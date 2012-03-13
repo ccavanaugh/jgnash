@@ -1,0 +1,3 @@
+Zde muzete zmenit QIF transakce pred dokoncenim importu.
+
+Bude treba prekontrolovat cilovou polozku pro lepsi zorganizovani prijmu a vydaju.

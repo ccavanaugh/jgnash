@@ -1,0 +1,93 @@
+<object-stream>
+  <RootAccount id="1" placeHolder="false" locked="false" visible="true" name="Receitas da esposa" description="">
+    <accountType id="2">ROOT</accountType>
+    <notes></notes>
+    <currencyNode id="3" locale="pt_BR" symbol="BRL" scale="2" prefix="R$" suffix="" description="pt_BR"/>
+    <children id="4">
+      <Account id="5" placeHolder="true" locked="false" visible="true" name="Contas de Depesas" description="">
+        <accountType id="6">EXPENSE</accountType>
+        <parentAccount class="RootAccount" reference="1"/>
+        <notes></notes>
+        <currencyNode reference="3"/>
+        <children id="7">
+          <Account id="8" placeHolder="true" locked="false" visible="true" name="Imposto de renda esposa" description="">
+            <accountType reference="6"/>
+            <parentAccount reference="5"/>
+            <notes></notes>
+            <currencyNode reference="3"/>
+            <securities id="26"/>
+            <accountNumber></accountNumber>
+            <propertyMap id="27"/>
+          </Account>
+        </children>
+        <securities id="28"/>
+        <accountNumber></accountNumber>
+        <propertyMap id="29"/>
+      </Account>
+      <Account id="30" placeHolder="true" locked="false" visible="true" name="Contas de Receitas" description="">
+        <accountType id="31">INCOME</accountType>
+        <parentAccount class="RootAccount" reference="1"/>
+        <notes></notes>
+        <currencyNode reference="3"/>
+        <children id="32">
+          <Account id="33" placeHolder="true" locked="false" visible="true" name="Receitas da esposa" description="">
+            <accountType reference="31"/>
+            <parentAccount reference="30"/>
+            <notes></notes>
+            <currencyNode reference="3"/>
+            <children id="34">
+              <Account id="35" placeHolder="false" locked="false" visible="true" name="Receitas não tributáveis" description="">
+                <accountType reference="31"/>
+                <parentAccount reference="33"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="36"/>
+                <securities id="37"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="38"/>
+              </Account>
+              <Account id="39" placeHolder="false" locked="false" visible="true" name="Juros" description="">
+                <accountType reference="31"/>
+                <parentAccount reference="33"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="40"/>
+                <securities id="41"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="42"/>
+              </Account>
+              <Account id="43" placeHolder="false" locked="false" visible="true" name="Outras receitas" description="">
+                <accountType reference="31"/>
+                <parentAccount reference="33"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="44"/>
+                <securities id="45"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="46"/>
+              </Account>
+              <Account id="47" placeHolder="false" locked="false" visible="true" name="Salário" description="">
+                <accountType reference="31"/>
+                <parentAccount reference="33"/>
+                <notes></notes>
+                <currencyNode reference="3"/>
+                <children id="48"/>
+                <securities id="49"/>
+                <accountNumber></accountNumber>
+                <propertyMap id="50"/>
+              </Account>
+            </children>
+            <securities id="51"/>
+            <accountNumber></accountNumber>
+            <propertyMap id="52"/>
+          </Account>
+        </children>
+        <securities id="53"/>
+        <accountNumber></accountNumber>
+        <propertyMap id="54"/>
+      </Account>
+    </children>
+    <securities id="55"/>
+    <propertyMap id="56"/>
+  </RootAccount>
+</object-stream>

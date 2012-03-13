@@ -1,0 +1,419 @@
+/*
+ * jGnash, a personal finance application
+ * Copyright (C) 2001-2012 Craig Cavanaugh
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package jgnash.ui.budget;
+
+import org.jdesktop.swingx.JXPanel;
+import org.jdesktop.swingx.JXTitledPanel;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
+
+import java.awt.EventQueue;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.ToolTipManager;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableModel;
+
+import jgnash.engine.Account;
+import jgnash.engine.AccountGroup;
+import jgnash.engine.Transaction;
+import jgnash.engine.budget.BudgetPeriodResults;
+import jgnash.engine.budget.BudgetResultsModel;
+import jgnash.message.ChannelEvent;
+import jgnash.message.Message;
+import jgnash.message.MessageListener;
+import jgnash.message.MessageProperty;
+import jgnash.text.CommodityFormat;
+import jgnash.ui.components.ShadowBorder;
+import jgnash.util.Resource;
+
+import static javax.swing.event.TableModelEvent.ALL_COLUMNS;
+import static javax.swing.event.TableModelEvent.UPDATE;
+import jgnash.ui.util.JTableUtils;
+
+/**
+ * Panel to display a row footer which summarizes account totals
+ *
+ * @author Craig Cavanaugh
+ * @version $Id: AccountRowFooterPanel.java 3187 2012-02-14 09:41:10Z ccavanaugh
+ * $
+ */
+public class AccountRowFooterPanel extends JPanel {
+
+    private ExpandingBudgetTableModel model;
+
+    private AccountRowSummaryModel summaryModel;
+
+    private JComponent header;
+
+    private JComponent footer;
+
+    private JTable table;
+
+    private JTable footerTable;
+
+    private final ExecutorService pool = Executors.newCachedThreadPool();
+
+    private BudgetResultsModel resultsModel;
+
+    public AccountRowFooterPanel(final ExpandingBudgetTableModel model) {
+        this.model = model;
+
+        this.resultsModel = model.getResultsModel();
+
+        summaryModel = new AccountRowSummaryModel(model);
+
+        layoutMainPanel();
+    }
+
+    public void unregisterListeners() {
+        summaryModel.unregisterListeners();
+    }
+
+    private void layoutMainPanel() {
+        FormLayout layout = new FormLayout("d:g", "d");
+
+        DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
+
+        setLayout(layout);
+
+        table = new SummaryTable(summaryModel);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table.setFocusable(false);
+        table.setCellSelectionEnabled(false);
+
+        JTableHeader tableHeader = new JTableHeader(table.getColumnModel());
+        tableHeader.setReorderingAllowed(false);
+        tableHeader.setResizingAllowed(false);
+        tableHeader.setTable(table);
+
+        builder.add(table, CC.xy(1, 1));
+
+        header = buildHeader(tableHeader);
+        footer = buildFooter();
+
+        setBorder(ShadowBorder.getCompondShadowBorder());
+
+        JTableUtils.packTables(table, footerTable); 
+
+        ToolTipManager.sharedInstance().unregisterComponent(table);
+        ToolTipManager.sharedInstance().unregisterComponent(tableHeader);
+    }
+
+    public JComponent getTableHeader() {
+        return header;
+    }
+
+    private JComponent buildHeader(final JTableHeader tableHeader) {
+        Resource rb = Resource.get();
+
+        JXTitledPanel panelHeader = new JXTitledPanel(rb.getString("Title.Summary"), tableHeader);
+        panelHeader.setBorder(ShadowBorder.getCompondShadowBorder());
+
+        return panelHeader;
+    }
+
+    /**
+     * Sets the height, in pixels, of all cells to rowHeight, revalidates, and
+     * repaints. The height of the cells will be equal to the row height minus
+     * the row margin.
+     *
+     * @param rowHeight new row height
+     * @see AccountRowHeaderPanel#getRowHeight()
+     * @see JTable#setRowHeight(int)
+     */
+    protected void setRowHeight(final int rowHeight) {
+        table.setRowHeight(rowHeight);
+    }
+
+    public JComponent buildFooter() {
+        FormLayout layout = new FormLayout("d:g", "d");
+
+        DefaultFormBuilder builder = new DefaultFormBuilder(layout, new JXPanel());
+
+        NumberFormat format = CommodityFormat.getShortNumberFormat(resultsModel.getBaseCurrency());
+
+        footerTable = new BudgetResultsTable(new FooterModel(), format);
+        footerTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        footerTable.setFocusable(false);
+        footerTable.setCellSelectionEnabled(false);
+
+        builder.add(footerTable, CC.xy(1, 1));
+
+        builder.setBorder(ShadowBorder.getCompondShadowBorder());
+
+        return builder.getPanel();
+    }
+
+    public JComponent getFooter() {
+        return footer;
+    }   
+
+    private class SummaryTable extends AbstractResultsTable {
+
+        public SummaryTable(final TableModel model) {
+            super(model);
+        }
+
+        @Override
+        protected NumberFormat getNumberFormat(int row) {
+            Account account = model.get(row);
+            return CommodityFormat.getShortNumberFormat(account.getCurrencyNode());
+        }
+    }
+
+    /**
+     * AccountTable model to for the summary footer that computes results by
+     * account group
+     */
+    private class FooterModel extends AbstractTableModel implements MessageListener {
+
+        private List<AccountGroup> groups;
+
+        FooterModel() {
+            groups = model.getAccountGroups();
+            registerListeners();
+        }
+
+        private void registerListeners() {
+
+            summaryModel.addTableModelListener(new TableModelListener() {
+
+                @Override
+                public void tableChanged(TableModelEvent e) {
+                    fireTableDataChanged();
+                }
+            });
+
+            model.addMessageListener(this);
+        }
+
+        @Override
+        public int getRowCount() {
+            return groups.size();
+        }
+
+        @Override
+        public int getColumnCount() {
+            return 3;
+        }
+
+        @Override
+        public Class<?> getColumnClass(final int columnIndex) {
+            return BigDecimal.class;
+        }
+
+        @Override
+        public Object getValueAt(final int rowIndex, final int columnIndex) {
+            AccountGroup group = resultsModel.getAccountGroupList().get(rowIndex);
+
+            switch (columnIndex) {
+                case 0:
+                    return resultsModel.getResults(group).getBudgeted();
+                case 1:
+                    return resultsModel.getResults(group).getChange();
+                case 2:
+                    return resultsModel.getResults(group).getRemaining();
+                default:
+                    return BigDecimal.ZERO;
+            }
+        }
+
+        @Override
+        public void messagePosted(final Message event) {
+            switch (event.getEvent()) {
+                case ACCOUNT_ADD:
+                case ACCOUNT_REMOVE:
+                case ACCOUNT_MODIFY:
+                case BUDGET_UPDATE:
+                    groups = model.getAccountGroups();
+                    EventQueue.invokeLater(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            fireTableDataChanged();
+                        }
+                    });
+                default:
+            }
+        }
+    }
+
+    /**
+     * AccountTable model to display a row footer which summarizes account
+     * totals
+     */
+    private class AccountRowSummaryModel extends AbstractTableModel implements MessageListener {
+
+        private ExpandingBudgetTableModel model;
+
+        private transient TableModelListener listener;
+
+        private final String[] columnNames = {Resource.get().getString("Column.Budgeted"),
+            Resource.get().getString("Column.Change"), Resource.get().getString("Column.Remaining")};
+
+        AccountRowSummaryModel(final ExpandingBudgetTableModel model) {
+            this.model = model;
+
+            registerListeners();
+        }
+
+        private void registerListeners() {
+            // pass through the events from the wrapped table model
+            listener = new TableModelListener() {
+
+                @Override
+                public void tableChanged(final TableModelEvent e) {
+                    fireTableChanged(e);
+                }
+            };
+
+            model.addTableModelListener(listener);
+            model.addMessageListener(this);
+        }
+
+        protected void unregisterListeners() {
+            model.removeTableModelListener(listener);
+            model.removeMessageListener(this);
+        }
+
+        @Override
+        public int getRowCount() {
+            return model.getRowCount();
+        }
+
+        @Override
+        public int getColumnCount() {
+            return 3;
+        }
+
+        @Override
+        public String getColumnName(final int columnIndex) {
+            return columnNames[columnIndex];
+        }
+
+        @Override
+        public Class<?> getColumnClass(final int columnIndex) {
+            return BigDecimal.class;
+        }
+
+        @Override
+        public Object getValueAt(final int rowIndex, final int columnIndex) {
+            Account account = model.get(rowIndex);
+
+            BudgetPeriodResults results = resultsModel.getResults(account);
+
+            switch (columnIndex) {
+                case 0:
+                    return results.getBudgeted();
+                case 1:
+                    return results.getChange();
+                case 2:
+                    return results.getRemaining();
+                default:
+                    return BigDecimal.ZERO;
+
+            }
+        }
+
+        @Override
+        public void messagePosted(final Message event) {
+            if (event.getEvent() == ChannelEvent.TRANSACTION_ADD || event.getEvent() == ChannelEvent.TRANSACTION_REMOVE) {
+                processTransactionEvent(event);
+            } else if (event.getEvent() == ChannelEvent.FILE_CLOSING) {
+                unregisterListeners();
+            } else if (event.getEvent() == ChannelEvent.BUDGET_GOAL_UPDATE) {
+                processBudgetGoalUpdate(event);
+            }
+        }
+
+        private void processBudgetGoalUpdate(final Message message) {
+            Runnable thread = new Runnable() {
+
+                @Override
+                public void run() {
+
+                    List<Account> accountList = ((Account) message.getObject(MessageProperty.ACCOUNT)).getAncestors();
+
+                    for (Account account : accountList) {
+
+                        final int row = model.indexOf(account);
+
+                        EventQueue.invokeLater(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                fireTableChanged(new TableModelEvent(AccountRowSummaryModel.this, row, row, ALL_COLUMNS, UPDATE));
+                                JTableUtils.packTables(table, footerTable); 
+                            }
+                        });
+                    }
+                }
+            };
+
+            pool.submit(thread);
+        }
+
+        private void processTransactionEvent(final Message message) {
+
+            Runnable thread = new Runnable() {
+
+                @Override
+                public void run() {
+                    final Transaction transaction = (Transaction) message.getObject(MessageProperty.TRANSACTION);
+
+                    // build a list of accounts include ancestors that will be impacted by the transaction changes
+                    final Set<Account> accounts = new HashSet<Account>();
+
+                    for (Account account : transaction.getAccounts()) {
+                        accounts.addAll(account.getAncestors());
+                    }
+
+                    for (Account account : accounts) {
+                        final int row = model.indexOf(account);
+
+                        EventQueue.invokeLater(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                fireTableChanged(new TableModelEvent(AccountRowSummaryModel.this, row, row, ALL_COLUMNS, UPDATE));
+                                JTableUtils.packTables(table, footerTable); 
+                            }
+                        });
+                    }
+                }
+            };
+
+            pool.submit(thread);
+        }
+    }
+}

@@ -1,0 +1,5 @@
+This builds a new budget based on the prior years income and expenses.
+
+Select the historical method of choice for creating a budget.
+
+Budget amounts may be refined at a later time if needed.

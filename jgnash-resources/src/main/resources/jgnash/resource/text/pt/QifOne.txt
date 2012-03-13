@@ -1,0 +1,5 @@
+O arquivo QIF que você selecionou não especifica a conta de destino para as transações.
+Isto é normal para aquivos QIF recebidos de bancos online ou fontes semelhantes.
+
+Selecione a conta de destino para as transações.
+As novas transações serão transações de entrada única pela falta de informação fornecida no arquivo QIF.

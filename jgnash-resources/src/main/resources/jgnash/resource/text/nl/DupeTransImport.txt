@@ -1,0 +1,2 @@
+Tijdens het importeren zijn er dubbele transacties gevonden.
+Wil je de dubbele transacties bewaren?

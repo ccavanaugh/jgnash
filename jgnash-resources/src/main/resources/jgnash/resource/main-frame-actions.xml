@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  The actions define all the Actions in an application
+  and toolbars and menus which use the actions
+-->
+
+<action-set id="main-frame-actions">
+
+    <!-- Define the actions. The following set represent menus. -->
+
+    <action id="file-menu-command"
+            name="Menu.File.Name"
+            mnemonic="Menu.File.Mnemonic"/>
+
+    <action id="report-menu-command"
+            name="Menu.Reports.Name"
+            mnemonic="Menu.Reports.Mnemonic"/>
+
+    <action id="edit-menu-command"
+            name="Menu.Edit.Name"
+            mnemonic="Menu.Edit.Mnemonic"/>
+
+    <action id="view-menu-command"
+            name="Menu.View.Name"
+            mnemonic="Menu.View.Mnemonic"/>
+
+    <action id="tools-menu-command"
+            name="Menu.Tools.Name"
+            mnemonic="Menu.Tools.Mnemonic"/>
+
+    <action id="window-menu-command"
+            name="Menu.Window.Name"
+            mnemonic="Menu.Window.Mnemonic"/>
+
+    <action id="help-menu-command"
+            name="Menu.Help.Name"
+            mnemonic="Menu.Help.Mnemonic"/>
+
+    <!-- File menu operations -->
+
+    <action id="new-command"
+            name="Menu.New.Name"
+            mnemonic="Menu.New.Mnemonic"
+            smicon="/jgnash/resource/document-new.png"
+            icon="/jgnash/resource/document-new.png"
+            accel="Menu.New.KeyStroke"
+            desc="Menu.New.Tooltip"/>
+
+    <action id="open-command"
+            name="Menu.Open.Name"
+            mnemonic="Menu.Open.Mnemonic"
+            smicon="/jgnash/resource/document-open.png"
+            icon="/jgnash/resource/document-open.png"
+            accel="Menu.Open.KeyStroke"
+            desc="Menu.Open.Tooltip"/>
+
+    <action id="saveas-command"
+            name="Menu.SaveAs.Name"
+            mnemonic="Menu.SaveAs.Mnemonic"
+            smicon="/jgnash/resource/document-save-as.png"
+            icon="/jgnash/resource/document-save-as.png"
+            desc="Menu.SaveAs.Tooltip"/>
+
+    <action id="import-menu-command"
+            name="Menu.Import.Name"
+            mnemonic="Menu.Import.Mnemonic"/>
+
+    <action id="export-menu-command"
+            name="Menu.Export.Name"
+            mnemonic="Menu.Export.Mnemonic"/>
+
+    <action id="qifimport-command"
+            name="Menu.ImportQif.Name"
+            mnemonic="Menu.ImportQif.Mnemonic"/>
+
+    <action id="exportAccounts-command"
+            name="Menu.ExportAccounts.Name"/>
+
+    <action id="accountsimport-command"
+            name="Menu.ImportAccounts.Name"
+            desc="Menu.ImportAccounts.Tooltip"/>  
+
+    <action id="jgnashimport-command"
+            name="Menu.ImportJgnash.Name"
+            desc="Menu.ImportJgnash.Tooltip"/>
+
+    <action id="ofximport-command"
+            name="Menu.ImportOfx.Name"
+            desc="Menu.ImportOfx.Tooltip"/>
+
+    <action id="exit-command"
+            name="Menu.Exit.Name"
+            mnemonic="Menu.Exit.Mnemonic"
+            desc="Menu.Exit.Tooltip"
+            accel="Menu.Exit.KeyStroke"/>
+
+    <action id="close-command"
+            name="Menu.Close.Name"
+            mnemonic="Menu.Close.Mnemonic"
+            desc="Menu.Close.Tooltip"
+            accel="Menu.Close.KeyStroke"/>
+
+    <!-- Report menu operations -->
+
+    <action id="report-export-menu-command"
+            name="Menu.Export.Name"/>
+
+    <action id="report-commodities-menu-command"
+            name="Menu.Commodity.Name"/>
+
+    <action id="report-account-menu-command"
+            name="Menu.Account.Name"/>
+
+    <action id="report-monthCSV-command"
+            name="Menu.MonthEndBalance.Name"/>
+
+    <action id="report-sechighlow-command"
+            name="Menu.HistoryChart.Name"/>
+
+    <action id="report-accmonthbal-command"
+            name="Menu.MonthBalance.Name"/>
+
+    <action id="report-accmonthbalcmp-command"
+            name="Menu.MonthBalanceCompare.Name"/>
+
+    <action id="report-accrunbal-command"
+            name="Menu.MonthEndBalance.Name"/>
+
+    <action id="report-iepiechart-command"
+            name="Menu.IEPieChart.Name"/>
+
+    <action id="report-payeepiechart-command"
+            name="Menu.PayeePieChart.Name"/>
+
+    <action id="report-profitloss-command"
+            name="Menu.ProfitLoss.Name"/>
+
+    <action id="report-profitlosstxt-command"
+            name="Menu.ProfitLossTXT.Name"/>
+
+    <action id="report-accregister-command"
+            name="Menu.AccountRegister.Name"/>
+
+    <action id="report-networth-command"
+            name="Menu.NetWorth.Name"/>
+
+    <action id="report-portfolio-command"
+            name="Menu.Portfolio.Name"/>
+
+    <action id="report-balancesheet-command"
+            name="Menu.BalanceSheet.Name"/>
+
+    <!-- Edit menu commands -->
+
+    <action id="copy-command"
+            name="Menu.Copy.Name"
+            mnemonic="Menu.Copy.Mnemonic"
+            smicon="/jgnash/resource/edit-copy.png"
+            icon="/jgnash/resource/edit-copy.png"
+            accel="Menu.Copy.KeyStroke"
+            desc="Menu.Copy.Tooltip"/>
+
+    <action id="cut-command"
+            name="Menu.Cut.Name"
+            mnemonic="Menu.Cut.Mnemonic"
+            smicon="/jgnash/resource/edit-cut.png"
+            icon="/jgnash/resource/edit-cut.png"
+            accel="Menu.Cut.KeyStroke"
+            desc="Menu.Cut.Tooltip"/>
+
+    <action id="paste-command"
+            name="Menu.Paste.Name"
+            mnemonic="Menu.Paste.Mnemonic"
+            smicon="/jgnash/resource/edit-paste.png"
+            icon="/jgnash/resource/edit-paste.png"
+            accel="Menu.Paste.KeyStroke"
+            desc="Menu.Paste.Tooltip"/>
+
+    <!-- View menu commands -->
+
+    <action id="filter-menu-command"
+            name="Menu.Filter.Name"
+            mnemonic="Menu.Filter.Mnemonic"/>
+
+    <action id="account-filter-command"
+            name="Menu.AccountList.Name"
+            mnemonic="Menu.AccountList.Mnemonic"/>
+
+    <action id="register-filter-command"
+            name="Menu.Register.Name"
+            mnemonic="Menu.Register.Mnemonic"/>
+
+    <!-- Tools menu commands -->
+
+    <action id="commodity-menu-command"
+            name="Menu.Commodity.Name"
+            mnemonic="Menu.Commodity.Mnemonic"/>
+
+    <action id="currency-menu-command"
+            name="Menu.Currency.Name"
+            mnemonic="Menu.Currency.Mnemonic"/>
+
+    <action id="commodity-createmodify-command"
+            name="Menu.ModifyCommodity.Name"
+            mnemonic="Menu.ModifyCommodity.Mnemonic"/>
+
+    <action id="budget-manager-command"
+            name="Menu.BudgetManager.Name"
+            mnemonic="Menu.BudgetManager.Mnemonic"/>
+
+    <action id="exchangerate-modify-command"
+            name="Menu.ModifyExchangeRates.Name"
+            mnemonic="Menu.ModifyExchangeRates.Mnemonic"/>
+
+    <action id="commodity-history-command"
+            name="Menu.HistoryCommodity.Name"
+            mnemonic="Menu.HistoryCommodity.Mnemonic"/>
+
+    <action id="commodity-historyimport-command"
+            name="Menu.HistoryImport.Name"/>
+
+    <action id="currency-addremove-command"
+            name="Menu.AddRemoveCurrency.Name"
+            mnemonic="Menu.AddRemoveCurrency.Mnemonic"/>
+
+    <action id="currency-modify-command"
+            name="Menu.ModifyCurrency.Name"
+            mnemonic="Menu.ModifyCurrency.Mnemonic"/>
+
+    <action id="currency-default-command"
+            name="Menu.DefaultCurrency.Name"
+            mnemonic="Menu.DefaultCurrency.Mnemonic"
+            desc="Menu.DefaultCurrency.Tooltip"/>
+
+    <action id="currency-background-update-command"
+            name="Menu.BackgroundCurrencyUpdate.Name"
+            desc="Menu.BackgroundCurrencyUpdate.Tooltip"/>
+
+    <action id="security-background-update-command"
+            name="Menu.BackgroundSecurityUpdate.Name"
+            desc="Menu.BackgroundSecurityUpdate.Tooltip"/>
+
+    <action id="printchecks-command"
+            name="Menu.PrintCheck.Name"
+            mnemonic="Menu.PrintCheck.Mnemonic"/>
+
+    <action id="designchecks-command"
+            name="Menu.DesignCheck.Name"
+            mnemonic="Menu.DesignCheck.Mnemonic"/>
+
+    <action id="options-command"
+            name="Menu.Option.Name"
+            mnemonic="Menu.Option.Mnemonic"
+            accel="Menu.Option.KeyStroke"/>
+
+    <action id="recurringList-command"
+            name="Menu.RecurringList.Name"
+            mnemonic="Menu.RecurringList.Mnemonic"/>
+
+    <action id="locale-command"
+            name="Menu.Locale.Name"/>
+
+    <action id="javascript-command"
+            name="Menu.RunJavaScript.Name"
+            smicon="/jgnash/resource/text-x-script.png"
+            icon="/jgnash/resource/text-x-script.png"
+            desc="Menu.RunJavaScript.Tooltip"/>
+
+    <!-- Window menu commands -->
+
+    <action id="close-all-windows-command"
+            name="Menu.CloseAllWindows.Name"
+            mnemonic="Menu.CloseAllWindows.Mnemonic"/>
+
+    <!-- Help menu commands -->
+
+    <action id="about-command"
+            name="Menu.About.Name"
+            mnemonic="Menu.About.Mnemonic"
+            accel="Menu.About.KeyStroke"
+            smicon="/jgnash/resource/dialog-information.png"
+            icon="/jgnash/resource/dialog-information.png"
+            desc="Menu.About.Tooltip"/>
+
+    <action id="help-command"
+            name="Menu.HelpTopics.Name"
+            mnemonic="Menu.HelpTopics.Mnemonic"
+            accel="Menu.HelpTopics.KeyStroke"
+            smicon="/jgnash/resource/help-browser.png"
+            icon="/jgnash/resource/help-browser.png"
+            desc="Menu.HelpTopics.Tooltip"/>
+
+    <action id="console-command"
+            name="Menu.ConsoleWindow.Name"
+            smicon="/jgnash/resource/utilities-system-monitor.png"
+            icon="/jgnash/resource/utilities-system-monitor.png"/>
+
+    <!-- Define the main menu -->
+
+    <action-node id="main-menu">
+        <!-- File menu -->
+        <action-node id="file-menu" idref="file-menu-command">
+            <action-node idref="new-command"/>
+            <empty/>
+            <action-node idref="open-command"/>
+            <action-node idref="saveas-command"/>
+            <empty/>
+            <action-node id="import-menu" idref="import-menu-command">
+                <action-node idref="ofximport-command"/>             
+                <action-node idref="qifimport-command"/>
+                <empty/>
+                <action-node idref="jgnashimport-command"/>
+                <action-node idref="accountsimport-command"/>
+            </action-node>
+            <action-node id="export-menu" idref="export-menu-command">
+                <action-node idref="exportAccounts-command"/>
+            </action-node>
+            <empty/>
+            <action-node idref="close-command"/>
+            <action-node idref="exit-command"/>
+        </action-node>
+
+        <!-- Report menu -->
+        <action-node id="report-menu" idref="report-menu-command">
+            <action-node id="report-export-menu" idref="report-export-menu-command">
+                <action-node idref="report-monthCSV-command"/>
+                <action-node idref="report-profitlosstxt-command"/>
+            </action-node>
+            <action-node id="report-commodities-menu" idref="report-commodities-menu-command">
+                <action-node idref="report-sechighlow-command"/>
+            </action-node>
+            <action-node id="report-account-menu" idref="report-account-menu-command">
+                <action-node idref="report-accmonthbal-command"/>
+                <action-node idref="report-accmonthbalcmp-command"/>
+                <action-node idref="report-accrunbal-command"/>
+                <action-node idref="report-accregister-command"/>
+                <action-node idref="report-iepiechart-command"/>
+                <action-node idref="report-payeepiechart-command"/>
+                <action-node idref="report-networth-command"/>
+                <action-node idref="report-balancesheet-command"/>
+                <action-node idref="report-profitloss-command"/>                
+                <action-node idref="report-portfolio-command"/>
+            </action-node>
+        </action-node>
+
+        <!-- Edit menu -->
+        <action-node id="edit-menu" idref="edit-menu-command">
+            <action-node idref="cut-command"/>
+            <action-node idref="copy-command"/>
+            <action-node idref="paste-command"/>
+        </action-node>
+
+        <!-- View menu -->
+        <action-node id="view-menu" idref="view-menu-command">
+            <action-node id="filter-menu" idref="filter-menu-command">
+                <action-node idref="account-filter-command"/>
+                <action-node idref="register-filter-command"/>
+            </action-node>
+        </action-node>
+
+        <!-- Tools menu -->
+        <action-node id="tools-menu" idref="tools-menu-command">
+            <action-node id="commodity-menu" idref="commodity-menu-command">
+                <action-node idref="commodity-createmodify-command"/>
+                <action-node idref="commodity-history-command"/>
+                <action-node idref="commodity-historyimport-command"/>
+                <empty/>
+                <action-node idref="security-background-update-command"/>
+            </action-node>
+            <action-node id="currency-menu" idref="currency-menu-command">
+                <action-node idref="currency-addremove-command"/>
+                <action-node idref="currency-modify-command"/>
+                <action-node idref="exchangerate-modify-command"/>
+                <action-node idref="currency-default-command"/>
+                <empty/>
+                <action-node idref="currency-background-update-command"/>
+            </action-node>
+            <action-node idref="recurringList-command"/>
+            <empty/>
+            <action-node idref="budget-manager-command"/>
+            <empty/>
+            <action-node idref="printchecks-command"/>
+            <action-node idref="designchecks-command"/>
+            <empty/>
+            <action-node idref="options-command"/>
+            <empty/>
+            <action-node idref="locale-command"/>
+            <empty/>
+            <action-node idref="javascript-command"/>
+        </action-node>
+
+        <!-- Window menu -->
+        <action-node id="window-menu" idref="window-menu-command">
+            <empty/>
+            <action-node idref="close-all-windows-command"/>
+        </action-node>
+
+        <!-- Help menu -->
+        <action-node id="help-menu" idref="help-menu-command">
+            <action-node idref="help-command"/>
+            <action-node idref="about-command"/>
+            <empty/>
+            <action-node idref="console-command"/>
+        </action-node>
+    </action-node>
+
+    <!-- Define the main toolbar -->
+
+    <action-node id="main-toolbar">
+        <action-node idref="open-command"/>
+        <action-node idref="cut-command"/>
+        <action-node idref="copy-command"/>
+        <action-node idref="paste-command"/>
+    </action-node>
+
+</action-set>
+

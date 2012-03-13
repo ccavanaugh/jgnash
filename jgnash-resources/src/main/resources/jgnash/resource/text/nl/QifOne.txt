@@ -1,0 +1,5 @@
+Het geselecteerde QIF bestand specificeert geen doelrekening voor de transacties.
+Dit is normaal voor QIF bestanden die je van online banking of soortgelijke bronnen ontvangt.
+
+Selecteer een doelrekening voor de transacties.
+De nieuwe transacties zullen Single Entry transacties zijn, omdat er niet voldoende gegevens worden meegeleverd in het QIF bestand.

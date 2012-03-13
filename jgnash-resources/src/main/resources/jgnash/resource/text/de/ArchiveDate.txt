@@ -1,0 +1,1 @@
+Der Stichtag legt fest, wo die Trennung zwischen archivierten und aufbewahrten Transaktionen liegt.

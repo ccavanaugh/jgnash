@@ -1,0 +1,3 @@
+Entre o nome do banco de dados que você gostaria de usar.
+
+Na maioria dos casos, os padrões serão suficientes, mas os usuários avançados podem alterá-las se necessário.

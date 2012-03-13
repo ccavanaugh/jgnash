@@ -1,0 +1,2 @@
+De beschikbare valuta voor nieuw aan te maken rekeningen kunnen hier gekozen worden. Als je geen gebruik wilt maken van meerdere verschillende valuta's, wijzig hier dan niets.
+Valuta kunnen op elk moment worden aangemaakt en verwijderd.

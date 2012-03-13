@@ -1,0 +1,3 @@
+Uma conta de Patrimônio Líquido precisa ser selecionada para transferência do balanço inicial.
+
+Se um conta de Patrimônio Líquido aceitável não existe. Saia do assistente e crie uma nova conta de Patrimônio Líquido antes de continuar.

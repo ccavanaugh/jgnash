@@ -1,0 +1,1 @@
+Kies een bestandsnaam voor het nieuw aan te maken archiveringsbestand. Hiervoor kun je niet de huidige bestandsnaam kiezen, die wordt gebruikt voor de niet te archiveren transacties.

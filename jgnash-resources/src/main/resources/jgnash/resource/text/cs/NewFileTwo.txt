@@ -1,0 +1,3 @@
+Vyberte vychozi menu, kterou budete nejcasteji pouzivat.  Ve vetsine pripadu bude pouzita jedna mena podle Vaseho lokalniho nastaveni.
+
+Vsechny ucty vytvorene v jGnash budou pouzivat tuto menu jako vychozi. Pri vytvareni novych uctu muzete zvolit jine meny.

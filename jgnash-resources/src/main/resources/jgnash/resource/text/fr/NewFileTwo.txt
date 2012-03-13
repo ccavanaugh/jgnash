@@ -1,0 +1,3 @@
+La devise par défaut est la devise que vous utilisez le plus souvent. Dans la plupart des cas, la seule devise à définir est la devise de votre pays.
+
+Tous les comptes créés dans jGnash utiliseront par défaut cette devise, mais d'autres devises peuvent être utilisées lors de la création de nouveaux comptes.

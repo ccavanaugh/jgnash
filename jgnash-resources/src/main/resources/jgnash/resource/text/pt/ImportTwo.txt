@@ -1,0 +1,5 @@
+Você pode modificar aqui as transações importadas antes de completar a importação.
+
+Você pode querer revisar a conta de destino para melhor organizar as suas receitas e despesas.
+
+Novas transações podem ser apagadas ou seu estado de importação mudado para não. Se uma transação é detectada como pré-existente, ela pode ser sobrescrita e a importação forçada.

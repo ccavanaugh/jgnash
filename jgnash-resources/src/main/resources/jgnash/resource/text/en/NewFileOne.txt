@@ -1,0 +1,3 @@
+Enter the the name of the database you would like to use.
+
+In most cases, the defaults will be fine, but advanced users can change them if needed.

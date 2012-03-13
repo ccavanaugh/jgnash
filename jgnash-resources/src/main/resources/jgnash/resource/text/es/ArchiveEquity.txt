@@ -1,0 +1,3 @@
+Se debe seleccionar una Cuenta de Patrimonio de la cual transferir el balance inicial.
+
+Si la Cuenta de Patrimonio no existe, salga del Asistente y agregue una antes de continuar.

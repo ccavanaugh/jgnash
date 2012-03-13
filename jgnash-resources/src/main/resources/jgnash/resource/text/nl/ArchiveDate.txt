@@ -1,0 +1,1 @@
+De archiveringsdatum bepaalt de splitsingsdatum tussen gearchiveerde transacties en transacties die behouden blijven.

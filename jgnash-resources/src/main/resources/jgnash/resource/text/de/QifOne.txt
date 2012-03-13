@@ -1,0 +1,5 @@
+Die ausgwählte QIF-Datei gibt keine Ziel-Konten für die Transaktionen an.
+Dies ist normal bei QIF-Dateien aus Online-Banking oder ähnlichen Quellen.
+
+Wählen Sie ein Ziel-Konto für die Transaktionen aus.
+Die neuen Transaktionen werden als Einzelbuchungen erfasst, wegen der fehlenden Informationen aus der QIF-Datei.

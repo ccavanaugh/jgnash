@@ -1,0 +1,3 @@
+A moeda padrão deve ser a moeda que você mais usa. Na maioria dos casos, apenas uma moeda será utilizada, que será a sua moeda local.
+
+Todas as contas criadas no jGnash usarão esta moeda por padrão, mas outras moedas podem ser selecionadas quando uma nova conta for criada.

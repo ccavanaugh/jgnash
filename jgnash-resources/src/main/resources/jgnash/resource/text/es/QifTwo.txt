@@ -1,0 +1,3 @@
+Puede cambiar las transacciones QIF antes de completar la importación.
+
+Quiza desee revisar las cuentas de destino para organizar mejor sus ingresos y gastos

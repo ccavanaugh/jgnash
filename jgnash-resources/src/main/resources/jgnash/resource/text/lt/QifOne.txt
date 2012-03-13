@@ -1,0 +1,5 @@
+J\u016bs\u0173 pasirinktoje QIF byloje esan\u010dioms operacijoms nenurodyta s\u0105skaita. 
+Tai \u012fprasta QIF byloms, gautoms i\u0161 internetin\u0117s bankininkyst\u0117s ar kit\u0173 pana\u0161i\u0173 sistem\u0173.
+
+Nurodykite operacij\u0173 s\u0105skait\u0105.
+Naujos operacijos bus \u012fvestos kaip atskiros, kadangi QIF byloje nepateikiama informacija, reikalinga operacij\u0173 grupavimui.

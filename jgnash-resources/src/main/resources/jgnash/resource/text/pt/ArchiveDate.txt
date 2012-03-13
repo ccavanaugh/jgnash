@@ -1,0 +1,1 @@
+A data limite determina onde a divisão ocorre entre as transacções arquivadas e as transações mantidas.

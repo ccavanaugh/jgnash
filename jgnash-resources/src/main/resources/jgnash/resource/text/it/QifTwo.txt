@@ -1,0 +1,3 @@
+È possibile modificare le transazioni QIF prima di importare i dati.
+
+Bisognerebbe controllare il conto di destinazione per organizzare meglio il reddito e le spese.

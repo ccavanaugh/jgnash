@@ -1,0 +1,3 @@
+Vous pouvez changer les transactions QIF avant de terminer l'importation.
+
+Vous pouvez revoir la destination des transactions pour améliorer l'organisation de vos revenus et dépenses.

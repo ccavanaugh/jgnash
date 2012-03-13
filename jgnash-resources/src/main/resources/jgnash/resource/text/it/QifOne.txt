@@ -1,0 +1,5 @@
+Il file QIF selezionato non specifica un conto di destinazione per le transazioni.
+Ciò è normale per files QIF ricevuti da sistemi bancari online o sergenti simili.
+
+Selezionare un conto di destinazione per le transazioni.
+Le nuove transazioni verranno trattate come importi singoli a causa di mancanza di informazioni nel file QIF.

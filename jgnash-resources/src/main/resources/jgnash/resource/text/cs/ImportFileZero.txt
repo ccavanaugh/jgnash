@@ -1,0 +1,1 @@
+Vyberte jGnash 1.11.x nebo novejsi soubor, ktery chcete importovat.

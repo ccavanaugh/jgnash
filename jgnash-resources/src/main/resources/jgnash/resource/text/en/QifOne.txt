@@ -1,0 +1,5 @@
+The QIF file you have selected does not specify a destination account for the transactions. 
+This is normal for QIF files received from online banking and similar sources.
+
+Select a destination account for the transactions.
+The new transactions will be Single Entry transactions because of a lack of information supplied in the QIF file.

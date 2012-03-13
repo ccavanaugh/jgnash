@@ -1,0 +1,3 @@
+Sie können hier die QIF-Transaktionen ändern, bevor der Import fertiggestellt wird.
+
+Sie können die Ziel-Konten überprüfen, um die Ausgaben und Einnahmen besser zu organisieren.

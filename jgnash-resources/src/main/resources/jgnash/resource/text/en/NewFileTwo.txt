@@ -1,0 +1,3 @@
+The default currency should be the currency you use most.  In most cases, only one currency will be used which will be your local currency.
+
+All accounts created within jGnash will use this currency by default, but other currencies can be selected when creating new accounts.

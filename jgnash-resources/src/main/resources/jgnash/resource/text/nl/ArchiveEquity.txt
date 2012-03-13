@@ -1,0 +1,3 @@
+Een standaard Equity rekening moet geselecteerd worden om de openingsbalansen te kunnen maken.
+
+Als er geen bruikbare Equity rekening bestaat, moet je eerst de wizard verlaten en een bruikbare Equity rekening aanmaken.

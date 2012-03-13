@@ -1,0 +1,5 @@
+You can modify the imported transactions here before completing the import.
+
+You may want to review the destination account to better organize your income and expenses.
+
+New transactions can be deleted or their import state toggled off.  If a transaction is detected as pre-existing, it may be overridden and the import forced.

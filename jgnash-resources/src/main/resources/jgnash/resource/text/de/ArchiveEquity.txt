@@ -1,0 +1,3 @@
+Ein Standard-Kapitalkonto muss ausgewählt werden, um Eröffnungssalden zu buchen.
+
+Wenn kein akzeptables Kapitalkonto existiert. Verlassen Sie den Assistenten und erzeugen Sie ein Kapitalkonto bevor Sie fortfahren.

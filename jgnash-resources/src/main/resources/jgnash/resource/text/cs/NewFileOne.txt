@@ -1,0 +1,3 @@
+Zadejte jmeno databaze.
+
+Ve vetsine pripadu Vam postaci zakladni nastaveni, ktere mohou pokrocili uzivatele zmenit.

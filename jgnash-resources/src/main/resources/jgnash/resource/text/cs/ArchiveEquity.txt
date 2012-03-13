@@ -1,0 +1,3 @@
+A default Equity Account must be selected to transfer opening balances from.
+
+If an acceptable Equity Account does not exist.  Exit the wizard and create a new Equity Account before continuing.

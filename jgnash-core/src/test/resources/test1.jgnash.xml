@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?fileVersion 1?>
+<dataRoot class="Data">
+	<rootAccount>141379697</rootAccount>
+	<date>2008.06.29 16:24:30:012</date>
+	<objects class="Array" type="jgnash.engine.jgnashObject" length="4">
+		<index0 class="RootAccount" ID="141379697">
+			<name>Root</name>
+			<commodity>USD.en.US</commodity>
+			<status>1</status>
+			<description>Root</description>
+			<notes/>
+			<visible>true</visible>
+			<locked>false</locked>
+			<placeHolder>false</placeHolder>
+			<parentAccount>0</parentAccount>
+			<size>0</size>
+			<rootBankAccount>1871912084</rootBankAccount>
+			<rootExpenseAccount>1478040899</rootExpenseAccount>
+			<rootIncomeAccount>950257298</rootIncomeAccount>
+		</index0>
+		<index1 class="BankAccount" ID="1871912084">
+			<name>Bank Accounts</name>
+			<commodity>USD.en.US</commodity>
+			<status>1</status>
+			<description>Bank Accounts</description>
+			<notes/>
+			<visible>true</visible>
+			<locked>false</locked>
+			<placeHolder>false</placeHolder>
+			<parentAccount>141379697</parentAccount>
+			<size>0</size>
+		</index1>
+		<index2 class="ExpenseAccount" ID="1478040899">
+			<name>Expense Accounts</name>
+			<commodity>USD.en.US</commodity>
+			<status>1</status>
+			<description>Expense Accounts</description>
+			<notes/>
+			<visible>true</visible>
+			<locked>false</locked>
+			<placeHolder>false</placeHolder>
+			<parentAccount>141379697</parentAccount>
+			<size>0</size>
+			<taxRelated>false</taxRelated>
+		</index2>
+		<index3 class="IncomeAccount" ID="950257298">
+			<name>Income Accounts</name>
+			<commodity>USD.en.US</commodity>
+			<status>1</status>
+			<description>Income Accounts</description>
+			<notes/>
+			<visible>true</visible>
+			<locked>false</locked>
+			<placeHolder>false</placeHolder>
+			<parentAccount>141379697</parentAccount>
+			<size>0</size>
+			<taxRelated>false</taxRelated>
+		</index3>
+	</objects>
+	<currencyList class="Array" type="jgnash.engine.commodity.CommodityNode" length="1">
+		<index0 class="CurrencyNode">
+			<symbol>USD</symbol>
+			<online>true</online>
+			<description>en_US</description>
+			<prefix>$</prefix>
+			<suffix/>
+			<scale>2</scale>
+			<locale>en.US</locale>
+		</index0>
+	</currencyList>
+	<exchangeRates class="Array" type="jgnash.engine.commodity.ExchangeRate-ExchangeRateNode" length="0"/>
+	<reminders class="Array" type="jgnash.engine.recurring.Reminder" length="0"/>
+	<transactionNumberItems class="jgnash.xml.XMLStringArray" length="2">
+		<index0>EFT</index0>
+		<index1>Trans</index1>
+	</transactionNumberItems>
+</dataRoot>

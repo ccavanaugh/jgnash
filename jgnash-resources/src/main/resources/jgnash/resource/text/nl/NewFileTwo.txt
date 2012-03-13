@@ -1,0 +1,3 @@
+De standaard valuta kun je het beste instellen op de valuta die je het vaakst gebruikt. In het algemeen zal er slechts \u00e9\u00e9n valuta gebruikt worden, namelijk je plaatselijke valuta (waarschijnlijk de Euro).
+
+Alle rekeningen die in jGnash worden aangemaakt zullen standaard deze valuta gebruiken, maar bij het aanmaken van rekeningen kun je ook andere valuta selecteren.

@@ -1,0 +1,5 @@
+QIF soubor, ktery jste vybrali blize neurcuje cilovou polozku pro transakce.
+Toto je bezne pro QIF soubory prijate z online bankovnictvi a podobne.
+
+Vyberte cilovou polozku pro transakce.
+Nove transakce budou z duvodu nedostatku informaci obsazenych v QIF souboru vlozeny jako jediny vklad.

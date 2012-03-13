@@ -1,0 +1,2 @@
+Se encontraron transacciones duplicadas durante la importación.
+¿Desea guardar estas transacciones duplicadas?

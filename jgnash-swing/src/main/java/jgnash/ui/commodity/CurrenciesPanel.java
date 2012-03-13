@@ -1,0 +1,309 @@
+/*
+ * jGnash, a personal finance application
+ * Copyright (C) 2001-2012 Craig Cavanaugh
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package jgnash.ui.commodity;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
+
+import java.awt.Component;
+import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
+import javax.swing.SwingConstants;
+
+import jgnash.engine.CurrencyNode;
+import jgnash.engine.DefaultCurrencies;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.ui.components.GenericCloseDialog;
+import jgnash.ui.components.SortedListModel;
+import jgnash.ui.util.ValidationFactory;
+import jgnash.util.Resource;
+
+/**
+ * Creates a panel for adding and removing currencies. A static method is provided for displaying the panel in a dialog.
+ * 
+ * @author Craig Cavanaugh
+ * @version $Id: CurrenciesPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ */
+public class CurrenciesPanel extends JPanel implements ActionListener {
+
+    private final Resource rb = Resource.get();
+
+    private SortedListModel<CurrencyNode> aList;
+
+    private SortedListModel<CurrencyElement> cList;
+
+    private JList cJList;
+
+    private JList aJList;
+
+    private JButton customButton;
+
+    private JTextField customField;
+
+    private JButton addButton;
+
+    private JButton removeButton;
+
+    private Engine engine;
+
+    public static void showDialog(final JFrame parent) {
+        final Resource rb = Resource.get();
+
+        EventQueue.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                GenericCloseDialog d = new GenericCloseDialog(null, new CurrenciesPanel(), rb.getString("Title.AddRemCurr"));
+                d.pack();
+                d.setMinimumSize(d.getSize());
+                d.setLocationRelativeTo(parent);
+                d.setVisible(true);
+            }
+        });
+    }
+
+    private CurrenciesPanel() {
+        engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        layoutMainPanel();
+        addButton.addActionListener(this);
+        removeButton.addActionListener(this);
+        customButton.addActionListener(this);
+    }
+
+    private void initComponents() {
+        addButton = new JButton(rb.getString("Button.Add"));
+        addButton.setIcon(Resource.getIcon("/jgnash/resource/list-add.png"));
+        addButton.setHorizontalTextPosition(SwingConstants.LEADING);
+
+        removeButton = new JButton(rb.getString("Button.Remove"));
+        removeButton.setIcon(Resource.getIcon("/jgnash/resource/list-remove.png"));
+
+        customButton = new JButton(rb.getString("Button.Add"));
+        customField = new JTextField();
+
+        buildLists(); // generate the Jlists
+    }
+
+    private void layoutMainPanel() {
+        initComponents();
+
+        FormLayout layout = new FormLayout("d:g(0.5), 8dlu, p, 8dlu, d:g(0.5)", "");
+        layout.addGroupedColumn(1);
+        layout.addGroupedColumn(5);
+        DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
+
+        builder.appendTitle(rb.getString("Title.Available"));
+        builder.append("");
+        builder.appendTitle(rb.getString("Title.Current"));
+        builder.nextLine();
+        builder.appendRelatedComponentsGapRow();
+        builder.nextLine();
+        builder.appendRow("fill:80dlu:g");
+        builder.append(new JScrollPane(aJList), buildCenterPanel(), new JScrollPane(cJList));
+        builder.nextLine();
+        builder.appendUnrelatedComponentsGapRow();
+        builder.nextLine();
+        builder.append(layoutCustomPanel(), 5);
+        builder.appendSeparator();
+    }
+
+    private JPanel layoutCustomPanel() {
+        FormLayout layout = new FormLayout("p, 8dlu, 55dlu, 8dlu, max(30dlu;p)", "");
+        DefaultFormBuilder builder = new DefaultFormBuilder(layout);
+        builder.append(rb.getString("Label.CreateCurr"), ValidationFactory.wrap(customField), customButton);
+
+        return builder.getPanel();
+    }
+
+    private JPanel buildCenterPanel() {
+        FormLayout layout = new FormLayout("p:g", "");
+        DefaultFormBuilder builder = new DefaultFormBuilder(layout);
+
+        builder.append(addButton);
+        builder.append(removeButton);
+        return builder.getPanel();
+    }
+
+    private void customAction() {
+        if (customField.getText().length() > 0) {
+
+            if (engine.getCurrency(customField.getText()) != null) {
+                ValidationFactory.showValidationError(rb.getString("Message.Error.Duplicate"), customField);
+            } else {
+                CurrencyNode node = DefaultCurrencies.buildCustomNode(customField.getText());
+
+                // the add could fail if the commodity symbol is a duplicate
+                if (engine.addCommodity(node)) {
+                    cList.addElement(new CurrencyElement(node, true));
+                    customField.setText(null);
+                    return;
+                }
+            }
+        }
+        ValidationFactory.showValidationError(rb.getString("Message.Error.MissingSymbol"), customField);
+    }
+
+    private void addAction() {
+        Object[] list = aJList.getSelectedValues();
+        for (Object obj : list) {
+            if (obj != null) {
+                aList.removeElement((CurrencyNode) obj);
+                cList.addElement(new CurrencyElement((CurrencyNode) obj, true));
+                engine.addCommodity((CurrencyNode) obj);
+            }
+        }
+    }
+
+    private void removeAction() {
+        for (Object element : cJList.getSelectedValues()) {
+            CurrencyElement currencyElement = (CurrencyElement) element;
+
+            if (currencyElement.isEnabled()) {
+                if (engine.removeCommodity(currencyElement.getNode())) {
+                    cList.removeElement(currencyElement);
+                    aList.addElement(currencyElement.getNode());
+                }
+            }
+        }
+    }
+
+    private void buildLists() {
+        Set<CurrencyNode> defaultNodes = DefaultCurrencies.generateCurrencies();
+
+        Set<CurrencyNode> activeNodes = engine.getActiveCurrencies();
+
+        List<CurrencyNode> availNodes = engine.getCurrencies();
+
+        for (CurrencyNode node : availNodes) {
+            defaultNodes.remove(node);
+        }
+
+        aList = new SortedListModel<CurrencyNode>(defaultNodes);
+        aJList = new JList(aList);
+
+        ArrayList<CurrencyElement> list = new ArrayList<CurrencyElement>();
+
+        for (CurrencyNode node : availNodes) {
+            if (activeNodes.contains(node)) {
+                list.add(new CurrencyElement(node, false));
+            } else {
+                list.add(new CurrencyElement(node, true));
+            }
+        }
+
+        cList = new SortedListModel<CurrencyElement>(list);
+        cJList = new JList(cList);
+        cJList.setCellRenderer(new CurrencyRenderer(cJList.getCellRenderer()));
+    }
+
+    /**
+     * Invoked when an action occurs
+     * 
+     * @param e action event
+     */
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == addButton) {
+            addAction();
+        } else if (e.getSource() == removeButton) {
+            removeAction();
+        } else if (e.getSource() == customButton) {
+            customAction();
+        }
+    }
+
+    static class CurrencyElement implements Comparable<CurrencyElement> {
+
+        private CurrencyNode node;
+
+        private boolean enabled;
+
+        CurrencyElement(CurrencyNode node, boolean enabled) {
+            this.node = node;
+            this.enabled = enabled;
+        }
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public CurrencyNode getNode() {
+            return node;
+        }
+
+        @Override
+        public final String toString() {
+            return node.toString();
+        }
+
+        @Override
+        public int compareTo(CurrencyElement cnode) {
+            return node.compareTo(cnode.node);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            boolean result = false;
+
+            if (o instanceof CurrencyElement) {
+                result = node.equals(((CurrencyElement) o).node);
+            }
+
+            return result;
+        }
+
+        @Override
+        public int hashCode() {
+            int hash = 7;
+            hash = 13 * hash + (node != null ? node.hashCode() : 0);
+            return 13 * hash + (enabled ? 1 : 0);
+        }
+    }
+
+    private final static class CurrencyRenderer implements ListCellRenderer {
+
+        private ListCellRenderer delegate;
+
+        public CurrencyRenderer(final ListCellRenderer delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean hasFocus) {
+            Component c = delegate.getListCellRendererComponent(list, value, index, isSelected, hasFocus);
+
+            c.setEnabled(((CurrencyElement) value).isEnabled());
+
+            return c;
+        }
+    }
+}

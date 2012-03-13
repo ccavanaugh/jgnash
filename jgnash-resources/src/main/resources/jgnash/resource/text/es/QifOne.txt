@@ -1,0 +1,5 @@
+El archivo QIF que ha seleccionado no especifica una cuenta de destino para las transacciones
+Esto es normal para archivos QIF que son recibidos electrónicamente desde bancos y fuentes similares.
+
+Seleccione una cuenta de destino para las transacciones.
+Las nuevas transacciones serán de entrada simple, debido a la falta de información que provee el archivo QIF.

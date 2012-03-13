@@ -1,0 +1,90 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>jgnash</groupId>
+    <artifactId>jgnash2</artifactId>
+    <version>2.9.0</version>
+    <packaging>pom</packaging>
+
+    <name>jGnash</name>
+    <url>http://sourceforge.net/projects/jgnash/</url>
+    <description>jGnash Personal Finance</description>
+    <inceptionYear>2001</inceptionYear>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.build.timestamp.format>yyyy/MM/dd-HH:mm</maven.build.timestamp.format>
+        <buildDate>${maven.build.timestamp}</buildDate>
+        <java-version>1.6</java-version>
+
+        <junit-version>4.8.2</junit-version>
+        <javahelp-version>2.0.05</javahelp-version>
+        <args4j-version>2.0.19</args4j-version>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>jgnash-local</id>
+            <name>Local repository in project tree</name>
+            <url>file:${basedir}/repository</url>
+        </repository>
+        <repository>
+            <id>maven.java.net</id>
+            <name>maven.java.net</name>
+            <url>https://maven.java.net/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>java.net-Public</id>
+            <name>maven.hudson-labs</name>
+            <url>http://maven.glassfish.org/content/repositories/maven.hudson-labs.org/</url>
+        </repository>
+        <repository>
+            <id>dynamicjasper</id>
+            <name>Dynamic Jasper</name>
+            <url>http://archiva.fdvs.com.ar/repository/public1/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit-version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.help</groupId>
+            <artifactId>javahelp</artifactId>
+            <version>${javahelp-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>args4j</groupId>
+            <artifactId>args4j</artifactId>
+            <version>${args4j-version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>${java-version}</source>
+                    <target>${java-version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <modules>
+        <module>jgnash-help</module>
+        <module>jgnash-resources</module>
+        <module>jgnash-core</module>
+        <module>jgnash-swing</module>
+        <module>jgnash-imports</module>
+    </modules>
+
+</project>
