@@ -36,7 +36,7 @@ public class SortedListModel<E extends Comparable<? super E>> extends AbstractLi
 
     private static final long serialVersionUID = -5321417365496715895L;
 
-    final private List<E> list = new ArrayList<E>();
+    final private List<E> list = new ArrayList<>();
 
     public SortedListModel() {
     }
@@ -170,7 +170,7 @@ public class SortedListModel<E extends Comparable<? super E>> extends AbstractLi
      * @return copy of the internal list
      */
     public List<E> asList() {
-        return new ArrayList<E>(list);
+        return new ArrayList<>(list);
     }
 
     /**

@@ -76,7 +76,7 @@ public class InvestmentTransactionPanel extends JPanel implements MessageListene
 
     private JPanel cardPanel;
 
-    private JComboBox actionCombo;
+    private JComboBox<String> actionCombo;
 
     private AbstractEntryFormPanel[] cards = new AbstractEntryFormPanel[0];
 
@@ -114,7 +114,7 @@ public class InvestmentTransactionPanel extends JPanel implements MessageListene
     }
 
     private void initComponents() {
-        actionCombo = new JComboBox(new DefaultComboBoxModel(actions));
+        actionCombo = new JComboBox<>(new DefaultComboBoxModel<>(actions));
 
         cardPanel = new JPanel();
         cardPanel.setLayout(new CardLayout());

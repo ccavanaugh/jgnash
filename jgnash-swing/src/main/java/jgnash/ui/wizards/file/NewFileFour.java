@@ -179,7 +179,7 @@ public class NewFileFour extends JPanel implements WizardPage {
 
     @Override
     public void putSettings(final Map<Enum<?>, Object> map) {
-        List<RootAccount> accounts = new ArrayList<RootAccount>();              
+        List<RootAccount> accounts = new ArrayList<>();              
 
         for (Object o : accountList.getSelectedValuesList()) {
             accounts.add((RootAccount) o);
@@ -189,7 +189,7 @@ public class NewFileFour extends JPanel implements WizardPage {
     }
 
     private static Collection<RootAccount> getLocalizedAccountSet() {
-        List<RootAccount> files = new ArrayList<RootAccount>();
+        List<RootAccount> files = new ArrayList<>();
 
         for (String string : getAccountSetList()) {
             InputStream stream = Object.class.getResourceAsStream(string);
@@ -206,7 +206,7 @@ public class NewFileFour extends JPanel implements WizardPage {
     private static List<String> getAccountSetList() {
         String path = ClassPathUtils.getLocalizedPath(ROOTPATH);
 
-        List<String> set = new ArrayList<String>();
+        List<String> set = new ArrayList<>();
 
         if (path != null) {
 

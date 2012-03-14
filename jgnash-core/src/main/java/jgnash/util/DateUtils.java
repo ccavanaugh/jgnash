@@ -321,7 +321,7 @@ public class DateUtils {
      * @return The array of dates
      */
     public static Date[] getFirstDayBiWeekly(final int year) {
-        List<Date> dates = new ArrayList<Date>();
+        List<Date> dates = new ArrayList<>();
 
         Date[] allWeeks = getFirstDayWeekly(year);
 
@@ -430,7 +430,7 @@ public class DateUtils {
         GregorianCalendar testCal = calendarPool.take();
 
         try {
-            List<Date> dates = new ArrayList<Date>();
+            List<Date> dates = new ArrayList<>();
 
             // level the date
             cal.setTime(trimDate(cal.getTime()));
@@ -470,7 +470,7 @@ public class DateUtils {
         GregorianCalendar cal = calendarPool.take();
 
         try {
-            List<Date> dates = new ArrayList<Date>();
+            List<Date> dates = new ArrayList<>();
 
             cal.setTime(trimDate(cal.getTime()));
             cal.set(Calendar.YEAR, year);
@@ -541,7 +541,7 @@ public class DateUtils {
      * @return The array of dates
      */
     public static List<Date> getLastDayOfTheMonths(final Date startDate, final Date endDate) {
-        ArrayList<Date> list = new ArrayList<Date>();
+        ArrayList<Date> list = new ArrayList<>();
 
         Date end = DateUtils.getLastDayOfTheMonth(endDate);
         Date t = DateUtils.getLastDayOfTheMonth(startDate);

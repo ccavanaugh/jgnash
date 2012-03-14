@@ -28,7 +28,7 @@ import javax.swing.JComboBox;
  * @author Craig Cavanaugh
  * @version $Id: FontComboBox.java 3051 2012-01-02 11:27:23Z ccavanaugh $
  */
-public final class FontComboBox extends JComboBox {
+public final class FontComboBox extends JComboBox<String> {
 
     public FontComboBox(final String font) {
         super(getFonts());

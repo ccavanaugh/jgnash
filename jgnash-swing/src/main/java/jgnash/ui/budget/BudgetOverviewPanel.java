@@ -196,9 +196,9 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
             @Override
             public void run() {
 
-                final List<AccountGroup> groups = new ArrayList<AccountGroup>(budgetPanel.getAccountGroups());
+                final List<AccountGroup> groups = new ArrayList<>(budgetPanel.getAccountGroups());
 
-                final List<Icon> icons = new ArrayList<Icon>();
+                final List<Icon> icons = new ArrayList<>();
 
                 for (AccountGroup group : groups) {
                     icons.add(budgetPanel.getSparkLineIcon(group));

@@ -76,7 +76,7 @@ public class Db4oBudgetDAO extends AbstractDb4oDAO implements BudgetDAO {
     @Override
     public List<Budget> getBudgets() {
         List<Budget> list = Collections.emptyList();
-        List<Budget> resultList = new ArrayList<Budget>();
+        List<Budget> resultList = new ArrayList<>();
 
         if (container.ext().setSemaphore(GLOBAL_SEMAPHORE, SEMAPHORE_WAIT_TIME)) {
             list = container.query(Budget.class);

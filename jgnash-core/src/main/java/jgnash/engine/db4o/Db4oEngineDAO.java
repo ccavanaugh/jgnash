@@ -160,7 +160,7 @@ public class Db4oEngineDAO extends AbstractDb4oDAO implements EngineDAO {
 
     @Override
     public List<StoredObject> getStoredObjects() {
-        ArrayList<StoredObject> list = new ArrayList<StoredObject>();
+        ArrayList<StoredObject> list = new ArrayList<>();
 
         if (container.ext().setSemaphore(GLOBAL_SEMAPHORE, SEMAPHORE_WAIT_TIME)) {
             ObjectSet<StoredObject> set = container.query(StoredObject.class);

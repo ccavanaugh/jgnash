@@ -55,7 +55,7 @@ public class MonthTab extends JPanel implements RecurringTab, ActionListener {
 
     private DatePanel endDateField;
 
-    private JComboBox typeComboBox;
+    private JComboBox<String> typeComboBox;
 
     private final Resource rb = Resource.get();
 
@@ -92,9 +92,9 @@ public class MonthTab extends JPanel implements RecurringTab, ActionListener {
         group.add(endButton);
 
         numberSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 24, 1));
-        typeComboBox = new JComboBox();
+        typeComboBox = new JComboBox<>();
 
-        typeComboBox.setModel(new DefaultComboBoxModel(new String[]{rb.getString("Column.Date"), rb.getString("Column.Day")}));
+        typeComboBox.setModel(new DefaultComboBoxModel<>(new String[]{rb.getString("Column.Date"), rb.getString("Column.Day")}));
 
         add(new JLabel(rb.getString("Label.Every")), cc.xy(1, 1));
         add(numberSpinner, cc.xywh(3, 1, 3, 1));

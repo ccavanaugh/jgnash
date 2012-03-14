@@ -39,7 +39,7 @@ public class MessageProxy {
     /**
      * Message Listeners
      */
-    private final List<WeakReference<MessageListener>> messageListeners = new ArrayList<WeakReference<MessageListener>>();
+    private final List<WeakReference<MessageListener>> messageListeners = new ArrayList<>();
 
     /**
      * Concurrency lock
@@ -61,7 +61,7 @@ public class MessageProxy {
         lock.lock();
 
         try {
-            messageListeners.add(new WeakReference<MessageListener>(messageListener));
+            messageListeners.add(new WeakReference<>(messageListener));
         } finally {
             lock.unlock();
         }

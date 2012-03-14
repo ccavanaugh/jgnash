@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -58,8 +59,6 @@ import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.JTableUtils;
 import jgnash.util.Resource;
 
-import org.jdesktop.swingx.combobox.EnumComboBoxModel;
-
 /**
  * A Dialog to manage a BudgetGoal
  * 
@@ -78,7 +77,7 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
     private final Resource rb = Resource.get();
 
-    private JComboBox budgetPeriodCombo;
+    private JComboBox<BudgetPeriod> budgetPeriodCombo;
 
     private BudgetGoal budgetGoal;
 
@@ -125,8 +124,8 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
         layoutMainPanel();
     }
-
-    private void layoutMainPanel() {
+ 
+	private void layoutMainPanel() {
         FormLayout layout = new FormLayout("right:d, $lcgap, fill:p:g", "f:p, $rgap, d, $ugap, f:p:g, $ugap, f:p");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
         builder.setDefaultDialogBorder();
@@ -134,8 +133,8 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
         cancelButton = new JButton(rb.getString("Button.Cancel"));
         okButton = new JButton(rb.getString("Button.Ok"));
 
-        budgetPeriodCombo = new JComboBox();
-        budgetPeriodCombo.setModel(new EnumComboBoxModel<BudgetPeriod>(BudgetPeriod.class));
+        budgetPeriodCombo = new JComboBox<>();            
+        budgetPeriodCombo.setModel(new DefaultComboBoxModel<>(BudgetPeriod.values()));        
         budgetPeriodCombo.setSelectedItem(getBudgetGoal().getBudgetPeriod());
 
         builder.append(new JLabel(rb.getString("Label.Period")), budgetPeriodCombo);

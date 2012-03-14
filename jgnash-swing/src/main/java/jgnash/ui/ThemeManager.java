@@ -59,7 +59,7 @@ public class ThemeManager {
 
 	private JMenu themesMenu = null;
 
-	private final ArrayList<Object> themeList = new ArrayList<Object>();
+	private final ArrayList<Object> themeList = new ArrayList<>();
 
 	private ButtonGroup lfButtonGroup = new ButtonGroup();
 
@@ -208,7 +208,7 @@ public class ThemeManager {
 
 		lfMenu.add(buildSubstanceMenu());
 
-		List<String> lookAndFeels = new ArrayList<String>();
+		List<String> lookAndFeels = new ArrayList<>();
 
 		for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 			if (isLookAndFeelAvailable(info.getClassName())) {

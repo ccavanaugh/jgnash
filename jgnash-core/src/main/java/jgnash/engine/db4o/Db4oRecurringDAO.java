@@ -55,7 +55,7 @@ class Db4oRecurringDAO extends AbstractDb4oDAO implements RecurringDAO {
             List<Reminder> list = container.query(Reminder.class);
 
             if (list != null) {
-                list = new ArrayList<Reminder>(list);
+                list = new ArrayList<>(list);
 
                 Iterator<Reminder> i = list.iterator();
 

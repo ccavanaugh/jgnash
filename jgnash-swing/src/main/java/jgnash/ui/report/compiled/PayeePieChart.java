@@ -85,7 +85,7 @@ public class PayeePieChart {
 
     private JCheckBox useFilters;
 
-    private JComboBox filterCombo;
+    private JComboBox<String> filterCombo;
 
     private List<String> filterList;
 
@@ -138,14 +138,14 @@ public class PayeePieChart {
         JButton deleteFilterButton = new JButton(rb.getString("Button.DeleteFilter"));
         JButton clearPrefButton = new JButton(rb.getString("Button.MasterDelete"));
 
-        filterCombo = new JComboBox();
+        filterCombo = new JComboBox<>();
 
         startField = new DatePanel();
         endField = new DatePanel();
 
         txtAddFilter = new TextField();
 
-        filterList = new ArrayList<String>();
+        filterList = new ArrayList<>();
         filtersChanged = false;
         useFilters = new JCheckBox(rb.getString("Label.UseFilters"));
         useFilters.setSelected(true);
@@ -403,7 +403,7 @@ public class PayeePieChart {
         DefaultPieDataset returnValue = new DefaultPieDataset();
         if (a != null) {
             //System.out.print("Account = "); System.out.println(a);
-            Map<String, BigDecimal> names = new HashMap<String, BigDecimal>();
+            Map<String, BigDecimal> names = new HashMap<>();
 
             List<TranTuple> list = getTransactions(a, new ArrayList<TranTuple>(), startField.getDate(), endField.getDate());
 

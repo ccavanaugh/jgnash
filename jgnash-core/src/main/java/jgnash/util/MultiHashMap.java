@@ -58,7 +58,7 @@ public class MultiHashMap<K, V> extends HashMap<K, Object> {
                     l.add(value);
                     return l.get(l.size() - 2);
                 }
-                ArrayList<Object> l = new ArrayList<Object>();
+                ArrayList<Object> l = new ArrayList<>();
                 l.add(val);
                 l.add(value);
                 super.put(key, l);

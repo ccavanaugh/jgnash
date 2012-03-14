@@ -87,7 +87,7 @@ public class TransactionFactory {
         assert account != null && investmentAccount != null && node != null && price != null && quantity != null;
         assert exchangeRate != null && fee != null && date != null && memo != null;
 
-        List<TransactionEntry> fees = new ArrayList<TransactionEntry>();
+        List<TransactionEntry> fees = new ArrayList<>();
 
         // fees are charged against cash balance of the investment account
         if (fee.compareTo(BigDecimal.ZERO) > 0) {
@@ -534,7 +534,7 @@ public class TransactionFactory {
         assert account != null && investmentAccount != null && node != null && price != null && quantity != null;
         assert exchange != null && fee != null && date != null && memo != null;
 
-        List<TransactionEntry> fees = new ArrayList<TransactionEntry>();
+        List<TransactionEntry> fees = new ArrayList<>();
 
         // fees are charged against cash balance of the investment account
         if (fee.compareTo(BigDecimal.ZERO) > 0) {

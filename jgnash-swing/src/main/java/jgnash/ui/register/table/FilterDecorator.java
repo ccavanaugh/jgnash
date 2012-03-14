@@ -61,7 +61,7 @@ public class FilterDecorator implements FilterModel {
         this.model = model;
         filter = "*";
         pm = new PayeeMatcher(filter, false);
-        matchedPayee = new ArrayList<Integer>();
+        matchedPayee = new ArrayList<>();
         updateMatches();
     }
 

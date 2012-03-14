@@ -53,7 +53,7 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     /**
      * Account goals are stored internally by the account UUID.
      */
-    private Map<String, BudgetGoal> accountGoals = new HashMap<String, BudgetGoal>();
+    private Map<String, BudgetGoal> accountGoals = new HashMap<>();
 
     private boolean assetAccountsIncluded = false;
 
@@ -208,7 +208,7 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
         budget.setDescription(getDescription());
         budget.setName(getName() + "(" + Resource.get().getString("Word.Copy") + ")");
 
-        budget.accountGoals = new HashMap<String, BudgetGoal>();
+        budget.accountGoals = new HashMap<>();
 
         for (String key : accountGoals.keySet()) {
             budget.accountGoals.put(key, (BudgetGoal) accountGoals.get(key).clone());
@@ -293,6 +293,5 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
      */
     public void setLiabilityAccountsIncluded(final boolean liabilityAccountsIncluded) {
         this.liabilityAccountsIncluded = liabilityAccountsIncluded;
-    }
-
+    }       
 }

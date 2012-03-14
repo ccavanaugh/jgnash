@@ -47,7 +47,7 @@ public class Message implements Serializable, Cloneable {
 
     private String message = "";
 
-    transient private EnumMap<MessageProperty, StoredObject> properties = new EnumMap<MessageProperty, StoredObject>(MessageProperty.class);
+    transient private EnumMap<MessageProperty, StoredObject> properties = new EnumMap<>(MessageProperty.class);
 
     /**
      * Used to flag message sent remotely
@@ -168,7 +168,7 @@ public class Message implements Serializable, Cloneable {
 
         message = s.readUTF();
 
-        properties = new EnumMap<MessageProperty, StoredObject>(MessageProperty.class);
+        properties = new EnumMap<>(MessageProperty.class);
 
         int size = s.readInt();
 

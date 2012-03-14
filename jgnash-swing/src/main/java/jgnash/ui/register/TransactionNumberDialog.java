@@ -186,7 +186,7 @@ public class TransactionNumberDialog extends JDialog implements ActionListener {
     private void okAction() {
         final ListModel<String> listModel = list.getModel();
         final int size = listModel.getSize();
-        final List<String> items = new ArrayList<String>();
+        final List<String> items = new ArrayList<>();
 
         for (int i = 0; i < size; i++) {
             items.add(listModel.getElementAt(i).toString());

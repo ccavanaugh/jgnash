@@ -29,11 +29,11 @@ import jgnash.engine.QuoteSource;
  *
  *         $Id$
  */
-public class QuoteSourceComboBox extends JComboBox {
+public class QuoteSourceComboBox extends JComboBox<QuoteSource> {
 
     public QuoteSourceComboBox() {
         super();
-        setModel(new DefaultComboBoxModel(QuoteSource.values()));
+        setModel(new DefaultComboBoxModel<>(QuoteSource.values()));
     }
 
     @Override

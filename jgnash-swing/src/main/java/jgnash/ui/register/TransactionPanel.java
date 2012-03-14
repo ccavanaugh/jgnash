@@ -284,7 +284,7 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
             if (canModifyTransaction(t)) { // split as the same base account
                 //  clone the splits for modification
 
-                splits = new ArrayList<TransactionEntry>();
+                splits = new ArrayList<>();
                 for (TransactionEntry entry : t.getTransactionEntries()) {
                     try {
                         splits.add((TransactionEntry) entry.clone());

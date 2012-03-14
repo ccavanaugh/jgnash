@@ -188,7 +188,7 @@ public class InvestmentAccountProxy extends AccountProxy {
         l.lock();
 
         try {
-            final HashMap<SecurityNode, BigDecimal> priceMap = new HashMap<SecurityNode, BigDecimal>();
+            final HashMap<SecurityNode, BigDecimal> priceMap = new HashMap<>();
 
             // build lookup map for market prices
             for (SecurityNode node : account.securities) {
@@ -225,7 +225,7 @@ public class InvestmentAccountProxy extends AccountProxy {
         l.lock();
 
         try {
-            final HashMap<SecurityNode, BigDecimal> priceMap = new HashMap<SecurityNode, BigDecimal>();
+            final HashMap<SecurityNode, BigDecimal> priceMap = new HashMap<>();
 
             Date today = new Date();
 
@@ -255,7 +255,7 @@ public class InvestmentAccountProxy extends AccountProxy {
         l.lock();
 
         try {
-            final HashMap<SecurityNode, BigDecimal> priceMap = new HashMap<SecurityNode, BigDecimal>();
+            final HashMap<SecurityNode, BigDecimal> priceMap = new HashMap<>();
 
             // build lookup map for market prices
             for (SecurityNode node : account.securities) {

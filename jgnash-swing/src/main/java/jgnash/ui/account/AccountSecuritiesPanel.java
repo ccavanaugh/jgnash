@@ -57,9 +57,9 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
 
     private JButton removeButton;
 
-    private JList availJList;
+    private JList<SecurityElement> availJList;
 
-    private JList selectedJList;
+    private JList<SecurityElement> selectedJList;
 
     private SortedListModel<SecurityElement> availModel;
 
@@ -79,8 +79,8 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
 
         removeButton = new JButton(rb.getString("Button.Remove"), Resource.getIcon("/jgnash/resource/list-remove.png"));
 
-        availJList = new JList();
-        selectedJList = new JList();
+        availJList = new JList<>();
+        selectedJList = new JList<>();
 
         selectedJList.setCellRenderer(new SecurityRenderer(selectedJList.getCellRenderer()));
 
@@ -133,7 +133,7 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
 
     public void setSecuritiesList(final Set<SecurityNode> list) {
 
-        selectedModel = new SortedListModel<SecurityElement>();
+        selectedModel = new SortedListModel<>();
 
         if (account != null) {
             Set<SecurityNode> used = account.getUsedSecurities();
@@ -157,7 +157,7 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
 
     public Set<SecurityNode> getSecuritiesList() {
 
-        TreeSet<SecurityNode> set = new TreeSet<SecurityNode>();
+        TreeSet<SecurityNode> set = new TreeSet<>();
 
         for (SecurityElement e : selectedModel.asList()) {
             set.add(e.getNode());
@@ -168,13 +168,13 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
 
     private void buildAvailableList() {
 
-        List<SecurityElement> list = new ArrayList<SecurityElement>();
+        List<SecurityElement> list = new ArrayList<>();
 
         for (SecurityNode node : engine.getSecurities()) {
             list.add(new SecurityElement(node, true));
         }
 
-        ArrayList<SecurityElement> tList = new ArrayList<SecurityElement>();
+        ArrayList<SecurityElement> tList = new ArrayList<>();
 
         for (SecurityElement node : list) {
             if (!selectedModel.contains(node)) {
@@ -182,7 +182,7 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
             }
         }
 
-        availModel = new SortedListModel<SecurityElement>(tList);
+        availModel = new SortedListModel<>(tList);
         availJList.setModel(availModel);
     }
 
@@ -242,16 +242,16 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
         }
     }
 
-    private static final class SecurityRenderer implements ListCellRenderer {
+    private static final class SecurityRenderer implements ListCellRenderer<SecurityElement> {
 
-        private ListCellRenderer delegate;
+        private ListCellRenderer<? super SecurityElement> delegate;
 
-        public SecurityRenderer(final ListCellRenderer delegate) {
+        public SecurityRenderer(final ListCellRenderer<? super SecurityElement> delegate) {
             this.delegate = delegate;
         }
 
         @Override
-        public Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean hasFocus) {
+        public Component getListCellRendererComponent(final JList<? extends SecurityElement> list, final SecurityElement value, final int index, final boolean isSelected, final boolean hasFocus) {
             boolean enabled = ((SecurityElement) value).isEnabled();
 
             Component c = delegate.getListCellRendererComponent(list, value, index, isSelected, hasFocus);

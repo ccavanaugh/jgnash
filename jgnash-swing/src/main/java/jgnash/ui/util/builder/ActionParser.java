@@ -119,20 +119,20 @@ public final class ActionParser extends DefaultHandler {
     /**
      * A list of all defined ActionAttributes
      */
-    private final ArrayList<ActionAttributes> actionList = new ArrayList<ActionAttributes>();
+    private final ArrayList<ActionAttributes> actionList = new ArrayList<>();
 
-    private final HashMap<String, ActionNode> actionTrees = new HashMap<String, ActionNode>();
+    private final HashMap<String, ActionNode> actionTrees = new HashMap<>();
 
-    private final HashMap<String, Action> actionMap = new HashMap<String, Action>();
+    private final HashMap<String, Action> actionMap = new HashMap<>();
 
     /**
      * A map of all generated JMenuItems
      */
-    private final HashMap<String, JMenuItem> menuItemMap = new HashMap<String, JMenuItem>();
+    private final HashMap<String, JMenuItem> menuItemMap = new HashMap<>();
 
     private ActionNode currentNode = null;
 
-    private final HashMap<String, ButtonGroup> buttonGroups = new HashMap<String, ButtonGroup>();
+    private final HashMap<String, ButtonGroup> buttonGroups = new HashMap<>();
 
     /**
      * Object to invoke methods on
@@ -481,7 +481,7 @@ public final class ActionParser extends DefaultHandler {
 
         public void addChild(final ActionNode child) {
             if (children == null) {
-                children = new ArrayList<ActionNode>();
+                children = new ArrayList<>();
             }
             child.parent = this;
             children.add(child);
@@ -534,7 +534,7 @@ public final class ActionParser extends DefaultHandler {
 
         Enumeration<URL> resources = classLoader.getResources(path);
 
-        List<File> dirs = new ArrayList<File>();
+        List<File> dirs = new ArrayList<>();
 
         while (resources.hasMoreElements()) {
             URL resource = resources.nextElement();
@@ -543,7 +543,7 @@ public final class ActionParser extends DefaultHandler {
             String fileNameDecoded = URLDecoder.decode(fileName, "UTF-8");
             dirs.add(new File(fileNameDecoded));
         }
-        ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
+        ArrayList<Class<?>> classes = new ArrayList<>();
 
         for (File directory : dirs) {
             classes.addAll(findActionClasses(directory, packageName));
@@ -562,7 +562,7 @@ public final class ActionParser extends DefaultHandler {
      */
     private static List<Class<?>> findActionClasses(final File directory, final String packageName) throws ClassNotFoundException {
 
-        List<Class<?>> classes = new ArrayList<Class<?>>();
+        List<Class<?>> classes = new ArrayList<>();
 
         if (directory.getPath().contains(".jar!")) { // loading from the jar distribution
             try {

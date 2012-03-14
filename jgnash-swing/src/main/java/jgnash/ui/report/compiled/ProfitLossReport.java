@@ -32,7 +32,7 @@ public class ProfitLossReport extends AbstractCrosstabReport {
 
     @Override
     protected List<AccountGroup> getAccountGroups() {
-        List<AccountGroup> groups = new ArrayList<AccountGroup>();
+        List<AccountGroup> groups = new ArrayList<>();
 
         groups.add(AccountGroup.INCOME);
         groups.add(AccountGroup.EXPENSE);

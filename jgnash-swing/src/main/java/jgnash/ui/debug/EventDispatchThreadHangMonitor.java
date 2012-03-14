@@ -83,7 +83,7 @@ public final class EventDispatchThreadHangMonitor extends EventQueue {
 
     // The currently outstanding event dispatches. The implementation of
     // modal dialogs is a common cause for multiple outstanding dispatches.
-    private final LinkedList<DispatchInfo> dispatches = new LinkedList<DispatchInfo>();
+    private final LinkedList<DispatchInfo> dispatches = new LinkedList<>();
 
     private final static boolean DEBUG = false;
 

@@ -54,7 +54,7 @@ public class PartialOne extends JPanel implements WizardPage, ActionListener {
 
     private JTextPane helpPane;
 
-    private JComboBox dateFormatCombo;
+    private JComboBox<String> dateFormatCombo;
 
     private QifAccount qAcc;
 
@@ -82,7 +82,7 @@ public class PartialOne extends JPanel implements WizardPage, ActionListener {
 
         /* Create the combo for date format selection */
         String[] formats = {QifUtils.US_FORMAT, QifUtils.EU_FORMAT};
-        dateFormatCombo = new JComboBox(formats);
+        dateFormatCombo = new JComboBox<>(formats);
 
         dateFormatCombo.addActionListener(this);
         dateFormatCombo.setSelectedIndex(pref.getInt(DATE_FORMAT, 0));

@@ -33,13 +33,13 @@ import javax.swing.MutableComboBoxModel;
  * @param <E> Model type
  */
 
-public class SortedComboBoxModel<E extends Comparable<? super E>> extends AbstractListModel implements MutableComboBoxModel {
+public class SortedComboBoxModel<E extends Comparable<? super E>> extends AbstractListModel<E> implements MutableComboBoxModel<E> {
 
     private static final long serialVersionUID = 4137642143757238233L;
 
     private Object selectedObject;
 
-    private List<E> list = new ArrayList<E>();
+    private List<E> list = new ArrayList<>();
 
     public SortedComboBoxModel() {
     }
@@ -50,7 +50,7 @@ public class SortedComboBoxModel<E extends Comparable<? super E>> extends Abstra
      * @param items an array of Object objects
      */
     public SortedComboBoxModel(final Collection<E> items) {
-        list = new ArrayList<E>(items);
+        list = new ArrayList<>(items);
         Collections.sort(list);
 
         if (getSize() > 0) {
@@ -97,7 +97,7 @@ public class SortedComboBoxModel<E extends Comparable<? super E>> extends Abstra
 
     // implements javax.swing.ListModel
     @Override
-    public final Object getElementAt(final int index) {
+    public final E getElementAt(final int index) {
         if (index >= 0 && index < list.size()) {
             return list.get(index);
         }
@@ -179,9 +179,8 @@ public class SortedComboBoxModel<E extends Comparable<? super E>> extends Abstra
         }
     }
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public void addElement(final Object obj) {
+    @Override   
+    public void addElement(final E obj) {
         int index = add((E) obj);
         fireIntervalAdded(this, index, index);
 
@@ -189,10 +188,9 @@ public class SortedComboBoxModel<E extends Comparable<? super E>> extends Abstra
             setSelectedItem(obj);
         }
     }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public void insertElementAt(final Object obj, final int index) {
+        
+    @Override    
+    public void insertElementAt(final E obj, final int index) {
         list.add((E) obj);
         Collections.sort(list);
 

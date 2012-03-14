@@ -95,22 +95,22 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
     private final String SORT_ORDER_BALANCE_DESC_WITH_PERCENTILE = rb.getString("SortOrder.AccountBalanceDescWithPercentile");
 
-    private JComboBox resolutionList;
+    private JComboBox<String> resolutionList;
 
-    private JComboBox sortOrderList;
+    private JComboBox<String> sortOrderList;
 
     private JCheckBox showLongNamesCheckBox;
 
-    private Map<Account, Double> percentileMap = new HashMap<Account, Double>();
+    private Map<Account, Double> percentileMap = new HashMap<>();
 
     /**
      * Report Data **
      */
-    private final ArrayList<Date> startDates = new ArrayList<Date>();
+    private final ArrayList<Date> startDates = new ArrayList<>();
 
-    private final ArrayList<Date> endDates = new ArrayList<Date>();
+    private final ArrayList<Date> endDates = new ArrayList<>();
 
-    private final ArrayList<String> dateLabels = new ArrayList<String>();
+    private final ArrayList<String> dateLabels = new ArrayList<>();
 
     private static final String HIDE_ZERO_BALANCE = "hideZeroBalance";
 
@@ -135,10 +135,10 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
         showLongNamesCheckBox = new JCheckBox(rb.getString("Button.UseLongNames"));
         showLongNamesCheckBox.setSelected(p.getBoolean(USE_LONG_NAMES, false));
 
-        resolutionList = new JComboBox(new String[]{RES_YEAR, RES_QUARTER, RES_MONTH});
+        resolutionList = new JComboBox<>(new String[]{RES_YEAR, RES_QUARTER, RES_MONTH});
         resolutionList.setSelectedIndex(1);
 
-        sortOrderList = new JComboBox(new String[]{SORT_ORDER_NAME, SORT_ORDER_BALANCE_DESC,
+        sortOrderList = new JComboBox<>(new String[]{SORT_ORDER_NAME, SORT_ORDER_BALANCE_DESC,
                 SORT_ORDER_BALANCE_DESC_WITH_PERCENTILE});
         sortOrderList.setSelectedIndex(0);
 
@@ -246,7 +246,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
         CurrencyNode baseCurrency = EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency();
 
-        List<Account> accounts = new ArrayList<Account>();
+        List<Account> accounts = new ArrayList<>();
 
         String sortOrder = sortOrderList.getSelectedItem().toString();
         boolean needPercentiles = SORT_ORDER_BALANCE_DESC_WITH_PERCENTILE.equals(sortOrder);
@@ -309,7 +309,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
         }
 
         // configure columns
-        List<ColumnInfo> columnsList = new LinkedList<AbstractCrosstabReport.ColumnInfo>();
+        List<ColumnInfo> columnsList = new LinkedList<>();
 
         // accounts column
         ColumnInfo ci = new AccountNameColumnInfo(accounts);

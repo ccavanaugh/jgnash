@@ -160,9 +160,9 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
 
     protected JButton helpButton;
 
-    protected JComboBox zoomComboBox;
+    protected JComboBox<String> zoomComboBox;
 
-    protected JComboBox fontSizeComboBox;
+    protected JComboBox<Integer> fontSizeComboBox;
 
     private JPanel scrollPanePanel;
 
@@ -172,7 +172,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
 
     private JPanel pageGluePanel;
 
-    private List<JRSaveContributor> saveContributors = new ArrayList<JRSaveContributor>();
+    private List<JRSaveContributor> saveContributors = new ArrayList<>();
 
     private DynamicJasperReport report;
 
@@ -234,17 +234,17 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
 
         zoomInButton = new JButton();
 
-        DefaultComboBoxModel zoomModel = new DefaultComboBoxModel();
+        DefaultComboBoxModel<String> zoomModel = new DefaultComboBoxModel<>();
         for (int z : ZOOM) {
             zoomModel.addElement(z + "%");
         }
-        zoomComboBox = new JComboBox(zoomModel);
+        zoomComboBox = new JComboBox<>(zoomModel);
 
-        DefaultComboBoxModel fontModel = new DefaultComboBoxModel();
+        DefaultComboBoxModel<Integer> fontModel = new DefaultComboBoxModel<>();
         for (int i = 0; i <= 10; i++) {
             fontModel.addElement(5 + i);
         }
-        fontSizeComboBox = new JComboBox(fontModel);
+        fontSizeComboBox = new JComboBox<>(fontModel);
         fontSizeComboBox.setToolTipText(Resource.get().getString("ToolTip.FontSize"));
         fontSizeComboBox.setSelectedItem(report.getBaseFontSize());
         fontSizeComboBox.addActionListener(this);

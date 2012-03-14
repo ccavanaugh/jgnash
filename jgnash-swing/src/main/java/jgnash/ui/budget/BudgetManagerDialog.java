@@ -149,7 +149,7 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
     }
 
     private void buildBudgetModel() {
-        final SortedListModel<BudgetObject> model = new SortedListModel<BudgetObject>();
+        final SortedListModel<BudgetObject> model = new SortedListModel<>();
 
         Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
 

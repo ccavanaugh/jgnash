@@ -72,11 +72,11 @@ public class Account extends StoredObject implements Comparable<Account>, Clonea
      */
     private CurrencyNode currencyNode;
 
-    private final List<Account> children = new ArrayList<Account>();
+    private final List<Account> children = new ArrayList<>();
 
-    final List<Transaction> transactions = new ArrayList<Transaction>();
+    final List<Transaction> transactions = new ArrayList<>();
 
-    List<SecurityNode> securities = new ArrayList<SecurityNode>();
+    List<SecurityNode> securities = new ArrayList<>();
 
     /**
      * Balance of the account
@@ -98,7 +98,7 @@ public class Account extends StoredObject implements Comparable<Account>, Clonea
      */
     private String bankId;
 
-    private final Map<String, Object> propertyMap = new HashMap<String, Object>();
+    private final Map<String, Object> propertyMap = new HashMap<>();
 
     private transient ReadWriteLock transactionLock;
 
@@ -350,7 +350,7 @@ public class Account extends StoredObject implements Comparable<Account>, Clonea
         l.lock();
 
         try {
-            return new ArrayList<Transaction>(transactions);
+            return new ArrayList<>(transactions);
         } finally {
             l.unlock();
         }
@@ -517,7 +517,7 @@ public class Account extends StoredObject implements Comparable<Account>, Clonea
 
         try {
             // return account defensive copy
-            return new ArrayList<Account>(children);
+            return new ArrayList<>(children);
         } finally {
             l.unlock();
         }
@@ -937,7 +937,7 @@ public class Account extends StoredObject implements Comparable<Account>, Clonea
      * <code>List</code> of accounts
      */
     public List<Account> getAncestors() {
-        List<Account> list = new ArrayList<Account>();
+        List<Account> list = new ArrayList<>();
         list.add(this);
 
         Account parent = getParent();
@@ -1031,7 +1031,7 @@ public class Account extends StoredObject implements Comparable<Account>, Clonea
         l.lock();
 
         try {
-            final ArrayList<Transaction> list = new ArrayList<Transaction>();
+            final ArrayList<Transaction> list = new ArrayList<>();
 
             for (Transaction transaction : transactions) {
                 if (DateUtils.after(transaction.getDate(), startDate, true) && DateUtils.before(transaction.getDate(), endDate, true)) {
@@ -1262,7 +1262,7 @@ public class Account extends StoredObject implements Comparable<Account>, Clonea
     }
 
     public Set<SecurityNode> getSecurities() {
-        Set<SecurityNode> set = new TreeSet<SecurityNode>();
+        Set<SecurityNode> set = new TreeSet<>();
 
         for (SecurityNode node : securities) {
             set.add(node);
@@ -1277,7 +1277,7 @@ public class Account extends StoredObject implements Comparable<Account>, Clonea
      * @return a set of used SecurityNodes
      */
     public Set<SecurityNode> getUsedSecurities() {
-        Set<SecurityNode> set = new TreeSet<SecurityNode>();
+        Set<SecurityNode> set = new TreeSet<>();
 
         Lock l = transactionLock.readLock();
         l.lock();
@@ -1382,7 +1382,7 @@ public class Account extends StoredObject implements Comparable<Account>, Clonea
     @Override
     public Object clone() throws CloneNotSupportedException {
         Account a = (Account) super.clone();
-        a.securities = new ArrayList<SecurityNode>(securities);
+        a.securities = new ArrayList<>(securities);
         a.children.clear();
         a.transactions.clear();
 

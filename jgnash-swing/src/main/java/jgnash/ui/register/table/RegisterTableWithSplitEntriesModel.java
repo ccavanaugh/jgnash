@@ -156,7 +156,7 @@ public class RegisterTableWithSplitEntriesModel extends RegisterTableModel {
      */
     private void updateData(final int startIndex) {
         if (data == null) {
-            data = new ArrayList<TransactionWrapper>(0);
+            data = new ArrayList<>(0);
         }
         while (data.size() > startIndex) {
             data.remove(startIndex);

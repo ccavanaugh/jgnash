@@ -27,6 +27,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -42,8 +43,6 @@ import jgnash.ui.UIApplication;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
 
-import org.jdesktop.swingx.combobox.EnumComboBoxModel;
-
 /**
  * Dialog for displaying and changing a budget's properties
  *
@@ -56,7 +55,7 @@ public final class BudgetPropertiesDialog extends JDialog implements ActionListe
 
     private final Resource rb = Resource.get();
 
-    private JComboBox budgetPeriodCombo;
+    private JComboBox<BudgetPeriod> budgetPeriodCombo;
 
     private JButton okButton;
 
@@ -97,8 +96,8 @@ public final class BudgetPropertiesDialog extends JDialog implements ActionListe
     }
 
     private void initComponents() {
-        budgetPeriodCombo = new JComboBox();
-        budgetPeriodCombo.setModel(new EnumComboBoxModel<BudgetPeriod>(BudgetPeriod.class));
+        budgetPeriodCombo = new JComboBox<>();       
+        budgetPeriodCombo.setModel(new DefaultComboBoxModel<>(BudgetPeriod.values()));
 
         descriptionField = new JTextField();
 

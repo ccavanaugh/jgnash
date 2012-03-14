@@ -134,7 +134,7 @@ public class OfxV1ToV2 {
             return null;
         }
 
-        List<String> strings = new ArrayList<String>();
+        List<String> strings = new ArrayList<>();
 
         BufferedReader reader = null;
 

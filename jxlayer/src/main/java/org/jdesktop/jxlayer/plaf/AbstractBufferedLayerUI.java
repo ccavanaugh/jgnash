@@ -180,7 +180,7 @@ public class AbstractBufferedLayerUI<V extends JComponent>
      * @see #getBuffer()
      */
     protected void setBuffer(BufferedImage buffer) {
-        cachedBuffer = new SoftReference<BufferedImage>(buffer);
+        cachedBuffer = new SoftReference<>(buffer);
     }
 
     /**

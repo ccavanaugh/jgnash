@@ -37,7 +37,7 @@ public class FontUtilities {
     /**
      * Allow the <code>FontRenderContext</code> to be garbage collected as needed
      */
-    private static Reference<FontRenderContext> contextReference = new SoftReference<FontRenderContext>(null);
+    private static Reference<FontRenderContext> contextReference = new SoftReference<>(null);
 
     private FontUtilities() {
     }
@@ -84,7 +84,7 @@ public class FontUtilities {
 
         if (context == null) {
             context = new FontRenderContext(null, true, true);
-            contextReference = new SoftReference<FontRenderContext>(context);
+            contextReference = new SoftReference<>(context);
         }
 
         return context;

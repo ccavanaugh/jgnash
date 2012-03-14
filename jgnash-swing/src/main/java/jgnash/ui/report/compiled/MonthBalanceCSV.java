@@ -68,9 +68,9 @@ public final class MonthBalanceCSV {
 
     private static final boolean SHOW_EMPTY_ACCOUNT = false;
 
-    private ArrayList<Account> accounts = new ArrayList<Account>();
+    private ArrayList<Account> accounts = new ArrayList<>();
 
-    private ArrayList<BigDecimal[]> balance = new ArrayList<BigDecimal[]>();
+    private ArrayList<BigDecimal[]> balance = new ArrayList<>();
 
     private SimpleDateFormat df = new SimpleDateFormat("MMMMM");
 
@@ -148,7 +148,7 @@ public final class MonthBalanceCSV {
 
     private static Date[] getLastDays(final Date start, final Date stop) {
 
-        ArrayList<Date> list = new ArrayList<Date>();
+        ArrayList<Date> list = new ArrayList<>();
 
         Date s = DateUtils.trimDate(start);
         Calendar c = Calendar.getInstance();

@@ -39,7 +39,7 @@ public class FontRegistry {
     /**
      * Maps the font file to the font name for embedding fonts in PDF files
      */
-    private final Map<String, String> registeredFontMap = new HashMap<String, String>();
+    private final Map<String, String> registeredFontMap = new HashMap<>();
 
     private static FontRegistry registry;
 

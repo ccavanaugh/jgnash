@@ -48,13 +48,13 @@ public final class QifParser {
 
     private boolean debug = false;
 
-    public ArrayList<QifCategory> categories = new ArrayList<QifCategory>();
+    public ArrayList<QifCategory> categories = new ArrayList<>();
 
-    private ArrayList<QifClassItem> classes = new ArrayList<QifClassItem>();
+    private ArrayList<QifClassItem> classes = new ArrayList<>();
 
-    public ArrayList<QifAccount> accountList = new ArrayList<QifAccount>();
+    public ArrayList<QifAccount> accountList = new ArrayList<>();
 
-    private ArrayList<QifSecurity> securities = new ArrayList<QifSecurity>();
+    private ArrayList<QifSecurity> securities = new ArrayList<>();
 
     private static final Logger logger = Logger.getLogger(QifParser.class.getName());
 

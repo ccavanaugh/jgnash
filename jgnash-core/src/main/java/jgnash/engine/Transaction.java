@@ -74,7 +74,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     /**
      * Transaction entries
      */
-    List<TransactionEntry> transactionEntries = new ArrayList<TransactionEntry>();
+    List<TransactionEntry> transactionEntries = new ArrayList<>();
 
     /**
      * ReadWrite lock
@@ -99,7 +99,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * @see Account
      */
     public Set<Account> getAccounts() {
-        Set<Account> accounts = new TreeSet<Account>();
+        Set<Account> accounts = new TreeSet<>();
 
         Lock l = getLock().readLock();
         l.lock();
@@ -360,7 +360,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
         try {
             // protect against write through by creating a new ArrayList
-            list = new ArrayList<TransactionEntry>(transactionEntries);
+            list = new ArrayList<>(transactionEntries);
         } finally {
             l.unlock();
         }
@@ -375,7 +375,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * @return List<TransactionEntry> of entries with the given tag. An empty list will be returned if none are found
      */
     List<TransactionEntry> getTransactionEntriesByTag(TransactionTag tag) {
-        List<TransactionEntry> list = new ArrayList<TransactionEntry>();
+        List<TransactionEntry> list = new ArrayList<>();
 
         Lock l = getLock().readLock();
         l.lock();
@@ -523,7 +523,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
             tran = (Transaction) super.clone();
 
             // deep clone
-            tran.transactionEntries = new ArrayList<TransactionEntry>(); // deep clone
+            tran.transactionEntries = new ArrayList<>(); // deep clone
             tran.lock = new ReentrantReadWriteLock(true);
 
             for (TransactionEntry entry : transactionEntries) {

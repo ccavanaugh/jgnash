@@ -91,7 +91,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
     private BudgetOverviewPanel overviewPanel;
     private int budgetYear;
     private BudgetComboBox budgetCombo;
-    private List<BudgetPeriodPanel> panels = new ArrayList<BudgetPeriodPanel>();
+    private List<BudgetPeriodPanel> panels = new ArrayList<>();
     private JButton budgetManagerButton;
     private JButton budgetPropertiesButton;
     private JButton budgetExportButton;
@@ -526,7 +526,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
     private List<BudgetPeriodPanel> buildPeriodPanels() {
         final List<BudgetPeriodDescriptor> descriptors = BudgetPeriodDescriptorFactory.getDescriptors(budgetYear, activeBudget.getBudgetPeriod());
 
-        final List<BudgetPeriodPanel> newPanels = new ArrayList<BudgetPeriodPanel>();
+        final List<BudgetPeriodPanel> newPanels = new ArrayList<>();
 
         for (BudgetPeriodDescriptor descriptor : descriptors) {
             BudgetPeriodPanel panel = new BudgetPeriodPanel(new BudgetPeriodModel(descriptor, tableModel));
@@ -690,7 +690,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
     }
 
     Icon getSparkLineIcon(final AccountGroup group) {
-        List<BigDecimal> remaining = new ArrayList<BigDecimal>();
+        List<BigDecimal> remaining = new ArrayList<>();
 
         for (final BudgetPeriodDescriptor descriptor : resultsModel.getDescriptorList()) {
             remaining.add(resultsModel.getResults(descriptor, group).getRemaining());

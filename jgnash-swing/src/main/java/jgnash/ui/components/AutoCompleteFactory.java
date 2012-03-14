@@ -321,7 +321,7 @@ public class AutoCompleteFactory {
      */
     private static class PayeeModel extends TransactionModel {
 
-        MultiHashMap<String, Transaction> transactions = new MultiHashMap<String, Transaction>();
+        MultiHashMap<String, Transaction> transactions = new MultiHashMap<>();
 
         @Override
         void load(final Transaction tran) {

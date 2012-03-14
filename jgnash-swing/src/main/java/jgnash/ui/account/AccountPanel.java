@@ -58,7 +58,7 @@ final class AccountPanel extends JPanel implements ActionListener {
 
     private Account parentAccount;
 
-    private Set<SecurityNode> commodityList = new TreeSet<SecurityNode>();
+    private Set<SecurityNode> commodityList = new TreeSet<>();
 
     private CurrencyComboBox currencyCombo;
 
@@ -84,9 +84,9 @@ final class AccountPanel extends JPanel implements ActionListener {
 
     private JCheckBox excludeBudgetCheckBox;
 
-    private JComboBox accountTypeCombo;
+    private JComboBox<AccountType> accountTypeCombo;
 
-    private DefaultComboBoxModel accountTypeModel;
+    private DefaultComboBoxModel<AccountType> accountTypeModel;
 
     public AccountPanel() {
         Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
@@ -106,9 +106,10 @@ final class AccountPanel extends JPanel implements ActionListener {
         descriptionField.setText(rb.getString("Word.Description"));
         currencyCombo = new CurrencyComboBox();
         securityButton = new JButton(rb.getString("Word.None"));
-
-        accountTypeModel = new DefaultComboBoxModel(AccountType.getAccountTypeSet().toArray());
-        accountTypeCombo = new JComboBox(accountTypeModel);
+                               
+        accountTypeModel = new DefaultComboBoxModel<>(AccountType.values());
+        accountTypeModel.removeElement(AccountType.ROOT);
+        accountTypeCombo = new JComboBox<>(accountTypeModel);
 
         lockedCheckBox = new JCheckBox(rb.getString("Button.Locked"));
         placeholderCheckBox = new JCheckBox(rb.getString("Button.PlaceHolder"));

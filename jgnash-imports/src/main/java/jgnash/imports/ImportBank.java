@@ -27,7 +27,7 @@ import java.util.List;
  * @author Arnout Engelen
  */
 public class ImportBank {
-    private List<ImportTransaction> transactions = new ArrayList<ImportTransaction>();
+    private List<ImportTransaction> transactions = new ArrayList<>();
 
     public List<ImportTransaction> getTransactions() {
         return transactions;

@@ -51,9 +51,9 @@ public class MessageBusRemoteServer {
 
     private Logger logger;
 
-    private Set<IoSession> clientSessions = new HashSet<IoSession>();
+    private Set<IoSession> clientSessions = new HashSet<>();
 
-    private Set<LocalServerListener> listeners = new HashSet<LocalServerListener>();
+    private Set<LocalServerListener> listeners = new HashSet<>();
 
     private ReadWriteLock rwl = new ReentrantReadWriteLock(true);
 

@@ -22,6 +22,7 @@ import java.awt.EventQueue;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
@@ -93,7 +94,7 @@ public final class BudgetComboBox extends JComboBox<Budget> {
         super.setSelectedItem(budget);
     }
 
-    protected static final class BudgetModel extends SortedComboBoxModel<Budget> implements ComboBoxModel, MessageListener {
+    protected static final class BudgetModel extends SortedComboBoxModel<Budget> implements ComboBoxModel<Budget>, MessageListener {
 
         private static final long serialVersionUID = 1L;
 
@@ -138,7 +139,7 @@ public final class BudgetComboBox extends JComboBox<Budget> {
 
                             @Override
                             public void run() {
-                                addElement(event.getObject(MessageProperty.BUDGET));
+                                addElement((Budget) event.getObject(MessageProperty.BUDGET));
 
                                 if (getSize() == 1) {
                                     setSelectedItem(event.getObject(MessageProperty.BUDGET));
@@ -176,9 +177,9 @@ public final class BudgetComboBox extends JComboBox<Budget> {
      */
     private class Renderer implements ListCellRenderer<Budget> {
 
-        private ListCellRenderer delegate;
+        private ListCellRenderer<? super Budget> delegate;
 
-        public Renderer(final ListCellRenderer delegate) {
+        public Renderer(final ListCellRenderer<? super Budget> delegate) {
             this.delegate = delegate;
         }
 
@@ -186,7 +187,14 @@ public final class BudgetComboBox extends JComboBox<Budget> {
         public Component getListCellRendererComponent(final JList<? extends Budget> list, final Budget value, final int index, final boolean isSelected, final boolean cellHasFocus) {
             if (value != null) {
                 BudgetComboBox.this.setToolTipText(value.getDescription());
-                return delegate.getListCellRendererComponent(list, value.getName(), index, isSelected, cellHasFocus);
+                
+                Component c = delegate.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                
+                if (c instanceof JLabel) {
+                	((JLabel)c).setText(value.getName());
+                }
+                
+                return c;
             }
             return delegate.getListCellRendererComponent(list, null, index, isSelected, cellHasFocus);
         }

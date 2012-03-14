@@ -84,7 +84,7 @@ public class AbstractBufferedImageOpEffect extends AbstractLayerEffect {
                 subImage.getWidth() != width ||
                 subImage.getHeight() != height) {
             subImage = new BufferedImage(width, height, buffer.getType());
-            cachedSubImage = new SoftReference<BufferedImage>(subImage);
+            cachedSubImage = new SoftReference<>(subImage);
         }
 
         Graphics2D bufg = buffer.createGraphics();

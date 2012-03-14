@@ -30,7 +30,7 @@ import javax.print.attribute.PrintRequestAttributeSet;
  * @version $Id: CheckLayout.java 3051 2012-01-02 11:27:23Z ccavanaugh $
  */
 public class CheckLayout {
-    private List<CheckObject> checkObjects = new ArrayList<CheckObject>();
+    private List<CheckObject> checkObjects = new ArrayList<>();
 
     private PrintRequestAttributeSet printAttributes = new HashPrintRequestAttributeSet();
 

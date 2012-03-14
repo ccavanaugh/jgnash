@@ -70,7 +70,7 @@ public class SearchDefinition implements Serializable {
     }
 
     public Set<Transaction> matches(final Collection<Transaction> transactions) {
-        Set<Transaction> set = new HashSet<Transaction>();
+        Set<Transaction> set = new HashSet<>();
 
         for (Transaction t : transactions) {
             if (matches(t)) {

@@ -35,7 +35,7 @@ import jgnash.util.DateUtils;
  */
 public final class BudgetPeriodDescriptorFactory {
 
-    private static Map<String, List<BudgetPeriodDescriptor>> cache = new HashMap<String, List<BudgetPeriodDescriptor>>();
+    private static Map<String, List<BudgetPeriodDescriptor>> cache = new HashMap<>();
 
     private static ReadWriteLock rwl = new ReentrantReadWriteLock(false);
 
@@ -80,7 +80,7 @@ public final class BudgetPeriodDescriptorFactory {
                     break;
             }
 
-            descriptors = new ArrayList<BudgetPeriodDescriptor>(dates.length);
+            descriptors = new ArrayList<>(dates.length);
 
             for (Date date : dates) {
                 // Calendar day 1 is 1.  Must subtract 1 to get correct index

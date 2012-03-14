@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class DefaultAutoCompleteModel implements AutoCompleteModel {
 
-    private final List<String> list = new LinkedList<String>();
+    private final List<String> list = new LinkedList<>();
 
     private boolean ignoreCase;
 

@@ -121,7 +121,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
         CurrencyNode baseCurrency = EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency();
 
-        List<Account> accounts = new ArrayList<Account>();
+        List<Account> accounts = new ArrayList<>();
 
         for (AccountGroup group : getAccountGroups()) {
             accounts.addAll(getAccountList(AccountType.getAccountTypes(group)));
@@ -153,7 +153,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
     private List<Account> getAccountList(final Set<AccountType> types) {
         Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-        Set<Account> accountSet = new TreeSet<Account>();
+        Set<Account> accountSet = new TreeSet<>();
 
         for (Account a: engine.getAccountList()) {
             if (types.contains(a.getAccountType())) {
@@ -161,7 +161,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
             }
         }
 
-        return new ArrayList<Account>(accountSet);
+        return new ArrayList<>(accountSet);
     }
 
     /**

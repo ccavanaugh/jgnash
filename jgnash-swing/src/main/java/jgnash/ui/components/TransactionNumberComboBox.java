@@ -41,7 +41,7 @@ import jgnash.util.Resource;
  * @author Craig Cavanaugh
  * @version $Id: TransactionNumberComboBox.java 3051 2012-01-02 11:27:23Z ccavanaugh $
  */
-public class TransactionNumberComboBox extends JComboBox implements ActionListener {
+public class TransactionNumberComboBox extends JComboBox<String> implements ActionListener {
 
     private static final String[] defaultItems;
 
@@ -62,10 +62,10 @@ public class TransactionNumberComboBox extends JComboBox implements ActionListen
         super(defaultItems);
 
         final List<String> items = EngineFactory.getEngine(EngineFactory.DEFAULT).getTransactionNumberList();
-        final ComboBoxModel model = getModel();
+        final ComboBoxModel<String> model = getModel();
 
         for (String s : items) {
-            ((DefaultComboBoxModel) model).addElement(s);
+            ((DefaultComboBoxModel<String>) model).addElement(s);
         }
 
         account = a;

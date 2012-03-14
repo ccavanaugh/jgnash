@@ -67,7 +67,7 @@ public class DefaultLocaleAction extends AbstractAction {
             @Override
             public void done() {
                 try {
-                    JComboBox combo = new JComboBox(get());
+                    JComboBox<LocaleObject> combo = new JComboBox<>(get());
                     combo.setSelectedItem(new LocaleObject(Locale.getDefault()));
 
                     int result = JOptionPane.showOptionDialog(UIApplication.getFrame(), combo, rb.getString("Title.SelDefLocale"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[1]);

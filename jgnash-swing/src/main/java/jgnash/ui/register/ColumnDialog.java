@@ -111,8 +111,8 @@ class ColumnDialog extends JDialog implements ActionListener {
         // generate the Jlists
         String[] names = model.getColumnNames();
 
-        showModel = new SortedListModel<String>();
-        hideModel = new SortedListModel<String>();
+        showModel = new SortedListModel<>();
+        hideModel = new SortedListModel<>();
 
         for (int i = 0; i < names.length; i++) {
             if (model.isColumnVisible(i)) {

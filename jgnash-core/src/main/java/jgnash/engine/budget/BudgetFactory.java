@@ -53,7 +53,7 @@ public class BudgetFactory {
 
         Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-        List<Account> accounts = new ArrayList<Account>();
+        List<Account> accounts = new ArrayList<>();
         accounts.addAll(engine.getIncomeAccountList());
         accounts.addAll(engine.getExpenseAccountList());
 

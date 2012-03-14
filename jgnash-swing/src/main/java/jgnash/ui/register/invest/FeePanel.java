@@ -59,7 +59,7 @@ class FeePanel extends JPanel implements ActionListener {
 
     private Account account;
 
-    private List<TransactionEntry> feeList = new ArrayList<TransactionEntry>();
+    private List<TransactionEntry> feeList = new ArrayList<>();
 
     FeePanel(final Account account) {
         this.account = account;
@@ -146,7 +146,7 @@ class FeePanel extends JPanel implements ActionListener {
      * @param fees <code>List</code> of fees to clone
      */
     public void setTransactionEntries(final List<TransactionEntry> fees) {
-        feeList = new ArrayList<TransactionEntry>();
+        feeList = new ArrayList<>();
 
         if (fees.size() == 1) {
             TransactionEntry e = fees.get(0);
@@ -190,7 +190,7 @@ class FeePanel extends JPanel implements ActionListener {
      * Clear the form and remove all entries
      */
     void clearForm() {
-        feeList = new ArrayList<TransactionEntry>();
+        feeList = new ArrayList<>();
         feeField.setDecimal(null);
     }
 

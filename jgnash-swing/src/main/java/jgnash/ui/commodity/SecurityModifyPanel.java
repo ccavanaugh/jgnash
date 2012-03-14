@@ -99,7 +99,7 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
     }
 
     private void initComponents() {
-        securityList = new JList<SecurityNode>();
+        securityList = new JList<>();
         securityList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         symbolField = new JTextFieldEx();
@@ -172,7 +172,7 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
     }
 
     private void buildLists() {
-        model = new SortedListModel<SecurityNode>(engine.getSecurities());
+        model = new SortedListModel<>(engine.getSecurities());
         ListListener listener = new ListListener();
         securityList.setModel(model);
         securityList.addListSelectionListener(listener);

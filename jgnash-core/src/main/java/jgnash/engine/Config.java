@@ -44,7 +44,7 @@ public class Config extends StoredObject {
     /**
      * Contains a list a items to display in the transaction number combo
      */
-    private List<String> transactionNumberItems = new ArrayList<String>();
+    private List<String> transactionNumberItems = new ArrayList<>();
 
     protected void initialize() {
         Account.setAccountSeparator(getAccountSeparator());
@@ -87,7 +87,7 @@ public class Config extends StoredObject {
             transactionNumberItems.add(rb.getString("Item.EFT"));
             transactionNumberItems.add(rb.getString("Item.Trans"));
         }
-        return new ArrayList<String>(transactionNumberItems);
+        return new ArrayList<>(transactionNumberItems);
     }
 
 }

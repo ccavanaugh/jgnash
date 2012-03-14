@@ -392,7 +392,7 @@ public class AccountRowFooterPanel extends JPanel {
                     final Transaction transaction = (Transaction) message.getObject(MessageProperty.TRANSACTION);
 
                     // build a list of accounts include ancestors that will be impacted by the transaction changes
-                    final Set<Account> accounts = new HashSet<Account>();
+                    final Set<Account> accounts = new HashSet<>();
 
                     for (Account account : transaction.getAccounts()) {
                         accounts.addAll(account.getAncestors());

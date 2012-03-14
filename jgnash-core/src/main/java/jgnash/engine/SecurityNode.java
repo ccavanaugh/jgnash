@@ -56,7 +56,7 @@ public final class SecurityNode extends CommodityNode implements Cloneable {
      */
     private String isin;
 
-    private List<SecurityHistoryNode> historyNodes = new ArrayList<SecurityHistoryNode>();
+    private List<SecurityHistoryNode> historyNodes = new ArrayList<>();
 
     private transient ReadWriteLock lock;
 
@@ -211,7 +211,7 @@ public final class SecurityNode extends CommodityNode implements Cloneable {
      * @return Returns a shallow copy of the history nodes to protect against modification
      */
     public List<SecurityHistoryNode> getHistoryNodes() {
-        return new ArrayList<SecurityHistoryNode>(historyNodes);
+        return new ArrayList<>(historyNodes);
     }
 
     protected SecurityHistoryNode getHistoryNode(final Date date) {
@@ -278,7 +278,7 @@ public final class SecurityNode extends CommodityNode implements Cloneable {
     @Override
     public Object clone() throws CloneNotSupportedException {
         SecurityNode node = (SecurityNode) super.clone();
-        node.historyNodes = new ArrayList<SecurityHistoryNode>();
+        node.historyNodes = new ArrayList<>();
         node.lock = new ReentrantReadWriteLock(true);
 
         return node;

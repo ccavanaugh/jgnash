@@ -84,7 +84,7 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
             boolean sum = getColumnStyle(columnIndex) == ColumnStyle.BALANCE_WITH_SUM || getColumnStyle(columnIndex) == ColumnStyle.BALANCE_WITH_SUM_AND_GLOBAL || getColumnStyle(columnIndex) == ColumnStyle.AMOUNT_SUM;
 
             // mapping to sum groups
-            HashMap<String, BigDecimal> groupMap = new HashMap<String, BigDecimal>();
+            HashMap<String, BigDecimal> groupMap = new HashMap<>();
 
             // number format to use
             NumberFormat nf;

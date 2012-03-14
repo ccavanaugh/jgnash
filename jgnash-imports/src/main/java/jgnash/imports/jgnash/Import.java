@@ -94,39 +94,39 @@ public class Import {
     /**
      * Id map for accounts
      */
-    private Map<String, Account> accountMap = new HashMap<String, Account>();
+    private Map<String, Account> accountMap = new HashMap<>();
 
     /**
      * Parent map for accounts
      */
-    private Map<Account, String> parentMap = new HashMap<Account, String>();
+    private Map<Account, String> parentMap = new HashMap<>();
 
     /**
      * Lock status of the accounts
      */
-    private Map<String, Boolean> lockMap = new HashMap<String, Boolean>();
+    private Map<String, Boolean> lockMap = new HashMap<>();
 
     /**
      * List of splits
      */
-    private List<Map<String, String>> splitList = new ArrayList<Map<String, String>>();
+    private List<Map<String, String>> splitList = new ArrayList<>();
 
     /**
      * List of split entries
      */
-    private List<Map<String, String>> splitEntryList = new ArrayList<Map<String, String>>();
+    private List<Map<String, String>> splitEntryList = new ArrayList<>();
 
     /**
      * Id map for commodities
      */
-    private Map<String, Commodity> commodityMap = new HashMap<String, Commodity>();
+    private Map<String, Commodity> commodityMap = new HashMap<>();
 
-    private static List<Runnable> workQueue = new ArrayList<Runnable>();
+    private static List<Runnable> workQueue = new ArrayList<>();
 
     /**
      * Cache of currency nodes, so that database doesn't need to be queried for each transaction.
      */
-    private Map<String, CurrencyNode> currencyCache = new HashMap<String, CurrencyNode>();
+    private Map<String, CurrencyNode> currencyCache = new HashMap<>();
 
     private Import() {
         try {
@@ -446,7 +446,7 @@ public class Import {
     }
 
     private void parseExchangeRate(final XMLStreamReader reader) {
-        Map<String, String> elementMap = new HashMap<String, String>();
+        Map<String, String> elementMap = new HashMap<>();
 
         /* still at start of the exchange rate.  Need to know when end is reached */
         QName parsingElement = reader.getName();
@@ -507,7 +507,7 @@ public class Import {
 
         assert reader.getAttributeCount() == 2;
 
-        Map<String, String> elementMap = new HashMap<String, String>();
+        Map<String, String> elementMap = new HashMap<>();
 
         /* still at start of the transaction.  Need to know when end is reached */
         QName parsingElement = reader.getName();
@@ -769,7 +769,7 @@ public class Import {
 
         assert reader.getAttributeCount() == 2;
 
-        Map<String, Object> elementMap = new HashMap<String, Object>();
+        Map<String, Object> elementMap = new HashMap<>();
 
         /* still at start of the account.  Need to know when end is reached */
         QName parsingElement = reader.getName();
@@ -915,7 +915,7 @@ public class Import {
 
     private Map<String, String> parseAmortizeObject(final XMLStreamReader reader) {
 
-        Map<String, String> elementMap = new HashMap<String, String>();
+        Map<String, String> elementMap = new HashMap<>();
 
         /* still at start of amortize object.  Need to know when end is reached */
         QName parsingElement = reader.getName();
@@ -951,7 +951,7 @@ public class Import {
 
         assert reader.getAttributeCount() == 2;
 
-        ArrayList<String> securities = new ArrayList<String>();
+        ArrayList<String> securities = new ArrayList<>();
 
         /* still at start of security array.  Need to know when end is reached */
         QName parsingElement = reader.getName();
@@ -1047,7 +1047,7 @@ public class Import {
     }
 
     private void parseCurrencyNode(final XMLStreamReader reader) {
-        Map<String, String> elementMap = new HashMap<String, String>();
+        Map<String, String> elementMap = new HashMap<>();
 
         /* still at start of the element.  Need to know when end is reached */
         QName parsingElement = reader.getName();
@@ -1095,7 +1095,7 @@ public class Import {
     }
 
     private void parseCommodityNode(final XMLStreamReader reader) {
-        Map<String, String> elementMap = new HashMap<String, String>();
+        Map<String, String> elementMap = new HashMap<>();
 
         /* still at start of the element.  Need to know when end is reached */
         QName parsingElement = reader.getName();
@@ -1140,7 +1140,7 @@ public class Import {
     }
 
     private void parseSecurityNode(final XMLStreamReader reader) {
-        Map<String, String> elementMap = new HashMap<String, String>();
+        Map<String, String> elementMap = new HashMap<>();
         List<SecurityHistoryNode> history = null;
 
         try {
@@ -1208,7 +1208,7 @@ public class Import {
     }
 
     private List<SecurityHistoryNode> parseHistoryNodes(final XMLStreamReader reader) {
-        List<SecurityHistoryNode> list = new ArrayList<SecurityHistoryNode>();
+        List<SecurityHistoryNode> list = new ArrayList<>();
 
         assert reader.getAttributeCount() == 3;
 
@@ -1217,7 +1217,7 @@ public class Import {
 
         logger.log(Level.FINEST, "Parsing {0} SecurityHistoryNodes", count);
 
-        Map<String, String> elementMap = new HashMap<String, String>();
+        Map<String, String> elementMap = new HashMap<>();
 
         QName parsingElement = null;
 

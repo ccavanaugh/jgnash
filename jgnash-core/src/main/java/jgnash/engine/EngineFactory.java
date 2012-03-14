@@ -84,9 +84,9 @@ public class EngineFactory {
 
     public static final String DEFAULT = "default";
 
-    private static final Map<String, Engine> engineMap = new HashMap<String, Engine>();
+    private static final Map<String, Engine> engineMap = new HashMap<>();
 
-    private static final Map<String, DataStore> dataStoreMap = new HashMap<String, DataStore>();
+    private static final Map<String, DataStore> dataStoreMap = new HashMap<>();
 
     private EngineFactory() {
     }

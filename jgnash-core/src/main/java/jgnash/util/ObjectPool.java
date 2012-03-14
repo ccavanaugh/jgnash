@@ -32,7 +32,7 @@ public abstract class ObjectPool<T> {
     private final Queue<T> objects;
 
     public ObjectPool() {
-        objects = new ConcurrentLinkedQueue<T>();
+        objects = new ConcurrentLinkedQueue<>();
     }
 
     public abstract T createInstance();

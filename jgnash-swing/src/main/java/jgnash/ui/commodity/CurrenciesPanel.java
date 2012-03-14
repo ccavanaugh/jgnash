@@ -205,10 +205,10 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
             defaultNodes.remove(node);
         }
 
-        aList = new SortedListModel<CurrencyNode>(defaultNodes);
+        aList = new SortedListModel<>(defaultNodes);
         aJList = new JList<>(aList);
 
-        ArrayList<CurrencyElement> list = new ArrayList<CurrencyElement>();
+        ArrayList<CurrencyElement> list = new ArrayList<>();
 
         for (CurrencyNode node : availNodes) {
             if (activeNodes.contains(node)) {
@@ -218,7 +218,7 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
             }
         }
 
-        cList = new SortedListModel<CurrencyElement>(list);
+        cList = new SortedListModel<>(list);
         cJList = new JList<>(cList);
         cJList.setCellRenderer(new CurrencyRenderer(cJList.getCellRenderer()));
     }

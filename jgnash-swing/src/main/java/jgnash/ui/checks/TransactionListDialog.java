@@ -145,7 +145,7 @@ public class TransactionListDialog extends JDialog implements ActionListener, Li
     }
 
     private List<Transaction> _getPrintableTransactions() {
-        List<Transaction> l = new ArrayList<Transaction>();
+        List<Transaction> l = new ArrayList<>();
 
         for (Transaction t : EngineFactory.getEngine(EngineFactory.DEFAULT).getTransactions()) {
             if (PRINT.equalsIgnoreCase(t.getNumber())) {
@@ -213,7 +213,7 @@ public class TransactionListDialog extends JDialog implements ActionListener, Li
 
         private static final long serialVersionUID = 6665735758964949493L;
 
-        private final ArrayList<Wrapper> wrapperList = new ArrayList<Wrapper>(); // list of transactions
+        private final ArrayList<Wrapper> wrapperList = new ArrayList<>(); // list of transactions
 
         private final String[] columnNames = { rb.getString("Column.Print"), rb.getString("Column.Date"),
                         rb.getString("Column.Payee"), rb.getString("Column.Account"), rb.getString("Column.Amount") };
@@ -311,7 +311,7 @@ public class TransactionListDialog extends JDialog implements ActionListener, Li
 
         public List<Transaction> getPrintableTransactions() {
 
-            ArrayList<Transaction> list = new ArrayList<Transaction>();
+            ArrayList<Transaction> list = new ArrayList<>();
 
             for (Wrapper w : wrapperList) {
                 if (w.print) {

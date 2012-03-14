@@ -45,7 +45,7 @@ public class SearchEngine {
      * @return List of transactions that matched the search pattern
      */
     public static List<Transaction> matchMemo(final String pattern, final Collection<Transaction> transactions, final boolean caseSensitive) {
-        List<Transaction> match = new ArrayList<Transaction>();
+        List<Transaction> match = new ArrayList<>();
 
         Pattern p = SearchUtils.createSearchPattern(pattern, caseSensitive);
 
@@ -69,7 +69,7 @@ public class SearchEngine {
      * @return List of transactions that matched the search pattern
      */
     public static List<Transaction> matchPayee(final String pattern, final Collection<Transaction> transactions, final boolean caseSensitive) {
-        List<Transaction> match = new ArrayList<Transaction>();
+        List<Transaction> match = new ArrayList<>();
 
         Pattern p = SearchUtils.createSearchPattern(pattern, caseSensitive);
 

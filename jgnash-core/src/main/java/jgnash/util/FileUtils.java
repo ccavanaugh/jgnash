@@ -273,7 +273,7 @@ public final class FileUtils {
      *         directory is not valid.
      */
     public static List<File> getDirectoryListing(final File directory, final String pattern) {
-        List<File> fileList = new ArrayList<File>();
+        List<File> fileList = new ArrayList<>();
 
         if (directory != null && directory.isDirectory()) {
 

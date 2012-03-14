@@ -64,7 +64,7 @@ public class CurrencyUpdateFactory {
                 UIApplication.getFrame().setNetworkBusy(true);
             }
 
-            List<CurrencyNode> list = new ArrayList<CurrencyNode>(EngineFactory.getEngine(EngineFactory.DEFAULT).getCurrencies());
+            List<CurrencyNode> list = new ArrayList<>(EngineFactory.getEngine(EngineFactory.DEFAULT).getCurrencies());
 
             int lengthOfTask = (list.size() * list.size() - list.size()) / 2;
 

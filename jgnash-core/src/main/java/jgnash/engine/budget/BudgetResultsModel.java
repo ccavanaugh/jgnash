@@ -49,7 +49,7 @@ import jgnash.message.*;
  */
 public class BudgetResultsModel implements MessageListener {
 
-    private Set<Account> accounts = new HashSet<Account>();
+    private Set<Account> accounts = new HashSet<>();
 
     private Budget budget;
 
@@ -81,10 +81,10 @@ public class BudgetResultsModel implements MessageListener {
         this.descriptorList = BudgetPeriodDescriptorFactory.getDescriptors(year, this.budget.getBudgetPeriod());
         this.baseCurrency = baseCurrency;
 
-        accountResultsCache = new HashMap<Account, BudgetPeriodResults>();
-        accountGroupResultsCache = new EnumMap<AccountGroup, BudgetPeriodResults>(AccountGroup.class);
-        descriptorAccountResultsCache = new HashMap<BudgetPeriodDescriptor, Map<Account, BudgetPeriodResults>>();
-        descriptorAccountGroupResultsCache = new HashMap<BudgetPeriodDescriptor, Map<AccountGroup, BudgetPeriodResults>>();
+        accountResultsCache = new HashMap<>();
+        accountGroupResultsCache = new EnumMap<>(AccountGroup.class);
+        descriptorAccountResultsCache = new HashMap<>();
+        descriptorAccountGroupResultsCache = new HashMap<>();
 
         loadAccounts();
         loadAccountGroups();
@@ -173,7 +173,7 @@ public class BudgetResultsModel implements MessageListener {
     private void loadAccounts() {
         Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-        Set<Account> accountSet = new HashSet<Account>();
+        Set<Account> accountSet = new HashSet<>();
 
         for (Account account : engine.getAccountList()) {
             if (includeAccount(account)) {
@@ -201,7 +201,7 @@ public class BudgetResultsModel implements MessageListener {
             }
 
             // create a list and sort
-            List<AccountGroup> groups = new ArrayList<AccountGroup>(accountSet);
+            List<AccountGroup> groups = new ArrayList<>(accountSet);
             Collections.sort(groups);
 
             accountGroupList = groups;
@@ -225,7 +225,7 @@ public class BudgetResultsModel implements MessageListener {
 
         try {
             // return a defensive copy
-            return new HashSet<Account>(accounts);
+            return new HashSet<>(accounts);
         } finally {
             accountLock.readLock().unlock();
         }
@@ -235,7 +235,7 @@ public class BudgetResultsModel implements MessageListener {
         accountLock.readLock().lock();
 
         try {
-            Set<Account> accountSet = new HashSet<Account>();
+            Set<Account> accountSet = new HashSet<>();
 
             for (Account account : accounts) {
                 if (account.memberOf(group)) {
@@ -264,7 +264,7 @@ public class BudgetResultsModel implements MessageListener {
             Map<Account, BudgetPeriodResults> resultsMap = descriptorAccountResultsCache.get(descriptor);
 
             if (resultsMap == null) {
-                resultsMap = new HashMap<Account, BudgetPeriodResults>();
+                resultsMap = new HashMap<>();
                 descriptorAccountResultsCache.put(descriptor, resultsMap);
             }
 
@@ -323,7 +323,7 @@ public class BudgetResultsModel implements MessageListener {
             Map<AccountGroup, BudgetPeriodResults> resultsMap = descriptorAccountGroupResultsCache.get(descriptor);
 
             if (resultsMap == null) {
-                resultsMap = new EnumMap<AccountGroup, BudgetPeriodResults>(AccountGroup.class);
+                resultsMap = new EnumMap<>(AccountGroup.class);
                 descriptorAccountGroupResultsCache.put(descriptor, resultsMap);
             }
 
@@ -642,7 +642,7 @@ public class BudgetResultsModel implements MessageListener {
 
         for (BudgetPeriodDescriptor descriptor : descriptorList) {
             if (descriptor.isBetween(transaction.getDate())) {
-                final Set<Account> accountSet = new HashSet<Account>();
+                final Set<Account> accountSet = new HashSet<>();
 
                 for (Account account : transaction.getAccounts()) {
                     accountSet.addAll(account.getAncestors());

@@ -51,7 +51,7 @@ public class ValidationFactory {
     }
 
     public static JComponent wrap(final JComponent component) {
-        JLayer<JComponent> layer = new JLayer<JComponent>(component);
+        JLayer<JComponent> layer = new JLayer<>(component);
         layer.setUI(new ValidationUI());
         return layer;
     }

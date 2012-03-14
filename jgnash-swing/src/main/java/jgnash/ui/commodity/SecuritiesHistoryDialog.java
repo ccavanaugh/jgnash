@@ -165,7 +165,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
         table.setColumnSelectionAllowed(false);
         table.setRowSelectionAllowed(true);
         table.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        table.setRowSorter(new TableRowSorter<HistoryModel>(model));
+        table.setRowSorter(new TableRowSorter<>(model));
         table.setFillsViewportHeight(true);
 
         // create an empty chart for panel construction

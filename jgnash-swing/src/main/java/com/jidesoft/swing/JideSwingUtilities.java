@@ -51,12 +51,12 @@ class JideSwingUtilities implements SwingConstants {
             @SuppressWarnings("unchecked")
             Map<JViewport, Integer> slaveViewportMap = (Map) property;
 
-            Map<JViewport, Integer> allViewportToSync = new HashMap<JViewport, Integer>();
+            Map<JViewport, Integer> allViewportToSync = new HashMap<>();
 
             allViewportToSync.putAll(slaveViewportMap);
 
             do {
-                Map<JViewport, Integer> viewportToAdd = new HashMap<JViewport, Integer>();
+                Map<JViewport, Integer> viewportToAdd = new HashMap<>();
                 for (JViewport slaveViewport : allViewportToSync.keySet()) {
                     Object slaveProperty = slaveViewport.getClientProperty(JideScrollPane.CLIENT_PROPERTY_SLAVE_VIEWPORT);
                     if (!(slaveProperty instanceof Map)) {

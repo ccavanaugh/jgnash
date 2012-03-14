@@ -256,7 +256,7 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
         if (isBetween(transaction.getDate())) { // don't update unless needed
 
             // build a list of accounts include ancestors that will be impacted by the transaction changes
-            final Set<Account> accounts = new HashSet<Account>();
+            final Set<Account> accounts = new HashSet<>();
 
             for (Account account : transaction.getAccounts()) {
                 accounts.addAll(account.getAncestors());

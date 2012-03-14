@@ -286,7 +286,7 @@ public class Engine {
 
             // check for multiple root accounts
             if (getConfig().getFileVersion() < 2.04f) {
-                List<RootAccount> roots = new ArrayList<RootAccount>();
+                List<RootAccount> roots = new ArrayList<>();
 
                 for (StoredObject o : getStoredObjects()) {
                     if (o instanceof RootAccount) {
@@ -344,8 +344,8 @@ public class Engine {
      */
     private void removeDuplicateCurrencies() {
 
-        Map<String, CurrencyNode> keepMap = new HashMap<String, CurrencyNode>();
-        List<CurrencyNode> discard = new ArrayList<CurrencyNode>();
+        Map<String, CurrencyNode> keepMap = new HashMap<>();
+        List<CurrencyNode> discard = new ArrayList<>();
 
         CurrencyNode defaultCurrency = getDefaultCurrency();
 
@@ -545,7 +545,7 @@ public class Engine {
 
     public List<PendingReminder> getPendingReminders() {
 
-        final ArrayList<PendingReminder> pendingList = new ArrayList<PendingReminder>();
+        final ArrayList<PendingReminder> pendingList = new ArrayList<>();
         final List<Reminder> list = getReminders();
         final Calendar c = Calendar.getInstance();
         final Date now = new Date(); // today's date
@@ -760,7 +760,7 @@ public class Engine {
      */
     public Set<Account> getInvestmentAccountList(final SecurityNode node) {
 
-        Set<Account> accounts = new HashSet<Account>();
+        Set<Account> accounts = new HashSet<>();
 
         for (Account account : getInvestmentAccountList()) {
             if (account.containsSecurity(node)) {
@@ -1465,7 +1465,7 @@ public class Engine {
      * @return member accounts
      */
     public List<Account> getAccounts(final AccountGroup group) {
-        final List<Account> accountList = new ArrayList<Account>();
+        final List<Account> accountList = new ArrayList<>();
         final List<Account> list = getAccountList();
 
         for (Account account : list) {
@@ -2059,7 +2059,7 @@ public class Engine {
             BudgetGoal oldGoals = budget.getBudgetGoal(account);
 
             List<BudgetPeriodDescriptor> descriptorList = BudgetPeriodDescriptorFactory.getDescriptors(DateUtils.getCurrentYear(), budgetPeriod);
-            List<BudgetPeriodDescriptor> changedDescriptors = new ArrayList<BudgetPeriodDescriptor>();
+            List<BudgetPeriodDescriptor> changedDescriptors = new ArrayList<>();
 
             for (BudgetPeriodDescriptor descriptor : descriptorList) {
                 BigDecimal oldAmount = oldGoals.getGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod());

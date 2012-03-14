@@ -65,7 +65,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
 
     private final Date openingDate;
 
-    private List<RecTransaction> list = new ArrayList<RecTransaction>();
+    private List<RecTransaction> list = new ArrayList<>();
 
     private final Resource rb = Resource.get();
 

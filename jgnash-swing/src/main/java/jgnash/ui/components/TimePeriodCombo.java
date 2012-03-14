@@ -30,7 +30,7 @@ import jgnash.util.Resource;
  * @author Craig Cavanaugh
  * @version $Id: TimePeriodCombo.java 3051 2012-01-02 11:27:23Z ccavanaugh $
  */
-public class TimePeriodCombo extends JComboBox {
+public class TimePeriodCombo extends JComboBox<String> {
 
     private int[] periods = new int[0];
 
@@ -42,7 +42,7 @@ public class TimePeriodCombo extends JComboBox {
 
         assert periods.length == descriptions.length;
 
-        setModel(new DefaultComboBoxModel(descriptions));
+        setModel(new DefaultComboBoxModel<>(descriptions));
     }
 
     static int[] getPeriods() {

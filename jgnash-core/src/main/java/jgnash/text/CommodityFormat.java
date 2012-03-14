@@ -45,9 +45,9 @@ public abstract class CommodityFormat {
 
     // private static CommodityFormat simpleFormat;
 
-    private static Map<CommodityNode, DecimalFormat> fullInstanceMap = new HashMap<CommodityNode, DecimalFormat>();
+    private static Map<CommodityNode, DecimalFormat> fullInstanceMap = new HashMap<>();
 
-    private static Map<CommodityNode, DecimalFormat> simpleInstanceMap = new HashMap<CommodityNode, DecimalFormat>();
+    private static Map<CommodityNode, DecimalFormat> simpleInstanceMap = new HashMap<>();
 
     private static String[] ESCAPE_CHARS = new String[] { ",", ".", "0", "#", "-", ";", "%" };
 

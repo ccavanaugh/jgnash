@@ -84,7 +84,7 @@ public class SecurityComboBox extends AbstractCommodityComboBox<SecurityNode> {
                 public void run() {
                     switch (event.getEvent()) {
                         case CURRENCY_ADD:
-                            model.addElement(node);
+                            model.addElement((SecurityNode) node);
                             return;
                         case CURRENCY_REMOVE:
                             model.removeElement(node);

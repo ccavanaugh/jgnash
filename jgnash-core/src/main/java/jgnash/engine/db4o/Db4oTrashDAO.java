@@ -42,7 +42,7 @@ class Db4oTrashDAO extends AbstractDb4oDAO implements TrashDAO {
 
     @Override
     public List<TrashObject> getTrashObjects() {
-        return new ArrayList<TrashObject>(container.query(TrashObject.class));
+        return new ArrayList<>(container.query(TrashObject.class));
     }
 
     @Override

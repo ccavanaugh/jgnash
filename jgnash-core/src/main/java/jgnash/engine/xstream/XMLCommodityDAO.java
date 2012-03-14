@@ -63,7 +63,7 @@ public class XMLCommodityDAO extends AbstractXMLDAO implements CommodityDAO {
 
     @Override
     public Set<CurrencyNode> getActiveCurrencies() {
-        Set<CurrencyNode> set = new HashSet<CurrencyNode>();
+        Set<CurrencyNode> set = new HashSet<>();
 
         for (Account a : stripMarkedForRemoval(container.query(Account.class))) {
             set.add(a.getCurrencyNode());

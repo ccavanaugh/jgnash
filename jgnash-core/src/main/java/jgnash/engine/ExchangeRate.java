@@ -34,7 +34,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class ExchangeRate extends StoredObject {
     private static final long serialVersionUID = -2365289994847042288L;
 
-    private List<ExchangeRateHistoryNode> historyNodes = new ArrayList<ExchangeRateHistoryNode>();
+    private List<ExchangeRateHistoryNode> historyNodes = new ArrayList<>();
 
     /**
      * Cache the last exchange rate
@@ -90,7 +90,7 @@ public class ExchangeRate extends StoredObject {
 
     public List<ExchangeRateHistoryNode> getHistory() {
         // return a defensive copy
-        return new ArrayList<ExchangeRateHistoryNode>(historyNodes);
+        return new ArrayList<>(historyNodes);
     }
 
     boolean addHistoryNode(final ExchangeRateHistoryNode node) {

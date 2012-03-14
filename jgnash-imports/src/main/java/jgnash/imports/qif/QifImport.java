@@ -55,18 +55,18 @@ public class QifImport {
 
     private Engine engine;
 
-    private HashMap<String, Account> expenseMap = new HashMap<String, Account>();
+    private HashMap<String, Account> expenseMap = new HashMap<>();
 
-    private HashMap<String, Account> incomeMap = new HashMap<String, Account>();
+    private HashMap<String, Account> incomeMap = new HashMap<>();
 
-    private HashMap<String, Account> accountMap = new HashMap<String, Account>();
+    private HashMap<String, Account> accountMap = new HashMap<>();
 
     private boolean stripDuplicates = true;
 
     /**
      * A holder for duplicate transactions
      */
-    private ArrayList<Transaction> duplicates = new ArrayList<Transaction>();
+    private ArrayList<Transaction> duplicates = new ArrayList<>();
 
     /**
      * Holds the number of duplicate transactions that were stripped during the import
@@ -174,7 +174,7 @@ public class QifImport {
      */
     public List<Account> getBankAccountList() {
 
-        final List<Account> retList = new ArrayList<Account>();
+        final List<Account> retList = new ArrayList<>();
         final List<Account> list = engine.getAccountList();
 
         for (Account a : list) {

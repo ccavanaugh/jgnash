@@ -50,13 +50,13 @@ public class MessageBus {
     private static final Logger logger = Logger.getLogger(MessageBus.class.getName());
 
     @SuppressWarnings("MapReplaceableByEnumMap")
-    private final Map<MessageChannel, Set<WeakReference<MessageListener>>> map = new ConcurrentHashMap<MessageChannel, Set<WeakReference<MessageListener>>>();
+    private final Map<MessageChannel, Set<WeakReference<MessageListener>>> map = new ConcurrentHashMap<>();
 
     private final ExecutorService pool = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
     private MessageBusRemoteClient messageBusClient = null;
 
-    private static final Map<String, MessageBus> busMap = new HashMap<String, MessageBus>();
+    private static final Map<String, MessageBus> busMap = new HashMap<>();
 
     private static final String DEFAULT = "default";
 
@@ -120,7 +120,7 @@ public class MessageBus {
         for (MessageChannel channel : channels) {
             Set<WeakReference<MessageListener>> set = map.get(channel);
             if (set == null) {
-                set = new CopyOnWriteArraySet<WeakReference<MessageListener>>();
+                set = new CopyOnWriteArraySet<>();
                 map.put(channel, set);
             }
 
@@ -128,7 +128,7 @@ public class MessageBus {
                 logger.severe("An attempt was made to install a duplicate listener");
                 logStackTrace(logger, Level.SEVERE);
             } else {
-                set.add(new WeakReference<MessageListener>(listener));
+                set.add(new WeakReference<>(listener));
             }
         }
     }

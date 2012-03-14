@@ -51,7 +51,7 @@ public class DefaultCurrencies {
      * @return An array of default CurrencyNodes
      */
     public static Set<CurrencyNode> generateCurrencies() {
-        TreeSet<CurrencyNode> set = new TreeSet<CurrencyNode>();
+        TreeSet<CurrencyNode> set = new TreeSet<>();
 
         for (Locale locale : NumberFormat.getAvailableLocales()) {
 

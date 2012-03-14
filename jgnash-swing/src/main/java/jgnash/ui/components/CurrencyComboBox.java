@@ -94,7 +94,7 @@ public class CurrencyComboBox extends AbstractCommodityComboBox<CurrencyNode> {
                             model.removeElement(node);
                             break;
                         case CURRENCY_ADD:
-                            model.addElement(node);
+                            model.addElement((CurrencyNode) node);
                             break;
                         case CURRENCY_MODIFY:
                             updateNode((CurrencyNode) node);

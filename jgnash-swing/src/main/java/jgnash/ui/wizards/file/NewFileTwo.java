@@ -47,7 +47,7 @@ public class NewFileTwo extends JPanel implements WizardPage {
     private final Resource rb = Resource.get();
 
     // Do not use a CurrencyComboBox at this point or it will boot the engine
-    private JComboBox currencyCombo = new JComboBox();
+    private JComboBox<CurrencyNode> currencyCombo = new JComboBox<>();
 
     private JEditorPane helpPane;
 
@@ -102,7 +102,7 @@ public class NewFileTwo extends JPanel implements WizardPage {
     public void getSettings(Map<Enum<?>, Object> map) {
         Set<CurrencyNode> currencies = (Set<CurrencyNode>) map.get(NewFileDialog.Settings.DEFAULT_CURRENCIES);
 
-        currencyCombo.setModel(new SortedComboBoxModel<CurrencyNode>(currencies));
+        currencyCombo.setModel(new SortedComboBoxModel<>(currencies));
 
         String currencyCode = Currency.getInstance(Locale.getDefault()).getCurrencyCode();
 

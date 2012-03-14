@@ -55,7 +55,7 @@ class Db4oTransactionDAO extends AbstractDb4oDAO implements TransactionDAO {
             List<Transaction> list = container.query(Transaction.class);
             container.ext().releaseSemaphore(GLOBAL_SEMAPHORE);
 
-            List<Transaction> resultList = new ArrayList<Transaction>(list.size());
+            List<Transaction> resultList = new ArrayList<>(list.size());
 
             for (Transaction t : list) {
                 if (!t.isMarkedForRemoval()) {

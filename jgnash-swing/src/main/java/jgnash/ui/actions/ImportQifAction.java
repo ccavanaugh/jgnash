@@ -172,7 +172,7 @@ public class ImportQifAction extends AbstractEnabledAction {
 
         /* Create the combo for date format selection */
         String[] formats = { QifUtils.US_FORMAT, QifUtils.EU_FORMAT };
-        JComboBox combo = new JComboBox(formats);
+        JComboBox<String> combo = new JComboBox<>(formats);
 
         combo.setSelectedIndex(pref.getInt(DATE_FORMAT, 0));
 

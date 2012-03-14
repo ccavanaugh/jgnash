@@ -72,7 +72,7 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
 
     private PrintPreviewPanel previewPanel;
 
-    private DefaultListModel model;
+    private DefaultListModel<CheckObject> model;
 
     private JFormattedTextField xPosField;
 
@@ -92,7 +92,7 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
 
     private JTextField nameField;
 
-    private JList objectList;
+    private JList<CheckObject> objectList;
 
     private JButton openButton;
 
@@ -106,7 +106,7 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
 
     private JToolBar toolBar;
 
-    private JComboBox typeCombo;
+    private JComboBox<CheckObjectType> typeCombo;
 
     private CheckObject activeObject = null;
 
@@ -164,8 +164,8 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
 
         previewPanel = new PrintPreviewPanel(layout, layout.getPageFormat());
 
-        objectList = new JList();
-        objectList.setPrototypeCellValue("Some dummy text");
+        objectList = new JList<>();
+        //objectList.setPrototypeCellValue("Some dummy text");
 
         setupButton = new JButton(rb.getString("Button.PageSetup"));
         addButton = new JButton(rb.getString("Button.Add"));
@@ -176,12 +176,12 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
         closeButton = new JButton(rb.getString("Button.Close"));
 
         nameField = new JTextFieldEx();
-        typeCombo = new JComboBox();
+        typeCombo = new JComboBox<>();
 
-        DefaultComboBoxModel comboModel = new DefaultComboBoxModel(CheckObjectType.values());
+        DefaultComboBoxModel<CheckObjectType> comboModel = new DefaultComboBoxModel<>(CheckObjectType.values());
 
         typeCombo.setModel(comboModel);
-        model = new DefaultListModel();
+        model = new DefaultListModel<>();
 
         objectList.setModel(model);
         objectList.addListSelectionListener(this);

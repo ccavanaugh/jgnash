@@ -74,7 +74,7 @@ public class ExpandingTable<E extends Comparable<? super E>> extends JTable {
 
     private static final int VERTICAL_ICON_PADDING = 5;
 
-    private Map<String, Icon> iconCache = new HashMap<String, Icon>();
+    private Map<String, Icon> iconCache = new HashMap<>();
 
     public ExpandingTable(final AbstractExpandingTableModel<E> model) {
         super(model);

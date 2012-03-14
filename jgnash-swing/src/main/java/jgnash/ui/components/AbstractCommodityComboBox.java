@@ -30,11 +30,12 @@ import jgnash.message.MessageListener;
  * @author Craig Cavanaugh
  * @version $Id: AbstractCommodityComboBox.java 3051 2012-01-02 11:27:23Z ccavanaugh $
  */
-public abstract class AbstractCommodityComboBox<T extends CommodityNode> extends JComboBox implements MessageListener {
+public abstract class AbstractCommodityComboBox<T extends CommodityNode> extends JComboBox<T> implements MessageListener {
 
-    SortedComboBoxModel<T> model = new SortedComboBoxModel<T>();
+    SortedComboBoxModel<T> model = new SortedComboBoxModel<>();
 
-    AbstractCommodityComboBox() {
+    @SuppressWarnings("unchecked")
+	AbstractCommodityComboBox() {
         super();
         setModel(model);
         super.setEditable(false);

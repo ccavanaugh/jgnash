@@ -171,7 +171,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
         table.setColumnSelectionAllowed(false);
         table.setRowSelectionAllowed(true);
         table.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        table.setRowSorter(new TableRowSorter<HistoryModel>(model));
+        table.setRowSorter(new TableRowSorter<>(model));
         table.setFillsViewportHeight(true);
 
         table.getSelectionModel().addListSelectionListener(this);
@@ -444,7 +444,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
 
         private NumberFormat decimalFormat;
 
-        private List<ExchangeRateHistoryNode> history = new ArrayList<ExchangeRateHistoryNode>();
+        private List<ExchangeRateHistoryNode> history = new ArrayList<>();
 
         private boolean invert = false;
 

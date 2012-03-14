@@ -70,7 +70,7 @@ public class BufferedLayerUI<V extends JComponent> extends
 	private LayerEffect[] effects = new LayerEffect[0];
 	private Shape clip;
 	private Composite composite;
-	private Map<RenderingHints.Key, Object> renderingHints = new HashMap<RenderingHints.Key, Object>(
+	private Map<RenderingHints.Key, Object> renderingHints = new HashMap<>(
 			0);
 	private AffineTransform transform;
 	private boolean incrementalUpdate = true;
@@ -339,7 +339,7 @@ public class BufferedLayerUI<V extends JComponent> extends
 	public void setRenderingHints(Map<RenderingHints.Key, Object> renderingHints) {
 		Map<RenderingHints.Key, Object> oldRenderingHints = getRenderingHints();
 		if (renderingHints == null) {
-			renderingHints = new HashMap<RenderingHints.Key, Object>();
+			renderingHints = new HashMap<>();
 		}
 		this.renderingHints = renderingHints;
 		firePropertyChange("renderingHints", oldRenderingHints, renderingHints);

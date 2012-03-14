@@ -54,7 +54,7 @@ class GainsPanel extends JPanel implements ActionListener {
 
     private Account account;
 
-    private List<TransactionEntry> gainsList = new ArrayList<TransactionEntry>();
+    private List<TransactionEntry> gainsList = new ArrayList<>();
 
     GainsPanel(final Account account) {
         this.account = account;
@@ -105,7 +105,7 @@ class GainsPanel extends JPanel implements ActionListener {
      * @param gains <code>List</code> of gains to clone
      */
     public void setTransactionEntries(final List<TransactionEntry> gains) {
-        gainsList = new ArrayList<TransactionEntry>();
+        gainsList = new ArrayList<>();
 
         for (TransactionEntry entry : gains) { // clone the provided set's entries
             try {
@@ -136,7 +136,7 @@ class GainsPanel extends JPanel implements ActionListener {
      * Clear the form and remove all entries
      */
     void clearForm() {
-        gainsList = new ArrayList<TransactionEntry>();
+        gainsList = new ArrayList<>();
         gainsField.setDecimal(null);
     }
 

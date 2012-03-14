@@ -32,7 +32,7 @@ public class NetWorthReport extends AbstractSumByTypeReport {
 
     @Override
     protected List<AccountGroup> getAccountGroups() {
-        List<AccountGroup> groups = new ArrayList<AccountGroup>();
+        List<AccountGroup> groups = new ArrayList<>();
 
         groups.add(AccountGroup.ASSET);
         groups.add(AccountGroup.INVEST);

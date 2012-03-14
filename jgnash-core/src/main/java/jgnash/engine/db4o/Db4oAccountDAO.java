@@ -68,7 +68,7 @@ class Db4oAccountDAO extends AbstractDb4oDAO implements AccountDAO {
                 logger.severe("More than one RootAccount found");
                 root = list.get(0);
 
-                List<RootAccount> emptyList = new ArrayList<RootAccount>();
+                List<RootAccount> emptyList = new ArrayList<>();
 
                 // find the root with accounts
                 for (RootAccount a : list) {
@@ -97,7 +97,7 @@ class Db4oAccountDAO extends AbstractDb4oDAO implements AccountDAO {
     public List<Account> getAccountList() {
 
         List<Account> list = Collections.emptyList();
-        List<Account> resultList = new ArrayList<Account>();
+        List<Account> resultList = new ArrayList<>();
 
         if (container.ext().setSemaphore(GLOBAL_SEMAPHORE, SEMAPHORE_WAIT_TIME)) {
             list = container.query(Account.class);

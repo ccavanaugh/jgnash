@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -48,7 +49,6 @@ import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.TextResource;
 import jgnash.ui.util.ValidationFactory;
 import jgnash.util.Resource;
-import org.jdesktop.swingx.combobox.EnumComboBoxModel;
 
 /**
  * BudgetWizardDialog is a mini wizard for creating a new budget based on historical data
@@ -69,8 +69,8 @@ final class BudgetWizardDialog extends JDialog implements ActionListener {
     private JButton cancelButton;
 
     private JTextField budgetNameField;
-
-    private JComboBox budgetPeriodCombo;
+   
+	private JComboBox<BudgetPeriod> budgetPeriodCombo;
 
     private JEditorPane helpPane;
 
@@ -131,13 +131,13 @@ final class BudgetWizardDialog extends JDialog implements ActionListener {
 
         setMinimumSize(getSize());
     }
-
-    private void initComponents() {
+   
+	private void initComponents() {
         okButton = new JButton(rb.getString("Button.Ok"));
         cancelButton = new JButton(rb.getString("Button.Cancel"));
 
-        budgetPeriodCombo = new JComboBox();
-        budgetPeriodCombo.setModel(new EnumComboBoxModel<BudgetPeriod>(BudgetPeriod.class));
+        budgetPeriodCombo = new JComboBox<>();
+        budgetPeriodCombo.setModel(new DefaultComboBoxModel<>(BudgetPeriod.values()));
         budgetPeriodCombo.setSelectedItem(BudgetPeriod.MONTHLY);
 
         budgetNameField = new JTextField();

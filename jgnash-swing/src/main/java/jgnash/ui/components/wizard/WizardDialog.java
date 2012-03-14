@@ -79,7 +79,7 @@ public class WizardDialog extends JDialog implements ActionListener {
 
     protected final Resource rb = Resource.get();
 
-    private final Map<Enum<?>, Object> settings = new HashMap<Enum<?>, Object>();
+    private final Map<Enum<?>, Object> settings = new HashMap<>();
 
     private static final String KEY = "TASK";
 

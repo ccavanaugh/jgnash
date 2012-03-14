@@ -89,7 +89,7 @@ import jgnash.util.FileUtils;
  */
 public class XMLContainer {
 
-    private final List<StoredObject> objects = new ArrayList<StoredObject>();
+    private final List<StoredObject> objects = new ArrayList<>();
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
 
@@ -226,7 +226,7 @@ public class XMLContainer {
      */
     @SuppressWarnings("unchecked")
     private static <T extends StoredObject> List<T> query(final Collection<StoredObject> values, final Class<T> clazz) {
-        ArrayList<T> list = new ArrayList<T>();
+        ArrayList<T> list = new ArrayList<>();
 
         for (StoredObject o : values) {
             if (clazz.isAssignableFrom(o.getClass())) {
@@ -249,7 +249,7 @@ public class XMLContainer {
         readWriteLock.readLock().lock();
 
         try {
-            list = new ArrayList<StoredObject>(objects);
+            list = new ArrayList<>(objects);
         } finally {
             readWriteLock.readLock().unlock();
         }
@@ -293,7 +293,7 @@ public class XMLContainer {
             }
         }
 
-        List<StoredObject> list = new ArrayList<StoredObject>();
+        List<StoredObject> list = new ArrayList<>();
 
         list.addAll(query(objects, Budget.class));
         list.addAll(query(objects, Config.class));

@@ -153,9 +153,9 @@ public class SplitsRegisterTableModel extends AbstractTableModel implements Acco
 
         protected SandBoxSplitTransaction(List<TransactionEntry> list) {
             if (list != null) {
-                splits = new ArrayList<TransactionEntry>(list);
+                splits = new ArrayList<>(list);
             } else {
-                splits = new ArrayList<TransactionEntry>();
+                splits = new ArrayList<>();
             }
         }
 

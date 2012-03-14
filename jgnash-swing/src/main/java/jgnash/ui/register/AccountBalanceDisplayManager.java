@@ -47,7 +47,7 @@ public class AccountBalanceDisplayManager {
 
     private static final String ACCOUNT_BALANCE_DISPLAY_MODE = "accountbalancedisplayingmode";
 
-    private static List<WeakReference<ActionListener>> actionListeners = new ArrayList<WeakReference<ActionListener>>();
+    private static List<WeakReference<ActionListener>> actionListeners = new ArrayList<>();
 
     static {
         Preferences p = Preferences.userNodeForPackage(AccountBalanceDisplayManager.class);
@@ -94,7 +94,7 @@ public class AccountBalanceDisplayManager {
     }
 
     public static void addAccountBalanceDisplayModeChangeListener(final ActionListener actionListener) {
-        actionListeners.add(new WeakReference<ActionListener>(actionListener));
+        actionListeners.add(new WeakReference<>(actionListener));
     }
 
     private static void accountBalanceDisplayModeChanged() {

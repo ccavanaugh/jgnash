@@ -72,7 +72,7 @@ public class CurrencyModifyDialog extends JDialog implements MessageListener, Li
 
     private JTextField suffixField;
 
-    private JList sourceList;
+    private JList<CurrencyNode> sourceList;
 
     private JTextField symbolField;
 
@@ -135,7 +135,7 @@ public class CurrencyModifyDialog extends JDialog implements MessageListener, Li
     private void initComponents() {
         closeButton = new JButton(rb.getString("Button.Close"));
 
-        sourceList = new JList();
+        sourceList = new JList<>();
         sourceList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         symbolField = new JTextFieldEx();
@@ -207,7 +207,7 @@ public class CurrencyModifyDialog extends JDialog implements MessageListener, Li
     }
 
     private void buildLists() {
-        model = new SortedListModel<CurrencyNode>(getEngine().getCurrencies());
+        model = new SortedListModel<>(getEngine().getCurrencies());
         sourceList.setModel(model);
         sourceList.addListSelectionListener(this);
 

@@ -106,7 +106,7 @@ public class InvestmentTransactionTest {
         e.addAccount(e.getRootAccount(), investAccount);
 
         // Adding security to the invest account
-        List<SecurityNode> securityNodeList = new ArrayList<SecurityNode>();
+        List<SecurityNode> securityNodeList = new ArrayList<>();
         securityNodeList.add(securityNode1);
         e.updateAccountSecurities(investAccount, securityNodeList);
     }
@@ -148,7 +148,7 @@ public class InvestmentTransactionTest {
         // There is not any History added to the security
 
         // Creating the list of fees
-        List<TransactionEntry> fees = new ArrayList<TransactionEntry>();
+        List<TransactionEntry> fees = new ArrayList<>();
         TransactionEntry fee1 = createTransactionEntry(investAccount, expenseAccount, new BigDecimal("20.00"), "Fee1", TransactionTag.INVESTMENT_FEE);
         fees.add(fee1);
         TransactionEntry fee2 = createTransactionEntry(investAccount, expenseAccount, new BigDecimal("10.00"), "Fee2", TransactionTag.INVESTMENT_FEE);
@@ -197,7 +197,7 @@ public class InvestmentTransactionTest {
         e.addSecurityHistory(securityNode1, history);
 
         // Creating the list of fees
-        List<TransactionEntry> fees = new ArrayList<TransactionEntry>();
+        List<TransactionEntry> fees = new ArrayList<>();
         TransactionEntry fee1 = createTransactionEntry(investAccount, expenseAccount, new BigDecimal("20.00"), "Fee1", TransactionTag.INVESTMENT_FEE);
         fees.add(fee1);
         TransactionEntry fee2 = createTransactionEntry(investAccount, expenseAccount, new BigDecimal("10.00"), "Fee2", TransactionTag.INVESTMENT_FEE);
@@ -251,7 +251,7 @@ public class InvestmentTransactionTest {
         e.addSecurityHistory(securityNode1, history);
 
         // Creating the list of buying fees
-        List<TransactionEntry> buyingFees = new ArrayList<TransactionEntry>();
+        List<TransactionEntry> buyingFees = new ArrayList<>();
         TransactionEntry bFee1 = createTransactionEntry(investAccount, expenseAccount, new BigDecimal("20.00"), "Buying Fee1", TransactionTag.INVESTMENT_FEE);
         buyingFees.add(bFee1);
         TransactionEntry bFee2 = createTransactionEntry(investAccount, expenseAccount, new BigDecimal("10.00"), "Buying Fee2", TransactionTag.INVESTMENT_FEE);
@@ -273,14 +273,14 @@ public class InvestmentTransactionTest {
         e.addSecurityHistory(securityNode1, history);
 
         // Creating the list of selling fees
-        List<TransactionEntry> sellingFees = new ArrayList<TransactionEntry>();
+        List<TransactionEntry> sellingFees = new ArrayList<>();
         TransactionEntry sFee1 = createTransactionEntry(investAccount, expenseAccount, new BigDecimal("20.00"), "Selling Fee1", TransactionTag.INVESTMENT_FEE);
         sellingFees.add(sFee1);
         TransactionEntry sFee2 = createTransactionEntry(investAccount, expenseAccount, new BigDecimal("10.00"), "Selling Fee2", TransactionTag.INVESTMENT_FEE);
         sellingFees.add(sFee2);
 
         // Creating the list of gains
-        List<TransactionEntry> sellingGains = new ArrayList<TransactionEntry>();
+        List<TransactionEntry> sellingGains = new ArrayList<>();
         TransactionEntry sGain1 = createTransactionEntry(incomeAccount, investAccount, new BigDecimal("20.00"), "Selling Gain1", TransactionTag.GAIN_LOSS);
         sellingGains.add(sGain1);
         TransactionEntry sGain2 = createTransactionEntry(incomeAccount, investAccount, new BigDecimal("10.00"), "Selling Gain2", TransactionTag.GAIN_LOSS);
@@ -450,7 +450,7 @@ public class InvestmentTransactionTest {
         e.addSecurityHistory(securityNode1, history);
 
         // Creating the list of buying fees
-        List<TransactionEntry> buyingFees = new ArrayList<TransactionEntry>();
+        List<TransactionEntry> buyingFees = new ArrayList<>();
         TransactionEntry bFee1 = createTransactionEntry(investAccount, expenseAccount, new BigDecimal("20.00"), "Buying Fee1", TransactionTag.INVESTMENT_FEE);
         buyingFees.add(bFee1);
         TransactionEntry bFee2 = createTransactionEntry(investAccount, expenseAccount, new BigDecimal("10.00"), "Buying Fee2", TransactionTag.INVESTMENT_FEE);
@@ -510,7 +510,7 @@ public class InvestmentTransactionTest {
         e.addSecurityHistory(securityNode1, history);
 
         // Creating the list of buying fees
-        List<TransactionEntry> buyingFees = new ArrayList<TransactionEntry>();
+        List<TransactionEntry> buyingFees = new ArrayList<>();
         TransactionEntry bFee1 = createTransactionEntry(investAccount, expenseAccount, new BigDecimal("20.00"), "Buying Fee1", TransactionTag.INVESTMENT_FEE);
         buyingFees.add(bFee1);
         TransactionEntry bFee2 = createTransactionEntry(investAccount, expenseAccount, new BigDecimal("10.00"), "Buying Fee2", TransactionTag.INVESTMENT_FEE);
@@ -525,14 +525,14 @@ public class InvestmentTransactionTest {
         transactionDate2 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-27", new ParsePosition(0));
 
         // Creating the list of selling fees
-        List<TransactionEntry> reinvestDividendFees = new ArrayList<TransactionEntry>();
+        List<TransactionEntry> reinvestDividendFees = new ArrayList<>();
         TransactionEntry rdFee1 = createTransactionEntry(investAccount, expenseAccount, new BigDecimal("5.00"), "Reinvest Dividend Fee1", TransactionTag.INVESTMENT_FEE);
         reinvestDividendFees.add(rdFee1);
         TransactionEntry rdFee2 = createTransactionEntry(investAccount, expenseAccount, new BigDecimal("15.00"), "Reinvest Dividend Fee2", TransactionTag.INVESTMENT_FEE);
         reinvestDividendFees.add(rdFee2);
 
         // Creating the list of gains
-        List<TransactionEntry> reinvestDividendGains = new ArrayList<TransactionEntry>();
+        List<TransactionEntry> reinvestDividendGains = new ArrayList<>();
         TransactionEntry rdGain1 = createTransactionEntry(incomeAccount, investAccount, new BigDecimal("20.00"), "Reinvest Dividend Gain1", TransactionTag.GAIN_LOSS);
         reinvestDividendGains.add(rdGain1);
         TransactionEntry rdGain2 = createTransactionEntry(incomeAccount, investAccount, new BigDecimal("30.00"), "Reinvest Dividend Gain2", TransactionTag.GAIN_LOSS);
@@ -584,7 +584,7 @@ public class InvestmentTransactionTest {
         e.addSecurityHistory(securityNode1, history);
 
         // Creating the list of buying fees
-        List<TransactionEntry> buyingFees = new ArrayList<TransactionEntry>();
+        List<TransactionEntry> buyingFees = new ArrayList<>();
         TransactionEntry bFee1 = createTransactionEntry(investAccount, expenseAccount, new BigDecimal("20.00"), "Buying Fee1", TransactionTag.INVESTMENT_FEE);
         buyingFees.add(bFee1);
         TransactionEntry bFee2 = createTransactionEntry(investAccount, expenseAccount, new BigDecimal("10.00"), "Buying Fee2", TransactionTag.INVESTMENT_FEE);
@@ -646,7 +646,7 @@ public class InvestmentTransactionTest {
         e.addSecurityHistory(securityNode1, history);
 
         // Creating the list of buying fees
-        List<TransactionEntry> buyingFees = new ArrayList<TransactionEntry>();
+        List<TransactionEntry> buyingFees = new ArrayList<>();
         TransactionEntry bFee1 = createTransactionEntry(investAccount, expenseAccount, new BigDecimal("20.00"), "Buying Fee1", TransactionTag.INVESTMENT_FEE);
         buyingFees.add(bFee1);
         TransactionEntry bFee2 = createTransactionEntry(investAccount, expenseAccount, new BigDecimal("10.00"), "Buying Fee2", TransactionTag.INVESTMENT_FEE);

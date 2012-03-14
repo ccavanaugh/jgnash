@@ -62,9 +62,9 @@ public class ProfitLossTXT {
 
     private static final boolean SHOW_EMPTY_ACCOUNT = false;
 
-    private ArrayList<BigDecimal> balance = new ArrayList<BigDecimal>();
+    private ArrayList<BigDecimal> balance = new ArrayList<>();
 
-    private ArrayList<String> pl = new ArrayList<String>();
+    private ArrayList<String> pl = new ArrayList<>();
 
     private CurrencyNode baseCommodity;
 
@@ -114,7 +114,7 @@ public class ProfitLossTXT {
         //Expense
         pl.add("Expenses");
         pl.add("------------------------------------------------------");
-        balance = new ArrayList<BigDecimal>();
+        balance = new ArrayList<>();
         getBalances(root, dates, AccountType.EXPENSE);
 
         //Add up the Gross Expenses
@@ -171,7 +171,7 @@ public class ProfitLossTXT {
     }
 
     private static Date[] getLastDays(final Date start, final Date stop) {
-        ArrayList<Date> list = new ArrayList<Date>();
+        ArrayList<Date> list = new ArrayList<>();
 
         Date s = DateUtils.trimDate(start);
         Date t = DateUtils.trimDate(stop);

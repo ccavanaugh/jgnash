@@ -152,7 +152,7 @@ class Db4oCommodityDAO extends AbstractDb4oDAO implements CommodityDAO {
             query.constrain(CurrencyNode.class);
             query.descend("markedForRemoval").constrain(Boolean.FALSE);
 
-            list = new ArrayList<CurrencyNode>(query.execute());
+            list = new ArrayList<>(query.execute());
 
             container.ext().releaseSemaphore(GLOBAL_SEMAPHORE);
         } else {
@@ -199,7 +199,7 @@ class Db4oCommodityDAO extends AbstractDb4oDAO implements CommodityDAO {
         if (container.ext().setSemaphore(GLOBAL_SEMAPHORE, SEMAPHORE_WAIT_TIME)) {
 
             // Remove any that are marked for removal
-            list = stripMarkedForRemoval(new ArrayList<SecurityNode>(container.query(SecurityNode.class)));
+            list = stripMarkedForRemoval(new ArrayList<>(container.query(SecurityNode.class)));
 
             container.ext().releaseSemaphore(GLOBAL_SEMAPHORE);
         } else {
@@ -216,7 +216,7 @@ class Db4oCommodityDAO extends AbstractDb4oDAO implements CommodityDAO {
         if (container.ext().setSemaphore(GLOBAL_SEMAPHORE, SEMAPHORE_WAIT_TIME)) {
 
             // Remove any that are marked for removal
-            list = stripMarkedForRemoval(new ArrayList<ExchangeRate>(container.query(ExchangeRate.class)));
+            list = stripMarkedForRemoval(new ArrayList<>(container.query(ExchangeRate.class)));
 
             container.ext().releaseSemaphore(GLOBAL_SEMAPHORE);
         } else {
@@ -312,7 +312,7 @@ class Db4oCommodityDAO extends AbstractDb4oDAO implements CommodityDAO {
 
     @Override
     public Set<CurrencyNode> getActiveCurrencies() {
-        Set<CurrencyNode> currencies = new HashSet<CurrencyNode>();
+        Set<CurrencyNode> currencies = new HashSet<>();
 
         if (container.ext().setSemaphore(GLOBAL_SEMAPHORE, SEMAPHORE_WAIT_TIME)) {
             ActiveAccountCurrencyPredicate accountPredicate = new ActiveAccountCurrencyPredicate();
@@ -338,7 +338,7 @@ class Db4oCommodityDAO extends AbstractDb4oDAO implements CommodityDAO {
     private static class ActiveAccountCurrencyPredicate extends Predicate<Account> {
         private static final long serialVersionUID = -652916106551112316L;
 
-        private final Set<CurrencyNode> set = new HashSet<CurrencyNode>();
+        private final Set<CurrencyNode> set = new HashSet<>();
 
         @Override
         public boolean match(Account account) {
@@ -357,7 +357,7 @@ class Db4oCommodityDAO extends AbstractDb4oDAO implements CommodityDAO {
     private static class ActiveSecurityCurrencyPredicate extends Predicate<SecurityNode> {
         private static final long serialVersionUID = -652916106551112316L;
 
-        private final Set<CurrencyNode> set = new HashSet<CurrencyNode>();
+        private final Set<CurrencyNode> set = new HashSet<>();
 
         @Override
         public boolean match(SecurityNode node) {

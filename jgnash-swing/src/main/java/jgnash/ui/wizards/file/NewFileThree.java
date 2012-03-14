@@ -180,8 +180,8 @@ public class NewFileThree extends JPanel implements WizardPage, ActionListener {
 
             Set<CurrencyNode> currencies = (Set<CurrencyNode>) map.get(NewFileDialog.Settings.DEFAULT_CURRENCIES);
 
-            aList = new SortedListModel<CurrencyNode>(currencies);
-            cList = new SortedListModel<CurrencyNode>();
+            aList = new SortedListModel<>(currencies);
+            cList = new SortedListModel<>();
 
             aJList.setModel(aList);
             cJList.setModel(cList);
@@ -190,7 +190,7 @@ public class NewFileThree extends JPanel implements WizardPage, ActionListener {
 
     @Override
     public void putSettings(Map<Enum<?>, Object> map) {
-        map.put(NewFileDialog.Settings.CURRENCIES, new TreeSet<CurrencyNode>(
+        map.put(NewFileDialog.Settings.CURRENCIES, new TreeSet<>(
                 cList.asList()));
     }
 }

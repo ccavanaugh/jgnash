@@ -151,7 +151,7 @@ public class BudgetResultsExport {
         }
 
         // must sort the accounts, otherwise child structure is not correct
-        List<Account> accounts = new ArrayList<Account>(model.getAccounts());
+        List<Account> accounts = new ArrayList<>(model.getAccounts());
         Collections.sort(accounts);
 
         // create account rows
@@ -179,9 +179,9 @@ public class BudgetResultsExport {
             c.setCellValue(createHelper.createRichTextString(account.getName()));
             c.setCellStyle(cs);
 
-            List<CellReference> budgetedRefList = new ArrayList<CellReference>();
-            List<CellReference> changeRefList = new ArrayList<CellReference>();
-            List<CellReference> remainingRefList = new ArrayList<CellReference>();
+            List<CellReference> budgetedRefList = new ArrayList<>();
+            List<CellReference> changeRefList = new ArrayList<>();
+            List<CellReference> remainingRefList = new ArrayList<>();
 
             for (int i = 0; i < model.getDescriptorList().size(); i++) {
 
@@ -248,9 +248,9 @@ public class BudgetResultsExport {
             c.setCellValue(createHelper.createRichTextString(group.toString()));
             c.setCellStyle(cs);
 
-            List<CellReference> budgetedRefList = new ArrayList<CellReference>();
-            List<CellReference> changeRefList = new ArrayList<CellReference>();
-            List<CellReference> remainingRefList = new ArrayList<CellReference>();
+            List<CellReference> budgetedRefList = new ArrayList<>();
+            List<CellReference> changeRefList = new ArrayList<>();
+            List<CellReference> remainingRefList = new ArrayList<>();
 
             for (int i = 0; i < model.getDescriptorList().size(); i++) {
 

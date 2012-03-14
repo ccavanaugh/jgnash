@@ -43,7 +43,7 @@ public class InvestmentPerformanceSummary {
 
     private Date endDate;
 
-    private Map<SecurityNode, SecurityPerformanceData> performanceData = new TreeMap<SecurityNode, SecurityPerformanceData>();
+    private Map<SecurityNode, SecurityPerformanceData> performanceData = new TreeMap<>();
 
     private List<Transaction> transactions;
 
@@ -110,7 +110,7 @@ public class InvestmentPerformanceSummary {
     }
 
     public List<SecurityNode> getSecurities() {
-        return new ArrayList<SecurityNode>(performanceData.keySet());
+        return new ArrayList<>(performanceData.keySet());
     }
 
     /**

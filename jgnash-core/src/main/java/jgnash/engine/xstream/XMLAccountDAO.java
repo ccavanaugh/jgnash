@@ -147,7 +147,7 @@ public class XMLAccountDAO extends AbstractXMLDAO implements AccountDAO {
     }
 
     private List<Account> getAccountByType(AccountType type) {
-        List<Account> list = new ArrayList<Account>();
+        List<Account> list = new ArrayList<>();
 
         for (Account a : getAccountList()) {
             if (a.getAccountType() == type) {

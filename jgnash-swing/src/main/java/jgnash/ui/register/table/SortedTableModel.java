@@ -42,7 +42,7 @@ public class SortedTableModel extends RegisterTableModel implements SortableTabl
 
     private static final long serialVersionUID = -7009845379286807436L;
 
-    List<Transaction> transactions = new ArrayList<Transaction>();
+    List<Transaction> transactions = new ArrayList<>();
 
     private int sortColumn = 0;
 

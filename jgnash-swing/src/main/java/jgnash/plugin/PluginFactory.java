@@ -59,7 +59,7 @@ public final class PluginFactory {
 
     static {
         factory = new PluginFactory();
-        plugins = new ArrayList<Plugin>();
+        plugins = new ArrayList<>();
     }
 
     private PluginFactory() {

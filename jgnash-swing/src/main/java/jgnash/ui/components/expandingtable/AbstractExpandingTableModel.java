@@ -49,14 +49,14 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
     /*
      * Remembers the account state (expanded)
      */
-    private final Map<E, ExpandingTableNode<E>> objects = new HashMap<E, ExpandingTableNode<E>>();
+    private final Map<E, ExpandingTableNode<E>> objects = new HashMap<>();
 
-    private transient List<ExpandingTableNode<E>> visibleObjects = new ArrayList<ExpandingTableNode<E>>();
+    private transient List<ExpandingTableNode<E>> visibleObjects = new ArrayList<>();
 
     /**
      * A list of the key/objects in the model.  It is faster to maintain a list vs return a keySet from the map
      */
-    private transient Set<E> keys = new HashSet<E>();
+    private transient Set<E> keys = new HashSet<>();
 
     /**
      * Read write lock for model access
@@ -92,7 +92,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
 
         try {
             // return a defensive copy
-            return new HashSet<E>(keys);
+            return new HashSet<>(keys);
         } finally {
             readLock.unlock();
         }
@@ -105,7 +105,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
         try {
             StringBuilder builder = new StringBuilder();
 
-            ArrayList<ExpandingTableNode<E>> values = new ArrayList<ExpandingTableNode<E>>(objects.values());
+            ArrayList<ExpandingTableNode<E>> values = new ArrayList<>(objects.values());
             Collections.sort(values);
 
             for (ExpandingTableNode<E> node : values) {
@@ -125,7 +125,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
         try {
             if (state != null && state.length() == objects.size()) {
 
-                ArrayList<ExpandingTableNode<E>> values = new ArrayList<ExpandingTableNode<E>>(objects.values());
+                ArrayList<ExpandingTableNode<E>> values = new ArrayList<>(objects.values());
                 Collections.sort(values);
 
                 for (int i = 0; i < state.length(); i++) {
@@ -228,7 +228,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
         writeLock.lock();
 
         try {
-            objects.put(object, new ExpandingTableNode<E>(object));
+            objects.put(object, new ExpandingTableNode<>(object));
             keys.add(object);
 
             buildVisibleModel();
@@ -364,7 +364,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
             visibleObjects.clear();
 
             for (E object : getModelObjects()) {
-                objects.put(object, new ExpandingTableNode<E>(object));
+                objects.put(object, new ExpandingTableNode<>(object));
                 keys.add(object);
             }
         } finally {
@@ -402,7 +402,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
         writeLock.lock();
 
         try {
-            List<ExpandingTableNode<E>> model = new ArrayList<ExpandingTableNode<E>>();
+            List<ExpandingTableNode<E>> model = new ArrayList<>();
 
             for (E child : getChildren(root)) {
                 loadVisibleModel(child, model);

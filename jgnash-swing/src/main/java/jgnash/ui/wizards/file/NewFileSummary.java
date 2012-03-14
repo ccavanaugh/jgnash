@@ -48,7 +48,7 @@ public class NewFileSummary extends javax.swing.JPanel implements WizardPage {
 
     private JTextField baseCurrencyField;
 
-    private JList currenciesList;
+    private JList<CurrencyNode> currenciesList;
 
     public NewFileSummary() {
         layoutMainPanel();
@@ -61,7 +61,7 @@ public class NewFileSummary extends javax.swing.JPanel implements WizardPage {
         baseCurrencyField = new JTextField();
         baseCurrencyField.setEditable(false);
 
-        currenciesList = new JList();
+        currenciesList = new JList<>();
         currenciesList.setBackground((Color) UIManager.getDefaults().get("TextField.inactiveBackground"));
     }
 
@@ -97,7 +97,7 @@ public class NewFileSummary extends javax.swing.JPanel implements WizardPage {
         fileField.setText((String) map.get(NewFileDialog.Settings.DATABASENAME));
         baseCurrencyField.setText(map.get(NewFileDialog.Settings.DEFAULT_CURRENCY).toString());
 
-        SortedListModel<CurrencyNode> model = new SortedListModel<CurrencyNode>((Set<CurrencyNode>) map.get(NewFileDialog.Settings.CURRENCIES));
+        SortedListModel<CurrencyNode> model = new SortedListModel<>((Set<CurrencyNode>) map.get(NewFileDialog.Settings.CURRENCIES));
         model.addElement(((CurrencyNode) (map.get(NewFileDialog.Settings.DEFAULT_CURRENCY))));
         currenciesList.setModel(model);
     }
