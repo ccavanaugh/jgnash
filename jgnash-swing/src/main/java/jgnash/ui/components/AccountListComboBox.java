@@ -47,7 +47,7 @@ import jgnash.message.MessageProperty;
  * @author Vijil E C (vijilec at gmail dot com)
  * @version $Id: AccountListComboBox.java 3070 2012-01-04 11:00:43Z ccavanaugh $
  */
-public class AccountListComboBox extends JComboBox implements MessageListener {
+public class AccountListComboBox extends JComboBox<Account> implements MessageListener {
 
     private boolean layingOut = false;
 
@@ -163,11 +163,11 @@ public class AccountListComboBox extends JComboBox implements MessageListener {
         });
     }
 
-    protected static abstract class AbstractModel extends AbstractListModel implements ComboBoxModel {
+    protected static abstract class AbstractModel extends AbstractListModel<Account> implements ComboBoxModel<Account> {
 
         private static final long serialVersionUID = -4037152571034212252L;
 
-        List<Account> accounts = new ArrayList<Account>();
+        List<Account> accounts = new ArrayList<>();
 
         Account baseAccount = null;
 
@@ -192,7 +192,7 @@ public class AccountListComboBox extends JComboBox implements MessageListener {
 
         void loadAccounts() {
             synchronized (lock) {
-                ArrayList<Account> list = new ArrayList<Account>();
+                ArrayList<Account> list = new ArrayList<>();
                 loadChildren(EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount(), list);
                 accounts.clear();
                 accounts = list;
@@ -211,7 +211,7 @@ public class AccountListComboBox extends JComboBox implements MessageListener {
          * @return the value at <code>index</code>
          */
         @Override
-        public Object getElementAt(final int index) {
+        public Account getElementAt(final int index) {
             synchronized (lock) {
                 return accounts.get(index);
             }
@@ -386,7 +386,7 @@ public class AccountListComboBox extends JComboBox implements MessageListener {
     /**
      * ComboBox renderer Display a specified text when the ComboBox is disabled
      */
-    private class Renderer implements ListCellRenderer {
+    private class Renderer implements ListCellRenderer<Account> {
 
         private ListCellRenderer delegate;
 
@@ -395,8 +395,8 @@ public class AccountListComboBox extends JComboBox implements MessageListener {
         }
 
         @Override
-        public Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean cellHasFocus) {
-            if (value != null) {
+        public Component getListCellRendererComponent(final JList<? extends Account> list, final Account value, final int index, final boolean isSelected, final boolean cellHasFocus) {
+            if (value != null) {            	                
                 AccountListComboBox.this.setToolTipText(((Account) value).getPathName());
                 return delegate.getListCellRendererComponent(list, AccountListComboBox.this.getToolTipText(), index, isSelected, cellHasFocus);
             }

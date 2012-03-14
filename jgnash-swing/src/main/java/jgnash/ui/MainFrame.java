@@ -33,6 +33,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -88,7 +89,7 @@ import jgnash.ui.util.builder.ActionParser;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.Resource;
 
-import org.jdesktop.jxlayer.JXLayer;
+import javax.swing.JLayer;
 import org.jdesktop.jxlayer.plaf.effect.BufferedImageOpEffect;
 import org.jdesktop.jxlayer.plaf.ext.LockableUI;
 import org.jdesktop.swingx.JXBusyLabel;
@@ -452,8 +453,8 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
         waitPanel = new WaitMessagePanel();
 
-        JXLayer<JPanel> rootLayer = new JXLayer<JPanel>(rootPanel);
-        rootLayer.setUI(primaryWaitBlurUI);
+        JLayer<JPanel> rootLayer = new JLayer<>(rootPanel);
+        rootLayer.setUI(primaryWaitBlurUI);             
 
         getContentPane().add(rootLayer, BorderLayout.CENTER);
 
@@ -846,7 +847,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
                 } else {
                     setTitle(Main.VERSION);
                 }
-            } catch (Exception exception) {
+            } catch (InterruptedException | ExecutionException exception) {
                 setTitle(Main.VERSION);
                 log.log(Level.INFO, exception.getMessage(), exception);
             }

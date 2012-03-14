@@ -65,7 +65,7 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
     private final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
     private final Resource rb = Resource.get();
     private JButton newButton;
-    private JList securityList;
+    private JList<SecurityNode> securityList;
     private JButton deleteButton;
     private JTextField symbolField;
     private JTextField isinField;
@@ -99,7 +99,7 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
     }
 
     private void initComponents() {
-        securityList = new JList();
+        securityList = new JList<SecurityNode>();
         securityList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         symbolField = new JTextFieldEx();

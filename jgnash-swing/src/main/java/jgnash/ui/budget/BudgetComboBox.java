@@ -42,7 +42,7 @@ import jgnash.util.Resource;
  * @author Craig Cavanaugh
  * @version $Id: BudgetComboBox.java 3058 2012-01-03 00:19:16Z ccavanaugh $
  */
-public final class BudgetComboBox extends JComboBox {
+public final class BudgetComboBox extends JComboBox<Budget> {
 
     private static final long serialVersionUID = 1L;
 
@@ -174,7 +174,7 @@ public final class BudgetComboBox extends JComboBox {
     /**
      * ComboBox renderer Display a specified text when the ComboBox is disabled
      */
-    private class Renderer implements ListCellRenderer {
+    private class Renderer implements ListCellRenderer<Budget> {
 
         private ListCellRenderer delegate;
 
@@ -183,10 +183,10 @@ public final class BudgetComboBox extends JComboBox {
         }
 
         @Override
-        public Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean cellHasFocus) {
+        public Component getListCellRendererComponent(final JList<? extends Budget> list, final Budget value, final int index, final boolean isSelected, final boolean cellHasFocus) {
             if (value != null) {
-                BudgetComboBox.this.setToolTipText(((Budget) value).getDescription());
-                return delegate.getListCellRendererComponent(list, ((Budget) value).getName(), index, isSelected, cellHasFocus);
+                BudgetComboBox.this.setToolTipText(value.getDescription());
+                return delegate.getListCellRendererComponent(list, value.getName(), index, isSelected, cellHasFocus);
             }
             return delegate.getListCellRendererComponent(list, null, index, isSelected, cellHasFocus);
         }

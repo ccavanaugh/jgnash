@@ -61,7 +61,7 @@ public class WizardDialog extends JDialog implements ActionListener {
 
     private final CardLayout layout;
 
-    private final DefaultListModel model;
+    private final DefaultListModel<WizardPage> model;
 
     private int selectedIndex = 0;
 
@@ -75,7 +75,7 @@ public class WizardDialog extends JDialog implements ActionListener {
 
     private JPanel pagePanel;
 
-    private JList taskList;
+    private JList<WizardPage> taskList;
 
     protected final Resource rb = Resource.get();
 
@@ -95,7 +95,7 @@ public class WizardDialog extends JDialog implements ActionListener {
         taskList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         layout = (CardLayout) pagePanel.getLayout();
 
-        model = new DefaultListModel();
+        model = new DefaultListModel<>();
         taskList.setModel(model);
         updateButtonState();
 
@@ -149,7 +149,7 @@ public class WizardDialog extends JDialog implements ActionListener {
         finishButton = new JButton(rb.getString("Button.Finish"));
         cancelButton = new JButton(rb.getString("Button.Cancel"));
 
-        taskList = new JList();
+        taskList = new JList<>();
         taskList.setBorder(new EtchedBorder());
         taskList.addListSelectionListener(new ListSelectionListener() {
 
@@ -348,30 +348,30 @@ public class WizardDialog extends JDialog implements ActionListener {
     /*
      * Color the renderer red if the page is not _valid
      */
-    private static final class WizardPageRenderer implements ListCellRenderer {
+    private static final class WizardPageRenderer implements ListCellRenderer<WizardPage> {
 
         private final Color inValidColor = Color.RED;
 
         private Color validColor = Color.RED;
 
-        private final ListCellRenderer delegate;
+        private final ListCellRenderer<? super WizardPage> delegate;
 
-        public WizardPageRenderer(final ListCellRenderer delegate) {
+        public WizardPageRenderer(final ListCellRenderer<? super WizardPage> listCellRenderer) {
             super();
-            this.delegate = delegate;
+            this.delegate = listCellRenderer;
 
-            if (delegate instanceof JLabel) {
-                validColor = ((JLabel) delegate).getForeground();
+            if (listCellRenderer instanceof JLabel) {
+                validColor = ((JLabel) listCellRenderer).getForeground();
             }
         }
 
         @Override
-        public Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean hasFocus) {
+        public Component getListCellRendererComponent(final JList<? extends WizardPage> list, final WizardPage value, final int index, final boolean isSelected, final boolean hasFocus) {
 
             Component c = delegate.getListCellRendererComponent(list, value, index, isSelected, hasFocus);
 
             if (delegate instanceof JLabel) {
-                if (((WizardPage) value).isPageValid()) {
+                if (value.isPageValid()) {
                     ((JLabel) delegate).setForeground(validColor);
                 } else {
                     ((JLabel) delegate).setForeground(inValidColor);

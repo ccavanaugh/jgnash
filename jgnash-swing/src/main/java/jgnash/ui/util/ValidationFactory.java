@@ -27,7 +27,7 @@ import javax.swing.JComponent;
 
 import jgnash.util.Resource;
 
-import org.jdesktop.jxlayer.JXLayer;
+import javax.swing.JLayer;
 import org.jdesktop.jxlayer.plaf.AbstractLayerUI;
 
 /**
@@ -51,7 +51,7 @@ public class ValidationFactory {
     }
 
     public static JComponent wrap(final JComponent component) {
-        JXLayer<JComponent> layer = new JXLayer<JComponent>(component);
+        JLayer<JComponent> layer = new JLayer<JComponent>(component);
         layer.setUI(new ValidationUI());
         return layer;
     }
@@ -59,7 +59,7 @@ public class ValidationFactory {
     public static void showValidationError(final String error, final JComponent component) {
         Container parent = component.getParent();
 
-        if (parent instanceof JXLayer) {
+        if (parent instanceof JLayer) {
             component.putClientProperty(ValidationFactory.VALIDATION_PROPERTY, error);
             component.repaint();
         }
@@ -68,7 +68,7 @@ public class ValidationFactory {
     private static class ValidationUI extends AbstractLayerUI<JComponent> {
 
         @Override
-        protected void paintLayer(final Graphics2D graphics, final JXLayer<? extends JComponent> layer) {
+        protected void paintLayer(final Graphics2D graphics, final JLayer<? extends JComponent> layer) {
             super.paintLayer(graphics, layer);
 
             if (layer.getView().getClientProperty(VALIDATION_PROPERTY) != null) {
@@ -82,14 +82,14 @@ public class ValidationFactory {
         }
 
         @Override
-        protected void processMouseEvent(final MouseEvent e, final JXLayer<? extends JComponent> layer) {
+        protected void processMouseEvent(final MouseEvent e, final JLayer<? extends JComponent> layer) {
             if (e.getID() == MouseEvent.MOUSE_CLICKED) {
                 layer.getView().putClientProperty(VALIDATION_PROPERTY, null);
             }
         }
 
         @Override
-        protected void processKeyEvent(final KeyEvent e, final JXLayer<? extends JComponent> layer) {
+        protected void processKeyEvent(final KeyEvent e, final JLayer<? extends JComponent> layer) {
             layer.getView().putClientProperty(VALIDATION_PROPERTY, null);
         }
     }

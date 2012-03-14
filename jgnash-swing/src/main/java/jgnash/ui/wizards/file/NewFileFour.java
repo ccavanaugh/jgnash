@@ -64,7 +64,7 @@ public class NewFileFour extends JPanel implements WizardPage {
 
     private static final String ROOTPATH = "/jgnash/resource/account";
 
-    private JList accountList;
+    private JList<Account> accountList;
 
     private JTree accountTree;
 
@@ -76,7 +76,7 @@ public class NewFileFour extends JPanel implements WizardPage {
     public NewFileFour() {
         layoutMainPanel();
 
-        DefaultListModel model = new DefaultListModel();
+        DefaultListModel<Account> model = new DefaultListModel<>();
 
         for (RootAccount account : getLocalizedAccountSet()) {
             model.addElement(account);
@@ -84,7 +84,7 @@ public class NewFileFour extends JPanel implements WizardPage {
 
         accountList.setModel(model);
         accountList.setSelectionModel(new ToggleSelectionModel());
-        accountList.setCellRenderer(new CheckListCellRenderer(accountList.getCellRenderer()));
+        accountList.setCellRenderer(new CheckListCellRenderer<>(accountList.getCellRenderer()));
 
     }
 
@@ -107,7 +107,7 @@ public class NewFileFour extends JPanel implements WizardPage {
     }
 
     private void initComponents() {
-        accountList = new JList();
+        accountList = new JList<>();
 
         accountList.addMouseListener(new java.awt.event.MouseAdapter() {
 
@@ -179,9 +179,9 @@ public class NewFileFour extends JPanel implements WizardPage {
 
     @Override
     public void putSettings(final Map<Enum<?>, Object> map) {
-        List<RootAccount> accounts = new ArrayList<RootAccount>();
+        List<RootAccount> accounts = new ArrayList<RootAccount>();              
 
-        for (Object o : accountList.getSelectedValues()) {
+        for (Object o : accountList.getSelectedValuesList()) {
             accounts.add((RootAccount) o);
 
         }

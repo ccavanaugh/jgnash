@@ -61,9 +61,9 @@ class ColumnDialog extends JDialog implements ActionListener {
 
     private JButton removeButton;
 
-    private JList showList;
+    private JList<String> showList;
 
-    private JList hideList;
+    private JList<String> hideList;
 
     private SortedListModel<String> showModel;
 
@@ -122,8 +122,8 @@ class ColumnDialog extends JDialog implements ActionListener {
             }
         }
 
-        showList = new JList(showModel);
-        hideList = new JList(hideModel);
+        showList = new JList<>(showModel);
+        hideList = new JList<>(hideModel);
         showList.setPrototypeCellValue("prototypeCellValue");
         hideList.setPrototypeCellValue("prototypeCellValue");
 
@@ -187,19 +187,17 @@ class ColumnDialog extends JDialog implements ActionListener {
         commitVisibility();
     }
 
-    private void addAction() {
-        Object[] list = hideList.getSelectedValues();
-        for (Object o : list) {
-            hideModel.removeElement((String) o);
-            showModel.addElement((String) o);
+    private void addAction() {        
+        for (String o : hideList.getSelectedValuesList()) {
+            hideModel.removeElement(o);
+            showModel.addElement(o);
         }
     }
 
-    private void removeAction() {
-        Object[] list = showList.getSelectedValues();
-        for (Object o : list) {
-            showModel.removeElement((String) o);
-            hideModel.addElement((String) o);
+    private void removeAction() {        
+        for (String o : showList.getSelectedValuesList()) {
+            showModel.removeElement(o);
+            hideModel.addElement(o);
         }
     }
 

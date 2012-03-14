@@ -78,7 +78,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
 
     private final JProgressBar bar = new JProgressBar();
 
-    private final JList securityList = new JList();
+    private final JList<SecurityNode> securityList = new JList<>();
 
     private final Calendar cal = Calendar.getInstance();
 
@@ -112,7 +112,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
 
         securityList.setModel(new SortedListModel<SecurityNode>(list));
         securityList.setSelectionModel(new ToggleSelectionModel());
-        securityList.setCellRenderer(new CheckListCellRenderer(securityList.getCellRenderer()));
+        securityList.setCellRenderer(new CheckListCellRenderer<>(securityList.getCellRenderer()));
 
         layoutMainPanel();
 

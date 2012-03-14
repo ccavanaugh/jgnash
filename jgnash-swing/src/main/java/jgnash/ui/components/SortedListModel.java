@@ -32,7 +32,7 @@ import javax.swing.AbstractListModel;
  * @version $Id: SortedListModel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
  */
 
-public class SortedListModel<E extends Comparable<? super E>> extends AbstractListModel {
+public class SortedListModel<E extends Comparable<? super E>> extends AbstractListModel<E> {
 
     private static final long serialVersionUID = -5321417365496715895L;
 

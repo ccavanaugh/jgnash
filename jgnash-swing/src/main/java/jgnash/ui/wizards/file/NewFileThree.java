@@ -53,9 +53,9 @@ public class NewFileThree extends JPanel implements WizardPage, ActionListener {
 
     private final Resource rb = Resource.get();
     private JEditorPane helpPane;
-    private JList aJList;
+    private JList<CurrencyNode> aJList;
     private JButton addButton;
-    private JList cJList;
+    private JList<CurrencyNode> cJList;
     private JButton removeButton;
     private SortedListModel<CurrencyNode> aList;
     private SortedListModel<CurrencyNode> cList;
@@ -72,8 +72,8 @@ public class NewFileThree extends JPanel implements WizardPage, ActionListener {
         removeButton = new JButton(rb.getString("Button.Remove"));
         removeButton.setIcon(Resource.getIcon("/jgnash/resource/list-remove.png"));
 
-        aJList = new javax.swing.JList();
-        cJList = new javax.swing.JList();
+        aJList = new JList<>();
+        cJList = new JList<>();
 
         helpPane = new JEditorPane();
         helpPane.setEditable(false);
@@ -136,7 +136,7 @@ public class NewFileThree extends JPanel implements WizardPage, ActionListener {
     }
 
     private void removeAction() {
-        CurrencyNode obj = (CurrencyNode) cJList.getSelectedValue();
+        CurrencyNode obj = cJList.getSelectedValue();
         if (obj != null) {
             cList.removeElement(obj);
             aList.addElement(obj);
@@ -144,7 +144,7 @@ public class NewFileThree extends JPanel implements WizardPage, ActionListener {
     }
 
     private void addAction() {
-        CurrencyNode obj = (CurrencyNode) aJList.getSelectedValue();
+        CurrencyNode obj = aJList.getSelectedValue();
         if (obj != null) {
             aList.removeElement(obj);
             cList.addElement(obj);

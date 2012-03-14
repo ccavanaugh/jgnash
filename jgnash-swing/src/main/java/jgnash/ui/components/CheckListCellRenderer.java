@@ -34,12 +34,12 @@ import javax.swing.ListCellRenderer;
  * @author Craig Cavanaugh
  * @version $Id: CheckListCellRenderer.java 3051 2012-01-02 11:27:23Z ccavanaugh $
  */
-public class CheckListCellRenderer extends JPanel implements ListCellRenderer {
-    private ListCellRenderer renderer;
+public class CheckListCellRenderer<E> extends JPanel implements ListCellRenderer<E> {
+    private ListCellRenderer<E> renderer;
 
     private JCheckBox checkBox = new JCheckBox();
 
-    public CheckListCellRenderer(ListCellRenderer renderer) {
+    public CheckListCellRenderer(ListCellRenderer<E> renderer) {
         this.renderer = renderer;
         setLayout(new BorderLayout());
         setOpaque(false);
@@ -47,7 +47,7 @@ public class CheckListCellRenderer extends JPanel implements ListCellRenderer {
     }
 
     @Override
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+    public Component getListCellRendererComponent(JList<? extends E> list, E value, int index, boolean isSelected, boolean cellHasFocus) {
         Component component = renderer.getListCellRendererComponent(list, value, index, false, cellHasFocus);
         checkBox.setSelected(isSelected);
         removeAll();

@@ -54,9 +54,9 @@ import jgnash.util.Resource;
  */
 public class TransactionNumberDialog extends JDialog implements ActionListener {
 
-    private JList list;
+    private JList<String> list;
 
-    private DefaultListModel model;
+    private DefaultListModel<String> model;
 
     private JTextField entryField;
 
@@ -115,14 +115,14 @@ public class TransactionNumberDialog extends JDialog implements ActionListener {
         upButton.addActionListener(this);
         downButton.addActionListener(this);
 
-        model = new DefaultListModel();
+        model = new DefaultListModel<>();
         final List<String> items = EngineFactory.getEngine(EngineFactory.DEFAULT).getTransactionNumberList();
 
         for (String s : items) {
             model.addElement(s);
         }
 
-        list = new JList(model);
+        list = new JList<>(model);
 
         entryField = new JTextFieldEx(10);
     }
@@ -184,7 +184,7 @@ public class TransactionNumberDialog extends JDialog implements ActionListener {
     }
 
     private void okAction() {
-        final ListModel listModel = list.getModel();
+        final ListModel<String> listModel = list.getModel();
         final int size = listModel.getSize();
         final List<String> items = new ArrayList<String>();
 

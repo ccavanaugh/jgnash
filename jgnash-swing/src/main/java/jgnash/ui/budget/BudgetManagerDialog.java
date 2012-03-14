@@ -35,6 +35,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -74,7 +75,7 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
 
     private JButton renameButton;
 
-    private JList budgetList;
+    private JList<BudgetObject> budgetList;
 
     public static void showDialog() {
 
@@ -106,7 +107,7 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
         newButton = new JButton(rb.getString("Button.NewEmpty"));
         renameButton = new JButton(rb.getString("Button.Rename"));
 
-        budgetList = new JList();
+        budgetList = new JList<>();
 
         buildBudgetModel();
 
@@ -189,7 +190,7 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
     }
 
     private void renameBudget() {
-        for (Object o : budgetList.getSelectedValues()) {
+        for (Object o : budgetList.getSelectedValuesList()) {
             RenameBudgetDialog.showDialog(((BudgetObject) o).getBudget(), BudgetManagerDialog.this);
         }
     }
@@ -233,15 +234,15 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
     private void deleteBudget() {
         Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-        Object[] values = budgetList.getSelectedValues();
+        List<BudgetObject> values = budgetList.getSelectedValuesList();
 
-        if (values.length > 0) {
+        if (values.size() > 0) {
 
-            String message = values.length == 1 ? rb.getString("Message.ConfirmBudgetDelete") : rb.getString("Message.ConfirmMultipleBudgetDelete");
+            String message = values.size() == 1 ? rb.getString("Message.ConfirmBudgetDelete") : rb.getString("Message.ConfirmMultipleBudgetDelete");
 
             if (YesNoDialog.showYesNoDialog(UIApplication.getFrame(), new JLabel(rb.getString(message)), rb.getString("Title.Confirm"))) {
-                for (Object value : values) {
-                    e.removeBudget(((BudgetObject) value).getBudget());
+                for (BudgetObject value : values) {
+                    e.removeBudget(value.getBudget());
                 }
             }
         }
@@ -250,7 +251,7 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
     private void cloneBudget() {
         Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-        for (Object value : budgetList.getSelectedValues()) {
+        for (Object value : budgetList.getSelectedValuesList()) {
 
             Budget newBudget;
             try {

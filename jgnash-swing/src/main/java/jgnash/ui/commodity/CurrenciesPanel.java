@@ -60,9 +60,9 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
 
     private SortedListModel<CurrencyElement> cList;
 
-    private JList cJList;
+    private JList<CurrencyElement> cJList;
 
-    private JList aJList;
+    private JList<CurrencyNode> aJList;
 
     private JButton customButton;
 
@@ -171,25 +171,24 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
         ValidationFactory.showValidationError(rb.getString("Message.Error.MissingSymbol"), customField);
     }
 
-    private void addAction() {
-        Object[] list = aJList.getSelectedValues();
-        for (Object obj : list) {
+    private void addAction() {        
+        for (CurrencyNode obj : aJList.getSelectedValuesList()) {
             if (obj != null) {
-                aList.removeElement((CurrencyNode) obj);
-                cList.addElement(new CurrencyElement((CurrencyNode) obj, true));
-                engine.addCommodity((CurrencyNode) obj);
+                aList.removeElement(obj);
+                cList.addElement(new CurrencyElement(obj, true));
+                engine.addCommodity(obj);
             }
         }
     }
 
     private void removeAction() {
-        for (Object element : cJList.getSelectedValues()) {
-            CurrencyElement currencyElement = (CurrencyElement) element;
+        for (CurrencyElement element : cJList.getSelectedValuesList()) {
+            
 
-            if (currencyElement.isEnabled()) {
-                if (engine.removeCommodity(currencyElement.getNode())) {
-                    cList.removeElement(currencyElement);
-                    aList.addElement(currencyElement.getNode());
+            if (element.isEnabled()) {
+                if (engine.removeCommodity(element.getNode())) {
+                    cList.removeElement(element);
+                    aList.addElement(element.getNode());
                 }
             }
         }
@@ -207,7 +206,7 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
         }
 
         aList = new SortedListModel<CurrencyNode>(defaultNodes);
-        aJList = new JList(aList);
+        aJList = new JList<>(aList);
 
         ArrayList<CurrencyElement> list = new ArrayList<CurrencyElement>();
 
@@ -220,7 +219,7 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
         }
 
         cList = new SortedListModel<CurrencyElement>(list);
-        cJList = new JList(cList);
+        cJList = new JList<>(cList);
         cJList.setCellRenderer(new CurrencyRenderer(cJList.getCellRenderer()));
     }
 
@@ -289,16 +288,16 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
         }
     }
 
-    private final static class CurrencyRenderer implements ListCellRenderer {
+    private final static class CurrencyRenderer implements ListCellRenderer<CurrencyElement> {
 
-        private ListCellRenderer delegate;
+        private ListCellRenderer<? super CurrencyElement> delegate;
 
-        public CurrencyRenderer(final ListCellRenderer delegate) {
+        public CurrencyRenderer(final ListCellRenderer<? super CurrencyElement> delegate) {
             this.delegate = delegate;
         }
 
         @Override
-        public Component getListCellRendererComponent(final JList list, final Object value, final int index, final boolean isSelected, final boolean hasFocus) {
+        public Component getListCellRendererComponent(final JList<? extends CurrencyElement> list, final CurrencyElement value, final int index, final boolean isSelected, final boolean hasFocus) {
             Component c = delegate.getListCellRendererComponent(list, value, index, isSelected, hasFocus);
 
             c.setEnabled(((CurrencyElement) value).isEnabled());
