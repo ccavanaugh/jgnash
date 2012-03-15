@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -138,73 +140,22 @@ public final class FileUtils {
      *
      * @param src Source file
      * @param dst Destination file
-     * @throws java.io.FileNotFoundException thrown if the src file is not found or if the dst file is not a valid filename
      * @return true is the copy was successful
      */
-    public static boolean copyFile(final File src, final File dst) throws FileNotFoundException {
-
-        if (src == null || dst == null || src.equals(dst)) {
-            return false;
-        }
+    public static boolean copyFile(final File src, final File dst) {
 
         boolean result = false;
 
-        if (src.exists()) {
-            if (dst.exists() && !dst.canWrite()) {
-                return false;
-            }
-
-            final FileInputStream srcStream = new FileInputStream(src);
-            final FileOutputStream dstStream = new FileOutputStream(dst);
-
-            final FileChannel srcChannel = srcStream.getChannel();
-            final FileChannel dstChannel = dstStream.getChannel();
-
-            FileLock dstLock = null;
-            FileLock srcLock = null;
-
+        if (src != null && dst != null && !src.equals(dst)) {
             try {
-
-                srcLock = srcChannel.tryLock(0, Long.MAX_VALUE, true);
-                dstLock = dstChannel.tryLock();
-
-                if (srcLock != null && dstLock != null) { // only copy if locks are obtained
-                    // magic number for Windows, 64Mb - 32Kb)
-                    int maxCount = 64 * 1024 * 1024 - 32 * 1024;
-                    long size = srcChannel.size();
-                    long position = 0;
-                    while (position < size) {
-                        position += srcChannel.transferTo(position, maxCount, dstChannel);
-                    }
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                if (srcChannel != null) {
-                    try {
-                        if (srcLock != null) {
-                            srcLock.release();
-                        }
-                        srcChannel.close();
-                        srcStream.close();
-                    } catch (IOException ex) {
-                        Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-                if (dstChannel != null) {
-                    try {
-                        if (dstLock != null) {
-                            dstLock.release();
-                        }
-                        dstChannel.close();
-                        dstStream.close();
-                        result = true;
-                    } catch (IOException ex) {
-                        Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
+                Files.copy(src.toPath(), dst.toPath().getFileName(), StandardCopyOption.REPLACE_EXISTING);
+                result = true;
+            } catch (IOException e) {
+                Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, e);
             }
+
         }
+
         return result;
     }
 
