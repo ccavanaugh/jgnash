@@ -83,7 +83,7 @@ import jgnash.util.FileUtils;
 
 /**
  * Simple object container for StoredObjects that reads and writes a xml file
- * 
+ *
  * @author Craig Cavanaugh
  * @version $Id: XMLContainer.java 3051 2012-01-02 11:27:23Z ccavanaugh $
  */
@@ -103,17 +103,13 @@ public class XMLContainer {
         this.file = file;
     }
 
-    @SuppressWarnings({ "ChannelOpenedButNotSafelyClosed", "IOResourceOpenedButNotSafelyClosed" })
+    @SuppressWarnings({"ChannelOpenedButNotSafelyClosed", "IOResourceOpenedButNotSafelyClosed"})
     private boolean acquireFileLock() {
         try {
             lockChannel = new RandomAccessFile(file, "rw").getChannel();
             fileLock = lockChannel.tryLock();
             return true;
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (OverlappingFileLockException ex) {
+        } catch (IOException | OverlappingFileLockException ex) {
             Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
@@ -216,12 +212,12 @@ public class XMLContainer {
 
     /**
      * Returns a list of objects that are assignable from from the specified Class.
-     * <p>
+     * <p/>
      * The returned list may be modified without causing side effects
-     * 
-     * @param <T> the type of class to query
+     *
+     * @param <T>    the type of class to query
      * @param values Collection of objects to query
-     * @param clazz the Class to query for
+     * @param clazz  the Class to query for
      * @return A list of type T containing objects of type clazz
      */
     @SuppressWarnings("unchecked")
@@ -239,7 +235,7 @@ public class XMLContainer {
     /**
      * Returns of list of all <code>StoredObjects</code> held within this container. The returned list is a defensive
      * copy.
-     * 
+     *
      * @return A list of all <code>StoredObjects</code>
      * @see StoredObject
      */
@@ -272,9 +268,9 @@ public class XMLContainer {
     /**
      * Writes an XML file given a collection of StoredObjects. TrashObjects and objects marked for removal are not
      * written. If the file already exists, it will be overwritten.
-     * 
+     *
      * @param objects Collection of StoredObjects to write
-     * @param file file to write
+     * @param file    file to write
      */
     public static synchronized void writeXML(final Collection<StoredObject> objects, final File file) {
         Logger logger = Logger.getLogger(XMLContainer.class.getName());
@@ -286,11 +282,8 @@ public class XMLContainer {
                     logger.log(Level.WARNING, "Was not able to delete the old backup file: {0}", backup.getAbsolutePath());
                 }
             }
-            try {
-                FileUtils.copyFile(file, backup);
-            } catch (FileNotFoundException e) {
-                logger.log(Level.SEVERE, null, e);
-            }
+
+            FileUtils.copyFile(file, backup);
         }
 
         List<StoredObject> list = new ArrayList<>();
@@ -473,7 +466,7 @@ public class XMLContainer {
             this.objects = objects;
         }
 
-        @SuppressWarnings({ "rawtypes" })
+        @SuppressWarnings({"rawtypes"})
         @Override
         public Object newInstance(final Class type) {
             Object o = super.newInstance(type);
