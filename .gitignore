@@ -9,4 +9,6 @@ target/
 /jgnash-core/repository/
 .project
 .classpath
+*.iml
+.idea/
 
