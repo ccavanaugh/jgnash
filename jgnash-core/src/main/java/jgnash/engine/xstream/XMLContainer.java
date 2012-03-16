@@ -307,40 +307,20 @@ public class XMLContainer {
         Collections.sort(list, new StoredObjectComparator());
 
         logger.info("Writing XML file");
-        ObjectOutputStream out = null;
 
-        Writer writer;
-        try {
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))) {
+            writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+            writer.write("<?fileVersion " + Engine.CURRENT_VERSION + "?>\n");
 
-            try {
-                writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-                writer.write("<?fileVersion " + Engine.CURRENT_VERSION + "?>\n");
+            XStream xstream = configureXStream(new XStream(new PureJavaReflectionProvider(), new KXml2Driver()));
 
-                XStream xstream = configureXStream(new XStream(new PureJavaReflectionProvider(), new KXml2Driver()));
-
-                out = xstream.createObjectOutputStream(new PrettyPrintWriter(writer));
+            try (ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(writer))) {
                 out.writeObject(list);
-            } catch (IOException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            } finally {
-                if (out != null) {
-                    try {
-                        out.close();
-                    } catch (IOException ex) {
-                        logger.log(Level.SEVERE, null, ex);
-                    }
-                }
-
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    logger.log(Level.SEVERE, null, e);
-                }
             }
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, null, e);
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
+
         logger.info("Writing XML file complete");
     }
 
