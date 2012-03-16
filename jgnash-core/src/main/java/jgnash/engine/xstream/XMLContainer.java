@@ -85,7 +85,6 @@ import jgnash.util.FileUtils;
  * Simple object container for StoredObjects that reads and writes a xml file
  *
  * @author Craig Cavanaugh
- * @version $Id: XMLContainer.java 3051 2012-01-02 11:27:23Z ccavanaugh $
  */
 public class XMLContainer {
 
@@ -353,53 +352,25 @@ public class XMLContainer {
             encoding = "UTF-8"; // encoding is always UTF-8 for anything greater than 2.0
         }
 
-        ObjectInputStream in = null;
-        FileLock readLock = null; // obtain a shared lock for reading
-        FileInputStream fis = new FileInputStream(file);
+        try (FileInputStream fis = new FileInputStream(file);
+             Reader reader = new BufferedReader(new InputStreamReader(fis, encoding))) {
 
-        Reader reader = new BufferedReader(new InputStreamReader(fis, encoding));
-
-        readWriteLock.writeLock().lock();
-
-        try {
+            readWriteLock.writeLock().lock();
             XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects), new KXml2Driver()));
 
-            readLock = fis.getChannel().tryLock(0, Long.MAX_VALUE, true);
-
-            if (readLock != null) {
-                in = xstream.createObjectInputStream(reader);
-                in.readObject();
-            }
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            if (in != null) {
-                try {
-                    if (readLock != null) {
-                        readLock.release();
+            try (FileLock readLock = fis.getChannel().tryLock(0, Long.MAX_VALUE, true)) {
+                if (readLock != null) {
+                    try (ObjectInputStream in = xstream.createObjectInputStream(reader)) {
+                        in.readObject();
                     }
-                    in.close();
-                } catch (IOException e) {
-                    Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, e);
                 }
-            }
-
-            try {
-                reader.close();
-            } catch (IOException e) {
+            } catch (ClassNotFoundException e) {
                 Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, e);
             }
-
-            try {
-                fis.close();
-            } catch (IOException e) {
-                Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, e);
-            }
-
+        } catch (IOException e) {
+            Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
             acquireFileLock(); // lock the file on open
-
             readWriteLock.writeLock().unlock();
         }
     }
