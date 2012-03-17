@@ -11,4 +11,5 @@ target/
 .classpath
 *.iml
 .idea/
+*.log
 
