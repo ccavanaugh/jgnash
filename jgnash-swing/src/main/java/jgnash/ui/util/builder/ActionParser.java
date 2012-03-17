@@ -297,23 +297,27 @@ public final class ActionParser extends DefaultHandler {
             }
         } else {
             // single | toggle
-            if ("single".equals(node.type)) {
-                menu = new JCheckBoxMenuItem(a);
-            } else if ("toggle".equals(node.type)) {
-                menu = new JRadioButtonMenuItem(a);
+            switch (node.type) {
+                case "single":
+                    menu = new JCheckBoxMenuItem(a);
+                    break;
+                case "toggle":
+                    menu = new JRadioButtonMenuItem(a);
 
-                if (node.group != null) { // create a group
-                    ButtonGroup bGroup;
-                    if (buttonGroups.get(node.group) != null) {
-                        bGroup = buttonGroups.get(node.group);
-                    } else {
-                        bGroup = new ButtonGroup();
-                        buttonGroups.put(node.group, bGroup);
+                    if (node.group != null) { // create a group
+                        ButtonGroup bGroup;
+                        if (buttonGroups.get(node.group) != null) {
+                            bGroup = buttonGroups.get(node.group);
+                        } else {
+                            bGroup = new ButtonGroup();
+                            buttonGroups.put(node.group, bGroup);
+                        }
+                        bGroup.add(menu);
                     }
-                    bGroup.add(menu);
-                }
-            } else {
-                menu = new JMenuItem(a);
+                    break;
+                default:
+                    menu = new JMenuItem(a);
+                    break;
             }
         }
         menuItemMap.put(node.idref, menu);

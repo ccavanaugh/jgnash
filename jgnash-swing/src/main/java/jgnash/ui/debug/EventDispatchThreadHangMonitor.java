@@ -333,17 +333,22 @@ public final class EventDispatchThreadHangMonitor extends EventQueue {
                         final JFrame frame = new JFrame();
                         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                         frame.setLocationRelativeTo(null);
-                        if (arg.equals("exception")) {
-                            runExceptionTest(frame);
-                        } else if (arg.equals("focus")) {
-                            runFocusTest(frame);
-                        } else if (arg.equals("modal-hang")) {
-                            runModalTest(frame, true);
-                        } else if (arg.equals("modal-no-hang")) {
-                            runModalTest(frame, false);
-                        } else {
-                            System.err.println("unknown regression test '" + arg + "'");
-                            System.exit(1);
+                        switch (arg) {
+                            case "exception":
+                                runExceptionTest(frame);
+                                break;
+                            case "focus":
+                                runFocusTest(frame);
+                                break;
+                            case "modal-hang":
+                                runModalTest(frame, true);
+                                break;
+                            case "modal-no-hang":
+                                runModalTest(frame, false);
+                                break;
+                            default:
+                                System.err.println("unknown regression test '" + arg + "'");
+                                System.exit(1);
                         }
                         frame.pack();
                         frame.setVisible(true);
