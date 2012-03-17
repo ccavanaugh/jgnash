@@ -26,7 +26,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,7 +34,6 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
@@ -324,7 +322,7 @@ public class XMLContainer {
         logger.info("Writing XML file complete");
     }
 
-    void readXML() throws FileNotFoundException, UnsupportedEncodingException {
+    void readXML() {
         String encoding = System.getProperty("file.encoding"); // system default encoding
         String version = FileMagic.getjGnashXMLVersion(file); // version of the jGnash XML file
 
