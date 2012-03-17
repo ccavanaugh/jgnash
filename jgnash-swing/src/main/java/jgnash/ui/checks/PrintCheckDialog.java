@@ -145,7 +145,10 @@ class PrintCheckDialog extends JDialog implements ActionListener {
     }
 
     /**
+     * Creates a <code>JFileChooser</code>
      * directory can be null, The JFileChooser will sort it out
+     * @param dir directory to start in
+     * @return the JFileChooser
      */
     private JFileChooser createFileChooser(final String dir) {
         JFileChooser chooser = new JFileChooser(dir);

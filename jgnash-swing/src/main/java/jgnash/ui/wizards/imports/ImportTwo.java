@@ -170,9 +170,7 @@ public class ImportTwo extends JPanel implements WizardPage, ActionListener {
     }
 
     /**
-     * puts settings (particularly transactions) into given map
-     * 
-     * @param map
+     * {@inheritDoc}
      */
     @Override
     public void putSettings(Map<Enum<?>, Object> map) {

@@ -276,8 +276,8 @@ public class JTableUtils {
      * Packs two table and forces them to have the same column width. 
      * Assumes both tables have the same number of columns
      * 
-     * @param table table 1
-     * @param footerTable table 2
+     * @param tableOne table 1
+     * @param tableTwo table 2
      */
     public static void packTables(final JTable tableOne, final JTable tableTwo) {
         packGenericTable(tableOne);
