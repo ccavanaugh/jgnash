@@ -86,6 +86,7 @@
         <module>jgnash-swing</module>
         <module>jgnash-imports</module>
         <module>jxlayer</module>
+        <module>jidesoft</module>
     </modules>
 
 </project>
