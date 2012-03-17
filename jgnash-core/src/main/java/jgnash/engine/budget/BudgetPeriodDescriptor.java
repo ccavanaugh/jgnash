@@ -190,16 +190,8 @@ public class BudgetPeriodDescriptor {
             return false;
         }
         BudgetPeriodDescriptor other = (BudgetPeriodDescriptor) obj;
-        if (budgetPeriod != other.budgetPeriod) {
-            return false;
-        }
-        if (budgetYear != other.budgetYear) {
-            return false;
-        }
-        if (startPeriod != other.startPeriod) {
-            return false;
-        }
-        return true;
+
+        return budgetPeriod == other.budgetPeriod && budgetYear == other.budgetYear && startPeriod == other.startPeriod;
     }
 
     public static String encodeToString(final BudgetPeriodDescriptor descriptor) {

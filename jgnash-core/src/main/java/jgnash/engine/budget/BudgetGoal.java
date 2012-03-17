@@ -158,14 +158,7 @@ public class BudgetGoal implements Cloneable {
         }
 
         BudgetGoal other = (BudgetGoal) obj;
-        if (budgetPeriod != other.budgetPeriod) {
-            return false;
-        }
 
-        if (!Arrays.equals(goals, other.goals)) {
-            return false;
-        }
-
-        return true;
+        return budgetPeriod == other.budgetPeriod && Arrays.equals(goals, other.goals);
     }
 }
