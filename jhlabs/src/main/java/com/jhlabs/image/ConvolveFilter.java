@@ -25,7 +25,7 @@ import java.awt.image.ColorModel;
 import java.awt.image.Kernel;
 
 /**
- * A filter which applies a convolution kernel to an com.jhlabs.image.
+ * A filter which applies a convolution kernel to an image.
  * 
  * @author Jerry Huxtable
  * 
@@ -60,7 +60,7 @@ public class ConvolveFilter extends AbstractBufferedImageOp {
     protected boolean premultiplyAlpha = true;
 
     /**
-     * What do do at the com.jhlabs.image edges.
+     * What do do at the image edges.
      */
     private int edgeAction = CLAMP_EDGES;
 

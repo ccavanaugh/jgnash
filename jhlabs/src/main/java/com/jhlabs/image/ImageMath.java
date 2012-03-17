@@ -17,7 +17,7 @@ limitations under the License.
 package com.jhlabs.image;
 
 /**
- * A class containing static math methods useful for com.jhlabs.image processing.
+ * A class containing static math methods useful for image processing.
  */
 class ImageMath {
 

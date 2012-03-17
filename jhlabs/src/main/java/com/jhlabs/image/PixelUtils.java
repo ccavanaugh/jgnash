@@ -17,7 +17,7 @@ limitations under the License.
 package com.jhlabs.image;
 
 /**
- * Some more useful math functions for com.jhlabs.image processing.
+ * Some more useful math functions for image processing.
  * These are becoming obsolete as we move to Java2D. Use MiscComposite instead.
  */
 public class PixelUtils {
