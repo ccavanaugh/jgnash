@@ -44,6 +44,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>jhlabs</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <artifactId>itext</artifactId>
             <groupId>com.lowagie</groupId>
             <version>2.1.7</version>

@@ -51,8 +51,8 @@ public abstract class AbstractBufferedImageOp implements BufferedImageOp, Clonea
     }
 
     /**
-     * A convenience method for getting ARGB pixels from an image. This tries to avoid the performance
-     * penalty of BufferedImage.getRGB unmanaging the image.
+     * A convenience method for getting ARGB pixels from an com.jhlabs.image. This tries to avoid the performance
+     * penalty of BufferedImage.getRGB unmanaging the com.jhlabs.image.
      *
      * @param image  a BufferedImage object
      * @param x      the left edge of the pixel block
@@ -71,8 +71,8 @@ public abstract class AbstractBufferedImageOp implements BufferedImageOp, Clonea
     }
 
     /**
-     * A convenience method for setting ARGB pixels in an image. This tries to avoid the performance
-     * penalty of BufferedImage.setRGB unmanaging the image.
+     * A convenience method for setting ARGB pixels in an com.jhlabs.image. This tries to avoid the performance
+     * penalty of BufferedImage.setRGB unmanaging the com.jhlabs.image.
      *
      * @param image  a BufferedImage object
      * @param x      the left edge of the pixel block

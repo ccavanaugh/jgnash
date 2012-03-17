@@ -87,6 +87,7 @@
         <module>jgnash-imports</module>
         <module>jxlayer</module>
         <module>jidesoft</module>
+        <module>jhlabs</module>
     </modules>
 
 </project>
