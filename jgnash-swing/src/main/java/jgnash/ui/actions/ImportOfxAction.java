@@ -161,9 +161,7 @@ public class ImportOfxAction extends AbstractEnabledAction {
                         }
                     }.start();
                 }
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ImportOfxAction.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ExecutionException ex) {
+            } catch (InterruptedException | ExecutionException ex) {
                 Logger.getLogger(ImportOfxAction.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

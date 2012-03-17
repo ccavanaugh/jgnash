@@ -341,9 +341,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
             if (initWorker != null) {
                 try {                   
                     initWorker.get();
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(AbstractExpandingTableModel.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ExecutionException ex) {
+                } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(AbstractExpandingTableModel.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -467,10 +465,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
     public boolean isVisible(final E object) {
         E parent = getParent(object);
 
-        if (parent != null && getNode(parent) != null) {
-            return getNode(parent).isExpanded();
-        }
-        return true;
+        return !(parent != null && getNode(parent) != null) || getNode(parent).isExpanded();
     }
 
     /**

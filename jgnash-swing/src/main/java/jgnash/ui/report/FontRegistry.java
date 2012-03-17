@@ -108,9 +108,7 @@ public class FontRegistry {
                 String fullName = bf.getFullFontName()[0][3].toLowerCase();
                 registeredFontMap.put(fullName, path);
             }
-        } catch (DocumentException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
+        } catch (DocumentException | IOException e) {
             throw new RuntimeException(e);
         }
     }

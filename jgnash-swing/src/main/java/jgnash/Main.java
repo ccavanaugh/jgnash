@@ -316,11 +316,7 @@ public final class Main {
 
             try {
                 Preferences.importPreferences(is);
-            } catch (FileNotFoundException e) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
-            } catch (IOException e) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
-            } catch (InvalidPreferencesFormatException e) {
+            } catch (InvalidPreferencesFormatException | IOException e) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
             } finally {
                 try {
@@ -353,11 +349,7 @@ public final class Main {
                         p.exportSubtree(os);
                     }
                     deleteUserPreferences();
-                } catch (BackingStoreException e) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
-                } catch (FileNotFoundException e) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
-                } catch (IOException e) {
+                } catch (BackingStoreException | IOException e) {
                     Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
                 } finally {
                     try {

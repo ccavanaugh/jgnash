@@ -94,8 +94,6 @@ public final class MonthBalanceCSV {
                 } else {
                     writeCSVFileHoriz(getFileName(), dates);
                 }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -174,9 +174,7 @@ public class NewFileDialog extends WizardDialog {
                     if (d.isWizardValid()) {
                         new Setup(d).execute();
                     }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
+                } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                 }
             }

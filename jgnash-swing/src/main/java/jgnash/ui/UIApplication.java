@@ -153,9 +153,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
                         mainFrame.setVisible(true);
                     }
                 });
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (InvocationTargetException e) {
+            } catch (InterruptedException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
         }

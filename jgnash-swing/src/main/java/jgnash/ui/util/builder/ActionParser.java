@@ -187,12 +187,8 @@ public final class ActionParser extends DefaultHandler {
             parser.parse(stream, this);
 
             createActions(); // create reflective actions
-        } catch (SAXException se) {
+        } catch (SAXException | ParserConfigurationException | IOException se) {
             log.severe(se.toString());
-        } catch (IOException ioe) {
-            log.severe(ioe.toString());
-        } catch (ParserConfigurationException pce) {
-            log.severe(pce.toString());
         }
     }
 
