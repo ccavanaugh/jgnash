@@ -13,13 +13,6 @@
 	<description>help module</description>
 	<inceptionYear>2001</inceptionYear>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.build.timestamp.format>yyyy/MM/dd-HH:mm</maven.build.timestamp.format>
-		<buildDate>${maven.build.timestamp}</buildDate>
-		<java-version>1.6</java-version>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>net.sf.docbook</groupId>
