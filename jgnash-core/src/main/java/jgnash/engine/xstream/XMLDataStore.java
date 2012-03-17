@@ -18,14 +18,11 @@
 package jgnash.engine.xstream;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import jgnash.engine.Config;
 
+import jgnash.engine.Config;
 import jgnash.engine.DataStore;
 import jgnash.engine.Engine;
 import jgnash.engine.StoredObject;
@@ -35,7 +32,6 @@ import jgnash.util.Resource;
  * XML specific code for data storage and creating an engine
  *
  * @author Craig Cavanaugh
- * @version $Id: XMLDataStore.java 3082 2012-01-08 02:26:38Z ccavanaugh $
  */
 public class XMLDataStore implements DataStore {
 
@@ -72,11 +68,7 @@ public class XMLDataStore implements DataStore {
         container = new XMLContainer(file);
 
         if (file.exists()) {
-            try {
-                container.readXML();
-            } catch (FileNotFoundException | UnsupportedEncodingException e) {
-                logger.log(Level.SEVERE, null, e);
-            }
+            container.readXML();
         }
 
         Engine engine = new Engine(new XMLEngineDAO(container), engineName);
@@ -174,8 +166,6 @@ public class XMLDataStore implements DataStore {
                 } else {
                     Logger.getLogger(XMLDataStore.class.getName()).severe("Invalid file");
                 }
-            } catch (FileNotFoundException | UnsupportedEncodingException e) {
-                logger.log(Level.SEVERE, null, e);
             } finally {
                 container.close();
             }

@@ -64,24 +64,6 @@ public class FileUtilsTest {
         assertFalse(FileUtils.copyFile(new File(absolutepath), new File(absolutepath)));
     }
 
-    @Test
-    public void fileCopy() throws IOException {
-        File tempfile = File.createTempFile("jgnash-test", "jdb");
-        String absolutepath = tempfile.getAbsolutePath();
-        String testdata = "42";
-
-        // Write the data to a file
-        writeTestData(testdata, tempfile);
-        checkTestData(testdata, absolutepath);
-
-        // Copy the file to another file: the copy should contain the same data
-        File secondTempFile = File.createTempFile("jgnash-test", "jdb");
-
-        if (FileUtils.copyFile(tempfile, secondTempFile)) {
-            checkTestData(testdata, secondTempFile.getAbsolutePath());
-        }
-    }
-
     private void checkTestData(String testdata, String absolutepath)
             throws IOException {
         char[] buffer = new char[testdata.length()];
