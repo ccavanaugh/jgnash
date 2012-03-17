@@ -62,9 +62,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * Parses an XML file and builds JMenuBar and JToolBar UI objects
  * <p/>
  * Ideas borrowed from: http://www.javadesktop.org/articles/actions/index.html
- * 
+ *
  * @author Craig Cavanaugh
- * @version $Id: ActionParser.java 3051 2012-01-02 11:27:23Z ccavanaugh $
  */
 public final class ActionParser extends DefaultHandler {
 
@@ -151,7 +150,7 @@ public final class ActionParser extends DefaultHandler {
     /**
      * Looks for classes that implement <code>javax.swing.Action</code> and are annotated with
      * <code>jgnash.ui.util.builder.Action</code> and pre-loads them into the action map
-     * 
+     *
      * @param packageName base package name to search
      */
     public void preLoadActions(final String packageName) {
@@ -175,7 +174,7 @@ public final class ActionParser extends DefaultHandler {
 
     /**
      * Adds the set of actions and action-lists from an action-set document into the ActionManager.
-     * 
+     *
      * @param stream InputStream containing an actionSet document
      */
     void loadFile(final InputStream stream) {
@@ -296,28 +295,31 @@ public final class ActionParser extends DefaultHandler {
                 }
             }
         } else {
-            // single | toggle
-            switch (node.type) {
-                case "single":
-                    menu = new JCheckBoxMenuItem(a);
-                    break;
-                case "toggle":
-                    menu = new JRadioButtonMenuItem(a);
+            if (node.type == null || node.type.isEmpty()) {
+                menu = new JMenuItem(a);
+            } else {
+                switch (node.type) {
+                    case "single":
+                        menu = new JCheckBoxMenuItem(a);
+                        break;
+                    case "toggle":
+                        menu = new JRadioButtonMenuItem(a);
 
-                    if (node.group != null) { // create a group
-                        ButtonGroup bGroup;
-                        if (buttonGroups.get(node.group) != null) {
-                            bGroup = buttonGroups.get(node.group);
-                        } else {
-                            bGroup = new ButtonGroup();
-                            buttonGroups.put(node.group, bGroup);
+                        if (node.group != null) { // create a group
+                            ButtonGroup bGroup;
+                            if (buttonGroups.get(node.group) != null) {
+                                bGroup = buttonGroups.get(node.group);
+                            } else {
+                                bGroup = new ButtonGroup();
+                                buttonGroups.put(node.group, bGroup);
+                            }
+                            bGroup.add(menu);
                         }
-                        bGroup.add(menu);
-                    }
-                    break;
-                default:
-                    menu = new JMenuItem(a);
-                    break;
+                        break;
+                    default:
+                        menu = new JMenuItem(a);
+                        break;
+                }
             }
         }
         menuItemMap.put(node.idref, menu);
@@ -446,7 +448,7 @@ public final class ActionParser extends DefaultHandler {
 
         /**
          * Retrieves the Attribute value.
-         * 
+         *
          * @param index one of ActionManager.._INDEX
          * @return value
          */
@@ -519,11 +521,11 @@ public final class ActionParser extends DefaultHandler {
 
     /**
      * Scans all classes accessible from the context class loader which belong to the given package and sub-packages.
-     * 
+     *
      * @param packageName The base package
      * @return The classes
      * @throws ClassNotFoundException exception
-     * @throws IOException exception
+     * @throws IOException            exception
      */
     private static ArrayList<Class<?>> getClasses(final String packageName) throws ClassNotFoundException, IOException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -554,8 +556,8 @@ public final class ActionParser extends DefaultHandler {
 
     /**
      * Recursive method used to find all classes in a given directory and subdirectories.
-     * 
-     * @param directory The base directory
+     *
+     * @param directory   The base directory
      * @param packageName The package name for classes found inside the base directory
      * @return The classes
      * @throws ClassNotFoundException error
