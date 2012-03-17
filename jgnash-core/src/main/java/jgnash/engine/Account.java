@@ -1314,7 +1314,6 @@ public class Account extends StoredObject implements Comparable<Account>, Clonea
      * Returns the depth of the account relative to the
      * <code>RootAccount</code>
      *
-     * @param account Account to get depth for
      * @return depth relative to the root
      */
     public int getDepth() {
