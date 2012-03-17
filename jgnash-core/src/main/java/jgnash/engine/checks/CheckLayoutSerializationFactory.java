@@ -41,8 +41,6 @@ public class CheckLayoutSerializationFactory {
             FileReader in = new FileReader(file);
             layout = (CheckLayout) xstream.fromXML(in);
             in.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

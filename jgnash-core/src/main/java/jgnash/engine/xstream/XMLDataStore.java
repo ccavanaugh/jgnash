@@ -74,9 +74,7 @@ public class XMLDataStore implements DataStore {
         if (file.exists()) {
             try {
                 container.readXML();
-            } catch (FileNotFoundException e) {
-                logger.log(Level.SEVERE, null, e);
-            } catch (UnsupportedEncodingException e) {
+            } catch (FileNotFoundException | UnsupportedEncodingException e) {
                 logger.log(Level.SEVERE, null, e);
             }
         }
@@ -176,9 +174,7 @@ public class XMLDataStore implements DataStore {
                 } else {
                     Logger.getLogger(XMLDataStore.class.getName()).severe("Invalid file");
                 }
-            } catch (FileNotFoundException e) {
-                logger.log(Level.SEVERE, null, e);
-            } catch (UnsupportedEncodingException e) {
+            } catch (FileNotFoundException | UnsupportedEncodingException e) {
                 logger.log(Level.SEVERE, null, e);
             } finally {
                 container.close();

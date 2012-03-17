@@ -125,8 +125,6 @@ public class FileMagic {
                     }
                     line = reader.readLine();
                 }
-            } catch (FileNotFoundException e) {
-                logger.log(Level.SEVERE, e.toString(), e);
             } catch (IOException e) {
                 logger.log(Level.SEVERE, e.toString(), e);
             } finally {
@@ -182,8 +180,6 @@ public class FileMagic {
                     }
                     line = reader.readLine();
                 }
-            } catch (FileNotFoundException e) {
-                logger.log(Level.SEVERE, e.toString(), e);
             } catch (IOException e) {
                 logger.log(Level.SEVERE, e.toString(), e);
             } finally {
@@ -232,8 +228,6 @@ public class FileMagic {
 
                     line = reader.readLine();
                 }
-            } catch (FileNotFoundException e) {
-                logger.log(Level.SEVERE, e.toString(), e);
             } catch (IOException e) {
                 logger.log(Level.SEVERE, e.toString(), e);
             } finally {
@@ -272,8 +266,6 @@ public class FileMagic {
                     }
                 }
                 di.close();
-            } catch (FileNotFoundException ex) {
-                log.log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
                 log.log(Level.SEVERE, null, ex);
             } finally {
@@ -346,12 +338,10 @@ public class FileMagic {
                         break;
                 }
             }
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException | IllegalStateException e) {
             logger.log(Level.SEVERE, e.toString(), e);
         } catch (XMLStreamException e) {
             logger.log(Level.INFO, "{0} was not a valid jGnash XML file", file.getAbsolutePath());
-        } catch (IllegalStateException e) {
-            logger.log(Level.SEVERE, e.toString(), e);
         } finally {
             if (reader != null) {
                 try {

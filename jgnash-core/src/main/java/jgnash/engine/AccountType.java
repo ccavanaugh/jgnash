@@ -106,17 +106,7 @@ public enum AccountType {
             Constructor<?> accConst = accountProxy.getDeclaredConstructor(constParams);
             Object[] params = new Object[] { account };
             return (AccountProxy) accConst.newInstance(params);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(AccountType.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(AccountType.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(AccountType.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvocationTargetException ex) {
-            Logger.getLogger(AccountType.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchMethodException ex) {
-            Logger.getLogger(AccountType.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(AccountType.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null; // unable to create object

@@ -78,8 +78,6 @@ public class ConnectionFactory {
 
         try {
             connection = url.openConnection();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

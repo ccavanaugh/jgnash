@@ -113,9 +113,7 @@ public class AccountTreeXMLFactory {
             if (o instanceof RootAccount) {
                 account = (RootAccount) o;
             }
-        } catch (IOException ex) {
-            Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
         return account;

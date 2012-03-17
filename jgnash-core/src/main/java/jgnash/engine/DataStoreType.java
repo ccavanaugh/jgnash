@@ -59,17 +59,7 @@ public enum DataStoreType {
         try {
             Constructor<?> storeConst = dataStore.getDeclaredConstructor();
             return (DataStore) storeConst.newInstance();
-        } catch (InstantiationException ex) {
-            Logger.getLogger(DataStoreType.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(DataStoreType.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(DataStoreType.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvocationTargetException ex) {
-            Logger.getLogger(DataStoreType.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchMethodException ex) {
-            Logger.getLogger(DataStoreType.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SecurityException ex) {
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(DataStoreType.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null; // unable to create object
