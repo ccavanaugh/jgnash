@@ -28,7 +28,6 @@ import jgnash.engine.Transaction;
  * SearchDefinition
  *
  * @author Craig Cavanaugh
- *
  */
 public class SearchDefinition implements Serializable {
 
@@ -40,25 +39,25 @@ public class SearchDefinition implements Serializable {
     }
 
     private final Criteria criteria;
-    private final Collection<Matcher> matchers;
+    private final Collection<Matcher> matcherCollection;
 
-    public SearchDefinition(final Criteria criteria, final Collection<Matcher> matchers) {
+    public SearchDefinition(final Criteria criteria, final Collection<Matcher> matcherCollection) {
         this.criteria = criteria;
-        this.matchers = matchers;
+        this.matcherCollection = matcherCollection;
     }
 
     public boolean matches(final Transaction t) {
         boolean result = false;
 
         if (criteria == Criteria.ANY) {
-            for (Matcher m : matchers) {
+            for (Matcher m : matcherCollection) {
                 if (m.matches(t)) {
                     result = true;
                     break;
                 }
             }
         } else { // must match all
-            for (Matcher m : matchers) {
+            for (Matcher m : matcherCollection) {
                 if (!m.matches(t)) {
                     break;
                 }
