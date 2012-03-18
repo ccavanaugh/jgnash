@@ -41,7 +41,6 @@ import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
  * Remote message bus server
  * 
  * @author Craig Cavanaugh
- *
  */
 public class MessageBusRemoteServer {
 
@@ -73,15 +72,8 @@ public class MessageBusRemoteServer {
         acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new TextLineCodecFactory(Charset.forName("UTF-8"))));
         acceptor.setHandler(new MessageHandler());
 
-        //SocketAcceptorConfig cfg = new SocketAcceptorConfig();
-        //cfg.setThreadModel(ThreadModel.MANUAL);
-        //cfg.getFilterChain().addLast("codec", new ProtocolCodecFilter(new TextLineCodecFactory(Charset.forName("UTF-8"))));
-
         try {
             acceptor.bind(new InetSocketAddress(port));
-
-            //acceptor.bind(new InetSocketAddress(port), new MessageHandler(), cfg);
-
         } catch (IOException e) {
             logger.log(Level.SEVERE, e.toString(), e);
         }
@@ -143,10 +135,6 @@ public class MessageBusRemoteServer {
 
         @Override
         public void sessionIdle(final IoSession session, final IdleStatus status) {
-            //Logger logger = IoSessionLogger.getLogger(session);
-
-            //SessionLog.info(session, "Disconnecting the idle.");
-
             logger.info("Disconnecting the idle client.");
 
             // disconnect an idle client                                   
