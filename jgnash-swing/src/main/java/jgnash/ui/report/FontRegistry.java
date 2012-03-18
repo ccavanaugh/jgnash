@@ -19,9 +19,11 @@ package jgnash.ui.report;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Logger;
 
 import jgnash.util.OS;
 
@@ -144,7 +146,7 @@ public class FontRegistry {
                             }
                         }
                     } catch (Exception ignored) {
-                        System.out.println("Could not find path for " + path);
+                        Logger.getLogger(FontRegistry.class.getName()).finest(MessageFormat.format("Could not find path for {0}", path));
                     }
                 }
             }
