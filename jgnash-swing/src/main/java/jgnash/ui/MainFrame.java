@@ -167,7 +167,8 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
         buildUI();
 
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        // hide on close is critical to correct behavior on Java 7, otherwise a segfault occurs on close
+        setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
         if (Main.checkEDT()) {
             log.info("Installing Event Dispatch Thread Checker into RepaintManager");
@@ -727,7 +728,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     private class ShutdownAdapter extends WindowAdapter {
 
         @Override
-        public void windowClosing(WindowEvent evt) {
+        public void windowClosing(final WindowEvent evt) {
             /*
              * force the shut down to the end of the event thread. Lets other listeners do their job
              */
