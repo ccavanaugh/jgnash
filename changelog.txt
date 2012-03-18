@@ -22,6 +22,11 @@ Hiding option of Transaction form which can help to see more transactions in Reg
 Direct Transaction entry option in the Ledger to avoid Transaction form.
 Formal Trial Balance report
 
+Release 2.9.0
+-----------------------
+03/17/12 Modularized jGnash into several Maven modules and separated the UI code from the core engine code
+03/17/12 jGnash was causing Java 7 JRE to segfault on close.
+
 Release 2.8.0
 -----------------------
 03/10/12 Help build system no longer requires OS level installed dependencies
