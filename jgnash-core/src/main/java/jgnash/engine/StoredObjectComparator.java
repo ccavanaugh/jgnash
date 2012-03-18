@@ -21,10 +21,9 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 /**
- * High level StoredObject comparator
+ * High level StoredObject comparator.  When serializing to an XML file, this helps with readability of references
  *
  * @author Craig Cavanaugh
- *
  */
 public class StoredObjectComparator implements Comparator<StoredObject>, Serializable {
 
@@ -33,14 +32,14 @@ public class StoredObjectComparator implements Comparator<StoredObject>, Seriali
     @Override
     public int compare(final StoredObject o1, final StoredObject o2) {
 
-        if (o1 instanceof CurrencyNode || o2 instanceof CurrencyNode && !(o1 instanceof CurrencyNode && o2 instanceof CurrencyNode)) {
+        if ((o1 instanceof CurrencyNode || o2 instanceof CurrencyNode) && !(o1 instanceof CurrencyNode && o2 instanceof CurrencyNode)) {
             if (o1 instanceof CurrencyNode) {
                 return -1;
             }
             return 1;
         }
 
-        if (o1 instanceof SecurityNode || o2 instanceof SecurityNode && !(o1 instanceof SecurityNode && o2 instanceof SecurityNode)) {
+        if ((o1 instanceof SecurityNode || o2 instanceof SecurityNode) && !(o1 instanceof SecurityNode && o2 instanceof SecurityNode)) {
 
             if (o1 instanceof SecurityNode) {
                 return -1;
@@ -56,14 +55,16 @@ public class StoredObjectComparator implements Comparator<StoredObject>, Seriali
             return 1;
         }
 
-        if (o1 instanceof Config || o2 instanceof Config && !(o1 instanceof Config && o2 instanceof Config)) {
+        // two config objects should never occur
+        if ((o1 instanceof Config || o2 instanceof Config) && !(o1 instanceof Config && o2 instanceof Config)) {
             if (o1 instanceof Config) {
                 return -1;
             }
             return 1;
         }
 
-        if (o1 instanceof RootAccount || o2 instanceof RootAccount && !(o1 instanceof RootAccount && o2 instanceof RootAccount)) {
+        // two root accounts should never occur
+        if ((o1 instanceof RootAccount || o2 instanceof RootAccount) && !(o1 instanceof RootAccount && o2 instanceof RootAccount)) {
             if (o1 instanceof RootAccount) {
                 return -1;
             }

@@ -164,7 +164,7 @@ public class InvestmentTransactionTest {
 
     @Test
     public void BuyShares() {
-        // Transfering some money to usdBankAccount
+        // Transferring some money to usdBankAccount
         Date transactionDate0;
         transactionDate0 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-25", new ParsePosition(0));
         TransactionEntry entry = new TransactionEntry();
@@ -209,11 +209,11 @@ public class InvestmentTransactionTest {
         e.addTransaction(it);
 
         // Evaluating the result
-        Object actuals[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), investAccount.getBalance(),
+        Object actual[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), investAccount.getBalance(),
                         investAccount.getMarketValue(), investAccount.getCashBalance() };
-        Object expecteds[] = { new BigDecimal("220.00"), new BigDecimal("30.00"), new BigDecimal("250.00"),
+        Object expected[] = { new BigDecimal("220.00"), new BigDecimal("30.00"), new BigDecimal("250.00"),
                         new BigDecimal("250.00"), new BigDecimal("0.00") };
-        assertArrayEquals("Account balances are not as expected!", expecteds, actuals);
+        assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
 
     @Test
@@ -290,15 +290,15 @@ public class InvestmentTransactionTest {
         e.addTransaction(it);
 
         // Checking the result
-        Object actuals[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+        Object actual[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
                         investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance() };
-        Object expecteds[] = { new BigDecimal("280.00"), new BigDecimal("60.00"), new BigDecimal("-30.00"),
+        Object expected[] = { new BigDecimal("280.00"), new BigDecimal("60.00"), new BigDecimal("-30.00"),
                         new BigDecimal("285.00"), new BigDecimal("285.00"), new BigDecimal("0.00") };
-        assertArrayEquals("Account balances are not as expected!", expecteds, actuals);
+        assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
 
     @Test
-    public void TrasferCashIn() {
+    public void TransferCashIn() {
         // Transferring some money to usdBankAccount
         Date transactionDate0;
         transactionDate0 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-25", new ParsePosition(0));
@@ -347,8 +347,8 @@ public class InvestmentTransactionTest {
     }
 
     @Test
-    public void TrasferCashOut() {
-        // Transfering some money to usdBankAccount
+    public void TransferCashOut() {
+        // Transferring some money to usdBankAccount
         Date transactionDate0;
         transactionDate0 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-25", new ParsePosition(0));
         TransactionEntry entry = new TransactionEntry();
@@ -408,11 +408,11 @@ public class InvestmentTransactionTest {
         e.addTransaction(transaction);
 
         // Checking the result
-        Object actuals[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+        Object actual[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
                         investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance() };
-        Object expecteds[] = { new BigDecimal("250.00"), new BigDecimal("125.00"), BigDecimal.ZERO,
+        Object expected[] = { new BigDecimal("250.00"), new BigDecimal("125.00"), BigDecimal.ZERO,
                         new BigDecimal("125.00"), BigDecimal.ZERO, new BigDecimal("125.00") };
-        assertArrayEquals("Account balances are not as expected!", expecteds, actuals);
+        assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
 
     @Test
@@ -468,11 +468,11 @@ public class InvestmentTransactionTest {
         e.addTransaction(it);
 
         // Checking the result
-        Object actuals[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+        Object actual[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
                         investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance() };
-        Object expecteds[] = { new BigDecimal("270.00"), new BigDecimal("30.00"), new BigDecimal("-50.00"),
+        Object expected[] = { new BigDecimal("270.00"), new BigDecimal("30.00"), new BigDecimal("-50.00"),
                         new BigDecimal("250.00"), new BigDecimal("250.00"), new BigDecimal("0.00") };
-        assertArrayEquals("Account balances are not as expected!", expecteds, actuals);
+        assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
 
     @Test
@@ -542,11 +542,11 @@ public class InvestmentTransactionTest {
         e.addTransaction(it);
 
         // Checking the result
-        Object actuals[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+        Object actual[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
                         investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance() };
-        Object expecteds[] = { new BigDecimal("220.00"), new BigDecimal("50.00"), new BigDecimal("-50.00"),
+        Object expected[] = { new BigDecimal("220.00"), new BigDecimal("50.00"), new BigDecimal("-50.00"),
                         new BigDecimal("280.00"), new BigDecimal("280.00"), new BigDecimal("0.00") };
-        assertArrayEquals("Account balances are not as expected!", expecteds, actuals);
+        assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
 
     @Test
@@ -602,13 +602,13 @@ public class InvestmentTransactionTest {
         e.addTransaction(it);
 
         // Checking the result
-        Object actuals[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+        Object actual[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
                         investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance() };
 
-        Object expecteds[] = { new BigDecimal("220.00"), new BigDecimal("30.00"), BigDecimal.ZERO,
+        Object expected[] = { new BigDecimal("220.00"), new BigDecimal("30.00"), BigDecimal.ZERO,
                         new BigDecimal("500.00"), new BigDecimal("500.00"), new BigDecimal("0.00") };
 
-        assertArrayEquals("Account balances are not as expected!", expecteds, actuals);
+        assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
 
     @Test
@@ -664,13 +664,13 @@ public class InvestmentTransactionTest {
         e.addTransaction(it);
 
         // Checking the result
-        Object actuals[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+        Object actual[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
                         investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance() };
 
-        Object expecteds[] = { new BigDecimal("220.00"), new BigDecimal("30.00"), BigDecimal.ZERO,
+        Object expected[] = { new BigDecimal("220.00"), new BigDecimal("30.00"), BigDecimal.ZERO,
                         new BigDecimal("200.00"), new BigDecimal("200.00"), new BigDecimal("0.00") };
 
-        assertArrayEquals("Account balances are not as expected!", expecteds, actuals);
+        assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
 
     private TransactionEntry createTransactionEntry(Account debitAccount, Account creditAccount, BigDecimal amount, String memo, TransactionTag transactionTag) {

@@ -76,7 +76,7 @@ public interface DataStore {
     boolean isRemote();
 
     /**
-     * Saves a Collection of StoredObejcts to a file other than what is currently open.
+     * Saves a Collection of StoredObjects to a file other than what is currently open.
      * <p> 
      * The currently open file will not be closed
      * 

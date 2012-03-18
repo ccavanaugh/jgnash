@@ -60,7 +60,7 @@ public class InvestmentPerformanceSummary {
         }
 
         if (!account.memberOf(AccountGroup.INVEST)) {
-            throw new IllegalArgumentException("Not a vaild account type");
+            throw new IllegalArgumentException("Not a valid account type");
         }
 
         this.baseCurrency = account.getCurrencyNode();
