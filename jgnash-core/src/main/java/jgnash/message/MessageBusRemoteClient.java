@@ -80,7 +80,7 @@ class MessageBusRemoteClient {
 
         xstream = new XStream(new StaxDriver());
         xstream.alias("Message", Message.class);
-        xstream.alias("MessagePropery", MessageProperty.class);
+        xstream.alias("MessageProperty", MessageProperty.class);
     }
 
     private static int getConnectionTimeout() {
@@ -97,12 +97,7 @@ class MessageBusRemoteClient {
         connector.setHandler(new ClientSessionHandler());
         connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(new TextLineCodecFactory(Charset.forName("UTF-8"))));
 
-        //SocketConnectorConfig cfg = new SocketConnectorConfig();
-        //cfg.setConnectTimeout(getConnectionTimeout());
-        //cfg.getFilterChain().addLast("codec", new ProtocolCodecFilter(new TextLineCodecFactory(Charset.forName("UTF-8"))));
-
         try {
-            //ConnectFuture future = connector.connect(new InetSocketAddress(host, port), new ClientSessionHandler(), cfg);
             ConnectFuture future = connector.connect(new InetSocketAddress(host, port));
 
             future.awaitUninterruptibly();
@@ -145,10 +140,16 @@ class MessageBusRemoteClient {
          */
         private static final int FORCED_LATENCY = 2000;
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void sessionOpened(IoSession s) {
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void messageReceived(final IoSession s, final Object object) {
 
@@ -174,12 +175,18 @@ class MessageBusRemoteClient {
             }
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void exceptionCaught(final IoSession s, final Throwable cause) {
             logger.error("Error", cause);
             s.close(true);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void sessionClosed(final IoSession s) throws Exception {
             s.close(true);
