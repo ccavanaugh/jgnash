@@ -27,7 +27,7 @@ import java.awt.event.ActionEvent;
  * UI Action to open the currencies dialog
  *
  * @author Craig Cavanaugh
- * @version $Id: CurrenciesAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 @Action("currency-addremove-command")
 public class CurrenciesAction extends AbstractEnabledAction {

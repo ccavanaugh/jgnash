@@ -49,7 +49,7 @@ import org.jdesktop.swingx.JXTitledPanel;
 
 /**
  * @author Craig Cavanaugh
- * @version $Id: AccountRowHeaderPanel.java 3138 2012-01-29 21:07:55Z ccavanaugh $
+ *
  */
 final class AccountRowHeaderPanel extends JPanel {
 

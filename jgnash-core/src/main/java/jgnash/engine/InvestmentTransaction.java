@@ -27,7 +27,7 @@ import java.util.List;
  * All TransactionEntry(s) must be of the same security
  *
  * @author Craig Cavanaugh
- * @version $Id: InvestmentTransaction.java 3065 2012-01-04 01:22:35Z ccavanaugh $
+ *
  */
 public class InvestmentTransaction extends Transaction {
 

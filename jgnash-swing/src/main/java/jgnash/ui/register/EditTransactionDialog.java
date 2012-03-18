@@ -32,7 +32,7 @@ import jgnash.util.Resource;
  * A Dialog for editing a newly created transaction.
  *
  * @author Craig Cavanaugh
- * @version $Id: EditTransactionDialog.java 197 2008-01-01 08:13:35Z ccavanaugh$
+ *
  */
 public class EditTransactionDialog extends JDialog implements RegisterListener {
 

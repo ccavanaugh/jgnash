@@ -50,7 +50,7 @@ import jgnash.util.Resource;
  * Displays a list of default user configurable items for transaction numbers
  *
  * @author Craig Cavanaugh
- * @version $Id: TransactionNumberDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class TransactionNumberDialog extends JDialog implements ActionListener {
 

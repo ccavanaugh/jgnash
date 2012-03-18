@@ -34,7 +34,7 @@ import jgnash.util.Resource;
 
 /**
  * @author Craig Cavanaugh
- * @version $Id: PartialTable.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class PartialTable extends FormattedJTable {
 

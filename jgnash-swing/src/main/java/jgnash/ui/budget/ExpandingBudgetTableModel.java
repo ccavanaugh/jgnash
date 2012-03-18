@@ -41,7 +41,7 @@ import jgnash.util.Resource;
  * TableModel that can expand and contract the displayed rows
  *
  * @author Craig Cavanaugh
- * @version $Id: ExpandingBudgetTableModel.java 3071 2012-01-05 10:35:52Z
+ *
  *          ccavanaugh $
  */
 public class ExpandingBudgetTableModel extends AbstractExpandingTableModel<Account> implements MessageListener {

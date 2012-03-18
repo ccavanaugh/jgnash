@@ -23,7 +23,7 @@ import java.util.Date;
  * Used to wrap a reminder and it's event date to aid sorting and display
  * 
  * @author Craig Cavanaugh
- * @version $Id: PendingReminder.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class PendingReminder implements Comparable<PendingReminder> {
 

@@ -36,7 +36,7 @@ import org.junit.Test;
  * JUnit 4 test class
  * 
  * @author Craig Cavanaugh
- * @version $Id: Ofx2Test.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class Ofx2Test {
 

@@ -40,7 +40,7 @@ import jgnash.util.Resource;
  * New file wizard panel
  *
  * @author Craig Cavanaugh
- * @version $Id: NewFileTwo.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class NewFileTwo extends JPanel implements WizardPage {
 

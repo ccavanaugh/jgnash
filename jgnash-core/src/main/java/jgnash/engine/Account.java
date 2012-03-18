@@ -41,7 +41,7 @@ import jgnash.util.DateUtils;
  *
  * @author Craig Cavanaugh
  * @author Jeff Prickett prickett@users.sourceforge.net
- * @version $Id: Account.java 3202 2012-02-21 10:36:52Z ccavanaugh $
+ *
  */
 public class Account extends StoredObject implements Comparable<Account>, Cloneable {
 

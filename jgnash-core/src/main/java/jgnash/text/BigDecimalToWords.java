@@ -23,7 +23,7 @@ import java.math.BigDecimal;
  * Returns a "word" representation of a BigDecimal
  * 
  * @author Craig Cavanaugh
- * @version $Id: BigDecimalToWords.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class BigDecimalToWords {
 

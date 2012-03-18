@@ -32,7 +32,7 @@ import jgnash.ui.UIApplication;
  * Fetches latest exchange rates in the background
  *
  * @author Craig Cavanaugh
- * @version $Id: CurrencyUpdateFactory.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class CurrencyUpdateFactory {
 

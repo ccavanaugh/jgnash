@@ -66,7 +66,7 @@ import org.jfree.data.time.TimeSeriesCollection;
  * @author Craig Cavanaugh
  * @author Dany Veilleux
  * @author Peter Vida
- * @version $Id: RunningAccountBalanceChart.java 3070 2012-01-04 11:00:43Z ccavanaugh $
+ *
  */
 public class RunningAccountBalanceChart {
 

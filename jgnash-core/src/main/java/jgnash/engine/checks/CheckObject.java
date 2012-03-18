@@ -25,7 +25,7 @@ import jgnash.util.Resource;
  * Check Object
  *
  * @author Craig Cavanaugh
- * @version $Id: CheckObject.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class CheckObject implements Serializable {
 

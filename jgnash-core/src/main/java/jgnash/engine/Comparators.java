@@ -26,7 +26,7 @@ import java.util.Date;
  * type.
  *
  * @author Craig Cavanaugh
- * @version $Id: Comparators.java 3169 2012-02-08 10:31:59Z ccavanaugh $
+ *
  */
 public class Comparators {
 

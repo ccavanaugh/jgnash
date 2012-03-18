@@ -26,7 +26,7 @@ import jgnash.engine.Account;
  * of an account
  *
  * @author Craig Cavanaugh
- * @version $Id: AccountTableModel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public interface AccountTableModel extends TableModel {
 

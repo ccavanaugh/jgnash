@@ -44,7 +44,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * assumed the user is not tracking income gains or loss
  *
  * @author Craig Cavanaugh
- * @version $Id: GainsPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class GainsPanel extends JPanel implements ActionListener {
 

@@ -23,7 +23,7 @@ import java.math.BigDecimal;
  * Abstract Add transaction
  *
  * @author Craig Cavanaugh
- * @version $Id: TransactionEntryAbstractIncrease.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public abstract class TransactionEntryAbstractIncrease extends AbstractInvestmentTransactionEntry {
 

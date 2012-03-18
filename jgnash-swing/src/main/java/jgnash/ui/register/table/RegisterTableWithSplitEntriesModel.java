@@ -36,7 +36,7 @@ import jgnash.ui.register.AccountBalanceDisplayManager;
  * 
  * @author Craig Cavanaugh
  * @author Vincent Frison
- * @version $Id: RegisterTableWithSplitEntriesModel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  * @see jgnash.ui.register.RegisterFactory#getTableModel(boolean, jgnash.engine.Account, boolean)
  */
 public class RegisterTableWithSplitEntriesModel extends RegisterTableModel {

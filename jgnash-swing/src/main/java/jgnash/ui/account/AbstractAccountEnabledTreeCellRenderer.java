@@ -31,7 +31,7 @@ import jgnash.engine.Account;
  * This extends the DefaultTreeCellRenderer to make place holder accounts look disabled
  * 
  * @author Craig Cavanaugh
- * @version $Id: AbstractAccountEnabledTreeCellRenderer.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 abstract class AbstractAccountEnabledTreeCellRenderer implements TreeCellRenderer {
 

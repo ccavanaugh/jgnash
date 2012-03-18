@@ -43,7 +43,7 @@ import jgnash.util.Resource;
  * @author Craig Cavanaugh
  * @author Don Brown
  * @author axnotizes
- * @version $Id: AdjustmentPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public final class AdjustmentPanel extends AbstractBankTransactionPanel {
 

@@ -36,7 +36,7 @@ import jgnash.util.Resource;
  *
  * @author Craig Cavanaugh
  * @author axnotizes
- * @version $Id: DatePanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class DatePanel extends JPanel implements ActionListener {
 

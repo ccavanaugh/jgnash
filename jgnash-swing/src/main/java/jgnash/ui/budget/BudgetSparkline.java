@@ -45,7 +45,7 @@ import org.jfree.ui.RectangleInsets;
  * Sparkline Utility class for budgets
  * 
  * @author Craig Cavanaugh
- * @version $Id: BudgetSparkline.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 final class BudgetSparkline {
 

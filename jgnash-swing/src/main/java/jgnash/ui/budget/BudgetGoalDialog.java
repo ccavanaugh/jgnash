@@ -63,7 +63,7 @@ import jgnash.util.Resource;
  * A Dialog to manage a BudgetGoal
  * 
  * @author Craig Cavanaugh
- * @version $Id: BudgetGoalDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public final class BudgetGoalDialog extends JDialog implements ActionListener {
 

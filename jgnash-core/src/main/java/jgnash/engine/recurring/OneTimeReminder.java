@@ -23,7 +23,7 @@ import java.util.Date;
  * A one time only reminder
  *
  * @author Craig Cavanaugh
- * @version $Id: OneTimeReminder.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class OneTimeReminder extends Reminder {
 

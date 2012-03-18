@@ -23,7 +23,7 @@ import jgnash.engine.Transaction;
  * Transaction memo matcher
  *
  * @author Craig Cavanaugh
- * @version $Id: MemoMatcher.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class MemoMatcher extends AbstractStringMatcher {
 

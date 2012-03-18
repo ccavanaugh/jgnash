@@ -29,7 +29,7 @@ import jgnash.util.Resource;
  * TableModel for ReminderObjects
  * 
  * @author Craig Cavanaugh
- * @version $Id: ReminderObjectTableModel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class ReminderObjectTableModel extends AbstractTableModel {
 

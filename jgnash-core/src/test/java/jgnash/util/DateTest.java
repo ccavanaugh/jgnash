@@ -29,7 +29,7 @@ import org.junit.Test;
 
 /**
  * @author Craig Cavanaugh
- * @version $Id: DateTest.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class DateTest {
 

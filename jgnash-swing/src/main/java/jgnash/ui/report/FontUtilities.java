@@ -30,7 +30,7 @@ import java.lang.ref.SoftReference;
  * Utility class to help calculate font sizes for reporting
  * 
  * @author Craig Cavanaugh
- * @version $Id: FontUtilities.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class FontUtilities {
 

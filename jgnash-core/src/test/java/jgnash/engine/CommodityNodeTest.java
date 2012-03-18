@@ -32,7 +32,7 @@ import org.junit.Test;
  * Commodity test
  * 
  * @author Craig Cavanaugh
- * @version $Id: CommodityNodeTest.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class CommodityNodeTest {
 

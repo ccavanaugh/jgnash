@@ -29,7 +29,7 @@ import java.math.BigDecimal;
  * of the buy is made against it.
  *
  * @author Craig Cavanaugh
- * @version $Id: TransactionEntryBuyX.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class TransactionEntryBuyX extends AbstractInvestmentTransactionEntry {
 

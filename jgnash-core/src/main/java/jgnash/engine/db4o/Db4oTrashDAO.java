@@ -30,7 +30,7 @@ import jgnash.engine.dao.TrashDAO;
  * Db4o trash DAO
  *
  * @author Craig Cavanaugh
- * @version $Id: Db4oTrashDAO.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class Db4oTrashDAO extends AbstractDb4oDAO implements TrashDAO {
 

@@ -34,7 +34,7 @@ import com.lowagie.text.pdf.BaseFont;
  * Utility class map font names to font files
  *
  * @author Craig Cavanaugh
- * @version $Id: FontRegistry.java 3122 2012-01-22 13:18:27Z ccavanaugh $
+ *
  */
 public class FontRegistry {
 

@@ -32,7 +32,7 @@ import javax.swing.plaf.FontUIResource;
  * Manages the look and feel and metal theme
  * 
  * @author Craig Cavanaugh
- * @version $Id: NimbusUtils.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class NimbusUtils {
 

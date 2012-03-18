@@ -26,7 +26,7 @@ import jgnash.engine.AccountType;
  * This extends AbstractAccountEnabledTreeCellRenderer to make sure all accounts except Equity Accounts are disabled.
  * 
  * @author Craig Cavanaugh
- * @version $Id: EquityAccountTreeCellRenderer.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class EquityAccountTreeCellRenderer extends AbstractAccountEnabledTreeCellRenderer {
 

@@ -44,7 +44,7 @@ import jgnash.ui.util.IconUtils;
  * A JTable that renders a tree structure in the first column using <code>prepareRenderer</code>.
  *
  * @author Craig Cavanaugh
- * @version $Id: ExpandingTable.java 3108 2012-01-18 09:38:14Z ccavanaugh $
+ *
  */
 public class ExpandingTable<E extends Comparable<? super E>> extends JTable {
 

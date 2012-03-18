@@ -41,7 +41,7 @@ import jgnash.util.Resource;
  * Daily Reminder panel.
  *
  * @author Craig Cavanaugh
- * @version $Id: DayTab.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class DayTab extends JPanel implements RecurringTab, ActionListener {
 

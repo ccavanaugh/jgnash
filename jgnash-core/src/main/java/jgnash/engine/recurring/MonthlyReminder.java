@@ -29,7 +29,7 @@ import jgnash.util.DateUtils;
  * much more consistent.
  *
  * @author Craig Cavanaugh
- * @version $Id: MonthlyReminder.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class MonthlyReminder extends Reminder {
 

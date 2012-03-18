@@ -39,7 +39,7 @@ import org.jdesktop.swingx.calendar.DateSelectionModel.SelectionMode;
  * Simple close dialog to display a calendar to select a dates.
  *
  * @author Craig Cavanaugh
- * @version $Id: DateSelectDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class DateSelectDialog extends GenericCloseDialog {
 

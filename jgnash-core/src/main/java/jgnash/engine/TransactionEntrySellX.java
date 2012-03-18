@@ -29,7 +29,7 @@ import java.math.BigDecimal;
  * gains of the sell are added to it.
  *
  * @author Craig Cavanaugh
- * @version $Id: TransactionEntrySellX.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class TransactionEntrySellX extends AbstractInvestmentTransactionEntry {
 

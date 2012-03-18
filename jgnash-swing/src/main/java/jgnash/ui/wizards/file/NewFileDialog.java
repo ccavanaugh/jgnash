@@ -41,7 +41,7 @@ import jgnash.util.Resource;
  * Dialog for creating a new file
  *
  * @author Craig Cavanaugh
- * @version $Id: NewFileDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class NewFileDialog extends WizardDialog {
 

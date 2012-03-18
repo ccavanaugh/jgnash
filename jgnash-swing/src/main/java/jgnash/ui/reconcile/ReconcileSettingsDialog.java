@@ -42,7 +42,7 @@ import jgnash.util.Resource;
  * Account reconcile settings dialog.
  * 
  * @author Craig Cavanaugh
- * @version $Id: ReconcileSettingsDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class ReconcileSettingsDialog extends JDialog implements ActionListener {
 

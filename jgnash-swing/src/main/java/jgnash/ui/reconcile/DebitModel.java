@@ -24,7 +24,7 @@ import jgnash.engine.Transaction;
 
 /**
  * @author Craig Cavanaugh
- * @version $Id: DebitModel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class DebitModel extends AbstractReconcileTableModel {
 

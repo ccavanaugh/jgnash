@@ -52,7 +52,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * <code>BudgetResultsModel</code>
  *
  * @author Craig Cavanaugh
- * @version $Id$
+ *
  */
 public class BudgetResultsExport {
 

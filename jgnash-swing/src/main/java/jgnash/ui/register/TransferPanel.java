@@ -33,7 +33,7 @@ import jgnash.ui.util.ValidationFactory;
  * @author Craig Cavanaugh
  * @author Don Brown
  * @author axnotizes
- * @version $Id: TransferPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class TransferPanel extends AbstractExchangeTransactionPanel {
 

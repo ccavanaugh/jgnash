@@ -23,7 +23,7 @@ import java.util.Date;
  * Wraps objects that have been removed from active use in the engine.
  *
  * @author Craig Cavanaugh
- * @version $Id: TrashObject.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class TrashObject extends StoredObject {
 

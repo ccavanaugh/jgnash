@@ -26,7 +26,7 @@ import jgnash.util.Resource;
  * A general configuration class so that application configuration can be stored inside the database
  * 
  * @author Craig Cavanaugh
- * @version $Id: Config.java 3117 2012-01-22 12:10:41Z ccavanaugh $
+ *
  */
 public class Config extends StoredObject {
 

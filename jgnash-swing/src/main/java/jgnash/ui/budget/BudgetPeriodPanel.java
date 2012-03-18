@@ -51,7 +51,7 @@ import org.jdesktop.swingx.JXTitledPanel;
  * Panel for displaying one budget budgetPeriod
  *
  * @author Craig Cavanaugh
- * @version $Id: BudgetPeriodPanel.java 3193 2012-02-14 17:47:08Z ccavanaugh $
+ *
  */
 final class BudgetPeriodPanel extends JPanel {
 

@@ -43,7 +43,7 @@ import jgnash.util.Resource;
  * Monthly reminder tab.
  *
  * @author Craig Cavanaugh
- * @version $Id: MonthTab.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class MonthTab extends JPanel implements RecurringTab, ActionListener {
 

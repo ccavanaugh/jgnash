@@ -33,7 +33,7 @@ import jgnash.util.Resource;
  * Report options panel
  *
  * @author Craig Cavanaugh
- * @version $Id: ReportOptions.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class ReportOptions extends JPanel implements ActionListener {
 

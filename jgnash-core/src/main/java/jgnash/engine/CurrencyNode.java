@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  * Class for representing currency nodes
  * 
  * @author Craig Cavanaugh
- * @version $Id: CurrencyNode.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class CurrencyNode extends CommodityNode {
 

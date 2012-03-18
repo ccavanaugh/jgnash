@@ -45,7 +45,7 @@ import jgnash.util.Resource;
  * First part of import wizard for import of QIF files from online sources.
  *
  * @author Craig Cavanaugh
- * @version $Id: PartialOne.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class PartialOne extends JPanel implements WizardPage, ActionListener {
     private Account destinationAccount;

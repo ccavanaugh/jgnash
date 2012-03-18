@@ -45,7 +45,7 @@ import jgnash.message.*;
  * Model for budget results
  *
  * @author Craig Cavanaugh
- * @version $Id: BudgetResultsModel.java 3183 2012-02-12 20:17:00Z ccavanaugh $
+ *
  */
 public class BudgetResultsModel implements MessageListener {
 

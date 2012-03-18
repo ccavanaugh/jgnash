@@ -35,7 +35,7 @@ import jgnash.engine.dao.TransactionDAO;
  * db4o transaction DAO
  *
  * @author Craig Cavanaugh
- * @version $Id: Db4oTransactionDAO.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class Db4oTransactionDAO extends AbstractDb4oDAO implements TransactionDAO {
 

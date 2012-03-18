@@ -67,7 +67,7 @@ import org.jfree.data.general.PieDataset;
  * per account basis to group by payee Name.
  * 
  * @author Pranay Kumar
- * @version $Id: PayeePieChart.java 3070 2012-01-04 11:00:43Z ccavanaugh $
+ *
  */
 public class PayeePieChart {
 

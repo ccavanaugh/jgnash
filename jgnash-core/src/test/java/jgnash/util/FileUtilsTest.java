@@ -34,7 +34,7 @@ import org.junit.Test;
  * File utilities test
  *
  * @author Craig Cavanaugh
- * @version $Id: FileUtilsTest.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class FileUtilsTest {
 

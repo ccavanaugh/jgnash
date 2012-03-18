@@ -81,7 +81,7 @@ import jgnash.engine.TransactionTag;
  * Accounts will be kept in a lookup table during the parsing operation
  *
  * @author Craig Cavanaugh
- * @version $Id: Import.java 3120 2012-01-22 12:59:37Z ccavanaugh $
+ *
  */
 public class Import {
 

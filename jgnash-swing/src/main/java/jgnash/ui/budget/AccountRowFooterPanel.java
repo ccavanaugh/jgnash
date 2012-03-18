@@ -64,7 +64,7 @@ import jgnash.ui.util.JTableUtils;
  * Panel to display a row footer which summarizes account totals
  *
  * @author Craig Cavanaugh
- * @version $Id: AccountRowFooterPanel.java 3187 2012-02-14 09:41:10Z ccavanaugh
+ *
  * $
  */
 public class AccountRowFooterPanel extends JPanel {

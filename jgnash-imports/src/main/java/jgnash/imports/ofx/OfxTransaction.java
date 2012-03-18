@@ -23,7 +23,7 @@ import jgnash.imports.ImportTransaction;
  * OFX Transaction object
  *
  * @author Craig Cavanaugh
- * @version $Id: OfxTransaction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class OfxTransaction extends ImportTransaction {
 

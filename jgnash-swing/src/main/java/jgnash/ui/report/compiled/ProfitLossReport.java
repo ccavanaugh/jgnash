@@ -26,7 +26,7 @@ import jgnash.engine.AccountGroup;
  * Profit and Loss Report
  *
  * @author Craig Cavanaugh
- * @version $Id: ProfitLossReport.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class ProfitLossReport extends AbstractCrosstabReport {
 

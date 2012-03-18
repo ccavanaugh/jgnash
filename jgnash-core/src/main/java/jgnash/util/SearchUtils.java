@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  * Search Utility class
  * 
  * @author Craig Cavanaugh
- * @version $Id: SearchUtils.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class SearchUtils {
 

@@ -35,7 +35,7 @@ import jgnash.net.ConnectionFactory;
  * An abstract CommodityParser for the Yahoo! financial web sites.
  *
  * @author Craig Cavanaugh
- * @version $Id: AbstractYahooParser.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public abstract class AbstractYahooParser implements SecurityParser {
 

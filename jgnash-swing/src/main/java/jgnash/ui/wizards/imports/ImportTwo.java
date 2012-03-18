@@ -47,7 +47,7 @@ import jgnash.util.Resource;
  * Wizard Page for OFX import.
  * 
  * @author Craig Cavanaugh
- * @version $Id: OfxImportTwo.java 197 2008-01-01 08:13:35Z ccavanaugh $
+ *
  */
 public class ImportTwo extends JPanel implements WizardPage, ActionListener {
 

@@ -26,7 +26,7 @@ import java.awt.event.ActionEvent;
  * UI Action to open the new file dialog
  *
  * @author Craig Cavanaugh
- * @version $Id: AccountRegisterReportAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 @Action("report-accregister-command")
 public class AccountRegisterReportAction extends AbstractEnabledAction {

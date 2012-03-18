@@ -28,7 +28,7 @@ import jgnash.engine.MathConstants;
  * 366 days per year are assumed and static for goals. The 366th day will not be used if not a leap year
  * 
  * @author Craig Cavanaugh
- * @version $Id: BudgetGoal.java 3103 2012-01-11 23:25:13Z ccavanaugh $
+ *
  */
 public class BudgetGoal implements Cloneable {
 

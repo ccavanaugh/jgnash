@@ -26,7 +26,7 @@ import java.awt.event.ActionEvent;
  * UI Action to open the currencies dialog
  *
  * @author Craig Cavanaugh
- * @version $Id: OptionsAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 @Action("options-command")
 public class OptionsAction extends AbstractEnabledAction {

@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  * Hides all the db4o config code
  *
  * @author Craig Cavanaugh
- * @version $Id: Db4oConfigDAO.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class Db4oConfigDAO extends AbstractDb4oDAO implements ConfigDAO {
 

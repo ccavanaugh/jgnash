@@ -29,7 +29,7 @@ import jgnash.util.SearchUtils;
  * Search Engine class
  *
  * @author Craig Cavanaugh
- * @version $Id: SearchEngine.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class SearchEngine {
 

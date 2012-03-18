@@ -31,7 +31,7 @@ import jgnash.util.Resource;
  * Transaction Factory
  * 
  * @author Craig Cavanaugh
- * @version $Id: TransactionFactory.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class TransactionFactory {
 

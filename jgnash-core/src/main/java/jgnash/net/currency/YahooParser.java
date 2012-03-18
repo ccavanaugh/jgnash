@@ -34,7 +34,7 @@ import jgnash.net.ConnectionFactory;
  * A CurrencyParser for the Yahoo finance site.
  *
  * @author Craig Cavanaugh
- * @version $Id: YahooParser.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class YahooParser implements CurrencyParser {
 

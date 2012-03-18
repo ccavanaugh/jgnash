@@ -30,7 +30,7 @@ import jgnash.ui.report.jasper.DynamicJasperReport;
  * Factory class for handling printing preferences
  *
  * @author Craig Cavanaugh
- * @version $Id: ReportPrintFactory.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class ReportPrintFactory {
     private static final String HEIGHT = "height";

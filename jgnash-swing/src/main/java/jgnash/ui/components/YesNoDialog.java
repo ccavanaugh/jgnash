@@ -40,7 +40,7 @@ import jgnash.util.Resource;
  * locale support and creates a more consistent user interface
  *
  * @author Craig Cavanaugh
- * @version $Id: YesNoDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class YesNoDialog extends JDialog implements ActionListener {
     private final Resource rb = Resource.get();

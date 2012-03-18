@@ -25,7 +25,7 @@ import java.util.List;
  * Budget DAO
  *
  * @author Craig Cavanaugh
- * @version $Id: BudgetDAO.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public interface BudgetDAO {
 

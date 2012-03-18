@@ -57,7 +57,7 @@ import jgnash.util.Resource;
  * BudgetManagerDialog is for creating and deleting budgets
  *
  * @author Craig Cavanaugh
- * @version $Id: CurrencyModifyDialog.java 2493 2011-01-02 16:08:57Z ccavanaugh $
+ *
  */
 public final class BudgetManagerDialog extends JDialog implements ActionListener, MessageListener {
 

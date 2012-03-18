@@ -76,7 +76,7 @@ import jgnash.util.Resource;
  * Panel for displaying a budget
  *
  * @author Craig Cavanaugh
- * @version $Id: BudgetPanel.java 3226 2012-03-05 10:50:09Z ccavanaugh $
+ *
  */
 public final class BudgetPanel extends JPanel implements ActionListener, MessageListener {
 

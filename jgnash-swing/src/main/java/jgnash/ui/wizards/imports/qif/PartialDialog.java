@@ -27,7 +27,7 @@ import jgnash.ui.components.wizard.WizardDialog;
  * Dialog for partial import of QIF files
  *
  * @author Craig Cavanaugh
- * @version $Id: PartialDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class PartialDialog extends WizardDialog {
 

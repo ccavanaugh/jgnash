@@ -29,7 +29,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * This class is thread-safe
  *
  * @author Craig Cavanaugh
- * @version $Id: MultiHashMap.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  * @param <K> Key class
  * @param <V> Object class
  */

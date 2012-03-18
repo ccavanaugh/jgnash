@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
  * 
  * @author Craig Cavanaugh
  * @author Vincent Frison
- * @version $Id: DateUtils.java 3106 2012-01-15 12:58:05Z ccavanaugh $
+ *
  */
 public class DateUtils {
 

@@ -24,7 +24,7 @@ import java.util.Collection;
  * Interface for data storage backends
  *
  * @author Craig Cavanaugh
- * @version $Id: DataStore.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public interface DataStore {
 

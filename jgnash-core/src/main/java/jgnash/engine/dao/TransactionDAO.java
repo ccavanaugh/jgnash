@@ -25,7 +25,7 @@ import jgnash.engine.Transaction;
  * Transaction DAO Interface
  *
  * @author Craig Cavanaugh
- * @version $Id: TransactionDAO.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public interface TransactionDAO {
 

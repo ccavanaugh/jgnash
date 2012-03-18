@@ -26,7 +26,7 @@ import jgnash.util.DateUtils;
  * A daily reminder
  *
  * @author Craig Cavanaugh
- * @version $Id: DailyReminder.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class DailyReminder extends Reminder {
 

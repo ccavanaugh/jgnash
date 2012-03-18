@@ -21,7 +21,7 @@ package jgnash.ui.register;
  * Panel type enumeration
  *
  * @author Craig Cavanaugh
- * @version $Id: PanelType.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public enum PanelType {
     INCREASE, DECREASE

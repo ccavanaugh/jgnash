@@ -26,7 +26,7 @@ import java.util.List;
  *
  * @author Craig Cavanaugh
  * @author Don Brown
- * @version $Id: DefaultAutoCompleteModel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class DefaultAutoCompleteModel implements AutoCompleteModel {
 

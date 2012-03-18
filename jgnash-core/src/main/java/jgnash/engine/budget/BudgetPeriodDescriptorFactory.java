@@ -31,7 +31,7 @@ import jgnash.util.DateUtils;
  * Factory class for generating descriptors
  * 
  * @author Craig Cavanaugh
- * @version $Id: BudgetPeriodDescriptorFactory.java 3086 2012-01-08 11:21:42Z ccavanaugh $
+ *
  */
 public final class BudgetPeriodDescriptorFactory {
 

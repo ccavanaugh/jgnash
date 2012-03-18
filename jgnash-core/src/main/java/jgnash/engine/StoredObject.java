@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  * Abstract class for anything stored in the database that requires a unique id
  *
  * @author Craig Cavanaugh
- * @version $Id: StoredObject.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public abstract class StoredObject implements Cloneable, Serializable {
 

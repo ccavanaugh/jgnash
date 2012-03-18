@@ -27,7 +27,7 @@ import java.awt.event.ActionEvent;
  * UI Action to open the new file dialog
  *
  * @author Craig Cavanaugh
- * @version $Id: ConsoleAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 @Action("console-command")
 public class ConsoleAction extends AbstractAction {

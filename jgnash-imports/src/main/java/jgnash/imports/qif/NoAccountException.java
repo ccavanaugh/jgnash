@@ -22,7 +22,7 @@ package jgnash.imports.qif;
  * destination account.
  *
  * @author Craig Cavanaugh
- * @version $Id: NoAccountException.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class NoAccountException extends Exception {
 

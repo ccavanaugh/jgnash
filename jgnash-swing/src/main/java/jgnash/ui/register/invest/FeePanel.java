@@ -49,7 +49,7 @@ import jgnash.util.Resource;
  * simple and charged against the account adjusting the cash balance.
  *
  * @author Craig Cavanaugh
- * @version $Id: FeePanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class FeePanel extends JPanel implements ActionListener {
 

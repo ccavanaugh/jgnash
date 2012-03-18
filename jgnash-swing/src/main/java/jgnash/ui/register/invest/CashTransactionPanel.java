@@ -31,7 +31,7 @@ import jgnash.ui.register.TransactionPanel;
  * Cash Transaction panel for the investment account register
  *
  * @author Craig Cavanaugh
- * @version $Id: CashTransactionPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public final class CashTransactionPanel extends TransactionPanel {
 

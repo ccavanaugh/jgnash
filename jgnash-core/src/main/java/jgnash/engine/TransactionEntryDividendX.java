@@ -27,7 +27,7 @@ import java.math.BigDecimal;
  * creditAccount is assumed to be the investment account.
  *
  * @author Craig Cavanaugh
- * @version $Id: TransactionEntryDividendX.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class TransactionEntryDividendX extends AbstractInvestmentTransactionEntry {
 

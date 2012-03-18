@@ -23,7 +23,7 @@ import jgnash.engine.EngineFactory;
 
 /**
  * @author Craig Cavanaugh
- * @version $Id: ImportUtils.java 3070 2012-01-04 11:00:43Z ccavanaugh $
+ *
  */
 public class ImportUtils {
 

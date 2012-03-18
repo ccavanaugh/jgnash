@@ -26,7 +26,7 @@ import java.math.BigDecimal;
  * The debitAccount and debitAmount fields are used for the capital gains (income) account.
  *
  * @author Craig Cavanaugh
- * @version $Id: TransactionEntryRocX.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class TransactionEntryRocX extends AbstractInvestmentTransactionEntry {
 

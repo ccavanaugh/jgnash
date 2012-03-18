@@ -46,7 +46,7 @@ import jgnash.util.Resource;
 
 /**
  * @author Craig Cavanaugh
- * @version $Id: OfxImportTable.java 197 2008-01-01 08:13:35Z ccavanaugh $
+ *
  */
 class ImportTable extends FormattedJTable {
 

@@ -24,7 +24,7 @@ import java.util.prefs.PreferencesFactory;
  * Map based Preferences implementation.
  *
  * @author Craig Cavanaugh
- * @version $Id: MapPreferencesFactory.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class MapPreferencesFactory implements PreferencesFactory {
 

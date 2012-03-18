@@ -36,7 +36,7 @@ import jgnash.util.Resource;
  * UI Action to open a database
  * 
  * @author Craig Cavanaugh
- * @version $Id: OpenAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class OpenAction {
 

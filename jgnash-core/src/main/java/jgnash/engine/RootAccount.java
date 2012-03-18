@@ -21,7 +21,7 @@ package jgnash.engine;
  * The RootAccount class
  *
  * @author Craig Cavanaugh
- * @version $Id: RootAccount.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class RootAccount extends Account {
 

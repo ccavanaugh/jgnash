@@ -45,7 +45,7 @@ import jgnash.util.Resource;
  * A Dialog for getting a date and transaction number.
  * 
  * @author Craig Cavanaugh
- * @version $Id: DateChkNumberDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 
 public class DateChkNumberDialog extends JDialog implements ActionListener {

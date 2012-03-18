@@ -39,7 +39,7 @@ import jgnash.util.Resource;
  * New file wizard panel.
  *
  * @author Craig Cavanaugh
- * @version $Id: NewFileSummary.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class NewFileSummary extends javax.swing.JPanel implements WizardPage {
     private final Resource rb = Resource.get();

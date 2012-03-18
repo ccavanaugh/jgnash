@@ -24,7 +24,7 @@ import java.util.Locale;
  * Classpath utilities
  *
  * @author Craig Cavanaugh
- * @version $Id: ClassPathUtils.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class ClassPathUtils {
 

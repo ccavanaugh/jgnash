@@ -26,7 +26,7 @@ import jgnash.engine.AccountGroup;
  * Balance Sheet Report
  *
  * @author Craig Cavanaugh
- * @version $Id: BalanceSheetReport.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class BalanceSheetReport extends AbstractSumByTypeReport {
 

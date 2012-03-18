@@ -23,7 +23,7 @@ import jgnash.engine.Config;
  * Configuration DAO Interface
  *
  * @author Craig Cavanaugh
- * @version $Id: ConfigDAO.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public interface ConfigDAO {
 

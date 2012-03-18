@@ -71,7 +71,7 @@ import jgnash.util.Resource;
  * operations. After a predefined period of time, they are permanently removed.
  * 
  * @author Craig Cavanaugh
- * @version $Id: Engine.java 3086 2012-01-08 11:21:42Z ccavanaugh $
+ *
  */
 public class Engine {
 

@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  * <b>Assumes that enums cannot be altered or created beyond the class definition</b>
  *
  * @author Craig Cavanaugh
- * @version $Id: TEnum.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class TEnum implements ObjectConstructor {
 

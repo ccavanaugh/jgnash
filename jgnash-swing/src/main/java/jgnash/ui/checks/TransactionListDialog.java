@@ -55,7 +55,7 @@ import jgnash.util.Resource;
  * Displays a dialog that list all printable transactions. Specific transactions can be selected to print.
  * 
  * @author Craig Cavanaugh
- * @version $Id: TransactionListDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class TransactionListDialog extends JDialog implements ActionListener, ListSelectionListener {
 

@@ -23,7 +23,7 @@ import java.math.BigDecimal;
  * A simple wrapper for calculated budget results
  *
  * @author Craig Cavanaugh
- * @version $Id: BudgetPeriodResults.java 3148 2012-02-03 10:22:17Z ccavanaugh $
+ *
  */
 public class BudgetPeriodResults {
 

@@ -100,7 +100,7 @@ import org.jdesktop.swingx.JXStatusBar;
  * 
  * @author Craig Cavanaugh
  * @author Aleksey Trufanov
- * @version $Id: MainFrame.java 3097 2012-01-09 10:42:51Z ccavanaugh $
+ *
  */
 public class MainFrame extends JFrame implements MessageListener, ActionListener {
 

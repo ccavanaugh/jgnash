@@ -53,7 +53,7 @@ import jgnash.util.Resource;
  * Displays a list of accounts using a table and adds a toolbar for common account methods
  * 
  * @author Craig Cavanaugh
- * @version $Id: AccountListPanel.java 1974 2010-01-01 11:28:19Z ccavanaugh $
+ *
  */
 public class ExpandingAccountTablePanel extends JPanel implements ActionListener, MessageListener {
 

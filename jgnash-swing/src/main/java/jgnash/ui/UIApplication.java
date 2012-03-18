@@ -55,7 +55,7 @@ import jgnash.util.Resource;
  * GUI version of the jGnash program. This Class creates and provides access to the MainFrame.
  *
  * @author Craig Cavanaugh
- * @version $Id: UIApplication.java 3077 2012-01-07 16:18:42Z ccavanaugh $
+ *
  */
 public class UIApplication implements Thread.UncaughtExceptionHandler {
 

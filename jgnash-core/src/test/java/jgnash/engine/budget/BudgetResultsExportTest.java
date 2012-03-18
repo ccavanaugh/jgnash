@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
  * JUnit test class to export a <code>BudgetResultsModel</code>
  *
  * @author Craig Cavanaugh
- * @version $Id$
+ *
  */
 public class BudgetResultsExportTest {
 

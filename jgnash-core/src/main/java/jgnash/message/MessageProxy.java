@@ -32,7 +32,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * processing
  *
  * @author Craig Cavanaugh
- * @version $Id: MessageProxy.java 3072 2012-01-06 10:43:44Z ccavanaugh $
+ *
  */
 public class MessageProxy {
 

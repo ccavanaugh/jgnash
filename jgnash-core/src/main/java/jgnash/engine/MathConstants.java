@@ -24,7 +24,7 @@ import java.math.RoundingMode;
  * Math constants interface
  *
  * @author Craig Cavanaugh
- * @version $Id: MathConstants.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public final class MathConstants {
 

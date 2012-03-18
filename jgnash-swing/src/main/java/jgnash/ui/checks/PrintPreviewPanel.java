@@ -31,7 +31,7 @@ import javax.swing.JPanel;
 
 /**
  * @author Craig Cavanaugh
- * @version $Id: PrintPreviewPanel.java 3128 2012-01-22 19:01:08Z ccavanaugh $
+ *
  */
 
 final class PrintPreviewPanel extends JPanel {

@@ -27,7 +27,7 @@ import jgnash.util.Resource;
  * Immutable descriptor for a budget period
  * 
  * @author Craig Cavanaugh
- * @version $Id
+ *
  */
 public class BudgetPeriodDescriptor {
 

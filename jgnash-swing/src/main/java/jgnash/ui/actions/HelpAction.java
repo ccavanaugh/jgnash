@@ -28,7 +28,7 @@ import jgnash.ui.util.builder.Action;
  * Action to display help tracker
  *
  * @author Craig Cavanaugh
- * @version $Id: HelpAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 
 @Action("help-command")

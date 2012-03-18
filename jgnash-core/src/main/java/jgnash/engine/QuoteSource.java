@@ -30,7 +30,7 @@ import jgnash.util.Resource;
  * Enumeration for quote download source
  *
  * @author Craig Cavanaugh
- * @version $Id: QuoteSource.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 @SuppressWarnings({"UnusedDeclaration"})
 public enum QuoteSource {

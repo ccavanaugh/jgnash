@@ -50,7 +50,7 @@ import org.pushingpixels.substance.api.skin.SkinInfo;
  * Manages the look and feel and metal themes
  * 
  * @author Craig Cavanaugh
- * @version $Id: ThemeManager.java 3224 2012-03-04 22:52:35Z ccavanaugh $
+ *
  */
 @SuppressWarnings("restriction")
 public class ThemeManager {

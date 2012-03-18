@@ -68,7 +68,7 @@ import net.sf.jasperreports.engine.JasperPrint;
  * @author Aleksey Trufanov
  * @author Vincent Frison
  * @author Klemen Zagar
- * @version $Id: AbstractCrosstabReport.java 3169 2012-02-08 10:31:59Z ccavanaugh $
+ *
  */
 abstract class AbstractCrosstabReport extends DynamicJasperReport {
 

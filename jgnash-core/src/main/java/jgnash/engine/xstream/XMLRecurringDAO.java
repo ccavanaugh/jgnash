@@ -26,7 +26,7 @@ import jgnash.engine.recurring.Reminder;
  * Recurring XML DAO
  *
  * @author Craig Cavanaugh
- * @version $Id: XMLRecurringDAO.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class XMLRecurringDAO extends AbstractXMLDAO implements RecurringDAO {
 

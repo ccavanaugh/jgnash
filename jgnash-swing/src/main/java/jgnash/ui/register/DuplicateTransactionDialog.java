@@ -36,7 +36,7 @@ import jgnash.util.Resource;
  * (month, day, year), then the current date and time is used to maintain entry order.
  *
  * @author Craig Cavanaugh
- * @version $Id: DuplicateTransactionDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class DuplicateTransactionDialog extends DateChkNumberDialog implements ActionListener {
 

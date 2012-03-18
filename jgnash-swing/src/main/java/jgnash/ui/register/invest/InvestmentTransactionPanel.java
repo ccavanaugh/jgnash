@@ -58,7 +58,7 @@ import jgnash.util.Resource;
  *
  * @author Craig Cavanaugh
  * @author Don Brown
- * @version $Id: InvestmentTransactionPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class InvestmentTransactionPanel extends JPanel implements MessageListener, ActionListener {
 

@@ -38,7 +38,7 @@ import jgnash.util.Resource;
  * sources.
  *
  * @author Craig Cavanaugh
- * @version $Id: OfxImportOne.java 197 2008-01-01 08:13:35Z ccavanaugh $
+ *
  */
 public class ImportOne extends JPanel implements WizardPage {
 

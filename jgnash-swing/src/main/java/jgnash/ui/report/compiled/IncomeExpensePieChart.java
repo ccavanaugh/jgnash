@@ -71,7 +71,7 @@ import org.jfree.data.general.PieDataset;
  * @author Craig Cavanaugh
  * @author Chad McHenry
  * @author Dany Veilleux
- * @version $Id: IncomeExpensePieChart.java 3070 2012-01-04 11:00:43Z ccavanaugh $
+ *
  */
 public class IncomeExpensePieChart {
 

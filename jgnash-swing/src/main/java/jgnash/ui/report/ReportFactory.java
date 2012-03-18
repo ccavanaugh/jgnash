@@ -26,7 +26,7 @@ import java.util.prefs.Preferences;
  * Factory methods to help with report configuration and generation
  * 
  * @author Craig Cavanaugh
- * @version $Id: ReportFactory.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class ReportFactory {
 

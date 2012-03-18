@@ -27,7 +27,7 @@ import org.junit.Test;
 
 /**
  * @author Craig Cavanaugh
- * @version $Id: Db4oEngineTest.java 3082 2012-01-08 02:26:38Z ccavanaugh $
+ *
  */
 public class Db4oEngineTest extends EngineTest {
 

@@ -28,7 +28,7 @@ import jgnash.imports.ImportTransaction;
  * 
  * @author Craig Cavanaugh
  * @author Nicolas Bouillon
- * @version $Id: OfxBank.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class OfxBank extends ImportBank {
 

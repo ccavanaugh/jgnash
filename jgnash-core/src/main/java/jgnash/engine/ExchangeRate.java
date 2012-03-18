@@ -29,7 +29,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Exchange rate object
  *
  * @author Craig Cavanaugh
- * @version $Id: ExchangeRate.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class ExchangeRate extends StoredObject {
     private static final long serialVersionUID = -2365289994847042288L;

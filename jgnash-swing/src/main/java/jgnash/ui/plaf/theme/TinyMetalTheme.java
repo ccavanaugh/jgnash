@@ -26,7 +26,7 @@ import javax.swing.plaf.metal.DefaultMetalTheme;
  * Metal theme that makes the fonts small for low res displays
  *
  * @author Craig Cavanaugh
- * @version $Id: TinyMetalTheme.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class TinyMetalTheme extends DefaultMetalTheme {
 

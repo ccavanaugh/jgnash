@@ -33,7 +33,7 @@ import org.jfree.data.xy.XYDataset;
  * Tooltip generator for the security history chart
  *
  * @author Craig Cavanaugh
- * @version $Id: SecurityItemLabelGenerator.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class SecurityItemLabelGenerator implements XYToolTipGenerator {
     /** The date formatter. */

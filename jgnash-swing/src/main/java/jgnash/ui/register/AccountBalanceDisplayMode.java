@@ -22,7 +22,7 @@ package jgnash.ui.register;
  * 
  * @author Peter Vida
  * @author Craig Cavanaugh
- * @version $Id: AccountBalanceDisplayMode.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public enum AccountBalanceDisplayMode {
     NONE(1),

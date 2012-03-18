@@ -32,7 +32,7 @@ import java.awt.event.ActionEvent;
  * UI Action to open the new file dialog
  *
  * @author Craig Cavanaugh
- * @version $Id: DefaultCurrencyAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 @Action("currency-default-command")
 public class DefaultCurrencyAction extends AbstractEnabledAction {

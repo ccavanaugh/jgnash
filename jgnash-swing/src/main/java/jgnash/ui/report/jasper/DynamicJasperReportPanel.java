@@ -87,7 +87,7 @@ import net.sf.jasperreports.view.save.JRSingleSheetXlsSaveContributor;
  * Panel to display reports created using DynamicJasper
  * 
  * @author Craig Cavanaugh
- * @version $Id: DynamicJasperReportPanel.java 3200 2012-02-16 11:02:25Z ccavanaugh $
+ *
  */
 class DynamicJasperReportPanel extends JPanel implements ActionListener {
 

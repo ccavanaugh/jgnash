@@ -61,7 +61,7 @@ import jgnash.util.Resource;
  * Dialog for entry for recurring transactions.
  *
  * @author Craig Cavanaugh
- * @version $Id: RecurringEntryDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class RecurringEntryDialog extends JDialog implements ActionListener {
 

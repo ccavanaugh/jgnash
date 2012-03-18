@@ -45,7 +45,7 @@ import jgnash.util.Resource;
 
 /**
  * @author Craig Cavanaugh
- * @version $Id: AccountSecuritiesPanel.java 3123 2012-01-22 13:18:57Z ccavanaugh $
+ *
  */
 class AccountSecuritiesPanel extends JPanel implements ActionListener {
 

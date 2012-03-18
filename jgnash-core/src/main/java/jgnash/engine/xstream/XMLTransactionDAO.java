@@ -26,7 +26,7 @@ import jgnash.engine.dao.TransactionDAO;
  * Transaction XML DAO
  *
  * @author Craig Cavanaugh
- * @version $Id$
+ *
  */
 public class XMLTransactionDAO extends AbstractXMLDAO implements TransactionDAO {
 

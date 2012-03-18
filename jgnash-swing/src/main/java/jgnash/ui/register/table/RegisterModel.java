@@ -22,7 +22,7 @@ package jgnash.ui.register.table;
  * <p/>
  *
  * @author Craig Cavanaugh
- * @version $Id: RegisterModel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public interface RegisterModel extends AccountTableModel {
 

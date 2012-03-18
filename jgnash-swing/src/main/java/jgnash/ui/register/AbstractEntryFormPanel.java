@@ -37,7 +37,7 @@ import jgnash.util.Resource;
  * Abstract transaction entry form class
  * 
  * @author Craig Cavanaugh
- * @version $Id: AbstractEntryFormPanel.java 3166 2012-02-07 10:50:43Z ccavanaugh $
+ *
  */
 public abstract class AbstractEntryFormPanel extends JPanel {
 

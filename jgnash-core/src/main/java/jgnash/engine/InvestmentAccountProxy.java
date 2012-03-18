@@ -26,7 +26,7 @@ import java.util.concurrent.locks.Lock;
  * Investment Account Proxy class
  * 
  * @author Craig Cavanaugh
- * @version $Id: InvestmentAccountProxy.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class InvestmentAccountProxy extends AccountProxy {
 

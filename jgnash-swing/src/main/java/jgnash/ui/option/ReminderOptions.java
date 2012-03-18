@@ -33,7 +33,7 @@ import jgnash.util.Resource;
  * Reminder options panel.
  *
  * @author Craig Cavanaugh
- * @version $Id: ReminderOptions.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class ReminderOptions extends JPanel implements ActionListener {
 

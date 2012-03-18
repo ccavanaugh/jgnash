@@ -36,7 +36,7 @@ import jgnash.ui.register.AccountBalanceDisplayManager;
  * Sortable table model
  *
  * @author Craig Cavanaugh
- * @version $Id: SortedTableModel.java 3129 2012-01-22 21:51:05Z ccavanaugh $
+ *
  */
 public class SortedTableModel extends RegisterTableModel implements SortableTableModel {
 

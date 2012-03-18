@@ -26,7 +26,7 @@ import jgnash.engine.Account;
  * refreshes itself when necessary.
  * 
  * @author Peter Vida
- * @version $Id: FilteredAccountListComboBox.java 3070 2012-01-04 11:00:43Z ccavanaugh $
+ *
  */
 public class FilteredAccountListComboBox extends AccountListComboBox {
 

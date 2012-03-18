@@ -21,7 +21,7 @@ package jgnash.net.security;
  * A CommodityParser for the Yahoo! AUS financial site.
  *
  * @author Rob Hills
- * @version $Id: YahooAusParser.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class YahooAusParser extends AbstractYahooParser {
 

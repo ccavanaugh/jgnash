@@ -48,7 +48,7 @@ import jgnash.ui.util.ValidationFactory;
  * @author Don Brown
  * @author axnotizes
  * @author Pranay Kumar
- * @version $Id: TransactionPanel.java 3129 2012-01-22 21:51:05Z ccavanaugh $
+ *
  */
 public class TransactionPanel extends AbstractExchangeTransactionPanel {
 

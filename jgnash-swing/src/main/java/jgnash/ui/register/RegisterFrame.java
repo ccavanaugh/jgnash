@@ -49,7 +49,7 @@ import jgnash.util.Resource;
  * A Dialog that displays a single account register. Size and position is remembered
  *
  * @author Craig Cavanaugh
- * @version $Id: RegisterFrame.java 3165 2012-02-07 09:39:33Z ccavanaugh $
+ *
  */
 public final class RegisterFrame extends JFrame implements MessageListener {
 

@@ -32,7 +32,7 @@ import jgnash.ui.components.FormattedJTable;
  * JTable for displaying budget results using the specified format
  *
  * @author Craig Cavanaugh
- * @version $Id: AbstractResultsTable.java 3164 2012-02-06 10:49:57Z ccavanaugh $
+ *
  */
 public abstract class AbstractResultsTable extends FormattedJTable {
 

@@ -36,7 +36,7 @@ import jgnash.engine.Account;
  *
  * @author Craig Cavanaugh
  * @author Pranay
- * @version $Id: AbstractExchangeTransactionPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public abstract class AbstractExchangeTransactionPanel extends AbstractBankTransactionPanel {
 

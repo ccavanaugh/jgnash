@@ -36,7 +36,7 @@ import javax.swing.UIManager;
  * Paints an Icon with vertical text
  *
  * @author Craig Cavanaugh
- * @version $Id: VerticalTextIcon.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 @SuppressWarnings({"SuspiciousNameCombination"})
 public class VerticalTextIcon implements Icon, SwingConstants {

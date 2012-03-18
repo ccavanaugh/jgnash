@@ -29,7 +29,7 @@ import jgnash.ui.register.table.SplitsRegisterTableModel;
  * Entry panel for investment fee transactions
  *
  * @author Craig Cavanaugh
- * @version $Id: FeeTransactionEntryPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class FeeTransactionEntryPanel extends AbstractTransactionEntryPanel implements ActionListener {
 

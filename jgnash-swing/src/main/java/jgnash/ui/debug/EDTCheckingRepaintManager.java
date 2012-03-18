@@ -25,7 +25,7 @@ import javax.swing.SwingUtilities;
  * Check for invalid UI updates on the EDT
  *
  * @author Craig Cavanaugh
- * @version $Id: EDTCheckingRepaintManager.java 3068 2012-01-04 10:20:11Z ccavanaugh $
+ *
  */
 public final class EDTCheckingRepaintManager extends RepaintManager {
 

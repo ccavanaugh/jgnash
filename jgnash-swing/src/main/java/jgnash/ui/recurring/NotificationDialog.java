@@ -54,7 +54,7 @@ import jgnash.util.Resource;
  *
  * @author Craig Cavanaugh
  * @author Clemens Wacha
- * @version $Id: NotificationDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class NotificationDialog extends JDialog implements ActionListener, ListSelectionListener {
 

@@ -28,7 +28,7 @@ import jgnash.engine.Transaction;
  * Table model for investment transactions
  * 
  * @author Craig Cavanaugh
- * @version $Id: InvestmentRegisterTableModel.java 3066 2012-01-04 01:25:35Z ccavanaugh $
+ *
  */
 
 public class InvestmentRegisterTableModel extends AbstractRegisterTableModel {

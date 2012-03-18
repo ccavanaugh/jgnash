@@ -23,7 +23,7 @@ import jgnash.engine.Transaction;
  * Transaction number matcher
  *
  * @author Craig Cavanaugh
- * @version $Id: NumberMatcher.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class NumberMatcher extends AbstractStringMatcher {
 

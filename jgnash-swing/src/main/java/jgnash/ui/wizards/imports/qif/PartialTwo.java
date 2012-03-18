@@ -42,7 +42,7 @@ import jgnash.util.Resource;
  * Wizard Page for a partial qif import.
  *
  * @author Craig Cavanaugh
- * @version $Id: PartialTwo.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class PartialTwo extends JPanel implements WizardPage, ActionListener {
     private Resource rb = Resource.get();

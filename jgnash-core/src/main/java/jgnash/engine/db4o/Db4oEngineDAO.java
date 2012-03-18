@@ -35,7 +35,7 @@ import com.db4o.query.Query;
  * Db4o DAO Interface
  *
  * @author Craig Cavanaugh
- * @version $Id: Db4oEngineDAO.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class Db4oEngineDAO extends AbstractDb4oDAO implements EngineDAO {
 

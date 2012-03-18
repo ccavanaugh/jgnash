@@ -27,7 +27,7 @@ import jgnash.engine.SecurityNode;
  * Account DAO Interface
  *
  * @author Craig Cavanaugh
- * @version $Id: AccountDAO.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public interface AccountDAO {
 

@@ -61,7 +61,7 @@ import jgnash.util.Resource;
  * 
  * @author Craig Cavanaugh
  * @author Tom Edelson
- * @version $Id: MonthBalanceCSV.java 3070 2012-01-04 11:00:43Z ccavanaugh $
+ *
  */
 
 public final class MonthBalanceCSV {

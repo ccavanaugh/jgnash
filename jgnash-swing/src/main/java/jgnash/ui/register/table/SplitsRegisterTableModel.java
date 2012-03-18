@@ -33,7 +33,7 @@ import jgnash.util.Resource;
  * Table model for displaying TransactionEntry objects
  *
  * @author Craig Cavanaugh
- * @version $Id: SplitsRegisterTableModel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class SplitsRegisterTableModel extends AbstractTableModel implements AccountTableModel {
 

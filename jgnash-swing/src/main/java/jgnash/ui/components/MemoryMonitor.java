@@ -30,7 +30,7 @@ import jgnash.util.Resource;
  * Simple memory monitor.
  * 
  * @author Craig Cavanaugh
- * @version $Id: MemoryMonitor.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class MemoryMonitor extends JProgressBar {
 

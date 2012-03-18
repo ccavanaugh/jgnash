@@ -45,7 +45,7 @@ import jgnash.util.Resource;
  * Options Dialog
  * 
  * @author Craig Cavanaugh
- * @version $Id: OptionDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class OptionDialog extends JDialog implements ActionListener {
 

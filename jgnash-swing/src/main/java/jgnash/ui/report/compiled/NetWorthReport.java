@@ -26,7 +26,7 @@ import jgnash.engine.AccountGroup;
  * Net Worth Report
  *
  * @author Craig Cavanaugh
- * @version $Id: NetWorthReport.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class NetWorthReport extends AbstractSumByTypeReport {
 

@@ -21,7 +21,7 @@ package jgnash.engine;
  * Specialized account properties
  *
  * @author Craig Cavanaugh
- * @version $Id: AccountProperty.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public enum AccountProperty {
 

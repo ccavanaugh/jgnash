@@ -32,7 +32,7 @@ import javax.swing.ListCellRenderer;
  * Usage <code>jList.setCellRenderer(new CheckListCellRenderer(jList.getCellRenderer())); </code>
  *
  * @author Craig Cavanaugh
- * @version $Id: CheckListCellRenderer.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class CheckListCellRenderer<E> extends JPanel implements ListCellRenderer<E> {
     private ListCellRenderer<E> renderer;

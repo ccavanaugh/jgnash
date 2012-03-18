@@ -28,7 +28,7 @@ import org.junit.Test;
 
 /**
  * @author Craig Cavanaugh
- * @version $Id: AccountTreeDepthTest.java 3202 2012-02-21 10:36:52Z ccavanaugh $
+ *
  */
 public class AccountTreeDepthTest {
 

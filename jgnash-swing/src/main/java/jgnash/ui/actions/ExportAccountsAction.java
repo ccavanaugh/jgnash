@@ -35,7 +35,7 @@ import jgnash.util.Resource;
  * UI Action to export the current account tree
  *
  * @author Craig Cavanaugh
- * @version $Id: ExportAccountsAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 @Action("exportAccounts-command")
 public class ExportAccountsAction extends AbstractEnabledAction {

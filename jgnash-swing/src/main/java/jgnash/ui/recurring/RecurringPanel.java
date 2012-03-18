@@ -66,7 +66,7 @@ import jgnash.util.Resource;
  * If this panel does not exist in the application, then events will not be fired.
  * 
  * @author Craig Cavanaugh
- * @version $Id: RecurringPanel.java 3097 2012-01-09 10:42:51Z ccavanaugh $
+ *
  */
 public class RecurringPanel extends JPanel implements ActionListener, MessageListener {
 

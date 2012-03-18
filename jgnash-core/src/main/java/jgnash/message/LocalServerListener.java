@@ -22,7 +22,7 @@ package jgnash.message;
  * Classes must implement this interface to register and lister the message events
  *
  * @author Craig Cavanaugh
- * @version $Id: LocalServerListener.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public interface LocalServerListener {
     void messagePosted(String event);

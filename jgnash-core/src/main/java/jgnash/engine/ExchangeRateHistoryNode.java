@@ -27,7 +27,7 @@ import jgnash.util.DateUtils;
  * <code>ExchangeRateHistoryNode</code> objects are immutable.
  *
  * @author Craig Cavanaugh
- * @version $Id: ExchangeRateHistoryNode.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNode> {
 

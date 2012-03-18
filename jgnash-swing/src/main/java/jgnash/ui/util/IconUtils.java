@@ -28,7 +28,7 @@ import javax.swing.JLabel;
  * Icon utility class
  * 
  * @author Craig Cavanaugh
- * @version $Id: IconUtils.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public final class IconUtils {
 

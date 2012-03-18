@@ -24,7 +24,7 @@ import java.math.BigDecimal;
  * entry transaction
  *
  * @author Craig Cavanaugh
- * @version $Id: TransactionEntryRemoveX.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public final class TransactionEntryRemoveX extends AbstractInvestmentTransactionEntry {
 

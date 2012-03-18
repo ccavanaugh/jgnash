@@ -21,7 +21,7 @@ package jgnash.ui.components.expandingtable;
  * An object used to manage and persist objects with a hierarchical structure
  * 
  * @author Craig Cavanaugh
- * @version $Id: ExpandingTableNode.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class ExpandingTableNode<E extends Comparable<? super E>> implements Comparable<ExpandingTableNode<E>> {
 

@@ -32,7 +32,7 @@ import jgnash.engine.recurring.Reminder;
  * Reminder DAO
  *
  * @author Craig Cavanaugh
- * @version $Id: Db4oRecurringDAO.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class Db4oRecurringDAO extends AbstractDb4oDAO implements RecurringDAO {
 

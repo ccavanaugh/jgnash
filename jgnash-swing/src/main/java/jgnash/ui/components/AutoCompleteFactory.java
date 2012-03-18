@@ -46,7 +46,7 @@ import jgnash.util.MultiHashMap;
  * 
  * @author Craig Cavanaugh
  * @author Don Brown
- * @version $Id: AutoCompleteFactory.java 3126 2012-01-22 18:21:32Z ccavanaugh $
+ *
  */
 public class AutoCompleteFactory {
 

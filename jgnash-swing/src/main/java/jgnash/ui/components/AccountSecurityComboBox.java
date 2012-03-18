@@ -33,7 +33,7 @@ import jgnash.util.Resource;
  * JComboBox to list Securities available to the account
  * 
  * @author Craig Cavanaugh
- * @version $Id: AccountSecurityComboBox.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class AccountSecurityComboBox extends AbstractCommodityComboBox<SecurityNode> {
 

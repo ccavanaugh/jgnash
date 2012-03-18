@@ -37,7 +37,7 @@ import jgnash.util.Resource;
  * Panel for general program options
  *
  * @author Craig Cavanaugh
- * @version $Id: GeneralOptions.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class GeneralOptions extends JPanel implements ActionListener {
 

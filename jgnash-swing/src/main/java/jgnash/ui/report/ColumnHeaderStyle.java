@@ -19,7 +19,7 @@ package jgnash.ui.report;
 
 /**
  * @author Craig Cavanaugh
- * @version $Id: ColumnHeaderStyle.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public enum ColumnHeaderStyle {
     LEFT,

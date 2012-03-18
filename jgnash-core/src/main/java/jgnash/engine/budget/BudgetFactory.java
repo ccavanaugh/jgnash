@@ -32,7 +32,7 @@ import jgnash.util.DateUtils;
  * Budget Factory for automatic generation of Budgets
  *
  * @author Craig Cavanaugh
- * @version $Id: BudgetFactory.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class BudgetFactory {
 

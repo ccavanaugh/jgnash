@@ -33,7 +33,7 @@ import javax.swing.KeyStroke;
  * strings, keystrokes, graphics, etc.
  *
  * @author Craig Cavanaugh
- * @version $Id: Resource.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class Resource {
 

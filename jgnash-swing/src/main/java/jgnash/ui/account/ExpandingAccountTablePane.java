@@ -37,7 +37,7 @@ import jgnash.ui.register.AccountBalanceDisplayManager;
  * A JScrollPane containing a table and will expand and contract on selection
  *
  * @author Craig Cavanaugh
- * @version $Id: ExpandingAccountTablePane.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class ExpandingAccountTablePane extends JScrollPane {
 

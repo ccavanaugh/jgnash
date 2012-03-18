@@ -49,7 +49,7 @@ import net.sf.jasperreports.engine.JasperPrint;
  * @author Vijil E C
  * @author Craig Cavanaugh
  * @author Juan Jose Garcia Ripoll
- * @version $Id: PortfolioReport.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class PortfolioReport extends DynamicJasperReport {
 

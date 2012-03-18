@@ -30,7 +30,7 @@ import jgnash.message.MessageListener;
  * Abstract action to automatically enables/disabled itself as files are loaded and unloaded
  *
  * @author Craig Cavanaugh
- * @version $Id: AbstractEnabledAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public abstract class AbstractEnabledAction extends AbstractAction implements MessageListener {
 

@@ -33,7 +33,7 @@ import jgnash.engine.StoredObject;
  * Message object
  * 
  * @author Craig Cavanaugh
- * @version $Id: Message.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class Message implements Serializable, Cloneable {
 

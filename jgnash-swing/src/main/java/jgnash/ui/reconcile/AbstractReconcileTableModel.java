@@ -55,7 +55,7 @@ import jgnash.util.Resource;
  * after the start date (reconciled or not) will be added to the list of transactions shown.
  * 
  * @author Craig Cavanaugh
- * @version $Id: AbstractReconcileTableModel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public abstract class AbstractReconcileTableModel extends AbstractTableModel implements MessageListener, PackableTableModel {
 

@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * </pre>
  *
  * @author Craig Cavanaugh
- * @version $Id: DefaultDaemonThreadFactory.java 3125 2012-01-22 15:13:18Z ccavanaugh $
+ *
  * @see java.util.concurrent.ExecutorService
  */
 public class DefaultDaemonThreadFactory implements ThreadFactory {

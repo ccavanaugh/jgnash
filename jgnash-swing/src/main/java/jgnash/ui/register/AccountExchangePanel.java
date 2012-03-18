@@ -58,7 +58,7 @@ import jgnash.util.Resource;
  * UI Form for handling the exchange of currencies
  * 
  * @author Craig Cavanaugh
- * @version $Id: AccountExchangePanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class AccountExchangePanel extends JPanel implements ActionListener, FocusListener, PopupMenuListener, ItemListener, MessageListener {
 

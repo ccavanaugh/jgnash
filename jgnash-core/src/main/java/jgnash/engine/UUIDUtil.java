@@ -23,7 +23,7 @@ import java.util.UUID;
  * Used to create unique business keys for the database
  *
  * @author Craig Cavanaugh
- * @version $Id: UUIDUtil.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class UUIDUtil {
 

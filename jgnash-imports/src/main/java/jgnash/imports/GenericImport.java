@@ -31,7 +31,7 @@ import jgnash.imports.ofx.OfxTransaction;
  * 
  * @author Craig Cavanaugh
  * @author Arnout Engelen
- * @version $Id: GenericImport.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class GenericImport {
 

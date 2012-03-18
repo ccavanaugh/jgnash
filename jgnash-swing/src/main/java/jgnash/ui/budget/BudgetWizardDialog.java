@@ -54,7 +54,7 @@ import jgnash.util.Resource;
  * BudgetWizardDialog is a mini wizard for creating a new budget based on historical data
  *
  * @author Craig Cavanaugh
- * @version $Id: BudgetWizardDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 final class BudgetWizardDialog extends JDialog implements ActionListener {
 

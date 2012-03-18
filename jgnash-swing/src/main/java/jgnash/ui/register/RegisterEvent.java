@@ -21,7 +21,7 @@ package jgnash.ui.register;
  * Event object for register events
  *
  * @author Craig Cavanaugh
- * @version $Id: RegisterEvent.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class RegisterEvent extends java.util.EventObject {
 

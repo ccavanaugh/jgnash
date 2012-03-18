@@ -35,7 +35,7 @@ import jgnash.util.EncodeDecode;
  * Static Dialog Utilities
  *
  * @author Craig Cavanaugh
- * @version $Id: DialogUtils.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class DialogUtils {
 

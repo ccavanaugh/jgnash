@@ -66,7 +66,7 @@ import jgnash.util.Resource;
  * Check design dialog.
  *
  * @author Craig Cavanaugh
- * @version $Id: CheckDesignDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class CheckDesignDialog extends JDialog implements ActionListener, ListSelectionListener, FocusListener {
 

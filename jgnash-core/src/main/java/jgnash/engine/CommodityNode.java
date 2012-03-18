@@ -23,7 +23,7 @@ import java.math.BigDecimal;
  * Abstract class for representing a commodity
  * 
  * @author Craig Cavanaugh
- * @version $Id: CommodityNode.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public abstract class CommodityNode extends StoredObject implements Comparable<CommodityNode> {
 

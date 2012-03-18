@@ -37,7 +37,7 @@ import jgnash.util.Resource;
  * Wizard Page for a OFX import.
  * 
  * @author Craig Cavanaugh
- * @version $Id: OfxImportSummary.java 197 2008-01-01 08:13:35Z ccavanaugh $
+ *
  */
 public class ImportSummary extends JPanel implements WizardPage {
 

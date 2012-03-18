@@ -61,7 +61,7 @@ import jgnash.ui.util.ValidationFactory;
  * 
  * @author Craig Cavanaugh
  * @author axnotizes
- * @version $Id: AbstractBankTransactionPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public abstract class AbstractBankTransactionPanel extends AbstractTransactionPanel implements ActionListener, MessageListener {
 

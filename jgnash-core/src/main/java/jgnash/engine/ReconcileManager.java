@@ -27,7 +27,7 @@ import java.util.prefs.Preferences;
  * only one can be true
  *
  * @author Craig Cavanaugh
- * @version $Id: ReconcileManager.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class ReconcileManager {
     private static final String RECONCILE_INCOMEEXPENSE = "reconcileIncomeExpense";

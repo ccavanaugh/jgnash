@@ -31,7 +31,7 @@ import jgnash.ui.components.autocomplete.AutoCompleteModel;
  * An extended JTextField that performs text auto completion
  * 
  * @author Craig Cavanaugh
- * @version $Id: AutoCompleteTextField.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 @SuppressWarnings({ "RedundantStringConstructorCall" })
 public class AutoCompleteTextField extends JTextFieldEx {

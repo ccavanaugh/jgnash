@@ -49,7 +49,7 @@ import org.jdesktop.swingx.JXColorSelectionButton;
  * 
  * @author Craig Cavanaugh
  * @author Peter Vida
- * @version $Id: RegisterOptions.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class RegisterOptions extends JPanel implements ActionListener {
 

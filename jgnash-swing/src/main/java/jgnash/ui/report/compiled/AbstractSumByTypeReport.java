@@ -58,7 +58,7 @@ import jgnash.util.Resource;
  * Abstract Report that groups and sums by <code>AccountGroup</code> and has a line for a global sum
  *
  * @author Craig Cavanaugh
- * @version $Id: AbstractSumByTypeReport.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 

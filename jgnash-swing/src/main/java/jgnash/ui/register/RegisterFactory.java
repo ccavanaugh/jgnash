@@ -45,7 +45,7 @@ import jgnash.util.Resource;
  * Factory class for constructing register tables and controlling global options for registers.
  * 
  * @author Craig Cavanaugh
- * @version $Id: RegisterFactory.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class RegisterFactory {
 

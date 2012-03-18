@@ -26,7 +26,7 @@ import jgnash.ui.util.builder.Action;
  * UI Action to open the new file dialog
  * 
  * @author Craig Cavanaugh
- * @version $Id: NewFileAction.java 2540 2011-01-16 21:00:19Z ccavanaugh $
+ *
  */
 @Action("report-profitlosstxt-command")
 public class ProfitLossTXTReportAction extends AbstractEnabledAction {

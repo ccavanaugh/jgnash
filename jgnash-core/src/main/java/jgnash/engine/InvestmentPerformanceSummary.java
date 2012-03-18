@@ -32,7 +32,7 @@ import java.util.TreeMap;
  * Investment Performance Summary Class
  * 
  * @author Craig Cavanaugh
- * @version $Id: InvestmentPerformanceSummary.java 3070 2012-01-04 11:00:43Z ccavanaugh $
+ *
  */
 
 public class InvestmentPerformanceSummary {

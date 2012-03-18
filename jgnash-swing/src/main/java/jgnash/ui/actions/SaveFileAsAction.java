@@ -38,7 +38,7 @@ import jgnash.util.Resource;
  * UI Action to save the current database as a new name and reopen
  * 
  * @author Craig Cavanaugh
- * @version $Id: SaveFileAsAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 @Action("saveas-command")
 public class SaveFileAsAction extends AbstractEnabledAction {

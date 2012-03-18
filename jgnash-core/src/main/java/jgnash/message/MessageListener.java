@@ -21,7 +21,7 @@ package jgnash.message;
  * Classes must implement this interface to register and lister the message events
  *
  * @author Craig Cavanaugh
- * @version $Id: MessageListener.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public interface MessageListener {
     void messagePosted(Message event);

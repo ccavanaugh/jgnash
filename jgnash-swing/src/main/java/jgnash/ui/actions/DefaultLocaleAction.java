@@ -34,7 +34,7 @@ import jgnash.util.Resource;
  * UI Action to open the new file dialog
  * 
  * @author Craig Cavanaugh
- * @version $Id: DefaultLocaleAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 @Action("locale-command")
 public class DefaultLocaleAction extends AbstractAction {

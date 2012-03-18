@@ -41,7 +41,7 @@ import java.util.logging.Logger;
  * Import and export a tree of accounts
  *
  * @author Craig Cavanaugh
- * @version $Id: AccountTreeXMLFactory.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class AccountTreeXMLFactory {
 

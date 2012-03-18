@@ -42,7 +42,7 @@ import jgnash.engine.dao.CommodityDAO;
  * Hides all the db4o commodity code
  *
  * @author Craig Cavanaugh
- * @version $Id: Db4oCommodityDAO.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 
 class Db4oCommodityDAO extends AbstractDb4oDAO implements CommodityDAO {

@@ -39,7 +39,7 @@ import org.jdesktop.swingx.painter.BusyPainter;
  * Animated panel intended for use as a glass pane to block application and display a message
  * 
  * @author Craig Cavanaugh
- * @version $Id: WaitMessagePanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public final class WaitMessagePanel extends JXPanel {
 

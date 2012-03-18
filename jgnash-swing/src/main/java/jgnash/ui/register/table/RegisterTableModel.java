@@ -28,7 +28,7 @@ import jgnash.engine.Transaction;
  * Generic register table model.
  * 
  * @author Craig Cavanaugh
- * @version $Id: RegisterTableModel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class RegisterTableModel extends AbstractRegisterTableModel {
 

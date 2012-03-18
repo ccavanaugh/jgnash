@@ -44,7 +44,7 @@ import jgnash.util.Resource;
  * This model does some internal manipulation to make it possible to hide specific columns.
  *
  * @author Craig Cavanaugh
- * @version $Id: AbstractRegisterTableModel.java 3129 2012-01-22 21:51:05Z ccavanaugh $
+ *
  */
 public abstract class AbstractRegisterTableModel extends AbstractTableModel implements MessageListener, AccountTableModel, PackableTableModel {
 

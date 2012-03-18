@@ -28,7 +28,7 @@ import jgnash.util.DateUtils;
  * This is an abstract class for scheduled reminders.
  *
  * @author Craig Cavanaugh
- * @version $Id: Reminder.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public abstract class Reminder extends StoredObject implements Comparable<Reminder>, Cloneable {
 

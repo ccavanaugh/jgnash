@@ -74,7 +74,7 @@ import net.sf.jasperreports.engine.data.JRTableModelDataSource;
  * Abstract report class that must be extended to create a report
  * 
  * @author Craig Cavanaugh
- * @version $Id: DynamicJasperReport.java 3200 2012-02-16 11:02:25Z ccavanaugh $
+ *
  */
 public abstract class DynamicJasperReport {
 

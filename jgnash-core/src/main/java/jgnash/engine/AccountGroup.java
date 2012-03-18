@@ -23,7 +23,7 @@ import jgnash.util.Resource;
  * Account Group class. Helps to categorize account types to make reporting easier and consistent.
  * 
  * @author Craig Cavanaugh
- * @version $Id: AccountGroup.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public enum AccountGroup {
 

@@ -35,7 +35,7 @@ import jgnash.util.Resource;
  * Table model for recurring iterators.
  *
  * @author Craig Cavanaugh
- * @version $Id: RecurringTableModel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class RecurringTableModel extends AbstractTableModel implements MessageListener {
 

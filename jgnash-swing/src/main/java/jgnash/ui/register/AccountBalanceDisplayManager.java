@@ -39,7 +39,7 @@ import jgnash.engine.AccountType;
  * 
  * @author Peter Vida
  * @author Craig Cavanaugh
- * @version $Id: AccountBalanceDisplayManager.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class AccountBalanceDisplayManager {
 

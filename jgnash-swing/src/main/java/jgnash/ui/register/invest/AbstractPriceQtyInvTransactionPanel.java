@@ -34,7 +34,7 @@ import jgnash.ui.components.JFloatField;
  * that requires date, price, quantity, and security fields
  *
  * @author Craig Cavanaugh
- * @version $Id: AbstractPriceQtyInvTransactionPanel.java 3167 2012-02-07 10:51:26Z ccavanaugh $
+ *
  */
 public abstract class AbstractPriceQtyInvTransactionPanel extends AbstractInvTransactionPanel {
 

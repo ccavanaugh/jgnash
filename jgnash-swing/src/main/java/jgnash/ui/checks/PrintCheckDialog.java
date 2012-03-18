@@ -48,7 +48,7 @@ import jgnash.util.Resource;
  * Displays a dialog that shows the available options for printing a check.
  *
  * @author Craig Cavanaugh
- * @version $Id: PrintCheckDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class PrintCheckDialog extends JDialog implements ActionListener {
 

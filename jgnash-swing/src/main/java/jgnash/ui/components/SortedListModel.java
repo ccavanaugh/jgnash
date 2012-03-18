@@ -29,7 +29,7 @@ import javax.swing.AbstractListModel;
  * A Sorted list model
  * 
  * @author Craig Cavanaugh
- * @version $Id: SortedListModel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 
 public class SortedListModel<E extends Comparable<? super E>> extends AbstractListModel<E> {

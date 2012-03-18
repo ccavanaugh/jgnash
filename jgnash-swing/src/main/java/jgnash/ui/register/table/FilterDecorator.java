@@ -31,7 +31,7 @@ import jgnash.engine.search.PayeeMatcher;
  * the transactions displayed using the string "filter".
  *
  * @author Pranay Kumar
- * @version $Id$
+ *
  */
 public class FilterDecorator implements FilterModel {
 

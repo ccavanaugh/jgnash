@@ -40,7 +40,7 @@ import org.jdesktop.swingx.JXStatusBar;
 
 /**
  * @author Craig Cavanaugh
- * @version $Id: DynamicJasperReportFrame.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 final class DynamicJasperReportFrame extends JFrame {
 

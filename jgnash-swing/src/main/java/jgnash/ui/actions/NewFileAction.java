@@ -29,7 +29,7 @@ import javax.swing.*;
  * UI Action to open the new file dialog
  *
  * @author Craig Cavanaugh
- * @version $Id: NewFileAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 @Action("new-command")
 public class NewFileAction extends AbstractAction {

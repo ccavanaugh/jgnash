@@ -48,7 +48,7 @@ import jgnash.util.Resource;
  * an Engine instance will be returned
  *
  * @author Craig Cavanaugh
- * @version $Id: EngineFactory.java 3082 2012-01-08 02:26:38Z ccavanaugh $
+ *
  */
 public class EngineFactory {
 

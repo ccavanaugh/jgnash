@@ -24,7 +24,7 @@ import javax.swing.JTextArea;
  * the use of HTML in the text
  *
  * @author Craig Cavanaugh
- * @version $Id: MultiLineLabel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public final class MultiLineLabel extends JTextArea {
 

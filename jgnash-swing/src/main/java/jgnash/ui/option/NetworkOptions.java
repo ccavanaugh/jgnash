@@ -38,7 +38,7 @@ import java.awt.event.FocusListener;
  * Panel for general program options
  *
  * @author Craig Cavanaugh
- * @version $Id: NetworkOptions.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class NetworkOptions extends JPanel implements ActionListener, FocusListener {
 

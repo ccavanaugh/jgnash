@@ -23,7 +23,7 @@ import jgnash.engine.DataStoreType;
 
 /**
  * @author Craig Cavanaugh
- * @version $Id: DataStoreTypeCombo.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class DataStoreTypeCombo extends JComboBox<DataStoreType> {
 

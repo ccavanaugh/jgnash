@@ -34,7 +34,7 @@ import javax.swing.JTextField;
  * permanent. That must be done using the options configuration for http connect
  *
  * @author Craig Cavanaugh
- * @version $Id: NetworkAuthenticator.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 
 public class NetworkAuthenticator extends Authenticator {

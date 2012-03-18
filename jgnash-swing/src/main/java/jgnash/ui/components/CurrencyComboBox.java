@@ -36,7 +36,7 @@ import jgnash.message.MessageProperty;
  * Currency ComboBox selector
  *
  * @author Craig Cavanaugh
- * @version $Id: CurrencyComboBox.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class CurrencyComboBox extends AbstractCommodityComboBox<CurrencyNode> {
 

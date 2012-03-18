@@ -27,7 +27,7 @@ import javax.print.attribute.PrintRequestAttributeSet;
  * Check layout object
  *
  * @author Craig Cavanaugh
- * @version $Id: CheckLayout.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class CheckLayout {
     private List<CheckObject> checkObjects = new ArrayList<>();

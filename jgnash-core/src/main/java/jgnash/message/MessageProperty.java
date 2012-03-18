@@ -21,7 +21,7 @@ package jgnash.message;
  * Message property Enums
  *
  * @author Craig Cavanaugh
- * @version $Id: MessageProperty.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public enum MessageProperty {
     ACCOUNT,

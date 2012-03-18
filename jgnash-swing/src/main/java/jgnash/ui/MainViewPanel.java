@@ -42,7 +42,7 @@ import jgnash.ui.components.VerticalTextIcon;
  * A Panel that holds all the views and uses a card layout to display the panels.
  * 
  * @author Craig Cavanaugh
- * @version $Id: MainViewPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class MainViewPanel extends JPanel implements ActionListener {
 

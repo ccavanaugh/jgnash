@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
  * 
  * @author Craig Cavanaugh
  * @author Navneet Karnani
- * @version $Id: QifUtils.java 3128 2012-01-22 19:01:08Z ccavanaugh $
+ *
  */
 public class QifUtils {
 

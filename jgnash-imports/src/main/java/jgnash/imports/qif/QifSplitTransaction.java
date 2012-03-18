@@ -23,7 +23,7 @@ import java.math.BigDecimal;
  * Class for QIF split transaction import
  * 
  * @author Craig Cavanaugh
- * @version $Id: QifSplitTransaction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class QifSplitTransaction {
 

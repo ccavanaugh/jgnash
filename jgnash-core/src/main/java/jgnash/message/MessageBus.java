@@ -36,7 +36,7 @@ import static jgnash.util.LogUtils.logStackTrace;
  * Thread safe Message Bus
  *
  * @author Craig Cavanaugh
- * @version $Id: MessageBus.java 3055 2012-01-02 15:02:10Z ccavanaugh $
+ *
  */
 
 /*

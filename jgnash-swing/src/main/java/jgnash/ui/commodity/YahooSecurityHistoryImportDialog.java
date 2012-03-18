@@ -63,7 +63,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * Dialog that lets the user download and import security history from Yahoo
  *
  * @author Craig Cavanaugh
- * @version $Id: YahooSecurityHistoryImportDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class YahooSecurityHistoryImportDialog extends JDialog implements ActionListener {
     private final Resource rb = Resource.get();

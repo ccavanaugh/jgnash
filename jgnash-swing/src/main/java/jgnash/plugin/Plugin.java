@@ -22,40 +22,43 @@ import javax.swing.JPanel;
 
 /**
  * This is the interface for jGnash application plugins.
- * <p>
- * 
+ * <p/>
+ * <p/>
  * Plugins can install multiple menu items into the primary UI. Any returned <code>JMenuItem</code>s must have the
  * client property <code>PRECEDINGMENUIDREF</code> set for the menu item to installed correctly.
- * <p>
- * 
+ * <p/>
+ * <p/>
  * The available preceding id for installation may be found in <code>main-frame-actions.xml</code> in the
  * <code>jgnash.resource</code> package.
- * <p>
+ * <p/>
  * Example:
- * <p>
- * <code> 
+ * <p/>
+ * <code>
  * JMenuItem item = new JMenuItem("Test Plugin");
- *        
- *  item.putClientProperty(Plugin.PRECEDINGMENUIDREF, "paste-command"); 
+ * <p/>
+ * item.putClientProperty(Plugin.PRECEDINGMENUIDREF, "paste-command");
  * </code>
- * <p>
+ * <p/>
  * The above example will install a menu item after <tt>Paste</tt> in the <tt>Edit</tt> menu.
- * 
+ *
  * @author Leif-Erik Dörr
  * @author Craig Cavanaugh
- * @version $Id: Plugin.java 3051 2012-01-02 11:27:23Z ccavanaugh $
  */
 public interface Plugin {
 
-    /** Client property key for the idref of the preceding menu item when adding a plugin specific menu item */
+    /**
+     * Client property key for the idref of the preceding menu item when adding a plugin specific menu item
+     */
     static final String PRECEDINGMENUIDREF = "PrecedingMenuIdref";
 
-    /** Client property key for the name of the options tab to add */
+    /**
+     * Client property key for the name of the options tab to add
+     */
     static final String OPTIONSNAME = "OptionsName";
 
     /**
      * Return a descriptive name for the plugin
-     * 
+     *
      * @return name of the plugin
      */
     String getName();
@@ -73,7 +76,7 @@ public interface Plugin {
     /**
      * This will add a <code>JMenuItem</code> to the primary application menu. The <code>PRECEDINGMENUIDREF</code>
      * client property must be set on the returned <code>JMenuItem</code>.
-     * 
+     *
      * @return a <code>JMenuItem</code> to perform an action. May be <code>null</code> if no action is to be performed
      * @see javax.swing.JMenuItem
      */
@@ -82,7 +85,7 @@ public interface Plugin {
     /**
      * This will add an additional option panel to the standard options dialog. The <code>OPTIONSNAME</code> client
      * property must be set on the returned <code>JPanel</code>.
-     * 
+     *
      * @return a <code>JPanel</code>. May be <code>null</code> if no panel is to be added
      */
     JPanel getOptionsPanel();

@@ -30,7 +30,7 @@ import jgnash.util.Resource;
  * Keep various odds and ends here instead of the main class
  * 
  * @author Craig Cavanaugh
- * @version $Id: StaticUIMethods.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class StaticUIMethods {
 

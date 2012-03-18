@@ -57,7 +57,7 @@ import jgnash.util.Resource;
  * Simple dialog to display info dumped to the console. Makes it easy for end users on Windows to capture errors.
  * 
  * @author Craig Cavanaugh
- * @version $Id: ConsoleDialog.java 3224 2012-03-04 22:52:35Z ccavanaugh $
+ *
  */
 @SuppressWarnings("restriction")
 public class ConsoleDialog {

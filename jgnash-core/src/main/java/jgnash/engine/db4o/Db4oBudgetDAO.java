@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  * Db4o Budget DAO
  *
  * @author Craig Cavanaugh
- * @version $Id$
+ *
  */
 
 public class Db4oBudgetDAO extends AbstractDb4oDAO implements BudgetDAO {

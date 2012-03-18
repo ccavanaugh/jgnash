@@ -54,7 +54,7 @@ import jgnash.util.Resource;
  * @author Michael Mueller
  * @author Craig Cavanaugh
  * @author David Robertson
- * @version $Id: ProfitLossTXT.java 3070 2012-01-04 11:00:43Z ccavanaugh $
+ *
  */
 public class ProfitLossTXT {
 

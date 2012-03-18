@@ -32,7 +32,7 @@ import javax.swing.text.PlainDocument;
  * Text field for entering integer values
  * 
  * @author Craig Cavanaugh
- * @version $Id: JIntegerField.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class JIntegerField extends JTextFieldEx {
 

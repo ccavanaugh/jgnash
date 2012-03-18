@@ -31,7 +31,7 @@ import jgnash.ui.register.table.PackableTableModel;
  * Methods for working with JTables
  *
  * @author Craig Cavanaugh
- * @version $Id: JTableUtils.java 3193 2012-02-14 17:47:08Z ccavanaugh $
+ *
  */
 public class JTableUtils {
 

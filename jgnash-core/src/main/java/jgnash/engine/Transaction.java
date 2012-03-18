@@ -35,7 +35,7 @@ import jgnash.util.DateUtils;
  * Base class for transactions
  * 
  * @author Craig Cavanaugh
- * @version $Id: Transaction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class Transaction extends StoredObject implements Comparable<Transaction>, Cloneable {
 

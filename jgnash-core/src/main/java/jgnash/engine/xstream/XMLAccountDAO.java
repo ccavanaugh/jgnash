@@ -32,7 +32,7 @@ import jgnash.engine.dao.AccountDAO;
  * XML Account DAO
  *
  * @author Craig Cavanaugh
- * @version $Id: XMLAccountDAO.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class XMLAccountDAO extends AbstractXMLDAO implements AccountDAO {
 

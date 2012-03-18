@@ -31,7 +31,7 @@ import jgnash.message.MessageProperty;
  * Sorts the account transactions.
  *
  * @author Craig Cavanaugh
- * @version $Id: SortedInvestmentTableModel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class SortedInvestmentTableModel extends InvestmentRegisterTableModel implements SortableTableModel {
 

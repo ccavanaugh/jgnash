@@ -25,7 +25,7 @@ import jgnash.ui.util.DialogUtils;
  * Dialog for import of OFX and MT940 files
  *
  * @author Craig Cavanaugh
- * @version $Id: ImportDialog.java 197 2008-01-01 08:13:35Z ccavanaugh $
+ *
  */
 public class ImportDialog extends WizardDialog {
 

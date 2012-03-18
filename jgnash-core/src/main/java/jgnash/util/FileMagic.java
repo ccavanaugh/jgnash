@@ -42,7 +42,7 @@ import jgnash.engine.xstream.XMLDataStore;
  * Class to identify file type
  *
  * @author Craig Cavanaugh
- * @version $Id: FileMagic.java 3082 2012-01-08 02:26:38Z ccavanaugh $
+ *
  */
 public class FileMagic {
 

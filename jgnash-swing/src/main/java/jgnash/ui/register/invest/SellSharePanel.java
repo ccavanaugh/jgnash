@@ -46,7 +46,7 @@ import jgnash.ui.util.ValidationFactory;
  * Form for selling shares.
  *
  * @author Craig Cavanaugh
- * @version $Id: BuySellSharePanel.java 326 2008-03-10 22:32:21Z ccavanaugh $
+ *
  */
 public final class SellSharePanel extends AbstractPriceQtyInvTransactionPanel implements ActionListener {
 

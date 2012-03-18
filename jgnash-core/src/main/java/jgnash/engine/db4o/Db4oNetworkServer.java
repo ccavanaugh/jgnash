@@ -49,7 +49,7 @@ import jgnash.util.Resource;
  * db4o network server
  *
  * @author Craig Cavanaugh
- * @version $Id: Db4oNetworkServer.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class Db4oNetworkServer implements MessageRecipient {
 

@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  * Utility class
  *
  * @author Craig Cavanaugh
- * @version $Id: LogUtils.java 3054 2012-01-02 15:00:53Z ccavanaugh $
+ *
  */
 public class LogUtils {
 

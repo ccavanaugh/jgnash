@@ -41,7 +41,7 @@ import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
  * Remote message bus server
  * 
  * @author Craig Cavanaugh
- * @version $Id: MessageBusRemoteServer.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class MessageBusRemoteServer {
 

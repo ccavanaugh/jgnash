@@ -51,7 +51,7 @@ import org.codehaus.plexus.util.DirectoryScanner;
  * the time.
  *
  * @author Craig Cavanaugh
- * @version $Id: HelpIndexer.java 3235 2012-03-10 10:30:08Z ccavanaugh $
+ *
  */
 public class HelpIndexer {
 

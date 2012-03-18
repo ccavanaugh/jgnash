@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  * Support class to cleanly persist BigIntegers as a String
  *
  * @author Craig Cavanaugh
- * @version $Id: TBigInteger.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class TBigInteger implements ObjectConstructor {
 

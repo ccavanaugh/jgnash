@@ -43,7 +43,7 @@ import jgnash.util.Resource;
  * Account dialog
  *
  * @author Craig Cavanaugh
- * @version $Id: AccountDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class AccountDialog extends JDialog implements ActionListener {
     private Resource rb = Resource.get();

@@ -36,7 +36,7 @@ import jgnash.util.Resource;
  * Import a tree of accounts
  *
  * @author Craig Cavanaugh
- * @version $Id: ImportAccountsAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 @Action("accountsimport-command")
 public class ImportAccountsAction extends AbstractEnabledAction {

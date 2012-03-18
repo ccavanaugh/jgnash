@@ -44,7 +44,7 @@ import java.util.zip.ZipOutputStream;
  * File utilities
  *
  * @author Craig Cavanaugh
- * @version $Id: FileUtils.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public final class FileUtils {
 

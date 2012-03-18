@@ -44,7 +44,7 @@ import jgnash.util.Resource;
  * Displays a list for available and current securities
  *
  * @author Craig Cavanaugh
- * @version $Id: AccountSecuritiesDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class AccountSecuritiesDialog extends JDialog implements ActionListener {
 

@@ -32,7 +32,7 @@ import jgnash.util.Resource;
  * None repeating reminder panel
  *
  * @author Craig Cavanaugh
- * @version $Id: NoneTab.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class NoneTab extends JPanel implements RecurringTab {
 

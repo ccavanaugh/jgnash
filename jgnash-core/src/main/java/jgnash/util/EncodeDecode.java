@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  * EncodeDecode is used to encode/decode various objects using a String
  *
  * @author Craig Cavanaugh
- * @version $Id: EncodeDecode.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 
 public class EncodeDecode {

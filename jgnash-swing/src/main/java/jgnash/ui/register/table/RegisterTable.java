@@ -46,7 +46,7 @@ import jgnash.ui.register.AccountBalanceDisplayManager;
  *
  * @author Craig Cavanaugh
  * @author axnotizes
- * @version $Id: RegisterTable.java 3129 2012-01-22 21:51:05Z ccavanaugh $
+ *
  */
 
 public class RegisterTable extends FormattedJTable {

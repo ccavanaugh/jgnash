@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * UI Action annotation
  *
  * @author Craig Cavanaugh
- * @version $Id: Action.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 
 @Retention(RetentionPolicy.RUNTIME)

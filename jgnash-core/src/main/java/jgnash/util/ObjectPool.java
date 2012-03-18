@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * is thread-safe
  *
  * @author Craig Cavanaugh
- * @version $Id: ObjectPool.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public abstract class ObjectPool<T> {
 

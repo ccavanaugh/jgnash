@@ -28,7 +28,7 @@ import jgnash.message.MessageListener;
  * Abstract JComboBox for listing available commodities
  *
  * @author Craig Cavanaugh
- * @version $Id: AbstractCommodityComboBox.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public abstract class AbstractCommodityComboBox<T extends CommodityNode> extends JComboBox<T> implements MessageListener {
 

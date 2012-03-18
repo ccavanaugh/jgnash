@@ -34,7 +34,7 @@ import jgnash.engine.Transaction;
  * This class does not perform any layout or container assignment.
  *
  * @author Craig Cavanaugh
- * @version $Id: AbstractTransactionPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public abstract class AbstractTransactionPanel extends AbstractEntryFormPanel {
 

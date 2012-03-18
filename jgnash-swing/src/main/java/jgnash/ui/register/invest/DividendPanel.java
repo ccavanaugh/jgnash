@@ -48,7 +48,7 @@ import jgnash.ui.util.ValidationFactory;
  * Form for dividends.
  * 
  * @author Craig Cavanaugh
- * @version $Id: DividendPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public final class DividendPanel extends AbstractInvTransactionPanel {
 

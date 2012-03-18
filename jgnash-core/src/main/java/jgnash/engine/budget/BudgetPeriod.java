@@ -23,7 +23,7 @@ import jgnash.util.Resource;
  * Budget BudgetPeriod Enum
  * 
  * @author Craig Cavanaugh
- * @version $Id: BudgetPeriod.java 3086 2012-01-08 11:21:42Z ccavanaugh $
+ *
  */
 public enum BudgetPeriod {
 

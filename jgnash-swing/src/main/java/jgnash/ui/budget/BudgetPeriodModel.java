@@ -52,7 +52,7 @@ import static javax.swing.event.TableModelEvent.*;
  * A display model for a budget period/descriptor.
  *
  * @author Craig Cavanaugh
- * @version $Id: BudgetPeriodModel.java 3154 2012-02-04 12:35:28Z ccavanaugh $
+ *
  */
 public final class BudgetPeriodModel implements TableModel, MessageListener {
 

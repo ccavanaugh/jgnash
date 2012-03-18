@@ -49,7 +49,7 @@ import jgnash.util.Resource;
 
 /**
  * @author Craig Cavanaugh
- * @version $Id: ImportQifAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 @Action("qifimport-command")
 public class ImportQifAction extends AbstractEnabledAction {

@@ -39,7 +39,7 @@ import jgnash.util.Resource;
  * A dialog that lets the user toggle the filter settings of and AccountListPane
  * 
  * @author Craig Cavanaugh
- * @version $Id: AccountListFilterDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class AccountListFilterDialog extends JDialog implements ActionListener {
     private Resource rb = Resource.get();

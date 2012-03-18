@@ -28,7 +28,7 @@ import java.util.Date;
  * portability. Results are returned as doubles. Results will need to be scaled and rounded.
  * 
  * @author Craig Cavanaugh
- * @version $Id: AmortizeObject.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class AmortizeObject {
 

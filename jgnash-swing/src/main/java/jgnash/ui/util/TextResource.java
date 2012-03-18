@@ -30,7 +30,7 @@ import jgnash.util.ClassPathUtils;
  * This class is for returning URL's to localized text files.
  * 
  * @author Craig Cavanaugh
- * @version $Id: TextResource.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class TextResource {
 

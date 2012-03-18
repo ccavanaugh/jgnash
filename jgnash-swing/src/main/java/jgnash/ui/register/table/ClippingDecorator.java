@@ -29,7 +29,7 @@ import jgnash.util.DateUtils;
  * A decorator that wraps an AbstractRegisterTableModel to clip the transactions displayed using a start and end date.
  * 
  * @author Craig Cavanaugh
- * @version $Id: ClippingDecorator.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public final class ClippingDecorator implements ClippingModel {
 

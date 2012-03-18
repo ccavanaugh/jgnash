@@ -25,7 +25,7 @@ import javax.swing.table.TableModel;
  * JTable for displaying budget results using the specified format
  *
  * @author Craig Cavanaugh
- * @version $Id: BudgetResultsTable.java 3164 2012-02-06 10:49:57Z ccavanaugh $
+ *
  */
 class BudgetResultsTable extends AbstractResultsTable {
 

@@ -25,7 +25,7 @@ import java.math.BigDecimal;
  * null on a get(index) operation means that the value at that index has not been set.
  * 
  * @author Craig Cavanaugh
- * @version $Id: BigDecimalCache.java 3123 2012-01-22 13:18:57Z ccavanaugh $
+ *
  */
 public final class BigDecimalCache {
 

@@ -23,7 +23,7 @@ import java.util.Date;
  * Interface for recurring iterators
  *
  * @author Craig Cavanaugh
- * @version $Id: RecurringIterator.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public interface RecurringIterator {
 

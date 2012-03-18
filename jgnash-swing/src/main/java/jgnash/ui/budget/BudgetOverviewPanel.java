@@ -52,7 +52,7 @@ import jgnash.util.Resource;
  * Overview panel for the displayed period
  *
  * @author Craig Cavanaugh
- * @version $Id: BudgetOverviewPanel.java 3074 2012-01-07 16:16:04Z ccavanaugh $
+ *
  */
 class BudgetOverviewPanel extends JPanel implements ChangeListener {
 

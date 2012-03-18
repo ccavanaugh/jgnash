@@ -47,7 +47,7 @@ import jgnash.util.Resource;
  * exited with an okAction, the changes are applied.
  *
  * @author Craig Cavanaugh
- * @version $Id: ColumnDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class ColumnDialog extends JDialog implements ActionListener {
 

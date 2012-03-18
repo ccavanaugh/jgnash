@@ -30,7 +30,7 @@ import jgnash.util.Resource;
  * UI Action to close the current database
  * 
  * @author Craig Cavanaugh
- * @version $Id: CloseEngineAction.java 3052 2012-01-02 12:01:39Z ccavanaugh $
+ *
  */
 @Action("close-command")
 public class CloseEngineAction extends AbstractEnabledAction {

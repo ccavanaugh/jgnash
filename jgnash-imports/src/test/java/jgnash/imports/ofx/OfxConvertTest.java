@@ -30,7 +30,7 @@ import org.junit.Test;
  * JUnit 4 test class
  * 
  * @author Craig Cavanaugh
- * @version $Id: OfxTest.java 792 2008-06-30 00:43:28Z ccavanaugh $
+ *
  */
 
 public class OfxConvertTest {

@@ -21,7 +21,7 @@ package jgnash.util;
  * OS specific detection code
  * 
  * @author Craig Cavanaugh
- * @version $Id: OS.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public final class OS {
 

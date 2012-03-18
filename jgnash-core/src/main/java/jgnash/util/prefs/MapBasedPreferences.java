@@ -28,7 +28,7 @@ import java.util.prefs.BackingStoreException;
  * methods.
  *
  * @author Craig Cavanaugh
- * @version $Id: MapBasedPreferences.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class MapBasedPreferences extends AbstractPreferences {
 

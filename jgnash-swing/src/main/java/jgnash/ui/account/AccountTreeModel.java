@@ -31,7 +31,7 @@ import jgnash.engine.RootAccount;
  * Account tree model
  * 
  * @author Craig Cavanaugh
- * @version $Id: AccountTreeModel.java 3069 2012-01-04 10:35:52Z ccavanaugh $
+ *
  */
 public class AccountTreeModel extends DefaultTreeModel {
 

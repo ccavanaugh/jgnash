@@ -39,7 +39,7 @@ import jgnash.util.Resource;
  * Displays a tree view of the accounts
  *
  * @author Craig Cavanaugh
- * @version $Id: AccountListDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class AccountListDialog extends JDialog implements ActionListener {
     private Resource rb = Resource.get();

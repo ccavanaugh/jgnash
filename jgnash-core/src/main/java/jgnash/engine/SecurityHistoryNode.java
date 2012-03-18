@@ -26,7 +26,7 @@ import jgnash.util.DateUtils;
  * Historical data for a <code>SecurityNode</code>.
  *
  * @author Craig Cavanaugh
- * @version $Id: SecurityHistoryNode.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class SecurityHistoryNode implements Comparable<SecurityHistoryNode> {
 

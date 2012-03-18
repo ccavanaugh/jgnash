@@ -21,7 +21,7 @@ package jgnash.engine;
  * Static account utilities
  * 
  * @author Craig Cavanaugh
- * @version $Id: AccountUtils.java 3070 2012-01-04 11:00:43Z ccavanaugh $
+ *
  */
 public class AccountUtils {
 

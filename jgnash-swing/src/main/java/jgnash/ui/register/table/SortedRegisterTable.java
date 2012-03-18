@@ -26,7 +26,7 @@ import javax.swing.table.TableColumnModel;
  * Sorted version of the table model.
  *
  * @author Craig Cavanaugh
- * @version $Id: SortedRegisterTable.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class SortedRegisterTable extends RegisterTable implements MouseListener {
 

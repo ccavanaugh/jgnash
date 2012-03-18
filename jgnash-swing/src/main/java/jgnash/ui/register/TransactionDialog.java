@@ -41,7 +41,7 @@ import jgnash.util.Resource;
  * A Dialog for creating and editing new transactions
  *
  * @author Craig Cavanaugh
- * @version $Id: TransactionDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class TransactionDialog extends JDialog implements RegisterListener {
 

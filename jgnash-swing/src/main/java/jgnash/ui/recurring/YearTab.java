@@ -41,7 +41,7 @@ import jgnash.util.Resource;
  * Yearly reminder tab.
  *
  * @author Craig Cavanaugh
- * @version $Id: YearTab.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class YearTab extends JPanel implements RecurringTab, ActionListener {
 

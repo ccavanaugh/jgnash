@@ -46,7 +46,7 @@ import jgnash.util.Resource;
  * Import OFX file action
  * 
  * @author Craig Cavanaugh
- * @version $Id: ImportOfxAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 @Action("ofximport-command")
 public class ImportOfxAction extends AbstractEnabledAction {

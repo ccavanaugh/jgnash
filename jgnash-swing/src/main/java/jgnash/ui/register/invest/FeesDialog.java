@@ -53,7 +53,7 @@ import jgnash.util.Resource;
  * Edit investment transaction fees
  * 
  * @author Craig Cavanaugh
- * @version $Id: FeesDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class FeesDialog extends JDialog implements ListSelectionListener, ActionListener {
 

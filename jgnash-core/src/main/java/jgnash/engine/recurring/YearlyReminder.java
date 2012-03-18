@@ -26,7 +26,7 @@ import jgnash.util.DateUtils;
  * A yearly reminder
  *
  * @author Craig Cavanaugh
- * @version $Id: YearlyReminder.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class YearlyReminder extends Reminder {
 

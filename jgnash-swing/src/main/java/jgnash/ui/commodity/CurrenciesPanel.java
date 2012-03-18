@@ -50,7 +50,7 @@ import jgnash.util.Resource;
  * Creates a panel for adding and removing currencies. A static method is provided for displaying the panel in a dialog.
  * 
  * @author Craig Cavanaugh
- * @version $Id: CurrenciesPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class CurrenciesPanel extends JPanel implements ActionListener {
 

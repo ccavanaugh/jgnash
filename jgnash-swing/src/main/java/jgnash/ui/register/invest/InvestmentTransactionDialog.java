@@ -41,7 +41,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * A Dialog for creating and editing new transactions
  *
  * @author Craig Cavanaugh
- * @version $Id: InvestmentTransactionDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class InvestmentTransactionDialog extends JDialog implements RegisterListener {
 

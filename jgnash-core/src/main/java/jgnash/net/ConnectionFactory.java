@@ -27,7 +27,7 @@ import java.util.prefs.Preferences;
  * Factory methods for setting network connection timeout and creating a URLConnection with timeout set correctly.
  * 
  * @author Craig Cavanaugh
- * @version $Id: ConnectionFactory.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class ConnectionFactory {
 

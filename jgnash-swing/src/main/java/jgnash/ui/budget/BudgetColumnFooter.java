@@ -29,7 +29,7 @@ import javax.swing.JPanel;
  * Column footer component for the budget table
  *
  * @author Craig Cavanaugh
- * @version $Id: BudgetColumnFooter.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class BudgetColumnFooter extends JPanel{
     private static final long serialVersionUID = 1L;

@@ -47,7 +47,7 @@ import jgnash.message.MessageProperty;
  * 
  * @author Craig Cavanaugh
  * @author Vijil E C (vijilec at gmail dot com)
- * @version $Id: AccountListComboBox.java 3070 2012-01-04 11:00:43Z ccavanaugh $
+ *
  */
 public class AccountListComboBox extends JComboBox<Account> implements
 		MessageListener {

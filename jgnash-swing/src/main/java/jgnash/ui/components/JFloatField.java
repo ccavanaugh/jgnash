@@ -43,7 +43,7 @@ import jgnash.engine.CommodityNode;
  * operators, decimals, and locale specific numerical grouping separators.
  *
  * @author Craig Cavanaugh
- * @version $Id: JFloatField.java 3119 2012-01-22 12:48:45Z ccavanaugh $
+ *
  */
 public class JFloatField extends JTextFieldEx {
 

@@ -25,7 +25,7 @@ import jgnash.util.Resource;
  * Reinvest dividend transaction
  * 
  * @author Craig Cavanaugh
- * @version $Id: TransactionEntryReinvestDivX.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class TransactionEntryReinvestDivX extends TransactionEntryAbstractIncrease {
 

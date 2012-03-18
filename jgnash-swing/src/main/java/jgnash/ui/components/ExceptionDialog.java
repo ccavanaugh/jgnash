@@ -40,7 +40,7 @@ import jgnash.util.Resource;
  * A simple exception dialog with a close button
  *
  * @author Craig Cavanaugh
- * @version $Id: ExceptionDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class ExceptionDialog extends JDialog implements ActionListener {
 

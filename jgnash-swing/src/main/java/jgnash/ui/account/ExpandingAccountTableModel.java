@@ -48,7 +48,7 @@ import jgnash.util.Resource;
  * 
  * @author Craig Cavanaugh
  * @author Peter Vida
- * @version $Id: ExpandingAccountTableModel.java 3069 2012-01-04 10:35:52Z ccavanaugh $
+ *
  */
 public final class ExpandingAccountTableModel extends AbstractExpandingTableModel<Account> implements AccountFilterModel {
 

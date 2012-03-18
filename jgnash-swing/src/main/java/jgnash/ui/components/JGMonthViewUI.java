@@ -29,7 +29,7 @@ import javax.swing.plaf.ComponentUI;
  * can be selected by double click.
  *
  * @author Peter Vida
- * @version $Id: JGMonthViewUI.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class JGMonthViewUI extends BasicMonthViewUI {
     private MouseListener mouseListener;

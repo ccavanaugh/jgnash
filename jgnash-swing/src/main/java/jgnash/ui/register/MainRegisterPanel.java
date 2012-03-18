@@ -57,7 +57,7 @@ import jgnash.util.Resource;
  * reused across data set loads and must be recreated
  *
  * @author Craig Cavanaugh
- * @version $Id: MainRegisterPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class MainRegisterPanel extends JPanel implements ActionListener, MessageListener {
 

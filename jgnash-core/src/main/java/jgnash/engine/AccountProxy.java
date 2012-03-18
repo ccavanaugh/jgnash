@@ -28,7 +28,7 @@ import jgnash.util.DateUtils;
  * handled differently.
  * 
  * @author Craig Cavanaugh
- * @version $Id: AccountProxy.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class AccountProxy {
 

@@ -23,7 +23,7 @@ import jgnash.engine.Transaction;
  * Matcher Interface
  *
  * @author Craig Cavanaugh
- * @version $Id: Matcher.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 interface Matcher {
 

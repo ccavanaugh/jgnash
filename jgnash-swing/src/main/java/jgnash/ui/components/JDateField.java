@@ -43,7 +43,7 @@ import jgnash.util.DateUtils;
  * T or t will set the field to current date
  *
  * @author Craig Cavanaugh
- * @version $Id: JDateField.java 3128 2012-01-22 19:01:08Z ccavanaugh $
+ *
  */
 public final class JDateField extends JTextFieldEx {
 

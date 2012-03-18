@@ -28,7 +28,7 @@ import jgnash.util.Resource;
  * can be overridden to change the available periods
  *
  * @author Craig Cavanaugh
- * @version $Id: TimePeriodCombo.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class TimePeriodCombo extends JComboBox<String> {
 

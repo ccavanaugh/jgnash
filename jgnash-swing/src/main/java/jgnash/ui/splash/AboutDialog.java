@@ -56,7 +56,7 @@ import org.jfree.ui.about.SystemPropertiesPanel;
  * This is the jGnash About Dialog.
  * 
  * @author Craig Cavanaugh
- * @version $Id: AboutDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class AboutDialog extends JDialog implements ActionListener {
 

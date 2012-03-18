@@ -47,7 +47,7 @@ import jgnash.util.Resource;
  * Dialog for displaying and changing a budget's properties
  *
  * @author Craig Cavanaugh
- * @version $Id: BudgetPropertiesDialog.java 3075 2012-01-07 16:16:54Z ccavanaugh $
+ *
  */
 public final class BudgetPropertiesDialog extends JDialog implements ActionListener {
 

@@ -23,7 +23,7 @@ import jgnash.util.Resource;
  * Reconciled State of a transaction
  *
  * @author Craig Cavanaugh
- * @version $Id: ReconciledState.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 
 public enum ReconciledState {

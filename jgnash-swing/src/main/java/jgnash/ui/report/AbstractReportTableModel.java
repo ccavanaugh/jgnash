@@ -35,7 +35,7 @@ import jgnash.util.DateUtils;
  * Report model interface
  *
  * @author Craig Cavanaugh
- * @version $Id: AbstractReportTableModel.java 3128 2012-01-22 19:01:08Z ccavanaugh $
+ *
  */
 public abstract class AbstractReportTableModel extends AbstractTableModel {
 

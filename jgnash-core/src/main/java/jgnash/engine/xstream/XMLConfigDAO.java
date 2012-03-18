@@ -27,7 +27,7 @@ import jgnash.engine.dao.ConfigDAO;
  * Config object DAO
  *
  * @author Craig Cavanaugh
- * @version $Id: XMLConfigDAO.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class XMLConfigDAO extends AbstractXMLDAO implements ConfigDAO {
 

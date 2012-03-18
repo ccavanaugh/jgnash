@@ -29,7 +29,7 @@ import java.io.IOException;
  * Factory methods for serializing CheckLayout objects
  *
  * @author Craig Cavanaugh
- * @version $Id: CheckLayoutSerializationFactory.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class CheckLayoutSerializationFactory {
 

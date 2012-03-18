@@ -42,7 +42,7 @@ import jgnash.util.Resource;
  * Weekly reminder tab.
  *
  * @author Craig Cavanaugh
- * @version $Id: WeekTab.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class WeekTab extends JPanel implements RecurringTab, ActionListener {
 

@@ -35,7 +35,7 @@ import jgnash.message.MessageProperty;
  * SecurityNode ComboBox
  *
  * @author Craig Cavanaugh
- * @version $Id: SecurityComboBox.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class SecurityComboBox extends AbstractCommodityComboBox<SecurityNode> {
 

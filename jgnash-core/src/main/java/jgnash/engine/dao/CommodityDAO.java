@@ -31,7 +31,7 @@ import jgnash.engine.SecurityNode;
  * Commodity DAO Interface
  *
  * @author Craig Cavanaugh
- * @version $Id: CommodityDAO.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public interface CommodityDAO {
 

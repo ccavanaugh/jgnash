@@ -43,7 +43,7 @@ import jgnash.ui.account.AmortizeDialog;
  * Register panel for liability accounts.
  *
  * @author Craig Cavanaugh
- * @version $Id: LiabilityRegisterPanel.java 3118 2012-01-22 12:37:14Z ccavanaugh $
+ *
  */
 public class LiabilityRegisterPanel extends RegisterPanel {
 

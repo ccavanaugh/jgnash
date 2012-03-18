@@ -49,7 +49,7 @@ import jgnash.util.Resource;
  * New file wizard panel
  *
  * @author Craig Cavanaugh
- * @version $Id: NewFileOne.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class NewFileOne extends JPanel implements WizardPage, ActionListener {
 

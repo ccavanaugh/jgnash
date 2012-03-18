@@ -40,7 +40,7 @@ import java.util.logging.Logger;
  * I'm not very happy with this code, but I'm not sure there is a clean solution to parsing QIF files
  * 
  * @author Craig Cavanaugh
- * @version $Id: QifParser.java 3156 2012-02-05 09:43:45Z ccavanaugh $
+ *
  */
 public final class QifParser {
 

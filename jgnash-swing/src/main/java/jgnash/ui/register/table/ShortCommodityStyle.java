@@ -22,7 +22,7 @@ package jgnash.ui.register.table;
  * register and reports
  *
  * @author Craig Cavanaugh
- * @version $Id: ShortCommodityStyle.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class ShortCommodityStyle {
 

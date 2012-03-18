@@ -29,7 +29,7 @@ import javax.swing.text.Document;
 /** Extended JTextField that selects existing text when it receives the focus
  * 
  * @author Craig Cavanaugh 
- * @version $Id: JTextFieldEx.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class JTextFieldEx extends JTextField {
 

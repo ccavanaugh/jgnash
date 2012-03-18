@@ -32,7 +32,7 @@ import jgnash.ui.util.builder.Action;
  * UI Action to run the portfolio report
  *
  * @author Craig Cavanaugh
- * @version $Id: PortfolioReportAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 @Action("report-portfolio-command")
 public class PortfolioReportAction extends AbstractEnabledAction {

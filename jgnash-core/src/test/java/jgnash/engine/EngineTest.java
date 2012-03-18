@@ -37,7 +37,7 @@ import static org.junit.Assert.*;
 
 /**
  * @author Craig Cavanaugh
- * @version $Id: EngineTest.java 3173 2012-02-10 17:31:43Z ccavanaugh $
+ *
  */
 public abstract class EngineTest {
 

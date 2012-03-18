@@ -51,7 +51,7 @@ import jgnash.util.Resource;
  * Security High / Low Chart
  *
  * @author Craig Cavanaugh
- * @version $Id: SecurityHighLowChart.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class SecurityHighLowChart {
 

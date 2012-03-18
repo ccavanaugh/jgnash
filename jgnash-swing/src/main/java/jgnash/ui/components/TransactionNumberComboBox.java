@@ -39,7 +39,7 @@ import jgnash.util.Resource;
  * numbers in a consistent manner.
  *
  * @author Craig Cavanaugh
- * @version $Id: TransactionNumberComboBox.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class TransactionNumberComboBox extends JComboBox<String> implements ActionListener {
 

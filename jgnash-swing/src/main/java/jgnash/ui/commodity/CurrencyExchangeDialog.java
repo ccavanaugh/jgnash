@@ -77,7 +77,7 @@ import jgnash.util.Resource;
  * direction. The rate must be inverted accordingly.
  * 
  * @author Craig Cavanaugh
- * @version $Id: CurrencyExchangeDialog.java 3128 2012-01-22 19:01:08Z ccavanaugh $
+ *
  */
 public class CurrencyExchangeDialog extends JDialog implements MessageListener, ActionListener, ListSelectionListener {
 

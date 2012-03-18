@@ -26,7 +26,7 @@ import java.util.List;
  * XML Budget DAO
  *
  * @author Craig Cavanaugh
- * @version $Id$
+ *
  */
 public class XMLBudgetDAO extends AbstractXMLDAO implements BudgetDAO {
 

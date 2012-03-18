@@ -28,7 +28,7 @@ import java.awt.event.ActionEvent;
  * UI Action to open the new file dialog
  *
  * @author Craig Cavanaugh
- * @version $Id: AboutAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 @Action("about-command")
 public class AboutAction extends AbstractAction {

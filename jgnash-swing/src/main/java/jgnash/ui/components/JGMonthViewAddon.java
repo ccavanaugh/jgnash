@@ -26,7 +26,7 @@ import org.jdesktop.swingx.plaf.DefaultsList;
  * can be selected by double click.
  * 
  * @author Peter Vida
- * @version $Id: JGMonthViewAddon.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class JGMonthViewAddon extends AbstractComponentAddon {
     public JGMonthViewAddon() {

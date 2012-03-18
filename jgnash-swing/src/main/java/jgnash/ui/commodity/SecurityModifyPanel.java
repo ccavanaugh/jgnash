@@ -58,7 +58,7 @@ import jgnash.util.Resource;
  * CommodityModifyPanel is used for modifying the currency list and exchange rates.
  *
  * @author Craig Cavanaugh
- * @version $Id: SecurityModifyPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class SecurityModifyPanel extends JPanel implements MessageListener, ActionListener {
 

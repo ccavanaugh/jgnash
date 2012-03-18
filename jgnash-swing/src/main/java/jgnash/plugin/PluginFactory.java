@@ -36,7 +36,7 @@ import java.util.logging.Logger;
 /**
  * @author Leif-Erik Dörr
  * @author Craig Cavanaugh
- * @version $Id: PluginFactory.java 3130 2012-01-23 10:42:36Z ccavanaugh $
+ *
  */
 public final class PluginFactory {
 

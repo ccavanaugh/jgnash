@@ -35,7 +35,7 @@ import jgnash.ui.register.AbstractTransactionPanel;
  * Abstract panel for investment transaction form.
  * 
  * @author Craig Cavanaugh
- * @version $Id: AbstractInvTransactionPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public abstract class AbstractInvTransactionPanel extends AbstractTransactionPanel {
 

@@ -42,7 +42,7 @@ import org.pushingpixels.substance.api.fonts.FontSet;
  * Slider component to manage the global font size of the Substance Look and Feel
  * 
  * @author Craig Cavanaugh
- * @version $Id: SubstanceFontSlider.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class SubstanceFontSlider extends JPanel {
 

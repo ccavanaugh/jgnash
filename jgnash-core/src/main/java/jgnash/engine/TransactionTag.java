@@ -23,7 +23,7 @@ import jgnash.util.Resource;
  * Tagging enumeration for special transaction types
  * 
  * @author Craig Cavanaugh
- * @version $Id: TransactionTag.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public enum TransactionTag {
 

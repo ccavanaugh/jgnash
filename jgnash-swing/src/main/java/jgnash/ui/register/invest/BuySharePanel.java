@@ -45,7 +45,7 @@ import jgnash.ui.util.ValidationFactory;
  * Form for buying shares.
  *
  * @author Craig Cavanaugh
- * @version $Id: BuySharePanel.java 3167 2012-02-07 10:51:26Z ccavanaugh $
+ *
  */
 public final class BuySharePanel extends AbstractPriceQtyInvTransactionPanel {
 

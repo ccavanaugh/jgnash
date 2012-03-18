@@ -36,7 +36,7 @@ import jgnash.util.DateUtils;
  * The last market price is cached to improve performance
  * 
  * @author Craig Cavanaugh
- * @version $Id: SecurityNode.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public final class SecurityNode extends CommodityNode implements Cloneable {
 

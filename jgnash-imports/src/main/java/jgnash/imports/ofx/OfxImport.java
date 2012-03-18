@@ -30,7 +30,7 @@ import jgnash.engine.TransactionFactory;
  * OfxImport utility methods
  * 
  * @author Craig Cavanaugh
- * @version $Id: OfxImport.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class OfxImport {
 

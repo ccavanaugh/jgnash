@@ -40,7 +40,7 @@ import jgnash.util.Resource;
  * Startup options panel
  * 
  * @author Craig Cavanaugh
- * @version $Id: StartupOptions.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class StartupOptions extends JPanel implements ActionListener {
 

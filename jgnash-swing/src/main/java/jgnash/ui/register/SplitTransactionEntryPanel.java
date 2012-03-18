@@ -27,7 +27,7 @@ import jgnash.ui.register.table.SplitsRegisterTableModel;
  * Entry panel for spit transactions
  *
  * @author Craig Cavanaugh
- * @version $Id: SplitTransactionEntryPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class SplitTransactionEntryPanel extends AbstractTransactionEntryPanel implements ActionListener {
 

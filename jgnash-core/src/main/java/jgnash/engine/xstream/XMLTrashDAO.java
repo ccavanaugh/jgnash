@@ -27,7 +27,7 @@ import jgnash.engine.dao.TrashDAO;
  * XML trash DAO
  *
  * @author Craig Cavanaugh
- * @version $Id: XMLTrashDAO.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class XMLTrashDAO extends AbstractXMLDAO implements TrashDAO {
 

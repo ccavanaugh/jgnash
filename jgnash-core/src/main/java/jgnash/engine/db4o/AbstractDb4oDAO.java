@@ -29,7 +29,7 @@ import jgnash.net.ConnectionFactory;
  * Abstract Db4o DAO
  *
  * @author Craig Cavanaugh
- * @version $Id: AbstractDb4oDAO.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public abstract class AbstractDb4oDAO extends AbstractDAO {
 

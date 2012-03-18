@@ -46,7 +46,7 @@ import jgnash.ui.register.table.SplitsRegisterTableModel;
  * Abstract Entry panel for spit transactions of various types
  *
  * @author Craig Cavanaugh
- * @version $Id: AbstractTransactionEntryPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public abstract class AbstractTransactionEntryPanel extends AbstractEntryFormPanel implements ActionListener {
 

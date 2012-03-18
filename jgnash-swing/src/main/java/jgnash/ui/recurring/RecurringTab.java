@@ -23,7 +23,7 @@ import jgnash.engine.recurring.Reminder;
  * Interface for a recurring tab panel.
  *
  * @author Craig Cavanaugh
- * @version $Id: RecurringTab.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public interface RecurringTab {
 

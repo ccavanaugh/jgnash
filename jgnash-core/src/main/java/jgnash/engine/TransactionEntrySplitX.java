@@ -25,7 +25,7 @@ import jgnash.util.Resource;
  * Add shares without impacting the cash balance. This is a single entry transaction
  * 
  * @author Craig Cavanaugh
- * @version $Id: TransactionEntrySplitX.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class TransactionEntrySplitX extends TransactionEntryAbstractIncrease {
 

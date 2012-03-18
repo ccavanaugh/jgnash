@@ -25,7 +25,7 @@ import org.jdesktop.swingx.plaf.LookAndFeelAddons;
  * Extension to the JXMonthView component, so that date from the calendar can be selected by double click.
  * 
  * @author Peter Vida
- * @version $Id: JGJXMonthView.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class JGJXMonthView extends JXMonthView {
 

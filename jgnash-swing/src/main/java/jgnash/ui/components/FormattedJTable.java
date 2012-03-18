@@ -37,7 +37,7 @@ import jgnash.util.DateUtils;
 /**
  * 
  * @author Craig Cavanaugh
- * @version $Id: FormattedJTable.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class FormattedJTable extends JTable {
 

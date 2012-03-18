@@ -55,7 +55,7 @@ import org.slf4j.LoggerFactory;
  * Remote message bus client
  * 
  * @author Craig Cavanaugh
- * @version $Id: MessageBusRemoteClient.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class MessageBusRemoteClient {
 

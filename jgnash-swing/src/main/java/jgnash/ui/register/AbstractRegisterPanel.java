@@ -53,7 +53,7 @@ import jgnash.util.Resource;
  * Account register panels should extend this class
  *
  * @author Craig Cavanaugh
- * @version $Id: AbstractRegisterPanel.java 3142 2012-02-01 10:06:12Z ccavanaugh $
+ *
  */
 public abstract class AbstractRegisterPanel extends JPanel implements MessageListener, KeyListener {
 

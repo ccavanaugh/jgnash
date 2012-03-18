@@ -41,7 +41,7 @@ import jgnash.util.Resource;
  * ComboBox for displaying a list of Budgets. Automatically refreshes itself when necessary
  *
  * @author Craig Cavanaugh
- * @version $Id: BudgetComboBox.java 3058 2012-01-03 00:19:16Z ccavanaugh $
+ *
  */
 public final class BudgetComboBox extends JComboBox<Budget> {
 

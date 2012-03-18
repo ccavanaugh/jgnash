@@ -43,7 +43,7 @@ import jgnash.util.Resource;
  * RenameBudgetDialog is for changing the name of a budget
  *
  * @author Craig Cavanaugh
- * @version $Id: RenameBudgetDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class RenameBudgetDialog extends JDialog implements ActionListener {
     private static final long serialVersionUID = 1L;

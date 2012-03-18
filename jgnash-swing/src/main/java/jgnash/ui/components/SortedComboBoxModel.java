@@ -29,7 +29,7 @@ import javax.swing.MutableComboBoxModel;
  * A ComboBoxModel that maintains the list in a sorted order
  * 
  * @author Craig Cavanaugh
- * @version $Id: SortedComboBoxModel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  * @param <E> Model type
  */
 

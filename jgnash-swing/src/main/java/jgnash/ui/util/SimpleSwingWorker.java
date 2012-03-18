@@ -9,7 +9,7 @@ import javax.swing.SwingWorker;
  * 
  * 
  * @author Jonathan Giles
- * @version $Id: SimpleSwingWorker.java 2443 2010-11-27 23:31:19Z ccavanaugh $
+ *
  */
 public abstract class SimpleSwingWorker {
 

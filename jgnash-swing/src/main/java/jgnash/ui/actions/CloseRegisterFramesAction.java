@@ -27,7 +27,7 @@ import jgnash.ui.util.builder.Action;
  * UI Action to close all open register frames
  *
  * @author Craig Cavanaugh
- * @version $Id: CloseRegisterFramesAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 @Action("close-all-windows-command")
 public class CloseRegisterFramesAction extends AbstractAction {

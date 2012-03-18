@@ -48,7 +48,7 @@ import org.kohsuke.args4j.Option;
  * This is the main entry point for the jGnash application.
  * 
  * @author Craig Cavanaugh
- * @version $Id: Main.java 3087 2012-01-08 11:47:10Z ccavanaugh $
+ *
  */
 
 public final class Main {

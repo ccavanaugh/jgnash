@@ -22,7 +22,7 @@ package jgnash.ui.components.autocomplete;
  *
  * @author Craig Cavanaugh
  * @author Don Brown
- * @version $Id: AutoCompleteModel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public interface AutoCompleteModel {
 

@@ -34,7 +34,7 @@ import java.util.prefs.Preferences;
  * UI Action to open the currencies dialog
  *
  * @author Craig Cavanaugh
- * @version $Id: RunJavaScriptAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 @Action("javascript-command")
 public class RunJavaScriptAction extends AbstractEnabledAction {

@@ -42,7 +42,6 @@ import jgnash.util.Resource;
  * Fetches latest stock prices in the background
  * 
  * @author Craig Cavanaugh
- * @version $Id: SecurityUpdateFactory.java 3051 2012-01-02 11:27:23Z ccavanaugh $
  */
 public class SecurityUpdateFactory {
 

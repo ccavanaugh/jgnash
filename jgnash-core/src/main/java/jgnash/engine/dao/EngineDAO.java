@@ -25,7 +25,7 @@ import jgnash.engine.StoredObject;
  * Engine DAO Interface
  *
  * @author Craig Cavanaugh
- * @version $Id: EngineDAO.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public interface EngineDAO {
 

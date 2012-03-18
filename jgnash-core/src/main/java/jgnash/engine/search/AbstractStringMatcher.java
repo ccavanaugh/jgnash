@@ -25,7 +25,7 @@ import jgnash.util.SearchUtils;
  * Transaction payee matcher
  *
  * @author Craig Cavanaugh
- * @version $Id: AbstractStringMatcher.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public abstract class AbstractStringMatcher implements Matcher {
 

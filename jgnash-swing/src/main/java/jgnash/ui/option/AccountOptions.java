@@ -41,7 +41,7 @@ import jgnash.util.Resource;
  * Panel for general account options
  * 
  * @author Craig Cavanaugh
- * @version $Id: AccountOptions.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class AccountOptions extends JPanel implements ActionListener, FocusListener {
 

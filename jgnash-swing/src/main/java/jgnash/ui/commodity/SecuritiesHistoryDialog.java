@@ -82,7 +82,7 @@ import org.jfree.ui.RectangleInsets;
  * A Dialog for manipulation security histories.
  * 
  * @author Craig Cavanaugh
- * @version $Id: SecuritiesHistoryDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
 

@@ -23,7 +23,7 @@ import jgnash.engine.Transaction;
  * Transaction payee matcher
  *
  * @author Craig Cavanaugh
- * @version $Id: PayeeMatcher.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class PayeeMatcher extends AbstractStringMatcher {
 

@@ -51,7 +51,7 @@ import jgnash.ui.register.table.RegisterTable;
  * modifying, and removing them.
  * 
  * @author Craig Cavanaugh
- * @version $Id: InvestmentRegisterPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class InvestmentRegisterPanel extends AbstractRegisterPanel implements ActionListener {
 

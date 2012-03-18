@@ -31,7 +31,7 @@ import jgnash.util.Resource;
  * UI Action to request database path from the user
  *
  * @author Craig Cavanaugh
- * @version $Id: DatabasePathAction.java 3113 2012-01-21 10:46:47Z ccavanaugh $
+ *
  */
 public class DatabasePathAction {
 

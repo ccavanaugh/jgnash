@@ -37,7 +37,7 @@ import jgnash.util.Resource;
  * A simple dialog with a close button
  *
  * @author Craig Cavanaugh
- * @version $Id: GenericCloseDialog.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class GenericCloseDialog extends JDialog implements ActionListener {
     private static final long serialVersionUID = 1L;

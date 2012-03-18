@@ -48,7 +48,7 @@ import jgnash.ui.util.ValidationFactory;
  * Form for buying and selling shares.
  * 
  * @author Craig Cavanaugh
- * @version $Id: ReturnOfCapitalPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public final class ReturnOfCapitalPanel extends AbstractInvTransactionPanel {
 

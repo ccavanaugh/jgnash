@@ -29,7 +29,7 @@ import javax.swing.table.TableCellRenderer;
  * A table header renderer that shows sort column and direction
  *
  * @author Craig Cavanaugh
- * @version $Id: SortableTableHeaderRenderer.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class SortableTableHeaderRenderer implements TableCellRenderer {
 

@@ -28,7 +28,7 @@ import javax.swing.plaf.metal.DefaultMetalTheme;
  * Metal theme that tries to look like the CDE/Motif look and feel
  *
  * @author Craig Cavanaugh
- * @version $Id: CDETheme.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class CDETheme extends DefaultMetalTheme {
 

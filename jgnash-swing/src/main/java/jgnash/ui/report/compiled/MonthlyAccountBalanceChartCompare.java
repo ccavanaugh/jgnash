@@ -66,7 +66,7 @@ import org.jfree.data.time.TimeSeriesCollection;
  * @author Dany Veilleux
  * @author Peter Vida
  * @author Pranay Kumar
- * @version $Id: MonthlyAccountBalanceChartCompare.java 3070 2012-01-04 11:00:43Z ccavanaugh $
+ *
  */
 
 /**

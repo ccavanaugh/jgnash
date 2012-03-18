@@ -21,7 +21,7 @@ import java.util.EventListener;
 
 /**
  * @author Craig Ccavanaugh
- * @version $Id: RegisterListener.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public interface RegisterListener extends EventListener {
     void registerEvent(RegisterEvent e);

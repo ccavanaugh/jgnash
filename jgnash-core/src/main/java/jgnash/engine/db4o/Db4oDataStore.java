@@ -68,7 +68,7 @@ import jgnash.util.Resource;
  * db4o specific code for data storage and creating an engine
  * 
  * @author Craig Cavanaugh
- * @version $Id: Db4oDataStore.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class Db4oDataStore implements DataStore {
 

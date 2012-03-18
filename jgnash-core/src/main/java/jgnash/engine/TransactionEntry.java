@@ -34,7 +34,7 @@ import java.util.logging.Logger;
  * set to the same account and the credit and debit amounts must be set to the same value.
  * 
  * @author Craig Cavanaugh
- * @version $Id: TransactionEntry.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable {
 

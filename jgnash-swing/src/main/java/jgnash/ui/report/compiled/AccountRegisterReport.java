@@ -54,7 +54,7 @@ import net.sf.jasperreports.engine.JasperPrint;
  * Account Register Report
  *
  * @author Craig Cavanaugh
- * @version $Id: AccountRegisterReport.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class AccountRegisterReport extends DynamicJasperReport {
 

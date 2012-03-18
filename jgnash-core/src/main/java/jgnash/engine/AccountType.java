@@ -31,7 +31,7 @@ import jgnash.util.Resource;
  * Account type enumeration
  * 
  * @author Craig Cavanaugh
- * @version $Id: AccountType.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public enum AccountType {
 

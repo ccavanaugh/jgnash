@@ -26,7 +26,7 @@ import jgnash.engine.dao.AbstractDAO;
  * Simple object container for StoredObjects that reads and writes and xml file
  *
  * @author Craig Cavanaugh
- * @version $Id: AbstractXMLDAO.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public abstract class AbstractXMLDAO extends AbstractDAO {
 

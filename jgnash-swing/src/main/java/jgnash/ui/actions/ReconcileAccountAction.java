@@ -27,7 +27,7 @@ import jgnash.ui.reconcile.ReconcileSettingsDialog;
  * Reconcile action class
  *
  * @author Craig Cavanaugh
- * @version $Id: ReconcileAccountAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class ReconcileAccountAction {
 

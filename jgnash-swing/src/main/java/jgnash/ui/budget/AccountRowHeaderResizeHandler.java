@@ -37,7 +37,7 @@ import javax.swing.event.TableModelListener;
  * Attaches mouse listeners to resize the JScrollPane row header
  *
  * @author Craig Cavanaugh
- * @version $Id: AccountRowHeaderResizeHandler.java 3020 2011-12-28 16:52:55Z
+ *
  * ccavanaugh $
  */
 final class AccountRowHeaderResizeHandler extends MouseInputAdapter {

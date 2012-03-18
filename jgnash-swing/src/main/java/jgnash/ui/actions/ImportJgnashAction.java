@@ -29,7 +29,7 @@ import java.awt.event.ActionEvent;
  * UI Action to import an old jgnash file
  *
  * @author Craig Cavanaugh
- * @version $Id: ImportJgnashAction.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 @Action("jgnashimport-command")
 public class ImportJgnashAction extends AbstractAction{

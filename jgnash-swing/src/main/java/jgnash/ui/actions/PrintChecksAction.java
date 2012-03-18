@@ -26,7 +26,7 @@ import java.awt.event.ActionEvent;
  * UI Action to open the currencies dialog
  *
  * @author Craig Cavanaugh
- * @version $Id: ModifyCurrenciesAction.java 2539 2011-01-16 20:33:27Z ccavanaugh $
+ *
  */
 @Action("printchecks-command")
 public class PrintChecksAction extends AbstractEnabledAction {

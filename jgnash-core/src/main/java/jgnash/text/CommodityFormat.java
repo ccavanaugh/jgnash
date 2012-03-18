@@ -35,7 +35,7 @@ import jgnash.message.MessageListener;
  * Formats commodities for display
  *
  * @author Craig Cavanaugh
- * @version $Id: CommodityFormat.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public abstract class CommodityFormat {
 

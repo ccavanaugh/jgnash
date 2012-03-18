@@ -36,7 +36,7 @@ import jgnash.util.FileMagic;
  * Utility class to convert OFX version 1 (SGML) to OFX version 2 (XML)
  *
  * @author Craig Cavanaugh
- * @version $Id: OfxV1ToV2.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 public class OfxV1ToV2 {
 

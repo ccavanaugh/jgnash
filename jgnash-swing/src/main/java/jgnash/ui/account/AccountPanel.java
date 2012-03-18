@@ -49,7 +49,7 @@ import jgnash.util.Resource;
  * Panel for entering / modifying account information.
  *
  * @author Craig Cavanaugh
- * @version $Id: AccountPanel.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 final class AccountPanel extends JPanel implements ActionListener {
     private static final long serialVersionUID = 1L;

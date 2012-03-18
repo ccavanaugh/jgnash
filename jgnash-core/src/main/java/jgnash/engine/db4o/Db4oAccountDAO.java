@@ -38,7 +38,7 @@ import com.db4o.query.Query;
  * db4o Account DAO
  *
  * @author Craig Cavanaugh
- * @version $Id: Db4oAccountDAO.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ *
  */
 class Db4oAccountDAO extends AbstractDb4oDAO implements AccountDAO {
 
