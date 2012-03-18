@@ -103,7 +103,7 @@ public class HelpIndexer {
         try {
             parser.parseArgument(cmdArgs);
 
-            ArrayList<String> args = new ArrayList<String>();
+            ArrayList<String> args = new ArrayList<>();
 
             if (dataBase != null) {
                 args.add("-db");
@@ -129,7 +129,7 @@ public class HelpIndexer {
     }
 
     private List<String> getFilesToIndex(final File basedir) {
-        ArrayList<String> files = new ArrayList<String>();
+        ArrayList<String> files = new ArrayList<>();
 
         DirectoryScanner scanner = new DirectoryScanner();
 

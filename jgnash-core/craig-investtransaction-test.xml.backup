@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?fileVersion 2.21?>
+<object-stream>
+  <list id="1">
+    <CurrencyNode id="2" uuid="4ded24d1-6a58-479b-9780-acdaf2a3d60b" symbol="USD" scale="2" prefix="$" suffix="">
+      <locale id="3">en_US</locale>
+    </CurrencyNode>
+    <CurrencyNode id="4" uuid="68d5cc97-0512-44c8-8858-5e4c28bb8ed2" symbol="CAD" scale="2" prefix="" suffix="" description="en_US">
+      <locale reference="3"/>
+    </CurrencyNode>
+    <Config id="5" uuid="a3f903a4-58d8-43c5-875d-e3ecc0acb826">
+      <defaultCurrency id="6" uuid="79426481-e978-4277-a576-debeb3ccfa2b" symbol="USD" scale="2" prefix="" suffix="" description="en_US">
+        <locale reference="3"/>
+      </defaultCurrency>
+      <name>DefaultConfig</name>
+      <accountSeparator>:</accountSeparator>
+      <fileVersion>2.21</fileVersion>
+      <transactionNumberItems id="7"/>
+    </Config>
+    <RootAccount id="8" uuid="a5b4ce95-3bd8-4bea-8daa-1212e132aa07" placeHolder="false" locked="false" visible="true" name="Root" description="Root">
+      <accountType>ROOT</accountType>
+      <excludedFromBudget>false</excludedFromBudget>
+      <notes></notes>
+      <currencyNode reference="6"/>
+      <children id="9"/>
+      <transactions id="10"/>
+      <securities id="11"/>
+      <accountNumber></accountNumber>
+      <propertyMap id="12"/>
+    </RootAccount>
+  </list>
+</object-stream>
