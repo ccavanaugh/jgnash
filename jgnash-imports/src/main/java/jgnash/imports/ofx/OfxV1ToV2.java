@@ -34,155 +34,167 @@ import jgnash.util.FileMagic;
 
 /**
  * Utility class to convert OFX version 1 (SGML) to OFX version 2 (XML)
- *
+ * 
  * @author Craig Cavanaugh
- *
+ * 
  */
 public class OfxV1ToV2 {
 
-    private static final int READ_AHEAD_LIMIT = 2048;
+	private static final int READ_AHEAD_LIMIT = 2048;
 
-    public static String convertToXML(final File file) {
-        String encoding = FileMagic.getOfxV1Encoding(file);
+	public static String convertToXML(final File file) {
+		String encoding = FileMagic.getOfxV1Encoding(file);
 
-        Logger.getLogger(OfxV1ToV2.class.getName()).info("OFX Version 1 file encoding was " + encoding);
+		Logger.getLogger(OfxV1ToV2.class.getName()).info(
+				"OFX Version 1 file encoding was " + encoding);
 
-        return convertSgmlToXML(readFile(file, encoding));
-    }
+		return convertSgmlToXML(readFile(file, encoding));
+	}
 
-    public static String convertToXML(final InputStream stream) {
-        return convertSgmlToXML(readFile(stream, System.getProperty("file.encoding")));
-    }
+	public static String convertToXML(final InputStream stream) {
+		return convertSgmlToXML(readFile(stream,
+				System.getProperty("file.encoding")));
+	}
 
-    private static String convertSgmlToXML(final String sgml) {
-        StringBuilder xml = new StringBuilder(sgml);
+	private static String convertSgmlToXML(final String sgml) {
+		StringBuilder xml = new StringBuilder(sgml);
 
-        int readPos = 0;
-        int tagEnd = 0;
+		int readPos = 0;
+		int tagEnd = 0;
 
-        while (readPos < xml.length() && readPos != -1) {
-            String tag;
+		while (readPos < xml.length() && readPos != -1) {
+			String tag;
 
-            readPos = xml.indexOf("<", tagEnd);
+			readPos = xml.indexOf("<", tagEnd);
 
-            if (readPos != -1) {
-                tagEnd = xml.indexOf(">", readPos);
+			if (readPos != -1) {
+				tagEnd = xml.indexOf(">", readPos);
 
-                if (tagEnd != -1) {
-                    tag = xml.substring(readPos + 1, tagEnd);
+				if (tagEnd != -1) {
+					tag = xml.substring(readPos + 1, tagEnd);
 
-                    if (!tag.startsWith("/")) {
-                        if (xml.indexOf("</" + tag + ">", tagEnd) == -1) {
+					if (!tag.startsWith("/")) {
+						if (xml.indexOf("</" + tag + ">", tagEnd) == -1) {
 
-                            readPos = xml.indexOf("<", tagEnd);
-                            xml = xml.insert(readPos, "</" + tag + ">");
-                        }
-                    }
-                } else {
-                    readPos = -1;
-                }
-            }
-        }
-        return xml.toString();
-    }
+							readPos = xml.indexOf("<", tagEnd);
+							xml = xml.insert(readPos, "</" + tag + ">");
+						}
+					}
+				} else {
+					readPos = -1;
+				}
+			}
+		}
+		return xml.toString();
+	}
 
-    private static String concat(final Collection<String> strings) {
-        StringBuilder b = new StringBuilder();
+	private static String concat(final Collection<String> strings) {
+		StringBuilder b = new StringBuilder();
 
-        for (String s : strings) {
-            b.append(s.trim());
-        }
+		for (String s : strings) {
+			b.append(s.trim());
+		}
 
-        return b.toString();
-    }
+		return b.toString();
+	}
 
-    private static void consumeHeader(final BufferedReader reader)
-            throws IOException {
+	/**
+	 * Munch through the header one character at a time. Do not assume clean
+	 * formating or EOL characters.
+	 * 
+	 * @param reader
+	 * @throws IOException
+	 */
+	private static void consumeHeader(final BufferedReader reader)
+			throws IOException {
 
-        Logger logger = Logger.getLogger(OfxV1ToV2.class.getName());
+		Logger logger = Logger.getLogger(OfxV1ToV2.class.getName());
 
-        while (true) {
-            reader.mark(READ_AHEAD_LIMIT);
-            String line = reader.readLine();
+		while (true) {
+			reader.mark(READ_AHEAD_LIMIT);
 
-            if (line != null) {
-                line = line.trim();
+			int character = reader.read();
 
-                if (line.contains("<") || line.contains(">") || line.contains("</")) {
-                    reader.reset();
-                    logger.info("readHeader() Complete");
-                    break;
-                }
-            } else {
-                break;
-            }
-        }
-    }
+			if (character >= 0) {
+				if (character == '<') {
+					reader.reset();
+					logger.info("readHeader() Complete");
+					break;
+				}
+			} else {
+				break;
+			}
+		}
+	}
 
-    /**
-     * Reads a file, strips the header and reads the SGML content into one large string
-     *
-     * @param stream input stream
-     * @return a String with the SGML content and header removed
-     */
-    private static String readFile(final InputStream stream, final String characterSet) {
+	/**
+	 * Reads a file, strips the header and reads the SGML content into one large
+	 * string
+	 * 
+	 * @param stream
+	 *            input stream
+	 * @return a String with the SGML content and header removed
+	 */
+	private static String readFile(final InputStream stream,
+			final String characterSet) {
 
-        Logger logger = Logger.getLogger(OfxV1ToV2.class.getName());
+		Logger logger = Logger.getLogger(OfxV1ToV2.class.getName());
 
-        if (stream == null) {
-            logger.severe("InputStream was null");
-            return null;
-        }
+		if (stream == null) {
+			logger.severe("InputStream was null");
+			return null;
+		}
 
-        List<String> strings = new ArrayList<>();
+		List<String> strings = new ArrayList<>();
 
-        BufferedReader reader = null;
+		BufferedReader reader = null;
 
-        try {
-            reader = new BufferedReader(new InputStreamReader(stream, characterSet));
+		try {
+			reader = new BufferedReader(new InputStreamReader(stream,
+					characterSet));
 
-            // consume the Ofx1 header
-            consumeHeader(reader);
+			// consume the Ofx1 header
+			consumeHeader(reader);
 
-            String line = reader.readLine();
+			String line = reader.readLine();
 
-            while (line != null) {
+			while (line != null) {
 
-                line = line.trim();
+				line = line.trim();
 
-                if (line.length() > 0) {
-                    strings.add(line);
-                }
+				if (line.length() > 0) {
+					strings.add(line);
+				}
 
-                line = reader.readLine();
-            }
-        } catch (FileNotFoundException e) {
-            logger.log(Level.SEVERE, e.toString(), e);
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, e.toString(), e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    logger.log(Level.SEVERE, e.toString(), e);
-                }
-            }
-        }
+				line = reader.readLine();
+			}
+		} catch (FileNotFoundException e) {
+			logger.log(Level.SEVERE, e.toString(), e);
+		} catch (IOException e) {
+			logger.log(Level.SEVERE, e.toString(), e);
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					logger.log(Level.SEVERE, e.toString(), e);
+				}
+			}
+		}
 
-        return concat(strings);
-    }
+		return concat(strings);
+	}
 
-    private static String readFile(final File file, final String characterSet) {
-        try {
-            return readFile(new FileInputStream(file), characterSet);
-        } catch (FileNotFoundException e) {
-            Logger logger = Logger.getLogger(OfxV1ToV2.class.getName());
-            logger.log(Level.SEVERE, e.toString(), e);
-            return "";
-        }
-    }
+	private static String readFile(final File file, final String characterSet) {
+		try {
+			return readFile(new FileInputStream(file), characterSet);
+		} catch (FileNotFoundException e) {
+			Logger logger = Logger.getLogger(OfxV1ToV2.class.getName());
+			logger.log(Level.SEVERE, e.toString(), e);
+			return "";
+		}
+	}
 
-    private OfxV1ToV2() {
-    }
+	private OfxV1ToV2() {
+	}
 }
