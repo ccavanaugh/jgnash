@@ -164,10 +164,7 @@ public class ExchangeRate extends StoredObject {
 
     @Override
     public boolean equals(final Object other) {
-        if (this == other) {
-            return true;
-        }
-        return this == other || other instanceof ExchangeRate && this.rateId.equals(((ExchangeRate) other).rateId);
+        return this == other || other instanceof ExchangeRate && rateId.equals(((ExchangeRate) other).rateId);
     }
 
     /**
