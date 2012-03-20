@@ -113,9 +113,6 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode> {
 
     @Override
     public boolean equals(final Object other) {
-        if (this == other) {
-            return true;
-        }
-        return other instanceof SecurityHistoryNode && date.equals(((SecurityHistoryNode) other).date);
+        return this == other || other instanceof SecurityHistoryNode && date.equals(((SecurityHistoryNode) other).date);
     }
 }
