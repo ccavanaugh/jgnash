@@ -339,11 +339,11 @@ public class InvestmentTransactionTest {
         e.addTransaction(transaction);
 
         // Checking the result
-        Object actuals[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+        Object actual[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
                         investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance() };
-        Object expecteds[] = { new BigDecimal("250.00"), BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("250.00"),
+        Object expected[] = { new BigDecimal("250.00"), BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("250.00"),
                         BigDecimal.ZERO, new BigDecimal("250.00") };
-        assertArrayEquals("Account balances are not as expected!", expecteds, actuals);
+        assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
 
     @Test
