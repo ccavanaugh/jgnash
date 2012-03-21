@@ -356,8 +356,10 @@ public class QifImport {
 
     /**
      * Returns the best matching account
+     * @param category QIF category
+     * @return Best matching account
      */
-    private Account findBestAccount(String category) {
+    private Account findBestAccount(final String category) {
         Account acc = null;
 
         // nulls can happen and don't search on an empty category
@@ -446,22 +448,30 @@ public class QifImport {
         Account account;
         CurrencyNode defaultCurrency = engine.getDefaultCurrency();
 
-        if (acc.type.equals("Bank")) {
-            account = new Account(AccountType.BANK, defaultCurrency);
-        } else if (acc.type.equals("CCard")) {
-            account = new Account(AccountType.CREDIT, defaultCurrency);
-            account.setProperty(AccountProperty.CREDITLIMIT, QifUtils.parseMoney(acc.creditLimit));
-        } else if (acc.type.equals("Cash")) {
-            account = new Account(AccountType.CASH, defaultCurrency);
-        } else if (acc.type.equals("Invst") || acc.type.equals("Port")) {
-            account = new Account(AccountType.INVEST, defaultCurrency);
-        } else if (acc.type.equals("Oth A")) {
-            account = new Account(AccountType.ASSET, defaultCurrency);
-        } else if (acc.type.equals("Oth L")) {
-            account = new Account(AccountType.LIABILITY, defaultCurrency);
-        } else {
-            logger.log(Level.SEVERE, "Could not generate an account for:\n{0}", acc.toString());
-            return null;
+        switch (acc.type) {
+            case "Bank":
+                account = new Account(AccountType.BANK, defaultCurrency);
+                break;
+            case "CCard":
+                account = new Account(AccountType.CREDIT, defaultCurrency);
+                account.setProperty(AccountProperty.CREDITLIMIT, QifUtils.parseMoney(acc.creditLimit));
+                break;
+            case "Cash":
+                account = new Account(AccountType.CASH, defaultCurrency);
+                break;
+            case "Invst":
+            case "Port":
+                account = new Account(AccountType.INVEST, defaultCurrency);
+                break;
+            case "Oth A":
+                account = new Account(AccountType.ASSET, defaultCurrency);
+                break;
+            case "Oth L":
+                account = new Account(AccountType.LIABILITY, defaultCurrency);
+                break;
+            default:
+                logger.log(Level.SEVERE, "Could not generate an account for:\n{0}", acc.toString());
+                return null;
         }
         account.setName(acc.name);
         account.setDescription(acc.description);
@@ -533,6 +543,7 @@ public class QifImport {
 
     /**
      * Generates a Transaction given a QifSplitTransaction
+     * @return generated TransactionEntry
      */
     private TransactionEntry generateSplitTransaction(QifSplitTransaction qTran, Account acc) {
         TransactionEntry tran = new TransactionEntry();

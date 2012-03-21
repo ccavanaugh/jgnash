@@ -80,25 +80,28 @@ public class QifUtils {
 
         String[] chunks = DATE_DELIMITER_PATTERN.split(sDate);
 
-        if (US_FORMAT.equals(format)) {
-            try {
-                month = Integer.parseInt(chunks[0].trim());
-                day = Integer.parseInt(chunks[1].trim());
-                year = Integer.parseInt(chunks[2].trim());
-            } catch (Exception e) {
-                Logger.getAnonymousLogger().severe(e.toString());
-            }
-        } else if (EU_FORMAT.equals(format)) {
-            try {
-                day = Integer.parseInt(chunks[0].trim());
-                month = Integer.parseInt(chunks[1].trim());
-                year = Integer.parseInt(chunks[2].trim());
-            } catch (Exception e) {
-                Logger.getAnonymousLogger().severe(e.toString());
-            }
-        } else {
-            Logger.getAnonymousLogger().severe("Invalid date format specified");
-            return new Date();
+        switch (format) {
+            case US_FORMAT:
+                try {
+                    month = Integer.parseInt(chunks[0].trim());
+                    day = Integer.parseInt(chunks[1].trim());
+                    year = Integer.parseInt(chunks[2].trim());
+                } catch (Exception e) {
+                    Logger.getAnonymousLogger().severe(e.toString());
+                }
+                break;
+            case EU_FORMAT:
+                try {
+                    day = Integer.parseInt(chunks[0].trim());
+                    month = Integer.parseInt(chunks[1].trim());
+                    year = Integer.parseInt(chunks[2].trim());
+                } catch (Exception e) {
+                    Logger.getAnonymousLogger().severe(e.toString());
+                }
+                break;
+            default:
+                Logger.getAnonymousLogger().severe("Invalid date format specified");
+                return new Date();
         }
 
         if (year < 100) {

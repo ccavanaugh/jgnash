@@ -27,6 +27,9 @@
 package jgnash.tools;
 
 import com.sun.java.help.search.Indexer;
+import org.codehaus.plexus.util.DirectoryScanner;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,41 +38,24 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
-import org.kohsuke.args4j.Option;
-
-import org.codehaus.plexus.util.DirectoryScanner;
-
 /**
  * This is a tool to index Javahelp files within Maven using only the javahelp2
  * dependency. Javahelp is not required to be installed at the OS level.
- *
+ * <p/>
  * This class is a replacement for the jhindexer executable class that is
  * included with the binary distribution of javahelp2 and an equivalent to
  * maven-javahelp-plugin which was not available in the codehaus repository at
  * the time.
  *
  * @author Craig Cavanaugh
- *
  */
 public class HelpIndexer {
 
     private final String[] cmdArgs;
     private static final String DEFAULT_INCLUDE = "**/*.html";
     private static final String DEFAULT_EXCLUDE = "**/.svn";
-    /**
-     * List of files to include. Specified as fileset patterns.
-     *
-     * @parameter
-     */
-    private String[] includes;
-    /**
-     * List of files to exclude. Specified as fileset patterns.
-     *
-     * @parameter
-     */
-    private String[] excludes;
+
+
     /**
      * The directory containing the Java Help set.
      *
@@ -88,7 +74,7 @@ public class HelpIndexer {
     /**
      * @param args the command line arguments
      */
-    public static void main(final String[] args) {                    
+    public static void main(final String[] args) {
         HelpIndexer helpIndexer = new HelpIndexer(args);
         helpIndexer.execute();
     }
@@ -120,11 +106,9 @@ public class HelpIndexer {
 
             Indexer indexer = new Indexer();
 
-            indexer.compile(args.toArray(new String[args.size()]));                                
-        } catch (CmdLineException e) {
-            Logger.getAnonymousLogger().log(Level.SEVERE, e.getLocalizedMessage(), e);           
+            indexer.compile(args.toArray(new String[args.size()]));
         } catch (Exception e) {
-            Logger.getAnonymousLogger().log(Level.SEVERE, e.getLocalizedMessage(), e);  
+            Logger.getAnonymousLogger().log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
     }
 
@@ -133,17 +117,8 @@ public class HelpIndexer {
 
         DirectoryScanner scanner = new DirectoryScanner();
 
-        if (excludes == null || excludes.length == 0) {
-            scanner.setExcludes(new String[]{DEFAULT_EXCLUDE});
-        } else {
-            scanner.setExcludes(excludes);
-        }
-
-        if (includes == null || includes.length == 0) {
-            scanner.setIncludes(new String[]{DEFAULT_INCLUDE});
-        } else {
-            scanner.setIncludes(includes);
-        }
+        scanner.setExcludes(new String[]{DEFAULT_EXCLUDE});
+        scanner.setIncludes(new String[]{DEFAULT_INCLUDE});
 
         scanner.setBasedir(basedir);
         scanner.scan();

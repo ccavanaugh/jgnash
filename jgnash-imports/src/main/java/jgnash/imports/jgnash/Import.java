@@ -81,7 +81,6 @@ import jgnash.engine.TransactionTag;
  * Accounts will be kept in a lookup table during the parsing operation
  *
  * @author Craig Cavanaugh
- *
  */
 public class Import {
 
@@ -225,9 +224,7 @@ public class Import {
             /* Lock accounts after transactions have been added */
             imp.lockAccounts();
 
-        } catch (FileNotFoundException e) {
-            imp.getLogger().log(Level.SEVERE, e.toString(), e);
-        } catch (XMLStreamException e) {
+        } catch (FileNotFoundException | XMLStreamException e) {
             imp.getLogger().log(Level.SEVERE, e.toString(), e);
         } catch (IOException e) {
             imp.getLogger().log(Level.SEVERE, e.toString(), e);
@@ -785,16 +782,21 @@ public class Import {
                     case XMLStreamConstants.START_ELEMENT:
                         String element = reader.getLocalName();
 
-                        if (element.equals("securities")) {
-                            logger.info("Parsing account securities");
-                            elementMap.put("securities", parseAccountSecurities(reader));
-                        } else if (element.equals("amortize")) {
-                            logger.info("Parsing amortize object");
-                            elementMap.put("amortize", parseAmortizeObject(reader));
-                        } else if (element.equals("locked")) {
-                            lockMap.put(accountId, Boolean.valueOf(reader.getElementText()));
-                        } else {
-                            elementMap.put(element, reader.getElementText());
+                        switch (element) {
+                            case "securities":
+                                logger.info("Parsing account securities");
+                                elementMap.put("securities", parseAccountSecurities(reader));
+                                break;
+                            case "amortize":
+                                logger.info("Parsing amortize object");
+                                elementMap.put("amortize", parseAmortizeObject(reader));
+                                break;
+                            case "locked":
+                                lockMap.put(accountId, Boolean.valueOf(reader.getElementText()));
+                                break;
+                            default:
+                                elementMap.put(element, reader.getElementText());
+                                break;
                         }
                         break;
                     case XMLStreamConstants.END_ELEMENT:
@@ -995,44 +997,59 @@ public class Import {
 
         Account account = null;
 
-        if (accountClass.equals("BankAccount")) {
-            account = new Account(AccountType.BANK, node);
-        } else if (accountClass.equals("ExpenseAccount")) {
-            account = new Account(AccountType.EXPENSE, node);
-        } else if (accountClass.equals("IncomeAccount")) {
-            account = new Account(AccountType.INCOME, node);
-        } else if (accountClass.equals("InvestmentAccount")) {
-            account = new Account(AccountType.INVEST, node);
+        switch (accountClass) {
+            case "BankAccount":
+                account = new Account(AccountType.BANK, node);
+                break;
+            case "ExpenseAccount":
+                account = new Account(AccountType.EXPENSE, node);
+                break;
+            case "IncomeAccount":
+                account = new Account(AccountType.INCOME, node);
+                break;
+            case "InvestmentAccount": {
+                account = new Account(AccountType.INVEST, node);
 
-            String[] securities = (String[]) elementMap.get("securities");
+                String[] securities = (String[]) elementMap.get("securities");
 
-            if (securities != null) {
-                for (String s : securities) {
-                    SecurityNode sNode = decodeSecurity(s);
-                    account.addSecurity(sNode);
+                if (securities != null) {
+                    for (String s : securities) {
+                        SecurityNode sNode = decodeSecurity(s);
+                        account.addSecurity(sNode);
+                    }
                 }
+                break;
             }
-        } else if (accountClass.equals("MutualFundAccount")) {
-            account = new Account(AccountType.MUTUAL, node);
+            case "MutualFundAccount": {
+                account = new Account(AccountType.MUTUAL, node);
 
-            String[] securities = (String[]) elementMap.get("securities");
+                String[] securities = (String[]) elementMap.get("securities");
 
-            if (securities != null) {
-                for (String s : securities) {
-                    SecurityNode sNode = decodeSecurity(s);
-                    account.addSecurity(sNode);
+                if (securities != null) {
+                    for (String s : securities) {
+                        SecurityNode sNode = decodeSecurity(s);
+                        account.addSecurity(sNode);
+                    }
                 }
+                break;
             }
-        } else if (accountClass.equals("CreditAccount")) {
-            account = new Account(AccountType.CREDIT, node);
-        } else if (accountClass.equals("CashAccount")) {
-            account = new Account(AccountType.CASH, node);
-        } else if (accountClass.equals("EquityAccount")) {
-            account = new Account(AccountType.EQUITY, node);
-        } else if (accountClass.equals("LiabilityAccount")) {
-            account = new Account(AccountType.LIABILITY, node);
-        } else if (accountClass.equals("AssetAccount")) {
-            account = new Account(AccountType.ASSET, node);
+            case "CreditAccount":
+                account = new Account(AccountType.CREDIT, node);
+                break;
+            case "CashAccount":
+                account = new Account(AccountType.CASH, node);
+                break;
+            case "EquityAccount":
+                account = new Account(AccountType.EQUITY, node);
+                break;
+            case "LiabilityAccount":
+                account = new Account(AccountType.LIABILITY, node);
+                break;
+            case "AssetAccount":
+                account = new Account(AccountType.ASSET, node);
+                break;
+            default:
+                break;
         }
 
         if (account != null) {
