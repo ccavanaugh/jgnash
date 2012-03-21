@@ -313,7 +313,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
             t.addTransactionEntries(newTrans.getTransactionEntries());
         }
                 
-        // preserve any prexisting memo field info
+        // preserve any preexisting memo field info
         if (!memoField.getText().isEmpty()) {
             t.setMemo(memoField.getText());
         }
