@@ -32,16 +32,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.ToolTipManager;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
@@ -60,10 +51,9 @@ import jgnash.ui.util.JTableUtils;
 import jgnash.util.Resource;
 
 /**
- * A Dialog to manage a BudgetGoal
+ * A Dialog to manage a BudgetGoal.
  * 
  * @author Craig Cavanaugh
- *
  */
 public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
@@ -126,9 +116,13 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
     }
  
 	private void layoutMainPanel() {
-        FormLayout layout = new FormLayout("right:d, $lcgap, fill:p:g", "f:p, $rgap, d, $ugap, f:p:g, $ugap, f:p");
+        FormLayout contentLayout = new FormLayout("fill:p:g, $lcgap, fill:p:g","f:p:g, $ugap, f:p");
+        JPanel contentPanel = new JPanel(contentLayout);
+        DefaultFormBuilder contentBuilder = new DefaultFormBuilder(contentLayout, contentPanel);
+        contentBuilder.setDefaultDialogBorder();
+
+        FormLayout layout = new FormLayout("right:d, $lcgap, fill:p:g", "f:p, $rgap, d, $ugap, f:p:g");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setDefaultDialogBorder();
 
         cancelButton = new JButton(rb.getString("Button.Cancel"));
         okButton = new JButton(rb.getString("Button.Ok"));
@@ -154,15 +148,17 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
         scrollPane.setPreferredSize(new Dimension(SCROLLPANE_WIDTH, SCROLLPANE_HEIGHT)); // force it something small so it will resize correctly
 
         builder.append(scrollPane, 3);
-        builder.nextLine();
-        builder.nextLine();
-        builder.append(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton), 3);
 
         budgetPeriodCombo.addActionListener(this);
         cancelButton.addActionListener(this);
         okButton.addActionListener(this);
 
-        getContentPane().add(builder.getPanel());
+        contentBuilder.append(builder.getPanel(), new JPanel());
+        contentBuilder.nextLine();
+        contentBuilder.nextLine();
+        contentBuilder.append(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton), 3);
+
+        getContentPane().add(contentBuilder.getPanel());
 
         pack();
         setMinimumSize(getSize());
