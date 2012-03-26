@@ -33,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
@@ -149,11 +150,15 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
         builder.append(scrollPane, 3);
 
+        FormLayout fillLayout = new FormLayout("right:d, $lcgap, fill:p:g", "f:p, $rgap, d, $ugap, f:p:g");
+        DefaultFormBuilder fillBuilder = new DefaultFormBuilder(fillLayout);
+        fillBuilder.setBorder(new TitledBorder(rb.getString("Title.SmartFill")));
+
         budgetPeriodCombo.addActionListener(this);
         cancelButton.addActionListener(this);
         okButton.addActionListener(this);
 
-        contentBuilder.append(builder.getPanel(), new JPanel());
+        contentBuilder.append(builder.getPanel(), fillBuilder.getPanel());
         contentBuilder.nextLine();
         contentBuilder.nextLine();
         contentBuilder.append(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton), 3);
