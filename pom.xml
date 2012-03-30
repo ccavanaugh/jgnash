@@ -28,17 +28,28 @@
             <id>jgnash-local</id>
             <name>Local repository in project tree</name>
             <url>file:${basedir}/repository</url>
+
         </repository>
         <repository>
             <id>maven.java.net</id>
             <name>maven.java.net</name>
             <url>https://maven.java.net/content/groups/public/</url>
         </repository>
+
+        <repository>
+            <id>maven.jenkins-ci.org</id>
+            <name>maven.jenkins-ci</name>
+            <url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
+        </repository>
+
+        <!--
         <repository>
             <id>java.net-Public</id>
             <name>maven.hudson-labs</name>
             <url>http://maven.glassfish.org/content/repositories/maven.hudson-labs.org/</url>
         </repository>
+        -->
+
         <repository>
             <id>dynamicjasper</id>
             <name>Dynamic Jasper</name>
