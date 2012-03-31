@@ -27,7 +27,7 @@
         <repository>
             <id>jgnash-local</id>
             <name>Local repository in project tree</name>
-            <url>file:${basedir}/repository</url>
+            <url>file:${basedir}/../repository</url>
 
         </repository>
         <repository>
