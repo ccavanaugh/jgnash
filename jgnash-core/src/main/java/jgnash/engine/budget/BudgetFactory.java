@@ -32,7 +32,6 @@ import jgnash.util.DateUtils;
  * Budget Factory for automatic generation of Budgets
  *
  * @author Craig Cavanaugh
- *
  */
 public class BudgetFactory {
 
@@ -64,7 +63,7 @@ public class BudgetFactory {
         return budget;
     }
 
-    private static BudgetGoal buildAverageBudgetGoal(final Account account, final List<BudgetPeriodDescriptor> descriptors, final boolean round) {
+    public static BudgetGoal buildAverageBudgetGoal(final Account account, final List<BudgetPeriodDescriptor> descriptors, final boolean round) {
         BudgetGoal goal = new BudgetGoal();
 
         for (BudgetPeriodDescriptor descriptor : descriptors) {
