@@ -118,7 +118,7 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
     }
  
 	private void layoutMainPanel() {
-        FormLayout contentLayout = new FormLayout("fill:p:g, $lcgap, fill:p:g","f:p:g, $ugap, f:p");
+        FormLayout contentLayout = new FormLayout("fill:p:g, $lcgap, fill:p","f:p:g, $ugap, f:p");
         JPanel contentPanel = new JPanel(contentLayout);
         DefaultFormBuilder contentBuilder = new DefaultFormBuilder(contentLayout, contentPanel);
         contentBuilder.setDefaultDialogBorder();
@@ -157,7 +157,7 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
         builder.append(scrollPane, 3);
 
-        FormLayout fillLayout = new FormLayout("right:d, $lcgap, fill:p:g, $lcgap, d", "d, $rgap, d");
+        FormLayout fillLayout = new FormLayout("right:d, $lcgap, fill:max(48dlu;min):g, $lcgap, d", "d, $rgap, d");
         DefaultFormBuilder fillBuilder = new DefaultFormBuilder(fillLayout);
         fillBuilder.setBorder(new TitledBorder(rb.getString("Title.SmartFill")));
 
