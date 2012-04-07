@@ -20,9 +20,23 @@ package jgnash.ui.budget;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.ButtonBarFactory;
 import com.jgoodies.forms.layout.FormLayout;
+import jgnash.engine.Account;
+import jgnash.engine.MathConstants;
+import jgnash.engine.budget.*;
+import jgnash.text.CommodityFormat;
+import jgnash.ui.UIApplication;
+import jgnash.ui.components.FormattedJTable;
+import jgnash.ui.components.JFloatField;
+import jgnash.ui.util.DialogUtils;
+import jgnash.ui.util.JTableUtils;
+import jgnash.util.Resource;
 
-import java.awt.Component;
-import java.awt.Dimension;
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -31,25 +45,6 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
-
-import jgnash.engine.Account;
-import jgnash.engine.MathConstants;
-import jgnash.engine.budget.BudgetGoal;
-import jgnash.engine.budget.BudgetPeriod;
-import jgnash.engine.budget.BudgetPeriodDescriptor;
-import jgnash.engine.budget.BudgetPeriodDescriptorFactory;
-import jgnash.text.CommodityFormat;
-import jgnash.ui.UIApplication;
-import jgnash.ui.components.FormattedJTable;
-import jgnash.ui.util.DialogUtils;
-import jgnash.ui.util.JTableUtils;
-import jgnash.util.Resource;
 
 /**
  * A Dialog to manage a BudgetGoal.
@@ -75,6 +70,12 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
     private JButton cancelButton;
 
     private JButton okButton;
+    
+    private JButton historicalButton;
+
+    private JFloatField fillAmountField;
+
+    private JButton fillButton;
 
     private boolean result = false;
 
@@ -127,6 +128,12 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
         cancelButton = new JButton(rb.getString("Button.Cancel"));
         okButton = new JButton(rb.getString("Button.Ok"));
+        
+        historicalButton = new JButton(rb.getString("Button.HistoricalFill"));
+
+        fillAmountField = new JFloatField(account.getCurrencyNode());
+
+        fillButton = new JButton(rb.getString("Button.Enter"));
 
         budgetPeriodCombo = new JComboBox<>();            
         budgetPeriodCombo.setModel(new DefaultComboBoxModel<>(BudgetPeriod.values()));        
@@ -150,13 +157,21 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
         builder.append(scrollPane, 3);
 
-        FormLayout fillLayout = new FormLayout("right:d, $lcgap, fill:p:g", "f:p, $rgap, d, $ugap, f:p:g");
+        FormLayout fillLayout = new FormLayout("right:d, $lcgap, fill:p:g, $lcgap, d", "d, $rgap, d");
         DefaultFormBuilder fillBuilder = new DefaultFormBuilder(fillLayout);
         fillBuilder.setBorder(new TitledBorder(rb.getString("Title.SmartFill")));
+
+        fillBuilder.append(historicalButton, 5);
+        fillBuilder.nextLine();
+        fillBuilder.nextLine();
+        fillBuilder.append(new JLabel(rb.getString("Label.FillAll")), fillAmountField, fillButton);
 
         budgetPeriodCombo.addActionListener(this);
         cancelButton.addActionListener(this);
         okButton.addActionListener(this);
+
+        historicalButton.addActionListener(this);
+        fillButton.addActionListener(this);
 
         contentBuilder.append(builder.getPanel(), fillBuilder.getPanel());
         contentBuilder.nextLine();
@@ -199,7 +214,29 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         } else if (e.getSource() == budgetPeriodCombo) {
             updatePeriod();
+        } else if (e.getSource() == historicalButton) {
+            performHistoricalImport();
+        } else if (e.getSource() == fillButton) {
+            performFillAction();
         }
+    }
+
+    private void performHistoricalImport() {
+        List<BudgetPeriodDescriptor> descriptors = BudgetPeriodDescriptorFactory.getDescriptors(workingYear, budgetGoal.getBudgetPeriod());
+
+        budgetGoal = BudgetFactory.buildAverageBudgetGoal(account, descriptors, true);
+
+        model.fireTableDataChanged();
+    }
+
+    private void performFillAction() {
+        BigDecimal fillAmount = fillAmountField.getDecimal();
+
+        for (BudgetPeriodDescriptor descriptor : BudgetPeriodDescriptorFactory.getDescriptors(workingYear, budgetGoal.getBudgetPeriod())) {
+            budgetGoal.setGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(), fillAmount);
+        }
+
+        model.fireTableDataChanged();
     }
 
     class PeriodTableModel extends AbstractTableModel {
