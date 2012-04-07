@@ -43,7 +43,7 @@ import java.beans.PropertyChangeListener;
 import java.lang.ref.SoftReference;
 
 /**
- * The {@code AbstractBufferedLayerUI} paitns the {@link JXLayer}
+ * The {@code AbstractBufferedLayerUI} paitns the {@link JLayer}
  * to the {@code BufferedImage} and then paints this image to the {@code Graphics}
  * passed to its {@code paint} method.
  * <p/>
@@ -52,7 +52,7 @@ import java.lang.ref.SoftReference;
  * the most popular effect is the {@link BufferedImageOpEffect}
  * which uses {@code BufferedImageOp} to filter the buffer
  * <p/>
- * This class introduces the {@link #isIncrementalUpdate(JXLayer)} method.
+ * This class introduces the {@link #isIncrementalUpdate(JLayer)} method.
  * <p/>
  * If it returns {@code false} and {@link #isDirty()} returns {@code false}
  * and the cached image exists and matches the size of painted {@code JXLayer}
@@ -62,19 +62,19 @@ import java.lang.ref.SoftReference;
  * If {@code isIncrementalUpdate(JXLayer)} returns {@code true}
  * the cache image will be updated on every painting.
  * <p/>
- * For custom painting, override {@link #paintLayer(Graphics2D,JXLayer)} as usual.
+ * For custom painting, override {@link #paintLayer(Graphics2D,JLayer)} as usual.
  * <p/>
- * If you want to apply {@code Effect}s, override  {@link #getLayerEffects(JXLayer)} methods
+ * If you want to apply {@code Effect}s, override  {@link #getLayerEffects(JLayer)} methods
  * or use more flexible {@link BufferedLayerUI}.
  * <p/>
  * <b>Note:</b> The {@code AbstractBufferedLayerUI} is not shareable and
- * can be set to single {@link JXLayer} instance.
+ * can be set to single {@link JLayer} instance.
  * The current {@code JXLayer} can be obtained with {@link #getLayer()} method
  *
  * @see org.jdesktop.jxlayer.plaf.effect.LayerEffect
  * @see BufferedImageOpEffect
  * @see BufferedLayerUI
- * @see #isIncrementalUpdate(JXLayer)
+ * @see #isIncrementalUpdate(JLayer)
  */
 public class AbstractBufferedLayerUI<V extends JComponent>
         extends AbstractLayerUI<V> implements PropertyChangeListener {
@@ -120,12 +120,12 @@ public class AbstractBufferedLayerUI<V extends JComponent>
 
     /**
      * This method is public as an implementation side effect.
-     * {@code AbstractBufferedLayerUI} listens property changes of its {@link JXLayer}
+     * {@code AbstractBufferedLayerUI} listens property changes of its {@link JLayer}
      * and marks itself as dirty if the {@code JXLayer}'s view component has been changed.
      *
      * @param evt the PropertyChangeEvent
      *
-     * @see JXLayer#setView(Component)
+     * @see JLayer#setView(Component)
      * @see #setDirty(boolean)
      */
     public void propertyChange(PropertyChangeEvent evt) {
@@ -160,7 +160,7 @@ public class AbstractBufferedLayerUI<V extends JComponent>
      * this image, so this method may return {@code null} at any time.
      * <p/>
      * However it is guaranteed that is safe to call this method inside
-     * {@link #paintLayer(Graphics2D,JXLayer)} method, because a strong reference
+     * {@link #paintLayer(Graphics2D,JLayer)} method, because a strong reference
      * to the buffer is kept during painting process and you'll get the actual
      * BufferedImage which you are free to use withing {@code paintLayer}.
      *
@@ -222,15 +222,15 @@ public class AbstractBufferedLayerUI<V extends JComponent>
     /**
      * {@inheritDoc}
      * <p/>
-     * This method paints the paitns the {@link JXLayer} to the {@code BufferedImage}
+     * This method paints the paitns the {@link JLayer} to the {@code BufferedImage}
      * and then paints this image to the passed {@code Graphics}.
      * <p/>It also manages the state of the existing cached image
      * and applies the existing {@link LayerEffect}s to the image.
      *
-     * @see #paintLayer(Graphics2D,JXLayer)
-     * @see #isBufferFormatValid(JXLayer)
-     * @see #isBufferContentValid(JXLayer,Shape)
-     * @see #getLayerEffects(JXLayer)
+     * @see #paintLayer(Graphics2D,JLayer)
+     * @see #isBufferFormatValid(JLayer)
+     * @see #isBufferContentValid(JLayer,Shape)
+     * @see #getLayerEffects(JLayer)
      */
     @SuppressWarnings("unchecked")
     public void paint(Graphics g, JComponent c) {
@@ -302,7 +302,7 @@ public class AbstractBufferedLayerUI<V extends JComponent>
      *         is valid, otherwise returns {@code false}
      *
      * @see #isDirty()
-     * @see #isIncrementalUpdate(JXLayer)
+     * @see #isIncrementalUpdate(JLayer)
      */
     protected boolean isBufferContentValid(JLayer<? extends V> l, Shape clip) {
         return !isDirty() && !isIncrementalUpdate(l);
@@ -329,7 +329,7 @@ public class AbstractBufferedLayerUI<V extends JComponent>
      * @param l the {@code JXLayer} being painted
      * @param clip the current clipping shape
      *
-     * @see #getLayerEffects(JXLayer)
+     * @see #getLayerEffects(JLayer)
      * @see org.jdesktop.jxlayer.plaf.effect.LayerEffect#isEnabled()
      */
     protected void applyLayerEffects(JLayer<? extends V> l, Shape clip) {
