@@ -49,10 +49,10 @@ import java.util.Map;
  * array of the {@link org.jdesktop.jxlayer.plaf.effect.LayerEffect}s, etc. It
  * also notifies its {@code LayerItemListener}s when any of its properties or
  * properties of its {@code Effect}s are changed, this leads to the automatic
- * repainting of the {@code JXLayer}, this object is set to.
+ * repainting of the {@code JLayer}, this object is set to.
  * <p/>
  * <b>Note:</b> The {@code BufferedLayerUI} is not shareable and can be set to
- * single {@link JXLayer} instance. The current {@code JXLayer} can be obtained
+ * single {@link JLayer} instance. The current {@code JLayer} can be obtained
  * with {@link #getLayer()} method
  * 
  * @see #setComposite(java.awt.Composite)
@@ -83,7 +83,7 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 *         of this painter
 	 * 
 	 * @see #setLayerEffects(LayerEffect[])
-	 * @see #getLayerEffects(JXLayer)
+	 * @see #getLayerEffects(JLayer)
 	 */
 	public LayerEffect[] getLayerEffects() {
 		LayerEffect[] result = new LayerEffect[effects.length];
@@ -99,7 +99,7 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 * <p/>
 	 * If a {@code BufferedLayerUI} provides more extensive API to support
 	 * different {@code Effect}s depending on its state or on the state of the
-	 * passed {@code JXLayer}, this method should be overridden.
+	 * passed {@code JLayer}, this method should be overridden.
 	 * 
 	 * @see #setLayerEffects(LayerEffect[])
 	 * @see #getLayerEffects()
@@ -117,14 +117,14 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 * when any of those {@code Effect}s changes its state.
 	 * <p>
 	 * This method marks {@code BufferedLayerUI} as dirty which causes
-	 * repainting of its {@link JXLayer}.
+	 * repainting of its {@link JLayer}.
 	 * 
 	 * @param effects
 	 *            the array of the {@code Effect}s to be applied to the buffer
 	 *            of this {@code BufferedLayerUI}
 	 * 
 	 * @see #getLayerEffects()
-	 * @see #getLayerEffects(JXLayer)
+	 * @see #getLayerEffects(JLayer)
 	 * @see #setDirty(boolean)
 	 */
 	public void setLayerEffects(LayerEffect... effects) {
@@ -151,7 +151,7 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 *         painting of this {@code BufferedLayerUI}
 	 * 
 	 * @see #setClip(Shape)
-	 * @see #getClip(JXLayer)
+	 * @see #getClip(JLayer)
 	 */
 	public Shape getClip() {
 		return clip;
@@ -179,14 +179,14 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 * during painting of this {@code BufferedLayerUI}.
 	 * <p>
 	 * This method marks {@code BufferedLayerUI} as dirty which causes
-	 * repainting of its {@link JXLayer}.
+	 * repainting of its {@link JLayer}.
 	 * 
 	 * @param clip
 	 *            the {@code Shape} to be used as the clip during painting of
 	 *            this {@code BufferedLayerUI}
 	 * 
 	 * @see #getClip()
-	 * @see #getClip(JXLayer)
+	 * @see #getClip(JLayer)
 	 * @see #setDirty(boolean)
 	 */
 	public void setClip(Shape clip) {
@@ -203,7 +203,7 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 *         during painting of this {@code BufferedLayerUI}
 	 * 
 	 * @see #setComposite(Composite)
-	 * @see #getComposite(JXLayer)
+	 * @see #getComposite(JLayer)
 	 */
 	public Composite getComposite() {
 		return composite;
@@ -231,14 +231,14 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 * painting of this {@code BufferedLayerUI}.
 	 * <p>
 	 * This method marks {@code BufferedLayerUI} as dirty which causes
-	 * repainting of its {@link JXLayer}.
+	 * repainting of its {@link JLayer}.
 	 * 
 	 * @param composite
 	 *            the {@code Composite} to be applied to the {@link Graphics2D}
 	 *            during painting of this {@code BufferedLayerUI}.
 	 * 
 	 * @see #getComposite()
-	 * @see #getComposite(JXLayer)
+	 * @see #getComposite(JLayer)
 	 * @see #setDirty(boolean)
 	 */
 	public void setComposite(Composite composite) {
@@ -296,7 +296,7 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 *         {@code BufferedLayerUI}
 	 * 
 	 * @see #setRenderingHints(Map)
-	 * @see #getRenderingHints(JXLayer)
+	 * @see #getRenderingHints(JLayer)
 	 */
 	public Map<RenderingHints.Key, Object> getRenderingHints() {
 		return Collections.unmodifiableMap(renderingHints);
@@ -325,7 +325,7 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 * during painting of this {@code BufferedLayerUI}.
 	 * <p>
 	 * This method marks {@code BufferedLayerUI} as dirty which causes
-	 * repainting of its {@link JXLayer}.
+	 * repainting of its {@link JLayer}.
 	 * 
 	 * @param renderingHints
 	 *            the map of rendering hints to be applied to the
@@ -333,7 +333,7 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 *            {@code BufferedLayerUI}
 	 * 
 	 * @see #getRenderingHints()
-	 * @see #getRenderingHints(JXLayer)
+	 * @see #getRenderingHints(JLayer)
 	 * @see #setDirty(boolean)
 	 */
 	public void setRenderingHints(Map<RenderingHints.Key, Object> renderingHints) {
@@ -354,7 +354,7 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 *         {@code BufferedLayerUI}
 	 * 
 	 * @see #setTransform(AffineTransform)
-	 * @see #getTransform(JXLayer)
+	 * @see #getTransform(JLayer)
 	 */
 	public AffineTransform getTransform() {
 		return transform;
@@ -382,7 +382,7 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 * during painting of this {@code BufferedLayerUI}.
 	 * <p>
 	 * This method marks {@code BufferedLayerUI} as dirty which causes
-	 * repainting of its {@link JXLayer}.
+	 * repainting of its {@link JLayer}.
 	 * 
 	 * @param transform
 	 *            the {@code AffineTransform} to be applied to the
@@ -390,7 +390,7 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 *            {@code BufferedLayerUI}
 	 * 
 	 * @see #getTransform()
-	 * @see #getTransform(JXLayer)
+	 * @see #getTransform(JLayer)
 	 * @see #setDirty(boolean)
 	 */
 	public void setTransform(AffineTransform transform) {
@@ -409,7 +409,7 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 *         repainting, otherwise returns {@code false}
 	 * 
 	 * @see #setIncrementalUpdate(boolean)
-	 * @see #isIncrementalUpdate(JXLayer)
+	 * @see #isIncrementalUpdate(JLayer)
 	 */
 	public boolean isIncrementalUpdate() {
 		return incrementalUpdate;
@@ -438,14 +438,14 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 * otherwise the existing image will be painted.
 	 * <p>
 	 * This method marks {@code BufferedLayerUI} as dirty which causes
-	 * repainting of its {@link JXLayer}.
+	 * repainting of its {@link JLayer}.
 	 * 
 	 * @param incrementalUpdate
 	 *            {@code true} if incremental update is enabled and cache image
 	 *            will be updated on every repainting, otherwise {@code false}
 	 * 
 	 * @see #isIncrementalUpdate()
-	 * @see #isIncrementalUpdate(JXLayer)
+	 * @see #isIncrementalUpdate(JLayer)
 	 * @see #setDirty(boolean)
 	 */
 	public void setIncrementalUpdate(boolean incrementalUpdate) {

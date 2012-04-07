@@ -60,7 +60,7 @@ import java.beans.PropertyChangeEvent;
  * {@link #setDirty(boolean)} with {@code true} as the parameter, it will
  * repaint all {@code JXLayer}s connected with this {@code AbstractLayerUI}
  * 
- * @see JXLayer#setUI(LayerUI)
+ * @see JLayer#setUI(LayerUI)
  */
 public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 
@@ -100,7 +100,7 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	 * repainted.
 	 * 
 	 * @return {@code true} if the {@code AbstractLayerUI} state has changed and
-	 *         the {@link JXLayer}s it is set to need to be repainted.
+	 *         the {@link JLayer}s it is set to need to be repainted.
 	 */
 	protected boolean isDirty() {
 		return isDirty;
@@ -109,7 +109,7 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	/**
 	 * Sets the "dirty bit". If {@code isDirty} is {@code true}, then the
 	 * {@code AbstractLayerUI} is considered dirty and it triggers the
-	 * repainting of the {@link JXLayer}s this {@code AbstractLayerUI} it is set
+	 * repainting of the {@link JLayer}s this {@code AbstractLayerUI} it is set
 	 * to.
 	 * 
 	 * @param isDirty
@@ -125,15 +125,15 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	 * {@inheritDoc}
 	 * <p/>
 	 * <b>Note:</b> It is rarely necessary to override this method, for custom
-	 * painting override {@link #paintLayer(Graphics2D,JXLayer)} instead
+	 * painting override {@link #paintLayer(Graphics2D,JLayer)} instead
 	 * <p/>
 	 * This method configures the passed {@code Graphics} with help of the
-	 * {@link #configureGraphics(Graphics2D,JXLayer)} method, then calls
+	 * {@link #configureGraphics(Graphics2D,JLayer)} method, then calls
 	 * {@code paintLayer(Graphics2D,JXLayer)} and resets the "dirty bit" at the
 	 * end.
 	 * 
-	 * @see #configureGraphics(Graphics2D,JXLayer)
-	 * @see #paintLayer(Graphics2D,JXLayer)
+	 * @see #configureGraphics(Graphics2D,JLayer)
+	 * @see #paintLayer(Graphics2D,JLayer)
 	 * @see #setDirty(boolean)
 	 */
 	@SuppressWarnings("unchecked")
@@ -175,10 +175,10 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	 * @param l
 	 *            the {@code JXLayer} being painted
 	 * 
-	 * @see #getComposite(JXLayer)
-	 * @see #getClip(JXLayer)
-	 * @see #getTransform(JXLayer)
-	 * @see #getRenderingHints(JXLayer)
+	 * @see #getComposite(JLayer)
+	 * @see #getClip(JLayer)
+	 * @see #getTransform(JLayer)
+	 * @see #getRenderingHints(JLayer)
 	 */
 	protected void configureGraphics(Graphics2D g2, JLayer<? extends V> l) {
 		Composite composite = getComposite(l);
@@ -267,7 +267,7 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	 * events are supported, if you need to catch any other type of events,
 	 * override this method to return the different mask
 	 * 
-	 * @see JXLayer#setLayerEventMask(long)
+	 * @see JLayer#setLayerEventMask(long)
 	 */
 	public long getLayerEventMask() {
 		return AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK
@@ -308,7 +308,7 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	}
 
 	/**
-	 * Processes {@code FocusEvent} occurring on the {@link JXLayer} or any of
+	 * Processes {@code FocusEvent} occurring on the {@link JLayer} or any of
 	 * its subcomponents.
 	 * 
 	 * @param e
@@ -320,7 +320,7 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	}
 
 	/**
-	 * Processes {@code MouseEvent} occurring on the {@link JXLayer} or any of
+	 * Processes {@code MouseEvent} occurring on the {@link JLayer} or any of
 	 * its subcomponents.
 	 * 
 	 * @param e
@@ -332,7 +332,7 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	}
 
 	/**
-	 * Processes mouse motion events occurring on the {@link JXLayer} or any of
+	 * Processes mouse motion events occurring on the {@link JLayer} or any of
 	 * its subcomponents.
 	 * 
 	 * @param e
@@ -344,7 +344,7 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	}
 
 	/**
-	 * Processes {@code MouseWheelEvent} occurring on the {@link JXLayer} or any
+	 * Processes {@code MouseWheelEvent} occurring on the {@link JLayer} or any
 	 * of its subcomponents.
 	 * 
 	 * @param e
@@ -357,7 +357,7 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	}
 
 	/**
-	 * Processes {@code KeyEvent} occurring on the {@link JXLayer} or any of its
+	 * Processes {@code KeyEvent} occurring on the {@link JLayer} or any of its
 	 * subcomponents.
 	 * 
 	 * @param e

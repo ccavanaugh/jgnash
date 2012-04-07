@@ -42,7 +42,7 @@ import org.jdesktop.jxlayer.plaf.*;
  * This class can be used together with subclasses of {@link AbstractBufferedLayerUI}
  * to create various visual effects like blur, color inversion etc.
  *
- * @see AbstractBufferedLayerUI#getLayerEffects(org.jdesktop.jxlayer.JXLayer)
+ * @see AbstractBufferedLayerUI#getLayerEffects(javax.swing.JLayer)
  * @see BufferedLayerUI#setLayerEffects(LayerEffect[])
  */
 public class BufferedImageOpEffect extends AbstractBufferedImageOpEffect {

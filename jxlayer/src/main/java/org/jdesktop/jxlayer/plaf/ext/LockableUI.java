@@ -42,7 +42,7 @@ import java.awt.event.FocusListener;
 
 /**
  * An implementation of the {@code BufferedLayerUI} which provides
- * a lightweight disabling for the content of its {@link JXLayer}.
+ * a lightweight disabling for the content of its {@link JLayer}.
  * This allows temporarily blocking a part of the interface
  * with all it subcomponents, it is also useful when some kind of action
  * is in progress, e.g. reading data from a database.
@@ -56,8 +56,8 @@ import java.awt.event.FocusListener;
  * after that, the {@code JXLayer}, together with all its subcomponents,
  * gets back to live.
  * <p/>
- * Subclasses usually override {@link #paintLayer(Graphics2D,JXLayer)} or
- * {@link #getLayerEffects(JXLayer)} to implement some visual effects
+ * Subclasses usually override {@link #paintLayer(Graphics2D,JLayer)} or
+ * {@link #getLayerEffects(JLayer)} to implement some visual effects
  * when {@code JXLayer} is in locked state.
  * <p/>
  * Here is an example of using {@code LockableLayerUI}:
@@ -137,7 +137,7 @@ public class LockableUI extends AbstractBufferedLayerUI<JComponent> {
 
     /**
      * Returns {@code true} if this {@code LockableLayerUI}
-     * is in locked state and all {@link JXLayer}'s mouse, keyboard and focuse events
+     * is in locked state and all {@link JLayer}'s mouse, keyboard and focuse events
      * are temporarily blocked, otherwise returns {@code false}.
      *
      * @return {@code true} if this {@code LockableLayerUI}
@@ -150,7 +150,7 @@ public class LockableUI extends AbstractBufferedLayerUI<JComponent> {
 
     /**
      * If {@code isLocked} is {@code true} then all mouse, keyboard and focuse events
-     * from the {@link JXLayer} of this {@code LockableLayerUI}
+     * from the {@link JLayer} of this {@code LockableLayerUI}
      * will be temporarily blocked.
      *
      * @param isLocked if {@code true} then all mouse, keyboard and focuse events
