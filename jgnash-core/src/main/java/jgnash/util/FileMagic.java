@@ -26,6 +26,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -42,7 +43,6 @@ import jgnash.engine.xstream.XMLDataStore;
  * Class to identify file type
  *
  * @author Craig Cavanaugh
- *
  */
 public class FileMagic {
 
@@ -50,8 +50,12 @@ public class FileMagic {
 
     public static final String UTF_8 = "UTF-8";
 
+    public static final byte[] BINARY_XSTREAM_HEADER = new byte[]{10, -127, 0, 13, 111, 98, 106, 101, 99, 116, 45,
+            115, 116, 114, 101, 97, 109, 11, -127, 10};
+
     public static enum FileType {
         db4o,
+        BinaryXStream,
         OfxV1,
         OfxV2,
         jGnash1XML,
@@ -77,6 +81,8 @@ public class FileMagic {
             return FileType.OfxV1;
         } else if (isOfxV2(file)) {
             return FileType.OfxV2;
+        } else if (isBinaryXStreamFile(file)) {
+            return FileType.BinaryXStream;
         }
 
         return FileType.unknown;
@@ -93,7 +99,7 @@ public class FileMagic {
         String charset = null;
 
         if (file.exists()) {
-            Logger logger = Logger.getLogger(FileUtils.class.getName());
+            Logger logger = Logger.getLogger(FileMagic.class.getName());
 
             BufferedReader reader = null;
 
@@ -161,7 +167,7 @@ public class FileMagic {
         boolean result = false;
 
         if (file.exists()) {
-            Logger logger = Logger.getLogger(FileUtils.class.getName());
+            Logger logger = Logger.getLogger(FileMagic.class.getName());
 
             BufferedReader reader = null;
 
@@ -201,7 +207,7 @@ public class FileMagic {
         boolean result = false;
 
         if (file.exists()) {
-            Logger logger = Logger.getLogger(FileUtils.class.getName());
+            Logger logger = Logger.getLogger(FileMagic.class.getName());
 
             BufferedReader reader = null;
 
@@ -244,11 +250,31 @@ public class FileMagic {
         return result;
     }
 
+    public static boolean isBinaryXStreamFile(final File file) {
+        boolean result = false;
+
+        if (file.exists()) {
+            try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
+                if (raf.length() > 0) { // must not be a zero length file
+                    byte[] header = new byte[20];
+
+                    raf.readFully(header);
+
+                    result = Arrays.equals(header, BINARY_XSTREAM_HEADER);
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(FileMagic.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return result;
+    }
+
     static boolean isdb4o(File file) {
         boolean result = false;
 
         if (file.exists()) {
-            Logger log = Logger.getLogger(FileUtils.class.getName());
+            Logger log = Logger.getLogger(FileMagic.class.getName());
 
             /* Search for db4o type first */
             RandomAccessFile di = null;
@@ -301,7 +327,7 @@ public class FileMagic {
     public static float getjGnashdb4oVersion(final File file) {
         return Db4oDataStore.getFileVersion(file);
     }
-    
+
     public static float getXStreamXmlVersion(final File file) {
         return XMLDataStore.getFileVersion(file);
     }
@@ -309,7 +335,7 @@ public class FileMagic {
     public static String getjGnashXMLVersion(final File file) {
         String version = "";
 
-        Logger logger = Logger.getLogger(FileUtils.class.getName());
+        Logger logger = Logger.getLogger(FileMagic.class.getName());
 
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
