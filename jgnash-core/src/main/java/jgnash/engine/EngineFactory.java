@@ -31,6 +31,7 @@ import java.util.prefs.Preferences;
 import javax.swing.filechooser.FileSystemView;
 import jgnash.engine.db4o.Db4oDataStore;
 
+import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.engine.xstream.XMLDataStore;
 import jgnash.message.ChannelEvent;
 import jgnash.message.Message;
@@ -310,6 +311,8 @@ public class EngineFactory {
             return DataStoreType.DB4O;
         } else if (type == FileType.jGnash2XML) {
             return DataStoreType.XML;
+        } else if (type == FileType.BinaryXStream) {
+            return DataStoreType.BINARY_XSTREAM;
         }
 
         return null;
@@ -324,6 +327,8 @@ public class EngineFactory {
             return Db4oDataStore.getFileVersion(file);
         } else if (type == FileType.jGnash2XML) {
             return XMLDataStore.getFileVersion(file);
+        } else if (type == FileType.BinaryXStream) {
+            return BinaryXStreamDataStore.getFileVersion(file);
         }
 
         return version;

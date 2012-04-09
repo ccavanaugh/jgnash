@@ -26,7 +26,6 @@ import jgnash.engine.dao.AbstractDAO;
  * Simple object container for StoredObjects that reads and writes and xml file
  *
  * @author Craig Cavanaugh
- *
  */
 public abstract class AbstractXMLDAO extends AbstractDAO {
 
@@ -37,13 +36,13 @@ public abstract class AbstractXMLDAO extends AbstractDAO {
 
     static final AtomicInteger commitCount = new AtomicInteger(0);
 
-    XMLContainer container;
+    AbstractXStreamContainer container;
 
     private static final ReentrantLock commitLock = new ReentrantLock();
 
     private static final int MAX_COMMIT_COUNT = 250;
 
-    AbstractXMLDAO(XMLContainer container) {
+    AbstractXMLDAO(final AbstractXStreamContainer container) {
         assert container != null;
 
         this.container = container;

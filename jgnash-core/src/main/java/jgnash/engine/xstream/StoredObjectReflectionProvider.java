@@ -17,45 +17,37 @@
  */
 package jgnash.engine.xstream;
 
-import jgnash.engine.budget.Budget;
-import jgnash.engine.dao.BudgetDAO;
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
+import jgnash.engine.StoredObject;
 
 import java.util.List;
 
 /**
- * XML Budget DAO
+ * Expanded XStream reflection provider.
+ *
+ * This will load all objects that extend <code>StoredObject</code> into a supplied list as they are created
  *
  * @author Craig Cavanaugh
  */
-public class XMLBudgetDAO extends AbstractXMLDAO implements BudgetDAO {
+public final class StoredObjectReflectionProvider extends PureJavaReflectionProvider {
 
-    XMLBudgetDAO(final AbstractXStreamContainer container) {
-        super(container);
+    /**
+     * Reference to the supplied list to load objects into.
+     */
+    private final List<StoredObject> objects;
+
+    StoredObjectReflectionProvider(final List<StoredObject> objects) {
+        this.objects = objects;
     }
 
+    @SuppressWarnings({"rawtypes"})
     @Override
-    public boolean add(final Budget budget) {
-        container.set(budget);
-        commit();
+    public Object newInstance(final Class type) {
+        Object o = super.newInstance(type);
 
-        return true;
-    }
-
-    @Override
-    public boolean update(final Budget budget) {
-        container.set(budget);
-        commit();
-
-        return true;
-    }
-
-    @Override
-    public List<Budget> getBudgets() {
-        return stripMarkedForRemoval(container.query(Budget.class));
-    }
-
-    @Override
-    public void refreshBudget(final Budget budget) {
-        // do nothing for XML DAO
+        if (o instanceof StoredObject) {
+            objects.add((StoredObject) o);
+        }
+        return o;
     }
 }

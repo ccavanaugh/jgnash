@@ -25,12 +25,11 @@ import jgnash.engine.recurring.Reminder;
 /**
  * Recurring XML DAO
  *
- * @author Craig Cavanaugh
- *
+ * @author Craig Cavanaug
  */
 public class XMLRecurringDAO extends AbstractXMLDAO implements RecurringDAO {
 
-    XMLRecurringDAO(XMLContainer container) {
+    XMLRecurringDAO(final AbstractXStreamContainer container) {
         super(container);
     }
 
@@ -40,19 +39,19 @@ public class XMLRecurringDAO extends AbstractXMLDAO implements RecurringDAO {
     }
 
     @Override
-    public boolean addReminder(Reminder reminder) {
+    public boolean addReminder(final Reminder reminder) {
         container.set(reminder);
         commit();
         return true;
     }
 
     @Override
-    public void refreshReminder(Reminder reminder) {
+    public void refreshReminder(final Reminder reminder) {
         // do nothing for this DAO
     }
 
     @Override
-    public boolean updateReminder(Reminder reminder) {
+    public boolean updateReminder(final Reminder reminder) {
         commit();
         return true;
     }

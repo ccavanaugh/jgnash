@@ -19,35 +19,28 @@ package jgnash.engine.xstream;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
-import com.thoughtworks.xstream.io.xml.KXml2Driver;
-import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
-
+import com.thoughtworks.xstream.io.binary.BinaryStreamDriver;
 import jgnash.engine.CommodityNode;
 import jgnash.engine.Config;
-import jgnash.engine.Engine;
 import jgnash.engine.ExchangeRate;
 import jgnash.engine.RootAccount;
 import jgnash.engine.StoredObject;
 import jgnash.engine.StoredObjectComparator;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.recurring.Reminder;
-import jgnash.util.FileMagic;
 import jgnash.util.FileUtils;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
+import java.io.OutputStream;
 import java.nio.channels.FileLock;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -62,23 +55,23 @@ import java.util.logging.Logger;
  *
  * @author Craig Cavanaugh
  */
-public class XMLContainer extends AbstractXStreamContainer {
+public class BinaryContainer extends AbstractXStreamContainer {
 
-    protected XMLContainer(final File file) {
+    protected BinaryContainer(final File file) {
         super(file);
     }
 
     @Override
     void commit() {
-        writeXML();
+        writeBinary();
     }
 
-    private synchronized void writeXML() {
+    private synchronized void writeBinary() {
         readWriteLock.readLock().lock();
 
         try {
             releaseFileLock();
-            writeXML(objects, file);
+            writeBinary(objects, file);
         } finally {
             acquireFileLock();
             readWriteLock.readLock().unlock();
@@ -92,8 +85,8 @@ public class XMLContainer extends AbstractXStreamContainer {
      * @param objects Collection of StoredObjects to write
      * @param file    file to write
      */
-    public static synchronized void writeXML(final Collection<StoredObject> objects, final File file) {
-        Logger logger = Logger.getLogger(XMLContainer.class.getName());
+    public static synchronized void writeBinary(final Collection<StoredObject> objects, final File file) {
+        Logger logger = Logger.getLogger(BinaryContainer.class.getName());
 
         if (file.exists()) {
             File backup = new File(file.getAbsolutePath() + ".backup");
@@ -127,31 +120,23 @@ public class XMLContainer extends AbstractXStreamContainer {
         // sort the list
         Collections.sort(list, new StoredObjectComparator());
 
-        logger.info("Writing XML file");
+        logger.info("Writing Binary file");
 
-        try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))) {
-            writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-            writer.write("<?fileVersion " + Engine.CURRENT_VERSION + "?>\n");
+        try (OutputStream os = new BufferedOutputStream(new FileOutputStream(file))) {
 
-            XStream xstream = configureXStream(new XStream(new PureJavaReflectionProvider(), new KXml2Driver()));
+            XStream xstream = configureXStream(new XStream(new PureJavaReflectionProvider(), new BinaryStreamDriver()));
 
-            try (ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(writer))) {
+            try (ObjectOutputStream out = xstream.createObjectOutputStream(os)) {
                 out.writeObject(list);
             }
         } catch (IOException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
 
-        logger.info("Writing XML file complete");
+        logger.info("Writing Binary file complete");
     }
 
-    void readXML() {
-        String encoding = System.getProperty("file.encoding"); // system default encoding
-        String version = FileMagic.getjGnashXMLVersion(file); // version of the jGnash XML file
-
-        if (Float.parseFloat(version) >= 2.01f) { // 2.01f is hard coded for prior encoding bug
-            encoding = "UTF-8"; // encoding is always UTF-8 for anything greater than 2.0
-        }
+    void readBinary() {
 
         ObjectInputStream in = null;
         FileLock readLock = null; // obtain a shared lock for reading
@@ -159,29 +144,24 @@ public class XMLContainer extends AbstractXStreamContainer {
         try {
             fis = new FileInputStream(file);
         } catch (FileNotFoundException e) {
-            Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(BinaryContainer.class.getName()).log(Level.SEVERE, null, e);
         }
 
-        Reader reader = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(fis, encoding));
-        } catch (UnsupportedEncodingException e) {
-            Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, e);
-        }
+        InputStream inputStream = new BufferedInputStream(fis);
 
         readWriteLock.writeLock().lock();
 
         try {
-            XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects), new KXml2Driver()));
+            XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects), new BinaryStreamDriver()));
 
             readLock = fis.getChannel().tryLock(0, Long.MAX_VALUE, true);
 
             if (readLock != null) {
-                in = xstream.createObjectInputStream(reader);
+                in = xstream.createObjectInputStream(inputStream);
                 in.readObject();
             }
         } catch (ClassNotFoundException | IOException ex) {
-            Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BinaryContainer.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             if (in != null) {
                 try {
@@ -190,20 +170,20 @@ public class XMLContainer extends AbstractXStreamContainer {
                     }
                     in.close();
                 } catch (IOException e) {
-                    Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, e);
+                    Logger.getLogger(BinaryContainer.class.getName()).log(Level.SEVERE, null, e);
                 }
             }
 
             try {
-                reader.close();
+                inputStream.close();
             } catch (IOException e) {
-                Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, e);
+                Logger.getLogger(BinaryContainer.class.getName()).log(Level.SEVERE, null, e);
             }
 
             try {
                 fis.close();
             } catch (IOException e) {
-                Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, e);
+                Logger.getLogger(BinaryContainer.class.getName()).log(Level.SEVERE, null, e);
             }
 
             acquireFileLock(); // lock the file on open

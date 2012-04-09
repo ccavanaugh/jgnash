@@ -33,7 +33,6 @@ import jgnash.engine.dao.*;
  * XML Engine DAO Interface
  * 
  * @author Craig Cavanaugh
- *
  */
 public class XMLEngineDAO extends AbstractXMLDAO implements EngineDAO {
 
@@ -57,7 +56,7 @@ public class XMLEngineDAO extends AbstractXMLDAO implements EngineDAO {
 
     private final Timer commitTimer;
 
-    protected XMLEngineDAO(final XMLContainer container) {
+    protected XMLEngineDAO(final AbstractXStreamContainer container) {
         super(container);
 
         commitTimer = new Timer();
@@ -154,7 +153,7 @@ public class XMLEngineDAO extends AbstractXMLDAO implements EngineDAO {
     }
 
     @Override
-    public StoredObject getObjectByUuid(String uuid) {
+    public StoredObject getObjectByUuid(final String uuid) {
         return container.get(uuid);
     }
 

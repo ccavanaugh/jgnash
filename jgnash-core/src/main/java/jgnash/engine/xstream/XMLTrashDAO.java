@@ -27,13 +27,12 @@ import jgnash.engine.dao.TrashDAO;
  * XML trash DAO
  *
  * @author Craig Cavanaugh
- *
  */
 public class XMLTrashDAO extends AbstractXMLDAO implements TrashDAO {
 
     private static final Logger logger = Logger.getLogger(XMLTrashDAO.class.getName());
 
-    XMLTrashDAO(XMLContainer container) {
+    XMLTrashDAO(final AbstractXStreamContainer container) {
         super(container);
     }
 
@@ -43,13 +42,13 @@ public class XMLTrashDAO extends AbstractXMLDAO implements TrashDAO {
     }
 
     @Override
-    public void add(TrashObject trashObject) {
+    public void add(final TrashObject trashObject) {
         container.set(trashObject);
         commit();
     }
 
     @Override
-    public void remove(TrashObject trashObject) {
+    public void remove(final TrashObject trashObject) {
         container.delete(trashObject.getObject());
         container.delete(trashObject);
 

@@ -32,13 +32,12 @@ import jgnash.engine.dao.AccountDAO;
  * XML Account DAO
  *
  * @author Craig Cavanaugh
- *
  */
 public class XMLAccountDAO extends AbstractXMLDAO implements AccountDAO {
 
     private static final Logger logger = Logger.getLogger(XMLAccountDAO.class.getName());
 
-    XMLAccountDAO(XMLContainer container) {
+    XMLAccountDAO(final AbstractXStreamContainer container) {
         super(container);
     }
 
@@ -66,7 +65,7 @@ public class XMLAccountDAO extends AbstractXMLDAO implements AccountDAO {
     }
 
     @Override
-    public boolean addAccount(Account parent, Account child) {
+    public boolean addAccount(final Account parent, final Account child) {
         container.set(child);
         commit();
 
@@ -74,7 +73,7 @@ public class XMLAccountDAO extends AbstractXMLDAO implements AccountDAO {
     }
 
     @Override
-    public boolean addRootAccount(RootAccount account) {
+    public boolean addRootAccount(final RootAccount account) {
         container.set(account);
         commit();
 
@@ -82,7 +81,7 @@ public class XMLAccountDAO extends AbstractXMLDAO implements AccountDAO {
     }
 
     @Override
-    public boolean addAccountSecurity(Account account, SecurityNode node) {
+    public boolean addAccountSecurity(final Account account, final SecurityNode node) {
         container.set(node);
         commit();
 
@@ -105,7 +104,7 @@ public class XMLAccountDAO extends AbstractXMLDAO implements AccountDAO {
     }
 
     @Override
-    public Account getAccountByUuid(String uuid) {
+    public Account getAccountByUuid(final String uuid) {
         Account account = null;
 
         StoredObject o = container.get(uuid);
@@ -118,35 +117,35 @@ public class XMLAccountDAO extends AbstractXMLDAO implements AccountDAO {
     }
 
     @Override
-    public boolean updateAccount(Account account) {
+    public boolean updateAccount(final Account account) {
         commit();
         return true;
     }
 
     @Override
-    public boolean setAccountProperty(Account account, Object object) {
+    public boolean setAccountProperty(final Account account, final Object object) {
         commit();
         return true;
     }
 
     @Override
-    public boolean removeAccountProperty(Account account, Object object) {
+    public boolean removeAccountProperty(final Account account, final Object object) {
         commit();
         return true;
     }
 
     @Override
-    public boolean toggleAccountVisibility(Account account) {
+    public boolean toggleAccountVisibility(final Account account) {
         commit();
         return true;
     }
 
     @Override
-    public void refreshAccount(Account account) {
-        // do nothing for XML DAO
+    public void refreshAccount(final Account account) {
+        // do nothing for an XStream DAO
     }
 
-    private List<Account> getAccountByType(AccountType type) {
+    private List<Account> getAccountByType(final AccountType type) {
         List<Account> list = new ArrayList<>();
 
         for (Account a : getAccountList()) {

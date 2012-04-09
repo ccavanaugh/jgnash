@@ -33,7 +33,7 @@ public class XMLConfigDAO extends AbstractXMLDAO implements ConfigDAO {
 
     private static final Logger logger = Logger.getLogger(XMLConfigDAO.class.getName());
 
-    XMLConfigDAO(XMLContainer container) {
+    XMLConfigDAO(final AbstractXStreamContainer container) {
         super(container);
     }
 
@@ -58,7 +58,7 @@ public class XMLConfigDAO extends AbstractXMLDAO implements ConfigDAO {
     }
 
     @Override
-    public void commit(Config config) {
+    public void commit(final Config config) {
         container.set(config);
         commit();
     }

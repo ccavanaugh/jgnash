@@ -34,11 +34,10 @@ import jgnash.engine.dao.CommodityDAO;
  * Hides all the db4o commodity code
  *
  * @author Craig Cavanaugh
- *
  */
 public class XMLCommodityDAO extends AbstractXMLDAO implements CommodityDAO {
 
-    XMLCommodityDAO(final XMLContainer container) {
+    XMLCommodityDAO(final AbstractXStreamContainer container) {
         super(container);
     }
 

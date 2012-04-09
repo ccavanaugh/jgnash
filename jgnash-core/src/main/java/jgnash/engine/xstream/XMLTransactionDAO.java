@@ -26,16 +26,15 @@ import jgnash.engine.dao.TransactionDAO;
  * Transaction XML DAO
  *
  * @author Craig Cavanaugh
- *
  */
 public class XMLTransactionDAO extends AbstractXMLDAO implements TransactionDAO {
 
-    XMLTransactionDAO(XMLContainer container) {
+    XMLTransactionDAO(final AbstractXStreamContainer container) {
         super(container);
     }
 
     @Override
-    public void refreshTransaction(Transaction transaction) {
+    public void refreshTransaction(final Transaction transaction) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -48,7 +47,7 @@ public class XMLTransactionDAO extends AbstractXMLDAO implements TransactionDAO 
     }
 
     @Override
-    public boolean addTransaction(Transaction transaction) {
+    public boolean addTransaction(final Transaction transaction) {
         container.set(transaction);
         commit();
 
@@ -56,7 +55,7 @@ public class XMLTransactionDAO extends AbstractXMLDAO implements TransactionDAO 
     }
 
     @Override
-    public boolean removeTransaction(Transaction transaction) {
+    public boolean removeTransaction(final Transaction transaction) {
         commit();
         return true;
     }

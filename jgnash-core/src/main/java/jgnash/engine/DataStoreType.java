@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.engine.db4o.Db4oDataStore;
+import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.engine.xstream.XMLDataStore;
 import jgnash.util.Resource;
 
@@ -30,7 +31,6 @@ import jgnash.util.Resource;
  * Storage type enumeration
  *
  * @author Craig Cavanaugh
- *
  */
 public enum DataStoreType {
 
@@ -38,6 +38,10 @@ public enum DataStoreType {
             Resource.get().getString("DataStoreType.Db4o"),
             true,
             Db4oDataStore.class),
+    BINARY_XSTREAM(
+            Resource.get().getString("DataStoreType.Bxds"),
+            true,
+            BinaryXStreamDataStore.class),
     XML(
             Resource.get().getString("DataStoreType.XML"),
             false,
