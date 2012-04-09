@@ -36,9 +36,6 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import jgnash.engine.db4o.Db4oDataStore;
-import jgnash.engine.xstream.XMLDataStore;
-
 /**
  * Class to identify file type
  *
@@ -322,14 +319,6 @@ public class FileMagic {
         }
 
         return getjGnashXMLVersion(file).startsWith(majorVersion);
-    }
-
-    public static float getjGnashdb4oVersion(final File file) {
-        return Db4oDataStore.getFileVersion(file);
-    }
-
-    public static float getXStreamXmlVersion(final File file) {
-        return XMLDataStore.getFileVersion(file);
     }
 
     public static String getjGnashXMLVersion(final File file) {
