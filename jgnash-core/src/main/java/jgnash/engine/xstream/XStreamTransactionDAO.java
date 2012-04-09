@@ -17,45 +17,46 @@
  */
 package jgnash.engine.xstream;
 
-import jgnash.engine.budget.Budget;
-import jgnash.engine.dao.BudgetDAO;
-
 import java.util.List;
 
+import jgnash.engine.Transaction;
+import jgnash.engine.dao.TransactionDAO;
+
 /**
- * XML Budget DAO
+ * Transaction XML DAO
  *
  * @author Craig Cavanaugh
  */
-public class XMLBudgetDAO extends AbstractXMLDAO implements BudgetDAO {
+public class XStreamTransactionDAO extends AbstractXStreamDAO implements TransactionDAO {
 
-    XMLBudgetDAO(final AbstractXStreamContainer container) {
+    XStreamTransactionDAO(final AbstractXStreamContainer container) {
         super(container);
     }
 
     @Override
-    public boolean add(final Budget budget) {
-        container.set(budget);
+    public void refreshTransaction(final Transaction transaction) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * @see TransactionDAO#getTransactions()    
+     */
+    @Override
+    public List<Transaction> getTransactions() {
+        return stripMarkedForRemoval(container.query(Transaction.class));
+    }
+
+    @Override
+    public boolean addTransaction(final Transaction transaction) {
+        container.set(transaction);
         commit();
 
         return true;
     }
 
     @Override
-    public boolean update(final Budget budget) {
-        container.set(budget);
+    public boolean removeTransaction(final Transaction transaction) {
         commit();
-
         return true;
-    }
-
-    @Override
-    public List<Budget> getBudgets() {
-        return stripMarkedForRemoval(container.query(Budget.class));
-    }
-
-    @Override
-    public void refreshBudget(final Budget budget) {
-        // do nothing for XML DAO
     }
 }

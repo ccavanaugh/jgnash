@@ -27,7 +27,7 @@ import jgnash.engine.dao.AbstractDAO;
  *
  * @author Craig Cavanaugh
  */
-public abstract class AbstractXMLDAO extends AbstractDAO {
+public abstract class AbstractXStreamDAO extends AbstractDAO {
 
     /**
      * Maximum time in seconds before a commit will occur
@@ -42,7 +42,7 @@ public abstract class AbstractXMLDAO extends AbstractDAO {
 
     private static final int MAX_COMMIT_COUNT = 250;
 
-    AbstractXMLDAO(final AbstractXStreamContainer container) {
+    AbstractXStreamDAO(final AbstractXStreamContainer container) {
         assert container != null;
 
         this.container = container;

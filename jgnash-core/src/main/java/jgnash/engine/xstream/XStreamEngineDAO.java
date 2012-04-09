@@ -34,7 +34,7 @@ import jgnash.engine.dao.*;
  * 
  * @author Craig Cavanaugh
  */
-public class XMLEngineDAO extends AbstractXMLDAO implements EngineDAO {
+public class XStreamEngineDAO extends AbstractXStreamDAO implements EngineDAO {
 
     private AccountDAO accountDAO;
 
@@ -56,7 +56,7 @@ public class XMLEngineDAO extends AbstractXMLDAO implements EngineDAO {
 
     private final Timer commitTimer;
 
-    protected XMLEngineDAO(final AbstractXStreamContainer container) {
+    protected XStreamEngineDAO(final AbstractXStreamContainer container) {
         super(container);
 
         commitTimer = new Timer();
@@ -79,7 +79,7 @@ public class XMLEngineDAO extends AbstractXMLDAO implements EngineDAO {
                     @Override
                     public void run() {
                         if (commitCount.get() > 0) {
-                            Logger.getLogger(XMLEngineDAO.class.getName()).info("Commiting file");
+                            Logger.getLogger(XStreamEngineDAO.class.getName()).info("Commiting file");
                             commitAndReset();
                         }
                     }
@@ -99,7 +99,7 @@ public class XMLEngineDAO extends AbstractXMLDAO implements EngineDAO {
     @Override
     public synchronized AccountDAO getAccountDAO() {
         if (accountDAO == null) {
-            accountDAO = new XMLAccountDAO(container);
+            accountDAO = new XStreamAccountDAO(container);
         }
         return accountDAO;
     }
@@ -107,7 +107,7 @@ public class XMLEngineDAO extends AbstractXMLDAO implements EngineDAO {
     @Override
     public BudgetDAO getBudgetDAO() {
         if (budgetDAO == null) {
-            budgetDAO = new XMLBudgetDAO(container);
+            budgetDAO = new XStreamBudgetDAO(container);
         }
         return budgetDAO;
     }
@@ -115,7 +115,7 @@ public class XMLEngineDAO extends AbstractXMLDAO implements EngineDAO {
     @Override
     public synchronized CommodityDAO getCommodityDAO() {
         if (commodityDAO == null) {
-            commodityDAO = new XMLCommodityDAO(container);
+            commodityDAO = new XStreamCommodityDAO(container);
         }
         return commodityDAO;
     }
@@ -123,7 +123,7 @@ public class XMLEngineDAO extends AbstractXMLDAO implements EngineDAO {
     @Override
     public synchronized ConfigDAO getConfigDAO() {
         if (configDAO == null) {
-            configDAO = new XMLConfigDAO(container);
+            configDAO = new XStreamConfigDAO(container);
         }
         return configDAO;
     }
@@ -131,7 +131,7 @@ public class XMLEngineDAO extends AbstractXMLDAO implements EngineDAO {
     @Override
     public synchronized RecurringDAO getRecurringDAO() {
         if (recurringDAO == null) {
-            recurringDAO = new XMLRecurringDAO(container);
+            recurringDAO = new XStreamRecurringDAO(container);
         }
         return recurringDAO;
     }
@@ -139,7 +139,7 @@ public class XMLEngineDAO extends AbstractXMLDAO implements EngineDAO {
     @Override
     public synchronized TransactionDAO getTransactionDAO() {
         if (transactionDAO == null) {
-            transactionDAO = new XMLTransactionDAO(container);
+            transactionDAO = new XStreamTransactionDAO(container);
         }
         return transactionDAO;
     }
@@ -147,7 +147,7 @@ public class XMLEngineDAO extends AbstractXMLDAO implements EngineDAO {
     @Override
     public synchronized TrashDAO getTrashDAO() {
         if (trashDAO == null) {
-            trashDAO = new XMLTrashDAO(container);
+            trashDAO = new XStreamTrashDAO(container);
         }
         return trashDAO;
     }

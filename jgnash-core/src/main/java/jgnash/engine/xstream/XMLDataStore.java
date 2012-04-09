@@ -71,7 +71,7 @@ public class XMLDataStore implements DataStore {
             container.readXML();
         }
 
-        Engine engine = new Engine(new XMLEngineDAO(container), engineName);
+        Engine engine = new Engine(new XStreamEngineDAO(container), engineName);
 
         logger.info("Created local XML container and engine");
 

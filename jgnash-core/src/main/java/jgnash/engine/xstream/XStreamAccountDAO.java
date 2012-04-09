@@ -33,11 +33,11 @@ import jgnash.engine.dao.AccountDAO;
  *
  * @author Craig Cavanaugh
  */
-public class XMLAccountDAO extends AbstractXMLDAO implements AccountDAO {
+public class XStreamAccountDAO extends AbstractXStreamDAO implements AccountDAO {
 
-    private static final Logger logger = Logger.getLogger(XMLAccountDAO.class.getName());
+    private static final Logger logger = Logger.getLogger(XStreamAccountDAO.class.getName());
 
-    XMLAccountDAO(final AbstractXStreamContainer container) {
+    XStreamAccountDAO(final AbstractXStreamContainer container) {
         super(container);
     }
 

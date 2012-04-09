@@ -35,9 +35,9 @@ import jgnash.engine.dao.CommodityDAO;
  *
  * @author Craig Cavanaugh
  */
-public class XMLCommodityDAO extends AbstractXMLDAO implements CommodityDAO {
+public class XStreamCommodityDAO extends AbstractXStreamDAO implements CommodityDAO {
 
-    XMLCommodityDAO(final AbstractXStreamContainer container) {
+    XStreamCommodityDAO(final AbstractXStreamContainer container) {
         super(container);
     }
 

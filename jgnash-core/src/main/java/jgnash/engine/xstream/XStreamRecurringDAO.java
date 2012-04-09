@@ -18,42 +18,41 @@
 package jgnash.engine.xstream;
 
 import java.util.List;
-import java.util.logging.Logger;
 
-import jgnash.engine.TrashObject;
-import jgnash.engine.dao.TrashDAO;
+import jgnash.engine.dao.RecurringDAO;
+import jgnash.engine.recurring.Reminder;
 
 /**
- * XML trash DAO
+ * Recurring XML DAO
  *
- * @author Craig Cavanaugh
+ * @author Craig Cavanaug
  */
-public class XMLTrashDAO extends AbstractXMLDAO implements TrashDAO {
+public class XStreamRecurringDAO extends AbstractXStreamDAO implements RecurringDAO {
 
-    private static final Logger logger = Logger.getLogger(XMLTrashDAO.class.getName());
-
-    XMLTrashDAO(final AbstractXStreamContainer container) {
+    XStreamRecurringDAO(final AbstractXStreamContainer container) {
         super(container);
     }
 
     @Override
-    public List<TrashObject> getTrashObjects() {
-        return container.query(TrashObject.class);
+    public List<Reminder> getReminderList() {
+        return stripMarkedForRemoval(container.query(Reminder.class));
     }
 
     @Override
-    public void add(final TrashObject trashObject) {
-        container.set(trashObject);
+    public boolean addReminder(final Reminder reminder) {
+        container.set(reminder);
         commit();
+        return true;
     }
 
     @Override
-    public void remove(final TrashObject trashObject) {
-        container.delete(trashObject.getObject());
-        container.delete(trashObject);
+    public void refreshReminder(final Reminder reminder) {
+        // do nothing for this DAO
+    }
 
+    @Override
+    public boolean updateReminder(final Reminder reminder) {
         commit();
-
-        logger.info("Removed TrashObject");
+        return true;
     }
 }

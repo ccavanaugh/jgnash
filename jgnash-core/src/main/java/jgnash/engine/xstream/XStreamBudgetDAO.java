@@ -17,49 +17,45 @@
  */
 package jgnash.engine.xstream;
 
-import java.util.List;
-import java.util.logging.Logger;
+import jgnash.engine.budget.Budget;
+import jgnash.engine.dao.BudgetDAO;
 
-import jgnash.engine.Config;
-import jgnash.engine.dao.ConfigDAO;
+import java.util.List;
 
 /**
- * Config object DAO
+ * XML Budget DAO
  *
  * @author Craig Cavanaugh
- *
  */
-public class XMLConfigDAO extends AbstractXMLDAO implements ConfigDAO {
+public class XStreamBudgetDAO extends AbstractXStreamDAO implements BudgetDAO {
 
-    private static final Logger logger = Logger.getLogger(XMLConfigDAO.class.getName());
-
-    XMLConfigDAO(final AbstractXStreamContainer container) {
+    XStreamBudgetDAO(final AbstractXStreamContainer container) {
         super(container);
     }
 
     @Override
-    public Config getDefaultConfig() {
-        Config defaultConfig = null;
+    public boolean add(final Budget budget) {
+        container.set(budget);
+        commit();
 
-        List<Config> list = container.query(Config.class);
-
-        if (!list.isEmpty()) {
-            defaultConfig = list.get(0);
-        }
-
-        if (defaultConfig == null) {
-            defaultConfig = new Config();
-            container.set(defaultConfig);
-            commit();
-            logger.info("Generating new default config");
-        }
-
-        return defaultConfig;
+        return true;
     }
 
     @Override
-    public void commit(final Config config) {
-        container.set(config);
+    public boolean update(final Budget budget) {
+        container.set(budget);
         commit();
+
+        return true;
+    }
+
+    @Override
+    public List<Budget> getBudgets() {
+        return stripMarkedForRemoval(container.query(Budget.class));
+    }
+
+    @Override
+    public void refreshBudget(final Budget budget) {
+        // do nothing for XML DAO
     }
 }

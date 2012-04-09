@@ -18,45 +18,42 @@
 package jgnash.engine.xstream;
 
 import java.util.List;
+import java.util.logging.Logger;
 
-import jgnash.engine.Transaction;
-import jgnash.engine.dao.TransactionDAO;
+import jgnash.engine.TrashObject;
+import jgnash.engine.dao.TrashDAO;
 
 /**
- * Transaction XML DAO
+ * XML trash DAO
  *
  * @author Craig Cavanaugh
  */
-public class XMLTransactionDAO extends AbstractXMLDAO implements TransactionDAO {
+public class XStreamTrashDAO extends AbstractXStreamDAO implements TrashDAO {
 
-    XMLTransactionDAO(final AbstractXStreamContainer container) {
+    private static final Logger logger = Logger.getLogger(XStreamTrashDAO.class.getName());
+
+    XStreamTrashDAO(final AbstractXStreamContainer container) {
         super(container);
     }
 
     @Override
-    public void refreshTransaction(final Transaction transaction) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    /**
-     * @see TransactionDAO#getTransactions()    
-     */
-    @Override
-    public List<Transaction> getTransactions() {
-        return stripMarkedForRemoval(container.query(Transaction.class));
+    public List<TrashObject> getTrashObjects() {
+        return container.query(TrashObject.class);
     }
 
     @Override
-    public boolean addTransaction(final Transaction transaction) {
-        container.set(transaction);
+    public void add(final TrashObject trashObject) {
+        container.set(trashObject);
+        commit();
+    }
+
+    @Override
+    public void remove(final TrashObject trashObject) {
+        container.delete(trashObject.getObject());
+        container.delete(trashObject);
+
         commit();
 
-        return true;
-    }
-
-    @Override
-    public boolean removeTransaction(final Transaction transaction) {
-        commit();
-        return true;
+        logger.info("Removed TrashObject");
     }
 }
