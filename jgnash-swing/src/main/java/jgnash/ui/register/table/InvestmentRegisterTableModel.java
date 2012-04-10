@@ -67,7 +67,7 @@ public class InvestmentRegisterTableModel extends AbstractRegisterTableModel {
                 } else if (t.getAmount(account).signum() > 0) {
                     return rb.getString("Item.CashDeposit");
                 }
-                return rb.getString("Item.CashWithdrawl");
+                return rb.getString("Item.CashWithdrawal");
             case 2:
                 if (_t != null) {
                     return _t.getSecurityNode().getSymbol();

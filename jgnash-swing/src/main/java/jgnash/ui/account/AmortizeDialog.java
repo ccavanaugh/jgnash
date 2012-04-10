@@ -46,7 +46,6 @@ import jgnash.util.Resource;
  * Amortization setup dialog.
  *
  * @author Craig Cavanaugh
- *
  */
 public class AmortizeDialog extends JDialog implements ActionListener {
     private Resource rb = Resource.get();
@@ -95,7 +94,7 @@ public class AmortizeDialog extends JDialog implements ActionListener {
 
     public AmortizeDialog(AmortizeObject o) {
         super((JFrame) null, true);
-        setTitle(rb.getString("Title.AmorSetup"));
+        setTitle(rb.getString("Title.AmortizationSetup"));
         setModal(true);
 
         layoutMainPanel();
