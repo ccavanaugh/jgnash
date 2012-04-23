@@ -18,6 +18,8 @@
 package jgnash.ui.wizards.file;
 
 import java.awt.Frame;
+import java.io.File;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -41,7 +43,6 @@ import jgnash.util.Resource;
  * Dialog for creating a new file
  *
  * @author Craig Cavanaugh
- *
  */
 public class NewFileDialog extends WizardDialog {
 
@@ -90,6 +91,9 @@ public class NewFileDialog extends WizardDialog {
 
                 // try to delete any existing database
                 EngineFactory.deleteDatabase(database);
+
+                // create the directory if needed
+                Files.createDirectories(new File(new File(database).getParent()).toPath());
 
                 Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, type);
 

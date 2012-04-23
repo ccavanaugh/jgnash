@@ -24,6 +24,8 @@ Formal Trial Balance report
 
 Release 2.9.0
 -----------------------
+04/23/12 A new file would not be created if the specified directory did not exist.  jGnash will now create the
+         directory tree automatically.
 04/09/12 Added new fast and compact binary file format
 04/07/12 Added a Smart fill panel to the budget goal entry dialog to make entry faster
 03/18/12 Fixed the import of Citibank QFX and OFX credit card exports.
