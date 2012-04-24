@@ -51,6 +51,9 @@ import jgnash.imports.ImportUtils;
  */
 public class QifImport {
 
+    /** Default for a QIF import */
+    private static final String FITID = "qif";
+
     private QifParser parser;
 
     private Engine engine;
@@ -62,6 +65,8 @@ public class QifImport {
     private HashMap<String, Account> accountMap = new HashMap<>();
 
     private boolean stripDuplicates = true;
+
+    private boolean partialImport = false;
 
     /**
      * A holder for duplicate transactions
@@ -114,8 +119,10 @@ public class QifImport {
 
     public void doPartialImport(Account account) {
         if (parser != null) {
-
             if (account != null) {
+
+                partialImport = true;
+
                 List<QifAccount> list = parser.accountList;
                 if (list.size() == 1) {
                     QifAccount qAcc = list.get(0);
@@ -270,6 +277,9 @@ public class QifImport {
                 continue;
             }
             if (tran != null) {
+                if (partialImport) {
+                    tran.setFitid(FITID);   // importing a bank statement, flag as imported
+                }
                 engine.addTransaction(tran);
             } else {
                 logger.warning("Null Transaction!");
