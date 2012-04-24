@@ -63,7 +63,7 @@ public class ImportDialog extends WizardDialog {
                     d.setSetting(ImportDialog.Settings.IMPORTFILE, lastfile);
                 }
 
-                d.setSetting(NewFileDialog.Settings.DATABASENAME, EngineFactory.getDefaultDatabase());
+                d.setSetting(NewFileDialog.Settings.DATABASE_NAME, EngineFactory.getDefaultDatabase());
 
                 d.addTaskPage(new ImportZero());
                 d.addTaskPage(new ImportOne());
@@ -72,7 +72,7 @@ public class ImportDialog extends WizardDialog {
                 d.setVisible(true);
 
                 if (d.isWizardValid()) {
-                    final String database = (String) d.getSetting(NewFileDialog.Settings.DATABASENAME);
+                    final String database = (String) d.getSetting(NewFileDialog.Settings.DATABASE_NAME);
 
                     final String importFile = (String) d.getSetting(Settings.IMPORTFILE);
                     final DataStoreType type = (DataStoreType) d.getSetting(NewFileDialog.Settings.TYPE);

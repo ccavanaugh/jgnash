@@ -94,7 +94,7 @@ public class NewFileSummary extends javax.swing.JPanel implements WizardPage {
     @SuppressWarnings("unchecked")
 
     public void getSettings(Map<Enum<?>, Object> map) {
-        fileField.setText((String) map.get(NewFileDialog.Settings.DATABASENAME));
+        fileField.setText((String) map.get(NewFileDialog.Settings.DATABASE_NAME));
         baseCurrencyField.setText(map.get(NewFileDialog.Settings.DEFAULT_CURRENCY).toString());
 
         SortedListModel<CurrencyNode> model = new SortedListModel<>((Set<CurrencyNode>) map.get(NewFileDialog.Settings.CURRENCIES));

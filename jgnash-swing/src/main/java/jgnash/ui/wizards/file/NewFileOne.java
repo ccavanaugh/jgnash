@@ -49,7 +49,6 @@ import jgnash.util.Resource;
  * New file wizard panel
  *
  * @author Craig Cavanaugh
- *
  */
 public class NewFileOne extends JPanel implements WizardPage, ActionListener {
 
@@ -93,6 +92,8 @@ public class NewFileOne extends JPanel implements WizardPage, ActionListener {
                 checkForOverwrite();
             }
         });
+
+        typeCombo.setSelectedItem(DataStoreType.BINARY_XSTREAM);
     }
 
     private void layoutMainPanel() {
@@ -144,7 +145,7 @@ public class NewFileOne extends JPanel implements WizardPage, ActionListener {
             typeCombo.setSelectedItem(type);
         }
 
-        String fileName = (String) map.get(NewFileDialog.Settings.DATABASENAME);
+        String fileName = (String) map.get(NewFileDialog.Settings.DATABASE_NAME);
 
         if (FileUtils.fileHasExtension(fileName)) {
             dbNameField.setText(fileName);
@@ -157,7 +158,7 @@ public class NewFileOne extends JPanel implements WizardPage, ActionListener {
 
     @Override
     public void putSettings(Map<Enum<?>, Object> map) {
-        map.put(NewFileDialog.Settings.DATABASENAME, dbNameField.getText());
+        map.put(NewFileDialog.Settings.DATABASE_NAME, dbNameField.getText());
         map.put(NewFileDialog.Settings.TYPE, typeCombo.getSelectedDataStoreType());
     }
 

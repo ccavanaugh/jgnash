@@ -52,8 +52,8 @@ public class NewFileDialog extends WizardDialog {
         CURRENCIES,
         DEFAULT_CURRENCIES,
         DEFAULT_CURRENCY,
-        DATABASENAME,
-        ACCOUNTSET,
+        DATABASE_NAME,
+        ACCOUNT_SET,
         TYPE
     }
 
@@ -80,7 +80,7 @@ public class NewFileDialog extends WizardDialog {
 
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
 
-                String database = (String) d.getSetting(Settings.DATABASENAME);
+                String database = (String) d.getSetting(Settings.DATABASE_NAME);
 
                 Set<CurrencyNode> nodes = (Set<CurrencyNode>) d.getSetting(Settings.CURRENCIES);
                 CurrencyNode defaultCurrency = (CurrencyNode) d.getSetting(Settings.DEFAULT_CURRENCY);
@@ -114,7 +114,7 @@ public class NewFileDialog extends WizardDialog {
                     e.setDefaultCurrency(defaultCurrency);
                 }
 
-                List<RootAccount> accountList = (List<RootAccount>) d.getSetting(Settings.ACCOUNTSET);
+                List<RootAccount> accountList = (List<RootAccount>) d.getSetting(Settings.ACCOUNT_SET);
 
                 if (!accountList.isEmpty()) { // import account sets
                     for (RootAccount root : accountList) {
@@ -142,6 +142,10 @@ public class NewFileDialog extends WizardDialog {
                     e.addAccount(root, expense);
                 }
 
+                // force a save and reload of the file
+                EngineFactory.closeEngine(EngineFactory.DEFAULT);
+                EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, type);
+
                 return null;
             }
 
@@ -164,7 +168,7 @@ public class NewFileDialog extends WizardDialog {
                     NewFileDialog d = new NewFileDialog(parent);
 
                     d.setSetting(NewFileDialog.Settings.DEFAULT_CURRENCIES, get());
-                    d.setSetting(NewFileDialog.Settings.DATABASENAME, EngineFactory.getDefaultDatabase());
+                    d.setSetting(NewFileDialog.Settings.DATABASE_NAME, EngineFactory.getDefaultDatabase());
 
                     d.addTaskPage(new NewFileOne());
                     d.addTaskPage(new NewFileTwo());

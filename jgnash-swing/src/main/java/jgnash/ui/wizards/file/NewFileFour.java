@@ -185,7 +185,7 @@ public class NewFileFour extends JPanel implements WizardPage {
             accounts.add((RootAccount) o);
 
         }
-        map.put(NewFileDialog.Settings.ACCOUNTSET, accounts);
+        map.put(NewFileDialog.Settings.ACCOUNT_SET, accounts);
     }
 
     private static Collection<RootAccount> getLocalizedAccountSet() {
