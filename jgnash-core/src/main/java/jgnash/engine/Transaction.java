@@ -62,7 +62,8 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     private String payee;
 
     /**
-     * Financial Institute Transaction ID. Typically used for OFX import FITID
+     * Financial Institute Transaction ID. Typically used for OFX import FITID.  If this field is not null
+     * then it is an indicator of an imported transaction
      */
     private String fitid;
 
@@ -193,7 +194,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
-     * Returns the number of <code>TransctionEntry(s)</code> this transaction contains. A read lock is obtained before
+     * Returns the number of <code>TransactionEntry(s)</code> this transaction contains. A read lock is obtained before
      * determining the size.
      * 
      * @return the number of <code>TransactionEntry(s)</code>
