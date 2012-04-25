@@ -24,6 +24,8 @@ Formal Trial Balance report
 
 Release 2.9.0
 -----------------------
+04/24/12 Warn if an attempt is made to modify a transaction with a locked account
+04/24/12 Correctly handle the modification of a transaction against a hidden account
 04/24/12 Mark newly imported QIF transactions so they can be considered for account matching (no change to file format)
 04/24/12 The account tree would not display correctly after a new file was created until open and closed.
 04/24/12 Make the new binary format the default for new files.

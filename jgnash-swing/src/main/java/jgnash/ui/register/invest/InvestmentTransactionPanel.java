@@ -46,6 +46,7 @@ import jgnash.message.MessageBus;
 import jgnash.message.MessageChannel;
 import jgnash.message.MessageListener;
 import jgnash.message.MessageProperty;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.ShadowBorder;
 import jgnash.ui.register.AbstractEntryFormPanel;
 import jgnash.ui.register.PanelType;
@@ -206,6 +207,13 @@ public class InvestmentTransactionPanel extends JPanel implements MessageListene
     }
 
     void modifyTransaction(final Transaction t) {
+
+        // check for a locked account and issue a warning if necessary
+        if (t.areAccountsLocked()) {
+            StaticUIMethods.displayError(rb.getString("Message.TransactionModifyLocked"));
+            return;
+        }
+
         modTrans = t;
 
         if (t instanceof InvestmentTransaction) {

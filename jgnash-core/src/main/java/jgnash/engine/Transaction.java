@@ -118,13 +118,46 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
+     * Determines if any of the transaction's accounts are hidden
+     * @return true if any of the accounts are hidden
+     */
+    public boolean areAccountsHidden() {
+        boolean accountsHidden = false;
+
+        for (Account account : getAccounts()) {
+            if (!account.isVisible()) {
+                accountsHidden = true;
+                break;
+            }
+        }
+
+        return accountsHidden;
+    }
+
+    /**
+     * Determines if any of the transaction's accounts are locked against editing (cloning and then changing accounts)
+     * @return true if any of the accounts are locked
+     */
+    public boolean areAccountsLocked() {
+        boolean accountsLocked = false;
+
+        for (Account account : getAccounts()) {
+            if (account.isLocked()) {
+                accountsLocked = true;
+                break;
+            }
+        }
+
+        return accountsLocked;
+    }
+
+    /**
      * Search for a common account for all entries
      * 
      * @return the common Account
      * @see Account
      */
     public Account getCommonAccount() {
-
         Account account = null;
 
         Lock l = getLock().readLock();
@@ -397,7 +430,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     /**
      * Adds a collection of transaction entries
      * 
-     * @param entries collection of TransactionEntrys
+     * @param entries collection of TransactionEntry(s)
      */
     public void addTransactionEntries(final Collection<TransactionEntry> entries) {
         for (TransactionEntry entry : entries) {

@@ -39,6 +39,7 @@ import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.util.ValidationFactory;
 
 /**
@@ -107,8 +108,6 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
     public void enterAction() {
         if (validateForm()) {
             if (modEntry != null && modTrans != null) {
-
-
                 try {
 
                     // clone the transaction
@@ -216,17 +215,25 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
         } else { // double entry transaction
             final int signum = amountField.getDecimal().signum();
 
+            final Account selectedAccount;
+
+            if (modTrans != null && modTrans.areAccountsHidden()) {
+                selectedAccount = getOppositeSideAccount(modTrans);
+            } else {
+                selectedAccount = accountPanel.getSelectedAccount();
+            }
+
             if (panelType == PanelType.DECREASE && signum >= 0 || panelType == PanelType.INCREASE && signum == -1) {
                 if (hasEqualCurrencies()) {
-                    transaction = TransactionFactory.generateDoubleEntryTransaction(accountPanel.getSelectedAccount(), getAccount(), amountField.getDecimal().abs(), datePanel.getDate(), memoField.getText(), payeeField.getText(), numberField.getText());
+                    transaction = TransactionFactory.generateDoubleEntryTransaction(selectedAccount, getAccount(), amountField.getDecimal().abs(), datePanel.getDate(), memoField.getText(), payeeField.getText(), numberField.getText());
                 } else {
-                    transaction = TransactionFactory.generateDoubleEntryTransaction(accountPanel.getSelectedAccount(), getAccount(), accountPanel.getExchangedAmount().abs(), amountField.getDecimal().abs().negate(), datePanel.getDate(), memoField.getText(), payeeField.getText(), numberField.getText());
+                    transaction = TransactionFactory.generateDoubleEntryTransaction(selectedAccount, getAccount(), accountPanel.getExchangedAmount().abs(), amountField.getDecimal().abs().negate(), datePanel.getDate(), memoField.getText(), payeeField.getText(), numberField.getText());
                 }
             } else {
                 if (hasEqualCurrencies()) {
-                    transaction = TransactionFactory.generateDoubleEntryTransaction(getAccount(), accountPanel.getSelectedAccount(), amountField.getDecimal().abs(), datePanel.getDate(), memoField.getText(), payeeField.getText(), numberField.getText());
+                    transaction = TransactionFactory.generateDoubleEntryTransaction(getAccount(), selectedAccount, amountField.getDecimal().abs(), datePanel.getDate(), memoField.getText(), payeeField.getText(), numberField.getText());
                 } else {
-                    transaction = TransactionFactory.generateDoubleEntryTransaction(getAccount(), accountPanel.getSelectedAccount(), amountField.getDecimal().abs(), accountPanel.getExchangedAmount().abs().negate(), datePanel.getDate(), memoField.getText(), payeeField.getText(), numberField.getText());
+                    transaction = TransactionFactory.generateDoubleEntryTransaction(getAccount(), selectedAccount, amountField.getDecimal().abs(), accountPanel.getExchangedAmount().abs().negate(), datePanel.getDate(), memoField.getText(), payeeField.getText(), numberField.getText());
                 }
             }
         }
@@ -237,12 +244,18 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
     }
 
     /**
-     * TODO: newTransaction() calls clearForm(). clearForm() nulls modTrans modTrans is required for displayCurrencyField to work correctly.
-     *
-     * End result is updateExchangeField() is called twice to display the correct exchange rate if it exists.
+     * Modifies an existing transaction
      */
     @Override
     public void modifyTransaction(final Transaction t) {
+
+        // check for a locked account and issue a warning if necessary
+        if (t.areAccountsLocked()) {
+            clearForm();
+            StaticUIMethods.displayError(rb.getString("Message.TransactionModifyLocked"));
+            return;
+        }
+
         newTransaction(t); // load the form
 
         modTrans = t; // save reference to old transaction
@@ -315,11 +328,11 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
                 }
             }
         } else if (t instanceof InvestmentTransaction) {
-            /* TODO: pop up a dialog or something to switch to the investment register to edit this transaction */
             Logger logger = Logger.getLogger(TransactionPanel.class.getName());
             logger.warning("unsupported transaction type");
         } else { // DoubleEntryTransaction
-            accountPanel.setEnabled(true);
+            accountPanel.setEnabled(!t.areAccountsHidden());
+
             amountField.setEnabled(true);
             datePanel.setEditable(true);
         }
@@ -336,6 +349,15 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
                 accountPanel.setExchangedAmount(entry.getDebitAmount().abs());
             }
         }
+    }
+
+    public Account getOppositeSideAccount(final Transaction t) {
+        TransactionEntry entry = t.getTransactionEntries().get(0);
+
+        if (entry.getCreditAccount().equals(getAccount())) {
+            return entry.getDebitAccount();
+        }
+        return entry.getCreditAccount();
     }
 
     /**
