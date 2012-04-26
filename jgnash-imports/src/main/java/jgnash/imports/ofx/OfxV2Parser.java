@@ -40,15 +40,15 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 /**
- * Parses 2.x OFX (XML) file
+ * Parses a 2.x OFX (XML) file
  *
  * @author Craig Cavanaugh
- *
  */
 public class OfxV2Parser implements OfxTags {
 
     private static final Logger logger = Logger.getLogger("OfxV2Parser");
     private static final boolean debug = false;
+    public static final String EXTRA_SPACE_REGEX = "\\s+";
     private OfxBank bank;
 
     public OfxV2Parser() {
@@ -305,15 +305,15 @@ public class OfxV2Parser implements OfxTags {
                     } else if (reader.getLocalName().equals(CHECKNUM)) {
                         tran.checkNumber = reader.getElementText();
                     } else if (reader.getLocalName().equals(NAME)) {
-                        tran.payee = reader.getElementText();
+                        tran.payee = reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim();
                     } else if (reader.getLocalName().equals(MEMO)) {
-                        tran.memo = reader.getElementText();
+                        tran.memo = reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim();
                     } else if (reader.getLocalName().equals(SIC)) {
                         tran.sic = reader.getElementText();
                     } else if (reader.getLocalName().equals(REFNUM)) {
                         tran.refNum = reader.getElementText();
                     } else if (reader.getLocalName().equals(PAYEEID)) {
-                        tran.payeeId = reader.getElementText();
+                        tran.payeeId = reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim();
                     } else if (reader.getLocalName().equals(CURRENCY)) {
                         tran.currency = reader.getElementText();
                     } else if (reader.getLocalName().equals(ORIGCURRENCY)) {
