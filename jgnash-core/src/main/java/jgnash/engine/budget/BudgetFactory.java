@@ -43,7 +43,7 @@ public class BudgetFactory {
     private BudgetFactory() {
     }
 
-    public static Budget buildBuildBudget(final BudgetPeriod budgetPeriod, final String name, final boolean round) {
+    public static Budget buildAverageBudget(final BudgetPeriod budgetPeriod, final String name, final boolean round) {
         Budget budget = new Budget();
         budget.setName(name);
         budget.setBudgetPeriod(budgetPeriod);

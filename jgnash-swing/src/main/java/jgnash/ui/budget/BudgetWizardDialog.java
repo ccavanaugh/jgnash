@@ -168,7 +168,7 @@ final class BudgetWizardDialog extends JDialog implements ActionListener {
 
                 BudgetPeriod period =  (BudgetPeriod)budgetPeriodCombo.getSelectedItem();
 
-                Budget budget = BudgetFactory.buildBuildBudget(period, budgetNameField.getText(), roundButton.isSelected());
+                Budget budget = BudgetFactory.buildAverageBudget(period, budgetNameField.getText(), roundButton.isSelected());
 
                 EngineFactory.getEngine(EngineFactory.DEFAULT).addBudget(budget);
 
