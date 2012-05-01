@@ -19,7 +19,10 @@ package jgnash.ui.budget;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.FormFactory;
+import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 import jgnash.engine.Account;
 import jgnash.engine.MathConstants;
 import jgnash.engine.budget.*;
@@ -48,7 +51,7 @@ import java.util.logging.Logger;
 
 /**
  * A Dialog to manage a BudgetGoal.
- * 
+ *
  * @author Craig Cavanaugh
  */
 public final class BudgetGoalDialog extends JDialog implements ActionListener {
@@ -70,7 +73,7 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
     private JButton cancelButton;
 
     private JButton okButton;
-    
+
     private JButton historicalButton;
 
     private JFloatField fillAmountField;
@@ -85,12 +88,22 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
     private int workingYear;
 
+    private JComboBox<Pattern> patternComboBox;
+
+    private JFloatField fillPatternAmountField;
+
+    private JSpinner startRowSpinner;
+
+    private JSpinner endRowSpinner;
+
+    private JButton fillPatternEnterButton;
+
     /**
      * Creates a dialog for modifying account specific budget goals. The supplied <code>BudgetGoal</code> is cloned
      * internally so side effects do not occur.
-     * 
-     * @param account <code>Account</code> budget goals being modified
-     * @param budgetGoal <code>BudgetGoal</code> to clone and modify
+     *
+     * @param account     <code>Account</code> budget goals being modified
+     * @param budgetGoal  <code>BudgetGoal</code> to clone and modify
      * @param workingYear the working year for the budget periods
      */
     public BudgetGoalDialog(final Account account, final BudgetGoal budgetGoal, int workingYear) {
@@ -112,13 +125,13 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
             LOGGER.log(Level.SEVERE, e.toString(), e);
         }
 
-        model = new PeriodTableModel(BudgetPeriodDescriptorFactory.getDescriptors(workingYear, budgetGoal.getBudgetPeriod()));
+        model = new PeriodTableModel(getDescriptors());
 
         layoutMainPanel();
     }
- 
-	private void layoutMainPanel() {
-        FormLayout contentLayout = new FormLayout("fill:p:g, $lcgap, fill:p","f:p:g, $ugap, f:p");
+
+    private void layoutMainPanel() {
+        FormLayout contentLayout = new FormLayout("fill:p:g, $lcgap, fill:p", "f:p:g, $ugap, f:p");
         JPanel contentPanel = new JPanel(contentLayout);
         DefaultFormBuilder contentBuilder = new DefaultFormBuilder(contentLayout, contentPanel);
         contentBuilder.setDefaultDialogBorder();
@@ -128,16 +141,26 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
         cancelButton = new JButton(rb.getString("Button.Cancel"));
         okButton = new JButton(rb.getString("Button.Ok"));
-        
+
         historicalButton = new JButton(rb.getString("Button.HistoricalFill"));
 
         fillAmountField = new JFloatField(account.getCurrencyNode());
+        fillPatternAmountField = new JFloatField(account.getCurrencyNode());
 
         fillButton = new JButton(rb.getString("Button.Enter"));
+        fillPatternEnterButton = new JButton(rb.getString("Button.Enter"));
 
-        budgetPeriodCombo = new JComboBox<>();            
-        budgetPeriodCombo.setModel(new DefaultComboBoxModel<>(BudgetPeriod.values()));        
+        budgetPeriodCombo = new JComboBox<>();
+        budgetPeriodCombo.setModel(new DefaultComboBoxModel<>(BudgetPeriod.values()));
         budgetPeriodCombo.setSelectedItem(getBudgetGoal().getBudgetPeriod());
+
+        patternComboBox = new JComboBox<>();
+        patternComboBox.setModel(new DefaultComboBoxModel<>(Pattern.values()));
+
+        int max = getDescriptors().size();
+
+        startRowSpinner = new JSpinner(new SpinnerNumberModel(1, 1, max, 1));
+        endRowSpinner = new JSpinner(new SpinnerNumberModel(max, 1, max, 1));
 
         builder.append(new JLabel(rb.getString("Label.Period")), budgetPeriodCombo);
         builder.nextLine();
@@ -157,7 +180,35 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
         builder.append(scrollPane, 3);
 
-        FormLayout fillLayout = new FormLayout("right:d, $lcgap, fill:max(48dlu;min):g, $lcgap, d", "d, $rgap, d, $rgap, d");
+        JPanel patternPanel = new JPanel();
+        patternPanel.setLayout(new FormLayout(new ColumnSpec[]{
+                FormFactory.RELATED_GAP_COLSPEC,
+                FormFactory.DEFAULT_COLSPEC,
+                FormFactory.RELATED_GAP_COLSPEC,
+                ColumnSpec.decode("default:grow"),},
+                new RowSpec[]{
+                        FormFactory.RELATED_GAP_ROWSPEC,
+                        FormFactory.DEFAULT_ROWSPEC,
+                        FormFactory.RELATED_GAP_ROWSPEC,
+                        FormFactory.DEFAULT_ROWSPEC,
+                        FormFactory.RELATED_GAP_ROWSPEC,
+                        FormFactory.DEFAULT_ROWSPEC,
+                        FormFactory.RELATED_GAP_ROWSPEC,
+                        FormFactory.DEFAULT_ROWSPEC,
+                        FormFactory.RELATED_GAP_ROWSPEC,
+                        FormFactory.DEFAULT_ROWSPEC,}));
+
+        patternPanel.add(new JLabel("Pattern:"), "2, 2, right, default");
+        patternPanel.add(patternComboBox, "4, 2, fill, default");
+        patternPanel.add(new JLabel("Start Row:"), "2, 4");
+        patternPanel.add(startRowSpinner, "4, 4");
+        patternPanel.add(new JLabel("End Row:"), "2, 6");
+        patternPanel.add(endRowSpinner, "4, 6");
+        patternPanel.add(new JLabel(rb.getString("Label.Amount")), "2, 8, right, default");
+        patternPanel.add(fillPatternAmountField, "4, 8, fill, default");
+        patternPanel.add(fillPatternEnterButton, "4, 10");
+
+        FormLayout fillLayout = new FormLayout("right:d, $lcgap, fill:max(48dlu;min):g, $lcgap, d", "d, $rgap, d, $rgap, d, $rgap, d, $rgap, d");
         DefaultFormBuilder fillBuilder = new DefaultFormBuilder(fillLayout);
         fillBuilder.setBorder(new TitledBorder(rb.getString("Title.SmartFill")));
 
@@ -168,6 +219,12 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
         fillBuilder.nextLine();
         fillBuilder.nextLine();
         fillBuilder.append(new JLabel(rb.getString("Label.FillAll")), fillAmountField, fillButton);
+        fillBuilder.nextLine();
+        fillBuilder.nextLine();
+        fillBuilder.appendSeparator();
+        fillBuilder.nextLine();
+        fillBuilder.nextLine();
+        fillBuilder.append(patternPanel, 5);
 
         budgetPeriodCombo.addActionListener(this);
         cancelButton.addActionListener(this);
@@ -175,6 +232,7 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
         historicalButton.addActionListener(this);
         fillButton.addActionListener(this);
+        fillPatternEnterButton.addActionListener(this);
 
         contentBuilder.append(builder.getPanel(), fillBuilder.getPanel());
         contentBuilder.nextLine();
@@ -203,7 +261,12 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
         getBudgetGoal().setBudgetPeriod(period);
 
-        model.updateDescriptors(BudgetPeriodDescriptorFactory.getDescriptors(workingYear, budgetGoal.getBudgetPeriod()));
+        model.updateDescriptors(getDescriptors());
+
+        int max = getDescriptors().size();
+
+        startRowSpinner.setModel(new SpinnerNumberModel(1, 1, max, 1));
+        endRowSpinner.setModel(new SpinnerNumberModel(max, 1, max, 1));
     }
 
     @Override
@@ -221,13 +284,29 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
             performHistoricalImport();
         } else if (e.getSource() == fillButton) {
             performFillAction();
+        } else if (e.getSource() == fillPatternEnterButton) {
+            performFillPatternAction();
         }
     }
 
-    private void performHistoricalImport() {
-        List<BudgetPeriodDescriptor> descriptors = BudgetPeriodDescriptorFactory.getDescriptors(workingYear, budgetGoal.getBudgetPeriod());
+    private List<BudgetPeriodDescriptor> getDescriptors() {
+       return  BudgetPeriodDescriptorFactory.getDescriptors(workingYear, budgetGoal.getBudgetPeriod());
+    }
 
-        budgetGoal = BudgetFactory.buildAverageBudgetGoal(account, descriptors, true);
+    private void performFillPatternAction() {
+        BigDecimal fillAmount = fillPatternAmountField.getDecimal();
+
+        int startRow = (Integer)startRowSpinner.getValue() - 1;
+        int endRow = (Integer)endRowSpinner.getValue() - 1;
+        Pattern pattern = patternComboBox.getItemAt(patternComboBox.getSelectedIndex());
+
+        budgetGoal = BudgetFactory.buildBudgetGoal(budgetGoal, account, getDescriptors(), pattern, startRow, endRow, fillAmount);
+
+        model.fireTableDataChanged();
+    }
+
+    private void performHistoricalImport() {
+        budgetGoal = BudgetFactory.buildAverageBudgetGoal(account, getDescriptors(), true);
 
         model.fireTableDataChanged();
     }
@@ -235,7 +314,7 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
     private void performFillAction() {
         BigDecimal fillAmount = fillAmountField.getDecimal();
 
-        for (BudgetPeriodDescriptor descriptor : BudgetPeriodDescriptorFactory.getDescriptors(workingYear, budgetGoal.getBudgetPeriod())) {
+        for (BudgetPeriodDescriptor descriptor : getDescriptors()) {
             budgetGoal.setGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(), fillAmount);
         }
 
@@ -248,7 +327,7 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
         private List<BudgetPeriodDescriptor> periodDescriptors;
 
-        private String[] columnNames = { rb.getString("Column.Period"), rb.getString("Column.Amount") };
+        private String[] columnNames = {rb.getString("Column.Period"), rb.getString("Column.Amount")};
 
         public PeriodTableModel(final List<BudgetPeriodDescriptor> descriptors) {
             this.periodDescriptors = descriptors;

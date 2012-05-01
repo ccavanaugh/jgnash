@@ -21,6 +21,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
@@ -66,6 +68,8 @@ public class BudgetFactory {
     public static BudgetGoal buildAverageBudgetGoal(final Account account, final List<BudgetPeriodDescriptor> descriptors, final boolean round) {
         BudgetGoal goal = new BudgetGoal();
 
+        goal.setBudgetPeriod(descriptors.get(0).getBudgetPeriod());
+
         for (BudgetPeriodDescriptor descriptor : descriptors) {
             BigDecimal amount = account.getBalance(descriptor.getStartDate(), descriptor.getEndDate());
 
@@ -81,8 +85,50 @@ public class BudgetFactory {
                 }
             }
 
-            goal.setBudgetPeriod(descriptor.getBudgetPeriod());
             goal.setGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(), amount);
+        }
+
+        return goal;
+    }
+
+    /**
+     * Creates a <code>BudgetGoal</code> with an alternating pattern
+     *
+     * @param account  Account for BudgetGoal
+     * @param descriptors descriptors to use
+     * @param pattern Pattern to use
+     * @param startRow starting row, 0 based index is assumed
+     * @param endRow ending row, 0 based index is assumed
+     * @param amount amount to use
+     * @return new <code>BudgetGoal</code>
+     */
+    public static BudgetGoal buildBudgetGoal(final BudgetGoal baseBudgetGoal, final Account account, final List<BudgetPeriodDescriptor> descriptors, final Pattern pattern, final int startRow, final int endRow, final BigDecimal amount) {
+        BudgetGoal goal;
+
+        try {
+            goal = (BudgetGoal)baseBudgetGoal.clone();
+        } catch (CloneNotSupportedException e) {
+            Logger.getLogger(BudgetFactory.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            goal = new BudgetGoal();
+        }
+
+        goal.setBudgetPeriod(descriptors.get(0).getBudgetPeriod());
+
+        //System.out.println("Pattern: " + pattern.getIncrement());
+
+        for (int i = startRow; i <= endRow; i += pattern.getIncrement()) {
+
+            //System.out.println(i);
+
+            BudgetPeriodDescriptor descriptor = descriptors.get(i);
+
+            goal.setBudgetPeriod(descriptor.getBudgetPeriod());
+
+            if (account.getAccountType() == AccountType.INCOME) {   // negate for income only
+                goal.setGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(), amount.negate());
+            } else {
+                goal.setGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(), amount);
+            }
         }
 
         return goal;
