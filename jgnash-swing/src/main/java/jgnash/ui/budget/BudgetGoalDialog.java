@@ -198,11 +198,11 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
                         FormFactory.RELATED_GAP_ROWSPEC,
                         FormFactory.DEFAULT_ROWSPEC,}));
 
-        patternPanel.add(new JLabel("Pattern:"), "2, 2, right, default");
+        patternPanel.add(new JLabel(rb.getString("Label.Pattern")), "2, 2, right, default");
         patternPanel.add(patternComboBox, "4, 2, fill, default");
-        patternPanel.add(new JLabel("Start Row:"), "2, 4");
+        patternPanel.add(new JLabel(rb.getString("Label.StartRow")), "2, 4, right, default");
         patternPanel.add(startRowSpinner, "4, 4");
-        patternPanel.add(new JLabel("End Row:"), "2, 6");
+        patternPanel.add(new JLabel(rb.getString("Label.EndRow")), "2, 6, right, default");
         patternPanel.add(endRowSpinner, "4, 6");
         patternPanel.add(new JLabel(rb.getString("Label.Amount")), "2, 8, right, default");
         patternPanel.add(fillPatternAmountField, "4, 8, fill, default");
