@@ -145,7 +145,9 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
         historicalButton = new JButton(rb.getString("Button.HistoricalFill"));
 
         fillAmountField = new JFloatField(account.getCurrencyNode());
+        fillAmountField.setDecimal(BigDecimal.ZERO);
         fillPatternAmountField = new JFloatField(account.getCurrencyNode());
+        fillPatternAmountField.setDecimal(BigDecimal.ZERO);
 
         fillButton = new JButton(rb.getString("Button.Enter"));
         fillPatternEnterButton = new JButton(rb.getString("Button.Enter"));
@@ -182,7 +184,6 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
         JPanel patternPanel = new JPanel();
         patternPanel.setLayout(new FormLayout(new ColumnSpec[]{
-                FormFactory.RELATED_GAP_COLSPEC,
                 FormFactory.DEFAULT_COLSPEC,
                 FormFactory.RELATED_GAP_COLSPEC,
                 ColumnSpec.decode("default:grow"),},
@@ -198,15 +199,15 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
                         FormFactory.RELATED_GAP_ROWSPEC,
                         FormFactory.DEFAULT_ROWSPEC,}));
 
-        patternPanel.add(new JLabel(rb.getString("Label.Pattern")), "2, 2, right, default");
-        patternPanel.add(patternComboBox, "4, 2, fill, default");
-        patternPanel.add(new JLabel(rb.getString("Label.StartRow")), "2, 4, right, default");
-        patternPanel.add(startRowSpinner, "4, 4");
-        patternPanel.add(new JLabel(rb.getString("Label.EndRow")), "2, 6, right, default");
-        patternPanel.add(endRowSpinner, "4, 6");
-        patternPanel.add(new JLabel(rb.getString("Label.Amount")), "2, 8, right, default");
-        patternPanel.add(fillPatternAmountField, "4, 8, fill, default");
-        patternPanel.add(fillPatternEnterButton, "4, 10");
+        patternPanel.add(new JLabel(rb.getString("Label.Pattern")), "1, 2, right, default");
+        patternPanel.add(patternComboBox, "3, 2, fill, default");
+        patternPanel.add(new JLabel(rb.getString("Label.StartRow")), "1, 4, right, default");
+        patternPanel.add(startRowSpinner, "3, 4");
+        patternPanel.add(new JLabel(rb.getString("Label.EndRow")), "1, 6, right, default");
+        patternPanel.add(endRowSpinner, "3, 6");
+        patternPanel.add(new JLabel(rb.getString("Label.Amount")), "1, 8, right, default");
+        patternPanel.add(fillPatternAmountField, "3, 8, fill, default");
+        patternPanel.add(ButtonBarFactory.buildOKBar(fillPatternEnterButton), "3, 10");
 
         FormLayout fillLayout = new FormLayout("right:d, $lcgap, fill:max(48dlu;min):g, $lcgap, d", "d, $rgap, d, $rgap, d, $rgap, d, $rgap, d");
         DefaultFormBuilder fillBuilder = new DefaultFormBuilder(fillLayout);

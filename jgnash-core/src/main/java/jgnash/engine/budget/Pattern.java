@@ -26,8 +26,9 @@ import jgnash.util.Resource;
  * @author Craig Cavanaugh
  */
 public enum Pattern {
+    EveryRow(Resource.get().getString("Sequence.EveryRow")),
     EveryOtherRow(Resource.get().getString("Sequence.EveryOtherRow")),
-    //EverySecondRow(Resource.get().getString("Sequence.EverySecondRow")),
+    EverySecondRow(Resource.get().getString("Sequence.EverySecondRow")),
     EveryThirdRow(Resource.get().getString("Sequence.EveryThirdRow")),
     EveryForthRow(Resource.get().getString("Sequence.EveryForthRow")),
     EveryFifthRow(Resource.get().getString("Sequence.EveryFifthRow"));
@@ -44,6 +45,6 @@ public enum Pattern {
     }
 
     public int getIncrement() {
-        return this.ordinal() + 2;
+        return this.ordinal() + 1;
     }
 }
