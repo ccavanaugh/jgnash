@@ -24,6 +24,7 @@ Formal Trial Balance report
 
 Release 2.9.0
 -----------------------
+05/03/12 Check for Java 7 or newer before executing
 05/02/12 Added an alternating pattern fill option to the budget goal entry dialog
 04/26/12 Strip extra white space when importing OFX files
 04/24/12 Warn if an attempt is made to modify a transaction with a locked account

@@ -44,11 +44,12 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
+import javax.swing.JOptionPane;
+
 /**
  * This is the main entry point for the jGnash application.
  * 
  * @author Craig Cavanaugh
- *
  */
 
 public final class Main {
@@ -120,9 +121,15 @@ public final class Main {
         final float version = getJVMVersion();
         boolean result = true;
 
-        if (version < 1.6f) {
-            System.out.println(Resource.get().getString("Message.JVM6"));
-            System.out.println(Resource.get().getString("Message.Version") + System.getProperty("java.version") + "\n");
+        System.out.println(version);
+
+        if (version < 1.7f) {
+            System.out.println(Resource.get().getString("Message.JVM7"));
+            System.out.println(Resource.get().getString("Message.Version") + " " + System.getProperty("java.version") + "\n");
+
+            // try and show a dialog
+            JOptionPane.showMessageDialog(null,Resource.get().getString("Message.JVM7"), Resource.get().getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+
             result = false;
         }
 
@@ -143,7 +150,6 @@ public final class Main {
         Logger.getLogger(MainFrame.class.getName()).setLevel(Level.ALL);
         Logger.getLogger(OpenAction.class.getName()).setLevel(Level.ALL);
         Logger.getLogger(AbstractYahooParser.class.getName()).setLevel(Level.ALL);
-
     }
 
     private static void enableAntialiasing() {

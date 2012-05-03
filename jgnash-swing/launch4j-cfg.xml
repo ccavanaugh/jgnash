@@ -14,7 +14,7 @@
   <icon>./gnome-money.ico</icon>
   <jre>
     <path></path>
-    <minVersion>1.6.0</minVersion>
+    <minVersion>1.7.0</minVersion>
     <maxVersion></maxVersion>
     <dontUsePrivateJres>false</dontUsePrivateJres>
     <initialHeapSize>32</initialHeapSize>
