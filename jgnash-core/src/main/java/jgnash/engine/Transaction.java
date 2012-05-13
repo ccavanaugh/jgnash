@@ -94,7 +94,8 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
-     * Returns a set of accounts this transaction effects
+     * Returns a set of accounts this transaction effects.
+     * The returned set may be altered without creating side effects
      * 
      * @return set of accounts
      * @see Account
@@ -307,7 +308,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * @param account reference account
      * @return Amount of this transaction relative to the supplied account
      */
-    public BigDecimal getAmount(Account account) {
+    public BigDecimal getAmount(final Account account) {
         BigDecimal balance = BigDecimal.ZERO;
 
         Lock l = getLock().readLock();
@@ -408,7 +409,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * @param tag TransactionTag to filter for
      * @return List<TransactionEntry> of entries with the given tag. An empty list will be returned if none are found
      */
-    List<TransactionEntry> getTransactionEntriesByTag(TransactionTag tag) {
+    List<TransactionEntry> getTransactionEntriesByTag(final TransactionTag tag) {
         List<TransactionEntry> list = new ArrayList<>();
 
         Lock l = getLock().readLock();
