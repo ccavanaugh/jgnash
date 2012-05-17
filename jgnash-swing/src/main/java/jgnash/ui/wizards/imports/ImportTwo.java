@@ -35,6 +35,7 @@ import javax.swing.JTextPane;
 import javax.swing.text.StyledEditorKit;
 
 import jgnash.engine.Account;
+import jgnash.imports.BayesImportClassifier;
 import jgnash.imports.GenericImport;
 import jgnash.imports.ImportBank;
 import jgnash.imports.ImportTransaction;
@@ -47,7 +48,6 @@ import jgnash.util.Resource;
  * Wizard Page for OFX import.
  * 
  * @author Craig Cavanaugh
- *
  */
 public class ImportTwo extends JPanel implements WizardPage, ActionListener {
 
@@ -138,34 +138,37 @@ public class ImportTwo extends JPanel implements WizardPage, ActionListener {
      * @param e action event
      * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
      */
-
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == deleteButton) {
             table.deleteSelected();
         }
     }
 
     @Override
-    public void getSettings(Map<Enum<?>, Object> map) {
+    public void getSettings(final Map<Enum<?>, Object> map) {
         ImportBank bank = (ImportBank) map.get(ImportDialog.Settings.BANK);
-        @SuppressWarnings("unchecked")
-        List<ImportTransaction> list = (List<ImportTransaction>) map.get(ImportDialog.Settings.TRANSACTIONS);
 
-        if (list != null && list.isEmpty() && bank != null) {
-            list = bank.getTransactions();
+        if (bank != null) {
+            List<ImportTransaction> list = bank.getTransactions();
 
             Account account = (Account) map.get(ImportDialog.Settings.ACCOUNT);
 
             // set to sane account assuming it's going to be a single entry
             for (ImportTransaction t : list) {
                 t.account = account;
+                t.setState(ImportTransaction.ImportState.NEW);
             }
 
             // match up any pre-existing transactions
             GenericImport.matchTransactions(list, account);
 
+            // classify the transactions
+            BayesImportClassifier.classifyTransactions(list, account);
+
             table.setTransactions(list);
+
+            refreshInfo();
         }
     }
 
@@ -173,7 +176,7 @@ public class ImportTwo extends JPanel implements WizardPage, ActionListener {
      * {@inheritDoc}
      */
     @Override
-    public void putSettings(Map<Enum<?>, Object> map) {
+    public void putSettings(final Map<Enum<?>, Object> map) {
         map.put(ImportDialog.Settings.TRANSACTIONS, table.getTransactions());
     }
 }

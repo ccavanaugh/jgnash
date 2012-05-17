@@ -131,15 +131,17 @@ public class BayesClassifier<E> {
         return (double) classCounter.get(classification) / classCounter.size() * probability;
     }
 
-    public void train(final Collection<String> features, final E classification) {
+    private void train(final Collection<String> features, final E classification) {
+        //System.out.println("Train ");
         for (String feature : features) {
+            //System.out.println(feature);
             incrementFeature(feature, classification);
         }
         incrementClass(classification);
     }
 
     public void train(final String item, final E classification) {
-        train(Arrays.asList(item.split(WHITE_SPACE_REGEX)), classification);
+        train(Arrays.asList(item.toLowerCase().split(WHITE_SPACE_REGEX)), classification);
     }
 
     public E classify(final String item) {
@@ -152,7 +154,7 @@ public class BayesClassifier<E> {
 
         // find the category with the highest probability
         for (E classification : classCounter.keySet()) {
-            classProb = getClassProbability(item, classification);
+            classProb = getClassProbability(item.toLowerCase(), classification);
             probabilities.put(classification, classProb);
             if (classProb > max) {
                 max = classProb;
