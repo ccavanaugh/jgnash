@@ -48,8 +48,6 @@ public class ImportOne extends JPanel implements WizardPage {
 
     private Resource rb = Resource.get();
 
-    // unused private Map<Enum<?>, Object> map;
-
     public ImportOne() {
         layoutMainPanel();
     }
@@ -100,9 +98,7 @@ public class ImportOne extends JPanel implements WizardPage {
     }
 
     @Override
-    public void getSettings(Map<Enum<?>, Object> map) {
-        // unused: this.map = map;
-
+    public void getSettings(final Map<Enum<?>, Object> map) {
         Account a = (Account) map.get(ImportDialog.Settings.ACCOUNT);
 
         if (a != null) {
@@ -111,8 +107,7 @@ public class ImportOne extends JPanel implements WizardPage {
     }
 
     @Override
-    public void putSettings(Map<Enum<?>, Object> map) {
-        map.put(ImportDialog.Settings.ACCOUNT, accountCombo
-                .getSelectedAccount());
+    public void putSettings(final Map<Enum<?>, Object> map) {
+        map.put(ImportDialog.Settings.ACCOUNT, accountCombo.getSelectedAccount());
     }
 }
