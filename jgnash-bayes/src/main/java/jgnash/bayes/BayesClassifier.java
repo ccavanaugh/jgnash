@@ -36,6 +36,7 @@ public class BayesClassifier<E> {
     private final static double THRESHOLD = 1.0;
     private final static double WEIGHT = 1.0;
     private final static String WHITE_SPACE_REGEX = "[,\\s]+";
+    // private final static String NUMBERS_REGEX = "(?>-?\\d+(?:[\\./]\\d+)?)";
 
     private Map<String, Map<E, Integer>> featureCounter = new HashMap<>();
     private Map<E, Integer> classCounter = new HashMap<>();
@@ -132,9 +133,7 @@ public class BayesClassifier<E> {
     }
 
     private void train(final Collection<String> features, final E classification) {
-        //System.out.println("Train ");
         for (String feature : features) {
-            //System.out.println(feature);
             incrementFeature(feature, classification);
         }
         incrementClass(classification);
