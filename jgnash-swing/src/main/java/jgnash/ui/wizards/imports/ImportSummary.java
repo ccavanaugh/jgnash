@@ -93,7 +93,7 @@ public class ImportSummary extends JPanel implements WizardPage {
         int count = 0;
 
         for (ImportTransaction tran : transactions) {
-            if (tran.getState() == ImportTransaction.ImportState.NEW || tran.getState() == ImportTransaction.ImportState.NOTEQUAL) { //
+            if (tran.getState() == ImportTransaction.ImportState.NEW || tran.getState() == ImportTransaction.ImportState.NOT_EQUAL) { //
                 count++;
             }
         }

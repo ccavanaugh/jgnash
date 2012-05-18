@@ -33,10 +33,6 @@ public class ImportBank {
         return transactions;
     }
 
-    public void setTransactions(List<ImportTransaction> transactions) {
-        this.transactions = transactions;
-    }
-
     public void addTransaction(ImportTransaction transaction) {
         transactions.add(transaction);
     }

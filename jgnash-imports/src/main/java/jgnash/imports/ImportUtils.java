@@ -38,10 +38,6 @@ public class ImportUtils {
         return searchForRootType(EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount(), AccountType.INCOME);
     }
 
-    public static Account getRootBankAccount() {
-        return searchForRootType(EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount(), AccountType.BANK);
-    }
-
     private static Account searchForRootType(Account account, AccountType type) {
         Account result = null;
 

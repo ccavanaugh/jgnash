@@ -34,7 +34,7 @@ public class ImportTransaction {
         NEW,
         EQUAL,
         IGNORE,
-        NOTEQUAL
+        NOT_EQUAL
     }
 
     /**
@@ -61,17 +61,6 @@ public class ImportTransaction {
     public String checkNumber = ""; // check number (?)
 
     private ImportState state = ImportState.NEW;
-
-    protected ImportTransaction() {
-
-    }
-
-    public ImportTransaction(Account account, BigDecimal amount, Date datePosted, String memo) {
-        this.account = account;
-        this.amount = amount;
-        this.datePosted = datePosted;
-        this.memo = memo;
-    }
 
     public ImportState getState() {
         return state;

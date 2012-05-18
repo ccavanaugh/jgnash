@@ -28,13 +28,12 @@ import jgnash.engine.TransactionFactory;
 
 /**
  * OfxImport utility methods
- * 
- * @author Craig Cavanaugh
  *
+ * @author Craig Cavanaugh
  */
 public class OfxImport {
 
-    public static void importTransactions(List<OfxTransaction> transactions, Account baseAccount) {
+    public static void importTransactions(final List<OfxTransaction> transactions, final Account baseAccount) {
         assert transactions != null && baseAccount != null;
 
         Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
@@ -42,7 +41,7 @@ public class OfxImport {
         for (OfxTransaction tran : transactions) {
             assert tran.account != null;
 
-            if (tran.getState() == OfxTransaction.ImportState.NEW || tran.getState() == OfxTransaction.ImportState.NOTEQUAL) { // do not import matched transactions
+            if (tran.getState() == OfxTransaction.ImportState.NEW || tran.getState() == OfxTransaction.ImportState.NOT_EQUAL) { // do not import matched transactions
                 Transaction t;
 
                 if (baseAccount.equals(tran.account)) { // single entry oTran
@@ -64,7 +63,7 @@ public class OfxImport {
         }
     }
 
-    public static Account matchAccount(OfxBank bank) {
+    public static Account matchAccount(final OfxBank bank) {
 
         Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
@@ -94,10 +93,9 @@ public class OfxImport {
         return account;
     }
 
-    /*public static void matchTransactions(List<OfxTransaction> list, Account baseAccount) {
-        GenericImport.matchTransactions(list, baseAccount);
-    }*/
-
+    /**
+     * Private constructor, utility class
+     */
     private OfxImport() {
     }
 }

@@ -91,9 +91,9 @@ class ImportTable extends FormattedJTable {
                                 ImportTransaction t = transactions.get(row);
 
                                 if (t.getState() == ImportTransaction.ImportState.EQUAL) {
-                                    t.setState(ImportTransaction.ImportState.NOTEQUAL);
+                                    t.setState(ImportTransaction.ImportState.NOT_EQUAL);
                                     model.fireTableCellUpdated(row, col);
-                                } else if (t.getState() == ImportTransaction.ImportState.NOTEQUAL) {
+                                } else if (t.getState() == ImportTransaction.ImportState.NOT_EQUAL) {
                                     t.setState(ImportTransaction.ImportState.EQUAL);
                                     model.fireTableCellUpdated(row, col);
                                 } else if (t.getState() == ImportTransaction.ImportState.NEW) {
@@ -247,7 +247,7 @@ class ImportTable extends FormattedJTable {
                 case 0:
                     if (transaction.getState() == ImportTransaction.ImportState.EQUAL) {
                         return equalIcon;
-                    } else if (transaction.getState() == ImportTransaction.ImportState.NOTEQUAL) {
+                    } else if (transaction.getState() == ImportTransaction.ImportState.NOT_EQUAL) {
                         return notEqualIcon;
                     } else if (transaction.getState() == ImportTransaction.ImportState.IGNORE) {
                         return removeIcon;
