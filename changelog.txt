@@ -22,6 +22,11 @@ Hiding option of Transaction form which can help to see more transactions in Reg
 Direct Transaction entry option in the Ledger to avoid Transaction form.
 Formal Trial Balance report
 
+Release 2.10.0
+----------------------
+05/18/12 Imported transactions are automatically assigned an account using a Naive Bayes classifier.
+05/17/12 Improved imported transaction match against manually entered transactions
+
 Release 2.9.0
 -----------------------
 05/03/12 Check for Java 7 or newer before executing
