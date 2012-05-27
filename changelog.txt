@@ -24,6 +24,8 @@ Formal Trial Balance report
 
 Release 2.10.0
 ----------------------
+05/27/12 Added workarounds for JVM bugs when using Gnome 3 and Cinnamon. Mouse behavior was not correct when the jGnash
+         window was maximised.
 05/18/12 Imported transactions are automatically assigned an account using a Naive Bayes classifier.
 05/17/12 Improved imported transaction match against manually entered transactions
 
