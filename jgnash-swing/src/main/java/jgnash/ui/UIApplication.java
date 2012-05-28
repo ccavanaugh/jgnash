@@ -139,8 +139,9 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
                 logger.log(Level.INFO, ex.getLocalizedMessage(), ex);
             }
 
-            // Workaround for main menu, pop-up & mouse issues for Gnome 3 shell and Cinnamon
+            // Workaround for main menu, pop-up & mouse issues for Gnome 3 shell and Cinnamon          
             if ("gnome-shell".equals(System.getenv("DESKTOP_SESSION"))
+                    || "cinnamon".equals(System.getenv("DESKTOP_SESSION"))
                     || (System.getenv("XDG_CURRENT_DESKTOP") != null && System.getenv("XDG_CURRENT_DESKTOP").contains("GNOME"))) {
                 try {
                     Class<?> x11_wm = Class.forName("sun.awt.X11.XWM");
