@@ -27,16 +27,15 @@
 package jgnash.tools;
 
 import com.sun.java.help.search.Indexer;
-import org.codehaus.plexus.util.DirectoryScanner;
-import org.kohsuke.args4j.CmdLineParser;
-import org.kohsuke.args4j.Option;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.codehaus.plexus.util.DirectoryScanner;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
 
 /**
  * This is a tool to index Javahelp files within Maven using only the javahelp2
@@ -80,7 +79,7 @@ public class HelpIndexer {
     }
 
     public HelpIndexer(final String[] args) {
-        cmdArgs = args;
+        cmdArgs = args.clone();        
     }
 
     public void execute() {
