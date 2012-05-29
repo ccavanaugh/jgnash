@@ -1,4 +1,3 @@
-// $codepro.audit.disable transientFieldInNonSerializable
 /*
  * jGnash, a personal finance application
  * Copyright (C) 2001-2012 Craig Cavanaugh
@@ -18,7 +17,9 @@
  */
 package jgnash.engine;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,9 +35,10 @@ import java.util.logging.Logger;
  * set to the same account and the credit and debit amounts must be set to the same value.
  * 
  * @author Craig Cavanaugh
- *
  */
-public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable {
+public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable, Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     private int hash = 0;
 
@@ -321,7 +323,6 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
         }
 
         return memo.equals(entry.getMemo());
-
     }
 
     /**
@@ -333,17 +334,18 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
         return creditAccount.equals(debitAccount) && creditAmount.equals(debitAmount);
     }
 
-    public void setTransactionTag(TransactionTag transactionTag) {
+    public void setTransactionTag(final TransactionTag transactionTag) {
         this.transactionTag = transactionTag.name();
         cachedTransactionTag = transactionTag;
     }
 
-    public TransactionTag getTransactionTag() {
-        if (cachedTransactionTag == null) {
-            cachedTransactionTag = TransactionTag.valueOf(transactionTag);
-        }
-
+    public TransactionTag getTransactionTag() {       
         return cachedTransactionTag;
+    }
+    
+    protected Object readResolve() {
+        cachedTransactionTag = TransactionTag.valueOf(transactionTag);
+        return this;
     }
 
     @Override
