@@ -35,9 +35,8 @@ import jgnash.util.DateUtils;
  * Base class for transactions
  * 
  * @author Craig Cavanaugh
- *
  */
-public class Transaction extends StoredObject implements Comparable<Transaction>, Cloneable {
+public class Transaction extends StoredObject implements Comparable<Transaction> {
 
     private static final long serialVersionUID = 6312043631736158707L;
 
