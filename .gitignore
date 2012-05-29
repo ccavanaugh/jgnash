@@ -12,4 +12,4 @@ target/
 *.iml
 .idea/
 *.log
-
+nb-configuration.xml
