@@ -17,6 +17,7 @@
  */
 package jgnash.engine;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -28,7 +29,9 @@ import jgnash.util.DateUtils;
  * @author Craig Cavanaugh
  *
  */
-public class SecurityHistoryNode implements Comparable<SecurityHistoryNode> {
+public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     private Date date = DateUtils.trimDate(new Date());
 

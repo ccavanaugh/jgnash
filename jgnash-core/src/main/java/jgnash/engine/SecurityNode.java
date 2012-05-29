@@ -30,34 +30,26 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import jgnash.util.DateUtils;
 
 /**
- * Security Node
- * <p>
- * 
- * The last market price is cached to improve performance
- * 
- * @author Craig Cavanaugh
+ * Security Node <p>
  *
+ * The last market price is cached to improve performance
+ *
+ * @author Craig Cavanaugh
  */
-public final class SecurityNode extends CommodityNode implements Cloneable {
+public final class SecurityNode extends CommodityNode {
 
     private static final long serialVersionUID = -8377663762619941498L;
-
     private CurrencyNode reportedCurrency;
-
     /**
      * The currency that security values are reported in
      */
     private String quoteSource = QuoteSource.NONE.name();
-
     private transient QuoteSource cachedQuoteSource;
-
     /**
      * Symbol for quote download. Not always the same as the commodity symbol
      */
     private String isin;
-
     private List<SecurityHistoryNode> historyNodes = new ArrayList<>();
-
     private transient ReadWriteLock lock;
 
     public SecurityNode() {
@@ -75,7 +67,7 @@ public final class SecurityNode extends CommodityNode implements Cloneable {
 
     /**
      * Prefix is deferred to the reported currency
-     * 
+     *
      * @return prefix of the reported currency
      */
     @Override
@@ -89,7 +81,7 @@ public final class SecurityNode extends CommodityNode implements Cloneable {
 
     /**
      * Suffix is deferred to the reported currency
-     * 
+     *
      * @return suffix of the reported currency
      */
     @Override
@@ -103,7 +95,7 @@ public final class SecurityNode extends CommodityNode implements Cloneable {
 
     /**
      * Returns the quote download source
-     * 
+     *
      * @return quote download source
      */
     public QuoteSource getQuoteSource() {
@@ -116,7 +108,7 @@ public final class SecurityNode extends CommodityNode implements Cloneable {
 
     /**
      * Sets the quote download source
-     * 
+     *
      * @param source QuoteSource to use
      */
     public void setQuoteSource(final QuoteSource source) {
@@ -134,7 +126,7 @@ public final class SecurityNode extends CommodityNode implements Cloneable {
 
     /**
      * Set the CurrencyNode that security histories are reported in
-     * 
+     *
      * @param node reported CurrencyNode
      */
     public void setReportedCurrencyNode(final CurrencyNode node) {
@@ -143,7 +135,7 @@ public final class SecurityNode extends CommodityNode implements Cloneable {
 
     /**
      * Returns the CurrencyNode that security histories are reported in
-     * 
+     *
      * @return reported CurrencyNode
      */
     public CurrencyNode getReportedCurrencyNode() {
@@ -191,24 +183,26 @@ public final class SecurityNode extends CommodityNode implements Cloneable {
     }
 
     private SecurityHistoryNode getLastHistoryNode() {
-
         getLock().readLock().lock();
 
-        SecurityHistoryNode node = null;
+        try {
+            SecurityHistoryNode node = null;
 
-        if (!historyNodes.isEmpty()) {
-            node = historyNodes.get(historyNodes.size() - 1);
+            if (!historyNodes.isEmpty()) {
+                node = historyNodes.get(historyNodes.size() - 1);
+            }
+
+            return node;
+        } finally {
+            getLock().readLock().unlock();
         }
-
-        getLock().readLock().unlock();
-
-        return node;
     }
 
     /**
      * Get a copy of SecurityHistoryNodes for this security
-     * 
-     * @return Returns a shallow copy of the history nodes to protect against modification
+     *
+     * @return Returns a shallow copy of the history nodes to protect against
+     * modification
      */
     public List<SecurityHistoryNode> getHistoryNodes() {
         return new ArrayList<>(historyNodes);
@@ -219,24 +213,27 @@ public final class SecurityNode extends CommodityNode implements Cloneable {
 
         getLock().readLock().lock();
 
-        SecurityHistoryNode hNode = null;
+        try {
 
-        for (int i = historyNodes.size() - 1; i >= 0; i--) {
-            SecurityHistoryNode node = historyNodes.get(i);
+            SecurityHistoryNode hNode = null;
 
-            if (testDate.compareTo(node.getDate()) >= 0) {
-                hNode = node;
-                break;
+            for (int i = historyNodes.size() - 1; i >= 0; i--) {
+                SecurityHistoryNode node = historyNodes.get(i);
+
+                if (testDate.compareTo(node.getDate()) >= 0) {
+                    hNode = node;
+                    break;
+                }
             }
+
+            if (hNode == null) {
+                hNode = getLastHistoryNode();
+            }
+
+            return hNode;
+        } finally {
+            getLock().readLock().unlock();
         }
-
-        if (hNode == null) {
-            hNode = getLastHistoryNode();
-        }
-
-        getLock().readLock().unlock();
-
-        return hNode;
     }
 
     BigDecimal getMarketPrice(final Date date) {
@@ -246,22 +243,25 @@ public final class SecurityNode extends CommodityNode implements Cloneable {
 
         getLock().readLock().lock();
 
-        for (SecurityHistoryNode node : historyNodes) {
-            if (node.getDate().getTime() <= testDate.getTime()) {
-                marketPrice = node.getPrice();
-            } else {
-                break;
+        try {
+
+            for (SecurityHistoryNode node : historyNodes) {
+                if (node.getDate().getTime() <= testDate.getTime()) {
+                    marketPrice = node.getPrice();
+                } else {
+                    break;
+                }
             }
+            
+            return marketPrice;
+        } finally {
+            getLock().readLock().unlock();
         }
-
-        getLock().readLock().unlock();
-
-        return marketPrice;
     }
 
     /**
      * Returns the latest market price exchanged to the specified currency
-     * 
+     *
      * @param date date to find closest matching rate without exceeding
      * @param node currency to exchange to
      * @return latest market price
@@ -272,7 +272,7 @@ public final class SecurityNode extends CommodityNode implements Cloneable {
 
     /**
      * Return a clone of this security node Security history is not cloned
-     * 
+     *
      * @return clone of this SecurityNode with history nodes
      */
     @Override
