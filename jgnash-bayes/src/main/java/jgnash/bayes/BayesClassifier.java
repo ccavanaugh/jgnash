@@ -18,6 +18,7 @@
 package jgnash.bayes;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Naive Bayes BayesClassifier.
@@ -101,12 +102,11 @@ public class BayesClassifier<E> {
 
         if (featureMap == null) {
             return count;
-        }
-
-        for (E category : featureMap.keySet()) {
-            int val = featureMap.get(category);
-            count += val;
-        }
+        }               
+        
+        for (Entry<E, Integer> entry : featureMap.entrySet()) {
+            count += entry.getValue();
+        }                    
 
         return count;
     }
@@ -140,7 +140,7 @@ public class BayesClassifier<E> {
     }
 
     public void train(final String item, final E classification) {
-        train(Arrays.asList(item.toLowerCase().split(WHITE_SPACE_REGEX)), classification);
+        train(Arrays.asList(item.toLowerCase(Locale.getDefault()).split(WHITE_SPACE_REGEX)), classification);               
     }
 
     public E classify(final String item) {
@@ -153,25 +153,25 @@ public class BayesClassifier<E> {
 
         // find the category with the highest probability
         for (E classification : classCounter.keySet()) {
-            classProb = getClassProbability(item.toLowerCase(), classification);
+            classProb = getClassProbability(item.toLowerCase(Locale.getDefault()), classification);
             probabilities.put(classification, classProb);
             if (classProb > max) {
                 max = classProb;
                 bestClass = classification;
             }
         }
-
+                       
         // make sure the probability exceeds
-        for (E classification : probabilities.keySet()) {
-            if (!classification.equals(bestClass)) {
-                classProb = probabilities.get(classification);
+        for (Entry<E, Double> entry : probabilities.entrySet()) {
+            if (!entry.getKey().equals(bestClass)) {
+                classProb = entry.getValue();
                 bestProbability = probabilities.get(bestClass);
-
+                
                 if (classProb * THRESHOLD >= bestProbability) {
                     return defaultClass;
                 }
             }
-        }
+        }       
 
         return bestClass;
     }
