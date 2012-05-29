@@ -26,17 +26,16 @@ import java.util.Date;
  * type.
  *
  * @author Craig Cavanaugh
- *
  */
 public class Comparators {
 
-    private static Comparator<Transaction> transactionByDate = null;
-    private static Comparator<Transaction> transactionByAmount = null;
-    private static Comparator<Transaction> transactionByMemo = null;
-    private static Comparator<Transaction> transactionByNumber = null;
-    private static Comparator<Transaction> transactionByPayee = null;
-    private static Comparator<Transaction> transactionBySecurity = null;
-    private static Comparator<Transaction> transactionByType = null;
+    private static volatile Comparator<Transaction> transactionByDate = null;
+    private static volatile Comparator<Transaction> transactionByAmount = null;
+    private static volatile Comparator<Transaction> transactionByMemo = null;
+    private static volatile Comparator<Transaction> transactionByNumber = null;
+    private static volatile Comparator<Transaction> transactionByPayee = null;
+    private static volatile Comparator<Transaction> transactionBySecurity = null;
+    private static volatile Comparator<Transaction> transactionByType = null;
 
     public static Comparator<Account> getAccountByName() {
         return new AccountByName();
