@@ -19,7 +19,6 @@ package jgnash.engine;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,7 +43,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
 
     private String transactionTag = TransactionTag.BANK.name();
 
-    private transient TransactionTag cachedTransactionTag;
+    private transient TransactionTag cachedTransactionTag = TransactionTag.BANK;
 
     /**
      * Account with balance being decreased
