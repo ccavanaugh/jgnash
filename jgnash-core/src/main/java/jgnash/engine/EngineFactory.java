@@ -29,8 +29,8 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import javax.swing.filechooser.FileSystemView;
-import jgnash.engine.db4o.Db4oDataStore;
 
+import jgnash.engine.db4o.Db4oDataStore;
 import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.engine.xstream.XMLDataStore;
 import jgnash.message.ChannelEvent;
@@ -49,7 +49,6 @@ import jgnash.util.Resource;
  * an Engine instance will be returned
  *
  * @author Craig Cavanaugh
- *
  */
 public class EngineFactory {
 

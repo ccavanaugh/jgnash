@@ -83,10 +83,8 @@ public class AccountTreeXMLFactory {
 
         XStream xstream = getStream();
 
-        try {
-            ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(new FileWriter(file)));
+        try (ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(new FileWriter(file)))) {
             out.writeObject(account);
-            out.close();
         } catch (IOException e) {
             Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
@@ -103,12 +101,8 @@ public class AccountTreeXMLFactory {
 
         XStream xstream = getStream();
 
-        try {
-            ObjectInputStream in = xstream.createObjectInputStream(reader);
-
+        try (ObjectInputStream in = xstream.createObjectInputStream(reader)) {
             Object o = in.readObject();
-
-            in.close();
 
             if (o instanceof RootAccount) {
                 account = (RootAccount) o;
@@ -116,6 +110,7 @@ public class AccountTreeXMLFactory {
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         return account;
     }
 
@@ -147,10 +142,11 @@ public class AccountTreeXMLFactory {
     }
 
     /**
-     * Imports an account tree into the existing account tree. Account currencies are forced to the engine's default
+     * Imports an account tree into the existing account tree. Account
+     * currencies are forced to the engine's default
      *
      * @param engine current engine to merge into
-     * @param root   root of account structure to merge
+     * @param root root of account structure to merge
      */
     public static void importAccountTree(final Engine engine, final RootAccount root) {
         AccountImport accountImport = new AccountImport();
@@ -158,10 +154,11 @@ public class AccountTreeXMLFactory {
     }
 
     /**
-     * Merges an account tree into the existing account tree. Duplicate currencies are prevented
+     * Merges an account tree into the existing account tree. Duplicate
+     * currencies are prevented
      *
      * @param engine current engine to merge into
-     * @param root   root of account structure to merge
+     * @param root root of account structure to merge
      */
     public static void mergeAccountTree(final Engine engine, final RootAccount root) {
         AccountImport accountImport = new AccountImport();
@@ -190,9 +187,10 @@ public class AccountTreeXMLFactory {
         }
 
         /**
-         * Ensures that duplicate currencies are not created when the accounts are merged
+         * Ensures that duplicate currencies are not created when the accounts
+         * are merged
          *
-         * @param engine  Engine with existing currencies
+         * @param engine Engine with existing currencies
          * @param account account to correct
          */
         private void fixCurrencies(final Engine engine, final Account account) {
@@ -236,9 +234,10 @@ public class AccountTreeXMLFactory {
         }
 
         /**
-         * Ensures that duplicate currencies are not created when the accounts are merged
+         * Ensures that duplicate currencies are not created when the accounts
+         * are merged
          *
-         * @param engine  Engine with existing currencies
+         * @param engine Engine with existing currencies
          * @param account account to correct
          */
         private void forceCurrency(final Engine engine, final Account account) {
@@ -298,7 +297,6 @@ public class AccountTreeXMLFactory {
                 importChildren(engine, child);
             }
         }
-
     }
 
     private AccountTreeXMLFactory() {

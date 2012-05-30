@@ -18,6 +18,7 @@
 package jgnash.engine;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import jgnash.net.security.NullParser;
 import jgnash.net.security.SecurityParser;
@@ -63,7 +64,7 @@ public enum QuoteSource {
         try {
             Constructor<?> accConst = parser.getDeclaredConstructor();
             return (SecurityParser) accConst.newInstance();
-        } catch (Exception e) {
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             return null; // unable to create object
         }
     }

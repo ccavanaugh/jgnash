@@ -31,7 +31,7 @@ import jgnash.util.Resource;
  * @author Craig Cavanaugh
  *
  */
-public class Budget extends StoredObject implements Comparable<Budget>, Cloneable {
+public class Budget extends StoredObject implements Comparable<Budget> {
 
     private static final long serialVersionUID = 1L;
 

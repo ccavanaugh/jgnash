@@ -17,6 +17,7 @@
  */
 package jgnash.engine;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -27,9 +28,10 @@ import jgnash.util.DateUtils;
  * <code>ExchangeRateHistoryNode</code> objects are immutable.
  *
  * @author Craig Cavanaugh
- *
  */
-public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNode> {
+public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNode>, Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     private Date date = DateUtils.trimDate(new Date());
 

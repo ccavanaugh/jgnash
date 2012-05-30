@@ -41,9 +41,8 @@ import jgnash.util.DateUtils;
  *
  * @author Craig Cavanaugh
  * @author Jeff Prickett prickett@users.sourceforge.net
- *
  */
-public class Account extends StoredObject implements Comparable<Account>, Cloneable {
+public class Account extends StoredObject implements Comparable<Account> {
 
     private static final long serialVersionUID = 6886735664760113291L;
 

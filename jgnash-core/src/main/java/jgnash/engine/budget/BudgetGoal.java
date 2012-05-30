@@ -17,6 +17,7 @@
  */
 package jgnash.engine.budget;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
@@ -28,9 +29,10 @@ import jgnash.engine.MathConstants;
  * 366 days per year are assumed and static for goals. The 366th day will not be used if not a leap year
  * 
  * @author Craig Cavanaugh
- *
  */
-public class BudgetGoal implements Cloneable {
+public class BudgetGoal implements Cloneable, Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     /** 366 days per year */
     public transient static final int PERIODS = 366;

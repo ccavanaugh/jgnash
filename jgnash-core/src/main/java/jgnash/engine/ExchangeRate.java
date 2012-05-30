@@ -17,6 +17,7 @@
  */
 package jgnash.engine;
 
+import java.io.ObjectStreamException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,9 +30,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Exchange rate object
  *
  * @author Craig Cavanaugh
- *
  */
 public class ExchangeRate extends StoredObject {
+
     private static final long serialVersionUID = -2365289994847042288L;
 
     private List<ExchangeRateHistoryNode> historyNodes = new ArrayList<>();
@@ -49,11 +50,11 @@ public class ExchangeRate extends StoredObject {
     /**
      * ReadWrite lock
      */
-    private transient ReadWriteLock lock;
+    private transient ReadWriteLock lock = new ReentrantReadWriteLock();
 
     /**
-     * No argument constructor for reflection purposes.
-     * <b>Do not use to create a new instance</b>
+     * No argument constructor for reflection purposes. <b>Do not use to create
+     * a new instance</b>
      *
      * @deprecated
      */
@@ -66,9 +67,6 @@ public class ExchangeRate extends StoredObject {
     }
 
     private synchronized ReadWriteLock getLock() {
-        if (lock == null) {
-            lock = new ReentrantReadWriteLock(true);
-        }
         return lock;
     }
 
@@ -146,7 +144,7 @@ public class ExchangeRate extends StoredObject {
 
     public BigDecimal getRate() {
         getLock().readLock().lock();
-        
+
         try {
             if (lastRate == null) {
                 if (!historyNodes.isEmpty()) {
@@ -173,5 +171,10 @@ public class ExchangeRate extends StoredObject {
     @Override
     public int hashCode() {
         return super.hashCode() * 67 + rateId.hashCode();
+    }
+
+    private Object readResolve() throws ObjectStreamException {
+        lock = new ReentrantReadWriteLock();
+        return this;
     }
 }

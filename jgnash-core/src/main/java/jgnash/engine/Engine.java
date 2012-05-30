@@ -2320,8 +2320,8 @@ public class Engine {
             if (removeTransaction(transaction)) {
                 addTransaction(clone);
             }
-        } catch (CloneNotSupportedException e) {
-            logSevere("Failed to reconcile the Transaction");
+        } catch (CloneNotSupportedException e) {           
+            logger.log(Level.SEVERE, "Failed to reconcile the Transaction", e);
         }
     }
 

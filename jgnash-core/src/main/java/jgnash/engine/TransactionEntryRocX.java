@@ -29,6 +29,8 @@ import java.math.BigDecimal;
  *
  */
 public class TransactionEntryRocX extends AbstractInvestmentTransactionEntry {
+    
+    private static final long serialVersionUID = 1L;
 
     /**
      * No argument constructor for reflection purposes only.

@@ -87,6 +87,7 @@ public class DefaultCurrencies {
             node.setSymbol(c.getCurrencyCode());
         } catch (Exception e) {
             node.setSymbol(ISOCode);
+            Logger.getLogger(DefaultCurrencies.class.getName()).log(Level.FINE, null, e);
         } finally {
             node.setDescription(Locale.getDefault().toString());
         }
