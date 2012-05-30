@@ -307,17 +307,12 @@ public class BudgetResultsExport {
         } else {
             filename = FileUtils.stripFileExtension(filename) + ".xls";
         }
-
-        FileOutputStream out;
-
-        try {
-            out = new FileOutputStream(filename);
-            wb.write(out);
-            out.close();
+        
+        try (FileOutputStream out = new FileOutputStream(filename)) {
+           wb.write(out); 
         } catch (Exception e) {
             Logger.getLogger(BudgetResultsExport.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
-
     }
 
     private static void addSummaryCell(final Row row, final int col, final List<CellReference> cellReferenceList, final CellStyle style) {

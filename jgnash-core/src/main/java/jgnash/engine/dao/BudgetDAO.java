@@ -17,15 +17,14 @@
  */
 package jgnash.engine.dao;
 
-import jgnash.engine.budget.Budget;
-
 import java.util.List;
+
+import jgnash.engine.budget.Budget;
 
 /**
  * Budget DAO
  *
  * @author Craig Cavanaugh
- *
  */
 public interface BudgetDAO {
 

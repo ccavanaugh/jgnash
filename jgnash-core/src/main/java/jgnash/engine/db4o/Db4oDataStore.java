@@ -17,7 +17,12 @@
  */
 package jgnash.engine.db4o;
 
+import com.db4o.DatabaseClosedException;
+import com.db4o.DatabaseFileLockedException;
+import com.db4o.DatabaseReadOnlyException;
 import com.db4o.Db4o;
+import com.db4o.Db4oIOException;
+import com.db4o.IncompatibleFileFormatException;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.config.Configuration;
@@ -30,6 +35,7 @@ import com.db4o.events.EventListener4;
 import com.db4o.events.EventRegistry;
 import com.db4o.events.EventRegistryFactory;
 import com.db4o.events.ObjectEventArgs;
+import com.db4o.ext.OldFormatException;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -372,10 +378,9 @@ public class Db4oDataStore implements DataStore {
             } else {
                 Logger.getLogger(Db4oDataStore.class.getName()).severe("Invalid file");
             }
-
-        } catch (Exception e) {
+        } catch (Db4oIOException | DatabaseFileLockedException | IncompatibleFileFormatException | OldFormatException | DatabaseReadOnlyException | DatabaseClosedException e) {
             container = null;
-            Logger.getLogger(Db4oDataStore.class.getName()).warning("Tried to open an incompatible file version");
+            Logger.getLogger(Db4oDataStore.class.getName()).log(Level.WARNING, "Tried to open an incompatible file version", e);
         } finally {
             if (container != null) {
                 container.close();

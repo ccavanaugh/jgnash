@@ -23,6 +23,8 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Factory methods for serializing CheckLayout objects
@@ -36,29 +38,24 @@ public class CheckLayoutSerializationFactory {
         XStream xstream = getStream();
         CheckLayout layout = null;
 
-        try {
-            FileReader in = new FileReader(file);
+        try (FileReader in = new FileReader(file)) {
             layout = (CheckLayout) xstream.fromXML(in);
-            in.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.getLogger(CheckLayoutSerializationFactory.class.getName()).log(Level.SEVERE, null, e);
         }
         return layout;
     }
 
     public static boolean saveLayout(final String file, final CheckLayout layout) {
-
         boolean result = false;
 
         XStream xstream = getStream();
 
-        try {
-            FileWriter out = new FileWriter(file);
+        try (FileWriter out = new FileWriter(file)) {
             xstream.toXML(layout, out);
-            out.close();
             result = true;
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.getLogger(CheckLayoutSerializationFactory.class.getName()).log(Level.SEVERE, null, e);
         }
 
         return result;
@@ -74,5 +71,4 @@ public class CheckLayoutSerializationFactory {
 
     private CheckLayoutSerializationFactory() {
     }
-
 }

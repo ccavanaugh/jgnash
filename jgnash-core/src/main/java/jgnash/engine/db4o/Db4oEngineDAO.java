@@ -17,6 +17,10 @@
  */
 package jgnash.engine.db4o;
 
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+import com.db4o.query.Query;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -26,10 +30,6 @@ import java.util.concurrent.TimeUnit;
 import jgnash.engine.StoredObject;
 import jgnash.engine.dao.*;
 import jgnash.util.DefaultDaemonThreadFactory;
-
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.query.Query;
 
 /**
  * Db4o DAO Interface

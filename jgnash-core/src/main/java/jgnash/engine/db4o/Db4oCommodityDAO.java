@@ -47,7 +47,7 @@ import jgnash.engine.dao.CommodityDAO;
 
 class Db4oCommodityDAO extends AbstractDb4oDAO implements CommodityDAO {
 
-    private final Logger logger = Logger.getLogger(Db4oCommodityDAO.class.getName());
+    private static final Logger logger = Logger.getLogger(Db4oCommodityDAO.class.getName());
 
     Db4oCommodityDAO(final ObjectContainer container, final boolean isRemote) {
         super(container, isRemote);

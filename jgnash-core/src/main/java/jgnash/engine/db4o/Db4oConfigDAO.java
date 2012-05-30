@@ -18,23 +18,23 @@
 package jgnash.engine.db4o;
 
 import com.db4o.ObjectContainer;
-import jgnash.engine.Config;
-import jgnash.engine.dao.ConfigDAO;
 
 import java.util.List;
 import java.util.logging.Logger;
 
+import jgnash.engine.Config;
+import jgnash.engine.dao.ConfigDAO;
+
 /**
- * Hides all the db4o config code
+ * Hides all the db4o configuration code
  *
  * @author Craig Cavanaugh
- *
  */
 class Db4oConfigDAO extends AbstractDb4oDAO implements ConfigDAO {
 
     private static final String CONFIG_SEMAPHORE = "ConfigLock";
 
-    private final Logger logger = Logger.getLogger(Db4oConfigDAO.class.getName());
+    private static final Logger logger = Logger.getLogger(Db4oConfigDAO.class.getName());
 
     Db4oConfigDAO(final ObjectContainer container, final boolean isRemote) {
         super(container, isRemote);

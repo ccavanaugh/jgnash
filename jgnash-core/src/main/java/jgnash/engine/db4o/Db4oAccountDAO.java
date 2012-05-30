@@ -17,6 +17,11 @@
  */
 package jgnash.engine.db4o;
 
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+import com.db4o.query.Predicate;
+import com.db4o.query.Query;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,11 +33,6 @@ import jgnash.engine.AccountType;
 import jgnash.engine.RootAccount;
 import jgnash.engine.SecurityNode;
 import jgnash.engine.dao.AccountDAO;
-
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectSet;
-import com.db4o.query.Predicate;
-import com.db4o.query.Query;
 
 /**
  * db4o Account DAO
@@ -176,8 +176,8 @@ class Db4oAccountDAO extends AbstractDb4oDAO implements AccountDAO {
     }
 
     /*
-    * @see jgnash.engine.AccountDAOInterface#getIncomeAccountList()
-    */
+     * @see jgnash.engine.AccountDAOInterface#getIncomeAccountList()
+     */
     @Override
     public List<Account> getIncomeAccountList() {
         List<Account> list = Collections.emptyList();
@@ -304,7 +304,8 @@ class Db4oAccountDAO extends AbstractDb4oDAO implements AccountDAO {
     }
 
     /**
-     * @see jgnash.engine.dao.AccountDAO#toggleAccountVisibility(jgnash.engine.Account)
+     * @see
+     * jgnash.engine.dao.AccountDAO#toggleAccountVisibility(jgnash.engine.Account)
      */
     @Override
     public boolean toggleAccountVisibility(final Account account) {
@@ -332,6 +333,7 @@ class Db4oAccountDAO extends AbstractDb4oDAO implements AccountDAO {
     }
 
     private static class AccountGroupPredicate extends Predicate<Account> {
+
         private static final long serialVersionUID = -860987774949510386L;
 
         private final AccountGroup group;
@@ -347,6 +349,7 @@ class Db4oAccountDAO extends AbstractDb4oDAO implements AccountDAO {
     }
 
     private static class AccountTypePredicate extends Predicate<Account> {
+
         private static final long serialVersionUID = -7268308931621048944L;
 
         private final AccountType type;

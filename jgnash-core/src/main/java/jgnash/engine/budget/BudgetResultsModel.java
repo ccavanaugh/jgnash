@@ -37,9 +37,13 @@ import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.MathConstants;
-
 import jgnash.engine.Transaction;
-import jgnash.message.*;
+import jgnash.message.Message;
+import jgnash.message.MessageBus;
+import jgnash.message.MessageChannel;
+import jgnash.message.MessageListener;
+import jgnash.message.MessageProperty;
+import jgnash.message.MessageProxy;
 
 /**
  * Model for budget results
@@ -610,7 +614,9 @@ public class BudgetResultsModel implements MessageListener {
             case ACCOUNT_MODIFY:
                 loadAccounts(); // force a reload of accounts, structure is indeterminate
                 clearCached();  // indeterminate structure, so dump all cached results
+                break;
             default:
+                break;
         }
 
         loadAccountGroups();    // force reload of account groups after accounts have changed
