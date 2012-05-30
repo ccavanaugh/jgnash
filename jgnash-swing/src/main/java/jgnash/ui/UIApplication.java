@@ -142,6 +142,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
             // Workaround for main menu, pop-up & mouse issues for Gnome 3 shell and Cinnamon          
             if ("gnome-shell".equals(System.getenv("DESKTOP_SESSION"))
                     || "cinnamon".equals(System.getenv("DESKTOP_SESSION"))
+                    || "gnome".equals(System.getenv("DESKTOP_SESSION"))
                     || (System.getenv("XDG_CURRENT_DESKTOP") != null && System.getenv("XDG_CURRENT_DESKTOP").contains("GNOME"))) {
                 try {
                     Class<?> x11_wm = Class.forName("sun.awt.X11.XWM");
@@ -150,7 +151,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
                     awt_wMgr.setAccessible(true);
 
                     Field other_wm = x11_wm.getDeclaredField("OTHER_WM");
-                    other_wm.setAccessible(true);
+                    other_wm.setAccessible(true);                                      
 
                     if (awt_wMgr.get(null).equals(other_wm.get(null))) {
                         Field metaCity_Wm = x11_wm.getDeclaredField("METACITY_WM");
@@ -158,7 +159,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
                         awt_wMgr.set(null, metaCity_Wm.get(null));
                         logger.info("Installed window manager workaround");
                     }
-                } catch (Exception ex) {
+                } catch (ClassNotFoundException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
                     logger.log(Level.INFO, ex.getLocalizedMessage(), ex);
                 }
             }
