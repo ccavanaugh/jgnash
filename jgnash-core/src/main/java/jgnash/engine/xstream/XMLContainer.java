@@ -22,18 +22,6 @@ import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider
 import com.thoughtworks.xstream.io.xml.KXml2Driver;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 
-import jgnash.engine.CommodityNode;
-import jgnash.engine.Config;
-import jgnash.engine.Engine;
-import jgnash.engine.ExchangeRate;
-import jgnash.engine.RootAccount;
-import jgnash.engine.StoredObject;
-import jgnash.engine.StoredObjectComparator;
-import jgnash.engine.budget.Budget;
-import jgnash.engine.recurring.Reminder;
-import jgnash.util.FileMagic;
-import jgnash.util.FileUtils;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -56,6 +44,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import jgnash.engine.CommodityNode;
+import jgnash.engine.Config;
+import jgnash.engine.Engine;
+import jgnash.engine.ExchangeRate;
+import jgnash.engine.RootAccount;
+import jgnash.engine.StoredObject;
+import jgnash.engine.StoredObjectComparator;
+import jgnash.engine.budget.Budget;
+import jgnash.engine.recurring.Reminder;
+import jgnash.util.FileMagic;
+import jgnash.util.FileUtils;
 
 /**
  * Simple object container for StoredObjects that reads and writes a xml file

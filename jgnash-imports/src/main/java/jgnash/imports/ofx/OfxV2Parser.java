@@ -47,8 +47,11 @@ import javax.xml.stream.XMLStreamReader;
 public class OfxV2Parser implements OfxTags {
 
     private static final Logger logger = Logger.getLogger("OfxV2Parser");
+
     private static final boolean debug = false;
+
     public static final String EXTRA_SPACE_REGEX = "\\s+";
+
     private OfxBank bank;
 
     public OfxV2Parser() {
@@ -76,7 +79,7 @@ public class OfxV2Parser implements OfxTags {
     /**
      * Parses an InputStream using a specified encoding
      *
-     * @param stream   InputStream to parse
+     * @param stream InputStream to parse
      * @param encoding encoding to use
      */
     public void parse(final InputStream stream, final String encoding) {
@@ -135,12 +138,16 @@ public class OfxV2Parser implements OfxTags {
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
-                    if (reader.getLocalName().equals(SIGNONMSGSRSV1)) {
-                        parseSignonMessageSet(reader);
-                    } else if (reader.getLocalName().equals(BANKMSGSRSV1)) {
-                        parseBankMessageSet(reader);
-                    } else if (reader.getLocalName().equals(CREDITCARDMSGSRSV1)) {
-                        parseCreditCardMessageSet(reader);
+                    switch (reader.getLocalName()) {
+                        case SIGNONMSGSRSV1:
+                            parseSignonMessageSet(reader);
+                            break;
+                        case BANKMSGSRSV1:
+                            parseBankMessageSet(reader);
+                            break;
+                        case CREDITCARDMSGSRSV1:
+                            parseCreditCardMessageSet(reader);
+                            break;
                     }
                 default:
             }
@@ -166,16 +173,22 @@ public class OfxV2Parser implements OfxTags {
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
-                    if (reader.getLocalName().equals(CURDEF)) {
-                        bank.currency = reader.getElementText();
-                    } else if (reader.getLocalName().equals(LEDGERBAL)) {
-                        parseLedgerBalance(reader);
-                    } else if (reader.getLocalName().equals(AVAILBAL)) {
-                        parseAvailableBalance(reader);
-                    } else if (reader.getLocalName().equals(BANKACCTFROM)) {
-                        parseAccountInfo(reader);
-                    } else if (reader.getLocalName().equals(BANKTRANLIST)) {
-                        parseBankTransactionList(reader);
+                    switch (reader.getLocalName()) {
+                        case CURDEF:
+                            bank.currency = reader.getElementText();
+                            break;
+                        case LEDGERBAL:
+                            parseLedgerBalance(reader);
+                            break;
+                        case AVAILBAL:
+                            parseAvailableBalance(reader);
+                            break;
+                        case BANKACCTFROM:
+                            parseAccountInfo(reader);
+                            break;
+                        case BANKTRANLIST:
+                            parseBankTransactionList(reader);
+                            break;
                     }
 
                     break;
@@ -208,16 +221,22 @@ public class OfxV2Parser implements OfxTags {
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
-                    if (reader.getLocalName().equals(CURDEF)) {
-                        bank.currency = reader.getElementText();
-                    } else if (reader.getLocalName().equals(LEDGERBAL)) {
-                        parseLedgerBalance(reader);
-                    } else if (reader.getLocalName().equals(AVAILBAL)) {
-                        parseAvailableBalance(reader);
-                    } else if (reader.getLocalName().equals(CCACCTFROM)) {
-                        parseAccountInfo(reader);
-                    } else if (reader.getLocalName().equals(BANKTRANLIST)) {
-                        parseBankTransactionList(reader);
+                    switch (reader.getLocalName()) {
+                        case CURDEF:
+                            bank.currency = reader.getElementText();
+                            break;
+                        case LEDGERBAL:
+                            parseLedgerBalance(reader);
+                            break;
+                        case AVAILBAL:
+                            parseAvailableBalance(reader);
+                            break;
+                        case CCACCTFROM:
+                            parseAccountInfo(reader);
+                            break;
+                        case BANKTRANLIST:
+                            parseBankTransactionList(reader);
+                            break;
                     }
 
                     break;
@@ -251,12 +270,16 @@ public class OfxV2Parser implements OfxTags {
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
-                    if (reader.getLocalName().equals(DTSTART)) {
-                        bank.dateStart = parseDate(reader.getElementText());
-                    } else if (reader.getLocalName().equals(DTEND)) {
-                        bank.dateEnd = parseDate(reader.getElementText());
-                    } else if (reader.getLocalName().equals(STMTTRN)) {
-                        parseBankTransaction(reader);
+                    switch (reader.getLocalName()) {
+                        case DTSTART:
+                            bank.dateStart = parseDate(reader.getElementText());
+                            break;
+                        case DTEND:
+                            bank.dateEnd = parseDate(reader.getElementText());
+                            break;
+                        case STMTTRN:
+                            parseBankTransaction(reader);
+                            break;
                     }
 
                     break;
@@ -292,32 +315,46 @@ public class OfxV2Parser implements OfxTags {
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
-                    if (reader.getLocalName().equals(TRNTYPE)) {
-                        tran.transactionType = reader.getElementText();
-                    } else if (reader.getLocalName().equals(DTPOSTED)) {
-                        tran.datePosted = parseDate(reader.getElementText());
-                    } else if (reader.getLocalName().equals(DTUSER)) {
-                        tran.dateUser = parseDate(reader.getElementText());
-                    } else if (reader.getLocalName().equals(TRNAMT)) {
-                        tran.amount = parseAmount(reader.getElementText());
-                    } else if (reader.getLocalName().equals(FITID)) {
-                        tran.transactionID = reader.getElementText();
-                    } else if (reader.getLocalName().equals(CHECKNUM)) {
-                        tran.checkNumber = reader.getElementText();
-                    } else if (reader.getLocalName().equals(NAME)) {
-                        tran.payee = reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim();
-                    } else if (reader.getLocalName().equals(MEMO)) {
-                        tran.memo = reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim();
-                    } else if (reader.getLocalName().equals(SIC)) {
-                        tran.sic = reader.getElementText();
-                    } else if (reader.getLocalName().equals(REFNUM)) {
-                        tran.refNum = reader.getElementText();
-                    } else if (reader.getLocalName().equals(PAYEEID)) {
-                        tran.payeeId = reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim();
-                    } else if (reader.getLocalName().equals(CURRENCY)) {
-                        tran.currency = reader.getElementText();
-                    } else if (reader.getLocalName().equals(ORIGCURRENCY)) {
-                        tran.currency = reader.getElementText();
+                    switch (reader.getLocalName()) {
+                        case TRNTYPE:
+                            tran.transactionType = reader.getElementText();
+                            break;
+                        case DTPOSTED:
+                            tran.datePosted = parseDate(reader.getElementText());
+                            break;
+                        case DTUSER:
+                            tran.dateUser = parseDate(reader.getElementText());
+                            break;
+                        case TRNAMT:
+                            tran.amount = parseAmount(reader.getElementText());
+                            break;
+                        case FITID:
+                            tran.transactionID = reader.getElementText();
+                            break;
+                        case CHECKNUM:
+                            tran.checkNumber = reader.getElementText();
+                            break;
+                        case NAME:
+                            tran.payee = reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim();
+                            break;
+                        case MEMO:
+                            tran.memo = reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim();
+                            break;
+                        case SIC:
+                            tran.sic = reader.getElementText();
+                            break;
+                        case REFNUM:
+                            tran.refNum = reader.getElementText();
+                            break;
+                        case PAYEEID:
+                            tran.payeeId = reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim();
+                            break;
+                        case CURRENCY:
+                            tran.currency = reader.getElementText();
+                            break;
+                        case ORIGCURRENCY:
+                            tran.currency = reader.getElementText();
+                            break;
                     }
 
                     break;
@@ -353,14 +390,19 @@ public class OfxV2Parser implements OfxTags {
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
-                    if (reader.getLocalName().equals(BANKID)) {
-                        bank.bankId = reader.getElementText();
-                    } else if (reader.getLocalName().equals(ACCTID)) {
-                        bank.accountId = reader.getElementText();
-                    } else if (reader.getLocalName().equals(ACCTTYPE)) {
-                        bank.accountType = reader.getElementText();
-                    } else if (reader.getLocalName().equals(BRANCHID)) {
-                        bank.branchId = reader.getElementText();
+                    switch (reader.getLocalName()) {
+                        case BANKID:
+                            bank.bankId = reader.getElementText();
+                            break;
+                        case ACCTID:
+                            bank.accountId = reader.getElementText();
+                            break;
+                        case ACCTTYPE:
+                            bank.accountType = reader.getElementText();
+                            break;
+                        case BRANCHID:
+                            bank.branchId = reader.getElementText();
+                            break;
                     }
 
                     break;
@@ -394,10 +436,13 @@ public class OfxV2Parser implements OfxTags {
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
-                    if (reader.getLocalName().equals(BALAMT)) {
-                        bank.ledgerBalance = parseAmount(reader.getElementText());
-                    } else if (reader.getLocalName().equals(DTASOF)) {
-                        bank.ledgerBalanceDate = parseDate(reader.getElementText());
+                    switch (reader.getLocalName()) {
+                        case BALAMT:
+                            bank.ledgerBalance = parseAmount(reader.getElementText());
+                            break;
+                        case DTASOF:
+                            bank.ledgerBalanceDate = parseDate(reader.getElementText());
+                            break;
                     }
 
                     break;
@@ -431,10 +476,13 @@ public class OfxV2Parser implements OfxTags {
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
-                    if (reader.getLocalName().equals(BALAMT)) {
-                        bank.ledgerBalance = parseAmount(reader.getElementText());
-                    } else if (reader.getLocalName().equals(DTASOF)) {
-                        bank.ledgerBalanceDate = parseDate(reader.getElementText());
+                    switch (reader.getLocalName()) {
+                        case BALAMT:
+                            bank.ledgerBalance = parseAmount(reader.getElementText());
+                            break;
+                        case DTASOF:
+                            bank.ledgerBalanceDate = parseDate(reader.getElementText());
+                            break;
                     }
 
                     break;
@@ -484,7 +532,7 @@ public class OfxV2Parser implements OfxTags {
     }
 
     /**
-     * Parse a date.  Time zone and seconds are ignored
+     * Parse a date. Time zone and seconds are ignored
      * <p/>
      * YYYYMMDDHHMMSS.XXX [gmt offset:tz name]
      *
@@ -507,7 +555,7 @@ public class OfxV2Parser implements OfxTags {
         /* Must trim the amount for a clean parse
          * Some banks leave extra spaces before the value
          */
-        
+
         try {
             return new BigDecimal(amount.trim());
         } catch (NumberFormatException e) {

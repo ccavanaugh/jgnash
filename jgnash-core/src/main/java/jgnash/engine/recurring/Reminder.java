@@ -18,6 +18,8 @@
 package jgnash.engine.recurring;
 
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jgnash.engine.Account;
 import jgnash.engine.StoredObject;
@@ -30,7 +32,7 @@ import jgnash.util.DateUtils;
  * @author Craig Cavanaugh
  *
  */
-public abstract class Reminder extends StoredObject implements Comparable<Reminder>, Cloneable {
+public abstract class Reminder extends StoredObject implements Comparable<Reminder> {
 
     private static final long serialVersionUID = 585114642710839171L;
 
@@ -173,11 +175,11 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
      * @return Returns the transaction.
      */
     public Transaction getTransaction() {
-        if (transaction != null) {
+        if (transaction != null) {           
             try {
                 return (Transaction) transaction.clone();
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
+            } catch (CloneNotSupportedException ex) {
+                Logger.getLogger(Reminder.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return null;

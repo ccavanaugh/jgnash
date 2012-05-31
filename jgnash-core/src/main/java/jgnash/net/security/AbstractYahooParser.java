@@ -35,12 +35,10 @@ import jgnash.net.ConnectionFactory;
  * An abstract CommodityParser for the Yahoo! financial web sites.
  *
  * @author Craig Cavanaugh
- *
  */
 public abstract class AbstractYahooParser implements SecurityParser {
-
-    // static reference is kept so LogManager cannot garbage collect the logger
-    private static Logger logger = Logger.getLogger(AbstractYahooParser.class.getName());
+  
+    private static final Logger logger = Logger.getLogger(AbstractYahooParser.class.getName());
 
     private static final Pattern COMMA_DELIMITER_PATTERN = Pattern.compile(",");
 

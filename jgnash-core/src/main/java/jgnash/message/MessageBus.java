@@ -29,8 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.util.DefaultDaemonThreadFactory;
-
-import static jgnash.util.LogUtils.logStackTrace;
+import jgnash.util.LogUtils;
 
 /**
  * Thread safe Message Bus
@@ -103,8 +102,10 @@ public class MessageBus {
         }
     }
 
-    private boolean connectToServer(final String remoteHost, final int remotePort) {
-        assert remoteHost != null & remotePort > 0;
+    private boolean connectToServer(final String remoteHost, final int remotePort) {             
+        if (remoteHost == null || remotePort <= 0) {            
+            throw new IllegalArgumentException();
+        }
 
         messageBusClient = new MessageBusRemoteClient(remoteHost, remotePort);
 
@@ -126,7 +127,7 @@ public class MessageBus {
 
             if (containsListener(listener, channel)) {
                 logger.severe("An attempt was made to install a duplicate listener");
-                logStackTrace(logger, Level.SEVERE);
+                LogUtils.logStackTrace(logger, Level.SEVERE);               
             } else {
                 set.add(new WeakReference<>(listener));
             }

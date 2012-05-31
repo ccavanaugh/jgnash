@@ -48,7 +48,7 @@ public class MessageBusRemoteServer {
 
     private IoAcceptor acceptor;
 
-    private Logger logger;
+    private static final Logger logger = Logger.getLogger(MessageBusRemoteServer.class.getName());
 
     private Set<IoSession> clientSessions = new HashSet<>();
 
@@ -61,8 +61,7 @@ public class MessageBusRemoteServer {
         IoBuffer.setAllocator(new SimpleBufferAllocator());
     }
 
-    public MessageBusRemoteServer(final int port) {
-        logger = Logger.getLogger(MessageBusRemoteServer.class.getName());
+    public MessageBusRemoteServer(final int port) {      
         this.port = port;
     }
 
@@ -120,8 +119,8 @@ public class MessageBusRemoteServer {
     private class MessageHandler extends IoHandlerAdapter {
 
         @Override
-        public void exceptionCaught(final IoSession session, final Throwable t) throws Exception {
-            t.printStackTrace();
+        public void exceptionCaught(final IoSession session, final Throwable t) throws Exception {           
+            logger.log(Level.SEVERE, null, t);
 
             rwl.writeLock().lock();
 
@@ -169,7 +168,7 @@ public class MessageBusRemoteServer {
                 rwl.readLock().unlock();
             }
 
-            logger.info("Broadcast: " + str);
+            logger.log(Level.INFO, "Broadcast: {0}", str);
         }
 
         @Override

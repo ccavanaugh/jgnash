@@ -30,11 +30,10 @@ import jgnash.engine.dao.TrashDAO;
  * Db4o trash DAO
  *
  * @author Craig Cavanaugh
- *
  */
 class Db4oTrashDAO extends AbstractDb4oDAO implements TrashDAO {
 
-    private final Logger logger = Logger.getLogger(Db4oTrashDAO.class.getName());
+    private static final Logger logger = Logger.getLogger(Db4oTrashDAO.class.getName());
 
     Db4oTrashDAO(final ObjectContainer container, final boolean isRemote) {
         super(container, isRemote);

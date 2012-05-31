@@ -20,15 +20,6 @@ package jgnash.engine.xstream;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.io.binary.BinaryStreamDriver;
-import jgnash.engine.CommodityNode;
-import jgnash.engine.Config;
-import jgnash.engine.ExchangeRate;
-import jgnash.engine.RootAccount;
-import jgnash.engine.StoredObject;
-import jgnash.engine.StoredObjectComparator;
-import jgnash.engine.budget.Budget;
-import jgnash.engine.recurring.Reminder;
-import jgnash.util.FileUtils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -49,6 +40,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import jgnash.engine.CommodityNode;
+import jgnash.engine.Config;
+import jgnash.engine.ExchangeRate;
+import jgnash.engine.RootAccount;
+import jgnash.engine.StoredObject;
+import jgnash.engine.StoredObjectComparator;
+import jgnash.engine.budget.Budget;
+import jgnash.engine.recurring.Reminder;
+import jgnash.util.FileUtils;
 
 /**
  * Simple object container for StoredObjects that reads and writes a xml file

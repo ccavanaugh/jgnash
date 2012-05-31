@@ -17,12 +17,12 @@
  */
 package jgnash.imports;
 
+import java.util.List;
+import java.util.Set;
+
 import jgnash.bayes.BayesClassifier;
 import jgnash.engine.Account;
 import jgnash.engine.Transaction;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  * Bayes classifier import utility methods

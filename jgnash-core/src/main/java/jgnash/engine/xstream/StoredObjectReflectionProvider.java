@@ -18,9 +18,10 @@
 package jgnash.engine.xstream;
 
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
-import jgnash.engine.StoredObject;
 
 import java.util.List;
+
+import jgnash.engine.StoredObject;
 
 /**
  * Expanded XStream reflection provider.

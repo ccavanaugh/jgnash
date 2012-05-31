@@ -23,9 +23,8 @@ import jgnash.engine.Transaction;
  * Matcher Interface
  *
  * @author Craig Cavanaugh
- *
  */
-interface Matcher {
+public interface Matcher {
 
     /**
      * Regex match against a Transaction

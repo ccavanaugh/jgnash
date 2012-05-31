@@ -293,5 +293,10 @@ public class Budget extends StoredObject implements Comparable<Budget> {
      */
     public void setLiabilityAccountsIncluded(final boolean liabilityAccountsIncluded) {
         this.liabilityAccountsIncluded = liabilityAccountsIncluded;
-    }       
+    }
+    
+    protected Object readResolve() {
+        workingYear = DateUtils.getCurrentYear();
+        return this;
+    }
 }

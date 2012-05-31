@@ -207,7 +207,7 @@ public abstract class CommodityFormat {
         return simpleFormat = new SimpleFormat();
     }*/
 
-    public static CommodityFormat getFullFormat() {
+    public static synchronized CommodityFormat getFullFormat() {
         if (fullFormat != null) {
             return fullFormat;
         }

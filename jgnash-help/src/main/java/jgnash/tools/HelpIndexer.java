@@ -27,12 +27,14 @@
 package jgnash.tools;
 
 import com.sun.java.help.search.Indexer;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;

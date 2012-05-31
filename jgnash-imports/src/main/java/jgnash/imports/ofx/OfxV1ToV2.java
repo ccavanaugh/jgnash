@@ -17,8 +17,6 @@
  */
 package jgnash.imports.ofx;
 
-import jgnash.util.FileMagic;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,12 +24,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import jgnash.util.FileMagic;
 
 /**
  * Utility class to convert OFX version 1 (SGML) to OFX version 2 (XML)
@@ -45,7 +44,7 @@ public class OfxV1ToV2 {
     public static String convertToXML(final File file) {
         String encoding = FileMagic.getOfxV1Encoding(file);
 
-        Logger.getLogger(OfxV1ToV2.class.getName()).info("OFX Version 1 file encoding was " + encoding);
+        Logger.getLogger(OfxV1ToV2.class.getName()).log(Level.INFO, "OFX Version 1 file encoding was {0}", encoding);
 
         return convertSgmlToXML(readFile(file, encoding));
     }

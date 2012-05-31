@@ -17,16 +17,16 @@
  */
 package jgnash.engine.xstream;
 
+import java.io.File;
+import java.util.Collection;
+import java.util.List;
+import java.util.logging.Logger;
+
 import jgnash.engine.Config;
 import jgnash.engine.DataStore;
 import jgnash.engine.Engine;
 import jgnash.engine.StoredObject;
 import jgnash.util.Resource;
-
-import java.io.File;
-import java.util.Collection;
-import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * XML specific code for data storage and creating an engine

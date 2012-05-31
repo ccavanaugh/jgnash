@@ -35,7 +35,7 @@ public class BudgetGoal implements Cloneable, Serializable {
     private static final long serialVersionUID = 1L;
 
     /** 366 days per year */
-    public transient static final int PERIODS = 366;
+    public static final int PERIODS = 366;
 
     // cache the hash code
     private transient int hash;

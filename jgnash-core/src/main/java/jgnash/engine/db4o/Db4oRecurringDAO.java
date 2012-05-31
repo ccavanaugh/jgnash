@@ -32,13 +32,12 @@ import jgnash.engine.recurring.Reminder;
  * Reminder DAO
  *
  * @author Craig Cavanaugh
- *
  */
 class Db4oRecurringDAO extends AbstractDb4oDAO implements RecurringDAO {
 
     private static final String SEMAPHORE_NAME = "ReminderLock";
 
-    private final Logger logger = Logger.getLogger(Db4oRecurringDAO.class.getName());
+    private static final Logger logger = Logger.getLogger(Db4oRecurringDAO.class.getName());
 
     Db4oRecurringDAO(final ObjectContainer container, final boolean isRemote) {
         super(container, isRemote);

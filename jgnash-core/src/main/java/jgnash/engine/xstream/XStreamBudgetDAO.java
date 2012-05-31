@@ -17,10 +17,10 @@
  */
 package jgnash.engine.xstream;
 
+import java.util.List;
+
 import jgnash.engine.budget.Budget;
 import jgnash.engine.dao.BudgetDAO;
-
-import java.util.List;
 
 /**
  * XML Budget DAO

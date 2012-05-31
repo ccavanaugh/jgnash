@@ -17,7 +17,6 @@
  */
 package jgnash.engine.search;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,16 +28,15 @@ import jgnash.engine.Transaction;
  *
  * @author Craig Cavanaugh
  */
-public class SearchDefinition implements Serializable {
-
-    private static final long serialVersionUID = -5064899725574780027L;
-
+public class SearchDefinition {
+   
     public enum Criteria {
         ALL,
         ANY
     }
 
     private final Criteria criteria;
+    
     private final Collection<Matcher> matcherCollection;
 
     public SearchDefinition(final Criteria criteria, final Collection<Matcher> matcherCollection) {

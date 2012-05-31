@@ -49,7 +49,6 @@ import jgnash.util.Resource;
  * db4o network server
  *
  * @author Craig Cavanaugh
- *
  */
 public class Db4oNetworkServer implements MessageRecipient {
 
@@ -103,13 +102,13 @@ public class Db4oNetworkServer implements MessageRecipient {
                     dirty = true;
                 }
             });
-
+            
             try {
                 if (!stop) {
                     this.wait(Long.MAX_VALUE); // wait forever for notify() from close()
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Db4oNetworkServer.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             backupExecutor.shutdown();

@@ -17,13 +17,13 @@
  */
 package jgnash.imports;
 
+import java.util.Date;
+import java.util.List;
+
 import jgnash.engine.Account;
 import jgnash.engine.Transaction;
 import jgnash.imports.ofx.OfxTransaction;
 import jgnash.util.DateUtils;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * Generic import utility methods

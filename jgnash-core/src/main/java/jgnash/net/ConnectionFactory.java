@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 /**
@@ -63,11 +65,11 @@ public class ConnectionFactory {
 
     public synchronized static URLConnection getConnection(String url) {
         URLConnection connection = null;
-
+       
         try {
             connection = getConnection(new URL(url));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ConnectionFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return connection;
@@ -78,8 +80,8 @@ public class ConnectionFactory {
 
         try {
             connection = url.openConnection();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            Logger.getLogger(ConnectionFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         /* Set the connection timeout */

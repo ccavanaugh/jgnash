@@ -130,7 +130,7 @@ public final class QifParser {
             }
             in.close();
         } catch (FileNotFoundException e) {
-            logger.warning("Could not find file: " + fileName);
+            logger.log(Level.WARNING, "Could not find file: {0}", fileName);
         } catch (IOException e) {
             System.err.println(e);
         }
@@ -155,7 +155,7 @@ public final class QifParser {
             }
             in.close();
         } catch (FileNotFoundException fne) {
-            logger.warning("Could not find file: " + fileName);
+            logger.log(Level.WARNING, "Could not find file: {0}", fileName);
             try {
                 if (in != null) {
                     in.close();

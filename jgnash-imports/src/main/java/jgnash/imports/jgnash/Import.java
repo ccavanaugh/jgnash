@@ -75,8 +75,9 @@ import jgnash.engine.TransactionTag;
 /**
  * Import jGnash 1.11.x files. Older versions are not supported
  * <p/>
- * Pass 1: Read commodity data and exchange rates and transaction number items Pass 2: Read account data and Pass 3:
- * Read transaction data Pass 4: Read reminders
+ * Pass 1: Read commodity data and exchange rates and transaction number items
+ * Pass 2: Read account data and Pass 3: Read transaction data Pass 4: Read
+ * reminders
  * <p/>
  * Accounts will be kept in a lookup table during the parsing operation
  *
@@ -123,7 +124,8 @@ public class Import {
     private static List<Runnable> workQueue = new ArrayList<>();
 
     /**
-     * Cache of currency nodes, so that database doesn't need to be queried for each transaction.
+     * Cache of currency nodes, so that database doesn't need to be queried for
+     * each transaction.
      */
     private Map<String, CurrencyNode> currencyCache = new HashMap<>();
 
@@ -166,7 +168,7 @@ public class Import {
             /* Run commodity generation cleanup threads */
             ExecutorService es = Executors.newSingleThreadExecutor();
 
-            for (Iterator<Runnable> i = workQueue.iterator(); i.hasNext(); ) {
+            for (Iterator<Runnable> i = workQueue.iterator(); i.hasNext();) {
                 es.execute(i.next());
                 i.remove();
             }
@@ -196,7 +198,7 @@ public class Import {
             /* Run account generation cleanup threads */
             es = Executors.newSingleThreadExecutor();
 
-            for (Iterator<Runnable> i = workQueue.iterator(); i.hasNext(); ) {
+            for (Iterator<Runnable> i = workQueue.iterator(); i.hasNext();) {
                 es.execute(i.next());
                 i.remove();
             }
@@ -268,7 +270,7 @@ public class Import {
         logger.log(Level.INFO, "Generating {0} Split Transactions", splitList.size());
 
         /* loop through the lists and add split transactions */
-        for (Iterator<Map<String, String>> i = splitList.iterator(); i.hasNext(); ) {
+        for (Iterator<Map<String, String>> i = splitList.iterator(); i.hasNext();) {
 
             Map<String, String> map = i.next();
 
@@ -282,7 +284,7 @@ public class Import {
             transaction.setPayee(map.get("payee"));
             transaction.setMemo(map.get("memo"));
 
-            for (Iterator<Map<String, String>> j = this.splitEntryList.iterator(); j.hasNext(); ) {
+            for (Iterator<Map<String, String>> j = this.splitEntryList.iterator(); j.hasNext();) {
                 Map<String, String> entryMap = j.next();
 
                 if (entryMap.get("parent").equals(id)) {
@@ -417,18 +419,23 @@ public class Import {
                 switch (event) {
                     case XMLStreamConstants.START_ELEMENT:
                         if (reader.getAttributeCount() > 0) {
-                            if (reader.getAttributeValue(0).equals("SecurityNode")) {
-                                logger.finest("Found the start of a SecurityNode");
-                                parseSecurityNode(reader);
-                            } else if (reader.getAttributeValue(0).equals("CurrencyNode")) {
-                                logger.finest("Found the start of a CurrencyNode");
-                                parseCurrencyNode(reader);
-                            } else if (reader.getAttributeValue(0).equals("CommodityNode")) {
-                                logger.finest("Found the start of a CommodityNode");
-                                parseCommodityNode(reader);
-                            } else if (reader.getAttributeValue(0).equals("ExchangeRate")) {
-                                logger.finest("Parse exchange rate");
-                                parseExchangeRate(reader);
+                            switch (reader.getAttributeValue(0)) {
+                                case "SecurityNode":
+                                    logger.finest("Found the start of a SecurityNode");
+                                    parseSecurityNode(reader);
+                                    break;
+                                case "CurrencyNode":
+                                    logger.finest("Found the start of a CurrencyNode");
+                                    parseCurrencyNode(reader);
+                                    break;
+                                case "CommodityNode":
+                                    logger.finest("Found the start of a CommodityNode");
+                                    parseCommodityNode(reader);
+                                    break;
+                                case "ExchangeRate":
+                                    logger.finest("Parse exchange rate");
+                                    parseExchangeRate(reader);
+                                    break;
                             }
                         }
                         break;
@@ -479,7 +486,7 @@ public class Import {
                                         EngineFactory.getEngine(EngineFactory.DEFAULT).setExchangeRate(cOne, cTwo, rate);
 
                                         logger.log(Level.FINE, "Set ExchangeRate {0}:{1}", new Object[]{key,
-                                                rate.toString()});
+                                                    rate.toString()});
                                     }
                                 }
 
@@ -555,17 +562,16 @@ public class Import {
     }
 
     private Transaction generateTransaction(final String transactionClass, final Map<String, String> elementMap) {
-
         //logger.finest("Being generateTransaction");
-
-        if (transactionClass.equals("SplitTransaction")) {
-            logger.finest("Found SplitTransaction");
-            splitList.add(elementMap);
-            return null;
-        } else if (transactionClass.equals("SplitEntryTransaction")) {
-            logger.finest("Found SplitEntryTransaction");
-            splitEntryList.add(elementMap);
-            return null;
+        switch (transactionClass) {
+            case "SplitTransaction":
+                logger.finest("Found SplitTransaction");
+                splitList.add(elementMap);
+                return null;
+            case "SplitEntryTransaction":
+                logger.finest("Found SplitEntryTransaction");
+                splitEntryList.add(elementMap);
+                return null;
         }
 
         //logger.finest("Building base transation");
@@ -709,54 +715,47 @@ public class Import {
 
             transaction.setReconciled(investmentAccount, reconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
         }
-
-        if (transactionClass.equals("SingleEntryTransaction")) {
-            BigDecimal amount = new BigDecimal(elementMap.get("amount"));
-            Account account = accountMap.get(elementMap.get("account"));
-            boolean reconciled = Boolean.parseBoolean(elementMap.get("reconciled"));
-
-            transaction = TransactionFactory.generateSingleEntryTransaction(account, amount, date, reconciled, memo, payee, number);
-            transaction.setDateEntered(actDate);
-        } else if (transactionClass.equals("DoubleEntryTransaction")) {
-            Account creditAccount = accountMap.get(elementMap.get("creditAccount"));
-            Account debitAccount = accountMap.get(elementMap.get("debitAccount"));
-            BigDecimal amount = new BigDecimal(elementMap.get("amount"));
-
-            boolean creditReconciled = Boolean.parseBoolean(elementMap.get("creditReconciled"));
-            boolean debitReconciled = Boolean.parseBoolean(elementMap.get("debitReconciled"));
-
-            transaction = new Transaction();
-
-            transaction.setDate(date);
-            transaction.setDateEntered(actDate);
-            transaction.setNumber(number);
-            transaction.setPayee(payee);
-
-            TransactionEntry entry = new TransactionEntry();
-            entry.setMemo(memo);
-
-            entry.setCreditAccount(creditAccount);
-            entry.setDebitAccount(debitAccount);
-
-            if (creditAccount.getCurrencyNode().equals(node)) {
-                entry.setCreditAmount(amount);
-            } else {
-                BigDecimal exchangeRate = new BigDecimal(elementMap.get("exchangeRate"));
-                entry.setCreditAmount(amount.multiply(exchangeRate));
+        switch (transactionClass) {
+            case "SingleEntryTransaction": {
+                BigDecimal amount = new BigDecimal(elementMap.get("amount"));
+                Account account = accountMap.get(elementMap.get("account"));
+                boolean reconciled = Boolean.parseBoolean(elementMap.get("reconciled"));
+                transaction = TransactionFactory.generateSingleEntryTransaction(account, amount, date, reconciled, memo, payee, number);
+                transaction.setDateEntered(actDate);
+                break;
             }
-
-            if (debitAccount.getCurrencyNode().equals(node)) {
-                entry.setDebitAmount(amount.negate());
-            } else {
-                BigDecimal exchangeRate = new BigDecimal(elementMap.get("exchangeRate"));
-                entry.setDebitAmount(amount.multiply(exchangeRate).negate());
+            case "DoubleEntryTransaction": {
+                Account creditAccount = accountMap.get(elementMap.get("creditAccount"));
+                Account debitAccount = accountMap.get(elementMap.get("debitAccount"));
+                BigDecimal amount = new BigDecimal(elementMap.get("amount"));
+                boolean creditReconciled = Boolean.parseBoolean(elementMap.get("creditReconciled"));
+                boolean debitReconciled = Boolean.parseBoolean(elementMap.get("debitReconciled"));
+                transaction = new Transaction();
+                transaction.setDate(date);
+                transaction.setDateEntered(actDate);
+                transaction.setNumber(number);
+                transaction.setPayee(payee);
+                TransactionEntry entry = new TransactionEntry();
+                entry.setMemo(memo);
+                entry.setCreditAccount(creditAccount);
+                entry.setDebitAccount(debitAccount);
+                if (creditAccount.getCurrencyNode().equals(node)) {
+                    entry.setCreditAmount(amount);
+                } else {
+                    BigDecimal exchangeRate = new BigDecimal(elementMap.get("exchangeRate"));
+                    entry.setCreditAmount(amount.multiply(exchangeRate));
+                }
+                if (debitAccount.getCurrencyNode().equals(node)) {
+                    entry.setDebitAmount(amount.negate());
+                } else {
+                    BigDecimal exchangeRate = new BigDecimal(elementMap.get("exchangeRate"));
+                    entry.setDebitAmount(amount.multiply(exchangeRate).negate());
+                }
+                transaction.addTransactionEntry(entry);
+                transaction.setReconciled(creditAccount, creditReconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
+                transaction.setReconciled(debitAccount, debitReconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
+                break;
             }
-
-            transaction.addTransactionEntry(entry);
-
-            transaction.setReconciled(creditAccount, creditReconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
-
-            transaction.setReconciled(debitAccount, debitReconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
         }
         return transaction;
     }
@@ -1385,7 +1384,6 @@ public class Import {
 
         return node;
     }
-
     private Calendar calendar = Calendar.getInstance(); // reused for date decode
 
     private Date decodeDate(final String date) {
@@ -1416,5 +1414,6 @@ public class Import {
         String prefix;
 
         byte scale;
+
     }
 }

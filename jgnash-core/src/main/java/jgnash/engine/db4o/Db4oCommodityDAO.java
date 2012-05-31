@@ -78,7 +78,7 @@ class Db4oCommodityDAO extends AbstractDb4oDAO implements CommodityDAO {
      * @see jgnash.engine.CommodityDAOInterface#addSecurityHistory(jgnash.engine.SecurityNode, jgnash.engine.SecurityHistoryNode)
      */
     @Override
-    public boolean addSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
+    public synchronized boolean addSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
 
         boolean result = false;
 
@@ -97,7 +97,7 @@ class Db4oCommodityDAO extends AbstractDb4oDAO implements CommodityDAO {
     }
 
     @Override
-    public boolean addExchangeRateHistory(final ExchangeRate rate, final ExchangeRateHistoryNode hNode) {
+    public synchronized boolean addExchangeRateHistory(final ExchangeRate rate, final ExchangeRateHistoryNode hNode) {
 
         boolean result = false;
 
@@ -117,7 +117,7 @@ class Db4oCommodityDAO extends AbstractDb4oDAO implements CommodityDAO {
     }
 
     @Override
-    public boolean removeExchangeRateHistory(final ExchangeRate rate, final ExchangeRateHistoryNode hNode) {
+    public synchronized boolean removeExchangeRateHistory(final ExchangeRate rate, final ExchangeRateHistoryNode hNode) {
         boolean result = false;
 
         if (container.ext().setSemaphore(GLOBAL_SEMAPHORE, SEMAPHORE_WAIT_TIME)) {
@@ -166,7 +166,7 @@ class Db4oCommodityDAO extends AbstractDb4oDAO implements CommodityDAO {
      * @see jgnash.engine.CommodityDAOInterface#getExchangeNode(java.lang.String)
      */
     @Override
-    public ExchangeRate getExchangeNode(final String rateId) {
+    public synchronized ExchangeRate getExchangeNode(final String rateId) {
         ExchangeRate rate = null;
 
         if (container.ext().setSemaphore(GLOBAL_SEMAPHORE, SEMAPHORE_WAIT_TIME)) {
@@ -230,7 +230,7 @@ class Db4oCommodityDAO extends AbstractDb4oDAO implements CommodityDAO {
      * @see jgnash.engine.CommodityDAOInterface#removeSecurityHistory(jgnash.engine.SecurityNode, jgnash.engine.SecurityHistoryNode)
      */
     @Override
-    public boolean removeSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
+    public synchronized boolean removeSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
 
         boolean result = false;
 
@@ -256,7 +256,7 @@ class Db4oCommodityDAO extends AbstractDb4oDAO implements CommodityDAO {
      * @see jgnash.engine.CommodityDAOInterface#setExchangeRate(jgnash.engine.ExchangeRate)
      */
     @Override
-    public void addExchangeRate(ExchangeRate eRate) {
+    public synchronized void addExchangeRate(ExchangeRate eRate) {
         if (container.ext().setSemaphore(GLOBAL_SEMAPHORE, SEMAPHORE_WAIT_TIME)) {
             container.set(eRate);
             commit();
@@ -267,7 +267,7 @@ class Db4oCommodityDAO extends AbstractDb4oDAO implements CommodityDAO {
     }
 
     @Override
-    public void refreshCommodityNode(CommodityNode node) {
+    public synchronized void refreshCommodityNode(CommodityNode node) {
         if (container.ext().setSemaphore(GLOBAL_SEMAPHORE, SEMAPHORE_WAIT_TIME)) {
             container.ext().refresh(node, 2);
             container.ext().releaseSemaphore(GLOBAL_SEMAPHORE);
@@ -277,7 +277,7 @@ class Db4oCommodityDAO extends AbstractDb4oDAO implements CommodityDAO {
     }
 
     @Override
-    public void refreshExchangeRate(ExchangeRate rate) {
+    public synchronized void refreshExchangeRate(ExchangeRate rate) {
         if (container.ext().setSemaphore(GLOBAL_SEMAPHORE, SEMAPHORE_WAIT_TIME)) {
             container.ext().refresh(rate, 2);
             container.ext().releaseSemaphore(GLOBAL_SEMAPHORE);
@@ -311,7 +311,7 @@ class Db4oCommodityDAO extends AbstractDb4oDAO implements CommodityDAO {
      */
 
     @Override
-    public Set<CurrencyNode> getActiveCurrencies() {
+    public synchronized Set<CurrencyNode> getActiveCurrencies() {
         Set<CurrencyNode> currencies = new HashSet<>();
 
         if (container.ext().setSemaphore(GLOBAL_SEMAPHORE, SEMAPHORE_WAIT_TIME)) {

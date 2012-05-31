@@ -33,7 +33,6 @@ import jgnash.engine.StoredObject;
  * Message object
  * 
  * @author Craig Cavanaugh
- *
  */
 public class Message implements Serializable, Cloneable {
 
@@ -204,6 +203,6 @@ public class Message implements Serializable, Cloneable {
      */
     @Override
     public String toString() {
-        return String.format("Message [event=%s, channel=%s, source=%s \n\tmessage=%s]", event, channel, source, message);
+        return String.format("Message [event=%s, channel=%s, source=%s %n\tmessage=%s]", event, channel, source, message);
     }
 }
