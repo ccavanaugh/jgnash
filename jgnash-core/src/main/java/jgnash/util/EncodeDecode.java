@@ -19,15 +19,15 @@ package jgnash.util;
 
 import java.awt.*;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
  * EncodeDecode is used to encode/decode various objects using a String
  *
  * @author Craig Cavanaugh
- *
  */
-
 public class EncodeDecode {
 
     private static final Pattern COMMA_DELIMITER_PATTERN = Pattern.compile(",");
@@ -90,7 +90,8 @@ public class EncodeDecode {
                 rectangle.y = Integer.parseInt(array[1]);
                 rectangle.width = Integer.parseInt(array[2]);
                 rectangle.height = Integer.parseInt(array[3]);
-            } catch (NumberFormatException nfe) {
+            } catch (NumberFormatException nfe) {                
+                Logger.getLogger(EncodeDecode.class.getName()).log(Level.SEVERE, null, nfe);
                 rectangle = null;
             }
         }
@@ -153,7 +154,7 @@ public class EncodeDecode {
      * Turns a string of "10101" into a boolean array
      *
      * @param array array to decode
-     * @return the boolean array, null if zero length or array was null
+     * @return the boolean array, zero length if string is null or zero length
      */
     public static boolean[] decodeBooleanArray(final String array) {
         if (array != null) {
@@ -168,6 +169,6 @@ public class EncodeDecode {
                 return b;
             }
         }
-        return null;
+        return new boolean[0];
     }
 }

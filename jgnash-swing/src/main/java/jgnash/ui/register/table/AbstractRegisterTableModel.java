@@ -164,11 +164,11 @@ public abstract class AbstractRegisterTableModel extends AbstractTableModel impl
     }
 
     public void setColumnVisibility(final boolean[] array) {
-        if (array != null && array.length == columnVisible.length) {
-            columnVisible = array.clone();
+        if (array.length == columnVisible.length) {
+            columnVisible = array.clone();  // create a defensive copy
             buildColumnMap();
             fireTableStructureChanged();
-            columnCountCache = false; // recalculate the column count
+            columnCountCache = false;       // recalculate the column count
         }
     }
 
