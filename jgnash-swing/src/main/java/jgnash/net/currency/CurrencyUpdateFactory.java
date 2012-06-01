@@ -84,10 +84,7 @@ public class CurrencyUpdateFactory {
                             if (conv != null && conv.compareTo(BigDecimal.ZERO) != 0) {
                                 EngineFactory.getEngine(EngineFactory.DEFAULT).setExchangeRate(i, j, conv);
                             }
-                        }
-
-                        // sleep a random amount to allow other processes to occur on slower systems
-                        Thread.sleep(Math.round(1010 * Math.random()));
+                        }                   
 
                         count++;
 
