@@ -29,6 +29,8 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.InvalidPreferencesFormatException;
 import java.util.prefs.Preferences;
 
+import javax.swing.JOptionPane;
+
 import jgnash.engine.Engine;
 import jgnash.engine.db4o.Db4oNetworkServer;
 import jgnash.net.NetworkAuthenticator;
@@ -43,8 +45,6 @@ import jgnash.util.Resource;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-
-import javax.swing.JOptionPane;
 
 /**
  * This is the main entry point for the jGnash application.

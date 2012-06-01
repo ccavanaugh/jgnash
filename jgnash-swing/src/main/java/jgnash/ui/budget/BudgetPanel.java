@@ -33,6 +33,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -224,7 +225,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
                         }
                     });
 
-                } catch (final Exception e) {
+                } catch (final InterruptedException | ExecutionException e) {
                     logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
                 }
             }
@@ -254,7 +255,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
                     if (size > 0) { // don't even try if a budget does not exist
                         showBudgetPane();
                     }
-                } catch (final Exception e) {
+                } catch (final InterruptedException | ExecutionException e) {
                     logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
                 }
             }

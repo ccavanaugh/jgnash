@@ -47,6 +47,7 @@ import java.util.prefs.Preferences;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFrame;
+import javax.swing.JLayer;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -89,7 +90,6 @@ import jgnash.ui.util.builder.ActionParser;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.Resource;
 
-import javax.swing.JLayer;
 import org.jdesktop.jxlayer.plaf.effect.BufferedImageOpEffect;
 import org.jdesktop.jxlayer.plaf.ext.LockableUI;
 import org.jdesktop.swingx.JXBusyLabel;

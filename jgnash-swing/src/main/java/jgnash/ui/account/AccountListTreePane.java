@@ -17,7 +17,15 @@
  */
 package jgnash.ui.account;
 
-import javax.swing.*;
+
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.lang.reflect.InvocationTargetException;
+import java.util.prefs.Preferences;
+
+import javax.swing.JComponent;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -31,15 +39,11 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.RootAccount;
 import jgnash.message.*;
 
-import java.awt.*;
-import java.util.prefs.Preferences;
-
 /**
  * Extends <code>JScrollPane</code> to create a component that lists a tree of available accounts. A JTree is used for
  * the display
  *
  * @author Craig Cavanaugh
- *
  */
 public class AccountListTreePane extends JScrollPane implements TreeSelectionListener, MessageListener, AccountFilterModel {
 
@@ -257,7 +261,7 @@ public class AccountListTreePane extends JScrollPane implements TreeSelectionLis
                         _expand();
                     }
                 });
-            } catch (Exception e) {
+            } catch (InterruptedException | InvocationTargetException e) {
                 System.err.println(e);
             }
         }

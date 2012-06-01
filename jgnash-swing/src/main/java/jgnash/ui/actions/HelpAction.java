@@ -17,9 +17,10 @@
  */
 package jgnash.ui.actions;
 
+import java.awt.event.ActionEvent;
+
 import javax.help.HelpBroker;
 import javax.swing.AbstractAction;
-import java.awt.event.ActionEvent;
 
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.builder.Action;
@@ -28,7 +29,6 @@ import jgnash.ui.util.builder.Action;
  * Action to display help tracker
  *
  * @author Craig Cavanaugh
- *
  */
 
 @Action("help-command")

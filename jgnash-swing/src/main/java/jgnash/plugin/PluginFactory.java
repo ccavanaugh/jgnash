@@ -126,7 +126,7 @@ public final class PluginFactory {
                         if (p != null) {
                             plugins.add(p);
                         }
-                    } catch (Exception ex) {
+                    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | IOException ex) {
                         logger.log(Level.SEVERE, null, ex);
                     }
                 }

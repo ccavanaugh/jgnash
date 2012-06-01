@@ -37,7 +37,7 @@ import jgnash.net.ConnectionFactory;
  * @author Craig Cavanaugh
  */
 public abstract class AbstractYahooParser implements SecurityParser {
-  
+
     private static final Logger logger = Logger.getLogger(AbstractYahooParser.class.getName());
 
     private static final Pattern COMMA_DELIMITER_PATTERN = Pattern.compile(",");
@@ -88,7 +88,6 @@ public abstract class AbstractYahooParser implements SecurityParser {
 
     // http://uk.old.finance.yahoo.com/d/quotes.csv?s=GB00B0HZR397GBP&f=sl1t1c1ohgv&e=.csv
     // http://download.finance.yahoo.com/d/quotes.csv?s=AMD&f=sl1d1t1c1ohgv&e=.csv
-
     protected abstract String getBaseURL();
 
     protected abstract boolean useISIN();
@@ -169,8 +168,7 @@ public abstract class AbstractYahooParser implements SecurityParser {
         } catch (NumberFormatException e) {
             logger.log(Level.SEVERE, line, e);
         } catch (Exception e) {
-            logger.severe(e.getLocalizedMessage());
-            e.printStackTrace();
+            logger.log(Level.SEVERE, null, e);
         } finally {
             try {
                 in.close();

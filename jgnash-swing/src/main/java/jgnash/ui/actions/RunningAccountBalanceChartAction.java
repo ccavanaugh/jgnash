@@ -17,10 +17,10 @@
  */
 package jgnash.ui.actions;
 
+import java.awt.event.ActionEvent;
+
 import jgnash.ui.report.compiled.RunningAccountBalanceChart;
 import jgnash.ui.util.builder.Action;
-
-import java.awt.event.ActionEvent;
 
 /**
  * UI Action to open the new file dialog

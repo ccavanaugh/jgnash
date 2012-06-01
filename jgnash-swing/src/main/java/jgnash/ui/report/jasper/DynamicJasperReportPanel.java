@@ -48,6 +48,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -1001,7 +1002,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
                 loadReport(get());
                 forceRefresh();
                 frame.stopWaitMessage();
-            } catch (Exception ex) {
+            } catch (InterruptedException | ExecutionException ex) {
                 logger.log(Level.SEVERE, ex.getMessage(), ex);
             }
         }

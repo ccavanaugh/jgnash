@@ -17,12 +17,13 @@
  */
 package jgnash.ui.actions;
 
+import java.awt.event.ActionEvent;
+
+import javax.swing.AbstractAction;
+
 import jgnash.ui.UIApplication;
 import jgnash.ui.splash.AboutDialog;
 import jgnash.ui.util.builder.Action;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
 
 /**
  * UI Action to open the new file dialog

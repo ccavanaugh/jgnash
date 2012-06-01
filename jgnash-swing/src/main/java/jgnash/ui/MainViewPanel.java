@@ -17,8 +17,6 @@
  */
 package jgnash.ui;
 
-import org.jdesktop.swingx.JXTitledPanel;
-
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
@@ -38,11 +36,12 @@ import javax.swing.SwingConstants;
 
 import jgnash.ui.components.VerticalTextIcon;
 
+import org.jdesktop.swingx.JXTitledPanel;
+
 /**
  * A Panel that holds all the views and uses a card layout to display the panels.
  * 
  * @author Craig Cavanaugh
- *
  */
 class MainViewPanel extends JPanel implements ActionListener {
 

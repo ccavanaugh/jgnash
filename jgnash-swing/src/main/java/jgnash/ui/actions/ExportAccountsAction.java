@@ -17,12 +17,13 @@
  */
 package jgnash.ui.actions;
 
+import java.io.File;
+import java.util.prefs.Preferences;
+
 import javax.swing.JFileChooser;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.util.prefs.Preferences;
 
 import jgnash.engine.AccountTreeXMLFactory;
 import jgnash.engine.EngineFactory;

@@ -35,6 +35,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.management.ManagementFactory;
 import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
@@ -171,16 +172,11 @@ public class ConsoleDialog {
         if (dumpFile != null) {
             MBeanServer server = ManagementFactory.getPlatformMBeanServer();
             try {
-                HotSpotDiagnosticMXBean bean = ManagementFactory.newPlatformMXBeanProxy(server, "com.sun.management:type=HotSpotDiagnostic", HotSpotDiagnosticMXBean.class);
-
-                System.gc();
-                System.gc();
-                System.gc();
-                System.gc();
+                HotSpotDiagnosticMXBean bean = ManagementFactory.newPlatformMXBeanProxy(server, "com.sun.management:type=HotSpotDiagnostic", HotSpotDiagnosticMXBean.class);                
 
                 bean.dumpHeap(dumpFile.getAbsolutePath(), true);
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException e) {              
+                Logger.getLogger(ConsoleDialog.class.getCanonicalName()).log(Level.SEVERE, null, e);
             }
         }
     }

@@ -16,19 +16,22 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package jgnash.ui.actions;
-
-import jgnash.ui.UIApplication;
-import jgnash.ui.util.builder.Action;
-
-import javax.script.ScriptEngineManager;
-import javax.swing.*;
-import java.awt.*;
+        
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+import javax.swing.JFileChooser;
+
+import jgnash.ui.UIApplication;
+import jgnash.ui.util.builder.Action;
 
 /**
  * UI Action to open the currencies dialog
@@ -64,14 +67,14 @@ public class RunJavaScriptAction extends AbstractEnabledAction {
                     try {
                         reader = new FileReader(file);
                         new ScriptEngineManager().getEngineByName("JavaScript").eval(reader);
-                    } catch (Exception e) {
+                    } catch (FileNotFoundException | ScriptException e) {
                         Logger.getLogger(RunJavaScriptAction.class.getName()).log(Level.SEVERE, e.toString(), e);
                     } finally {
                         if (reader != null) {
                             try {
                                 reader.close();
                             } catch (IOException e) {
-                                e.printStackTrace();
+                                Logger.getLogger(RunJavaScriptAction.class.getName()).log(Level.SEVERE, e.toString(), e);
                             }
                         }
                     }

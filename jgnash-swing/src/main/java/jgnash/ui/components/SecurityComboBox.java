@@ -19,6 +19,7 @@ package jgnash.ui.components;
 
 import java.awt.EventQueue;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 import javax.swing.SwingWorker;
@@ -57,7 +58,7 @@ public class SecurityComboBox extends AbstractCommodityComboBox<SecurityNode> {
                     if (model.getSize() > 0) {
                         SecurityComboBox.this.setSelectedIndex(0);
                     }
-                } catch (Exception e) {
+                } catch (InterruptedException | ExecutionException e) {
                     Logger.getLogger(SecurityComboBox.class.getName()).severe(e.getLocalizedMessage());
                 }
             }

@@ -59,6 +59,10 @@ import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.ButtonBarFactory;
 import com.jgoodies.forms.layout.FormLayout;
 
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.logging.Level;
+
 /**
  * Dialog that lets the user download and import security history from Yahoo
  *
@@ -293,9 +297,8 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
                 String message = MessageFormat.format(rb.getString("Message.UpdatedPrice"), sNode.getSymbol());
                 Logger.getLogger(SecurityUpdateFactory.class.getName()).info(message);
 
-            } catch (Exception ex) {
-                Logger.getLogger(YahooSecurityHistoryImportDialog.class.getName()).severe(ex.getLocalizedMessage());
-                ex.printStackTrace();
+            } catch (IOException | ParseException | NumberFormatException ex) {                
+                Logger.getLogger(YahooSecurityHistoryImportDialog.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
                 if (in != null) { // close everything up
                     try {
@@ -307,8 +310,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
                             }
                         }
                     } catch (Exception ex) {
-                        Logger.getLogger(YahooSecurityHistoryImportDialog.class.getName()).severe(ex.getLocalizedMessage());
-                        ex.printStackTrace();
+                        Logger.getLogger(YahooSecurityHistoryImportDialog.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }

@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URL;
@@ -167,7 +168,7 @@ public final class ActionParser extends DefaultHandler {
                 }
             }
 
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | IOException | InstantiationException | IllegalAccessException e) {
             log.log(Level.SEVERE, e.toString(), e);
         }
     }
@@ -592,7 +593,7 @@ public final class ActionParser extends DefaultHandler {
                         }
                     }
                 }
-            } catch (Exception e) {
+            } catch (IOException | ClassNotFoundException e) {
                 log.log(Level.SEVERE, e.getMessage(), e);
             }
         } else if (!directory.exists()) {
@@ -655,7 +656,7 @@ public final class ActionParser extends DefaultHandler {
             if (method != null) {
                 try {
                     method.invoke(clazz, (Object[]) null);
-                } catch (Exception e) {
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                     log.log(Level.SEVERE, e.getMessage(), e);
                 }
             }

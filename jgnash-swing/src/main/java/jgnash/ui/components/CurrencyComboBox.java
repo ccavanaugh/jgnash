@@ -20,6 +20,7 @@ package jgnash.ui.components;
 import java.awt.EventQueue;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 import javax.swing.SwingWorker;
@@ -58,7 +59,7 @@ public class CurrencyComboBox extends AbstractCommodityComboBox<CurrencyNode> {
                 try {
                     model.addAll(get());
                     CurrencyComboBox.this.setSelectedNode(defaultNode);
-                } catch (Exception e) {
+                } catch (InterruptedException | ExecutionException e) {
                     Logger.getLogger(CurrencyComboBox.class.getName()).severe(e.getLocalizedMessage());
                 }
             }

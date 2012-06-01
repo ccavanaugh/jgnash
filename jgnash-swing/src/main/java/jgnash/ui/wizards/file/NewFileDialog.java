@@ -23,6 +23,8 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.SwingWorker;
 
@@ -182,9 +184,10 @@ public class NewFileDialog extends WizardDialog {
                     if (d.isWizardValid()) {
                         new Setup(d).execute();
                     }
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
+                } catch (InterruptedException | ExecutionException e) {                  
+                    Logger.getLogger(NewFileDialog.class.getName()).log(Level.SEVERE, null, e);
                 }
+               
             }
         }
 

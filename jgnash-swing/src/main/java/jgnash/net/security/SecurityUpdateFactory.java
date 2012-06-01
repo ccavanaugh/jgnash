@@ -50,7 +50,7 @@ public class SecurityUpdateFactory {
     private static final String UPDATE_ON_STARTUP = "updateOnStartup";
 
     // static reference is kept so LogManager cannot garbage collect the logger
-    private static Logger logger = Logger.getLogger(SecurityUpdateFactory.class.getName());
+    private static final Logger logger = Logger.getLogger(SecurityUpdateFactory.class.getName());
 
     private SecurityUpdateFactory() {
     }
@@ -112,7 +112,11 @@ public class SecurityUpdateFactory {
 
         public SecurityUpdateWorker() {
             super();
-            MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
+            registerListeners();            
+        }
+        
+        private void registerListeners() {
+          MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);  
         }
 
         @Override
@@ -136,10 +140,7 @@ public class SecurityUpdateFactory {
                                 setProgress(100);
                                 break;
                             }
-                        }
-
-                        // sleep a random amount to allow other processes to occur on slower systems
-                        Thread.sleep(Math.round(1010 * Math.random()));
+                        }                     
                     }
                     setProgress((int) ((i + 1f) / size * 100f));
                 }
