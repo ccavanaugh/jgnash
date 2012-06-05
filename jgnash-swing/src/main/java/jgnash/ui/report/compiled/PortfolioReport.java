@@ -41,6 +41,8 @@ import jgnash.util.Resource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
+
+import java.util.logging.Level;
 import net.sf.jasperreports.engine.JasperPrint;
 
 /**
@@ -199,11 +201,11 @@ public class PortfolioReport extends DynamicJasperReport {
 
             try {
                 performanceSummary = new InvestmentPerformanceSummary(accountCombo.getSelectedAccount(), subAccountCheckBox.isSelected());
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception e) {           
+                Logger.getLogger(PortfolioReport.class.getName()).log(Level.SEVERE, null, e);
             }
 
-            Logger.getAnonymousLogger().info(performanceSummary.toString());
+             Logger.getLogger(PortfolioReport.class.getName()).info(performanceSummary.toString());
         }
 
         @Override

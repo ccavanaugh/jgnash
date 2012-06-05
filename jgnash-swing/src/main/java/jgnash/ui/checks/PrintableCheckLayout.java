@@ -35,6 +35,8 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.Size2DSyntax;
@@ -53,7 +55,6 @@ import jgnash.text.BigDecimalToWords;
  * Check layout object
  *
  * @author Craig Cavanaugh
- *
  */
 class PrintableCheckLayout implements Printable {
 
@@ -109,8 +110,7 @@ class PrintableCheckLayout implements Printable {
             try {
                 getPrinterJob().print(checkLayout.getPrintAttributes());
             } catch (PrinterException pe) {
-                System.err.println(pe.toString());
-                pe.printStackTrace();
+                Logger.getLogger(PrintableCheckLayout.class.getName()).log(Level.SEVERE, null, pe);
             }
         }
     }

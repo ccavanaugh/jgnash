@@ -17,9 +17,13 @@
  */
 package jgnash.ui.actions;
 
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComboBox;
@@ -78,8 +82,8 @@ public class DefaultLocaleAction extends AbstractAction {
 
                         JOptionPane.showMessageDialog(UIApplication.getFrame(), o.toString() + "\n" + rb.getString("Message.RestartLocale"));
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } catch (InterruptedException | ExecutionException | HeadlessException e) {
+                    Logger.getLogger(DefaultLocaleAction.class.getName()).log(Level.SEVERE, null, e);                  
                 }
             }
         };

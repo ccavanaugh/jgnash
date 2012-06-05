@@ -28,6 +28,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -122,7 +123,7 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
                     if (!new JLabel().getFont().canDisplay(model.getEnabledSymbol())) {
                         model.setEnabledSymbol('X');
                     }
-                } catch (Exception e) {
+                } catch (InterruptedException | ExecutionException e) {
                     Logger.getLogger(RecurringPanel.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
                 }
             }
@@ -359,7 +360,7 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
 
                         showingDialog = false;
                     }
-                } catch (final Exception e) {
+                } catch (final InterruptedException | ExecutionException | RuntimeException e) {
                     Logger.getLogger(RecurringPanel.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
                 }
             }

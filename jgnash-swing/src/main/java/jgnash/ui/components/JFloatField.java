@@ -25,6 +25,8 @@ import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -282,8 +284,8 @@ public class JFloatField extends JTextFieldEx {
                     return new BigDecimal(o.toString()).setScale(scale, BigDecimal.ROUND_HALF_UP).toString();
                 }
             } catch (ScriptException ex) {
-                if (DEBUG) {
-                    ex.printStackTrace();
+                if (DEBUG) {               
+                    Logger.getLogger(JFloatField.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 return "";
             }

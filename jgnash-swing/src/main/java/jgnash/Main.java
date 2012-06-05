@@ -165,7 +165,8 @@ public final class Main {
     @SuppressWarnings("unused")
     public static void main(final String args[]) {
         if (checkJVMVersion()) {
-            new Main(args);
+            Main main = new Main();
+            main.init(args);
         }
     }
 
@@ -203,10 +204,10 @@ public final class Main {
         } catch (BackingStoreException bse) {
             System.err.println(Resource.get().getString("Message.UninstallBad"));
         }
-    }
-
-    @SuppressWarnings("unused")
-    private Main(final String args[]) {
+    }    
+    
+    @SuppressWarnings("ResultOfObjectAllocationIgnored")
+    private void init(final String args[]) {        
         configureLogging();
 
         CmdLineParser parser = new CmdLineParser(this);
@@ -290,7 +291,7 @@ public final class Main {
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
             parser.printUsage(System.err);
-        }
+        }        
     }
 
     private File getPreferenceFile() {

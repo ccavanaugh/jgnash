@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.AbstractListModel;
 
@@ -29,7 +28,6 @@ import javax.swing.AbstractListModel;
  * A Sorted list model
  * 
  * @author Craig Cavanaugh
- *
  */
 
 public class SortedListModel<E extends Comparable<? super E>> extends AbstractListModel<E> {

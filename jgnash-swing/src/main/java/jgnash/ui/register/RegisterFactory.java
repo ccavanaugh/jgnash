@@ -45,7 +45,6 @@ import jgnash.util.Resource;
  * Factory class for constructing register tables and controlling global options for registers.
  * 
  * @author Craig Cavanaugh
- *
  */
 public class RegisterFactory {
 
@@ -81,83 +80,83 @@ public class RegisterFactory {
         evenBackgroundColor = new Color(p.getInt(EVENCOLOR, 0xE1F7DF)); // 225,247,223
     }
 
-    private static String[] BANK_NAMES = { rb.getString("Column.Date"), rb.getString("Column.Num"),
+    private static final String[] BANK_NAMES = { rb.getString("Column.Date"), rb.getString("Column.Num"),
                     rb.getString("Column.Payee"), rb.getString("Column.Memo"), rb.getString("Column.Account"),
                     rb.getString("Column.Clr"), rb.getString("Column.Deposit"), rb.getString("Column.Withdrawal"),
                     rb.getString("Column.Balance") };
 
-    private static String[] GENERIC_NAMES = { rb.getString("Column.Date"), rb.getString("Column.Num"),
+    private static final String[] GENERIC_NAMES = { rb.getString("Column.Date"), rb.getString("Column.Num"),
                     rb.getString("Column.Payee"), rb.getString("Column.Memo"), rb.getString("Column.Account"),
                     rb.getString("Column.Clr"), rb.getString("Column.Increase"), rb.getString("Column.Decrease"),
                     rb.getString("Column.Balance") };
 
-    private static String[] CASH_NAMES = { rb.getString("Column.Date"), rb.getString("Column.Num"),
+    private static final String[] CASH_NAMES = { rb.getString("Column.Date"), rb.getString("Column.Num"),
                     rb.getString("Column.Payee"), rb.getString("Column.Memo"), rb.getString("Column.Account"),
                     rb.getString("Column.Clr"), rb.getString("Column.Receive"), rb.getString("Column.Spend"),
                     rb.getString("Column.Balance") };
 
-    private static String[] EXPENSE_NAMES = { rb.getString("Column.Date"), rb.getString("Column.Num"),
+    private static final String[] EXPENSE_NAMES = { rb.getString("Column.Date"), rb.getString("Column.Num"),
                     rb.getString("Column.Payee"), rb.getString("Column.Memo"), rb.getString("Column.Account"),
                     rb.getString("Column.Clr"), rb.getString("Column.Expense"), rb.getString("Column.Rebate"),
                     rb.getString("Column.Balance") };
 
-    private static String[] INCOME_NAMES = { rb.getString("Column.Date"), rb.getString("Column.Num"),
+    private static final String[] INCOME_NAMES = { rb.getString("Column.Date"), rb.getString("Column.Num"),
                     rb.getString("Column.Payee"), rb.getString("Column.Memo"), rb.getString("Column.Account"),
                     rb.getString("Column.Clr"), rb.getString("Column.Charge"), rb.getString("Column.Income"),
                     rb.getString("Column.Balance") };
 
-    private static String[] CREDIT_NAMES = { rb.getString("Column.Date"), rb.getString("Column.Num"),
+    private static final String[] CREDIT_NAMES = { rb.getString("Column.Date"), rb.getString("Column.Num"),
                     rb.getString("Column.Payee"), rb.getString("Column.Memo"), rb.getString("Column.Account"),
                     rb.getString("Column.Clr"), rb.getString("Column.Payment"), rb.getString("Column.Charge"),
                     rb.getString("Column.Balance") };
 
-    private static String[] EQUITY_NAMES = { rb.getString("Column.Date"), rb.getString("Column.Num"),
+    private static final String[] EQUITY_NAMES = { rb.getString("Column.Date"), rb.getString("Column.Num"),
                     rb.getString("Column.Payee"), rb.getString("Column.Memo"), rb.getString("Column.Account"),
                     rb.getString("Column.Clr"), rb.getString("Column.Decrease"), rb.getString("Column.Increase"),
                     rb.getString("Column.Balance") };
 
-    private static String[] LIABILITY_NAMES = EQUITY_NAMES;
+    private static final String[] LIABILITY_NAMES = EQUITY_NAMES;
 
-    private static String[] ACCOUNTING_NAMES = { rb.getString("Column.Date"), rb.getString("Column.Num"),
+    private static final String[] ACCOUNTING_NAMES = { rb.getString("Column.Date"), rb.getString("Column.Num"),
                     rb.getString("Column.Payee"), rb.getString("Column.Memo"), rb.getString("Column.Account"),
                     rb.getString("Column.Clr"), rb.getString("Column.Debit"), rb.getString("Column.Credit"),
                     rb.getString("Column.Balance") };
 
-    private static String[] SPLIT_ACCOUNTING_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
+    private static final String[] SPLIT_ACCOUNTING_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
                     rb.getString("Column.Memo"), rb.getString("Column.Debit"), rb.getString("Column.Credit"),
                     rb.getString("Column.Balance") };
 
-    private static String[] SPLIT_CREDIT_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
+    private static final String[] SPLIT_CREDIT_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
                     rb.getString("Column.Memo"), rb.getString("Column.Payment"), rb.getString("Column.Charge"),
                     rb.getString("Column.Balance") };
 
-    private static String[] SPLIT_EXPENSE_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
+    private static final String[] SPLIT_EXPENSE_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
                     rb.getString("Column.Memo"), rb.getString("Column.Expense"), rb.getString("Column.Rebate"),
                     rb.getString("Column.Balance") };
 
-    private static String[] SPLIT_INCOME_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
+    private static final String[] SPLIT_INCOME_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
                     rb.getString("Column.Memo"), rb.getString("Column.Charge"), rb.getString("Column.Income"),
                     rb.getString("Column.Balance") };
 
-    private static String[] SPLIT_CASH_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
+    private static final String[] SPLIT_CASH_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
                     rb.getString("Column.Memo"), rb.getString("Column.Receive"), rb.getString("Column.Spend"),
                     rb.getString("Column.Balance") };
 
-    private static String[] SPLIT_EQUITY_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
+    private static final String[] SPLIT_EQUITY_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
                     rb.getString("Column.Memo"), rb.getString("Column.Decrease"), rb.getString("Column.Increase"),
                     rb.getString("Column.Balance") };
 
-    private static String[] SPLIT_LIABILITY_NAMES = SPLIT_EQUITY_NAMES;
+    private static final String[] SPLIT_LIABILITY_NAMES = SPLIT_EQUITY_NAMES;
 
-    private static String[] SPLIT_BANK_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
+    private static final String[] SPLIT_BANK_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
                     rb.getString("Column.Memo"), rb.getString("Column.Deposit"), rb.getString("Column.Withdrawal"),
                     rb.getString("Column.Balance") };
 
-    private static String[] SPLIT_GAINLOSS_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
+    private static final String[] SPLIT_GAINLOSS_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
                     rb.getString("Column.Memo"), rb.getString("Column.Gain"), rb.getString("Column.Loss"),
                     rb.getString("Column.Balance") };
 
-    private static String[] SPLIT_GENERIC_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
+    private static final String[] SPLIT_GENERIC_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
                     rb.getString("Column.Memo"), rb.getString("Column.Deposit"), rb.getString("Column.Withdrawal"),
                     rb.getString("Column.Balance") };
 

@@ -34,6 +34,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Unit test for binary xstream
@@ -62,8 +63,8 @@ public class BinaryXStreamTest {
         try {
             tempFile = File.createTempFile("test", "");
             tempFile.deleteOnExit();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException e) {            
+            fail(e.toString());
         }
 
         if (tempFile != null) {
@@ -76,7 +77,7 @@ public class BinaryXStreamTest {
                     out.writeObject(integerData);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+               fail(e.toString());
             }
 
             assertTrue(FileMagic.isBinaryXStreamFile(tempFile));
@@ -92,11 +93,11 @@ public class BinaryXStreamTest {
 
                     assertArrayEquals(strings.toArray(), stringData.toArray());
                     assertArrayEquals(integers.toArray(), integerData.toArray());
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {                    
+                    fail(e.toString());
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+               fail(e.toString());
             }
         }
     }

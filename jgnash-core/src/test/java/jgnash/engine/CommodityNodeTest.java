@@ -141,8 +141,7 @@ public class CommodityNodeTest {
             }
 
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception e) {            
             fail(e.toString());
         }
     }

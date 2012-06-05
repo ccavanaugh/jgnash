@@ -115,9 +115,8 @@ public class ImportQifAction extends AbstractEnabledAction {
 
                         try {
                             imp.doFullParse(chooser.getSelectedFile(), dateFormat);
-                        } catch (NoAccountException e) {
-                            logger.severe("Mistook partial qif file as a full qif file");
-                            e.printStackTrace();
+                        } catch (NoAccountException e) {                           
+                            logger.log(Level.SEVERE, "Mistook partial qif file as a full qif file", e);
                         }
                         imp.dumpStats();
                         imp.doFullImport();

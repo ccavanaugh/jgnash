@@ -19,6 +19,8 @@ package jgnash.ui.checks;
 
 import java.awt.EventQueue;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -29,7 +31,6 @@ import jgnash.engine.checks.CheckLayout;
  * Class that contains the check printing logic.
  *
  * @author Craig Cavanaugh
- *
  */
 public class PrintCheckFactory {
 
@@ -126,7 +127,7 @@ public class PrintCheckFactory {
                 return clone;
             }
         } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+            Logger.getLogger(PrintCheckFactory.class.getName()).log(Level.SEVERE, null, e);
         }
 
         return transaction;

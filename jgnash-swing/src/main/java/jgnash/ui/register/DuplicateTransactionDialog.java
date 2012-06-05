@@ -19,6 +19,7 @@ package jgnash.ui.register;
 
 import java.awt.event.ActionListener;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -132,7 +133,7 @@ public class DuplicateTransactionDialog extends DateChkNumberDialog implements A
 
                     EngineFactory.getEngine(EngineFactory.DEFAULT).addTransaction(clone); // add the transaction
 
-                } catch (Exception e) {
+                } catch (InterruptedException | ExecutionException e) {
                     Logger.getLogger(DuplicateTransactionDialog.class.getName()).log(Level.SEVERE, e.toString(), e);
                 }
             }
@@ -151,7 +152,7 @@ public class DuplicateTransactionDialog extends DateChkNumberDialog implements A
             if (worker != null) {   // null if duplicate action was canceled
                 newTransaction = worker.get();
             }
-        } catch (Exception e) {
+        } catch (InterruptedException | ExecutionException e) {
             Logger.getLogger(DuplicateTransactionDialog.class.getName()).log(Level.SEVERE, e.toString(), e);
         }
 

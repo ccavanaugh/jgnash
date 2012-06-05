@@ -37,6 +37,9 @@ import jgnash.util.Resource;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * UI Panel for handling investment gains and loss.
  * <p/>
@@ -110,8 +113,8 @@ class GainsPanel extends JPanel implements ActionListener {
         for (TransactionEntry entry : gains) { // clone the provided set's entries
             try {
                 gainsList.add((TransactionEntry) entry.clone());
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
+            } catch (CloneNotSupportedException e) {               
+                Logger.getLogger(GainsPanel.class.getName()).log(Level.SEVERE, null, e);
             }
         }
 

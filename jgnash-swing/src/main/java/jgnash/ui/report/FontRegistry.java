@@ -60,7 +60,7 @@ public class FontRegistry {
         if (!registrationComplete.get()) {
             while (!registrationComplete.get()) {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(500);                   
                     System.out.println("Waiting for font registration to complete");
                 } catch (InterruptedException ignored) {
                 }
@@ -136,13 +136,19 @@ public class FontRegistry {
                         } else {
                             String name = file.getPath();
                             String suffix = name.length() < 4 ? null : name.substring(name.length() - 3).toLowerCase();
-                            if ("afm".equals(suffix) || "pfm".equals(suffix)) {
-                                File pfb = new File(name.substring(0, name.length() - 3) + "pfb");
-                                if (pfb.exists()) {
+                            switch (suffix) {
+                                case "afm":
+                                case "pfm":
+                                    File pfb = new File(name.substring(0, name.length() - 3) + "pfb");
+                                    if (pfb.exists()) {
+                                        registerFont(name);
+                                    }
+                                    break;
+                                case "ttf":
+                                case "otf":
+                                case "ttc":
                                     registerFont(name);
-                                }
-                            } else if ("ttf".equals(suffix) || "otf".equals(suffix) || "ttc".equals(suffix)) {
-                                registerFont(name);
+                                    break;
                             }
                         }
                     } catch (Exception ignored) {

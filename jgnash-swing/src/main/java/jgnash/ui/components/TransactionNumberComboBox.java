@@ -20,6 +20,7 @@ package jgnash.ui.components;
 import java.awt.EventQueue;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -157,7 +158,7 @@ public class TransactionNumberComboBox extends JComboBox<String> implements Acti
                 e.setSelectionStart(length);
                 e.setSelectionEnd(length);
                 e.setCaretPosition(length);
-            } catch (Exception e) {
+            } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
         }
