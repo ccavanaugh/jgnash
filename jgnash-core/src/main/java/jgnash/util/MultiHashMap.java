@@ -118,14 +118,15 @@ public class MultiHashMap<K, V> extends HashMap<K, Object> {
     //             readLock.unlock();
     //         }
     //     }
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    
+    @SuppressWarnings({"unchecked", "rawtypes", "element-type-mismatch"})
     @Override
     public Object remove(Object key) {
         Lock writeLock = lock.writeLock();
 
         try {
             writeLock.lock();
-
+         
             Object v = super.get(key);
             if (v instanceof ArrayList) {
                 ArrayList l = (ArrayList) v;
