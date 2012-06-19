@@ -48,7 +48,9 @@ import java.util.zip.ZipOutputStream;
  */
 public final class FileUtils {
 
-    /** Regular expression for returning the file extension */
+    /**
+     * Regular expression for returning the file extension
+     */
     private final static String FILEEXTREGEX = "(?<=\\.).*$";
 
     private static final Pattern FILE_EXTENSION_SPLIT_PATTERN = Pattern.compile("\\.");
@@ -57,7 +59,8 @@ public final class FileUtils {
     }
 
     /**
-     * Determines if a file has been locked for use. The lock check is performed at the OS level.
+     * Determines if a file has been locked for use. The lock check is performed
+     * at the OS level.
      *
      * @param fileName file name to check for locked state
      * @return true if the file is locked at the OS level.
@@ -79,7 +82,7 @@ public final class FileUtils {
                 lock.release();
                 result = false;
             }
-        } catch (IOException e) {
+        } catch (IOException ignored) {
             result = true;
         } finally {
             if (channel != null) {
@@ -101,8 +104,8 @@ public final class FileUtils {
     }
 
     /**
-     * Strips the extension off of the supplied filename. If the supplied filename does not contain an extension then
-     * the original is returned
+     * Strips the extension off of the supplied filename. If the supplied
+     * filename does not contain an extension then the original is returned
      *
      * @param fileName filename to strip the extension off
      * @return filename with extension removed
@@ -161,67 +164,58 @@ public final class FileUtils {
 
     public static void compressFile(final File source, final File destination) {
 
-        byte[] ioBuffer = new byte[8192];
+        // Try to open the zip file for output
+        try (FileOutputStream fos = new FileOutputStream(destination);
+                ZipOutputStream zipOut = new ZipOutputStream(fos)) {
 
-        FileInputStream in = null;
+            // Try to obtain the lock on the output stream
+            try (FileLock fosLock = fos.getChannel().tryLock()) {
 
-        FileLock fosLock;
-        FileLock fisLock = null;
+                if (fosLock != null) {
+                    
+                    // Try to open the input stream
+                    try (FileInputStream in = new FileInputStream(source)) {
 
-        try {
-            // Create the ZIP file
-            FileOutputStream fos = new FileOutputStream(destination);
-            fosLock = fos.getChannel().tryLock();
+                        // Try to lock input stream
+                        try (FileLock fisLock = in.getChannel().tryLock(0L, Long.MAX_VALUE, true)) {
+                           
+                            if (fisLock != null) {
+                                zipOut.setLevel(Deflater.BEST_COMPRESSION);
 
-            in = new FileInputStream(source);
-            fisLock = in.getChannel().tryLock(0, Long.MAX_VALUE, true);
+                                // strip the path when creating the zip entry
+                                zipOut.putNextEntry(new ZipEntry(source.getName()));
 
-            if (fosLock != null && fisLock != null) {
-                ZipOutputStream zipOut = new ZipOutputStream(fos);
+                                // Transfer bytes from the file to the ZIP file
+                                int length;
 
-                zipOut.setLevel(Deflater.BEST_COMPRESSION);
+                                byte[] ioBuffer = new byte[8192];
 
-                // strip the path when creating the zip entry
-                zipOut.putNextEntry(new ZipEntry(source.getName()));
+                                while ((length = in.read(ioBuffer)) > 0) {
+                                    zipOut.write(ioBuffer, 0, length);
+                                }
 
-                // Transfer bytes from the file to the ZIP file
-                int length;
+                                // finish the zip entry, but let the try-with-resources handle the close
+                                zipOut.finish();
 
-                while ((length = in.read(ioBuffer)) > 0) {
-                    zipOut.write(ioBuffer, 0, length);
+                                fosLock.release();
+                            }
+                        }
+                    }
                 }
-
-                // Complete the entry
-                zipOut.closeEntry();
-
-                fosLock.release();
-
-                // Complete the ZIP file
-                zipOut.close();
             }
         } catch (IOException ex) {
-            Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            if (in != null) {
-                try {
-                    if (fisLock != null) {
-                        fisLock.release();
-                    }
-                    in.close();
-                } catch (IOException e) {
-                    Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, e);
-                }
-            }
+            Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
         }
     }
 
     /**
-     * Returns a sorted list of files in a specified directory that match a DOS style wildcard search pattern.
+     * Returns a sorted list of files in a specified directory that match a DOS
+     * style wildcard search pattern.
      *
      * @param directory base directory for the search
-     * @param pattern   DOS search pattern
-     * @return a List of matching Files.  The list will be empty if no matches are found or if the
-     *         directory is not valid.
+     * @param pattern DOS search pattern
+     * @return a List of matching Files. The list will be empty if no matches
+     * are found or if the directory is not valid.
      */
     public static List<File> getDirectoryListing(final File directory, final String pattern) {
         List<File> fileList = new ArrayList<>();
