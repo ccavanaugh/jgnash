@@ -18,6 +18,7 @@
 package jgnash.ui.account;
 
 import java.util.Collection;
+import java.util.logging.Logger;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
@@ -32,25 +33,25 @@ import jgnash.util.Resource;
  * Static account creation and modification methods
  * 
  * @author Craig Cavanaugh
- *
  */
 class AccountTools {
 
     private AccountTools() {
     }
 
-    static void createAccount(final Account _account) {
-        Account parentAccount = _account;
+    static void createAccount(final Account account) {
+        Account parentAccount = account;
 
         Resource rb = Resource.get();
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-        if (parentAccount == null) {
-            if (engine.getRootAccount() == null) {
-                return; // no root account at all, file was closed
-            }
+        if (parentAccount == null) {            
             parentAccount = engine.getRootAccount();
+            
+            if (parentAccount == null) {
+                return; // no root account at all, file was closed
+            }           
         }
 
         AccountDialog dlg = new AccountDialog();
@@ -59,32 +60,36 @@ class AccountTools {
         dlg.setTitle(rb.getString("Title.NewAccount"));
         dlg.setVisible(true);
 
-        if (dlg.returnStatus()) {
-            Account account;
-            CurrencyNode commodity = dlg.getAccountCommodity();
+        if (dlg.returnStatus()) {          
+            CurrencyNode currency = dlg.getCurrency();
             AccountType accType = dlg.getAccountType();
+            
+            if (currency == null) {
+                currency = engine.getRootAccount().getCurrencyNode();
+                Logger.getLogger(AccountTools.class.getName()).warning("Forcing use of the default currency");
+            }
 
-            account = new Account(accType, commodity);
+            Account newAccount = new Account(accType, currency);
 
             if (accType.getAccountGroup() == AccountGroup.INVEST) {
                 Collection<SecurityNode> collection = dlg.getAccountSecurities();
 
                 for (SecurityNode node : collection) {
-                    account.addSecurity(node);
+                    newAccount.addSecurity(node);
                 }
             }
 
-            account.setName(dlg.getAccountName());
-            account.setAccountNumber(dlg.getAccountCode());
-            account.setBankId(dlg.getBankId());
-            account.setDescription(dlg.getAccountDescription());
-            account.setNotes(dlg.getAccountNotes());
-            account.setLocked(dlg.isAccountLocked());
-            account.setPlaceHolder(dlg.isAccountPlaceholder());
-            account.setVisible(dlg.isAccountVisible());
-            account.setExcludedFromBudget(dlg.isExcludedFromBudget());
+            newAccount.setName(dlg.getAccountName());
+            newAccount.setAccountNumber(dlg.getAccountCode());
+            newAccount.setBankId(dlg.getBankId());
+            newAccount.setDescription(dlg.getAccountDescription());
+            newAccount.setNotes(dlg.getAccountNotes());
+            newAccount.setLocked(dlg.isAccountLocked());
+            newAccount.setPlaceHolder(dlg.isAccountPlaceholder());
+            newAccount.setVisible(dlg.isAccountVisible());
+            newAccount.setExcludedFromBudget(dlg.isExcludedFromBudget());
 
-            engine.addAccount(dlg.getParentAccount(), account);
+            engine.addAccount(dlg.getParentAccount(), newAccount);
         }
     }
 
@@ -115,7 +120,7 @@ class AccountTools {
         dlg.setAccountDescription(account.getDescription());
         dlg.setAccountCode(account.getAccountNumber());
         dlg.setBankID(account.getBankId());
-        dlg.setAccountCommodity(account.getCurrencyNode());
+        dlg.setCurrency(account.getCurrencyNode());
         dlg.setAccountNotes(account.getNotes());
         dlg.setAccountLocked(account.isLocked());
         dlg.setAccountVisible(account.isVisible());
@@ -141,7 +146,7 @@ class AccountTools {
 
         if (dlg.returnStatus()) {
 
-            Account tAccount = new Account(dlg.getAccountType(), dlg.getAccountCommodity());
+            Account tAccount = new Account(dlg.getAccountType(), dlg.getCurrency());
             // set the data
             tAccount.setAccountNumber(dlg.getAccountCode());
             tAccount.setBankId(dlg.getBankId());
@@ -153,7 +158,8 @@ class AccountTools {
 
             if (dlg.getParentAccount() == account) {
                 tAccount.setParent(account.getParent());
-                System.out.println("Prevented an attempt to assign accounts parent to itself");
+               
+                Logger.getLogger(AccountTools.class.getName()).warning("Prevented an attempt to assign accounts parent to itself");
             } else {
                 tAccount.setParent(dlg.getParentAccount());
             }

@@ -43,7 +43,6 @@ import jgnash.util.Resource;
  * Account dialog
  *
  * @author Craig Cavanaugh
- *
  */
 class AccountDialog extends JDialog implements ActionListener {
     private Resource rb = Resource.get();
@@ -61,11 +60,7 @@ class AccountDialog extends JDialog implements ActionListener {
     public AccountDialog() {
         super(UIApplication.getFrame(), true);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        layoutMainPanel();
-
-        setMinimumSize(getSize());
-
-        DialogUtils.addBoundsListener(this);
+        layoutMainPanel();        
     }
 
     private void initComponents() {
@@ -100,6 +95,9 @@ class AccountDialog extends JDialog implements ActionListener {
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
 
         pack();
+        setMinimumSize(getSize());
+
+        DialogUtils.addBoundsListener(this);
     }
 
     private void close() {
@@ -162,11 +160,11 @@ class AccountDialog extends JDialog implements ActionListener {
         accountPanel.setAccountNotes(notes);
     }
 
-    public CurrencyNode getAccountCommodity() {
+    public CurrencyNode getCurrency() {
         return accountPanel.getAccountCurrency();
     }
 
-    public void setAccountCommodity(final CurrencyNode currency) {
+    public void setCurrency(final CurrencyNode currency) {
         accountPanel.setAccountCurrency(currency);
     }
 
