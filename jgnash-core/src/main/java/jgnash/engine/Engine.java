@@ -326,7 +326,13 @@ public class Engine {
                     }
                 }
             }
-
+            
+            // check for improperlu set default currency
+            if (getDefaultCurrency() == null) {
+                setDefaultCurrency(this.getRootAccount().getCurrencyNode());
+                logger.warning("Forcing default currency");
+            }
+            
             // if the file version is not current, then update it
             if (getConfig().getFileVersion() != CURRENT_VERSION) {
                 getConfig().setFileVersion(CURRENT_VERSION);
