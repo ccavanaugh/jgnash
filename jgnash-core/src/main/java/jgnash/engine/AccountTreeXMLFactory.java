@@ -23,13 +23,14 @@ import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,9 +42,9 @@ import java.util.logging.Logger;
  * Import and export a tree of accounts
  *
  * @author Craig Cavanaugh
- *
  */
 public class AccountTreeXMLFactory {
+    private static final String ENCODING = "UTF-8";
 
     private static XStream getStream() {
         XStream xstream = new XStream(new PureJavaReflectionProvider(), new StaxDriver());
@@ -83,7 +84,7 @@ public class AccountTreeXMLFactory {
 
         XStream xstream = getStream();
 
-        try (ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(new FileWriter(file)))) {
+        try (ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(new OutputStreamWriter(new FileOutputStream(file), ENCODING)))) {
             out.writeObject(account);
         } catch (IOException e) {
             Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
@@ -120,14 +121,15 @@ public class AccountTreeXMLFactory {
      * @param file file name to use
      * @return RootAccount if file name is valid
      */
-    public static RootAccount loadAccountTree(final File file) {
-        RootAccount account = null;
-
-        try {
-            account = loadAccountTree(new FileReader(file));
+    public static RootAccount loadAccountTree(final File file){
+        RootAccount account = null;   
+                
+        try (Reader reader = new InputStreamReader(new FileInputStream(file), ENCODING)) {
+           account = loadAccountTree(reader);
         } catch (IOException ex) {
             Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         return account;
     }
 
@@ -137,8 +139,14 @@ public class AccountTreeXMLFactory {
      * @param stream InputStream to use
      * @return RootAccount if stream is valid
      */
-    public static RootAccount loadAccountTree(final InputStream stream) {
-        return loadAccountTree(new InputStreamReader(stream));
+    public static RootAccount loadAccountTree(final InputStream stream) {        
+        try (Reader reader = new InputStreamReader(stream, ENCODING)) {
+            return loadAccountTree(reader);
+        } catch (IOException ex) {
+            Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
     }
 
     /**
