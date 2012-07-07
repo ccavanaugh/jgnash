@@ -36,7 +36,7 @@ import java.util.logging.Logger;
 /**
  * @author Leif-Erik Dörr
  * @author Craig Cavanaugh
- *
+ * 
  */
 public final class PluginFactory {
 
@@ -141,7 +141,7 @@ public final class PluginFactory {
     private String[] getPluginPaths() {
         File dir = new File(getPluginDirectory());
 
-        //create filter to return all *.jar in pluginDirectory
+        // create filter to return all *.jar in pluginDirectory
         FilenameFilter filter = new FilenameFilter() {
 
             @Override
@@ -153,23 +153,25 @@ public final class PluginFactory {
     }
 
     private Plugin loadPlugin(final String jarFileName) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
-        JarURLClassLoader classLoader = new JarURLClassLoader(new URL("file:///" + getPluginDirectory() + jarFileName));
+        try (JarURLClassLoader classLoader = new JarURLClassLoader(new URL("file:///" + getPluginDirectory()
+                + jarFileName))) {
 
-        Plugin plugin = null;
+            Plugin plugin = null;
 
-        String pluginActivator = classLoader.getActivator();
+            String pluginActivator = classLoader.getActivator();
 
-        if (pluginActivator != null) {
-            Object object = classLoader.loadClass(pluginActivator).newInstance();
+            if (pluginActivator != null) {
+                Object object = classLoader.loadClass(pluginActivator).newInstance();
 
-            if (object instanceof Plugin) {
-                plugin = (Plugin) object;
+                if (object instanceof Plugin) {
+                    plugin = (Plugin) object;
+                }
+            } else {
+                logger.log(Level.SEVERE, "''{0}'' Plugin Interface was not implemented", jarFileName);
             }
-        } else {
-            logger.log(Level.SEVERE, "''{0}'' Plugin Interface was not implemented", jarFileName);
-        }
 
-        return plugin;
+            return plugin;
+        }
     }
 
     /**
