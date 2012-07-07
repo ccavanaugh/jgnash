@@ -88,8 +88,8 @@ public class BinaryXStreamTest {
                 XStream xstream = new XStream(bsd);
 
                 try (ObjectInputStream in = xstream.createObjectInputStream(fis)) {
-                    List strings = (List) in.readObject();
-                    List integers = (List) in.readObject();
+                    List<?> strings = (List<?>) in.readObject();
+                    List<?> integers = (List<?>) in.readObject();
 
                     assertArrayEquals(strings.toArray(), stringData.toArray());
                     assertArrayEquals(integers.toArray(), integerData.toArray());
