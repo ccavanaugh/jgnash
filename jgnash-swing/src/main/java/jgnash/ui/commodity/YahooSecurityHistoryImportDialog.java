@@ -65,9 +65,9 @@ import java.util.logging.Level;
 
 /**
  * Dialog that lets the user download and import security history from Yahoo
- *
+ * 
  * @author Craig Cavanaugh
- *
+ * 
  */
 public class YahooSecurityHistoryImportDialog extends JDialog implements ActionListener {
     private final Resource rb = Resource.get();
@@ -187,8 +187,9 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
 
     /**
      * Invoked when an action occurs.
-     *
-     * @param e action event
+     * 
+     * @param e
+     *            action event
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
@@ -206,7 +207,6 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
      * This class does all the work for importing the data
      */
     private class ImportRun implements Runnable {
-
 
         private volatile Object lock = new Object();
 
@@ -245,72 +245,61 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
             r.append("&f=").append(f).append("&s=").append(s);
             r.append("&y=0&g=d&ignore=.csv");
 
-            URLConnection connection = null;
-            BufferedReader in = null;
+            URLConnection connection = null;           
 
             try {
                 /* Yahoo uses English locale for date format... force the locale */
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+                
                 connection = new URL(r.toString()).openConnection();
-                in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
-                String l = in.readLine();
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {                    
 
-                // make sure that we have valid data format.
-                if (!l.equals("Date,Open,High,Low,Close,Volume,Adj Close")) {
-                    in.close();
-                    closeDialog();
-                    return;
-                }
+                    String l = in.readLine();
 
-                //Date,Open,High,Low,Close,Volume,Adj Close
-                //2007-02-13,14.75,14.86,14.47,14.60,17824500,14.60
-
-                l = in.readLine();
-                while (l != null && lock != null) {
-
-                    if (!l.startsWith("<")) { // may have comments in file
-                        String[] fields = COMMA_DELIMITER_PATTERN.split(l);
-                        Date date = df.parse(fields[0]);
-                        BigDecimal high = new BigDecimal(fields[2]);
-                        BigDecimal low = new BigDecimal(fields[3]);
-                        BigDecimal close = new BigDecimal(fields[4]);
-                        long volume = Long.parseLong(fields[5]);
-
-                        SecurityHistoryNode node = new SecurityHistoryNode();
-                        node.setDate(date);
-                        node.setPrice(close);
-                        node.setVolume(volume);
-                        node.setHigh(high);
-                        node.setLow(low);
-
-                        EngineFactory.getEngine(EngineFactory.DEFAULT).addSecurityHistory(sNode, node);
+                    // make sure that we have valid data format.
+                    if (!l.equals("Date,Open,High,Low,Close,Volume,Adj Close")) {                        
+                        closeDialog();
+                        return;
                     }
 
+                    //Date,Open,High,Low,Close,Volume,Adj Close
+                    //2007-02-13,14.75,14.86,14.47,14.60,17824500,14.60
+
                     l = in.readLine();
-                }
-               
-                if (connection instanceof HttpURLConnection) {
-                    ((HttpURLConnection) connection).disconnect();
-                }
+                    while (l != null && lock != null) {
+
+                        if (!l.startsWith("<")) { // may have comments in file
+                            String[] fields = COMMA_DELIMITER_PATTERN.split(l);
+                            Date date = df.parse(fields[0]);
+                            BigDecimal high = new BigDecimal(fields[2]);
+                            BigDecimal low = new BigDecimal(fields[3]);
+                            BigDecimal close = new BigDecimal(fields[4]);
+                            long volume = Long.parseLong(fields[5]);
+
+                            SecurityHistoryNode node = new SecurityHistoryNode();
+                            node.setDate(date);
+                            node.setPrice(close);
+                            node.setVolume(volume);
+                            node.setHigh(high);
+                            node.setLow(low);
+
+                            EngineFactory.getEngine(EngineFactory.DEFAULT).addSecurityHistory(sNode, node);
+                        }
+
+                        l = in.readLine();
+                    }
+                }               
 
                 String message = MessageFormat.format(rb.getString("Message.UpdatedPrice"), sNode.getSymbol());
                 Logger.getLogger(SecurityUpdateFactory.class.getName()).info(message);
 
-            } catch (IOException | ParseException | NumberFormatException ex) {                
+            } catch (IOException | ParseException | NumberFormatException ex) {
                 Logger.getLogger(YahooSecurityHistoryImportDialog.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
-                if (in != null) { // close everything up
-                    try {
-                        in.close();
-
-                        if (connection != null) {
-                            if (connection instanceof HttpURLConnection) {
-                                ((HttpURLConnection) connection).disconnect();
-                            }
-                        }
-                    } catch (Exception ex) {
-                        Logger.getLogger(YahooSecurityHistoryImportDialog.class.getName()).log(Level.SEVERE, null, ex);
+                if (connection != null) {
+                    if (connection instanceof HttpURLConnection) {
+                        ((HttpURLConnection) connection).disconnect();                        
                     }
                 }
             }

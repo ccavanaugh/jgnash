@@ -35,7 +35,6 @@ import java.util.regex.Pattern;
  * 
  * @author Craig Cavanaugh
  * @author Navneet Karnani
- *
  */
 public class QifUtils {
 
@@ -62,14 +61,18 @@ public class QifUtils {
      * Converts a string into a data object
      * <p>
      * <p/>
-     * format "6/21' 1" -> 6/21/2001 format "6/21'01" -> 6/21/2001 format "9/18'2001 -> 9/18/2001 format "06/21/2001"
-     * format "06/21/01" format "3.26.03" -> German version of quicken format "03-26-2005" -> MSMoney format format
-     * "1.1.2005" -> kmymoney2 20.1.94 European dd/mm/yyyy has been confirmed
+     * format "6/21' 1" -> 6/21/2001 format "6/21'01" -> 6/21/2001 format
+     * "9/18'2001 -> 9/18/2001 format "06/21/2001" format "06/21/01" format
+     * "3.26.03" -> German version of quicken format "03-26-2005" -> MSMoney
+     * format format "1.1.2005" -> kmymoney2 20.1.94 European dd/mm/yyyy has
+     * been confirmed
      * <p/>
      * 21/2/07 -> 02/21/2007 UK, Quicken 2007 D15/2/07
      * 
-     * @param sDate String QIF date to parse
-     * @param format String identifier of format to parse
+     * @param sDate
+     *            String QIF date to parse
+     * @param format
+     *            String identifier of format to parse
      * @return Returns parsed date and current date if an error occurs
      */
     public static Date parseDate(String sDate, String format) {
@@ -81,27 +84,27 @@ public class QifUtils {
         String[] chunks = DATE_DELIMITER_PATTERN.split(sDate);
 
         switch (format) {
-            case US_FORMAT:
-                try {
-                    month = Integer.parseInt(chunks[0].trim());
-                    day = Integer.parseInt(chunks[1].trim());
-                    year = Integer.parseInt(chunks[2].trim());
-                } catch (Exception e) {
-                    Logger.getAnonymousLogger().severe(e.toString());
-                }
-                break;
-            case EU_FORMAT:
-                try {
-                    day = Integer.parseInt(chunks[0].trim());
-                    month = Integer.parseInt(chunks[1].trim());
-                    year = Integer.parseInt(chunks[2].trim());
-                } catch (Exception e) {
-                    Logger.getAnonymousLogger().severe(e.toString());
-                }
-                break;
-            default:
-                Logger.getAnonymousLogger().severe("Invalid date format specified");
-                return new Date();
+        case US_FORMAT:
+            try {
+                month = Integer.parseInt(chunks[0].trim());
+                day = Integer.parseInt(chunks[1].trim());
+                year = Integer.parseInt(chunks[2].trim());
+            } catch (Exception e) {
+                Logger.getAnonymousLogger().severe(e.toString());
+            }
+            break;
+        case EU_FORMAT:
+            try {
+                day = Integer.parseInt(chunks[0].trim());
+                month = Integer.parseInt(chunks[1].trim());
+                year = Integer.parseInt(chunks[2].trim());
+            } catch (Exception e) {
+                Logger.getAnonymousLogger().severe(e.toString());
+            }
+            break;
+        default:
+            Logger.getAnonymousLogger().severe("Invalid date format specified");
+            return new Date();
         }
 
         if (year < 100) {
@@ -164,7 +167,8 @@ public class QifUtils {
                     }
                     return bd;
                 } catch (ParseException ignored) {
-                    Logger.getLogger(QifUtils.class.getName()).log(Level.SEVERE, "poorly formatted number: {0}", sMoney);
+                    Logger.getLogger(QifUtils.class.getName())
+                            .log(Level.SEVERE, "poorly formatted number: {0}", sMoney);
                 }
             }
         }
@@ -172,11 +176,12 @@ public class QifUtils {
     }
 
     public static boolean isFullFile(File file) {
-        QifReader in;
+
         boolean result = false;
-        try {
-            in = new QifReader(new FileReader(file));
+
+        try (QifReader in = new QifReader(new FileReader(file))) {
             String line = in.readLine();
+
             while (line != null) {
                 if (startsWith(line, "!Type:Class")) {
                     result = true;
@@ -221,19 +226,24 @@ public class QifUtils {
             in.close();
             return result;
         } catch (FileNotFoundException e) {
-            System.err.println("Could not find file: " + file.getAbsolutePath());
+            Logger.getLogger(QifUtils.class.getName()).log(Level.SEVERE, "Could not find file: {0}",
+                    file.getAbsolutePath());
+
             return false;
         } catch (IOException e) {
-            System.err.println(e);
+            Logger.getLogger(QifUtils.class.getName()).log(Level.SEVERE, null, e);
             return false;
         }
     }
 
     /**
-     * Tests if the source string starts with the prefix string. Case is ignored.
+     * Tests if the source string starts with the prefix string. Case is
+     * ignored.
      * 
-     * @param source the source String.
-     * @param prefix the prefix String.
+     * @param source
+     *            the source String.
+     * @param prefix
+     *            the prefix String.
      * @return true, if the source starts with the prefix string.
      */
     private static boolean startsWith(final String source, final String prefix) {
@@ -241,9 +251,11 @@ public class QifUtils {
     }
 
     /**
-     * Strip any category tags from the category name... found when parsing transactions
+     * Strip any category tags from the category name... found when parsing
+     * transactions
      * 
-     * @param category string to strip
+     * @param category
+     *            string to strip
      * @return the stripped string
      */
     public static String stripCategoryTags(final String category) {

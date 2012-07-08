@@ -192,24 +192,12 @@ public final class ActionParser extends DefaultHandler {
         }
     }
 
-    public void loadFile(final String fileName) {
-        InputStream s = getClass().getResourceAsStream(fileName);
-
-        try {
-            if (s != null) {
-                loadFile(s);
-            }
-        } catch (Exception e) {
-            log.severe(e.toString());
-        } finally {
-            try {
-                if (s != null) {
-                    s.close();
-                }
-            } catch (IOException ioe) {
-                log.severe(ioe.toString());
-            }
-        }
+    public void loadFile(final String fileName) {        
+        try (InputStream s = getClass().getResourceAsStream(fileName)) {
+            loadFile(s);
+        } catch (IOException e) {
+           log.log(Level.SEVERE, null, e);
+        }                
     }
 
     public void preLoadAction(final String id, final Action action) {

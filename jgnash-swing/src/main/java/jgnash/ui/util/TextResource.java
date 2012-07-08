@@ -41,55 +41,35 @@ public class TextResource {
      */
     private TextResource() {
     }
-
-    /**
-     * Find a locale specific text file given the file name.
-     * 
-     * @param fileName the file name of the text file to look for.
-     * @return a URL for reading the resource, or null if the resource could not be found
-     */
-    private static InputStream getInputStream(String fileName) {
-
-        String root = ClassPathUtils.getLocalizedPath(ROOTPATH);
-
-        return Object.class.getResourceAsStream(root + "/" + fileName);
-    }
-
+    
     /**
      * Find a locale specific text file given the file name. Multiple lines of text are preserved.
      * 
      * @param fileName the file name of the text file to look for.
      * @return a String containing the contents of the file.
      */
-    public static String getString(String fileName) {
-        InputStream s = getInputStream(fileName);
-        StringBuilder sb = new StringBuilder();
-        if (s != null) {
-
-            BufferedReader b = null;
-
-            try {
-                b = new BufferedReader(new InputStreamReader(s, "8859_1"));
-                String t = loadConvert(b.readLine());
-                while (t != null) {
-                    sb.append(t);
-                    t = loadConvert(b.readLine());
-                    if (t != null) {
-                        sb.append('\n');
-                    }
-                }
-            } catch (IOException e) {
-                Logger.getLogger(TextResource.class.getName()).log(Level.SEVERE, null, e);
-            } finally {
-                if (b != null) {
-                    try {
-                        b.close();
-                    } catch (IOException ex) {
-                        Logger.getLogger(TextResource.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
+    public static String getString(final String fileName) {
+        
+        final String root = ClassPathUtils.getLocalizedPath(ROOTPATH);
+        final StringBuilder sb = new StringBuilder();
+        
+        try (InputStream s = Object.class.getResourceAsStream(root + "/" + fileName)) {            
+            if (s != null) {                                
+                try (BufferedReader b = new BufferedReader(new InputStreamReader(s, "8859_1"))) {
+                    String t = loadConvert(b.readLine());
+                    while (t != null) {
+                        sb.append(t);
+                        t = loadConvert(b.readLine());
+                        if (t != null) {
+                            sb.append('\n');
+                        }
+                    }                    
+                }                
+            }                                    
+        } catch (IOException e) {
+            Logger.getLogger(TextResource.class.getName()).log(Level.SEVERE, null, e);
         }
+                                                  
         return sb.toString();
     }
 
@@ -101,7 +81,7 @@ public class TextResource {
      * @param theString unicode formatted string
      * @return string without unicode characters
      */
-    private static String loadConvert(String theString) {
+    private static String loadConvert(final String theString) {
 
         if (theString == null) {
             return null;

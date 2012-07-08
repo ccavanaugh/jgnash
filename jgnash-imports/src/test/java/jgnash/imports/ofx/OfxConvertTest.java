@@ -30,31 +30,22 @@ import org.junit.Test;
  * JUnit 4 test class
  * 
  * @author Craig Cavanaugh
- *
  */
 
 public class OfxConvertTest {
 
     @Test
     public void parseBankOne() {
-
-        InputStream stream = null;
-        try {
-            stream = new Object().getClass().getResourceAsStream("/bank1.ofx");
-
+        
+        try (InputStream stream = new Object().getClass().getResourceAsStream("/bank1.ofx")) {
             String result = OfxV1ToV2.convertToXML(stream);
 
-            System.out.println(result);
-        } finally {
-            try {
-                if (stream != null) {
-                    stream.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(OfxConvertTest.class.getName()).log(Level.SEVERE, null, ex);
-                assertTrue(false);
-            }
+            System.out.println(result);            
+        } catch (IOException e) {
+            Logger.getLogger(OfxConvertTest.class.getName()).log(Level.SEVERE, null, e);
+            assertTrue(false);
         }
+       
         assertTrue(true);
     }
 }

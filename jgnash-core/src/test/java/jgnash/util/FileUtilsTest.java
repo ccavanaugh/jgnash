@@ -32,9 +32,9 @@ import org.junit.Test;
 
 /**
  * File utilities test
- *
+ * 
  * @author Craig Cavanaugh
- *
+ * 
  */
 public class FileUtilsTest {
 
@@ -64,21 +64,19 @@ public class FileUtilsTest {
         assertFalse(FileUtils.copyFile(new File(absolutepath), new File(absolutepath)));
     }
 
-    private void checkTestData(String testdata, String absolutepath)
-            throws IOException {
+    private void checkTestData(final String testdata, final String absolutepath) throws IOException {
         char[] buffer = new char[testdata.length()];
-        
+
         try (InputStreamReader reader = new InputStreamReader(new FileInputStream(absolutepath))) {
             reader.read(buffer);
         }
-              
+
         assertEquals(testdata, new String(buffer));
     }
 
-    private void writeTestData(String testdata, File tempfile)
-            throws IOException {
-        OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(tempfile));
-        os.write(testdata);
-        os.close();
+    private void writeTestData(final String testdata, final File tempfile) throws IOException {        
+        try (OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(tempfile))) {
+            os.write(testdata); 
+        }               
     }
 }

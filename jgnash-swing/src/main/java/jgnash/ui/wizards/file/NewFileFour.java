@@ -56,7 +56,7 @@ import jgnash.util.Resource;
 
 /**
  * @author Craig Cavanaugh
- *
+ * 
  */
 public class NewFileFour extends JPanel implements WizardPage {
 
@@ -159,7 +159,8 @@ public class NewFileFour extends JPanel implements WizardPage {
     }
 
     /**
-     * toString must return a valid description for this page that will appear in the task list of the WizardDialog
+     * toString must return a valid description for this page that will appear
+     * in the task list of the WizardDialog
      * 
      * @return Title of this page
      */
@@ -179,7 +180,7 @@ public class NewFileFour extends JPanel implements WizardPage {
 
     @Override
     public void putSettings(final Map<Enum<?>, Object> map) {
-        List<RootAccount> accounts = new ArrayList<>();              
+        List<RootAccount> accounts = new ArrayList<>();
 
         for (Object o : accountList.getSelectedValuesList()) {
             accounts.add((RootAccount) o);
@@ -208,33 +209,18 @@ public class NewFileFour extends JPanel implements WizardPage {
 
         List<String> set = new ArrayList<>();
 
-        if (path != null) {
+        if (path != null) {           
+            try (InputStream stream = Object.class.getResourceAsStream(path + "/set.txt");
+                    BufferedReader r = new BufferedReader(new InputStreamReader(stream))) {
 
-            BufferedReader r = null;
+                String line = r.readLine();
 
-            try {
-                InputStream stream = Object.class.getResourceAsStream(path + "/set.txt");
-
-                if (stream != null) {
-                    r = new BufferedReader(new InputStreamReader(stream));
-
-                    String line = r.readLine();
-
-                    while (line != null) {
-                        set.add(path + "/" + line);
-                        line = r.readLine();
-                    }
+                while (line != null) {
+                    set.add(path + "/" + line);
+                    line = r.readLine();
                 }
             } catch (IOException ex) {
                 Logger.getLogger(NewFileFour.class.getName()).log(Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    if (r != null) {
-                        r.close();
-                    }
-                } catch (IOException ex) {
-                    Logger.getLogger(NewFileFour.class.getName()).log(Level.SEVERE, null, ex);
-                }
             }
         }
         return set;

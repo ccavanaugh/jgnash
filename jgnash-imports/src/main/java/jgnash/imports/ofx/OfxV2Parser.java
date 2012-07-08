@@ -88,36 +88,24 @@ public class OfxV2Parser implements OfxTags {
         bank = new OfxBank();
 
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        InputStream input = new BufferedInputStream(stream);
-        try {
+                
+        try (InputStream input = new BufferedInputStream(stream)) {
             XMLStreamReader reader = inputFactory.createXMLStreamReader(input, encoding);
-            readOfx(reader);
-        } catch (XMLStreamException e) {
+            readOfx(reader);            
+        } catch (IOException | XMLStreamException e) {
             logger.log(Level.SEVERE, e.toString(), e);
-        } finally {
-            try {
-                input.close();
-            } catch (IOException e) {
-                logger.log(Level.SEVERE, e.toString(), e);
-            }
-        }
+        }                             
 
         logger.exiting(OfxV2Parser.class.getName(), "parse");
     }
 
     public void parse(final File file) throws FileNotFoundException {
-
-        InputStream stream = new FileInputStream(file);
-
-        try {
+        
+        try (InputStream stream = new FileInputStream(file)) {
             parse(stream);
-        } finally {
-            try {
-                stream.close();
-            } catch (IOException e) {
-                logger.log(Level.SEVERE, e.toString(), e);
-            }
-        }
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, e.toString(), e);
+        }                
     }
 
     public void parse(final String string, final String encoding) {

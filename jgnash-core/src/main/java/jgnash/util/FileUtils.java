@@ -42,9 +42,9 @@ import java.util.zip.ZipOutputStream;
 
 /**
  * File utilities
- *
+ * 
  * @author Craig Cavanaugh
- *
+ * 
  */
 public final class FileUtils {
 
@@ -61,44 +61,29 @@ public final class FileUtils {
     /**
      * Determines if a file has been locked for use. The lock check is performed
      * at the OS level.
-     *
-     * @param fileName file name to check for locked state
+     * 
+     * @param fileName
+     *            file name to check for locked state
      * @return true if the file is locked at the OS level.
-     * @throws java.io.FileNotFoundException thrown if file does not exist
+     * @throws java.io.FileNotFoundException
+     *             thrown if file does not exist
      */
     public static boolean isFileLocked(final String fileName) throws FileNotFoundException {
 
         boolean result = true;
 
-        final RandomAccessFile raf = new RandomAccessFile(new File(fileName), "rw");
-
-        FileChannel channel = null;
-
-        try {
-            channel = raf.getChannel();
+        try (RandomAccessFile raf = new RandomAccessFile(new File(fileName), "rw");
+                FileChannel channel = raf.getChannel()) {
+            
             final FileLock lock = channel.tryLock();
 
             if (lock != null) {
                 lock.release();
                 result = false;
             }
-        } catch (IOException ignored) {
-            result = true;
-        } finally {
-            if (channel != null) {
-                try {
-                    channel.close();
-                } catch (IOException e) {
-                    Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, e.toString(), e);
-                }
-            }
-
-            try {
-                raf.close();
-            } catch (IOException e) {
-                Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, e.toString(), e);
-            }
-        }
+        } catch (IOException e) {
+            Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, e.toString(), e);
+        }        
 
         return result;
     }
@@ -106,8 +91,9 @@ public final class FileUtils {
     /**
      * Strips the extension off of the supplied filename. If the supplied
      * filename does not contain an extension then the original is returned
-     *
-     * @param fileName filename to strip the extension off
+     * 
+     * @param fileName
+     *            filename to strip the extension off
      * @return filename with extension removed
      */
     public static String stripFileExtension(final String fileName) {
@@ -116,8 +102,9 @@ public final class FileUtils {
 
     /**
      * Determine if the supplied file name has an extension
-     *
-     * @param fileName filename to check
+     * 
+     * @param fileName
+     *            filename to check
      * @return true if supplied file has an extension
      */
     public static boolean fileHasExtension(final String fileName) {
@@ -140,9 +127,11 @@ public final class FileUtils {
 
     /**
      * Make a copy of a file given a source and destination.
-     *
-     * @param src Source file
-     * @param dst Destination file
+     * 
+     * @param src
+     *            Source file
+     * @param dst
+     *            Destination file
      * @return true is the copy was successful
      */
     public static boolean copyFile(final File src, final File dst) {
@@ -172,13 +161,13 @@ public final class FileUtils {
             try (FileLock fosLock = fos.getChannel().tryLock()) {
 
                 if (fosLock != null) {
-                    
+
                     // Try to open the input stream
                     try (FileInputStream in = new FileInputStream(source)) {
 
                         // Try to lock input stream
                         try (FileLock fisLock = in.getChannel().tryLock(0L, Long.MAX_VALUE, true)) {
-                           
+
                             if (fisLock != null) {
                                 zipOut.setLevel(Deflater.BEST_COMPRESSION);
 
@@ -211,11 +200,13 @@ public final class FileUtils {
     /**
      * Returns a sorted list of files in a specified directory that match a DOS
      * style wildcard search pattern.
-     *
-     * @param directory base directory for the search
-     * @param pattern DOS search pattern
+     * 
+     * @param directory
+     *            base directory for the search
+     * @param pattern
+     *            DOS search pattern
      * @return a List of matching Files. The list will be empty if no matches
-     * are found or if the directory is not valid.
+     *         are found or if the directory is not valid.
      */
     public static List<File> getDirectoryListing(final File directory, final String pattern) {
         List<File> fileList = new ArrayList<>();

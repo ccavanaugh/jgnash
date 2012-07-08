@@ -21,7 +21,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,7 +37,7 @@ import javax.xml.stream.XMLStreamReader;
 
 /**
  * Class to identify file type
- *
+ * 
  * @author Craig Cavanaugh
  */
 public class FileMagic {
@@ -47,23 +46,18 @@ public class FileMagic {
 
     public static final String UTF_8 = "UTF-8";
 
-    public static final byte[] BINARY_XSTREAM_HEADER = new byte[]{10, -127, 0, 13, 111, 98, 106, 101, 99, 116, 45,
-            115, 116, 114, 101, 97, 109, 11, -127, 10};
+    public static final byte[] BINARY_XSTREAM_HEADER = new byte[] { 10, -127, 0, 13, 111, 98, 106, 101, 99, 116, 45,
+            115, 116, 114, 101, 97, 109, 11, -127, 10 };
 
     public static enum FileType {
-        db4o,
-        BinaryXStream,
-        OfxV1,
-        OfxV2,
-        jGnash1XML,
-        jGnash2XML,
-        unknown
+        db4o, BinaryXStream, OfxV1, OfxV2, jGnash1XML, jGnash2XML, unknown
     }
 
     /**
      * Returns the file type
-     *
-     * @param file file to identify
+     * 
+     * @param file
+     *            file to identify
      * @return identified file type
      */
     public static FileType magic(final File file) {
@@ -87,21 +81,18 @@ public class FileMagic {
 
     /**
      * Determine the correct character encoding of an OFX Version 1 file
-     *
-     * @param file File to look at
+     * 
+     * @param file
+     *            File to look at
      * @return encoding of the file
      */
     public static String getOfxV1Encoding(final File file) {
         String encoding = null;
         String charset = null;
 
-        if (file.exists()) {
-            Logger logger = Logger.getLogger(FileMagic.class.getName());
+        if (file.exists()) {          
 
-            BufferedReader reader = null;
-
-            try {
-                reader = new BufferedReader(new FileReader(file));
+            try( BufferedReader reader = new BufferedReader(new FileReader(file))) {               
                 String line = reader.readLine();
 
                 while (line != null) {
@@ -129,16 +120,8 @@ public class FileMagic {
                     line = reader.readLine();
                 }
             } catch (IOException e) {
-                logger.log(Level.SEVERE, e.toString(), e);
-            } finally {
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        logger.log(Level.SEVERE, e.toString(), e);
-                    }
-                }
-            }
+                Logger.getLogger(FileMagic.class.getName()).log(Level.SEVERE, e.toString(), e);
+            } 
         }
 
         if (encoding != null && charset != null) {
@@ -164,12 +147,7 @@ public class FileMagic {
         boolean result = false;
 
         if (file.exists()) {
-            Logger logger = Logger.getLogger(FileMagic.class.getName());
-
-            BufferedReader reader = null;
-
-            try {
-                reader = new BufferedReader(new FileReader(file));
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 String line = reader.readLine();
 
                 while (line != null) {
@@ -184,15 +162,7 @@ public class FileMagic {
                     line = reader.readLine();
                 }
             } catch (IOException e) {
-                logger.log(Level.SEVERE, e.toString(), e);
-            } finally {
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        logger.log(Level.SEVERE, e.toString(), e);
-                    }
-                }
+                Logger.getLogger(FileMagic.class.getName()).log(Level.SEVERE, e.toString(), e);
             }
         }
 
@@ -204,16 +174,12 @@ public class FileMagic {
         boolean result = false;
 
         if (file.exists()) {
-            Logger logger = Logger.getLogger(FileMagic.class.getName());
 
-            BufferedReader reader = null;
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 
-            try {
-                reader = new BufferedReader(new FileReader(file));
                 String line = reader.readLine();
 
                 while (line != null) {
-
                     line = line.trim();
 
                     // consume any processing instructions and check for ofx 2.0 hints
@@ -232,15 +198,7 @@ public class FileMagic {
                     line = reader.readLine();
                 }
             } catch (IOException e) {
-                logger.log(Level.SEVERE, e.toString(), e);
-            } finally {
-                if (reader != null) {
-                    try {
-                        reader.close();
-                    } catch (IOException e) {
-                        logger.log(Level.SEVERE, e.toString(), e);
-                    }
-                }
+                Logger.getLogger(FileMagic.class.getName()).log(Level.SEVERE, e.toString(), e);
             }
         }
 
@@ -267,19 +225,13 @@ public class FileMagic {
         return result;
     }
 
-    static boolean isdb4o(File file) {
+    static boolean isdb4o(final File file) {
         boolean result = false;
 
         if (file.exists()) {
-            Logger log = Logger.getLogger(FileMagic.class.getName());
 
-            /* Search for db4o type first */
-            RandomAccessFile di = null;
-
-            try {
+            try (RandomAccessFile di = new RandomAccessFile(file, "r")) {
                 byte[] header = new byte[4];
-
-                di = new RandomAccessFile(file, "r");
 
                 if (di.length() > 0) { // must not be a zero length file
                     di.readFully(header);
@@ -288,17 +240,8 @@ public class FileMagic {
                         result = true;
                     }
                 }
-                di.close();
             } catch (IOException ex) {
-                log.log(Level.SEVERE, null, ex);
-            } finally {
-                if (di != null) {
-                    try {
-                        di.close();
-                    } catch (IOException ex) {
-                        log.log(Level.SEVERE, null, ex);
-                    }
-                }
+                Logger.getLogger(FileMagic.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
@@ -324,55 +267,35 @@ public class FileMagic {
     public static String getjGnashXMLVersion(final File file) {
         String version = "";
 
-        Logger logger = Logger.getLogger(FileMagic.class.getName());
+        try (InputStream input = new BufferedInputStream(new FileInputStream(file))) {
+            XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
-        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+            XMLStreamReader reader = inputFactory.createXMLStreamReader(input, UTF_8);
 
-        InputStream input = null;
-        XMLStreamReader reader = null;
-
-        try {
-            input = new BufferedInputStream(new FileInputStream(file));
-            reader = inputFactory.createXMLStreamReader(input, UTF_8);
-
-            parse:
-            while (reader.hasNext()) {
+            parse: while (reader.hasNext()) {
                 int event = reader.next();
 
                 switch (event) {
-                    case XMLStreamConstants.PROCESSING_INSTRUCTION:
-                        String name = reader.getPITarget();
-                        String data = reader.getPIData();
+                case XMLStreamConstants.PROCESSING_INSTRUCTION:
+                    String name = reader.getPITarget();
+                    String data = reader.getPIData();
 
-                        if (name.equals("fileVersion")) {
-                            version = data;
-                            break parse;
-                        }
-                        break;
-                    default:
-                        break;
+                    if (name.equals("fileVersion")) {
+                        version = data;
+                        break parse;
+                    }
+                    break;
+                default:
+                    break;
                 }
             }
-        } catch (FileNotFoundException | IllegalStateException e) {
-            logger.log(Level.SEVERE, e.toString(), e);
+
+            reader.close();
+        } catch (IOException e) {
+            Logger.getLogger(FileMagic.class.getName()).log(Level.SEVERE, e.toString(), e);
         } catch (XMLStreamException e) {
-            logger.log(Level.INFO, "{0} was not a valid jGnash XML file", file.getAbsolutePath());
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (XMLStreamException ex) {
-                    logger.log(Level.SEVERE, null, ex);
-                }
-            }
-
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException ex) {
-                    logger.log(Level.SEVERE, null, ex);
-                }
-            }
+            Logger.getLogger(FileMagic.class.getName()).log(Level.INFO, "{0} was not a valid jGnash XML file",
+                    file.getAbsolutePath());
         }
 
         return version;

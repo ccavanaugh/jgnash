@@ -33,7 +33,7 @@ import jgnash.net.ConnectionFactory;
 
 /**
  * An abstract CommodityParser for the Yahoo! financial web sites.
- *
+ * 
  * @author Craig Cavanaugh
  */
 public abstract class AbstractYahooParser implements SecurityParser {
@@ -111,15 +111,12 @@ public abstract class AbstractYahooParser implements SecurityParser {
         // String u = "http://finance.yahoo.com/d/quotes.csv?s=" + symbol +
 
         String u = base + symbol + "&f=sl1d1t1c1ohgv&e=.csv";
-        BufferedReader in;
 
         String line = null;
 
         URLConnection connection = ConnectionFactory.getConnection(u);
 
-        in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-        try {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
             line = in.readLine();
 
             if (line != null) {
@@ -169,12 +166,6 @@ public abstract class AbstractYahooParser implements SecurityParser {
             logger.log(Level.SEVERE, line, e);
         } catch (Exception e) {
             logger.log(Level.SEVERE, null, e);
-        } finally {
-            try {
-                in.close();
-            } catch (IOException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            }
         }
 
         return result;

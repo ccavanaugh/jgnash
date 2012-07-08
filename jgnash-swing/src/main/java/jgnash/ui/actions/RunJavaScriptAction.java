@@ -19,7 +19,6 @@ package jgnash.ui.actions;
         
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -62,22 +61,12 @@ public class RunJavaScriptAction extends AbstractEnabledAction {
 
                 @Override
                 public void run() {
-                    FileReader reader = null;
-
-                    try {
-                        reader = new FileReader(file);
+                    
+                    try (FileReader reader = new FileReader(file)) {
                         new ScriptEngineManager().getEngineByName("JavaScript").eval(reader);
-                    } catch (FileNotFoundException | ScriptException e) {
+                    } catch (IOException | ScriptException e) {
                         Logger.getLogger(RunJavaScriptAction.class.getName()).log(Level.SEVERE, e.toString(), e);
-                    } finally {
-                        if (reader != null) {
-                            try {
-                                reader.close();
-                            } catch (IOException e) {
-                                Logger.getLogger(RunJavaScriptAction.class.getName()).log(Level.SEVERE, e.toString(), e);
-                            }
-                        }
-                    }
+                    }                                                                              
                 }
             });
         }

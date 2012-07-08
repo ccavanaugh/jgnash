@@ -26,21 +26,25 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The QIF format seems to be very broken. Various applications and services export it differently, some have even
- * extended an already broken format to add even more confusion. To make matters worse, the format has changed over time
- * with no indication of what "version" the QIF file is.
+ * The QIF format seems to be very broken. Various applications and services
+ * export it differently, some have even extended an already broken format to
+ * add even more confusion. To make matters worse, the format has changed over
+ * time with no indication of what "version" the QIF file is.
  * <p/>
- * This parses through the QIF file using brute force, no fancy parser or tricks. The QIF file is broken enough that
- * it's easier to find problems with the parser when it's easy to step through the code.
+ * This parses through the QIF file using brute force, no fancy parser or
+ * tricks. The QIF file is broken enough that it's easier to find problems with
+ * the parser when it's easy to step through the code.
  * <p/>
- * The !Option:AutoSwitch and !Clear:AutoSwitch headers do not appear to be used correctly, even by the "creator" of the
- * QIF file format. There seems to be confusion as to it's purpose. The best thing to do is ignore AutoSwitch completely
- * and make an educated guess about the data.
+ * The !Option:AutoSwitch and !Clear:AutoSwitch headers do not appear to be used
+ * correctly, even by the "creator" of the QIF file format. There seems to be
+ * confusion as to it's purpose. The best thing to do is ignore AutoSwitch
+ * completely and make an educated guess about the data.
  * <p/>
- * I'm not very happy with this code, but I'm not sure there is a clean solution to parsing QIF files
+ * I'm not very happy with this code, but I'm not sure there is a clean solution
+ * to parsing QIF files
  * 
  * @author Craig Cavanaugh
- *
+ * 
  */
 public final class QifParser {
 
@@ -63,10 +67,13 @@ public final class QifParser {
     }
 
     /**
-     * Tests if the source string starts with the prefix string. Case is ignored.
+     * Tests if the source string starts with the prefix string. Case is
+     * ignored.
      * 
-     * @param source the source String.
-     * @param prefix the prefix String.
+     * @param source
+     *            the source String.
+     * @param prefix
+     *            the prefix String.
      * @return true, if the source starts with the prefix string.
      */
     private boolean startsWith(final String source, final String prefix) {
@@ -90,10 +97,11 @@ public final class QifParser {
     }
 
     private void parseFullFile(final String fileName) throws NoAccountException {
-        QifReader in;
-        try {
-            in = new QifReader(new FileReader(fileName));
+
+        try (QifReader in = new QifReader(new FileReader(fileName))) {
+
             String line = in.readLine();
+            
             while (line != null) {
                 if (startsWith(line, "!Type:Class")) {
                     parseClassList(in);
@@ -132,14 +140,14 @@ public final class QifParser {
         } catch (FileNotFoundException e) {
             logger.log(Level.WARNING, "Could not find file: {0}", fileName);
         } catch (IOException e) {
-            System.err.println(e);
+            logger.log(Level.SEVERE, null, e);
         }
     }
 
     private boolean parsePartialFile(String fileName) {
-        QifReader in = null;
-        try {
-            in = new QifReader(new FileReader(fileName));
+
+        try (QifReader in = new QifReader(new FileReader(fileName))) {
+
             String peek = in.peekLine();
             if (startsWith(peek, "!Type:")) {
                 QifAccount acc = new QifAccount(); // "unknown" holding account
@@ -156,22 +164,8 @@ public final class QifParser {
             in.close();
         } catch (FileNotFoundException fne) {
             logger.log(Level.WARNING, "Could not find file: {0}", fileName);
-            try {
-                if (in != null) {
-                    in.close();
-                }
-            } catch (Exception e) {
-                logger.warning(e.getLocalizedMessage());
-            }
         } catch (IOException ioe) {
-            System.err.println(ioe);
-            try {
-                if (in != null) {
-                    in.close();
-                }
-            } catch (Exception e) {
-                logger.warning(e.getLocalizedMessage());
-            }
+            logger.log(Level.SEVERE, null, ioe);
         }
         return false;
     }
@@ -381,7 +375,8 @@ public final class QifParser {
                 } else if (startsWith(line, "!Type:Prices")) { // fund prices... jump out
                     in.reset();
                     return true;
-                } else if (line.charAt(0) == 'S' || line.charAt(0) == 'E' || line.charAt(0) == '$' || line.charAt(0) == '%') {
+                } else if (line.charAt(0) == 'S' || line.charAt(0) == 'E' || line.charAt(0) == '$'
+                        || line.charAt(0) == '%') {
                     // doing a split transaction
                     in.reset();
                     QifSplitTransaction split = parseSplitTransaction(in);
@@ -463,7 +458,8 @@ public final class QifParser {
                     in.reset();
                     result = true;
                     break;
-                } else if (line.charAt(0) == 'S' || line.charAt(0) == 'E' || line.charAt(0) == '$' || line.charAt(0) == '%') {
+                } else if (line.charAt(0) == 'S' || line.charAt(0) == 'E' || line.charAt(0) == '$'
+                        || line.charAt(0) == '%') {
                     // doing a split transaction
                     in.reset();
                     QifSplitTransaction split = parseSplitTransaction(in);
@@ -542,7 +538,8 @@ public final class QifParser {
     /**
      * Just eats the data, it's not useful right now
      * 
-     * @param in <code>QifReader</code>
+     * @param in
+     *            <code>QifReader</code>
      */
     private void parseMemorizedTransactions(final QifReader in) {
         if (debug) {
@@ -645,10 +642,11 @@ public final class QifParser {
     }
 
     /**
-     * So far, I haven't see a security as part of a list, but it is supported just in case there is another "variation"
-     * of the format
+     * So far, I haven't see a security as part of a list, but it is supported
+     * just in case there is another "variation" of the format
      * 
-     * @param in <code>QifReader</code>
+     * @param in
+     *            <code>QifReader</code>
      * @return true if successful
      */
     private boolean parseSecurity(final QifReader in) {
@@ -688,7 +686,8 @@ public final class QifParser {
     /**
      * Price data in QIF file is not very informative.... ignore it for now
      * 
-     * @param in <code>QifReader</code>
+     * @param in
+     *            <code>QifReader</code>
      * @return true if successful
      */
     private boolean parsePrice(QifReader in) {

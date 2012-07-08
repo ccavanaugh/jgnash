@@ -17,9 +17,6 @@
  */
 package jgnash.ui.report.compiled;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -48,13 +45,15 @@ import jgnash.ui.register.AccountBalanceDisplayManager;
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;
 
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
+
 /**
  * Profit loss report
  * 
  * @author Michael Mueller
  * @author Craig Cavanaugh
  * @author David Robertson
- *
  */
 public class ProfitLossTXT {
 
@@ -140,34 +139,16 @@ public class ProfitLossTXT {
             return;
         }
 
-        //print("writing file");
-
-        BufferedWriter writer = null;
-
-        try {
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName)));
-
-            //write the array list pl to the file.
-            for (Object aPl : pl) {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName)))) {            
+            for (Object aPl : pl) {  //write the array list pl to the file
                 //print (pl.get(i));
                 writer.write(aPl.toString());
                 writer.newLine();
-
             }
-            writer.newLine();
-
-            writer.close();
+            writer.newLine();            
         } catch (IOException e) {
             Logger.getLogger(ProfitLossTXT.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            try {
-                if (writer != null) {
-                    writer.close();
-                }
-            } catch (IOException e) {
-                Logger.getLogger(ProfitLossTXT.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-            }
-        }
+        }         
     }
 
     private static Date[] getLastDays(final Date start, final Date stop) {

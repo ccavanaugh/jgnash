@@ -317,21 +317,13 @@ public final class Main {
         File importFile = getPreferenceFile();
 
         if (importFile.canRead()) {
-            Logger.getLogger(Main.class.getName()).info("Importing preferences");
+            Logger.getLogger(Main.class.getName()).info("Importing preferences");        
 
-            FileInputStream is = new FileInputStream(importFile);
-
-            try {
+            try(FileInputStream is = new FileInputStream(importFile)) {
                 Preferences.importPreferences(is);
             } catch (InvalidPreferencesFormatException | IOException e) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
-            } finally {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
-                }
-            }
+            } 
         }
     }
 
@@ -345,27 +337,18 @@ public final class Main {
             File exportFile = getPreferenceFile();
 
             Preferences prefs = Preferences.userRoot();
-
-            FileOutputStream os;
-            try {
-                os = new FileOutputStream(exportFile);
-
+    
+            try( FileOutputStream os = new FileOutputStream(exportFile)) {              
                 try {
                     if (prefs.nodeExists("/jgnash")) {
                         Preferences p = prefs.node("/jgnash");
                         p.exportSubtree(os);
                     }
                     deleteUserPreferences();
-                } catch (BackingStoreException | IOException e) {
+                } catch (BackingStoreException e) {
                     Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
-                } finally {
-                    try {
-                        os.close();
-                    } catch (IOException e) {
-                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
-                    }
-                }
-            } catch (FileNotFoundException e) {
+                } 
+            } catch (IOException e) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
             }
         }

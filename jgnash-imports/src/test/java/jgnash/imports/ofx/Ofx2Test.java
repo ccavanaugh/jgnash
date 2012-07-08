@@ -36,7 +36,7 @@ import org.junit.Test;
  * JUnit 4 test class
  * 
  * @author Craig Cavanaugh
- *
+ * 
  */
 public class Ofx2Test {
 
@@ -49,162 +49,165 @@ public class Ofx2Test {
 
     @Test
     public void parseSpec201() {
-
-        InputStream stream = null;
-        try {
-            stream = Object.class.getResourceAsStream("/ofx_spec201_stmtrs_example.xml");
-
+                
+        try (InputStream stream =  Object.class.getResourceAsStream("/ofx_spec201_stmtrs_example.xml")) {
             parser.parse(stream);
 
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
-        } finally {
-            try {
-                if (stream != null) {
-                    stream.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, ex);
-                assertTrue(false);
-            }
+            Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());            
+        } catch (IOException e) {
+            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            assertTrue(false);
         }
-
+                
         assertTrue(true);
     }
 
     @Test
     public void parseActivity() {
+        final String testFile = "/activity.ofx";
 
-        InputStream stream = null;
+        URL url = Object.class.getResource(testFile);
+        String encoding;
+
         try {
-            stream = Object.class.getResourceAsStream("/activity.ofx");
+            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
 
-            parser.parse(OfxV1ToV2.convertToXML(stream));
+            try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
+                parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
 
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
-        } finally {
-            try {
-                if (stream != null) {
-                    stream.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
+            } catch (IOException e) {
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
                 assertTrue(false);
             }
+        } catch (URISyntaxException e) {
+            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            assertTrue(false);
         }
+
         assertTrue(true);
     }
 
     @Test
     public void parseBankOne() {
+        final String testFile = "/bank1.ofx";
 
-        InputStream stream = null;
+        URL url = Object.class.getResource(testFile);
+        String encoding;
+
         try {
-            stream = Object.class.getResourceAsStream("/bank1.ofx");
+            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
 
-            parser.parse(OfxV1ToV2.convertToXML(stream));
+            try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
+                parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
 
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
-        } finally {
-            try {
-                if (stream != null) {
-                    stream.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
+            } catch (IOException e) {
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
                 assertTrue(false);
             }
+        } catch (URISyntaxException e) {
+            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            assertTrue(false);
         }
+
         assertTrue(true);
     }
 
     @Test
     public void parseCheckingOne() {
+        final String testFile = "/checking1.ofx";
 
-        InputStream stream = null;
+        URL url = Object.class.getResource(testFile);
+        String encoding;
+
         try {
-            stream = Object.class.getResourceAsStream("/checking1.ofx");
+            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
 
-            parser.parse(OfxV1ToV2.convertToXML(stream));
+            try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
+                parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
 
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
-        } finally {
-            try {
-                if (stream != null) {
-                    stream.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
+            } catch (IOException e) {
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
                 assertTrue(false);
             }
+        } catch (URISyntaxException e) {
+            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            assertTrue(false);
         }
+
         assertTrue(true);
     }
 
     @Test
     public void parseChequing() {
 
-        InputStream stream = null;
+        final String testFile = "/chequing.ofx";
+
+        URL url = Object.class.getResource(testFile);
+        String encoding;
+
         try {
-            stream = Object.class.getResourceAsStream("/chequing.ofx");
+            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
 
-            parser.parse(OfxV1ToV2.convertToXML(stream));
+            try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
+                parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
 
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
-        } finally {
-            try {
-                if (stream != null) {
-                    stream.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
+            } catch (IOException e) {
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
                 assertTrue(false);
             }
+        } catch (URISyntaxException e) {
+            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            assertTrue(false);
         }
+
         assertTrue(true);
     }
 
     @Test
     public void parseComptes() {
 
-        InputStream stream = null;
+        final String testFile = "/comptes.ofx";
+
+        URL url = Object.class.getResource(testFile);
+        String encoding;
+
         try {
-            stream = Object.class.getResourceAsStream("/comptes.ofx");
+            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
 
-            parser.parse(OfxV1ToV2.convertToXML(stream));
+            try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
+                parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
 
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
-        } finally {
-            try {
-                if (stream != null) {
-                    stream.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
+            } catch (IOException e) {
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
                 assertTrue(false);
             }
+        } catch (URISyntaxException e) {
+            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            assertTrue(false);
         }
+
         assertTrue(true);
     }
 
     @Test
     public void parseDemobank() {
 
-        InputStream stream = null;
-        try {
-            stream = Object.class.getResourceAsStream("/demobank.ofx");
+        final String testFile = "/demobank.ofx";
+
+        try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
             parser.parse(OfxV1ToV2.convertToXML(stream), "ISO-8859-1");
 
             Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
-        } finally {
-            try {
-                if (stream != null) {
-                    stream.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, ex);
-                assertTrue(false);
-            }
+        } catch (IOException e) {
+            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            assertTrue(false);
         }
+
         assertTrue(true);
     }
 
@@ -212,27 +215,25 @@ public class Ofx2Test {
     public void parseSample() {
         final String testFile = "/Sample.ofx";
 
-        InputStream stream = null;
+        URL url = Object.class.getResource(testFile);
+        String encoding;
+
         try {
-            URL url = Object.class.getResource(testFile);
-            String encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
+            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
 
-            stream = Object.class.getResourceAsStream(testFile);
-            parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
+            try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
+                parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
 
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                if (stream != null) {
-                    stream.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
+            } catch (IOException e) {
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
                 assertTrue(false);
             }
+        } catch (URISyntaxException e) {
+            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            assertTrue(false);
         }
+
         assertTrue(true);
     }
 
@@ -240,27 +241,25 @@ public class Ofx2Test {
     public void parseFileWithAccents() {
         final String testFile = "/File_with_Accents.ofx";
 
-        InputStream stream = null;
+        URL url = Object.class.getResource(testFile);
+        String encoding;
+
         try {
-            URL url = Object.class.getResource(testFile);
-            String encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
+            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
 
-            stream = Object.class.getResourceAsStream(testFile);
-            parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
+            try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
+                parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
 
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                if (stream != null) {
-                    stream.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
+            } catch (IOException e) {
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
                 assertTrue(false);
             }
+        } catch (URISyntaxException e) {
+            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            assertTrue(false);
         }
+
         assertTrue(true);
     }
 

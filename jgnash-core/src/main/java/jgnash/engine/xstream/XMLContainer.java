@@ -17,16 +17,10 @@
  */
 package jgnash.engine.xstream;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
-import com.thoughtworks.xstream.io.xml.KXml2Driver;
-import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -34,7 +28,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.nio.channels.FileLock;
 import java.util.ArrayList;
@@ -57,9 +50,14 @@ import jgnash.engine.recurring.Reminder;
 import jgnash.util.FileMagic;
 import jgnash.util.FileUtils;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
+import com.thoughtworks.xstream.io.xml.KXml2Driver;
+import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
+
 /**
- * Simple object container for StoredObjects that reads and writes a xml file
- *
+ * Simple object container for StoredObjects that reads and writes an XML file
+ * 
  * @author Craig Cavanaugh
  */
 public class XMLContainer extends AbstractXStreamContainer {
@@ -86,11 +84,14 @@ public class XMLContainer extends AbstractXStreamContainer {
     }
 
     /**
-     * Writes an XML file given a collection of StoredObjects. TrashObjects and objects marked for removal are not
-     * written. If the file already exists, it will be overwritten.
-     *
-     * @param objects Collection of StoredObjects to write
-     * @param file    file to write
+     * Writes an XML file given a collection of StoredObjects. TrashObjects and
+     * objects marked for removal are not written. If the file already exists,
+     * it will be overwritten.
+     * 
+     * @param objects
+     *            Collection of StoredObjects to write
+     * @param file
+     *            file to write
      */
     public static synchronized void writeXML(final Collection<StoredObject> objects, final File file) {
         Logger logger = Logger.getLogger(XMLContainer.class.getName());
@@ -99,7 +100,8 @@ public class XMLContainer extends AbstractXStreamContainer {
             File backup = new File(file.getAbsolutePath() + ".backup");
             if (backup.exists()) {
                 if (!backup.delete()) {
-                    logger.log(Level.WARNING, "Was not able to delete the old backup file: {0}", backup.getAbsolutePath());
+                    logger.log(Level.WARNING, "Was not able to delete the old backup file: {0}",
+                            backup.getAbsolutePath());
                 }
             }
 
@@ -147,68 +149,34 @@ public class XMLContainer extends AbstractXStreamContainer {
 
     void readXML() {
         String encoding = System.getProperty("file.encoding"); // system default encoding
+
         String version = FileMagic.getjGnashXMLVersion(file); // version of the jGnash XML file
 
         if (Float.parseFloat(version) >= 2.01f) { // 2.01f is hard coded for prior encoding bug
             encoding = "UTF-8"; // encoding is always UTF-8 for anything greater than 2.0
         }
 
-        ObjectInputStream in = null;
-        FileLock readLock = null; // obtain a shared lock for reading
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, e);
-        }
+        try (FileInputStream fis = new FileInputStream(file);
+                Reader reader = new BufferedReader(new InputStreamReader(fis, encoding))) {
 
-        Reader reader = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(fis, encoding));
-        } catch (UnsupportedEncodingException e) {
-            Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, e);
-        }
+            readWriteLock.writeLock().lock();
 
-        readWriteLock.writeLock().lock();
+            XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects),
+                    new KXml2Driver()));
 
-        try {
-            XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects), new KXml2Driver()));
-
-            readLock = fis.getChannel().tryLock(0, Long.MAX_VALUE, true);
+            FileLock readLock = fis.getChannel().tryLock(0, Long.MAX_VALUE, true);
 
             if (readLock != null) {
-                in = xstream.createObjectInputStream(reader);
+                ObjectInputStream in = xstream.createObjectInputStream(reader);
+                
                 in.readObject();
+                readLock.release();
             }
-        } catch (ClassNotFoundException | IOException ex) {
-            Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException | ClassNotFoundException e) {
+            Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, e);
         } finally {
-            if (in != null) {
-                try {
-                    if (readLock != null) {
-                        readLock.release();
-                    }
-                    in.close();
-                } catch (IOException e) {
-                    Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, e);
-                }
-            }
-
-            try {
-                reader.close();
-            } catch (IOException e) {
-                Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, e);
-            }
-
-            try {
-                fis.close();
-            } catch (IOException e) {
-                Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, e);
-            }
-
             acquireFileLock(); // lock the file on open
-
             readWriteLock.writeLock().unlock();
-        }
+        }                
     }
 }

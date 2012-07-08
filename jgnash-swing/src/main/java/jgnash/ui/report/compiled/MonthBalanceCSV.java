@@ -60,7 +60,7 @@ import jgnash.util.Resource;
  * 
  * @author Craig Cavanaugh
  * @author Tom Edelson
- *
+ * 
  */
 
 public final class MonthBalanceCSV {
@@ -129,7 +129,8 @@ public final class MonthBalanceCSV {
 
         JPanel panel = builder.getPanel();
 
-        int option = JOptionPane.showConfirmDialog(null, new Object[] { panel }, rb.getString("Message.StartEndDate"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        int option = JOptionPane.showConfirmDialog(null, new Object[] { panel }, rb.getString("Message.StartEndDate"),
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (option == JOptionPane.OK_OPTION) {
             dates = getLastDays(startField.getDate(), endField.getDate());
@@ -152,7 +153,7 @@ public final class MonthBalanceCSV {
 
         c.setTime(s);
         c.set(Calendar.DATE, 15); // pick a date mid month
-        //s = c.getTime();
+        // s = c.getTime();
 
         Date t = DateUtils.getLastDayOfTheMonth(c.get(Calendar.MONTH), c.get(Calendar.YEAR));
 
@@ -176,7 +177,8 @@ public final class MonthBalanceCSV {
                 accounts.add(child); // add the account
                 BigDecimal[] b = new BigDecimal[dates.length];
                 for (int j = 0; j < dates.length; j++) {
-                    b[j] = AccountBalanceDisplayManager.convertToSelectedBalanceMode(child.getAccountType(), child.getBalance(dates[j]));
+                    b[j] = AccountBalanceDisplayManager.convertToSelectedBalanceMode(child.getAccountType(),
+                            child.getBalance(dates[j]));
                 }
                 balance.add(b);
             }
@@ -187,11 +189,8 @@ public final class MonthBalanceCSV {
     } // end method buildLists
 
     /*
-    ,A1,A2,A3
-    Jan,455,30,80
-    Feb,566,70,90
-    March,678,200,300
-    */
+     * ,A1,A2,A3 Jan,455,30,80 Feb,566,70,90 March,678,200,300
+     */
 
     private void writeCSVFileHoriz(final String fileName, final Date[] dates) throws IOException {
 
@@ -199,39 +198,35 @@ public final class MonthBalanceCSV {
             return;
         }
 
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName)));
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName)))) {
 
-        // write out the account names with full path
-        int length = accounts.size();
+            // write out the account names with full path
+            int length = accounts.size();
 
-        for (Account a : accounts) {
-            writer.write(",");
-            writer.write(a.getPathName());
-        }
-
-        writer.newLine();
-
-        // write out the month, and then balance for that month
-        for (int i = 0; i < dates.length; i++) {
-            writer.write(df.format(dates[i]));
-            for (int j = 0; j < length; j++) {
-                BigDecimal[] b = balance.get(j);
+            for (Account a : accounts) {
                 writer.write(",");
-                writer.write(b[i].toString());
+                writer.write(a.getPathName());
             }
-            writer.newLine();
-        }
 
-        writer.close();
+            writer.newLine();
+
+            // write out the month, and then balance for that month
+            for (int i = 0; i < dates.length; i++) {
+                writer.write(df.format(dates[i]));
+                for (int j = 0; j < length; j++) {
+                    BigDecimal[] b = balance.get(j);
+                    writer.write(",");
+                    writer.write(b[i].toString());
+                }
+                writer.newLine();
+            }
+        }
 
     } // end method writeCSVFileHoriz
 
     /*
-    ,Jan,Feb,Mar
-    A1,30,80,100
-    A2,70,90,120
-    A3,200,300,400
-    */
+     * ,Jan,Feb,Mar A1,30,80,100 A2,70,90,120 A3,200,300,400
+     */
 
     private void writeCSVFileVert(final String fileName, final Date[] dates) throws IOException {
 
@@ -239,28 +234,27 @@ public final class MonthBalanceCSV {
             return;
         }
 
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName)));
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName)))) {
 
-        // write out the month header, the first column is empty
-        for (Date date : dates) {
-            writer.write(",");
-            writer.write(df.format(date));
-        }
-
-        writer.newLine();
-
-        // write out the account balance info
-        for (int i = 0; i < accounts.size(); i++) {
-            writer.write(accounts.get(i).getPathName());
-            BigDecimal[] b = balance.get(i);
-            for (BigDecimal aB : b) {
+            // write out the month header, the first column is empty
+            for (Date date : dates) {
                 writer.write(",");
-                writer.write(aB.toString());
+                writer.write(df.format(date));
             }
-            writer.newLine();
-        } // end outer for loop
 
-        writer.close();
+            writer.newLine();
+
+            // write out the account balance info
+            for (int i = 0; i < accounts.size(); i++) {
+                writer.write(accounts.get(i).getPathName());
+                BigDecimal[] b = balance.get(i);
+                for (BigDecimal aB : b) {
+                    writer.write(",");
+                    writer.write(aB.toString());
+                }
+                writer.newLine();
+            } // end outer for loop
+        }
 
     } // end method writeCSVFileVert
 
