@@ -40,7 +40,7 @@ import java.util.logging.Logger;
 
 /**
  * Import and export a tree of accounts
- *
+ * 
  * @author Craig Cavanaugh
  */
 public class AccountTreeXMLFactory {
@@ -84,7 +84,8 @@ public class AccountTreeXMLFactory {
 
         XStream xstream = getStream();
 
-        try (ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(new OutputStreamWriter(new FileOutputStream(file), ENCODING)))) {
+        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), ENCODING);
+                ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(writer))) {
             out.writeObject(account);
         } catch (IOException e) {
             Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
@@ -93,8 +94,9 @@ public class AccountTreeXMLFactory {
 
     /**
      * Load an account tree given a reader
-     *
-     * @param reader Reader to use
+     * 
+     * @param reader
+     *            Reader to use
      * @return RootAccount if reader is valid
      */
     private static RootAccount loadAccountTree(final Reader reader) {
@@ -117,44 +119,48 @@ public class AccountTreeXMLFactory {
 
     /**
      * Load an account tree given a reader
-     *
-     * @param file file name to use
+     * 
+     * @param file
+     *            file name to use
      * @return RootAccount if file name is valid
      */
-    public static RootAccount loadAccountTree(final File file){
-        RootAccount account = null;   
-                
+    public static RootAccount loadAccountTree(final File file) {
+        RootAccount account = null;
+
         try (Reader reader = new InputStreamReader(new FileInputStream(file), ENCODING)) {
-           account = loadAccountTree(reader);
+            account = loadAccountTree(reader);
         } catch (IOException ex) {
             Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return account;
     }
 
     /**
      * Load an account tree given an InputStream
-     *
-     * @param stream InputStream to use
+     * 
+     * @param stream
+     *            InputStream to use
      * @return RootAccount if stream is valid
      */
-    public static RootAccount loadAccountTree(final InputStream stream) {        
+    public static RootAccount loadAccountTree(final InputStream stream) {
         try (Reader reader = new InputStreamReader(stream, ENCODING)) {
             return loadAccountTree(reader);
         } catch (IOException ex) {
             Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return null;
     }
 
     /**
      * Imports an account tree into the existing account tree. Account
      * currencies are forced to the engine's default
-     *
-     * @param engine current engine to merge into
-     * @param root root of account structure to merge
+     * 
+     * @param engine
+     *            current engine to merge into
+     * @param root
+     *            root of account structure to merge
      */
     public static void importAccountTree(final Engine engine, final RootAccount root) {
         AccountImport accountImport = new AccountImport();
@@ -164,9 +170,11 @@ public class AccountTreeXMLFactory {
     /**
      * Merges an account tree into the existing account tree. Duplicate
      * currencies are prevented
-     *
-     * @param engine current engine to merge into
-     * @param root root of account structure to merge
+     * 
+     * @param engine
+     *            current engine to merge into
+     * @param root
+     *            root of account structure to merge
      */
     public static void mergeAccountTree(final Engine engine, final RootAccount root) {
         AccountImport accountImport = new AccountImport();
@@ -197,9 +205,11 @@ public class AccountTreeXMLFactory {
         /**
          * Ensures that duplicate currencies are not created when the accounts
          * are merged
-         *
-         * @param engine Engine with existing currencies
-         * @param account account to correct
+         * 
+         * @param engine
+         *            Engine with existing currencies
+         * @param account
+         *            account to correct
          */
         private void fixCurrencies(final Engine engine, final Account account) {
 
@@ -227,7 +237,8 @@ public class AccountTreeXMLFactory {
                             }
                             engine.addCommodity(sNode);
                         } catch (CloneNotSupportedException e) {
-                            Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                            Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE,
+                                    e.getLocalizedMessage(), e);
                         }
                     }
 
@@ -244,9 +255,11 @@ public class AccountTreeXMLFactory {
         /**
          * Ensures that duplicate currencies are not created when the accounts
          * are merged
-         *
-         * @param engine Engine with existing currencies
-         * @param account account to correct
+         * 
+         * @param engine
+         *            Engine with existing currencies
+         * @param account
+         *            account to correct
          */
         private void forceCurrency(final Engine engine, final Account account) {
 
@@ -288,7 +301,8 @@ public class AccountTreeXMLFactory {
             }
 
             // search for a pre-existing match
-            Account match = AccountUtils.searchTree(engine.getRootAccount(), account.getName(), account.getAccountType(), account.getDepth());
+            Account match = AccountUtils.searchTree(engine.getRootAccount(), account.getName(),
+                    account.getAccountType(), account.getDepth());
 
             if (match != null && match.getParent().equals(mergeMap.get(account.getParent()))) { // found a match
                 mergeMap.put(account, match);

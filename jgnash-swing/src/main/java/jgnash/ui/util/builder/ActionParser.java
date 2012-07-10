@@ -63,7 +63,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Parses an XML file and builds JMenuBar and JToolBar UI objects
  * <p/>
  * Ideas borrowed from: http://www.javadesktop.org/articles/actions/index.html
- *
+ * 
  * @author Craig Cavanaugh
  */
 public final class ActionParser extends DefaultHandler {
@@ -149,10 +149,12 @@ public final class ActionParser extends DefaultHandler {
     }
 
     /**
-     * Looks for classes that implement <code>javax.swing.Action</code> and are annotated with
-     * <code>jgnash.ui.util.builder.Action</code> and pre-loads them into the action map
-     *
-     * @param packageName base package name to search
+     * Looks for classes that implement <code>javax.swing.Action</code> and are
+     * annotated with <code>jgnash.ui.util.builder.Action</code> and pre-loads
+     * them into the action map
+     * 
+     * @param packageName
+     *            base package name to search
      */
     public void preLoadActions(final String packageName) {
         try {
@@ -174,9 +176,11 @@ public final class ActionParser extends DefaultHandler {
     }
 
     /**
-     * Adds the set of actions and action-lists from an action-set document into the ActionManager.
-     *
-     * @param stream InputStream containing an actionSet document
+     * Adds the set of actions and action-lists from an action-set document into
+     * the ActionManager.
+     * 
+     * @param stream
+     *            InputStream containing an actionSet document
      */
     void loadFile(final InputStream stream) {
         SAXParserFactory parserfactory = SAXParserFactory.newInstance();
@@ -192,12 +196,12 @@ public final class ActionParser extends DefaultHandler {
         }
     }
 
-    public void loadFile(final String fileName) {        
+    public void loadFile(final String fileName) {
         try (InputStream s = getClass().getResourceAsStream(fileName)) {
             loadFile(s);
         } catch (IOException e) {
-           log.log(Level.SEVERE, null, e);
-        }                
+            log.log(Level.SEVERE, null, e);
+        }
     }
 
     public void preLoadAction(final String id, final Action action) {
@@ -288,26 +292,26 @@ public final class ActionParser extends DefaultHandler {
                 menu = new JMenuItem(a);
             } else {
                 switch (node.type) {
-                    case "single":
-                        menu = new JCheckBoxMenuItem(a);
-                        break;
-                    case "toggle":
-                        menu = new JRadioButtonMenuItem(a);
+                case "single":
+                    menu = new JCheckBoxMenuItem(a);
+                    break;
+                case "toggle":
+                    menu = new JRadioButtonMenuItem(a);
 
-                        if (node.group != null) { // create a group
-                            ButtonGroup bGroup;
-                            if (buttonGroups.get(node.group) != null) {
-                                bGroup = buttonGroups.get(node.group);
-                            } else {
-                                bGroup = new ButtonGroup();
-                                buttonGroups.put(node.group, bGroup);
-                            }
-                            bGroup.add(menu);
+                    if (node.group != null) { // create a group
+                        ButtonGroup bGroup;
+                        if (buttonGroups.get(node.group) != null) {
+                            bGroup = buttonGroups.get(node.group);
+                        } else {
+                            bGroup = new ButtonGroup();
+                            buttonGroups.put(node.group, bGroup);
                         }
-                        break;
-                    default:
-                        menu = new JMenuItem(a);
-                        break;
+                        bGroup.add(menu);
+                    }
+                    break;
+                default:
+                    menu = new JMenuItem(a);
+                    break;
                 }
             }
         }
@@ -373,8 +377,10 @@ public final class ActionParser extends DefaultHandler {
     }
 
     /**
-     * @param namespaceURI name space
-     * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
+     * @param namespaceURI
+     *            name space
+     * @see org.xml.sax.ContentHandler#endElement(java.lang.String,
+     *      java.lang.String, java.lang.String)
      */
     @Override
     public void endElement(final String namespaceURI, final String localName, final String qName) {
@@ -390,9 +396,10 @@ public final class ActionParser extends DefaultHandler {
     }
 
     /**
-     * @param namespaceURI name space
-     * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String,
-     *      org.xml.sax.Attributes)
+     * @param namespaceURI
+     *            name space
+     * @see org.xml.sax.ContentHandler#startElement(java.lang.String,
+     *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
      */
     @Override
     public void startElement(final String namespaceURI, final String localName, final String qName, final Attributes atts) {
@@ -437,8 +444,9 @@ public final class ActionParser extends DefaultHandler {
 
         /**
          * Retrieves the Attribute value.
-         *
-         * @param index one of ActionManager.._INDEX
+         * 
+         * @param index
+         *            one of ActionManager.._INDEX
          * @return value
          */
         public String getValue(int index) {
@@ -509,12 +517,16 @@ public final class ActionParser extends DefaultHandler {
     }
 
     /**
-     * Scans all classes accessible from the context class loader which belong to the given package and sub-packages.
-     *
-     * @param packageName The base package
+     * Scans all classes accessible from the context class loader which belong
+     * to the given package and sub-packages.
+     * 
+     * @param packageName
+     *            The base package
      * @return The classes
-     * @throws ClassNotFoundException exception
-     * @throws IOException            exception
+     * @throws ClassNotFoundException
+     *             exception
+     * @throws IOException
+     *             exception
      */
     private static ArrayList<Class<?>> getClasses(final String packageName) throws ClassNotFoundException, IOException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -544,12 +556,16 @@ public final class ActionParser extends DefaultHandler {
     }
 
     /**
-     * Recursive method used to find all classes in a given directory and subdirectories.
-     *
-     * @param directory   The base directory
-     * @param packageName The package name for classes found inside the base directory
+     * Recursive method used to find all classes in a given directory and
+     * subdirectories.
+     * 
+     * @param directory
+     *            The base directory
+     * @param packageName
+     *            The package name for classes found inside the base directory
      * @return The classes
-     * @throws ClassNotFoundException error
+     * @throws ClassNotFoundException
+     *             error
      */
     private static List<Class<?>> findActionClasses(final File directory, final String packageName) throws ClassNotFoundException {
 
@@ -559,25 +575,28 @@ public final class ActionParser extends DefaultHandler {
             try {
                 int index = directory.getPath().indexOf(".jar!");
 
-                URL url = new URL("jar:" + directory.getPath().substring(0, index).replace('/', File.separatorChar) + ".jar!/");
+                URL url = new URL("jar:" + directory.getPath().substring(0, index).replace('/', File.separatorChar)
+                        + ".jar!/");
 
                 JarURLConnection conn = (JarURLConnection) url.openConnection();
-                JarFile jar = conn.getJarFile();
 
-                Enumeration<JarEntry> entries = jar.entries();
+                try (JarFile jar = conn.getJarFile()) {                   
 
-                String path = packageName.replace('.', '/');
+                    Enumeration<JarEntry> entries = jar.entries();
 
-                while (entries.hasMoreElements()) {
-                    JarEntry entry = entries.nextElement();
+                    String path = packageName.replace('.', '/');
 
-                    String name = entry.getName();
+                    while (entries.hasMoreElements()) {
+                        JarEntry entry = entries.nextElement();
 
-                    if (name.startsWith(path) && name.endsWith(".class") && !name.contains("$")) {
-                        Class<?> clazz = Class.forName(name.substring(0, name.length() - 6).replace('/', '.'));
+                        String name = entry.getName();
 
-                        if (Action.class.isAssignableFrom(clazz)) {
-                            classes.add(Class.forName(name.substring(0, name.length() - 6).replace('/', '.')));
+                        if (name.startsWith(path) && name.endsWith(".class") && !name.contains("$")) {
+                            Class<?> clazz = Class.forName(name.substring(0, name.length() - 6).replace('/', '.'));
+
+                            if (Action.class.isAssignableFrom(clazz)) {
+                                classes.add(Class.forName(name.substring(0, name.length() - 6).replace('/', '.')));
+                            }
                         }
                     }
                 }
@@ -599,10 +618,12 @@ public final class ActionParser extends DefaultHandler {
                     classes.addAll(findActionClasses(file, packageName + "." + file.getName()));
                 } else if (file.getName().endsWith(".class") && !fileName.contains("$")) {
 
-                    Class<?> clazz = Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6));
+                    Class<?> clazz = Class.forName(packageName + '.'
+                            + file.getName().substring(0, file.getName().length() - 6));
 
                     if (Action.class.isAssignableFrom(clazz)) {
-                        classes.add(Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6)));
+                        classes.add(Class.forName(packageName + '.'
+                                + file.getName().substring(0, file.getName().length() - 6)));
                     }
                 }
             }

@@ -192,13 +192,14 @@ public class NewFileFour extends JPanel implements WizardPage {
     private static Collection<RootAccount> getLocalizedAccountSet() {
         List<RootAccount> files = new ArrayList<>();
 
-        for (String string : getAccountSetList()) {
-            InputStream stream = Object.class.getResourceAsStream(string);
-
-            if (stream != null) {
+        for (String string : getAccountSetList()) {           
+            
+            try (InputStream stream = Object.class.getResourceAsStream(string)) {
                 RootAccount account = AccountTreeXMLFactory.loadAccountTree(stream);
                 files.add(account);
-            }
+            } catch (IOException e) {
+                Logger.getLogger(NewFileFour.class.getName()).log(Level.SEVERE, null, e);
+            }            
         }
 
         return files;

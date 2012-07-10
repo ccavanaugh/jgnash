@@ -80,7 +80,7 @@ import jgnash.engine.TransactionTag;
  * reminders
  * <p/>
  * Accounts will be kept in a lookup table during the parsing operation
- *
+ * 
  * @author Craig Cavanaugh
  */
 public class Import {
@@ -146,8 +146,6 @@ public class Import {
 
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
-        InputStream input;
-
         try {
             Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
@@ -159,11 +157,11 @@ public class Import {
             }
 
             /* read commodity data first */
-            input = new BufferedInputStream(new FileInputStream(new File(filename)));
-            XMLStreamReader reader = inputFactory.createXMLStreamReader(input, "UTF-8");
-            imp.importCommodities(reader);
-            reader.close();
-            input.close();
+            try (InputStream input = new BufferedInputStream(new FileInputStream(new File(filename)))) {
+                XMLStreamReader reader = inputFactory.createXMLStreamReader(input, "UTF-8");
+                imp.importCommodities(reader);
+                reader.close();
+            }
 
             /* Run commodity generation cleanup threads */
             ExecutorService es = Executors.newSingleThreadExecutor();
@@ -187,11 +185,11 @@ public class Import {
             imp.getLogger().info("Commodity cleanup threads complete");
 
             /* read account data first */
-            input = new BufferedInputStream(new FileInputStream(new File(filename)));
-            reader = inputFactory.createXMLStreamReader(input, "UTF-8");
-            imp.importAccounts(reader);
-            reader.close();
-            input.close();
+            try (InputStream input = new BufferedInputStream(new FileInputStream(new File(filename)))) {
+                XMLStreamReader reader = inputFactory.createXMLStreamReader(input, "UTF-8");
+                imp.importAccounts(reader);
+                reader.close();
+            }
 
             imp.getLogger().info("Running account cleanup threads");
 
@@ -217,11 +215,11 @@ public class Import {
             imp.getLogger().info("Account cleanup threads complete");
 
             /* import transactions */
-            input = new BufferedInputStream(new FileInputStream(new File(filename)));
-            reader = inputFactory.createXMLStreamReader(input, "UTF-8");
-            imp.importTransactions(reader);
-            reader.close();
-            input.close();
+            try (InputStream input = new BufferedInputStream(new FileInputStream(new File(filename)))) {
+                XMLStreamReader reader = inputFactory.createXMLStreamReader(input, "UTF-8");
+                imp.importTransactions(reader);
+                reader.close();
+            }
 
             /* Lock accounts after transactions have been added */
             imp.lockAccounts();
@@ -242,25 +240,24 @@ public class Import {
         logger.info("Begin transaction import");
 
         try {
-            parse:
-            while (reader.hasNext()) {
+            parse: while (reader.hasNext()) {
                 int event = reader.next();
 
                 switch (event) {
-                    case XMLStreamConstants.START_ELEMENT:
-                        if (reader.getAttributeCount() > 0 && reader.getAttributeValue(0).contains("Transaction")) {
-                            logger.finest("Found the start of a Transaction");
-                            parseTransaction(reader);
-                        }
-                        break;
-                    case XMLStreamConstants.END_ELEMENT:
-                        if (reader.getLocalName().equals("objects")) {
-                            logger.fine("Found the end of the object list and transactions");
-                            break parse;
-                        }
-                        break;
-                    default:
-                        break;
+                case XMLStreamConstants.START_ELEMENT:
+                    if (reader.getAttributeCount() > 0 && reader.getAttributeValue(0).contains("Transaction")) {
+                        logger.finest("Found the start of a Transaction");
+                        parseTransaction(reader);
+                    }
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (reader.getLocalName().equals("objects")) {
+                        logger.fine("Found the end of the object list and transactions");
+                        break parse;
+                    }
+                    break;
+                default:
+                    break;
                 }
             }
         } catch (XMLStreamException e) {
@@ -321,9 +318,11 @@ public class Import {
 
                     transaction.addTransactionEntry(entry);
 
-                    transaction.setReconciled(creditAccount, creditReconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
+                    transaction.setReconciled(creditAccount, creditReconciled ? ReconciledState.RECONCILED
+                            : ReconciledState.NOT_RECONCILED);
 
-                    transaction.setReconciled(debitAccount, debitReconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
+                    transaction.setReconciled(debitAccount, debitReconciled ? ReconciledState.RECONCILED
+                            : ReconciledState.NOT_RECONCILED);
 
                     j.remove();
                 }
@@ -348,27 +347,26 @@ public class Import {
         logger.info("Begin Account import");
 
         try {
-            parse:
-            while (reader.hasNext()) {
+            parse: while (reader.hasNext()) {
                 int event = reader.next();
 
                 switch (event) {
-                    case XMLStreamConstants.START_ELEMENT:
-                        if (reader.getAttributeCount() > 0) {
-                            if (reader.getAttributeValue(0).contains("Account")) {
-                                logger.finest("Found the start of an Account");
-                                parseAccount(reader);
-                            }
+                case XMLStreamConstants.START_ELEMENT:
+                    if (reader.getAttributeCount() > 0) {
+                        if (reader.getAttributeValue(0).contains("Account")) {
+                            logger.finest("Found the start of an Account");
+                            parseAccount(reader);
                         }
-                        break;
-                    case XMLStreamConstants.END_ELEMENT:
-                        if (reader.getLocalName().equals("objects")) {
-                            logger.finest("Found the end of the object list and accounts");
-                            break parse;
-                        }
-                        break;
-                    default:
-                        break;
+                    }
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (reader.getLocalName().equals("objects")) {
+                        logger.finest("Found the end of the object list and accounts");
+                        break parse;
+                    }
+                    break;
+                default:
+                    break;
                 }
             }
         } catch (XMLStreamException e) {
@@ -385,7 +383,7 @@ public class Import {
                 if (!account.getParent().equals(parent)) {
                     engine.moveAccount(account, parent);
 
-                    logger.log(Level.FINEST, "Moving {0} to {1}", new Object[]{account.getName(), parent.getName()});
+                    logger.log(Level.FINEST, "Moving {0} to {1}", new Object[] { account.getName(), parent.getName() });
                 }
             }
         }
@@ -405,8 +403,9 @@ public class Import {
      * Import Commodities.
      * <p/>
      * Commodities are ordered first in the file. Exchange rates are last.
-     *
-     * @param reader XMLStreamReader
+     * 
+     * @param reader
+     *            XMLStreamReader
      */
     private void importCommodities(final XMLStreamReader reader) {
 
@@ -417,29 +416,29 @@ public class Import {
                 int event = reader.next();
 
                 switch (event) {
-                    case XMLStreamConstants.START_ELEMENT:
-                        if (reader.getAttributeCount() > 0) {
-                            switch (reader.getAttributeValue(0)) {
-                                case "SecurityNode":
-                                    logger.finest("Found the start of a SecurityNode");
-                                    parseSecurityNode(reader);
-                                    break;
-                                case "CurrencyNode":
-                                    logger.finest("Found the start of a CurrencyNode");
-                                    parseCurrencyNode(reader);
-                                    break;
-                                case "CommodityNode":
-                                    logger.finest("Found the start of a CommodityNode");
-                                    parseCommodityNode(reader);
-                                    break;
-                                case "ExchangeRate":
-                                    logger.finest("Parse exchange rate");
-                                    parseExchangeRate(reader);
-                                    break;
-                            }
+                case XMLStreamConstants.START_ELEMENT:
+                    if (reader.getAttributeCount() > 0) {
+                        switch (reader.getAttributeValue(0)) {
+                        case "SecurityNode":
+                            logger.finest("Found the start of a SecurityNode");
+                            parseSecurityNode(reader);
+                            break;
+                        case "CurrencyNode":
+                            logger.finest("Found the start of a CurrencyNode");
+                            parseCurrencyNode(reader);
+                            break;
+                        case "CommodityNode":
+                            logger.finest("Found the start of a CommodityNode");
+                            parseCommodityNode(reader);
+                            break;
+                        case "ExchangeRate":
+                            logger.finest("Parse exchange rate");
+                            parseExchangeRate(reader);
+                            break;
                         }
-                        break;
-                    default:
+                    }
+                    break;
+                default:
                 }
             }
         } catch (XMLStreamException e) {
@@ -461,43 +460,43 @@ public class Import {
                 int event = reader.next();
 
                 switch (event) {
-                    case XMLStreamConstants.START_ELEMENT:
-                        String element = reader.getLocalName();
-                        elementMap.put(element.intern(), reader.getElementText());
-                        break;
-                    case XMLStreamConstants.END_ELEMENT:
-                        if (reader.getName().equals(parsingElement)) {
-                            logger.finest("Found the end of the exchange rate");
+                case XMLStreamConstants.START_ELEMENT:
+                    String element = reader.getLocalName();
+                    elementMap.put(element.intern(), reader.getElementText());
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (reader.getName().equals(parsingElement)) {
+                        logger.finest("Found the end of the exchange rate");
 
-                            try {
-                                String key = elementMap.get("key");
+                        try {
+                            String key = elementMap.get("key");
 
-                                if (key != null && key.length() == 6) {
+                            if (key != null && key.length() == 6) {
 
-                                    Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                                Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-                                    CurrencyNode cOne = e.getCurrency(key.substring(0, 3));
-                                    CurrencyNode cTwo = e.getCurrency(key.substring(3, 6));
+                                CurrencyNode cOne = e.getCurrency(key.substring(0, 3));
+                                CurrencyNode cTwo = e.getCurrency(key.substring(3, 6));
 
-                                    // jGnash 1.x would hold onto old exchange rates for deleted commodities
-                                    if (cOne != null && cTwo != null) {
-                                        BigDecimal rate = new BigDecimal(elementMap.get("rate"));
+                                // jGnash 1.x would hold onto old exchange rates for deleted commodities
+                                if (cOne != null && cTwo != null) {
+                                    BigDecimal rate = new BigDecimal(elementMap.get("rate"));
 
-                                        EngineFactory.getEngine(EngineFactory.DEFAULT).setExchangeRate(cOne, cTwo, rate);
+                                    EngineFactory.getEngine(EngineFactory.DEFAULT).setExchangeRate(cOne, cTwo, rate);
 
-                                        logger.log(Level.FINE, "Set ExchangeRate {0}:{1}", new Object[]{key,
-                                                    rate.toString()});
-                                    }
+                                    logger.log(Level.FINE, "Set ExchangeRate {0}:{1}",
+                                            new Object[] { key, rate.toString() });
                                 }
-
-                            } catch (Exception e) {
-                                logger.log(Level.SEVERE, e.toString(), e);
                             }
-                            return;
+
+                        } catch (Exception e) {
+                            logger.log(Level.SEVERE, e.toString(), e);
                         }
-                        break;
-                    default:
-                        break;
+                        return;
+                    }
+                    break;
+                default:
+                    break;
                 }
             }
         } catch (XMLStreamException e) {
@@ -527,32 +526,32 @@ public class Import {
                 int event = reader.next();
 
                 switch (event) {
-                    case XMLStreamConstants.START_ELEMENT:
-                        String element = reader.getLocalName();
-                        elementMap.put(element.intern(), reader.getElementText());
-                        break;
-                    case XMLStreamConstants.END_ELEMENT:
-                        if (reader.getName().equals(parsingElement)) {
-                            logger.log(Level.FINEST, "Found the end of a Transaction: {0}", transactionId);
+                case XMLStreamConstants.START_ELEMENT:
+                    String element = reader.getLocalName();
+                    elementMap.put(element.intern(), reader.getElementText());
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (reader.getName().equals(parsingElement)) {
+                        logger.log(Level.FINEST, "Found the end of a Transaction: {0}", transactionId);
 
-                            try {
-                                Transaction transaction = generateTransaction(transactionClass, elementMap);
+                        try {
+                            Transaction transaction = generateTransaction(transactionClass, elementMap);
 
-                                if (transaction != null) {
-                                    Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-                                    engine.addTransaction(transaction);
-                                    logger.finest("Transaction add complete");
-                                }
-                            } catch (Exception e) {
-                                logger.log(Level.SEVERE, "Error importing transaction id: {0}", transactionId);
-                                logger.log(Level.SEVERE, e.toString(), e);
-                                throw new RuntimeException(e);
+                            if (transaction != null) {
+                                Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                                engine.addTransaction(transaction);
+                                logger.finest("Transaction add complete");
                             }
-                            return;
+                        } catch (Exception e) {
+                            logger.log(Level.SEVERE, "Error importing transaction id: {0}", transactionId);
+                            logger.log(Level.SEVERE, e.toString(), e);
+                            throw new RuntimeException(e);
                         }
-                        break;
-                    default:
-                        break;
+                        return;
+                    }
+                    break;
+                default:
+                    break;
                 }
             }
         } catch (XMLStreamException e) {
@@ -564,14 +563,14 @@ public class Import {
     private Transaction generateTransaction(final String transactionClass, final Map<String, String> elementMap) {
         //logger.finest("Being generateTransaction");
         switch (transactionClass) {
-            case "SplitTransaction":
-                logger.finest("Found SplitTransaction");
-                splitList.add(elementMap);
-                return null;
-            case "SplitEntryTransaction":
-                logger.finest("Found SplitEntryTransaction");
-                splitEntryList.add(elementMap);
-                return null;
+        case "SplitTransaction":
+            logger.finest("Found SplitTransaction");
+            splitList.add(elementMap);
+            return null;
+        case "SplitEntryTransaction":
+            logger.finest("Found SplitEntryTransaction");
+            splitEntryList.add(elementMap);
+            return null;
         }
 
         //logger.finest("Building base transation");
@@ -611,7 +610,8 @@ public class Import {
             transaction.setPayee(payee);
             transaction.addTransactionEntry(entry);
 
-            transaction.setReconciled(investmentAccount, reconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
+            transaction.setReconciled(investmentAccount, reconciled ? ReconciledState.RECONCILED
+                    : ReconciledState.NOT_RECONCILED);
         }
 
         if (transactionClass.equals("SplitXTransaction") || transactionClass.equals("MergeXTransaction")) {
@@ -638,7 +638,8 @@ public class Import {
             transaction.setPayee(payee);
             transaction.addTransactionEntry(entry);
 
-            transaction.setReconciled(investmentAccount, reconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
+            transaction.setReconciled(investmentAccount, reconciled ? ReconciledState.RECONCILED
+                    : ReconciledState.NOT_RECONCILED);
         }
 
         if (transactionClass.equals("BuyXTransaction") || transactionClass.equals("SellXTransaction")) {
@@ -656,16 +657,20 @@ public class Import {
             if (sNode != null) {
 
                 if (transactionClass.equals("BuyXTransaction")) {
-                    transaction = TransactionFactory.import1xBuyXTransaction(account, investmentAccount, sNode, price, quantity, exchangeRate, fees, date, memo);
+                    transaction = TransactionFactory.import1xBuyXTransaction(account, investmentAccount, sNode, price,
+                            quantity, exchangeRate, fees, date, memo);
                 } else {
-                    transaction = TransactionFactory.import1xSellXTransaction(account, investmentAccount, sNode, price, quantity, exchangeRate, fees, date, memo);
+                    transaction = TransactionFactory.import1xSellXTransaction(account, investmentAccount, sNode, price,
+                            quantity, exchangeRate, fees, date, memo);
                 }
 
                 transaction.setDateEntered(actDate);
                 transaction.setPayee(payee);
 
-                transaction.setReconciled(investmentAccount, investmentAccountReconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
-                transaction.setReconciled(account, accountReconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
+                transaction.setReconciled(investmentAccount, investmentAccountReconciled ? ReconciledState.RECONCILED
+                        : ReconciledState.NOT_RECONCILED);
+                transaction.setReconciled(account, accountReconciled ? ReconciledState.RECONCILED
+                        : ReconciledState.NOT_RECONCILED);
             }
         }
 
@@ -678,11 +683,14 @@ public class Import {
             boolean investmentAccountReconciled = Boolean.parseBoolean(elementMap.get("investmentAccountReconciled"));
             SecurityNode sNode = EngineFactory.getEngine(EngineFactory.DEFAULT).getSecurity(elementMap.get("security"));
 
-            transaction = TransactionFactory.generateDividendXTransaction(investmentAccount, investmentAccount, account, sNode, amount, amount.negate(), amount, date, memo, accountReconciled);
+            transaction = TransactionFactory.generateDividendXTransaction(investmentAccount, investmentAccount,
+                    account, sNode, amount, amount.negate(), amount, date, memo, accountReconciled);
 
-            ReconcileManager.reconcileTransaction(investmentAccount, transaction, investmentAccountReconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
+            ReconcileManager.reconcileTransaction(investmentAccount, transaction,
+                    investmentAccountReconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
 
-            ReconcileManager.reconcileTransaction(account, transaction, accountReconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
+            ReconcileManager.reconcileTransaction(account, transaction, accountReconciled ? ReconciledState.RECONCILED
+                    : ReconciledState.NOT_RECONCILED);
         }
 
         if (transactionClass.equals("ReinvestDivTransaction")) {
@@ -695,7 +703,8 @@ public class Import {
 
             transaction = new InvestmentTransaction();
 
-            AbstractInvestmentTransactionEntry entry = new TransactionEntryReinvestDivX(investmentAccount, sNode, price, quantity);
+            AbstractInvestmentTransactionEntry entry = new TransactionEntryReinvestDivX(investmentAccount, sNode,
+                    price, quantity);
 
             entry.setMemo(memo);
 
@@ -713,49 +722,53 @@ public class Import {
                 transaction.addTransactionEntry(fTran);
             }
 
-            transaction.setReconciled(investmentAccount, reconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
+            transaction.setReconciled(investmentAccount, reconciled ? ReconciledState.RECONCILED
+                    : ReconciledState.NOT_RECONCILED);
         }
         switch (transactionClass) {
-            case "SingleEntryTransaction": {
-                BigDecimal amount = new BigDecimal(elementMap.get("amount"));
-                Account account = accountMap.get(elementMap.get("account"));
-                boolean reconciled = Boolean.parseBoolean(elementMap.get("reconciled"));
-                transaction = TransactionFactory.generateSingleEntryTransaction(account, amount, date, reconciled, memo, payee, number);
-                transaction.setDateEntered(actDate);
-                break;
+        case "SingleEntryTransaction": {
+            BigDecimal amount = new BigDecimal(elementMap.get("amount"));
+            Account account = accountMap.get(elementMap.get("account"));
+            boolean reconciled = Boolean.parseBoolean(elementMap.get("reconciled"));
+            transaction = TransactionFactory.generateSingleEntryTransaction(account, amount, date, reconciled, memo,
+                    payee, number);
+            transaction.setDateEntered(actDate);
+            break;
+        }
+        case "DoubleEntryTransaction": {
+            Account creditAccount = accountMap.get(elementMap.get("creditAccount"));
+            Account debitAccount = accountMap.get(elementMap.get("debitAccount"));
+            BigDecimal amount = new BigDecimal(elementMap.get("amount"));
+            boolean creditReconciled = Boolean.parseBoolean(elementMap.get("creditReconciled"));
+            boolean debitReconciled = Boolean.parseBoolean(elementMap.get("debitReconciled"));
+            transaction = new Transaction();
+            transaction.setDate(date);
+            transaction.setDateEntered(actDate);
+            transaction.setNumber(number);
+            transaction.setPayee(payee);
+            TransactionEntry entry = new TransactionEntry();
+            entry.setMemo(memo);
+            entry.setCreditAccount(creditAccount);
+            entry.setDebitAccount(debitAccount);
+            if (creditAccount.getCurrencyNode().equals(node)) {
+                entry.setCreditAmount(amount);
+            } else {
+                BigDecimal exchangeRate = new BigDecimal(elementMap.get("exchangeRate"));
+                entry.setCreditAmount(amount.multiply(exchangeRate));
             }
-            case "DoubleEntryTransaction": {
-                Account creditAccount = accountMap.get(elementMap.get("creditAccount"));
-                Account debitAccount = accountMap.get(elementMap.get("debitAccount"));
-                BigDecimal amount = new BigDecimal(elementMap.get("amount"));
-                boolean creditReconciled = Boolean.parseBoolean(elementMap.get("creditReconciled"));
-                boolean debitReconciled = Boolean.parseBoolean(elementMap.get("debitReconciled"));
-                transaction = new Transaction();
-                transaction.setDate(date);
-                transaction.setDateEntered(actDate);
-                transaction.setNumber(number);
-                transaction.setPayee(payee);
-                TransactionEntry entry = new TransactionEntry();
-                entry.setMemo(memo);
-                entry.setCreditAccount(creditAccount);
-                entry.setDebitAccount(debitAccount);
-                if (creditAccount.getCurrencyNode().equals(node)) {
-                    entry.setCreditAmount(amount);
-                } else {
-                    BigDecimal exchangeRate = new BigDecimal(elementMap.get("exchangeRate"));
-                    entry.setCreditAmount(amount.multiply(exchangeRate));
-                }
-                if (debitAccount.getCurrencyNode().equals(node)) {
-                    entry.setDebitAmount(amount.negate());
-                } else {
-                    BigDecimal exchangeRate = new BigDecimal(elementMap.get("exchangeRate"));
-                    entry.setDebitAmount(amount.multiply(exchangeRate).negate());
-                }
-                transaction.addTransactionEntry(entry);
-                transaction.setReconciled(creditAccount, creditReconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
-                transaction.setReconciled(debitAccount, debitReconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
-                break;
+            if (debitAccount.getCurrencyNode().equals(node)) {
+                entry.setDebitAmount(amount.negate());
+            } else {
+                BigDecimal exchangeRate = new BigDecimal(elementMap.get("exchangeRate"));
+                entry.setDebitAmount(amount.multiply(exchangeRate).negate());
             }
+            transaction.addTransactionEntry(entry);
+            transaction.setReconciled(creditAccount, creditReconciled ? ReconciledState.RECONCILED
+                    : ReconciledState.NOT_RECONCILED);
+            transaction.setReconciled(debitAccount, debitReconciled ? ReconciledState.RECONCILED
+                    : ReconciledState.NOT_RECONCILED);
+            break;
+        }
         }
         return transaction;
     }
@@ -778,60 +791,61 @@ public class Import {
                 int event = reader.next();
 
                 switch (event) {
-                    case XMLStreamConstants.START_ELEMENT:
-                        String element = reader.getLocalName();
+                case XMLStreamConstants.START_ELEMENT:
+                    String element = reader.getLocalName();
 
-                        switch (element) {
-                            case "securities":
-                                logger.info("Parsing account securities");
-                                elementMap.put("securities", parseAccountSecurities(reader));
-                                break;
-                            case "amortize":
-                                logger.info("Parsing amortize object");
-                                elementMap.put("amortize", parseAmortizeObject(reader));
-                                break;
-                            case "locked":
-                                lockMap.put(accountId, Boolean.valueOf(reader.getElementText()));
-                                break;
-                            default:
-                                elementMap.put(element, reader.getElementText());
-                                break;
-                        }
+                    switch (element) {
+                    case "securities":
+                        logger.info("Parsing account securities");
+                        elementMap.put("securities", parseAccountSecurities(reader));
                         break;
-                    case XMLStreamConstants.END_ELEMENT:
-                        if (reader.getName().equals(parsingElement)) {
-                            logger.finest("Found the end of an Account");
+                    case "amortize":
+                        logger.info("Parsing amortize object");
+                        elementMap.put("amortize", parseAmortizeObject(reader));
+                        break;
+                    case "locked":
+                        lockMap.put(accountId, Boolean.valueOf(reader.getElementText()));
+                        break;
+                    default:
+                        elementMap.put(element, reader.getElementText());
+                        break;
+                    }
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (reader.getName().equals(parsingElement)) {
+                        logger.finest("Found the end of an Account");
 
-                            Account account = generateAccount(accountClass, elementMap);
+                        Account account = generateAccount(accountClass, elementMap);
 
-                            if (account != null) {
-                                accountMap.put(accountId, account);
+                        if (account != null) {
+                            accountMap.put(accountId, account);
 
-                                // do not put the root account into the parent map
-                                if (account.getAccountType() != AccountType.ROOT) {
-                                    parentMap.put(account, (String) elementMap.get("parentAccount"));
-                                }
+                            // do not put the root account into the parent map
+                            if (account.getAccountType() != AccountType.ROOT) {
+                                parentMap.put(account, (String) elementMap.get("parentAccount"));
+                            }
 
-                                if (account.getAccountType() != AccountType.ROOT) {
-                                    Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                            if (account.getAccountType() != AccountType.ROOT) {
+                                Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-                                    engine.addAccount(engine.getRootAccount(), account);
+                                engine.addAccount(engine.getRootAccount(), account);
 
-                                    if (account.getAccountType() == AccountType.LIABILITY) {
-                                        Map<String, String> amortizeObject = (Map<String, String>) elementMap.get("amortize");
+                                if (account.getAccountType() == AccountType.LIABILITY) {
+                                    Map<String, String> amortizeObject = (Map<String, String>) elementMap
+                                            .get("amortize");
 
-                                        if (amortizeObject != null) {
-                                            AOThread t = new AOThread(account, amortizeObject);
-                                            workQueue.add(t);
-                                        }
+                                    if (amortizeObject != null) {
+                                        AOThread t = new AOThread(account, amortizeObject);
+                                        workQueue.add(t);
                                     }
                                 }
                             }
-                            return;
                         }
-                        break;
-                    default:
-                        break;
+                        return;
+                    }
+                    break;
+                default:
+                    break;
                 }
             }
         } catch (XMLStreamException e) {
@@ -922,23 +936,22 @@ public class Import {
         QName parsingElement = reader.getName();
 
         try {
-            parse:
-            while (reader.hasNext()) {
+            parse: while (reader.hasNext()) {
                 int event = reader.next();
 
                 switch (event) {
-                    case XMLStreamConstants.START_ELEMENT:
-                        String element = reader.getLocalName();
-                        elementMap.put(element, reader.getElementText());
-                        break;
-                    case XMLStreamConstants.END_ELEMENT:
-                        if (reader.getName().equals(parsingElement)) {
-                            logger.finest("Found the end of the Amortize Object");
-                            break parse;
-                        }
-                        break;
-                    default:
-                        break;
+                case XMLStreamConstants.START_ELEMENT:
+                    String element = reader.getLocalName();
+                    elementMap.put(element, reader.getElementText());
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (reader.getName().equals(parsingElement)) {
+                        logger.finest("Found the end of the Amortize Object");
+                        break parse;
+                    }
+                    break;
+                default:
+                    break;
                 }
             }
         } catch (XMLStreamException e) {
@@ -958,22 +971,21 @@ public class Import {
         QName parsingElement = reader.getName();
 
         try {
-            parse:
-            while (reader.hasNext()) {
+            parse: while (reader.hasNext()) {
                 int event = reader.next();
 
                 switch (event) {
-                    case XMLStreamConstants.START_ELEMENT:
-                        securities.add(reader.getElementText());
-                        break;
-                    case XMLStreamConstants.END_ELEMENT:
-                        if (reader.getName().equals(parsingElement)) {
-                            logger.finest("Found the end of the Account Securities");
-                            break parse;
-                        }
-                        break;
-                    default:
-                        break;
+                case XMLStreamConstants.START_ELEMENT:
+                    securities.add(reader.getElementText());
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (reader.getName().equals(parsingElement)) {
+                        logger.finest("Found the end of the Account Securities");
+                        break parse;
+                    }
+                    break;
+                default:
+                    break;
                 }
             }
         } catch (XMLStreamException e) {
@@ -997,58 +1009,58 @@ public class Import {
         Account account = null;
 
         switch (accountClass) {
-            case "BankAccount":
-                account = new Account(AccountType.BANK, node);
-                break;
-            case "ExpenseAccount":
-                account = new Account(AccountType.EXPENSE, node);
-                break;
-            case "IncomeAccount":
-                account = new Account(AccountType.INCOME, node);
-                break;
-            case "InvestmentAccount": {
-                account = new Account(AccountType.INVEST, node);
+        case "BankAccount":
+            account = new Account(AccountType.BANK, node);
+            break;
+        case "ExpenseAccount":
+            account = new Account(AccountType.EXPENSE, node);
+            break;
+        case "IncomeAccount":
+            account = new Account(AccountType.INCOME, node);
+            break;
+        case "InvestmentAccount": {
+            account = new Account(AccountType.INVEST, node);
 
-                String[] securities = (String[]) elementMap.get("securities");
+            String[] securities = (String[]) elementMap.get("securities");
 
-                if (securities != null) {
-                    for (String s : securities) {
-                        SecurityNode sNode = decodeSecurity(s);
-                        account.addSecurity(sNode);
-                    }
+            if (securities != null) {
+                for (String s : securities) {
+                    SecurityNode sNode = decodeSecurity(s);
+                    account.addSecurity(sNode);
                 }
-                break;
             }
-            case "MutualFundAccount": {
-                account = new Account(AccountType.MUTUAL, node);
+            break;
+        }
+        case "MutualFundAccount": {
+            account = new Account(AccountType.MUTUAL, node);
 
-                String[] securities = (String[]) elementMap.get("securities");
+            String[] securities = (String[]) elementMap.get("securities");
 
-                if (securities != null) {
-                    for (String s : securities) {
-                        SecurityNode sNode = decodeSecurity(s);
-                        account.addSecurity(sNode);
-                    }
+            if (securities != null) {
+                for (String s : securities) {
+                    SecurityNode sNode = decodeSecurity(s);
+                    account.addSecurity(sNode);
                 }
-                break;
             }
-            case "CreditAccount":
-                account = new Account(AccountType.CREDIT, node);
-                break;
-            case "CashAccount":
-                account = new Account(AccountType.CASH, node);
-                break;
-            case "EquityAccount":
-                account = new Account(AccountType.EQUITY, node);
-                break;
-            case "LiabilityAccount":
-                account = new Account(AccountType.LIABILITY, node);
-                break;
-            case "AssetAccount":
-                account = new Account(AccountType.ASSET, node);
-                break;
-            default:
-                break;
+            break;
+        }
+        case "CreditAccount":
+            account = new Account(AccountType.CREDIT, node);
+            break;
+        case "CashAccount":
+            account = new Account(AccountType.CASH, node);
+            break;
+        case "EquityAccount":
+            account = new Account(AccountType.EQUITY, node);
+            break;
+        case "LiabilityAccount":
+            account = new Account(AccountType.LIABILITY, node);
+            break;
+        case "AssetAccount":
+            account = new Account(AccountType.ASSET, node);
+            break;
+        default:
+            break;
         }
 
         if (account != null) {
@@ -1073,34 +1085,34 @@ public class Import {
                 int event = reader.next();
 
                 switch (event) {
-                    case XMLStreamConstants.START_ELEMENT:
-                        String element = reader.getLocalName();
-                        elementMap.put(element, reader.getElementText());
-                        break;
-                    case XMLStreamConstants.END_ELEMENT:
-                        if (reader.getName().equals(parsingElement)) {
-                            logger.finest("Found the end of a CurrencyNode");
+                case XMLStreamConstants.START_ELEMENT:
+                    String element = reader.getLocalName();
+                    elementMap.put(element, reader.getElementText());
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (reader.getName().equals(parsingElement)) {
+                        logger.finest("Found the end of a CurrencyNode");
 
-                            Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-                            if (engine.getCurrency(elementMap.get("symbol")) == null) {
+                        if (engine.getCurrency(elementMap.get("symbol")) == null) {
 
-                                CurrencyNode node = new CurrencyNode();
+                            CurrencyNode node = new CurrencyNode();
 
-                                node.setSymbol(elementMap.get("symbol"));
-                                node.setDescription(elementMap.get("description"));
-                                node.setPrefix(elementMap.get("prefix"));
-                                node.setSuffix(elementMap.get("suffix"));
-                                node.setScale(Byte.parseByte(elementMap.get("scale")));
+                            node.setSymbol(elementMap.get("symbol"));
+                            node.setDescription(elementMap.get("description"));
+                            node.setPrefix(elementMap.get("prefix"));
+                            node.setSuffix(elementMap.get("suffix"));
+                            node.setScale(Byte.parseByte(elementMap.get("scale")));
 
-                                engine.addCommodity(node);
-                            }
-                            return;
+                            engine.addCommodity(node);
                         }
-                        break;
+                        return;
+                    }
+                    break;
 
-                    default:
-                        break;
+                default:
+                    break;
                 }
 
             }
@@ -1121,31 +1133,31 @@ public class Import {
                 int event = reader.next();
 
                 switch (event) {
-                    case XMLStreamConstants.START_ELEMENT:
-                        String element = reader.getLocalName();
-                        elementMap.put(element, reader.getElementText());
-                        break;
-                    case XMLStreamConstants.END_ELEMENT:
-                        if (reader.getName().equals(parsingElement)) {
-                            logger.finest("Found the end of a CommodityNode");
+                case XMLStreamConstants.START_ELEMENT:
+                    String element = reader.getLocalName();
+                    elementMap.put(element, reader.getElementText());
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (reader.getName().equals(parsingElement)) {
+                        logger.finest("Found the end of a CommodityNode");
 
-                            Commodity node = new Commodity();
+                        Commodity node = new Commodity();
 
-                            node.symbol = elementMap.get("symbol");
-                            node.description = elementMap.get("description");
-                            node.prefix = elementMap.get("prefix");
-                            node.suffix = elementMap.get("suffix");
-                            node.scale = Byte.parseByte(elementMap.get("scale"));
+                        node.symbol = elementMap.get("symbol");
+                        node.description = elementMap.get("description");
+                        node.prefix = elementMap.get("prefix");
+                        node.suffix = elementMap.get("suffix");
+                        node.scale = Byte.parseByte(elementMap.get("scale"));
 
-                            // place in the map
-                            commodityMap.put(node.symbol, node);
+                        // place in the map
+                        commodityMap.put(node.symbol, node);
 
-                            return;
-                        }
-                        break;
+                        return;
+                    }
+                    break;
 
-                    default:
-                        break;
+                default:
+                    break;
                 }
 
             }
@@ -1167,54 +1179,54 @@ public class Import {
                 int event = reader.next();
 
                 switch (event) {
-                    case XMLStreamConstants.START_ELEMENT:
-                        if (reader.getLocalName().equals("history")) {
-                            logger.finest("parse history");
-                            history = parseHistoryNodes(reader);
-                        } else {
-                            String element = reader.getLocalName();
-                            elementMap.put(element, reader.getElementText());
-                        }
-                        break;
-                    case XMLStreamConstants.END_ELEMENT:
-                        if (reader.getName().equals(parsingElement)) {
-                            logger.finest("Found the end of a SecurityNode");
+                case XMLStreamConstants.START_ELEMENT:
+                    if (reader.getLocalName().equals("history")) {
+                        logger.finest("parse history");
+                        history = parseHistoryNodes(reader);
+                    } else {
+                        String element = reader.getLocalName();
+                        elementMap.put(element, reader.getElementText());
+                    }
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (reader.getName().equals(parsingElement)) {
+                        logger.finest("Found the end of a SecurityNode");
 
-                            Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-                            if (engine.getSecurity(elementMap.get("symbol")) == null) {
+                        if (engine.getSecurity(elementMap.get("symbol")) == null) {
 
-                                SecurityNode node = new SecurityNode(engine.getDefaultCurrency());
+                            SecurityNode node = new SecurityNode(engine.getDefaultCurrency());
 
-                                node.setSymbol(elementMap.get("symbol"));
-                                node.setDescription(elementMap.get("description"));
-                                node.setPrefix(elementMap.get("prefix"));
-                                node.setSuffix(elementMap.get("suffix"));
-                                node.setScale(Byte.parseByte(elementMap.get("scale")));
-                                node.setQuoteSource(QuoteSource.YAHOO);
+                            node.setSymbol(elementMap.get("symbol"));
+                            node.setDescription(elementMap.get("description"));
+                            node.setPrefix(elementMap.get("prefix"));
+                            node.setSuffix(elementMap.get("suffix"));
+                            node.setScale(Byte.parseByte(elementMap.get("scale")));
+                            node.setQuoteSource(QuoteSource.YAHOO);
 
-                                if (elementMap.get("reportedCurrency") != null) {
-                                    SecurityThread thread = new SecurityThread(node, elementMap.get("reportedCurrency"));
-                                    workQueue.add(thread);
-                                }
-
-                                engine.addCommodity(node);
+                            if (elementMap.get("reportedCurrency") != null) {
+                                SecurityThread thread = new SecurityThread(node, elementMap.get("reportedCurrency"));
+                                workQueue.add(thread);
                             }
 
-                            if (history != null) {
-                                SecurityNode node = engine.getSecurity(elementMap.get("symbol"));
-                                if (node != null) {
-                                    for (SecurityHistoryNode hNode : history) {
-                                        engine.addSecurityHistory(node, hNode);
-                                    }
+                            engine.addCommodity(node);
+                        }
+
+                        if (history != null) {
+                            SecurityNode node = engine.getSecurity(elementMap.get("symbol"));
+                            if (node != null) {
+                                for (SecurityHistoryNode hNode : history) {
+                                    engine.addSecurityHistory(node, hNode);
                                 }
                             }
-                            return;
                         }
-                        break;
+                        return;
+                    }
+                    break;
 
-                    default:
-                        break;
+                default:
+                    break;
                 }
             }
         } catch (XMLStreamException e) {
@@ -1242,33 +1254,33 @@ public class Import {
                 int event = reader.next();
 
                 switch (event) {
-                    case XMLStreamConstants.START_ELEMENT:
-                        if (reader.getAttributeCount() > 0 && reader.getAttributeValue(0).equals("SecurityHistoryNode")) { // start of hNode
+                case XMLStreamConstants.START_ELEMENT:
+                    if (reader.getAttributeCount() > 0 && reader.getAttributeValue(0).equals("SecurityHistoryNode")) { // start of hNode
 
-                            parsingElement = reader.getName();
-                        } else {
-                            String element = reader.getLocalName();
-                            elementMap.put(element, reader.getElementText());
-                        }
-                        break;
-                    case XMLStreamConstants.END_ELEMENT:
-                        if (reader.getName().equals(parsingElement)) {
-                            // build the security history node;
-                            SecurityHistoryNode hNode = new SecurityHistoryNode();
+                        parsingElement = reader.getName();
+                    } else {
+                        String element = reader.getLocalName();
+                        elementMap.put(element, reader.getElementText());
+                    }
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (reader.getName().equals(parsingElement)) {
+                        // build the security history node;
+                        SecurityHistoryNode hNode = new SecurityHistoryNode();
 
-                            hNode.setDate(decodeDate(elementMap.get("date")));
-                            hNode.setHigh(new BigDecimal(elementMap.get("high")));
-                            hNode.setLow(new BigDecimal(elementMap.get("low")));
-                            hNode.setPrice(new BigDecimal(elementMap.get("price")));
-                            hNode.setVolume(Long.parseLong(elementMap.get("volume")));
+                        hNode.setDate(decodeDate(elementMap.get("date")));
+                        hNode.setHigh(new BigDecimal(elementMap.get("high")));
+                        hNode.setLow(new BigDecimal(elementMap.get("low")));
+                        hNode.setPrice(new BigDecimal(elementMap.get("price")));
+                        hNode.setVolume(Long.parseLong(elementMap.get("volume")));
 
-                            elementMap.clear();
+                        elementMap.clear();
 
-                            list.add(hNode);
-                        }
-                        break;
-                    default:
-                        break;
+                        list.add(hNode);
+                    }
+                    break;
+                default:
+                    break;
                 }
 
             }
@@ -1384,6 +1396,7 @@ public class Import {
 
         return node;
     }
+
     private Calendar calendar = Calendar.getInstance(); // reused for date decode
 
     private Date decodeDate(final String date) {

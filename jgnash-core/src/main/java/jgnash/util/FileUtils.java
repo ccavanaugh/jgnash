@@ -74,16 +74,15 @@ public final class FileUtils {
 
         try (RandomAccessFile raf = new RandomAccessFile(new File(fileName), "rw");
                 FileChannel channel = raf.getChannel()) {
-            
-            final FileLock lock = channel.tryLock();
 
-            if (lock != null) {
-                lock.release();
-                result = false;
+            try (FileLock lock = channel.tryLock()) {
+                if (lock != null) {
+                    result = false;
+                }
             }
         } catch (IOException e) {
             Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, e.toString(), e);
-        }        
+        }
 
         return result;
     }

@@ -88,21 +88,23 @@ public final class QifParser {
         }
     }
 
-    void parseFullFile(File file) throws NoAccountException {
+    void parseFullFile(final File file) throws NoAccountException {
         parseFullFile(file.getAbsolutePath());
     }
 
-    void parsePartialFile(File file) {
+    void parsePartialFile(final File file) {
         parsePartialFile(file.getAbsolutePath());
     }
 
     private void parseFullFile(final String fileName) throws NoAccountException {
+        
+        boolean accountFound = true;
 
         try (QifReader in = new QifReader(new FileReader(fileName))) {
 
             String line = in.readLine();
             
-            while (line != null) {
+            while (line != null) {                                                                               
                 if (startsWith(line, "!Type:Class")) {
                     parseClassList(in);
                 } else if (startsWith(line, "!Type:Cat")) {
@@ -115,18 +117,18 @@ public final class QifParser {
                     parseSecurity(in);
                 } else if (startsWith(line, "!Type:Prices")) {
                     parsePrice(in);
-                } else if (startsWith(line, "!Type:Bank")) { // QIF from an online bank statement... assumes the account is known
-                    in.close(); // close the open file
-                    throw new NoAccountException();
+                } else if (startsWith(line, "!Type:Bank")) { // QIF from an online bank statement... assumes the account is known                  
+                    accountFound = false;
+                    break;                  
                 } else if (startsWith(line, "!Type:CCard")) { // QIF from an online credit card statement
-                    in.close(); // close the open file
-                    throw new NoAccountException();
+                    accountFound = false;
+                    break;                    
                 } else if (startsWith(line, "!Type:Oth")) { // QIF from an online credit card statement
-                    in.close(); // close the open file
-                    throw new NoAccountException();
+                    accountFound = false;
+                    break;                  
                 } else if (startsWith(line, "!Type:Cash")) { // Partial QIF export
-                    in.close(); // close the open file
-                    throw new NoAccountException();
+                    accountFound = false;
+                    break;                    
                 } else if (startsWith(line, "!Option:AutoSwitch")) {
                     logger.info("Consuming !Option:AutoSwitch");
                 } else if (startsWith(line, "!Clear:AutoSwitch")) {
@@ -135,16 +137,19 @@ public final class QifParser {
                     System.out.println("Error: " + line);
                 }
                 line = in.readLine();
-            }
-            in.close();
+            }          
         } catch (FileNotFoundException e) {
             logger.log(Level.WARNING, "Could not find file: {0}", fileName);
         } catch (IOException e) {
             logger.log(Level.SEVERE, null, e);
         }
+        
+        if (!accountFound) {
+            throw new NoAccountException();
+        }
     }
 
-    private boolean parsePartialFile(String fileName) {
+    private boolean parsePartialFile(final String fileName) {
 
         try (QifReader in = new QifReader(new FileReader(fileName))) {
 
@@ -156,12 +161,12 @@ public final class QifParser {
                     if (debug) {
                         System.out.println("*** Added account ***");
                     }
-                    in.close();
+                   
                     return true; // only look for transactions for one account
                 }
                 System.err.println("parseAccountTransactions: error");
             }
-            in.close();
+          
         } catch (FileNotFoundException fne) {
             logger.log(Level.WARNING, "Could not find file: {0}", fileName);
         } catch (IOException ioe) {
@@ -170,7 +175,7 @@ public final class QifParser {
         return false;
     }
 
-    private boolean parseAccount(QifReader in) {
+    private boolean parseAccount(final QifReader in) {
         logger.entering(this.getClass().getName(), "parseAccount", in);
 
         String line;
@@ -286,7 +291,7 @@ public final class QifParser {
         return result;
     }
 
-    QifAccount searchForDuplicate(QifAccount acc) {
+    QifAccount searchForDuplicate(final QifAccount acc) {
         String name = acc.name;
         String type = acc.type;
         String description = acc.description; // assume non-null description
@@ -322,7 +327,7 @@ public final class QifParser {
     }
 
     // TODO strip out investment account transaction checks
-    private boolean parseAccountTransactions(QifReader in, QifAccount acc) {
+    private boolean parseAccountTransactions(final QifReader in, final QifAccount acc) {
 
         String line;
         QifTransaction tran = new QifTransaction();
@@ -400,7 +405,7 @@ public final class QifParser {
         return true;
     }
 
-    private boolean parseInvestmentAccountTransactions(QifReader in, QifAccount acc) {
+    private boolean parseInvestmentAccountTransactions(final QifReader in, final QifAccount acc) {
 
         boolean result = true;
 
@@ -481,7 +486,7 @@ public final class QifParser {
         return result;
     }
 
-    private QifSplitTransaction parseSplitTransaction(QifReader in) {
+    private QifSplitTransaction parseSplitTransaction(final QifReader in) {
         boolean category = false;
         boolean memo = false;
         boolean amount = false;
@@ -573,7 +578,7 @@ public final class QifParser {
         }
     }
 
-    private boolean parseCategoryList(QifReader in) {
+    private boolean parseCategoryList(final QifReader in) {
         String line;
         QifCategory cat = new QifCategory();
         try {
@@ -612,7 +617,7 @@ public final class QifParser {
         }
     }
 
-    private boolean parseClassList(QifReader in) {
+    private boolean parseClassList(final QifReader in) {
         String line;
         QifClassItem clas = new QifClassItem();
         try {
@@ -690,7 +695,7 @@ public final class QifParser {
      *            <code>QifReader</code>
      * @return true if successful
      */
-    private boolean parsePrice(QifReader in) {
+    private boolean parsePrice(final QifReader in) {
         logger.entering(this.getClass().getName(), "parsePrice");
 
         boolean result = true;
