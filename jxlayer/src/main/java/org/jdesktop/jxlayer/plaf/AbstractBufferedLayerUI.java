@@ -98,6 +98,7 @@ public class AbstractBufferedLayerUI<V extends JComponent>
      * @see #uninstallUI(JComponent)
      * @see #getLayer()
      */
+    @Override
     @SuppressWarnings("unchecked")
     public void installUI(JComponent c) {
         if (layer != null) {
@@ -112,6 +113,7 @@ public class AbstractBufferedLayerUI<V extends JComponent>
     /**
      * {@inheritDoc}
      */
+    @Override
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
         c.removePropertyChangeListener(this);
@@ -128,6 +130,7 @@ public class AbstractBufferedLayerUI<V extends JComponent>
      * @see JLayer#setView(Component)
      * @see #setDirty(boolean)
      */
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
         if (evt.getSource() != getLayer() || "view".equals(propertyName)) {
@@ -140,6 +143,7 @@ public class AbstractBufferedLayerUI<V extends JComponent>
      *
      * @param l the {@code JXLayer} this {@code AbstractBufferedLayerUI} is set to
      */
+    @Override
     public void updateUI(JLayer<? extends V> l) {
         setDirty(true);
     }
@@ -232,6 +236,7 @@ public class AbstractBufferedLayerUI<V extends JComponent>
      * @see #isBufferContentValid(JLayer,Shape)
      * @see #getLayerEffects(JLayer)
      */
+    @Override
     @SuppressWarnings("unchecked")
     public void paint(Graphics g, JComponent c) {
         if (g instanceof Graphics2D) {

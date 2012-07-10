@@ -43,13 +43,15 @@ public class ButtonPanelUI extends AbstractLayerUI<JComponent> {
 	private static final long serialVersionUID = -6872441543970666543L;
 	private boolean isFocusCyclic;
 
-	public void installUI(JComponent c) {
+	@Override
+    public void installUI(JComponent c) {
 		super.installUI(c);
 		c.setFocusTraversalPolicyProvider(true);
 		c.setFocusTraversalPolicy(new ButtonPanelFocusTraversalPolicy());
 	}
 
-	public void uninstallUI(JComponent c) {
+	@Override
+    public void uninstallUI(JComponent c) {
 		super.uninstallUI(c);
 		c.setFocusTraversalPolicyProvider(false);
 		c.setFocusTraversalPolicy(new LayoutFocusTraversalPolicy());
@@ -159,7 +161,8 @@ public class ButtonPanelUI extends AbstractLayerUI<JComponent> {
 			isAlternativeFocusMode = alternativeFocusMode;
 		}
 
-		protected boolean accept(Component c) {
+		@Override
+        protected boolean accept(Component c) {
 			if (!isAlternativeFocusMode() && c instanceof AbstractButton) {
 				AbstractButton button = (AbstractButton) c;
 				ButtonGroup group = getButtonGroup(button);
@@ -171,7 +174,8 @@ public class ButtonPanelUI extends AbstractLayerUI<JComponent> {
 			return super.accept(c);
 		}
 
-		public Component getComponentAfter(Container aContainer,
+		@Override
+        public Component getComponentAfter(Container aContainer,
 				Component aComponent) {
 			Component componentAfter = super.getComponentAfter(aContainer,
 					aComponent);
@@ -188,7 +192,8 @@ public class ButtonPanelUI extends AbstractLayerUI<JComponent> {
 			return componentAfter;
 		}
 
-		public Component getComponentBefore(Container aContainer,
+		@Override
+        public Component getComponentBefore(Container aContainer,
 				Component aComponent) {
 			Component componentBefore = super.getComponentBefore(aContainer,
 					aComponent);

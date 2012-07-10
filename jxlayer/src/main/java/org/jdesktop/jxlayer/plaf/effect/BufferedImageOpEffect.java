@@ -62,6 +62,7 @@ public class BufferedImageOpEffect extends AbstractBufferedImageOpEffect {
     /**
      * {@inheritDoc}
      */
+    @Override
     public BufferedImageOp[] getBufferedImageOps() {
         BufferedImageOp[] result = new BufferedImageOp[bufferedImageOps.length];
         System.arraycopy(bufferedImageOps, 0, result, 0, result.length);

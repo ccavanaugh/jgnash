@@ -104,7 +104,8 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 * @see #setLayerEffects(LayerEffect[])
 	 * @see #getLayerEffects()
 	 */
-	protected LayerEffect[] getLayerEffects(JLayer<? extends V> l) {
+	@Override
+    protected LayerEffect[] getLayerEffects(JLayer<? extends V> l) {
 		return getLayerEffects();
 	}
 
@@ -170,7 +171,8 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 * @see #getClip()
 	 * @see #setClip(Shape)
 	 */
-	protected Shape getClip(JLayer<? extends V> l) {
+	@Override
+    protected Shape getClip(JLayer<? extends V> l) {
 		return getClip();
 	}
 
@@ -222,7 +224,8 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 * @see #setComposite(Composite)
 	 * @see #getComposite()
 	 */
-	protected Composite getComposite(JLayer<? extends V> l) {
+	@Override
+    protected Composite getComposite(JLayer<? extends V> l) {
 		return getComposite();
 	}
 
@@ -315,7 +318,8 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 * @see #setRenderingHints(java.util.Map)
 	 * @see #getRenderingHints()
 	 */
-	protected Map<RenderingHints.Key, Object> getRenderingHints(
+	@Override
+    protected Map<RenderingHints.Key, Object> getRenderingHints(
 			JLayer<? extends V> l) {
 		return getRenderingHints();
 	}
@@ -373,7 +377,8 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 * @see #setTransform(AffineTransform)
 	 * @see #getTransform()
 	 */
-	protected AffineTransform getTransform(JLayer<? extends V> l) {
+	@Override
+    protected AffineTransform getTransform(JLayer<? extends V> l) {
 		return getTransform();
 	}
 
@@ -428,7 +433,8 @@ public class BufferedLayerUI<V extends JComponent> extends
 	 * @see #setIncrementalUpdate(boolean)
 	 * @see #isIncrementalUpdate()
 	 */
-	protected boolean isIncrementalUpdate(JLayer<? extends V> l) {
+	@Override
+    protected boolean isIncrementalUpdate(JLayer<? extends V> l) {
 		return isIncrementalUpdate();
 	}
 

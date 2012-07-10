@@ -84,6 +84,7 @@ public class LockableUI extends AbstractBufferedLayerUI<JComponent> {
     private Cursor lockedCursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR);
     private LayerEffect[] lockedEffects = new LayerEffect[0];
     private final FocusListener focusListener = new FocusListener() {
+        @Override
         public void focusGained(FocusEvent e) {
             // we don't want extra repaintings
             // when focus comes from another window
@@ -92,6 +93,7 @@ public class LockableUI extends AbstractBufferedLayerUI<JComponent> {
             }
         }
 
+        @Override
         public void focusLost(FocusEvent e) {
         }
     };

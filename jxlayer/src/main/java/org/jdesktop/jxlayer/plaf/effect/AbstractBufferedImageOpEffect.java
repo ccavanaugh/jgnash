@@ -49,6 +49,7 @@ public class AbstractBufferedImageOpEffect extends AbstractLayerEffect {
      * Filters the passed image using {@code clip} and 
      * {@code BufferedImageOp}s provided by {@link #getBufferedImageOps()}
      */
+    @Override
     public void apply(BufferedImage buffer, Shape clip) {
         if (buffer == null) {
             throw new IllegalArgumentException("BufferedImage is null");

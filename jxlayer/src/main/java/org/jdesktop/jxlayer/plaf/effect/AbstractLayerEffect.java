@@ -51,7 +51,8 @@ public abstract class AbstractLayerEffect implements LayerEffect {
 	 * 
 	 * The default return value for this method is {@code true}.
 	 */
-	public boolean isEnabled() {
+	@Override
+    public boolean isEnabled() {
 		return isEnabled;
 	}
 
@@ -76,21 +77,24 @@ public abstract class AbstractLayerEffect implements LayerEffect {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addPropertyChangeListener(PropertyChangeListener l) {
+	@Override
+    public void addPropertyChangeListener(PropertyChangeListener l) {
 		propertyChangeSupport.addPropertyChangeListener(l);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public PropertyChangeListener[] getPropertyChangeListeners() {
+	@Override
+    public PropertyChangeListener[] getPropertyChangeListeners() {
 		return propertyChangeSupport.getPropertyChangeListeners();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void removePropertyChangeListener(PropertyChangeListener l) {
+	@Override
+    public void removePropertyChangeListener(PropertyChangeListener l) {
 		propertyChangeSupport.removePropertyChangeListener(l);
 	}
 

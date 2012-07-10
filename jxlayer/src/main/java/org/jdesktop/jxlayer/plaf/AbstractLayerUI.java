@@ -71,13 +71,15 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 
 	private boolean isDirty;
 
-	@SuppressWarnings("rawtypes")
+	@Override
+    @SuppressWarnings("rawtypes")
 	public void installUI(JComponent c) {
 		super.installUI(c);
 		((JLayer) c).setLayerEventMask(getLayerEventMask());
 	}
 
-	@SuppressWarnings("rawtypes")
+	@Override
+    @SuppressWarnings("rawtypes")
 	public void uninstallUI(JComponent c) {
 		super.uninstallUI(c);
 		((JLayer) c).setLayerEventMask(0);
@@ -136,7 +138,8 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	 * @see #paintLayer(Graphics2D,JLayer)
 	 * @see #setDirty(boolean)
 	 */
-	@SuppressWarnings("unchecked")
+	@Override
+    @SuppressWarnings("unchecked")
 	public void paint(Graphics g, JComponent c) {
 		if (g instanceof Graphics2D) {
 			Graphics2D g2 = (Graphics2D) g.create();
@@ -316,7 +319,8 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	 * @param l
 	 *            the layer this LayerUI is set to
 	 */
-	protected void processFocusEvent(FocusEvent e, JLayer<? extends V> l) {
+	@Override
+    protected void processFocusEvent(FocusEvent e, JLayer<? extends V> l) {
 	}
 
 	/**
@@ -328,7 +332,8 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	 * @param l
 	 *            the layer this LayerUI is set to
 	 */
-	protected void processMouseEvent(MouseEvent e, JLayer<? extends V> l) {
+	@Override
+    protected void processMouseEvent(MouseEvent e, JLayer<? extends V> l) {
 	}
 
 	/**
@@ -340,7 +345,8 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	 * @param l
 	 *            the layer this LayerUI is set to
 	 */
-	protected void processMouseMotionEvent(MouseEvent e, JLayer<? extends V> l) {
+	@Override
+    protected void processMouseMotionEvent(MouseEvent e, JLayer<? extends V> l) {
 	}
 
 	/**
@@ -352,7 +358,8 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	 * @param l
 	 *            the layer this LayerUI is set to
 	 */
-	protected void processMouseWheelEvent(MouseWheelEvent e,
+	@Override
+    protected void processMouseWheelEvent(MouseWheelEvent e,
 			JLayer<? extends V> l) {
 	}
 
@@ -365,6 +372,7 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	 * @param l
 	 *            the layer this LayerUI is set to
 	 */
-	protected void processKeyEvent(KeyEvent e, JLayer<? extends V> l) {
+	@Override
+    protected void processKeyEvent(KeyEvent e, JLayer<? extends V> l) {
 	}
 }
