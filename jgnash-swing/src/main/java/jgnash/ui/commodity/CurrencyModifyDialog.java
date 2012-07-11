@@ -214,7 +214,7 @@ public class CurrencyModifyDialog extends JDialog implements MessageListener, Li
     }
 
     private void updateForm() {
-        CurrencyNode node = (CurrencyNode) sourceList.getSelectedValue();
+        CurrencyNode node = sourceList.getSelectedValue();
         if (node != null) {
             symbolField.setText(node.getSymbol());
             symbolField.setEnabled(false);
@@ -261,7 +261,7 @@ public class CurrencyModifyDialog extends JDialog implements MessageListener, Li
     private void commitCommodityNode() {
         if (validateForm()) {
 
-            CurrencyNode oldNode = (CurrencyNode) sourceList.getSelectedValue();
+            CurrencyNode oldNode = sourceList.getSelectedValue();
 
             CurrencyNode newNode = buildCommodityNode();
             if (getEngine().getCurrency(newNode.getSymbol()) != null && oldNode != null) {

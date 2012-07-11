@@ -111,7 +111,7 @@ public class WizardDialog extends JDialog implements ActionListener {
 
         /* New setting. Tell each page to read */
         for (int i = 0; i < model.size(); i++) {
-            WizardPage p = (WizardPage) model.getElementAt(i);
+            WizardPage p = model.getElementAt(i);
             p.getSettings(settings);
         }
     }
@@ -251,7 +251,7 @@ public class WizardDialog extends JDialog implements ActionListener {
             boolean _valid = true;
 
             for (int i = 0; i < model.size(); i++) {
-                WizardPage page = (WizardPage) model.get(i);
+                WizardPage page = model.get(i);
 
                 if (!page.isPageValid()) {
                     _valid = false;
@@ -310,7 +310,7 @@ public class WizardDialog extends JDialog implements ActionListener {
     private void finishAction() {
         valid = true;
         for (int i = 0; i < model.size(); i++) {
-            WizardPage p = (WizardPage) model.getElementAt(i);
+            WizardPage p = model.getElementAt(i);
             if (!p.isPageValid()) {
                 valid = false;
                 break;

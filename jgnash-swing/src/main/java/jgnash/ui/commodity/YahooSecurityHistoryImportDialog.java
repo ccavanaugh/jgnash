@@ -177,7 +177,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
         SecurityNode[] nodes = new SecurityNode[list.length];
 
         for (int i = 0; i < list.length; i++) {
-            nodes[i] = (SecurityNode) securityList.getModel().getElementAt(list[i]);
+            nodes[i] = securityList.getModel().getElementAt(list[i]);
         }
 
         // create the runnable and start the thread

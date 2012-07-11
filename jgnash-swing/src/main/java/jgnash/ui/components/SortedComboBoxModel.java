@@ -181,7 +181,7 @@ public class SortedComboBoxModel<E extends Comparable<? super E>> extends Abstra
 
     @Override   
     public void addElement(final E obj) {
-        int index = add((E) obj);
+        int index = add(obj);
         fireIntervalAdded(this, index, index);
 
         if (list.size() == 1 && selectedObject == null && obj != null) {
@@ -191,7 +191,7 @@ public class SortedComboBoxModel<E extends Comparable<? super E>> extends Abstra
         
     @Override    
     public void insertElementAt(final E obj, final int index) {
-        list.add((E) obj);
+        list.add(obj);
         Collections.sort(list);
 
         fireContentsChanged(this, 0, list.size() - 1);

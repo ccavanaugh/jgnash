@@ -300,7 +300,7 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
         public Component getListCellRendererComponent(final JList<? extends CurrencyElement> list, final CurrencyElement value, final int index, final boolean isSelected, final boolean hasFocus) {
             Component c = delegate.getListCellRendererComponent(list, value, index, isSelected, hasFocus);
 
-            c.setEnabled(((CurrencyElement) value).isEnabled());
+            c.setEnabled(value.isEnabled());
 
             return c;
         }

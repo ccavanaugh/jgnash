@@ -404,7 +404,7 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
     }
 
     private void showObject() {
-        activeObject = (CheckObject) objectList.getSelectedValue();
+        activeObject = objectList.getSelectedValue();
         if (activeObject != null) {
             typeCombo.setSelectedItem(activeObject.getType());
             nameField.setText(activeObject.getName());

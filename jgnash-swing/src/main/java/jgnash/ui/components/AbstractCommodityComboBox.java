@@ -66,7 +66,7 @@ public abstract class AbstractCommodityComboBox<T extends CommodityNode> extends
             int size = model.getSize();
             T tNode;
             for (int i = 0; i < size; i++) {
-                tNode = (T) model.getElementAt(i);
+                tNode = model.getElementAt(i);
                 if (node.matches(tNode)) {
                     setSelectedIndex(i);
                     return; // exit the loop early

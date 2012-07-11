@@ -179,7 +179,7 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
     }
 
     void updateForm() {
-        SecurityNode node = (SecurityNode) securityList.getSelectedValue();
+        SecurityNode node = securityList.getSelectedValue();
         if (node != null) {
             symbolField.setText(node.getSymbol());
             isinField.setText(node.getISIN());
@@ -236,7 +236,7 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
     }
 
     private void commitSecurityNode() {
-        SecurityNode oldNode = (SecurityNode) securityList.getSelectedValue();
+        SecurityNode oldNode = securityList.getSelectedValue();
 
         if (validateForm()) {
             SecurityNode newNode = buildSecurityNode();
@@ -249,7 +249,7 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
     }
 
     private void deleteSecurityNode() {
-        SecurityNode node = (SecurityNode) securityList.getSelectedValue();
+        SecurityNode node = securityList.getSelectedValue();
         if (node != null) {
             if (!engine.removeCommodity(node)) {
                  throw new RuntimeException("Unable to remove the security");

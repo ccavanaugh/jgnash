@@ -116,7 +116,7 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
     }
 
     private void addAction() {
-        SecurityElement obj = (SecurityElement) availJList.getSelectedValue();
+        SecurityElement obj = availJList.getSelectedValue();
         if (obj != null) {
             availModel.removeElement(obj);
             selectedModel.addElement(obj);
@@ -124,7 +124,7 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
     }
 
     private void removeAction() {
-        SecurityElement obj = (SecurityElement) selectedJList.getSelectedValue();
+        SecurityElement obj = selectedJList.getSelectedValue();
         if (obj != null && obj.enabled) {
             selectedModel.removeElement(obj);
             availModel.addElement(obj);
@@ -252,7 +252,7 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
 
         @Override
         public Component getListCellRendererComponent(final JList<? extends SecurityElement> list, final SecurityElement value, final int index, final boolean isSelected, final boolean hasFocus) {
-            boolean enabled = ((SecurityElement) value).isEnabled();
+            boolean enabled = value.isEnabled();
 
             Component c = delegate.getListCellRendererComponent(list, value, index, isSelected, hasFocus);
 
