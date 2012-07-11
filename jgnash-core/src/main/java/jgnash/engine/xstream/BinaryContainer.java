@@ -50,7 +50,7 @@ import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider
 import com.thoughtworks.xstream.io.binary.BinaryStreamDriver;
 
 /**
- * Simple object container for StoredObjects that reads and writes a xml file
+ * Simple object container for StoredObjects that reads and writes a binary file using XStream.
  * 
  * @author Craig Cavanaugh
  */
@@ -148,19 +148,18 @@ public class BinaryContainer extends AbstractXStreamContainer {
             XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects),
                     new BinaryStreamDriver()));
 
-            FileLock readLock = fis.getChannel().tryLock(0, Long.MAX_VALUE, true);
-
-            if (readLock != null) {
-                ObjectInputStream in = xstream.createObjectInputStream(inputStream);
-
-                in.readObject();
-                readLock.release();
+            try (ObjectInputStream in = xstream.createObjectInputStream(inputStream);
+                    FileLock readLock = fis.getChannel().tryLock(0, Long.MAX_VALUE, true)) {
+                if (readLock != null) {
+                    in.readObject();
+                }
             }
+           
         } catch (IOException | ClassNotFoundException e) {
             Logger.getLogger(BinaryContainer.class.getName()).log(Level.SEVERE, null, e);
         } finally {
             acquireFileLock(); // lock the file on open
             readWriteLock.writeLock().unlock();
         }
-    }    
+    }
 }
