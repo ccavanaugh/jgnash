@@ -63,7 +63,7 @@ public class ImportQifAction extends AbstractEnabledAction {
     public ImportQifAction() {
     }
 
-    private void importQif() {
+    private static void importQif() {
         final Resource rb = Resource.get();
 
         final Preferences pref = Preferences.userNodeForPackage(ImportQifAction.class);

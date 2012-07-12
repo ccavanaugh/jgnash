@@ -133,7 +133,7 @@ public class AccountRowFooterPanel extends JPanel {
         return header;
     }
 
-    private JComponent buildHeader(final JTableHeader tableHeader) {
+    private static JComponent buildHeader(final JTableHeader tableHeader) {
         Resource rb = Resource.get();
 
         JXTitledPanel panelHeader = new JXTitledPanel(rb.getString("Title.Summary"), tableHeader);

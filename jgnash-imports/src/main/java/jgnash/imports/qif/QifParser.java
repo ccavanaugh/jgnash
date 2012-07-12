@@ -76,7 +76,7 @@ public final class QifParser {
      *            the prefix String.
      * @return true, if the source starts with the prefix string.
      */
-    private boolean startsWith(final String source, final String prefix) {
+    private static boolean startsWith(final String source, final String prefix) {
         return prefix.length() <= source.length() && source.regionMatches(true, 0, prefix, 0, prefix.length());
     }
 
@@ -486,7 +486,7 @@ public final class QifParser {
         return result;
     }
 
-    private QifSplitTransaction parseSplitTransaction(final QifReader in) {
+    private static QifSplitTransaction parseSplitTransaction(final QifReader in) {
         boolean category = false;
         boolean memo = false;
         boolean amount = false;

@@ -158,7 +158,7 @@ public class QifImport {
         addAccounts();
     }
 
-    private void loadCategoryMap(List<Account> list, Map<String, Account> map) {
+    private static void loadCategoryMap(List<Account> list, Map<String, Account> map) {
         if (list != null) { // protect against a failed load on a new account
             for (Account aList : list) {
                 loadCategoryMap(aList, map);
@@ -166,7 +166,7 @@ public class QifImport {
         }
     }
 
-    private void loadCategoryMap(Account acc, Map<String, Account> map) {
+    private static void loadCategoryMap(Account acc, Map<String, Account> map) {
         String pathName = acc.getPathName();
         int index = pathName.indexOf(':');
         if (index != -1) {
@@ -287,7 +287,7 @@ public class QifImport {
         }
     }
 
-    private boolean isDuplicate(final Transaction t, final Account a) {
+    private static boolean isDuplicate(final Transaction t, final Account a) {
 
         for (Transaction tran : a.getReadonlyTransactionList()) {
             if (tran.equalsIgnoreDate(t)) {
@@ -402,7 +402,7 @@ public class QifImport {
     /**
      * Determines if the supplied String represents a QIF account
      */
-    private boolean isAccount(String category) {
+    private static boolean isAccount(String category) {
         return category.startsWith("[") && category.endsWith("]");
     }
 

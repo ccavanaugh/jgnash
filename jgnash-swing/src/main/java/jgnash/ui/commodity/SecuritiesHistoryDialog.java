@@ -300,7 +300,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
         }
     }
 
-    private JFreeChart createChart(final SecurityNode node) {
+    private static JFreeChart createChart(final SecurityNode node) {
 
         assert node != null;
 

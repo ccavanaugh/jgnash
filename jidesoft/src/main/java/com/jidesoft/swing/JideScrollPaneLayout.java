@@ -1034,7 +1034,7 @@ public class JideScrollPaneLayout extends ScrollPaneLayout implements JideScroll
         }
     }
 
-    private Rectangle adjustBounds(Container container, Rectangle rect, boolean ltr) {
+    private static Rectangle adjustBounds(Container container, Rectangle rect, boolean ltr) {
         if (ltr) {
             return rect;
         }

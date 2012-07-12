@@ -61,7 +61,7 @@ public class SortedTableModel extends RegisterTableModel implements SortableTabl
         getTransactions();
     }
 
-    private boolean[] getSortableColumns() {
+    private static boolean[] getSortableColumns() {
         return new boolean[]{true, true, true, true, true, false, true, true, false};
     }
 

@@ -176,7 +176,7 @@ public class Db4oNetworkServer implements MessageRecipient {
         }
     }
 
-    private void exportXML(final ObjectServer server, final String fileName) {
+    private static void exportXML(final ObjectServer server, final String fileName) {
         ObjectContainer container = server.ext().objectContainer();
 
         ArrayList<StoredObject> list = new ArrayList<>(container.query(StoredObject.class));

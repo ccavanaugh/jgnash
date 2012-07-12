@@ -195,7 +195,7 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
         }
     }
 
-    private void createNewAutoBudget() {
+    private static void createNewAutoBudget() {
         BudgetWizardDialog.showDialog();
     }
 

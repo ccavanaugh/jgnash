@@ -59,7 +59,7 @@ public abstract class AbstractEntryFormPanel extends JPanel {
      * @param error error message to display for the user
      * @param origin the component with the invalid data
      */
-    protected final void showValidationError(final String error, final JComponent origin) {
+    protected final static void showValidationError(final String error, final JComponent origin) {
         ValidationFactory.showValidationError(error, origin);
     }
 

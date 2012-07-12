@@ -94,7 +94,7 @@ public final class PluginFactory {
         return pluginDirectory;
     }
 
-    public void startPlugins() {
+    public static void startPlugins() {
         if (!pluginsStarted) {
 
             for (Plugin plugin : plugins) {
@@ -105,7 +105,7 @@ public final class PluginFactory {
         }
     }
 
-    public void stopPlugins() {
+    public static void stopPlugins() {
         if (pluginsStarted) {
             for (Plugin plugin : plugins) {
                 plugin.stop();

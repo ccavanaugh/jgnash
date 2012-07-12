@@ -673,7 +673,7 @@ public class InvestmentTransactionTest {
         assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
 
-    private TransactionEntry createTransactionEntry(Account debitAccount, Account creditAccount, BigDecimal amount, String memo, TransactionTag transactionTag) {
+    private static TransactionEntry createTransactionEntry(Account debitAccount, Account creditAccount, BigDecimal amount, String memo, TransactionTag transactionTag) {
         TransactionEntry entry = new TransactionEntry();
 
         entry.setMemo(memo);

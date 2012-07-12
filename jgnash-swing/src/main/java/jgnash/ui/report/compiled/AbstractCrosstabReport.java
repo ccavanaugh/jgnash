@@ -363,7 +363,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
         return new ReportModel(accounts, baseCurrency);
     }
 
-    private List<Account> getAccountList(Set<AccountType> types) {
+    private static List<Account> getAccountList(Set<AccountType> types) {
         Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
         List<Account> accounts = engine.getAccountList();

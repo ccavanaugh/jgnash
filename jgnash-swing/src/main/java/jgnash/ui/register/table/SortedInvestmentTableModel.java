@@ -58,7 +58,7 @@ public class SortedInvestmentTableModel extends InvestmentRegisterTableModel imp
         return sortedColumnMap[col];
     }
 
-    private boolean[] getSortableColumns() {
+    private static boolean[] getSortableColumns() {
         return new boolean[] { true, true, true, false, false, false, false };
     }
 

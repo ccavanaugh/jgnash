@@ -113,7 +113,7 @@ public class HelpIndexer {
         }
     }
 
-    private List<String> getFilesToIndex(final File basedir) {
+    private static List<String> getFilesToIndex(final File basedir) {
         ArrayList<String> files = new ArrayList<>();
 
         DirectoryScanner scanner = new DirectoryScanner();

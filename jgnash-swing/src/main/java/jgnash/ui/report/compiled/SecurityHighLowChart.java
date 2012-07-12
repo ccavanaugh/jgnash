@@ -81,7 +81,7 @@ public class SecurityHighLowChart {
         });
     }
 
-    private JFreeChart createHighLowChart(String title, String timeAxisLabel, String valueAxisLabel, AbstractXYDataset data, boolean legend) {
+    private static JFreeChart createHighLowChart(String title, String timeAxisLabel, String valueAxisLabel, AbstractXYDataset data, boolean legend) {
 
         ValueAxis timeAxis = new DateAxis(timeAxisLabel);
         NumberAxis valueAxis = new NumberAxis(valueAxisLabel);
@@ -95,7 +95,7 @@ public class SecurityHighLowChart {
         return new JFreeChart(title, JFreeChart.DEFAULT_TITLE_FONT, plot, legend);
     }
 
-    private AbstractXYDataset createHighLowDataset(SecurityNode node) {
+    private static AbstractXYDataset createHighLowDataset(SecurityNode node) {
         assert node != null;
 
         List<SecurityHistoryNode> hNodes = node.getHistoryNodes();

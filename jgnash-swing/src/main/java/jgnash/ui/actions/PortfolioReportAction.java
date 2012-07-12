@@ -92,7 +92,7 @@ public class PortfolioReportAction extends AbstractEnabledAction {
         thread.start();
     }
 
-    private boolean hasInvestmentAccount() {
+    private static boolean hasInvestmentAccount() {
         Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
         if (e != null) {

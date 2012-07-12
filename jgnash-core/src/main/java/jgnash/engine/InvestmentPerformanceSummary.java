@@ -216,13 +216,13 @@ public class InvestmentPerformanceSummary {
         }
     }
 
-    private void calculateUnrealizedGains(final SecurityPerformanceData data) {
+    private static void calculateUnrealizedGains(final SecurityPerformanceData data) {
         if (data.getSharesHeld().compareTo(BigDecimal.ZERO) != 0) {
             data.setUnrealizedGains(data.getPrice().subtract(data.getCostBasisPerShare()).multiply(data.getSharesHeld()));
         }
     }
 
-    private void calculateTotalGains(final SecurityPerformanceData data) {
+    private static void calculateTotalGains(final SecurityPerformanceData data) {
         data.setTotalGains(data.getUnrealizedGains().add(data.getRealizedGains()));
 
         if (data.getTotalCostBasis().compareTo(BigDecimal.ZERO) != 0) {
@@ -236,7 +236,7 @@ public class InvestmentPerformanceSummary {
      * @param data SecurityPerformanceData object to save the result in
      * @param transactions transactions to count shares against
      */
-    private void calculateShares(final SecurityPerformanceData data, final List<Transaction> transactions) {
+    private static void calculateShares(final SecurityPerformanceData data, final List<Transaction> transactions) {
         SecurityNode node = data.getNode();
 
         BigDecimal shares = BigDecimal.ZERO;

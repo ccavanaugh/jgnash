@@ -1344,7 +1344,7 @@ public class Engine {
      * 
      * @param message message to display
      */
-    private void logInfo(final String message) {
+    private static void logInfo(final String message) {
         logger.log(Level.INFO, message);
     }
 
@@ -1353,7 +1353,7 @@ public class Engine {
      * 
      * @param message message to display
      */
-    private void logWarning(final String message) {
+    private static void logWarning(final String message) {
 
         logger.warning(message);
     }
@@ -1363,7 +1363,7 @@ public class Engine {
      * 
      * @param message message to display
      */
-    private void logSevere(final String message) {
+    private static void logSevere(final String message) {
 
         logger.severe(message);
     }

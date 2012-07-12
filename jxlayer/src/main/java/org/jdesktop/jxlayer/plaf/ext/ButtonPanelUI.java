@@ -87,7 +87,7 @@ public class ButtonPanelUI extends AbstractLayerUI<JComponent> {
 		this.isFocusCyclic = isFocusCyclic;
 	}
 
-	private ButtonGroup getButtonGroup(AbstractButton button) {
+	private static ButtonGroup getButtonGroup(AbstractButton button) {
 		ButtonModel model = button.getModel();
 		if (model instanceof DefaultButtonModel) {
 			return ((DefaultButtonModel) model).getGroup();
@@ -115,7 +115,7 @@ public class ButtonPanelUI extends AbstractLayerUI<JComponent> {
 		}
 	}
 
-	private void moveFocus(boolean isForward, JLayer<? extends JComponent> l) {
+	private static void moveFocus(boolean isForward, JLayer<? extends JComponent> l) {
 		Component fo = KeyboardFocusManager.getCurrentKeyboardFocusManager()
 				.getFocusOwner();
 		ButtonPanelFocusTraversalPolicy bftp = (ButtonPanelFocusTraversalPolicy) l

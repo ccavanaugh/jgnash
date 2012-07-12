@@ -874,7 +874,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
         }
     }
 
-    private JRGraphics2DExporter getGraphics2DExporter() throws JRException {
+    private static JRGraphics2DExporter getGraphics2DExporter() throws JRException {
         return new JRGraphics2DExporter();
     }
 

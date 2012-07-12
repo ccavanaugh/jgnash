@@ -16,7 +16,7 @@ public class TransactionTest {
         testBackEnd();
     }
 
-    private void testBackEnd() {
+    private static void testBackEnd() {
 
         String database = EngineFactory.getDefaultDatabase() + "-transaction-test.xml";
 

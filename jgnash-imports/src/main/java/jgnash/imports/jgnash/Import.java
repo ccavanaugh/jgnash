@@ -448,7 +448,7 @@ public class Import {
         logger.info("Commodity import complete");
     }
 
-    private void parseExchangeRate(final XMLStreamReader reader) {
+    private static void parseExchangeRate(final XMLStreamReader reader) {
         Map<String, String> elementMap = new HashMap<>();
 
         /* still at start of the exchange rate.  Need to know when end is reached */
@@ -928,7 +928,7 @@ public class Import {
         }
     }
 
-    private Map<String, String> parseAmortizeObject(final XMLStreamReader reader) {
+    private static Map<String, String> parseAmortizeObject(final XMLStreamReader reader) {
 
         Map<String, String> elementMap = new HashMap<>();
 
@@ -961,7 +961,7 @@ public class Import {
         return elementMap;
     }
 
-    private String[] parseAccountSecurities(final XMLStreamReader reader) {
+    private static String[] parseAccountSecurities(final XMLStreamReader reader) {
 
         assert reader.getAttributeCount() == 2;
 
@@ -1074,7 +1074,7 @@ public class Import {
         return account;
     }
 
-    private void parseCurrencyNode(final XMLStreamReader reader) {
+    private static void parseCurrencyNode(final XMLStreamReader reader) {
         Map<String, String> elementMap = new HashMap<>();
 
         /* still at start of the element.  Need to know when end is reached */

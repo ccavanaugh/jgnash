@@ -64,7 +64,7 @@ public class FileUtilsTest {
         assertFalse(FileUtils.copyFile(new File(absolutepath), new File(absolutepath)));
     }
 
-    private void checkTestData(final String testdata, final String absolutepath) throws IOException {
+    private static void checkTestData(final String testdata, final String absolutepath) throws IOException {
         char[] buffer = new char[testdata.length()];
 
         try (InputStreamReader reader = new InputStreamReader(new FileInputStream(absolutepath))) {
@@ -74,7 +74,7 @@ public class FileUtilsTest {
         assertEquals(testdata, new String(buffer));
     }
 
-    private void writeTestData(final String testdata, final File tempfile) throws IOException {        
+    private static void writeTestData(final String testdata, final File tempfile) throws IOException {        
         try (OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(tempfile))) {
             os.write(testdata); 
         }               

@@ -150,7 +150,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
         return new ReportModel(accounts, startDate, endDate, baseCurrency);
     }
 
-    private List<Account> getAccountList(final Set<AccountType> types) {
+    private static List<Account> getAccountList(final Set<AccountType> types) {
         Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
         Set<Account> accountSet = new TreeSet<>();

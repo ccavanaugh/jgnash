@@ -493,7 +493,7 @@ public class OfxV2Parser implements OfxTags {
      * @throws XMLStreamException XML parsing error has occurred
      */
     @SuppressWarnings("fallthrough")
-    private void parseSignonMessageSet(final XMLStreamReader reader) throws XMLStreamException {
+    private static void parseSignonMessageSet(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "parseSignonMessageSet");
 
         QName parsingElement = reader.getName();

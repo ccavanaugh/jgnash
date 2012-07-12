@@ -231,8 +231,8 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     }
 
     private void loadPlugins() {
-        PluginFactory.get().loadPlugins();
-        PluginFactory.get().startPlugins();
+        PluginFactory.get().loadPlugins();       
+        PluginFactory.startPlugins();
 
         for (Plugin plugin : PluginFactory.getPlugins()) {
 
@@ -521,8 +521,8 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
      * @param shutDown true if UI should be shutdown when dispose is called
      */
     void dispose(boolean shutDown) {
-
-        PluginFactory.get().stopPlugins();
+       
+        PluginFactory.stopPlugins();
 
         if (!shutDown) {
             for (WindowListener listener : getWindowListeners()) {

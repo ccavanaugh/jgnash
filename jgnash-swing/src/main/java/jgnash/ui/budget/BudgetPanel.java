@@ -158,7 +158,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
         refreshDisplay();
     }
 
-    private JPanel getBudgetPanel(final List<BudgetPeriodPanel> periodPanels) {
+    private static JPanel getBudgetPanel(final List<BudgetPeriodPanel> periodPanels) {
         FormLayout layout = new FormLayout("d", "d");
 
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);

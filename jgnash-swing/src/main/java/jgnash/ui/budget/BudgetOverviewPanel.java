@@ -243,7 +243,7 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
         updateIconExecutor.execute(r);
     }
 
-    private JLabel getLabel(final AccountGroup group, final Icon icon) {
+    private static JLabel getLabel(final AccountGroup group, final Icon icon) {
         JLabel label = new JLabel(group.toString(), icon, JLabel.LEFT);
         label.setHorizontalTextPosition(JLabel.LEFT);
 

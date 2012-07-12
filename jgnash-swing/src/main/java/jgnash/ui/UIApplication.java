@@ -125,7 +125,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
         }
     }
 
-    private void fixWM() {
+    private static void fixWM() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
 
         if (toolkit.getClass().getName().equals("sun.awt.X11.XToolkit")) {
