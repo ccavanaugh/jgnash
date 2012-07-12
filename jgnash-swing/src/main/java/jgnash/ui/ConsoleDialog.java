@@ -70,6 +70,10 @@ public class ConsoleDialog {
     private static boolean init = false;
 
     private static final Object consoleLock = new Object();
+    
+    private static PrintStream outStream;
+    
+    private static PrintStream errStream;
 
     private ConsoleDialog() {
     }
@@ -85,7 +89,7 @@ public class ConsoleDialog {
             final PrintStream oldOut = System.out;
             final PrintStream oldErr = System.err;
 
-            PrintStream outStream = new PrintStream(new OutputStream() {
+            outStream = new PrintStream(new OutputStream() {
 
                 @Override
                 public void write(int b) {
@@ -102,7 +106,7 @@ public class ConsoleDialog {
                 }
             });
 
-            PrintStream errStream = new PrintStream(new OutputStream() {
+           errStream = new PrintStream(new OutputStream() {
 
                 @Override
                 public void write(int b) {
