@@ -164,10 +164,11 @@ public class XMLContainer extends AbstractXStreamContainer {
             XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects),
                     new KXml2Driver()));
 
-            try (FileLock readLock = fis.getChannel().tryLock(0, Long.MAX_VALUE, true);
-                    ObjectInputStream in = xstream.createObjectInputStream(reader)) {
-                    
-                in.readObject();
+            try (ObjectInputStream in = xstream.createObjectInputStream(reader);
+                    FileLock readLock = fis.getChannel().tryLock(0, Long.MAX_VALUE, true)) {
+                if (readLock != null) {
+                    in.readObject();
+                }
             }
 
         } catch (IOException | ClassNotFoundException e) {
