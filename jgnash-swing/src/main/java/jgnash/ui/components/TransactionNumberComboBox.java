@@ -18,7 +18,6 @@
 package jgnash.ui.components;
 
 import java.awt.EventQueue;
-import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -42,7 +41,7 @@ import jgnash.util.Resource;
  * @author Craig Cavanaugh
  *
  */
-public class TransactionNumberComboBox extends JComboBox<String> implements ActionListener {
+public class TransactionNumberComboBox extends JComboBox<String> {
 
     private static final String[] defaultItems;
 

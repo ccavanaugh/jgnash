@@ -17,8 +17,6 @@
  */
 package jgnash.ui.register;
 
-import java.awt.event.ActionListener;
-
 import jgnash.engine.ReconciledState;
 import jgnash.engine.TransactionEntry;
 import jgnash.ui.register.table.SplitsRegisterTableModel;
@@ -29,7 +27,7 @@ import jgnash.ui.register.table.SplitsRegisterTableModel;
  * @author Craig Cavanaugh
  *
  */
-public class SplitTransactionEntryPanel extends AbstractTransactionEntryPanel implements ActionListener {
+public class SplitTransactionEntryPanel extends AbstractTransactionEntryPanel {
 
     private PanelType panelType;
 

@@ -17,7 +17,6 @@
  */
 package jgnash.ui.register;
 
-import java.awt.event.ActionListener;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
@@ -37,9 +36,8 @@ import jgnash.util.Resource;
  * (month, day, year), then the current date and time is used to maintain entry order.
  *
  * @author Craig Cavanaugh
- *
  */
-public class DuplicateTransactionDialog extends DateChkNumberDialog implements ActionListener {
+public class DuplicateTransactionDialog extends DateChkNumberDialog {
 
     private Transaction transaction;
 

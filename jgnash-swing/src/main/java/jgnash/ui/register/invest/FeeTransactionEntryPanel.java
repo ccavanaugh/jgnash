@@ -17,8 +17,6 @@
  */
 package jgnash.ui.register.invest;
 
-import java.awt.event.ActionListener;
-
 import jgnash.engine.ReconciledState;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionTag;
@@ -29,9 +27,8 @@ import jgnash.ui.register.table.SplitsRegisterTableModel;
  * Entry panel for investment fee transactions
  *
  * @author Craig Cavanaugh
- *
  */
-public class FeeTransactionEntryPanel extends AbstractTransactionEntryPanel implements ActionListener {
+public class FeeTransactionEntryPanel extends AbstractTransactionEntryPanel {
 
     FeeTransactionEntryPanel(SplitsRegisterTableModel model) {
         super(model);

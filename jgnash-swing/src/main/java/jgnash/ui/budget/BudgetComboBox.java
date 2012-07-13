@@ -20,7 +20,6 @@ package jgnash.ui.budget;
 import java.awt.Component;
 import java.awt.EventQueue;
 
-import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -94,7 +93,7 @@ public final class BudgetComboBox extends JComboBox<Budget> {
         super.setSelectedItem(budget);
     }
 
-    protected static final class BudgetModel extends SortedComboBoxModel<Budget> implements ComboBoxModel<Budget>, MessageListener {
+    protected static final class BudgetModel extends SortedComboBoxModel<Budget> implements MessageListener {
 
         private static final long serialVersionUID = 1L;
 
