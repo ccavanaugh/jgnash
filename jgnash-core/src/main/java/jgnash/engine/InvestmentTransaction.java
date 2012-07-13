@@ -25,9 +25,8 @@ import java.util.List;
  * Class for investment transactions.
  * <p/>
  * All TransactionEntry(s) must be of the same security
- *
+ * 
  * @author Craig Cavanaugh
- *
  */
 public class InvestmentTransaction extends Transaction {
 
@@ -96,7 +95,7 @@ public class InvestmentTransaction extends Transaction {
 
     /**
      * Returns the price per share
-     *
+     * 
      * @return the price per share
      */
     public BigDecimal getPrice() {
@@ -113,7 +112,7 @@ public class InvestmentTransaction extends Transaction {
 
     /**
      * Returns the number of shares assigned to this transaction.
-     *
+     * 
      * @return the quantity of securities for this transaction
      * @see #getSignedQuantity()
      */
@@ -130,7 +129,7 @@ public class InvestmentTransaction extends Transaction {
 
     /**
      * Returns the number of shares assigned to this transaction.
-     *
+     * 
      * @return the quantity of securities for this transaction
      * @see #getSignedQuantity()
      */
@@ -165,7 +164,7 @@ public class InvestmentTransaction extends Transaction {
 
     /**
      * Sum transaction fees
-     *
+     * 
      * @return transaction fees
      */
     public BigDecimal getFees() {
@@ -174,8 +173,9 @@ public class InvestmentTransaction extends Transaction {
 
     /**
      * Sum transaction fees
-     *
-     * @param account account to calculate fees against
+     * 
+     * @param account
+     *            account to calculate fees against
      * @return transaction fees
      */
     BigDecimal getFees(final Account account) {
@@ -198,7 +198,7 @@ public class InvestmentTransaction extends Transaction {
 
     /**
      * Get a list of transaction entries tagged as investment fees
-     *
+     * 
      * @return list of investment fees
      * @see TransactionTag#INVESTMENT_FEE
      */
@@ -208,7 +208,7 @@ public class InvestmentTransaction extends Transaction {
 
     /**
      * Get a list of transaction entries tagged as gains and loss
-     *
+     * 
      * @return list of gains and loss entries
      * @see TransactionTag#GAIN_LOSS
      */
@@ -217,9 +217,11 @@ public class InvestmentTransaction extends Transaction {
     }
 
     /**
-     * Return the market value of the transaction based on the supplied share price
-     *
-     * @param sharePrice share price
+     * Return the market value of the transaction based on the supplied share
+     * price
+     * 
+     * @param sharePrice
+     *            share price
      * @return the value of this transaction
      */
     public BigDecimal getMarketValue(final BigDecimal sharePrice) {
@@ -227,22 +229,27 @@ public class InvestmentTransaction extends Transaction {
     }
 
     /**
-     * Return the market value of the transaction based on the latest share price
-     *
-     * @param date Date to base market value against
+     * Return the market value of the transaction based on the latest share
+     * price
+     * 
+     * @param date
+     *            Date to base market value against
      * @return the value of this transaction
      */
     public BigDecimal getMarketValue(final Date date) {
-        return getSignedQuantity().multiply(getSecurityNode().getMarketPrice(date, getInvestmentAccount().getCurrencyNode()));
+        return getSignedQuantity().multiply(
+                getSecurityNode().getMarketPrice(date, getInvestmentAccount().getCurrencyNode()));
     }
 
     /**
-     * Calculates the total of the value of the shares, gains, fees, etc. as it pertains to an account.
+     * Calculates the total of the value of the shares, gains, fees, etc. as it
+     * pertains to an account.
      * <p/>
      * <p/>
      * <b>Not intended for use to calculate account balances</b>
-     *
-     * @param account The <code>Account</code> to calculate the total against
+     * 
+     * @param account
+     *            The <code>Account</code> to calculate the total against
      * @return total resulting total for this transaction
      * @see AbstractInvestmentTransactionEntry#getTotal()
      */
@@ -264,13 +271,15 @@ public class InvestmentTransaction extends Transaction {
      * Calculates the total cash value of the transaction
      * <p/>
      * <b>Not intended for use to calculate account balances</b>
-     *
+     * 
      * @return the total cash value of the transaction
      */
     public BigDecimal getNetCashValue() {
         BigDecimal total = getQuantity().multiply(getPrice());
 
         switch (getTransactionType()) {
+            case DIVIDEND:
+                return getAmount(getInvestmentAccount());
             case REINVESTDIV:
             case SELLSHARE:
                 total = total.subtract(getFees());

@@ -24,6 +24,7 @@ Formal Trial Balance report
 
 Release 2.10.0
 ----------------------
+07/12/12 Dividends where not showing a correct value in the register total column (Bug #3526172)
 07/12/12 Code migrated to fully utilize Java 7 try-with-resources.
 07/07/12 Fixed a memory leak that was occurring when loading plugins
 05/27/12 Added workarounds for JVM bugs when using Gnome 3 and Cinnamon. Mouse behavior was not correct when the jGnash
