@@ -32,9 +32,8 @@ import com.lowagie.text.pdf.BaseFont;
 
 /**
  * Utility class map font names to font files
- *
+ * 
  * @author Craig Cavanaugh
- *
  */
 public class FontRegistry {
 
@@ -60,7 +59,7 @@ public class FontRegistry {
         if (!registrationComplete.get()) {
             while (!registrationComplete.get()) {
                 try {
-                    Thread.sleep(500);                   
+                    Thread.sleep(500);
                     System.out.println("Waiting for font registration to complete");
                 } catch (InterruptedException ignored) {
                 }
@@ -92,7 +91,8 @@ public class FontRegistry {
 
     private void registerFont(final String path) {
         try {
-            if (path.toLowerCase().endsWith(".ttf") || path.toLowerCase().endsWith(".otf") || path.toLowerCase().indexOf(".ttc,") > 0) {
+            if (path.toLowerCase().endsWith(".ttf") || path.toLowerCase().endsWith(".otf")
+                    || path.toLowerCase().indexOf(".ttc,") > 0) {
                 Object allNames[] = BaseFont.getAllFontNames(path, BaseFont.WINANSI, null);
 
                 String[][] names = (String[][]) allNames[2]; //full name
@@ -117,7 +117,7 @@ public class FontRegistry {
 
     /**
      * Register all the fonts in a directory and its subdirectories.
-     *
+     * 
      * @param dir the directory
      */
     private void registerFontDirectory(final String dir) {
@@ -136,23 +136,27 @@ public class FontRegistry {
                         } else {
                             String name = file.getPath();
                             String suffix = name.length() < 4 ? null : name.substring(name.length() - 3).toLowerCase();
-                            switch (suffix) {
-                                case "afm":
-                                case "pfm":
-                                    File pfb = new File(name.substring(0, name.length() - 3) + "pfb");
-                                    if (pfb.exists()) {
+
+                            if (suffix != null) {
+                                switch (suffix) {
+                                    case "afm":
+                                    case "pfm":
+                                        File pfb = new File(name.substring(0, name.length() - 3) + "pfb");
+                                        if (pfb.exists()) {
+                                            registerFont(name);
+                                        }
+                                        break;
+                                    case "ttf":
+                                    case "otf":
+                                    case "ttc":
                                         registerFont(name);
-                                    }
-                                    break;
-                                case "ttf":
-                                case "otf":
-                                case "ttc":
-                                    registerFont(name);
-                                    break;
+                                        break;
+                                }
                             }
                         }
                     } catch (Exception ignored) {
-                        Logger.getLogger(FontRegistry.class.getName()).finest(MessageFormat.format("Could not find path for {0}", path));
+                        Logger.getLogger(FontRegistry.class.getName()).finest(
+                                MessageFormat.format("Could not find path for {0}", path));
                     }
                 }
             }
