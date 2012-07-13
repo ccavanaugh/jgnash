@@ -7,7 +7,6 @@ VAT/GST UI
 Command Line interface/Class for loading accounts and transactions
 Improve Security creation/modification UI
 Mass selection of destination accounts for imported transactions.
-Fuzzy match of destination account for imported transactions.
 OFX export
 Info icon in a sell investment panel that calculate the estimated gains/loss for selling a transaction
 FIFO, and Lot performance calculations for securities. (http://groups.google.com/group/jgnash-user/browse_thread/thread/fe124ecf806857f3?hl=en)
@@ -17,14 +16,14 @@ Date filtering option for the Accounts view & Register view
 Hyperlink option from the results in the Reports and Graphs to the concerned Transactions of the Registers.
 External File attachment in transaction entries.
 Drill down of split entries in Split Transactions by right cling on ledger view.
-Class/Tag option to Transaction entries. ( to categorise the Expense & Income further in more categorised way )
+Class/Tag option to Transaction entries. ( to categorize the Expense & Income further in more categorized way )
 Hiding option of Transaction form which can help to see more transactions in Register view.
 Direct Transaction entry option in the Ledger to avoid Transaction form.
 Formal Trial Balance report
 
 Release 2.10.0
 ----------------------
-07/12/12 Dividends where not showing a correct value in the register total column (Bug #3526172)
+07/12/12 Dividends were not showing a correct value in the register total column (Bug #3526172)
 07/12/12 Code migrated to fully utilize Java 7 try-with-resources.
 07/07/12 Fixed a memory leak that was occurring when loading plugins
 05/27/12 Added workarounds for JVM bugs when using Gnome 3 and Cinnamon. Mouse behavior was not correct when the jGnash
@@ -48,7 +47,7 @@ Release 2.9.0
 04/07/12 Added a Smart fill panel to the budget goal entry dialog for historical entry and fill all
 03/18/12 Fixed the import of Citibank QFX and OFX credit card exports.
 03/17/12 Modularized jGnash into several Maven modules and separated the UI code from the core engine code
-03/17/12 jGnash was causing Java 7 JRE to segfault on close.
+03/17/12 jGnash was causing Java 7 JRE to seg-fault on close.
 
 Release 2.8.0
 -----------------------
@@ -91,7 +90,7 @@ Release 2.6.1
 01/08/12 Add a Yearly period option for Budgets
 01/08/12 Add a command line option to help detect UI code that hangs the EDT
 01/07/12 Corrected some UI update and threading and performance issues with the Budget interface
-01/03/12 Reinvested dividends where not showing a correct value in the register total column (Bug #3467513)
+01/03/12 Reinvested dividends were not showing a correct value in the register total column (Bug #3467513)
 01/02/12 Close any open windows first when closing a file
 01/01/12 Switched build system over to Maven and Ant hybrid
 12/28/11 Expand budgeting help for budget properties
