@@ -480,7 +480,7 @@ public abstract class EngineTest {
 
         Account parent = e.getRootAccount();
 
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 50; i++) {
             Account child = new Account(AccountType.BANK, node);
             child.setName("Account" + Integer.toString(i + 1));
             child.setAccountNumber(Integer.toString(i + 1));
@@ -493,7 +493,7 @@ public abstract class EngineTest {
 
             parent = child;
         }
-
+                     
         // close and reopen to force check for persistence
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
         e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
@@ -501,9 +501,9 @@ public abstract class EngineTest {
         parent = e.getRootAccount();
 
         // look for all the accounts
-        assertEquals(500, e.getAccountList().size());
+        assertEquals(50, e.getAccountList().size());
 
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 50; i++) {
             assertEquals(1, parent.getChildCount());
 
             if (parent.getChildCount() == 1) {
