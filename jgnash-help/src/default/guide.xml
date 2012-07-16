@@ -1106,6 +1106,7 @@
         </answer>
       </qandaentry>
 
+      <qandaentry>
       <question>
         <para>Can I use multiple currencies?</para>
       </question>
@@ -1116,6 +1117,7 @@
         <para>After adding new currencies, simple create new accounts that use the new currency. When creating a
         transaction between accounts with different currencies, a field for the exchange rate will be enabled.</para>
       </answer>
+      </qandaentry>
 
       <qandaentry>
         <question>
