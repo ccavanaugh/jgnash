@@ -22,12 +22,16 @@ import java.util.List;
 
 /**
  * Common superclass for OFX and MT940 imports
- *
+ * 
  * @author Craig Cavanaugh
  * @author Arnout Engelen
  */
 public class ImportBank {
     private List<ImportTransaction> transactions = new ArrayList<>();
+
+    public void setTransactions(List<ImportTransaction> transactions) {
+        this.transactions = transactions;
+    }
 
     public List<ImportTransaction> getTransactions() {
         return transactions;

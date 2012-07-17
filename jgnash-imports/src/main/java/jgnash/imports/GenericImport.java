@@ -21,23 +21,64 @@ import java.util.Date;
 import java.util.List;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
+import jgnash.engine.TransactionFactory;
 import jgnash.imports.ofx.OfxTransaction;
 import jgnash.util.DateUtils;
 
 /**
  * Generic import utility methods
- *
+ * 
  * @author Craig Cavanaugh
  * @author Arnout Engelen
  */
 public class GenericImport {
 
+    public static void importTransactions(List<? extends ImportTransaction> transactions, Account baseAccount) {
+        assert transactions != null && baseAccount != null;
+
+        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+        for (ImportTransaction tran : transactions) {
+            assert tran.account != null;
+
+            if (tran.getState() == ImportTransaction.ImportState.NEW
+                    || tran.getState() == ImportTransaction.ImportState.NOT_EQUAL) { // do not import matched transactions
+                Transaction t;
+
+                if (baseAccount.equals(tran.account)) { // single entry oTran
+                    t = TransactionFactory.generateSingleEntryTransaction(baseAccount, tran.amount, tran.datePosted,
+                            false, tran.memo, tran.payee, tran.checkNumber);
+                } else { // double entry
+                    if (tran.amount.signum() >= 0) {
+                        t = TransactionFactory.generateDoubleEntryTransaction(baseAccount, tran.account,
+                                tran.amount.abs(), tran.datePosted, tran.memo, tran.payee, tran.checkNumber);
+                    } else {
+                        t = TransactionFactory.generateDoubleEntryTransaction(tran.account, baseAccount,
+                                tran.amount.abs(), tran.datePosted, tran.memo, tran.payee, tran.checkNumber);
+                    }
+                }
+
+                // add the oTran
+                if (t != null) {
+                    // for now we don't have transaction id's
+                    //t.setFitid(tran.transactionID);
+                    engine.addTransaction(t);
+                }
+            }
+        }
+
+    }
+
     /**
      * Sets the match state of a list of imported transactions
-     *
-     * @param list list of imported transactions
-     * @param baseAccount account to perform match against
+     * 
+     * @param list
+     *            list of imported transactions
+     * @param baseAccount
+     *            account to perform match against
      */
     public static void matchTransactions(final List<? extends ImportTransaction> list, final Account baseAccount) {
         for (ImportTransaction oTran : list) {
@@ -47,7 +88,7 @@ public class GenericImport {
 
                 if (tran.getAmount(baseAccount).equals(oTran.amount)) { // amounts must always match
 
-                    {   // check for date match
+                    { // check for date match
                         Date startDate;
                         Date endDate;
 
@@ -55,7 +96,7 @@ public class GenericImport {
                         if ((oTran.dateUser != null)) {
                             startDate = DateUtils.addDays(oTran.dateUser, -1);
                             endDate = DateUtils.addDays(oTran.dateUser, 1);
-                        } else {    // use the posted date with a larger window
+                        } else { // use the posted date with a larger window
                             startDate = DateUtils.addDays(oTran.datePosted, -3);
                             endDate = DateUtils.addDays(oTran.datePosted, 3);
                         }
@@ -66,7 +107,7 @@ public class GenericImport {
                         }
                     }
 
-                    {   // check for matching check number
+                    { // check for matching check number
                         String checkNumber = oTran.checkNumber;
                         if (checkNumber != null && checkNumber.length() > 0) {
                             if (tran.getNumber() != null && tran.getNumber().equals(checkNumber)) {
@@ -94,7 +135,6 @@ public class GenericImport {
             }
         }
     }
-
 
     private GenericImport() {
     }
