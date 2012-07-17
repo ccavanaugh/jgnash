@@ -52,7 +52,7 @@ public class Mt940Test {
 
         Mt940Parser parser = new Mt940Parser();
 
-        InputStream inputStream = this.getClass().getResourceAsStream("/net/bzzt/swift/mt940/bank1.STA");
+        InputStream inputStream = this.getClass().getResourceAsStream("/bank1.STA");
 
         try (LineNumberReader reader = new LineNumberReader(new InputStreamReader(inputStream))) {
             Mt940File file = parser.parse(reader);
@@ -77,7 +77,7 @@ public class Mt940Test {
 
         Mt940Parser parser = new Mt940Parser();
 
-        InputStream inputStream = this.getClass().getResourceAsStream("/net/bzzt/swift/mt940/rabobank.swi");        
+        InputStream inputStream = this.getClass().getResourceAsStream("/rabobank.swi");        
         
         try(LineNumberReader reader = new LineNumberReader(new InputStreamReader(inputStream))) {
             Mt940File file = parser.parse(reader);
