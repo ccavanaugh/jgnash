@@ -1,0 +1,26 @@
+:20:940xxxxxx3
+:25:3xxxxxx.013EUR                     
+:28:00000/00
+:60F:C101231EUR000000005360,80
+:61:110103C000000000015,00N122P000xxxxxx      Jxxxxxxxxxxxxxxxx                 
+:86:MAANDELIJKSE CONTRIBUTIE xxxxxxxx                                
+:86:TRANSACTIEDATUM* 01-01-2011                                      
+:61:110103C000000000015,00N122P001xxxxxx      Wxxxxxxxxxxxxxxxxenburg           
+:86:CONTRIBUTIE                                                      
+:86:TRANSACTIEDATUM* 01-01-2011                                      
+:61:110103C000000000015,00N122P001xxxxxx      Hxxxxxxxxxxxxxxxx                 
+:86:CONTRIBUTIE BBSA                                                 
+:86:TRANSACTIEDATUM* 01-01-2011                                      
+:61:110103C000000000015,00N122P003xxxxxx      Axxxxxxxxxxxxxxxx en M v          
+:86:CONTRIBUTIE                                                      
+:86:TRANSACTIEDATUM* 01-01-2011                                      
+:62F:C110103EUR000000005420,80
+:20:940xxxxxx4
+:25:3xxxxxx.013EUR                     
+:28:00000/00
+:60F:C110103EUR000000005420,80
+:61:110104C000000000015,00N1270309xxxxxx      Rxxxxxxxxxxxxxxxx                 
+:86:Contributie                                                      
+:61:110104C000000000015,00N1220531xxxxxx      Axxxxxxxxxxxxxx                   
+:86:CONTRIBUTIE                                                      
+:62F:C110104EUR000000005450,80
