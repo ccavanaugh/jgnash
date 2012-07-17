@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jgnash.util.OS;
+
 /**
  * Factory methods for serializing CheckLayout objects
  *
@@ -64,7 +66,17 @@ public class CheckLayoutSerializationFactory {
     private static XStream getStream() {
         XStream xstream = new XStream(new StaxDriver());
         xstream.alias("CheckLayout", CheckLayout.class);
-        xstream.alias("CheckObject", CheckObject.class);
+        xstream.alias("CheckObject", CheckObject.class);       
+        
+        if (OS.isSystemWindows()) {
+            try {
+                Class<?> media = Class.forName("sun.print.Win32MediaTray");
+                xstream.omitField(media, "value");
+                xstream.omitField(media, "winID");
+            } catch (ClassNotFoundException e) {
+                Logger.getLogger(CheckLayoutSerializationFactory.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
 
         return xstream;
     }
