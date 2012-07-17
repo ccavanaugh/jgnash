@@ -155,7 +155,7 @@ public class Mt940Parser {
                 line = parseSollHabenKennung(currentEntry, line);
                 line = parseBetrag(currentEntry, line);
             }
-            if (line.startsWith(":86:")) {
+            if (line.startsWith(":86:") && currentEntry != null) {
                 currentEntry.addToMehrzweckfeld(line.substring(4));
             }
         }
