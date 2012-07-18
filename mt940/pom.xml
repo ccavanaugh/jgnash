@@ -25,4 +25,22 @@
             <version>${project.version}</version>
         </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <archive>                                
+            <manifestEntries>
+                <Plugin-Activator>net.bzzt.swift.mt940.Mt940Plugin</Plugin-Activator>
+                <Plugin-Version>2.5</Plugin-Version>
+            </manifestEntries>
+          </archive>
+        </configuration>        
+      </plugin>
+    </plugins>
+  </build>
 </project>
