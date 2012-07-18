@@ -17,16 +17,18 @@
 
 package net.bzzt.swift.mt940;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import jgnash.plugin.*;
 
-
 public class Mt940Plugin implements Plugin {
 
     @Override
-    public void start() {       
+    public void start() {
         // ignored
     }
 
@@ -37,18 +39,27 @@ public class Mt940Plugin implements Plugin {
 
     @Override
     public JMenuItem[] getMenuItems() {
-                     
-        JMenuItem menuItem = new JMenuItem();                              
-        
+
+        JMenuItem menuItem = new JMenuItem();
+
         menuItem.putClientProperty(Plugin.PRECEDINGMENUIDREF, "ofximport-command");
-        
-        menuItem.setAction(new ImportMt940Action());
-        
-        return new JMenuItem[] {menuItem};
+
+        System.out.println("loading plugin");
+
+        try {
+            menuItem.setAction(new ImportMt940Action());
+            
+            // reflective load of class loader?
+            
+            return new JMenuItem[] { menuItem };
+        } catch (NoClassDefFoundError e) {
+            Logger.getLogger(Mt940Plugin.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            return null;
+        }
     }
 
     @Override
-    public JPanel getOptionsPanel() {       
+    public JPanel getOptionsPanel() {
         return null;
     }
 
