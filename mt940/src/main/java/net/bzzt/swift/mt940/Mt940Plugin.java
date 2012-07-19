@@ -47,9 +47,7 @@ public class Mt940Plugin implements Plugin {
         System.out.println("loading plugin");
 
         try {
-            menuItem.setAction(new ImportMt940Action());
-            
-            // reflective load of class loader?
+            menuItem.setAction(new ImportMt940Action());                       
             
             return new JMenuItem[] { menuItem };
         } catch (NoClassDefFoundError e) {

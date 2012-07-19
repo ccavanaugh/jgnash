@@ -36,7 +36,6 @@ import java.util.logging.Logger;
 /**
  * @author Leif-Erik Dörr
  * @author Craig Cavanaugh
- * 
  */
 public final class PluginFactory {
 
@@ -150,28 +149,29 @@ public final class PluginFactory {
             }
         };
         return dir.list(filter);
-    }
+    }   
 
     private Plugin loadPlugin(final String jarFileName) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
-        try (JarURLClassLoader classLoader = new JarURLClassLoader(new URL("file:///" + getPluginDirectory()
-                + jarFileName))) {
+        
+        // If classLoader is closed, the plugin is not able to load new classes...
+        @SuppressWarnings("resource")
+        JarURLClassLoader classLoader = new JarURLClassLoader(new URL("file:///" + getPluginDirectory() + jarFileName));
 
-            Plugin plugin = null;
+        Plugin plugin = null;
 
-            String pluginActivator = classLoader.getActivator();
+        String pluginActivator = classLoader.getActivator();
 
-            if (pluginActivator != null) {
-                Object object = classLoader.loadClass(pluginActivator).newInstance();
+        if (pluginActivator != null) {
+            Object object = classLoader.loadClass(pluginActivator).newInstance();
 
-                if (object instanceof Plugin) {
-                    plugin = (Plugin) object;
-                }
-            } else {
-                logger.log(Level.SEVERE, "''{0}'' Plugin Interface was not implemented", jarFileName);
+            if (object instanceof Plugin) {
+                plugin = (Plugin) object;
             }
+        } else {
+            logger.log(Level.SEVERE, "''{0}'' Plugin Interface was not implemented", jarFileName);
+        }               
 
-            return plugin;
-        }
+        return plugin;
     }
 
     /**
