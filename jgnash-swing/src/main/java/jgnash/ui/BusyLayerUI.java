@@ -48,11 +48,11 @@ import javax.swing.plaf.LayerUI;
 
 /**
  * A busy layer for the UI
- *
+ * 
  * @author Craig Cavanaugh
  */
 public class BusyLayerUI extends LayerUI<JPanel> implements ActionListener {
-    
+
     private static final int FPS = 24;
     private static final int TIMER_TICK = 1000 / FPS;
 
@@ -78,7 +78,7 @@ public class BusyLayerUI extends LayerUI<JPanel> implements ActionListener {
         Graphics2D g2 = (Graphics2D) g.create();
 
         float fade = (float) fadeCount / (float) fadeLimit;
-        
+
         // Gray it out.
         Composite urComposite = g2.getComposite();
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f * fade));
@@ -87,18 +87,17 @@ public class BusyLayerUI extends LayerUI<JPanel> implements ActionListener {
 
         // Paint the wait indicator.
         int s = Math.min(w, h) / 5;
-        
+
         int cx = w / 2;
         int cy = h / 2;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setStroke(new BasicStroke(s / 4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));       
+        g2.setStroke(new BasicStroke(s / 4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g2.setPaint(Color.DARK_GRAY);
         g2.rotate(Math.PI * angle / 180, cx, cy);
-        
+
         for (int i = 0; i < 8; i++) {
-            float scale = (7.0f - (float) i) / 7.0f;
+            float scale = (7.0f - i) / 7.0f;
             g2.drawLine(cx + s, cy, cx + s * 2, cy);
-            //g2.drawOval(cx + s, cy, cx + s * 2, cy);
             g2.rotate(-Math.PI / 4, cx, cy);
             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, scale * fade));
         }
@@ -134,8 +133,7 @@ public class BusyLayerUI extends LayerUI<JPanel> implements ActionListener {
         isRunning = true;
         isFadingOut = false;
         fadeCount = 0;
-        
-        
+
         timer = new Timer(TIMER_TICK, this);
         timer.start();
     }
@@ -145,6 +143,7 @@ public class BusyLayerUI extends LayerUI<JPanel> implements ActionListener {
     }
 
     @Override
+    @SuppressWarnings("rawtypes") 
     public void applyPropertyChange(final PropertyChangeEvent pce, final JLayer l) {
         if ("tick".equals(pce.getPropertyName())) {
             l.repaint();
