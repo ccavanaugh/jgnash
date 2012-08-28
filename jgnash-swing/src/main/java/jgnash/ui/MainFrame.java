@@ -17,8 +17,6 @@
  */
 package jgnash.ui;
 
-import com.jhlabs.image.BlurFilter;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -90,8 +88,6 @@ import jgnash.ui.util.builder.ActionParser;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.Resource;
 
-import org.jdesktop.jxlayer.plaf.effect.BufferedImageOpEffect;
-import org.jdesktop.jxlayer.plaf.ext.LockableUI;
 import org.jdesktop.swingx.JXBusyLabel;
 import org.jdesktop.swingx.JXStatusBar;
 
@@ -142,9 +138,9 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     private final LogHandler logHandler = new LogHandler();
 
-    private Color infoColor = null;
-
-    private final LockableUI primaryWaitBlurUI = new LockableUI(new BufferedImageOpEffect(new BlurFilter()));
+    private Color infoColor = null;   
+    
+    private BusyLayerUI layerUI;
 
     static {
         registerFollowsTree = doesRegisterFollowTree();
@@ -452,10 +448,10 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         rootPanel.add(menuBar, BorderLayout.NORTH);
         rootPanel.add(contentPanel, BorderLayout.CENTER);
 
-        waitPanel = new WaitMessagePanel();
-
-        JLayer<JPanel> rootLayer = new JLayer<>(rootPanel);
-        rootLayer.setUI(primaryWaitBlurUI);             
+        waitPanel = new WaitMessagePanel();         
+        
+        layerUI = new BusyLayerUI();       
+        JLayer<JPanel> rootLayer = new JLayer<>(rootPanel, layerUI);
 
         getContentPane().add(rootLayer, BorderLayout.CENTER);
 
@@ -495,8 +491,8 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         EventQueue.invokeLater(new Runnable() {
 
             @Override
-            public void run() {
-                primaryWaitBlurUI.setLocked(true);
+            public void run() {               
+                layerUI.start();
                 waitPanel.setMessage(message);
                 waitPanel.setWaiting(true);
             }
@@ -684,8 +680,8 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
             @Override
             public void run() {
-                waitPanel.setWaiting(false);
-                primaryWaitBlurUI.setLocked(false);
+                waitPanel.setWaiting(false);             
+                layerUI.stop();
             }
         });
     }

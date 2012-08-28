@@ -21,31 +21,23 @@ import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
-import java.awt.geom.Ellipse2D;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import org.jdesktop.swingx.JXBusyLabel;
 import org.jdesktop.swingx.JXPanel;
-import org.jdesktop.swingx.icon.EmptyIcon;
-import org.jdesktop.swingx.painter.BusyPainter;
 
 /**
  * Animated panel intended for use as a glass pane to block application and display a message
  * 
  * @author Craig Cavanaugh
- *
  */
 public final class WaitMessagePanel extends JXPanel {
 
-    private JLabel messageLabel;
-
-    private JXBusyLabel busyLabel;
+    private JLabel messageLabel;    
 
     public WaitMessagePanel() {
         layoutPanel();
@@ -57,16 +49,7 @@ public final class WaitMessagePanel extends JXPanel {
     private void initComponents() {
         messageLabel = new JLabel();
         messageLabel.setFont(messageLabel.getFont().deriveFont(Font.BOLD, 20f));
-        messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-        busyLabel = new JXBusyLabel(new Dimension(100, 100));
-
-        BusyPainter painter = new BusyPainter(new Ellipse2D.Float(0, 0, 22f, 12f), new Ellipse2D.Float(15f, 15f, 70f, 70f));
-        painter.setTrailLength(4);
-        painter.setPoints(10);
-        busyLabel.setPreferredSize(new Dimension(100, 100));
-        busyLabel.setIcon(new EmptyIcon(100, 100));
-        busyLabel.setBusyPainter(painter);
+        messageLabel.setHorizontalAlignment(SwingConstants.CENTER);        
 
         addMouseListener(new MouseAdapter() {
             // empty adapter to block input
@@ -80,13 +63,10 @@ public final class WaitMessagePanel extends JXPanel {
 
         initComponents();
 
-        FormLayout layout = new FormLayout("c:p:g", "b:p:g, 10dlu, t:p:g");
+        FormLayout layout = new FormLayout("c:p:g", "c:p:g");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
         builder.setDefaultDialogBorder();
-
-        builder.append(busyLabel);
-        builder.nextLine();
-        builder.nextLine();
+       
         builder.append(messageLabel);
 
         setLayout(new BorderLayout());
@@ -98,15 +78,16 @@ public final class WaitMessagePanel extends JXPanel {
         setAlpha(0.4f);
     }
 
-    public void setMessage(final String messages) {
-        assert messages != null;
+    public void setMessage(final String messages) {      
+        if (messages ==  null) {
+            throw new IllegalArgumentException();
+        }
 
         messageLabel.setText(messages);
         validate();
     }
 
     public void setWaiting(final boolean busy) {
-        setVisible(busy);
-        busyLabel.setBusy(busy);
+        setVisible(busy);        
     }
 }
