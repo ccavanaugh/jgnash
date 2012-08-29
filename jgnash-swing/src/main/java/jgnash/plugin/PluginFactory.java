@@ -40,20 +40,14 @@ import java.util.logging.Logger;
 public final class PluginFactory {
 
     private String pluginDirectory = null;
-
     private final static String PLUGIN_DIRECTORY_NAME = "plugins";
-
     private final static BigDecimal INTERFACE_VERSION = new BigDecimal("2.5");
-
     private static final Logger logger = Logger.getLogger(PluginFactory.class.getName());
 
     /* Singleton */
     private static PluginFactory factory;
-
     private static List<Plugin> plugins;
-
     private static boolean pluginsStarted = false;
-
     private static boolean pluginsLoaded = false;
 
     static {
@@ -138,21 +132,12 @@ public final class PluginFactory {
     }
 
     private String[] getPluginPaths() {
-        File dir = new File(getPluginDirectory());
-
-        // create filter to return all *.jar in pluginDirectory
-        FilenameFilter filter = new FilenameFilter() {
-
-            @Override
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".jar");
-            }
-        };
-        return dir.list(filter);
-    }   
+        File dir = new File(getPluginDirectory());        
+        return dir.list(new PluginFilenameFilter());
+    }
 
     private Plugin loadPlugin(final String jarFileName) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
-        
+
         // If classLoader is closed, the plugin is not able to load new classes...
         @SuppressWarnings("resource")
         JarURLClassLoader classLoader = new JarURLClassLoader(new URL("file:///" + getPluginDirectory() + jarFileName));
@@ -169,7 +154,7 @@ public final class PluginFactory {
             }
         } else {
             logger.log(Level.SEVERE, "''{0}'' Plugin Interface was not implemented", jarFileName);
-        }               
+        }
 
         return plugin;
     }
@@ -180,11 +165,10 @@ public final class PluginFactory {
     private static class JarURLClassLoader extends URLClassLoader {
 
         private static final String PLUGIN_ACTIVATOR = "Plugin-Activator";
-
         private static final String PLUGIN_VERSION = "Plugin-Version";
 
         public JarURLClassLoader(final URL url) {
-            super(new URL[] { url });
+            super(new URL[]{url});
         }
 
         public String getActivator() throws IOException {
@@ -216,6 +200,14 @@ public final class PluginFactory {
             }
 
             return activator;
+        }
+    }
+
+    private static class PluginFilenameFilter implements FilenameFilter {
+
+        @Override
+        public boolean accept(final File dir, final String name) {
+            return name.endsWith(".jar");
         }
     }
 }
