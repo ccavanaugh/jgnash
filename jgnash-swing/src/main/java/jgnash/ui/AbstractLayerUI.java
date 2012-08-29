@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.jdesktop.jxlayer.plaf;
+package jgnash.ui;
 
 import javax.swing.JLayer;
 

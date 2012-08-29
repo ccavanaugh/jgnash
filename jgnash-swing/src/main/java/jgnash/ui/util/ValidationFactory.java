@@ -25,10 +25,10 @@ import java.awt.event.MouseEvent;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 
+import jgnash.ui.AbstractLayerUI;
 import jgnash.util.Resource;
 
 import javax.swing.JLayer;
-import org.jdesktop.jxlayer.plaf.AbstractLayerUI;
 
 /**
  * Validation factory methods
@@ -40,7 +40,7 @@ public class ValidationFactory {
 
     private static final Icon errorIcon;
 
-    public static final String VALIDATION_PROPERTY = "validationProperty";
+    private static final String VALIDATION_PROPERTY = "validationProperty";
 
     static {
         errorIcon = Resource.getIcon("/jgnash/resource/validation-error.png");
@@ -66,7 +66,7 @@ public class ValidationFactory {
     }
 
     private static class ValidationUI extends AbstractLayerUI<JComponent> {
-
+               
         @Override
         protected void paintLayer(final Graphics2D graphics, final JLayer<? extends JComponent> layer) {
             super.paintLayer(graphics, layer);
