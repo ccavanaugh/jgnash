@@ -48,7 +48,7 @@ import jgnash.util.Resource;
  * @author Craig Cavanaugh
  */
 public class AmortizeDialog extends JDialog implements ActionListener {
-    private Resource rb = Resource.get();
+    private transient  Resource rb = Resource.get();
 
     private JButton cancelButton;
 
@@ -90,7 +90,7 @@ public class AmortizeDialog extends JDialog implements ActionListener {
 
     private boolean result = false;
 
-    private AmortizeObject ao;
+    private transient AmortizeObject ao;
 
     public AmortizeDialog(AmortizeObject o) {
         super((JFrame) null, true);

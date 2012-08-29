@@ -45,7 +45,7 @@ import jgnash.util.Resource;
  * @author Craig Cavanaugh
  */
 class AccountDialog extends JDialog implements ActionListener {
-    private Resource rb = Resource.get();
+    private transient Resource rb = Resource.get();
 
     private boolean returnStatus = false;
 
@@ -184,7 +184,7 @@ class AccountDialog extends JDialog implements ActionListener {
         return accountPanel.getAccountCode();
     }
 
-    public void setBankID(final String id) {
+    public void setBankId(final String id) {
         accountPanel.setBankId(id);
     }
 

@@ -119,7 +119,7 @@ class AccountTools {
         dlg.setAccountName(account.getName());
         dlg.setAccountDescription(account.getDescription());
         dlg.setAccountCode(account.getAccountNumber());
-        dlg.setBankID(account.getBankId());
+        dlg.setBankId(account.getBankId());
         dlg.setCurrency(account.getCurrencyNode());
         dlg.setAccountNotes(account.getNotes());
         dlg.setAccountLocked(account.isLocked());

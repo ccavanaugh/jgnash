@@ -53,7 +53,7 @@ class MainViewPanel extends JPanel implements ActionListener {
 
     private Component last = null;
 
-    private Preferences pref = Preferences.userNodeForPackage(MainViewPanel.class);
+    private transient Preferences pref = Preferences.userNodeForPackage(MainViewPanel.class);
 
     private static final String LAST_VIEW = "lastview";
 

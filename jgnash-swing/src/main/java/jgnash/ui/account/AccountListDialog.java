@@ -42,7 +42,7 @@ import jgnash.util.Resource;
  *
  */
 public class AccountListDialog extends JDialog implements ActionListener {
-    private Resource rb = Resource.get();
+    private transient Resource rb = Resource.get();
 
     private JButton okButton;
 

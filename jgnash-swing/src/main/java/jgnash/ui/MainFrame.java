@@ -114,7 +114,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     private MainViewPanel mainView;
 
-    private final Resource rb = Resource.get();
+    private final transient Resource rb = Resource.get();
 
     private WaitMessagePanel waitPanel;
 
@@ -122,7 +122,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     private MainRegisterPanel registerTreePanel;
 
-    private Action editAction;
+    private transient Action editAction;
 
     private ExpandingAccountTablePanel expandingAccountPanel;
 
@@ -130,13 +130,13 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     private static final Logger log = Logger.getLogger(MainFrame.class.getName());
 
-    private final PausableThreadPoolExecutor backgroundUpdateExecutor = new PausableThreadPoolExecutor();
+    private final transient PausableThreadPoolExecutor backgroundUpdateExecutor = new PausableThreadPoolExecutor();
 
     private static final int SCHEDULED_DELAY = 10;
 
     private JXBusyLabel backgroundOperationLabel;
 
-    private final LogHandler logHandler = new LogHandler();
+    private final transient LogHandler logHandler = new LogHandler();
 
     private Color infoColor = null;   
     

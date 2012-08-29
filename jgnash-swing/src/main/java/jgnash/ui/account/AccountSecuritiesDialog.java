@@ -48,7 +48,7 @@ import jgnash.util.Resource;
  */
 public class AccountSecuritiesDialog extends JDialog implements ActionListener {
 
-    private Resource rb = Resource.get();
+    private transient Resource rb = Resource.get();
 
     private boolean retValue = false;
 

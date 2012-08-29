@@ -49,9 +49,9 @@ import jgnash.util.Resource;
  */
 class AccountSecuritiesPanel extends JPanel implements ActionListener {
 
-    private Resource rb = Resource.get();
+    private transient Resource rb = Resource.get();
 
-    private Engine engine;
+    private transient Engine engine;
 
     private JButton addButton;
 

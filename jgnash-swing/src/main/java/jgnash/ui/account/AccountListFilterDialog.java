@@ -42,7 +42,7 @@ import jgnash.util.Resource;
  *
  */
 public class AccountListFilterDialog extends JDialog implements ActionListener {
-    private Resource rb = Resource.get();
+    private transient Resource rb = Resource.get();
 
     private AccountFilterModel filterModel;
 
@@ -65,8 +65,7 @@ public class AccountListFilterDialog extends JDialog implements ActionListener {
 
         layoutMainPanel();
 
-        resetForm();
-        DialogUtils.addBoundsListener(this);
+        resetForm();        
     }
 
     private void initComponents() {
@@ -111,6 +110,8 @@ public class AccountListFilterDialog extends JDialog implements ActionListener {
         pack();
 
         setMinimumSize(getSize());
+        
+        DialogUtils.addBoundsListener(this);
     }
 
     private void resetForm() {

@@ -66,9 +66,9 @@ public final class ExpandingAccountTableModel extends AbstractExpandingTableMode
 
     private static final Logger logger = Logger.getLogger(ExpandingAccountTableModel.class.getName());
 
-    private CommodityFormat formatter = CommodityFormat.getFullFormat();
+    private transient CommodityFormat formatter = CommodityFormat.getFullFormat();
 
-    private Preferences p = Preferences.userNodeForPackage(ExpandingAccountTableModel.class);
+    private transient Preferences p = Preferences.userNodeForPackage(ExpandingAccountTableModel.class);
 
     private static final String HIDDEN_VISIBLE = "HiddenVisible";
 
@@ -78,7 +78,7 @@ public final class ExpandingAccountTableModel extends AbstractExpandingTableMode
 
     private static final String ACCOUNT_VISIBLE = "AccountVisible";
 
-    private MessageBusListener messageListener = new MessageBusListener();
+    private transient MessageBusListener messageListener = new MessageBusListener();
 
     public ExpandingAccountTableModel() {
         logger.setLevel(Level.ALL);
