@@ -49,7 +49,6 @@ import jgnash.util.Resource;
  * A Dialog that displays a single account register. Size and position is remembered
  *
  * @author Craig Cavanaugh
- *
  */
 public final class RegisterFrame extends JFrame implements MessageListener {
 
@@ -197,6 +196,8 @@ public final class RegisterFrame extends JFrame implements MessageListener {
                 w.toBack();
             }
         }
+        
+        setAutoRequestFocus(true);
         super.toFront();
     }
 
@@ -207,7 +208,7 @@ public final class RegisterFrame extends JFrame implements MessageListener {
     protected static void showDialog(final Account account, final Transaction t) {
 
         for (final RegisterFrame d : dialogList) {
-            if (account.equals(account)) {
+            if (account.equals(d.account)) {
                 EventQueue.invokeLater(new Runnable() {
 
                     @Override
@@ -219,6 +220,7 @@ public final class RegisterFrame extends JFrame implements MessageListener {
                         if (d.getExtendedState() == ICONIFIED) {
                             d.setExtendedState(NORMAL);
                         }
+                                               
                         d.toFront();
                     }
                 });
