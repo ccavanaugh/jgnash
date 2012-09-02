@@ -23,6 +23,7 @@ Formal Trial Balance report
 
 Release 2.10.0
 ----------------------
+09/02/12 Do not preload report fonts to improve startup time and reduce memory usage if reports are not being generated.
 08/28/12 Changed busy indicator for significant memory usage reduction.
 07/17/12 Fix for printing checks on Windows printers.
 07/12/12 Dividends were not showing a correct value in the register total column (Bug #3526172)

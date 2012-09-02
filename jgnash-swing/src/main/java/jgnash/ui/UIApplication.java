@@ -44,7 +44,6 @@ import jgnash.message.Message;
 import jgnash.message.MessageBus;
 import jgnash.message.MessageChannel;
 import jgnash.ui.components.ExceptionDialog;
-import jgnash.ui.report.FontRegistry;
 import jgnash.ui.splash.AboutDialog;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
@@ -53,7 +52,6 @@ import jgnash.util.Resource;
  * GUI version of the jGnash program. This Class creates and provides access to the MainFrame.
  *
  * @author Craig Cavanaugh
- *
  */
 public class UIApplication implements Thread.UncaughtExceptionHandler {
 
@@ -91,9 +89,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
     public UIApplication(final File file) {
 
         if (initFrame()) {
-
-            FontRegistry.registerFonts(); // pre-register report fonts
-
+        
             // try to load the last open file
             EventQueue.invokeLater(new Runnable() {
 
@@ -110,9 +106,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
     }
 
     public UIApplication(final String host, final int port, final String user, final String password) {
-        if (initFrame()) {
-
-            FontRegistry.registerFonts(); // pre-register report fonts
+        if (initFrame()) {         
 
             // try to connect to the remove host
             EventQueue.invokeLater(new Runnable() {
