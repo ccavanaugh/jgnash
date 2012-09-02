@@ -96,10 +96,8 @@
         <module>jgnash-resources</module>
         <module>jgnash-core</module>
         <module>jgnash-swing</module>
-        <module>jgnash-imports</module>
-        <module>jxlayer</module>
-        <module>jidesoft</module>
-        <module>jhlabs</module>
+        <module>jgnash-imports</module>       
+        <module>jidesoft</module>       
         <module>mt940</module>
     </modules>
 
