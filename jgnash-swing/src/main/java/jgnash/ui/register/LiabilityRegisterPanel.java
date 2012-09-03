@@ -43,7 +43,6 @@ import jgnash.ui.account.AmortizeDialog;
  * Register panel for liability accounts.
  *
  * @author Craig Cavanaugh
- *
  */
 public class LiabilityRegisterPanel extends RegisterPanel {
 
@@ -134,9 +133,8 @@ public class LiabilityRegisterPanel extends RegisterPanel {
 
             } else {
                 interest = ao.getIPayment(balance); // get the interest portion
-
             }
-
+                       
             // get debit account
             Account bank = ao.getBankAccount();
 
@@ -147,33 +145,22 @@ public class LiabilityRegisterPanel extends RegisterPanel {
                 transaction.setDate(d.getDate());
                 transaction.setNumber(d.getNumber());
                 transaction.setPayee(ao.getPayee());
-
-                //SplitEntryTransaction e;
-
-                // transaction is made relative to the debit/checking account
-                //SplitTransaction t = new SplitTransaction(n);
-                //t.setAccount(bank);
-                //t.setMemo(ao.getMemo());
-                //t.setPayee(ao.getPayee());
-                //t.setNumber(d.getNumber());
-                //t.setDate(d.getDate());
+                
+                // transaction is made relative to the debit/checking account              
 
                 TransactionEntry e = new TransactionEntry();
 
-                // this entry is the principal payment
-                //e = new SplitEntryTransaction(n);
+                // this entry is the principal payment              
                 e.setCreditAccount(account);
                 e.setDebitAccount(bank);
                 e.setAmount(n.round(payment - interest));
                 e.setMemo(ao.getMemo());
 
                 transaction.addTransactionEntry(e);
-
-                // System.out.println(e.getAmount());
-
+            
                 // handle interest portion of the payment
                 Account i = ao.getInterestAccount();
-                if (i != null) {
+                if (i != null && interest != 0.0) {
                     e = new TransactionEntry();
                     e.setCreditAccount(i);
                     e.setDebitAccount(bank);
@@ -314,7 +301,7 @@ public class LiabilityRegisterPanel extends RegisterPanel {
     }
     }*/
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         super.actionPerformed(e);
 
         if (e.getSource() == amortizeButton) {

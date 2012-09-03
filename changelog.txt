@@ -21,6 +21,10 @@ Hiding option of Transaction form which can help to see more transactions in Reg
 Direct Transaction entry option in the Ledger to avoid Transaction form.
 Formal Trial Balance report
 
+Release 2.11.0
+----------------------
+09/03/12 A exception would occur when trying to generate a loan payment with a zero percent interest rate.
+
 Release 2.10.0
 ----------------------
 09/02/12 The Jump button would not work from a register in a separate window (Bug #3563951)

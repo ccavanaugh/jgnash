@@ -24,11 +24,11 @@ import java.util.Date;
 /**
  * This class is used to calculate loan payments.
  * <p>
- * Because BigDecimal is lacking methods of exponents, calculations are performed using StrictMath to maintain
- * portability. Results are returned as doubles. Results will need to be scaled and rounded.
+ * Because BigDecimal is lacking methods of exponents, calculations are
+ * performed using StrictMath to maintain portability. Results are returned as
+ * doubles. Results will need to be scaled and rounded.
  * 
  * @author Craig Cavanaugh
- *
  */
 public class AmortizeObject {
 
@@ -102,7 +102,7 @@ public class AmortizeObject {
     public AmortizeObject() {
     }
 
-    public void setDate(Date date) {
+    public void setDate(final Date date) {
         this.date = (Date) date.clone();
     }
 
@@ -110,7 +110,7 @@ public class AmortizeObject {
         return date;
     }
 
-    public void setPaymentPeriods(int periods) {
+    public void setPaymentPeriods(final int periods) {
         numPayments = periods;
     }
 
@@ -123,7 +123,7 @@ public class AmortizeObject {
      * 
      * @param months length of loan
      */
-    public void setLength(int months) {
+    public void setLength(final int months) {
         this.length = months;
     }
 
@@ -137,12 +137,12 @@ public class AmortizeObject {
     }
 
     /**
-     * Determines if interest will be calculate based on a daily periodic rate, or if it is assumed that the interest is
-     * paid exactly on the due date.
+     * Determines if interest will be calculate based on a daily periodic rate,
+     * or if it is assumed that the interest is paid exactly on the due date.
      * 
      * @param daily true if interest should be calculated using a daily rate
      */
-    public void setUseDailyRate(boolean daily) {
+    public void setUseDailyRate(final boolean daily) {
         useDailyRate = daily;
     }
 
@@ -156,16 +156,18 @@ public class AmortizeObject {
     }
 
     /**
-     * Sets the number of days per year used to calculate the daily periodic interest rate. The value can be a decimal.
+     * Sets the number of days per year used to calculate the daily periodic
+     * interest rate. The value can be a decimal.
      * 
      * @param days The number of days in a year
      */
-    public void setDaysPerYear(BigDecimal days) {
+    public void setDaysPerYear(final BigDecimal days) {
         daysPerYear = days;
     }
 
     /**
-     * Returns the number of days per year used to calculate a daily periodic interest rate.
+     * Returns the number of days per year used to calculate a daily periodic
+     * interest rate.
      * 
      * @return The number of days per year
      */
@@ -173,7 +175,7 @@ public class AmortizeObject {
         return daysPerYear;
     }
 
-    public void setRate(BigDecimal rate) {
+    public void setRate(final BigDecimal rate) {
         interestRate = rate;
     }
 
@@ -181,7 +183,7 @@ public class AmortizeObject {
         return interestRate;
     }
 
-    public void setPrincipal(BigDecimal principal) {
+    public void setPrincipal(final BigDecimal principal) {
         originalBalance = principal;
     }
 
@@ -189,7 +191,7 @@ public class AmortizeObject {
         return originalBalance;
     }
 
-    public void setInterestPeriods(int periods) {
+    public void setInterestPeriods(final int periods) {
         numCompPeriods = periods;
     }
 
@@ -197,7 +199,7 @@ public class AmortizeObject {
         return numCompPeriods;
     }
 
-    public void setFees(BigDecimal fees) {
+    public void setFees(final BigDecimal fees) {
         if (fees != null) {
             this.fees = fees;
         } else {
@@ -214,7 +216,7 @@ public class AmortizeObject {
      * 
      * @param id the id of the interest account
      */
-    public void setInterestAccount(Account id) {
+    public void setInterestAccount(final Account id) {
         interestAccount = id;
     }
 
@@ -232,7 +234,7 @@ public class AmortizeObject {
      * 
      * @param id the id of the principal account
      */
-    public void setBankAccount(Account id) {
+    public void setBankAccount(final Account id) {
         bankAccount = id;
     }
 
@@ -250,7 +252,7 @@ public class AmortizeObject {
      * 
      * @param id the id of the fees account
      */
-    public void setFeesAccount(Account id) {
+    public void setFeesAccount(final Account id) {
         feesAccount = id;
     }
 
@@ -263,7 +265,7 @@ public class AmortizeObject {
         return feesAccount;
     }
 
-    public void setPayee(String payee) {
+    public void setPayee(final String payee) {
         this.payee = payee;
     }
 
@@ -324,12 +326,21 @@ public class AmortizeObject {
     //    }
 
     /**
-     * Calculates the principal and interest payment of an equal payment series M = P * ( Ie / (1 - (1 + Ie) ^ -N)) N =
-     * total number of periods the loan is amortized over
+     * Calculates the principal and interest payment of an equal payment series
+     * M = P * ( Ie / (1 - (1 + Ie) ^ -N)) N = total number of periods the loan
+     * is amortized over
      * 
      * @return P and I
      */
     double getPIPayment() {
+
+        // zero interest loan
+        if ((interestRate == null || interestRate.compareTo(BigDecimal.ZERO) == 0) && length > 0 && numPayments > 0
+                && originalBalance != null) {
+            
+            return originalBalance.doubleValue() / (length / 12 * numPayments);
+        }
+
         if (length > 0 && numPayments > 0 && numCompPeriods > 0 && originalBalance != null && interestRate != null) {
             double i = getEffectiveInterestRate();
             double p = originalBalance.doubleValue();
@@ -349,12 +360,13 @@ public class AmortizeObject {
     }
 
     /**
-     * Calculates the interest portion of the next loan payment given the remaining loan balance
+     * Calculates the interest portion of the next loan payment given the
+     * remaining loan balance
      * 
      * @param balance remaining balance
      * @return interest
      */
-    public double getIPayment(BigDecimal balance) {
+    public double getIPayment(final BigDecimal balance) {
         if (balance != null) {
             double i = getEffectiveInterestRate();
             return i * balance.doubleValue();
@@ -363,15 +375,15 @@ public class AmortizeObject {
     }
 
     /**
-     * Calculates the interest portion of the next loan payment given the remaining loan balance and the dates between
-     * payments
+     * Calculates the interest portion of the next loan payment given the
+     * remaining loan balance and the dates between payments
      * 
      * @param balance balance
      * @param start start date
      * @param end end date
      * @return interest
      */
-    public double getIPayment(BigDecimal balance, Date start, Date end) {
+    public double getIPayment(final BigDecimal balance, final Date start, final Date end) {
         if (balance != null) {
 
             Calendar c = Calendar.getInstance();
