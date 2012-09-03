@@ -23,7 +23,6 @@ import java.math.BigDecimal;
  * Abstract class for representing a commodity
  * 
  * @author Craig Cavanaugh
- *
  */
 public abstract class CommodityNode extends StoredObject implements Comparable<CommodityNode> {
 
@@ -39,7 +38,7 @@ public abstract class CommodityNode extends StoredObject implements Comparable<C
 
     private String description;
 
-    public void setScale(byte scale) {
+    public void setScale(final byte scale) {
         this.scale = scale;
     }
 
@@ -47,7 +46,7 @@ public abstract class CommodityNode extends StoredObject implements Comparable<C
         return scale;
     }
 
-    public void setSymbol(String symbol) {
+    public void setSymbol(final String symbol) {
         this.symbol = symbol;
     }
 
@@ -55,7 +54,7 @@ public abstract class CommodityNode extends StoredObject implements Comparable<C
         return symbol;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -63,7 +62,7 @@ public abstract class CommodityNode extends StoredObject implements Comparable<C
         return description;
     }
 
-    public void setPrefix(String prefix) {
+    public void setPrefix(final String prefix) {
         this.prefix = prefix;
     }
 
@@ -71,7 +70,7 @@ public abstract class CommodityNode extends StoredObject implements Comparable<C
         return prefix;
     }
 
-    public void setSuffix(String suffix) {
+    public void setSuffix(final String suffix) {
         this.suffix = suffix;
     }
 
@@ -88,12 +87,12 @@ public abstract class CommodityNode extends StoredObject implements Comparable<C
     }
 
     @Override
-    public int compareTo(CommodityNode node) {
+    public int compareTo(final CommodityNode node) {
         return symbol.compareTo(node.symbol);
     }
 
     @Override
-    public boolean equals(Object other) {
+    public boolean equals(final Object other) {
         return this == other || other instanceof CommodityNode && getUuid().equals(((CommodityNode) other).getUuid());
     }
 
@@ -108,7 +107,7 @@ public abstract class CommodityNode extends StoredObject implements Comparable<C
      * @param other CurrencyNode to compare against
      * @return true if objects match
      */
-    public boolean matches(CommodityNode other) {
+    public boolean matches(final CommodityNode other) {
         boolean result = equals(other);
 
         if (!result) {
@@ -123,7 +122,7 @@ public abstract class CommodityNode extends StoredObject implements Comparable<C
      * @param value double to round
      * @return properly scaled BigDecimal
      */
-    public BigDecimal round(double value) {
-        return new BigDecimal(value).setScale(scale, BigDecimal.ROUND_HALF_EVEN);
+    public BigDecimal round(final double value) {
+        return new BigDecimal(value).setScale(scale, MathConstants.roundingMode);
     }
 }
