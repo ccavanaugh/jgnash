@@ -23,6 +23,7 @@ Formal Trial Balance report
 
 Release 2.11.0
 ----------------------
+10/03/12 Updated Spanish Translation (Marcelo Abeldaño)
 09/03/12 A exception would occur when trying to generate a loan payment with a zero percent interest rate.
 
 Release 2.10.0
