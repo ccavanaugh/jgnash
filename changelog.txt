@@ -15,7 +15,7 @@ Moving option for a Transaction from one Register to other Register.
 Date filtering option for the Accounts view & Register view
 Hyperlink option from the results in the Reports and Graphs to the concerned Transactions of the Registers.
 External File attachment in transaction entries.
-Drill down of split entries in Split Transactions by right cling on ledger view.
+Drill down of split entries in Split Transactions by right clicking on ledger view.
 Class/Tag option to Transaction entries. ( to categorize the Expense & Income further in more categorized way )
 Hiding option of Transaction form which can help to see more transactions in Register view.
 Direct Transaction entry option in the Ledger to avoid Transaction form.
@@ -23,7 +23,8 @@ Formal Trial Balance report
 
 Release 2.11.0
 ----------------------
-10/03/12 Updated Spanish Translation (Marcelo Abeldaño)
+10/06/12 Added an option for matching to the last similar entry when entering transactions. (Pranay Kumar) 
+10/03/12 Updated the Spanish Translation. (Marcelo Abeldaño)
 09/03/12 A exception would occur when trying to generate a loan payment with a zero percent interest rate.
 
 Release 2.10.0

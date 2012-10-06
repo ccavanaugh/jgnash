@@ -49,7 +49,6 @@ import org.jdesktop.swingx.JXColorSelectionButton;
  * 
  * @author Craig Cavanaugh
  * @author Peter Vida
- *
  */
 class RegisterOptions extends JPanel implements ActionListener {
 
@@ -66,6 +65,8 @@ class RegisterOptions extends JPanel implements ActionListener {
     private JCheckBox regDateCheckBox;
 
     private JCheckBox ignoreCaseCheckBox;
+
+    private JCheckBox fuzzyMatchCheckBox;
 
     private JCheckBox confirmTransDeleteCheckBox;
 
@@ -89,6 +90,7 @@ class RegisterOptions extends JPanel implements ActionListener {
         }
 
         autoCompleteCheckBox.setSelected(AutoCompleteFactory.isEnabled());
+        fuzzyMatchCheckBox.setSelected(AutoCompleteFactory.fuzzyMatch());
         ignoreCaseCheckBox.setSelected(!AutoCompleteFactory.ignoreCase());
         confirmTransDeleteCheckBox.setSelected(RegisterFactory.isConfirmTransactionDeleteEnabled());
         sortableCheckBox.setSelected(RegisterFactory.isSortingEnabled());
@@ -111,6 +113,7 @@ class RegisterOptions extends JPanel implements ActionListener {
 
     private void registerListeners() {
         autoCompleteCheckBox.addActionListener(this);
+        fuzzyMatchCheckBox.addActionListener(this);
         ignoreCaseCheckBox.addActionListener(this);
         confirmTransDeleteCheckBox.addActionListener(this);
         sortableCheckBox.addActionListener(this);
@@ -144,12 +147,12 @@ class RegisterOptions extends JPanel implements ActionListener {
             }
         });
 
-
         autoCompleteCheckBox.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 ignoreCaseCheckBox.setEnabled(autoCompleteCheckBox.isSelected());
+                fuzzyMatchCheckBox.setEnabled(autoCompleteCheckBox.isSelected());
             }
         });
     }
@@ -159,6 +162,8 @@ class RegisterOptions extends JPanel implements ActionListener {
         oddButton = new JXColorSelectionButton();
 
         autoCompleteCheckBox = new JCheckBox(rb.getString("Button.EnableAutoComplete"));
+        fuzzyMatchCheckBox = new JCheckBox(rb.getString("Button.UseFuzzyMatch"));
+        fuzzyMatchCheckBox.setToolTipText(rb.getString("ToolTip.FuzzyMatch"));
         ignoreCaseCheckBox = new JCheckBox(rb.getString("Button.MatchCaseSensitive"));
 
         confirmTransDeleteCheckBox = new JCheckBox(rb.getString("Button.ConfirmTransDelete"));
@@ -204,10 +209,11 @@ class RegisterOptions extends JPanel implements ActionListener {
     }
 
     private JPanel buildCasePanel() {
-        FormLayout layout = new FormLayout("$ug, p", "d");
+        FormLayout layout = new FormLayout("$ug, p", "d, $rgap, d");
         JPanel panel = new JPanel(layout);
 
-        panel.add(ignoreCaseCheckBox, CC.xy(2, 1));                    
+        panel.add(ignoreCaseCheckBox, CC.xy(2, 1));
+        panel.add(fuzzyMatchCheckBox, CC.xy(2, 3));
 
         return panel;
     }
@@ -259,7 +265,8 @@ class RegisterOptions extends JPanel implements ActionListener {
             RegisterFactory.setSortingEnabled(sortableCheckBox.isSelected());
         } else if (e.getSource() == autoCompleteCheckBox) {
             AutoCompleteFactory.setEnabled(autoCompleteCheckBox.isSelected());
-        } else if (e.getSource() == disableAutoReconcileButton || e.getSource() == autoReconcileBothSidesButton || e.getSource() == autoReconcileIncomeExpenseButton) {
+        } else if (e.getSource() == disableAutoReconcileButton || e.getSource() == autoReconcileBothSidesButton
+                || e.getSource() == autoReconcileIncomeExpenseButton) {
             reconcileAction();
         } else if (e.getSource() == registerFollowsCheckBox) {
             registerFollowsAccountListAction();
@@ -267,8 +274,10 @@ class RegisterOptions extends JPanel implements ActionListener {
             AbstractTransactionPanel.setRememberLastDate(regDateCheckBox.isSelected());
         } else if (e.getSource() == confirmTransDeleteCheckBox) {
             RegisterFactory.setConfirmTransactionDeleteEnabled(confirmTransDeleteCheckBox.isSelected());
-        } else if (e.getSource() == ignoreCaseCheckBox) {          
+        } else if (e.getSource() == ignoreCaseCheckBox) {
             AutoCompleteFactory.setIgnoreCase(!ignoreCaseCheckBox.isSelected());
+        } else if (e.getSource() == fuzzyMatchCheckBox) {
+            AutoCompleteFactory.setFuzzyMatch(fuzzyMatchCheckBox.isSelected());
         }
     }
 }

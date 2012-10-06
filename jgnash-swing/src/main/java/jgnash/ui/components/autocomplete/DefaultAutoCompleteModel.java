@@ -23,10 +23,10 @@ import java.util.List;
 
 /**
  * Default model for auto complete search.
- *
+ * 
  * @author Craig Cavanaugh
  * @author Don Brown
- *
+ * @author Pranay Kumar
  */
 public class DefaultAutoCompleteModel implements AutoCompleteModel {
 
@@ -36,16 +36,22 @@ public class DefaultAutoCompleteModel implements AutoCompleteModel {
 
     private boolean enabled = true;
 
-    public void setIgnoreCase(boolean ignoreCase) {
+    private boolean fuzzyMatch = false;
+
+    public void setIgnoreCase(final boolean ignoreCase) {
         this.ignoreCase = ignoreCase;
     }
-    
-    public void setEnabled(boolean enabled) {
+
+    public void setEnabled(final boolean enabled) {
         this.enabled = enabled;
     }
 
-    /**     
-     * @see AutoCompleteModel#doLookAhead(java.lang.String) 
+    public void setFuzzyMatch(final boolean fuzzyMatch) {
+        this.fuzzyMatch = fuzzyMatch;
+    }
+
+    /**
+     * @see AutoCompleteModel#doLookAhead(java.lang.String)
      */
     @Override
     public String doLookAhead(final String content) {
@@ -55,38 +61,25 @@ public class DefaultAutoCompleteModel implements AutoCompleteModel {
         return null;
     }
 
-    private String doLookAhead(final String content, boolean ignoreCase) {
+    /** Perform a brute force linear search top down for the best match */
+    private String doLookAhead(final String content, final boolean ignoreCase) {
         if (content.length() > 0) {
             synchronized (list) {
                 for (String s : list) {
-                    
+
                     if (ignoreCase) {
-                       if (s.equalsIgnoreCase(content)) {
+                        if (s.equalsIgnoreCase(content)) {
                             break;
-                        } 
+                        }
                     } else {
                         if (s.equals(content)) {
                             break;
                         }
                     }
-                    
-                    if (startsWith(s, content, ignoreCase)) {
-                            return s;
-                    }
 
-//                    if (ignoreCase) {
-//                        if (s.equalsIgnoreCase(content)) {
-//                            break;
-//                        } else if (startsWith(s, content, ignoreCase)) {
-//                            return s;
-//                        }
-//                    } else {
-//                        if (s.equals(content)) {
-//                            break;
-//                        } else if (startsWith(s, content, ignoreCase)) {
-//                            return s;
-//                        }
-//                    }
+                    if (startsWith(s, content, ignoreCase)) {
+                        return s;
+                    }
                 }
             }
         }
@@ -96,16 +89,24 @@ public class DefaultAutoCompleteModel implements AutoCompleteModel {
     public void addString(final String content) {
         if (content != null && !content.isEmpty()) {
             synchronized (list) {
-                int index = Collections.binarySearch(list, content);
-                if (index < 0) {
-                    list.add(-index - 1, content);
+                if (fuzzyMatch) {
+                    if (list.contains(content)) {
+                        list.remove(content); // remove old instance
+                    }
+                    list.add(0, content); // push it to the top of the search list
+                } else {
+                    int index = Collections.binarySearch(list, content);
+
+                    if (index < 0) {
+                        list.add(-index - 1, content);
+                    }
                 }
             }
         }
     }
 
     /**
-     * Removes all of the string that have been remembered
+     * Removes all of the strings that have been remembered
      */
     public void purge() {
         synchronized (list) {
@@ -114,11 +115,10 @@ public class DefaultAutoCompleteModel implements AutoCompleteModel {
     }
 
     /**
-     * Returns extra information that might be stored with a
-     * found string returned by doLookAhead().  This information
-     * can be used to populate other fields based on matching the
-     * string key.
-     *
+     * Returns extra information that might be stored with a found string
+     * returned by doLookAhead(). This information can be used to populate other
+     * fields based on matching the string key.
+     * 
      * @param key The string key most likely returned from doLookAhead()
      * @return null
      */
@@ -126,11 +126,11 @@ public class DefaultAutoCompleteModel implements AutoCompleteModel {
     public Object getExtraInfo(final String key) {
         return null;
     }
-    
+
     /**
      * Tests if the source string starts with the prefix string. Case is
      * ignored.
-     *
+     * 
      * @param source the source String.
      * @param prefix the prefix String.
      * @param ignoreCase true if case should be ignored

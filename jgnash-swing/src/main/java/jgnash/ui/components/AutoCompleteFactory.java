@@ -23,6 +23,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -39,14 +41,15 @@ import jgnash.message.MessageChannel;
 import jgnash.message.MessageListener;
 import jgnash.message.MessageProperty;
 import jgnash.ui.components.autocomplete.DefaultAutoCompleteModel;
+import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.MultiHashMap;
 
 /**
- * This factory class generates AutoCompleteTextFields that share a common model to reduce the amount of overhead.
+ * This factory class generates AutoCompleteTextFields that share a common model
+ * to reduce the amount of overhead.
  * 
  * @author Craig Cavanaugh
  * @author Don Brown
- *
  */
 public class AutoCompleteFactory {
 
@@ -54,17 +57,27 @@ public class AutoCompleteFactory {
 
     private static boolean autoComplete;
 
+    private static boolean fuzzyMatch;
+
     private static boolean ignoreCase;
 
     private static final String AUTO_COMPLETE = "autoComplete";
 
     private static final String IGNORE_CASE = "ignoreCase";
 
+    private static final String FUZZY_MATCH = "fuzzyMatch";
+
     private static final PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(new Object());
+
+    /**
+     * Use an ExecutorService to manage the number of running threads
+     */
+    private static final ExecutorService pool = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
     static {
         Preferences p = Preferences.userNodeForPackage(AutoCompleteFactory.class);
         autoComplete = p.getBoolean(AUTO_COMPLETE, true);
+        fuzzyMatch = p.getBoolean(FUZZY_MATCH, false);
         ignoreCase = p.getBoolean(IGNORE_CASE, true);
     }
 
@@ -112,6 +125,22 @@ public class AutoCompleteFactory {
     }
 
     /**
+     * Sets if fuzzy match is used for auto completion
+     * 
+     * @param doFuzzyMatch case sensitivity state
+     */
+    public static void setFuzzyMatch(final boolean doFuzzyMatch) {
+
+        boolean oldfuzzyMatch = fuzzyMatch;
+
+        fuzzyMatch = doFuzzyMatch;
+        Preferences p = Preferences.userNodeForPackage(AutoCompleteFactory.class);
+        p.putBoolean(FUZZY_MATCH, fuzzyMatch);
+
+        propertyChangeSupport.firePropertyChange(FUZZY_MATCH, oldfuzzyMatch, fuzzyMatch);
+    }
+
+    /**
      * Returns the status of auto completion
      * 
      * @return true is auto completion is enabled, false otherwise
@@ -127,6 +156,15 @@ public class AutoCompleteFactory {
      */
     public static boolean ignoreCase() {
         return ignoreCase;
+    }
+
+    /**
+     * Returns the state of fuzzy match
+     * 
+     * @return true if fuzzy match is enabled
+     */
+    public static boolean fuzzyMatch() {
+        return fuzzyMatch;
     }
 
     /**
@@ -150,7 +188,7 @@ public class AutoCompleteFactory {
      * @param account account this payee field will match
      * @return A plain JTextField or an AutoCompleteTextField.
      */
-    public static JTextField getPayeeField(Account account) {
+    public static JTextField getPayeeField(final Account account) {
         if (autoComplete) {
             return new AutoCompleteTextField(new PayeeAccountModel(account));
         }
@@ -166,6 +204,7 @@ public class AutoCompleteFactory {
         public TransactionModel() {
             init();
             setIgnoreCase(AutoCompleteFactory.ignoreCase());
+            setFuzzyMatch(AutoCompleteFactory.fuzzyMatch());
         }
 
         final void init() {
@@ -180,6 +219,9 @@ public class AutoCompleteFactory {
                         reload();
                     } else if (evt.getPropertyName().equals(AUTO_COMPLETE) && evt.getNewValue() != evt.getOldValue()) {
                         setEnabled((Boolean) evt.getNewValue());
+                    } else if (evt.getPropertyName().equals(FUZZY_MATCH) && evt.getNewValue() != evt.getOldValue()) {
+                        setFuzzyMatch((Boolean) evt.getNewValue());
+                        reload();
                     }
                 }
             };
@@ -203,7 +245,7 @@ public class AutoCompleteFactory {
                     reload();
                     return;
                 case FILE_CLOSING:
-                    load = false;
+                    load = false; // prevent loading
                     AutoCompleteFactory.removePropertyChangeListener(listener);
                     return;
                 default:
@@ -212,12 +254,14 @@ public class AutoCompleteFactory {
 
         void load() {
             load = true;
-            new Thread(new Runnable() {
+
+            pool.execute(new Runnable() {
 
                 @Override
                 public void run() {
                     try {
-                        List<Transaction> transactions = EngineFactory.getEngine(EngineFactory.DEFAULT).getTransactions();
+                        List<Transaction> transactions = EngineFactory.getEngine(EngineFactory.DEFAULT)
+                                .getTransactions();
 
                         // sort the transactions for consistent order
                         Collections.sort(transactions);
@@ -230,10 +274,11 @@ public class AutoCompleteFactory {
                             }
                         }
                     } catch (Exception e) {
-                        Logger.getLogger(AutoCompleteFactory.class.getName()).log(Level.INFO, e.getLocalizedMessage(), e);
+                        Logger.getLogger(AutoCompleteFactory.class.getName()).log(Level.INFO, e.getLocalizedMessage(),
+                                e);
                     }
                 }
-            }).start();
+            });
         }
 
         final void reload() {
@@ -255,14 +300,14 @@ public class AutoCompleteFactory {
     }
 
     /**
-     * This model stores the transaction with the payee field value. A new instance is created for each account and is
-     * account specific
+     * This model stores the transaction with the payee field value. A new
+     * instance is created for each account and is account specific
      */
     private static final class PayeeAccountModel extends PayeeModel {
 
         private Account account;
 
-        public PayeeAccountModel(Account account) {
+        public PayeeAccountModel(final Account account) {
             super();
             this.account = account;
         }
@@ -273,7 +318,8 @@ public class AutoCompleteFactory {
 
                 @Override
                 public void run() {
-                    new Thread(new Runnable() {
+
+                    pool.execute(new Runnable() {
 
                         @Override
                         public void run() {
@@ -283,7 +329,7 @@ public class AutoCompleteFactory {
                                 }
                             }
                         }
-                    }).start();
+                    });
                 }
             });
         }
@@ -316,8 +362,9 @@ public class AutoCompleteFactory {
     }
 
     /**
-     * This model stores the transaction with the payee field value. Split entries are filtered for now because
-     * duplicating one in a form would produce would only impact the parent split transaction.
+     * This model stores the transaction with the payee field value. Split
+     * entries are filtered for now because duplicating one in a form would
+     * produce would only impact the parent split transaction.
      */
     private static class PayeeModel extends TransactionModel {
 
@@ -348,8 +395,8 @@ public class AutoCompleteFactory {
         }
 
         /**
-         * Removes the transaction associated with the payee. This is done so that deleted transactions can be garbage
-         * collected.
+         * Removes the transaction associated with the payee. This is done so
+         * that deleted transactions can be garbage collected.
          * 
          * @param t transaction to remove
          */
