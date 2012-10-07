@@ -67,7 +67,6 @@ import java.util.logging.Level;
  * Dialog that lets the user download and import security history from Yahoo
  * 
  * @author Craig Cavanaugh
- * 
  */
 public class YahooSecurityHistoryImportDialog extends JDialog implements ActionListener {
     private final Resource rb = Resource.get();
@@ -136,31 +135,28 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
     }
 
     private void layoutMainPanel() {
-        FormLayout layout = new FormLayout("r:p, $lcgap, 48dlu:g", "");
+        FormLayout layout = new FormLayout("r:p, $lcgap, 48dlu:g, $ugap, r:p, $lcgap, 48dlu:g", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
         builder.setDefaultDialogBorder();
 
         JScrollPane scrollPane = new JScrollPane(securityList);
         scrollPane.setAutoscrolls(true);
 
-        builder.append(rb.getString("Label.StartDate"), startField);
-        builder.nextLine();
-        builder.appendRelatedComponentsGapRow();
-        builder.nextLine();
+        builder.append(rb.getString("Label.StartDate"), startField);       
         builder.append(rb.getString("Label.EndDate"), endField);
         builder.nextLine();
         builder.appendRelatedComponentsGapRow();
         builder.nextLine();
         builder.appendRow("f:p:g");
-        builder.append(rb.getString("Label.Security"), scrollPane);
+        builder.append(rb.getString("Label.Security"), scrollPane, 5);
         builder.nextLine();
         builder.appendRelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(bar, 3);
+        builder.append(bar, 7);
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton), 3);
+        builder.append(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton), 7);
 
         getContentPane().add(builder.getPanel());
         pack();
