@@ -34,6 +34,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -63,6 +65,8 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.logging.Level;
 
+import static jgnash.util.Arrays.intListToArray;
+
 /**
  * Dialog that lets the user download and import security history from Yahoo
  * 
@@ -78,6 +82,12 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
     private final JButton okButton = new JButton(rb.getString("Button.Ok"));
 
     private final JButton cancelButton = new JButton(rb.getString("Button.Cancel"));
+    
+    private final JButton selectAllButton = new JButton(rb.getString("Button.SelectAll"));
+    
+    private final JButton invertAllButton = new JButton(rb.getString("Button.InvertSelection"));
+    
+    private final JButton clearAllButton = new JButton(rb.getString("Button.ClearAll"));
 
     private final JProgressBar bar = new JProgressBar();
 
@@ -121,10 +131,17 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
 
         setMinimumSize(getSize());
 
+        registerListeners();
+    }
+    
+    private void registerListeners() {
         okButton.addActionListener(this);
         cancelButton.addActionListener(this);
+        selectAllButton.addActionListener(this);
+        clearAllButton.addActionListener(this);
+        invertAllButton.addActionListener(this);
 
-        DialogUtils.addBoundsListener(this);
+        DialogUtils.addBoundsListener(this);        
     }
 
     /**
@@ -144,6 +161,10 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
 
         builder.append(rb.getString("Label.StartDate"), startField);       
         builder.append(rb.getString("Label.EndDate"), endField);
+        builder.nextLine();
+        builder.appendRelatedComponentsGapRow();
+        builder.nextLine();
+        builder.append(ButtonBarFactory.buildLeftAlignedBar(selectAllButton, clearAllButton, invertAllButton), 7);
         builder.nextLine();
         builder.appendRelatedComponentsGapRow();
         builder.nextLine();
@@ -196,8 +217,30 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
                 run.stop();
             }
             closeDialog();
+        } else if (e.getSource() == selectAllButton) {
+            securityList.setSelectionInterval(0, securityList.getModel().getSize() - 1);
+        } else if (e.getSource() == clearAllButton) {            
+            securityList.clearSelection();
+        } else if (e.getSource() == invertAllButton) {
+            invertSelection();           
         }
     }
+    
+    private void invertSelection() {
+        int selected[] = securityList.getSelectedIndices();
+        
+        List<Integer> invertedSelectionIndices = new ArrayList<>();
+        
+        int count = securityList.getModel().getSize();
+        
+        for (int i = 0; i < count; i++) {
+            if (Arrays.binarySearch(selected, i) < 0) {
+                invertedSelectionIndices.add(i);
+            }            
+        }            
+        
+        securityList.setSelectedIndices(intListToArray(invertedSelectionIndices));        
+    }      
 
     /**
      * This class does all the work for importing the data
