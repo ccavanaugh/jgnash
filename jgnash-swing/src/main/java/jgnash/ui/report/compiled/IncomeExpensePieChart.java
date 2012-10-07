@@ -39,6 +39,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
+import jgnash.engine.CurrencyNode;
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
 import jgnash.engine.EngineFactory;
@@ -71,7 +72,7 @@ import org.jfree.data.general.PieDataset;
  * @author Craig Cavanaugh
  * @author Chad McHenry
  * @author Dany Veilleux
- *
+ * @author Pranay Kumar
  */
 public class IncomeExpensePieChart {
 
@@ -308,6 +309,7 @@ public class IncomeExpensePieChart {
         PiePlot plot = new PiePlot(data);
 
         // rebuilt each time because they're based on the account's commodity
+        CurrencyNode defaultCurrency = EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency();
         NumberFormat valueFormat = CommodityFormat.getFullNumberFormat(a.getCurrencyNode());
         NumberFormat percentFormat = new DecimalFormat("0.0#%");
         defaultLabels = new StandardPieSectionLabelGenerator("{0} = {1}", valueFormat, percentFormat);
@@ -341,8 +343,14 @@ public class IncomeExpensePieChart {
 
         BigDecimal total = a.getTreeBalance(startField.getDate(), endField.getDate()).abs();
 
-        chart.addSubtitle(new TextTitle(valueFormat.format(total)));
-
+        String subtitle = valueFormat.format(total);
+        if (!defaultCurrency.equals(a.getCurrencyNode()))
+        {
+            BigDecimal totalDefaultCurrency = total.multiply(a.getCurrencyNode().getExchangeRate(defaultCurrency));
+            NumberFormat defaultValueFormat = CommodityFormat.getFullNumberFormat(defaultCurrency);
+            subtitle += "  -  " + defaultValueFormat.format(totalDefaultCurrency);
+        }
+        chart.addSubtitle( new TextTitle(subtitle) );
         chart.setBackgroundPaint(null);
 
         return chart;
