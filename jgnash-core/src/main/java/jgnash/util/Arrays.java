@@ -33,7 +33,7 @@ public class Arrays {
      * Converts a List of Integers to an integer array
      * 
      * @param integerList List of Integers
-     * @return interger array
+     * @return integer array
      */
     public static int[] intListToArray(final List<Integer> integerList)
     {
