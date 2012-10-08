@@ -38,9 +38,7 @@ import jgnash.util.Resource;
  * @author Craig Cavanaugh
  *
  */
-public class OpenAction {
-
-    static final String MESSAGE_PLEASE_WAIT = "Message.PleaseWait";
+public class OpenAction {  
 
     public static void openAction() {
 
@@ -56,9 +54,11 @@ public class OpenAction {
             protected Void doInBackground() throws Exception {
                 Resource rb = Resource.get();
 
-                UIApplication.getFrame().displayWaitMessage(rb.getString(MESSAGE_PLEASE_WAIT));
+                UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
 
                 EngineFactory.closeEngine(EngineFactory.DEFAULT);
+                
+                Engine e = null;
 
                 if (dialog.isRemote()) {
                     String user = dialog.getUserName();
@@ -67,17 +67,14 @@ public class OpenAction {
                     int port = dialog.getPort();
                     boolean save = dialog.savePassword();
 
-                    EngineFactory.bootClientEngine(host, port, user, password, EngineFactory.DEFAULT, save);
+                    e = EngineFactory.bootClientEngine(host, port, user, password, EngineFactory.DEFAULT, save);
                 } else {
                     if (FileUtils.isFileLocked(dialog.getDatabasePath())) {
                         StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
                     } else {
-                        EngineFactory.bootLocalEngine(dialog.getDatabasePath(), EngineFactory.DEFAULT);
+                        e = EngineFactory.bootLocalEngine(dialog.getDatabasePath(), EngineFactory.DEFAULT);
                     }
-                }
-
-                // prime the engine
-                Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                }               
 
                 if (e != null) {
                     e.getRootAccount(); // prime the engine
@@ -128,15 +125,18 @@ public class OpenAction {
             @Override
             protected Void doInBackground() throws Exception {
                 Resource rb = Resource.get();
-                UIApplication.getFrame().displayWaitMessage(rb.getString(MESSAGE_PLEASE_WAIT));
+                UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
                 logger.fine("Booting the engine");
 
                 // Disk IO is heavy so delay and allow the UI to react before starting the boot operation
                 Thread.sleep(750);
 
-                EngineFactory.bootLocalEngine(file.getAbsolutePath(), EngineFactory.DEFAULT);
-
-                EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount(); // prime the engine
+                Engine e = EngineFactory.bootLocalEngine(file.getAbsolutePath(), EngineFactory.DEFAULT);
+                
+                if (e != null) {
+                    e.getRootAccount(); // prime the engine
+                }
+                
                 logger.fine("Engine boot complete");
                 return null;
             }
@@ -168,7 +168,7 @@ public class OpenAction {
             @Override
             protected Void doInBackground() throws Exception {
                 Resource rb = Resource.get();
-                UIApplication.getFrame().displayWaitMessage(rb.getString(MESSAGE_PLEASE_WAIT));
+                UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
                 logger.fine("Booting the engine");
 
                 // Disk IO is heavy so delay and allow the UI to react before starting the boot operation
@@ -236,7 +236,7 @@ public class OpenAction {
             @Override
             protected Void doInBackground() throws Exception {
                 Resource rb = Resource.get();
-                UIApplication.getFrame().displayWaitMessage(rb.getString(MESSAGE_PLEASE_WAIT));
+                UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
                 logger.fine("Booting the engine");
 
                 Thread.sleep(750);

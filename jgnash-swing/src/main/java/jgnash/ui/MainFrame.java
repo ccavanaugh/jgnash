@@ -499,6 +499,17 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         });
 
     }
+    
+    public void stopWaitMessage() {
+        EventQueue.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                waitPanel.setWaiting(false);             
+                layerUI.stop();
+            }
+        });
+    }
 
     private void displayWarning(final String message) {
         EventQueue.invokeLater(new Runnable() {
@@ -673,18 +684,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     public void resumeBackgroundUpdates() {
         backgroundUpdateExecutor.resume();
-    }
-
-    public void stopWaitMessage() {
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                waitPanel.setWaiting(false);             
-                layerUI.stop();
-            }
-        });
-    }
+    }    
 
     private void updateTitle() {
         new UpdateTitleWorker().execute();
