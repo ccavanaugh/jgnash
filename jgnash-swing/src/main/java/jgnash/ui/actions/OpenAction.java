@@ -38,11 +38,17 @@ import jgnash.util.Resource;
  * @author Craig Cavanaugh
  *
  */
-public class OpenAction {  
+public class OpenAction {
+    
+    private static final Logger logger = Logger.getLogger(OpenAction.class.getName());
+    
+    static {
+        logger.setLevel(Level.ALL);        
+    }
 
     public static void openAction() {
 
-        final class BootEngine extends SimpleSwingWorker {
+        final class BootEngine extends SimpleSwingWorker {                       
 
             private OpenDatabaseDialog dialog;
 
@@ -85,6 +91,7 @@ public class OpenAction {
 
             @Override
             protected void done() {
+                logger.info("openAction() done");
                 UIApplication.getFrame().stopWaitMessage();
             }
         }
@@ -115,9 +122,8 @@ public class OpenAction {
         });
     }
 
-    public static void openAction(final File file) {
-        final Logger logger = Logger.getLogger(OpenAction.class.getName());
-
+    public static void openAction(final File file) {        
+        
         String database = file.getAbsolutePath();
 
         final class BootEngine extends SimpleSwingWorker {
@@ -143,6 +149,7 @@ public class OpenAction {
 
             @Override
             protected void done() {
+                logger.info("openAction(final File file) done");
                 UIApplication.getFrame().stopWaitMessage();
             }
         }
@@ -161,7 +168,7 @@ public class OpenAction {
     }
 
     public static void openLastAction() {
-        final Logger logger = UIApplication.getLogger();
+        final Logger appLogger = UIApplication.getLogger();
 
         final class BootEngine extends SimpleSwingWorker {
 
@@ -185,18 +192,18 @@ public class OpenAction {
                     engine = EngineFactory.bootClientEngine(host, port, user, password, EngineFactory.DEFAULT, true);
 
                     if (engine == null) {
-                        logger.warning(rb.getString("Message.ErrorServerConnection"));
+                        appLogger.warning(rb.getString("Message.ErrorServerConnection"));
                     }
                 } else {
                     engine = EngineFactory.bootLocalEngine(EngineFactory.getLastDatabase(), EngineFactory.DEFAULT);
 
                     if (engine == null) {
-                        logger.warning(rb.getString("Message.ErrorLoadingFile"));
+                        appLogger.warning(rb.getString("Message.ErrorLoadingFile"));
                     }
                 }
 
                 if (engine != null) {
-                    EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount(); // prime the engine
+                    engine.getRootAccount(); // prime the engine
                     logger.fine("Engine boot complete");
                 }
 
@@ -205,6 +212,7 @@ public class OpenAction {
 
             @Override
             protected void done() {
+                logger.info("openLastAction() done");
                 UIApplication.getFrame().stopWaitMessage();
             }
         }
@@ -221,16 +229,14 @@ public class OpenAction {
                         StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
                     }
                 } catch (FileNotFoundException e) {
-                    logger.log(Level.SEVERE, e.toString(), e);
+                    appLogger.log(Level.SEVERE, e.toString(), e);
                 }
             }
         }
     }
 
     public static void openRemote(final String host, final int port, final String user, final String password) {
-
-        final Logger logger = Logger.getLogger(OpenAction.class.getName());
-
+       
         final class BootEngine extends SimpleSwingWorker {
 
             @Override
