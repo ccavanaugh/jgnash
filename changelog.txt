@@ -23,6 +23,8 @@ Formal Trial Balance report
 
 Release 2.11.0
 ----------------------
+10/13/13 Updated DynamicJasper to the latest release.
+10/11/13 Updated XStream and Mina dependencies to the latest releases.
 10/08/12 Add new controls to the historical security import dialog to make selection of securities faster and easier.
 10/07/12 The Income and Expense pie chart now displays the default currency in addition to the account 
          currency in multiple currencies are being used. (Pranay Kumar)  
