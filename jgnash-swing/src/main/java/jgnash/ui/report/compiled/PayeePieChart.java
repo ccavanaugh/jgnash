@@ -42,7 +42,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import jgnash.engine.Account;
-import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Transaction;
 import jgnash.engine.search.PayeeMatcher;
@@ -50,6 +49,7 @@ import jgnash.text.CommodityFormat;
 import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.GenericCloseDialog;
+import jgnash.ui.util.DialogUtils;
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;
 
@@ -67,7 +67,6 @@ import org.jfree.data.general.PieDataset;
  * per account basis to group by payee Name.
  * 
  * @author Pranay Kumar
- *
  */
 public class PayeePieChart {
 
@@ -97,7 +96,8 @@ public class PayeePieChart {
 
     private Account currentAccount; // because the list may not be showing children
 
-    private ChartPanel chartPanel;
+    private ChartPanel chartPanelCredit;
+    private ChartPanel chartPanelDebit;
 
     // Fields to select the dates
     private DatePanel startField;
@@ -122,6 +122,11 @@ public class PayeePieChart {
                 JPanel p = chart.createPanel();
                 GenericCloseDialog d = new GenericCloseDialog(p, rb.getString("Title.AccountBalance"));
                 d.pack();
+                
+                d.setMinimumSize(d.getSize());
+                
+                DialogUtils.addBoundsListener(d);
+                
                 d.setModal(false);
 
                 d.setVisible(true);
@@ -161,35 +166,48 @@ public class PayeePieChart {
         startField.setDate(new Date(start));
 
         currentAccount = combo.getSelectedAccount();
-        JFreeChart chart = createPieChart(currentAccount);
-        chartPanel = new ChartPanel(chart, true, true, true, false, true);
+        PieDataset[] data = createPieDataset(currentAccount);
+        JFreeChart chartCredit = createPieChart(currentAccount, data, 0);
+        chartPanelCredit = new ChartPanel(chartCredit, true, true, true, false, true);
         //                         (chart, properties, save, print, zoom, tooltips)
+        JFreeChart chartDebit = createPieChart(currentAccount, data, 1);
+        chartPanelDebit = new ChartPanel(chartDebit, true, true, true, false, true);
 
-        FormLayout layout = new FormLayout("p, 4dlu, 70dlu, 8dlu, p, 4dlu, 70dlu, 8dlu, p, 4dlu:g, left:p", "f:d, 3dlu, f:d, 6dlu, f:p:g");
+        FormLayout layout = new FormLayout("p, $lcgap, 70dlu, 8dlu, p, $lcgap, 70dlu, $ugap, p, $lcgap:g, left:p", "d, $rgap, d, $ugap, f:p:g, $rgap, d");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
         layout.setRowGroups(new int[][] { { 1, 3 } });
 
+        // row 1
         builder.append(combo, 9);
         builder.append(useFilters);
         builder.nextLine();
-
         builder.nextLine();
 
+        // row 3
         builder.append(rb.getString("Label.StartDate"), startField);
         builder.append(rb.getString("Label.EndDate"), endField);
         builder.append(refreshButton);
-
         builder.append(showPercentCheck);
         builder.nextLine();
         builder.nextLine();
 
-        builder.append(chartPanel, 11);
+        // row 5
+        FormLayout sublayout = new FormLayout("180dlu:g, 1dlu, 180dlu:g", "f:180dlu:g");
+        DefaultFormBuilder subbuilder = new DefaultFormBuilder(sublayout);
+        subbuilder.append(chartPanelCredit);
+        subbuilder.append(chartPanelDebit);
+        
+        builder.append(subbuilder.getPanel(), 11);
+        builder.nextLine();
         builder.nextLine();
 
+        // row 7
         builder.append(txtAddFilter, 3);
         builder.append(addFilterButton, 3);
         builder.append(saveButton);
         builder.nextLine();
+        
+        // row
         builder.append(filterCombo, 3);
         builder.append(deleteFilterButton, 3);
         builder.append(clearPrefButton);
@@ -306,7 +324,8 @@ public class PayeePieChart {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-                ((PiePlot) chartPanel.getChart().getPlot()).setLabelGenerator(showPercentCheck.isSelected() ? percentLabels : defaultLabels);
+                ((PiePlot) chartPanelCredit.getChart().getPlot()).setLabelGenerator(showPercentCheck.isSelected() ? percentLabels : defaultLabels);
+                ((PiePlot) chartPanelDebit.getChart().getPlot()).setLabelGenerator(showPercentCheck.isSelected() ? percentLabels : defaultLabels);
             }
         });
 
@@ -327,16 +346,18 @@ public class PayeePieChart {
             }
             currentAccount = a;
 
-            chartPanel.setChart(createPieChart(a));
-            chartPanel.validate();
+            PieDataset[] data = createPieDataset(a);
+            chartPanelCredit.setChart(createPieChart(a, data, 0));
+            chartPanelCredit.validate();
+            chartPanelDebit.setChart(createPieChart(a, data, 1));
+            chartPanelDebit.validate();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    private JFreeChart createPieChart(Account a) {
-        PieDataset data = createPieDataset(a);
-        PiePlot plot = new PiePlot(data);
+    private JFreeChart createPieChart(Account a, PieDataset[] data, int index) {
+        PiePlot plot = new PiePlot(data[index]);
 
         // rebuilt each time because they're based on the account's commodity
         NumberFormat valueFormat = CommodityFormat.getFullNumberFormat(a.getCurrencyNode());
@@ -349,25 +370,28 @@ public class PayeePieChart {
         plot.setLabelGap(.02);
         plot.setInteriorGap(.1);
 
-        String title;
+        BigDecimal thisTotal = BigDecimal.ZERO;
+        for(int i=0; i<data[index].getItemCount(); i++ ) {
+            thisTotal = thisTotal.add( (BigDecimal)(data[index].getValue(i)) );
+        }
+        BigDecimal acTotal = a.getTreeBalance(startField.getDate(), endField.getDate()).abs();
 
-        // pick an appropriate title
-        if (a.getAccountType() == AccountType.EXPENSE) {
-            title = rb.getString("Title.PercentExpense");
-        } else if (a.getAccountType() == AccountType.INCOME) {
-            title = rb.getString("Title.PercentIncome");
-        } else {
-            title = rb.getString("Title.PercentDist");
+        String title = "";
+        String subtitle = "";
+
+        // pick an appropriate title(s)
+        if (index == 0) {
+            title = a.getPathName();
+            subtitle = rb.getString("Column.Credit") + " : " + valueFormat.format(thisTotal);
+        } else if (index == 1) {
+            title = rb.getString("Column.Balance") + " : " + valueFormat.format(acTotal);
+            subtitle = rb.getString("Column.Debit") + " : " + valueFormat.format(thisTotal);
         }
 
-        title = title + " - " + a.getPathName();
 
         JFreeChart chart = new JFreeChart(title, JFreeChart.DEFAULT_TITLE_FONT, plot, false);
 
-        BigDecimal total = a.getTreeBalance(startField.getDate(), endField.getDate()).abs();
-
-        chart.addSubtitle(new TextTitle(valueFormat.format(total)));
-
+        chart.addSubtitle(new TextTitle(subtitle));
         chart.setBackgroundPaint(null);
 
         return chart;
@@ -399,8 +423,11 @@ public class PayeePieChart {
         return transactions;
     }
 
-    private PieDataset createPieDataset(final Account a) {
-        DefaultPieDataset returnValue = new DefaultPieDataset();
+    private PieDataset[] createPieDataset(final Account a) {
+        DefaultPieDataset[] returnValue = new DefaultPieDataset[2];
+        returnValue[0] = new DefaultPieDataset();
+        returnValue[1] = new DefaultPieDataset();
+
         if (a != null) {
             //System.out.print("Account = "); System.out.println(a);
             Map<String, BigDecimal> names = new HashMap<>();
@@ -447,10 +474,11 @@ public class PayeePieChart {
 
                 if (value.compareTo(BigDecimal.ZERO) == -1) {
                     value = value.negate();
-                    sKey = sKey + "(-ve)";
+                    //sKey = sKey + "(-ve)";
+                    returnValue[1].setValue(sKey, value);
                 }
-
-                returnValue.setValue(sKey, value);
+                else
+                    returnValue[0].setValue(sKey, value);
             }
         }
         return returnValue;
