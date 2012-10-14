@@ -24,12 +24,17 @@ import java.math.BigDecimal;
 import java.net.SocketTimeoutException;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import jgnash.engine.SecurityNode;
 import jgnash.net.ConnectionFactory;
+import jgnash.util.DateUtils;
 
 /**
  * An abstract CommodityParser for the Yahoo! financial web sites.
@@ -49,6 +54,8 @@ public abstract class AbstractYahooParser implements SecurityParser {
     private BigDecimal high;
 
     private BigDecimal low;
+
+    private Date date = DateUtils.today();
 
     @Override
     public synchronized long getVolume() {
@@ -84,6 +91,21 @@ public abstract class AbstractYahooParser implements SecurityParser {
 
     private synchronized void setLow(final BigDecimal low) {
         this.low = low;
+    }
+
+    /**
+     * @return the date
+     */
+    @Override
+    public Date getDate() {
+        return date;
+    }
+
+    /**
+     * @param date the date to set
+     */
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     // http://uk.old.finance.yahoo.com/d/quotes.csv?s=GB00B0HZR397GBP&f=sl1t1c1ohgv&e=.csv
@@ -132,6 +154,18 @@ public abstract class AbstractYahooParser implements SecurityParser {
                     // may be returned as a yield percentage... ignore for now
                     if (!fields[1].contains("%")) {
                         setPrice(new BigDecimal(fields[1]));
+                    }
+
+                    // try to parse the date "10/12/2012"
+                    // the date from Yahoo is the last close date.  It may not reflect the date the parse is performed
+                    if (!fields[2].isEmpty()) {
+                        try {
+                            DateFormat df = new SimpleDateFormat("\"MM/dd/yyyy\"");
+                            Date date = df.parse(fields[2]);
+                            setDate(date);
+                        } catch (ParseException e) {
+                            logger.log(Level.SEVERE, null, e);                            
+                        }                        
                     }
 
                     if (fields[6].equals("N/A")) {

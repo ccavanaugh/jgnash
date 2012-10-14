@@ -83,6 +83,7 @@ public class SecurityUpdateFactory {
                 history.setVolume(parser.getVolume());
                 history.setHigh(parser.getHigh());
                 history.setLow(parser.getLow());
+                history.setDate(parser.getDate());  // returned date from the parser
 
                 Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
 

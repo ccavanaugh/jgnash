@@ -19,6 +19,7 @@ package jgnash.net.security;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Date;
 
 import jgnash.engine.SecurityNode;
 
@@ -26,7 +27,6 @@ import jgnash.engine.SecurityNode;
  * Interface for security history information
  *
  * @author Craig Cavanaugh
- *
  */
 public interface SecurityParser {   
 
@@ -37,6 +37,8 @@ public interface SecurityParser {
     BigDecimal getLow();
 
     long getVolume();
-
+        
+    Date getDate();
+      
     boolean parse(SecurityNode node) throws IOException;
 }

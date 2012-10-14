@@ -23,6 +23,8 @@ Formal Trial Balance report
 
 Release 2.11.0
 ----------------------
+10/13/12 Improve security price import from Yahoo.  Dates returned from the Yahoo are now used.  This 
+         prevents entries on weekends and financial holidays.
 10/13/12 Corrections to the reporting in the Income and Expense by Payee pie chart report as well as GUI
          behavior improvements.  It now has a chart for debit and credits. (Pranay Kumar)
 10/13/12 Updated DynamicJasper to the latest release.
