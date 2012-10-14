@@ -23,6 +23,8 @@ Formal Trial Balance report
 
 Release 2.11.0
 ----------------------
+10/14/12 Added a new Simple Investment account type.  This can be used for Annuities or Guaranteed Retirement accounts
+         that you cannot actively manage. 
 10/14/12 Added a utility script that can be run to remove weekend security history.
 10/14/12 Update to the latest Insubstantial/Substance L&F release.
 10/13/12 Improve security price import from Yahoo.  Dates returned from Yahoo are now used.  This prevents 

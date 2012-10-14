@@ -15,7 +15,7 @@
       </imageobject>
     </mediaobject>
 
-    <title>jGnash 2.10.x User Guide</title>
+    <title>jGnash 2.11.x User Guide</title>
 
     <copyright>
       <year>2001-2012</year>
@@ -515,6 +515,14 @@
 
         <para>Mutual fund accounts are a specialized version of an Investment account and generally used to track mutual
         fund type investments.</para>
+      </section>
+      
+      <section>
+        <title>Simple Investment</title>
+
+        <para>Simple investment accounts are for investments where you do not actively manage or are able to track purchases
+        and sales of securities.  The typical scenario would be a company pension plan that only provides cash balance
+        information.  Sometimes, these types of investment accounts are called Annuities or Guaranteed Retirement Accounts</para>
       </section>
 
       <section>
