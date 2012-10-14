@@ -53,7 +53,7 @@ public class DateTest {
     public void trimTest() {
 
         // first one initializes the queue
-        DateUtils.trimDate(new Date());
+        DateUtils.today();
 
         Date date = new Date();
 
@@ -159,7 +159,7 @@ public class DateTest {
     @Test
     public void getDateOfTheYearTest() {
 
-        Date today = DateUtils.trimDate(new Date());
+        Date today = DateUtils.today();
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(today);

@@ -33,7 +33,7 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
     
     private static final long serialVersionUID = 1L;
 
-    private Date date = DateUtils.trimDate(new Date());
+    private Date date = DateUtils.today();
 
     private BigDecimal price = BigDecimal.ZERO;
 

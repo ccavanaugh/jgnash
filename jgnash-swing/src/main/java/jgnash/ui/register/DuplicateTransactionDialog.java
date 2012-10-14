@@ -105,7 +105,7 @@ public class DuplicateTransactionDialog extends DateChkNumberDialog {
                 try {
                     clone = (Transaction) transaction.clone();
 
-                    Date today = DateUtils.trimDate(new Date()); // get today's date
+                    Date today = DateUtils.today(); // get today's date
 
                     if (today.equals(datePanel.getDate())) {
                         clone.setDate(new Date()); // maintain entry order
