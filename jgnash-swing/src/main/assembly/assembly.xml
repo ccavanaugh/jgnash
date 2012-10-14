@@ -42,5 +42,12 @@
 				<include>*.jar</include>
 			</includes>
 		</fileSet>
+                <fileSet>
+			<directory>scripts</directory>
+			<outputDirectory>scripts</outputDirectory>
+			<includes>
+				<include>*.js</include>
+			</includes>
+		</fileSet>
 	</fileSets>
 </assembly>
