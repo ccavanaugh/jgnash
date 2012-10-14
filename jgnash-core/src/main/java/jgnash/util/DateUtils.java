@@ -60,7 +60,7 @@ public class DateUtils {
     private static final Pattern DAY_PATTERN = Pattern.compile("d{1,2}");
 
     private DateUtils() {
-    }
+    }        
 
     private static void updateMonthNames() {
         if (lastLocale != Locale.getDefault()) {
@@ -815,6 +815,15 @@ public class DateUtils {
         } finally {
             calendarPool.put(c);
         }
+    }
+    
+    /**
+     * Returns a trimmed version of todays date
+     * 
+     * @return trimmed date
+     */
+    public static Date today() {
+        return trimDate(new Date());
     }
 
     /**
