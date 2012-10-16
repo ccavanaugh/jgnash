@@ -33,7 +33,6 @@ import java.util.regex.Pattern;
  * 
  * @author Craig Cavanaugh
  * @author Vincent Frison
- *
  */
 public class DateUtils {
 
@@ -47,6 +46,9 @@ public class DateUtils {
 
     private static Locale lastLocale;
 
+    /**
+     * Local object pool for calendar objects because they are expensive to create
+     */
     private static final ObjectPool<GregorianCalendar> calendarPool = new ObjectPool<GregorianCalendar>() {
 
         @Override
@@ -61,7 +63,7 @@ public class DateUtils {
 
     private DateUtils() {
     }        
-
+    
     private static void updateMonthNames() {
         if (lastLocale != Locale.getDefault()) {
 
@@ -73,7 +75,6 @@ public class DateUtils {
     }
 
     public static String getNameOfMonth(final Date date) {
-
         updateMonthNames();
 
         GregorianCalendar c = calendarPool.take();
@@ -553,6 +554,30 @@ public class DateUtils {
         while (before(t, end)) {
             list.add(t);
             t = DateUtils.getLastDayOfTheMonth(DateUtils.addMonth(t));
+        }
+        return list;
+    }
+    
+    /**
+     * Generates an array of dates starting on the first day of every month between the start and stop dates.
+     * 
+     * @param startDate The date to start at
+     * @param endDate The data to stop at
+     * @return The array of dates
+     */
+    public static List<Date> getFirstDayOfTheMonths(final Date startDate, final Date endDate) {
+        ArrayList<Date> list = new ArrayList<>();
+
+        Date end = DateUtils.getFirstDayOfTheMonth(endDate);
+        Date t = DateUtils.getFirstDayOfTheMonth(startDate);
+
+        /*
+         * add a month at a time to the previous date until all of the months
+         * have been captured
+         */
+        while (before(t, end)) {
+            list.add(t);
+            t = DateUtils.getFirstDayOfTheMonth(DateUtils.addMonth(t));
         }
         return list;
     }
