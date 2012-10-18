@@ -17,18 +17,51 @@
  */
 package jgnash.ui.report.compiled;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
+import jgnash.engine.CurrencyNode;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 
 /**
  * Balance Sheet Report
  *
  * @author Craig Cavanaugh
- *
  */
 public class BalanceSheetReport extends AbstractSumByTypeReport {
+    
+    public BalanceSheetReport() {
+        runningTotal = false;
+    }
+    
+    /**
+     * Returns the retained profit or loss for the given period
+     * 
+     * @param date Start date for the period
+     * @return the profit or loss for the period
+     */
+    BigDecimal getRetainedProfitLoss(final Date date) {
+        BigDecimal profitLoss = BigDecimal.ZERO;
+        
+        CurrencyNode baseCurrency = EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency();
+                
+        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        
+        for (Account account : engine.getExpenseAccountList()) {
+            profitLoss = profitLoss.add(account.getBalance(date, baseCurrency));
+        }
+        
+        for (Account account : engine.getIncomeAccountList()) {
+            profitLoss = profitLoss.add(account.getBalance(date, baseCurrency));
+        }  
+        
+        return profitLoss;
+    }
 
     @Override
     protected List<AccountGroup> getAccountGroups() {
@@ -36,7 +69,7 @@ public class BalanceSheetReport extends AbstractSumByTypeReport {
 
         groups.add(AccountGroup.ASSET);
         groups.add(AccountGroup.INVEST);
-        groups.add(AccountGroup.LIABILITY);
+        groups.add(AccountGroup.LIABILITY);                       
         groups.add(AccountGroup.EQUITY);
 
         return groups;

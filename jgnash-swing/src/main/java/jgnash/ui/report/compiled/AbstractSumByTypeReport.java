@@ -58,7 +58,6 @@ import jgnash.util.Resource;
  * Abstract Report that groups and sums by <code>AccountGroup</code> and has a line for a global sum
  *
  * @author Craig Cavanaugh
- *
  */
 abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
@@ -69,8 +68,12 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
     private JButton refreshButton;
 
     private JCheckBox hideZeroBalanceAccounts;
+    
     private static final String HIDE_ZERO_BALANCE = "hideZeroBalance";
+    
     private static final String MONTHS = "months";
+    
+    protected boolean runningTotal = true;
 
     public AbstractSumByTypeReport() {
 
@@ -116,7 +119,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
     protected abstract List<AccountGroup> getAccountGroups();
 
-    private ReportModel createTableModel(final Date startDate, final Date endDate) {
+    protected ReportModel createReportModel(final Date startDate, final Date endDate) {
         logger.info(rb.getString("Message.CollectingReportData"));
 
         CurrencyNode baseCurrency = EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency();
@@ -174,7 +177,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
         Date endDate = endDateField.getDate();
         Date startDate = startDateField.getDate();
 
-        ReportModel model = createTableModel(startDate, endDate);
+        ReportModel model = createReportModel(startDate, endDate);
 
         return createJasperPrint(model, formatForCSV);
     }
@@ -202,7 +205,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
         return builder.getPanel();
     }
 
-    private static class ReportModel extends AbstractReportTableModel {
+    private class ReportModel extends AbstractReportTableModel {
 
         private CurrencyNode baseCurrency;
 
@@ -219,8 +222,17 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
         protected ReportModel(final List<Account> accountList, final Date startDate, final Date endDate, final CurrencyNode currency) {
             this.accountList = accountList;
             this.baseCurrency = currency;
-
-            dates = DateUtils.getLastDayOfTheMonths(startDate, endDate);
+            
+            if (runningTotal) {
+                dates = DateUtils.getLastDayOfTheMonths(startDate, endDate);              
+            } else {                                             
+                dates = DateUtils.getFirstDayOfTheMonths(startDate, endDate);
+                dates.set(0, startDate);
+                
+                if (DateUtils.after(endDate, dates.get(dates.size() - 1))) {
+                    dates.add(endDate);
+                }                               
+            }                    
         }
 
         @Override
@@ -241,7 +253,11 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
          */
         @Override
         public int getColumnCount() {
-            return dates.size() + 2;
+            if (runningTotal) {
+                return dates.size() + 2;
+            } else {
+                return dates.size() - 1 + 2;
+            }
         }
 
         /**
@@ -254,7 +270,15 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
             } else if (columnIndex == getColumnCount() - 1) {
                 return "Type";
             }
-            return dateFormat.format(dates.get(columnIndex - 1));
+            
+            if (runningTotal) {
+                return dateFormat.format(dates.get(columnIndex - 1));               
+            } else {                                            
+                Date startDate = dates.get(columnIndex - 1);                  
+                Date endDate = DateUtils.subtractDay(dates.get(columnIndex));
+                
+                return dateFormat.format(startDate) + " - " + dateFormat.format(endDate);
+            }
         }
 
         /**
@@ -302,7 +326,14 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
             } else if (columnIndex == getColumnCount() - 1) { // group column
                 return a.getAccountType().getAccountGroup().toString();
             } else if (columnIndex > 0 && columnIndex <= dates.size()) {
-                return a.getBalance(dates.get(columnIndex - 1), getCurrency());
+                if (runningTotal) {                    
+                    return a.getBalance(dates.get(columnIndex - 1), getCurrency());
+                } else {                                                        
+                    Date startDate = dates.get(columnIndex - 1);                  
+                    Date endDate = DateUtils.subtractDay(dates.get(columnIndex));
+                    
+                    return a.getBalance(startDate, endDate, getCurrency()).negate();
+                }
             }
             return null;
         }
