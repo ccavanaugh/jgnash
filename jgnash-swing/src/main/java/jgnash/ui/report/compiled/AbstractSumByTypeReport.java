@@ -55,8 +55,9 @@ import jgnash.util.DateUtils;
 import jgnash.util.Resource;
 
 /**
- * Abstract Report that groups and sums by <code>AccountGroup</code> and has a line for a global sum
- *
+ * Abstract Report that groups and sums by <code>AccountGroup</code> and has a
+ * line for a global sum
+ * 
  * @author Craig Cavanaugh
  */
 abstract class AbstractSumByTypeReport extends DynamicJasperReport {
@@ -68,11 +69,11 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
     private JButton refreshButton;
 
     private JCheckBox hideZeroBalanceAccounts;
-    
+
     private static final String HIDE_ZERO_BALANCE = "hideZeroBalance";
-    
+
     private static final String MONTHS = "months";
-    
+
     protected boolean runningTotal = true;
 
     public AbstractSumByTypeReport() {
@@ -95,7 +96,8 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
         startDateField.setDate(startDate);
 
-        refreshButton = new JButton(rb.getString("Button.Refresh"), Resource.getIcon("/jgnash/resource/view-refresh.png"));
+        refreshButton = new JButton(rb.getString("Button.Refresh"),
+                Resource.getIcon("/jgnash/resource/view-refresh.png"));
 
         refreshButton.addActionListener(new AbstractAction() {
             private static final long serialVersionUID = 1L;
@@ -150,7 +152,10 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
             }
         }
 
-        return new ReportModel(accounts, startDate, endDate, baseCurrency);
+        ReportModel model = new ReportModel(startDate, endDate, baseCurrency);
+        model.addAccounts(accounts);
+
+        return model;
     }
 
     private static List<Account> getAccountList(final Set<AccountType> types) {
@@ -158,7 +163,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
         Set<Account> accountSet = new TreeSet<>();
 
-        for (Account a: engine.getAccountList()) {
+        for (Account a : engine.getAccountList()) {
             if (types.contains(a.getAccountType())) {
                 accountSet.add(a);
             }
@@ -169,7 +174,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
     /**
      * Creates a JasperPrint object
-     *
+     * 
      * @return JasperPrint
      */
     @Override
@@ -183,8 +188,8 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
     }
 
     /**
-     * Creates a report control panel.  May return null if a panel is not used
-     *
+     * Creates a report control panel. May return null if a panel is not used
+     * 
      * @return control panel
      */
     @Override
@@ -205,11 +210,24 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
         return builder.getPanel();
     }
 
-    private class ReportModel extends AbstractReportTableModel {
+    /**
+     * Wraps a row of table data into one object
+     */
+    protected abstract class Row {
+        /**
+         * Returns the value given a column index
+         * 
+         * @param columnIndex column index
+         * @return column value
+         */
+        public abstract Object getValueAt(final int columnIndex);
+    }
+
+    protected class ReportModel extends AbstractReportTableModel {
+
+        private List<Row> rowList = new ArrayList<>();
 
         private CurrencyNode baseCurrency;
-
-        private List<Account> accountList = Collections.emptyList();
 
         private List<Date> dates = Collections.emptyList();
 
@@ -217,40 +235,40 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
         private Resource rb = Resource.get();
 
-        private static final long serialVersionUID = -2526030825754030630L;
-
-        protected ReportModel(final List<Account> accountList, final Date startDate, final Date endDate, final CurrencyNode currency) {
-            this.accountList = accountList;
+        public ReportModel(final Date startDate, final Date endDate, final CurrencyNode currency) {
             this.baseCurrency = currency;
-            
+
             if (runningTotal) {
-                dates = DateUtils.getLastDayOfTheMonths(startDate, endDate);              
-            } else {                                             
+                dates = DateUtils.getLastDayOfTheMonths(startDate, endDate);
+            } else {
                 dates = DateUtils.getFirstDayOfTheMonths(startDate, endDate);
                 dates.set(0, startDate);
-                
+
                 if (DateUtils.after(endDate, dates.get(dates.size() - 1))) {
                     dates.add(endDate);
-                }                               
-            }                    
+                }
+            }
         }
 
-        @Override
-        public CurrencyNode getCurrency() {
-            return baseCurrency;
+        public void addAccounts(final Collection<Account> accounts) {
+            for (Account account : accounts) {
+                addAccount(account);
+            }
         }
 
-        /**
-         * @see javax.swing.table.TableModel#getRowCount()
-         */
+        public void addRow(final Row row) {
+            rowList.add(row);
+        }
+
+        public void addAccount(final Account account) {
+            rowList.add(new AccountRow(account));
+        }
+
         @Override
         public int getRowCount() {
-            return accountList.size();
+            return rowList.size();
         }
 
-        /**
-         * @see javax.swing.table.TableModel#getColumnCount()
-         */
         @Override
         public int getColumnCount() {
             if (runningTotal) {
@@ -260,25 +278,18 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
             }
         }
 
-        /**
-         * @see javax.swing.table.TableModel#getColumnName(int)
-         */
         @Override
-        public String getColumnName(final int columnIndex) {
-            if (columnIndex == 0) {
-                return rb.getString("Column.Account");
-            } else if (columnIndex == getColumnCount() - 1) {
-                return "Type";
+        public Object getValueAt(final int rowIndex, final int columnIndex) {
+            if (!rowList.isEmpty()) {
+                return rowList.get(rowIndex).getValueAt(columnIndex);
             }
-            
-            if (runningTotal) {
-                return dateFormat.format(dates.get(columnIndex - 1));               
-            } else {                                            
-                Date startDate = dates.get(columnIndex - 1);                  
-                Date endDate = DateUtils.subtractDay(dates.get(columnIndex));
-                
-                return dateFormat.format(startDate) + " - " + dateFormat.format(endDate);
-            }
+
+            return null;
+        }
+
+        @Override
+        public CurrencyNode getCurrency() {
+            return baseCurrency;
         }
 
         /**
@@ -292,6 +303,27 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
                 return String.class;
             }
             return BigDecimal.class;
+        }
+
+        /**
+         * @see javax.swing.table.TableModel#getColumnName(int)
+         */
+        @Override
+        public String getColumnName(final int columnIndex) {
+            if (columnIndex == 0) {
+                return rb.getString("Column.Account");
+            } else if (columnIndex == getColumnCount() - 1) {
+                return "Type";
+            }
+
+            if (runningTotal) {
+                return dateFormat.format(dates.get(columnIndex - 1));
+            } else {
+                Date startDate = dates.get(columnIndex - 1);
+                Date endDate = DateUtils.subtractDay(dates.get(columnIndex));
+
+                return dateFormat.format(startDate) + " - " + dateFormat.format(endDate);
+            }
         }
 
         @Override
@@ -314,29 +346,33 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
             return ColumnHeaderStyle.RIGHT;
         }
 
-        /**
-         * @see javax.swing.table.TableModel#getValueAt(int, int)
-         */
-        @Override
-        public Object getValueAt(final int rowIndex, final int columnIndex) {
-            Account a = accountList.get(rowIndex);
+        private class AccountRow extends Row {
 
-            if (columnIndex == 0) { // account column
-                return a.getName();
-            } else if (columnIndex == getColumnCount() - 1) { // group column
-                return a.getAccountType().getAccountGroup().toString();
-            } else if (columnIndex > 0 && columnIndex <= dates.size()) {
-                if (runningTotal) {                    
-                    return a.getBalance(dates.get(columnIndex - 1), getCurrency());
-                } else {                                                        
-                    Date startDate = dates.get(columnIndex - 1);                  
-                    Date endDate = DateUtils.subtractDay(dates.get(columnIndex));
-                    
-                    return a.getBalance(startDate, endDate, getCurrency()).negate();
-                }
+            Account account;
+
+            public AccountRow(final Account account) {
+                this.account = account;
             }
-            return null;
-        }
 
+            @Override
+            public Object getValueAt(final int columnIndex) {
+
+                if (columnIndex == 0) { // account column
+                    return account.getName();
+                } else if (columnIndex == getColumnCount() - 1) { // group column
+                    return account.getAccountType().getAccountGroup().toString();
+                } else if (columnIndex > 0 && columnIndex <= dates.size()) {
+                    if (runningTotal) {
+                        return account.getBalance(dates.get(columnIndex - 1), getCurrency());
+                    } else {
+                        Date startDate = dates.get(columnIndex - 1);
+                        Date endDate = DateUtils.subtractDay(dates.get(columnIndex));
+
+                        return account.getBalance(startDate, endDate, getCurrency()).negate();
+                    }
+                }
+                return null;
+            }
+        }
     }
 }
