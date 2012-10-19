@@ -155,8 +155,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
                 Account account = i.next();
                 boolean remove = true;
 
-                if (runningTotal) {
-                    Collection<Date> dates = DateUtils.getLastDayOfTheMonths(startDate, endDate);
+                if (runningTotal) {                    
                     for (Date date : dates) {
                         if (account.getBalance(date).compareTo(BigDecimal.ZERO) != 0) {
                             remove = false;
