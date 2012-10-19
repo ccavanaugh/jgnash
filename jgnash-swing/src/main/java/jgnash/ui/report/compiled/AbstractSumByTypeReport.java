@@ -76,6 +76,8 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
     protected boolean runningTotal = true;
 
+    protected List<Date> dates = Collections.emptyList();
+
     public AbstractSumByTypeReport() {
 
         Preferences p = getPreferences();
@@ -122,7 +124,20 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
     protected abstract List<AccountGroup> getAccountGroups();
 
     protected ReportModel createReportModel(final Date startDate, final Date endDate) {
+
         logger.info(rb.getString("Message.CollectingReportData"));
+
+        // generate the date information
+        if (runningTotal) {
+            dates = DateUtils.getLastDayOfTheMonths(startDate, endDate);
+        } else {
+            dates = DateUtils.getFirstDayOfTheMonths(startDate, endDate);
+            dates.set(0, startDate);
+
+            if (DateUtils.after(endDate, dates.get(dates.size() - 1))) {
+                dates.add(endDate);
+            }
+        }
 
         CurrencyNode baseCurrency = EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency();
 
@@ -133,18 +148,31 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
         }
 
         // remove any account that will report a zero balance for all periods
-        if (hideZeroBalanceAccounts.isSelected()) {
-
-            Collection<Date> dates = DateUtils.getLastDayOfTheMonths(startDate, endDate);
+        if (hideZeroBalanceAccounts.isSelected()) {            
             Iterator<Account> i = accounts.iterator();
+            
             while (i.hasNext()) {
                 Account account = i.next();
                 boolean remove = true;
-                for (Date date : dates) {
-                    if (account.getBalance(date).compareTo(BigDecimal.ZERO) != 0) {
-                        remove = false;
-                        break;
+
+                if (runningTotal) {
+                    Collection<Date> dates = DateUtils.getLastDayOfTheMonths(startDate, endDate);
+                    for (Date date : dates) {
+                        if (account.getBalance(date).compareTo(BigDecimal.ZERO) != 0) {
+                            remove = false;
+                            break;
+                        }
                     }
+                } else {
+                    for (int j = 0; j < dates.size() - 1; j++) {
+                        Date sDate = dates.get(j);
+                        Date eDate = DateUtils.subtractDay(dates.get(j+1));
+                        
+                        if (account.getBalance(sDate, eDate).compareTo(BigDecimal.ZERO) != 0) {
+                            remove = false;
+                            break;
+                        }
+                    }                    
                 }
                 if (remove) {
                     i.remove();
@@ -217,7 +245,8 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
         /**
          * Returns the value given a column index
          * 
-         * @param columnIndex column index
+         * @param columnIndex
+         *            column index
          * @return column value
          */
         public abstract Object getValueAt(final int columnIndex);
@@ -229,25 +258,12 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
         private CurrencyNode baseCurrency;
 
-        private List<Date> dates = Collections.emptyList();
-
         private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
 
         private Resource rb = Resource.get();
 
         public ReportModel(final Date startDate, final Date endDate, final CurrencyNode currency) {
             this.baseCurrency = currency;
-
-            if (runningTotal) {
-                dates = DateUtils.getLastDayOfTheMonths(startDate, endDate);
-            } else {
-                dates = DateUtils.getFirstDayOfTheMonths(startDate, endDate);
-                dates.set(0, startDate);
-
-                if (DateUtils.after(endDate, dates.get(dates.size() - 1))) {
-                    dates.add(endDate);
-                }
-            }
         }
 
         public void addAccounts(final Collection<Account> accounts) {
