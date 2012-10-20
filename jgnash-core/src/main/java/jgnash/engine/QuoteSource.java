@@ -17,11 +17,12 @@
  */
 package jgnash.engine;
 
-import com.sun.istack.internal.logging.Logger;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import jgnash.net.security.NullParser;
 import jgnash.net.security.SecurityParser;
 import jgnash.net.security.YahooAusParser;
@@ -33,7 +34,6 @@ import jgnash.util.Resource;
  * Enumeration for quote download source
  *
  * @author Craig Cavanaugh
- *
  */
 @SuppressWarnings({"UnusedDeclaration"})
 public enum QuoteSource {
@@ -67,7 +67,7 @@ public enum QuoteSource {
             Constructor<?> accConst = parser.getDeclaredConstructor();
             return (SecurityParser) accConst.newInstance();
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-            Logger.getLogger(QuoteSource.class).log(Level.SEVERE, e.toString(), e);
+            Logger.getLogger(QuoteSource.class.getName()).log(Level.SEVERE, e.toString(), e);
             return null; // unable to create object
         }
     }
