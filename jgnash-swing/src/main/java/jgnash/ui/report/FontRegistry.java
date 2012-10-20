@@ -30,9 +30,14 @@ import jgnash.util.OS;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont;
 
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
+
 /**
  * Utility class map font names to font files
- * 
+ *
  * @author Craig Cavanaugh
  */
 public class FontRegistry {
@@ -41,12 +46,16 @@ public class FontRegistry {
      * Maps the font file to the font name for embedding fonts in PDF files
      */
     private final Map<String, String> registeredFontMap = new HashMap<>();
-
+    
     private static FontRegistry registry;
-
+    
     private static final AtomicBoolean registrationComplete = new AtomicBoolean(false);
-
+    
     private static final AtomicBoolean registrationStarted = new AtomicBoolean(false);
+    
+    private static final Lock lock = new ReentrantLock();
+    
+    private static final Condition isComplete = lock.newCondition();
 
     private FontRegistry() {
     }
@@ -57,12 +66,15 @@ public class FontRegistry {
         }
 
         if (!registrationComplete.get()) {
-            while (!registrationComplete.get()) {
-                try {
-                    Thread.sleep(500);
-                    System.out.println("Waiting for font registration to complete");
-                } catch (InterruptedException ignored) {
-                }
+
+            try {
+                lock.lock();
+                isComplete.await();
+
+            } catch (InterruptedException ex) {
+                Logger.getLogger(FontRegistry.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                lock.unlock();
             }
         }
 
@@ -70,17 +82,26 @@ public class FontRegistry {
     }
 
     public static void registerFonts() {
+
         if (!registrationStarted.get()) {
             registrationStarted.set(true);
 
             Thread thread = new Thread() {
-
                 @Override
                 public void run() {
-                    registry = new FontRegistry();
-                    registry.registerFontDirectories();
-                    registrationComplete.set(true);
-                    System.out.println("Font registration is complete");
+                    lock.lock();
+
+                    try {
+                        registry = new FontRegistry();
+                        registry.registerFontDirectories();
+                        registrationComplete.set(true);
+
+                        isComplete.signal();
+
+                        Logger.getLogger(FontRegistry.class.getName()).info("Font registration is complete");
+                    } finally {
+                        lock.unlock();
+                    }
                 }
             };
 
@@ -117,7 +138,7 @@ public class FontRegistry {
 
     /**
      * Register all the fonts in a directory and its subdirectories.
-     * 
+     *
      * @param dir the directory
      */
     private void registerFontDirectory(final String dir) {
@@ -154,9 +175,8 @@ public class FontRegistry {
                                 }
                             }
                         }
-                    } catch (Exception ignored) {
-                        Logger.getLogger(FontRegistry.class.getName()).finest(
-                                MessageFormat.format("Could not find path for {0}", path));
+                    } catch (Exception e) {
+                        Logger.getLogger(FontRegistry.class.getName()).log(Level.FINEST, MessageFormat.format("Could not find path for {0}", path), e);
                     }
                 }
             }
