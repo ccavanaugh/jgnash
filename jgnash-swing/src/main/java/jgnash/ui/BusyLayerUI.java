@@ -58,7 +58,7 @@ public class BusyLayerUI extends LayerUI<JPanel> implements ActionListener {
 
     private boolean isRunning;
     private boolean isFadingOut;
-    private Timer timer;
+    private Timer timer = new Timer(TIMER_TICK, this);
     private int angle;
     private int fadeCount;
     private int fadeLimit = 24;
@@ -91,7 +91,7 @@ public class BusyLayerUI extends LayerUI<JPanel> implements ActionListener {
         int cx = w / 2;
         int cy = h / 2;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setStroke(new BasicStroke(s / 4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g2.setStroke(new BasicStroke(s / (float)4, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
         g2.setPaint(Color.DARK_GRAY);
         g2.rotate(Math.PI * angle / 180, cx, cy);
 

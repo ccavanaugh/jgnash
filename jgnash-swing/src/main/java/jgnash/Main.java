@@ -146,7 +146,7 @@ public final class Main {
             handler.setLevel(Level.ALL);
         }
 
-        Logger.getLogger(Engine.class.getName()).setLevel(Level.ALL);
+        Engine.getLogger().setLevel(Level.ALL);
         Logger.getLogger(MainFrame.class.getName()).setLevel(Level.ALL);
         Logger.getLogger(OpenAction.class.getName()).setLevel(Level.ALL);
         Logger.getLogger(AbstractYahooParser.class.getName()).setLevel(Level.ALL);
@@ -202,6 +202,7 @@ public final class Main {
                 System.err.println(Resource.get().getString("Message.PrefFail"));
             }
         } catch (BackingStoreException bse) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, bse.toString(), bse);
             System.err.println(Resource.get().getString("Message.UninstallBad"));
         }
     }    
@@ -251,6 +252,7 @@ public final class Main {
                         System.err.println(Resource.get().getString("Message.FileIsLocked"));
                     }
                 } catch (FileNotFoundException e) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
                     System.err.println("File " + server.getAbsolutePath() + " was not found");
                 }
             } else { // start the UI
@@ -260,6 +262,7 @@ public final class Main {
                     try {
                         importPreferences();
                     } catch (FileNotFoundException e) {
+                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
                         System.err.println("Preferences file " + getPreferenceFile().getAbsolutePath() + " was not found");
                     }
 

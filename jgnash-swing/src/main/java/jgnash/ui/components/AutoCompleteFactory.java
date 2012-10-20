@@ -23,6 +23,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -53,8 +54,9 @@ import jgnash.util.MultiHashMap;
  */
 public class AutoCompleteFactory {
 
-    private static MemoModel memoModel;
-
+    // volatile because accessor method is not synchronized
+    private static volatile MemoModel memoModel;    
+    
     private static boolean autoComplete;
 
     private static boolean fuzzyMatch;
@@ -378,7 +380,7 @@ public class AutoCompleteFactory {
                     addString(tran.getPayee());
 
                     if (ignoreCase) {
-                        transactions.put(tran.getPayee().toLowerCase(), tran);
+                        transactions.put(tran.getPayee().toLowerCase(Locale.getDefault()), tran);
                     } else {
                         transactions.put(tran.getPayee(), tran);
                     }
@@ -389,7 +391,7 @@ public class AutoCompleteFactory {
         @Override
         public Object getExtraInfo(final String key) {
             if (ignoreCase) {
-                return transactions.get(key.toLowerCase());
+                return transactions.get(key.toLowerCase(Locale.getDefault()));
             }
             return transactions.get(key);
         }
@@ -402,7 +404,7 @@ public class AutoCompleteFactory {
          */
         void removeExtraInfo(final Transaction t) {
             if (ignoreCase) {
-                transactions.remove(t.getPayee().toLowerCase(), t);
+                transactions.remove(t.getPayee().toLowerCase(Locale.getDefault()), t);
             }
             transactions.remove(t.getPayee(), t);
         }

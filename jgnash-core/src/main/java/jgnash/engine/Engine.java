@@ -1335,8 +1335,16 @@ public class Engine {
     }
 
     public void updateReminder(final Reminder reminder) {
-
         getReminderDAO().updateReminder(reminder);
+    }
+    
+    /**
+     * Returns the engine logger
+     * 
+     * @return the engine logger
+     */
+    public static Logger getLogger() {
+        return logger;
     }
 
     /**

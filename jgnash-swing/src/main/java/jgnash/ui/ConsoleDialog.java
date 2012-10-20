@@ -33,7 +33,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
+import java.nio.charset.Charset;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -55,8 +57,9 @@ import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
 
 /**
- * Simple dialog to display info dumped to the console. Makes it easy for end users on Windows to capture errors.
- * 
+ * Simple dialog to display info dumped to the console. Makes it easy for end
+ * users on Windows to capture errors.
+ *
  * @author Craig Cavanaugh
  *
  */
@@ -64,15 +67,10 @@ import jgnash.util.Resource;
 public class ConsoleDialog {
 
     private static JTextArea console;
-
     private static JDialog dialog;
-
     private static boolean init = false;
-
     private static final Object consoleLock = new Object();
-    
     private static PrintStream outStream;
-    
     private static PrintStream errStream;
 
     private ConsoleDialog() {
@@ -88,48 +86,51 @@ public class ConsoleDialog {
 
             final PrintStream oldOut = System.out;
             final PrintStream oldErr = System.err;
+            try {
+                outStream = new PrintStream(new OutputStream() {
+                    @Override
+                    public void write(int b) {
+                    }
 
-            outStream = new PrintStream(new OutputStream() {
-
-                @Override
-                public void write(int b) {
-                }
-
-                @Override
-                public void write(byte[] b, int off, int len) {
-                    oldOut.write(b, off, len);
-                    synchronized (consoleLock) {
-                        if (console != null) {
-                            console.append(new String(b, off, len));
+                    @Override
+                    public void write(byte[] b, int off, int len) {
+                        oldOut.write(b, off, len);
+                        synchronized (consoleLock) {
+                            if (console != null) {
+                                console.append(new String(b, off, len, Charset.defaultCharset()));
+                            }
                         }
                     }
-                }
-            });
+                }, false, Charset.defaultCharset().name());
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(ConsoleDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                errStream = new PrintStream(new OutputStream() {
+                    @Override
+                    public void write(int b) {
+                    }
 
-           errStream = new PrintStream(new OutputStream() {
-
-                @Override
-                public void write(int b) {
-                }
-
-                @Override
-                public void write(byte[] b, int off, int len) {
-                    oldErr.write(b, off, len);
-                    synchronized (consoleLock) {
-                        if (console != null) {
-                            console.append(new String(b, off, len));
+                    @Override
+                    public void write(byte[] b, int off, int len) {
+                        oldErr.write(b, off, len);
+                        synchronized (consoleLock) {
+                            if (console != null) {
+                                console.append(new String(b, off, len, Charset.defaultCharset()));
+                            }
                         }
                     }
-                }
-            });
+                }, false, Charset.defaultCharset().name());
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(ConsoleDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             // set both System.out and System.err to that stream
             System.setOut(outStream);
             System.setErr(errStream);
 
             // capture the engine log
-            Logger.getLogger(Engine.class.getName()).addHandler(new Handler() {
-
+            Engine.getLogger().addHandler(new Handler() {
                 @Override
                 public void close() throws SecurityException {
                 }
@@ -142,7 +143,6 @@ public class ConsoleDialog {
                 public void publish(final LogRecord record) {
                     // update on the event thread to prevent display corruption
                     EventQueue.invokeLater(new Runnable() {
-
                         @Override
                         public void run() {
                             synchronized (consoleLock) {
@@ -176,10 +176,10 @@ public class ConsoleDialog {
         if (dumpFile != null) {
             MBeanServer server = ManagementFactory.getPlatformMBeanServer();
             try {
-                HotSpotDiagnosticMXBean bean = ManagementFactory.newPlatformMXBeanProxy(server, "com.sun.management:type=HotSpotDiagnostic", HotSpotDiagnosticMXBean.class);                
+                HotSpotDiagnosticMXBean bean = ManagementFactory.newPlatformMXBeanProxy(server, "com.sun.management:type=HotSpotDiagnostic", HotSpotDiagnosticMXBean.class);
 
                 bean.dumpHeap(dumpFile.getAbsolutePath(), true);
-            } catch (IOException e) {              
+            } catch (IOException e) {
                 Logger.getLogger(ConsoleDialog.class.getCanonicalName()).log(Level.SEVERE, null, e);
             }
         }
@@ -194,7 +194,6 @@ public class ConsoleDialog {
             JButton copyButton = new JButton(rb.getString("Button.CopyToClip"));
 
             copyButton.addActionListener(new ActionListener() {
-
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (console != null) {
@@ -207,7 +206,6 @@ public class ConsoleDialog {
             JButton gcButton = new JButton(rb.getString("Button.ForceGC"));
 
             gcButton.addActionListener(new ActionListener() {
-
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     System.gc();
@@ -217,7 +215,6 @@ public class ConsoleDialog {
             JButton heapButton = new JButton(rb.getString("Button.CreateHeapDump"));
 
             heapButton.addActionListener(new ActionListener() {
-
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (console != null) {
@@ -231,13 +228,11 @@ public class ConsoleDialog {
             dialog.setTitle(rb.getString("Title.ConsoleWindow"));
 
             dialog.addWindowListener(new WindowAdapter() {
-
                 @Override
                 public void windowClosing(WindowEvent evt) {
                     /* force the shut down to the end of the event thread.
                      * Lets other listeners do their job */
                     EventQueue.invokeLater(new Runnable() {
-
                         @Override
                         public void run() {
                             synchronized (consoleLock) {
