@@ -18,6 +18,7 @@
 package jgnash.ui.util;
 
 import java.awt.Cursor;
+import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -82,7 +83,7 @@ public class CursorUtils {
                 Image image = Resource.getImage(resource);
 
                 predefined[type] = tk.createCustomCursor(image, point, name);
-            } catch (Exception e) {
+            } catch (IndexOutOfBoundsException | HeadlessException e) {
                 // this would be an error in the properties
                 predefined[type] = Cursor.getDefaultCursor();
                 throw new RuntimeException(e);

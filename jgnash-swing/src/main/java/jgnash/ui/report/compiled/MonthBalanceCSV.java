@@ -30,6 +30,7 @@ package jgnash.ui.report.compiled;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
+import com.sun.istack.internal.logging.Logger;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import java.util.logging.Level;
 import javax.swing.ButtonGroup;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -93,8 +95,8 @@ public final class MonthBalanceCSV {
                 } else {
                     writeCSVFileHoriz(getFileName(), dates);
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException e) {               
+                Logger.getLogger(MonthBalanceCSV.class).log(Level.SEVERE, null, e);
             }
         }
 
