@@ -20,9 +20,15 @@ package jgnash.engine.checks;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,16 +38,17 @@ import jgnash.util.OS;
  * Factory methods for serializing CheckLayout objects
  *
  * @author Craig Cavanaugh
- *
  */
 public class CheckLayoutSerializationFactory {
+    
+    private static final String CHARSET = "UTF-8";
 
     public static CheckLayout loadLayout(final String file) {
         XStream xstream = getStream();
         CheckLayout layout = null;
 
-        try (FileReader in = new FileReader(file)) {
-            layout = (CheckLayout) xstream.fromXML(in);
+        try (Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), CHARSET))) {
+            layout = (CheckLayout) xstream.fromXML(reader);
         } catch (IOException e) {
             Logger.getLogger(CheckLayoutSerializationFactory.class.getName()).log(Level.SEVERE, null, e);
         }
@@ -53,8 +60,8 @@ public class CheckLayoutSerializationFactory {
 
         XStream xstream = getStream();
 
-        try (FileWriter out = new FileWriter(file)) {
-            xstream.toXML(layout, out);
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), CHARSET))) {
+            xstream.toXML(layout, writer);
             result = true;
         } catch (IOException e) {
             Logger.getLogger(CheckLayoutSerializationFactory.class.getName()).log(Level.SEVERE, null, e);

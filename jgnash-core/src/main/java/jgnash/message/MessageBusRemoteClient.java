@@ -28,6 +28,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import jgnash.engine.Account;
 import jgnash.engine.CommodityNode;
 import jgnash.engine.Engine;
@@ -48,8 +51,6 @@ import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
 import org.apache.mina.transport.socket.SocketConnector;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Remote message bus client
@@ -63,7 +64,7 @@ class MessageBusRemoteClient {
 
     private int port = 0;
 
-    private static final Logger logger = LoggerFactory.getLogger(MessageBusRemoteClient.class);
+    private static final Logger logger = Logger.getLogger(MessageBusRemoteClient.class.getName());
 
     private IoSession session;
 
@@ -93,7 +94,7 @@ class MessageBusRemoteClient {
 
         SocketConnector connector = new NioSocketConnector();
 
-        connector.setConnectTimeoutMillis(getConnectionTimeout() * 1000);
+        connector.setConnectTimeoutMillis(getConnectionTimeout() * 1000L);
         connector.setHandler(new ClientSessionHandler());
         connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(new TextLineCodecFactory(Charset.forName("UTF-8"))));
 
@@ -105,7 +106,7 @@ class MessageBusRemoteClient {
             result = true;
             logger.info("Connected to remote message server");
         } catch (RuntimeIoException e) {
-            logger.error("Failed to connect to remote message bus");
+            logger.log(Level.SEVERE, "Failed to connect to remote message bus", e);           
 
             if (session != null) {
                 session.close(true);
@@ -127,7 +128,7 @@ class MessageBusRemoteClient {
         xstream.marshal(message, new CompactWriter(writer));
         session.write(writer.toString());
 
-        logger.info("sent: " + writer.toString());
+        logger.log(Level.INFO, "sent: {0}", writer.toString());
     }
 
     private class ClientSessionHandler extends IoHandlerAdapter {
@@ -153,7 +154,7 @@ class MessageBusRemoteClient {
         @Override
         public void messageReceived(final IoSession s, final Object object) {
 
-            logger.info("messageReceived: " + object.toString());
+            logger.log(Level.INFO, "messageReceived: {0}", object.toString());
 
             if (object instanceof String && ((String) object).startsWith("<Message")) {
                 final Message message = (Message) xstream.fromXML((String) object);
@@ -171,7 +172,7 @@ class MessageBusRemoteClient {
                     }, FORCED_LATENCY, TimeUnit.MILLISECONDS);
                 }
             } else {
-                logger.error("Unknown message: " + object.toString());
+                logger.log(Level.SEVERE, "Unknown message: {0}", object.toString());
             }
         }
 
@@ -180,7 +181,7 @@ class MessageBusRemoteClient {
          */
         @Override
         public void exceptionCaught(final IoSession s, final Throwable cause) {
-            logger.error("Error", cause);
+            logger.log(Level.SEVERE, null, cause);
             s.close(true);
         }
 

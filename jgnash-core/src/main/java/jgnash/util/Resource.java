@@ -33,7 +33,6 @@ import javax.swing.KeyStroke;
  * strings, keystrokes, graphics, etc.
  *
  * @author Craig Cavanaugh
- *
  */
 public class Resource {
 
@@ -72,9 +71,9 @@ public class Resource {
     private void loadBundle() {
         try {
             resourceBundle = ResourceBundle.getBundle(DEFAULT_BUNDLE);
-        } catch (MissingResourceException e) {
+        } catch (MissingResourceException e) {            
+            logger.log(Level.WARNING, "Could not find correct resource bundle", e );            
             resourceBundle = ResourceBundle.getBundle(DEFAULT_BUNDLE, Locale.ENGLISH);
-            logger.warning("Could not find correct resource bundle");
         }
     }
 
@@ -93,10 +92,11 @@ public class Resource {
      * @param key The key for the localized string
      * @return The localized string
      */
-    public String getString(String key) {
+    public String getString(final String key) {
         try {
             return resourceBundle.getString(key);
         } catch (MissingResourceException mre) {
+            logger.log(Level.WARNING, "Missing resource for: " + key, mre);
             return key;
         }
     }
@@ -108,7 +108,7 @@ public class Resource {
      * @param key mnemonic key
      * @return char for mnemonic
      */
-    public char getMnemonic(String key) {
+    public char getMnemonic(final String key) {
         String value = getString(key);
         if (value == null || value.length() != 1) {
             logger.log(Level.WARNING, "The value ''{0}'' for key ''{1}'' is not valid.", new Object[]{value, key});
@@ -123,7 +123,7 @@ public class Resource {
      * @param key KeyStroke key
      * @return localized KeyStroke
      */
-    public KeyStroke getKeyStroke(String key) {
+    public KeyStroke getKeyStroke(final String key) {
         String value = getString(key);
         
         // if working on an QSX system, use the meta key instead of the control key
@@ -145,7 +145,7 @@ public class Resource {
      * @param icon path to icon
      * @return icon
      */
-    public static ImageIcon getIcon(String icon) {
+    public static ImageIcon getIcon(final String icon) {
         return new ImageIcon(resource.getClass().getResource(icon));
     }
 
@@ -155,7 +155,7 @@ public class Resource {
      * @param icon path to icon
      * @return new Image
      */
-    public static Image getImage(String icon) {
+    public static Image getImage(final String icon) {
         return getIcon(icon).getImage();
     }
 

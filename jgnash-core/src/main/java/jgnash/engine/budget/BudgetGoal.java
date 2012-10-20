@@ -68,7 +68,7 @@ public class BudgetGoal implements Cloneable, Serializable {
             }
         }
 
-        this.goals = goals;
+        this.goals = goals.clone(); //perform a defensive copy
     }
 
     /**

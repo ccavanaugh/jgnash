@@ -74,7 +74,7 @@ public class YahooParser implements CurrencyParser {
             return false;
         } catch (UnknownHostException e) {
             result = null;
-            Logger.getLogger(YahooParser.class.getName()).warning("Unknown host");
+            Logger.getLogger(YahooParser.class.getName()).warning(e.getLocalizedMessage());
         } catch (Exception e) {
             Logger.getLogger(YahooParser.class.getName()).severe(e.getLocalizedMessage());
             return false;

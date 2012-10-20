@@ -46,7 +46,7 @@ public class FileMagic {
 
     public static final String UTF_8 = "UTF-8";
 
-    public static final byte[] BINARY_XSTREAM_HEADER = new byte[] { 10, -127, 0, 13, 111, 98, 106, 101, 99, 116, 45,
+    static final byte[] BINARY_XSTREAM_HEADER = new byte[] { 10, -127, 0, 13, 111, 98, 106, 101, 99, 116, 45,
             115, 116, 114, 101, 97, 109, 11, -127, 10 };
 
     public static enum FileType {
