@@ -35,7 +35,6 @@ import jgnash.message.MessageListener;
  * Formats commodities for display
  *
  * @author Craig Cavanaugh
- *
  */
 public abstract class CommodityFormat {
 
@@ -79,9 +78,8 @@ public abstract class CommodityFormat {
 
         DecimalFormat format = (DecimalFormat) getFullNumberFormat(node);
         String pattern = format.toPattern();
-
-        if (pattern.startsWith("\u00A4")) {
-
+               
+        if (pattern.charAt(0) == '\u00A4') {
             String prefix = node.getPrefix();
 
             // escape any special characters

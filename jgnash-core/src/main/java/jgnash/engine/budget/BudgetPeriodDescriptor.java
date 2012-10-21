@@ -31,7 +31,7 @@ import jgnash.util.Resource;
  */
 public class BudgetPeriodDescriptor {
 
-    private transient int hash = 0;
+    private int hash = 0;
 
     private static final int ONE_WEEK_INCREMENT = 6;
 
@@ -183,12 +183,15 @@ public class BudgetPeriodDescriptor {
         if (this == obj) {
             return true;
         }
+        
         if (obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        
+        if (!(obj instanceof BudgetPeriodDescriptor)) {
             return false;
         }
+        
         BudgetPeriodDescriptor other = (BudgetPeriodDescriptor) obj;
 
         return budgetPeriod == other.budgetPeriod && budgetYear == other.budgetYear && startPeriod == other.startPeriod;

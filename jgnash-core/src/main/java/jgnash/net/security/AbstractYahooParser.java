@@ -192,10 +192,10 @@ public abstract class AbstractYahooParser implements SecurityParser {
 
         } catch (SocketTimeoutException e) {
             price = null;
-            logger.warning("Network timeout");
+            logger.log(Level.WARNING, "Network timeout", e);          
         } catch (UnknownHostException e) {
-            price = null;
-            logger.warning("Unknown host");
+            price = null;           
+            logger.log(Level.WARNING, "Unknown host", e);
         } catch (NumberFormatException e) {
             logger.log(Level.SEVERE, line, e);
         } catch (Exception e) {

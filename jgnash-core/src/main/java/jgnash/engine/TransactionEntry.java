@@ -261,41 +261,24 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
         return -1;
     }
 
-    @Override
-    public boolean equals(final Object entry) {
-        assert entry instanceof TransactionEntry;
-
-        return equals((TransactionEntry) entry);
-    }
-
-    @Override
-    public int hashCode() {
-        int h = hash;
-        if (h == 0) {
-            h = 5;
-            h = 17 * h + (transactionTag != null ? transactionTag.hashCode() : 0);
-            h = 17 * h + (debitAccount != null ? debitAccount.hashCode() : 0);
-            h = 17 * h + (creditAccount != null ? creditAccount.hashCode() : 0);
-            h = 17 * h + (creditAmount != null ? this.creditAmount.hashCode() : 0);
-            h = 17 * h + (debitAmount != null ? debitAmount.hashCode() : 0);
-            h = 17 * h + (creditReconciled != null ? creditReconciled.hashCode() : 0);
-            h = 17 * h + (debitReconciled != null ? debitReconciled.hashCode() : 0);
-            h = 17 * h + (memo != null ? memo.hashCode() : 0);
-            hash = h;
-        }
-        return h;
-    }
-
     /**
      * Reconciled state is ignored
-     * 
-     * @param entry transaction entry to compare
-     * @return true if equal
      */
-    boolean equals(final TransactionEntry entry) {
-        if (this == entry) {
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
         }
+        
+        if (obj == null) {
+            return false;
+        }
+        
+        if (!(obj instanceof TransactionEntry)) {
+            return false;
+        }
+        
+        TransactionEntry entry = (TransactionEntry) obj;        
 
         if (!creditAccount.equals(entry.getCreditAccount())) {
             return false;
@@ -323,6 +306,24 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
 
         return memo.equals(entry.getMemo());
     }
+
+    @Override
+    public int hashCode() {
+        int h = hash;
+        if (h == 0) {
+            h = 5;
+            h = 17 * h + (transactionTag != null ? transactionTag.hashCode() : 0);
+            h = 17 * h + (debitAccount != null ? debitAccount.hashCode() : 0);
+            h = 17 * h + (creditAccount != null ? creditAccount.hashCode() : 0);
+            h = 17 * h + (creditAmount != null ? this.creditAmount.hashCode() : 0);
+            h = 17 * h + (debitAmount != null ? debitAmount.hashCode() : 0);
+            h = 17 * h + (creditReconciled != null ? creditReconciled.hashCode() : 0);
+            h = 17 * h + (debitReconciled != null ? debitReconciled.hashCode() : 0);
+            h = 17 * h + (memo != null ? memo.hashCode() : 0);
+            hash = h;
+        }
+        return h;
+    }    
 
     /**
      * Check to determine is this is a single entry transaction

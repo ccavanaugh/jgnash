@@ -327,7 +327,7 @@ public class Engine {
                 }
             }
             
-            // check for improperlu set default currency
+            // check for improperly set default currency
             if (getDefaultCurrency() == null) {
                 setDefaultCurrency(this.getRootAccount().getCurrencyNode());
                 logger.warning("Forcing default currency");

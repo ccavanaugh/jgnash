@@ -30,7 +30,6 @@ import jgnash.util.DateUtils;
  * This is an abstract class for scheduled reminders.
  *
  * @author Craig Cavanaugh
- *
  */
 public abstract class Reminder extends StoredObject implements Comparable<Reminder> {
 
@@ -199,6 +198,10 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
 
     @Override
     public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }      
+        
         return obj != null && getClass() == obj.getClass() && this.getUuid().equals(((Reminder) obj).getUuid());
     }
 

@@ -23,7 +23,6 @@ import java.util.Date;
  * Used to wrap a reminder and it's event date to aid sorting and display
  * 
  * @author Craig Cavanaugh
- *
  */
 public class PendingReminder implements Comparable<PendingReminder> {
 
@@ -68,6 +67,10 @@ public class PendingReminder implements Comparable<PendingReminder> {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        
         return o instanceof PendingReminder && ((PendingReminder) o).reminder == reminder && ((PendingReminder) o).eventDate.equals(eventDate);
     }
 

@@ -338,7 +338,7 @@ public class AmortizeObject {
         if ((interestRate == null || interestRate.compareTo(BigDecimal.ZERO) == 0) && length > 0 && numPayments > 0
                 && originalBalance != null) {
             
-            return originalBalance.doubleValue() / (length / 12 * numPayments);
+            return originalBalance.doubleValue() / ((length / 12.0) * numPayments);
         }
 
         if (length > 0 && numPayments > 0 && numCompPeriods > 0 && originalBalance != null && interestRate != null) {

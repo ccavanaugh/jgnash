@@ -155,7 +155,7 @@ public class BudgetGoal implements Cloneable, Serializable {
             return false;
         }
 
-        if (getClass() != obj.getClass()) {
+        if (!(obj instanceof BudgetGoal)) {
             return false;
         }
 
