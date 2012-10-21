@@ -199,7 +199,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
 
         // create the runnable and start the thread
         run = new ImportRun(start, end, nodes);
-        new Thread(run).start();
+        new Thread(run, "doImport").start();
     }
 
     /**

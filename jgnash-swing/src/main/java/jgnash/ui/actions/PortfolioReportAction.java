@@ -85,7 +85,7 @@ public class PortfolioReportAction extends AbstractEnabledAction {
                     }
                 });
             }
-        });
+        }, "updateEnabledState");
 
         thread.setPriority(Thread.MIN_PRIORITY);
 

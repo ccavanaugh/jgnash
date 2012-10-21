@@ -475,7 +475,7 @@ public final class EventDispatchThreadHangMonitor extends EventQueue {
                                 });
                             }
                         }
-                    }).start();
+                    }, "runModalTest").start();
 
                     dialog.setVisible(true);
 
