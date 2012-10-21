@@ -77,7 +77,7 @@ public class ImportQifAction extends AbstractEnabledAction {
                 logger.addHandler(fh);
                 logger.setLevel(Level.FINEST);
             } catch (IOException ioe) {
-                logger.severe("Could not install file handler");
+                logger.log(Level.SEVERE, "Could not install file handler", ioe);              
             }
         }
 

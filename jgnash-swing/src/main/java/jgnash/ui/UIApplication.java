@@ -80,7 +80,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
 
     private static volatile HelpBroker helpBroker;
 
-    private static final Logger logger = Logger.getLogger(UIApplication.class.getName());
+    private static final Logger LOG = Logger.getLogger(UIApplication.class.getName());
 
     private static JDialog helpDialog;
 
@@ -130,7 +130,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
                 awtAppClassNameField.setAccessible(true);
                 awtAppClassNameField.set(toolkit, Resource.getAppName());
             } catch (NoSuchFieldException | IllegalAccessException ex) {
-                logger.log(Level.INFO, ex.getLocalizedMessage(), ex);
+                LOG.log(Level.INFO, ex.getLocalizedMessage(), ex);
             }
 
             // Workaround for main menu, pop-up & mouse issues for Gnome 3 shell and Cinnamon          
@@ -151,10 +151,10 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
                         Field metaCity_Wm = x11_wm.getDeclaredField("METACITY_WM");
                         metaCity_Wm.setAccessible(true);
                         awt_wMgr.set(null, metaCity_Wm.get(null));
-                        logger.info("Installed window manager workaround");
+                        LOG.info("Installed window manager workaround");
                     }
                 } catch (ClassNotFoundException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
-                    logger.log(Level.INFO, ex.getLocalizedMessage(), ex);
+                    LOG.log(Level.INFO, ex.getLocalizedMessage(), ex);
                 }
             }
         }
@@ -248,7 +248,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
                     jHelp.setCurrentID(id);
                 }
             } catch (javax.help.BadIDException e) {
-                logger.log(Level.INFO, "Invalid help ID: {0}", id);
+                LOG.log(Level.INFO, "Invalid help ID: " + id, e);               
             }
 
             if (helpDialog == null) {
@@ -297,7 +297,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
             return;
         }
 
-        logger.log(Level.SEVERE, e.getMessage(), e);
+        LOG.log(Level.SEVERE, e.getMessage(), e);
 
         EventQueue.invokeLater(new Runnable() {
 
@@ -350,11 +350,11 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
     }
 
     /**
-     * Returns a common application level logger. Intended for user readable information and warnings
+     * Returns a common application level LOG. Intended for user readable information and warnings
      *
      * @return Logger
      */
     public static Logger getLogger() {
-        return logger;
+        return LOG;
     }
 }

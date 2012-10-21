@@ -19,6 +19,8 @@ package jgnash.ui.components;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.InputVerifier;
 import javax.swing.JComponent;
@@ -32,13 +34,14 @@ import javax.swing.text.PlainDocument;
  * Text field for entering integer values
  * 
  * @author Craig Cavanaugh
- *
  */
 public class JIntegerField extends JTextFieldEx {
 
     private static final NumberFormat formatter = NumberFormat.getNumberInstance();
 
     private static final String INTEGER = "0123456789";
+    
+    private static final Logger LOG = Logger.getLogger(JIntegerField.class.getName());
 
     public JIntegerField() {
         this(0);
@@ -61,6 +64,7 @@ public class JIntegerField extends JTextFieldEx {
         try {
             return Long.parseLong(getText());
         } catch (NumberFormatException e) {
+            LOG.log(Level.FINEST, e.getLocalizedMessage(), e);
             return 0;
         }
     }
@@ -69,6 +73,7 @@ public class JIntegerField extends JTextFieldEx {
         try {
             return Integer.parseInt(getText());
         } catch (NumberFormatException e) {
+            LOG.log(Level.FINEST, e.getLocalizedMessage(), e);
             return 0;
         }
     }
@@ -111,6 +116,7 @@ public class JIntegerField extends JTextFieldEx {
                 formatter.parse(((JTextField) input).getText());
                 return true;
             } catch (ParseException e) {
+                LOG.log(Level.FINEST, e.getLocalizedMessage(), e);
                 return false;
             }
         }

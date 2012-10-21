@@ -43,13 +43,14 @@ import jgnash.util.DateUtils;
  * T or t will set the field to current date
  *
  * @author Craig Cavanaugh
- *
  */
 public final class JDateField extends JTextFieldEx {
 
     private final String DATE;
 
     private final DateFormat formatter;
+    
+    private static final Logger LOG = Logger.getLogger(JDateField.class.getName());
 
     public JDateField() {
         super(0);
@@ -91,7 +92,7 @@ public final class JDateField extends JTextFieldEx {
         try {
             tDate.setTime(formatter.parse(getText()).getTime());
         } catch (ParseException e) {
-            Logger.getLogger(JDateField.class.getName()).log(Level.INFO, e.getLocalizedMessage(), e);
+            LOG.log(Level.INFO, e.getLocalizedMessage(), e);
         }
         return tDate;
     }
@@ -133,6 +134,7 @@ public final class JDateField extends JTextFieldEx {
                 formatter.parse(((JTextField) input).getText());
                 return true;
             } catch (ParseException e) {
+                LOG.log(Level.FINEST, e.getLocalizedMessage(), e);
                 return false;
             }
         }

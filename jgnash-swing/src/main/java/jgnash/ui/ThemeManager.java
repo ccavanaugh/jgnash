@@ -48,9 +48,8 @@ import org.pushingpixels.substance.api.skin.SkinInfo;
 
 /**
  * Manages the look and feel and metal themes
- *
+ * 
  * @author Craig Cavanaugh
- *
  */
 @SuppressWarnings("restriction")
 public class ThemeManager {
@@ -67,14 +66,10 @@ public class ThemeManager {
     private static final long animationDuration;
     private static final String LF = "lookandfeel3";
     private static final String THEME = "theme3";
-    private static final String[] KNOWN = {
-        "com.jgoodies.looks.plastic.PlasticLookAndFeel",
-        "com.jgoodies.looks.plastic.Plastic3DLookAndFeel",
-        "com.jgoodies.looks.plastic.PlasticXPLookAndFeel",
-        "com.jgoodies.looks.windows.WindowsLookAndFeel",
-        "com.sun.java.swing.plaf.mac.MacLookAndFeel",
-        "com.nilo.plaf.nimrod.NimRODLookAndFeel",
-        "de.muntjak.tinylookandfeel.TinyLookAndFeel"};
+    private static final String[] KNOWN = { "com.jgoodies.looks.plastic.PlasticLookAndFeel",
+            "com.jgoodies.looks.plastic.Plastic3DLookAndFeel", "com.jgoodies.looks.plastic.PlasticXPLookAndFeel",
+            "com.jgoodies.looks.windows.WindowsLookAndFeel", "com.sun.java.swing.plaf.mac.MacLookAndFeel",
+            "com.nilo.plaf.nimrod.NimRODLookAndFeel", "de.muntjak.tinylookandfeel.TinyLookAndFeel" };
 
     static {
         animationDuration = AnimationConfigurationManager.getInstance().getTimelineDuration();
@@ -83,28 +78,22 @@ public class ThemeManager {
     protected ThemeManager(final JFrame frame) {
 
         // this line needs to be implemented in order to make JWS work properly
-        UIManager.getLookAndFeelDefaults().put("ClassLoader",
-                frame.getClass().getClassLoader());
+        UIManager.getLookAndFeelDefaults().put("ClassLoader", frame.getClass().getClassLoader());
 
         try { // This could fail if JGoodies is not available
-            com.jgoodies.looks.Options.setPopupDropShadowEnabled(true); // Enabled
-            // JGoodies
-            // drop
-            // shadow
+            com.jgoodies.looks.Options.setPopupDropShadowEnabled(true); // Enabled JGoodies drop shadow         
         } catch (Exception e) {
-            Logger.getLogger(ThemeManager.class.getName()).info(
-                    "JGoodies L&F was not found");
+            Logger.getLogger(ThemeManager.class.getName()).log(Level.FINE, "JGoodies L&F was not found", e);
         }
 
         Preferences pref = Preferences.userNodeForPackage(ThemeManager.class);
 
-        setLookAndFeel(pref.get(LF,
-                UIManager.getCrossPlatformLookAndFeelClassName()));
+        setLookAndFeel(pref.get(LF, UIManager.getCrossPlatformLookAndFeelClassName()));
     }
 
     /**
      * Determine is the current look and feel is the OSX Aqua look and feel
-     *
+     * 
      * @return true if the OSX Aqua look and feel is being used
      */
     public static boolean isLookAndFeelOSX() {
@@ -134,9 +123,8 @@ public class ThemeManager {
             MetalTheme themeObject = (MetalTheme) themeClass.newInstance();
             MetalLookAndFeel.setCurrentTheme(themeObject);
         } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            Logger.getLogger(ThemeManager.class.getName()).log(Level.SEVERE,
-                    "Could not install theme: {0}\n{1}",
-                    new Object[]{theme, e.toString()});
+            Logger.getLogger(ThemeManager.class.getName()).log(Level.SEVERE, "Could not install theme: {0}\n{1}",
+                    new Object[] { theme, e.toString() });
         }
     }
 
@@ -149,8 +137,7 @@ public class ThemeManager {
             Object lafInstance = lafClass.newInstance();
 
             if (lafInstance instanceof SubstanceSkin) {
-                UIManager.put(SubstanceLookAndFeel.SHOW_EXTRA_WIDGETS,
-                        Boolean.TRUE);
+                UIManager.put(SubstanceLookAndFeel.SHOW_EXTRA_WIDGETS, Boolean.TRUE);
 
                 if (isSubstanceAnimationsEnabled()) {
                     AnimationConfigurationManager.getInstance().setTimelineDuration(animationDuration);
@@ -168,15 +155,15 @@ public class ThemeManager {
             } else if (lafInstance instanceof LookAndFeel) {
                 UIManager.setLookAndFeel((LookAndFeel) lafInstance);
             }
-        } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-            Logger.getLogger(ThemeManager.class.getName()).log(Level.WARNING,
-                    null, e);
+        } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException
+                | UnsupportedLookAndFeelException e) {
+            Logger.getLogger(ThemeManager.class.getName()).log(Level.WARNING, null, e);
         }
     }
 
     /**
      * Loads the menu with the available look and feels for the application
-     *
+     * 
      * @return l and f menu
      */
     protected JMenu buildLookAndFeelMenu() {
@@ -235,8 +222,7 @@ public class ThemeManager {
                     button.setSelected(true);
                 }
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-                Logger.getLogger(ThemeManager.class.getName()).log(
-                        Level.WARNING, null, e);
+                Logger.getLogger(ThemeManager.class.getName()).log(Level.WARNING, null, e);
             }
         }
 
@@ -275,14 +261,13 @@ public class ThemeManager {
         addTheme("com.jgoodies.looks.plastic.theme.SkyYellow");
     }
 
-    @SuppressWarnings({"rawtypes"})
+    @SuppressWarnings({ "rawtypes" })
     private void addTheme(final String theme) {
         try {
             Class c = Class.forName(theme);
             themeList.add(c.newInstance());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            Logger.getAnonymousLogger().log(Level.WARNING,
-                    "Could not add theme: {0}", theme);
+            Logger.getLogger(ThemeManager.class.getName()).log(Level.WARNING, "Could not add theme: " + theme, e);
         }
     }
 
@@ -328,8 +313,7 @@ public class ThemeManager {
     protected JMenu buildSubstanceMenu() {
         LookAndFeel lf = UIManager.getLookAndFeel();
 
-        JMenu substanceMenu = new JMenu(
-                rb.getString("Menu.SubstanceThemes.Name"));
+        JMenu substanceMenu = new JMenu(rb.getString("Menu.SubstanceThemes.Name"));
 
         for (SkinInfo info : SubstanceLookAndFeel.getAllSkins().values()) {
             JRadioButtonMenuItem button = new JRadioButtonMenuItem();
@@ -372,8 +356,7 @@ public class ThemeManager {
                     themesMenu.setEnabled(false);
                 }
             } catch (Exception e) {
-                Logger.getLogger(ThemeManager.class.getName()).log(Level.INFO,
-                        e.getLocalizedMessage(), e);
+                Logger.getLogger(ThemeManager.class.getName()).log(Level.INFO, e.getLocalizedMessage(), e);
             }
         }
     }
@@ -386,7 +369,7 @@ public class ThemeManager {
      * <p/>
      * The L&F menu will use this method to determine whether the various L&F
      * options should be active or inactive.
-     *
+     * 
      * @param laf name of look and feel to search for
      * @return true if found
      */
@@ -398,6 +381,7 @@ public class ThemeManager {
 
             return newLAF.isSupportedLookAndFeel();
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) { // If ANYTHING bad happens, return false
+            Logger.getLogger(ThemeManager.class.getName()).log(Level.FINEST, e.getLocalizedMessage(), e);
             return false;
         }
     }
@@ -417,8 +401,7 @@ public class ThemeManager {
         p.putBoolean(SUBSTANCE_ANIMATIONS, enabled);
 
         if (enabled) {
-            AnimationConfigurationManager.getInstance().setTimelineDuration(
-                    animationDuration);
+            AnimationConfigurationManager.getInstance().setTimelineDuration(animationDuration);
         } else {
             AnimationConfigurationManager.getInstance().setTimelineDuration(0);
         }
@@ -453,8 +436,7 @@ public class ThemeManager {
 
                 UIManager.setLookAndFeel(old);
             } catch (Exception e) {
-                Logger.getLogger(ThemeManager.class.getName()).log(
-                        Level.SEVERE, e.toString(), e);
+                Logger.getLogger(ThemeManager.class.getName()).log(Level.SEVERE, e.toString(), e);
             }
         }
 

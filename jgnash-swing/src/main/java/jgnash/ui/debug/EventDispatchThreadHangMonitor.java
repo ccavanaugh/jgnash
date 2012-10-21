@@ -301,7 +301,7 @@ public final class EventDispatchThreadHangMonitor extends EventQueue {
         // reinstate that, but search from the other end of the stack?
         for (StackTraceElement stackTraceElement : stackTrace) {
             String indentation = "    ";
-            result.append("\n").append(indentation).append(stackTraceElement);
+            result.append(System.lineSeparator()).append(indentation).append(stackTraceElement);
         }
         return result.toString();
     }

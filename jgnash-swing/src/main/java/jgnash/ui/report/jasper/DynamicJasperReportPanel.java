@@ -92,7 +92,7 @@ import net.sf.jasperreports.view.save.JRSingleSheetXlsSaveContributor;
  */
 class DynamicJasperReportPanel extends JPanel implements ActionListener {
 
-    private static final Logger logger = Logger.getLogger(DynamicJasperReportPanel.class.getName());
+    private static final Logger LOG = Logger.getLogger(DynamicJasperReportPanel.class.getName());
 
     /**
      * The DPI of the generated report.
@@ -600,11 +600,11 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
                 try {
                     
                     if (contributor instanceof JRSingleSheetXlsSaveContributor) {
-                        logger.info("Formatting for xls file");
+                        LOG.info("Formatting for xls file");
                         JasperPrint print = report.createJasperPrint(true);
                         contributor.save(print, file);
                     } else if (contributor instanceof JRCsvSaveContributor) {
-                        logger.info("Formatting for csv file");
+                        LOG.info("Formatting for csv file");
                         JasperPrint print = report.createJasperPrint(true);
                         contributor.save(print, file);
                     } else {
@@ -612,7 +612,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
                     }
 
                 } catch (JRException ex) {
-                    logger.log(Level.SEVERE, ex.getMessage(), ex);
+                    LOG.log(Level.SEVERE, ex.getMessage(), ex);
                     JOptionPane.showMessageDialog(this, getBundleString("error.saving"));
                 }
             }
@@ -633,7 +633,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
                         try {
                             JasperPrintManager.printReport(jPrint, true);
                         } catch (JRException ex) {
-                            logger.log(Level.SEVERE, ex.getMessage(), ex);
+                            LOG.log(Level.SEVERE, ex.getMessage(), ex);
                         }
                     }
                 });
@@ -647,7 +647,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
                     DynamicJasperReportPanel.this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     printButton.setEnabled(true);
                 } catch (Exception ex) {
-                    logger.log(Level.SEVERE, ex.getMessage(), ex);
+                    LOG.log(Level.SEVERE, ex.getMessage(), ex);
                 }
             }
         }
@@ -844,6 +844,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
         try {
             newZoom = zoomFormat.parse((String) zoomComboBox.getEditor().getItem()).floatValue() / 100f;
         } catch (ParseException e) {
+            LOG.log(Level.SEVERE, e.getMessage(), e);
             newZoom = zoom;
         }
 
@@ -900,7 +901,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
             exporter.exportReport();
         } catch (Exception ex) {
 
-            logger.log(Level.SEVERE, ex.getMessage(), ex);
+            LOG.log(Level.SEVERE, ex.getMessage(), ex);
 
             EventQueue.invokeLater(new Runnable() {
 
@@ -1003,7 +1004,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
                 forceRefresh();
                 frame.stopWaitMessage();
             } catch (InterruptedException | ExecutionException ex) {
-                logger.log(Level.SEVERE, ex.getMessage(), ex);
+                LOG.log(Level.SEVERE, ex.getMessage(), ex);
             }
         }
     }

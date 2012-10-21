@@ -128,7 +128,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     private JTextField statusField;
 
-    private static final Logger log = Logger.getLogger(MainFrame.class.getName());
+    private static final Logger LOG = Logger.getLogger(MainFrame.class.getName());
 
     private final transient PausableThreadPoolExecutor backgroundUpdateExecutor = new PausableThreadPoolExecutor();
 
@@ -167,7 +167,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
         if (Main.checkEDT()) {
-            log.info("Installing Event Dispatch Thread Checker into RepaintManager");
+            LOG.info("Installing Event Dispatch Thread Checker into RepaintManager");
             RepaintManager.setCurrentManager(new EDTCheckingRepaintManager());
         }
 
@@ -191,7 +191,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
         registerListeners();
 
-        /* add log handlers to listen and display warning and errors */
+        /* add LOG handlers to listen and display warning and errors */
         registerLogHandler(Engine.class);
         registerLogHandler(EngineFactory.class);
         registerLogHandler(AbstractYahooParser.class);
@@ -204,7 +204,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
         setBounds();
 
-        log.fine("UI Construction is complete");
+        LOG.fine("UI Construction is complete");
 
         // engine is not null only when a UI restart occurs
         if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
@@ -798,6 +798,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
                     pausedCondition.await();
                 }
             } catch (InterruptedException ie) {
+                LOG.log(Level.INFO, ie.getMessage(), ie);
                 t.interrupt();
             } finally {
                 pauseLock.unlock();
@@ -846,7 +847,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
                 }
             } catch (InterruptedException | ExecutionException exception) {
                 setTitle(Main.VERSION);
-                log.log(Level.INFO, exception.getMessage(), exception);
+                LOG.log(Level.INFO, exception.getMessage(), exception);
             }
         }
     }
