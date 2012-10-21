@@ -364,13 +364,16 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
-        b.append("TransactionEntry hashCode: ").append(hashCode()).append('\n');
-        b.append("Tag:            ").append(getTransactionTag().name()).append('\n');
-        b.append("Memo:           ").append(getMemo()).append('\n');
-        b.append("Debit Account:  ").append(getDebitAccount().getName()).append('\n');
-        b.append("Credit Account: ").append(getCreditAccount().getName()).append('\n');
-        b.append("Debit Amount:   ").append(getDebitAmount().toPlainString()).append('\n');
-        b.append("Credit Amount:  ").append(getCreditAmount().toPlainString()).append('\n');
+        
+        final String lineSep = System.lineSeparator();
+        
+        b.append("TransactionEntry hashCode: ").append(hashCode()).append(lineSep);
+        b.append("Tag:            ").append(getTransactionTag().name()).append(lineSep);
+        b.append("Memo:           ").append(getMemo()).append(lineSep);
+        b.append("Debit Account:  ").append(getDebitAccount().getName()).append(lineSep);
+        b.append("Credit Account: ").append(getCreditAccount().getName()).append(lineSep);
+        b.append("Debit Amount:   ").append(getDebitAmount().toPlainString()).append(lineSep);
+        b.append("Credit Amount:  ").append(getCreditAmount().toPlainString()).append(lineSep);
 
         return b.toString();
     }

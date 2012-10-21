@@ -579,15 +579,18 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
-        b.append("Transaction UUID: ").append(getUuid()).append('\n');
-        b.append("Number:           ").append(getNumber()).append('\n');
-        b.append("Payee:            ").append(getPayee()).append('\n');
-        b.append("Memo:             ").append(getMemo()).append('\n');
+        
+        final String lineSep = System.getProperty("line.separator"); 
+        
+        b.append("Transaction UUID: ").append(getUuid()).append(lineSep);
+        b.append("Number:           ").append(getNumber()).append(lineSep);
+        b.append("Payee:            ").append(getPayee()).append(lineSep);
+        b.append("Memo:             ").append(getMemo()).append(lineSep);
 
-        b.append('\n');
+        b.append(lineSep);
 
         for (TransactionEntry entry : getTransactionEntries()) {
-            b.append(entry.toString()).append('\n');
+            b.append(entry.toString()).append(lineSep);
         }
 
         return b.toString();

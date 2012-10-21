@@ -32,9 +32,7 @@ import java.util.TreeMap;
  * Investment Performance Summary Class
  * 
  * @author Craig Cavanaugh
- *
  */
-
 public class InvestmentPerformanceSummary {
 
     private Account account;
@@ -321,24 +319,26 @@ public class InvestmentPerformanceSummary {
 
         Format percentageFormat = NumberFormat.getPercentInstance();
         ((NumberFormat) percentageFormat).setMinimumFractionDigits(2);
-
+        
+        final String lineSep = System.lineSeparator();
+        
         for (SecurityPerformanceData data : performanceData.values()) {
-            b.append(data.getNode().getSymbol()).append('\n');
-            b.append("sharesHeld: ").append(data.getSharesHeld().toPlainString()).append('\n');
-            b.append("price: ").append(data.getPrice().toPlainString()).append('\n');
-            b.append("costBasisPerShare: ").append(data.getCostBasisPerShare().toPlainString()).append('\n');
-            b.append("costBasisShares: ").append(data.getCostBasisShares().toPlainString()).append('\n');
-            b.append("totalCostBasis: ").append(data.getTotalCostBasis().toPlainString()).append('\n');
-            b.append("heldCostBasis: ").append(data.getHeldCostBasis().toPlainString()).append('\n');
-            b.append("marketValue: ").append(data.getMarketValue().toPlainString()).append('\n');
-            b.append("unrealizedGains: ").append(data.getUnrealizedGains().toPlainString()).append('\n');
-            b.append("realizedGains: ").append(data.getRealizedGains().toPlainString()).append('\n');
-            b.append("totalGains: ").append(data.getTotalGains().toPlainString()).append('\n');
-            b.append("totalGainsPercentage: ").append(percentageFormat.format(data.getTotalGainsPercentage())).append('\n');
-            b.append("sharesSold: ").append(data.getSharesSold().toPlainString()).append('\n');
-            b.append("avgSalePrice: ").append(data.getAvgSalePrice().toPlainString()).append('\n');
-            b.append("percentPortfolio: ").append(percentageFormat.format(data.getPercentPortfolio())).append('\n');
-            b.append('\n');
+            b.append(data.getNode().getSymbol()).append(lineSep);
+            b.append("sharesHeld: ").append(data.getSharesHeld().toPlainString()).append(lineSep);
+            b.append("price: ").append(data.getPrice().toPlainString()).append(lineSep);
+            b.append("costBasisPerShare: ").append(data.getCostBasisPerShare().toPlainString()).append(lineSep);
+            b.append("costBasisShares: ").append(data.getCostBasisShares().toPlainString()).append(lineSep);
+            b.append("totalCostBasis: ").append(data.getTotalCostBasis().toPlainString()).append(lineSep);
+            b.append("heldCostBasis: ").append(data.getHeldCostBasis().toPlainString()).append(lineSep);
+            b.append("marketValue: ").append(data.getMarketValue().toPlainString()).append(lineSep);
+            b.append("unrealizedGains: ").append(data.getUnrealizedGains().toPlainString()).append(lineSep);
+            b.append("realizedGains: ").append(data.getRealizedGains().toPlainString()).append(lineSep);
+            b.append("totalGains: ").append(data.getTotalGains().toPlainString()).append(lineSep);
+            b.append("totalGainsPercentage: ").append(percentageFormat.format(data.getTotalGainsPercentage())).append(lineSep);
+            b.append("sharesSold: ").append(data.getSharesSold().toPlainString()).append(lineSep);
+            b.append("avgSalePrice: ").append(data.getAvgSalePrice().toPlainString()).append(lineSep);
+            b.append("percentPortfolio: ").append(percentageFormat.format(data.getPercentPortfolio())).append(lineSep);
+            b.append(lineSep);
         }
 
         return b.toString();

@@ -25,7 +25,6 @@ import java.util.logging.Logger;
  * Utility class
  *
  * @author Craig Cavanaugh
- *
  */
 public class LogUtils {
 
@@ -35,10 +34,10 @@ public class LogUtils {
 
     public static void logStackTrace(final Logger logger, final Level level) {
 
-        StringBuilder trace = new StringBuilder("Stack Trace\n");
+        StringBuilder trace = new StringBuilder("Stack Trace" + System.lineSeparator());
 
         for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
-            trace.append("\tat ").append(element).append('\n');
+            trace.append("\tat ").append(element).append(System.lineSeparator());
         }
         
         logger.log(level, trace.toString());

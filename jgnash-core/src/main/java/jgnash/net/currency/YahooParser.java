@@ -68,13 +68,10 @@ public class YahooParser implements CurrencyParser {
             if (!"\"N/A\"".equals(fields[2])) { // "N/A"
                 result = new BigDecimal(fields[1]);
             }
-        } catch (SocketTimeoutException e) {
+        } catch (SocketTimeoutException | UnknownHostException e) {
             result = null;
             Logger.getLogger(YahooParser.class.getName()).warning(e.getLocalizedMessage());
-            return false;
-        } catch (UnknownHostException e) {
-            result = null;
-            Logger.getLogger(YahooParser.class.getName()).warning(e.getLocalizedMessage());
+            return false;       
         } catch (Exception e) {
             Logger.getLogger(YahooParser.class.getName()).severe(e.getLocalizedMessage());
             return false;

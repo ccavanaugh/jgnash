@@ -23,7 +23,7 @@ import java.math.BigDecimal;
  * Investment Transaction Entry
  * 
  * @author Craig Cavanaugh
- *
+ * 
  */
 public abstract class AbstractInvestmentTransactionEntry extends TransactionEntry {
 
@@ -50,7 +50,8 @@ public abstract class AbstractInvestmentTransactionEntry extends TransactionEntr
     }
 
     /**
-     * Calculates the total of the value of the shares, gains, fees, etc. as it pertains to an account.
+     * Calculates the total of the value of the shares, gains, fees, etc. as it
+     * pertains to an account.
      * <p>
      * <p/>
      * <b>Not intended for use to calculate account balances</b>
@@ -79,7 +80,8 @@ public abstract class AbstractInvestmentTransactionEntry extends TransactionEntr
     }
 
     /**
-     * Assigns the number of shares for this transaction. The value should be always be a positive value.
+     * Assigns the number of shares for this transaction. The value should be
+     * always be a positive value.
      * 
      * @param quantity the quantity of securities to assign to this account
      * @see #getSignedQuantity()
@@ -99,8 +101,8 @@ public abstract class AbstractInvestmentTransactionEntry extends TransactionEntr
     }
 
     /**
-     * Returns the number of shares as it would impact the sum of the investment accounts shares. Useful for summing
-     * share quantities
+     * Returns the number of shares as it would impact the sum of the investment
+     * accounts shares. Useful for summing share quantities
      * 
      * @return the quantity of securities for this transaction
      */
@@ -117,9 +119,9 @@ public abstract class AbstractInvestmentTransactionEntry extends TransactionEntr
     public String toString() {
         StringBuilder b = new StringBuilder(super.toString());
 
-        b.append("Security:       ").append(getSecurityNode().getSymbol()).append('\n');
-        b.append("Quantity:       ").append(getQuantity().toPlainString()).append('\n');
-        b.append("Price:          ").append(getPrice().toPlainString()).append('\n');
+        b.append("Security:       ").append(getSecurityNode().getSymbol()).append(System.lineSeparator());
+        b.append("Quantity:       ").append(getQuantity().toPlainString()).append(System.lineSeparator());
+        b.append("Price:          ").append(getPrice().toPlainString()).append(System.lineSeparator());
 
         return b.toString();
     }
