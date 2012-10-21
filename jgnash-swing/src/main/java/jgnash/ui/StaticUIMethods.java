@@ -20,7 +20,11 @@ package jgnash.ui;
 import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.KeyboardFocusManager;
+import java.awt.Toolkit;
 import java.awt.Window;
+import java.lang.reflect.Field;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -30,9 +34,11 @@ import jgnash.util.Resource;
  * Keep various odds and ends here instead of the main class
  * 
  * @author Craig Cavanaugh
- *
  */
 public class StaticUIMethods {
+    
+    private StaticUIMethods() {
+    }
 
     /**
      * Display an error message
@@ -58,8 +64,46 @@ public class StaticUIMethods {
                 JOptionPane.showMessageDialog(frame, message, rb.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
             }
         });
-    }
+    }    
 
-    private StaticUIMethods() {
+    static void fixWindowManager() {
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+    
+        if (toolkit.getClass().getName().equals("sun.awt.X11.XToolkit")) {
+    
+            // Oracle Bug #6528430 - provide proper app name on Linux
+            try {
+                Field awtAppClassNameField = toolkit.getClass().getDeclaredField("awtAppClassName");
+                awtAppClassNameField.setAccessible(true);
+                awtAppClassNameField.set(toolkit, Resource.getAppName());
+            } catch (NoSuchFieldException | IllegalAccessException ex) {
+                Logger.getLogger(StaticUIMethods.class.getName()).log(Level.INFO, ex.getLocalizedMessage(), ex);
+            }
+    
+            // Workaround for main menu, pop-up & mouse issues for Gnome 3 shell and Cinnamon          
+            if ("gnome-shell".equals(System.getenv("DESKTOP_SESSION"))
+                    || "cinnamon".equals(System.getenv("DESKTOP_SESSION"))
+                    || "gnome".equals(System.getenv("DESKTOP_SESSION"))
+                    || (System.getenv("XDG_CURRENT_DESKTOP") != null && System.getenv("XDG_CURRENT_DESKTOP").contains("GNOME"))) {
+                try {
+                    Class<?> x11_wm = Class.forName("sun.awt.X11.XWM");
+    
+                    Field awt_wMgr = x11_wm.getDeclaredField("awt_wmgr");
+                    awt_wMgr.setAccessible(true);
+    
+                    Field other_wm = x11_wm.getDeclaredField("OTHER_WM");
+                    other_wm.setAccessible(true);                                      
+    
+                    if (awt_wMgr.get(null).equals(other_wm.get(null))) {
+                        Field metaCity_Wm = x11_wm.getDeclaredField("METACITY_WM");
+                        metaCity_Wm.setAccessible(true);
+                        awt_wMgr.set(null, metaCity_Wm.get(null));
+                        Logger.getLogger(StaticUIMethods.class.getName()).info("Installed window manager workaround");
+                    }
+                } catch (ClassNotFoundException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
+                   Logger.getLogger(StaticUIMethods.class.getName()).log(Level.INFO, ex.getLocalizedMessage(), ex);
+                }
+            }
+        }
     }
 }
