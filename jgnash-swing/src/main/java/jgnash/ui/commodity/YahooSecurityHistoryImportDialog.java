@@ -307,8 +307,8 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
 
                     l = in.readLine();
                     while (l != null && lock != null) {
-
-                        if (!l.startsWith("<")) { // may have comments in file
+                        
+                        if (l.charAt(0) != '<') { // may have comments in file                                                    
                             String[] fields = COMMA_DELIMITER_PATTERN.split(l);
                             Date date = df.parse(fields[0]);
                             BigDecimal high = new BigDecimal(fields[2]);

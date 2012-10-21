@@ -218,7 +218,7 @@ public final class Main {
 
             /* handle a file name passed in as an argument without use of the -file argument
                assumed behavior for windows users */
-            if (args.length == 1 && !args[0].startsWith("-")) {
+            if (args.length == 1 && args[0].charAt(0) != '-') {                           
                 File testFile = new File(args[0]);
 
                 if (testFile.exists()) {
