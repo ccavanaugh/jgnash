@@ -293,7 +293,7 @@ public class RegisterFactory {
 
         AbstractRegisterTableModel model;
 
-        if (account.memberOf(AccountGroup.INVEST)) {
+        if (account.memberOf(AccountGroup.INVEST) && (account.getAccountType() != AccountType.SIMPLEINVEST)) {
             if (sort) {
                 return new SortedInvestmentTableModel(account);
             }
@@ -399,7 +399,10 @@ public class RegisterFactory {
      * @return the register panel
      */
     protected static AbstractRegisterPanel createRegisterPanel(final Account account) {
-        if (account.memberOf(AccountGroup.INVEST)) {
+        
+        if (account.getAccountType() == AccountType.SIMPLEINVEST) { // invest account group, but needs a simple register 
+            return new RegisterPanel(account); 
+        } else if (account.memberOf(AccountGroup.INVEST)) {
             return new InvestmentRegisterPanel(account);
         } else if (account.getAccountType() == AccountType.LIABILITY) {
             return new LiabilityRegisterPanel(account);
