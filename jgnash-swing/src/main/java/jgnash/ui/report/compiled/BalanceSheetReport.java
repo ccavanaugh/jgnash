@@ -31,24 +31,24 @@ import jgnash.util.DateUtils;
 
 /**
  * Balance Sheet Report
- *
+ * 
  * @author Craig Cavanaugh
  */
 public class BalanceSheetReport extends AbstractSumByTypeReport {
-    
+
     public BalanceSheetReport() {
         runningTotal = false;
     }
-    
+
     @Override
-    protected ReportModel createReportModel(final Date startDate, final Date endDate) {        
+    protected ReportModel createReportModel(final Date startDate, final Date endDate) {
         ReportModel model = super.createReportModel(startDate, endDate);
-        
+
         // load retained profit and loss row        
         model.addRow(new RetainedEarningsRow());
-               
-        return model;        
-    }                  
+
+        return model;
+    }
 
     @Override
     protected List<AccountGroup> getAccountGroups() {
@@ -56,7 +56,7 @@ public class BalanceSheetReport extends AbstractSumByTypeReport {
 
         groups.add(AccountGroup.ASSET);
         groups.add(AccountGroup.INVEST);
-        groups.add(AccountGroup.LIABILITY);                       
+        groups.add(AccountGroup.LIABILITY);
         groups.add(AccountGroup.EQUITY);
 
         return groups;
@@ -64,7 +64,7 @@ public class BalanceSheetReport extends AbstractSumByTypeReport {
 
     /**
      * Returns the name of the report
-     *
+     * 
      * @return report name
      */
     @Override
@@ -74,7 +74,7 @@ public class BalanceSheetReport extends AbstractSumByTypeReport {
 
     /**
      * Returns the legend for the grand total
-     *
+     * 
      * @return report name
      */
     @Override
@@ -86,15 +86,18 @@ public class BalanceSheetReport extends AbstractSumByTypeReport {
     public String getGroupFooterLabel() {
         return rb.getString("Word.Subtotal");
     }
-    
+
+    /**
+     * Internal class to return a row the calculates the retained earnings for an account   
+     */
     private class RetainedEarningsRow extends Row {
 
         /**
          * Returns values for retained earnings
          */
         @Override
-        public Object getValueAt(int columnIndex) {
-                                                           
+        public Object getValueAt(final int columnIndex) {
+
             if (columnIndex == 0) { // account column
                 return rb.getString("Title.RetainedEarnings");
             } else if (columnIndex == getColumnCount() - 1) { // group column              
@@ -102,41 +105,41 @@ public class BalanceSheetReport extends AbstractSumByTypeReport {
             } else if (columnIndex > 0 && columnIndex <= dates.size()) {
                 Date startDate = dates.get(columnIndex - 1);
                 Date endDate = DateUtils.subtractDay(dates.get(columnIndex));
-                
-                return getRetainedProfitLoss(startDate, endDate);                                
+
+                return getRetainedProfitLoss(startDate, endDate);
             }
             return null;
         }
-        
+
         public int getColumnCount() {
             if (runningTotal) {
                 return dates.size() + 2;
             } else {
                 return dates.size() - 1 + 2;
             }
-        }    
-        
+        }
+
         /**
          * Returns the retained profit or loss for the given period
          * 
          * @param date Start date for the period
          * @return the profit or loss for the period
          */
-        private  BigDecimal getRetainedProfitLoss(final Date startDate, final Date endDate) {
+        private BigDecimal getRetainedProfitLoss(final Date startDate, final Date endDate) {
             BigDecimal profitLoss = BigDecimal.ZERO;
-            
+
             CurrencyNode baseCurrency = EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency();
-                    
+
             Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-            
+
             for (Account account : engine.getExpenseAccountList()) {
                 profitLoss = profitLoss.add(account.getBalance(startDate, endDate, baseCurrency));
             }
-            
+
             for (Account account : engine.getIncomeAccountList()) {
                 profitLoss = profitLoss.add(account.getBalance(startDate, endDate, baseCurrency));
-            }  
-            
+            }
+
             return profitLoss.negate();
         }
     }

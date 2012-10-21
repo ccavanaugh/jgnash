@@ -23,10 +23,9 @@ import jgnash.ui.util.builder.Action;
 import java.awt.event.ActionEvent;
 
 /**
- * UI Action to open the new file dialog
+ * UI Action to display the Balance Sheet report
  *
  * @author Craig Cavanaugh
- *
  */
 @Action("report-balancesheet-command")
 public class BalanceSheetReportAction extends AbstractEnabledAction {
