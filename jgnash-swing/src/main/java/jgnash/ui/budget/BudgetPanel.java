@@ -68,6 +68,7 @@ import jgnash.message.MessageBus;
 import jgnash.message.MessageChannel;
 import jgnash.message.MessageListener;
 import jgnash.message.MessageProperty;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.RollOverButton;
 import jgnash.util.DateUtils;
@@ -75,9 +76,9 @@ import jgnash.util.Resource;
 
 /**
  * Panel for displaying a budget
- *
+ * 
  * @author Craig Cavanaugh
- *
+ * 
  */
 public final class BudgetPanel extends JPanel implements ActionListener, MessageListener {
 
@@ -124,14 +125,17 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
 
         Resource rb = Resource.get();
 
-        budgetExportButton = new RollOverButton(rb.getString("Button.ExportSpreadsheet"), Resource.getIcon("/jgnash/resource/x-office-spreadsheet.png"));
+        budgetExportButton = new RollOverButton(rb.getString("Button.ExportSpreadsheet"),
+                Resource.getIcon("/jgnash/resource/x-office-spreadsheet.png"));
         budgetExportButton.addActionListener(this);
 
-        budgetManagerButton = new RollOverButton(rb.getString("Button.BudgetMgr"), Resource.getIcon("/jgnash/resource/document-new.png"));
+        budgetManagerButton = new RollOverButton(rb.getString("Button.BudgetMgr"),
+                Resource.getIcon("/jgnash/resource/document-new.png"));
         budgetManagerButton.setToolTipText(rb.getString("ToolTip.BudgetMgr"));
         budgetManagerButton.addActionListener(this);
 
-        budgetPropertiesButton = new RollOverButton(rb.getString("Button.Properties"), Resource.getIcon("/jgnash/resource/document-properties.png"));
+        budgetPropertiesButton = new RollOverButton(rb.getString("Button.Properties"),
+                Resource.getIcon("/jgnash/resource/document-properties.png"));
         budgetPropertiesButton.addActionListener(this);
 
         summaryRowVisibleCheckBox = new JCheckBox(rb.getString("Button.SumRowVis"));
@@ -213,7 +217,8 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
                     }
 
                     // the combo takes the full toolbar space unless limited
-                    budgetCombo.setMaximumSize(new Dimension(COMBO_BOX_WIDTH, budgetCombo.getPreferredSize().height * 3));
+                    budgetCombo
+                            .setMaximumSize(new Dimension(COMBO_BOX_WIDTH, budgetCombo.getPreferredSize().height * 3));
 
                     budgetCombo.addActionListener(new ActionListener() {
 
@@ -241,7 +246,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
 
             @Override
             protected Integer doInBackground() throws Exception {
-                return engine.getBudgetList().size();   // could take awhile if the engine is busy
+                return engine.getBudgetList().size(); // could take awhile if the engine is busy
             }
 
             @Override
@@ -405,12 +410,12 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
         logger.entering(BudgetPanel.class.getName(), "removeBudgetPane");
 
         rowHeaderResizeHandler.detachListeners();
-       
+
         scrollPane.setRowHeaderView(null);
         scrollPane.setViewportView(null);
         scrollPane.setColumnHeaderView(null);
-        scrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, null);             
-        
+        scrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, null);
+
         removeSummaryColumn();
         removeSummaryRows();
 
@@ -433,7 +438,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
                 ((AccountRowFooterPanel) scrollPane.getRowFooter().getView()).unregisterListeners();
             }
 
-            scrollPane.setCorner(JScrollPane.UPPER_RIGHT_CORNER, null);  
+            scrollPane.setCorner(JScrollPane.UPPER_RIGHT_CORNER, null);
             scrollPane.setCorner(JScrollPane.LOWER_RIGHT_CORNER, null);
             scrollPane.setRowFooterView(null);
         }
@@ -450,7 +455,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
 
     private void removeSummaryRows() {
         scrollPane.setColumnFooterView(null);
-        scrollPane.setCorner(JScrollPane.LOWER_LEFT_CORNER, null);        
+        scrollPane.setCorner(JScrollPane.LOWER_LEFT_CORNER, null);
     }
 
     private void addSummaryCorner() {
@@ -509,7 +514,8 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
                         if (summaryRowVisibleCheckBox.isSelected()) {
                             addSummaryRows();
 
-                            if (summaryColVisibleCheckBox.isSelected() && activeBudget.getBudgetPeriod() != BudgetPeriod.YEARLY) {
+                            if (summaryColVisibleCheckBox.isSelected()
+                                    && activeBudget.getBudgetPeriod() != BudgetPeriod.YEARLY) {
                                 addSummaryCorner();
                             }
                         } else {
@@ -525,7 +531,8 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
     }
 
     private List<BudgetPeriodPanel> buildPeriodPanels() {
-        final List<BudgetPeriodDescriptor> descriptors = BudgetPeriodDescriptorFactory.getDescriptors(budgetYear, activeBudget.getBudgetPeriod());
+        final List<BudgetPeriodDescriptor> descriptors = BudgetPeriodDescriptorFactory.getDescriptors(budgetYear,
+                activeBudget.getBudgetPeriod());
 
         final List<BudgetPeriodPanel> newPanels = new ArrayList<>();
 
@@ -539,8 +546,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
     }
 
     /**
-     * Makes the current
-     * <code>BudgetPeriodPanel</code> visible
+     * Makes the current <code>BudgetPeriodPanel</code> visible
      */
     private void showCurrentPeriod() {
 
@@ -707,26 +713,36 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
 
         JFileChooser chooser = new JFileChooser(pref.get(CURRENT_DIR, null));
         chooser.setAcceptAllFileFilterUsed(false);
-        chooser.addChoosableFileFilter(new FileNameExtensionFilter(rb.getString("Label.SpreadsheetFiles") + " (*.xls, *.xlsx)", "xls", "xlsx"));
+        chooser.addChoosableFileFilter(new FileNameExtensionFilter(rb.getString("Label.SpreadsheetFiles")
+                + " (*.xls, *.xlsx)", "xls", "xlsx"));
 
         if (chooser.showSaveDialog(UIApplication.getFrame()) == JFileChooser.APPROVE_OPTION) {
             pref.put(CURRENT_DIR, chooser.getCurrentDirectory().getAbsolutePath());
 
             final File file = new File(chooser.getSelectedFile().getAbsolutePath());
 
-            final class Export extends SwingWorker<Void, Void> {
+            final class Export extends SwingWorker<String, Void> {
 
                 @Override
-                protected Void doInBackground() throws Exception {
+                protected String doInBackground() throws Exception {
                     UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
-                    BudgetResultsExport.exportBudgetResultsModel(file, resultsModel);
 
-                    return null;
+                    return BudgetResultsExport.exportBudgetResultsModel(file, resultsModel);
                 }
 
                 @Override
                 protected void done() {
                     UIApplication.getFrame().stopWaitMessage();
+                    try {
+                        String message = get();
+
+                        // display any errors that may have occurred
+                        if (message != null) {
+                            StaticUIMethods.displayError(message);
+                        }
+                    } catch (InterruptedException | ExecutionException e) {
+                        logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+                    }
                 }
             }
 

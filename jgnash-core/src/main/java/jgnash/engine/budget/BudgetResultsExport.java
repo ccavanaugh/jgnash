@@ -52,7 +52,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * <code>BudgetResultsModel</code>
  *
  * @author Craig Cavanaugh
- *
  */
 public class BudgetResultsExport {
 
@@ -60,7 +59,16 @@ public class BudgetResultsExport {
         // utility class
     }
 
-    public static void exportBudgetResultsModel(final File file, final BudgetResultsModel model) {
+    /**
+     * Exports a <code>BudgetResultsModel</code> to a spreadsheet
+     * 
+     * @param file File to save to
+     * @param model Results model to export
+     * @return Error message
+     */
+    public static String exportBudgetResultsModel(final File file, final BudgetResultsModel model) {
+        
+        String message = null;
 
         Resource rb = Resource.get();
 
@@ -312,7 +320,10 @@ public class BudgetResultsExport {
            wb.write(out); 
         } catch (Exception e) {
             Logger.getLogger(BudgetResultsExport.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            message = e.getLocalizedMessage();
         }
+        
+        return message;
     }
 
     private static void addSummaryCell(final Row row, final int col, final List<CellReference> cellReferenceList, final CellStyle style) {
@@ -326,7 +337,7 @@ public class BudgetResultsExport {
         StringBuilder formula = new StringBuilder(cellReferenceList.get(0).formatAsString());
 
         for (int i = 1; i < cellReferenceList.size(); i++) {
-            formula.append("+");
+            formula.append('+');
             formula.append(cellReferenceList.get(i).formatAsString());
         }
 
