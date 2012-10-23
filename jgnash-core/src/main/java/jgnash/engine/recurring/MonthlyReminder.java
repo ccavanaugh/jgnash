@@ -85,9 +85,8 @@ public class MonthlyReminder extends Reminder {
             if (getLastDate() != null) {
                 calendar.setTime(getLastDate()); // set the last execute date
 
-                // adjust for actual target date, it could have been modified since the last date
-                int day = DateUtils.getDayOfTheMonth(getStartDate());
-                calendar.set(Calendar.DAY_OF_MONTH, day);
+                // adjust for actual target date, it could have been modified since the last date                
+                calendar.set(Calendar.DAY_OF_MONTH,  DateUtils.getDayOfTheMonth(getStartDate()));
             } else {
                 if (type == DATE) {
                     calendar.setTime(getStartDate());

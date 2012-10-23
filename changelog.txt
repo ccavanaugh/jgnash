@@ -23,6 +23,7 @@ Formal Trial Balance report
 
 Release 2.11.0
 ----------------------
+10/23/12 Reminder dates were not correct if it was modified after being executed.
 10/21/12 Display a message if an error occurs during a budget export (Read only file, etc)
 10/20/12 Reworked the Balance Sheet report.  Results are displayed by period instead of a running balance and retained
          income / expense is calculated.         

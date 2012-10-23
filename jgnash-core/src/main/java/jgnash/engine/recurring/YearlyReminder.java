@@ -24,9 +24,9 @@ import jgnash.util.DateUtils;
 
 /**
  * A yearly reminder
- *
+ * 
  * @author Craig Cavanaugh
- *
+ * 
  */
 public class YearlyReminder extends Reminder {
 
@@ -59,6 +59,9 @@ public class YearlyReminder extends Reminder {
         public YearlyIterator() {
             if (getLastDate() != null) {
                 calendar.setTime(getLastDate());
+
+                // adjust for actual target date, it could have been modified since the last date                
+                calendar.set(Calendar.DAY_OF_YEAR, DateUtils.getDayOfTheYear(getStartDate()));
             } else {
                 calendar.setTime(getStartDate());
                 calendar.add(Calendar.YEAR, getIncrement() * -1);
