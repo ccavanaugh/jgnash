@@ -23,13 +23,11 @@ import java.util.Date;
 import jgnash.util.DateUtils;
 
 /**
- * A monthly reminder / iterator.
- * Dates get a little weird when iterating by DAY and the day is early or late in the month.
- * Months may be skipped or multiple days in the same month.  Iterating by DATE will be
- * much more consistent.
- *
+ * A monthly reminder / iterator. Dates get a little weird when iterating by DAY
+ * and the day is early or late in the month. Months may be skipped or multiple
+ * days in the same month. Iterating by DATE will be much more consistent.
+ * 
  * @author Craig Cavanaugh
- *
  */
 public class MonthlyReminder extends Reminder {
 
@@ -85,7 +83,11 @@ public class MonthlyReminder extends Reminder {
 
         public MonthlyIterator() {
             if (getLastDate() != null) {
-                calendar.setTime(getLastDate());
+                calendar.setTime(getLastDate()); // set the last execute date
+
+                // adjust for actual target date, it could have been modified since the last date
+                int day = DateUtils.getDayOfTheMonth(getStartDate());
+                calendar.set(Calendar.DAY_OF_MONTH, day);
             } else {
                 if (type == DATE) {
                     calendar.setTime(getStartDate());

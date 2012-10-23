@@ -24,9 +24,8 @@ import jgnash.util.DateUtils;
 
 /**
  * A weekly reminder
- *
+ * 
  * @author Craig Cavanaugh
- *
  */
 public class WeeklyReminder extends Reminder {
 
@@ -59,6 +58,12 @@ public class WeeklyReminder extends Reminder {
         public WeeklyIterator() {
             if (getLastDate() != null) {
                 calendar.setTime(getLastDate());
+
+                // adjust for actual target date, it could have been modified since the last date               
+                calendar.set(Calendar.DAY_OF_MONTH, DateUtils.getDayOfTheMonth(getStartDate()));
+
+                // adjust for actual target date, it could have been modified since the last date               
+                calendar.set(Calendar.DAY_OF_WEEK, DateUtils.getDayOfTheWeek(getStartDate()));
             } else {
                 calendar.setTime(getStartDate());
                 calendar.add(Calendar.WEEK_OF_MONTH, getIncrement() * -1);

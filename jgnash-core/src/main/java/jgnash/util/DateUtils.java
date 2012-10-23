@@ -221,6 +221,41 @@ public class DateUtils {
             calendarPool.put(c);
         }
     }
+    
+    /**
+     * Returns the numerical day of the week given a date
+     * 
+     * @param date the base date to work from
+     * @return the week of the year
+     */
+    public static int getDayOfTheWeek(final Date date) {
+        GregorianCalendar c = calendarPool.take();
+
+        try {
+            c.setTime(date);
+            return c.get(Calendar.DAY_OF_WEEK);
+        } finally {
+            calendarPool.put(c);
+        }
+    }
+    
+    
+    /**
+     * Returns the numerical day of the month given a date
+     * 
+     * @param date the base date to work from
+     * @return the week of the year
+     */
+    public static int getDayOfTheMonth(final Date date) {
+        GregorianCalendar c = calendarPool.take();
+
+        try {
+            c.setTime(date);
+            return c.get(Calendar.DAY_OF_MONTH);
+        } finally {
+            calendarPool.put(c);
+        }
+    }
 
     /**
      * Returns the numerical day of the year given a date
@@ -238,7 +273,7 @@ public class DateUtils {
             calendarPool.put(c);
         }
     }
-
+        
     /**
      * Returns the number of days in the month given a date
      * 
