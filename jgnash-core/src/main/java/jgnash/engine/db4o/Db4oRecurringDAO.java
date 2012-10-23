@@ -79,7 +79,7 @@ class Db4oRecurringDAO extends AbstractDb4oDAO implements RecurringDAO {
      * @see jgnash.engine.ReminderDAOInterface#addReminder(jgnash.engine.recurring.Reminder)
      */
     @Override
-    public boolean addReminder(Reminder reminder) {
+    public boolean addReminder(final Reminder reminder) {
         boolean result = false;
 
         if (container.ext().setSemaphore(SEMAPHORE_NAME, SEMAPHORE_WAIT_TIME)) {
@@ -96,24 +96,12 @@ class Db4oRecurringDAO extends AbstractDb4oDAO implements RecurringDAO {
     }
 
     @Override
-    public boolean updateReminder(Reminder reminder) {
-        boolean result = false;
-
-        if (container.ext().setSemaphore(SEMAPHORE_NAME, SEMAPHORE_WAIT_TIME)) {
-            container.set(reminder);
-            commit();
-
-            container.ext().releaseSemaphore(SEMAPHORE_NAME);
-            result = true;
-        } else {
-            logger.severe(SEMAPHORE_WARNING);
-        }
-
-        return result;
+    public boolean updateReminder(final Reminder reminder) {
+        return addReminder(reminder);   // call add, same code
     }
 
     @Override
-    public void refreshReminder(Reminder reminder) {
+    public void refreshReminder(final Reminder reminder) {
         container.ext().refresh(reminder, 2);
     }
 }
