@@ -25,7 +25,7 @@ import jgnash.engine.recurring.Reminder;
 /**
  * Recurring XML DAO
  *
- * @author Craig Cavanaug
+ * @author Craig Cavanaugh
  */
 public class XStreamRecurringDAO extends AbstractXStreamDAO implements RecurringDAO {
 
