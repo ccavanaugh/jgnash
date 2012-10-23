@@ -47,7 +47,8 @@ public class DateUtils {
     private static Locale lastLocale;
 
     /**
-     * Local object pool for calendar objects because they are expensive to create
+     * Local object pool for calendar objects because they are expensive to
+     * create
      */
     private static final ObjectPool<GregorianCalendar> calendarPool = new ObjectPool<GregorianCalendar>() {
 
@@ -62,8 +63,8 @@ public class DateUtils {
     private static final Pattern DAY_PATTERN = Pattern.compile("d{1,2}");
 
     private DateUtils() {
-    }        
-    
+    }
+
     private static void updateMonthNames() {
         if (lastLocale != Locale.getDefault()) {
 
@@ -94,8 +95,10 @@ public class DateUtils {
     /**
      * Returns a date a given number of days after the requested date
      * 
-     * @param date start date
-     * @param days the number of days to add
+     * @param date
+     *            start date
+     * @param days
+     *            the number of days to add
      * @return new date
      */
     public static Date addDays(final Date date, final int days) {
@@ -123,10 +126,13 @@ public class DateUtils {
     }
 
     /**
-     * Determines is Date d1 occurs after Date d2. The specified dates are inclusive.
+     * Determines is Date d1 occurs after Date d2. The specified dates are
+     * inclusive.
      * 
-     * @param d1 date 1
-     * @param d2 date 2
+     * @param d1
+     *            date 1
+     * @param d2
+     *            date 2
      * @return true if d1 is after d2
      */
     public static boolean after(final Date d1, final Date d2) {
@@ -136,9 +142,12 @@ public class DateUtils {
     /**
      * Determines if Date d1 occurs after Date d2.
      * 
-     * @param d1 date 1
-     * @param d2 date 2
-     * @param inclusive <code>true</code> is comparison is inclusive
+     * @param d1
+     *            date 1
+     * @param d2
+     *            date 2
+     * @param inclusive
+     *            <code>true</code> is comparison is inclusive
      * @return <code>true</code> if d1 occurs after d2
      */
     public static boolean after(final Date d1, final Date d2, final boolean inclusive) {
@@ -146,10 +155,13 @@ public class DateUtils {
     }
 
     /**
-     * Determines if Date d1 occurs before Date d2. The specified dates are inclusive
+     * Determines if Date d1 occurs before Date d2. The specified dates are
+     * inclusive
      * 
-     * @param d1 date 1
-     * @param d2 date 2
+     * @param d1
+     *            date 1
+     * @param d2
+     *            date 2
      * @return true if d1 is before d2 or the same date
      */
     public static boolean before(final Date d1, final Date d2) {
@@ -159,9 +171,12 @@ public class DateUtils {
     /**
      * Determines if Date d1 occurs before Date d2.
      * 
-     * @param d1 date 1
-     * @param d2 date 2
-     * @param inclusive <code>true</code> is comparison is inclusive
+     * @param d1
+     *            date 1
+     * @param d2
+     *            date 2
+     * @param inclusive
+     *            <code>true</code> is comparison is inclusive
      * @return <code>true</code> if d1 occurs before d2
      */
     public static boolean before(final Date d1, final Date d2, final boolean inclusive) {
@@ -184,7 +199,8 @@ public class DateUtils {
     /**
      * Returns the calendar year given a date
      * 
-     * @param date date
+     * @param date
+     *            date
      * @return the year
      */
     public static int getYear(final Date date) {
@@ -201,12 +217,14 @@ public class DateUtils {
 
     /**
      * Returns the date given a year and a day of the year.
-     *
-     * The first day of the year has value 1. 
      * 
-     * @param year the year
-     * @param dayOfYear day of the year
-     * @return the date    
+     * The first day of the year has value 1.
+     * 
+     * @param year
+     *            the year
+     * @param dayOfYear
+     *            day of the year
+     * @return the date
      */
     public static Date getDateOfTheYear(int year, int dayOfYear) {
         GregorianCalendar c = calendarPool.take();
@@ -221,63 +239,65 @@ public class DateUtils {
             calendarPool.put(c);
         }
     }
-    
+
     /**
      * Returns the numerical day of the week given a date
      * 
-     * @param date the base date to work from
-     * @return the week of the year
+     * @param date
+     *            the base date to work from
+     * @return the day of the week
      */
     public static int getDayOfTheWeek(final Date date) {
-        GregorianCalendar c = calendarPool.take();
-
-        try {
-            c.setTime(date);
-            return c.get(Calendar.DAY_OF_WEEK);
-        } finally {
-            calendarPool.put(c);
-        }
+        return getDayOfX(date, Calendar.DAY_OF_WEEK);
     }
-    
-    
+
     /**
      * Returns the numerical day of the month given a date
      * 
-     * @param date the base date to work from
-     * @return the week of the year
+     * @param date
+     *            the base date to work from
+     * @return the day of the month
      */
     public static int getDayOfTheMonth(final Date date) {
-        GregorianCalendar c = calendarPool.take();
-
-        try {
-            c.setTime(date);
-            return c.get(Calendar.DAY_OF_MONTH);
-        } finally {
-            calendarPool.put(c);
-        }
+        return getDayOfX(date, Calendar.DAY_OF_MONTH);
     }
 
     /**
      * Returns the numerical day of the year given a date
      * 
-     * @param dateOfYear the base date to work from
+     * @param date
+     *            the base date to work from
      * @return the week of the year
      */
-    public static int getDayOfTheYear(final Date dateOfYear) {
+    public static int getDayOfTheYear(final Date date) {
+        return getDayOfX(date, Calendar.DAY_OF_YEAR);
+    }
+
+    /**
+     * Returns a numerical value given a date and Calendar field
+     * 
+     * @param date
+     *            the base date to work from
+     * @param field
+     *            Calendar field
+     * @return numerical value
+     */
+    private static int getDayOfX(final Date date, int field) {
         GregorianCalendar c = calendarPool.take();
 
         try {
-            c.setTime(dateOfYear);
-            return c.get(Calendar.DAY_OF_YEAR);
+            c.setTime(date);
+            return c.get(field);
         } finally {
             calendarPool.put(c);
         }
     }
-        
+
     /**
      * Returns the number of days in the month given a date
      * 
-     * @param date date (Month)
+     * @param date
+     *            date (Month)
      * @return the number of days in the month
      */
     public static int getDaysInMonth(final Date date) {
@@ -296,7 +316,8 @@ public class DateUtils {
     /**
      * Returns the number of days in the year
      * 
-     * @param year calendar year
+     * @param year
+     *            calendar year
      * @return the number of days in the year
      */
     public static int getDaysInYear(final int year) {
@@ -309,8 +330,10 @@ public class DateUtils {
     /**
      * Determines the difference in days of two dates
      * 
-     * @param startDate start date
-     * @param endDate end date
+     * @param startDate
+     *            start date
+     * @param endDate
+     *            end date
      * @return number of days
      */
     public static int getDifferenceInDays(final Date startDate, final Date endDate) {
@@ -332,8 +355,10 @@ public class DateUtils {
     /**
      * Determines the difference in months of two dates
      * 
-     * @param startDate start date
-     * @param endDate end date
+     * @param startDate
+     *            start date
+     * @param endDate
+     *            end date
      * @return number of days
      */
     public static float getDifferenceInMonths(final Date startDate, final Date endDate) {
@@ -353,7 +378,8 @@ public class DateUtils {
     }
 
     /**
-     * @param year The year to generate the array for
+     * @param year
+     *            The year to generate the array for
      * @return The array of dates
      */
     public static Date[] getFirstDayBiWeekly(final int year) {
@@ -369,9 +395,11 @@ public class DateUtils {
     }
 
     /**
-     * Generates an array of dates starting on the first day of every month in the specified year
+     * Generates an array of dates starting on the first day of every month in
+     * the specified year
      * 
-     * @param year The year to generate the array for
+     * @param year
+     *            The year to generate the array for
      * @return The array of dates
      */
     public static Date[] getFirstDayMonthly(final int year) {
@@ -383,9 +411,11 @@ public class DateUtils {
     }
 
     /**
-     * Returns a leveled date representing the first day of the month based on a specified date.
+     * Returns a leveled date representing the first day of the month based on a
+     * specified date.
      * 
-     * @param date the base date to work from
+     * @param date
+     *            the base date to work from
      * @return The last day of the month and year specified
      */
     public static Date getFirstDayOfTheMonth(final Date date) {
@@ -404,8 +434,10 @@ public class DateUtils {
     /**
      * Returns a leveled date representing the first day of the month
      * 
-     * @param month The month (index starts at 0)
-     * @param year The year (index starts at 1)
+     * @param month
+     *            The month (index starts at 0)
+     * @param year
+     *            The year (index starts at 1)
      * @return The last day of the month and year specified
      */
     public static Date getFirstDayOfTheMonth(final int month, final int year) {
@@ -426,7 +458,8 @@ public class DateUtils {
     /**
      * Returns an array of the starting date of each quarter in a year
      * 
-     * @param year The year to generate the array for
+     * @param year
+     *            The year to generate the array for
      * @return The array of quarter bound dates
      */
     public static Date[] getFirstDayQuarterly(final int year) {
@@ -454,12 +487,14 @@ public class DateUtils {
     }
 
     /**
-     * Returns an array of Dates starting with the first day of each week of the year.
-     *
-     * @param year The year to generate the array for
+     * Returns an array of Dates starting with the first day of each week of the
+     * year.
+     * 
+     * @param year
+     *            The year to generate the array for
      * @return The array of dates
      * @see <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO_8601</a>
-     *
+     * 
      */
     public static Date[] getFirstDayWeekly(final int year) {
         GregorianCalendar cal = calendarPool.take();
@@ -498,7 +533,8 @@ public class DateUtils {
     /**
      * Returns an array of every day in a given year
      * 
-     * @param year The year to generate the array for
+     * @param year
+     *            The year to generate the array for
      * @return The array of dates
      */
     public static Date[] getAllDays(int year) {
@@ -527,9 +563,11 @@ public class DateUtils {
     }
 
     /**
-     * Returns a leveled date representing the last day of the month based on a specified date.
+     * Returns a leveled date representing the last day of the month based on a
+     * specified date.
      * 
-     * @param date the base date to work from
+     * @param date
+     *            the base date to work from
      * @return The last day of the month of the supplied date
      */
     public static Date getLastDayOfTheMonth(final Date date) {
@@ -550,8 +588,10 @@ public class DateUtils {
     /**
      * Returns a leveled date representing the last day of the month
      * 
-     * @param month The month (index starts at 0)
-     * @param year The year (index starts at 1)
+     * @param month
+     *            The month (index starts at 0)
+     * @param year
+     *            The year (index starts at 1)
      * @return The last day of the month and year specified
      */
     public static Date getLastDayOfTheMonth(final int month, final int year) {
@@ -570,10 +610,13 @@ public class DateUtils {
     }
 
     /**
-     * Generates an array of dates ending on the last day of every month between the start and stop dates.
+     * Generates an array of dates ending on the last day of every month between
+     * the start and stop dates.
      * 
-     * @param startDate The date to start at
-     * @param endDate The data to stop at
+     * @param startDate
+     *            The date to start at
+     * @param endDate
+     *            The data to stop at
      * @return The array of dates
      */
     public static List<Date> getLastDayOfTheMonths(final Date startDate, final Date endDate) {
@@ -592,12 +635,15 @@ public class DateUtils {
         }
         return list;
     }
-    
+
     /**
-     * Generates an array of dates starting on the first day of every month between the start and stop dates.
+     * Generates an array of dates starting on the first day of every month
+     * between the start and stop dates.
      * 
-     * @param startDate The date to start at
-     * @param endDate The data to stop at
+     * @param startDate
+     *            The date to start at
+     * @param endDate
+     *            The data to stop at
      * @return The array of dates
      */
     public static List<Date> getFirstDayOfTheMonths(final Date startDate, final Date endDate) {
@@ -618,9 +664,11 @@ public class DateUtils {
     }
 
     /**
-     * Returns a leveled date representing the last day of the quarter based on a specified date.
+     * Returns a leveled date representing the last day of the quarter based on
+     * a specified date.
      * 
-     * @param date the base date to work from
+     * @param date
+     *            the base date to work from
      * @return The last day of the quarter specified
      */
     public static Date getLastDayOfTheQuarter(final Date date) {
@@ -646,9 +694,11 @@ public class DateUtils {
     }
 
     /**
-     * Returns a leveled date representing the last day of the year based on a specified date.
+     * Returns a leveled date representing the last day of the year based on a
+     * specified date.
      * 
-     * @param date the base date to work from
+     * @param date
+     *            the base date to work from
      * @return The last day of the year specified
      */
     public static Date getLastDayOfTheYear(final Date date) {
@@ -667,10 +717,11 @@ public class DateUtils {
     }
 
     /**
-     * Returns an array of quarter bound dates of the year based on a specified date. The order is q1s, q1e, q2s, q2e,
-     * q3s, q3e, q4s, q4e.
+     * Returns an array of quarter bound dates of the year based on a specified
+     * date. The order is q1s, q1e, q2s, q2e, q3s, q3e, q4s, q4e.
      * 
-     * @param date the base date to work from
+     * @param date
+     *            the base date to work from
      * @return The array of quarter bound dates
      */
     private static Date[] getQuarterBounds(final Date date) {
@@ -716,9 +767,11 @@ public class DateUtils {
     }
 
     /**
-     * Returns the number of the quarter (i.e. 1, 2, 3 or 4) based on a specified date.
+     * Returns the number of the quarter (i.e. 1, 2, 3 or 4) based on a
+     * specified date.
      * 
-     * @param date the base date to work from
+     * @param date
+     *            the base date to work from
      * @return The number of the quarter specified
      */
     public static int getQuarterNumber(final Date date) {
@@ -774,7 +827,8 @@ public class DateUtils {
      * <p>
      * Minimal days of week is set to 4 to comply with ISO 8601
      * 
-     * @param dateOfYear the base date to work from
+     * @param dateOfYear
+     *            the base date to work from
      * @return the week of the year
      */
     public static int getWeekOfTheYear(final Date dateOfYear) {
@@ -796,7 +850,8 @@ public class DateUtils {
     /**
      * Determines if the supplied year is a leap year
      * 
-     * @param year integer based year (ex. 2000, 2011)
+     * @param year
+     *            integer based year (ex. 2000, 2011)
      * @return <code>true</code> if the given year is a leap year
      */
     public static boolean isLeapYear(final int year) {
@@ -812,7 +867,8 @@ public class DateUtils {
     /**
      * Subtract one day from the supplied date
      * 
-     * @param date start date
+     * @param date
+     *            start date
      * @return one day less
      */
     public static Date subtractDay(final Date date) {
@@ -822,7 +878,8 @@ public class DateUtils {
     /**
      * Subtracts one month from the supplied date
      * 
-     * @param date beginning date
+     * @param date
+     *            beginning date
      * @return prior month
      */
     public static Date subtractMonth(final Date date) {
@@ -832,8 +889,10 @@ public class DateUtils {
     /**
      * Subtracts months from the supplied date
      * 
-     * @param date beginning date
-     * @param months number of months to subtract
+     * @param date
+     *            beginning date
+     * @param months
+     *            number of months to subtract
      * @return prior month
      */
     public static Date subtractMonths(final Date date, int months) {
@@ -851,7 +910,8 @@ public class DateUtils {
     /**
      * Returns a date one year earlier than the provided date
      * 
-     * @param date start date
+     * @param date
+     *            start date
      * @return date of the previous year
      */
     public static Date subtractYear(final Date date) {
@@ -861,8 +921,10 @@ public class DateUtils {
     /**
      * Returns a date incremented or decremented by a number of years
      * 
-     * @param date start date
-     * @param years number of years
+     * @param date
+     *            start date
+     * @param years
+     *            number of years
      * @return date of the new year
      */
     public static Date addYears(final Date date, int years) {
@@ -876,7 +938,7 @@ public class DateUtils {
             calendarPool.put(c);
         }
     }
-    
+
     /**
      * Returns a trimmed version of todays date
      * 
@@ -889,7 +951,8 @@ public class DateUtils {
     /**
      * Trims the date so that only the day, month, and year are significant.
      * 
-     * @param date date to trim
+     * @param date
+     *            date to trim
      * @return leveled date
      */
     public static Date trimDate(final Date date) {
