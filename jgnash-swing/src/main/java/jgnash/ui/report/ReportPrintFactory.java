@@ -22,8 +22,6 @@ import java.awt.print.Paper;
 import java.awt.print.PrinterJob;
 import java.util.prefs.Preferences;
 
-import javax.print.PrintService;
-
 import jgnash.ui.report.jasper.DynamicJasperReport;
 
 /**
@@ -45,19 +43,15 @@ public class ReportPrintFactory {
     }
 
     /**
-     * Gets the default page format based on the default printer.  If no printers are found
-     * a generic default is created.
+     * Gets the default page format which is letter size
      *
      * @return page format
      */
-    private static PageFormat getDefaultPage() {
-
-        PrintService[] services = PrinterJob.lookupPrintServices();
-        if (services.length == 0) { // no printers found on the system.
-            return new PageFormat();
-        }
-
-        return PrinterJob.getPrinterJob().defaultPage();
+    private static PageFormat getDefaultPage() {          
+        PageFormat format = new PageFormat();
+        format.setPaper(new Paper());
+        
+        return format;                               
     }
 
     /**
@@ -79,7 +73,7 @@ public class ReportPrintFactory {
         p.putDouble(IMAGEABLE_HEIGHT, paper.getImageableHeight());
         p.putDouble(IMAGEABLE_WIDTH, paper.getImageableWidth());
         p.putDouble(IMAGEABLE_X, paper.getImageableX());
-        p.putDouble(IMAGEABLE_Y, paper.getImageableY());
+        p.putDouble(IMAGEABLE_Y, paper.getImageableY());            
     }
 
     public static PageFormat getPageFormat(final DynamicJasperReport report) {
