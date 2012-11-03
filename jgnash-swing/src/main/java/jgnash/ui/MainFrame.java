@@ -841,7 +841,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
                 Engine engine = get();
 
                 if (engine != null) {
-                    setTitle(new StringBuilder(Main.VERSION).append("  [").append(EngineFactory.getActiveDatabase()).append(']').toString());
+                    setTitle(Main.VERSION + "  [" + EngineFactory.getActiveDatabase() + ']');
                 } else {
                     setTitle(Main.VERSION);
                 }

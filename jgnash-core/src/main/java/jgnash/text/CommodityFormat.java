@@ -213,7 +213,7 @@ public abstract class CommodityFormat {
     }
 
     private static String getConversion(final String cur1, final String cur2) {
-        return new StringBuilder(cur1).append(" > ").append(cur2).toString();
+        return cur1 + " > " + cur2;
     }
 
     public static String getConversion(final CommodityNode cur1, final CommodityNode cur2) {

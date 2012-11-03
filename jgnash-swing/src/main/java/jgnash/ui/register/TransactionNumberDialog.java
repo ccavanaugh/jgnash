@@ -189,7 +189,7 @@ public class TransactionNumberDialog extends JDialog implements ActionListener {
         final List<String> items = new ArrayList<>();
 
         for (int i = 0; i < size; i++) {
-            items.add(listModel.getElementAt(i).toString());
+            items.add(listModel.getElementAt(i));
         }
 
         EngineFactory.getEngine(EngineFactory.DEFAULT).setTransactionNumberList(items);

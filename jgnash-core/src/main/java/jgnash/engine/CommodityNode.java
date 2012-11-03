@@ -81,7 +81,7 @@ public abstract class CommodityNode extends StoredObject implements Comparable<C
     @Override
     public String toString() {
         if (description != null) {
-            return new StringBuilder(symbol).append(" (").append(description).append(')').toString();
+            return symbol + " (" + description + ')';
         }
         return symbol;
     }
