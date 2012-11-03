@@ -117,9 +117,7 @@ public class ImportMt940Action extends AbstractEnabledAction {
 
                     GenericImport.importTransactions(transactions, account);
                 }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
         }

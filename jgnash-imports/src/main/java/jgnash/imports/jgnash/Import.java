@@ -20,7 +20,6 @@ package jgnash.imports.jgnash;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -224,9 +223,7 @@ public class Import {
             /* Lock accounts after transactions have been added */
             imp.lockAccounts();
 
-        } catch (FileNotFoundException | XMLStreamException e) {
-            imp.getLogger().log(Level.SEVERE, e.toString(), e);
-        } catch (IOException e) {
+        } catch (XMLStreamException | IOException e) {
             imp.getLogger().log(Level.SEVERE, e.toString(), e);
         }
     }

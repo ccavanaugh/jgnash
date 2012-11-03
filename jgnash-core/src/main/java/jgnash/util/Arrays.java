@@ -42,7 +42,7 @@ public class Arrays {
         
         for (int i = 0; i < intArray.length; i++)
         {
-            intArray[i] = iterator.next().intValue();
+            intArray[i] = iterator.next();
         }
         
         return intArray;
