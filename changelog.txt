@@ -21,6 +21,10 @@ Hiding option of Transaction form which can help to see more transactions in Reg
 Direct Transaction entry option in the Ledger to avoid Transaction form.
 Formal Trial Balance report
 
+Release 2.12.0
+----------------------
+11/04/12 Update to Mina 2.0.7
+
 Release 2.11.0
 ----------------------
 10/24/12 Tabular style reports will start with a better default page size the first time the report is run.
