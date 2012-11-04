@@ -110,6 +110,7 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
      * @param hsbPolicy an integer that specifies the horizontal scrollbar policy
      * @see #setViewportView(java.awt.Component)
      */
+    @SuppressWarnings("MagicConstant")
     private JideScrollPane(Component view, int vsbPolicy, int hsbPolicy) {
         setLayout(new JideScrollPaneLayout.UIResource());
         setVerticalScrollBarPolicy(vsbPolicy);

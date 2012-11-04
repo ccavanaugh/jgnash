@@ -28,6 +28,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.text.MessageFormat;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -49,6 +50,7 @@ import jgnash.message.MessageBus;
 import jgnash.message.MessageChannel;
 import jgnash.message.MessageListener;
 import jgnash.message.MessageProperty;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.JIntegerField;
 import jgnash.ui.components.JTextFieldEx;
@@ -265,7 +267,9 @@ public class CurrencyModifyDialog extends JDialog implements MessageListener, Li
 
             CurrencyNode newNode = buildCommodityNode();
             if (getEngine().getCurrency(newNode.getSymbol()) != null && oldNode != null) {
-                getEngine().updateCommodity(oldNode, newNode);
+                if (!getEngine().updateCommodity(oldNode, newNode)) {
+                    StaticUIMethods.displayError(MessageFormat.format(rb.getString("Message.Error.CurrencyUpdate"), newNode.getSymbol()));
+                }
             } else {
                 getEngine().addCommodity(newNode);
             }

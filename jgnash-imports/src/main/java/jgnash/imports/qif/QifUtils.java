@@ -75,6 +75,7 @@ public class QifUtils {
      *            String identifier of format to parse
      * @return Returns parsed date and current date if an error occurs
      */
+    @SuppressWarnings("MagicConstant")
     public static Date parseDate(String sDate, String format) {
         Calendar cal = Calendar.getInstance();
         int month = cal.get(Calendar.MONTH);

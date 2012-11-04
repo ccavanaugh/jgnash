@@ -25,6 +25,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.MessageFormat;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -46,6 +47,7 @@ import jgnash.message.MessageBus;
 import jgnash.message.MessageChannel;
 import jgnash.message.MessageListener;
 import jgnash.message.MessageProperty;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.CurrencyComboBox;
 import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.components.JIntegerField;
@@ -241,7 +243,9 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
         if (validateForm()) {
             SecurityNode newNode = buildSecurityNode();
             if (isModifying && oldNode != null) {
-                engine.updateCommodity(oldNode, newNode);
+                if (!engine.updateCommodity(oldNode, newNode)) {
+                    StaticUIMethods.displayError(MessageFormat.format(rb.getString("Message.Error.SecurityUpdate"), newNode.getSymbol()));
+                }
             } else {
                 engine.addCommodity(newNode);
             }

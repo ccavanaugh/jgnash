@@ -66,6 +66,7 @@ public class FormattedJTable extends JTable {
      * 
      * @see javax.swing.JTable#prepareRenderer(javax.swing.table.TableCellRenderer, int, int)
      */
+    @SuppressWarnings("MagicConstant")
     @Override
     public Component prepareRenderer(final TableCellRenderer renderer, final int row, final int column) {
 

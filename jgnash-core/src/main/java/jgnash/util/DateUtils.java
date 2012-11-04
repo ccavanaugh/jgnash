@@ -34,6 +34,8 @@ import java.util.regex.Pattern;
  * @author Craig Cavanaugh
  * @author Vincent Frison
  */
+
+@SuppressWarnings("MagicConstant")
 public class DateUtils {
 
     private static final int DAYS_PER_YEAR = 365;
@@ -226,7 +228,7 @@ public class DateUtils {
      *            day of the year
      * @return the date
      */
-    public static Date getDateOfTheYear(int year, int dayOfYear) {
+    public static Date getDateOfTheYear(final int year, final int dayOfYear) {
         GregorianCalendar c = calendarPool.take();
 
         try {
@@ -282,7 +284,7 @@ public class DateUtils {
      *            Calendar field
      * @return numerical value
      */
-    private static int getDayOfX(final Date date, int field) {
+    private static int getDayOfX(final Date date, final int field) {
         GregorianCalendar c = calendarPool.take();
 
         try {
@@ -537,7 +539,7 @@ public class DateUtils {
      *            The year to generate the array for
      * @return The array of dates
      */
-    public static Date[] getAllDays(int year) {
+    public static Date[] getAllDays(final int year) {
 
         GregorianCalendar cal = calendarPool.take();
 
@@ -895,7 +897,7 @@ public class DateUtils {
      *            number of months to subtract
      * @return prior month
      */
-    public static Date subtractMonths(final Date date, int months) {
+    public static Date subtractMonths(final Date date, final int months) {
         GregorianCalendar c = calendarPool.take();
 
         try {
@@ -927,7 +929,7 @@ public class DateUtils {
      *            number of years
      * @return date of the new year
      */
-    public static Date addYears(final Date date, int years) {
+    public static Date addYears(final Date date, final int years) {
         GregorianCalendar c = calendarPool.take();
 
         try {

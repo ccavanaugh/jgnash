@@ -27,6 +27,7 @@ import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
+import jgnash.ui.StaticUIMethods;
 import jgnash.util.Resource;
 
 /**
@@ -167,7 +168,9 @@ class AccountTools {
             tAccount.setVisible(dlg.isAccountVisible());
             tAccount.setExcludedFromBudget(dlg.isExcludedFromBudget());
 
-            engine.modifyAccount(tAccount, account);
+            if (!engine.modifyAccount(tAccount, account)) {
+                StaticUIMethods.displayError(rb.getString("Message.Error.AccouuntUpdate"));
+            }
 
             if (account.getAccountType().getAccountGroup() == AccountGroup.INVEST) {
                 engine.updateAccountSecurities(account, dlg.getAccountSecurities());

@@ -30,11 +30,7 @@ import java.lang.management.ThreadMXBean;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 /**
  * Monitors the AWT event dispatch thread for events that take longer than a
@@ -331,7 +327,7 @@ public final class EventDispatchThreadHangMonitor extends EventQueue {
                 public void run() {
                     for (String arg : args) {
                         final JFrame frame = new JFrame();
-                        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
                         frame.setLocationRelativeTo(null);
                         switch (arg) {
                             case "exception":

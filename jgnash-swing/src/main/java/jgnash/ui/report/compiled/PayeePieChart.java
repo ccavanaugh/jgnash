@@ -469,16 +469,14 @@ public class PayeePieChart {
             }
 
             for (String key : names.keySet()) {
-                String sKey = key;
                 BigDecimal value = names.get(key);
 
                 if (value.compareTo(BigDecimal.ZERO) == -1) {
                     value = value.negate();
-                    //sKey = sKey + "(-ve)";
-                    returnValue[1].setValue(sKey, value);
+                    returnValue[1].setValue(key, value);
                 }
                 else
-                    returnValue[0].setValue(sKey, value);
+                    returnValue[0].setValue(key, value);
             }
         }
         return returnValue;

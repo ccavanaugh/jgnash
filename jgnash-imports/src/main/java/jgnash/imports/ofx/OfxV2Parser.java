@@ -527,6 +527,7 @@ public class OfxV2Parser implements OfxTags {
      * @param date String form of the date
      * @return parsed date
      */
+    @SuppressWarnings("MagicConstant")
     private static Date parseDate(final String date) {
         int year = Integer.parseInt(date.substring(0, 4)); // year
         int month = Integer.parseInt(date.substring(4, 6)); // month

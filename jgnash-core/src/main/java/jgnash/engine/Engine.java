@@ -18,6 +18,7 @@
 package jgnash.engine;
 
 import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -304,7 +305,9 @@ public class Engine {
                         RootAccount extraRoot = roots.get(i);
 
                         for (Account child : extraRoot.getChildren()) {
-                            moveAccount(child, root);
+                            if (!moveAccount(child, root)) {
+                                logWarning(rb.getString("Message.Error.MoveAccount"));
+                            }
                         }
 
                         moveObjectToTrash(extraRoot);
@@ -727,19 +730,23 @@ public class Engine {
 
         try {
 
+            boolean status;
+
             // must delete any equivalent history nodes by identity
             List<SecurityHistoryNode> list = node.getHistoryNodes();
 
             for (SecurityHistoryNode h : list) {
                 if (h.equals(hNode)) {
-                    removeSecurityHistory(node, h);
+                    if (!removeSecurityHistory(node, h)) {
+                        logSevere(MessageFormat.format(rb.getString("Message.Error.HistRemoval"), hNode.getDate(), node.getSymbol()));
+                    }
                     break;
                 }
             }
 
             node.addHistoryNode(hNode);
 
-            boolean status = getCommodityDAO().addSecurityHistory(node, hNode);
+            status = getCommodityDAO().addSecurityHistory(node, hNode);
 
             Message message;
             if (status) {
@@ -1074,7 +1081,9 @@ public class Engine {
                     List<SecurityHistoryNode> hNodes = ((SecurityNode) node).getHistoryNodes();
 
                     for (SecurityHistoryNode hNode : hNodes) {
-                        removeSecurityHistory((SecurityNode) node, hNode);
+                        if (!removeSecurityHistory((SecurityNode) node, hNode)) {
+                            logSevere(MessageFormat.format(rb.getString("Message.Error.HistRemoval"), hNode.getDate(), node.getSymbol()));
+                        }
                     }
                 } else {
                     clearObsoleteExchangeRates();
@@ -1710,7 +1719,10 @@ public class Engine {
 
             /* Check to see if the account needs to be moved */
             if (account.parentAccount != template.parentAccount && template.parentAccount != null && result) {
-                moveAccount(account, template.parentAccount);
+                if (!moveAccount(account, template.parentAccount)) {
+                    logWarning(rb.getString("Message.Error.MoveAccount"));
+                    result = false;
+                }
             }
 
             return result;

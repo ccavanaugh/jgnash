@@ -151,7 +151,7 @@ public abstract class AbstractXStreamContainer {
         return xstream;
     }
 
-    @SuppressWarnings({"ChannelOpenedButNotSafelyClosed", "IOResourceOpenedButNotSafelyClosed"})
+    @SuppressWarnings(value = {"ChannelOpenedButNotSafelyClosed", "IOResourceOpenedButNotSafelyClosed"})
     protected boolean acquireFileLock() {
         try {
             lockChannel = new RandomAccessFile(file, "rw").getChannel();
