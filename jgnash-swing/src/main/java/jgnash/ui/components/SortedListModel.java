@@ -100,7 +100,7 @@ public class SortedListModel<E extends Comparable<? super E>> extends AbstractLi
      * 
      * @param elem an object.
      * @return <code>true</code> if the specified object is the same as a component in this list
-     * @see Vector#contains(Object)
+     * @see java.util.Vector#contains(Object)
      */
     public boolean contains(final E elem) {
         return list.contains(elem);
@@ -112,7 +112,7 @@ public class SortedListModel<E extends Comparable<? super E>> extends AbstractLi
      * @param elem an object.
      * @return the index of the first occurrence of the argument in this list; returns <code>-1</code> if the object is
      *         not found.
-     * @see Vector#indexOf(Object)
+     * @see java.util.Vector#indexOf(Object)
      */
     int indexOf(final E elem) {
         return list.indexOf(elem);
@@ -122,7 +122,7 @@ public class SortedListModel<E extends Comparable<? super E>> extends AbstractLi
      * Adds the specified component to the end of this list.
      * 
      * @param obj the component to be added.
-     * @see Vector#addElement(Object)
+     * @see java.util.Vector#addElement(Object)
      */
     public void addElement(final E obj) {
         int i = Collections.binarySearch(list, obj);

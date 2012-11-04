@@ -122,7 +122,8 @@ public class BalanceSheetReport extends AbstractSumByTypeReport {
         /**
          * Returns the retained profit or loss for the given period
          * 
-         * @param date Start date for the period
+         * @param startDate Start date for the period
+         * @param endDate End date for the period
          * @return the profit or loss for the period
          */
         private BigDecimal getRetainedProfitLoss(final Date startDate, final Date endDate) {
