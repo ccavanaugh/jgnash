@@ -82,7 +82,7 @@ public class ImportMt940Action extends AbstractEnabledAction {
     }
 
     final static class ImportMt940 extends SwingWorker<ImportBank, Void> {
-        private String fileName;
+        private final String fileName;
 
         protected ImportMt940(String fileName) {
             this.fileName = fileName;

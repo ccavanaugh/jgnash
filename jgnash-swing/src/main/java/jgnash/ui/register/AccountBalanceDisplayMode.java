@@ -29,7 +29,7 @@ public enum AccountBalanceDisplayMode {
     REVERSE_CREDIT(2),
     REVERSE_INCOME_EXPENSE(3);
 
-    private transient int value;
+    private final transient int value;
 
     private AccountBalanceDisplayMode(final int value) {
         this.value = value;

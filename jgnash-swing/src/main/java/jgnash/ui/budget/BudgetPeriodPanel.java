@@ -65,7 +65,7 @@ final class BudgetPeriodPanel extends JPanel {
     
     private JTable footerTable;
 
-    private BudgetPeriodModel model;
+    private final BudgetPeriodModel model;
 
     public BudgetPeriodPanel(final BudgetPeriodModel model) {
         this.model = model;

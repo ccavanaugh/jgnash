@@ -184,7 +184,7 @@ public class AccountTreeXMLFactory {
     static private class AccountImport {
 
         // merge map for accounts
-        private Map<Account, Account> mergeMap = new HashMap<>();
+        private final Map<Account, Account> mergeMap = new HashMap<>();
 
         private void importAccountTree(final Engine engine, final RootAccount root) {
             forceCurrency(engine, root);

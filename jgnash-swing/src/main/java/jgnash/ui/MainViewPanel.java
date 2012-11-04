@@ -53,7 +53,7 @@ class MainViewPanel extends JPanel implements ActionListener {
 
     private Component last = null;
 
-    private transient Preferences pref = Preferences.userNodeForPackage(MainViewPanel.class);
+    private final transient Preferences pref = Preferences.userNodeForPackage(MainViewPanel.class);
 
     private static final String LAST_VIEW = "lastview";
 
@@ -165,9 +165,9 @@ class MainViewPanel extends JPanel implements ActionListener {
 
     private static class Button extends JButton {
 
-        private Component component;
+        private final Component component;
 
-        private Icon icon;
+        private final Icon icon;
 
         Button(Component component, Icon icon) {
             super(icon);

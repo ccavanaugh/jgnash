@@ -34,7 +34,7 @@ public class RegisterEvent extends java.util.EventObject {
         OPEN
     }
 
-    private Action action;
+    private final Action action;
 
     public RegisterEvent(Object source, Action action) {
         super(source);

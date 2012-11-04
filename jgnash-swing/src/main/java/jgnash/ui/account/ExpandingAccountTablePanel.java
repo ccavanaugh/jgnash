@@ -57,7 +57,7 @@ import jgnash.util.Resource;
  */
 public class ExpandingAccountTablePanel extends JPanel implements ActionListener, MessageListener {
 
-    private Resource rb = Resource.get();
+    private final Resource rb = Resource.get();
 
     private ExpandingAccountTablePane accountPane;
 
@@ -73,7 +73,7 @@ public class ExpandingAccountTablePanel extends JPanel implements ActionListener
 
     private JButton zoomButton;
 
-    private AccountPopup popup;
+    private final AccountPopup popup;
 
     public ExpandingAccountTablePanel() {
         initComponents();
@@ -318,11 +318,11 @@ public class ExpandingAccountTablePanel extends JPanel implements ActionListener
 
     private class AccountPopup extends JPopupMenu implements ActionListener {
 
-        JMenuItem menuVisible;
+        final JMenuItem menuVisible;
 
-        JMenuItem reconcile;
+        final JMenuItem reconcile;
 
-        JMenuItem delete;
+        final JMenuItem delete;
 
         private static final String MODIFY = "mod";
 

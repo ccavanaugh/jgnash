@@ -41,7 +41,7 @@ public class InvestmentPerformanceSummary {
 
     private Date endDate;
 
-    private Map<SecurityNode, SecurityPerformanceData> performanceData = new TreeMap<>();
+    private final Map<SecurityNode, SecurityPerformanceData> performanceData = new TreeMap<>();
 
     private List<Transaction> transactions;
 

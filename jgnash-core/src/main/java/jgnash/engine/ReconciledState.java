@@ -31,7 +31,7 @@ public enum ReconciledState {
     NOT_RECONCILED(Resource.get().getString("State.NotReconciled")),
     RECONCILED(Resource.get().getString("State.Reconciled"));
 
-    private transient String symbol;
+    private final transient String symbol;
 
     private ReconciledState(String symbol) {
         this.symbol = symbol;

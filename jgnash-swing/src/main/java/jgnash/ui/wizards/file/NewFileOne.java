@@ -54,7 +54,7 @@ public class NewFileOne extends JPanel implements WizardPage, ActionListener {
 
     protected final Resource rb = Resource.get();
 
-    private JTextField dbNameField = new JTextField();
+    private final JTextField dbNameField = new JTextField();
 
     private JButton dbNameButton;
 

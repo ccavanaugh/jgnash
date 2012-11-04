@@ -60,7 +60,7 @@ public class DateChkNumberDialog extends JDialog implements ActionListener {
 
     TransactionNumberComboBox numberCombo;
 
-    private Account account;
+    private final Account account;
 
     private boolean result = false;
 

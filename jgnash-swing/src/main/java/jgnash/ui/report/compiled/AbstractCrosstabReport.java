@@ -72,13 +72,13 @@ import net.sf.jasperreports.engine.JasperPrint;
  */
 abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
-    private DatePanel startDateField;
+    private final DatePanel startDateField;
 
-    private DatePanel endDateField;
+    private final DatePanel endDateField;
 
-    private JButton refreshButton;
+    private final JButton refreshButton;
 
-    private JCheckBox hideZeroBalanceAccounts;
+    private final JCheckBox hideZeroBalanceAccounts;
 
     // ----- Resolution constants
     private final String RES_YEAR = rb.getString("Word.Yearly");
@@ -95,13 +95,13 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
     private final String SORT_ORDER_BALANCE_DESC_WITH_PERCENTILE = rb.getString("SortOrder.AccountBalanceDescWithPercentile");
 
-    private JComboBox<String> resolutionList;
+    private final JComboBox<String> resolutionList;
 
-    private JComboBox<String> sortOrderList;
+    private final JComboBox<String> sortOrderList;
 
-    private JCheckBox showLongNamesCheckBox;
+    private final JCheckBox showLongNamesCheckBox;
 
-    private Map<Account, Double> percentileMap = new HashMap<>();
+    private final Map<Account, Double> percentileMap = new HashMap<>();
 
     /**
      * Report Data **
@@ -427,7 +427,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
     private class ReportModel extends AbstractReportTableModel {
 
-        private CurrencyNode baseCurrency;
+        private final CurrencyNode baseCurrency;
 
         private List<Account> accountList = Collections.emptyList();
 

@@ -55,30 +55,30 @@ public class BudgetResultsModel implements MessageListener {
 
     private Set<Account> accounts = new HashSet<>();
 
-    private Budget budget;
+    private final Budget budget;
 
-    private CurrencyNode baseCurrency;
+    private final CurrencyNode baseCurrency;
 
     private List<AccountGroup> accountGroupList;
 
-    private List<BudgetPeriodDescriptor> descriptorList;
+    private final List<BudgetPeriodDescriptor> descriptorList;
 
-    private ReentrantReadWriteLock accountLock = new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock accountLock = new ReentrantReadWriteLock();
 
-    private ReentrantLock cacheLock = new ReentrantLock();
+    private final ReentrantLock cacheLock = new ReentrantLock();
 
-    private Map<Account, BudgetPeriodResults> accountResultsCache;
+    private final Map<Account, BudgetPeriodResults> accountResultsCache;
 
-    private Map<AccountGroup, BudgetPeriodResults> accountGroupResultsCache;
+    private final Map<AccountGroup, BudgetPeriodResults> accountGroupResultsCache;
 
-    private Map<BudgetPeriodDescriptor, Map<Account, BudgetPeriodResults>> descriptorAccountResultsCache;
+    private final Map<BudgetPeriodDescriptor, Map<Account, BudgetPeriodResults>> descriptorAccountResultsCache;
 
-    private Map<BudgetPeriodDescriptor, Map<AccountGroup, BudgetPeriodResults>> descriptorAccountGroupResultsCache;
+    private final Map<BudgetPeriodDescriptor, Map<AccountGroup, BudgetPeriodResults>> descriptorAccountGroupResultsCache;
 
     /**
      * Message proxy
      */
-    private MessageProxy proxy = new MessageProxy();
+    private final MessageProxy proxy = new MessageProxy();
 
     public BudgetResultsModel(final Budget budget, final int year, final CurrencyNode baseCurrency) {
         this.budget = budget;

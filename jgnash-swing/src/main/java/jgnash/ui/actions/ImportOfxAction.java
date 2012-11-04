@@ -82,7 +82,7 @@ public class ImportOfxAction extends AbstractEnabledAction {
 
     final static class Import extends SwingWorker<OfxV2Parser, Void> {
 
-        private File file;
+        private final File file;
 
         private Account match = null;
 

@@ -293,7 +293,7 @@ public class RegisterTableWithSplitEntriesModel extends RegisterTableModel {
 
     private static class TransactionWrapper {
 
-        Transaction transaction;
+        final Transaction transaction;
 
         TransactionEntry entry;
 

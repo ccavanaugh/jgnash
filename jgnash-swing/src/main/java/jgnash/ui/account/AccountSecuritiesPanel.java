@@ -49,9 +49,9 @@ import jgnash.util.Resource;
  */
 class AccountSecuritiesPanel extends JPanel implements ActionListener {
 
-    private transient Resource rb = Resource.get();
+    private final transient Resource rb = Resource.get();
 
-    private transient Engine engine;
+    private final transient Engine engine;
 
     private JButton addButton;
 
@@ -65,7 +65,7 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
 
     private SortedListModel<SecurityElement> selectedModel;
 
-    private Account account;
+    private final Account account;
 
     AccountSecuritiesPanel(final Account account) {
         engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
@@ -197,9 +197,9 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
 
     static final class SecurityElement implements Comparable<SecurityElement> {
 
-        private SecurityNode node;
+        private final SecurityNode node;
 
-        private boolean enabled;
+        private final boolean enabled;
 
         SecurityElement(final SecurityNode node, final boolean enabled) {
             this.node = node;
@@ -244,7 +244,7 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
 
     private static final class SecurityRenderer implements ListCellRenderer<SecurityElement> {
 
-        private ListCellRenderer<? super SecurityElement> delegate;
+        private final ListCellRenderer<? super SecurityElement> delegate;
 
         public SecurityRenderer(final ListCellRenderer<? super SecurityElement> delegate) {
             this.delegate = delegate;

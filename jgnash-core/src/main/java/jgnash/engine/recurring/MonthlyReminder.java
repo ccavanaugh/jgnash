@@ -79,7 +79,7 @@ public class MonthlyReminder extends Reminder {
     }
 
     private class MonthlyIterator implements RecurringIterator {
-        private Calendar calendar = Calendar.getInstance();
+        private final Calendar calendar = Calendar.getInstance();
 
         public MonthlyIterator() {
             if (getLastDate() != null) {

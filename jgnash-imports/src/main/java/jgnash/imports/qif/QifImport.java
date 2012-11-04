@@ -56,13 +56,13 @@ public class QifImport {
 
     private QifParser parser;
 
-    private Engine engine;
+    private final Engine engine;
 
-    private HashMap<String, Account> expenseMap = new HashMap<>();
+    private final HashMap<String, Account> expenseMap = new HashMap<>();
 
-    private HashMap<String, Account> incomeMap = new HashMap<>();
+    private final HashMap<String, Account> incomeMap = new HashMap<>();
 
-    private HashMap<String, Account> accountMap = new HashMap<>();
+    private final HashMap<String, Account> accountMap = new HashMap<>();
 
     private boolean stripDuplicates = true;
 
@@ -71,7 +71,7 @@ public class QifImport {
     /**
      * A holder for duplicate transactions
      */
-    private ArrayList<Transaction> duplicates = new ArrayList<>();
+    private final ArrayList<Transaction> duplicates = new ArrayList<>();
 
     /**
      * Holds the number of duplicate transactions that were stripped during the import

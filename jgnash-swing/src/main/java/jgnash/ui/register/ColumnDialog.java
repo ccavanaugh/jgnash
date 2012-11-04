@@ -69,7 +69,7 @@ class ColumnDialog extends JDialog implements ActionListener {
 
     private SortedListModel<String> hideModel;
 
-    private AbstractRegisterTableModel model;
+    private final AbstractRegisterTableModel model;
 
     private boolean result = false;
 

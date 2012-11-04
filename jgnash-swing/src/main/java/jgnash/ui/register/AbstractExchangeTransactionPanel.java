@@ -40,9 +40,9 @@ import jgnash.engine.Account;
  */
 public abstract class AbstractExchangeTransactionPanel extends AbstractBankTransactionPanel {
 
-    PanelType panelType;
+    final PanelType panelType;
 
-    AccountExchangePanel accountPanel;
+    final AccountExchangePanel accountPanel;
 
     AbstractExchangeTransactionPanel(Account account, PanelType panelType) {
         super(account);

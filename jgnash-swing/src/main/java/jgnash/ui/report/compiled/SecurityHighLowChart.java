@@ -57,7 +57,7 @@ public class SecurityHighLowChart {
 
     private SecurityComboBox combo;
 
-    private Resource rb = Resource.get();
+    private final Resource rb = Resource.get();
 
     private ChartPanel chartPanel;
 

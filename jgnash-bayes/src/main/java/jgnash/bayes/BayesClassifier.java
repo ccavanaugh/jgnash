@@ -39,8 +39,8 @@ public class BayesClassifier<E> {
     private final static String WHITE_SPACE_REGEX = "[,\\s]+";
     // private final static String NUMBERS_REGEX = "(?>-?\\d+(?:[\\./]\\d+)?)";
 
-    private Map<String, Map<E, Integer>> featureCounter = new HashMap<>();
-    private Map<E, Integer> classCounter = new HashMap<>();
+    private final Map<String, Map<E, Integer>> featureCounter = new HashMap<>();
+    private final Map<E, Integer> classCounter = new HashMap<>();
 
     public BayesClassifier(final E defaultClass) {
         this.defaultClass = defaultClass;

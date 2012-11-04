@@ -51,11 +51,11 @@ import java.util.logging.Logger;
  */
 class GainsPanel extends JPanel implements ActionListener {
 
-    private JFloatField gainsField;
+    private final JFloatField gainsField;
 
-    private JButton gainsButton;
+    private final JButton gainsButton;
 
-    private Account account;
+    private final Account account;
 
     private List<TransactionEntry> gainsList = new ArrayList<>();
 

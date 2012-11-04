@@ -33,7 +33,7 @@ import jgnash.util.DateUtils;
  */
 public final class ClippingDecorator implements ClippingModel {
 
-    private AbstractRegisterTableModel model;
+    private final AbstractRegisterTableModel model;
 
     private Date endDate = new Date();
 

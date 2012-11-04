@@ -45,7 +45,7 @@ import jgnash.util.Resource;
  * @author Craig Cavanaugh
  */
 class AccountDialog extends JDialog implements ActionListener {
-    private transient Resource rb = Resource.get();
+    private final transient Resource rb = Resource.get();
 
     private boolean returnStatus = false;
 

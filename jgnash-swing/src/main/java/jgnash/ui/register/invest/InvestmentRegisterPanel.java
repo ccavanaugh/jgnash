@@ -75,7 +75,7 @@ public class InvestmentRegisterPanel extends AbstractRegisterPanel implements Ac
 
     private JScrollPane jScrollPane;
 
-    private CommodityFormat fullFormat;
+    private final CommodityFormat fullFormat;
 
     private Account account;
 

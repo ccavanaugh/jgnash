@@ -36,7 +36,7 @@ class AccountTreeCellRenderer extends AbstractAccountEnabledTreeCellRenderer {
         super(delegate);
     }
 
-    private Set<Account> disabledAccount = new HashSet<>();
+    private final Set<Account> disabledAccount = new HashSet<>();
 
     private boolean isPlaceHolderEnabled = true;
 

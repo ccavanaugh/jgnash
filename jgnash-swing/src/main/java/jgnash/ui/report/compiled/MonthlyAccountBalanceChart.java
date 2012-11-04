@@ -70,13 +70,13 @@ import org.jfree.data.time.TimeSeriesCollection;
  */
 public class MonthlyAccountBalanceChart {
 
-    private FilteredAccountListComboBox combo = new FilteredAccountListComboBox(false, false);
+    private final FilteredAccountListComboBox combo = new FilteredAccountListComboBox(false, false);
 
-    private Resource rb = Resource.get();
+    private final Resource rb = Resource.get();
 
-    private DatePanel startDateField = new DatePanel();
+    private final DatePanel startDateField = new DatePanel();
 
-    private DatePanel endDateField = new DatePanel();
+    private final DatePanel endDateField = new DatePanel();
 
     private JCheckBox subAccountCheckBox;
 

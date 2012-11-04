@@ -72,7 +72,7 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
 
     private JButton removeButton;
 
-    private Engine engine;
+    private final Engine engine;
 
     public static void showDialog(final JFrame parent) {
         final Resource rb = Resource.get();
@@ -242,9 +242,9 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
 
     static class CurrencyElement implements Comparable<CurrencyElement> {
 
-        private CurrencyNode node;
+        private final CurrencyNode node;
 
-        private boolean enabled;
+        private final boolean enabled;
 
         CurrencyElement(CurrencyNode node, boolean enabled) {
             this.node = node;
@@ -290,7 +290,7 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
 
     private final static class CurrencyRenderer implements ListCellRenderer<CurrencyElement> {
 
-        private ListCellRenderer<? super CurrencyElement> delegate;
+        private final ListCellRenderer<? super CurrencyElement> delegate;
 
         public CurrencyRenderer(final ListCellRenderer<? super CurrencyElement> delegate) {
             this.delegate = delegate;

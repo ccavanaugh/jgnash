@@ -131,7 +131,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
      */
     private float realZoom = 0f;
 
-    private DecimalFormat zoomFormat = new DecimalFormat("#.#");
+    private final DecimalFormat zoomFormat = new DecimalFormat("#.#");
 
     private ResourceBundle resourceBundle = null;
 
@@ -173,14 +173,14 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
 
     private JPanel pageGluePanel;
 
-    private List<JRSaveContributor> saveContributors = new ArrayList<>();
+    private final List<JRSaveContributor> saveContributors = new ArrayList<>();
 
-    private DynamicJasperReport report;
+    private final DynamicJasperReport report;
 
     private PageRenderer pageRenderer;
 
     // reference to the parent frame to control wait message
-    private DynamicJasperReportFrame frame;
+    private final DynamicJasperReportFrame frame;
 
     protected DynamicJasperReportPanel(final DynamicJasperReportFrame frame, final DynamicJasperReport report) {
 

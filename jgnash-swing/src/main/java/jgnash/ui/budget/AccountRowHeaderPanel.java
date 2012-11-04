@@ -57,7 +57,7 @@ final class AccountRowHeaderPanel extends JPanel {
 
     private final ExpandingBudgetTableModel tableModel;
 
-    private Budget budget;
+    private final Budget budget;
 
     private JTable table;
 

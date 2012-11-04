@@ -47,7 +47,7 @@ class GeneralOptions extends JPanel implements ActionListener {
 
     private JButton numButton;
 
-    private JDialog parent;
+    private final JDialog parent;
 
     private JCheckBox selectOnFocusCheckBox;
 

@@ -400,7 +400,7 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
      */
     private class Renderer implements ListCellRenderer<Account> {
 
-        private ListCellRenderer<? super Account> delegate;
+        private final ListCellRenderer<? super Account> delegate;
 
         public Renderer(final ListCellRenderer<? super Account> delegate) {
             this.delegate = delegate;

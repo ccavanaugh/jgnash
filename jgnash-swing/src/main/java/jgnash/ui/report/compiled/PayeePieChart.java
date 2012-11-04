@@ -78,7 +78,7 @@ public class PayeePieChart {
 
     private final Resource rb = Resource.get();
 
-    private Preferences pref = Preferences.userNodeForPackage(PayeePieChart.class);
+    private final Preferences pref = Preferences.userNodeForPackage(PayeePieChart.class);
 
     private AccountListComboBox combo;
 
@@ -399,9 +399,9 @@ public class PayeePieChart {
 
     private static class TranTuple {
 
-        Account account;
+        final Account account;
 
-        Transaction transaction;
+        final Transaction transaction;
 
         public TranTuple(Account account, Transaction transaction) {
             this.account = account;

@@ -49,9 +49,9 @@ import jgnash.ui.util.ValidationFactory;
  */
 public final class BuySharePanel extends AbstractPriceQtyInvTransactionPanel {
 
-    private FeePanel feePanel;
+    private final FeePanel feePanel;
 
-    private AccountExchangePanel accountExchangePanel;
+    private final AccountExchangePanel accountExchangePanel;
 
     BuySharePanel(Account account) {
         super(account);

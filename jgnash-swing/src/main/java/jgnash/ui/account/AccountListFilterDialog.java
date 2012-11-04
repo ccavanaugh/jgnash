@@ -42,9 +42,9 @@ import jgnash.util.Resource;
  *
  */
 public class AccountListFilterDialog extends JDialog implements ActionListener {
-    private transient Resource rb = Resource.get();
+    private final transient Resource rb = Resource.get();
 
-    private AccountFilterModel filterModel;
+    private final AccountFilterModel filterModel;
 
     private JCheckBox incomeCheck;
 

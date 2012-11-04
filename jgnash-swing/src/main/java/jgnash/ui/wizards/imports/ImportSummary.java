@@ -41,7 +41,7 @@ import jgnash.util.Resource;
  */
 public class ImportSummary extends JPanel implements WizardPage {
 
-    private Resource rb = Resource.get();
+    private final Resource rb = Resource.get();
 
     private JLabel destLabel;
 

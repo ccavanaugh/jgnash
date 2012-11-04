@@ -35,10 +35,10 @@ import jgnash.engine.search.PayeeMatcher;
  */
 public class FilterDecorator implements FilterModel {
 
-    private AbstractRegisterTableModel model;
+    private final AbstractRegisterTableModel model;
     private String filter;
     private PayeeMatcher pm;
-    private List<Integer> matchedPayee;
+    private final List<Integer> matchedPayee;
 
     @Override
     public void setFilter(final String filter) {

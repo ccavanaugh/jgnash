@@ -35,13 +35,13 @@ public class InvestmentRegisterTableModel extends AbstractRegisterTableModel {
 
     private static final long serialVersionUID = -8280207838778167891L;
 
-    private static String[] names = { rb.getString("Column.Date"), rb.getString("Column.Action"),
+    private static final String[] names = { rb.getString("Column.Date"), rb.getString("Column.Action"),
                     rb.getString("Column.Investment"), rb.getString("Column.Clr"), rb.getString("Column.Quantity"),
                     rb.getString("Column.Price"), rb.getString("Column.Total") };
 
-    private static int[] PREF_COLUMN_WEIGHTS = { 0, 0, 20, 0, 0, 0, 0 };
+    private static final int[] PREF_COLUMN_WEIGHTS = { 0, 0, 20, 0, 0, 0, 0 };
 
-    private static Class<?>[] clazz = { Date.class, String.class, String.class, String.class, QuantityStyle.class,
+    private static final Class<?>[] clazz = { Date.class, String.class, String.class, String.class, QuantityStyle.class,
                     ShortCommodityStyle.class, ShortCommodityStyle.class };
 
     public InvestmentRegisterTableModel(Account account) {

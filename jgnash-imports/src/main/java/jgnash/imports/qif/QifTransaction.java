@@ -52,9 +52,9 @@ public class QifTransaction {
     String quantity;
     String type;
     String amountTrans;
-    public ArrayList<QifSplitTransaction> splits = new ArrayList<>();
+    public final ArrayList<QifSplitTransaction> splits = new ArrayList<>();
     @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection"})
-    private ArrayList<String> address = new ArrayList<>();
+    private final ArrayList<String> address = new ArrayList<>();
 
     public void addSplit(QifSplitTransaction split) {
         splits.add(split);

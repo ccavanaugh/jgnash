@@ -38,17 +38,17 @@ import jgnash.ui.components.JFloatField;
  */
 public abstract class AbstractPriceQtyInvTransactionPanel extends AbstractInvTransactionPanel {
 
-    protected DatePanel datePanel;
+    protected final DatePanel datePanel;
 
-    protected JTextField memoField;
+    protected final JTextField memoField;
 
-    protected JFloatField priceField;
+    protected final JFloatField priceField;
 
-    protected JFloatField quantityField;
+    protected final JFloatField quantityField;
 
-    protected AccountSecurityComboBox securityCombo;
+    protected final AccountSecurityComboBox securityCombo;
 
-    protected JFloatField totalField;
+    protected final JFloatField totalField;
 
     protected static final Logger logger = UIApplication.getLogger();
 

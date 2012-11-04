@@ -86,7 +86,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
     private static final String CURRENT_DIR = "cwd";
     private static final String LAST_BUDGET = "lastBudget";
     private static final String ROW_VISIBLE = "rowVisible";
-    private Preferences preferences = Preferences.userNodeForPackage(BudgetPanel.class);
+    private final Preferences preferences = Preferences.userNodeForPackage(BudgetPanel.class);
     private static final long serialVersionUID = 1L;
     private static final int COMBO_BOX_WIDTH = 180;
     private Budget activeBudget;
@@ -97,7 +97,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
     private JButton budgetManagerButton;
     private JButton budgetPropertiesButton;
     private JButton budgetExportButton;
-    private Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+    private final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
     private ExpandingBudgetTableModel tableModel;
     private JideScrollPane scrollPane;
     private transient AccountRowHeaderResizeHandler rowHeaderResizeHandler;

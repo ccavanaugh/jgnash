@@ -48,7 +48,7 @@ public class ExceptionDialog extends JDialog implements ActionListener {
 
     private JButton closeButton;
 
-    private Throwable throwable;
+    private final Throwable throwable;
 
     private JTextArea textArea;
 

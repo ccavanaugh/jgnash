@@ -52,7 +52,7 @@ public class ImportZero extends JPanel implements WizardPage, ActionListener {
 
     private final Resource rb = Resource.get();
 
-    private JTextField fileImportField = new JTextField();
+    private final JTextField fileImportField = new JTextField();
 
     private JButton fileImportButton;
 

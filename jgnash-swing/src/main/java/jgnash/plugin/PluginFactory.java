@@ -45,8 +45,8 @@ public final class PluginFactory {
     private static final Logger logger = Logger.getLogger(PluginFactory.class.getName());
 
     /* Singleton */
-    private static PluginFactory factory;
-    private static List<Plugin> plugins;
+    private static final PluginFactory factory;
+    private static final List<Plugin> plugins;
     private static boolean pluginsStarted = false;
     private static boolean pluginsLoaded = false;
 

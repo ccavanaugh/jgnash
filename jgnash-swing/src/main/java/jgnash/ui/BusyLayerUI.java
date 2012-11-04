@@ -61,7 +61,7 @@ public class BusyLayerUI extends LayerUI<JPanel> implements ActionListener {
     private Timer timer = new Timer(TIMER_TICK, this);
     private int angle;
     private int fadeCount;
-    private int fadeLimit = 24;
+    private final int fadeLimit = 24;
 
     @Override
     public void paint(final Graphics g, final JComponent c) {

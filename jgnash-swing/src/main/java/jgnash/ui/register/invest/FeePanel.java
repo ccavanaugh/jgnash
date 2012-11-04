@@ -57,7 +57,7 @@ class FeePanel extends JPanel implements ActionListener {
 
     private JButton feeButton;
 
-    private Account account;
+    private final Account account;
 
     private List<TransactionEntry> feeList = new ArrayList<>();
 

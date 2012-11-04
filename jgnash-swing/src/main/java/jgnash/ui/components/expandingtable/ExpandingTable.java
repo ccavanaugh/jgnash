@@ -48,33 +48,33 @@ import jgnash.ui.util.IconUtils;
  */
 public class ExpandingTable<E extends Comparable<? super E>> extends JTable {
 
-    private int iconIndent;
+    private final int iconIndent;
 
-    private Icon openIcon = UIManager.getIcon("Tree.openIcon");
+    private final Icon openIcon = UIManager.getIcon("Tree.openIcon");
 
-    private Icon closedIcon = UIManager.getIcon("Tree.closedIcon");
+    private final Icon closedIcon = UIManager.getIcon("Tree.closedIcon");
 
-    private Icon leafIcon = UIManager.getIcon("Tree.leafIcon");
+    private final Icon leafIcon = UIManager.getIcon("Tree.leafIcon");
 
-    private Icon collapsedIcon = UIManager.getIcon("Tree.collapsedIcon");
+    private final Icon collapsedIcon = UIManager.getIcon("Tree.collapsedIcon");
 
-    private Icon expandedIcon = UIManager.getIcon("Tree.expandedIcon");
+    private final Icon expandedIcon = UIManager.getIcon("Tree.expandedIcon");
 
     private int iconSpacing = 0;
 
     private final int selectionRange = getSelectionRange();
 
-    private AtomicBoolean defaultSaved = new AtomicBoolean();
+    private final AtomicBoolean defaultSaved = new AtomicBoolean();
 
     protected Color defaultForeground;
 
     protected int defaultAlignment;
 
-    AbstractExpandingTableModel<E> model;
+    final AbstractExpandingTableModel<E> model;
 
     private static final int VERTICAL_ICON_PADDING = 5;
 
-    private Map<String, Icon> iconCache = new HashMap<>();
+    private final Map<String, Icon> iconCache = new HashMap<>();
 
     public ExpandingTable(final AbstractExpandingTableModel<E> model) {
         super(model);
@@ -338,15 +338,15 @@ public class ExpandingTable<E extends Comparable<? super E>> extends JTable {
      */
     private static class IndentedIcon implements Icon {
 
-        private Icon[] icons;
+        private final Icon[] icons;
 
-        private int indent;
+        private final int indent;
 
         private int height;
 
         private int width;
 
-        private int iconSpacing;
+        private final int iconSpacing;
 
         public IndentedIcon(final Icon[] icons, final int indent, final int iconSpacing) {
             this.icons = icons;

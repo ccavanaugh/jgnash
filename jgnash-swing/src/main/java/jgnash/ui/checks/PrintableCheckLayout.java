@@ -74,7 +74,7 @@ class PrintableCheckLayout implements Printable {
 
     private PrinterJob job = PrinterJob.getPrinterJob();
 
-    private static float space = 4.5f;
+    private static final float space = 4.5f;
 
     protected PrintableCheckLayout(final CheckLayout layout) {
         this.checkLayout = layout;

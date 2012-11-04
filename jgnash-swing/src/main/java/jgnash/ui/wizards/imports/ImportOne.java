@@ -46,7 +46,7 @@ public class ImportOne extends JPanel implements WizardPage {
 
     private JTextPane helpPane;
 
-    private Resource rb = Resource.get();
+    private final Resource rb = Resource.get();
 
     public ImportOne() {
         layoutMainPanel();

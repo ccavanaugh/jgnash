@@ -34,7 +34,7 @@ import javax.swing.JPanel;
 class BudgetColumnFooter extends JPanel{
     private static final long serialVersionUID = 1L;
 
-    private List<BudgetPeriodPanel> panels;
+    private final List<BudgetPeriodPanel> panels;
 
     public BudgetColumnFooter(final List<BudgetPeriodPanel> panels) {
         this.panels = panels;

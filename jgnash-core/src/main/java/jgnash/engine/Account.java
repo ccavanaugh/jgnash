@@ -110,7 +110,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      */
     private static String accountSeparator = ":";
 
-    private static Pattern numberPattern = Pattern.compile("\\d+");
+    private static final Pattern numberPattern = Pattern.compile("\\d+");
 
     private static final Logger logger = Logger.getLogger(Account.class.getName());
 

@@ -84,9 +84,9 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
     private PeriodTableModel model;
 
-    private Account account;
+    private final Account account;
 
-    private int workingYear;
+    private final int workingYear;
 
     private JComboBox<Pattern> patternComboBox;
 
@@ -328,7 +328,7 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
         private List<BudgetPeriodDescriptor> periodDescriptors;
 
-        private String[] columnNames = {rb.getString("Column.Period"), rb.getString("Column.Amount")};
+        private final String[] columnNames = {rb.getString("Column.Period"), rb.getString("Column.Amount")};
 
         public PeriodTableModel(final List<BudgetPeriodDescriptor> descriptors) {
             this.periodDescriptors = descriptors;
@@ -406,7 +406,7 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
     private class GoalTable extends FormattedJTable {
 
-        private NumberFormat commodityFormatter;
+        private final NumberFormat commodityFormatter;
 
         public GoalTable(final TableModel model) {
             super(model);

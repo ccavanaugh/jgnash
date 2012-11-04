@@ -62,13 +62,13 @@ import jgnash.util.Resource;
  */
 abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
-    private DatePanel startDateField;
+    private final DatePanel startDateField;
 
-    private DatePanel endDateField;
+    private final DatePanel endDateField;
 
-    private JButton refreshButton;
+    private final JButton refreshButton;
 
-    private JCheckBox hideZeroBalanceAccounts;
+    private final JCheckBox hideZeroBalanceAccounts;
 
     private static final String HIDE_ZERO_BALANCE = "hideZeroBalance";
 
@@ -253,13 +253,13 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
     protected class ReportModel extends AbstractReportTableModel {
 
-        private List<Row> rowList = new ArrayList<>();
+        private final List<Row> rowList = new ArrayList<>();
 
-        private CurrencyNode baseCurrency;
+        private final CurrencyNode baseCurrency;
 
-        private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
+        private final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
 
-        private Resource rb = Resource.get();
+        private final Resource rb = Resource.get();
 
         public ReportModel(final Date startDate, final Date endDate, final CurrencyNode currency) {
             this.baseCurrency = currency;
@@ -363,7 +363,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
         private class AccountRow extends Row {
 
-            Account account;
+            final Account account;
 
             public AccountRow(final Account account) {
                 this.account = account;

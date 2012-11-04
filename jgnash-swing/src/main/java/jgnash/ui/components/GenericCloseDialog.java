@@ -46,7 +46,7 @@ public class GenericCloseDialog extends JDialog implements ActionListener {
 
     private JButton closeButton;
 
-    private JComponent component;
+    private final JComponent component;
 
     public GenericCloseDialog(final Window parent, final JComponent panel, final String title) {
         super(parent);

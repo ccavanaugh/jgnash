@@ -37,7 +37,7 @@ public class QifAccount {
 
     public String statementBalance;
 
-    public ArrayList<QifTransaction> items = new ArrayList<>();
+    public final ArrayList<QifTransaction> items = new ArrayList<>();
 
     public void addTransaction(QifTransaction item) {
         items.add(item);

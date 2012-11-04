@@ -63,7 +63,7 @@ public class ProfitLossTXT {
 
     private ArrayList<BigDecimal> balance = new ArrayList<>();
 
-    private ArrayList<String> pl = new ArrayList<>();
+    private final ArrayList<String> pl = new ArrayList<>();
 
     private CurrencyNode baseCommodity;
 

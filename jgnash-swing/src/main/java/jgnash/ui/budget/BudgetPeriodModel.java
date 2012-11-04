@@ -72,12 +72,12 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
     /**
      * Message proxy
      */
-    private MessageProxy proxy = new MessageProxy();
+    private final MessageProxy proxy = new MessageProxy();
 
     /**
      * List of listeners
      */
-    protected EventListenerList listenerList = new EventListenerList();
+    protected final EventListenerList listenerList = new EventListenerList();
 
     private static final Logger logger = Logger.getLogger(BudgetPeriodModel.class.getName());
 

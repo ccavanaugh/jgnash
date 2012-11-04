@@ -80,7 +80,7 @@ public class IncomeExpensePieChart {
 
     private final Resource rb = Resource.get();
 
-    private Preferences pref = Preferences.userNodeForPackage(IncomeExpensePieChart.class);
+    private final Preferences pref = Preferences.userNodeForPackage(IncomeExpensePieChart.class);
 
     private AccountListComboBox combo;
 
@@ -88,9 +88,9 @@ public class IncomeExpensePieChart {
 
     private JCheckBox showPercentCheck;
 
-    private Cursor ZOOM_IN = CursorUtils.getCursor(CursorUtils.ZOOM_IN);
+    private final Cursor ZOOM_IN = CursorUtils.getCursor(CursorUtils.ZOOM_IN);
 
-    private Cursor ZOOM_OUT = CursorUtils.getCursor(CursorUtils.ZOOM_OUT);
+    private final Cursor ZOOM_OUT = CursorUtils.getCursor(CursorUtils.ZOOM_OUT);
 
     private Point lastPoint;
 

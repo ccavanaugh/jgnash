@@ -56,15 +56,15 @@ public class PartialOne extends JPanel implements WizardPage, ActionListener {
 
     private JComboBox<String> dateFormatCombo;
 
-    private QifAccount qAcc;
+    private final QifAccount qAcc;
 
-    private Preferences pref = Preferences.userNodeForPackage(PartialOne.class);
+    private final Preferences pref = Preferences.userNodeForPackage(PartialOne.class);
 
     private static final String LAST_ACCOUNT = "lastAccount";
 
     private static final String DATE_FORMAT = "dateFormat";
 
-    private Resource rb = Resource.get();
+    private final Resource rb = Resource.get();
 
     public PartialOne(QifAccount qAcc) {
         this.qAcc = qAcc;

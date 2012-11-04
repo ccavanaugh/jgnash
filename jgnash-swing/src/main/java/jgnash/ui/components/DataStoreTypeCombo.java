@@ -27,7 +27,7 @@ import jgnash.engine.DataStoreType;
  */
 public class DataStoreTypeCombo extends JComboBox<DataStoreType> {
 
-    private SortedComboBoxModel<DataStoreType> model = new SortedComboBoxModel<>();
+    private final SortedComboBoxModel<DataStoreType> model = new SortedComboBoxModel<>();
    
 	public DataStoreTypeCombo() {
         super();

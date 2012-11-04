@@ -50,15 +50,15 @@ public final class QifParser {
 
     private String dateFormat = QifUtils.US_FORMAT;
 
-    private boolean debug = false;
+    private final boolean debug = false;
 
-    public ArrayList<QifCategory> categories = new ArrayList<>();
+    public final ArrayList<QifCategory> categories = new ArrayList<>();
 
-    private ArrayList<QifClassItem> classes = new ArrayList<>();
+    private final ArrayList<QifClassItem> classes = new ArrayList<>();
 
-    public ArrayList<QifAccount> accountList = new ArrayList<>();
+    public final ArrayList<QifAccount> accountList = new ArrayList<>();
 
-    private ArrayList<QifSecurity> securities = new ArrayList<>();
+    private final ArrayList<QifSecurity> securities = new ArrayList<>();
 
     private static final Logger logger = Logger.getLogger(QifParser.class.getName());
 

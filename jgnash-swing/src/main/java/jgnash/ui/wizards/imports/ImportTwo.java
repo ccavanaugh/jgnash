@@ -51,7 +51,7 @@ import jgnash.util.Resource;
  */
 public class ImportTwo extends JPanel implements WizardPage, ActionListener {
 
-    private Resource rb = Resource.get();
+    private final Resource rb = Resource.get();
 
     private JButton deleteButton;
 

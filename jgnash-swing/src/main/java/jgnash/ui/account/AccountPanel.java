@@ -54,7 +54,7 @@ import jgnash.util.Resource;
 final class AccountPanel extends JPanel implements ActionListener {
     private static final long serialVersionUID = 1L;
 
-    private transient Resource rb = Resource.get();
+    private final transient Resource rb = Resource.get();
 
     private Account parentAccount;
 

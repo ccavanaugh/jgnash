@@ -93,40 +93,40 @@ public class Import {
     /**
      * Id map for accounts
      */
-    private Map<String, Account> accountMap = new HashMap<>();
+    private final Map<String, Account> accountMap = new HashMap<>();
 
     /**
      * Parent map for accounts
      */
-    private Map<Account, String> parentMap = new HashMap<>();
+    private final Map<Account, String> parentMap = new HashMap<>();
 
     /**
      * Lock status of the accounts
      */
-    private Map<String, Boolean> lockMap = new HashMap<>();
+    private final Map<String, Boolean> lockMap = new HashMap<>();
 
     /**
      * List of splits
      */
-    private List<Map<String, String>> splitList = new ArrayList<>();
+    private final List<Map<String, String>> splitList = new ArrayList<>();
 
     /**
      * List of split entries
      */
-    private List<Map<String, String>> splitEntryList = new ArrayList<>();
+    private final List<Map<String, String>> splitEntryList = new ArrayList<>();
 
     /**
      * Id map for commodities
      */
-    private Map<String, Commodity> commodityMap = new HashMap<>();
+    private final Map<String, Commodity> commodityMap = new HashMap<>();
 
-    private static List<Runnable> workQueue = new ArrayList<>();
+    private static final List<Runnable> workQueue = new ArrayList<>();
 
     /**
      * Cache of currency nodes, so that database doesn't need to be queried for
      * each transaction.
      */
-    private Map<String, CurrencyNode> currencyCache = new HashMap<>();
+    private final Map<String, CurrencyNode> currencyCache = new HashMap<>();
 
     private Import() {
         try {
@@ -886,9 +886,9 @@ public class Import {
 
     private class AOThread extends Thread {
 
-        Map<String, String> elementMap;
+        final Map<String, String> elementMap;
 
-        Account liabilityAccount;
+        final Account liabilityAccount;
 
         public AOThread(final Account liabilityAccount, final Map<String, String> elementMap) {
             this.liabilityAccount = liabilityAccount;
@@ -1397,7 +1397,7 @@ public class Import {
         return node;
     }
 
-    private Calendar calendar = Calendar.getInstance(); // reused for date decode
+    private final Calendar calendar = Calendar.getInstance(); // reused for date decode
 
     @SuppressWarnings("MagicConstant")
     private Date decodeDate(final String date) {

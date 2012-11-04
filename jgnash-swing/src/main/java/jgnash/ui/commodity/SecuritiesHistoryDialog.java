@@ -394,7 +394,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
 
         List<SecurityHistoryNode> history;        
 
-        private NumberFormat volumeFormatter = NumberFormat.getIntegerInstance();
+        private final NumberFormat volumeFormatter = NumberFormat.getIntegerInstance();
 
         private NumberFormat commodityFormatter;
 

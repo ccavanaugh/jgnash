@@ -69,11 +69,11 @@ public final class MonthBalanceCSV {
 
     private static final boolean SHOW_EMPTY_ACCOUNT = false;
 
-    private ArrayList<Account> accounts = new ArrayList<>();
+    private final ArrayList<Account> accounts = new ArrayList<>();
 
-    private ArrayList<BigDecimal[]> balance = new ArrayList<>();
+    private final ArrayList<BigDecimal[]> balance = new ArrayList<>();
 
-    private SimpleDateFormat df = new SimpleDateFormat("MMMMM");
+    private final SimpleDateFormat df = new SimpleDateFormat("MMMMM");
 
     private final Resource rb = Resource.get();
 

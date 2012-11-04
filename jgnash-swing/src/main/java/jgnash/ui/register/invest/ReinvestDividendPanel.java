@@ -47,9 +47,9 @@ import jgnash.ui.util.ValidationFactory;
  */
 public final class ReinvestDividendPanel extends AbstractPriceQtyInvTransactionPanel {
 
-    private FeePanel feePanel;
+    private final FeePanel feePanel;
 
-    private GainsPanel gainsPanel;
+    private final GainsPanel gainsPanel;
 
     protected ReinvestDividendPanel(Account account) {
         super(account);

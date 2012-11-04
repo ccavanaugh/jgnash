@@ -55,13 +55,13 @@ import net.sf.jasperreports.engine.JasperPrint;
  */
 public class PortfolioReport extends DynamicJasperReport {
 
-    private JCheckBox subAccountCheckBox;
+    private final JCheckBox subAccountCheckBox;
 
-    private JCheckBox verboseCheckBox;
+    private final JCheckBox verboseCheckBox;
 
-    private AccountListComboBox accountCombo;
+    private final AccountListComboBox accountCombo;
 
-    private JButton refreshButton;
+    private final JButton refreshButton;
 
     private static final String USE_LONG_NAMES = "useLongNames";
 
@@ -189,7 +189,7 @@ public class PortfolioReport extends DynamicJasperReport {
 
         boolean verbose;
 
-        private CurrencyNode baseCurrency;
+        private final CurrencyNode baseCurrency;
 
         private InvestmentPerformanceSummary performanceSummary;
 

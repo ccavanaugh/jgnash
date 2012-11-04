@@ -33,7 +33,7 @@ import javax.swing.table.TableCellRenderer;
  */
 class SortableTableHeaderRenderer implements TableCellRenderer {
 
-    private TableCellRenderer tableCellRenderer;
+    private final TableCellRenderer tableCellRenderer;
 
     protected SortableTableHeaderRenderer(TableCellRenderer tableCellRenderer) {
         this.tableCellRenderer = tableCellRenderer;

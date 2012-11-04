@@ -50,11 +50,11 @@ import jgnash.util.Resource;
  */
 class ImportTable extends FormattedJTable {
 
-    private Resource rb = Resource.get();
+    private final Resource rb = Resource.get();
 
-    private Model model;
+    private final Model model;
 
-    private TableCellEditor accEditor = new DefaultCellEditor(new AccountListComboBox());
+    private final TableCellEditor accEditor = new DefaultCellEditor(new AccountListComboBox());
 
     private List<? extends ImportTransaction> transactions = Collections.emptyList();
 
@@ -170,14 +170,14 @@ class ImportTable extends FormattedJTable {
 
         private ImageIcon removeIcon = null;
 
-        private String[] cNames = { " ", rb.getString("Column.Date"), rb.getString("Column.Num"),
+        private final String[] cNames = { " ", rb.getString("Column.Date"), rb.getString("Column.Num"),
                         rb.getString("Column.Payee"), rb.getString("Column.Memo"), rb.getString("Column.Account"),
                         rb.getString("Column.Amount") };
 
-        private Class<?>[] cClass = { String.class, String.class, String.class, String.class, String.class,
+        private final Class<?>[] cClass = { String.class, String.class, String.class, String.class, String.class,
                         String.class, BigDecimal.class };
 
-        private DateFormat dateFormatter = DateUtils.getShortDateFormat();
+        private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
 
         public Model() {
             notEqualIcon = Resource.getIcon("/jgnash/resource/not-equal.png");

@@ -68,7 +68,7 @@ class MessageBusRemoteClient {
 
     private IoSession session;
 
-    private XStream xstream;
+    private final XStream xstream;
 
     static {
         IoBuffer.setUseDirectBuffer(false);

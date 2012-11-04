@@ -29,7 +29,7 @@ import javax.swing.table.TableModel;
  */
 class BudgetResultsTable extends AbstractResultsTable {
 
-    NumberFormat format;
+    final NumberFormat format;
 
     public BudgetResultsTable(final TableModel model, NumberFormat format) {
         super(model);

@@ -56,21 +56,21 @@ import jgnash.ui.register.table.RegisterTable;
  */
 public class RegisterPanel extends AbstractRegisterPanel implements ActionListener, RegisterListener {
 
-    private NumberFormat format;
+    private final NumberFormat format;
 
-    Account account;
+    final Account account;
 
-    private AbstractRegisterTableModel model;
+    private final AbstractRegisterTableModel model;
 
-    private RegisterTable table;
+    private final RegisterTable table;
 
-    private TransactionPanel debitPanel;
+    private final TransactionPanel debitPanel;
 
-    private TransactionPanel creditPanel;
+    private final TransactionPanel creditPanel;
 
-    private TransferPanel transferPanel;
+    private final TransferPanel transferPanel;
 
-    private AdjustmentPanel adjustPanel;
+    private final AdjustmentPanel adjustPanel;
 
     JButton newButton;
 

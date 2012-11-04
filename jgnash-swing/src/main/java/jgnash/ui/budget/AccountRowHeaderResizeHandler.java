@@ -42,7 +42,7 @@ import javax.swing.event.TableModelListener;
  */
 final class AccountRowHeaderResizeHandler extends MouseInputAdapter {
 
-    private JScrollPane scrollPane;
+    private final JScrollPane scrollPane;
 
     private JViewport rowHeaderViewport;
 
@@ -70,7 +70,7 @@ final class AccountRowHeaderResizeHandler extends MouseInputAdapter {
 
     private int borderWidth;
 
-    private ModelListener listener = new ModelListener();
+    private final ModelListener listener = new ModelListener();
 
     public AccountRowHeaderResizeHandler(final JScrollPane scrollPane) {
         this.scrollPane = scrollPane;

@@ -39,7 +39,7 @@ public class CheckObject implements Serializable {
         MEMO(Resource.get().getString("Item.Memo")),
         ADDRESS(Resource.get().getString("Item.Address"));
 
-        transient private String typeName;
+        final transient private String typeName;
 
         private CheckObjectType(String name) {
             this.typeName = name;

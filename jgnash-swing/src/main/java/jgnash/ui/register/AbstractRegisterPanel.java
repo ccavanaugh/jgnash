@@ -65,7 +65,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
 
     protected final Resource rb = Resource.get();
 
-    private TransactionPopup popup = new TransactionPopup();
+    private final TransactionPopup popup = new TransactionPopup();
 
     protected abstract Account getAccount();
 
@@ -435,15 +435,15 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
 
     protected class TransactionPopup extends JPopupMenu implements ActionListener {
 
-        private JMenuItem duplicate;
+        private final JMenuItem duplicate;
 
-        private JMenuItem delete;
+        private final JMenuItem delete;
 
-        private JRadioButtonMenuItem reconciled;
+        private final JRadioButtonMenuItem reconciled;
 
-        private JRadioButtonMenuItem unreconciled;
+        private final JRadioButtonMenuItem unreconciled;
 
-        private JMenuItem jump;
+        private final JMenuItem jump;
 
         public TransactionPopup() {
 

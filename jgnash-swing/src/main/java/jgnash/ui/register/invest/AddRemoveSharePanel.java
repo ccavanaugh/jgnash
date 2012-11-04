@@ -43,7 +43,7 @@ import jgnash.ui.util.ValidationFactory;
  */
 public final class AddRemoveSharePanel extends AbstractPriceQtyInvTransactionPanel {
 
-    private TransactionType tranType;
+    private final TransactionType tranType;
 
     AddRemoveSharePanel(Account account, TransactionType tranType) {
         super(account);

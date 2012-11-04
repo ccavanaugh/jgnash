@@ -55,7 +55,6 @@ import jgnash.util.Resource;
  * after the start date (reconciled or not) will be added to the list of transactions shown.
  * 
  * @author Craig Cavanaugh
- *
  */
 public abstract class AbstractReconcileTableModel extends AbstractTableModel implements MessageListener, PackableTableModel {
 
@@ -65,22 +64,22 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
 
     private final Date openingDate;
 
-    private List<RecTransaction> list = new ArrayList<>();
+    private final List<RecTransaction> list = new ArrayList<>();
 
     private final Resource rb = Resource.get();
 
-    private String[] cNames = { rb.getString("Column.Clr"), rb.getString("Column.Date"), rb.getString("Column.Num"),
+    private final String[] cNames = { rb.getString("Column.Clr"), rb.getString("Column.Date"), rb.getString("Column.Num"),
                     rb.getString("Column.Payee"), rb.getString("Column.Amount") };
 
-    private Class<?>[] cClass = { String.class, String.class, String.class, String.class, BigDecimal.class };
+    private final Class<?>[] cClass = { String.class, String.class, String.class, String.class, BigDecimal.class };
 
     private final int[] columnWidths = { 0, 0, 0, 99, 0 };
 
-    private DateFormat dateFormatter = DateUtils.getShortDateFormat();
+    private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
 
     private NumberFormat commodityFormatter;
 
-    private ReadWriteLock rwl = new ReentrantReadWriteLock(true);
+    private final ReadWriteLock rwl = new ReentrantReadWriteLock(true);
 
     AbstractReconcileTableModel(final Account account, final Date openingDate) {
         assert cNames.length == cClass.length;

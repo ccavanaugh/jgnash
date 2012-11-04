@@ -69,9 +69,9 @@ import jgnash.ui.util.JTableUtils;
  */
 public class AccountRowFooterPanel extends JPanel {
 
-    private ExpandingBudgetTableModel model;
+    private final ExpandingBudgetTableModel model;
 
-    private AccountRowSummaryModel summaryModel;
+    private final AccountRowSummaryModel summaryModel;
 
     private JComponent header;
 
@@ -83,7 +83,7 @@ public class AccountRowFooterPanel extends JPanel {
 
     private final ExecutorService pool = Executors.newCachedThreadPool();
 
-    private BudgetResultsModel resultsModel;
+    private final BudgetResultsModel resultsModel;
 
     public AccountRowFooterPanel(final ExpandingBudgetTableModel model) {
         this.model = model;
@@ -274,7 +274,7 @@ public class AccountRowFooterPanel extends JPanel {
      */
     private class AccountRowSummaryModel extends AbstractTableModel implements MessageListener {
 
-        private ExpandingBudgetTableModel model;
+        private final ExpandingBudgetTableModel model;
 
         private transient TableModelListener listener;
 

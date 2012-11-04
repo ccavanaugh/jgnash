@@ -44,11 +44,11 @@ public abstract class CommodityFormat {
 
     // private static CommodityFormat simpleFormat;
 
-    private static Map<CommodityNode, DecimalFormat> fullInstanceMap = new HashMap<>();
+    private static final Map<CommodityNode, DecimalFormat> fullInstanceMap = new HashMap<>();
 
-    private static Map<CommodityNode, DecimalFormat> simpleInstanceMap = new HashMap<>();
+    private static final Map<CommodityNode, DecimalFormat> simpleInstanceMap = new HashMap<>();
 
-    private static String[] ESCAPE_CHARS = new String[] { ",", ".", "0", "#", "-", ";", "%" };
+    private static final String[] ESCAPE_CHARS = new String[] { ",", ".", "0", "#", "-", ";", "%" };
 
     private static final boolean DEBUG = false;
 

@@ -45,7 +45,7 @@ import jgnash.util.Resource;
  *
  */
 public class PartialTwo extends JPanel implements WizardPage, ActionListener {
-    private Resource rb = Resource.get();
+    private final Resource rb = Resource.get();
 
     private JButton deleteButton;
 
@@ -53,7 +53,7 @@ public class PartialTwo extends JPanel implements WizardPage, ActionListener {
 
     private PartialTable table;
 
-    private QifAccount qAcc;
+    private final QifAccount qAcc;
 
     public PartialTwo(QifAccount qAcc) {
         this.qAcc = qAcc;

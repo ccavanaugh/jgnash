@@ -52,17 +52,17 @@ import jgnash.ui.util.ValidationFactory;
  */
 public final class DividendPanel extends AbstractInvTransactionPanel {
 
-    private DatePanel datePanel;
+    private final DatePanel datePanel;
 
-    private JTextField memoField;
+    private final JTextField memoField;
 
-    private JFloatField dividendField;
+    private final JFloatField dividendField;
 
-    private AccountSecurityComboBox securityCombo;
+    private final AccountSecurityComboBox securityCombo;
 
-    private AccountExchangePanel accountExchangePanel;
+    private final AccountExchangePanel accountExchangePanel;
 
-    private AccountExchangePanel incomeExchangePanel;
+    private final AccountExchangePanel incomeExchangePanel;
 
     private static final Logger logger = Logger.getLogger(DividendPanel.class.getName());
 

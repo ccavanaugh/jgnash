@@ -35,7 +35,7 @@ public class ExchangeRate extends StoredObject {
 
     private static final long serialVersionUID = -2365289994847042288L;
 
-    private List<ExchangeRateHistoryNode> historyNodes = new ArrayList<>();
+    private final List<ExchangeRateHistoryNode> historyNodes = new ArrayList<>();
 
     /**
      * Cache the last exchange rate

@@ -176,7 +176,7 @@ public final class BudgetComboBox extends JComboBox<Budget> {
      */
     private class Renderer implements ListCellRenderer<Budget> {
 
-        private ListCellRenderer<? super Budget> delegate;
+        private final ListCellRenderer<? super Budget> delegate;
 
         public Renderer(final ListCellRenderer<? super Budget> delegate) {
             this.delegate = delegate;

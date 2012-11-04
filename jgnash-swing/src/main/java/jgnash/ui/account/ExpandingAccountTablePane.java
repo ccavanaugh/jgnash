@@ -43,7 +43,7 @@ class ExpandingAccountTablePane extends JScrollPane {
 
     ExpandingAccountTableModel model = new ExpandingAccountTableModel();
 
-    JTable accountTable;
+    final JTable accountTable;
 
     public ExpandingAccountTablePane() {
         model = new ExpandingAccountTableModel();

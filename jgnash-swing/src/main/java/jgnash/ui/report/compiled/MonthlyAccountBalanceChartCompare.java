@@ -77,17 +77,17 @@ import org.jfree.data.time.TimeSeriesCollection;
 
 public class MonthlyAccountBalanceChartCompare {
 
-    private FilteredAccountListComboBox combo1 = new FilteredAccountListComboBox(false, false);
+    private final FilteredAccountListComboBox combo1 = new FilteredAccountListComboBox(false, false);
 
-    private FilteredAccountListComboBox combo2 = new FilteredAccountListComboBox(false, false);
+    private final FilteredAccountListComboBox combo2 = new FilteredAccountListComboBox(false, false);
 
     //this is a customisation that can be removed for a more general release
 
-    private Resource rb = Resource.get();
+    private final Resource rb = Resource.get();
 
-    private DatePanel startDateField = new DatePanel();
+    private final DatePanel startDateField = new DatePanel();
 
-    private DatePanel endDateField = new DatePanel();
+    private final DatePanel endDateField = new DatePanel();
 
     private JCheckBox subAccountCheckBox;
 

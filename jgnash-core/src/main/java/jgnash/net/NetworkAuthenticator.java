@@ -53,7 +53,7 @@ public class NetworkAuthenticator extends Authenticator {
 
     public static final String PROXYPORT = "proxyport";
 
-    private Preferences auth = Preferences.userRoot().node(NODEHTTP);
+    private final Preferences auth = Preferences.userRoot().node(NODEHTTP);
 
     public static void setName(String name) {
         Preferences pref = Preferences.userRoot().node(NODEHTTP);

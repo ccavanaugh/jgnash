@@ -38,13 +38,13 @@ import jgnash.util.Resource;
  */
 class PartialTable extends FormattedJTable {
 
-    private Resource rb = Resource.get();
+    private final Resource rb = Resource.get();
 
-    private QifAccount qAccount;
+    private final QifAccount qAccount;
 
-    private Model model;
+    private final Model model;
 
-    private TableCellEditor accEditor = new DefaultCellEditor(new AccountListComboBox());
+    private final TableCellEditor accEditor = new DefaultCellEditor(new AccountListComboBox());
 
     public PartialTable(final QifAccount qAccount) {
         super();
@@ -75,12 +75,12 @@ class PartialTable extends FormattedJTable {
 
         private static final long serialVersionUID = 7054758354758853979L;
 
-        private String[] cNames = { rb.getString("Column.Date"), rb.getString("Column.Payee"),
+        private final String[] cNames = { rb.getString("Column.Date"), rb.getString("Column.Payee"),
                         rb.getString("Column.Account"), rb.getString("Column.Amount") };
 
-        private Class<?>[] cClass = { String.class, String.class, String.class, BigDecimal.class };
+        private final Class<?>[] cClass = { String.class, String.class, String.class, BigDecimal.class };
 
-        private DateFormat dateFormatter = DateUtils.getShortDateFormat();
+        private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
 
         @Override
         public String getColumnName(final int column) {

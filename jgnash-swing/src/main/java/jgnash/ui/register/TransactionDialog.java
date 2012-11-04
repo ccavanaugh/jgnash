@@ -47,9 +47,9 @@ public class TransactionDialog extends JDialog implements RegisterListener {
 
     private final Resource rb = Resource.get();
 
-    private Account account;
+    private final Account account;
 
-    private JTabbedPane tabbedPane;
+    private final JTabbedPane tabbedPane;
 
     private TransactionPanelEx debitPanel;
 

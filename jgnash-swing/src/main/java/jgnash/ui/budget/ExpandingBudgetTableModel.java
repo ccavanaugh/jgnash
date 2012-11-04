@@ -48,11 +48,11 @@ public class ExpandingBudgetTableModel extends AbstractExpandingTableModel<Accou
 
     private static final String COLUMN_NAME = Resource.get().getString("Column.Account");
 
-    private MessageProxy proxy = new MessageProxy();
+    private final MessageProxy proxy = new MessageProxy();
 
-    private Budget budget;
+    private final Budget budget;
 
-    private BudgetResultsModel model;
+    private final BudgetResultsModel model;
 
     public ExpandingBudgetTableModel(final BudgetResultsModel model) {
         this.budget = model.getBudget();

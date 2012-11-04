@@ -31,7 +31,7 @@ import jgnash.ui.components.wizard.WizardDialog;
  */
 public class PartialDialog extends WizardDialog {
 
-    private PartialOne partialOne;
+    private final PartialOne partialOne;
 
     public PartialDialog(final QifParser parser) {
         super(UIApplication.getFrame());

@@ -63,13 +63,13 @@ import jgnash.util.Resource;
  */
 public class InvestmentTransactionPanel extends JPanel implements MessageListener, ActionListener {
 
-    private Account account;
+    private final Account account;
 
     private Transaction modTrans;
 
     private int currentCard;
 
-    private CardLayout cardLayout;
+    private final CardLayout cardLayout;
 
     private JButton enterButton;
 
@@ -83,7 +83,7 @@ public class InvestmentTransactionPanel extends JPanel implements MessageListene
 
     private final Resource rb = Resource.get();
 
-    private static String[] actions;
+    private static final String[] actions;
 
     static {
         Resource eRb = Resource.get();

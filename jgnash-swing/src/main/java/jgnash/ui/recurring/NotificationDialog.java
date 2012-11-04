@@ -64,13 +64,13 @@ class NotificationDialog extends JDialog implements ActionListener, ListSelectio
 
     private JButton okButton;
 
-    private TimePeriodCombo periodCombo = new TimePeriodCombo();
+    private final TimePeriodCombo periodCombo = new TimePeriodCombo();
 
-    private ReminderObjectTableModel model;
+    private final ReminderObjectTableModel model;
 
     private JTable table;
 
-    private List<PendingReminder> reminders;
+    private final List<PendingReminder> reminders;
 
     static int showDialog(final List<PendingReminder> reminders, final int snoozeTime) {
         NotificationDialog d = new NotificationDialog(reminders);

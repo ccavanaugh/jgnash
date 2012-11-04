@@ -37,12 +37,12 @@ public class ReminderObjectTableModel extends AbstractTableModel {
 
     private final Resource rb = Resource.get();
 
-    private String[] cNames = { rb.getString("Column.Approve"), rb.getString("Column.Description"),
+    private final String[] cNames = { rb.getString("Column.Approve"), rb.getString("Column.Description"),
                     rb.getString("Column.Date") };
 
     private List<PendingReminder> reminders = null;
 
-    private DateFormat dateFormatter = DateUtils.getShortDateFormat();
+    private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
 
     private char enabledSymbol = '\u2713';
 

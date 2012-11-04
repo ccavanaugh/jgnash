@@ -47,19 +47,19 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
 
     private final Resource rb = Resource.get();
 
-    private JTextField nameField = new JTextFieldEx();
+    private final JTextField nameField = new JTextFieldEx();
 
-    private JPasswordField passwordField = new JPasswordField();
+    private final JPasswordField passwordField = new JPasswordField();
 
-    private JTextField hostField = new JTextFieldEx();
+    private final JTextField hostField = new JTextFieldEx();
 
-    private JLabel fileFieldLabel = new JLabel(rb.getString("Label.DatabaseName"));
+    private final JLabel fileFieldLabel = new JLabel(rb.getString("Label.DatabaseName"));
 
-    private JTextField fileField = new JTextFieldEx();
+    private final JTextField fileField = new JTextFieldEx();
 
     private JCheckBox passwordBox = null;
 
-    private JButton fileButton = new JButton("...");
+    private final JButton fileButton = new JButton("...");
 
     private JButton okButton;
 
@@ -67,7 +67,7 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
 
     private JCheckBox remoteButton = null;
 
-    private JIntegerField portField = new JIntegerField();
+    private final JIntegerField portField = new JIntegerField();
 
     private boolean result = false;
 

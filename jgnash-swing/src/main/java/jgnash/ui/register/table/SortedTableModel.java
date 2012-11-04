@@ -54,7 +54,7 @@ public class SortedTableModel extends RegisterTableModel implements SortableTabl
 
     private Comparator<Transaction> comparator = Comparators.getTransactionByDate();
 
-    private ReentrantLock lock = new ReentrantLock();
+    private final ReentrantLock lock = new ReentrantLock();
 
     public SortedTableModel(final Account account, final String[] names) {
         super(account, names);

@@ -56,19 +56,19 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
     /**
      * A list of the key/objects in the model.  It is faster to maintain a list vs return a keySet from the map
      */
-    private transient Set<E> keys = new HashSet<>();
+    private final transient Set<E> keys = new HashSet<>();
 
     /**
      * Read write lock for model access
      */
-    protected ReentrantReadWriteLock rwl = new ReentrantReadWriteLock(false);
+    protected final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock(false);
 
     /**
      * Expansion state preference key
      */
     private static final String EXPANSION_STATE = "ExpansionState";
 
-    private Preferences preferences = Preferences.userNodeForPackage(getClass());
+    private final Preferences preferences = Preferences.userNodeForPackage(getClass());
     
     private SwingWorker<Void, Void> initWorker;
 

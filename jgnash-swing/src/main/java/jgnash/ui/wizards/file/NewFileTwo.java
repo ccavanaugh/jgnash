@@ -47,7 +47,7 @@ public class NewFileTwo extends JPanel implements WizardPage {
     private final Resource rb = Resource.get();
 
     // Do not use a CurrencyComboBox at this point or it will boot the engine
-    private JComboBox<CurrencyNode> currencyCombo = new JComboBox<>();
+    private final JComboBox<CurrencyNode> currencyCombo = new JComboBox<>();
 
     private JEditorPane helpPane;
 

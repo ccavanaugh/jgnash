@@ -45,9 +45,9 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class InvestmentTransactionDialog extends JDialog implements RegisterListener {
 
-    private Account account;
+    private final Account account;
 
-    private InvestmentTransactionPanel transactionPanel;
+    private final InvestmentTransactionPanel transactionPanel;
 
     public static void showDialog(InvestmentTransaction t) {
         Resource rb = Resource.get();

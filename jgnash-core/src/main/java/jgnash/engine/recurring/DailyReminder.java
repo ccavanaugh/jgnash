@@ -53,7 +53,7 @@ public class DailyReminder extends Reminder {
     }
 
     private class DailyIterator implements RecurringIterator {
-        private Calendar calendar = Calendar.getInstance();
+        private final Calendar calendar = Calendar.getInstance();
 
         public DailyIterator() {
             if (getLastDate() != null) {

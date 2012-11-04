@@ -50,7 +50,7 @@ final class DynamicJasperReportFrame extends JFrame {
 
     private WaitMessagePanel waitPanel;
 
-    private LogHandler logHandler = new LogHandler();
+    private final LogHandler logHandler = new LogHandler();
 
     private JTextField statusField;
 

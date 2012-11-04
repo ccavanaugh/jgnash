@@ -53,11 +53,11 @@ public class AccountListTreePane extends JScrollPane implements TreeSelectionLis
     private static final String ACCOUNT_VISIBLE = "AccountVisible";
     protected JTree tree;
 
-    private transient AccountTreeCellRenderer renderer;
+    private final transient AccountTreeCellRenderer renderer;
     private AccountTreeModel model = new AccountTreeModel();
     private Account selectedAccount;
-    private boolean rootVisible;
-    private transient Preferences p;
+    private final boolean rootVisible;
+    private final transient Preferences p;
 
     public AccountListTreePane(final String identifier, final boolean rootVisible) {
         this.rootVisible = rootVisible;

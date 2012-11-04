@@ -72,13 +72,13 @@ import jgnash.util.Resource;
  */
 public class ReconcileDialog extends JDialog implements MessageListener, ActionListener, ListSelectionListener {
 
-    private Account account;
+    private final Account account;
 
-    private Date openingDate;
+    private final Date openingDate;
 
-    private BigDecimal openingBalance;
+    private final BigDecimal openingBalance;
 
-    private BigDecimal endingBalance;
+    private final BigDecimal endingBalance;
 
     private JTable creditTable;
 
@@ -114,7 +114,7 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
 
     private JLabel reconciledBalanceLabel;
 
-    private NumberFormat numberFormat;
+    private final NumberFormat numberFormat;
 
     private final Resource rb = Resource.get();
 

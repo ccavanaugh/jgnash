@@ -40,7 +40,7 @@ public class AutoCompleteTextField extends JTextFieldEx {
 
     private volatile boolean setText = false;
 
-    private AutoCompleteModel model;
+    private final AutoCompleteModel model;
 
     public AutoCompleteTextField(final AutoCompleteModel model) {
         super();

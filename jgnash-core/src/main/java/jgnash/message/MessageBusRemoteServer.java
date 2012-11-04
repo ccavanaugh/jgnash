@@ -50,11 +50,11 @@ public class MessageBusRemoteServer {
 
     private static final Logger logger = Logger.getLogger(MessageBusRemoteServer.class.getName());
 
-    private Set<IoSession> clientSessions = new HashSet<>();
+    private final Set<IoSession> clientSessions = new HashSet<>();
 
-    private Set<LocalServerListener> listeners = new HashSet<>();
+    private final Set<LocalServerListener> listeners = new HashSet<>();
 
-    private ReadWriteLock rwl = new ReentrantReadWriteLock(true);
+    private final ReadWriteLock rwl = new ReentrantReadWriteLock(true);
 
     static {
         IoBuffer.setUseDirectBuffer(false);

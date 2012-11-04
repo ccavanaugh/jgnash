@@ -46,11 +46,11 @@ public class SplitsRegisterTableModel extends AbstractTableModel implements Acco
      */
     private String[] cNames = { rb.getString("Column.Account"), rb.getString("Column.Clr"), rb.getString("Column.Memo"), rb.getString("Column.Credit"), rb.getString("Column.Debit"), rb.getString("Column.Balance") };
 
-    private Class<?>[] cClass = { String.class, String.class, String.class, ShortCommodityStyle.class, ShortCommodityStyle.class, FullCommodityStyle.class };
+    private final Class<?>[] cClass = { String.class, String.class, String.class, ShortCommodityStyle.class, ShortCommodityStyle.class, FullCommodityStyle.class };
 
-    private Account account;
+    private final Account account;
 
-    private SandBoxSplitTransaction transaction;
+    private final SandBoxSplitTransaction transaction;
 
     public SplitsRegisterTableModel(final Account account, final String[] names, final List<TransactionEntry> splits) {
         this.account = account;
@@ -149,7 +149,7 @@ public class SplitsRegisterTableModel extends AbstractTableModel implements Acco
      */
     class SandBoxSplitTransaction {
 
-        private ArrayList<TransactionEntry> splits;
+        private final ArrayList<TransactionEntry> splits;
 
         protected SandBoxSplitTransaction(List<TransactionEntry> list) {
             if (list != null) {

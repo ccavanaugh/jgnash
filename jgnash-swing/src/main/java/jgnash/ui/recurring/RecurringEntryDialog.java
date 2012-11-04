@@ -82,7 +82,7 @@ class RecurringEntryDialog extends JDialog implements ActionListener {
     private JTextArea notesArea;
     private AccountListComboBox accountCombo;
     private final Resource rb = Resource.get();
-    private HashMap<Class<?>, Integer> tabMap = new HashMap<>();
+    private final HashMap<Class<?>, Integer> tabMap = new HashMap<>();
     private Transaction transaction = null;
 
     /**

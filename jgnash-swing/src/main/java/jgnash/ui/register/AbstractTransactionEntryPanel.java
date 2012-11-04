@@ -62,7 +62,7 @@ public abstract class AbstractTransactionEntryPanel extends AbstractEntryFormPan
 
     private JButton cancelButton;
 
-    protected Account account;
+    protected final Account account;
 
     protected TransactionEntry oldEntry;
 

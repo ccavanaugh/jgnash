@@ -48,7 +48,7 @@ import jgnash.util.Resource;
  */
 public class AccountSecuritiesDialog extends JDialog implements ActionListener {
 
-    private transient Resource rb = Resource.get();
+    private final transient Resource rb = Resource.get();
 
     private boolean retValue = false;
 
@@ -58,7 +58,7 @@ public class AccountSecuritiesDialog extends JDialog implements ActionListener {
 
     private JButton cancelButton;
 
-    private Account account;
+    private final Account account;
 
     AccountSecuritiesDialog(final Account account, final Set<SecurityNode> list, final Component parent) {
         super(SwingUtilities.getWindowAncestor(parent), Dialog.ModalityType.APPLICATION_MODAL);

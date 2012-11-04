@@ -307,7 +307,7 @@ public class AutoCompleteFactory {
      */
     private static final class PayeeAccountModel extends PayeeModel {
 
-        private Account account;
+        private final Account account;
 
         public PayeeAccountModel(final Account account) {
             super();
@@ -370,7 +370,7 @@ public class AutoCompleteFactory {
      */
     private static class PayeeModel extends TransactionModel {
 
-        MultiHashMap<String, Transaction> transactions = new MultiHashMap<>();
+        final MultiHashMap<String, Transaction> transactions = new MultiHashMap<>();
 
         @Override
         void load(final Transaction tran) {

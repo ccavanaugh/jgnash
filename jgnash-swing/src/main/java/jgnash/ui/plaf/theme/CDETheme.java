@@ -121,7 +121,7 @@ public class CDETheme extends DefaultMetalTheme {
     }
 
     // font manipulation
-    FontUIResource menuText = new FontUIResource("Dialog", Font.PLAIN, 12);
+    final FontUIResource menuText = new FontUIResource("Dialog", Font.PLAIN, 12);
 
     @Override
     public FontUIResource getMenuTextFont() {

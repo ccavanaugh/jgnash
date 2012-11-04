@@ -38,11 +38,11 @@ import jgnash.util.Resource;
  *
  */
 public class PartialSummary extends JPanel implements WizardPage {
-    private PartialDialog dlg;
+    private final PartialDialog dlg;
 
-    private QifAccount qAcc;
+    private final QifAccount qAcc;
 
-    private Resource rb = Resource.get();
+    private final Resource rb = Resource.get();
 
     private JLabel destLabel;
 

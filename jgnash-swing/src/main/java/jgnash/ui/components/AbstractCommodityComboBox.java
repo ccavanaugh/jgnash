@@ -28,11 +28,10 @@ import jgnash.message.MessageListener;
  * Abstract JComboBox for listing available commodities
  *
  * @author Craig Cavanaugh
- *
  */
 public abstract class AbstractCommodityComboBox<T extends CommodityNode> extends JComboBox<T> implements MessageListener {
 
-    SortedComboBoxModel<T> model = new SortedComboBoxModel<>();
+    final SortedComboBoxModel<T> model = new SortedComboBoxModel<>();
 
     @SuppressWarnings("unchecked")
 	AbstractCommodityComboBox() {

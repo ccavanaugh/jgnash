@@ -30,7 +30,7 @@ import java.io.Reader;
  */
 class QifReader extends LineNumberReader {
 
-    private static boolean debug = false;
+    private static final boolean debug = false;
 
     public QifReader(Reader in) {
         super(in, 8192);

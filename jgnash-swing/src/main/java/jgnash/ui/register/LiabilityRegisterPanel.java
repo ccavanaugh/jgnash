@@ -50,7 +50,7 @@ public class LiabilityRegisterPanel extends RegisterPanel {
 
     private JButton paymentButton;
 
-    private Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+    private final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
     /**
      * Creates a new instance of LiabilityRegisterPanel

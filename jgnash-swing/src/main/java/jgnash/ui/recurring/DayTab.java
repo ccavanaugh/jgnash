@@ -55,7 +55,7 @@ public class DayTab extends JPanel implements RecurringTab, ActionListener {
 
     private final Resource rb = Resource.get();
 
-    private ButtonGroup group = new ButtonGroup();
+    private final ButtonGroup group = new ButtonGroup();
 
     private Reminder reminder = new DailyReminder();
 

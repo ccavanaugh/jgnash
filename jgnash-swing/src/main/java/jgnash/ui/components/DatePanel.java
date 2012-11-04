@@ -40,8 +40,8 @@ import jgnash.util.Resource;
  */
 public class DatePanel extends JPanel implements ActionListener {
 
-    private JDateField dateField;
-    private JButton button;
+    private final JDateField dateField;
+    private final JButton button;
 
     public DatePanel() {
         dateField = new JDateField();

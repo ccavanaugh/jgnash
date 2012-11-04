@@ -50,11 +50,11 @@ import jgnash.ui.util.ValidationFactory;
  */
 public final class SellSharePanel extends AbstractPriceQtyInvTransactionPanel implements ActionListener {
 
-    private FeePanel feePanel;
+    private final FeePanel feePanel;
 
-    private GainsPanel gainsPanel;
+    private final GainsPanel gainsPanel;
 
-    private AccountExchangePanel accountExchangePanel;
+    private final AccountExchangePanel accountExchangePanel;
 
     protected SellSharePanel(final Account account) {
         super(account);

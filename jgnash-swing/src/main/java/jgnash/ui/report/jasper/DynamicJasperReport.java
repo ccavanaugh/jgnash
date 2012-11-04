@@ -78,7 +78,7 @@ import net.sf.jasperreports.engine.data.JRTableModelDataSource;
  */
 public abstract class DynamicJasperReport {
 
-    protected Resource rb = Resource.get();
+    protected final Resource rb = Resource.get();
 
     private DynamicJasperReportPanel viewer;
 

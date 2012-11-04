@@ -29,7 +29,7 @@ import jgnash.ui.register.table.SplitsRegisterTableModel;
  */
 public class SplitTransactionEntryPanel extends AbstractTransactionEntryPanel {
 
-    private PanelType panelType;
+    private final PanelType panelType;
 
     public SplitTransactionEntryPanel(SplitsRegisterTableModel model, PanelType type) {
         super(model);

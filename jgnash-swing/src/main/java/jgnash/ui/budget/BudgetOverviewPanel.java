@@ -60,7 +60,7 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
 
     private SpinnerNumberModel model;
 
-    private BudgetPanel budgetPanel;
+    private final BudgetPanel budgetPanel;
 
     private JPanel sparklinePanel;
 

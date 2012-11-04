@@ -35,9 +35,9 @@ import javax.swing.ListCellRenderer;
  *
  */
 public class CheckListCellRenderer<E> extends JPanel implements ListCellRenderer<E> {
-    private ListCellRenderer<E> renderer;
+    private final ListCellRenderer<E> renderer;
 
-    private JCheckBox checkBox = new JCheckBox();
+    private final JCheckBox checkBox = new JCheckBox();
 
     public CheckListCellRenderer(ListCellRenderer<E> renderer) {
         this.renderer = renderer;

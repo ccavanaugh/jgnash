@@ -58,19 +58,19 @@ import net.sf.jasperreports.engine.JasperPrint;
  */
 public class AccountRegisterReport extends DynamicJasperReport {
 
-    private AccountListComboBox accountCombo;
+    private final AccountListComboBox accountCombo;
 
-    private JButton refreshButton;
+    private final JButton refreshButton;
 
-    private DatePanel startDateField;
+    private final DatePanel startDateField;
 
-    private DatePanel endDateField;
+    private final DatePanel endDateField;
 
-    private JCheckBox detailSplitsCheckBox;
+    private final JCheckBox detailSplitsCheckBox;
 
     private static final String SHOW_DETAILS = "showDetails";
 
-    private JCheckBox filterCheckBox;
+    private final JCheckBox filterCheckBox;
 
     private static final String FILTERTAG = "filter:";
 
@@ -267,14 +267,14 @@ public class AccountRegisterReport extends DynamicJasperReport {
 
     private class ReportTableModel extends AbstractReportTableModel {
 
-        private RegisterModel model;
+        private final RegisterModel model;
 
         private static final long serialVersionUID = 1L;
 
         /* if sumAmounts is true, any column with a ShortCommodityStyle class will be summed
          * at the end of the report
         */
-        private boolean sumAmounts;
+        private final boolean sumAmounts;
 
         ReportTableModel(final RegisterModel model, final boolean sumAmounts) {
             this.model = model;

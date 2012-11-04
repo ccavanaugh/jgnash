@@ -95,7 +95,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
 
     private ExchangeRateUpdateWorker updateWorker;
 
-    private JFloatField rateField = new JFloatField(0, 6, 2);
+    private final JFloatField rateField = new JFloatField(0, 6, 2);
 
     private JButton updateButton;
 
@@ -438,11 +438,11 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
 
         private ExchangeRate exchangeRate;
 
-        private String[] cNames = { rb.getString("Column.Date"), rb.getString("Column.ExchangeRate") };
+        private final String[] cNames = { rb.getString("Column.Date"), rb.getString("Column.ExchangeRate") };
 
-        private Class<?>[] cClass = { Date.class, BigDecimal.class };
+        private final Class<?>[] cClass = { Date.class, BigDecimal.class };
 
-        private NumberFormat decimalFormat;
+        private final NumberFormat decimalFormat;
 
         private List<ExchangeRateHistoryNode> history = new ArrayList<>();
 

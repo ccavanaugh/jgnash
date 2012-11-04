@@ -65,7 +65,7 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
 
     private static final String ACTIVE_ACCOUNT = "ActiveAccount";
 
-    private Preferences prefs = Preferences.userNodeForPackage(MainRegisterPanel.class);
+    private final Preferences prefs = Preferences.userNodeForPackage(MainRegisterPanel.class);
 
     private JSplitPane registerPane;
 

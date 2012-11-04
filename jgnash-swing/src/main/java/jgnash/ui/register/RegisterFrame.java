@@ -52,9 +52,9 @@ import jgnash.util.Resource;
  */
 public final class RegisterFrame extends JFrame implements MessageListener {
 
-    private static EventListenerList listenerList = new EventListenerList();
+    private static final EventListenerList listenerList = new EventListenerList();
 
-    private static List<RegisterFrame> dialogList = new ArrayList<>();
+    private static final List<RegisterFrame> dialogList = new ArrayList<>();
 
     private Account account = null;
 

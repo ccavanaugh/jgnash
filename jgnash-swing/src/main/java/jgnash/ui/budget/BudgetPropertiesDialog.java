@@ -71,7 +71,7 @@ public final class BudgetPropertiesDialog extends JDialog implements ActionListe
 
     private JCheckBox liabilityGroupCheckBox;
 
-    private Budget budget;
+    private final Budget budget;
 
     public BudgetPropertiesDialog(final Budget budget) {
         super(UIApplication.getFrame(), true);

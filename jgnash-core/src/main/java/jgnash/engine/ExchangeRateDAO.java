@@ -27,7 +27,7 @@ import jgnash.engine.dao.CommodityDAO;
  */
 class ExchangeRateDAO {
 
-    private CommodityDAO commodityDAO;
+    private final CommodityDAO commodityDAO;
 
     ExchangeRateDAO(final CommodityDAO commodityDAO) {
         this.commodityDAO = commodityDAO;

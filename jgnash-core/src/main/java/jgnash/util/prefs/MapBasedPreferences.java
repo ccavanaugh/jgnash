@@ -34,7 +34,7 @@ class MapBasedPreferences extends AbstractPreferences {
 
     private final boolean isUserNode;
 
-    private Map<String, String> map = new HashMap<>();
+    private final Map<String, String> map = new HashMap<>();
 
     protected MapBasedPreferences(final MapBasedPreferences parent, final String name, final boolean isUserNode) {
         super(parent, name);

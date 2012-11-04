@@ -52,7 +52,7 @@ import jgnash.util.Resource;
  */
 class PrintCheckDialog extends JDialog implements ActionListener {
 
-    private Resource rb = Resource.get();
+    private final Resource rb = Resource.get();
 
     private JButton cancelButton;
 
@@ -76,7 +76,7 @@ class PrintCheckDialog extends JDialog implements ActionListener {
 
     private boolean returnStatus = false; // return status of dialog
 
-    private Preferences pref = Preferences.userNodeForPackage(PrintCheckDialog.class);
+    private final Preferences pref = Preferences.userNodeForPackage(PrintCheckDialog.class);
 
     public PrintCheckDialog() {
         super(UIApplication.getFrame(), true);

@@ -47,7 +47,7 @@ import jgnash.util.Resource;
  */
 public final class AdjustmentPanel extends AbstractBankTransactionPanel {
 
-    private JButton convertButton;
+    private final JButton convertButton;
 
     AdjustmentPanel(final Account account) {
         super(account);

@@ -35,9 +35,9 @@ import jgnash.util.DateUtils;
  */
 public final class BudgetPeriodDescriptorFactory {
 
-    private static Map<String, List<BudgetPeriodDescriptor>> cache = new HashMap<>();
+    private static final Map<String, List<BudgetPeriodDescriptor>> cache = new HashMap<>();
 
-    private static ReadWriteLock rwl = new ReentrantReadWriteLock(false);
+    private static final ReadWriteLock rwl = new ReentrantReadWriteLock(false);
 
     private BudgetPeriodDescriptorFactory() {
     }
