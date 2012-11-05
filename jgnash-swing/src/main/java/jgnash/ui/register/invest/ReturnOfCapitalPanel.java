@@ -66,7 +66,7 @@ public final class ReturnOfCapitalPanel extends AbstractInvTransactionPanel {
 
     private static final Logger logger = Logger.getLogger(ReturnOfCapitalPanel.class.getName());
 
-    protected ReturnOfCapitalPanel(Account account) {
+    ReturnOfCapitalPanel(Account account) {
         super(account);
 
         datePanel = new DatePanel();

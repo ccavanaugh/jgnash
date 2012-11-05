@@ -92,7 +92,7 @@ final class BudgetPeriodPanel extends JPanel {
      * @see AccountRowHeaderPanel#getRowHeight()
      * @see JTable#setRowHeight(int)
      */
-    protected void setRowHeight(final int rowHeight) {
+    void setRowHeight(final int rowHeight) {
         table.setRowHeight(rowHeight);
     }
 
@@ -215,15 +215,15 @@ final class BudgetPeriodPanel extends JPanel {
             }
         }
 
-        protected BigDecimal getTotalRemaining(final AccountGroup group) {
+        BigDecimal getTotalRemaining(final AccountGroup group) {
             return model.getRemainingTotal(group);
         }
 
-        protected BigDecimal getTotalChange(final AccountGroup group) {
+        BigDecimal getTotalChange(final AccountGroup group) {
             return model.getChangeTotal(group);
         }
 
-        protected BigDecimal getTotalBudgeted(final AccountGroup group) {
+        BigDecimal getTotalBudgeted(final AccountGroup group) {
             return model.getBudgetedTotal(group);
         }
 

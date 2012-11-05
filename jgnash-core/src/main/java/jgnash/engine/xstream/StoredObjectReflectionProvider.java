@@ -30,7 +30,7 @@ import jgnash.engine.StoredObject;
  *
  * @author Craig Cavanaugh
  */
-public final class StoredObjectReflectionProvider extends PureJavaReflectionProvider {
+final class StoredObjectReflectionProvider extends PureJavaReflectionProvider {
 
     /**
      * Reference to the supplied list to load objects into.

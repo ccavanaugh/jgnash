@@ -37,7 +37,7 @@ import jgnash.util.Resource;
  *
  * @author Craig Cavanaugh
  */
-public class DuplicateTransactionDialog extends DateChkNumberDialog {
+class DuplicateTransactionDialog extends DateChkNumberDialog {
 
     private Transaction transaction;
 

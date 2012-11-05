@@ -45,7 +45,7 @@ public final class SplitMergeSharePanel extends AbstractPriceQtyInvTransactionPa
 
     private TransactionType tranType;
 
-    protected SplitMergeSharePanel(Account account, TransactionType tranType) {
+    SplitMergeSharePanel(Account account, TransactionType tranType) {
         super(account);
 
         assert tranType == TransactionType.SPLITSHARE || tranType == TransactionType.MERGESHARE;

@@ -90,7 +90,7 @@ public class RegisterPanel extends AbstractRegisterPanel implements ActionListen
 
     JButton duplicateButton;
 
-    protected RegisterPanel(final Account account) {
+    RegisterPanel(final Account account) {
         this.account = account;
         format = CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
 

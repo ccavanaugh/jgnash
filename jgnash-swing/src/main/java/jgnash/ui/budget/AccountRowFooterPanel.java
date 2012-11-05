@@ -151,11 +151,11 @@ public class AccountRowFooterPanel extends JPanel {
      * @see AccountRowHeaderPanel#getRowHeight()
      * @see JTable#setRowHeight(int)
      */
-    protected void setRowHeight(final int rowHeight) {
+    void setRowHeight(final int rowHeight) {
         table.setRowHeight(rowHeight);
     }
 
-    public JComponent buildFooter() {
+    JComponent buildFooter() {
         FormLayout layout = new FormLayout("d:g", "d");
 
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, new JXPanel());
@@ -301,7 +301,7 @@ public class AccountRowFooterPanel extends JPanel {
             model.addMessageListener(this);
         }
 
-        protected void unregisterListeners() {
+        void unregisterListeners() {
             model.removeTableModelListener(listener);
             model.removeMessageListener(this);
         }

@@ -38,7 +38,7 @@ public class SplitTransactionEntryPanel extends AbstractTransactionEntryPanel {
     }
 
     @Override
-    public TransactionEntry buildTransactionEntry() {
+    protected TransactionEntry buildTransactionEntry() {
         TransactionEntry entry = new TransactionEntry();
         entry.setMemo(memoField.getText());
 

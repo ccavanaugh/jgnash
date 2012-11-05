@@ -55,7 +55,7 @@ public class BayesImportClassifier {
         }
     }
 
-    public static BayesClassifier<Account> generateClassifier(final Account baseAccount) {
+    private static BayesClassifier<Account> generateClassifier(final Account baseAccount) {
         BayesClassifier<Account> classifier = new BayesClassifier<>(baseAccount);
 
         for (Transaction t : baseAccount.getReadonlyTransactionList()) {

@@ -35,7 +35,7 @@ import org.jfree.data.xy.XYDataset;
  * @author Craig Cavanaugh
  *
  */
-public class SecurityItemLabelGenerator implements XYToolTipGenerator {
+class SecurityItemLabelGenerator implements XYToolTipGenerator {
     /** The date formatter. */
     private DateFormat dateFormatter;
 

@@ -220,7 +220,7 @@ public class RegisterTableWithSplitEntriesModel extends RegisterTableModel {
     }
 
     @Override
-    public BigDecimal getBalanceAt(final int index) {
+    BigDecimal getBalanceAt(final int index) {
         if (balanceCache.get(index) != null) {
             return AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(), balanceCache.get(index));
         }
@@ -297,12 +297,12 @@ public class RegisterTableWithSplitEntriesModel extends RegisterTableModel {
 
         TransactionEntry entry;
 
-        protected TransactionWrapper(final Transaction transaction, final TransactionEntry entry) {
+        TransactionWrapper(final Transaction transaction, final TransactionEntry entry) {
             this.transaction = transaction;
             this.entry = entry;
         }
 
-        protected TransactionWrapper(final Transaction transaction) {
+        TransactionWrapper(final Transaction transaction) {
             this.transaction = transaction;
         }
     }

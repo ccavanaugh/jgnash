@@ -64,14 +64,14 @@ import jgnash.engine.budget.BudgetPeriod;
  *
  * @author Craig Cavanaugh
  */
-public abstract class AbstractXStreamContainer {
-    protected final List<StoredObject> objects = new ArrayList<>();
-    protected final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
-    protected final File file;
+abstract class AbstractXStreamContainer {
+    final List<StoredObject> objects = new ArrayList<>();
+    final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
+    final File file;
     private FileLock fileLock = null;
     private FileChannel lockChannel = null;
 
-    public AbstractXStreamContainer(final File file) {
+    AbstractXStreamContainer(final File file) {
         this.file = file;
     }
 
@@ -86,7 +86,7 @@ public abstract class AbstractXStreamContainer {
      * @return A list of type T containing objects of type clazz
      */
     @SuppressWarnings("unchecked")
-    protected static <T extends StoredObject> List<T> query(final Collection<StoredObject> values, final Class<T> clazz) {
+    static <T extends StoredObject> List<T> query(final Collection<StoredObject> values, final Class<T> clazz) {
         ArrayList<T> list = new ArrayList<>();
 
         for (StoredObject o : values) {
@@ -97,7 +97,7 @@ public abstract class AbstractXStreamContainer {
         return list;
     }
 
-    public static XStream configureXStream(final XStream xstream) {
+    static XStream configureXStream(final XStream xstream) {
         xstream.setMode(XStream.ID_REFERENCES);
 
         xstream.alias("Account", Account.class);
@@ -152,7 +152,7 @@ public abstract class AbstractXStreamContainer {
     }
 
     @SuppressWarnings(value = {"ChannelOpenedButNotSafelyClosed", "IOResourceOpenedButNotSafelyClosed"})
-    protected boolean acquireFileLock() {
+    boolean acquireFileLock() {
         try {
             lockChannel = new RandomAccessFile(file, "rw").getChannel();
             fileLock = lockChannel.tryLock();
@@ -163,7 +163,7 @@ public abstract class AbstractXStreamContainer {
         return false;
     }
 
-    protected void releaseFileLock() {
+    void releaseFileLock() {
         try {
             if (fileLock != null) {
                 fileLock.release();

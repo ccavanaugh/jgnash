@@ -31,7 +31,7 @@ import jgnash.net.ConnectionFactory;
  * @author Craig Cavanaugh
  *
  */
-public abstract class AbstractDb4oDAO extends AbstractDAO {
+abstract class AbstractDb4oDAO extends AbstractDAO {
 
     static final int SEMAPHORE_WAIT_TIME = ConnectionFactory.getConnectionTimeout() * 1000; //max wait time in seconds
 
@@ -55,7 +55,7 @@ public abstract class AbstractDb4oDAO extends AbstractDAO {
 
     ObjectContainer container;
 
-    protected boolean isRemote = false;
+    boolean isRemote = false;
 
     AbstractDb4oDAO(final ObjectContainer container, final boolean isRemote) {
         assert container != null;

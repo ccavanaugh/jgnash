@@ -50,7 +50,7 @@ public class TransactionEntryDividendX extends AbstractInvestmentTransactionEntr
      * @param dividend              Dividend received
      * @param incomeExchangedAmount Exchanged amount for the debit account
      */
-    protected TransactionEntryDividendX(Account incomeAccount, Account investmentAccount, SecurityNode securityNode, BigDecimal dividend, BigDecimal incomeExchangedAmount) {
+    TransactionEntryDividendX(Account incomeAccount, Account investmentAccount, SecurityNode securityNode, BigDecimal dividend, BigDecimal incomeExchangedAmount) {
 
         assert incomeAccount != null && investmentAccount != null;
         assert investmentAccount.memberOf(AccountGroup.INVEST);

@@ -771,7 +771,7 @@ public class Import {
         return transaction;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "ConstantConditions"})
     private void parseAccount(final XMLStreamReader reader) {
 
         assert reader.getAttributeCount() == 2;

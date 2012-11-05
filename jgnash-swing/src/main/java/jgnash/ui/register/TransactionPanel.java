@@ -351,7 +351,7 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
         }
     }
 
-    public Account getOppositeSideAccount(final Transaction t) {
+    Account getOppositeSideAccount(final Transaction t) {
         TransactionEntry entry = t.getTransactionEntries().get(0);
 
         if (entry.getCreditAccount().equals(getAccount())) {

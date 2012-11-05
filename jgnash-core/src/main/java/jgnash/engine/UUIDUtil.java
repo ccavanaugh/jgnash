@@ -33,7 +33,7 @@ class UUIDUtil {
      *
      * @return the unique id
      */
-    protected static String getUID() {
+    static String getUID() {
         return UUID.randomUUID().toString();
     }
 

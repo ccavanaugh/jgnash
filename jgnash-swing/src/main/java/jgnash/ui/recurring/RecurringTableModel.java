@@ -77,15 +77,15 @@ public class RecurringTableModel extends AbstractTableModel implements MessageLi
         }
     }
 
-    protected void setEnabledSymbol(char symbol) {
+    void setEnabledSymbol(char symbol) {
         enabledSymbol = symbol;
     }
 
-    protected char getEnabledSymbol() {
+    char getEnabledSymbol() {
         return enabledSymbol;
     }
 
-    protected Reminder getReminderAt(int row) {
+    Reminder getReminderAt(int row) {
         return reminders.get(row);
     }
 

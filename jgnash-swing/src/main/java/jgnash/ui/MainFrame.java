@@ -828,7 +828,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     /**
      * The engine could be busy with something else, so run in the background and do not block the EDT
      */
-    final class UpdateTitleWorker extends SwingWorker<Engine, Void> {
+    private final class UpdateTitleWorker extends SwingWorker<Engine, Void> {
 
         @Override
         protected Engine doInBackground() throws Exception {

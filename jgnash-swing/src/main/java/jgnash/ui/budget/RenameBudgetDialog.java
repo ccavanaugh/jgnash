@@ -72,7 +72,7 @@ class RenameBudgetDialog extends JDialog implements ActionListener {
         });
     }
 
-    public RenameBudgetDialog(final Budget budget, final Dialog parent) {
+    private RenameBudgetDialog(final Budget budget, final Dialog parent) {
         super(parent, true);
         setTitle(rb.getString("Title.RenameBudget"));
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

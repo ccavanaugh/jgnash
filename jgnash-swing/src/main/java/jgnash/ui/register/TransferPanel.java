@@ -37,7 +37,7 @@ import jgnash.ui.util.ValidationFactory;
  */
 public class TransferPanel extends AbstractExchangeTransactionPanel {
 
-    protected TransferPanel(Account account) {
+    TransferPanel(Account account) {
         super(account, PanelType.DECREASE);
 
         layoutMainPanel();

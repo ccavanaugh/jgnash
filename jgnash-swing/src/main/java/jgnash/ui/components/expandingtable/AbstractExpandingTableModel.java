@@ -72,7 +72,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
     
     private SwingWorker<Void, Void> initWorker;
 
-    public AbstractExpandingTableModel() {
+    protected AbstractExpandingTableModel() {
         initializeModel();
     }
 
@@ -155,7 +155,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
         }
     }
 
-    public ExpandingTableNode<E> getNode(final E object) {
+    ExpandingTableNode<E> getNode(final E object) {
         ReadLock readLock = rwl.readLock();
         readLock.lock();
 
@@ -166,7 +166,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
         }
     }
 
-    public void clear() {
+    protected void clear() {
         WriteLock writeLock = rwl.writeLock();
         writeLock.lock();
 
@@ -223,7 +223,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
         throw new UnsupportedOperationException();
     }
 
-    public void addNode(final E object) {
+    protected void addNode(final E object) {
         WriteLock writeLock = rwl.writeLock();
         writeLock.lock();
 
@@ -260,7 +260,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
     /**
      * Force update of the visible model and notify listeners
      */
-    public final void fireNodeChanged() {
+    protected final void fireNodeChanged() {
         WriteLock writeLock = rwl.writeLock();
         writeLock.lock();
 
@@ -273,7 +273,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
         }
     }
 
-    public void removeNode(final E object) {
+    protected void removeNode(final E object) {
         WriteLock writeLock = rwl.writeLock();
         writeLock.lock();
 
@@ -314,7 +314,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
      * @return the number of visible objects in this model
      * @see List#size()
      */
-    public int size() {
+    int size() {
         ReadLock readLock = rwl.readLock();
         readLock.lock();
 
@@ -331,7 +331,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
      * @param rowIndex visible row index
      * @return node
      */
-    public ExpandingTableNode<E> getExpandingTableNodeAt(final int rowIndex) {
+    protected ExpandingTableNode<E> getExpandingTableNodeAt(final int rowIndex) {
         ReadLock readLock = rwl.readLock();
         readLock.lock();
 
@@ -417,7 +417,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
      * <p/>
      * If overridden, the overriding method must call the base method for the model to update correctly
      */
-    protected void buildVisibleModel() {
+    void buildVisibleModel() {
         buildVisibleModel(getRootObject());
     }
 
@@ -444,7 +444,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
      * @param object parent object
      * @return collection of objects.
      */
-    public abstract Collection<E> getChildren(E object);
+    protected abstract Collection<E> getChildren(E object);
 
     /**
      * Returns the parent of the given object. May return null if the object does not have a parent
@@ -452,7 +452,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
      * @param object parent object
      * @return the parent of the given object.
      */
-    public abstract E getParent(E object);
+    protected abstract E getParent(E object);
 
     /**
      * Determines if the object should be visible. This is used to filter the displayed objects. The default
@@ -462,7 +462,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
      * @param object object to check
      * @return true if it should be visible
      */
-    public boolean isVisible(final E object) {
+    protected boolean isVisible(final E object) {
         E parent = getParent(object);
 
         return !(parent != null && getNode(parent) != null) || getNode(parent).isExpanded();

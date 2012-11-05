@@ -104,7 +104,7 @@ public abstract class AbstractYahooParser implements SecurityParser {
     /**
      * @param date the date to set
      */
-    public void setDate(Date date) {
+    void setDate(Date date) {
         this.date = date;
     }
 

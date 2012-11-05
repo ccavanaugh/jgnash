@@ -40,7 +40,7 @@ import java.util.logging.Level;
  *
  * @author Craig Cavanaugh
  */
-public class FontRegistry {
+class FontRegistry {
 
     /**
      * Maps the font file to the font name for embedding fonts in PDF files
@@ -81,7 +81,7 @@ public class FontRegistry {
         return registry.registeredFontMap.get(name.toLowerCase());
     }
 
-    public static void registerFonts() {
+    private static void registerFonts() {
 
         if (!registrationStarted.get()) {
             registrationStarted.set(true);
@@ -141,6 +141,7 @@ public class FontRegistry {
      *
      * @param dir the directory
      */
+    @SuppressWarnings("ConstantConditions")
     private void registerFontDirectory(final String dir) {
 
         File directory = new File(dir);

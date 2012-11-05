@@ -184,21 +184,21 @@ public abstract class DynamicJasperReport {
      * 
      * @return report name
      */
-    public abstract String getGrandTotalLegend();
+    protected abstract String getGrandTotalLegend();
 
     /**
      * Returns the general label for the group footer
      * 
      * @return footer label
      */
-    public abstract String getGroupFooterLabel();
+    protected abstract String getGroupFooterLabel();
 
     /**
      * Returns the subtitle for the report
      * 
      * @return subtitle
      */
-    public String getSubTitle() {
+    protected String getSubTitle() {
         DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
         return df.format(new Date());
     }
@@ -333,6 +333,7 @@ public abstract class DynamicJasperReport {
         return headerStyle;
     }
 
+    @SuppressWarnings("ConstantConditions")
     protected final JasperPrint createJasperPrint(final AbstractReportTableModel model, final boolean formatForCSV) {
 
         logger.info(rb.getString("Message.ProcessingReportData"));

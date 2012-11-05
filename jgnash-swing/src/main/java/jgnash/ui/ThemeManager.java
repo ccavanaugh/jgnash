@@ -75,7 +75,7 @@ public class ThemeManager {
         animationDuration = AnimationConfigurationManager.getInstance().getTimelineDuration();
     }
 
-    protected ThemeManager(final JFrame frame) {
+    ThemeManager(final JFrame frame) {
 
         // this line needs to be implemented in order to make JWS work properly
         UIManager.getLookAndFeelDefaults().put("ClassLoader", frame.getClass().getClassLoader());
@@ -166,7 +166,7 @@ public class ThemeManager {
      * 
      * @return l and f menu
      */
-    protected JMenu buildLookAndFeelMenu() {
+    JMenu buildLookAndFeelMenu() {
         String activeLookAndFeelName = UIManager.getLookAndFeel().getName();
 
         // ButtonGroup buttonGroup = new ButtonGroup();
@@ -271,7 +271,7 @@ public class ThemeManager {
         }
     }
 
-    protected JMenu buildThemeMenu() {
+    JMenu buildThemeMenu() {
 
         Preferences pref = Preferences.userNodeForPackage(ThemeManager.class);
         String currentTheme = pref.get(THEME, DEFAULT_THEME);
@@ -310,7 +310,7 @@ public class ThemeManager {
         return themesMenu;
     }
 
-    protected JMenu buildSubstanceMenu() {
+    JMenu buildSubstanceMenu() {
         LookAndFeel lf = UIManager.getLookAndFeel();
 
         JMenu substanceMenu = new JMenu(rb.getString("Menu.SubstanceThemes.Name"));

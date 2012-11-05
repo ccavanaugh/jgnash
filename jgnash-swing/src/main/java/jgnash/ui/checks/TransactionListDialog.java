@@ -222,7 +222,7 @@ public class TransactionListDialog extends JDialog implements ActionListener, Li
 
         private final CommodityFormat commodityformat = CommodityFormat.getFullFormat();
 
-        protected Model(final List<Transaction> list) {
+        Model(final List<Transaction> list) {
 
             for (Transaction t : list) {
                 wrapperList.add(new Wrapper(t));
@@ -305,7 +305,7 @@ public class TransactionListDialog extends JDialog implements ActionListener, Li
             }
         }
 
-        protected Wrapper getWrapperAt(final int i) {
+        Wrapper getWrapperAt(final int i) {
             return wrapperList.get(i);
         }
 
@@ -322,7 +322,7 @@ public class TransactionListDialog extends JDialog implements ActionListener, Li
             return list;
         }
 
-        protected void clearAll() {
+        void clearAll() {
             int size = wrapperList.size();
             for (int i = 0; i < size; i++) {
                 getWrapperAt(i).print = false;
@@ -330,7 +330,7 @@ public class TransactionListDialog extends JDialog implements ActionListener, Li
             fireTableDataChanged();
         }
 
-        protected void selectAll() {
+        void selectAll() {
             int size = wrapperList.size();
             for (int i = 0; i < size; i++) {
                 getWrapperAt(i).print = true;
@@ -338,7 +338,7 @@ public class TransactionListDialog extends JDialog implements ActionListener, Li
             fireTableDataChanged();
         }
 
-        protected void invertAll() {
+        void invertAll() {
             int size = wrapperList.size();
             for (int i = 0; i < size; i++) {
                 getWrapperAt(i).print = !getWrapperAt(i).print;
@@ -356,7 +356,7 @@ public class TransactionListDialog extends JDialog implements ActionListener, Li
 
         boolean print;
 
-        protected Wrapper(final Transaction t) {
+        Wrapper(final Transaction t) {
             assert t != null;
             this.transaction = t;
         }

@@ -103,7 +103,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
      * @param debitAccount debit account for the transaction
      * @param amount amount for the transaction
      */
-    protected TransactionEntry(final Account creditAccount, final Account debitAccount, final BigDecimal amount) {
+    TransactionEntry(final Account creditAccount, final Account debitAccount, final BigDecimal amount) {
         assert creditAccount != null && debitAccount != null && amount != null;
 
         this.creditAccount = creditAccount;
@@ -120,7 +120,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
      * @param creditAmount amount for the transaction
      * @param debitAmount amount for the transaction
      */
-    protected TransactionEntry(final Account creditAccount, final Account debitAccount, final BigDecimal creditAmount, final BigDecimal debitAmount) {
+    TransactionEntry(final Account creditAccount, final Account debitAccount, final BigDecimal creditAmount, final BigDecimal debitAmount) {
         assert creditAccount != null && debitAccount != null && creditAmount != null && debitAmount != null;
         assert creditAmount.signum() == 1 && debitAmount.signum() == -1;
 

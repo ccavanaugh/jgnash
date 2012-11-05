@@ -53,9 +53,9 @@ public class OfxBank extends ImportBank {
 
     public Date ledgerBalanceDate;
 
-    public BigDecimal availBalance;
+    private BigDecimal availBalance;
 
-    public Date availBalanceDate;
+    private Date availBalanceDate;
 
     @Override
     public String toString() {

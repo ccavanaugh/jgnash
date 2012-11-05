@@ -150,7 +150,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         JTableUtils.setColumnWidths(getTable(), widths);
     }
 
-    protected boolean restoreColumnLayout() {
+    boolean restoreColumnLayout() {
         boolean result = false;
 
         Preferences pwidth = Preferences.userRoot().node(NODE_REG_WIDTH);
@@ -175,7 +175,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         return result;
     }
 
-    protected void saveColumnLayout() {
+    void saveColumnLayout() {
         Preferences pwidth = Preferences.userRoot().node(NODE_REG_WIDTH);
         Preferences ppos = Preferences.userRoot().node(NODE_REG_POS);
         Preferences pvis = Preferences.userRoot().node(NODE_REG_VIS);
@@ -295,7 +295,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         }
     }
 
-    public void setSelectedRow(final int row) {
+    void setSelectedRow(final int row) {
         if (row >= 0) {
             JTable table = getTable();
             table.scrollRectToVisible(table.getCellRect(row, 0, true));
@@ -433,7 +433,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         });
     }
 
-    protected class TransactionPopup extends JPopupMenu implements ActionListener {
+    class TransactionPopup extends JPopupMenu implements ActionListener {
 
         private final JMenuItem duplicate;
 

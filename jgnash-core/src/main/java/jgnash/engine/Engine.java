@@ -231,6 +231,7 @@ public class Engine {
     /**
      * Corrects minor issues with a database that may occur because of prior bugs or file format upgrades
      */
+    @SuppressWarnings("ConstantConditions")
     private void checkAndCorrect() {
 
         WriteLock commodityWriteLock = commodityLock.writeLock();
@@ -771,7 +772,7 @@ public class Engine {
      * @param node security node
      * @return list of investment accounts
      */
-    public Set<Account> getInvestmentAccountList(final SecurityNode node) {
+    Set<Account> getInvestmentAccountList(final SecurityNode node) {
 
         Set<Account> accounts = new HashSet<>();
 

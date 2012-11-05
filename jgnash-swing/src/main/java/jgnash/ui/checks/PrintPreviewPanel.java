@@ -40,7 +40,7 @@ final class PrintPreviewPanel extends JPanel {
 
     private PageFormat pageFormat;
 
-    protected PrintPreviewPanel(Printable printable, PageFormat pageFormat) {
+    PrintPreviewPanel(Printable printable, PageFormat pageFormat) {
         assert printable != null;
         setPageFormat(pageFormat);
         this.printable = printable;

@@ -55,7 +55,7 @@ public class TransactionEntrySellX extends AbstractInvestmentTransactionEntry {
      * @param quantity          Number of shares
      * @param exchangeRate      Exchange rate for the debit account (May be ONE, but may not be null and must be greater than ZERO)
      */
-    protected TransactionEntrySellX(Account account, Account investmentAccount, SecurityNode securityNode, BigDecimal price, BigDecimal quantity, BigDecimal exchangeRate) {
+    TransactionEntrySellX(Account account, Account investmentAccount, SecurityNode securityNode, BigDecimal price, BigDecimal quantity, BigDecimal exchangeRate) {
 
         assert investmentAccount.memberOf(AccountGroup.INVEST);
         assert exchangeRate != null && exchangeRate.signum() == 1;

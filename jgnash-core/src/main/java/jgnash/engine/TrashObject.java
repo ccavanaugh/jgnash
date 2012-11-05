@@ -48,7 +48,7 @@ public class TrashObject extends StoredObject {
     public TrashObject() {
     }
 
-    protected TrashObject(StoredObject object) {
+    TrashObject(StoredObject object) {
         this.object = object;
         object.setMarkedForRemoval(true);
         setMarkedForRemoval(true);

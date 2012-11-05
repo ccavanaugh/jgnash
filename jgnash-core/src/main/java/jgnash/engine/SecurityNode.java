@@ -208,7 +208,7 @@ public final class SecurityNode extends CommodityNode {
         return new ArrayList<>(historyNodes);
     }
 
-    protected SecurityHistoryNode getHistoryNode(final Date date) {
+    SecurityHistoryNode getHistoryNode(final Date date) {
         Date testDate = DateUtils.trimDate(date);
 
         getLock().readLock().lock();

@@ -318,7 +318,7 @@ public class RegisterFactory {
      * @param splits transaction entries to display
      * @return returns a GenericRegisterTable of the appropriate type
      */
-    protected static RegisterTable generateSplitsTable(final Account account, final List<TransactionEntry> splits) {
+    static RegisterTable generateSplitsTable(final Account account, final List<TransactionEntry> splits) {
 
         String[] names; // reference to the correct column names
 
@@ -398,7 +398,7 @@ public class RegisterFactory {
      * @param account the account to create a register panel for
      * @return the register panel
      */
-    protected static AbstractRegisterPanel createRegisterPanel(final Account account) {
+    static AbstractRegisterPanel createRegisterPanel(final Account account) {
         
         if (account.getAccountType() == AccountType.SIMPLEINVEST) { // invest account group, but needs a simple register 
             return new RegisterPanel(account); 

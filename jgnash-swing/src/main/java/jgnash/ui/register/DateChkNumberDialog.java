@@ -48,7 +48,7 @@ import jgnash.util.Resource;
  *
  */
 
-public class DateChkNumberDialog extends JDialog implements ActionListener {
+class DateChkNumberDialog extends JDialog implements ActionListener {
 
     private final Resource rb = Resource.get();
 

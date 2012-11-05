@@ -80,11 +80,11 @@ public class HelpIndexer {
         helpIndexer.execute();
     }
 
-    public HelpIndexer(final String[] args) {
+    private HelpIndexer(final String[] args) {
         cmdArgs = args.clone();        
     }
 
-    public void execute() {
+    void execute() {
         CmdLineParser parser = new CmdLineParser(this);
 
         try {

@@ -78,28 +78,31 @@ public class TextResource {
      * <p/>
      * This was copied from the JDK source code; Properties.java
      * 
-     * @param theString unicode formatted string
+     * @param string unicode formatted string
      * @return string without unicode characters
      */
-    private static String loadConvert(final String theString) {
+    @SuppressWarnings("ConstantConditions")
+    private static String loadConvert(final String string) {
 
-        if (theString == null) {
+        if (string == null) {
             return null;
         }
 
         char aChar;
-        int len = theString.length();
+
+        final int len = string.length();
+
         StringBuilder outBuffer = new StringBuilder(len);
 
         for (int x = 0; x < len;) {
-            aChar = theString.charAt(x++);
+            aChar = string.charAt(x++);
             if (aChar == '\\') {
-                aChar = theString.charAt(x++);
+                aChar = string.charAt(x++);
                 if (aChar == 'u') {
                     // Read the xxxx
                     int value = 0;
                     for (int i = 0; i < 4; i++) {
-                        aChar = theString.charAt(x++);
+                        aChar = string.charAt(x++);
                         switch (aChar) {
                             case '0':
                             case '1':

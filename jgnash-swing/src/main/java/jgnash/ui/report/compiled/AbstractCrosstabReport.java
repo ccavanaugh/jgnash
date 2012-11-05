@@ -118,7 +118,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
     private static final String USE_LONG_NAMES = "useLongNames";
 
-    public AbstractCrosstabReport() {
+    AbstractCrosstabReport() {
 
         Preferences p = getPreferences();
 
@@ -241,6 +241,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private ReportModel createTableModel() {
         logger.info(rb.getString("Message.CollectingReportData"));
 
@@ -423,7 +424,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
         return builder.getPanel();
     }
 
-    public ColumnInfo[] columns;
+    private ColumnInfo[] columns;
 
     private class ReportModel extends AbstractReportTableModel {
 
@@ -433,7 +434,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
         private static final long serialVersionUID = -2526030825754030630L;
 
-        protected ReportModel(final List<Account> accountList, final CurrencyNode currency) {
+        ReportModel(final List<Account> accountList, final CurrencyNode currency) {
             this.accountList = accountList;
             this.baseCurrency = currency;
         }

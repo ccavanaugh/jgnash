@@ -117,7 +117,7 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	 * @param isDirty
 	 *            whether this {@code AbstractLayerUI} is dirty or not.
 	 */
-	protected void setDirty(boolean isDirty) {
+    void setDirty(boolean isDirty) {
 		boolean oldDirty = this.isDirty;
 		this.isDirty = isDirty;
 		firePropertyChange("dirty", oldDirty, isDirty);
@@ -183,7 +183,7 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	 * @see #getTransform(JLayer)
 	 * @see #getRenderingHints(JLayer)
 	 */
-	protected void configureGraphics(Graphics2D g2, JLayer<? extends V> l) {
+    void configureGraphics(Graphics2D g2, JLayer<? extends V> l) {
 		Composite composite = getComposite(l);
 		if (composite != null) {
 			g2.setComposite(composite);
@@ -217,7 +217,7 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	 * @return the {@link Composite} to be used during painting for the
 	 *         {@code JXLayer}
 	 */
-	protected Composite getComposite(JLayer<? extends V> l) {
+    Composite getComposite(JLayer<? extends V> l) {
 		return null;
 	}
 
@@ -231,7 +231,7 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	 * @return the {@link AffineTransform} to be used during painting of the
 	 *         {@code JXLayer}
 	 */
-	protected AffineTransform getTransform(JLayer<? extends V> l) {
+    AffineTransform getTransform(JLayer<? extends V> l) {
 		return null;
 	}
 
@@ -245,7 +245,7 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	 * @return the {@link Shape} to be used as the clip during painting of the
 	 *         {@code JXLayer}
 	 */
-	protected Shape getClip(JLayer<? extends V> l) {
+    Shape getClip(JLayer<? extends V> l) {
 		return null;
 	}
 
@@ -260,8 +260,8 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	 * @return the map of rendering hints to be used during painting of the
 	 *         {@code JXLayer}
 	 */
-	protected Map<RenderingHints.Key, Object> getRenderingHints(
-			JLayer<? extends V> l) {
+    Map<RenderingHints.Key, Object> getRenderingHints(
+            JLayer<? extends V> l) {
 		return emptyRenderingHintMap;
 	}
 
@@ -272,7 +272,7 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 	 * 
 	 * @see JLayer#setLayerEventMask(long)
 	 */
-	public long getLayerEventMask() {
+    long getLayerEventMask() {
 		return AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK
 				| AWTEvent.MOUSE_WHEEL_EVENT_MASK | AWTEvent.KEY_EVENT_MASK
 				| AWTEvent.FOCUS_EVENT_MASK;

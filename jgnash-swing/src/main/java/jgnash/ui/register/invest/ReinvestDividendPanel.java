@@ -51,7 +51,7 @@ public final class ReinvestDividendPanel extends AbstractPriceQtyInvTransactionP
 
     private final GainsPanel gainsPanel;
 
-    protected ReinvestDividendPanel(Account account) {
+    ReinvestDividendPanel(Account account) {
         super(account);
 
 

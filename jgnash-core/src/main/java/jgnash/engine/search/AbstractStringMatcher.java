@@ -27,9 +27,9 @@ import jgnash.util.SearchUtils;
  * @author Craig Cavanaugh
  *
  */
-public abstract class AbstractStringMatcher implements Matcher {
+abstract class AbstractStringMatcher implements Matcher {
 
-    protected Pattern p;
+    Pattern p;
 
     /**
      * Creates a Matcher for Strings
@@ -37,7 +37,7 @@ public abstract class AbstractStringMatcher implements Matcher {
      * @param pattern       DOS style wildcard search pattern
      * @param caseSensitive should be true if match should be case sensitive
      */
-    public AbstractStringMatcher(final String pattern, final boolean caseSensitive) {
+    AbstractStringMatcher(final String pattern, final boolean caseSensitive) {
         if (pattern == null) {
             throw new RuntimeException();
         }

@@ -31,7 +31,7 @@ import jgnash.util.SearchUtils;
  * @author Craig Cavanaugh
  *
  */
-public class SearchEngine {
+class SearchEngine {
 
     private SearchEngine() {
     }

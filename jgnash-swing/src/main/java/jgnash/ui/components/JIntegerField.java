@@ -47,7 +47,7 @@ public class JIntegerField extends JTextFieldEx {
         this(0);
     }
 
-    public JIntegerField(final int columnSize) {
+    private JIntegerField(final int columnSize) {
         super(columnSize);
         setInputVerifier(new IntegerVerifier());
     }

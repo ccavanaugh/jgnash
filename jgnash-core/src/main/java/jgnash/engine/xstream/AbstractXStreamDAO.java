@@ -27,7 +27,7 @@ import jgnash.engine.dao.AbstractDAO;
  *
  * @author Craig Cavanaugh
  */
-public abstract class AbstractXStreamDAO extends AbstractDAO {
+abstract class AbstractXStreamDAO extends AbstractDAO {
 
     /**
      * Maximum time in seconds before a commit will occur

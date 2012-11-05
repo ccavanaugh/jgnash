@@ -94,7 +94,7 @@ public enum AccountType {
         return mutable;
     }
 
-    public static Set<AccountType> getAccountTypeSet() {
+    private static Set<AccountType> getAccountTypeSet() {
         Set<AccountType> set = EnumSet.allOf(AccountType.class);
 
         set.remove(AccountType.ROOT);

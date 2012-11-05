@@ -117,11 +117,11 @@ class RecurringEntryDialog extends JDialog implements ActionListener {
         autoEnterCheckBox.addActionListener(this);
     }
 
-    protected static Reminder showDialog() {
+    static Reminder showDialog() {
         return showDialog(null);
     }
 
-    protected static Reminder showDialog(final Reminder reminder) {
+    static Reminder showDialog(final Reminder reminder) {
         RecurringEntryDialog d = new RecurringEntryDialog(reminder);
         d.setMinimumSize(d.getSize());
         DialogUtils.addBoundsListener(d, "dialogbounds");

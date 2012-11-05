@@ -51,7 +51,7 @@ public class TransactionEntryRocX extends AbstractInvestmentTransactionEntry {
      * @param dividend              Dividend received
      * @param incomeExchangedAmount Exchanged amount for the debit account
      */
-    protected TransactionEntryRocX(final Account incomeAccount, final Account investmentAccount, final SecurityNode securityNode, final BigDecimal dividend, final BigDecimal incomeExchangedAmount) {
+    TransactionEntryRocX(final Account incomeAccount, final Account investmentAccount, final SecurityNode securityNode, final BigDecimal dividend, final BigDecimal incomeExchangedAmount) {
 
         assert incomeAccount != null && investmentAccount != null;
         assert investmentAccount.memberOf(AccountGroup.INVEST);

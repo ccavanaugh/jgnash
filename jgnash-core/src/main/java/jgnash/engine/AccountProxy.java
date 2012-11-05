@@ -30,7 +30,7 @@ import jgnash.util.DateUtils;
  * @author Craig Cavanaugh
  *
  */
-public class AccountProxy {
+class AccountProxy {
 
     final Account account;
 

@@ -46,7 +46,7 @@ public class Config extends StoredObject {
      */
     private List<String> transactionNumberItems = new ArrayList<>();
 
-    protected void initialize() {
+    void initialize() {
         Account.setAccountSeparator(getAccountSeparator());
     }
 

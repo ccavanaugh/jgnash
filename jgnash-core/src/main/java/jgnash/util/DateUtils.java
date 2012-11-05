@@ -322,7 +322,7 @@ public class DateUtils {
      *            calendar year
      * @return the number of days in the year
      */
-    public static int getDaysInYear(final int year) {
+    private static int getDaysInYear(final int year) {
         if (isLeapYear(year)) {
             return DAYS_PER_YEAR + 1;
         }
@@ -442,7 +442,7 @@ public class DateUtils {
      *            The year (index starts at 1)
      * @return The last day of the month and year specified
      */
-    public static Date getFirstDayOfTheMonth(final int month, final int year) {
+    private static Date getFirstDayOfTheMonth(final int month, final int year) {
         assert month >= 0 && month <= 11;
 
         GregorianCalendar c = calendarPool.take();
@@ -897,7 +897,7 @@ public class DateUtils {
      *            number of months to subtract
      * @return prior month
      */
-    public static Date subtractMonths(final Date date, final int months) {
+    private static Date subtractMonths(final Date date, final int months) {
         GregorianCalendar c = calendarPool.take();
 
         try {
@@ -929,7 +929,7 @@ public class DateUtils {
      *            number of years
      * @return date of the new year
      */
-    public static Date addYears(final Date date, final int years) {
+    private static Date addYears(final Date date, final int years) {
         GregorianCalendar c = calendarPool.take();
 
         try {

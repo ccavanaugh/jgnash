@@ -267,7 +267,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
 
         private String f;
 
-        protected ImportRun(final Date start, final Date end, final SecurityNode[] sNodes) {
+        ImportRun(final Date start, final Date end, final SecurityNode[] sNodes) {
             this.start = start;
             this.end = end;
             this.sNodes = sNodes;
@@ -372,7 +372,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
             closeDialog();
         }
 
-        protected void stop() {
+        void stop() {
             lock = null;
         }
     }

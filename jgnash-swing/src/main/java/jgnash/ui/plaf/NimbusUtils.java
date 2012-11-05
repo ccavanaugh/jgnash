@@ -36,7 +36,7 @@ import javax.swing.plaf.FontUIResource;
  */
 public class NimbusUtils {
 
-    static float growthPercentage = 1f;
+    private static float growthPercentage = 1f;
 
     /**
      * Returns the base font size for the Nimbus Look and Feel
@@ -45,6 +45,7 @@ public class NimbusUtils {
      * 
      * @return base base font size
      */
+    @SuppressWarnings("ConstantConditions")
     public static int getBaseFontSize() {
 
         int baseSize = 12;
@@ -64,6 +65,7 @@ public class NimbusUtils {
         return baseSize;
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static void changeFontSize(final int size) {
 
         // get UI defaults

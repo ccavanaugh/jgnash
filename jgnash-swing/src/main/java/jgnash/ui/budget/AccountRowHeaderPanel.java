@@ -80,7 +80,7 @@ final class AccountRowHeaderPanel extends JPanel {
         return panel;
     }
 
-    protected JTable getTable() {
+    JTable getTable() {
         return table;
     }
 
@@ -92,7 +92,7 @@ final class AccountRowHeaderPanel extends JPanel {
      * @see BudgetPeriodPanel#setRowHeight(int)
      * @return the height in pixels of a table row
      */
-    protected int getRowHeight() {
+    int getRowHeight() {
         return table.getRowHeight();
     }
 

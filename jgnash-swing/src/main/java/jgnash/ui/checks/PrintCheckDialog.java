@@ -187,7 +187,7 @@ class PrintCheckDialog extends JDialog implements ActionListener {
         return checkLayout;
     }
 
-    protected boolean incrementCheckNumbers() {
+    boolean incrementCheckNumbers() {
         return incCheckBox.isSelected();
     }
 

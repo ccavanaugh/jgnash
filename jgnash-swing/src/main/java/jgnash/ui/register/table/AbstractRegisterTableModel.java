@@ -97,7 +97,7 @@ public abstract class AbstractRegisterTableModel extends AbstractTableModel impl
         return columnWidths.clone(); // return a clone to prevent accidental change
     }
 
-    public void setPreferredColumnWeights(final int[] widths) {
+    void setPreferredColumnWeights(final int[] widths) {
         columnWidths = widths.clone();
     }
 

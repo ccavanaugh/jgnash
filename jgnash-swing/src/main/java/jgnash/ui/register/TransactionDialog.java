@@ -166,7 +166,7 @@ public class TransactionDialog extends JDialog implements RegisterListener {
 
         private Transaction t = null;
 
-        protected TransactionPanelEx(Account account, PanelType panelType) {
+        TransactionPanelEx(Account account, PanelType panelType) {
             super(account, panelType);
         }
 

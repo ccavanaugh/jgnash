@@ -56,7 +56,7 @@ public final class SellSharePanel extends AbstractPriceQtyInvTransactionPanel im
 
     private final AccountExchangePanel accountExchangePanel;
 
-    protected SellSharePanel(final Account account) {
+    SellSharePanel(final Account account) {
         super(account);
 
         feePanel = new FeePanel(account);

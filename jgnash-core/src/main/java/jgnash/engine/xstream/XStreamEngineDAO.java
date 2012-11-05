@@ -52,11 +52,11 @@ public class XStreamEngineDAO extends AbstractXStreamDAO implements EngineDAO {
 
     private ScheduledExecutorService commitExecutor;
 
-    ScheduledFuture<?> future;
+    private ScheduledFuture<?> future;
 
     private final Timer commitTimer;
 
-    protected XStreamEngineDAO(final AbstractXStreamContainer container) {
+    XStreamEngineDAO(final AbstractXStreamContainer container) {
         super(container);
 
         commitTimer = new Timer();

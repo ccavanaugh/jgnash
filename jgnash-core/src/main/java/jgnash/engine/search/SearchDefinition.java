@@ -44,7 +44,7 @@ public class SearchDefinition {
         this.matcherCollection = matcherCollection;
     }
 
-    public boolean matches(final Transaction t) {
+    boolean matches(final Transaction t) {
         boolean result = false;
 
         if (criteria == Criteria.ANY) {

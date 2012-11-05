@@ -51,7 +51,7 @@ import javax.swing.plaf.LayerUI;
  * 
  * @author Craig Cavanaugh
  */
-public class BusyLayerUI extends LayerUI<JPanel> implements ActionListener {
+class BusyLayerUI extends LayerUI<JPanel> implements ActionListener {
 
     private static final int FPS = 24;
     private static final int TIMER_TICK = 1000 / FPS;

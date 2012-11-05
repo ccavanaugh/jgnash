@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @author Craig Cavanaugh
  *
  */
-public abstract class ObjectPool<T> {
+abstract class ObjectPool<T> {
 
     private final Queue<T> objects;
 

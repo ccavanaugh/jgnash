@@ -81,7 +81,7 @@ import jgnash.util.Resource;
  */
 public class CurrencyExchangeDialog extends JDialog implements MessageListener, ActionListener, ListSelectionListener {
 
-    public static final int DELAY_MILLIS = 1500;
+    private static final int DELAY_MILLIS = 1500;
 
     private final Resource rb = Resource.get();
 

@@ -135,35 +135,35 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
 
     private ResourceBundle resourceBundle = null;
 
-    protected JToggleButton actualSizeButton;
+    private JToggleButton actualSizeButton;
 
-    protected JButton firstButton;
+    private JButton firstButton;
 
-    protected JToggleButton fitPageButton;
+    private JToggleButton fitPageButton;
 
-    protected JToggleButton fitWidthButton;
+    private JToggleButton fitWidthButton;
 
-    protected JButton lastButton;
+    private JButton lastButton;
 
-    protected JButton nextButton;
+    private JButton nextButton;
 
     private JButton pageSetupButton;
 
-    protected JButton previousButton;
+    private JButton previousButton;
 
-    protected JButton printButton;
+    private JButton printButton;
 
-    protected JButton saveButton;
+    private JButton saveButton;
 
-    protected JButton zoomInButton;
+    private JButton zoomInButton;
 
-    protected JButton zoomOutButton;
+    private JButton zoomOutButton;
 
-    protected JButton helpButton;
+    private JButton helpButton;
 
-    protected JComboBox<String> zoomComboBox;
+    private JComboBox<String> zoomComboBox;
 
-    protected JComboBox<Integer> fontSizeComboBox;
+    private JComboBox<Integer> fontSizeComboBox;
 
     private JPanel scrollPanePanel;
 
@@ -182,7 +182,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
     // reference to the parent frame to control wait message
     private final DynamicJasperReportFrame frame;
 
-    protected DynamicJasperReportPanel(final DynamicJasperReportFrame frame, final DynamicJasperReport report) {
+    DynamicJasperReportPanel(final DynamicJasperReportFrame frame, final DynamicJasperReport report) {
 
         screenResolution = Toolkit.getDefaultToolkit().getScreenResolution();
         resourceBundle = ResourceBundle.getBundle(NET_SF_JASPERREPORTS_VIEW_VIEWER);
@@ -751,7 +751,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
         }
     }
 
-    protected void refreshReport() {
+    void refreshReport() {
         new ReportWorker().execute();
     }
 
@@ -979,7 +979,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
 
         private DynamicJasperReportPanel viewer = null;
 
-        protected PageRenderer(final DynamicJasperReportPanel viewer) {
+        PageRenderer(final DynamicJasperReportPanel viewer) {
             this.viewer = viewer;
         }
 

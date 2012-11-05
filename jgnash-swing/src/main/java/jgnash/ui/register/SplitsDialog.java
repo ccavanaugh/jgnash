@@ -72,7 +72,7 @@ public class SplitsDialog extends JDialog implements ListSelectionListener, Acti
 
     private Account account;
 
-    protected boolean returnStatus = false;
+    boolean returnStatus = false;
 
     private JButton newButton;
 
@@ -86,7 +86,7 @@ public class SplitsDialog extends JDialog implements ListSelectionListener, Acti
 
     private JButton cancelButton;
 
-    protected static SplitsDialog getSplitsDialog(Component c, Account account, List<TransactionEntry> splits, PanelType defaultTab) {
+    static SplitsDialog getSplitsDialog(Component c, Account account, List<TransactionEntry> splits, PanelType defaultTab) {
 
         Window parent = SwingUtilities.getWindowAncestor(c);
 

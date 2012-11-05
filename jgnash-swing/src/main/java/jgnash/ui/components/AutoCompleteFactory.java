@@ -86,11 +86,11 @@ public class AutoCompleteFactory {
     private AutoCompleteFactory() {
     }
 
-    public static void addPropertyChangeListener(final PropertyChangeListener listener) {
+    private static void addPropertyChangeListener(final PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
 
-    public static void removePropertyChangeListener(final PropertyChangeListener listener) {
+    private static void removePropertyChangeListener(final PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
 

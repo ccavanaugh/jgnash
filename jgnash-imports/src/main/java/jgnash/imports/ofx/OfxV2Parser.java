@@ -50,7 +50,7 @@ public class OfxV2Parser implements OfxTags {
 
     private static final boolean debug = false;
 
-    public static final String EXTRA_SPACE_REGEX = "\\s+";
+    private static final String EXTRA_SPACE_REGEX = "\\s+";
 
     private OfxBank bank;
 
@@ -82,7 +82,7 @@ public class OfxV2Parser implements OfxTags {
      * @param stream InputStream to parse
      * @param encoding encoding to use
      */
-    public void parse(final InputStream stream, final String encoding) {
+    void parse(final InputStream stream, final String encoding) {
         logger.entering(OfxV2Parser.class.getName(), "parse");
 
         bank = new OfxBank();

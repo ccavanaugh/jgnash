@@ -278,7 +278,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
         }
     }
 
-    protected void toggleReconciledState(final int index) {
+    void toggleReconciledState(final int index) {
         rwl.readLock().lock();
 
         try {
@@ -295,7 +295,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
         }
     }
 
-    protected void selectAll() {
+    void selectAll() {
 
         rwl.readLock().lock();
 
@@ -309,7 +309,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
         }
     }
 
-    protected void clearAll() {
+    void clearAll() {
 
         rwl.readLock().lock();
 
@@ -323,7 +323,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
         }
     }
 
-    protected void commitChanges() {
+    void commitChanges() {
 
         Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
@@ -356,7 +356,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
 
         Transaction transaction;
 
-        protected RecTransaction(final Transaction transaction) {
+        RecTransaction(final Transaction transaction) {
             assert transaction != null;
             this.transaction = transaction;
             reconciled = transaction.getReconciled(account);

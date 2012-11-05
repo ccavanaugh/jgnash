@@ -77,7 +77,7 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
     /**
      * List of listeners
      */
-    protected final EventListenerList listenerList = new EventListenerList();
+    private final EventListenerList listenerList = new EventListenerList();
 
     private static final Logger logger = Logger.getLogger(BudgetPeriodModel.class.getName());
 
@@ -193,7 +193,7 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
         return expandingBudgetTableModel;
     }
 
-    public BudgetPeriodResults getResults(final Account account) {
+    BudgetPeriodResults getResults(final Account account) {
         if (account == null) {
             throw new IllegalArgumentException("account may not be null");
         }
@@ -224,7 +224,7 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
      * @see TableModelEvent
      * @see EventListenerList
      */
-    public void fireTableRowsUpdated(int firstRow, int lastRow) {
+    void fireTableRowsUpdated(int firstRow, int lastRow) {
         fireTableChanged(new TableModelEvent(this, firstRow, lastRow, ALL_COLUMNS, UPDATE));
     }
 
@@ -238,7 +238,7 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
      * @see javax.swing.event.TableModelEvent
      * @see EventListenerList
      */
-    public void fireTableChanged(TableModelEvent e) {
+    void fireTableChanged(TableModelEvent e) {
         // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
         // Process the listeners last to first, notifying

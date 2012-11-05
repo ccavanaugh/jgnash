@@ -187,7 +187,7 @@ public abstract class AbstractTransactionEntryPanel extends AbstractEntryFormPan
         }
     }
 
-    protected void cancelAction() {
+    void cancelAction() {
         clearForm();
         fireCancelAction();
         focusFirstComponent();
@@ -198,7 +198,7 @@ public abstract class AbstractTransactionEntryPanel extends AbstractEntryFormPan
     }
 
     @Override
-    public boolean validateForm() {
+    protected boolean validateForm() {
         return !amountField.getText().equals("");
     }
 

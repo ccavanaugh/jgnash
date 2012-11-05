@@ -46,7 +46,7 @@ public class ReminderObjectTableModel extends AbstractTableModel {
 
     private char enabledSymbol = '\u2713';
 
-    protected ReminderObjectTableModel(final List<PendingReminder> reminders) {
+    ReminderObjectTableModel(final List<PendingReminder> reminders) {
         this.reminders = reminders;
     }
 
@@ -96,16 +96,16 @@ public class ReminderObjectTableModel extends AbstractTableModel {
         }
     }
 
-    protected void toggleSelectedState(final int index) {
+    void toggleSelectedState(final int index) {
         reminders.get(index).setSelected(!reminders.get(index).isSelected());
         fireTableRowsUpdated(index, index);
     }
 
-    protected void setEnabledSymbol(final char symbol) {
+    void setEnabledSymbol(final char symbol) {
         enabledSymbol = symbol;
     }
 
-    protected char getEnabledSymbol() {
+    char getEnabledSymbol() {
         return enabledSymbol;
     }
 }

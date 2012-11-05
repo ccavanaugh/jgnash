@@ -151,7 +151,7 @@ public class SplitsRegisterTableModel extends AbstractTableModel implements Acco
 
         private final ArrayList<TransactionEntry> splits;
 
-        protected SandBoxSplitTransaction(List<TransactionEntry> list) {
+        SandBoxSplitTransaction(List<TransactionEntry> list) {
             if (list != null) {
                 splits = new ArrayList<>(list);
             } else {
@@ -163,20 +163,20 @@ public class SplitsRegisterTableModel extends AbstractTableModel implements Acco
             return splits.size();
         }
 
-        protected TransactionEntry getSplitAt(final int index) {
+        TransactionEntry getSplitAt(final int index) {
             return splits.get(index);
         }
 
-        protected void removeSplit(final int index) {
+        void removeSplit(final int index) {
             splits.remove(index);
         }
 
-        protected void addSplit(final TransactionEntry t) {
+        void addSplit(final TransactionEntry t) {
             splits.add(t);
             Collections.sort(splits);
         }
 
-        protected void replaceSplit(final TransactionEntry oldTrans, final TransactionEntry newTrans) {
+        void replaceSplit(final TransactionEntry oldTrans, final TransactionEntry newTrans) {
             int index = splits.indexOf(oldTrans);
             if (index != -1) {
                 splits.set(index, newTrans);
@@ -193,7 +193,7 @@ public class SplitsRegisterTableModel extends AbstractTableModel implements Acco
          * @param index transaction index
          * @return balance for the index
          */
-        protected BigDecimal getRunningBalance(final int index) {
+        BigDecimal getRunningBalance(final int index) {
             BigDecimal balance = getSplitAt(0).getAmount(account);
             for (int i = 1; i < index; i++) {
                 balance = balance.add(getSplitAt(i).getAmount(account));

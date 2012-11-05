@@ -45,11 +45,11 @@ public class TimePeriodCombo extends JComboBox<String> {
         setModel(new DefaultComboBoxModel<>(descriptions));
     }
 
-    static int[] getPeriods() {
+    private static int[] getPeriods() {
         return new int[]{300000, 600000, 900000, 1800000, 3600000, 7200000, 28800000, 86400000, 0};
     }
 
-    static String[] getDescriptions() {
+    private static String[] getDescriptions() {
 
         final Resource rb = Resource.get();
 

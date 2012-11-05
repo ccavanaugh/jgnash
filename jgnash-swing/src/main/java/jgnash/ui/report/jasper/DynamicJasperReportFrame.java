@@ -44,7 +44,7 @@ import org.jdesktop.swingx.JXStatusBar;
  */
 final class DynamicJasperReportFrame extends JFrame {
 
-    protected DynamicJasperReportPanel viewer = null;
+    private DynamicJasperReportPanel viewer = null;
 
     private JPanel mainPanel;
 
@@ -130,12 +130,12 @@ final class DynamicJasperReportFrame extends JFrame {
         DialogUtils.addBoundsListener(this);
     }
 
-    protected static void viewReport(final DynamicJasperReport report) {
+    static void viewReport(final DynamicJasperReport report) {
         DynamicJasperReportFrame jasperViewer = new DynamicJasperReportFrame(report);
         jasperViewer.setVisible(true);
     }
 
-    protected void displayWaitMessage(final String message) {
+    void displayWaitMessage(final String message) {
         EventQueue.invokeLater(new Runnable() {
 
             @Override
@@ -146,7 +146,7 @@ final class DynamicJasperReportFrame extends JFrame {
         });
     }
 
-    protected void stopWaitMessage() {
+    void stopWaitMessage() {
         EventQueue.invokeLater(new Runnable() {
 
             @Override
@@ -156,7 +156,7 @@ final class DynamicJasperReportFrame extends JFrame {
         });
     }
 
-    protected void setStatus(final String status) {
+    void setStatus(final String status) {
         statusField.setText(status);
     }
 

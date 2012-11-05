@@ -70,7 +70,7 @@ public class ExpandingTable<E extends Comparable<? super E>> extends JTable {
 
     protected int defaultAlignment;
 
-    final AbstractExpandingTableModel<E> model;
+    private final AbstractExpandingTableModel<E> model;
 
     private static final int VERTICAL_ICON_PADDING = 5;
 

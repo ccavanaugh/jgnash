@@ -54,9 +54,9 @@ import com.thoughtworks.xstream.io.binary.BinaryStreamDriver;
  * 
  * @author Craig Cavanaugh
  */
-public class BinaryContainer extends AbstractXStreamContainer {
+class BinaryContainer extends AbstractXStreamContainer {
 
-    protected BinaryContainer(final File file) {
+    BinaryContainer(final File file) {
         super(file);
     }
 

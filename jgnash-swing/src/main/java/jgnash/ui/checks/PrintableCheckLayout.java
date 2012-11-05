@@ -76,7 +76,7 @@ class PrintableCheckLayout implements Printable {
 
     private static final float space = 4.5f;
 
-    protected PrintableCheckLayout(final CheckLayout layout) {
+    PrintableCheckLayout(final CheckLayout layout) {
         this.checkLayout = layout;
         pageFormat = getPrinterJob().defaultPage();
     }
@@ -96,7 +96,7 @@ class PrintableCheckLayout implements Printable {
         return job;
     }
 
-    protected PageFormat pageSetup() {
+    PageFormat pageSetup() {
         pageFormat = getPrinterJob().pageDialog(checkLayout.getPrintAttributes());
         return pageFormat;
     }
@@ -104,7 +104,7 @@ class PrintableCheckLayout implements Printable {
     /**
      * This will print the sheet checks (Transactions)
      */
-    protected void print() {
+    void print() {
         getPrinterJob().setPrintable(this);
         if (getPrinterJob().printDialog(checkLayout.getPrintAttributes())) {
             try {
@@ -120,7 +120,7 @@ class PrintableCheckLayout implements Printable {
      *
      * @param t transactions to print
      */
-    protected void print(final Transaction[] t) {
+    void print(final Transaction[] t) {
         assert t != null;
         assert t.length == checkLayout.getNumberOfChecks();
         this.transactions = t;

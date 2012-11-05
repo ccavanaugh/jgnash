@@ -52,7 +52,7 @@ public class Mt940Exporter {
      * @param file file to import
      * @return list of import transactions
      */
-    static List<ImportTransaction> convertTransactions(Mt940File file) {
+    private static List<ImportTransaction> convertTransactions(Mt940File file) {
         List<ImportTransaction> retval = new ArrayList<>();
         for (Mt940Record record : file.getRecords()) {
             for (Mt940Entry entry : record.getEntries()) {

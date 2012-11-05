@@ -113,7 +113,7 @@ public class YesNoDialog extends JDialog implements ActionListener {
         pack();
     }
 
-    static Icon getIconForType(int messageType) {
+    private static Icon getIconForType(int messageType) {
         if (messageType < 0 || messageType > 3) {
             return null;
         }

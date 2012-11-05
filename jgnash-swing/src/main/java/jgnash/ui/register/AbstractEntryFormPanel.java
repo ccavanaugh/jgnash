@@ -82,11 +82,11 @@ public abstract class AbstractEntryFormPanel extends JPanel {
         }
     }
 
-    protected void addRegisterListener(final RegisterListener l) {
+    void addRegisterListener(final RegisterListener l) {
         listenerList.add(RegisterListener.class, l);
     }
 
-    protected void removeRegisterListener(final RegisterListener l) {
+    void removeRegisterListener(final RegisterListener l) {
         listenerList.remove(RegisterListener.class, l);
     }
 

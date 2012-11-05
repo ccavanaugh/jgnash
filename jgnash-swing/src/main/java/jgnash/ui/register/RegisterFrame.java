@@ -205,7 +205,7 @@ public final class RegisterFrame extends JFrame implements MessageListener {
         showDialog(account, null);
     }
 
-    protected static void showDialog(final Account account, final Transaction t) {
+    static void showDialog(final Account account, final Transaction t) {
 
         for (final RegisterFrame d : dialogList) {
             if (account.equals(d.account)) {

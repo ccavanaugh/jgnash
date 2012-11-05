@@ -35,7 +35,7 @@ class SortableTableHeaderRenderer implements TableCellRenderer {
 
     private final TableCellRenderer tableCellRenderer;
 
-    protected SortableTableHeaderRenderer(TableCellRenderer tableCellRenderer) {
+    SortableTableHeaderRenderer(TableCellRenderer tableCellRenderer) {
         this.tableCellRenderer = tableCellRenderer;
     }
 

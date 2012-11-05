@@ -58,7 +58,7 @@ import jgnash.util.Resource;
  * @author Craig Cavanaugh
  *
  */
-public class IncomeDialog extends JDialog implements ListSelectionListener, ActionListener {
+class IncomeDialog extends JDialog implements ListSelectionListener, ActionListener {
 
     private final Resource rb = Resource.get();
 

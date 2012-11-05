@@ -60,9 +60,9 @@ import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
  * 
  * @author Craig Cavanaugh
  */
-public class XMLContainer extends AbstractXStreamContainer {
+class XMLContainer extends AbstractXStreamContainer {
 
-    protected XMLContainer(final File file) {
+    XMLContainer(final File file) {
         super(file);
     }
 

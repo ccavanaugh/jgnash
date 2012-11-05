@@ -74,11 +74,11 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
     private static final String MONTHS = "months";
 
-    protected boolean runningTotal = true;
+    boolean runningTotal = true;
 
-    protected List<Date> dates = Collections.emptyList();
+    List<Date> dates = Collections.emptyList();
 
-    public AbstractSumByTypeReport() {
+    AbstractSumByTypeReport() {
 
         Preferences p = getPreferences();
 
@@ -123,7 +123,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
     protected abstract List<AccountGroup> getAccountGroups();
 
-    protected ReportModel createReportModel(final Date startDate, final Date endDate) {
+    ReportModel createReportModel(final Date startDate, final Date endDate) {
 
         logger.info(rb.getString("Message.CollectingReportData"));
 
@@ -240,7 +240,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
     /**
      * Wraps a row of table data into one object
      */
-    protected abstract class Row {
+    abstract class Row {
         /**
          * Returns the value given a column index
          * 

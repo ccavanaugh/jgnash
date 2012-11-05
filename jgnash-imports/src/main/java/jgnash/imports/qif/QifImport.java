@@ -179,7 +179,7 @@ public class QifImport {
      * 
      * @return List of bank accounts
      */
-    public List<Account> getBankAccountList() {
+    List<Account> getBankAccountList() {
 
         final List<Account> retList = new ArrayList<>();
         final List<Account> list = engine.getAccountList();
