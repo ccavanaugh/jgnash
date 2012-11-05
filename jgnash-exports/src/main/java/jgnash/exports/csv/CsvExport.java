@@ -20,8 +20,14 @@ package jgnash.exports.csv;
 import jgnash.engine.Account;
 import jgnash.engine.Transaction;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Primary class for CSV export
@@ -30,13 +36,34 @@ import java.util.List;
  */
 public class CsvExport {
 
-    private char delimiter = ',';   // comma separated format
+    private static char delimiter = ',';   // comma separated format
 
-    public void exportAccount(final Account account, final Date startDate, final Date endDate, final String fileName) {
+    private CsvExport() {
+    }
 
-        List<Transaction> transactions = account.getTransactions(startDate, endDate);
+    public static void exportAccount(final Account account, final Date startDate, final Date endDate, final String fileName) {
 
+        if (account == null || startDate ==  null || endDate == null || fileName == null) {
+            throw new RuntimeException();
+        }
 
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName)))) {
 
+            // write the header
+            writer.write("Account,Number,Debit,Credit,Balance,Date,Memo,Payee,Reconciled");
+            writer.newLine();
+
+            // write the transactions
+            List<Transaction> transactions = account.getTransactions(startDate, endDate);
+
+            for (Transaction transaction : transactions) {
+
+                //writer.write(aPl.toString());
+                writer.newLine();
+            }
+            writer.newLine();
+        } catch (IOException e) {
+            Logger.getLogger(CsvExport.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
     }
 }
