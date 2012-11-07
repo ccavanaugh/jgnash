@@ -18,12 +18,17 @@
 package jgnash.exports.csv;
 
 import jgnash.engine.Account;
+import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
+import jgnash.text.CommodityFormat;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.math.BigDecimal;
+import java.text.MessageFormat;
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -36,7 +41,7 @@ import java.util.logging.Logger;
  */
 public class CsvExport {
 
-    private static char delimiter = ',';   // comma separated format
+    private static char DELIMITER = ',';   // comma separated format
 
     private CsvExport() {
     }
@@ -56,9 +61,20 @@ public class CsvExport {
             // write the transactions
             List<Transaction> transactions = account.getTransactions(startDate, endDate);
 
+            String pattern = "{1}{0}{2}{0}{3}{0}{4}{0}{5}{0}{6,date,short}{0}{7}{0}{8}{0}{9}";
+
+            NumberFormat numberFormat = CommodityFormat.getShortNumberFormat(account.getCurrencyNode());
+
             for (Transaction transaction : transactions) {
 
-                //writer.write(aPl.toString());
+                String credit = transaction.getAmount(account).compareTo(BigDecimal.ZERO) == 0 ? "" :  numberFormat.format(transaction.getAmount(account));
+                String debit = transaction.getAmount(account).compareTo(BigDecimal.ZERO) == 0 ? "" :  numberFormat.format(transaction.getAmount(account));
+
+                String balance = numberFormat.format(account.getBalanceAt(transaction));
+                String reconciled = transaction.getReconciled(account) == ReconciledState.NOT_RECONCILED ? Boolean.FALSE.toString() : Boolean.TRUE.toString();
+
+                writer.write(MessageFormat.format(pattern, DELIMITER, account.getName(), transaction.getNumber(), debit,
+                        credit, balance, transaction.getDate(), transaction.getMemo(), transaction.getPayee(), reconciled));
                 writer.newLine();
             }
             writer.newLine();
