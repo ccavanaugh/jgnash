@@ -20,14 +20,15 @@ package jgnash.exports.csv;
 import jgnash.engine.Account;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
-import jgnash.text.CommodityFormat;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.MessageFormat;
-import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,10 +44,10 @@ public class CsvExport {
     private CsvExport() {
     }
 
-    // TODO escape numeric data (eliminate commas), escape quotes, fix debit and credit columns
+    // TODO escape quotes
     public static void exportAccount(final Account account, final Date startDate, final Date endDate, final File file) {
 
-        if (account == null || startDate ==  null || endDate == null || file == null) {
+        if (account == null || startDate == null || endDate == null || file == null) {
             throw new RuntimeException();
         }
 
@@ -59,20 +60,26 @@ public class CsvExport {
             // write the transactions
             List<Transaction> transactions = account.getTransactions(startDate, endDate);
 
-            String pattern = "{1}{0}{2}{0}{3}{0}{4}{0}{5}{0}{6,date,short}{0}{7}{0}{8}{0}{9}";
+            String pattern = "{1}{0}{2}{0}{3}{0}{4}{0}{5}{0}{6}{0}{7}{0}{8}{0}{9}";
 
-            NumberFormat numberFormat = CommodityFormat.getShortNumberFormat(account.getCurrencyNode());
+            // request locale specific date format and force to a 4 digit year format
+            DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+            if (dateFormat instanceof SimpleDateFormat) {
+                String datePattern = ((SimpleDateFormat) dateFormat).toPattern().replaceAll("y+", "yyyy");
+                ((SimpleDateFormat) dateFormat).applyPattern(datePattern);
+            }
 
             for (Transaction transaction : transactions) {
 
-                String credit = transaction.getAmount(account).compareTo(BigDecimal.ZERO) == 0 ? "" :  numberFormat.format(transaction.getAmount(account));
-                String debit = transaction.getAmount(account).compareTo(BigDecimal.ZERO) == 0 ? "" :  numberFormat.format(transaction.getAmount(account));
+                String date = dateFormat.format(transaction.getDate());
+                String credit = transaction.getAmount(account).compareTo(BigDecimal.ZERO) == -1 ? "" : transaction.getAmount(account).abs().toPlainString();
+                String debit = transaction.getAmount(account).compareTo(BigDecimal.ZERO) == 1 ? "" : transaction.getAmount(account).abs().toPlainString();
 
-                String balance = numberFormat.format(account.getBalanceAt(transaction));
+                String balance = account.getBalanceAt(transaction).toPlainString();
                 String reconciled = transaction.getReconciled(account) == ReconciledState.NOT_RECONCILED ? Boolean.FALSE.toString() : Boolean.TRUE.toString();
 
                 writer.write(MessageFormat.format(pattern, DELIMITER, account.getName(), transaction.getNumber(), debit,
-                        credit, balance, transaction.getDate(), transaction.getMemo(), transaction.getPayee(), reconciled));
+                        credit, balance, date, transaction.getMemo(), transaction.getPayee(), reconciled));
                 writer.newLine();
             }
             writer.newLine();
