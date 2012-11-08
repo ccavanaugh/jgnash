@@ -22,10 +22,7 @@ import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.text.CommodityFormat;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
@@ -46,13 +43,14 @@ public class CsvExport {
     private CsvExport() {
     }
 
-    public static void exportAccount(final Account account, final Date startDate, final Date endDate, final String fileName) {
+    // TODO escape numeric data (eliminate commas), escape quotes, fix debit and credit columns
+    public static void exportAccount(final Account account, final Date startDate, final Date endDate, final File file) {
 
-        if (account == null || startDate ==  null || endDate == null || fileName == null) {
+        if (account == null || startDate ==  null || endDate == null || file == null) {
             throw new RuntimeException();
         }
 
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName)))) {
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))) {
 
             // write the header
             writer.write("Account,Number,Debit,Credit,Balance,Date,Memo,Payee,Reconciled");

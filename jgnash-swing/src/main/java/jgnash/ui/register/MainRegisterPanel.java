@@ -23,6 +23,7 @@ import java.awt.EventQueue;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.util.prefs.Preferences;
 
 import javax.help.CSH;
@@ -45,6 +46,7 @@ import jgnash.message.MessageListener;
 import jgnash.message.MessageProperty;
 import jgnash.ui.account.AccountListFilterDialog;
 import jgnash.ui.account.AccountListTreePane;
+import jgnash.ui.actions.ExportCsvAction;
 import jgnash.ui.actions.ReconcileAccountAction;
 import jgnash.ui.components.RollOverButton;
 import jgnash.ui.register.table.AbstractRegisterTableModel;
@@ -80,6 +82,8 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
     private JButton resizeButton;
 
     private JButton printButton;
+
+    private JButton exportButton;
 
     private RegisterTree registerTree;
 
@@ -137,6 +141,11 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
         printButton.setToolTipText(rb.getString("ToolTip.PrintRegRep"));
         printButton.addActionListener(this);
         toolBar.add(printButton);
+
+        exportButton = new RollOverButton(rb.getString("Button.Export"), Resource.getIcon("/jgnash/resource/document-save-as.png"));
+        exportButton.setToolTipText(rb.getString("ToolTip.ExportCsv"));
+        exportButton.addActionListener(this);
+        toolBar.add(exportButton);
 
         toolPanel.add(toolBar, BorderLayout.NORTH);
         toolPanel.add(new JSeparator(), BorderLayout.CENTER);
@@ -319,6 +328,26 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
         }
     }
 
+    private void exportAction() {
+
+        Account account = registerTree.getSelectedAccount();
+
+        if (account != null && account.getTransactionCount() > 1) {
+            Date startDate = account.getTransactionAt(0).getDate();
+            Date endDate = account.getTransactionAt(account.getTransactionCount() - 1).getDate();
+
+            final int[] rows = getActiveTable().getSelectedRows(); // fetch selected rows
+
+            if (rows.length > 1) {
+                startDate = account.getTransactionAt(rows[0]).getDate();
+                endDate = account.getTransactionAt(rows[rows.length - 1]).getDate();
+            }
+
+            ExportCsvAction.exportTransactions(account, startDate, endDate);
+        }
+
+    }
+
     /**
      * Display a dialog with an account register in it
      */
@@ -364,6 +393,8 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
             saveCurrentRegisterLayout();
         } else if (e.getSource() == printButton) {
             printAction();
+        } else if (e.getSource() == exportButton) {
+            exportAction();
         }
     }
 
