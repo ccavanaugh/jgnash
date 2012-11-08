@@ -132,7 +132,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     private final transient PausableThreadPoolExecutor backgroundUpdateExecutor = new PausableThreadPoolExecutor();
 
-    private static final int SCHEDULED_DELAY = 10;
+    private static final int SCHEDULED_DELAY = 20;
 
     private JXBusyLabel backgroundOperationLabel;
 
