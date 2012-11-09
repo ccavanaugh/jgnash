@@ -24,7 +24,6 @@ import jgnash.engine.Transaction;
 import java.io.*;
 import java.math.BigDecimal;
 import java.text.DateFormat;
-import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -39,28 +38,20 @@ import java.util.logging.Logger;
  */
 public class CsvExport {
 
-    private static char DELIMITER = ',';   // comma separated format
-
     private CsvExport() {
     }
 
-    // TODO escape quotes
     public static void exportAccount(final Account account, final Date startDate, final Date endDate, final File file) {
 
         if (account == null || startDate == null || endDate == null || file == null) {
             throw new RuntimeException();
         }
 
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))) {
-
-            // write the header
-            writer.write("Account,Number,Debit,Credit,Balance,Date,Memo,Payee,Reconciled");
-            writer.newLine();
+        try (AutoCloseableCSVWriter writer = new AutoCloseableCSVWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file))))) {
+            writer.writeNext("Account","Number","Debit","Credit","Balance","Date","Memo","Payee","Reconciled");
 
             // write the transactions
             List<Transaction> transactions = account.getTransactions(startDate, endDate);
-
-            String pattern = "{1}{0}{2}{0}{3}{0}{4}{0}{5}{0}{6}{0}{7}{0}{8}{0}{9}";
 
             // request locale specific date format and force to a 4 digit year format
             DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
@@ -78,11 +69,8 @@ public class CsvExport {
                 String balance = account.getBalanceAt(transaction).toPlainString();
                 String reconciled = transaction.getReconciled(account) == ReconciledState.NOT_RECONCILED ? Boolean.FALSE.toString() : Boolean.TRUE.toString();
 
-                writer.write(MessageFormat.format(pattern, DELIMITER, account.getName(), transaction.getNumber(), debit,
-                        credit, balance, date, transaction.getMemo(), transaction.getPayee(), reconciled));
-                writer.newLine();
+                writer.writeNext(account.getName(), transaction.getNumber(), debit, credit, balance, date, transaction.getMemo(), transaction.getPayee(), reconciled);
             }
-            writer.newLine();
         } catch (IOException e) {
             Logger.getLogger(CsvExport.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
