@@ -2,12 +2,12 @@ $Id: changelog.txt 3238 2012-03-10 17:18:34Z ccavanaugh $
 
 WANTS
 ---------------
-CSV Import and export
+CSV Import
+OFX export
 VAT/GST UI
 Command Line interface/Class for loading accounts and transactions
 Improve Security creation/modification UI
 Mass selection of destination accounts for imported transactions.
-OFX export
 Info icon in a sell investment panel that calculate the estimated gains/loss for selling a transaction
 FIFO, and Lot performance calculations for securities. (http://groups.google.com/group/jgnash-user/browse_thread/thread/fe124ecf806857f3?hl=en)
 Search option in the Registers. ( to find any particular transaction by entering part of Text in search criteria )
@@ -23,6 +23,7 @@ Formal Trial Balance report
 
 Release 2.12.0
 ----------------------
+11/10/12 Added CSV export direct from the transaction register
 11/04/12 Update to Mina 2.0.7
 
 Release 2.11.0
