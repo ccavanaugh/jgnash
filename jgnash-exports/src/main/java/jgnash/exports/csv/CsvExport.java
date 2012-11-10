@@ -48,7 +48,7 @@ public class CsvExport {
         }
 
         try (AutoCloseableCSVWriter writer = new AutoCloseableCSVWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file))))) {
-            writer.writeNext("Account","Number","Debit","Credit","Balance","Date","Memo","Payee","Reconciled");
+            writer.writeNextRow("Account","Number","Debit","Credit","Balance","Date","Memo","Payee","Reconciled");
 
             // write the transactions
             List<Transaction> transactions = account.getTransactions(startDate, endDate);
@@ -69,7 +69,7 @@ public class CsvExport {
                 String balance = account.getBalanceAt(transaction).toPlainString();
                 String reconciled = transaction.getReconciled(account) == ReconciledState.NOT_RECONCILED ? Boolean.FALSE.toString() : Boolean.TRUE.toString();
 
-                writer.writeNext(account.getName(), transaction.getNumber(), debit, credit, balance, date, transaction.getMemo(), transaction.getPayee(), reconciled);
+                writer.writeNextRow(account.getName(), transaction.getNumber(), debit, credit, balance, date, transaction.getMemo(), transaction.getPayee(), reconciled);
             }
         } catch (IOException e) {
             Logger.getLogger(CsvExport.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);

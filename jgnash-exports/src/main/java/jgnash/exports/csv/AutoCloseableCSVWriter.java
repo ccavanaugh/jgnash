@@ -22,18 +22,17 @@ import au.com.bytecode.opencsv.CSVWriter;
 import java.io.Writer;
 
 /**
- * Wrap <code>CSVWriter to make it AutoCloseable</code> for improved resource handling
- * and add a little syntactic sugar.
+ * Wrap <code>CSVWriter to add a little syntactic sugar.
  *
  * @author Craig Cavanaugh
  */
-public class AutoCloseableCSVWriter extends CSVWriter implements AutoCloseable {
+public class AutoCloseableCSVWriter extends CSVWriter {
 
     public AutoCloseableCSVWriter(final Writer writer) {
         super(writer);
     }
-
-    public void writeNext(final String... columns) {
+   
+    public void writeNextRow(final String... columns) {
         super.writeNext(columns);
     }
 }
