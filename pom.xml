@@ -12,6 +12,10 @@
     <description>jGnash Personal Finance</description>
     <inceptionYear>2001</inceptionYear>
 
+    <prerequisites>
+        <maven>3.0.0</maven>
+    </prerequisites>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy/MM/dd-HH:mm</maven.build.timestamp.format>
@@ -81,7 +85,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>2.5.1</version>
                 <configuration>
                     <source>${java-version}</source>
                     <target>${java-version}</target>
