@@ -24,6 +24,7 @@ Formal Trial Balance report
 Release 2.12.0
 ----------------------
 11/10/12 Added CSV export direct from the transaction register
+11/10/12 Backup files were not being created in the same directory as the data file.
 11/04/12 Update to Mina 2.0.7
 
 Release 2.11.0

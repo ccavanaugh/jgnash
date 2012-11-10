@@ -131,7 +131,7 @@ public final class FileUtils {
      *            Source file
      * @param dst
      *            Destination file
-     * @return true is the copy was successful
+     * @return true if the copy was successful
      */
     public static boolean copyFile(final File src, final File dst) {
 
@@ -139,7 +139,7 @@ public final class FileUtils {
 
         if (src != null && dst != null && !src.equals(dst)) {
             try {
-                Files.copy(src.toPath(), dst.toPath().getFileName(), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(src.toPath(), dst.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 result = true;
             } catch (IOException e) {
                 Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, e);
