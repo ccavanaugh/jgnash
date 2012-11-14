@@ -19,16 +19,64 @@ package jgnash.exports.ofx;
 
 import jgnash.engine.Account;
 
+import java.io.*;
+import java.nio.charset.Charset;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Primary class for OFX export
+ * Primary class for OFX export.  The SGML format is used instead of the newer XML
+ * to offer the best compatability with older importers
  *
  * @author Craig Cavanaugh
  */
 public class OfxExport {
 
-    public void exportAccount(final Account account, final Date startDate, final Date endDate, final String fileName) {
+    private static final String[] OFXHEADER = new String[]{"OFXHEADER:100", "DATA:OFXSGML", "VERSION:102", "SECURITY:NONE",
+            "ENCODING:USASCII", "CHARSET:1252", "COMPRESSION:NONE", "OLDFILEUID:NONE", "NEWFILEUID:NONE"};
 
+    public static void exportAccount(final Account account, final Date startDate, final Date endDate, final File file) {
+
+        if (account == null || startDate == null || endDate == null || file == null) {
+            throw new RuntimeException();
+        }
+
+        try (IndentedPrintWriter writer = new IndentedPrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charset.forName("windows-1252"))))) {
+
+            // write the required header
+            for (String line : OFXHEADER) {
+                writer.println(line);
+            }
+
+            // start of data
+            writer.println("<OFX>");
+
+            // write data
+
+
+            // finished
+            writer.println("</OFX>");
+        } catch (IOException e) {
+            Logger.getLogger(OfxExport.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
+
+    }
+
+
+    /**
+     * Support class to make writing indented SGML easier
+     */
+    private static class IndentedPrintWriter extends PrintWriter {
+
+        public IndentedPrintWriter(final Writer out) {
+            super(out);
+        }
+
+
+        public void println(int indentDepth, String x) {
+            write("  "); // fix
+            println(x);
+        }
     }
 }
