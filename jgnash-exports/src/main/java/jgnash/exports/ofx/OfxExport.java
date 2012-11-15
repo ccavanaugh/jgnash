@@ -21,6 +21,8 @@ import jgnash.engine.Account;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +38,11 @@ public class OfxExport {
     private static final String[] OFXHEADER = new String[]{"OFXHEADER:100", "DATA:OFXSGML", "VERSION:102", "SECURITY:NONE",
             "ENCODING:USASCII", "CHARSET:1252", "COMPRESSION:NONE", "OLDFILEUID:NONE", "NEWFILEUID:NONE"};
 
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+
     public static void exportAccount(final Account account, final Date startDate, final Date endDate, final File file) {
+
+        int indentLevel = 0;
 
         if (account == null || startDate == null || endDate == null || file == null) {
             throw new RuntimeException();
@@ -46,36 +52,82 @@ public class OfxExport {
 
             // write the required header
             for (String line : OFXHEADER) {
-                writer.println(line);
+                writer.println(line, indentLevel);
             }
 
             // start of data
-            writer.println("<OFX>");
+            writer.println("<OFX>", indentLevel++);
 
-            // write data
+            // write sign-on response
+            writer.println("<SIGNONMSGSRSV1>", indentLevel++);
+            writer.println("<SONRS>", indentLevel++);
+            writer.println("<STATUS>", indentLevel++);
+            writer.println("<CODE>0", indentLevel);
+            writer.println("<SEVERITY>INFO", indentLevel--);
+            writer.println("</STATUS>", indentLevel);
+            writer.println(MessageFormat.format("<DTSERVER>{0}", encodeDate(new Date())), indentLevel);
+            writer.println("<LANGUAGE>ENG", indentLevel--);
+            writer.println("</SONRS>", indentLevel--);
+            writer.println("</SIGNONMSGSRSV1>", indentLevel);
 
+            writer.println(wrapOpen(getAccountTypeAggregate(account)), indentLevel);
+
+
+
+
+
+            writer.println(wrapClose(getAccountTypeAggregate(account)), indentLevel--);
 
             // finished
-            writer.println("</OFX>");
+            writer.println("</OFX>", indentLevel);
         } catch (IOException e) {
             Logger.getLogger(OfxExport.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
 
     }
 
+    private static String encodeDate(final Date date) {
+        return dateFormat.format(date);
+    }
+
+    private static String wrapOpen(final String string) {
+        return "<" + string + ">";
+    }
+
+    private static String wrapClose(final String string) {
+        return "</" + string + ">";
+    }
+
+
+    private static String getAccountTypeAggregate(final Account account) {
+        switch (account.getAccountType()) {
+            case BANK:
+            case CHECKING:
+                return "BANKMSGSRSV1";
+            case CREDIT:
+                return "CREDITCARDMSGSRSV1";
+            case INVEST:
+                return "INVSTMTMSGSRSV1";
+            default:
+                return "";
+        }
+    }
 
     /**
      * Support class to make writing indented SGML easier
      */
     private static class IndentedPrintWriter extends PrintWriter {
 
+        private static String INDENT = "  ";
+
         public IndentedPrintWriter(final Writer out) {
             super(out);
         }
 
-
-        public void println(int indentDepth, String x) {
-            write("  "); // fix
+        public void println(final String x, final int indentLevel) {
+            for (int i = 0; i < indentLevel; i++) {
+                write(INDENT);
+            }
             println(x);
         }
     }
