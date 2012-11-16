@@ -70,13 +70,15 @@ public class OfxExport {
             writer.println("</SONRS>", indentLevel--);
             writer.println("</SIGNONMSGSRSV1>", indentLevel);
 
-            writer.println(wrapOpen(getAccountTypeAggregate(account)), indentLevel);
+            writer.println(wrapOpen(getBankingMessageSetAggregate(account)), indentLevel);
+
+            // if credit card, extra level?
 
 
 
 
 
-            writer.println(wrapClose(getAccountTypeAggregate(account)), indentLevel--);
+            writer.println(wrapClose(getBankingMessageSetAggregate(account)), indentLevel--);
 
             // finished
             writer.println("</OFX>", indentLevel);
@@ -98,15 +100,19 @@ public class OfxExport {
         return "</" + string + ">";
     }
 
-
-    private static String getAccountTypeAggregate(final Account account) {
+    private static String getBankingMessageSetAggregate(final Account account) {
         switch (account.getAccountType()) {
+            case ASSET:
             case BANK:
+            case CASH:
             case CHECKING:
+            case SIMPLEINVEST:
                 return "BANKMSGSRSV1";
             case CREDIT:
+            case LIABILITY:
                 return "CREDITCARDMSGSRSV1";
             case INVEST:
+            case MUTUAL:
                 return "INVSTMTMSGSRSV1";
             default:
                 return "";
