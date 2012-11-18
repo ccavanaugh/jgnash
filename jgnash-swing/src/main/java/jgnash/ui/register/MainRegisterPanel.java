@@ -46,7 +46,7 @@ import jgnash.message.MessageListener;
 import jgnash.message.MessageProperty;
 import jgnash.ui.account.AccountListFilterDialog;
 import jgnash.ui.account.AccountListTreePane;
-import jgnash.ui.actions.ExportCsvAction;
+import jgnash.ui.actions.ExportTransactionsAction;
 import jgnash.ui.actions.ReconcileAccountAction;
 import jgnash.ui.components.RollOverButton;
 import jgnash.ui.register.table.AbstractRegisterTableModel;
@@ -143,7 +143,7 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
         toolBar.add(printButton);
 
         exportButton = new RollOverButton(rb.getString("Button.Export"), Resource.getIcon("/jgnash/resource/document-save-as.png"));
-        exportButton.setToolTipText(rb.getString("ToolTip.ExportCsv"));
+        exportButton.setToolTipText(rb.getString("ToolTip.ExportTransactions"));
         exportButton.addActionListener(this);
         toolBar.add(exportButton);
 
@@ -343,7 +343,7 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
                 endDate = account.getTransactionAt(rows[rows.length - 1]).getDate();
             }
 
-            ExportCsvAction.exportTransactions(account, startDate, endDate);
+            ExportTransactionsAction.exportTransactions(account, startDate, endDate);
         }
 
     }

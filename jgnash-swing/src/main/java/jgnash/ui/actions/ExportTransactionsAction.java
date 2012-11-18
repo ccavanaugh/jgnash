@@ -19,7 +19,9 @@ package jgnash.ui.actions;
 
 import jgnash.engine.Account;
 import jgnash.exports.csv.CsvExport;
+import jgnash.exports.ofx.OfxExport;
 import jgnash.ui.UIApplication;
+import jgnash.util.FileUtils;
 import jgnash.util.Resource;
 
 import javax.swing.*;
@@ -33,27 +35,31 @@ import java.util.prefs.Preferences;
  *
  * @author Craig Cavanaugh
  */
-public class ExportCsvAction {
+public class ExportTransactionsAction {
     private static final String CURRENT_DIR = "cwd";
 
-    private ExportCsvAction() {}
+    public static final String OFX = "ofx";
+
+    private ExportTransactionsAction() {}
 
     public static void exportTransactions(final Account account, final Date startDate, final Date endDate) {
 
         final Resource rb = Resource.get();
 
-        final Preferences pref = Preferences.userNodeForPackage(ExportCsvAction.class);
+        final Preferences pref = Preferences.userNodeForPackage(ExportTransactionsAction.class);
 
         JFileChooser chooser = new JFileChooser(pref.get(CURRENT_DIR, null));
 
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(rb.getString("Label.CsvFiles") + " (*.csv)", "csv");
-        chooser.addChoosableFileFilter(filter);
-        chooser.setFileFilter(filter);
+        FileNameExtensionFilter csvFilter = new FileNameExtensionFilter(rb.getString("Label.CsvFiles") + " (*.csv)", "csv");
+        FileNameExtensionFilter ofxFilter = new FileNameExtensionFilter(rb.getString("Label.OfxFiles") + " (*.ofx)", OFX);
+        chooser.addChoosableFileFilter(csvFilter);
+        chooser.addChoosableFileFilter(ofxFilter);
+        chooser.setAcceptAllFileFilterUsed(false);
+        chooser.setFileFilter(csvFilter);
 
         if (chooser.showSaveDialog(UIApplication.getFrame()) == JFileChooser.APPROVE_OPTION) {
             pref.put(CURRENT_DIR, chooser.getCurrentDirectory().getAbsolutePath());
 
-            // strip the file extension if added and ensure it ends with XML
             final File file = chooser.getSelectedFile();
 
             final class Export extends SwingWorker<Void, Void> {
@@ -61,7 +67,12 @@ public class ExportCsvAction {
                 @Override
                 protected Void doInBackground() throws Exception {
                     UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
-                    CsvExport.exportAccount(account, startDate, endDate, file);
+
+                    if (OFX.equals(FileUtils.getFileExtension(file.getName()))) {
+                        OfxExport.exportAccount(account, startDate, endDate, file);
+                    } else {
+                        CsvExport.exportAccount(account, startDate, endDate, file);
+                    }
                     return null;
                 }
 

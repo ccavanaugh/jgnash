@@ -20,6 +20,7 @@ package jgnash.exports.csv;
 import jgnash.engine.Account;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
+import jgnash.util.FileUtils;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -47,14 +48,18 @@ public class CsvExport {
             throw new RuntimeException();
         }
 
-        try (AutoCloseableCSVWriter writer = new AutoCloseableCSVWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file))))) {
+        // force a correct file extension
+        final String fileName = FileUtils.stripFileExtension(file.getAbsolutePath()) + ".csv";
+
+        try (AutoCloseableCSVWriter writer = new AutoCloseableCSVWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName))))) {
             writer.writeNextRow("Account","Number","Debit","Credit","Balance","Date","Memo","Payee","Reconciled");
 
             // write the transactions
-            List<Transaction> transactions = account.getTransactions(startDate, endDate);
+            final List<Transaction> transactions = account.getTransactions(startDate, endDate);
 
             // request locale specific date format and force to a 4 digit year format
-            DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+            final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+
             if (dateFormat instanceof SimpleDateFormat) {
                 String datePattern = ((SimpleDateFormat) dateFormat).toPattern().replaceAll("y+", "yyyy");
                 ((SimpleDateFormat) dateFormat).applyPattern(datePattern);

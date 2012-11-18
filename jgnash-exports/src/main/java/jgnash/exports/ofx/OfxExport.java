@@ -18,6 +18,7 @@
 package jgnash.exports.ofx;
 
 import jgnash.engine.Account;
+import jgnash.util.FileUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -29,7 +30,7 @@ import java.util.logging.Logger;
 
 /**
  * Primary class for OFX export.  The SGML format is used instead of the newer XML
- * to offer the best compatability with older importers
+ * to offer the best compatibility with older importers
  *
  * @author Craig Cavanaugh
  */
@@ -48,7 +49,10 @@ public class OfxExport {
             throw new RuntimeException();
         }
 
-        try (IndentedPrintWriter writer = new IndentedPrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), Charset.forName("windows-1252"))))) {
+        // force a correct file extension
+        final String fileName = FileUtils.stripFileExtension(file.getAbsolutePath()) + ".ofx";
+
+        try (IndentedPrintWriter writer = new IndentedPrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), Charset.forName("windows-1252"))))) {
 
             // write the required header
             for (String line : OFXHEADER) {
@@ -70,14 +74,17 @@ public class OfxExport {
             writer.println("</SONRS>", indentLevel--);
             writer.println("</SIGNONMSGSRSV1>", indentLevel);
 
-            writer.println(wrapOpen(getBankingMessageSetAggregate(account)), indentLevel);
+            writer.println(wrapOpen(getBankingMessageSetAggregate(account)), indentLevel++);
+            writer.println(wrapOpen(getResponse(account)), indentLevel++);
+            writer.println("<TRNUID>1", indentLevel);
+            writer.println("<STATUS>", indentLevel++);
+            writer.println("<CODE>0", indentLevel);
+            writer.println("<SEVERITY>INFO", indentLevel--);
 
-            // if credit card, extra level?
+            writer.println("</STATUS>", indentLevel--);
 
 
-
-
-
+            writer.println(wrapClose(getResponse(account)), indentLevel--);
             writer.println(wrapClose(getBankingMessageSetAggregate(account)), indentLevel--);
 
             // finished
@@ -85,7 +92,6 @@ public class OfxExport {
         } catch (IOException e) {
             Logger.getLogger(OfxExport.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
-
     }
 
     private static String encodeDate(final Date date) {
@@ -114,6 +120,25 @@ public class OfxExport {
             case INVEST:
             case MUTUAL:
                 return "INVSTMTMSGSRSV1";
+            default:
+                return "";
+        }
+    }
+
+    private static String getResponse(final Account account) {
+        switch (account.getAccountType()) {
+            case ASSET:
+            case BANK:
+            case CASH:
+            case CHECKING:
+            case SIMPLEINVEST:
+                return "STMTTRNRS";
+            case CREDIT:
+            case LIABILITY:
+                return "CCSTMTTRNRS";
+            case INVEST:
+            case MUTUAL:
+                return "INVSTMTTRNRS";
             default:
                 return "";
         }
