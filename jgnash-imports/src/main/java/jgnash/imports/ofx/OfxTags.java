@@ -22,7 +22,6 @@ package jgnash.imports.ofx;
  *
  * @author Craig Cavanaugh
  * @author Nicolas Bouillon
- *
  */
 public interface OfxTags {
 
@@ -57,6 +56,11 @@ public interface OfxTags {
     static String CCACCTFROM = "CCACCTFROM";
 
     /**
+     * Investment Account info
+     */
+    static String INVACCTFROM = "INVACCTFROM";
+
+    /**
      * Bank ID
      */
     static String BANKID = "BANKID";
@@ -84,8 +88,14 @@ public interface OfxTags {
 
     static String CURRENCY = "CURRENCY";
 
+    static String CREDIT = "CREDIT";
+
+    static String DEBIT = "DEBIT";
+
     /**
-     * Date of balance (LEDGERBA & AVAILBAL
+     * Date of balance
+     * @see #LEDGERBAL
+     * @see #AVAILBAL
      */
     static String DTASOF = "DTASOF";
 
@@ -120,10 +130,6 @@ public interface OfxTags {
      */
     static String FITID = "FITID";
 
-    /**
-     * Investment Account info
-     */
-    static String INVACCTFROM = "INVACCTFROM";
 
     static String LANGUAGE = "LANGUAGE";
 
@@ -140,7 +146,8 @@ public interface OfxTags {
     static String MESSAGE = "MESSAGE";
 
     /**
-     * Transaction name
+     * Name of payee or transaction description, may be used exclusive of <code>PAYEE</code>
+     * @see #PAYEE
      */
     static String NAME = "NAME";
 
@@ -149,6 +156,12 @@ public interface OfxTags {
     static String ORG = "ORG";
 
     static String ORIGCURRENCY = "ORIGCURRENCY";
+
+    /**
+     * Name of payee, may be used exclusive of <code>NAME</code>
+     * @see #NAME
+     */
+    static String PAYEE = "PAYEE";
 
     static String PAYEEID = "PAYEEID";
 
@@ -192,6 +205,10 @@ public interface OfxTags {
 
     static String STMTTRNRS = "STMTTRNRS";
 
+    static String CCSTMTTRNRS = "CCSTMTTRNRS";
+
+    static String INVSTMTTRNRS = "INVSTMTTRNRS";
+
     /**
      * Transaction amount
      */
@@ -215,6 +232,8 @@ public interface OfxTags {
     static String BANKMSGSRSV1 = "BANKMSGSRSV1";
 
     static String CREDITCARDMSGSRSV1 = "CREDITCARDMSGSRSV1";
+
+    static String INVSTMTMSGSRSV1 = "INVSTMTMSGSRSV1";
 
     /**
      * Intuit mucking up the OFX standard, Bank Id, In signon message

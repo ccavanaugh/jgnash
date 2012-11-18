@@ -323,7 +323,7 @@ public class OfxV2Parser implements OfxTags {
                             tran.checkNumber = reader.getElementText();
                             break;
                         case NAME:
-                        case PAYEE:
+                        case PAYEE: // either PAYEE or NAME will be used
                             tran.payee = reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim();
                             break;
                         case MEMO:

@@ -18,11 +18,14 @@
 package jgnash.exports.ofx;
 
 import jgnash.engine.Account;
+import jgnash.engine.AccountType;
+import jgnash.engine.Transaction;
+import jgnash.imports.ofx.OfxTags;
 import jgnash.util.FileUtils;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.nio.charset.Charset;
-import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
@@ -34,7 +37,7 @@ import java.util.logging.Logger;
  *
  * @author Craig Cavanaugh
  */
-public class OfxExport {
+public class OfxExport implements OfxTags {
 
     private static final String[] OFXHEADER = new String[]{"OFXHEADER:100", "DATA:OFXSGML", "VERSION:102", "SECURITY:NONE",
             "ENCODING:USASCII", "CHARSET:1252", "COMPRESSION:NONE", "OLDFILEUID:NONE", "NEWFILEUID:NONE"};
@@ -42,6 +45,8 @@ public class OfxExport {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
     public static void exportAccount(final Account account, final Date startDate, final Date endDate, final File file) {
+
+        final Date exportDate = new Date();
 
         int indentLevel = 0;
 
@@ -58,37 +63,87 @@ public class OfxExport {
             for (String line : OFXHEADER) {
                 writer.println(line, indentLevel);
             }
+            writer.println();
 
             // start of data
-            writer.println("<OFX>", indentLevel++);
+            writer.println(wrapOpen(OFX), indentLevel++);
 
             // write sign-on response
-            writer.println("<SIGNONMSGSRSV1>", indentLevel++);
-            writer.println("<SONRS>", indentLevel++);
-            writer.println("<STATUS>", indentLevel++);
-            writer.println("<CODE>0", indentLevel);
-            writer.println("<SEVERITY>INFO", indentLevel--);
-            writer.println("</STATUS>", indentLevel);
-            writer.println(MessageFormat.format("<DTSERVER>{0}", encodeDate(new Date())), indentLevel);
-            writer.println("<LANGUAGE>ENG", indentLevel--);
-            writer.println("</SONRS>", indentLevel--);
-            writer.println("</SIGNONMSGSRSV1>", indentLevel);
+            writer.println(wrapOpen(SIGNONMSGSRSV1), indentLevel++);
+            writer.println(wrapOpen(SONRS), indentLevel++);
+            writer.println(wrapOpen(STATUS), indentLevel++);
+            writer.println(wrapOpen(CODE) + "0", indentLevel);
+            writer.println(wrapOpen(SEVERITY) + "INFO", indentLevel);
+            writer.println(wrapClose(STATUS), --indentLevel);
+            writer.println(wrapOpen(DTSERVER) + encodeDate(exportDate), indentLevel);
+            writer.println(wrapOpen(LANGUAGE) + "ENG", indentLevel);
+            writer.println(wrapClose(SONRS), --indentLevel);
+            writer.println(wrapClose(SIGNONMSGSRSV1), --indentLevel);
 
             writer.println(wrapOpen(getBankingMessageSetAggregate(account)), indentLevel++);
             writer.println(wrapOpen(getResponse(account)), indentLevel++);
-            writer.println("<TRNUID>1", indentLevel);
-            writer.println("<STATUS>", indentLevel++);
-            writer.println("<CODE>0", indentLevel);
-            writer.println("<SEVERITY>INFO", indentLevel--);
+            writer.println(wrapOpen(TRNUID) + "1", indentLevel);
+            writer.println(wrapOpen(STATUS), indentLevel++);
+            writer.println(wrapOpen(CODE) + "0", indentLevel);
+            writer.println(wrapOpen(SEVERITY) + "INFO", indentLevel);
+            writer.println(wrapClose(STATUS), --indentLevel);
 
-            writer.println("</STATUS>", indentLevel--);
+            // begin start of statement response
+            writer.println(wrapOpen(getStatementResponse(account)), indentLevel++);
+            writer.println(wrapOpen(CURDEF) + account.getCurrencyNode().getSymbol(), indentLevel);
 
+            // write account identification
+            writer.println(wrapOpen(getAccountFromAggregate(account)), indentLevel++);
+            writer.println(wrapOpen(BANKID) + account.getBankId(), indentLevel);  // savings and checking only
+            writer.println(wrapOpen(ACCTID) + account.getAccountNumber(), indentLevel);
+            //writer.println("<ACCTTYPE>" + account.getAccountType()., indentLevel);          // CHECKING, SAVINGS, MONEYMRKT, CREDITLINE
+            writer.println(wrapClose(getAccountFromAggregate(account)), --indentLevel);
 
-            writer.println(wrapClose(getResponse(account)), indentLevel--);
-            writer.println(wrapClose(getBankingMessageSetAggregate(account)), indentLevel--);
+            // begin start of bank transaction list
+            writer.println(wrapOpen(BANKTRANLIST), indentLevel++);
+            writer.println(wrapOpen(DTSTART) + encodeDate(startDate), indentLevel);
+            writer.println(wrapOpen(DTEND) + encodeDate(endDate), indentLevel);
+
+            // write bank transactions
+            for (Transaction transaction : account.getTransactions(startDate, endDate)) {
+                writer.println(wrapOpen(STMTTRN), indentLevel++);
+                writer.println(wrapOpen(TRNTYPE) + (transaction.getAmount(account).compareTo(BigDecimal.ZERO) == 1 ? CREDIT : DEBIT), indentLevel);
+
+                writer.println(wrapOpen(DTPOSTED) + encodeDate(transaction.getDate()), indentLevel);
+                writer.println(wrapOpen(TRNAMT) + transaction.getAmount(account).toPlainString(), indentLevel);
+                writer.println(wrapOpen(REFNUM) + transaction.getUuid(), indentLevel);
+                writer.println(wrapOpen(NAME) + transaction.getPayee(), indentLevel);
+                writer.println(wrapOpen(MEMO) + transaction.getMemo(), indentLevel);
+
+                // write the check number if applicable
+                if (account.getAccountType() == AccountType.CHECKING && !transaction.getNumber().isEmpty()) {
+                    writer.println(wrapOpen(CHECKNUM) + transaction.getNumber(), indentLevel);
+                }
+
+                // write out the banks transaction id if previously imported
+                if (transaction.getFitid() != null && !transaction.getFitid().isEmpty()) {
+                    writer.println(wrapOpen(FITID) + transaction.getFitid(), indentLevel);
+                }
+
+                writer.println(wrapClose(STMTTRN), --indentLevel);
+            }
+
+            // end of bank transaction list
+            writer.println(wrapClose(BANKTRANLIST), --indentLevel);
+
+            // write ledger balance
+            writer.println(wrapOpen(LEDGERBAL), indentLevel++);
+            writer.println(wrapOpen(BALAMT) + account.getBalance(endDate).toPlainString(), indentLevel);
+            writer.println(wrapOpen(DTASOF) + encodeDate(exportDate), indentLevel);
+            writer.println(wrapClose(LEDGERBAL), --indentLevel);
+
+            // end of statement response
+            writer.println(wrapClose(getStatementResponse(account)), --indentLevel);
+            writer.println(wrapClose(getResponse(account)), --indentLevel);
+            writer.println(wrapClose(getBankingMessageSetAggregate(account)), --indentLevel);
 
             // finished
-            writer.println("</OFX>", indentLevel);
+            writer.println(wrapClose(OFX), --indentLevel);
         } catch (IOException e) {
             Logger.getLogger(OfxExport.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
@@ -113,13 +168,13 @@ public class OfxExport {
             case CASH:
             case CHECKING:
             case SIMPLEINVEST:
-                return "BANKMSGSRSV1";
+                return BANKMSGSRSV1;
             case CREDIT:
             case LIABILITY:
-                return "CREDITCARDMSGSRSV1";
+                return CREDITCARDMSGSRSV1;
             case INVEST:
             case MUTUAL:
-                return "INVSTMTMSGSRSV1";
+                return INVSTMTMSGSRSV1;
             default:
                 return "";
         }
@@ -132,13 +187,52 @@ public class OfxExport {
             case CASH:
             case CHECKING:
             case SIMPLEINVEST:
-                return "STMTTRNRS";
+                return STMTTRNRS;
             case CREDIT:
             case LIABILITY:
-                return "CCSTMTTRNRS";
+                return CCSTMTTRNRS;
             case INVEST:
             case MUTUAL:
-                return "INVSTMTTRNRS";
+                return INVSTMTTRNRS;
+            default:
+                return "";
+        }
+    }
+
+    private static String getStatementResponse(final Account account) {
+        switch (account.getAccountType()) {
+            case ASSET:
+            case BANK:
+            case CASH:
+            case CHECKING:
+            case SIMPLEINVEST:
+                return STMTRS;
+            case CREDIT:
+            case LIABILITY:
+                return CCSTMTRS;
+            case INVEST:
+            case MUTUAL:
+                return INVSTMTRS;
+            default:
+                return "";
+        }
+    }
+
+    private static String getAccountFromAggregate(final Account account) {
+
+        switch (account.getAccountType()) {
+            case ASSET:
+            case BANK:
+            case CASH:
+            case CHECKING:
+            case SIMPLEINVEST:
+                return BANKACCTFROM;
+            case CREDIT:
+            case LIABILITY:
+                return CCACCTFROM;
+            case INVEST:
+            case MUTUAL:
+                return INVACCTFROM;
             default:
                 return "";
         }
