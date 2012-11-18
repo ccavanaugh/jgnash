@@ -96,7 +96,28 @@ public class OfxExport implements OfxTags {
             writer.println(wrapOpen(getAccountFromAggregate(account)), indentLevel++);
             writer.println(wrapOpen(BANKID) + account.getBankId(), indentLevel);  // savings and checking only
             writer.println(wrapOpen(ACCTID) + account.getAccountNumber(), indentLevel);
-            //writer.println("<ACCTTYPE>" + account.getAccountType()., indentLevel);          // CHECKING, SAVINGS, MONEYMRKT, CREDITLINE
+
+            // write the required account type
+            switch (account.getAccountType()) {
+                case CHECKING:
+                    writer.println(wrapOpen(ACCTTYPE) + CHECKING, indentLevel);
+                    break;
+                case ASSET:
+                case BANK:
+                case CASH:
+                    writer.println(wrapOpen(ACCTTYPE) + SAVINGS, indentLevel);
+                    break;
+                case CREDIT:
+                case LIABILITY:
+                    writer.println(wrapOpen(ACCTTYPE) + CREDITLINE, indentLevel);
+                    break;
+                case SIMPLEINVEST:
+                    writer.println(wrapOpen(ACCTTYPE) + MONEYMRKT, indentLevel);
+                    break;
+                default:
+                    break;
+            }
+
             writer.println(wrapClose(getAccountFromAggregate(account)), --indentLevel);
 
             // begin start of bank transaction list

@@ -88,8 +88,40 @@ public interface OfxTags {
 
     static String CURRENCY = "CURRENCY";
 
+    /**
+     * Checking account type
+     * @see #ACCTTYPE
+     */
+    static String CHECKING = "CHECKING";
+
+    /**
+     * Credit line account type
+     * @see #ACCTTYPE
+     */
+    static String CREDITLINE = "CREDITLINE";
+
+    /**
+     * Money market account type
+     * @see #ACCTTYPE
+     */
+    static String MONEYMRKT = "MONEYMRKT";
+
+    /**
+     * Savings account type
+     * @see #ACCTTYPE
+     */
+    static String SAVINGS = "SAVINGS";
+
+    /**
+     * Credit transaction
+     * @see #TRNTYPE
+     */
     static String CREDIT = "CREDIT";
 
+    /**
+     * Debit transaction
+     * @see #TRNTYPE
+     */
     static String DEBIT = "DEBIT";
 
     /**
