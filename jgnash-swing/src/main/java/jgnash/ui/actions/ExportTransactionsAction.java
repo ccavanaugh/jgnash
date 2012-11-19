@@ -69,7 +69,8 @@ public class ExportTransactionsAction {
                     UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
 
                     if (OFX.equals(FileUtils.getFileExtension(file.getName()))) {
-                        OfxExport.exportAccount(account, startDate, endDate, file);
+                        OfxExport export = new OfxExport(account, startDate, endDate, file);
+                        export.exportAccount();
                     } else {
                         CsvExport.exportAccount(account, startDate, endDate, file);
                     }

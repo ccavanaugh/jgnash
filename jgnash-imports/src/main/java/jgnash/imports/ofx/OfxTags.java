@@ -75,6 +75,8 @@ public interface OfxTags {
      */
     static String BANKTRANLIST = "BANKTRANLIST";
 
+    static String INVTRANLIST = "INVTRANLIST";
+
     static String BROKERID = "BROKERID";
 
     /**

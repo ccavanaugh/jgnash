@@ -44,7 +44,22 @@ public class OfxExport implements OfxTags {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
-    public static void exportAccount(final Account account, final Date startDate, final Date endDate, final File file) {
+    private Account account;
+
+    private Date startDate;
+
+    private Date endDate;
+
+    private File file;
+
+    public OfxExport(final Account account, final Date startDate, final Date endDate, final File file) {
+        this.account = account;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.file = file;
+    }
+
+    public void exportAccount() {
 
         final Date exportDate = new Date();
 
@@ -94,7 +109,17 @@ public class OfxExport implements OfxTags {
 
             // write account identification
             writer.println(wrapOpen(getAccountFromAggregate(account)), indentLevel++);
-            writer.println(wrapOpen(BANKID) + account.getBankId(), indentLevel);  // savings and checking only
+
+            switch (account.getAccountType()) {
+                case INVEST:
+                case MUTUAL:
+                    writer.println(wrapOpen(BROKERID), indentLevel);  //  required for investment accounts, but jGnash does not manage a broker ID, normally a web URL
+                    break;
+                default:
+                    writer.println(wrapOpen(BANKID) + account.getBankId(), indentLevel);  // savings and checking only
+                    break;
+            }
+
             writer.println(wrapOpen(ACCTID) + account.getAccountNumber(), indentLevel);
 
             // write the required account type
@@ -121,7 +146,7 @@ public class OfxExport implements OfxTags {
             writer.println(wrapClose(getAccountFromAggregate(account)), --indentLevel);
 
             // begin start of bank transaction list
-            writer.println(wrapOpen(BANKTRANLIST), indentLevel++);
+            writer.println(wrapOpen(getTransactionList(account)), indentLevel++);
             writer.println(wrapOpen(DTSTART) + encodeDate(startDate), indentLevel);
             writer.println(wrapOpen(DTEND) + encodeDate(endDate), indentLevel);
 
@@ -150,7 +175,7 @@ public class OfxExport implements OfxTags {
             }
 
             // end of bank transaction list
-            writer.println(wrapClose(BANKTRANLIST), --indentLevel);
+            writer.println(wrapClose(getTransactionList(account)), --indentLevel);
 
             // write ledger balance
             writer.println(wrapOpen(LEDGERBAL), indentLevel++);
@@ -168,6 +193,10 @@ public class OfxExport implements OfxTags {
         } catch (IOException e) {
             Logger.getLogger(OfxExport.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
+    }
+
+    private static void writeBankTransactions() {
+
     }
 
     private static String encodeDate(final Date date) {
@@ -240,7 +269,6 @@ public class OfxExport implements OfxTags {
     }
 
     private static String getAccountFromAggregate(final Account account) {
-
         switch (account.getAccountType()) {
             case ASSET:
             case BANK:
@@ -256,6 +284,16 @@ public class OfxExport implements OfxTags {
                 return INVACCTFROM;
             default:
                 return "";
+        }
+    }
+
+    private static String getTransactionList(final Account account) {
+        switch (account.getAccountType()) {
+            case INVEST:
+            case MUTUAL:
+                return INVTRANLIST;
+            default:
+                return BANKTRANLIST;
         }
     }
 
