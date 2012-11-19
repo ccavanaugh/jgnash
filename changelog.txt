@@ -21,6 +21,12 @@ Hiding option of Transaction form which can help to see more transactions in Reg
 Direct Transaction entry option in the Ledger to avoid Transaction form.
 Formal Trial Balance report
 
+Planned Future File Structure changes
+-------------------------------------
+Add Broker ID, info to accounts etc to improve support for OFX import and export
+Class/Category tags for improved sorting.
+Money market account type
+
 Release 2.12.0
 ----------------------
 11/10/12 Added CSV export direct from the transaction register
