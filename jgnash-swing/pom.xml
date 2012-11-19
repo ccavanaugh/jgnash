@@ -20,7 +20,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>jgnash-imports</artifactId>
+            <artifactId>jgnash-convert</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
