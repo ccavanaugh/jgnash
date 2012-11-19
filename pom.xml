@@ -101,7 +101,6 @@
         <module>jgnash-core</module>
         <module>jgnash-swing</module>
         <module>jgnash-imports</module>
-        <module>jgnash-exports</module>
         <module>jidesoft</module>
         <module>mt940</module>
     </modules>
