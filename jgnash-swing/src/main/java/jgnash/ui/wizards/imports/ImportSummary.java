@@ -29,7 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import jgnash.engine.Account;
-import jgnash.imports.ImportTransaction;
+import jgnash.convert.imports.ImportTransaction;
 import jgnash.ui.components.wizard.WizardPage;
 import jgnash.util.Resource;
 

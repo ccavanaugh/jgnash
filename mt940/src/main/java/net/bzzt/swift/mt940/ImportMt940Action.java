@@ -30,9 +30,9 @@ import javax.swing.SwingWorker;
 
 import jgnash.engine.Account;
 import jgnash.engine.EngineFactory;
-import jgnash.imports.GenericImport;
-import jgnash.imports.ImportBank;
-import jgnash.imports.ImportTransaction;
+import jgnash.convert.imports.GenericImport;
+import jgnash.convert.imports.ImportBank;
+import jgnash.convert.imports.ImportTransaction;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.actions.AbstractEnabledAction;

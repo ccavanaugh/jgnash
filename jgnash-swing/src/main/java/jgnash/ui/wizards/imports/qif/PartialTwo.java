@@ -33,7 +33,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.text.StyledEditorKit;
 
-import jgnash.imports.qif.QifAccount;
+import jgnash.convert.imports.qif.QifAccount;
 import jgnash.ui.components.wizard.WizardPage;
 import jgnash.ui.util.TextResource;
 import jgnash.util.Resource;

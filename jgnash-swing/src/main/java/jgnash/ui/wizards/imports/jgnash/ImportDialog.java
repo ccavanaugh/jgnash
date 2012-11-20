@@ -24,7 +24,7 @@ import javax.swing.SwingWorker;
 
 import jgnash.engine.DataStoreType;
 import jgnash.engine.EngineFactory;
-import jgnash.imports.jgnash.Import;
+import jgnash.convert.imports.jgnash.Import;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.wizard.WizardDialog;
 import jgnash.ui.wizards.file.NewFileDialog;

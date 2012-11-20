@@ -25,8 +25,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 
 import jgnash.engine.Account;
-import jgnash.imports.qif.QifAccount;
-import jgnash.imports.qif.QifTransaction;
+import jgnash.convert.imports.qif.QifAccount;
+import jgnash.convert.imports.qif.QifTransaction;
 import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.util.DateUtils;

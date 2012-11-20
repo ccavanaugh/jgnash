@@ -26,8 +26,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import jgnash.imports.ImportBank;
-import jgnash.imports.ImportTransaction;
+import jgnash.convert.imports.ImportBank;
+import jgnash.convert.imports.ImportTransaction;
 
 /**
  * The Mt940 Exporter converts a parsed Mt940File to jGnash-specific

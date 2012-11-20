@@ -18,8 +18,8 @@
 package jgnash.ui.actions;
 
 import jgnash.engine.Account;
-import jgnash.exports.csv.CsvExport;
-import jgnash.exports.ofx.OfxExport;
+import jgnash.convert.exports.csv.CsvExport;
+import jgnash.convert.exports.ofx.OfxExport;
 import jgnash.ui.UIApplication;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;

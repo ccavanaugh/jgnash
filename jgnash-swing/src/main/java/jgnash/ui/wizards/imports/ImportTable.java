@@ -38,7 +38,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 import jgnash.engine.Account;
-import jgnash.imports.ImportTransaction;
+import jgnash.convert.imports.ImportTransaction;
 import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.util.DateUtils;

@@ -27,7 +27,7 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.text.ParseException;
 
-import jgnash.imports.ImportBank;
+import jgnash.convert.imports.ImportBank;
 
 /**
  * Tests for SWIFT Mt940 importing

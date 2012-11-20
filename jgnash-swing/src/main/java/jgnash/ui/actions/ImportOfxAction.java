@@ -31,11 +31,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import jgnash.engine.Account;
 import jgnash.engine.EngineFactory;
-import jgnash.imports.ofx.OfxBank;
-import jgnash.imports.ofx.OfxImport;
-import jgnash.imports.ofx.OfxTransaction;
-import jgnash.imports.ofx.OfxV1ToV2;
-import jgnash.imports.ofx.OfxV2Parser;
+import jgnash.convert.imports.ofx.OfxBank;
+import jgnash.convert.imports.ofx.OfxImport;
+import jgnash.convert.imports.ofx.OfxTransaction;
+import jgnash.convert.imports.ofx.OfxV1ToV2;
+import jgnash.convert.imports.ofx.OfxV2Parser;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.util.builder.Action;
 import jgnash.ui.wizards.imports.ImportDialog;

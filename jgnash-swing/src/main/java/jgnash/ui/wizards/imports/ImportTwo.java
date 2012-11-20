@@ -35,10 +35,10 @@ import javax.swing.JTextPane;
 import javax.swing.text.StyledEditorKit;
 
 import jgnash.engine.Account;
-import jgnash.imports.BayesImportClassifier;
-import jgnash.imports.GenericImport;
-import jgnash.imports.ImportBank;
-import jgnash.imports.ImportTransaction;
+import jgnash.convert.imports.BayesImportClassifier;
+import jgnash.convert.imports.GenericImport;
+import jgnash.convert.imports.ImportBank;
+import jgnash.convert.imports.ImportTransaction;
 import jgnash.ui.components.wizard.WizardPage;
 import jgnash.ui.util.JTableUtils;
 import jgnash.ui.util.TextResource;

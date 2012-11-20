@@ -33,9 +33,9 @@ import javax.swing.text.StyledEditorKit;
 
 import jgnash.engine.Account;
 import jgnash.engine.EngineFactory;
-import jgnash.imports.qif.QifAccount;
-import jgnash.imports.qif.QifTransaction;
-import jgnash.imports.qif.QifUtils;
+import jgnash.convert.imports.qif.QifAccount;
+import jgnash.convert.imports.qif.QifTransaction;
+import jgnash.convert.imports.qif.QifUtils;
 import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.wizard.WizardPage;
 import jgnash.ui.util.TextResource;
