@@ -15,7 +15,7 @@
       </imageobject>
     </mediaobject>
 
-    <title>jGnash 2.11.x User Guide</title>
+    <title>jGnash 2.12.x User Guide</title>
 
     <copyright>
       <year>2001-2012</year>
@@ -516,13 +516,14 @@
         <para>Mutual fund accounts are a specialized version of an Investment account and generally used to track mutual
         fund type investments.</para>
       </section>
-      
+
       <section>
         <title>Simple Investment</title>
 
-        <para>Simple investment accounts are for investments where you do not actively manage or are able to track purchases
-        and sales of securities.  The typical scenario would be a company pension plan that only provides cash balance
-        information.  Sometimes, these types of investment accounts are called Annuities or Guaranteed Retirement Accounts</para>
+        <para>Simple investment accounts are for investments where you do not actively manage or are able to track
+        purchases and sales of securities. The typical scenario would be a company pension plan that only provides cash
+        balance information. Sometimes, these types of investment accounts are called Annuities or Guaranteed Retirement
+        Accounts</para>
       </section>
 
       <section>
@@ -616,6 +617,10 @@
 
         <para>The Object Database format is required when using the client / server functionality of jGnash. It may be
         used for a single user, but the binary file format described below is a better choice.</para>
+
+        <para>As of release 2.12.0, the Object Database format is depreciated and will be removed in 2.13.0. To covert
+        to the XML or Binary format, please see <link linkend="ls
+        lssaveas">File | Save As</link></para>
       </section>
 
       <section>
@@ -869,6 +874,56 @@
   </chapter>
 
   <chapter>
+    <title>Administration</title>
+
+    <para>Several administation options and tools are provided to help with managment of your data.</para>
+
+    <section xml:id="saveas">
+      <title>File | Save As</title>
+
+      <para>An open file may be saved as a new file of the same type, or a new file with a new file type. To save the
+      file as a differnent type, you must change the file extension to a supported type. Correct file extensions are
+      shown below.</para>
+
+      <table>
+        <title>File Formats</title>
+
+        <tgroup cols="2">
+          <tbody>
+            <row>
+              <entry>Object Database <emphasis>(Depreciated in release 2.12.0)</emphasis></entry>
+
+              <entry>.jdb</entry>
+            </row>
+
+            <row>
+              <entry>XML File</entry>
+
+              <entry>.xml</entry>
+            </row>
+
+            <row>
+              <entry>Binary File</entry>
+
+              <entry>.bxds</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </table>
+    </section>
+    
+    <section>
+    <title>File | Export | Export Accounts and File | Import | Import Accounts</title>
+    
+    <para>Use of these commands allows you to export your account structure and import it back into and new file.
+    This is handy if you want to start a new file without manually receating your accounts.
+    </para>
+    
+    </section>
+    
+  </chapter>
+
+  <chapter>
     <title>Plugins and JavaScript</title>
 
     <para>jGnash support the addition of JavaScript and Plugins to add additional functionality to the
@@ -1115,16 +1170,16 @@
       </qandaentry>
 
       <qandaentry>
-      <question>
-        <para>Can I use multiple currencies?</para>
-      </question>
+        <question>
+          <para>Can I use multiple currencies?</para>
+        </question>
 
-      <answer>
-        <para>Yes! The Tools|Currencies|Add/Remove menu will let you add additional currencies.</para>
+        <answer>
+          <para>Yes! The Tools|Currencies|Add/Remove menu will let you add additional currencies.</para>
 
-        <para>After adding new currencies, simple create new accounts that use the new currency. When creating a
-        transaction between accounts with different currencies, a field for the exchange rate will be enabled.</para>
-      </answer>
+          <para>After adding new currencies, simple create new accounts that use the new currency. When creating a
+          transaction between accounts with different currencies, a field for the exchange rate will be enabled.</para>
+        </answer>
       </qandaentry>
 
       <qandaentry>
