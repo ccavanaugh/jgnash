@@ -186,6 +186,16 @@ public class EngineFactory {
     }
 
     /**
+     * Provides access to the engines <code>DataStore</code>.  This is intended for internal use only
+     *
+     * @param engineName name of the engine
+     * @return DataStore for the named engine.
+     */
+    public static synchronized DataStore getDataStore(final String engineName) {
+        return dataStoreMap.get(engineName);
+    }
+
+    /**
      * Boots a local Engine for a preexisting file. The API determines the
      * correct file type and uses the correct DataStoreType for engine
      * initialization. If successful, a new

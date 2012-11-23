@@ -23,8 +23,10 @@ import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jgnash.engine.DataStore;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.db4o.Db4oDataStore;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.OpenDatabaseDialog;
@@ -93,6 +95,8 @@ public class OpenAction {
             protected void done() {
                 logger.info("openAction() done");
                 UIApplication.getFrame().stopWaitMessage();
+
+                warnOnDb4o();
             }
         }
 
@@ -120,6 +124,14 @@ public class OpenAction {
 
             }
         });
+    }
+
+    private static void warnOnDb4o() {
+        DataStore dataStore = EngineFactory.getDataStore(EngineFactory.DEFAULT);
+
+        if (dataStore instanceof Db4oDataStore)  {
+            StaticUIMethods.displayWarning(Resource.get().getString("Message.Db4oWarning"));
+        }
     }
 
     public static void openAction(final File file) {        
@@ -151,6 +163,8 @@ public class OpenAction {
             protected void done() {
                 logger.info("openAction(final File file) done");
                 UIApplication.getFrame().stopWaitMessage();
+
+                warnOnDb4o();
             }
         }
 
@@ -214,6 +228,8 @@ public class OpenAction {
             protected void done() {
                 logger.info("openLastAction() done");
                 UIApplication.getFrame().stopWaitMessage();
+
+                warnOnDb4o();
             }
         }
 

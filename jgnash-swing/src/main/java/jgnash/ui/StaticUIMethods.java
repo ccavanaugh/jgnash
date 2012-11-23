@@ -32,21 +32,21 @@ import jgnash.util.Resource;
 
 /**
  * Keep various odds and ends here instead of in the main class
- * 
+ *
  * @author Craig Cavanaugh
  */
 public class StaticUIMethods {
-    
+
     private StaticUIMethods() {
     }
 
     /**
      * Display an error message
-     * 
+     *
      * @param message error message to display
      */
     public static void displayError(final String message) {
-        displayMessage(message, JOptionPane.ERROR_MESSAGE);
+        displayMessage(message, Resource.get().getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
     }
 
     /**
@@ -55,7 +55,7 @@ public class StaticUIMethods {
      * @param message error message to display
      */
     public static void displayWarning(final String message) {
-        displayMessage(message, JOptionPane.WARNING_MESSAGE);
+        displayMessage(message, Resource.get().getString("Title.Warning"), JOptionPane.WARNING_MESSAGE);
     }
 
     /**
@@ -63,7 +63,7 @@ public class StaticUIMethods {
      *
      * @param message error message to display
      */
-    public static void displayMessage(final String message, final int type) {
+    public static void displayMessage(final String message, final String title, final int type) {
         EventQueue.invokeLater(new Runnable() {
 
             @Override
@@ -79,16 +79,16 @@ public class StaticUIMethods {
                     frame = (Frame) window;
                 }
 
-                JOptionPane.showMessageDialog(frame, message, rb.getString("Title.Error"), type);
+                JOptionPane.showMessageDialog(frame, message, title, type);
             }
         });
     }
 
     static void fixWindowManager() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
-    
+
         if (toolkit.getClass().getName().equals("sun.awt.X11.XToolkit")) {
-    
+
             // Oracle Bug #6528430 - provide proper app name on Linux
             try {
                 Field awtAppClassNameField = toolkit.getClass().getDeclaredField("awtAppClassName");
@@ -97,7 +97,7 @@ public class StaticUIMethods {
             } catch (NoSuchFieldException | IllegalAccessException ex) {
                 Logger.getLogger(StaticUIMethods.class.getName()).log(Level.INFO, ex.getLocalizedMessage(), ex);
             }
-    
+
             // Workaround for main menu, pop-up & mouse issues for Gnome 3 shell and Cinnamon          
             if ("gnome-shell".equals(System.getenv("DESKTOP_SESSION"))
                     || "cinnamon".equals(System.getenv("DESKTOP_SESSION"))
@@ -105,13 +105,13 @@ public class StaticUIMethods {
                     || (System.getenv("XDG_CURRENT_DESKTOP") != null && System.getenv("XDG_CURRENT_DESKTOP").contains("GNOME"))) {
                 try {
                     Class<?> x11_wm = Class.forName("sun.awt.X11.XWM");
-    
+
                     Field awt_wMgr = x11_wm.getDeclaredField("awt_wmgr");
                     awt_wMgr.setAccessible(true);
-    
+
                     Field other_wm = x11_wm.getDeclaredField("OTHER_WM");
-                    other_wm.setAccessible(true);                                      
-    
+                    other_wm.setAccessible(true);
+
                     if (awt_wMgr.get(null).equals(other_wm.get(null))) {
                         Field metaCity_Wm = x11_wm.getDeclaredField("METACITY_WM");
                         metaCity_Wm.setAccessible(true);
@@ -119,7 +119,7 @@ public class StaticUIMethods {
                         Logger.getLogger(StaticUIMethods.class.getName()).info("Installed window manager workaround");
                     }
                 } catch (ClassNotFoundException | NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
-                   Logger.getLogger(StaticUIMethods.class.getName()).log(Level.INFO, ex.getLocalizedMessage(), ex);
+                    Logger.getLogger(StaticUIMethods.class.getName()).log(Level.INFO, ex.getLocalizedMessage(), ex);
                 }
             }
         }
