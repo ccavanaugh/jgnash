@@ -31,7 +31,7 @@ import javax.swing.JOptionPane;
 import jgnash.util.Resource;
 
 /**
- * Keep various odds and ends here instead of the main class
+ * Keep various odds and ends here instead of in the main class
  * 
  * @author Craig Cavanaugh
  */
@@ -46,6 +46,24 @@ public class StaticUIMethods {
      * @param message error message to display
      */
     public static void displayError(final String message) {
+        displayMessage(message, JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Display an error message
+     *
+     * @param message error message to display
+     */
+    public static void displayWarning(final String message) {
+        displayMessage(message, JOptionPane.WARNING_MESSAGE);
+    }
+
+    /**
+     * Display an error message
+     *
+     * @param message error message to display
+     */
+    public static void displayMessage(final String message, final int type) {
         EventQueue.invokeLater(new Runnable() {
 
             @Override
@@ -61,10 +79,10 @@ public class StaticUIMethods {
                     frame = (Frame) window;
                 }
 
-                JOptionPane.showMessageDialog(frame, message, rb.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, message, rb.getString("Title.Error"), type);
             }
         });
-    }    
+    }
 
     static void fixWindowManager() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
