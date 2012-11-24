@@ -67,9 +67,7 @@ public class StaticUIMethods {
         EventQueue.invokeLater(new Runnable() {
 
             @Override
-            public void run() {
-                Resource rb = Resource.get();
-
+            public void run() {               
                 Frame frame = UIApplication.getFrame();
 
                 KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
