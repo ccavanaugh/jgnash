@@ -16,10 +16,11 @@ public @interface NonNull {
 
     static class Checker implements TypeQualifierValidator<NonNull> {
 
-        public When forConstantValue(NonNull qualifierqualifierArgument,
-                                     Object value) {
-            if (value == null)
+        @Override
+        public When forConstantValue(NonNull qualifierqualifierArgument, Object value) {
+            if (value == null) {
                 return When.NEVER;
+            }
             return When.ALWAYS;
         }
     }
