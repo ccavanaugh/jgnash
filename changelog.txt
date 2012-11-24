@@ -25,6 +25,7 @@ Planned Future File Structure changes
 -------------------------------------
 Add Broker ID, info to accounts etc to improve support for OFX import and export
 Class/Category tags for improved sorting.
+External links for transaction (External blobs)
 Money market account type
 
 Release 2.12.0
