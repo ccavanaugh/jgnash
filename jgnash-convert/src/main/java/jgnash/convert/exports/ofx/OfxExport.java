@@ -19,10 +19,12 @@ package jgnash.convert.exports.ofx;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
+import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
 import jgnash.convert.common.OfxTags;
 import jgnash.util.FileUtils;
 
+import javax.annotation.NonNull;
 import java.io.*;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
@@ -52,6 +54,8 @@ public class OfxExport implements OfxTags {
 
     private File file;
 
+    int indentLevel = 0;
+
     public OfxExport(final Account account, final Date startDate, final Date endDate, final File file) {
         this.account = account;
         this.startDate = startDate;
@@ -63,7 +67,6 @@ public class OfxExport implements OfxTags {
 
         final Date exportDate = new Date();
 
-        int indentLevel = 0;
 
         if (account == null || startDate == null || endDate == null || file == null) {
             throw new RuntimeException();
@@ -145,36 +148,19 @@ public class OfxExport implements OfxTags {
 
             writer.println(wrapClose(getAccountFromAggregate(account)), --indentLevel);
 
-            // begin start of bank transaction list
+            // begin start of transaction list
             writer.println(wrapOpen(getTransactionList(account)), indentLevel++);
             writer.println(wrapOpen(DTSTART) + encodeDate(startDate), indentLevel);
             writer.println(wrapOpen(DTEND) + encodeDate(endDate), indentLevel);
 
-            // write bank transactions
-            for (Transaction transaction : account.getTransactions(startDate, endDate)) {
-                writer.println(wrapOpen(STMTTRN), indentLevel++);
-                writer.println(wrapOpen(TRNTYPE) + (transaction.getAmount(account).compareTo(BigDecimal.ZERO) == 1 ? CREDIT : DEBIT), indentLevel);
-
-                writer.println(wrapOpen(DTPOSTED) + encodeDate(transaction.getDate()), indentLevel);
-                writer.println(wrapOpen(TRNAMT) + transaction.getAmount(account).toPlainString(), indentLevel);
-                writer.println(wrapOpen(REFNUM) + transaction.getUuid(), indentLevel);
-                writer.println(wrapOpen(NAME) + transaction.getPayee(), indentLevel);
-                writer.println(wrapOpen(MEMO) + transaction.getMemo(), indentLevel);
-
-                // write the check number if applicable
-                if (account.getAccountType() == AccountType.CHECKING && !transaction.getNumber().isEmpty()) {
-                    writer.println(wrapOpen(CHECKNUM) + transaction.getNumber(), indentLevel);
-                }
-
-                // write out the banks transaction id if previously imported
-                if (transaction.getFitid() != null && !transaction.getFitid().isEmpty()) {
-                    writer.println(wrapOpen(FITID) + transaction.getFitid(), indentLevel);
-                }
-
-                writer.println(wrapClose(STMTTRN), --indentLevel);
+            // write the transaction list
+            if (account.getAccountType() == AccountType.INVEST || account.getAccountType() == AccountType.MUTUAL) {
+                writeInvestmentTransactions(writer);
+            } else {
+                writeBankTransactions(writer);
             }
 
-            // end of bank transaction list
+            // end of transaction list
             writer.println(wrapClose(getTransactionList(account)), --indentLevel);
 
             // write ledger balance
@@ -195,23 +181,102 @@ public class OfxExport implements OfxTags {
         }
     }
 
-    private static void writeBankTransactions() {
+    private void writeBankTransactions(final IndentedPrintWriter writer) {
 
+        // write bank transactions
+        for (Transaction transaction : account.getTransactions(startDate, endDate)) {
+            writer.println(wrapOpen(STMTTRN), indentLevel++);
+            writer.println(wrapOpen(TRNTYPE) + (transaction.getAmount(account).compareTo(BigDecimal.ZERO) == 1 ? CREDIT : DEBIT), indentLevel);
+
+            writer.println(wrapOpen(DTPOSTED) + encodeDate(transaction.getDate()), indentLevel);
+            writer.println(wrapOpen(TRNAMT) + transaction.getAmount(account).toPlainString(), indentLevel);
+            writer.println(wrapOpen(REFNUM) + transaction.getUuid(), indentLevel);
+            writer.println(wrapOpen(NAME) + transaction.getPayee(), indentLevel);
+            writer.println(wrapOpen(MEMO) + transaction.getMemo(), indentLevel);
+
+            // write the check number if applicable
+            if (account.getAccountType() == AccountType.CHECKING && !transaction.getNumber().isEmpty()) {
+                writer.println(wrapOpen(CHECKNUM) + transaction.getNumber(), indentLevel);
+            }
+
+            // write out the banks transaction id if previously imported
+            if (transaction.getFitid() != null && !transaction.getFitid().isEmpty()) {
+                writer.println(wrapOpen(FITID) + transaction.getFitid(), indentLevel);
+            }
+
+            writer.println(wrapClose(STMTTRN), --indentLevel);
+        }
     }
 
-    private static String encodeDate(final Date date) {
+    private void writeInvestmentTransactions(final IndentedPrintWriter writer) {
+        for (Transaction transaction : account.getTransactions(startDate, endDate)) {
+            if (transaction instanceof InvestmentTransaction) {
+                InvestmentTransaction invTransaction = (InvestmentTransaction) transaction;
+
+                switch (invTransaction.getTransactionType()) {
+                    case BUYSHARE:
+                        writer.println(wrapOpen(BUYSTOCK), indentLevel++);
+                        writer.println(wrapOpen(INVBUY), indentLevel++);
+
+                        writer.println(wrapOpen(INVTRAN), indentLevel++);
+                        // write out the banks transaction id if previously imported
+                        if (transaction.getFitid() != null && !transaction.getFitid().isEmpty()) {
+                            writer.println(wrap(FITID, transaction.getFitid()), indentLevel);
+                        } else {
+                            writer.println(wrap(FITID, transaction.getUuid()), indentLevel);
+                        }
+                        writer.println(wrap(DTTRADE, encodeDate(transaction.getDate())), indentLevel);
+                        writer.println(wrap(DTSETTLE, encodeDate(transaction.getDate())), indentLevel);
+                        writer.println(wrapClose(INVTRAN), --indentLevel);
+
+                        // write security information
+                        writer.println(wrapOpen(SECID), indentLevel++);
+
+                        if (invTransaction.getSecurityNode().getISIN() != null && !invTransaction.getSecurityNode().getISIN().isEmpty()) {
+                            writer.println(wrap(UNIQUEID, invTransaction.getSecurityNode().getISIN()), indentLevel);
+                        } else {
+                            writer.println(wrap(UNIQUEID, invTransaction.getSecurityNode().getSymbol()), indentLevel);
+                        }
+                        writer.println(wrap(UNIQUEIDTYPE, "CUSIP"), indentLevel);
+                        writer.println(wrapClose(SECID), --indentLevel);
+
+                        writer.println(wrap(UNITS, invTransaction.getQuantity().toPlainString()), indentLevel);
+                        writer.println(wrap(UNITPRICE, invTransaction.getPrice().toPlainString()), indentLevel);
+                        writer.println(wrap(COMMISSION,  invTransaction.getFees().toPlainString()), indentLevel);
+                        writer.println(wrap(TOTAL, invTransaction.getTotal(account).toPlainString()), indentLevel);
+                        writer.println(wrap(SUBACCTSEC, "CASH"), indentLevel);
+                        writer.println(wrap(SUBACCTFUND, "CASH"), indentLevel);
+
+                        writer.println(wrapClose(INVBUY), --indentLevel);
+                        writer.println(wrap(BUYTYPE, "BUY"), indentLevel);
+                        writer.println(wrapClose(BUYSTOCK), --indentLevel);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+        }
+    }
+
+    private static String encodeDate(@NonNull final Date date) {
         return dateFormat.format(date);
     }
 
-    private static String wrapOpen(final String string) {
-        return "<" + string + ">";
+    private static String wrapOpen(final String element) {
+        return "<" + element + ">";
     }
 
-    private static String wrapClose(final String string) {
-        return "</" + string + ">";
+    private static String wrapClose(final String element) {
+        return "</" + element + ">";
     }
 
-    private static String getBankingMessageSetAggregate(final Account account) {
+    private static String wrap(final String element, final String text) {
+        return wrapOpen(element) + text + wrapClose(element);
+    }
+
+    private static @NonNull
+    String getBankingMessageSetAggregate(@NonNull final Account account) {
         switch (account.getAccountType()) {
             case ASSET:
             case BANK:
@@ -230,7 +295,8 @@ public class OfxExport implements OfxTags {
         }
     }
 
-    private static String getResponse(final Account account) {
+    private static @NonNull
+    String getResponse(@NonNull final Account account) {
         switch (account.getAccountType()) {
             case ASSET:
             case BANK:
@@ -249,7 +315,8 @@ public class OfxExport implements OfxTags {
         }
     }
 
-    private static String getStatementResponse(final Account account) {
+    private static @NonNull
+    String getStatementResponse(@NonNull final Account account) {
         switch (account.getAccountType()) {
             case ASSET:
             case BANK:
@@ -268,7 +335,8 @@ public class OfxExport implements OfxTags {
         }
     }
 
-    private static String getAccountFromAggregate(final Account account) {
+    private static @NonNull
+    String getAccountFromAggregate(final Account account) {
         switch (account.getAccountType()) {
             case ASSET:
             case BANK:
@@ -287,7 +355,8 @@ public class OfxExport implements OfxTags {
         }
     }
 
-    private static String getTransactionList(final Account account) {
+    private static @NonNull
+    String getTransactionList(@NonNull final Account account) {
         switch (account.getAccountType()) {
             case INVEST:
             case MUTUAL:
@@ -304,11 +373,11 @@ public class OfxExport implements OfxTags {
 
         private static String INDENT = "  ";
 
-        public IndentedPrintWriter(final Writer out) {
+        public IndentedPrintWriter(@NonNull final Writer out) {
             super(out);
         }
 
-        public void println(final String x, final int indentLevel) {
+        public void println(@NonNull final String x, final int indentLevel) {
             for (int i = 0; i < indentLevel; i++) {
                 write(INDENT);
             }

@@ -66,6 +66,13 @@ public interface OfxTags {
     static String BANKID = "BANKID";
 
     /**
+     * Stock purchase
+     */
+    static String BUYSTOCK = "BUYSTOCK";
+
+    static String BUYTYPE = "BUYTYPE";
+
+    /**
      * Branch identifier. May be required for some non-US banks
      */
     static String BRANCHID = "BRANCHID";
@@ -76,6 +83,10 @@ public interface OfxTags {
     static String BANKTRANLIST = "BANKTRANLIST";
 
     static String INVTRANLIST = "INVTRANLIST";
+
+    static String INVTRAN = "INVTRAN";
+
+    static String INVBUY = "INVBUY";
 
     static String BROKERID = "BROKERID";
 
@@ -155,6 +166,10 @@ public interface OfxTags {
      */
     static String DTSTART = "DTSTART";
 
+    static String DTTRADE = "DTTRADE";
+
+    static String DTSETTLE = "DTSETTLE";
+
     static String FI = "FI";
 
     static String FID = "FID";
@@ -203,6 +218,8 @@ public interface OfxTags {
 
     static String SEVERITY = "SEVERITY";
 
+    static String SECID = "SECID";
+
     /**
      * Accounting SIC code
      */
@@ -239,6 +256,10 @@ public interface OfxTags {
 
     static String STMTTRNRS = "STMTTRNRS";
 
+    static String SUBACCTSEC = "SUBACCTSEC";
+
+    static String SUBACCTFUND = "SUBACCTFUND";
+
     static String CCSTMTTRNRS = "CCSTMTTRNRS";
 
     static String INVSTMTTRNRS = "INVSTMTTRNRS";
@@ -258,7 +279,19 @@ public interface OfxTags {
      */
     static String TRNUID = "TRNUID";
 
+    static String TOTAL = "TOTAL";
+
     static String USERKEY = "USERKEY";
+
+    static String UNIQUEID = "UNIQUEID";
+
+    static String UNIQUEIDTYPE = "UNIQUEIDTYPE";
+
+    static String UNITS = "UNITS";
+
+    static String UNITPRICE = "UNITPRICE";
+
+    static String COMMISSION = "COMMISSION";
 
     /**
      * Bank Message Set Aggregate
