@@ -102,8 +102,7 @@
         <module>jgnash-swing</module>
         <module>jgnash-convert</module>
         <module>jidesoft</module>
-        <module>mt940</module>
-        <module>jsr-305</module>               
+        <module>mt940</module>      
     </modules>
 
 </project>

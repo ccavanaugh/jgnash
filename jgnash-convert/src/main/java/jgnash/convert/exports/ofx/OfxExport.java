@@ -24,7 +24,6 @@ import jgnash.engine.Transaction;
 import jgnash.convert.common.OfxTags;
 import jgnash.util.FileUtils;
 
-import javax.annotation.NonNull;
 import java.io.*;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
@@ -34,15 +33,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Primary class for OFX export.  The SGML format is used instead of the newer XML
- * to offer the best compatibility with older importers
- *
+ * Primary class for OFX export. The SGML format is used instead of the newer
+ * XML to offer the best compatibility with older importers
+ * 
  * @author Craig Cavanaugh
  */
 public class OfxExport implements OfxTags {
 
-    private static final String[] OFXHEADER = new String[]{"OFXHEADER:100", "DATA:OFXSGML", "VERSION:102", "SECURITY:NONE",
-            "ENCODING:USASCII", "CHARSET:1252", "COMPRESSION:NONE", "OLDFILEUID:NONE", "NEWFILEUID:NONE"};
+    private static final String[] OFXHEADER = new String[] { "OFXHEADER:100", "DATA:OFXSGML", "VERSION:102",
+            "SECURITY:NONE", "ENCODING:USASCII", "CHARSET:1252", "COMPRESSION:NONE", "OLDFILEUID:NONE",
+            "NEWFILEUID:NONE" };
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
@@ -67,7 +67,6 @@ public class OfxExport implements OfxTags {
 
         final Date exportDate = new Date();
 
-
         if (account == null || startDate == null || endDate == null || file == null) {
             throw new RuntimeException();
         }
@@ -75,7 +74,8 @@ public class OfxExport implements OfxTags {
         // force a correct file extension
         final String fileName = FileUtils.stripFileExtension(file.getAbsolutePath()) + ".ofx";
 
-        try (IndentedPrintWriter writer = new IndentedPrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), Charset.forName("windows-1252"))))) {
+        try (IndentedPrintWriter writer = new IndentedPrintWriter(new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream(fileName), Charset.forName("windows-1252"))))) {
 
             // write the required header
             for (String line : OFXHEADER) {
@@ -116,10 +116,10 @@ public class OfxExport implements OfxTags {
             switch (account.getAccountType()) {
                 case INVEST:
                 case MUTUAL:
-                    writer.println(wrapOpen(BROKERID), indentLevel);  //  required for investment accounts, but jGnash does not manage a broker ID, normally a web URL
+                    writer.println(wrapOpen(BROKERID), indentLevel); //  required for investment accounts, but jGnash does not manage a broker ID, normally a web URL
                     break;
                 default:
-                    writer.println(wrapOpen(BANKID) + account.getBankId(), indentLevel);  // savings and checking only
+                    writer.println(wrapOpen(BANKID) + account.getBankId(), indentLevel); // savings and checking only
                     break;
             }
 
@@ -186,7 +186,8 @@ public class OfxExport implements OfxTags {
         // write bank transactions
         for (Transaction transaction : account.getTransactions(startDate, endDate)) {
             writer.println(wrapOpen(STMTTRN), indentLevel++);
-            writer.println(wrapOpen(TRNTYPE) + (transaction.getAmount(account).compareTo(BigDecimal.ZERO) == 1 ? CREDIT : DEBIT), indentLevel);
+            writer.println(wrapOpen(TRNTYPE)
+                    + (transaction.getAmount(account).compareTo(BigDecimal.ZERO) == 1 ? CREDIT : DEBIT), indentLevel);
 
             writer.println(wrapOpen(DTPOSTED) + encodeDate(transaction.getDate()), indentLevel);
             writer.println(wrapOpen(TRNAMT) + transaction.getAmount(account).toPlainString(), indentLevel);
@@ -232,7 +233,8 @@ public class OfxExport implements OfxTags {
                         // write security information
                         writer.println(wrapOpen(SECID), indentLevel++);
 
-                        if (invTransaction.getSecurityNode().getISIN() != null && !invTransaction.getSecurityNode().getISIN().isEmpty()) {
+                        if (invTransaction.getSecurityNode().getISIN() != null
+                                && !invTransaction.getSecurityNode().getISIN().isEmpty()) {
                             writer.println(wrap(UNIQUEID, invTransaction.getSecurityNode().getISIN()), indentLevel);
                         } else {
                             writer.println(wrap(UNIQUEID, invTransaction.getSecurityNode().getSymbol()), indentLevel);
@@ -242,7 +244,7 @@ public class OfxExport implements OfxTags {
 
                         writer.println(wrap(UNITS, invTransaction.getQuantity().toPlainString()), indentLevel);
                         writer.println(wrap(UNITPRICE, invTransaction.getPrice().toPlainString()), indentLevel);
-                        writer.println(wrap(COMMISSION,  invTransaction.getFees().toPlainString()), indentLevel);
+                        writer.println(wrap(COMMISSION, invTransaction.getFees().toPlainString()), indentLevel);
                         writer.println(wrap(TOTAL, invTransaction.getTotal(account).toPlainString()), indentLevel);
                         writer.println(wrap(SUBACCTSEC, "CASH"), indentLevel);
                         writer.println(wrap(SUBACCTFUND, "CASH"), indentLevel);
@@ -259,7 +261,7 @@ public class OfxExport implements OfxTags {
         }
     }
 
-    private static String encodeDate(@NonNull final Date date) {
+    private static String encodeDate(final Date date) {
         return dateFormat.format(date);
     }
 
@@ -275,8 +277,7 @@ public class OfxExport implements OfxTags {
         return wrapOpen(element) + text + wrapClose(element);
     }
 
-    private static @NonNull
-    String getBankingMessageSetAggregate(@NonNull final Account account) {
+    private static String getBankingMessageSetAggregate(final Account account) {
         switch (account.getAccountType()) {
             case ASSET:
             case BANK:
@@ -295,8 +296,7 @@ public class OfxExport implements OfxTags {
         }
     }
 
-    private static @NonNull
-    String getResponse(@NonNull final Account account) {
+    private static String getResponse(final Account account) {
         switch (account.getAccountType()) {
             case ASSET:
             case BANK:
@@ -315,8 +315,7 @@ public class OfxExport implements OfxTags {
         }
     }
 
-    private static @NonNull
-    String getStatementResponse(@NonNull final Account account) {
+    private static String getStatementResponse(final Account account) {
         switch (account.getAccountType()) {
             case ASSET:
             case BANK:
@@ -335,8 +334,7 @@ public class OfxExport implements OfxTags {
         }
     }
 
-    private static @NonNull
-    String getAccountFromAggregate(final Account account) {
+    private static String getAccountFromAggregate(final Account account) {
         switch (account.getAccountType()) {
             case ASSET:
             case BANK:
@@ -355,8 +353,7 @@ public class OfxExport implements OfxTags {
         }
     }
 
-    private static @NonNull
-    String getTransactionList(@NonNull final Account account) {
+    private static String getTransactionList(final Account account) {
         switch (account.getAccountType()) {
             case INVEST:
             case MUTUAL:
@@ -373,11 +370,11 @@ public class OfxExport implements OfxTags {
 
         private static String INDENT = "  ";
 
-        public IndentedPrintWriter(@NonNull final Writer out) {
+        public IndentedPrintWriter(final Writer out) {
             super(out);
         }
 
-        public void println(@NonNull final String x, final int indentLevel) {
+        public void println(final String x, final int indentLevel) {
             for (int i = 0; i < indentLevel; i++) {
                 write(INDENT);
             }

@@ -16,12 +16,7 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>jgnash-resources</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-        <dependency>
-            <groupId>jsr-305</groupId>
-            <artifactId>jsr-305</artifactId>
-            <version>1.0</version>
-        </dependency>
+		</dependency>        
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
 			<artifactId>xstream</artifactId>
