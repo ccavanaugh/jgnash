@@ -27,6 +27,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import javax.annotation.Nullable;
+
 import jgnash.util.DateUtils;
 
 /**
@@ -45,10 +47,12 @@ public final class SecurityNode extends CommodityNode {
      */
     private String quoteSource = QuoteSource.NONE.name();
     private transient QuoteSource cachedQuoteSource;
+
     /**
-     * Symbol for quote download. Not always the same as the commodity symbol
+     * ISIN or CUSIP.  Used for OFX and quote downloads
      */
-    private String isin;
+    private @Nullable String isin;
+
     private List<SecurityHistoryNode> historyNodes = new ArrayList<>();
     private transient ReadWriteLock lock;
 
@@ -116,7 +120,7 @@ public final class SecurityNode extends CommodityNode {
         cachedQuoteSource = source;
     }
 
-    public String getISIN() {
+    public @Nullable String getISIN() {
         return isin;
     }
 
@@ -182,7 +186,7 @@ public final class SecurityNode extends CommodityNode {
         return result;
     }
 
-    private SecurityHistoryNode getLastHistoryNode() {
+    private @Nullable SecurityHistoryNode getLastHistoryNode() {
         getLock().readLock().lock();
 
         try {
