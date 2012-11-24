@@ -17,10 +17,7 @@
  */
 package jgnash.convert.exports.ofx;
 
-import jgnash.engine.Account;
-import jgnash.engine.AccountType;
-import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.Transaction;
+import jgnash.engine.*;
 import jgnash.convert.common.OfxTags;
 import jgnash.util.FileUtils;
 
@@ -35,14 +32,14 @@ import java.util.logging.Logger;
 /**
  * Primary class for OFX export. The SGML format is used instead of the newer
  * XML to offer the best compatibility with older importers
- * 
+ *
  * @author Craig Cavanaugh
  */
 public class OfxExport implements OfxTags {
 
-    private static final String[] OFXHEADER = new String[] { "OFXHEADER:100", "DATA:OFXSGML", "VERSION:102",
+    private static final String[] OFXHEADER = new String[]{"OFXHEADER:100", "DATA:OFXSGML", "VERSION:102",
             "SECURITY:NONE", "ENCODING:USASCII", "CHARSET:1252", "COMPRESSION:NONE", "OLDFILEUID:NONE",
-            "NEWFILEUID:NONE" };
+            "NEWFILEUID:NONE"};
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
@@ -53,6 +50,8 @@ public class OfxExport implements OfxTags {
     private Date endDate;
 
     private File file;
+
+    private IndentedPrintWriter writer;
 
     int indentLevel = 0;
 
@@ -76,6 +75,8 @@ public class OfxExport implements OfxTags {
 
         try (IndentedPrintWriter writer = new IndentedPrintWriter(new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream(fileName), Charset.forName("windows-1252"))))) {
+
+            this.writer = writer;
 
             // write the required header
             for (String line : OFXHEADER) {
@@ -155,9 +156,9 @@ public class OfxExport implements OfxTags {
 
             // write the transaction list
             if (account.getAccountType() == AccountType.INVEST || account.getAccountType() == AccountType.MUTUAL) {
-                writeInvestmentTransactions(writer);
+                writeInvestmentTransactions();
             } else {
-                writeBankTransactions(writer);
+                writeBankTransactions();
             }
 
             // end of transaction list
@@ -181,84 +182,149 @@ public class OfxExport implements OfxTags {
         }
     }
 
-    private void writeBankTransactions(final IndentedPrintWriter writer) {
-
-        // write bank transactions
+    /**
+     * Writes all bank account transactions within the date range
+     */
+    private void writeBankTransactions() {
         for (Transaction transaction : account.getTransactions(startDate, endDate)) {
-            writer.println(wrapOpen(STMTTRN), indentLevel++);
-            writer.println(wrapOpen(TRNTYPE)
-                    + (transaction.getAmount(account).compareTo(BigDecimal.ZERO) == 1 ? CREDIT : DEBIT), indentLevel);
-
-            writer.println(wrapOpen(DTPOSTED) + encodeDate(transaction.getDate()), indentLevel);
-            writer.println(wrapOpen(TRNAMT) + transaction.getAmount(account).toPlainString(), indentLevel);
-            writer.println(wrapOpen(REFNUM) + transaction.getUuid(), indentLevel);
-            writer.println(wrapOpen(NAME) + transaction.getPayee(), indentLevel);
-            writer.println(wrapOpen(MEMO) + transaction.getMemo(), indentLevel);
-
-            // write the check number if applicable
-            if (account.getAccountType() == AccountType.CHECKING && !transaction.getNumber().isEmpty()) {
-                writer.println(wrapOpen(CHECKNUM) + transaction.getNumber(), indentLevel);
-            }
-
-            // write out the banks transaction id if previously imported
-            if (transaction.getFitid() != null && !transaction.getFitid().isEmpty()) {
-                writer.println(wrapOpen(FITID) + transaction.getFitid(), indentLevel);
-            }
-
-            writer.println(wrapClose(STMTTRN), --indentLevel);
+            writeBankTransaction(transaction);
         }
     }
 
-    private void writeInvestmentTransactions(final IndentedPrintWriter writer) {
+    /**
+     * Writes all investment account transactions within the date range
+     */
+    private void writeInvestmentTransactions() {
         for (Transaction transaction : account.getTransactions(startDate, endDate)) {
             if (transaction instanceof InvestmentTransaction) {
                 InvestmentTransaction invTransaction = (InvestmentTransaction) transaction;
 
                 switch (invTransaction.getTransactionType()) {
+                    case ADDSHARE:
                     case BUYSHARE:
-                        writer.println(wrapOpen(BUYSTOCK), indentLevel++);
-                        writer.println(wrapOpen(INVBUY), indentLevel++);
-
-                        writer.println(wrapOpen(INVTRAN), indentLevel++);
-                        // write out the banks transaction id if previously imported
-                        if (transaction.getFitid() != null && !transaction.getFitid().isEmpty()) {
-                            writer.println(wrap(FITID, transaction.getFitid()), indentLevel);
-                        } else {
-                            writer.println(wrap(FITID, transaction.getUuid()), indentLevel);
-                        }
-                        writer.println(wrap(DTTRADE, encodeDate(transaction.getDate())), indentLevel);
-                        writer.println(wrap(DTSETTLE, encodeDate(transaction.getDate())), indentLevel);
-                        writer.println(wrapClose(INVTRAN), --indentLevel);
-
-                        // write security information
-                        writer.println(wrapOpen(SECID), indentLevel++);
-
-                        if (invTransaction.getSecurityNode().getISIN() != null
-                                && !invTransaction.getSecurityNode().getISIN().isEmpty()) {
-                            writer.println(wrap(UNIQUEID, invTransaction.getSecurityNode().getISIN()), indentLevel);
-                        } else {
-                            writer.println(wrap(UNIQUEID, invTransaction.getSecurityNode().getSymbol()), indentLevel);
-                        }
-                        writer.println(wrap(UNIQUEIDTYPE, "CUSIP"), indentLevel);
-                        writer.println(wrapClose(SECID), --indentLevel);
-
-                        writer.println(wrap(UNITS, invTransaction.getQuantity().toPlainString()), indentLevel);
-                        writer.println(wrap(UNITPRICE, invTransaction.getPrice().toPlainString()), indentLevel);
-                        writer.println(wrap(COMMISSION, invTransaction.getFees().toPlainString()), indentLevel);
-                        writer.println(wrap(TOTAL, invTransaction.getTotal(account).toPlainString()), indentLevel);
-                        writer.println(wrap(SUBACCTSEC, "CASH"), indentLevel);
-                        writer.println(wrap(SUBACCTFUND, "CASH"), indentLevel);
-
-                        writer.println(wrapClose(INVBUY), --indentLevel);
-                        writer.println(wrap(BUYTYPE, "BUY"), indentLevel);
-                        writer.println(wrapClose(BUYSTOCK), --indentLevel);
+                        writeBuyStockTransaction(invTransaction);
+                        break;
+                    case REMOVESHARE:
+                    case SELLSHARE:
+                        writeSellStockTransaction(invTransaction);
                         break;
                     default:
                         break;
                 }
+            } else {    // bank transaction, write it
+                writer.println(wrapOpen(INVBANKTRAN), indentLevel++);
+                writeBankTransaction(transaction);
+                writer.println(wrapClose(INVBANKTRAN), --indentLevel);
             }
-
         }
+    }
+
+    /**
+     * Writes one bank transaction
+     *
+     * @param transaction <code>Transaction</code> to write
+     */
+    private void writeBankTransaction(final Transaction transaction) {
+        writer.println(wrapOpen(STMTTRN), indentLevel++);
+        writer.println(wrapOpen(TRNTYPE)
+                + (transaction.getAmount(account).compareTo(BigDecimal.ZERO) == 1 ? CREDIT : DEBIT), indentLevel);
+
+        writer.println(wrapOpen(DTPOSTED) + encodeDate(transaction.getDate()), indentLevel);
+        writer.println(wrapOpen(TRNAMT) + transaction.getAmount(account).toPlainString(), indentLevel);
+        writer.println(wrapOpen(REFNUM) + transaction.getUuid(), indentLevel);
+        writer.println(wrapOpen(NAME) + transaction.getPayee(), indentLevel);
+        writer.println(wrapOpen(MEMO) + transaction.getMemo(), indentLevel);
+
+        // write the check number if applicable
+        if (account.getAccountType() == AccountType.CHECKING && !transaction.getNumber().isEmpty()) {
+            writer.println(wrapOpen(CHECKNUM) + transaction.getNumber(), indentLevel);
+        }
+
+        // write out the banks transaction id if previously imported
+        writeFitID(transaction);
+
+        writer.println(wrapClose(STMTTRN), --indentLevel);
+    }
+
+    private void writeFitID(final Transaction transaction) {
+        // write out the banks transaction id if previously imported
+        if (transaction.getFitid() != null && !transaction.getFitid().isEmpty()) {
+            writer.println(wrap(FITID, transaction.getFitid()), indentLevel);
+        } else {
+            writer.println(wrap(FITID, transaction.getUuid()), indentLevel);
+        }
+    }
+
+    private void writeSecID(final SecurityNode node) {
+
+        // write security information
+        writer.println(wrapOpen(SECID), indentLevel++);
+
+        if (node.getISIN() != null && !node.getISIN().isEmpty()) {
+            writer.println(wrap(UNIQUEID, node.getISIN()), indentLevel);
+        } else {
+            writer.println(wrap(UNIQUEID, node.getSymbol()), indentLevel);
+        }
+
+        writer.println(wrap(UNIQUEIDTYPE, "CUSIP"), indentLevel);
+        writer.println(wrapClose(SECID), --indentLevel);
+    }
+
+    private void writeBuyStockTransaction(final InvestmentTransaction transaction) {
+        writer.println(wrapOpen(BUYSTOCK), indentLevel++);
+        writer.println(wrapOpen(INVBUY), indentLevel++);
+
+        writer.println(wrapOpen(INVTRAN), indentLevel++);
+
+        // write the FITID
+        writeFitID(transaction);
+
+        writer.println(wrap(DTTRADE, encodeDate(transaction.getDate())), indentLevel);
+        writer.println(wrap(DTSETTLE, encodeDate(transaction.getDate())), indentLevel);
+
+        writer.println(wrapClose(INVTRAN), --indentLevel);
+
+        // write security information
+        writeSecID(transaction.getSecurityNode());
+
+        writer.println(wrap(UNITS, transaction.getQuantity().toPlainString()), indentLevel);
+        writer.println(wrap(UNITPRICE, transaction.getPrice().toPlainString()), indentLevel);
+        writer.println(wrap(COMMISSION, transaction.getFees().toPlainString()), indentLevel);
+        writer.println(wrap(TOTAL, transaction.getTotal(account).toPlainString()), indentLevel);
+        writer.println(wrap(SUBACCTSEC, "CASH"), indentLevel);
+        writer.println(wrap(SUBACCTFUND, "CASH"), indentLevel);
+
+        writer.println(wrapClose(INVBUY), --indentLevel);
+        writer.println(wrap(BUYTYPE, "BUY"), indentLevel);
+        writer.println(wrapClose(BUYSTOCK), --indentLevel);
+    }
+
+    private void writeSellStockTransaction(final InvestmentTransaction transaction) {
+        writer.println(wrapOpen(SELLSTOCK), indentLevel++);
+        writer.println(wrapOpen(INVSELL), indentLevel++);
+
+        writer.println(wrapOpen(INVTRAN), indentLevel++);
+
+        // write the FITID
+        writeFitID(transaction);
+
+        writer.println(wrap(DTTRADE, encodeDate(transaction.getDate())), indentLevel);
+        writer.println(wrap(DTSETTLE, encodeDate(transaction.getDate())), indentLevel);
+        writer.println(wrapClose(INVTRAN), --indentLevel);
+
+        // write security information
+        writeSecID(transaction.getSecurityNode());
+
+        writer.println(wrap(UNITS, transaction.getQuantity().toPlainString()), indentLevel);
+        writer.println(wrap(UNITPRICE, transaction.getPrice().toPlainString()), indentLevel);
+        writer.println(wrap(COMMISSION, transaction.getFees().toPlainString()), indentLevel);
+        writer.println(wrap(TOTAL, transaction.getTotal(account).toPlainString()), indentLevel);
+        writer.println(wrap(SUBACCTSEC, "CASH"), indentLevel);
+        writer.println(wrap(SUBACCTFUND, "CASH"), indentLevel);
+
+        writer.println(wrapClose(INVSELL), --indentLevel);
+        writer.println(wrap(SELLTYPE, "SELL"), indentLevel);
+        writer.println(wrapClose(SELLSTOCK), --indentLevel);
     }
 
     private static String encodeDate(final Date date) {

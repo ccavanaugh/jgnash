@@ -88,6 +88,8 @@ public interface OfxTags {
 
     static String INVBUY = "INVBUY";
 
+    static String INVSELL = "INVSELL";
+
     static String BROKERID = "BROKERID";
 
     /**
@@ -240,6 +242,11 @@ public interface OfxTags {
     static String STMTRS = "STMTRS";
 
     /**
+     * Investment account bank transaction
+     */
+    static String INVBANKTRAN = "INVBANKTRAN";
+
+    /**
      * Credit Card statement response aggregate
      */
     static String CCSTMTRS = "CCSTMTRS";
@@ -259,6 +266,10 @@ public interface OfxTags {
     static String SUBACCTSEC = "SUBACCTSEC";
 
     static String SUBACCTFUND = "SUBACCTFUND";
+
+    static String SELLSTOCK = "SELLSTOCK";
+
+    static String SELLTYPE = "SELLTYPE";
 
     static String CCSTMTTRNRS = "CCSTMTTRNRS";
 
