@@ -74,7 +74,7 @@ public class RegisterFactory {
         Preferences p = Preferences.userNodeForPackage(RegisterFactory.class);
         sortable = p.getBoolean(SORTABLE, true);
         useAccountingTerms = p.getBoolean(ACCOUNTINGTERMS, false);
-        confirmTransactionDelete = p.getBoolean(CONFIRMDELETE, false);
+        confirmTransactionDelete = p.getBoolean(CONFIRMDELETE, true);
 
         oddBackgroundColor = new Color(p.getInt(ODDCOLOR, Color.WHITE.getRGB()));
         evenBackgroundColor = new Color(p.getInt(EVENCOLOR, 0xE1F7DF)); // 225,247,223
