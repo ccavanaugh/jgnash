@@ -327,6 +327,34 @@ public class OfxExport implements OfxTags {
         writer.println(wrapClose(SELLSTOCK), --indentLevel);
     }
 
+    private void writeReinvestStockTransaction(final InvestmentTransaction transaction) {
+        writer.println(wrapOpen(SELLSTOCK), indentLevel++);
+        writer.println(wrapOpen(INVSELL), indentLevel++);
+
+        writer.println(wrapOpen(INVTRAN), indentLevel++);
+
+        // write the FITID
+        writeFitID(transaction);
+
+        writer.println(wrap(DTTRADE, encodeDate(transaction.getDate())), indentLevel);
+        writer.println(wrap(DTSETTLE, encodeDate(transaction.getDate())), indentLevel);
+        writer.println(wrapClose(INVTRAN), --indentLevel);
+
+        // write security information
+        writeSecID(transaction.getSecurityNode());
+
+        writer.println(wrap(UNITS, transaction.getQuantity().toPlainString()), indentLevel);
+        writer.println(wrap(UNITPRICE, transaction.getPrice().toPlainString()), indentLevel);
+        writer.println(wrap(COMMISSION, transaction.getFees().toPlainString()), indentLevel);
+        writer.println(wrap(TOTAL, transaction.getTotal(account).toPlainString()), indentLevel);
+        writer.println(wrap(SUBACCTSEC, "CASH"), indentLevel);
+        writer.println(wrap(SUBACCTFUND, "CASH"), indentLevel);
+
+        writer.println(wrapClose(INVSELL), --indentLevel);
+        writer.println(wrap(SELLTYPE, "SELL"), indentLevel);
+        writer.println(wrapClose(SELLSTOCK), --indentLevel);
+    }
+
     private static String encodeDate(final Date date) {
         return dateFormat.format(date);
     }

@@ -275,6 +275,8 @@ public interface OfxTags {
 
     static String INVSTMTTRNRS = "INVSTMTTRNRS";
 
+    static String REINVEST = "REINVEST";
+
     /**
      * Transaction amount
      */
