@@ -46,7 +46,7 @@ public class Ofx1toOfx2 {
         main.convert(args);
     }
 
-    public void convert(final String args[]) {
+    private void convert(final String args[]) {
         CmdLineParser parser = new CmdLineParser(this);
 
         try {
@@ -60,7 +60,7 @@ public class Ofx1toOfx2 {
         }
     }
 
-    public static void convertToXML(final File inFile, final File outFile) {
+    private static void convertToXML(final File inFile, final File outFile) {
 
         try (FileWriter writer = new FileWriter(outFile)) {
             String xmlData = OfxV1ToV2.convertToXML(inFile);
