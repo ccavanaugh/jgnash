@@ -208,6 +208,12 @@ public class OfxExport implements OfxTags {
                     case SELLSHARE:
                         writeSellStockTransaction(invTransaction);
                         break;
+                    case DIVIDEND:
+                        writeDividendTransaction(invTransaction);
+                        break;
+                    case REINVESTDIV:
+                        writeReinvestStockTransaction(invTransaction);
+                        break;
                     default:
                         break;
                 }
@@ -327,9 +333,19 @@ public class OfxExport implements OfxTags {
         writer.println(wrapClose(SELLSTOCK), --indentLevel);
     }
 
+    /**
+     * Reinvested transaction is a two part process.
+     * Need to show Income into cash and then the reinvestment from cash
+     *
+     * @param transaction transaction to write
+     */
     private void writeReinvestStockTransaction(final InvestmentTransaction transaction) {
-        writer.println(wrapOpen(SELLSTOCK), indentLevel++);
-        writer.println(wrapOpen(INVSELL), indentLevel++);
+
+        // Part one, show dividend income to cash
+        writeDividendTransaction(transaction);
+
+        // Part two, show reinvest from cash
+        writer.println(wrapOpen(REINVEST), indentLevel++);
 
         writer.println(wrapOpen(INVTRAN), indentLevel++);
 
@@ -338,21 +354,40 @@ public class OfxExport implements OfxTags {
 
         writer.println(wrap(DTTRADE, encodeDate(transaction.getDate())), indentLevel);
         writer.println(wrap(DTSETTLE, encodeDate(transaction.getDate())), indentLevel);
+        writer.println(wrap(MEMO, "Distribution reinvestment: " + transaction.getSecurityNode().getSymbol()), indentLevel);
+        writer.println(wrapClose(INVTRAN), --indentLevel);
+
+        // write security information
+        writeSecID(transaction.getSecurityNode());
+        writer.println(wrap(INCOMETYPE, "DIV"), indentLevel);
+        writer.println(wrap(TOTAL, transaction.getTotal(account).abs().negate().toPlainString()), indentLevel);
+        writer.println(wrap(SUBACCTSEC, "CASH"), indentLevel);
+
+        writer.println(wrap(UNITS, transaction.getQuantity().toPlainString()), indentLevel);
+        writer.println(wrap(UNITPRICE, transaction.getPrice().toPlainString()), indentLevel);
+        writer.println(wrap(COMMISSION, transaction.getFees().toPlainString()), indentLevel);
+        writer.println(wrapClose(REINVEST), --indentLevel);
+    }
+
+    private void writeDividendTransaction(final InvestmentTransaction transaction) {
+        writer.println(wrapOpen(INCOME), indentLevel++);
+
+        writer.println(wrapOpen(INVTRAN), indentLevel++);
+        writeFitID(transaction);  // write the FITID
+
+        writer.println(wrap(DTTRADE, encodeDate(transaction.getDate())), indentLevel);
+        writer.println(wrap(DTSETTLE, encodeDate(transaction.getDate())), indentLevel);
+        writer.println(wrap(MEMO, "Dividend: " + transaction.getSecurityNode().getSymbol()), indentLevel);
         writer.println(wrapClose(INVTRAN), --indentLevel);
 
         // write security information
         writeSecID(transaction.getSecurityNode());
 
-        writer.println(wrap(UNITS, transaction.getQuantity().toPlainString()), indentLevel);
-        writer.println(wrap(UNITPRICE, transaction.getPrice().toPlainString()), indentLevel);
-        writer.println(wrap(COMMISSION, transaction.getFees().toPlainString()), indentLevel);
-        writer.println(wrap(TOTAL, transaction.getTotal(account).toPlainString()), indentLevel);
+        writer.println(wrap(INCOMETYPE, "DIV"), indentLevel);
+        writer.println(wrap(TOTAL, transaction.getTotal(account).abs().toPlainString()), indentLevel);
         writer.println(wrap(SUBACCTSEC, "CASH"), indentLevel);
         writer.println(wrap(SUBACCTFUND, "CASH"), indentLevel);
-
-        writer.println(wrapClose(INVSELL), --indentLevel);
-        writer.println(wrap(SELLTYPE, "SELL"), indentLevel);
-        writer.println(wrapClose(SELLSTOCK), --indentLevel);
+        writer.println(wrapClose(INCOME), --indentLevel);
     }
 
     private static String encodeDate(final Date date) {

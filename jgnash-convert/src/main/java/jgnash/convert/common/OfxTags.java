@@ -277,6 +277,10 @@ public interface OfxTags {
 
     static String REINVEST = "REINVEST";
 
+    static String INCOME = "INCOME";
+
+    static String INCOMETYPE = "INCOMETYPE";
+
     /**
      * Transaction amount
      */
