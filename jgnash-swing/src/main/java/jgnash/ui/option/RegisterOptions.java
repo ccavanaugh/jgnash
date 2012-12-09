@@ -70,6 +70,8 @@ class RegisterOptions extends JPanel implements ActionListener {
 
     private JCheckBox confirmTransDeleteCheckBox;
 
+    private JCheckBox restoreLastTabCheckBox;
+
     private JButton oddButton;
 
     private JRadioButton autoReconcileBothSidesButton;
@@ -95,6 +97,7 @@ class RegisterOptions extends JPanel implements ActionListener {
         confirmTransDeleteCheckBox.setSelected(RegisterFactory.isConfirmTransactionDeleteEnabled());
         sortableCheckBox.setSelected(RegisterFactory.isSortingEnabled());
         registerFollowsCheckBox.setSelected(MainFrame.doesRegisterFollowTree());
+        restoreLastTabCheckBox.setSelected(RegisterFactory.isRestoreLastTransactionTabEnabled());
 
         regDateCheckBox.setSelected(AbstractTransactionPanel.getRememberLastDate());
 
@@ -118,6 +121,7 @@ class RegisterOptions extends JPanel implements ActionListener {
         confirmTransDeleteCheckBox.addActionListener(this);
         sortableCheckBox.addActionListener(this);
         registerFollowsCheckBox.addActionListener(this);
+        restoreLastTabCheckBox.addActionListener(this);
 
         regDateCheckBox.addActionListener(this);
 
@@ -169,6 +173,7 @@ class RegisterOptions extends JPanel implements ActionListener {
         confirmTransDeleteCheckBox = new JCheckBox(rb.getString("Button.ConfirmTransDelete"));
         sortableCheckBox = new JCheckBox(rb.getString("Button.EnableSortCol"));
         registerFollowsCheckBox = new JCheckBox(rb.getString("Button.RegisterFollowsList"));
+        restoreLastTabCheckBox = new JCheckBox(rb.getString("Button.RestoreLastTranTab"));
 
         regDateCheckBox = new JCheckBox(rb.getString("Button.RegDate"));
 
@@ -201,6 +206,7 @@ class RegisterOptions extends JPanel implements ActionListener {
 
         builder.append(regDateCheckBox);
         builder.append(confirmTransDeleteCheckBox);
+        builder.append(restoreLastTabCheckBox);
         builder.appendSeparator(rb.getString("Title.ReconcileSettings"));
         builder.append(disableAutoReconcileButton);
         builder.append(autoReconcileBothSidesButton);
@@ -278,6 +284,8 @@ class RegisterOptions extends JPanel implements ActionListener {
             AutoCompleteFactory.setIgnoreCase(!ignoreCaseCheckBox.isSelected());
         } else if (e.getSource() == fuzzyMatchCheckBox) {
             AutoCompleteFactory.setFuzzyMatch(fuzzyMatchCheckBox.isSelected());
+        } else if (e.getSource() == restoreLastTabCheckBox) {
+            RegisterFactory.setRestoreLastTransactionTab(restoreLastTabCheckBox.isSelected());
         }
     }
 }

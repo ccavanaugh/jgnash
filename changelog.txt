@@ -20,6 +20,7 @@ Class/Tag option to Transaction entries. ( to categorize the Expense & Income fu
 Hiding option of Transaction form which can help to see more transactions in Register view.
 Direct Transaction entry option in the Ledger to avoid Transaction form.
 Formal Trial Balance report
+Better method of keeping preferences when updating computers
 
 Planned Future File Structure changes
 -------------------------------------
@@ -30,6 +31,7 @@ Money market account type
 
 Release 2.12.0
 ----------------------
+12/09/12 Added register option to restore the last used transaction tab
 12/09/12 When modifying an existing account, the current account currency would not be set in the dialog correctly.
 12/02/12 Update to latest Substance L&F
 11/25/12 Make confirmation on transaction deletion the default.

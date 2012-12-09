@@ -21,15 +21,19 @@ import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.ButtonBarFactory;
 import com.jgoodies.forms.layout.FormLayout;
 
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
+import java.util.prefs.Preferences;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
@@ -48,13 +52,14 @@ import jgnash.ui.register.table.RegisterTable;
 /**
  * Main view for a generic account register. This displays the account's transactions and the forms for adding,
  * modifying, and removing them.
- * 
+ *
  * @author Craig Cavanaugh
  * @author Don Brown
  * @author axnotizes
- *
  */
 public class RegisterPanel extends AbstractRegisterPanel implements ActionListener, RegisterListener {
+
+    private static final String NODE_REG_TAB = "/jgnash/ui/register/tab";
 
     private final NumberFormat format;
 
@@ -132,6 +137,14 @@ public class RegisterPanel extends AbstractRegisterPanel implements ActionListen
             tabbedPane.setSelectedComponent(debitPanel);
         }
 
+        restoreLastTabUsed();
+
+        tabbedPane.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                saveLastTabUsed(tabbedPane.getSelectedIndex());
+            }
+        });
+
         table.addKeyListener(this);
 
         installPopupHandler();
@@ -176,9 +189,32 @@ public class RegisterPanel extends AbstractRegisterPanel implements ActionListen
         builder.append(tabbedPane);
     }
 
+    private void saveLastTabUsed(final int index) {
+        Preferences tabPreferences = Preferences.userRoot().node(NODE_REG_TAB);
+        String id = getAccount().getUuid();
+        tabPreferences.putInt(id, index);
+    }
+
+    private void restoreLastTabUsed() {
+        if (RegisterFactory.isRestoreLastTransactionTabEnabled()) {
+
+            Preferences tabPreferences = Preferences.userRoot().node(NODE_REG_TAB);
+            String id = getAccount().getUuid();
+
+            final int index = tabPreferences.getInt(id, tabbedPane.getSelectedIndex());
+
+            EventQueue.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    tabbedPane.setSelectedIndex(index);
+                }
+            });
+        }
+    }
+
     /**
      * Creates the top panel with account path, balance, etc
-     * 
+     *
      * @return top panel
      */
     private JPanel createTopPanel() {
@@ -192,7 +228,7 @@ public class RegisterPanel extends AbstractRegisterPanel implements ActionListen
 
     /**
      * Margins are built into this panel so that they disappear if the panel is made invisible
-     * 
+     *
      * @return button command panel
      */
     JPanel createButtonPanel() {

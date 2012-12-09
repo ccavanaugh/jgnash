@@ -66,15 +66,20 @@ public class RegisterFactory {
 
     private static final String CONFIRM_ON_DELETE = "confirmdelete";
 
+    private static final String RESTORE_LAST_TRANSACTION_TAB = "restoreTab";
+
     private static Color evenBackgroundColor;
 
     private static Color oddBackgroundColor;
+
+    private static boolean restoreLastTransactionTab;
 
     static {
         Preferences p = Preferences.userNodeForPackage(RegisterFactory.class);
         sortable = p.getBoolean(SORTABLE, true);
         useAccountingTerms = p.getBoolean(ACCOUNTING_TERMS, false);
         confirmTransactionDelete = p.getBoolean(CONFIRM_ON_DELETE, true);
+        restoreLastTransactionTab = p.getBoolean(RESTORE_LAST_TRANSACTION_TAB, true);
 
         oddBackgroundColor = new Color(p.getInt(ODD_COLOR, Color.WHITE.getRGB()));
         evenBackgroundColor = new Color(p.getInt(EVEN_COLOR, 0xE1F7DF)); // 225,247,223
@@ -233,6 +238,16 @@ public class RegisterFactory {
 
     public static boolean isAccountingTermsEnabled() {
         return useAccountingTerms;
+    }
+
+    public static void setRestoreLastTransactionTab(final boolean enabled) {
+        restoreLastTransactionTab = enabled;
+        Preferences p = Preferences.userNodeForPackage(RegisterFactory.class);
+        p.putBoolean(RESTORE_LAST_TRANSACTION_TAB, restoreLastTransactionTab);
+    }
+
+    public static boolean isRestoreLastTransactionTabEnabled() {
+        return restoreLastTransactionTab;
     }
 
     /**
