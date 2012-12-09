@@ -48,11 +48,11 @@ import jgnash.util.Resource;
  */
 public class RegisterFactory {
 
-    private static final String ACCOUNTINGTERMS = "accountingterms";
+    private static final String ACCOUNTING_TERMS = "accountingterms";
 
-    private static final String EVENCOLOR = "EvenColor";
+    private static final String EVEN_COLOR = "EvenColor";
 
-    private static final String ODDCOLOR = "OddColor";
+    private static final String ODD_COLOR = "OddColor";
 
     private static final Resource rb = Resource.get();
 
@@ -64,7 +64,7 @@ public class RegisterFactory {
 
     private static final String SORTABLE = "sortable";
 
-    private static final String CONFIRMDELETE = "confirmdelete";
+    private static final String CONFIRM_ON_DELETE = "confirmdelete";
 
     private static Color evenBackgroundColor;
 
@@ -73,11 +73,11 @@ public class RegisterFactory {
     static {
         Preferences p = Preferences.userNodeForPackage(RegisterFactory.class);
         sortable = p.getBoolean(SORTABLE, true);
-        useAccountingTerms = p.getBoolean(ACCOUNTINGTERMS, false);
-        confirmTransactionDelete = p.getBoolean(CONFIRMDELETE, true);
+        useAccountingTerms = p.getBoolean(ACCOUNTING_TERMS, false);
+        confirmTransactionDelete = p.getBoolean(CONFIRM_ON_DELETE, true);
 
-        oddBackgroundColor = new Color(p.getInt(ODDCOLOR, Color.WHITE.getRGB()));
-        evenBackgroundColor = new Color(p.getInt(EVENCOLOR, 0xE1F7DF)); // 225,247,223
+        oddBackgroundColor = new Color(p.getInt(ODD_COLOR, Color.WHITE.getRGB()));
+        evenBackgroundColor = new Color(p.getInt(EVEN_COLOR, 0xE1F7DF)); // 225,247,223
     }
 
     private static final String[] BANK_NAMES = { rb.getString("Column.Date"), rb.getString("Column.Num"),
@@ -165,7 +165,7 @@ public class RegisterFactory {
 
     public static void setOddColor(final Color color) {
         Preferences p = Preferences.userNodeForPackage(RegisterFactory.class);
-        p.putInt(ODDCOLOR, color.getRGB());
+        p.putInt(ODD_COLOR, color.getRGB());
 
         oddBackgroundColor = color;
     }
@@ -180,7 +180,7 @@ public class RegisterFactory {
 
     public static void setEvenColor(final Color color) {
         Preferences p = Preferences.userNodeForPackage(RegisterFactory.class);
-        p.putInt(EVENCOLOR, color.getRGB());
+        p.putInt(EVEN_COLOR, color.getRGB());
 
         evenBackgroundColor = color;
     }
@@ -213,7 +213,7 @@ public class RegisterFactory {
     public static void setConfirmTransactionDeleteEnabled(final boolean enabled) {
         confirmTransactionDelete = enabled;
         Preferences p = Preferences.userNodeForPackage(RegisterFactory.class);
-        p.putBoolean(CONFIRMDELETE, confirmTransactionDelete);
+        p.putBoolean(CONFIRM_ON_DELETE, confirmTransactionDelete);
     }
 
     /**
@@ -228,7 +228,7 @@ public class RegisterFactory {
     public static void setAccountingTermsEnabled(final boolean enabled) {
         useAccountingTerms = enabled;
         Preferences p = Preferences.userNodeForPackage(RegisterFactory.class);
-        p.putBoolean(ACCOUNTINGTERMS, useAccountingTerms);
+        p.putBoolean(ACCOUNTING_TERMS, useAccountingTerms);
     }
 
     public static boolean isAccountingTermsEnabled() {
