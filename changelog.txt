@@ -35,6 +35,8 @@ Release 2.12.0
 12/09/12 When modifying an existing account, the current account currency would not be set in the dialog correctly.
 12/02/12 Update to latest Substance L&F
 11/25/12 Make confirmation on transaction deletion the default.
+11/24/12 Added basic OFX export of accounts (Investment accounts are still a work in progress)
+11/23/12 Warn if you are using a db4o (jdb) and recommend that you save as another format
 11/10/12 Added CSV export direct from the transaction register.
 11/10/12 Backup files were not being created in the same directory as the data file.
 11/04/12 Update to Mina 2.0.7
