@@ -17,12 +17,16 @@
  */
 package jgnash.ui.components;
 
+import java.awt.*;
 import java.util.Collection;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import javax.swing.JComboBox;
+import javax.swing.*;
 
 import jgnash.engine.CommodityNode;
 import jgnash.message.MessageListener;
+import jgnash.util.DefaultDaemonThreadFactory;
 
 /**
  * Abstract JComboBox for listing available commodities
@@ -32,6 +36,8 @@ import jgnash.message.MessageListener;
 public abstract class AbstractCommodityComboBox<T extends CommodityNode> extends JComboBox<T> implements MessageListener {
 
     final SortedComboBoxModel<T> model = new SortedComboBoxModel<>();
+
+    protected ExecutorService threadPool = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
     @SuppressWarnings("unchecked")
 	AbstractCommodityComboBox() {
@@ -62,15 +68,28 @@ public abstract class AbstractCommodityComboBox<T extends CommodityNode> extends
         if (node == null) {
             setSelectedIndex(-1);
         } else {
-            int size = model.getSize();
-            T tNode;
-            for (int i = 0; i < size; i++) {
-                tNode = model.getElementAt(i);
-                if (node.matches(tNode)) {
-                    setSelectedIndex(i);
-                    return; // exit the loop early
+
+            threadPool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    int size = model.getSize();
+
+                    for (int i = 0; i < size; i++) {
+                        if (node.matches(model.getElementAt(i))) {
+                            final T tNode = model.getElementAt(i);
+
+                            EventQueue.invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setSelectedItem(tNode);
+                                }
+                            });
+
+                            break;
+                        }
+                    }
                 }
-            }
+            });
         }
     }
 

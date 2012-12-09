@@ -30,6 +30,7 @@ Money market account type
 
 Release 2.12.0
 ----------------------
+12/09/12 When modifying an existing account, the current account currency would not be set in the dialog correctly.
 12/02/12 Update to latest Substance L&F
 11/25/12 Make confirmation on transaction deletion the default.
 11/10/12 Added CSV export direct from the transaction register.

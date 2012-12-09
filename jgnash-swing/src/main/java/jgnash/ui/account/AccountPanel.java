@@ -38,8 +38,6 @@ import javax.swing.JTextField;
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
 import jgnash.ui.components.CurrencyComboBox;
 import jgnash.ui.components.JTextFieldEx;
@@ -49,7 +47,6 @@ import jgnash.util.Resource;
  * Panel for entering / modifying account information.
  *
  * @author Craig Cavanaugh
- *
  */
 final class AccountPanel extends JPanel implements ActionListener {
     private static final long serialVersionUID = 1L;
@@ -89,11 +86,8 @@ final class AccountPanel extends JPanel implements ActionListener {
     private DefaultComboBoxModel<AccountType> accountTypeModel;
 
     public AccountPanel() {
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-
         layoutMainPanel();
 
-        setAccountCurrency(engine.getDefaultCurrency());
         setAccountType(AccountType.BANK);
     }
 

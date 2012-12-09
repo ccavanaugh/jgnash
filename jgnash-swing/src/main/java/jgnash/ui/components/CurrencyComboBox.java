@@ -20,10 +20,6 @@ package jgnash.ui.components;
 import java.awt.EventQueue;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Logger;
-
-import javax.swing.SwingWorker;
 
 import jgnash.engine.CommodityNode;
 import jgnash.engine.CurrencyNode;
@@ -37,35 +33,19 @@ import jgnash.message.MessageProperty;
  * Currency ComboBox selector
  *
  * @author Craig Cavanaugh
- *
  */
 public class CurrencyComboBox extends AbstractCommodityComboBox<CurrencyNode> {
 
     public CurrencyComboBox() {
         super();
 
-        SwingWorker<List<CurrencyNode>, Void> worker = new SwingWorker<List<CurrencyNode>, Void>() {
+        // Model loading and setting of default was being done in the background.  If an immediate set was performed,
+        // the background operation would override.
+        final List<CurrencyNode> nodeList = EngineFactory.getEngine(EngineFactory.DEFAULT).getCurrencies();
+        final CurrencyNode defaultCurrency = EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency();
 
-            CurrencyNode defaultNode;
-
-            @Override
-            public List<CurrencyNode> doInBackground() {
-                defaultNode = EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency();
-                return EngineFactory.getEngine(EngineFactory.DEFAULT).getCurrencies();
-            }
-
-            @Override
-            public void done() {
-                try {
-                    model.addAll(get());
-                    CurrencyComboBox.this.setSelectedNode(defaultNode);
-                } catch (InterruptedException | ExecutionException e) {
-                    Logger.getLogger(CurrencyComboBox.class.getName()).severe(e.getLocalizedMessage());
-                }
-            }
-        };
-
-        worker.execute();
+        model.addAll(nodeList);
+        setSelectedNode(defaultCurrency);
 
         MessageBus.getInstance().registerListener(this, MessageChannel.COMMODITY);
     }
