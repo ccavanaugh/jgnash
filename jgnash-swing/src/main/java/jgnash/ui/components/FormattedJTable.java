@@ -37,7 +37,6 @@ import jgnash.util.DateUtils;
 /**
  * 
  * @author Craig Cavanaugh
- *
  */
 public class FormattedJTable extends JTable {
 
@@ -101,7 +100,7 @@ public class FormattedJTable extends JTable {
                 ((JLabel) c).setHorizontalAlignment(defaultAlignment);   
             } else if (Date.class.isAssignableFrom(getColumnClass(column))) {  // special handling for dates
                 ((JLabel) c).setHorizontalAlignment(defaultAlignment);
-                ((JLabel) c).setText(dateFormatter.format(getModel().getValueAt(row, column)));
+                ((JLabel) c).setText(dateFormatter.format(getModel().getValueAt(row, convertColumnIndexToModel(column)))); // column may have been reordered
             } else {
                 ((JLabel) c).setHorizontalAlignment(defaultAlignment);
             }

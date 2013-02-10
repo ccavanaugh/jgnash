@@ -100,7 +100,7 @@ public class RegisterTable extends FormattedJTable {
 
                 NumberFormat numberFormat = CommodityFormat.getShortNumberFormat(((InvestmentTransaction) t).getSecurityNode());
 
-                Object value = getModel().getValueAt(row, column);
+                Object value = getModel().getValueAt(row, convertColumnIndexToModel(column));   // column may have been reordered
 
                 if (value != null && value instanceof Number) {
                     ((JLabel) c).setText(numberFormat.format(value));
@@ -114,7 +114,7 @@ public class RegisterTable extends FormattedJTable {
 
             ((JLabel) c).setHorizontalAlignment(SwingConstants.RIGHT);
 
-            Object value = getModel().getValueAt(row, column);
+            Object value = getModel().getValueAt(row, convertColumnIndexToModel(column));   // column may have been reordered
 
             if (value != null && value instanceof Number) {
 
@@ -130,7 +130,7 @@ public class RegisterTable extends FormattedJTable {
 
             ((JLabel) c).setHorizontalAlignment(SwingConstants.RIGHT);
 
-            Object value = getModel().getValueAt(row, column);
+            Object value = getModel().getValueAt(row, convertColumnIndexToModel(column));   // column may have been reordered
 
             if (value != null && value instanceof Number) {
                 ((JLabel) c).setText(shortFormat.format(value));
