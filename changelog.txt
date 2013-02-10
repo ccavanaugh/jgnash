@@ -31,6 +31,7 @@ Money market account type
 
 Release 2.12.0
 ----------------------
+01/30/13 Improved the natural sort order of investment transaction for improved consistency (Date, Type, Memo, Security, Modification Date, Internal Id)
 01/20/13 Fix for IllegalArgumentException caused by reordering table columns
 12/09/12 Added register option to restore the last used transaction tab
 12/09/12 When modifying an existing account, the current account currency would not be set in the dialog correctly.

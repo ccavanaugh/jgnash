@@ -25,7 +25,7 @@ import java.util.List;
  * Class for investment transactions.
  * <p/>
  * All TransactionEntry(s) must be of the same security
- * 
+ *
  * @author Craig Cavanaugh
  */
 public class InvestmentTransaction extends Transaction {
@@ -95,7 +95,7 @@ public class InvestmentTransaction extends Transaction {
 
     /**
      * Returns the price per share
-     * 
+     *
      * @return the price per share
      */
     public BigDecimal getPrice() {
@@ -112,7 +112,7 @@ public class InvestmentTransaction extends Transaction {
 
     /**
      * Returns the number of shares assigned to this transaction.
-     * 
+     *
      * @return the quantity of securities for this transaction
      * @see #getSignedQuantity()
      */
@@ -129,7 +129,7 @@ public class InvestmentTransaction extends Transaction {
 
     /**
      * Returns the number of shares assigned to this transaction.
-     * 
+     *
      * @return the quantity of securities for this transaction
      * @see #getSignedQuantity()
      */
@@ -164,7 +164,7 @@ public class InvestmentTransaction extends Transaction {
 
     /**
      * Sum transaction fees
-     * 
+     *
      * @return transaction fees
      */
     public BigDecimal getFees() {
@@ -173,9 +173,8 @@ public class InvestmentTransaction extends Transaction {
 
     /**
      * Sum transaction fees
-     * 
-     * @param account
-     *            account to calculate fees against
+     *
+     * @param account account to calculate fees against
      * @return transaction fees
      */
     BigDecimal getFees(final Account account) {
@@ -198,7 +197,7 @@ public class InvestmentTransaction extends Transaction {
 
     /**
      * Get a list of transaction entries tagged as investment fees
-     * 
+     *
      * @return list of investment fees
      * @see TransactionTag#INVESTMENT_FEE
      */
@@ -208,7 +207,7 @@ public class InvestmentTransaction extends Transaction {
 
     /**
      * Get a list of transaction entries tagged as gains and loss
-     * 
+     *
      * @return list of gains and loss entries
      * @see TransactionTag#GAIN_LOSS
      */
@@ -219,9 +218,8 @@ public class InvestmentTransaction extends Transaction {
     /**
      * Return the market value of the transaction based on the supplied share
      * price
-     * 
-     * @param sharePrice
-     *            share price
+     *
+     * @param sharePrice share price
      * @return the value of this transaction
      */
     public BigDecimal getMarketValue(final BigDecimal sharePrice) {
@@ -231,9 +229,8 @@ public class InvestmentTransaction extends Transaction {
     /**
      * Return the market value of the transaction based on the latest share
      * price
-     * 
-     * @param date
-     *            Date to base market value against
+     *
+     * @param date Date to base market value against
      * @return the value of this transaction
      */
     public BigDecimal getMarketValue(final Date date) {
@@ -245,11 +242,11 @@ public class InvestmentTransaction extends Transaction {
      * Calculates the total of the value of the shares, gains, fees, etc. as it
      * pertains to an account.
      * <p/>
-     * <p/>
+     * <
+     * p/>
      * <b>Not intended for use to calculate account balances</b>
-     * 
-     * @param account
-     *            The <code>Account</code> to calculate the total against
+     *
+     * @param account The <code>Account</code> to calculate the total against
      * @return total resulting total for this transaction
      * @see AbstractInvestmentTransactionEntry#getTotal()
      */
@@ -271,7 +268,7 @@ public class InvestmentTransaction extends Transaction {
      * Calculates the total cash value of the transaction
      * <p/>
      * <b>Not intended for use to calculate account balances</b>
-     * 
+     *
      * @return the total cash value of the transaction
      */
     public BigDecimal getNetCashValue() {
@@ -292,5 +289,52 @@ public class InvestmentTransaction extends Transaction {
         }
 
         return total;
+    }
+
+    /**
+     * Compares two Transactions for ordering. Equality is checked for at the
+     * reference level. If a comparison cannot be determined, the hashCode is
+     * used
+     *
+     * @param tran the <code>Transaction</code> to be compared.
+     * @return the value <code>0</code> if the argument Transaction is equal to
+     * this Transaction; a value less than <code>0</code> if this Transaction is
+     * before the Transaction argument; and a value greater than <code>0</code>
+     * if this Transaction is after the Transaction argument.
+     */
+    @Override
+    public int compareTo(final Transaction tran) {
+        if (tran == this) {
+            return 0;
+        }
+
+        int result = getDate().compareTo(tran.getDate());
+        if (result != 0) {
+            return result;
+        }
+
+        result = getTransactionType().compareTo(tran.getTransactionType());
+        if (result != 0) {
+            return result;
+        }
+
+        result = getMemo().compareTo(tran.getMemo());
+        if (result != 0) {
+            return result;
+        }
+
+        if (tran instanceof InvestmentTransaction) {
+            result = getSecurityNode().compareTo(((InvestmentTransaction) tran).getSecurityNode());
+            if (result != 0) {
+                return result;
+            }
+        }
+
+        result = getDateEntered().compareTo(tran.getDateEntered());
+        if (result != 0) {
+            return result;
+        }
+
+        return getUuid().compareTo(tran.getUuid());
     }
 }
