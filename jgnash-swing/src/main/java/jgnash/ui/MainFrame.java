@@ -93,53 +93,32 @@ import org.jdesktop.swingx.JXStatusBar;
 
 /**
  * The JFrame for the application.
- * 
+ *
  * @author Craig Cavanaugh
  * @author Aleksey Trufanov
- *
  */
 public class MainFrame extends JFrame implements MessageListener, ActionListener {
 
     private static final String REGISTER_KEY = "register";
-
     private static final String REGISTER_FOLLOWS_LIST = "RegisterFollowsList";
-
     private JMenuBar menuBar;
-
     private JMenu windowMenu;
-
     private JMenu viewMenu;
-
     private JMenu reportMenu;
-
     private MainViewPanel mainView;
-
     private final transient Resource rb = Resource.get();
-
     private WaitMessagePanel waitPanel;
-
     private static boolean registerFollowsTree;
-
     private MainRegisterPanel registerTreePanel;
-
     private transient Action editAction;
-
     private ExpandingAccountTablePanel expandingAccountPanel;
-
     private JTextField statusField;
-
     private static final Logger LOG = Logger.getLogger(MainFrame.class.getName());
-
     private final transient PausableThreadPoolExecutor backgroundUpdateExecutor = new PausableThreadPoolExecutor();
-
     private static final int SCHEDULED_DELAY = 20;
-
     private JXBusyLabel backgroundOperationLabel;
-
     private final transient LogHandler logHandler = new LogHandler();
-
-    private Color infoColor = null;   
-    
+    private Color infoColor = null;
     private BusyLayerUI layerUI;
 
     static {
@@ -163,8 +142,8 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
         buildUI();
 
-        // hide on close is critical to correct behavior on Java 7, otherwise a segfault occurs on close
-        setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        // do nothing by default, let the shutdown adapter do all the work
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         if (Main.checkEDT()) {
             LOG.info("Installing Event Dispatch Thread Checker into RepaintManager");
@@ -178,7 +157,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         addWindowListener(new ShutdownAdapter());
 
         RegisterFrame.addRegisterListener(new RegisterListener() {
-
             @Override
             public void registerEvent(RegisterEvent e) {
                 if (e.getAction() == RegisterEvent.Action.OPEN) {
@@ -214,6 +192,34 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         }
     }
 
+    /**
+     * Performs a controlled shutdown to ensure the file is written and closed
+     * before the UI disappears
+     */
+    private void performControlledShutdown() {
+        closeAllWindows(); // close any open windows first
+
+        displayWaitMessage(Resource.get().getString("Message.StoreWait"));
+
+        try {
+            Thread.sleep(1800); // lets the UI start and get the users attention
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+        stopWaitMessage();
+
+        try {
+            Thread.sleep(1800);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        System.exit(0); // explicit exit  
+    }
+
     private void registerListeners() {
         MessageBus.getInstance().registerListener(this, MessageChannel.ACCOUNT, MessageChannel.SYSTEM);
     }
@@ -227,7 +233,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     }
 
     private void loadPlugins() {
-        PluginFactory.get().loadPlugins();       
+        PluginFactory.get().loadPlugins();
         PluginFactory.startPlugins();
 
         for (Plugin plugin : PluginFactory.getPlugins()) {
@@ -285,7 +291,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     private void addWindowItem(final RegisterEvent e) {
         EventQueue.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 RegisterFrame d = (RegisterFrame) e.getSource();
@@ -345,7 +350,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         actionParser.preLoadAction("paste-command", new DefaultEditorKit.PasteAction());
 
         actionParser.preLoadAction("exit-command", new AbstractAction() {
-
             @Override
             public void actionPerformed(final ActionEvent e) {
                 shutDown();
@@ -353,7 +357,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         });
 
         actionParser.preLoadAction("open-command", new AbstractAction() {
-
             @Override
             public void actionPerformed(final ActionEvent e) {
                 OpenAction.openAction();
@@ -362,7 +365,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         });
 
         actionParser.preLoadAction("account-filter-command", new AbstractEnabledAction() {
-
             @Override
             public void actionPerformed(final ActionEvent e) {
                 expandingAccountPanel.showAccountFilterDialog();
@@ -370,7 +372,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         });
 
         actionParser.preLoadAction("register-filter-command", new AbstractEnabledAction() {
-
             @Override
             public void actionPerformed(final ActionEvent e) {
                 registerTreePanel.showAccountFilterDialog();
@@ -378,7 +379,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         });
 
         actionParser.preLoadAction("currency-background-update-command", new AbstractEnabledAction() {
-
             @Override
             public void actionPerformed(final ActionEvent e) {
                 backgroundUpdateExecutor.schedule(CurrencyUpdateFactory.getUpdateWorker(), 1, TimeUnit.SECONDS);
@@ -386,7 +386,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         });
 
         actionParser.preLoadAction("security-background-update-command", new AbstractEnabledAction() {
-
             @Override
             public void actionPerformed(final ActionEvent e) {
                 backgroundUpdateExecutor.schedule(SecurityUpdateFactory.getUpdateWorker(), 1, TimeUnit.SECONDS);
@@ -448,9 +447,9 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         rootPanel.add(menuBar, BorderLayout.NORTH);
         rootPanel.add(contentPanel, BorderLayout.CENTER);
 
-        waitPanel = new WaitMessagePanel();         
-        
-        layerUI = new BusyLayerUI();       
+        waitPanel = new WaitMessagePanel();
+
+        layerUI = new BusyLayerUI();
         JLayer<JPanel> rootLayer = new JLayer<>(rootPanel, layerUI);
 
         getContentPane().add(rootLayer, BorderLayout.CENTER);
@@ -460,7 +459,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     public void closeAllWindows() {
         EventQueue.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 for (Component c : windowMenu.getMenuComponents()) {
@@ -478,7 +476,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     final void displayStatus(final String message) {
         EventQueue.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 statusField.setForeground(infoColor);
@@ -489,9 +486,8 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     public void displayWaitMessage(final String message) {
         EventQueue.invokeLater(new Runnable() {
-
             @Override
-            public void run() {               
+            public void run() {
                 layerUI.start();
                 waitPanel.setMessage(message);
                 waitPanel.setWaiting(true);
@@ -499,13 +495,12 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         });
 
     }
-    
+
     public void stopWaitMessage() {
         EventQueue.invokeLater(new Runnable() {
-
             @Override
             public void run() {
-                waitPanel.setWaiting(false);             
+                waitPanel.setWaiting(false);
                 layerUI.stop();
             }
         });
@@ -513,7 +508,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     private void displayWarning(final String message) {
         EventQueue.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 statusField.setForeground(Color.RED);
@@ -524,11 +518,11 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     /**
      * Dispose the UI with an option to prevent complete program shutdown
-     * 
+     *
      * @param shutDown true if UI should be shutdown when dispose is called
      */
     void dispose(boolean shutDown) {
-       
+
         PluginFactory.stopPlugins();
 
         if (!shutDown) {
@@ -566,7 +560,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     @Override
     public void messagePosted(final Message event) {
         EventQueue.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 switch (event.getEvent()) {
@@ -617,7 +610,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     private void removeWindowItem(final RegisterEvent e) {
         EventQueue.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 RegisterFrame d = (RegisterFrame) e.getSource();
@@ -653,7 +645,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         closeAllWindows(); // force all windows closed for a clean looking exit
 
         EventQueue.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 dispatchEvent(new WindowEvent(MainFrame.this, WindowEvent.WINDOW_CLOSING));
@@ -663,7 +654,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     private void startBackgroundUpdates() {
         EventQueue.invokeLater(new Runnable() {
-
             @Override
             public void run() {
 
@@ -684,7 +674,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     public void resumeBackgroundUpdates() {
         backgroundUpdateExecutor.resume();
-    }    
+    }
 
     private void updateTitle() {
         new UpdateTitleWorker().execute();
@@ -694,12 +684,10 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
         @Override
         public void close() throws SecurityException {
-
         }
 
         @Override
         public void flush() {
-
         }
 
         @Override
@@ -707,7 +695,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
             // update on the event thread to prevent display corruption
             EventQueue.invokeLater(new Runnable() {
-
                 @Override
                 public void run() {
 
@@ -725,29 +712,16 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
         @Override
         public void windowClosing(final WindowEvent evt) {
-            /*
-             * force the shut down to the end of the event thread. Lets other listeners do their job
-             */
-            EventQueue.invokeLater(new Runnable() {
-
+            
+            // push the shutdown process outside the EDT so the UI effects work correctly
+            Thread t = new Thread() {
                 @Override
                 public void run() {
-                    closeAllWindows();
-                    removeViews();
-
-                    // start thread outside the EDT so the file closure cannot hang the EDT
-                    Thread thread = new Thread() {
-
-                        @Override
-                        public void run() {
-                            EngineFactory.closeEngine(EngineFactory.DEFAULT);
-                            System.exit(0); // explicit exit
-                        }
-                    };
-
-                    thread.start();
+                    performControlledShutdown();
                 }
-            });
+            };
+
+            t.start();
         }
     }
 
@@ -765,7 +739,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
             final RegisterFrame d = (RegisterFrame) getValue(REGISTER_KEY);
 
             EventQueue.invokeLater(new Runnable() {
-
                 @Override
                 public void run() {
                     if (d.getExtendedState() == ICONIFIED) {
@@ -780,9 +753,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     static class PausableThreadPoolExecutor extends ScheduledThreadPoolExecutor {
 
         private boolean isPaused;
-
         private final ReentrantLock pauseLock = new ReentrantLock();
-
         private final Condition pausedCondition = pauseLock.newCondition();
 
         public PausableThreadPoolExecutor() {
@@ -826,7 +797,8 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     }
 
     /**
-     * The engine could be busy with something else, so run in the background and do not block the EDT
+     * The engine could be busy with something else, so run in the background
+     * and do not block the EDT
      */
     private final class UpdateTitleWorker extends SwingWorker<Engine, Void> {
 
