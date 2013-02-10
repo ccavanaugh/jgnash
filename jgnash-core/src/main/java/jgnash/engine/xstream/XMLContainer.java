@@ -57,7 +57,7 @@ import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 
 /**
  * Simple object container for StoredObjects that reads and writes an XML file
- * 
+ *
  * @author Craig Cavanaugh
  */
 class XMLContainer extends AbstractXStreamContainer {
@@ -87,11 +87,9 @@ class XMLContainer extends AbstractXStreamContainer {
      * Writes an XML file given a collection of StoredObjects. TrashObjects and
      * objects marked for removal are not written. If the file already exists,
      * it will be overwritten.
-     * 
-     * @param objects
-     *            Collection of StoredObjects to write
-     * @param file
-     *            file to write
+     *
+     * @param objects Collection of StoredObjects to write
+     * @param file file to write
      */
     public static synchronized void writeXML(final Collection<StoredObject> objects, final File file) {
         Logger logger = Logger.getLogger(XMLContainer.class.getName());
@@ -139,7 +137,9 @@ class XMLContainer extends AbstractXStreamContainer {
 
             try (ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(writer))) {
                 out.writeObject(list);
+                out.flush();
             }
+            writer.flush(); // forcibly flush before letting go of the resources to help older windows systems write correctly
         } catch (IOException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
