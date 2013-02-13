@@ -315,13 +315,6 @@ public class Db4oDataStore implements DataStore {
             unregisterListeners(db);
 
             db.close(); // close the db4o store
-
-            // Force a really long delay to ensure the db4o file is closed.
-            try {
-                Thread.sleep(10000); //
-            } catch (InterruptedException e) {
-                Logger.getLogger(Db4oDataStore.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-            }
         }
     }
 
