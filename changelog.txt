@@ -31,6 +31,9 @@ Money market account type
 
 Release 2.12.0
 ----------------------
+02/12/13 Update to XStream 1.4.4
+02/12/13 Update to SwingX 1.6.5
+02/12/13 Update to Apache POI 3.9
 02/10/13 Changed the exit process so that the final file write and closure is complete before the UI disappears instead of afterwards.
 01/30/13 Improved the natural sort order of investment transaction for improved consistency (Date, Type, Memo, Security, Modification Date, Internal Id)
 01/20/13 Fix for IllegalArgumentException caused by reordering table columns
