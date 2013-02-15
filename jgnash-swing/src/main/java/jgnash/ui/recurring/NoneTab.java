@@ -32,7 +32,6 @@ import jgnash.util.Resource;
  * None repeating reminder panel
  *
  * @author Craig Cavanaugh
- *
  */
 public class NoneTab extends JPanel implements RecurringTab {
 
@@ -43,7 +42,7 @@ public class NoneTab extends JPanel implements RecurringTab {
 
         Resource rb = Resource.get();
 
-        setBorder(Borders.DIALOG_BORDER);
+        setBorder(Borders.DIALOG);
         add(new JLabel(rb.getString("Message.NoRepeat")), BorderLayout.CENTER);
     }
 

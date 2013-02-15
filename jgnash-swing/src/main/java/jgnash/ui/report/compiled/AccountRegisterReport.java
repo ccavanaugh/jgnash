@@ -18,6 +18,7 @@
 package jgnash.ui.report.compiled;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.TextField;
@@ -54,7 +55,6 @@ import net.sf.jasperreports.engine.JasperPrint;
  * Account Register Report
  *
  * @author Craig Cavanaugh
- *
  */
 public class AccountRegisterReport extends DynamicJasperReport {
 
@@ -200,7 +200,7 @@ public class AccountRegisterReport extends DynamicJasperReport {
         FormLayout layout = new FormLayout("p, $lcgap, p:g, 8dlu, p, 8dlu, p", "f:d, $lgap, f:d");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
         builder.append(rb.getString("Label.Account"), accountCombo);
         builder.append(refreshButton, 3);
         builder.nextLine();

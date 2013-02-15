@@ -18,7 +18,7 @@
 package jgnash.ui.budget;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -39,6 +39,7 @@ import javax.swing.WindowConstants;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetPeriod;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
@@ -124,7 +125,7 @@ public final class BudgetPropertiesDialog extends JDialog implements ActionListe
         FormLayout layout = new FormLayout("p, $lcgap, f:max(90dlu;p)", "f:p, $rgap, f:p, $ugap, f:p, $rgap, f:p, $rgap, f:p, $rgap, f:p, $rgap, f:p, $ugap, p");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         CellConstraints cc = new CellConstraints();
 
@@ -140,7 +141,7 @@ public final class BudgetPropertiesDialog extends JDialog implements ActionListe
         builder.add(assetGroupCheckBox, cc.xyw(1, 11, 3));
         builder.add(liabilityGroupCheckBox, cc.xyw(1, 13, 3));
 
-        builder.add(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton), cc.xyw(1, 15, 3));
+        builder.add(StaticUIMethods.buildOKCancelBar(okButton, cancelButton), cc.xyw(1, 15, 3));
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
 

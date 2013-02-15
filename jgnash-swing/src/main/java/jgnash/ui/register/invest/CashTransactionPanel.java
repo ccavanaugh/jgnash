@@ -31,13 +31,12 @@ import jgnash.ui.register.TransactionPanel;
  * Cash Transaction panel for the investment account register
  *
  * @author Craig Cavanaugh
- *
  */
 public final class CashTransactionPanel extends TransactionPanel {
 
     CashTransactionPanel(final Account account, final PanelType panelType) {
         super(account, panelType);
-        setBorder(Borders.EMPTY_BORDER);    // investment panels do not have a border
+        setBorder(Borders.EMPTY);    // investment panels do not have a border
     }
 
     @Override

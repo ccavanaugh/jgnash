@@ -18,7 +18,6 @@
 package jgnash.ui.register.invest;
 
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.ButtonBarFactory;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -137,14 +136,14 @@ public class InvestmentTransactionPanel extends JPanel implements MessageListene
         FormLayout layout = new FormLayout("d, 4dlu, m:g, 4dlu, m", "f:d, $ugap, f:d");
         CellConstraints cc = new CellConstraints();
 
-        setBorder(new CompoundBorder(new ShadowBorder(), Borders.TABBED_DIALOG_BORDER));
+        setBorder(new CompoundBorder(new ShadowBorder(), Borders.TABBED_DIALOG));
         setLayout(layout);
 
         add(cardPanel, cc.xyw(1, 1, 5));
         add(new JSeparator(), cc.xyw(1, 2, 5));
         add(new JLabel(rb.getString("Label.Action")), cc.xy(1, 3));
         add(actionCombo, cc.xy(3, 3));
-        add(ButtonBarFactory.buildOKCancelBar(enterButton, cancelButton), cc.xy(5, 3));
+        add(StaticUIMethods.buildOKCancelBar(enterButton, cancelButton), cc.xy(5, 3));
     }
 
     void addRegisterListener(final RegisterListener l) {

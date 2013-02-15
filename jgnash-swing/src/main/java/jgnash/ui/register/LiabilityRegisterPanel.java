@@ -18,7 +18,6 @@
 package jgnash.ui.register;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.event.ActionEvent;
@@ -37,6 +36,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.account.AmortizeDialog;
 
 /**
@@ -79,8 +79,8 @@ public class LiabilityRegisterPanel extends RegisterPanel {
         FormLayout layout = new FormLayout("d, 4dlu:g, d", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 
-        builder.append(ButtonBarFactory.buildLeftAlignedBar(newButton, duplicateButton, jumpButton, deleteButton));
-        builder.append(ButtonBarFactory.buildRightAlignedBar(paymentButton, amortizeButton));
+        builder.append(StaticUIMethods.buildLeftAlignedBar(newButton, duplicateButton, jumpButton, deleteButton));
+        builder.append(StaticUIMethods.buildRightAlignedBar(paymentButton, amortizeButton));
         return builder.getPanel();
     }
 

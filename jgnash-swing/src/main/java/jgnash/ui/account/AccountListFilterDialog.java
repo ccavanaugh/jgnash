@@ -18,7 +18,7 @@
 package jgnash.ui.account;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.BorderLayout;
@@ -31,6 +31,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.WindowConstants;
 
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
@@ -89,7 +90,7 @@ public class AccountListFilterDialog extends JDialog implements ActionListener {
         FormLayout layout = new FormLayout("max(100dlu;pref):g(1.0)", "");
 
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         builder.appendSeparator(rb.getString("Title.AccountFilter"));
 
@@ -103,7 +104,7 @@ public class AccountListFilterDialog extends JDialog implements ActionListener {
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildCloseBar(closeButton));
+        builder.append(StaticUIMethods.buildCloseBar(closeButton));
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
 

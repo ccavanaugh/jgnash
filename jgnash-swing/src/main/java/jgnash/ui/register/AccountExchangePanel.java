@@ -222,7 +222,7 @@ public class AccountExchangePanel extends JPanel implements ActionListener, Focu
         FormLayout layout = new FormLayout("d, 6dlu, right:d, $lcgap, max(48dlu;min)", "f:d");
         JPanel panel = new JPanel(layout);
 
-        panel.setBorder(Borders.DLU2_BORDER);
+        panel.setBorder(Borders.DLU2);
 
         panel.add(conversionLabel, cc.xy(1, 1));
         panel.add(new JLabel(rb.getString("Label.ExchangeRate")), cc.xy(3, 1));

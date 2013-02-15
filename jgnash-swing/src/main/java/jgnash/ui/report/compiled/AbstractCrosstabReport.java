@@ -18,6 +18,7 @@
 package jgnash.ui.report.compiled;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.event.ActionEvent;
@@ -68,7 +69,6 @@ import net.sf.jasperreports.engine.JasperPrint;
  * @author Aleksey Trufanov
  * @author Vincent Frison
  * @author Klemen Zagar
- *
  */
 abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
@@ -411,7 +411,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
         builder.append(rb.getString("Label.StartDate"), startDateField);
         builder.append(rb.getString("Label.EndDate"), endDateField);
         builder.append(rb.getString("Label.Resolution"), resolutionList);

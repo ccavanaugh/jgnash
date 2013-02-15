@@ -49,7 +49,6 @@ import jgnash.ui.util.ValidationFactory;
  * @author Don Brown
  * @author axnotizes
  * @author Pranay Kumar
- *
  */
 public class TransactionPanel extends AbstractExchangeTransactionPanel {
 
@@ -75,7 +74,7 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
         CellConstraints cc = new CellConstraints();
 
         setLayout(layout);
-        setBorder(Borders.DIALOG_BORDER);
+        setBorder(Borders.DIALOG);
 
         JPanel sub = buildHorizontalSubPanel("48dlu:g, $lcgap, d", accountPanel, splitsButton);
 

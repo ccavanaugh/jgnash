@@ -17,8 +17,9 @@
  */
 package jgnash.ui.commodity;
 
+import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
@@ -77,7 +78,6 @@ import jgnash.util.Resource;
  * direction. The rate must be inverted accordingly.
  * 
  * @author Craig Cavanaugh
- *
  */
 public class CurrencyExchangeDialog extends JDialog implements MessageListener, ActionListener, ListSelectionListener {
 
@@ -210,8 +210,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
 
         FormLayout layout = new FormLayout("f:p:g", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
         builder.appendSeparator(rb.getString("Title.Currencies"));
         builder.nextLine();
         builder.appendRelatedComponentsGapRow();
@@ -228,7 +227,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildCloseBar(closeButton));
+        builder.append(new ButtonBarBuilder().addGlue().addButton(clearButton).build());
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
 
@@ -256,7 +255,8 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
         builder.appendUnrelatedComponentsGapRow();
         builder.nextRow();
 
-        builder.append(ButtonBarFactory.buildLeftAlignedBar(addButton, deleteButton, clearButton), 8);
+        builder.append(new ButtonBarBuilder().addButton(addButton, deleteButton, clearButton).build(), 8);
+
         builder.nextRow();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextRow();

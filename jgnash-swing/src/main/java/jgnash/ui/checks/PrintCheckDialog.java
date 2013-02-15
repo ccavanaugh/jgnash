@@ -18,7 +18,7 @@
 package jgnash.ui.checks;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.BorderLayout;
@@ -40,6 +40,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import jgnash.engine.checks.CheckLayout;
 import jgnash.engine.checks.CheckLayoutSerializationFactory;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.JTextFieldEx;
 import jgnash.util.Resource;
@@ -115,17 +116,17 @@ class PrintCheckDialog extends JDialog implements ActionListener {
         FormLayout layout = new FormLayout("p, 4dlu, 85dlu:g, 4dlu, p", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 
-        builder.setDefaultDialogBorder();
-        builder.setRowGroupingEnabled(true);
+        builder.border(Borders.DIALOG);
+        builder.rowGroupingEnabled(true);
         builder.append(rb.getString("Label.CheckLayout"), layoutField, selectButton);
         builder.append(rb.getString("Label.StartPos"), startSpinner);
         builder.nextLine();
         builder.append(incCheckBox, 5);
-        builder.setRowGroupingEnabled(false);
+        builder.rowGroupingEnabled(false);
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildOKCancelBar(printButton, cancelButton), 5);
+        builder.append(StaticUIMethods.buildOKCancelBar(printButton, cancelButton), 5);
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
 

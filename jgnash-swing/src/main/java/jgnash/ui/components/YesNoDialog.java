@@ -18,7 +18,7 @@
 package jgnash.ui.components;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.Frame;
@@ -33,6 +33,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.UIManager;
 
+import jgnash.ui.StaticUIMethods;
 import jgnash.util.Resource;
 
 /**
@@ -99,7 +100,7 @@ public class YesNoDialog extends JDialog implements ActionListener {
     private void layoutMainPanel(final int messageType) {
         FormLayout layout = new FormLayout("p, $lcgap, fill:p:g", "f:p:g, $ugap, f:p");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         noButton = new JButton(rb.getString("Button.No"));
         yesButton = new JButton(rb.getString("Button.Yes"));
@@ -107,7 +108,7 @@ public class YesNoDialog extends JDialog implements ActionListener {
         builder.append(new JLabel(getIconForType(messageType)), component);
         builder.nextLine();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildOKCancelBar(yesButton, noButton), 3);
+        builder.append(StaticUIMethods.buildOKCancelBar(yesButton, noButton), 3);
 
         getContentPane().add(builder.getPanel());
         pack();

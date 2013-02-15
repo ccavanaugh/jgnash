@@ -18,7 +18,7 @@
 package jgnash.ui.register.invest;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
@@ -37,6 +37,7 @@ import jgnash.engine.Transaction;
 import jgnash.message.MessageBus;
 import jgnash.message.MessageChannel;
 import jgnash.text.CommodityFormat;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.account.AccountSecuritiesDialog;
 import jgnash.ui.components.ShadowBorder;
 import jgnash.ui.register.AbstractRegisterPanel;
@@ -145,7 +146,7 @@ public class InvestmentRegisterPanel extends AbstractRegisterPanel implements Ac
     private void layoutMainPanel() {
         FormLayout layout = new FormLayout("p:g", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         builder.append(createTopPanel());
         builder.nextLine();
@@ -169,7 +170,7 @@ public class InvestmentRegisterPanel extends AbstractRegisterPanel implements Ac
     }
 
     private JPanel createButtonPanel() {
-        buttonPanel = ButtonBarFactory.buildLeftAlignedBar(newButton, deleteButton, duplicateButton, securitiesButton);
+        buttonPanel = StaticUIMethods.buildLeftAlignedBar(newButton, deleteButton, duplicateButton, securitiesButton);
         return buttonPanel;
     }
 

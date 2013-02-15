@@ -18,6 +18,7 @@
 package jgnash.ui.option;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.event.ActionEvent;
@@ -33,7 +34,6 @@ import jgnash.util.Resource;
  * Report options panel
  *
  * @author Craig Cavanaugh
- *
  */
 class ReportOptions extends JPanel implements ActionListener {
 
@@ -62,8 +62,8 @@ class ReportOptions extends JPanel implements ActionListener {
         FormLayout layout = new FormLayout("right:p, $lcgap, max(75dlu;p):g", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
 
-        builder.setRowGroupingEnabled(true);
-        builder.setDefaultDialogBorder();
+        builder.rowGroupingEnabled(true);
+        builder.border(Borders.DIALOG);
 
         builder.appendSeparator(rb.getString("Title.Fonts"));
         builder.append(rb.getString("Label.Monospace"), monoCombo);

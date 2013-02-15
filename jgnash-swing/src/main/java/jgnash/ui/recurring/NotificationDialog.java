@@ -18,7 +18,7 @@
 package jgnash.ui.recurring;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
@@ -43,6 +43,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.engine.recurring.PendingReminder;
 import jgnash.engine.recurring.Reminder;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.ui.components.TimePeriodCombo;
@@ -123,7 +124,7 @@ class NotificationDialog extends JDialog implements ActionListener, ListSelectio
     private void layoutMainPanel() {
         FormLayout layout = new FormLayout("right:p, 4dlu, fill:p:g", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         cancelButton = new JButton(rb.getString("Button.RemindLater"));
         okButton = new JButton(rb.getString("Button.AckSel"));
@@ -147,7 +148,7 @@ class NotificationDialog extends JDialog implements ActionListener, ListSelectio
         builder.nextLine();
         builder.appendRelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton), 3);
+        builder.append(StaticUIMethods.buildOKCancelBar(okButton, cancelButton), 3);
 
         getContentPane().add(builder.getPanel());
         pack();

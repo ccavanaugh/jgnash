@@ -20,6 +20,7 @@ package jgnash.ui.account;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
@@ -100,6 +101,10 @@ final class AccountPanel extends JPanel implements ActionListener {
         descriptionField.setText(rb.getString("Word.Description"));
         currencyCombo = new CurrencyComboBox();
         securityButton = new JButton(rb.getString("Word.None"));
+
+        // for preferred width so button does not force a wide layout
+        securityButton.setPreferredSize(new Dimension(20, securityButton.getPreferredSize().height));
+
                                
         accountTypeModel = new DefaultComboBoxModel<>(AccountType.values());
         accountTypeModel.removeElement(AccountType.ROOT);
@@ -124,12 +129,12 @@ final class AccountPanel extends JPanel implements ActionListener {
     private void layoutMainPanel() {
         initComponents();
 
-        FormLayout layout = new FormLayout("right:max(20dlu;pref), $lcgap, max(50dlu;min):grow(1.0), $lcgap, max(50dlu;min):grow(1.0)", "");
+        FormLayout layout = new FormLayout("right:max(20dlu;pref), $lcgap, d, $lcgap, d:g", "");
 
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
 
         builder.appendSeparator(rb.getString("Title.AccountInfo"));
-        builder.setRowGroupingEnabled(true);
+        builder.rowGroupingEnabled(true);
         builder.append(rb.getString("Label.Name"), nameField, 3);
         builder.nextLine();
         builder.append(rb.getString("Label.Description"), descriptionField, 3);
@@ -147,7 +152,7 @@ final class AccountPanel extends JPanel implements ActionListener {
         builder.append(rb.getString("Label.AccountOptions"), lockedCheckBox, hideCheckBox);
         builder.nextLine();
         builder.append("", placeholderCheckBox, excludeBudgetCheckBox);
-        builder.setRowGroupingEnabled(false);
+        builder.rowGroupingEnabled(false);
         builder.appendSeparator(rb.getString("Title.ParentAccount"));
         builder.append(parentButton, 5);
         builder.appendSeparator(rb.getString("Title.Notes"));

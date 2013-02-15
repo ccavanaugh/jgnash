@@ -33,7 +33,6 @@ import jgnash.ui.util.ValidationFactory;
  * @author Craig Cavanaugh
  * @author Don Brown
  * @author axnotizes
- *
  */
 public class TransferPanel extends AbstractExchangeTransactionPanel {
 
@@ -51,7 +50,7 @@ public class TransferPanel extends AbstractExchangeTransactionPanel {
         CellConstraints cc = new CellConstraints();
 
         setLayout(layout);
-        setBorder(Borders.DIALOG_BORDER);
+        setBorder(Borders.DIALOG);
 
         add("Label.TransferTo", cc.xy(1, 1));
         add(accountPanel, cc.xy(3, 1));

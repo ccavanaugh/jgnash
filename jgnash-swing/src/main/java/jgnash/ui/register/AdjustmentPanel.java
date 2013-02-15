@@ -18,7 +18,6 @@
 package jgnash.ui.register;
 
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.ButtonBarFactory;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -33,6 +32,7 @@ import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.account.AccountListDialog;
 import jgnash.ui.util.ValidationFactory;
 import jgnash.util.Resource;
@@ -67,7 +67,7 @@ public final class AdjustmentPanel extends AbstractBankTransactionPanel {
         CellConstraints cc = new CellConstraints();
 
         setLayout(layout);
-        setBorder(Borders.DIALOG_BORDER);
+        setBorder(Borders.DIALOG);
 
         add("Label.Payee", cc.xy(1, 1));
         add(payeeField, cc.xy(3, 1));
@@ -83,7 +83,7 @@ public final class AdjustmentPanel extends AbstractBankTransactionPanel {
         add("Label.Amount", cc.xy(5, 5));
         add(ValidationFactory.wrap(amountField), cc.xy(7, 5));
 
-        add(ButtonBarFactory.buildHelpBar(convertButton, enterButton, cancelButton), cc.xywh(1, 7, 7, 1));
+        add(StaticUIMethods.buildHelpBar(convertButton, enterButton, cancelButton), cc.xywh(1, 7, 7, 1));
     }
 
     @Override

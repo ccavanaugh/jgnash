@@ -18,7 +18,7 @@
 package jgnash.ui.checks;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
@@ -45,6 +45,7 @@ import jgnash.engine.Account;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.text.CommodityFormat;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.ui.register.table.AccountTableModel;
@@ -114,10 +115,10 @@ public class TransactionListDialog extends JDialog implements ActionListener, Li
         FormLayout layout = new FormLayout("p:g", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         builder.appendTitle(rb.getString("Message.TransToPrint"));
-        builder.append(ButtonBarFactory.buildLeftAlignedBar(selectButton, clearButton, invertButton));
+        builder.append(StaticUIMethods.buildLeftAlignedBar(selectButton, clearButton, invertButton));
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
@@ -126,7 +127,7 @@ public class TransactionListDialog extends JDialog implements ActionListener, Li
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton));
+        builder.append(StaticUIMethods.buildOKCancelBar(okButton, cancelButton));
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
 

@@ -26,6 +26,7 @@ import java.math.BigDecimal;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import com.jgoodies.forms.factories.Borders;
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.AccountType;
@@ -51,7 +52,6 @@ import net.sf.jasperreports.engine.JasperPrint;
  * @author Vijil E C
  * @author Craig Cavanaugh
  * @author Juan Jose Garcia Ripoll
- *
  */
 public class PortfolioReport extends DynamicJasperReport {
 
@@ -135,7 +135,7 @@ public class PortfolioReport extends DynamicJasperReport {
         FormLayout layout = new FormLayout("p, $lcgap, p:g, 8dlu, p", "f:d, $lgap, f:d");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
         builder.append(rb.getString("Label.Account"), accountCombo);
         builder.append(refreshButton);
         builder.nextLine();

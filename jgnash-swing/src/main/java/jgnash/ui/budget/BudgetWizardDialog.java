@@ -18,7 +18,7 @@
 package jgnash.ui.budget;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.util.DefaultUnitConverter;
@@ -44,6 +44,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetFactory;
 import jgnash.engine.budget.BudgetPeriod;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.TextResource;
@@ -54,7 +55,6 @@ import jgnash.util.Resource;
  * BudgetWizardDialog is a mini wizard for creating a new budget based on historical data
  *
  * @author Craig Cavanaugh
- *
  */
 final class BudgetWizardDialog extends JDialog implements ActionListener {
 
@@ -105,7 +105,7 @@ final class BudgetWizardDialog extends JDialog implements ActionListener {
         FormLayout layout = new FormLayout("p, $lcgap, f:p:g", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         builder.appendRow(RowSpec.decode("f:p:g"));
         builder.append(helpPane, 3);
@@ -124,7 +124,7 @@ final class BudgetWizardDialog extends JDialog implements ActionListener {
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton), 3);
+        builder.append(StaticUIMethods.buildOKCancelBar(okButton, cancelButton), 3);
 
         getContentPane().add(builder.getPanel());
         pack();

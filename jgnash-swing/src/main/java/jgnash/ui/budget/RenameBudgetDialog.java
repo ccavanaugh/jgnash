@@ -18,7 +18,7 @@
 package jgnash.ui.budget;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.Dialog;
@@ -35,6 +35,7 @@ import javax.swing.WindowConstants;
 
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.ValidationFactory;
 import jgnash.util.Resource;
@@ -91,11 +92,11 @@ class RenameBudgetDialog extends JDialog implements ActionListener {
 
         FormLayout layout = new FormLayout("p, $lcgap, fill:100dlu:g", "f:p:g, $ugap, f:p");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         builder.append(new JLabel(rb.getString("Label.RenameBudget")), ValidationFactory.wrap(budgetNameField));
         builder.nextRow();
-        builder.append(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton), 3);
+        builder.append(StaticUIMethods.buildOKCancelBar(okButton, cancelButton), 3);
 
         getContentPane().add(builder.getPanel());
         pack();

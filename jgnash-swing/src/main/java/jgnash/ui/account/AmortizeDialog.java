@@ -18,7 +18,7 @@
 package jgnash.ui.account;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.BorderLayout;
@@ -35,6 +35,7 @@ import javax.swing.JFrame;
 
 import jgnash.engine.Account;
 import jgnash.engine.AmortizeObject;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.components.JIntegerField;
@@ -145,9 +146,9 @@ public class AmortizeDialog extends JDialog implements ActionListener {
         FormLayout layout = new FormLayout("right:max(40dlu;pref), $lcgap, max(75dlu;pref):grow(1.0)", "");
 
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
-        builder.setRowGroupingEnabled(true);
+        builder.rowGroupingEnabled(true);
 
         builder.appendSeparator(rb.getString("Title.AmortizationSetup"));
 
@@ -165,9 +166,9 @@ public class AmortizeDialog extends JDialog implements ActionListener {
         builder.nextLine();
         builder.append(rb.getString("Label.EscrowPmi"), feesField);
         builder.nextLine();
-        builder.setLeadingColumnOffset(2);
+        builder.leadingColumnOffset(2);
         builder.append(useDaysButton);
-        builder.setLeadingColumnOffset(0);
+        builder.leadingColumnOffset(0);
         builder.nextLine();
         builder.append(rb.getString("Label.CompDaysPerYear"), daysField);
 
@@ -187,7 +188,7 @@ public class AmortizeDialog extends JDialog implements ActionListener {
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
 
-        builder.append(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton), 3);
+        builder.append(StaticUIMethods.buildOKCancelBar(okButton, cancelButton), 3);
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
     }

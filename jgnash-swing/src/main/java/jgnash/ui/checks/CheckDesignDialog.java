@@ -18,7 +18,7 @@
 package jgnash.ui.checks;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
@@ -58,6 +58,7 @@ import jgnash.engine.checks.CheckLayout;
 import jgnash.engine.checks.CheckLayoutSerializationFactory;
 import jgnash.engine.checks.CheckObject;
 import jgnash.engine.checks.CheckObject.CheckObjectType;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.JTextFieldEx;
 import jgnash.ui.components.RollOverButton;
 import jgnash.util.Resource;
@@ -209,7 +210,7 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
 
         FormLayout formLayout = new FormLayout("p:g, 8dlu, f:$lcgap, 8dlu, p", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(formLayout);
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
         builder.appendRow(RowSpec.decode("f:p:g"));
         builder.append(buildLeftPanel());
         builder.append(new JSeparator(SwingConstants.VERTICAL));
@@ -218,7 +219,7 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildHelpCloseBar(printButton, closeButton), 5);
+        builder.append(StaticUIMethods.buildHelpCloseBar(printButton, closeButton), 5);
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
 
@@ -233,20 +234,20 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
 
         builder.appendRow(RowSpec.decode("f:p:g")); // JScrollPane fills and grows
         builder.append(new JScrollPane(objectList), 3);
-        builder.append(ButtonBarFactory.buildAddRemoveBar(addButton, removeButton), 3);
+        builder.append(StaticUIMethods.buildAddRemoveBar(addButton, removeButton), 3);
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.setRowGroupingEnabled(true);
+        builder.rowGroupingEnabled(true);
         builder.append(rb.getString("Label.Type"), typeCombo);
         builder.append(rb.getString("Label.Name"), nameField);
         builder.append(rb.getString("Label.XPos"), xPosField);
         builder.append(rb.getString("Label.YPos"), yPosField);
-        builder.setRowGroupingEnabled(false);
+        builder.rowGroupingEnabled(false);
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildOKCancelBar(clearButton, applyButton), 3);
+        builder.append(StaticUIMethods.buildOKCancelBar(clearButton, applyButton), 3);
         return builder.getPanel();
     }
 

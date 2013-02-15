@@ -18,7 +18,6 @@
 package jgnash.ui;
 
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.ButtonBarFactory;
 import com.sun.management.HotSpotDiagnosticMXBean;
 
 import java.awt.BorderLayout;
@@ -252,13 +251,13 @@ public class ConsoleDialog {
             }
 
             JPanel panel = new JPanel();
-            panel.setBorder(Borders.DIALOG_BORDER);
+            panel.setBorder(Borders.DIALOG);
             panel.setLayout(new BorderLayout());
 
             panel.add(new MemoryMonitor(), BorderLayout.NORTH);
             panel.add(new JScrollPane(console), BorderLayout.CENTER);
 
-            JPanel buttonPanel = ButtonBarFactory.buildRightAlignedBar(heapButton, gcButton, copyButton);
+            JPanel buttonPanel = StaticUIMethods.buildRightAlignedBar(heapButton, gcButton, copyButton);
             buttonPanel.setBorder(new EmptyBorder(10, 0, 10, 0));
 
             panel.add(buttonPanel, BorderLayout.SOUTH);

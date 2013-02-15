@@ -18,7 +18,7 @@
 package jgnash.ui.components;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.event.ActionEvent;
@@ -33,6 +33,7 @@ import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.actions.DatabasePathAction;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
@@ -155,7 +156,7 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
 
         FormLayout layout = new FormLayout("p, 4dlu, fill:70dlu:g, 1dlu, d", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         builder.append(fileFieldLabel, fileField, fileButton);
 
@@ -171,7 +172,7 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton), 5);
+        builder.append(StaticUIMethods.buildOKCancelBar(okButton, cancelButton), 5);
 
         getContentPane().add(builder.getPanel());
 

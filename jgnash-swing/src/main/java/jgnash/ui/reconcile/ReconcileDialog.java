@@ -17,11 +17,11 @@
  */
 package jgnash.ui.reconcile;
 
+import jgnash.ui.StaticUIMethods;
 import org.jdesktop.swingx.JXTitledPanel;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.ButtonBarFactory;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -68,7 +68,6 @@ import jgnash.util.Resource;
  * Account reconcile dialog.
  *
  * @author Craig Cavanaugh
- *
  */
 public class ReconcileDialog extends JDialog implements MessageListener, ActionListener, ListSelectionListener {
 
@@ -217,19 +216,19 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
         FormLayout dLayout = new FormLayout("fill:min:g(1.0)", "fill:min:g, 4dlu, p");
         JPanel dPanel = new JPanel(dLayout);
         dPanel.add(buildTablePanel(columnNames[1], debitTotalLabel, debitTable), cc.xy(1, 1));
-        dPanel.add(ButtonBarFactory.buildLeftAlignedBar(debitSelectAllButton, debitClearAllButton), cc.xy(1, 3));
+        dPanel.add(StaticUIMethods.buildLeftAlignedBar(debitSelectAllButton, debitClearAllButton), cc.xy(1, 3));
 
         FormLayout cLayout = new FormLayout("fill:min:g(1.0)", "fill:min:g, 4dlu, p");
         JPanel cPanel = new JPanel(cLayout);
         cPanel.add(buildTablePanel(columnNames[0], creditTotalLabel, creditTable), cc.xy(1, 1));
-        cPanel.add(ButtonBarFactory.buildLeftAlignedBar(creditSelectAllButton, creditClearAllButton), cc.xy(1, 3));
+        cPanel.add(StaticUIMethods.buildLeftAlignedBar(creditSelectAllButton, creditClearAllButton), cc.xy(1, 3));
 
         JPanel p = new JPanel(layout);
-        p.setBorder(Borders.DIALOG_BORDER);
+        p.setBorder(Borders.DIALOG);
         p.add(dPanel, cc.xywh(1, 1, 1, 3));
         p.add(cPanel, cc.xy(3, 1));
         p.add(buildStatPanel(), cc.xy(3, 3));
-        p.add(ButtonBarFactory.buildRightAlignedBar(cancelButton, finishLaterButton, finishButton), cc.xywh(1, 5, 3, 1));
+        p.add(StaticUIMethods.buildRightAlignedBar(cancelButton, finishLaterButton, finishButton), cc.xywh(1, 5, 3, 1));
         getContentPane().add(p);
         pack();
 
@@ -241,8 +240,8 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
     private JPanel buildStatPanel() {
         FormLayout layout = new FormLayout("left:p, 8dlu, right:65dlu:g", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setDefaultDialogBorder();
-        builder.setRowGroupingEnabled(true);
+        builder.border(Borders.DIALOG);
+        builder.rowGroupingEnabled(true);
 
         builder.append(rb.getString("Label.OpeningBalance"), openingBalanceLabel);
         builder.append(rb.getString("Label.TargetBalance"), targetBalanceLabel);

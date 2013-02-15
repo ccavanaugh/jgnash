@@ -107,12 +107,7 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
     }
 
     private JPanel layoutButtonStack() {
-        ButtonStackBuilder builder = new ButtonStackBuilder();
-
-        builder.addGridded(addButton);
-        builder.addRelatedGap();
-        builder.addGridded(removeButton);
-        return builder.getPanel();
+        return new ButtonStackBuilder().addButton(addButton, removeButton).build();
     }
 
     private void addAction() {

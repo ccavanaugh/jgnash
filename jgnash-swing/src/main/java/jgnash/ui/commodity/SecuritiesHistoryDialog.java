@@ -17,8 +17,9 @@
  */
 package jgnash.ui.commodity;
 
-import com.jgoodies.forms.builder.ButtonBarBuilder2;
+import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
@@ -186,7 +187,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
         FormLayout layout = new FormLayout("r:p, $lcgap, max(75dlu;p):g(0.5), 8dlu, r:p, $lcgap, max(75dlu;p):g(0.5)", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         builder.appendRow(RowSpec.decode("f:p:g"));
         builder.append(new JScrollPane(table), 7);
@@ -195,7 +196,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.setRowGroupingEnabled(true);
+        builder.rowGroupingEnabled(true);
         builder.append(rb.getString("Label.Security"), securityCombo, 5);
         builder.nextLine();
         builder.append(rb.getString("Label.Date"), dateField);
@@ -206,7 +207,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
         builder.nextLine();
         builder.append(rb.getString("Label.High"), highField);
         builder.append(rb.getString("Label.Low"), lowField);
-        builder.setRowGroupingEnabled(false);
+        builder.rowGroupingEnabled(false);
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
@@ -216,7 +217,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
     }
 
     private JPanel buildButtonBar() {
-        ButtonBarBuilder2 builder = new ButtonBarBuilder2();
+        ButtonBarBuilder builder = new ButtonBarBuilder();
 
         builder.addButton(deleteButton, clearButton, applyButton);
         builder.addGlue();

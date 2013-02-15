@@ -18,6 +18,7 @@
 package jgnash.ui.components;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.BorderLayout;
@@ -65,7 +66,7 @@ public final class WaitMessagePanel extends JXPanel {
 
         FormLayout layout = new FormLayout("c:p:g", "c:p:g");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
        
         builder.append(messageLabel);
 

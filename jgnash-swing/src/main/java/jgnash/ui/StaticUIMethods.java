@@ -26,8 +26,9 @@ import java.lang.reflect.Field;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
+import com.jgoodies.forms.builder.ButtonBarBuilder;
 import jgnash.util.Resource;
 
 /**
@@ -67,7 +68,7 @@ public class StaticUIMethods {
         EventQueue.invokeLater(new Runnable() {
 
             @Override
-            public void run() {               
+            public void run() {
                 Frame frame = UIApplication.getFrame();
 
                 KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
@@ -121,5 +122,95 @@ public class StaticUIMethods {
                 }
             }
         }
+    }
+
+    /**
+     * Builds and returns a filled button bar with Add and Remove.
+     *
+     * @param add    the Add button
+     * @param remove the Remove button
+     * @return a panel that contains the button(s)
+     */
+    public static JPanel buildAddRemoveBar(final JButton add, final JButton remove) {
+        return new ButtonBarBuilder().addGrowing(add).addRelatedGap().addGrowing(remove).build();
+    }
+
+    /**
+     * Builds and returns a left aligned button bar with the given buttons.
+     *
+     * @param buttons an array of buttons to add
+     * @return a left aligned button bar with the given buttons
+     */
+    public static JPanel buildLeftAlignedBar(final JButton... buttons) {
+        return new ButtonBarBuilder().addButton(buttons).addGlue().build();
+    }
+
+    /**
+     * Builds and returns a right aligned button bar with the given buttons.
+     *
+     * @param buttons an array of buttons to add
+     * @return a right aligned button bar with the given buttons
+     */
+    public static JPanel buildRightAlignedBar(final JButton... buttons) {
+        ButtonBarBuilder builder = new ButtonBarBuilder();
+        builder.addGlue();
+        builder.addButton(buttons);
+        return builder.getPanel();
+    }
+
+    public static JPanel buildOKCancelBar(final JButton okButton, final JButton cancelButton) {
+        return new ButtonBarBuilder().addGlue().addButton(okButton, cancelButton).build();
+    }
+
+    /**
+     * Builds and returns a button bar with Close.
+     *
+     * @param close the Close button
+     * @return a panel that contains the button(s)
+     */
+    public static JPanel buildCloseBar(final JButton close) {
+        return buildRightAlignedBar(close);
+    }
+
+
+    /**
+     * Builds and returns a right aligned bar with help and other buttons.
+     *
+     * @param help    the help button to add on the left side
+     * @param buttons an array of buttons to add
+     * @return a right aligned button bar with the given buttons
+     */
+    public static JPanel buildHelpBar(final JButton help, final JButton... buttons) {
+        ButtonBarBuilder builder = new ButtonBarBuilder();
+        builder.addButton(help);
+        builder.addUnrelatedGap();
+        builder.addGlue();
+        builder.addButton(buttons);
+        return builder.getPanel();
+    }
+
+    /**
+     * Builds and returns a button bar with
+     * Help, OK and Cancel.
+     *
+     * @param help   the Help button
+     * @param ok     the OK button
+     * @param cancel the Cancel button
+     * @return a panel that contains the button(s)
+     */
+    public static JPanel buildHelpOKCancelBar(final JButton help, final JButton ok, final JButton cancel) {
+        return buildHelpBar(help, ok, cancel);
+    }
+
+    /**
+     * Builds and returns a button bar with
+     * Help and Close.
+     *
+     * @param help  the Help button
+     * @param close the Close button
+     * @return a panel that contains the button(s)
+     */
+    public static JPanel buildHelpCloseBar(final JButton help, final JButton close) {
+        return buildHelpBar(help, close);
     }
 }

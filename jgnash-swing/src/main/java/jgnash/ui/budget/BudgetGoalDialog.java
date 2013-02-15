@@ -17,16 +17,18 @@
  */
 package jgnash.ui.budget;
 
+import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
-import com.jgoodies.forms.factories.FormFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
 import jgnash.engine.Account;
 import jgnash.engine.MathConstants;
 import jgnash.engine.budget.*;
 import jgnash.text.CommodityFormat;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.ui.components.JFloatField;
@@ -134,7 +136,7 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
         FormLayout contentLayout = new FormLayout("fill:p:g, $lcgap, fill:p", "f:p:g, $ugap, f:p");
         JPanel contentPanel = new JPanel(contentLayout);
         DefaultFormBuilder contentBuilder = new DefaultFormBuilder(contentLayout, contentPanel);
-        contentBuilder.setDefaultDialogBorder();
+        contentBuilder.border(Borders.DIALOG);
 
         FormLayout layout = new FormLayout("right:d, $lcgap, fill:p:g", "f:p, $rgap, d, $ugap, f:p:g");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
@@ -184,20 +186,20 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
         JPanel patternPanel = new JPanel();
         patternPanel.setLayout(new FormLayout(new ColumnSpec[]{
-                FormFactory.DEFAULT_COLSPEC,
-                FormFactory.RELATED_GAP_COLSPEC,
+                FormSpecs.DEFAULT_COLSPEC,
+                FormSpecs.RELATED_GAP_COLSPEC,
                 ColumnSpec.decode("default:grow"),},
                 new RowSpec[]{
-                        FormFactory.RELATED_GAP_ROWSPEC,
-                        FormFactory.DEFAULT_ROWSPEC,
-                        FormFactory.RELATED_GAP_ROWSPEC,
-                        FormFactory.DEFAULT_ROWSPEC,
-                        FormFactory.RELATED_GAP_ROWSPEC,
-                        FormFactory.DEFAULT_ROWSPEC,
-                        FormFactory.RELATED_GAP_ROWSPEC,
-                        FormFactory.DEFAULT_ROWSPEC,
-                        FormFactory.RELATED_GAP_ROWSPEC,
-                        FormFactory.DEFAULT_ROWSPEC,}));
+                        FormSpecs.RELATED_GAP_ROWSPEC,
+                        FormSpecs.DEFAULT_ROWSPEC,
+                        FormSpecs.RELATED_GAP_ROWSPEC,
+                        FormSpecs.DEFAULT_ROWSPEC,
+                        FormSpecs.RELATED_GAP_ROWSPEC,
+                        FormSpecs.DEFAULT_ROWSPEC,
+                        FormSpecs.RELATED_GAP_ROWSPEC,
+                        FormSpecs.DEFAULT_ROWSPEC,
+                        FormSpecs.RELATED_GAP_ROWSPEC,
+                        FormSpecs.DEFAULT_ROWSPEC,}));
 
         patternPanel.add(new JLabel(rb.getString("Label.Pattern")), "1, 2, right, default");
         patternPanel.add(patternComboBox, "3, 2, fill, default");
@@ -207,11 +209,11 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
         patternPanel.add(endRowSpinner, "3, 6");
         patternPanel.add(new JLabel(rb.getString("Label.Amount")), "1, 8, right, default");
         patternPanel.add(fillPatternAmountField, "3, 8, fill, default");
-        patternPanel.add(ButtonBarFactory.buildOKBar(fillPatternEnterButton), "3, 10");
+        patternPanel.add(new ButtonBarBuilder().addGlue().addButton(fillPatternEnterButton).build(), "3, 10");
 
         FormLayout fillLayout = new FormLayout("right:d, $lcgap, fill:max(48dlu;min):g, $lcgap, d", "d, $rgap, d, $rgap, d, $rgap, d, $rgap, d");
         DefaultFormBuilder fillBuilder = new DefaultFormBuilder(fillLayout);
-        fillBuilder.setBorder(new TitledBorder(rb.getString("Title.SmartFill")));
+        fillBuilder.border(new TitledBorder(rb.getString("Title.SmartFill")));
 
         fillBuilder.append(historicalButton, 5);
         fillBuilder.nextLine();
@@ -238,7 +240,7 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
         contentBuilder.append(builder.getPanel(), fillBuilder.getPanel());
         contentBuilder.nextLine();
         contentBuilder.nextLine();
-        contentBuilder.append(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton), 3);
+        contentBuilder.append(StaticUIMethods.buildOKCancelBar(okButton, cancelButton), 3);
 
         getContentPane().add(contentBuilder.getPanel());
 

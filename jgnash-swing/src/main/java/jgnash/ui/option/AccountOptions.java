@@ -18,6 +18,7 @@
 package jgnash.ui.option;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.event.ActionEvent;
@@ -41,7 +42,6 @@ import jgnash.util.Resource;
  * Panel for general account options
  * 
  * @author Craig Cavanaugh
- *
  */
 class AccountOptions extends JPanel implements ActionListener, FocusListener {
 
@@ -107,7 +107,7 @@ class AccountOptions extends JPanel implements ActionListener, FocusListener {
         FormLayout layout = new FormLayout("right:p, $lcgap, max(75dlu;p):g", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
 
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         builder.appendSeparator(rb.getString("Title.Display"));
         builder.append(rb.getString("Label.AccountSeparator"), accountSeparatorField);

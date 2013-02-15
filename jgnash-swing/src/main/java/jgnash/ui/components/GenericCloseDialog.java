@@ -18,7 +18,7 @@
 package jgnash.ui.components;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.Window;
@@ -30,6 +30,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.util.Resource;
 
@@ -71,14 +72,14 @@ public class GenericCloseDialog extends JDialog implements ActionListener {
     private void layoutMainPanel() {
         FormLayout layout = new FormLayout("fill:p:g", "f:p:g, $ugap, f:p");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         closeButton = new JButton(rb.getString("Button.Close"));
 
         builder.append(component);
         builder.nextLine();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildCloseBar(closeButton));
+        builder.append(StaticUIMethods.buildCloseBar(closeButton));
 
         getContentPane().add(builder.getPanel());
         pack();

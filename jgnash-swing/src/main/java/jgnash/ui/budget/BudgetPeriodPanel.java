@@ -51,7 +51,6 @@ import org.jdesktop.swingx.JXTitledPanel;
  * Panel for displaying one budget budgetPeriod
  *
  * @author Craig Cavanaugh
- *
  */
 final class BudgetPeriodPanel extends JPanel {
 
@@ -152,7 +151,7 @@ final class BudgetPeriodPanel extends JPanel {
 
         builder.add(footerTable, CC.xy(1, 1));
 
-        builder.setBorder(ShadowBorder.getCompondShadowBorder());
+        builder.border(ShadowBorder.getCompondShadowBorder());
 
         periodFooter = builder.getPanel();
     }

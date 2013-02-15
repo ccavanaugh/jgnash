@@ -18,7 +18,7 @@
 package jgnash.ui.account;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.BorderLayout;
@@ -35,6 +35,7 @@ import jgnash.engine.Account;
 import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.SecurityNode;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
@@ -82,7 +83,7 @@ class AccountDialog extends JDialog implements ActionListener {
         FormLayout layout = new FormLayout("pref:grow", "");
 
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         builder.appendRow("f:p:g");
         builder.append(accountPanel);
@@ -90,7 +91,7 @@ class AccountDialog extends JDialog implements ActionListener {
 
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildHelpOKCancelBar(helpButton, okButton, cancelButton));
+        builder.append(StaticUIMethods.buildHelpOKCancelBar(helpButton, okButton, cancelButton));
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
 

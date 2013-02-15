@@ -18,7 +18,7 @@
 package jgnash.ui.account;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.BorderLayout;
@@ -31,6 +31,7 @@ import javax.swing.JDialog;
 import javax.swing.WindowConstants;
 
 import jgnash.engine.Account;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
@@ -39,7 +40,6 @@ import jgnash.util.Resource;
  * Displays a tree view of the accounts
  *
  * @author Craig Cavanaugh
- *
  */
 public class AccountListDialog extends JDialog implements ActionListener {
     private final transient Resource rb = Resource.get();
@@ -106,14 +106,14 @@ public class AccountListDialog extends JDialog implements ActionListener {
         FormLayout layout = new FormLayout("max(200dlu;p):g", "");
 
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         builder.appendRow("f:100dlu:g");
         builder.append(list);
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton));
+        builder.append(StaticUIMethods.buildOKCancelBar(okButton, cancelButton));
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
 

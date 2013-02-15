@@ -52,7 +52,6 @@ import jgnash.util.Resource;
  * Overview panel for the displayed period
  *
  * @author Craig Cavanaugh
- *
  */
 class BudgetOverviewPanel extends JPanel implements ChangeListener {
 
@@ -122,7 +121,7 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
         setLayout(layout);
 
-        setBorder(Borders.EMPTY_BORDER);
+        setBorder(Borders.EMPTY);
 
         builder.add(new JLabel(rb.getString("Label.Year")), CC.xy(2, 1));
         builder.add(yearSpinner, CC.xy(4, 1));

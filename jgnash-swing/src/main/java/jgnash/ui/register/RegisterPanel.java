@@ -17,8 +17,9 @@
  */
 package jgnash.ui.register;
 
+import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.EventQueue;
@@ -170,7 +171,7 @@ public class RegisterPanel extends AbstractRegisterPanel implements ActionListen
 
         FormLayout layout = new FormLayout("p:g", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         builder.append(createTopPanel());
         builder.nextLine();
@@ -232,7 +233,7 @@ public class RegisterPanel extends AbstractRegisterPanel implements ActionListen
      * @return button command panel
      */
     JPanel createButtonPanel() {
-        return ButtonBarFactory.buildLeftAlignedBar(newButton, duplicateButton, jumpButton, deleteButton);
+        return new ButtonBarBuilder().addButton(newButton, duplicateButton, jumpButton, deleteButton).build();
     }
 
     @Override

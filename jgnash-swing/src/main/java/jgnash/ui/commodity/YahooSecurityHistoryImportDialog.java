@@ -44,11 +44,13 @@ import java.util.Locale;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import com.jgoodies.forms.factories.Borders;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.QuoteSource;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.net.security.SecurityUpdateFactory;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.CheckListCellRenderer;
 import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.SortedListModel;
@@ -58,7 +60,6 @@ import jgnash.util.DateUtils;
 import jgnash.util.Resource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.io.IOException;
@@ -154,7 +155,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
     private void layoutMainPanel() {
         FormLayout layout = new FormLayout("r:p, $lcgap, 48dlu:g, $ugap, r:p, $lcgap, 48dlu:g", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         JScrollPane scrollPane = new JScrollPane(securityList);
         scrollPane.setAutoscrolls(true);
@@ -164,7 +165,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
         builder.nextLine();
         builder.appendRelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildLeftAlignedBar(selectAllButton, clearAllButton, invertAllButton), 7);
+        builder.append(StaticUIMethods.buildLeftAlignedBar(selectAllButton, clearAllButton, invertAllButton), 7);
         builder.nextLine();
         builder.appendRelatedComponentsGapRow();
         builder.nextLine();
@@ -177,7 +178,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton), 7);
+        builder.append(StaticUIMethods.buildOKCancelBar(okButton, cancelButton), 7);
 
         getContentPane().add(builder.getPanel());
         pack();

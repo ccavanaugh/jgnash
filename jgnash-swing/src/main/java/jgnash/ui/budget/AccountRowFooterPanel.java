@@ -64,8 +64,6 @@ import jgnash.ui.util.JTableUtils;
  * Panel to display a row footer which summarizes account totals
  *
  * @author Craig Cavanaugh
- *
- * $
  */
 public class AccountRowFooterPanel extends JPanel {
 
@@ -169,7 +167,7 @@ public class AccountRowFooterPanel extends JPanel {
 
         builder.add(footerTable, CC.xy(1, 1));
 
-        builder.setBorder(ShadowBorder.getCompondShadowBorder());
+        builder.border(ShadowBorder.getCompondShadowBorder());
 
         return builder.getPanel();
     }

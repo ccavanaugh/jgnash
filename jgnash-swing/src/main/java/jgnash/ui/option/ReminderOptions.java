@@ -18,6 +18,7 @@
 package jgnash.ui.option;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.event.ActionEvent;
@@ -33,7 +34,6 @@ import jgnash.util.Resource;
  * Reminder options panel.
  *
  * @author Craig Cavanaugh
- *
  */
 class ReminderOptions extends JPanel implements ActionListener {
 
@@ -58,8 +58,8 @@ class ReminderOptions extends JPanel implements ActionListener {
         FormLayout layout = new FormLayout("right:p, $lcgap, max(75dlu;p):g", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
 
-        builder.setRowGroupingEnabled(true);
-        builder.setDefaultDialogBorder();
+        builder.rowGroupingEnabled(true);
+        builder.border(Borders.DIALOG);
 
         builder.append(confirmDeleteButton, 3);
     }

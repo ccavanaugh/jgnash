@@ -18,7 +18,6 @@
 package jgnash.ui.register;
 
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.ButtonBarFactory;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -35,6 +34,7 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import jgnash.engine.Account;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.TransactionNumberComboBox;
@@ -123,12 +123,12 @@ class DateChkNumberDialog extends JDialog implements ActionListener {
 
         JPanel p = new JPanel(layout);
 
-        p.setBorder(Borders.DIALOG_BORDER);
+        p.setBorder(Borders.DIALOG);
         p.add(new JLabel(rb.getString("Label.Date")), cc.xy(1, 1));
         p.add(datePanel, cc.xy(3, 1));
         p.add(new JLabel(rb.getString("Label.Number")), cc.xy(1, 3));
         p.add(numberCombo, cc.xy(3, 3));
-        p.add(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton), cc.xyw(1, 5, 3));
+        p.add(StaticUIMethods.buildOKCancelBar(okButton, cancelButton), cc.xyw(1, 5, 3));
 
         getContentPane().add(p, BorderLayout.CENTER);
     }

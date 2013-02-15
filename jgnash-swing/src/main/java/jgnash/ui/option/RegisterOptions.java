@@ -18,6 +18,7 @@
 package jgnash.ui.option;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -194,7 +195,7 @@ class RegisterOptions extends JPanel implements ActionListener {
         FormLayout layout = new FormLayout("p:g", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
 
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         builder.appendSeparator(rb.getString("Title.Colors"));
         builder.append(buildColorPanel());

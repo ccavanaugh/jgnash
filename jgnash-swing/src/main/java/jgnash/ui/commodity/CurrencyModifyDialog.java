@@ -18,7 +18,7 @@
 package jgnash.ui.commodity;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
@@ -160,7 +160,7 @@ public class CurrencyModifyDialog extends JDialog implements MessageListener, Li
         FormLayout layout = new FormLayout("f:p:g", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
         builder.appendSeparator(rb.getString("Title.Currencies"));
         builder.nextLine();
         builder.appendRelatedComponentsGapRow();
@@ -170,7 +170,7 @@ public class CurrencyModifyDialog extends JDialog implements MessageListener, Li
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildCloseBar(closeButton));
+        builder.append(StaticUIMethods.buildCloseBar(closeButton));
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
 
@@ -183,7 +183,7 @@ public class CurrencyModifyDialog extends JDialog implements MessageListener, Li
         FormLayout layout = new FormLayout("r:p, $lcgap, max(55dlu;p)", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 
-        builder.setRowGroupingEnabled(true);
+        builder.rowGroupingEnabled(true);
         builder.append(rb.getString("Label.Symbol"), symbolField);
         builder.append(rb.getString("Label.Description"), descriptionField);
         builder.append(rb.getString("Label.Scale"), scaleField);
@@ -203,7 +203,7 @@ public class CurrencyModifyDialog extends JDialog implements MessageListener, Li
 
         builder.appendRelatedComponentsGapRow();
         builder.nextRow();
-        builder.append(ButtonBarFactory.buildLeftAlignedBar(clearButton, applyButton), 3);
+        builder.append(StaticUIMethods.buildLeftAlignedBar(clearButton, applyButton), 3);
 
         return builder.getPanel();
     }

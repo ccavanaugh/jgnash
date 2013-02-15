@@ -19,7 +19,7 @@ package jgnash.ui.budget;
 
 import com.jgoodies.forms.builder.ButtonStackBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -47,6 +47,7 @@ import jgnash.message.Message;
 import jgnash.message.MessageBus;
 import jgnash.message.MessageChannel;
 import jgnash.message.MessageListener;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.components.YesNoDialog;
@@ -57,7 +58,6 @@ import jgnash.util.Resource;
  * BudgetManagerDialog is for creating and deleting budgets
  *
  * @author Craig Cavanaugh
- *
  */
 public final class BudgetManagerDialog extends JDialog implements ActionListener, MessageListener {
 
@@ -133,13 +133,13 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
         FormLayout layout = new FormLayout("p:g, $lcgap, f:p", "f:max(35dlu;p):g, $ugap, p");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         CellConstraints cc = new CellConstraints();
 
         builder.add(new JScrollPane(budgetList), cc.xy(1, 1));
         builder.add(buttonStackBuilder.getPanel(), cc.xy(3, 1));
-        builder.add(ButtonBarFactory.buildCloseBar(closeButton), cc.xyw(1, 3, 3));
+        builder.add(StaticUIMethods.buildCloseBar(closeButton), cc.xyw(1, 3, 3));
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
 

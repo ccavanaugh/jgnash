@@ -18,6 +18,7 @@
 package jgnash.ui.components.wizard;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
@@ -169,7 +170,7 @@ public class WizardDialog extends JDialog implements ActionListener {
 
         FormLayout lay = new FormLayout("p, $rgap, min(220dlu;d):g", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(lay);
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         builder.appendRow(RowSpec.decode("f:p:g"));
         builder.append(buildTaskPanel(), pagePanel);

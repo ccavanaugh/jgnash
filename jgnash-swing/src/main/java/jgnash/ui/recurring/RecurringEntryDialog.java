@@ -17,9 +17,9 @@
  */
 package jgnash.ui.recurring;
 
+import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.ButtonBarFactory;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -47,6 +47,7 @@ import jgnash.engine.recurring.OneTimeReminder;
 import jgnash.engine.recurring.Reminder;
 import jgnash.engine.recurring.WeeklyReminder;
 import jgnash.engine.recurring.YearlyReminder;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.DatePanel;
@@ -166,7 +167,7 @@ class RecurringEntryDialog extends JDialog implements ActionListener {
 
         p.add(new JLabel(rb.getString("Label.Transaction")), cc.xy(1, 5));
         p.add(transactionField, cc.xy(3, 5));
-        p.add(ButtonBarFactory.buildLeftAlignedBar(editButton, deleteButton), cc.xy(5, 5));
+        p.add(new ButtonBarBuilder().addButton(editButton, deleteButton).build(), cc.xy(5, 5));
 
         p.add(new JLabel(rb.getString("Label.Notes")), cc.xy(1, 7));
         p.add(pane, cc.xywh(3, 7, 3, 1));
@@ -241,14 +242,14 @@ class RecurringEntryDialog extends JDialog implements ActionListener {
         okButton = new JButton(rb.getString("Button.Ok"));
         cancelButton = new JButton(rb.getString("Button.Cancel"));
 
-        builder.setBorder(Borders.DIALOG_BORDER);
+        builder.border(Borders.DIALOG);
         builder.addSeparator(rb.getString("Title.Transaction"), cc.xyw(1, 1, 2));
         builder.add(createTransactionPanel(), cc.xy(2, 3));
         builder.addSeparator(rb.getString("Title.Frequency"), cc.xyw(1, 5, 2));
         builder.add(createFreqPanel(), cc.xy(2, 7));
         builder.addSeparator(rb.getString("Title.Entry"), cc.xyw(1, 9, 2));
         builder.add(createEntryPanel(), cc.xy(2, 11));
-        builder.add(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton), cc.xy(2, 13));
+        builder.add(StaticUIMethods.buildOKCancelBar(okButton, cancelButton), cc.xy(2, 13));
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
 

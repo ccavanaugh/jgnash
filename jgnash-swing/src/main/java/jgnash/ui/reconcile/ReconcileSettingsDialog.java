@@ -18,7 +18,7 @@
 package jgnash.ui.reconcile;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.event.ActionEvent;
@@ -31,6 +31,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 
 import jgnash.engine.Account;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.JFloatField;
@@ -86,8 +87,8 @@ public class ReconcileSettingsDialog extends JDialog implements ActionListener {
     private void layoutMainPanel() {
         final FormLayout layout = new FormLayout("p:g, $lcgap, max(70dlu;min)", "");
         final DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setDefaultDialogBorder();
-        builder.setRowGroupingEnabled(true);
+        builder.border(Borders.DIALOG);
+        builder.rowGroupingEnabled(true);
 
         builder.append(rb.getString("Label.OpenStateDate"), datePanel);
         builder.append(rb.getString("Label.OpeningBalance"), openField);
@@ -95,7 +96,7 @@ public class ReconcileSettingsDialog extends JDialog implements ActionListener {
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton), 3);
+        builder.append(StaticUIMethods.buildOKCancelBar(okButton, cancelButton), 3);
 
         getContentPane().add(builder.getPanel());
         pack();

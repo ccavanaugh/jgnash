@@ -17,9 +17,9 @@
  */
 package jgnash.ui.register.invest;
 
-import com.jgoodies.forms.builder.ButtonBarBuilder2;
+import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.BorderLayout;
@@ -42,6 +42,7 @@ import javax.swing.event.ListSelectionListener;
 
 import jgnash.engine.Account;
 import jgnash.engine.TransactionEntry;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.register.RegisterFactory;
 import jgnash.ui.register.table.RegisterTable;
 import jgnash.ui.register.table.SplitsRegisterTableModel;
@@ -53,7 +54,6 @@ import jgnash.util.Resource;
  * Edit investment transaction fees
  * 
  * @author Craig Cavanaugh
- *
  */
 class FeesDialog extends JDialog implements ListSelectionListener, ActionListener {
 
@@ -150,12 +150,12 @@ class FeesDialog extends JDialog implements ListSelectionListener, ActionListene
         FormLayout layout = new FormLayout("d:g", "80dlu:g");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         builder.append(new JScrollPane(table));
 
         // build the button bar
-        ButtonBarBuilder2 bbb = new ButtonBarBuilder2();
+        ButtonBarBuilder bbb = new ButtonBarBuilder();
         bbb.addButton(newButton, deleteButton);
         bbb.addUnrelatedGap();
         bbb.addGlue();
@@ -166,7 +166,7 @@ class FeesDialog extends JDialog implements ListSelectionListener, ActionListene
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton));
+        builder.append(StaticUIMethods.buildOKCancelBar(okButton, cancelButton));
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
     }

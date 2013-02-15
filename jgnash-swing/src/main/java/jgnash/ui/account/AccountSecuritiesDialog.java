@@ -18,7 +18,7 @@
 package jgnash.ui.account;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.BorderLayout;
@@ -37,6 +37,7 @@ import javax.swing.WindowConstants;
 import jgnash.engine.Account;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
 
@@ -92,14 +93,14 @@ public class AccountSecuritiesDialog extends JDialog implements ActionListener {
         FormLayout layout = new FormLayout("p:g", "f:p:g(1.0)");
 
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         builder.append(panel);
         builder.nextLine();
 
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton));
+        builder.append(StaticUIMethods.buildOKCancelBar(okButton, cancelButton));
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
     }

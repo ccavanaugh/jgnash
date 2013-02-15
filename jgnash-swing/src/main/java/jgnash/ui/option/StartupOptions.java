@@ -18,6 +18,7 @@
 package jgnash.ui.option;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.event.ActionEvent;
@@ -40,7 +41,6 @@ import jgnash.util.Resource;
  * Startup options panel
  * 
  * @author Craig Cavanaugh
- *
  */
 class StartupOptions extends JPanel implements ActionListener {
 
@@ -106,8 +106,8 @@ class StartupOptions extends JPanel implements ActionListener {
         FormLayout layout = new FormLayout("p, $lcgap, f:p:g", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
 
-        builder.setRowGroupingEnabled(true);
-        builder.setDefaultDialogBorder();
+        builder.rowGroupingEnabled(true);
+        builder.border(Borders.DIALOG);
 
         builder.appendSeparator(rb.getString("Title.Startup"));
         builder.append(openLastOnStartup, 3);

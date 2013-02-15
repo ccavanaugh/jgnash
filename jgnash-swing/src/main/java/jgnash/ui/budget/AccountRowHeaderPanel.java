@@ -49,7 +49,6 @@ import org.jdesktop.swingx.JXTitledPanel;
 
 /**
  * @author Craig Cavanaugh
- *
  */
 final class AccountRowHeaderPanel extends JPanel {
 
@@ -164,7 +163,7 @@ final class AccountRowHeaderPanel extends JPanel {
 
         builder.add(table, CC.xy(1, 1));
 
-        builder.setBorder(ShadowBorder.getCompondShadowBorder());
+        builder.border(ShadowBorder.getCompondShadowBorder());
 
         return builder.getPanel();
     }

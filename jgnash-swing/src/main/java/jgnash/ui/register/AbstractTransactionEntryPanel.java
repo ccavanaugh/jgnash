@@ -19,7 +19,6 @@ package jgnash.ui.register;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.ButtonBarFactory;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -38,6 +37,7 @@ import javax.swing.SwingConstants;
 import jgnash.engine.Account;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.AutoCompleteFactory;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.register.table.SplitsRegisterTableModel;
@@ -121,7 +121,7 @@ public abstract class AbstractTransactionEntryPanel extends AbstractEntryFormPan
         CellConstraints cc = new CellConstraints();
 
         setLayout(layout);
-        setBorder(Borders.DIALOG_BORDER);
+        setBorder(Borders.DIALOG);
 
         add("Label.Account", cc.xy(1, 1));
         add(accountPanel, cc.xy(3, 1));
@@ -141,8 +141,7 @@ public abstract class AbstractTransactionEntryPanel extends AbstractEntryFormPan
         FormLayout layout = new FormLayout("m, 8dlu, m:g", "f:d");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 
-        builder.append(reconciledButton,
-                ButtonBarFactory.buildOKCancelBar(enterButton, cancelButton));
+        builder.append(reconciledButton, StaticUIMethods.buildOKCancelBar(enterButton, cancelButton));
 
         return builder.getPanel();
     }

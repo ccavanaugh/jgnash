@@ -17,7 +17,7 @@
  */
 package jgnash.ui.commodity;
 
-import com.jgoodies.forms.builder.ButtonBarBuilder2;
+import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
@@ -151,7 +151,7 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
     private JPanel layoutRightPanel() {
         FormLayout layout = new FormLayout("right:p, $lcgap, 90dlu", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setRowGroupingEnabled(true);
+        builder.rowGroupingEnabled(true);
 
         builder.append(rb.getString("Label.Symbol"), symbolField);
         builder.append(rb.getString("Label.ISIN"), isinField);
@@ -163,7 +163,7 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
     }
 
     private JPanel layoutButtonPanel() {
-        ButtonBarBuilder2 builder = new ButtonBarBuilder2();
+        ButtonBarBuilder builder = new ButtonBarBuilder();
 
         builder.addButton(new JButton[] { newButton, deleteButton, cancelButton });
         builder.addUnrelatedGap();

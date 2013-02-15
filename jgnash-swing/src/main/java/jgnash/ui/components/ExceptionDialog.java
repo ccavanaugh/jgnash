@@ -18,7 +18,7 @@
 package jgnash.ui.components;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.Frame;
@@ -33,6 +33,7 @@ import javax.swing.JDialog;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
 
@@ -71,7 +72,7 @@ public class ExceptionDialog extends JDialog implements ActionListener {
     private void layoutMainPanel() {
         FormLayout layout = new FormLayout("fill:max(80dlu;p):g", "f:max(120dlu;p):g, 6dlu, f:p");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         closeButton = new JButton(rb.getString("Button.Close"));
 
@@ -82,7 +83,7 @@ public class ExceptionDialog extends JDialog implements ActionListener {
         builder.append(new JScrollPane(textArea));
         builder.nextLine();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildRightAlignedBar(copyButton, closeButton));
+        builder.append(StaticUIMethods.buildRightAlignedBar(copyButton, closeButton));
 
         getContentPane().add(builder.getPanel());
         pack();

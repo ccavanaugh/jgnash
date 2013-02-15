@@ -18,7 +18,7 @@
 package jgnash.ui.splash;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
@@ -47,6 +47,7 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.text.html.HTMLDocument;
 
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.util.HTMLResource;
 import jgnash.util.Resource;
 
@@ -136,7 +137,7 @@ public class AboutDialog extends JDialog implements ActionListener {
 
         FormLayout layout = new FormLayout("200dlu:g", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
         builder.appendRow(RowSpec.decode("fill:200dlu:g"));
         builder.append(tabbedPane);
 
@@ -152,7 +153,7 @@ public class AboutDialog extends JDialog implements ActionListener {
             builder.nextLine();
             builder.appendUnrelatedComponentsGapRow();
             builder.nextLine();
-            builder.append(ButtonBarFactory.buildCloseBar(closeButton));
+            builder.append(StaticUIMethods.buildCloseBar(closeButton));
         }
 
         getContentPane().add(builder.getPanel());

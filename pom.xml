@@ -32,8 +32,8 @@
             <id>jgnash-local</id>
             <name>Local repository in project tree</name>
             <url>file:${basedir}/../repository</url>
-
         </repository>
+
         <repository>
             <id>maven.java.net</id>
             <name>maven.java.net</name>

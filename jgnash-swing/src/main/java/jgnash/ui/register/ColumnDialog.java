@@ -18,7 +18,7 @@
 package jgnash.ui.register;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
@@ -35,6 +35,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.register.table.AbstractRegisterTableModel;
@@ -139,7 +140,7 @@ class ColumnDialog extends JDialog implements ActionListener {
 
         FormLayout layout = new FormLayout("d:g(0.5), 8dlu, p, 8dlu, d:g(0.5)", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         builder.appendTitle(rb.getString("Title.Available"));
         builder.append("");
@@ -154,7 +155,7 @@ class ColumnDialog extends JDialog implements ActionListener {
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildOKCancelBar(okButton, cancelButton), 5);
+        builder.append(StaticUIMethods.buildOKCancelBar(okButton, cancelButton), 5);
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
     }

@@ -18,7 +18,7 @@
 package jgnash.ui.option;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.BorderLayout;
@@ -36,6 +36,7 @@ import javax.swing.WindowConstants;
 
 import jgnash.plugin.Plugin;
 import jgnash.plugin.PluginFactory;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.ThemeManager;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.DialogUtils;
@@ -126,13 +127,13 @@ public class OptionDialog extends JDialog implements ActionListener {
         FormLayout layout = new FormLayout("p:g", "");
 
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setDefaultDialogBorder();
+        builder.border(Borders.DIALOG);
 
         builder.append(tabbedPane);
         builder.nextLine();              
         builder.appendGlueRow();
         builder.nextLine();
-        builder.append(ButtonBarFactory.buildCloseBar(closeButton));
+        builder.append(StaticUIMethods.buildCloseBar(closeButton));
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
         pack();

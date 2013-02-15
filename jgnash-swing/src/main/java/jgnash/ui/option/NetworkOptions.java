@@ -18,6 +18,7 @@
 package jgnash.ui.option;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 import jgnash.net.ConnectionFactory;
 import jgnash.net.NetworkAuthenticator;
@@ -38,7 +39,6 @@ import java.awt.event.FocusListener;
  * Panel for general program options
  *
  * @author Craig Cavanaugh
- *
  */
 class NetworkOptions extends JPanel implements ActionListener, FocusListener {
 
@@ -101,8 +101,8 @@ class NetworkOptions extends JPanel implements ActionListener, FocusListener {
         FormLayout layout = new FormLayout("right:p, $lcgap, max(55dlu;p), $lcgap, min:g", "");
 
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
-        builder.setRowGroupingEnabled(true);
-        builder.setDefaultDialogBorder();
+        builder.rowGroupingEnabled(true);
+        builder.border(Borders.DIALOG);
 
         builder.appendSeparator(rb.getString("Title.HTTPProxy"));
         builder.append(proxyCheckBox, 5);

@@ -41,7 +41,6 @@ import jgnash.util.Resource;
  * A Dialog for creating and editing new transactions
  *
  * @author Craig Cavanaugh
- *
  */
 public class TransactionDialog extends JDialog implements RegisterListener {
 
@@ -142,7 +141,7 @@ public class TransactionDialog extends JDialog implements RegisterListener {
         p.add(new JLabel(account.getPathName()), cc.xy(3, 1));
         p.add(tabbedPane, cc.xyw(1, 3, 3));
 
-        p.setBorder(Borders.DIALOG_BORDER);
+        p.setBorder(Borders.DIALOG);
 
         getContentPane().setLayout(new java.awt.BorderLayout());
         getContentPane().add(p, java.awt.BorderLayout.CENTER);

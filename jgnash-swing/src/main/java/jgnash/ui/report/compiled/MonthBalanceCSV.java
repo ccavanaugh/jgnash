@@ -119,7 +119,7 @@ public final class MonthBalanceCSV {
 
         FormLayout layout = new FormLayout("right:p, 4dlu, p:g", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
-        builder.setRowGroupingEnabled(true);
+        builder.rowGroupingEnabled(true);
 
         builder.append(rb.getString("Label.StartDate"), startField);
         builder.append(rb.getString("Label.EndDate"), endField);

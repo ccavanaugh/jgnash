@@ -41,7 +41,6 @@ import jgnash.util.Resource;
  * Daily Reminder panel.
  *
  * @author Craig Cavanaugh
- *
  */
 public class DayTab extends JPanel implements RecurringTab, ActionListener {
 
@@ -76,7 +75,7 @@ public class DayTab extends JPanel implements RecurringTab, ActionListener {
         FormLayout layout = new FormLayout("right:p, $lcgap, f:p, 2dlu, max(48dlu;min), 2dlu, f:p", "f:p, $lgap, f:p, $lgap, f:p");
         layout.setRowGroups(new int[][]{{1, 3, 5}});
         setLayout(layout);
-        setBorder(Borders.DIALOG_BORDER);
+        setBorder(Borders.DIALOG);
 
         CellConstraints cc = new CellConstraints();
 
