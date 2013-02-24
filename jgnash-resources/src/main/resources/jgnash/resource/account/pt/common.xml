@@ -4,7 +4,7 @@
     <notes></notes>
     <currencyNode id="3" locale="pt_BR" symbol="BRL" scale="2" prefix="R$" suffix="" description="pt_BR"/>
     <children id="4">
-      <Account id="5" placeHolder="true" locked="false" visible="true" name="Contas Bancárias" description="">
+      <Account id="5" placeHolder="true" locked="false" visible="true" name="Contas BancÃ¡rias" description="">
         <accountType id="6">BANK</accountType>
         <parentAccount class="RootAccount" reference="1"/>
         <notes></notes>
@@ -41,13 +41,13 @@
         <notes></notes>
         <currencyNode reference="3"/>
         <children id="20">
-          <Account id="21" placeHolder="true" locked="false" visible="true" name="Automóvel" description="">
+          <Account id="21" placeHolder="true" locked="false" visible="true" name="AutomÃ³vel" description="">
             <accountType reference="19"/>
             <parentAccount reference="18"/>
             <notes></notes>
             <currencyNode reference="3"/>
             <children id="22">
-              <Account id="23" placeHolder="false" locked="false" visible="true" name="Combustível" description="">
+              <Account id="23" placeHolder="false" locked="false" visible="true" name="CombustÃ­vel" description="">
                 <accountType reference="19"/>
                 <parentAccount reference="21"/>
                 <notes></notes>
@@ -67,7 +67,7 @@
                 <accountNumber></accountNumber>
                 <propertyMap id="30"/>
               </Account>
-              <Account id="31" placeHolder="false" locked="false" visible="true" name="Serviços" description="">
+              <Account id="31" placeHolder="false" locked="false" visible="true" name="ServiÃ§os" description="">
                 <accountType reference="19"/>
                 <parentAccount reference="21"/>
                 <notes>Ã“leo, pneus, etc.</notes>
@@ -113,13 +113,13 @@
             <accountNumber></accountNumber>
             <propertyMap id="48"/>
           </Account>
-          <Account id="49" placeHolder="true" locked="false" visible="true" name="Alimentação" description="">
+          <Account id="49" placeHolder="true" locked="false" visible="true" name="AlimentaÃ§Ã£o" description="">
             <accountType reference="19"/>
             <parentAccount reference="18"/>
             <notes></notes>
             <currencyNode reference="3"/>
             <children id="50">              
-              <Account id="51" placeHolder="false" locked="false" visible="true" name="Refeições fora" description="">
+              <Account id="51" placeHolder="false" locked="false" visible="true" name="RefeiÃ§Ãµes fora" description="">
                 <accountType reference="19"/>
                 <parentAccount reference="49"/>
                 <notes></notes>
@@ -144,13 +144,13 @@
             <accountNumber></accountNumber>
             <propertyMap id="60"/>
           </Account>
-          <Account id="61" placeHolder="true" locked="false" visible="true" name="Saúde" description="">
+          <Account id="61" placeHolder="true" locked="false" visible="true" name="SaÃºde" description="">
             <accountType reference="19"/>
             <parentAccount reference="18"/>
             <notes></notes>
             <currencyNode reference="3"/>
             <children id="62">
-              <Account id="63" placeHolder="false" locked="false" visible="true" name="Plano de saúde" description="">
+              <Account id="63" placeHolder="false" locked="false" visible="true" name="Plano de saÃºde" description="">
                 <accountType reference="19"/>
                 <parentAccount reference="61"/>
                 <notes></notes>
@@ -180,7 +180,7 @@
                 <accountNumber></accountNumber>
                 <propertyMap id="74"/>
               </Account>
-              <Account id="75" placeHolder="false" locked="false" visible="true" name="Escritório" description="">
+              <Account id="75" placeHolder="false" locked="false" visible="true" name="EscritÃ³rio" description="">
                 <accountType reference="19"/>
                 <parentAccount reference="61"/>
                 <notes></notes>
@@ -211,7 +211,7 @@
             <notes></notes>
             <currencyNode reference="3"/>
             <children id="86">
-              <Account id="87" placeHolder="false" locked="false" visible="true" name="Eletrodomésticos e móveis" description="">
+              <Account id="87" placeHolder="false" locked="false" visible="true" name="EletrodomÃ©sticos e mÃ³veis" description="">
                 <accountType reference="19"/>
                 <parentAccount reference="85"/>
                 <notes></notes>
@@ -221,7 +221,7 @@
                 <accountNumber></accountNumber>
                 <propertyMap id="90"/>
               </Account>
-              <Account id="91" placeHolder="false" locked="false" visible="true" name="Vestuário, cama, mesa e banho" description="">
+              <Account id="91" placeHolder="false" locked="false" visible="true" name="VestuÃ¡rio, cama, mesa e banho" description="">
                 <accountType reference="19"/>
                 <parentAccount reference="85"/>
                 <notes></notes>
@@ -231,7 +231,7 @@
                 <accountNumber></accountNumber>
                 <propertyMap id="94"/>
               </Account>
-              <Account id="95" placeHolder="false" locked="false" visible="true" name="Eletrônicos" description="">
+              <Account id="95" placeHolder="false" locked="false" visible="true" name="EletrÃ´nicos" description="">
                 <accountType reference="19"/>
                 <parentAccount reference="85"/>
                 <notes></notes>
@@ -272,7 +272,7 @@
             <notes></notes>
             <currencyNode reference="3"/>
             <children id="110">
-              <Account id="111" placeHolder="false" locked="false" visible="true" name="Taxas bancárias" description="">
+              <Account id="111" placeHolder="false" locked="false" visible="true" name="Taxas bancÃ¡rias" description="">
                 <accountType reference="19"/>
                 <parentAccount reference="109"/>
                 <notes></notes>
@@ -282,7 +282,7 @@
                 <accountNumber></accountNumber>
                 <propertyMap id="114"/>
               </Account>
-              <Account id="115" placeHolder="false" locked="false" visible="true" name="Contribuição a caridade" description="">
+              <Account id="115" placeHolder="false" locked="false" visible="true" name="ContribuiÃ§Ã£o a caridade" description="">
                 <accountType reference="19"/>
                 <parentAccount reference="109"/>
                 <notes></notes>
@@ -307,7 +307,7 @@
             <accountNumber></accountNumber>
             <propertyMap id="124"/>
           </Account>
-          <Account id="125" placeHolder="true" locked="false" visible="true" name="Recreação" description="">
+          <Account id="125" placeHolder="true" locked="false" visible="true" name="RecreaÃ§Ã£o" description="">
             <accountType reference="19"/>
             <parentAccount reference="18"/>
             <notes></notes>
@@ -398,7 +398,7 @@
         <notes></notes>
         <currencyNode reference="3"/>
         <children id="181">
-          <Account id="182" placeHolder="false" locked="false" visible="true" name="Receitas não tributáveis" description="">
+          <Account id="182" placeHolder="false" locked="false" visible="true" name="Receitas nÃ£o tributÃ¡veis" description="">
             <accountType reference="180"/>
             <parentAccount reference="179"/>
             <notes></notes>
@@ -428,7 +428,7 @@
             <accountNumber></accountNumber>
             <propertyMap id="193"/>
           </Account>
-          <Account id="194" placeHolder="false" locked="false" visible="true" name="Salário" description="">
+          <Account id="194" placeHolder="false" locked="false" visible="true" name="SalÃ¡rio" description="">
             <accountType reference="180"/>
             <parentAccount reference="179"/>
             <notes></notes>
@@ -443,7 +443,7 @@
         <accountNumber>95</accountNumber>
         <propertyMap id="199"/>
       </Account>
-      <Account id="200" placeHolder="false" locked="false" visible="false" name="Balanço inicial" description="">
+      <Account id="200" placeHolder="false" locked="false" visible="false" name="BalanÃ§o inicial" description="">
         <accountType id="201">EQUITY</accountType>
         <parentAccount class="RootAccount" reference="1"/>
         <notes></notes>

@@ -1,2 +1,2 @@
-Transações duplicadas foram encontradas durante a importação.
-Você quer salvar as transações duplicadas?
+TransaÃ§Ãµes duplicadas foram encontradas durante a importaÃ§Ã£o.
+VocÃª quer salvar as transaÃ§Ãµes duplicadas?

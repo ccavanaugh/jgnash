@@ -31,6 +31,7 @@ Money market account type
 
 Release 2.12.0
 ----------------------
+02/24/13 Corrections made to the Portuguese translation. (Fernando Ribeiro da Silva)
 02/14/13 Updated the jGoodies libraries
 02/12/13 Updated to XStream 1.4.4
 02/12/13 Updated to SwingX 1.6.5
