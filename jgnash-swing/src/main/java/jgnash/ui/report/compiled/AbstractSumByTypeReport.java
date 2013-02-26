@@ -180,7 +180,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
             }
         }
 
-        ReportModel model = new ReportModel(startDate, endDate, baseCurrency);
+        ReportModel model = new ReportModel(baseCurrency);
         model.addAccounts(accounts);
 
         return model;
@@ -262,7 +262,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
         private final Resource rb = Resource.get();
 
-        public ReportModel(final Date startDate, final Date endDate, final CurrencyNode currency) {
+        public ReportModel(final CurrencyNode currency) {
             this.baseCurrency = currency;
         }
 
