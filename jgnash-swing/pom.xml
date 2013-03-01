@@ -119,7 +119,7 @@
         <dependency>
             <groupId>ar.com.fdvs</groupId>
             <artifactId>DynamicJasper</artifactId>
-            <version>3.2.5</version>
+            <version>4.0.3</version>
             <exclusions>
                 <exclusion>
                     <artifactId>jcommon</artifactId>

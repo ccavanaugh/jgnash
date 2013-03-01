@@ -233,7 +233,7 @@ public abstract class DynamicJasperReport {
         Style style = new Style();
         style.setFont(ReportFactory.getDefaultProportionalFont(getBaseFontSize() + 2, true));
         style.setHorizontalAlign(HorizontalAlign.LEFT);
-        style.setBorderBottom(Border.THIN);
+        style.setBorderBottom(Border.THIN());
         style.setPaddingTop(getBaseFontSize());
         return style;
     }
@@ -248,7 +248,7 @@ public abstract class DynamicJasperReport {
         Style style = new Style();
         style.setFont(ReportFactory.getDefaultMonoFont(getBaseFontSize(), true));
         style.setHorizontalAlign(HorizontalAlign.RIGHT);
-        style.setBorderTop(Border.THIN);
+        style.setBorderTop(Border.THIN());
         return style;
     }
 
@@ -256,7 +256,7 @@ public abstract class DynamicJasperReport {
         Style style = new Style();
         style.setFont(ReportFactory.getDefaultMonoFont(getBaseFontSize(), true));
         style.setHorizontalAlign(HorizontalAlign.RIGHT);
-        style.setBorderTop(Border.THIN);
+        style.setBorderTop(Border.THIN());
         return style;
     }
 
@@ -305,8 +305,8 @@ public abstract class DynamicJasperReport {
         Style headerStyle = new Style();
         headerStyle.setFont(ReportFactory.getDefaultProportionalFont(getBaseFontSize() + 1, true));
         headerStyle.setHorizontalAlign(HorizontalAlign.RIGHT);
-        headerStyle.setBorderTop(Border.THIN);
-        headerStyle.setBorderBottom(Border.THIN);
+        headerStyle.setBorderTop(Border.THIN());
+        headerStyle.setBorderBottom(Border.THIN());
         headerStyle.setBackgroundColor(Color.decode("#E0E9F1"));
         headerStyle.setTransparency(Transparency.OPAQUE);
         headerStyle.setVerticalAlign(VerticalAlign.MIDDLE);
