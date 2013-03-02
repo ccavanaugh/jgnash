@@ -53,7 +53,7 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
      * @param date date for this history node
      * @param rate exchange rate for the given date
      */
-    ExchangeRateHistoryNode(Date date, BigDecimal rate) {
+    ExchangeRateHistoryNode(final Date date, final BigDecimal rate) {
         assert date != null && rate != null;
 
         this.date = DateUtils.trimDate(date);
@@ -61,12 +61,12 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
     }
 
     @Override
-    public int compareTo(ExchangeRateHistoryNode node) {
+    public int compareTo(final ExchangeRateHistoryNode node) {
         return getDate().compareTo(node.getDate());
     }
 
     @Override
-    public boolean equals(Object other) {
+    public boolean equals(final Object other) {
         return this == other || other instanceof ExchangeRateHistoryNode && date.equals(((ExchangeRateHistoryNode) other).date);
     }
 
