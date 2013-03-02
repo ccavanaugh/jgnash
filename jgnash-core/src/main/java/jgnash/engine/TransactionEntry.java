@@ -334,6 +334,18 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
         return creditAccount.equals(debitAccount) && creditAmount.equals(debitAmount);
     }
 
+    /**
+     * Returns true if multiple currencies are being used for this entry.
+     * <p>
+     * If the credit and debit accounts have differing currencies, then unless
+     * the currencies are equal in value, the credit and debit amounts should be different.
+     *
+     * @return <code>true</code> if this is a multi-currency transaction entry
+     */
+    public boolean isMultiCurrency() {
+        return !creditAccount.getCurrencyNode().equals(debitAccount.getCurrencyNode());
+    }
+
     public void setTransactionTag(final TransactionTag transactionTag) {
         this.transactionTag = transactionTag.name();
         cachedTransactionTag = transactionTag;

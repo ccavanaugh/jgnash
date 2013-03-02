@@ -17,10 +17,13 @@
  */
 package jgnash.engine;
 
+import jgnash.util.DateUtils;
+
 import java.io.ObjectStreamException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -158,6 +161,36 @@ public class ExchangeRate extends StoredObject {
         }
 
         return lastRate;
+    }
+
+    /**
+     * Returns the exchange rate for a given date.
+     * <p>
+     * If a rate has not be set, <code>BigDecimal.ZERO</code> is returned
+     *
+     * @param date Date for exchange
+     *
+     * @return the exchange rate if known, otherwise <code>BigDecimal.ZERO</code>
+     */
+    public BigDecimal getRate(final Date date) {
+        getLock().readLock().lock();
+
+        BigDecimal rate = BigDecimal.ZERO;
+
+        Date exchangeDate = DateUtils.trimDate(date);
+
+        try {
+            for (ExchangeRateHistoryNode historyNode : historyNodes) {
+                if (exchangeDate.equals(historyNode.getDate())) {
+                    rate = historyNode.getRate();
+                    break;
+                }
+            }
+        } finally {
+            getLock().readLock().unlock();
+        }
+
+        return rate;
     }
 
     @Override

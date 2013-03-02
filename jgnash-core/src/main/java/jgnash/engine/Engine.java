@@ -2284,6 +2284,21 @@ public class Engine {
                 result = getTransactionDAO().addTransaction(transaction);
 
                 logInfo(rb.getString("Message.TransactionAdd"));
+
+                /* If successful, extract and enter a default exchange rate for the transaction date if a rate has not been set */
+                if (result) {
+                    for (TransactionEntry entry: transaction.getTransactionEntries()) {
+                        if (entry.isMultiCurrency()) {
+                            final ExchangeRate rate = getExchangeRate(entry.getDebitAccount().getCurrencyNode(), entry.getCreditAccount().getCurrencyNode());
+
+                            if (rate.getRate(transaction.getDate()).equals(BigDecimal.ZERO)) { // no rate for the date has been set
+                                final BigDecimal exchangeRate = entry.getDebitAmount().abs().divide(entry.getCreditAmount().abs(), MathConstants.mathContext);
+
+                                setExchangeRate(entry.getCreditAccount().getCurrencyNode(), entry.getDebitAccount().getCurrencyNode(), exchangeRate, transaction.getDate());
+                            }
+                        }
+                    }
+                }
             }
 
             postTransactionAdd(transaction, result);
