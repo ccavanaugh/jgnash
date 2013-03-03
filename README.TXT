@@ -1,4 +1,4 @@
-jGnash 2.x requires that version 6 or newer of the Java Platform be installed. 
+jGnash 2.x requires that version 7 or newer of the Java Platform be installed.
 jGnash has been tested with the Oracle JVM as well as the open source OpenJDK Platform.
 
 To Install:
@@ -32,7 +32,7 @@ with the SoyLatte Java distribution.
 
 try
         do shell script "/System/Library/Frameworks/JavaVM.framework/Versions/
-1.6.0/Home/bin/java -classpath /Applications/jGnash/lib -jar /
+1.7.0/Home/bin/java -classpath /Applications/jGnash/lib -jar /
 Applications/jGnash/jgnash2.jar"
 end try
 
