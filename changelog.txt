@@ -31,6 +31,7 @@ Money market account type
 
 Release 2.12.0
 ----------------------
+03/03/13 When importing transactions, display a tooltip for payee and memo fields to make transaction determination easier. (Feature Request #107)
 03/02/13 Automatically update the exchange rate tables when a multi-currency transaction is entered for a given date if one has not been set.
 03/01/13 Updated to DynamicJasper 4.0.3.
 02/24/13 Corrections made to the Portuguese translation. (Fernando Ribeiro da Silva)

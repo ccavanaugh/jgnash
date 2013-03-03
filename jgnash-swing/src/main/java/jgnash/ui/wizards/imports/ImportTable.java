@@ -26,13 +26,7 @@ import java.text.DateFormat;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.DefaultCellEditor;
-import javax.swing.DefaultRowSorter;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.RowSorter;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -46,7 +40,6 @@ import jgnash.util.Resource;
 
 /**
  * @author Craig Cavanaugh
- *
  */
 class ImportTable extends FormattedJTable {
 
@@ -59,7 +52,7 @@ class ImportTable extends FormattedJTable {
     private List<? extends ImportTransaction> transactions = Collections.emptyList();
 
     @SuppressWarnings("rawtypes")
-	public ImportTable() {
+    public ImportTable() {
         super();
         model = new Model();
         setAutoCreateRowSorter(true);
@@ -113,7 +106,7 @@ class ImportTable extends FormattedJTable {
 
     /**
      * Override prepareRenderer instead of using a custom renderer so the look and feel is preserved
-     * 
+     *
      * @see javax.swing.JTable#prepareRenderer(javax.swing.table.TableCellRenderer, int, int)
      */
     @Override
@@ -121,11 +114,26 @@ class ImportTable extends FormattedJTable {
 
         Component c = super.prepareRenderer(renderer, row, column);
 
-        if (column == 0) {
+        int modelCol = convertColumnIndexToModel(column);
+
+        if (modelCol == 0) {
             Icon icon = (Icon) model.getValueAt(row, column);
             ((JLabel) c).setHorizontalAlignment(SwingConstants.CENTER);
             ((JLabel) c).setIcon(icon);
             ((JLabel) c).setText(null);
+            ((JLabel) c).setToolTipText(null);
+        } else if (modelCol == 3 || modelCol == 4) {    // Display tool tip text for memo and payee because of potential length
+            if (c instanceof JComponent) {
+                if (getValueAt(row, column).toString() != null && !getValueAt(row, column).toString().isEmpty()) {
+                    ((JComponent) c).setToolTipText(getValueAt(row, column).toString());
+                } else {
+                    ((JComponent) c).setToolTipText(null);
+                }
+            }
+        } else {
+            if (c instanceof JComponent) {
+                ((JComponent) c).setToolTipText(null);
+            }
         }
 
         return c;
@@ -170,12 +178,12 @@ class ImportTable extends FormattedJTable {
 
         private ImageIcon removeIcon = null;
 
-        private final String[] cNames = { " ", rb.getString("Column.Date"), rb.getString("Column.Num"),
-                        rb.getString("Column.Payee"), rb.getString("Column.Memo"), rb.getString("Column.Account"),
-                        rb.getString("Column.Amount") };
+        private final String[] cNames = {" ", rb.getString("Column.Date"), rb.getString("Column.Num"),
+                rb.getString("Column.Payee"), rb.getString("Column.Memo"), rb.getString("Column.Account"),
+                rb.getString("Column.Amount")};
 
-        private final Class<?>[] cClass = { String.class, String.class, String.class, String.class, String.class,
-                        String.class, BigDecimal.class };
+        private final Class<?>[] cClass = {String.class, String.class, String.class, String.class, String.class,
+                String.class, BigDecimal.class};
 
         private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
 
@@ -211,7 +219,7 @@ class ImportTable extends FormattedJTable {
         /**
          * Returns the number of columns in the model. A <code>JTable</code> uses this method to determine how many
          * columns it should create and display by default.
-         * 
+         *
          * @return the number of columns in the model
          * @see #getRowCount
          */
@@ -224,7 +232,7 @@ class ImportTable extends FormattedJTable {
         /**
          * Returns the number of rows in the model. A <code>JTable</code> uses this method to determine how many rows it
          * should display. This method should be quick, as it is called frequently during rendering.
-         * 
+         *
          * @return the number of rows in the model
          * @see #getColumnCount
          */
@@ -235,8 +243,8 @@ class ImportTable extends FormattedJTable {
 
         /**
          * Returns the value for the cell at <code>columnIndex</code> and <code>rowIndex</code>.
-         * 
-         * @param rowIndex the row whose value is to be queried
+         *
+         * @param rowIndex    the row whose value is to be queried
          * @param columnIndex the column whose value is to be queried
          * @return the value Object at the specified cell
          */
