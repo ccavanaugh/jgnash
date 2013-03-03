@@ -59,7 +59,7 @@ public class Mt940Parser {
     /** 
      * Parse the Mt940-file. Mt940 records are delimited by '-'.
      *
-     * @param reader
+     * @param reader reader
      * @return Mt940File instance
      * @throws IOException
      * @throws ParseException
@@ -96,7 +96,7 @@ public class Mt940Parser {
      * After that, a line that doesn't start with a ':' is assumed to
      * belong to the previous 'real' line.
      *
-     * @return
+     * @return List of strings that have been correctly merged
      */
     private static List<String> mergeLines(final List<String> recordLines) {
         List<String> retval = new ArrayList<>();
@@ -129,8 +129,8 @@ public class Mt940Parser {
      * An mt940-record consists of some general lines and a couple
      * of entries consisting of a :61: and a :86:-section.
      *
-     * @param recordLines
-     * @return
+     * @param recordLines the List of MT940 records to parse
+     * @return and generate Mt940 Record
      * @throws ParseException
      */
     private static Mt940Record parseRecord(final List<String> recordLines) throws ParseException {
