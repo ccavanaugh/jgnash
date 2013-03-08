@@ -37,24 +37,33 @@ public enum DataStoreType {
     DB4O(
             Resource.get().getString("DataStoreType.Db4o"),
             true,
+            true,
             Db4oDataStore.class),
     BINARY_XSTREAM(
             Resource.get().getString("DataStoreType.Bxds"),
             true,
+            false,
             BinaryXStreamDataStore.class),
     XML(
             Resource.get().getString("DataStoreType.XML"),
+            true,
             false,
             XMLDataStore.class);
 
+
+    /* If true, then this DataStoreType can support remote connections */
     final transient boolean supportsRemote;
+
+    /* If true, then this DataStoreType can support local connections */
+    final transient boolean supportsLocal;
 
     private final transient String description;
 
     private final transient Class<? extends DataStore> dataStore;
 
-    private DataStoreType(final String description, final boolean supportsRemote, final Class<? extends DataStore> dataStore) {
+    private DataStoreType(final String description, final boolean supportsLocal, final boolean supportsRemote, final Class<? extends DataStore> dataStore) {
         this.description = description;
+        this.supportsLocal = supportsLocal;
         this.supportsRemote = supportsRemote;
         this.dataStore = dataStore;
     }

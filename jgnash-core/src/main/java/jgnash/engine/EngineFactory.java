@@ -232,6 +232,11 @@ public class EngineFactory {
      * @see DataStoreType
      */
     public static synchronized Engine bootLocalEngine(final String fileName, final String engineName, final DataStoreType type) {
+
+        if (!type.supportsLocal) {
+            throw new UnsupportedOperationException("Local operation not supported for this type.");
+        }
+
         MessageBus.getInstance(engineName).setLocal();
 
         DataStore dataStore = type.getDataStore();
