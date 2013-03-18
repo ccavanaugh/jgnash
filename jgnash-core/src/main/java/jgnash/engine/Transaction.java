@@ -31,11 +31,18 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import jgnash.util.DateUtils;
 
+import javax.persistence.Basic;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+
 /**
  * Base class for transactions
- * 
+ *
  * @author Craig Cavanaugh
  */
+@Entity
+@DiscriminatorValue("tran")
 public class Transaction extends StoredObject implements Comparable<Transaction> {
 
     private static final long serialVersionUID = 6312043631736158707L;
@@ -64,6 +71,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * Financial Institute Transaction ID. Typically used for OFX import FITID.  If this field is not null
      * then it is an indicator of an imported transaction
      */
+    @Basic(optional = true)
     private String fitid;
 
     /**
@@ -74,6 +82,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     /**
      * Transaction entries
      */
+    @ElementCollection
     List<TransactionEntry> transactionEntries = new ArrayList<>();
 
     /**
@@ -95,7 +104,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     /**
      * Returns a set of accounts this transaction effects.
      * The returned set may be altered without creating side effects
-     * 
+     *
      * @return set of accounts
      * @see Account
      */
@@ -119,6 +128,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
     /**
      * Determines if any of the transaction's accounts are hidden
+     *
      * @return true if any of the accounts are hidden
      */
     public boolean areAccountsHidden() {
@@ -136,6 +146,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
     /**
      * Determines if any of the transaction's accounts are locked against editing (cloning and then changing accounts)
+     *
      * @return true if any of the accounts are locked
      */
     public boolean areAccountsLocked() {
@@ -153,7 +164,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
     /**
      * Search for a common account for all entries
-     * 
+     *
      * @return the common Account
      * @see Account
      */
@@ -194,7 +205,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     /**
      * Returns the balance of the transaction amount with respect to the supplied account. Value will be positive or
      * negative depending if the transaction debits or credits the account.
-     * 
+     *
      * @param entry new TransactionEntry to add
      * @see TransactionEntry
      */
@@ -229,7 +240,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     /**
      * Returns the number of <code>TransactionEntry(s)</code> this transaction contains. A read lock is obtained before
      * determining the size.
-     * 
+     *
      * @return the number of <code>TransactionEntry(s)</code>
      * @see TransactionEntry
      */
@@ -257,7 +268,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
     /**
      * Sets the payee for this transaction
-     * 
+     *
      * @param payee the transaction payee
      */
     public void setPayee(final String payee) {
@@ -266,7 +277,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
     /**
      * Return the payee for this transaction
-     * 
+     *
      * @return the transaction payee. Guaranteed to not return null
      */
     public String getPayee() {
@@ -280,7 +291,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
     /**
      * Sets the number for this transaction
-     * 
+     *
      * @param number the transaction number
      */
     public void setNumber(final String number) {
@@ -289,7 +300,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
     /**
      * Return the number for this transaction
-     * 
+     *
      * @return the transaction number. Guaranteed to not return null
      */
     public String getNumber() {
@@ -303,7 +314,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
     /**
      * Calculates the amount of the transaction relative to the supplied account
-     * 
+     *
      * @param account reference account
      * @return Amount of this transaction relative to the supplied account
      */
@@ -327,7 +338,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     /**
      * Compares two Transactions for ordering. Equality is checked for at the reference level. If a comparison cannot be
      * determined, the hashCode is used
-     * 
+     *
      * @param tran the <code>Transaction</code> to be compared.
      * @return the value <code>0</code> if the argument Transaction is equal to this Transaction; a value less than
      *         <code>0</code> if this Transaction is before the Transaction argument; and a value greater than
@@ -360,7 +371,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     /**
      * Compares this transaction against another for equality. The date the transaction is created is ignored. The
      * voucher date is still tested.
-     * 
+     *
      * @param tran Transaction to compare against
      * @return <code>true</code> if Transactions are equal
      */
@@ -404,7 +415,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
     /**
      * Return a list of transaction entries with the given tag
-     * 
+     *
      * @param tag TransactionTag to filter for
      * @return List<TransactionEntry> of entries with the given tag. An empty list will be returned if none are found
      */
@@ -429,7 +440,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
     /**
      * Adds a collection of transaction entries
-     * 
+     *
      * @param entries collection of TransactionEntry(s)
      */
     public void addTransactionEntries(final Collection<TransactionEntry> entries) {
@@ -579,9 +590,9 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
-        
-        final String lineSep = System.getProperty("line.separator"); 
-        
+
+        final String lineSep = System.getProperty("line.separator");
+
         b.append("Transaction UUID: ").append(getUuid()).append(lineSep);
         b.append("Number:           ").append(getNumber()).append(lineSep);
         b.append("Payee:            ").append(getPayee()).append(lineSep);

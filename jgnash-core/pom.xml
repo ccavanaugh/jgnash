@@ -11,16 +11,32 @@
 	<name>jGnash Core</name>
 	<description>Core non UI specific code</description>
 
+    <properties>
+        <derby.version>10.9.1.0</derby.version>
+        <openjpa.version>2.2.1</openjpa.version>
+        <xstream.version>1.4.4</xstream.version>
+    </properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>jgnash-resources</artifactId>
 			<version>${project.version}</version>
-		</dependency>        
+		</dependency>
+        <dependency>
+            <groupId>org.apache.openjpa</groupId>
+            <artifactId>openjpa-all</artifactId>
+            <version>${openjpa.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>${derby.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
 			<artifactId>xstream</artifactId>
-			<version>1.4.4</version>
+			<version>${xstream.version}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>xmlpull</artifactId>

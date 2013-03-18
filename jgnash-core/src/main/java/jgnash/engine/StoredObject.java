@@ -17,6 +17,7 @@
  */
 package jgnash.engine;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,8 +26,9 @@ import java.util.logging.Logger;
  * Abstract class for anything stored in the database that requires a unique id
  *
  * @author Craig Cavanaugh
- *
  */
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class StoredObject implements Cloneable, Serializable {
 
     private static final long serialVersionUID = -6989773226655555899L;
@@ -34,11 +36,14 @@ public abstract class StoredObject implements Cloneable, Serializable {
     /**
      * Indicates object is marked for removal
      */
+    @Basic
     private boolean markedForRemoval = false;
 
     /**
-     * database business key
+     * Unique ID for every object
      */
+    @Id()
+    @Column(name="UUID", nullable = false)
     private String uuid = UUIDUtil.getUID();
 
     /**
@@ -55,11 +60,11 @@ public abstract class StoredObject implements Cloneable, Serializable {
      *
      * @param uuid uuid to assign the object
      */
-    private void setUuid(String uuid) {
+    private void setUuid(final String uuid) {
         this.uuid = uuid;
     }
 
-    void setMarkedForRemoval(boolean markedForRemoval) {
+    void setMarkedForRemoval(final boolean markedForRemoval) {
         this.markedForRemoval = markedForRemoval;
     }
 
@@ -84,7 +89,7 @@ public abstract class StoredObject implements Cloneable, Serializable {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         return this == o || o instanceof StoredObject && getUuid().equals(((StoredObject) o).getUuid());
 
     }

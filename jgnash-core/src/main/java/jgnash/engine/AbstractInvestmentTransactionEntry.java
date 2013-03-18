@@ -17,19 +17,22 @@
  */
 package jgnash.engine;
 
+import javax.persistence.Embeddable;
+import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 
 /**
  * Investment Transaction Entry
  * 
  * @author Craig Cavanaugh
- * 
  */
+@Embeddable
 public abstract class AbstractInvestmentTransactionEntry extends TransactionEntry {
 
     /**
      * Security for this entry
      */
+    @ManyToOne
     private SecurityNode securityNode;
 
     /**

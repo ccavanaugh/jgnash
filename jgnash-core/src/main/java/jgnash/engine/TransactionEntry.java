@@ -17,6 +17,10 @@
  */
 package jgnash.engine;
 
+import javax.persistence.Basic;
+import javax.persistence.Embeddable;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.logging.Level;
@@ -35,11 +39,12 @@ import java.util.logging.Logger;
  * 
  * @author Craig Cavanaugh
  */
+@Embeddable
 public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable, Serializable {
     
     private static final long serialVersionUID = 1L;
 
-    private int hash = 0;
+    private transient int hash = 0;
 
     private String transactionTag = TransactionTag.BANK.name();
 
@@ -62,11 +67,13 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     /**
      * Reconciled state of the transaction
      */
+    @Enumerated(EnumType.STRING)
     private ReconciledState creditReconciled = ReconciledState.NOT_RECONCILED;
 
     /**
      * Reconciled state of the debit side of the transaction
      */
+    @Enumerated(EnumType.STRING)
     private ReconciledState debitReconciled = ReconciledState.NOT_RECONCILED;
 
     /**

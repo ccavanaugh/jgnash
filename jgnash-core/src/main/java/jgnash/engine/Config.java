@@ -22,12 +22,17 @@ import java.util.List;
 
 import jgnash.util.Resource;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+
 /**
  * A general configuration class so that application configuration can be stored inside the database
  * 
  * @author Craig Cavanaugh
- *
  */
+@Entity
+@DiscriminatorValue("config")
 public class Config extends StoredObject {
 
     private static final long serialVersionUID = -7317806359608639763L;
@@ -44,6 +49,7 @@ public class Config extends StoredObject {
     /**
      * Contains a list a items to display in the transaction number combo
      */
+    @ElementCollection
     private List<String> transactionNumberItems = new ArrayList<>();
 
     void initialize() {

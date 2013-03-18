@@ -36,12 +36,16 @@ import java.util.regex.Pattern;
 
 import jgnash.util.DateUtils;
 
+import javax.persistence.*;
+
 /**
  * Abstract Account class
  *
  * @author Craig Cavanaugh
  * @author Jeff Prickett prickett@users.sourceforge.net
  */
+@Entity
+@DiscriminatorValue("acc")
 public class Account extends StoredObject implements Comparable<Account> {
 
     private static final long serialVersionUID = 6886735664760113291L;
@@ -54,6 +58,7 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     private boolean locked = false;
 
+    @ManyToOne
     Account parentAccount;
 
     private boolean visible = true;
@@ -64,17 +69,34 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     private String description = "";
 
+    @Lob
     private String notes = "";
 
     /**
      * CurrencyNode for this account
      */
+    @ManyToOne
     private CurrencyNode currencyNode;
 
+    /**
+     * Sorted list of child accounts
+     */
+    @OneToMany(cascade = {CascadeType.ALL})
+    @OrderBy("name")
     private final List<Account> children = new ArrayList<>();
 
+    /**
+     * List of transactions for this account
+     */
+    @OneToMany(orphanRemoval = true, cascade = {CascadeType.ALL})
+    @OrderBy("date")
     final List<Transaction> transactions = new ArrayList<>();
 
+    /**
+     * List of securities if this is an investment account
+     */
+    @OneToMany(cascade = {CascadeType.ALL})
+    @OrderBy("symbol")
     List<SecurityNode> securities = new ArrayList<>();
 
     /**
@@ -678,7 +700,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * transaction sort order
      *
      * @param transaction reference transaction for running balance.  Must be contained within the account
-     * @return  the balance of this account at the specified transaction
+     * @return the balance of this account at the specified transaction
      */
     public BigDecimal getBalanceAt(final Transaction transaction) {
         Lock l = transactionLock.readLock();
