@@ -17,6 +17,8 @@
  */
 package jgnash.engine;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +30,8 @@ import java.util.List;
  *
  * @author Craig Cavanaugh
  */
+@Entity
+@DiscriminatorValue("InvTran")
 public class InvestmentTransaction extends Transaction {
 
     private static final long serialVersionUID = -7026047119534296655L;

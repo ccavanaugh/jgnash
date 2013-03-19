@@ -31,10 +31,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import jgnash.util.DateUtils;
 
-import javax.persistence.Basic;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 /**
  * Base class for transactions
@@ -42,19 +39,23 @@ import javax.persistence.Entity;
  * @author Craig Cavanaugh
  */
 @Entity
-@DiscriminatorValue("tran")
+@DiscriminatorValue("Tran")
 public class Transaction extends StoredObject implements Comparable<Transaction> {
 
     private static final long serialVersionUID = 6312043631736158707L;
 
     private static final transient String EMPTY = "";
 
-    /* date of entry from form entry */
+    /**
+     * Date of entry from form entry, used for sort order
+     */
+    @Temporal(TemporalType.DATE)
     private Date date = new Date();
 
     /**
      * Date transaction was created
      */
+    @Temporal(TemporalType.DATE)
     private Date dateEntered = new Date();
 
     /**

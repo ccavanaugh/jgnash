@@ -45,7 +45,7 @@ import javax.persistence.*;
  * @author Jeff Prickett prickett@users.sourceforge.net
  */
 @Entity
-@DiscriminatorValue("acc")
+@DiscriminatorValue("Account")
 public class Account extends StoredObject implements Comparable<Account> {
 
     private static final long serialVersionUID = 6886735664760113291L;
@@ -81,7 +81,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     /**
      * Sorted list of child accounts
      */
-    @OneToMany(cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "account", cascade = {CascadeType.ALL})
     @OrderBy("name")
     private final List<Account> children = new ArrayList<>();
 

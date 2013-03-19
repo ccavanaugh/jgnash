@@ -23,16 +23,22 @@ import java.util.Date;
 
 import jgnash.util.DateUtils;
 
+import javax.persistence.Embeddable;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 /**
  * Historical data for a <code>SecurityNode</code>.
  *
  * @author Craig Cavanaugh
- *
  */
+
+@Embeddable
 public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Serializable {
     
     private static final long serialVersionUID = 1L;
 
+    @Temporal(TemporalType.DATE)
     private Date date = DateUtils.today();
 
     private BigDecimal price = BigDecimal.ZERO;

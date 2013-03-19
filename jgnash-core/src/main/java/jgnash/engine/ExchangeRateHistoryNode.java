@@ -23,16 +23,23 @@ import java.util.Date;
 
 import jgnash.util.DateUtils;
 
+import javax.persistence.Embeddable;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 /**
  * Exchange rate history node for a <code>ExchangeRate</code>.
  * <code>ExchangeRateHistoryNode</code> objects are immutable.
  *
  * @author Craig Cavanaugh
  */
+
+@Embeddable
 public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNode>, Serializable {
     
     private static final long serialVersionUID = 1L;
 
+    @Temporal(TemporalType.DATE)
     private Date date = DateUtils.today();
 
     private BigDecimal rate = BigDecimal.ZERO;
@@ -40,10 +47,8 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
     /**
      * No argument constructor for reflection purposes.
      * <b>Do not use to create a new instance</b>
-     *
-     * @deprecated
      */
-    @Deprecated
+    @SuppressWarnings("unused")
     ExchangeRateHistoryNode() {
     }
 

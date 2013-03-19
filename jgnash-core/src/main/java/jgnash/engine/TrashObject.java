@@ -17,14 +17,19 @@
  */
 package jgnash.engine;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.Date;
 
 /**
  * Wraps objects that have been removed from active use in the engine.
  *
  * @author Craig Cavanaugh
- *
  */
+
+@Entity
 public class TrashObject extends StoredObject {
 
     private static final long serialVersionUID = -5923174140959126059L;
@@ -32,23 +37,23 @@ public class TrashObject extends StoredObject {
     /**
      * Date object was added
      */
+    @Temporal(TemporalType.TIMESTAMP)
     private final Date date = new Date();
 
     /**
      * The stored object
      */
+    @ManyToOne
     private StoredObject object;
 
     /**
      * Public no-argument constructor for reflection purposes
-     *
-     * @deprecated
      */
-    @Deprecated
+    @SuppressWarnings("unused")
     public TrashObject() {
     }
 
-    TrashObject(StoredObject object) {
+    TrashObject(final StoredObject object) {
         this.object = object;
         object.setMarkedForRemoval(true);
         setMarkedForRemoval(true);

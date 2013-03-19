@@ -17,10 +17,7 @@
  */
 package jgnash.engine;
 
-import javax.persistence.Basic;
-import javax.persistence.Embeddable;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.logging.Level;
@@ -53,11 +50,13 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     /**
      * Account with balance being decreased
      */
+    @ManyToOne
     private Account debitAccount;
 
     /**
      * Account with balance being increased
      */
+    @ManyToOne
     private Account creditAccount;
 
     private BigDecimal creditAmount = BigDecimal.ZERO;

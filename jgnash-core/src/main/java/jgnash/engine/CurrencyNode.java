@@ -17,6 +17,9 @@
  */
 package jgnash.engine;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.Transient;
 import java.io.ObjectStreamException;
 import java.math.BigDecimal;
 import java.util.Locale;
@@ -26,14 +29,16 @@ import java.util.logging.Logger;
  * Class for representing currency nodes
  * 
  * @author Craig Cavanaugh
- *
  */
+@Entity
+@DiscriminatorValue("Currency")
 public class CurrencyNode extends CommodityNode {
 
     private static final long serialVersionUID = 1339921229356331512L;
 
     // unused, but left to keep file compatibility with prior releases
     @SuppressWarnings("unused")
+    @Transient
     private Locale locale = Locale.getDefault();
 
     private transient ExchangeRateDAO exchangeRateDAO;

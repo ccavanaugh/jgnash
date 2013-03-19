@@ -29,6 +29,11 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import jgnash.util.DateUtils;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+
 /**
  * Security Node <p>
  *
@@ -36,14 +41,20 @@ import jgnash.util.DateUtils;
  *
  * @author Craig Cavanaugh
  */
-public final class SecurityNode extends CommodityNode {
+@Entity
+@DiscriminatorValue("Security")
+public class SecurityNode extends CommodityNode {
 
     private static final long serialVersionUID = -8377663762619941498L;
+
+    @ManyToOne
     private CurrencyNode reportedCurrency;
+
     /**
      * The currency that security values are reported in
      */
     private String quoteSource = QuoteSource.NONE.name();
+
     private transient QuoteSource cachedQuoteSource;
 
     /**
@@ -51,7 +62,9 @@ public final class SecurityNode extends CommodityNode {
      */
     private String isin;
 
+    @ElementCollection
     private List<SecurityHistoryNode> historyNodes = new ArrayList<>();
+
     private transient ReadWriteLock lock;
 
     public SecurityNode() {

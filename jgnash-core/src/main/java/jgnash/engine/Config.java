@@ -22,24 +22,24 @@ import java.util.List;
 
 import jgnash.util.Resource;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 /**
- * A general configuration class so that application configuration can be stored inside the database
+ * A general configuration class so that global configuration information may be stored inside the database
  * 
  * @author Craig Cavanaugh
  */
 @Entity
-@DiscriminatorValue("config")
+@DiscriminatorValue("Config")
 public class Config extends StoredObject {
 
     private static final long serialVersionUID = -7317806359608639763L;
 
+    @ManyToOne
     private CurrencyNode defaultCurrency;
 
     @SuppressWarnings("unused")
+    @Transient
     private String name = "DefaultConfig"; // left for compatibility
 
     private String accountSeparator = ":";

@@ -19,6 +19,9 @@ package jgnash.engine;
 
 import jgnash.util.DateUtils;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
 import java.io.ObjectStreamException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -34,10 +37,13 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  *
  * @author Craig Cavanaugh
  */
+@Entity
+@DiscriminatorValue("ExchangeHistory")
 public class ExchangeRate extends StoredObject {
 
     private static final long serialVersionUID = -2365289994847042288L;
 
+    @ElementCollection
     private final List<ExchangeRateHistoryNode> historyNodes = new ArrayList<>();
 
     /**
@@ -56,12 +62,10 @@ public class ExchangeRate extends StoredObject {
     private transient ReadWriteLock lock = new ReentrantReadWriteLock();
 
     /**
-     * No argument constructor for reflection purposes. <b>Do not use to create
-     * a new instance</b>
-     *
-     * @deprecated
+     * No argument constructor for reflection purposes.
+     * <b>Do not use to create a new instance</b>
      */
-    @Deprecated
+    @SuppressWarnings("unused")
     public ExchangeRate() {
     }
 
