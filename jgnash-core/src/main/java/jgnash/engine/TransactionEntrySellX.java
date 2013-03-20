@@ -17,6 +17,7 @@
  */
 package jgnash.engine;
 
+import javax.persistence.Embeddable;
 import java.math.BigDecimal;
 
 /**
@@ -29,8 +30,8 @@ import java.math.BigDecimal;
  * gains of the sell are added to it.
  *
  * @author Craig Cavanaugh
- *
  */
+@Embeddable
 public class TransactionEntrySellX extends AbstractInvestmentTransactionEntry {
     
     private static final long serialVersionUID = 1L;
@@ -38,10 +39,8 @@ public class TransactionEntrySellX extends AbstractInvestmentTransactionEntry {
     /**
      * No argument constructor for reflection purposes.
      * <b>Do not use to create a new instance</b>
-     *
-     * @deprecated
      */
-    @Deprecated
+    @SuppressWarnings("unused")
     public TransactionEntrySellX() {
     }
 
@@ -55,7 +54,7 @@ public class TransactionEntrySellX extends AbstractInvestmentTransactionEntry {
      * @param quantity          Number of shares
      * @param exchangeRate      Exchange rate for the debit account (May be ONE, but may not be null and must be greater than ZERO)
      */
-    TransactionEntrySellX(Account account, Account investmentAccount, SecurityNode securityNode, BigDecimal price, BigDecimal quantity, BigDecimal exchangeRate) {
+    TransactionEntrySellX(final Account account, final Account investmentAccount, final SecurityNode securityNode, final BigDecimal price, final BigDecimal quantity, final BigDecimal exchangeRate) {
 
         assert investmentAccount.memberOf(AccountGroup.INVEST);
         assert exchangeRate != null && exchangeRate.signum() == 1;

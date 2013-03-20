@@ -17,6 +17,7 @@
  */
 package jgnash.engine;
 
+import javax.persistence.Embeddable;
 import java.math.BigDecimal;
 
 /**
@@ -27,8 +28,8 @@ import java.math.BigDecimal;
  * creditAccount is assumed to be the investment account.
  *
  * @author Craig Cavanaugh
- *
  */
+@Embeddable
 public class TransactionEntryDividendX extends AbstractInvestmentTransactionEntry {
     
     private static final long serialVersionUID = 1L;
@@ -37,6 +38,7 @@ public class TransactionEntryDividendX extends AbstractInvestmentTransactionEntr
      * No argument constructor for reflection purposes only.
      * <b>Do not use to create a new instance</b>
      */
+    @SuppressWarnings("unused")
     public TransactionEntryDividendX() {
 
     }
@@ -50,7 +52,7 @@ public class TransactionEntryDividendX extends AbstractInvestmentTransactionEntr
      * @param dividend              Dividend received
      * @param incomeExchangedAmount Exchanged amount for the debit account
      */
-    TransactionEntryDividendX(Account incomeAccount, Account investmentAccount, SecurityNode securityNode, BigDecimal dividend, BigDecimal incomeExchangedAmount) {
+    TransactionEntryDividendX(final Account incomeAccount, final Account investmentAccount, final SecurityNode securityNode, final BigDecimal dividend, final BigDecimal incomeExchangedAmount) {
 
         assert incomeAccount != null && investmentAccount != null;
         assert investmentAccount.memberOf(AccountGroup.INVEST);

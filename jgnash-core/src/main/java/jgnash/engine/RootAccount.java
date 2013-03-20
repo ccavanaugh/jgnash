@@ -17,12 +17,16 @@
  */
 package jgnash.engine;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
 /**
  * The RootAccount class
  *
  * @author Craig Cavanaugh
- *
  */
+@Entity
+@DiscriminatorValue("RootAccount")
 public class RootAccount extends Account {
 
     private static final long serialVersionUID = 566641506784882611L;

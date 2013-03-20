@@ -17,6 +17,7 @@
  */
 package jgnash.engine;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -89,7 +90,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * List of transactions for this account
      */
     @OneToMany(orphanRemoval = true, cascade = {CascadeType.ALL})
-    @OrderBy("date")
+    @OrderBy("date, number, dateEntered")
     final List<Transaction> transactions = new ArrayList<>();
 
     /**
@@ -119,7 +120,8 @@ public class Account extends StoredObject implements Comparable<Account> {
      */
     private String bankId;
 
-    private final Map<String, Object> propertyMap = new HashMap<>();
+    @OneToMany
+    private final Map<String, Serializable> propertyMap = new HashMap<>();
 
     private transient ReadWriteLock transactionLock;
 
@@ -192,7 +194,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @param key   AccountProperty
      * @param value actual object to add or set
      */
-    public void setProperty(final AccountProperty key, final Object value) {
+    public void setProperty(final AccountProperty key, final Serializable value) {
         propertyMap.put(key.name(), value);
     }
 
@@ -212,7 +214,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @param key AccountProperty to get
      * @return not null if the account contained the property
      */
-    public Object getProperty(final AccountProperty key) {
+    public Serializable getProperty(final AccountProperty key) {
         return propertyMap.get(key.name());
     }
 

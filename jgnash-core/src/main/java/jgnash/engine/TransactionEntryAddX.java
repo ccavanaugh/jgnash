@@ -17,6 +17,7 @@
  */
 package jgnash.engine;
 
+import javax.persistence.Embeddable;
 import java.math.BigDecimal;
 
 /**
@@ -24,8 +25,8 @@ import java.math.BigDecimal;
  * entry transaction
  *
  * @author Craig Cavanaugh
- *
  */
+@Embeddable
 public class TransactionEntryAddX extends TransactionEntryAbstractIncrease {
     
     private static final long serialVersionUID = 1L;
@@ -33,14 +34,12 @@ public class TransactionEntryAddX extends TransactionEntryAbstractIncrease {
     /**
      * No argument constructor for reflection purposes.
      * <b>Do not use to create a new instance</b>
-     *
-     * @deprecated
      */
-    @Deprecated
+    @SuppressWarnings("unused")
     public TransactionEntryAddX() {
     }
 
-    public TransactionEntryAddX(Account account, SecurityNode securityNode, BigDecimal price, BigDecimal quantity) {
+    public TransactionEntryAddX(final Account account, final SecurityNode securityNode, final BigDecimal price, final BigDecimal quantity) {
         setCreditAccount(account);
         setDebitAccount(account);
 

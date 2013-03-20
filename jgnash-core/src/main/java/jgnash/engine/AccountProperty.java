@@ -21,12 +21,9 @@ package jgnash.engine;
  * Specialized account properties
  *
  * @author Craig Cavanaugh
- *
  */
 public enum AccountProperty {
-
     AMORTIZEOBJECT,
     CREDITLIMIT,
     VATOBJECT
-
 }

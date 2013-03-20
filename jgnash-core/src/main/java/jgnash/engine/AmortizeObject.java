@@ -17,6 +17,9 @@
  */
 package jgnash.engine;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,14 +33,20 @@ import java.util.Date;
  * 
  * @author Craig Cavanaugh
  */
-public class AmortizeObject {
+@Entity
+public class AmortizeObject implements Serializable {
 
+    private static final long serialVersionUID = 4823735664756113291L;
+
+    @ManyToOne
     private Account interestAccount; // account for interest payment
 
+    @ManyToOne
     private Account bankAccount; // account for principal account
 
     // (normally the liability account)
-    private Account feesAccount; // account id to place non interest fees
+    @ManyToOne
+    private Account feesAccount; // account to place non interest fees
 
     /**
      * the number of payments per year

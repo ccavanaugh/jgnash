@@ -17,6 +17,7 @@
  */
 package jgnash.engine;
 
+import javax.persistence.Embeddable;
 import java.math.BigDecimal;
 
 /**
@@ -26,8 +27,8 @@ import java.math.BigDecimal;
  * The debitAccount and debitAmount fields are used for the capital gains (income) account.
  *
  * @author Craig Cavanaugh
- *
  */
+@Embeddable
 public class TransactionEntryRocX extends AbstractInvestmentTransactionEntry {
     
     private static final long serialVersionUID = 1L;
@@ -35,10 +36,8 @@ public class TransactionEntryRocX extends AbstractInvestmentTransactionEntry {
     /**
      * No argument constructor for reflection purposes only.
      * <b>Do not use to create a new instance</b>
-     *
-     * @deprecated
      */
-    @Deprecated
+    @SuppressWarnings("unused")
     public TransactionEntryRocX() {
     }
 

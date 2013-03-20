@@ -17,6 +17,7 @@
  */
 package jgnash.engine;
 
+import javax.persistence.Embeddable;
 import java.math.BigDecimal;
 
 /**
@@ -29,8 +30,8 @@ import java.math.BigDecimal;
  * of the buy is made against it.
  *
  * @author Craig Cavanaugh
- *
  */
+@Embeddable
 public class TransactionEntryBuyX extends AbstractInvestmentTransactionEntry {
     
     private static final long serialVersionUID = 1L;
@@ -38,10 +39,8 @@ public class TransactionEntryBuyX extends AbstractInvestmentTransactionEntry {
     /**
      * No argument constructor for reflection purposes.
      * <b>Do not use to create a new instance</b>
-     *
-     * @deprecated
      */
-    @Deprecated
+    @SuppressWarnings("unused")
     public TransactionEntryBuyX() {
     }
 
@@ -55,7 +54,7 @@ public class TransactionEntryBuyX extends AbstractInvestmentTransactionEntry {
      * @param quantity          Number of shares
      * @param exchangeRate      Exchange rate for the credit account (May be ONE, but may not be null and must be greater than ZERO)
      */
-    TransactionEntryBuyX(Account account, Account investmentAccount, SecurityNode securityNode, BigDecimal price, BigDecimal quantity, BigDecimal exchangeRate) {
+    TransactionEntryBuyX(final Account account, final Account investmentAccount, final SecurityNode securityNode, final BigDecimal price, final BigDecimal quantity, final BigDecimal exchangeRate) {
 
         assert investmentAccount.memberOf(AccountGroup.INVEST);
         assert exchangeRate != null && exchangeRate.signum() == 1;

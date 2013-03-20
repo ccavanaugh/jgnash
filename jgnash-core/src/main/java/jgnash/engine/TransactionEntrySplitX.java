@@ -25,7 +25,6 @@ import jgnash.util.Resource;
  * Add shares without impacting the cash balance. This is a single entry transaction
  * 
  * @author Craig Cavanaugh
- *
  */
 public class TransactionEntrySplitX extends TransactionEntryAbstractIncrease {
     
@@ -35,10 +34,8 @@ public class TransactionEntrySplitX extends TransactionEntryAbstractIncrease {
      * No argument constructor for reflection purposes.
      * <p>
      * <b>Do not use to create a new instance</b>
-     * 
-     * @deprecated
      */
-    @Deprecated
+    @SuppressWarnings("unused")
     public TransactionEntrySplitX() {
     }
 

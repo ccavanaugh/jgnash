@@ -21,12 +21,14 @@ import java.math.BigDecimal;
 
 import jgnash.util.Resource;
 
+import javax.persistence.Embeddable;
+
 /**
  * Reinvest dividend transaction
  * 
  * @author Craig Cavanaugh
- *
  */
+@Embeddable
 public class TransactionEntryReinvestDivX extends TransactionEntryAbstractIncrease {
     
     private static final long serialVersionUID = 1L;
@@ -35,10 +37,8 @@ public class TransactionEntryReinvestDivX extends TransactionEntryAbstractIncrea
      * No argument constructor for reflection purposes.
      * <p>
      * <b>Do not use to create a new instance</b>
-     * 
-     * @deprecated
      */
-    @Deprecated
+    @SuppressWarnings("unused")
     public TransactionEntryReinvestDivX() {
     }
 
