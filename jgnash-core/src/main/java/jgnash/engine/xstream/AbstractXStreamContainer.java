@@ -147,6 +147,9 @@ abstract class AbstractXStreamContainer {
         xstream.useAttributeFor(StoredObject.class, "uuid");
 
         xstream.omitField(StoredObject.class, "markedForRemoval");
+        xstream.omitField(Account.class, "version");
+        xstream.omitField(Budget.class, "version");
+        xstream.omitField(CommodityNode.class, "version");
 
         return xstream;
     }

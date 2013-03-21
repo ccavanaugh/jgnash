@@ -27,6 +27,8 @@ import javax.persistence.Query;
 import java.util.List;
 import java.util.Locale;
 
+import static org.junit.Assert.assertNotNull;
+
 public class JpaTests {
 
     @Test
@@ -47,14 +49,37 @@ public class JpaTests {
 
         em.getTransaction().commit();
 
-        em.close();
+        em.getTransaction().begin();
+        {
+            Account child = new Account(AccountType.BANK, node);
+            child.setName("Child");
+            account.addChild(child);
+            em.persist(child);
+            em.persist(account);
+        }
 
+        em.getTransaction().commit();
+
+
+        em.close();
+        factory.close();
+
+        factory = Persistence.createEntityManagerFactory("jgnash", System.getProperties());
         EntityManager em2 = factory.createEntityManager();
 
         Query q = em2.createQuery("select a from Account a");
 
         for (Account a : (List<Account>) q.getResultList()) {
             System.out.println(a.getName() + " (with currency: " + a.getCurrencyNode().getSymbol() + ")");
+
+            if (a.isParent()) {
+                System.out.println("    " + a.getName() + " has child: " + a.getChildren().get(0).getName());
+            }
+
+            assertNotNull(a.getTransactionLock());
+
+            a.getTransactionLock().readLock().lock();
+            a.getTransactionLock().readLock().unlock();
         }
 
         em2.close();

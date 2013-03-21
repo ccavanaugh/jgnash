@@ -21,6 +21,7 @@ import jgnash.util.DateUtils;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.PostLoad;
 import java.io.ObjectStreamException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -208,6 +209,7 @@ public class ExchangeRate extends StoredObject {
         return super.hashCode() * 67 + rateId.hashCode();
     }
 
+    @PostLoad
     private Object readResolve() throws ObjectStreamException {
         lock = new ReentrantReadWriteLock();
         return this;

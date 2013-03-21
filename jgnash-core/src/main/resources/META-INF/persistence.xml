@@ -42,6 +42,8 @@
         <class>jgnash.engine.AbstractInvestmentTransactionEntry</class>
         <class>jgnash.engine.Account</class>
         <class>jgnash.engine.AmortizeObject</class>
+        <class>jgnash.engine.budget.Budget</class>
+        <class>jgnash.engine.budget.BudgetGoal</class>
         <class>jgnash.engine.CommodityNode</class>
         <class>jgnash.engine.Config</class>
         <class>jgnash.engine.CurrencyNode</class>

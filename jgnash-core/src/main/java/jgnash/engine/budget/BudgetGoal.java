@@ -23,6 +23,8 @@ import java.util.Arrays;
 
 import jgnash.engine.MathConstants;
 
+import javax.persistence.Embeddable;
+
 /**
  * Budget Goal Object
  * 
@@ -30,6 +32,7 @@ import jgnash.engine.MathConstants;
  * 
  * @author Craig Cavanaugh
  */
+@Embeddable
 public class BudgetGoal implements Cloneable, Serializable {
     
     private static final long serialVersionUID = 1L;

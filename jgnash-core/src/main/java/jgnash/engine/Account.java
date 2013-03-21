@@ -50,6 +50,13 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     private static final long serialVersionUID = 6886735664760113291L;
 
+    /**
+     * Version field for persistence purposes
+     */
+    @SuppressWarnings("unused")
+    @Version
+    private int version;
+
     private String accountType;
 
     private transient AccountType cachedAccountType;
@@ -81,16 +88,16 @@ public class Account extends StoredObject implements Comparable<Account> {
     /**
      * Sorted list of child accounts
      */
-    @OneToMany(mappedBy = "account", cascade = {CascadeType.ALL})
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @OrderBy("name")
-    private final List<Account> children = new ArrayList<>();
+    private List<Account> children = new ArrayList<>();
 
     /**
      * List of transactions for this account
      */
     @OneToMany(orphanRemoval = true, cascade = {CascadeType.ALL})
     @OrderBy("date, number, dateEntered")
-    final List<Transaction> transactions = new ArrayList<>();
+    List<Transaction> transactions = new ArrayList<>();
 
     /**
      * List of securities if this is an investment account
@@ -1413,6 +1420,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         this.excludedFromBudget = excludeFromBudget;
     }
 
+    @PostLoad
     protected Object readResolve() {
         transactionLock = new ReentrantReadWriteLock(true);
         childLock = new ReentrantReadWriteLock(true);

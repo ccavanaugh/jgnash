@@ -25,15 +25,24 @@ import jgnash.engine.StoredObject;
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;
 
+import javax.persistence.*;
+
 /**
  * Budget Object
  * 
  * @author Craig Cavanaugh
- *
  */
+@Entity
 public class Budget extends StoredObject implements Comparable<Budget> {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Version field for persistence purposes
+     */
+    @SuppressWarnings("unused")
+    @Version
+    private int version;
 
     /**
      * Budget name
@@ -48,11 +57,13 @@ public class Budget extends StoredObject implements Comparable<Budget> {
     /**
      * Period to report the budget in
      */
+    @Enumerated(EnumType.STRING)
     private BudgetPeriod budgetPeriod = BudgetPeriod.MONTHLY;
 
     /**
      * Account goals are stored internally by the account UUID.
      */
+    @OneToMany
     private Map<String, BudgetGoal> accountGoals = new HashMap<>();
 
     private boolean assetAccountsIncluded = false;
@@ -294,7 +305,8 @@ public class Budget extends StoredObject implements Comparable<Budget> {
     public void setLiabilityAccountsIncluded(final boolean liabilityAccountsIncluded) {
         this.liabilityAccountsIncluded = liabilityAccountsIncluded;
     }
-    
+
+    @PostLoad
     protected Object readResolve() {
         workingYear = DateUtils.getCurrentYear();
         return this;

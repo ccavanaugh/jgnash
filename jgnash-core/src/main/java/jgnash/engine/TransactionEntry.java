@@ -360,7 +360,8 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     public TransactionTag getTransactionTag() {       
         return cachedTransactionTag;
     }
-    
+
+    @PostLoad
     protected Object readResolve() {
         cachedTransactionTag = TransactionTag.valueOf(transactionTag);
         return this;

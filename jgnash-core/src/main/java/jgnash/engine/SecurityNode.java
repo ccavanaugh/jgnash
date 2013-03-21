@@ -32,6 +32,7 @@ import jgnash.util.DateUtils;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.PostLoad;
 
 /**
  * Security Node
@@ -297,6 +298,7 @@ public class SecurityNode extends CommodityNode {
         return node;
     }
 
+    @PostLoad
     private Object readResolve() throws ObjectStreamException {
         lock = new ReentrantReadWriteLock(true);
         return this;
