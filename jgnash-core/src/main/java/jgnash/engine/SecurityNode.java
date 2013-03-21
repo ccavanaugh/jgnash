@@ -29,13 +29,12 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import jgnash.util.DateUtils;
 
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
 /**
- * Security Node <p>
+ * Security Node
  *
  * The last market price is cached to improve performance
  *

@@ -19,7 +19,6 @@ package jgnash.engine;
 
 import jgnash.util.DateUtils;
 
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import java.io.ObjectStreamException;

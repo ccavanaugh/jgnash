@@ -21,7 +21,6 @@ import java.math.BigDecimal;
 
 import jgnash.util.Resource;
 
-import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 
 /**

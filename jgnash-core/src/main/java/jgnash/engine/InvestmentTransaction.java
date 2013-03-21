@@ -17,9 +17,8 @@
  */
 package jgnash.engine;
 
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Table;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;

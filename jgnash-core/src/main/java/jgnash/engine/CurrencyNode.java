@@ -17,7 +17,6 @@
  */
 package jgnash.engine;
 
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
 import java.io.ObjectStreamException;
