@@ -29,7 +29,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import jgnash.engine.Account;
-import jgnash.engine.AccountProperty;
 import jgnash.engine.AmortizeObject;
 import jgnash.engine.CommodityNode;
 import jgnash.engine.Engine;
@@ -88,7 +87,7 @@ public class LiabilityRegisterPanel extends RegisterPanel {
      * Displays the Amortize dialog
      */
     private void amortizeAction() {
-        AmortizeObject ao = (AmortizeObject) account.getProperty(AccountProperty.AMORTIZEOBJECT);
+        AmortizeObject ao = account.getAmortizeObject();
 
         AmortizeDialog d = new AmortizeDialog(ao);
         d.setVisible(true);
@@ -100,7 +99,7 @@ public class LiabilityRegisterPanel extends RegisterPanel {
 
     /* creates the payment transaction relative to the debit account */
     private void paymentActionDebit() {
-        AmortizeObject ao = (AmortizeObject) account.getProperty(AccountProperty.AMORTIZEOBJECT);
+        AmortizeObject ao = account.getAmortizeObject();
 
         if (ao != null) {
 

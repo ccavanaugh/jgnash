@@ -72,14 +72,13 @@ import jgnash.util.Resource;
  * operations. After a predefined period of time, they are permanently removed.
  * 
  * @author Craig Cavanaugh
- *
  */
 public class Engine {
 
     /**
      * Current version for the file format
      */
-    public static final float CURRENT_VERSION = 2.21f;
+    public static final float CURRENT_VERSION = 2.3f;
 
     private final Resource rb = Resource.get();
 
@@ -329,6 +328,11 @@ public class Engine {
                         getAccountDAO().updateAccount(account);
                     }
                 }
+            }
+
+            // migrate amortization object to new storage format
+            if (getConfig().getFileVersion() < 2.3f) {
+                migrateAmortizeObjects();
             }
             
             // check for improperly set default currency
@@ -1813,6 +1817,30 @@ public class Engine {
         }
     }
 
+    @SuppressWarnings("deprecation")
+    private void migrateAmortizeObjects() {
+
+        WriteLock accountWriteLock = accountLock.writeLock();
+        accountWriteLock.lock();
+
+        try {
+
+            for (Account account : getAccounts(AccountGroup.LIABILITY)) {
+                if (account.getProperty(AccountProperty.AMORTIZEOBJECT) != null) {
+
+                    AmortizeObject oldAmortizeObject = (AmortizeObject) account.getProperty(AccountProperty.AMORTIZEOBJECT);
+
+                    account.setAmortizeObject(oldAmortizeObject);
+
+                    account.removeProperty(AccountProperty.AMORTIZEOBJECT);
+                    getAccountDAO().removeAccountProperty(account, oldAmortizeObject);
+                }
+            }
+        } finally {
+            accountWriteLock.unlock();
+        }
+    }
+
     /**
      * Sets the amortize object of an account
      * 
@@ -1828,24 +1856,13 @@ public class Engine {
         try {
             if (account != null && amortizeObject != null && account.getAccountType() == AccountType.LIABILITY) {
 
-                AmortizeObject oldAmortizeObject = (AmortizeObject) account.getProperty(AccountProperty.AMORTIZEOBJECT);
+                account.setAmortizeObject(amortizeObject);
 
-                if (oldAmortizeObject != null) {
-                    if (account.removeProperty(AccountProperty.AMORTIZEOBJECT)) {
-                        if (!getAccountDAO().removeAccountProperty(account, oldAmortizeObject)) {
-                            logSevere("Was not able to remove the old amortize object");
-                        }
-                    }
-                }
-
-                account.setProperty(AccountProperty.AMORTIZEOBJECT, amortizeObject);
-
-                if (!getAccountDAO().setAccountProperty(account, amortizeObject)) {
+                if (!getAccountDAO().updateAccount(account)) {
                     logSevere("Was not able to save the amortize object");
                 }
 
                 return true;
-
             }
             return false;
         } finally {

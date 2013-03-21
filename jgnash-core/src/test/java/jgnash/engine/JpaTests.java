@@ -32,6 +32,7 @@ import static org.junit.Assert.assertNotNull;
 public class JpaTests {
 
     @Test
+    @SuppressWarnings("unchecked")
     public void SimpleAccountTest() {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", System.getProperties());
 
@@ -60,7 +61,6 @@ public class JpaTests {
 
         em.getTransaction().commit();
 
-
         em.close();
         factory.close();
 
@@ -68,6 +68,7 @@ public class JpaTests {
         EntityManager em2 = factory.createEntityManager();
 
         Query q = em2.createQuery("select a from Account a");
+
 
         for (Account a : (List<Account>) q.getResultList()) {
             System.out.println(a.getName() + " (with currency: " + a.getCurrencyNode().getSymbol() + ")");

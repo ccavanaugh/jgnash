@@ -27,7 +27,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.engine.Account;
-import jgnash.engine.AccountProperty;
 import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
@@ -464,7 +463,6 @@ public class QifImport {
                 break;
             case "CCard":
                 account = new Account(AccountType.CREDIT, defaultCurrency);
-                account.setProperty(AccountProperty.CREDITLIMIT, QifUtils.parseMoney(acc.creditLimit));
                 break;
             case "Cash":
                 account = new Account(AccountType.CASH, defaultCurrency);

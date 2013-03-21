@@ -126,7 +126,9 @@ public class Account extends StoredObject implements Comparable<Account> {
      */
     private String bankId;
 
-    @OneToMany
+    private AmortizeObject amortizeObject;
+
+    @Transient  // we don't want this to be persisted by Jpa and will become obsolete
     private final Map<String, Serializable> propertyMap = new HashMap<>();
 
     private transient ReadWriteLock transactionLock;
@@ -134,6 +136,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     private transient ReadWriteLock childLock;
 
     private transient AccountProxy proxy;
+
 
     /**
      * String delimiter for reported account structure
@@ -145,8 +148,9 @@ public class Account extends StoredObject implements Comparable<Account> {
     private static final Logger logger = Logger.getLogger(Account.class.getName());
 
     /**
-     * No argument public constructor for reflection purposes. <b>Do not use to
-     * create account new instance</b>
+     * No argument public constructor for reflection purposes.
+     * <p>
+     * <b>Do not use to create account new instance</b>
      */
     public Account() {
         transactionLock = new ReentrantReadWriteLock(true);
@@ -200,6 +204,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @param key   AccountProperty
      * @param value actual object to add or set
      */
+    @Deprecated
     public void setProperty(final AccountProperty key, final Serializable value) {
         propertyMap.put(key.name(), value);
     }
@@ -210,6 +215,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @param key AccountProperty to remove
      * @return true if this account contained the AccountProperty
      */
+    @Deprecated
     boolean removeProperty(final AccountProperty key) {
         return propertyMap.remove(key.name()) != null;
     }
@@ -220,6 +226,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @param key AccountProperty to get
      * @return not null if the account contained the property
      */
+    @Deprecated
     public Serializable getProperty(final AccountProperty key) {
         return propertyMap.get(key.name());
     }
@@ -230,6 +237,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @return Set of AccountProperties. An empty Set will be returned in none
      *         exist.
      */
+    @Deprecated
     public Set<AccountProperty> getProperties() {
         Set<AccountProperty> properties = EnumSet.noneOf(AccountProperty.class);
 
@@ -1420,7 +1428,22 @@ public class Account extends StoredObject implements Comparable<Account> {
         this.excludedFromBudget = excludeFromBudget;
     }
 
-    @PostLoad
+    /**
+     * Amortization object for loan payments
+     */
+    public AmortizeObject getAmortizeObject() {
+        return amortizeObject;
+    }
+
+    protected void setAmortizeObject(AmortizeObject amortizeObject) {
+        this.amortizeObject = amortizeObject;
+    }
+
+    /**
+     * Needed by XStream for proper initialization
+     *
+     * @return Properly initialized Account
+     */
     protected Object readResolve() {
         transactionLock = new ReentrantReadWriteLock(true);
         childLock = new ReentrantReadWriteLock(true);

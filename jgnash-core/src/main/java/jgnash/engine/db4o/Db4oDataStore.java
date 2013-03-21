@@ -424,6 +424,7 @@ public class Db4oDataStore implements DataStore {
         }
 
         @Override
+        @SuppressWarnings("deprecation")
         public void onEvent(final Event4 e, final EventArgs args) {
             if (args instanceof ObjectEventArgs) {
                 ObjectEventArgs queryArgs = (ObjectEventArgs) args;

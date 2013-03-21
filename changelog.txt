@@ -29,6 +29,10 @@ Class/Category tags for improved sorting.
 External links for transaction (External blobs)
 Money market account type
 
+Release 2.13.0
+----------------------
+03/21/13 Changed binary and xml file structure for amortization objects
+
 Release 2.12.0
 ----------------------
 03/03/13 When importing transactions, display a tooltip for payee and memo fields to make transaction determination easier. (Feature Request #107)
