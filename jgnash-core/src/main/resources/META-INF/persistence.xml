@@ -39,8 +39,31 @@
         </provider>
 
         <!-- We must enumerate each entity in the persistence unit -->
-        <class>jgnash.engine.StoredObject</class>
+        <class>jgnash.engine.AbstractInvestmentTransactionEntry</class>
         <class>jgnash.engine.Account</class>
+        <class>jgnash.engine.CommodityNode</class>
+        <class>jgnash.engine.Config</class>
+        <class>jgnash.engine.CurrencyNode</class>
+        <class>jgnash.engine.ExchangeRate</class>
+        <class>jgnash.engine.ExchangeRateHistoryNode</class>
+        <class>jgnash.engine.InvestmentTransaction</class>
+        <class>jgnash.engine.RootAccount</class>
+        <class>jgnash.engine.SecurityHistoryNode</class>
+        <class>jgnash.engine.SecurityNode</class>
+        <class>jgnash.engine.Transaction</class>
+        <class>jgnash.engine.TransactionEntry</class>
+        <class>jgnash.engine.TransactionEntryAddX</class>
+        <class>jgnash.engine.TransactionEntryAbstractIncrease</class>
+        <class>jgnash.engine.TransactionEntryBuyX</class>
+        <class>jgnash.engine.TransactionEntryDividendX</class>
+        <class>jgnash.engine.TransactionEntryMergeX</class>
+        <class>jgnash.engine.TransactionEntryReinvestDivX</class>
+        <class>jgnash.engine.TransactionEntryRemoveX</class>
+        <class>jgnash.engine.TransactionEntryRocX</class>
+        <class>jgnash.engine.TransactionEntrySellX</class>
+        <class>jgnash.engine.TransactionEntrySplitX</class>
+        <class>jgnash.engine.StoredObject</class>
+        <class>jgnash.engine.TrashObject</class>
 
         <properties>
             <property name="openjpa.ConnectionURL" value="jdbc:derby:openjpa-database;create=true"/>

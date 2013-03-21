@@ -39,7 +39,7 @@ import javax.persistence.*;
  * @author Craig Cavanaugh
  */
 @Entity
-@DiscriminatorValue("Tran")
+@Table(name="TRANS") // cannot use "Transaction" as the table name or it causes an SQL error!!!!
 public class Transaction extends StoredObject implements Comparable<Transaction> {
 
     private static final long serialVersionUID = 6312043631736158707L;

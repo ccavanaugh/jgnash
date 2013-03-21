@@ -30,7 +30,6 @@ import javax.persistence.*;
  * @author Craig Cavanaugh
  */
 @Entity
-@DiscriminatorValue("Config")
 public class Config extends StoredObject {
 
     private static final long serialVersionUID = -7317806359608639763L;

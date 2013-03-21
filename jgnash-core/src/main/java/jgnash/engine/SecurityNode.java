@@ -42,7 +42,6 @@ import javax.persistence.ManyToOne;
  * @author Craig Cavanaugh
  */
 @Entity
-@DiscriminatorValue("Security")
 public class SecurityNode extends CommodityNode {
 
     private static final long serialVersionUID = -8377663762619941498L;

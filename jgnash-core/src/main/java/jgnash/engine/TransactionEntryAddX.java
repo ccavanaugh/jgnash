@@ -18,6 +18,7 @@
 package jgnash.engine;
 
 import javax.persistence.Embeddable;
+import javax.persistence.Entity;
 import java.math.BigDecimal;
 
 /**
@@ -26,7 +27,7 @@ import java.math.BigDecimal;
  *
  * @author Craig Cavanaugh
  */
-@Embeddable
+@Entity
 public class TransactionEntryAddX extends TransactionEntryAbstractIncrease {
     
     private static final long serialVersionUID = 1L;

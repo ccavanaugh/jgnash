@@ -31,7 +31,6 @@ import java.util.logging.Logger;
  * @author Craig Cavanaugh
  */
 @Entity
-@DiscriminatorValue("Currency")
 public class CurrencyNode extends CommodityNode {
 
     private static final long serialVersionUID = 1339921229356331512L;

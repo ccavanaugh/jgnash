@@ -46,7 +46,6 @@ import javax.persistence.*;
  * @author Jeff Prickett prickett@users.sourceforge.net
  */
 @Entity
-@DiscriminatorValue("Account")
 public class Account extends StoredObject implements Comparable<Account> {
 
     private static final long serialVersionUID = 6886735664760113291L;

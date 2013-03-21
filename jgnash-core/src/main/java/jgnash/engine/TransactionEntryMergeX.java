@@ -22,13 +22,14 @@ import java.math.BigDecimal;
 import jgnash.util.Resource;
 
 import javax.persistence.Embeddable;
+import javax.persistence.Entity;
 
 /**
  * Remove shares without impacting the cash balance. This is a single entry transaction
  * 
  * @author Craig Cavanaugh
  */
-@Embeddable
+@Entity
 public final class TransactionEntryMergeX extends AbstractInvestmentTransactionEntry {
     
     private static final long serialVersionUID = 1L;

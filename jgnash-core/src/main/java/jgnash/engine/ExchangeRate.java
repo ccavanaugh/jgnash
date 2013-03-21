@@ -38,7 +38,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @author Craig Cavanaugh
  */
 @Entity
-@DiscriminatorValue("ExchangeHistory")
 public class ExchangeRate extends StoredObject {
 
     private static final long serialVersionUID = -2365289994847042288L;

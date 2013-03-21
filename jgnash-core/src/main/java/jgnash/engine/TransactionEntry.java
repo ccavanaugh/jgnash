@@ -36,7 +36,7 @@ import java.util.logging.Logger;
  * 
  * @author Craig Cavanaugh
  */
-@Embeddable
+@Entity
 public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable, Serializable {
     
     private static final long serialVersionUID = 1L;
