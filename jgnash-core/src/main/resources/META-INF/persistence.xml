@@ -69,15 +69,17 @@
         <class>jgnash.engine.TrashObject</class>
 
         <properties>
-            <property name="openjpa.ConnectionURL" value="jdbc:derby:openjpa-database;create=true"/>
-            <property name="openjpa.ConnectionDriverName" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+            <property name="openjpa.ConnectionURL" value="jdbc:h2:openjpa-database"/>
+            <property name="openjpa.ConnectionDriverName" value="org.h2.Driver"/>
             <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema"/>
             <property name="openjpa.ConnectionUserName" value=""/>
             <property name="openjpa.ConnectionPassword" value=""/>
 
             <!--
-           <property name="openjpa.ConnectionUserName" value="user"/>
-            <property name="openjpa.ConnectionPassword" value="secret"/>
+             <property name="openjpa.ConnectionURL" value="jdbc:derby:openjpa-database;create=true"/>
+             <property name="openjpa.ConnectionDriverName" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+             <property name="openjpa.ConnectionUserName" value="user"/>
+             <property name="openjpa.ConnectionPassword" value="secret"/>
             -->
 
         </properties>
