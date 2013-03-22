@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.engine.db4o.Db4oDataStore;
+import jgnash.engine.jpa.JpaDataStore;
 import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.engine.xstream.XMLDataStore;
 import jgnash.util.Resource;
@@ -44,6 +45,11 @@ public enum DataStoreType {
             true,
             false,
             BinaryXStreamDataStore.class),
+    H2_DATABASE (
+            Resource.get().getString("DataStoreType.H2"),
+            true,
+            true,
+            JpaDataStore.class),
     XML(
             Resource.get().getString("DataStoreType.XML"),
             true,
