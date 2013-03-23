@@ -17,6 +17,7 @@
  */
 package jgnash.engine;
 
+import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 import java.math.BigDecimal;
@@ -26,7 +27,7 @@ import java.math.BigDecimal;
  * 
  * @author Craig Cavanaugh
  */
-@MappedSuperclass
+@Entity
 public abstract class CommodityNode extends StoredObject implements Comparable<CommodityNode> {
 
     private static final long serialVersionUID = -8694706937407227601L;
