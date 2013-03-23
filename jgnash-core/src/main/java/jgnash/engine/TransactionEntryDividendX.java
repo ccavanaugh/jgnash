@@ -17,6 +17,7 @@
  */
 package jgnash.engine;
 
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import java.math.BigDecimal;
 
@@ -29,7 +30,7 @@ import java.math.BigDecimal;
  *
  * @author Craig Cavanaugh
  */
-@Entity
+@Embeddable
 public class TransactionEntryDividendX extends AbstractInvestmentTransactionEntry {
     
     private static final long serialVersionUID = 1L;

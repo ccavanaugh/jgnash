@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 
 import jgnash.util.Resource;
 
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 
 /**
@@ -28,7 +29,7 @@ import javax.persistence.Entity;
  * 
  * @author Craig Cavanaugh
  */
-@Entity
+@Embeddable
 public class TransactionEntrySplitX extends TransactionEntryAbstractIncrease {
     
     private static final long serialVersionUID = 1L;

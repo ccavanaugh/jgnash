@@ -18,6 +18,7 @@
 package jgnash.engine;
 
 
+import javax.persistence.Embeddable;
 import javax.persistence.MappedSuperclass;
 import java.math.BigDecimal;
 
@@ -26,7 +27,7 @@ import java.math.BigDecimal;
  *
  * @author Craig Cavanaugh
  */
-@MappedSuperclass
+@Embeddable
 public abstract class TransactionEntryAbstractIncrease extends AbstractInvestmentTransactionEntry {
 
     TransactionEntryAbstractIncrease() {
