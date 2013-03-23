@@ -91,6 +91,7 @@ public class JpaTests {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void transactionTest() {
         final String ACC_NAME = "Test Tran";
 

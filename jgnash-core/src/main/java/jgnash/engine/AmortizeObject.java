@@ -19,6 +19,8 @@ package jgnash.engine;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -93,6 +95,7 @@ public class AmortizeObject implements Serializable {
     /**
      * origination date
      */
+    @Temporal(TemporalType.DATE)
     private Date date = new Date();
 
     /**

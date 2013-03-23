@@ -126,9 +126,10 @@ public class Account extends StoredObject implements Comparable<Account> {
      */
     private String bankId;
 
+    @OneToOne(optional = true, orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private AmortizeObject amortizeObject;
 
-    @Transient  // we don't want this to be persisted by Jpa and will become obsolete
+    @Transient  // we don't want this to be persisted by JPA and will become obsolete
     private final Map<String, Serializable> propertyMap = new HashMap<>();
 
     private transient ReadWriteLock transactionLock;
