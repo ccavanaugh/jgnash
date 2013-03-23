@@ -65,6 +65,12 @@
         <class>jgnash.engine.TransactionEntryRocX</class>
         <class>jgnash.engine.TransactionEntrySellX</class>
         <class>jgnash.engine.TransactionEntrySplitX</class>
+        <class>jgnash.engine.recurring.DailyReminder</class>
+        <class>jgnash.engine.recurring.MonthlyReminder</class>
+        <class>jgnash.engine.recurring.OneTimeReminder</class>
+        <class>jgnash.engine.recurring.Reminder</class>
+        <class>jgnash.engine.recurring.WeeklyReminder</class>
+        <class>jgnash.engine.recurring.YearlyReminder</class>
         <class>jgnash.engine.StoredObject</class>
         <class>jgnash.engine.TrashObject</class>
 

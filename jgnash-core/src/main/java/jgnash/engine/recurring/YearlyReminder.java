@@ -22,12 +22,14 @@ import java.util.Date;
 
 import jgnash.util.DateUtils;
 
+import javax.persistence.Entity;
+
 /**
  * A yearly reminder
  * 
  * @author Craig Cavanaugh
- * 
  */
+@Entity
 public class YearlyReminder extends Reminder {
 
     private static final long serialVersionUID = 8173755092984444499L;

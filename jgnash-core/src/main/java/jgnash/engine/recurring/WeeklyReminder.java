@@ -22,11 +22,14 @@ import java.util.Date;
 
 import jgnash.util.DateUtils;
 
+import javax.persistence.Entity;
+
 /**
  * A weekly reminder
  * 
  * @author Craig Cavanaugh
  */
+@Entity
 public class WeeklyReminder extends Reminder {
 
     private static final long serialVersionUID = -1083131503417503307L;

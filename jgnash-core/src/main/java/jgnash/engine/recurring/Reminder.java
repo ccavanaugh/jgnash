@@ -26,11 +26,14 @@ import jgnash.engine.StoredObject;
 import jgnash.engine.Transaction;
 import jgnash.util.DateUtils;
 
+import javax.persistence.*;
+
 /**
  * This is an abstract class for scheduled reminders.
  *
  * @author Craig Cavanaugh
  */
+@Entity
 public abstract class Reminder extends StoredObject implements Comparable<Reminder> {
 
     private static final long serialVersionUID = 585114642710839171L;
@@ -63,6 +66,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * The last date the reminder will stop executing, may be null (Bug #2860259)
      */
+    @Temporal(TemporalType.DATE)
     private Date endDate = null;
 
     /**
@@ -75,6 +79,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
      * It should remain an increment of the iterator
      * for correct operation
      */
+    @Temporal(TemporalType.DATE)
     private Date lastDate = null;
 
     /**
@@ -90,14 +95,17 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * The start date of this reminder
      */
+    @Temporal(TemporalType.DATE)
     private Date startDate = new Date();
 
+    @ManyToOne
     private Account account;
 
     /**
      * Reference to the transaction for this reminder.
-     * This transaction is not store in the IDMap.
+     * This transaction is not stored in the IDMap.
      */
+    @OneToOne
     private Transaction transaction;
 
     @Override

@@ -22,6 +22,8 @@ import java.util.Date;
 
 import jgnash.util.DateUtils;
 
+import javax.persistence.Entity;
+
 /**
  * A monthly reminder / iterator. Dates get a little weird when iterating by DAY
  * and the day is early or late in the month. Months may be skipped or multiple
@@ -29,6 +31,7 @@ import jgnash.util.DateUtils;
  * 
  * @author Craig Cavanaugh
  */
+@Entity
 public class MonthlyReminder extends Reminder {
 
     private static final long serialVersionUID = 11516039436649194L;

@@ -17,14 +17,15 @@
  */
 package jgnash.engine.recurring;
 
+import javax.persistence.Entity;
 import java.util.Date;
 
 /**
  * A one time only reminder
  *
  * @author Craig Cavanaugh
- *
  */
+@Entity
 public class OneTimeReminder extends Reminder {
 
     private static final long serialVersionUID = -5004255823120090993L;
