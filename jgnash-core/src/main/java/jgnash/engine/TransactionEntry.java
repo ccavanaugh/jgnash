@@ -36,6 +36,7 @@ import java.util.logging.Logger;
  * 
  * @author Craig Cavanaugh
  */
+// TODO Fixme, should be embeddable
 @Entity
 public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable, Serializable {
     
