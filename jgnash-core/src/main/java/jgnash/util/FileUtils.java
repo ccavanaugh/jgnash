@@ -44,14 +44,13 @@ import java.util.zip.ZipOutputStream;
  * File utilities
  * 
  * @author Craig Cavanaugh
- * 
  */
 public final class FileUtils {
 
     /**
      * Regular expression for returning the file extension
      */
-    private final static String FILEEXTREGEX = "(?<=\\.).*$";
+    private final static String FILE_EXT_REGEX = "(?<=\\.).*$";
 
     private static final Pattern FILE_EXTENSION_SPLIT_PATTERN = Pattern.compile("\\.");
 
@@ -114,7 +113,7 @@ public final class FileUtils {
 
         String result = "";
 
-        final Pattern pattern = Pattern.compile(FILEEXTREGEX);
+        final Pattern pattern = Pattern.compile(FILE_EXT_REGEX);
         final Matcher matcher = pattern.matcher(fileName);
 
         if (matcher.find()) {
