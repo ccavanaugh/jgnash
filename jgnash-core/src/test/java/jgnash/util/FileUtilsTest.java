@@ -46,6 +46,12 @@ public class FileUtilsTest {
     }
 
     @Test
+    public void strip() {
+        assertEquals("database", FileUtils.stripFileExtension("database.h2.db"));
+        assertEquals("database", FileUtils.stripFileExtension("database.db"));
+    }
+
+    @Test
     public void fileExtensionText() {
         assertEquals(FileUtils.getFileExtension("test.txt"), "txt");
     }
