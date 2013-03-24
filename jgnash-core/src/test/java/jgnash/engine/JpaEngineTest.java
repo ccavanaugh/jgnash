@@ -37,7 +37,7 @@ public class JpaEngineTest extends EngineTest {
         testFile = "jpa-test." + JpaDataStore.FILE_EXT;
 
         try {
-            File temp = File.createTempFile("jpa-test", JpaDataStore.FILE_EXT);
+            File temp = File.createTempFile("jpa-test", "." +JpaDataStore.FILE_EXT);
             temp.deleteOnExit();
             testFile = temp.getAbsolutePath();
         } catch (IOException e1) {          

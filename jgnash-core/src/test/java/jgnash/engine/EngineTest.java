@@ -18,6 +18,7 @@
 package jgnash.engine;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -129,7 +130,12 @@ public abstract class EngineTest {
 
         // close and reopen to force check for persistence
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+        System.out.println(testFile);
+
         e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+
+        assertNotNull(e);
 
         String uuid = e.getDefaultCurrency().getUuid();
 
@@ -145,7 +151,6 @@ public abstract class EngineTest {
     public void testAddCommodity() {
         // close and reopen to force check for persistence
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
-
 
         e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
         
@@ -222,7 +227,11 @@ public abstract class EngineTest {
 
         // close and reopen to force check for persistence
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
         e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+
+        assertNotNull(e);
+
         assertEquals(1, e.getBudgetList().size());
 
         a = e.getAccountByName(ACCOUNT_NAME);
@@ -394,11 +403,9 @@ public abstract class EngineTest {
     @Test
     public void testGetAccountSeparator() {
         String sep = e.getAccountSeparator();
-        assertNotNull(sep);
 
-        if (sep != null) {
-            assertTrue(sep.length() > 0);
-        }
+        assertNotNull(sep);
+        assertTrue(sep.length() > 0);
     }
 
     @Ignore
@@ -478,7 +485,11 @@ public abstract class EngineTest {
 
         CurrencyNode node = e.getDefaultCurrency();
 
+        assertNotNull(node);
+
         Account parent = e.getRootAccount();
+
+        assertNotNull(parent);
 
         for (int i = 0; i < 50; i++) {
             Account child = new Account(AccountType.BANK, node);
@@ -561,10 +572,34 @@ public abstract class EngineTest {
         fail("Not yet implemented");
     }
 
-    @Ignore
     @Test
     public void testRemoveAccount() {
-        fail("Not yet implemented");
+        final String ACCOUNT_NAME = "testIsStored";
+        CurrencyNode node = e.getDefaultCurrency();
+
+        assertNotNull(e);
+
+        Account a = new Account(AccountType.BANK, node);
+        a.setName(ACCOUNT_NAME);
+
+        assertFalse(e.isStored(a));
+
+        e.addAccount(e.getRootAccount(), a);
+
+        assertTrue(e.isStored(a));
+
+        // close and reopen to force check for persistence
+        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+
+        a = e.getAccountByName(ACCOUNT_NAME);
+
+        e.removeAccount(a);
+
+        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+
+        assertNull(e.getAccountByName(ACCOUNT_NAME));
     }
 
     @Ignore
@@ -593,10 +628,14 @@ public abstract class EngineTest {
 
     @Test
     public void testIsStored() {
+
+        final String ACCOUNT_NAME = "testIsStored";
         CurrencyNode node = e.getDefaultCurrency();
 
+        assertNotNull(e);
+
         Account a = new Account(AccountType.BANK, node);
-        a.setName("testIsStored");
+        a.setName(ACCOUNT_NAME);
 
         assertFalse(e.isStored(a));
 
@@ -605,10 +644,9 @@ public abstract class EngineTest {
         assertTrue(e.isStored(a));
     }
 
-    @Ignore
     @Test
     public void testAddTransaction() {
-        fail("Not yet implemented");
+        testGetTransactions();
     }
 
     @Ignore
@@ -635,10 +673,29 @@ public abstract class EngineTest {
         fail("Not yet implemented");
     }
 
-    @Ignore
     @Test
     public void testGetTransactions() {
-        fail("Not yet implemented");
+        final String ACCOUNT_NAME = "testAccount";
+
+        CurrencyNode node = e.getDefaultCurrency();
+
+        Account a = new Account(AccountType.BANK, node);
+        a.setName(ACCOUNT_NAME);
+
+        e.addAccount(e.getRootAccount(), a);
+
+        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), true, "memo", "payee", "1"));
+        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), true, "memo", "payee", "2"));
+        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), true, "memo", "payee", "3"));
+
+        assertEquals(3, a.getTransactionCount());
+
+        // close and reopen to force check for persistence
+        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+
+        a = e.getAccountByName(ACCOUNT_NAME);
+        assertEquals(3, a.getTransactionCount());
     }
 
     @Test
