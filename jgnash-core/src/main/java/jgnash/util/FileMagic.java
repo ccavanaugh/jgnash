@@ -49,8 +49,10 @@ public class FileMagic {
     private static final byte[] BINARY_XSTREAM_HEADER = new byte[] { 10, -127, 0, 13, 111, 98, 106, 101, 99, 116, 45,
             115, 116, 114, 101, 97, 109, 11, -127, 10 };
 
+    private static final byte[] H2_HEADER = new byte[] {0x2D, 0x2D, 0x20, 0x48, 0x32, 0x20, 0x30, 0x2E, 0x35, 0x2F, 0x42, 0x20, 0x2D, 0x2D};
+
     public static enum FileType {
-        db4o, BinaryXStream, OfxV1, OfxV2, jGnash1XML, jGnash2XML, unknown
+        db4o, BinaryXStream, OfxV1, OfxV2, jGnash1XML, jGnash2XML, h2, unknown
     }
 
     /**
@@ -74,6 +76,8 @@ public class FileMagic {
             return FileType.OfxV2;
         } else if (isBinaryXStreamFile(file)) {
             return FileType.BinaryXStream;
+        } else if (isH2File(file)) {
+            return FileType.h2;
         }
 
         return FileType.unknown;
@@ -206,16 +210,24 @@ public class FileMagic {
     }
 
     public static boolean isBinaryXStreamFile(final File file) {
+        return isFile(file, BINARY_XSTREAM_HEADER);
+    }
+
+    public static boolean isH2File(final File file) {
+        return isFile(file, H2_HEADER);
+    }
+
+    public static boolean isFile(final File file, final byte[] header) {
         boolean result = false;
 
         if (file.exists()) {
             try (RandomAccessFile raf = new RandomAccessFile(file, "r")) {
                 if (raf.length() > 0) { // must not be a zero length file
-                    byte[] header = new byte[20];
+                    byte[] fileHeader = new byte[header.length];
 
-                    raf.readFully(header);
+                    raf.readFully(fileHeader);
 
-                    result = Arrays.equals(header, BINARY_XSTREAM_HEADER);
+                    result = Arrays.equals(fileHeader, header);
                 }
             } catch (IOException ex) {
                 Logger.getLogger(FileMagic.class.getName()).log(Level.SEVERE, null, ex);
