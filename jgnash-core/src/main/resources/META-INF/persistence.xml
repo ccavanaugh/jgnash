@@ -35,7 +35,7 @@
         -->
 
         <provider>
-            org.apache.openjpa.persistence.PersistenceProviderImpl
+            org.eclipse.persistence.jpa.PersistenceProvider
         </provider>
 
         <!-- We must enumerate each entity in the persistence unit -->
@@ -75,17 +75,20 @@
         <class>jgnash.engine.TrashObject</class>
 
         <properties>
-            <property name="openjpa.ConnectionURL" value="jdbc:h2:openjpa-database"/>
-            <property name="openjpa.ConnectionDriverName" value="org.h2.Driver"/>
-            <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema"/>
-            <property name="openjpa.ConnectionUserName" value="test"/>
-            <property name="openjpa.ConnectionPassword" value=""/>
+            <property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.H2Platform"/>
+            <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
+
+            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="javax.persistence.jdbc.user" value="test"/>
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:openjpa-database"/>
 
             <!--
-             <property name="openjpa.ConnectionURL" value="jdbc:derby:openjpa-database;create=true"/>
-             <property name="openjpa.ConnectionDriverName" value="org.apache.derby.jdbc.EmbeddedDriver"/>
-             <property name="openjpa.ConnectionUserName" value="user"/>
-             <property name="openjpa.ConnectionPassword" value="secret"/>
+             <property name="openjpa.ConnectionURL" value="jdbc:h2:openjpa-database"/>
+             <property name="openjpa.ConnectionDriverName" value="org.h2.Driver"/>
+             <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema"/>
+             <property name="openjpa.ConnectionUserName" value="test"/>
+             <property name="openjpa.ConnectionPassword" value=""/>
             -->
 
         </properties>
