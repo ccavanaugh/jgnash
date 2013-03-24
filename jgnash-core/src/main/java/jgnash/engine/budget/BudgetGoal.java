@@ -135,6 +135,7 @@ public class BudgetGoal implements Cloneable, Serializable {
     @Override
     public Object clone() throws CloneNotSupportedException {
         BudgetGoal goal = (BudgetGoal) super.clone();
+        goal.id = UUIDUtil.getUID();  // force a new UUID for the clone
 
         // deep copy
         goal.goals = new BigDecimal[PERIODS];
