@@ -28,6 +28,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -36,8 +37,18 @@ public class JpaTests {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void SimpleAccountTest() {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", System.getProperties());
+    public void simpleAccountTest() {
+        Properties properties = System.getProperties();
+
+        properties.setProperty("openjpa.ConnectionURL", "jdbc:h2:" + "testDatabase");
+        properties.setProperty("openjpa.ConnectionDriverName", "org.h2.Driver");
+        properties.setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema");
+
+        properties.setProperty("openjpa.ConnectionUserName", "");
+        properties.setProperty("openjpa.ConnectionPassword", "");
+
+
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", properties);
 
         EntityManager em = factory.createEntityManager();
 
@@ -49,6 +60,15 @@ public class JpaTests {
 
         Account account = new Account(AccountType.BANK, node);
         account.setName("Test");
+
+        String notes = "This is a character blob in the database";
+
+        for (int i = 0; i < 8192 ; i++) {
+            notes = notes + "z";
+        }
+
+        account.setNotes(notes);
+
         em.persist(account);
 
         em.getTransaction().commit();
@@ -145,6 +165,33 @@ public class JpaTests {
 
         em2.close();
         factory.close();
+    }
+
+    @Test
+    public void securityNodeTest() {
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", System.getProperties());
+
+        EntityManager em = factory.createEntityManager();
+
+        // Begin a new local transaction so that we can persist a new entity
+        em.getTransaction().begin();
+
+        CurrencyNode node = DefaultCurrencies.buildNode(Locale.US);
+        em.persist(node);
+
+        Account account = new Account(AccountType.INVEST, node);
+        account.setName("Invest");
+
+
+        SecurityNode sNode = new SecurityNode(node);
+        sNode.setSymbol("MSFT");
+
+        account.addSecurity(sNode);
+
+        em.persist(account);
+        em.persist(sNode);
+
+        em.getTransaction().commit();
     }
 
 

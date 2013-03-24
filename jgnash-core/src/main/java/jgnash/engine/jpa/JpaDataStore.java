@@ -17,17 +17,25 @@
  */
 package jgnash.engine.jpa;
 
+import jgnash.engine.Config;
 import jgnash.engine.DataStore;
 import jgnash.engine.Engine;
 import jgnash.engine.StoredObject;
+import jgnash.util.FileUtils;
 import jgnash.util.Resource;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.io.File;
 import java.util.Collection;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * JPA specific code for data storage and creating an engine
@@ -36,7 +44,7 @@ import java.util.Properties;
  */
 public class JpaDataStore implements DataStore {
 
-    private static final String FILE_EXT = "db";
+    public static final String FILE_EXT = "h2.db";
 
     private EntityManager em;
 
@@ -46,7 +54,7 @@ public class JpaDataStore implements DataStore {
 
     private String fileName;
 
-    // private static final boolean DEBUG = false;
+    private static final boolean DEBUG = false;
 
     @Override
     public void closeEngine() {
@@ -58,30 +66,52 @@ public class JpaDataStore implements DataStore {
 
     @Override
     public Engine getClientEngine(final String host, final int port, final String user, final String password, final String engineName) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        Properties properties = System.getProperties();
+
+        properties.setProperty("openjpa.ConnectionURL", "jdbc:h2:" + FileUtils.stripFileExtension(fileName));
+        properties.setProperty("openjpa.ConnectionDriverName", "org.h2.Driver");
+        properties.setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema");
+
+        properties.setProperty("openjpa.ConnectionUserName", user);
+        properties.setProperty("openjpa.ConnectionPassword", password);
+
+        return null;  // TODO Fix me
     }
 
     @Override
     public Engine getLocalEngine(final String fileName, final String engineName) {
+        Properties properties = System.getProperties();
 
-        Properties properties = new Properties();
-
-        properties.setProperty("openjpa.ConnectionURL","jdbc:h2:" + fileName);
-        properties.setProperty("openjpa.ConnectionDriverName","org.h2.Driver");
-        properties.setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema");
+        properties.setProperty("openjpa.ConnectionURL", "jdbc:h2:" + FileUtils.stripFileExtension(fileName));
+        //properties.setProperty("openjpa.ConnectionDriverName", "org.h2.Driver");
+        //properties.setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema");
 
         properties.setProperty("openjpa.ConnectionUserName", "");
         properties.setProperty("openjpa.ConnectionPassword", "");
 
-        factory = Persistence.createEntityManagerFactory("jgnash", System.getProperties());
-        em = factory.createEntityManager();
+        Engine engine = null;
 
-        this.fileName = fileName;
+        if (DEBUG) {
+            System.out.println(FileUtils.stripFileExtension(fileName));
+        }
 
-        remote = false;
+        try {
+            factory = Persistence.createEntityManagerFactory("jgnash", properties);
+            //factory = Persistence.createEntityManagerFactory("jgnash", System.getProperties());
+
+            em = factory.createEntityManager();
+
+            Logger.getLogger(JpaDataStore.class.getName()).info("Created local JPA container and engine");
+            engine = new Engine(new JpaEngineDAO(em, false), engineName);
+
+            this.fileName = fileName;
+            remote = false;
+        } catch (final Exception e) {
+            Logger.getLogger(JpaDataStore.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+        }
 
 
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return engine;
     }
 
     @Override
@@ -101,7 +131,99 @@ public class JpaDataStore implements DataStore {
 
     @Override
     public void saveAs(final File file, final Collection<StoredObject> objects) {
-        //To change body of implemented methods use File | Settings | File Templates.
+
+        // Remove the existing file so we don't mix entities and cause corruption
+        if (file.exists()) {
+            file.delete();
+        }
+
+        Properties properties = System.getProperties();
+
+        properties.setProperty("openjpa.ConnectionURL", "jdbc:h2:" + FileUtils.stripFileExtension(file.getAbsolutePath()));
+        properties.setProperty("openjpa.ConnectionDriverName", "org.h2.Driver");
+        properties.setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema");
+
+        properties.setProperty("openjpa.ConnectionUserName", "");
+        properties.setProperty("openjpa.ConnectionPassword", "");
+
+        EntityManagerFactory factory = null;
+        EntityManager em = null;
+
+        try {
+            factory = Persistence.createEntityManagerFactory("jgnash", properties);
+            em = factory.createEntityManager();
+
+            em.getTransaction().begin();
+
+            for (StoredObject o : objects) {
+                em.persist(o);
+            }
+
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            Logger.getLogger(JpaDataStore.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+
+            if (factory != null) {
+                factory.close();
+            }
+        }
+    }
+
+    /**
+     * Opens the database in readonly mode and reads the version of the file format.
+     *
+     * @param file <code>File</code> to open
+     * @return file version
+     */
+    public static float getFileVersion(final File file) {
+
+        float fileVersion = 0;
+
+        Properties properties = System.getProperties();
+
+        properties.setProperty("openjpa.ConnectionURL", "jdbc:h2:" + FileUtils.stripFileExtension(file.getAbsolutePath()));
+        properties.setProperty("openjpa.ConnectionDriverName", "org.h2.Driver");
+        properties.setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema");
+
+        properties.setProperty("openjpa.ConnectionUserName", "");
+        properties.setProperty("openjpa.ConnectionPassword", "");
+
+        EntityManagerFactory factory = null;
+        EntityManager em = null;
+
+        try {
+            factory = Persistence.createEntityManagerFactory("jgnash", properties);
+            em = factory.createEntityManager();
+
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Config> cq = cb.createQuery(Config.class);
+            Root<Config> root = cq.from(Config.class);
+            cq.select(root);
+
+            TypedQuery<Config> q = em.createQuery(cq);
+
+            Config defaultConfig = q.getSingleResult();
+
+            fileVersion = defaultConfig.getFileVersion();
+
+
+        } catch (Exception e) {
+            Logger.getLogger(JpaDataStore.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+
+            if (factory != null) {
+                factory.close();
+            }
+        }
+
+        return fileVersion;
     }
 
     /**

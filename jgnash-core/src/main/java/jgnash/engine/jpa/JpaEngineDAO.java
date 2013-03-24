@@ -21,16 +21,19 @@ import jgnash.engine.StoredObject;
 import jgnash.engine.dao.*;
 import jgnash.util.DefaultDaemonThreadFactory;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
+
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 /**
  * Engine DAO
@@ -54,6 +57,8 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
     private TrashDAO trashDAO;
 
     private ScheduledExecutorService commitExecutor;
+
+    private static final Logger logger = Logger.getLogger(JpaEngineDAO.class.getName());
 
     JpaEngineDAO(final EntityManager entityManager, final boolean isRemote) {
         super(entityManager, isRemote);
@@ -140,14 +145,21 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
 
         StoredObject o = null;
 
-        String queryString = "SELECT a FROM StoredObject a WHERE a.uuid = :uuid";
-        javax.persistence.Query query = em.createQuery(queryString);
-        query.setParameter("uuid", uuid);
+        try {
 
-        StoredObject temp = (StoredObject)query.getSingleResult();
+            String queryString = "SELECT a FROM StoredObject a WHERE a.uuid = :uuid";
+            javax.persistence.Query query = em.createQuery(queryString);
+            query.setParameter("uuid", uuid);
 
-        if (temp != null) {
-            o = temp;
+            StoredObject temp = (StoredObject) query.getSingleResult();
+
+            if (temp != null) {
+                o = temp;
+            }
+        } catch (NoResultException ignore) {
+            // this is okay
+            logger.info("Did not find object for uuid: " + uuid);
+
         }
 
         return o;

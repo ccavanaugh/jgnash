@@ -17,10 +17,8 @@
  */
 package jgnash.engine;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -28,17 +26,21 @@ import java.util.Date;
 
 /**
  * This class is used to calculate loan payments.
- * <p>
+ * <p/>
  * Because BigDecimal is lacking methods of exponents, calculations are
  * performed using StrictMath to maintain portability. Results are returned as
  * doubles. Results will need to be scaled and rounded.
- * 
+ *
  * @author Craig Cavanaugh
  */
 @Entity
-public class AmortizeObject extends StoredObject {
+public class AmortizeObject implements Serializable {
 
     private static final long serialVersionUID = 4823735664756113291L;
+
+    @Id
+    @SuppressWarnings("unused")
+    private String id = UUIDUtil.getUID();
 
     @ManyToOne
     private Account interestAccount; // account for interest payment
@@ -132,7 +134,7 @@ public class AmortizeObject extends StoredObject {
 
     /**
      * Sets the length of the loan (in months)
-     * 
+     *
      * @param months length of loan
      */
     public void setLength(final int months) {
@@ -141,7 +143,7 @@ public class AmortizeObject extends StoredObject {
 
     /**
      * Gets the length of the loan in months
-     * 
+     *
      * @return length of loan in months
      */
     public int getLength() {
@@ -151,7 +153,7 @@ public class AmortizeObject extends StoredObject {
     /**
      * Determines if interest will be calculate based on a daily periodic rate,
      * or if it is assumed that the interest is paid exactly on the due date.
-     * 
+     *
      * @param daily true if interest should be calculated using a daily rate
      */
     public void setUseDailyRate(final boolean daily) {
@@ -160,7 +162,7 @@ public class AmortizeObject extends StoredObject {
 
     /**
      * Returns how interest will be calculated.
-     * 
+     *
      * @return true if interest is calculated using the daily periodic rate
      */
     public boolean getUseDailyRate() {
@@ -170,7 +172,7 @@ public class AmortizeObject extends StoredObject {
     /**
      * Sets the number of days per year used to calculate the daily periodic
      * interest rate. The value can be a decimal.
-     * 
+     *
      * @param days The number of days in a year
      */
     public void setDaysPerYear(final BigDecimal days) {
@@ -180,7 +182,7 @@ public class AmortizeObject extends StoredObject {
     /**
      * Returns the number of days per year used to calculate a daily periodic
      * interest rate.
-     * 
+     *
      * @return The number of days per year
      */
     public BigDecimal getDaysPerYear() {
@@ -225,7 +227,7 @@ public class AmortizeObject extends StoredObject {
 
     /**
      * Set the id of the interest account
-     * 
+     *
      * @param id the id of the interest account
      */
     public void setInterestAccount(final Account id) {
@@ -234,7 +236,7 @@ public class AmortizeObject extends StoredObject {
 
     /**
      * Returns the id of the interest account
-     * 
+     *
      * @return the id of the interest account
      */
     public Account getInterestAccount() {
@@ -243,7 +245,7 @@ public class AmortizeObject extends StoredObject {
 
     /**
      * Set the id of the principal account
-     * 
+     *
      * @param id the id of the principal account
      */
     public void setBankAccount(final Account id) {
@@ -252,7 +254,7 @@ public class AmortizeObject extends StoredObject {
 
     /**
      * Returns the id of the principal account
-     * 
+     *
      * @return the id of the principal account
      */
     public Account getBankAccount() {
@@ -261,7 +263,7 @@ public class AmortizeObject extends StoredObject {
 
     /**
      * Set the id of the fees account
-     * 
+     *
      * @param id the id of the fees account
      */
     public void setFeesAccount(final Account id) {
@@ -270,7 +272,7 @@ public class AmortizeObject extends StoredObject {
 
     /**
      * Returns the id of the fees account
-     * 
+     *
      * @return the id of the fees account
      */
     public Account getFeesAccount() {
@@ -297,7 +299,7 @@ public class AmortizeObject extends StoredObject {
      * Calculates the effective interest rate.<br>
      * Ie = (1 + i/m)^(m/n) - 1 <br>
      * n = payments per period m = number of times compounded per period
-     * 
+     *
      * @return effective interest rate
      */
     double getEffectiveInterestRate() {
@@ -311,7 +313,7 @@ public class AmortizeObject extends StoredObject {
     /**
      * Calculates the daily interest rate.<br>
      * This works for US, can't find any information on Canada
-     * 
+     *
      * @return periodic interest rate
      */
     double getDailyPeriodicInterestRate() {
@@ -341,7 +343,7 @@ public class AmortizeObject extends StoredObject {
      * Calculates the principal and interest payment of an equal payment series
      * M = P * ( Ie / (1 - (1 + Ie) ^ -N)) N = total number of periods the loan
      * is amortized over
-     * 
+     *
      * @return P and I
      */
     double getPIPayment() {
@@ -349,7 +351,7 @@ public class AmortizeObject extends StoredObject {
         // zero interest loan
         if ((interestRate == null || interestRate.compareTo(BigDecimal.ZERO) == 0) && length > 0 && numPayments > 0
                 && originalBalance != null) {
-            
+
             return originalBalance.doubleValue() / ((length / 12.0) * numPayments);
         }
 
@@ -364,7 +366,7 @@ public class AmortizeObject extends StoredObject {
 
     /**
      * Calculates the principal and interest plus finance charges
-     * 
+     *
      * @return the payment
      */
     public double getPayment() {
@@ -374,7 +376,7 @@ public class AmortizeObject extends StoredObject {
     /**
      * Calculates the interest portion of the next loan payment given the
      * remaining loan balance
-     * 
+     *
      * @param balance remaining balance
      * @return interest
      */
@@ -389,10 +391,10 @@ public class AmortizeObject extends StoredObject {
     /**
      * Calculates the interest portion of the next loan payment given the
      * remaining loan balance and the dates between payments
-     * 
+     *
      * @param balance balance
-     * @param start start date
-     * @param end end date
+     * @param start   start date
+     * @param end     end date
      * @return interest
      */
     public double getIPayment(final BigDecimal balance, final Date start, final Date end) {

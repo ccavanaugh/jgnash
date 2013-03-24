@@ -74,7 +74,8 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
 
         TypedQuery<Account> q = em.createQuery(cq);
 
-        return stripMarkedForRemoval(q.getResultList());
+        // result lists are readonly
+        return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
     }
 
     /*
@@ -127,7 +128,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
         Query query = em.createQuery(queryString);
         query.setParameter("type", type.name());
 
-        List<Account> list = query.getResultList();
+        List<Account> list = new ArrayList<Account>(query.getResultList());
 
         return list;
     }

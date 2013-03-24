@@ -22,8 +22,12 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 
 import jgnash.engine.MathConstants;
+import jgnash.engine.UUIDUtil;
 
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
 
 /**
  * Budget Goal Object
@@ -32,10 +36,14 @@ import javax.persistence.Embeddable;
  * 
  * @author Craig Cavanaugh
  */
-@Embeddable
+@Entity
 public class BudgetGoal implements Cloneable, Serializable {
-    
+
     private static final long serialVersionUID = 1L;
+
+    @Id
+    @SuppressWarnings("unused")
+    private String id = UUIDUtil.getUID();
 
     /** 366 days per year */
     public static final int PERIODS = 366;
@@ -45,6 +53,7 @@ public class BudgetGoal implements Cloneable, Serializable {
 
     private BigDecimal[] goals;
 
+    @Enumerated(EnumType.STRING)
     private BudgetPeriod budgetPeriod = BudgetPeriod.MONTHLY;
 
     public BudgetGoal() {

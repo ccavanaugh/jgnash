@@ -34,7 +34,7 @@ public class Config extends StoredObject {
 
     private static final long serialVersionUID = -7317806359608639763L;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private CurrencyNode defaultCurrency;
 
     @SuppressWarnings("unused")

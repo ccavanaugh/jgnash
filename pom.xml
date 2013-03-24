@@ -41,6 +41,11 @@
         </repository>
 
         <repository>
+            <id>EclipseLink</id>
+            <url>http://download.eclipse.org/rt/eclipselink/maven.repo</url>
+        </repository>
+
+        <repository>
             <id>maven.jenkins-ci.org</id>
             <name>maven.jenkins-ci</name>
             <url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>

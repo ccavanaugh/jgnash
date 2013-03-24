@@ -16,6 +16,7 @@
         <openjpa.version>2.2.1</openjpa.version>
         <xstream.version>1.4.4</xstream.version>
         <h2.version>1.3.170</h2.version>
+        <eclipselink.version>2.4.1</eclipselink.version>
     </properties>
 
 	<dependencies>
@@ -24,10 +25,17 @@
 			<artifactId>jgnash-resources</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+        <!--
         <dependency>
             <groupId>org.apache.openjpa</groupId>
             <artifactId>openjpa-all</artifactId>
             <version>${openjpa.version}</version>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.jpa</artifactId>
+            <version>${eclipselink.version}</version>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
