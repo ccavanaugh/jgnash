@@ -36,7 +36,7 @@ import java.util.Date;
  * @author Craig Cavanaugh
  */
 @Entity
-public class AmortizeObject implements Serializable {
+public class AmortizeObject extends StoredObject {
 
     private static final long serialVersionUID = 4823735664756113291L;
 
