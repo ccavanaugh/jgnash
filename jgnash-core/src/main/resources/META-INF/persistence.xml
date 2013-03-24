@@ -76,12 +76,12 @@
 
         <properties>
             <property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.H2Platform"/>
-            <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
+            <!-- <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/> -->
 
             <property name="javax.persistence.jdbc.password" value=""/>
-            <property name="javax.persistence.jdbc.user" value="test"/>
+            <property name="javax.persistence.jdbc.user" value=""/>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:h2:openjpa-database"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:eclipselink-database"/>
 
             <!--
              <property name="openjpa.ConnectionURL" value="jdbc:h2:openjpa-database"/>

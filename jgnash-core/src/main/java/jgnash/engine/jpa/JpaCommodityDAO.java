@@ -108,7 +108,7 @@ class JpaCommodityDAO extends AbstractJpaDAO  implements CommodityDAO {
         TypedQuery<CurrencyNode> q = em.createQuery(cq);
 
 
-        return stripMarkedForRemoval(q.getResultList());
+        return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
     }
 
     /*
@@ -140,7 +140,7 @@ class JpaCommodityDAO extends AbstractJpaDAO  implements CommodityDAO {
         TypedQuery<SecurityNode> q = em.createQuery(cq);
 
 
-        return stripMarkedForRemoval(q.getResultList());
+        return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
     }
 
     @Override
@@ -153,7 +153,7 @@ class JpaCommodityDAO extends AbstractJpaDAO  implements CommodityDAO {
         TypedQuery<ExchangeRate> q = em.createQuery(cq);
 
 
-        return stripMarkedForRemoval(q.getResultList());
+        return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
     }
 
     /*

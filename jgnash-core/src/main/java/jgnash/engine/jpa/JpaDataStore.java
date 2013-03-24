@@ -64,30 +64,31 @@ public class JpaDataStore implements DataStore {
         }
     }
 
-    @Override
-    public Engine getClientEngine(final String host, final int port, final String user, final String password, final String engineName) {
+    private static Properties getProperties(final String fileName, final String user, final String password) {
         Properties properties = System.getProperties();
 
-        properties.setProperty("openjpa.ConnectionURL", "jdbc:h2:" + FileUtils.stripFileExtension(fileName));
-        properties.setProperty("openjpa.ConnectionDriverName", "org.h2.Driver");
-        properties.setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema");
+        properties.setProperty("eclipselink.target-database", "org.eclipse.persistence.platform.database.H2Platform");
+        //properties.setProperty("eclipselink.ddl-generation", "create-or-extend-tables");
 
-        properties.setProperty("openjpa.ConnectionUserName", user);
-        properties.setProperty("openjpa.ConnectionPassword", password);
+        properties.setProperty("javax.persistence.jdbc.url", "jdbc:h2:" + FileUtils.stripFileExtension(fileName));
+        properties.setProperty("javax.persistence.jdbc.driver", "org.h2.Driver");
+
+        properties.setProperty("javax.persistence.jdbc.user", user);
+        properties.setProperty("javax.persistence.jdbc.password", password);
+
+        return properties;
+    }
+
+    @Override
+    public Engine getClientEngine(final String host, final int port, final String user, final String password, final String engineName) {
+        //Properties properties = getProperties("", user, password);
 
         return null;  // TODO Fix me
     }
 
     @Override
     public Engine getLocalEngine(final String fileName, final String engineName) {
-        Properties properties = System.getProperties();
-
-        properties.setProperty("openjpa.ConnectionURL", "jdbc:h2:" + FileUtils.stripFileExtension(fileName));
-        //properties.setProperty("openjpa.ConnectionDriverName", "org.h2.Driver");
-        //properties.setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema");
-
-        properties.setProperty("openjpa.ConnectionUserName", "");
-        properties.setProperty("openjpa.ConnectionPassword", "");
+        Properties properties = getProperties(fileName, "", "");
 
         Engine engine = null;
 
@@ -96,8 +97,12 @@ public class JpaDataStore implements DataStore {
         }
 
         try {
+
+            if (!new File(fileName).exists()) {
+                properties.setProperty("eclipselink.ddl-generation", "create-or-extend-tables");
+            }
+
             factory = Persistence.createEntityManagerFactory("jgnash", properties);
-            //factory = Persistence.createEntityManagerFactory("jgnash", System.getProperties());
 
             em = factory.createEntityManager();
 
@@ -137,14 +142,7 @@ public class JpaDataStore implements DataStore {
             file.delete();
         }
 
-        Properties properties = System.getProperties();
-
-        properties.setProperty("openjpa.ConnectionURL", "jdbc:h2:" + FileUtils.stripFileExtension(file.getAbsolutePath()));
-        properties.setProperty("openjpa.ConnectionDriverName", "org.h2.Driver");
-        properties.setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema");
-
-        properties.setProperty("openjpa.ConnectionUserName", "");
-        properties.setProperty("openjpa.ConnectionPassword", "");
+        Properties properties = getProperties(file.getAbsolutePath(), "", "");
 
         EntityManagerFactory factory = null;
         EntityManager em = null;
@@ -183,14 +181,7 @@ public class JpaDataStore implements DataStore {
 
         float fileVersion = 0;
 
-        Properties properties = System.getProperties();
-
-        properties.setProperty("openjpa.ConnectionURL", "jdbc:h2:" + FileUtils.stripFileExtension(file.getAbsolutePath()));
-        properties.setProperty("openjpa.ConnectionDriverName", "org.h2.Driver");
-        properties.setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema");
-
-        properties.setProperty("openjpa.ConnectionUserName", "");
-        properties.setProperty("openjpa.ConnectionPassword", "");
+        Properties properties = getProperties(file.getAbsolutePath(), "", "");
 
         EntityManagerFactory factory = null;
         EntityManager em = null;
@@ -209,8 +200,6 @@ public class JpaDataStore implements DataStore {
             Config defaultConfig = q.getSingleResult();
 
             fileVersion = defaultConfig.getFileVersion();
-
-
         } catch (Exception e) {
             Logger.getLogger(JpaDataStore.class.getName()).log(Level.SEVERE, e.getMessage(), e);
         } finally {

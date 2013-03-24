@@ -26,8 +26,10 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -138,7 +140,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
      */
     @Override
     public List<Account> getIncomeAccountList() {
-       return getAccountList(AccountType.INCOME);
+        return getAccountList(AccountType.INCOME);
     }
 
     /*
@@ -156,7 +158,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
     public List<Account> getInvestmentAccountList() {
         List<Account> list = new ArrayList<>();
 
-        for (Account a : getAccountList())  {
+        for (Account a : getAccountList()) {
             if (a.memberOf(AccountGroup.INVEST)) {
                 list.add(a);
             }
@@ -176,7 +178,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
         Query query = em.createQuery(queryString);
         query.setParameter("uuid", uuid);
 
-        Account temp = (Account)query.getSingleResult();
+        Account temp = (Account) query.getSingleResult();
 
         if (temp != null) {
             account = temp;
@@ -190,11 +192,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
      */
     @Override
     public boolean updateAccount(final Account account) {
-        em.getTransaction().begin();
-        em.persist(account);
-        em.getTransaction().commit();
-
-        return true;
+        return simpleUpdate(account);
     }
 
     @Override
@@ -212,15 +210,31 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
      */
     @Override
     public boolean toggleAccountVisibility(final Account account) {
-        em.getTransaction().begin();
-        em.persist(account);
-        em.getTransaction().commit();
-
-        return true;
+        return simpleUpdate(account);
     }
 
     @Override
     public void refreshAccount(Account account) {
         em.merge(account);
+    }
+
+    private boolean simpleUpdate(final Account account) {
+        boolean result = false;
+
+        if (em.contains(account)) { // don't try if the EntityManager does not contain the account
+            try {
+                em.getTransaction().begin();
+                em.persist(account);
+                em.getTransaction().commit();
+
+                result = true;
+            } catch (Exception e) {
+                logger.log(Level.SEVERE, e.getMessage(), e);
+            }
+        } else {
+            logger.log(Level.SEVERE, "Tried to update an account that was not persisted", new Exception());
+        }
+
+        return result;
     }
 }

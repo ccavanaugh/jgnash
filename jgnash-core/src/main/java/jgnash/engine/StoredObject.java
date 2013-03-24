@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  * @author Craig Cavanaugh
  */
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class StoredObject implements Cloneable, Serializable {
 
     private static final long serialVersionUID = -6989773226655555899L;
@@ -43,7 +43,7 @@ public abstract class StoredObject implements Cloneable, Serializable {
      * Unique ID for every object
      */
     @Id()
-    @Column(name="UUID", nullable = false)
+    @Column(nullable = false)
     private String uuid = UUIDUtil.getUID();
 
     /**

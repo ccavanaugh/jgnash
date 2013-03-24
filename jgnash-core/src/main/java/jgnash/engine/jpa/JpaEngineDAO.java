@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -146,15 +147,15 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
         StoredObject o = null;
 
         try {
+            Query query = em.createQuery("SELECT x FROM StoredObject x WHERE x.uuid = :id");
+            query.setParameter("id", uuid);
 
-            String queryString = "SELECT a FROM StoredObject a WHERE a.uuid = :uuid";
-            javax.persistence.Query query = em.createQuery(queryString);
-            query.setParameter("uuid", uuid);
+            List<StoredObject> results =  query.getResultList();
 
-            StoredObject temp = (StoredObject) query.getSingleResult();
+            //StoredObject temp = (StoredObject) query.getSingleResult();
 
-            if (temp != null) {
-                o = temp;
+            if (!results.isEmpty()) {
+                o = results.get(0);
             }
         } catch (NoResultException ignore) {
             // this is okay

@@ -152,7 +152,7 @@ class Db4oCommodityDAO extends AbstractDb4oDAO implements CommodityDAO {
             query.constrain(CurrencyNode.class);
             query.descend("markedForRemoval").constrain(Boolean.FALSE);
 
-            list = new ArrayList<>(query.execute());
+            list = new ArrayList<CurrencyNode>(query.execute());
 
             container.ext().releaseSemaphore(GLOBAL_SEMAPHORE);
         } else {

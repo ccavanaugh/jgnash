@@ -40,8 +40,8 @@ public class Budget extends StoredObject implements Comparable<Budget> {
     /**
      * Version field for persistence purposes
      */
-    @SuppressWarnings("unused")
     @Version
+    @SuppressWarnings("unused")
     private int version;
 
     /**
@@ -63,7 +63,8 @@ public class Budget extends StoredObject implements Comparable<Budget> {
     /**
      * Account goals are stored internally by the account UUID.
      */
-    @OneToMany
+    @JoinColumn()
+    @OneToMany(orphanRemoval = true, cascade = {CascadeType.ALL})
     private Map<String, BudgetGoal> accountGoals = new HashMap<>();
 
     private boolean assetAccountsIncluded = false;
