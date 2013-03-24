@@ -19,7 +19,6 @@ package jgnash.engine;
 
 import javax.persistence.Embeddable;
 import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
 import java.math.BigDecimal;
 
 /**
