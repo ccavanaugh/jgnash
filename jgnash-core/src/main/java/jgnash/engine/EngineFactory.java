@@ -31,6 +31,7 @@ import java.util.prefs.Preferences;
 import javax.swing.filechooser.FileSystemView;
 
 import jgnash.engine.db4o.Db4oDataStore;
+import jgnash.engine.jpa.JpaDataStore;
 import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.engine.xstream.XMLDataStore;
 import jgnash.message.ChannelEvent;
@@ -62,7 +63,7 @@ public class EngineFactory {
 
     private static final String LAST_PASSWORD = "LastPassword";
 
-    private static final String LAST_USEDPASSWORD = "LastUsedPassword";
+    private static final String LAST_USED_PASSWORD = "LastUsedPassword";
 
     private static final String LAST_REMOTE = "LastRemote";
 
@@ -301,7 +302,7 @@ public class EngineFactory {
 
                 if (password != null) {
                     // remember if the user used a password for the last session
-                    pref.putBoolean(LAST_USEDPASSWORD, password.length() > 0);
+                    pref.putBoolean(LAST_USED_PASSWORD, password.length() > 0);
 
                     if (savePassword) {
                         pref.put(LAST_PASSWORD, password);
@@ -309,7 +310,7 @@ public class EngineFactory {
                         pref.put(LAST_PASSWORD, "");
                     }
                 } else {
-                    pref.putBoolean(LAST_USEDPASSWORD, false);
+                    pref.putBoolean(LAST_USED_PASSWORD, false);
                     pref.put(LAST_PASSWORD, "");
                 }
             }
@@ -327,6 +328,8 @@ public class EngineFactory {
             return DataStoreType.XML;
         } else if (type == FileType.BinaryXStream) {
             return DataStoreType.BINARY_XSTREAM;
+        } else if (type == FileType.h2) {
+            return DataStoreType.H2_DATABASE;
         }
 
         return null;
@@ -343,6 +346,8 @@ public class EngineFactory {
             return XMLDataStore.getFileVersion(file);
         } else if (type == FileType.BinaryXStream) {
             return BinaryXStreamDataStore.getFileVersion(file);
+        }  else if (type == FileType.h2) {
+            return JpaDataStore.getFileVersion(file);
         }
 
         return version;
