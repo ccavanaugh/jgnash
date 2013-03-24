@@ -201,6 +201,8 @@ public class Engine {
                 if (node == null) {
                     node = DefaultCurrencies.buildNode(Locale.getDefault());
                     node.setExchangeRateDAO(exchangeRateDAO);
+
+                    addCommodity(node); // force the node to persisted
                 }
 
                 root = new RootAccount(node);
