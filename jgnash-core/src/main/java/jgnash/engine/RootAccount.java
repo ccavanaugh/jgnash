@@ -17,7 +17,6 @@
  */
 package jgnash.engine;
 
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 /**
@@ -26,7 +25,6 @@ import javax.persistence.Entity;
  * @author Craig Cavanaugh
  */
 @Entity
-@DiscriminatorValue("RootAccount")
 public class RootAccount extends Account {
 
     private static final long serialVersionUID = 566641506784882611L;
@@ -34,10 +32,7 @@ public class RootAccount extends Account {
     /**
      * No argument constructor for reflection purposes.
      * <b>Do not use to create a new instance</b>
-     *
-     * @deprecated
      */
-    @Deprecated
     public RootAccount() {
         super();
     }
