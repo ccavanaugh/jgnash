@@ -23,9 +23,8 @@ import java.util.UUID;
  * Used to create unique business keys for the database
  *
  * @author Craig Cavanaugh
- *
  */
-class UUIDUtil {
+public class UUIDUtil {
 
     /**
      * Generates a unique id that does not repeat.
@@ -33,7 +32,7 @@ class UUIDUtil {
      *
      * @return the unique id
      */
-    static String getUID() {
+    public static String getUID() {
         return UUID.randomUUID().toString();
     }
 
