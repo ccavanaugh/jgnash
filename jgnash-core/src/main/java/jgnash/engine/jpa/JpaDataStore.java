@@ -31,6 +31,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
 import java.io.File;
 import java.util.Collection;
 import java.util.Properties;
@@ -86,6 +87,18 @@ public class JpaDataStore implements DataStore {
         return null;  // TODO Fix me
     }
 
+    public static boolean isDatabaseLocked(final String fileName) {
+        boolean locked = false;
+
+        String lockFile = FileUtils.stripFileExtension(fileName) + ".lock.db";
+
+        if (new File(lockFile).exists()) {
+            locked = true;
+        }
+
+        return locked;
+    }
+
     @Override
     public Engine getLocalEngine(final String fileName, final String engineName) {
         Properties properties = getProperties(fileName, "", "");
@@ -96,23 +109,25 @@ public class JpaDataStore implements DataStore {
             System.out.println(FileUtils.stripFileExtension(fileName));
         }
 
-        try {
+        if (!isDatabaseLocked(fileName)) {
 
-            if (!new File(fileName).exists()) {
-                properties.setProperty("eclipselink.ddl-generation", "create-or-extend-tables");
+            try {
+                if (!new File(fileName).exists()) {
+                    properties.setProperty("eclipselink.ddl-generation", "create-or-extend-tables");
+                }
+
+                factory = Persistence.createEntityManagerFactory("jgnash", properties);
+
+                em = factory.createEntityManager();
+
+                Logger.getLogger(JpaDataStore.class.getName()).info("Created local JPA container and engine");
+                engine = new Engine(new JpaEngineDAO(em, false), engineName);
+
+                this.fileName = fileName;
+                remote = false;
+            } catch (final Exception e) {
+                Logger.getLogger(JpaDataStore.class.getName()).log(Level.SEVERE, e.getMessage(), e);
             }
-
-            factory = Persistence.createEntityManagerFactory("jgnash", properties);
-
-            em = factory.createEntityManager();
-
-            Logger.getLogger(JpaDataStore.class.getName()).info("Created local JPA container and engine");
-            engine = new Engine(new JpaEngineDAO(em, false), engineName);
-
-            this.fileName = fileName;
-            remote = false;
-        } catch (final Exception e) {
-            Logger.getLogger(JpaDataStore.class.getName()).log(Level.SEVERE, e.getMessage(), e);
         }
 
 
