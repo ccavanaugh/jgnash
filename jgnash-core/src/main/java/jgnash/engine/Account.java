@@ -208,6 +208,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @param value actual object to add or set
      */
     @Deprecated
+    @SuppressWarnings("unused")
     public void setProperty(final AccountProperty key, final Serializable value) {
         propertyMap.put(key.name(), value);
     }
