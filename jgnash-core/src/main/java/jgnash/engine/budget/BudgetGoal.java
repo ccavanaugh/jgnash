@@ -133,6 +133,8 @@ public class BudgetGoal implements Cloneable, Serializable {
     public Object clone() throws CloneNotSupportedException {
         BudgetGoal goal = (BudgetGoal) super.clone();
 
+        goal.id = 0;    // reset, must be unique for JPA
+
         // deep copy
         goal.goals = new BigDecimal[PERIODS];
         System.arraycopy(goals, 0, goal.goals, 0, goals.length);
