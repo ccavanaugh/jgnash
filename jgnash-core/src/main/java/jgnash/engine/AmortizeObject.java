@@ -40,7 +40,8 @@ public class AmortizeObject implements Serializable {
 
     @Id
     @SuppressWarnings("unused")
-    private String id = UUIDUtil.getUID();
+    @GeneratedValue(strategy=GenerationType.TABLE)
+    private int id;
 
     @ManyToOne
     private Account interestAccount; // account for interest payment

@@ -22,12 +22,8 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 
 import jgnash.engine.MathConstants;
-import jgnash.engine.UUIDUtil;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Budget Goal Object
@@ -43,7 +39,8 @@ public class BudgetGoal implements Cloneable, Serializable {
 
     @Id
     @SuppressWarnings("unused")
-    private String id = UUIDUtil.getUID();
+    @GeneratedValue(strategy=GenerationType.TABLE)
+    private int id;
 
     /** 366 days per year */
     public static final int PERIODS = 366;
@@ -135,7 +132,6 @@ public class BudgetGoal implements Cloneable, Serializable {
     @Override
     public Object clone() throws CloneNotSupportedException {
         BudgetGoal goal = (BudgetGoal) super.clone();
-        goal.id = UUIDUtil.getUID();  // force a new UUID for the clone
 
         // deep copy
         goal.goals = new BigDecimal[PERIODS];
