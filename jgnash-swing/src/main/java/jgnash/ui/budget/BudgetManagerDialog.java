@@ -240,7 +240,7 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
 
             String message = values.size() == 1 ? rb.getString("Message.ConfirmBudgetDelete") : rb.getString("Message.ConfirmMultipleBudgetDelete");
 
-            if (YesNoDialog.showYesNoDialog(UIApplication.getFrame(), new JLabel(rb.getString(message)), rb.getString("Title.Confirm"))) {
+            if (YesNoDialog.showYesNoDialog(UIApplication.getFrame(), new JLabel(message), rb.getString("Title.Confirm"))) {
                 for (BudgetObject value : values) {
                     e.removeBudget(value.getBudget());
                 }
