@@ -17,12 +17,15 @@
  */
 package jgnash.engine.jpa;
 
+import jgnash.engine.StoredObject;
 import jgnash.engine.dao.AbstractDAO;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 
 /**
  * Abstract DAO
@@ -79,5 +82,22 @@ abstract class AbstractJpaDAO extends AbstractDAO {
         } finally {
             commitLock.unlock();
         }
+    }
+
+    public StoredObject getObjectByUuid(final String uuid) {
+
+        StoredObject o = null;
+
+        try {
+            emLock.lock();
+
+            o = em.find(StoredObject.class, uuid);
+        } catch (NoResultException e) {
+            Logger.getLogger(AbstractJpaDAO.class.getName()).info("Did not find object for uuid: " + uuid);
+        } finally {
+            emLock.unlock();
+        }
+
+        return o;
     }
 }

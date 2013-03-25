@@ -18,6 +18,7 @@
 package jgnash.engine;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +29,7 @@ import java.util.logging.Logger;
  * @author Craig Cavanaugh
  */
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class StoredObject implements Cloneable, Serializable {
 
     private static final long serialVersionUID = -6989773226655555899L;

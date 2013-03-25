@@ -17,10 +17,8 @@
  */
 package jgnash.engine;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
+
 import java.util.Date;
 
 /**
@@ -35,15 +33,23 @@ public class TrashObject extends StoredObject {
     private static final long serialVersionUID = -5923174140959126059L;
 
     /**
+     * ID of the object to remove
+     */
+    private String objectID;
+
+    /**
      * Date object was added
      */
     @Temporal(TemporalType.TIMESTAMP)
-    private final Date date = new Date();
+    private Date date = new Date();
 
     /**
      * The stored object
+     *
+     * Transparent in JPA applications
      */
-    @ManyToOne
+    @SuppressWarnings("unused")
+    @Transient
     private StoredObject object;
 
     /**
@@ -55,6 +61,7 @@ public class TrashObject extends StoredObject {
 
     TrashObject(final StoredObject object) {
         this.object = object;
+        objectID = object.getUuid();
         object.setMarkedForRemoval(true);
         setMarkedForRemoval(true);
     }
@@ -63,7 +70,22 @@ public class TrashObject extends StoredObject {
         return object;
     }
 
+    public String getObjectId() {
+       return objectID;
+    }
+
     public Date getDate() {
         return date;
+    }
+
+    /*
+     Change from old storage format
+     */
+    protected Object readResolve() {
+        if (object != null) {
+            objectID = object.getUuid();
+        }
+
+        return this;
     }
 }

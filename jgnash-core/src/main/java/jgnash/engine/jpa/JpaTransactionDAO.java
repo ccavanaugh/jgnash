@@ -121,7 +121,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
                 em.persist(account);
             }
 
-            em.remove(transaction);
+            em.persist(transaction);    // saved, removed with the trash
 
             em.getTransaction().commit();
 

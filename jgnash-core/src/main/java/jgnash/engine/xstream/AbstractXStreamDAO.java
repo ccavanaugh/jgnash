@@ -20,6 +20,7 @@ package jgnash.engine.xstream;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
+import jgnash.engine.StoredObject;
 import jgnash.engine.dao.AbstractDAO;
 
 /**
@@ -46,6 +47,10 @@ abstract class AbstractXStreamDAO extends AbstractDAO {
         assert container != null;
 
         this.container = container;
+    }
+
+    public StoredObject getObjectByUuid(final String uuid) {
+        return container.get(uuid);
     }
 
     final void commit() {

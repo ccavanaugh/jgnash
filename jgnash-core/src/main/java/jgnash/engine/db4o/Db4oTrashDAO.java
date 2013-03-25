@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import jgnash.engine.StoredObject;
 import jgnash.engine.TrashObject;
 import jgnash.engine.dao.TrashDAO;
 
@@ -52,8 +53,11 @@ class Db4oTrashDAO extends AbstractDb4oDAO implements TrashDAO {
 
     @Override
     public void remove(TrashObject trashObject) {
-        container.delete(trashObject.getObject());
-        container.ext().purge(trashObject.getObject());
+
+        StoredObject storedObject = getObjectByUuid(trashObject.getObjectId());
+
+        container.delete(storedObject);
+        container.ext().purge(storedObject);
         container.delete(trashObject);
         container.ext().purge(trashObject);
 

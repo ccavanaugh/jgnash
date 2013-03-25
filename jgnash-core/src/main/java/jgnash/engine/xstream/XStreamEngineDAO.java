@@ -153,11 +153,6 @@ public class XStreamEngineDAO extends AbstractXStreamDAO implements EngineDAO {
     }
 
     @Override
-    public StoredObject getObjectByUuid(final String uuid) {
-        return container.get(uuid);
-    }
-
-    @Override
     public List<StoredObject> getStoredObjects() {
         return container.asList();
     }

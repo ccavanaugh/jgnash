@@ -22,6 +22,9 @@ import com.db4o.ObjectContainer;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
+import com.db4o.ObjectSet;
+import com.db4o.query.Query;
+import jgnash.engine.StoredObject;
 import jgnash.engine.dao.AbstractDAO;
 import jgnash.net.ConnectionFactory;
 
@@ -62,6 +65,28 @@ abstract class AbstractDb4oDAO extends AbstractDAO {
 
         this.isRemote = isRemote;
         this.container = container;
+    }
+
+    public StoredObject getObjectByUuid(final String uuid) {
+
+        StoredObject o = null;
+
+        if (container.ext().setSemaphore(GLOBAL_SEMAPHORE, SEMAPHORE_WAIT_TIME)) {
+            Query query = container.query();
+            query.constrain(StoredObject.class);
+            query.descend("uuid").constrain(uuid);
+            ObjectSet<?> result = query.execute();
+
+            container.ext().releaseSemaphore(GLOBAL_SEMAPHORE);
+
+            assert result.size() <= 1;
+
+            if (result.size() == 1) {
+                o = (StoredObject) result.get(0);
+            }
+        }
+
+        return o;
     }
 
     /**

@@ -131,8 +131,6 @@ public abstract class EngineTest {
         // close and reopen to force check for persistence
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-        System.out.println(testFile);
-
         e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
 
         assertNotNull(e);

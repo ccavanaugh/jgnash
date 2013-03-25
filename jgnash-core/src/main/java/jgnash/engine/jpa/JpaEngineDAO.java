@@ -26,10 +26,8 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -58,7 +56,7 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
 
     private ScheduledExecutorService commitExecutor;
 
-    private static final Logger logger = Logger.getLogger(JpaEngineDAO.class.getName());
+    // private static final Logger logger = Logger.getLogger(JpaEngineDAO.class.getName());
 
     JpaEngineDAO(final EntityManager entityManager, final boolean isRemote) {
         super(entityManager, isRemote);
@@ -138,24 +136,6 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
             trashDAO = new JpaTrashDAO(em, isRemote);
         }
         return trashDAO;
-    }
-
-    @Override
-    public StoredObject getObjectByUuid(final String uuid) {
-
-        StoredObject o = null;
-
-        try {
-            emLock.lock();
-
-            o = em.find(StoredObject.class, uuid);
-        } catch (NoResultException e) {
-            logger.info("Did not find object for uuid: " + uuid);
-        } finally {
-            emLock.unlock();
-        }
-
-        return o;
     }
 
     @Override

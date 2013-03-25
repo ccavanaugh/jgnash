@@ -19,17 +19,16 @@ package jgnash.engine.db4o;
 
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
-import com.db4o.query.Query;
+
+import jgnash.engine.StoredObject;
+import jgnash.engine.dao.*;
+import jgnash.util.DefaultDaemonThreadFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import jgnash.engine.StoredObject;
-import jgnash.engine.dao.*;
-import jgnash.util.DefaultDaemonThreadFactory;
 
 /**
  * Db4o DAO Interface
@@ -133,29 +132,6 @@ public class Db4oEngineDAO extends AbstractDb4oDAO implements EngineDAO {
             trashDAO = new Db4oTrashDAO(container, isRemote);
         }
         return trashDAO;
-    }
-
-    @Override
-    public StoredObject getObjectByUuid(String uuid) {
-
-        StoredObject o = null;
-
-        if (container.ext().setSemaphore(GLOBAL_SEMAPHORE, SEMAPHORE_WAIT_TIME)) {
-            Query query = container.query();
-            query.constrain(StoredObject.class);
-            query.descend("uuid").constrain(uuid);
-            ObjectSet<?> result = query.execute();
-
-            container.ext().releaseSemaphore(GLOBAL_SEMAPHORE);
-
-            assert result.size() <= 1;
-
-            if (result.size() == 1) {
-                o = (StoredObject) result.get(0);
-            }
-        }
-
-        return o;
     }
 
     @Override

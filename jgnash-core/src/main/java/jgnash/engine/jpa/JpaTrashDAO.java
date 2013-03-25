@@ -18,6 +18,7 @@
 package jgnash.engine.jpa;
 
 
+import jgnash.engine.StoredObject;
 import jgnash.engine.TrashObject;
 import jgnash.engine.dao.TrashDAO;
 
@@ -69,6 +70,7 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
             emLock.lock();
             em.getTransaction().begin();
 
+            em.persist(trashObject.getObject());
             em.persist(trashObject);
 
             em.getTransaction().commit();
@@ -85,7 +87,9 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
 
             em.getTransaction().begin();
 
-            em.remove(trashObject.getObject());
+            StoredObject object = getObjectByUuid(trashObject.getUuid());
+
+            em.remove(object);
             em.remove(trashObject);
 
             em.getTransaction().commit();
