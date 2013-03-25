@@ -32,15 +32,10 @@ import javax.persistence.*;
  * 
  * @author Craig Cavanaugh
  */
-@Entity
+@Embeddable
 public class BudgetGoal implements Cloneable, Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    @Id
-    @SuppressWarnings("unused")
-    @GeneratedValue(strategy=GenerationType.TABLE)
-    private int id;
 
     /** 366 days per year */
     public static final int PERIODS = 366;
@@ -132,8 +127,6 @@ public class BudgetGoal implements Cloneable, Serializable {
     @Override
     public Object clone() throws CloneNotSupportedException {
         BudgetGoal goal = (BudgetGoal) super.clone();
-
-        goal.id = 0;    // reset, must be unique for JPA
 
         // deep copy
         goal.goals = new BigDecimal[PERIODS];
