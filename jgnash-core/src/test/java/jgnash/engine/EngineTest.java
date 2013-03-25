@@ -414,40 +414,85 @@ public abstract class EngineTest {
         fail("Not yet implemented");
     }
 
-    @Ignore
     @Test
     public void testGetAccountByUuid() {
-        fail("Not yet implemented");
+        String rootUUID = e.getRootAccount().getUuid();
+
+        assertEquals(e.getRootAccount(), e.getStoredObjectByUuid(rootUUID));
     }
 
-    @Ignore
     @Test
     public void testGetAccountByName() {
-        fail("Not yet implemented");
+        final String ACCOUNT_NAME = "testAccount";
+
+        CurrencyNode node = e.getDefaultCurrency();
+
+        Account a = new Account(AccountType.BANK, node);
+        a.setName(ACCOUNT_NAME);
+
+        e.addAccount(e.getRootAccount(), a);
+
+        assertEquals(a, e.getAccountByName(ACCOUNT_NAME));
     }
 
-    @Ignore
     @Test
     public void testGetIncomeAccountList() {
-        fail("Not yet implemented");
+        CurrencyNode node = e.getDefaultCurrency();
+
+        Account a = new Account(AccountType.INCOME, node);
+        a.setName("Income");
+        e.addAccount(e.getRootAccount(), a);
+
+        // close and reopen to force check for persistence
+        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+
+        assertTrue(e.getIncomeAccountList().size() > 0);
     }
 
-    @Ignore
     @Test
     public void testGetExpenseAccountList() {
-        fail("Not yet implemented");
+        CurrencyNode node = e.getDefaultCurrency();
+
+        Account a = new Account(AccountType.EXPENSE, node);
+        a.setName("Expense");
+        e.addAccount(e.getRootAccount(), a);
+
+        // close and reopen to force check for persistence
+        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+
+        assertTrue(e.getExpenseAccountList().size() > 0);
     }
 
-    @Ignore
     @Test
     public void testGetBankAccountList() {
-        fail("Not yet implemented");
+        CurrencyNode node = e.getDefaultCurrency();
+
+        Account a = new Account(AccountType.BANK, node);
+        a.setName("Asset");
+        e.addAccount(e.getRootAccount(), a);
+
+        // close and reopen to force check for persistence
+        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+
+        assertTrue(e.getAccounts(AccountGroup.ASSET).size() > 0);
     }
 
-    @Ignore
     @Test
     public void testGetInvestmentAccountList() {
-        fail("Not yet implemented");
+        CurrencyNode node = e.getDefaultCurrency();
+
+        Account a = new Account(AccountType.INVEST, node);
+        a.setName("Invest");
+        e.addAccount(e.getRootAccount(), a);
+
+        // close and reopen to force check for persistence
+        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+
+        assertTrue(e.getInvestmentAccountList().size() > 0);
     }
 
     @Ignore
