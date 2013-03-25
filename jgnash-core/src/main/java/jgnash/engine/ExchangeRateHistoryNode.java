@@ -23,6 +23,7 @@ import java.util.Date;
 
 import jgnash.util.DateUtils;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -42,6 +43,7 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
     @Temporal(TemporalType.DATE)
     private Date date = DateUtils.today();
 
+    @Column(precision = 32, scale = 16)
     private BigDecimal rate = BigDecimal.ZERO;
 
     /**

@@ -59,8 +59,10 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     @ManyToOne
     private Account creditAccount;
 
+    @Column(precision = 32, scale = 16)
     private BigDecimal creditAmount = BigDecimal.ZERO;
 
+    @Column(precision = 32, scale = 16)
     private BigDecimal debitAmount = BigDecimal.ZERO;
 
     /**

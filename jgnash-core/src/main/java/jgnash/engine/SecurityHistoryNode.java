@@ -23,6 +23,7 @@ import java.util.Date;
 
 import jgnash.util.DateUtils;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -41,10 +42,13 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
     @Temporal(TemporalType.DATE)
     private Date date = DateUtils.today();
 
+    @Column(precision = 32, scale = 16)
     private BigDecimal price = BigDecimal.ZERO;
 
+    @Column(precision = 32, scale = 16)
     private BigDecimal high = BigDecimal.ZERO;
 
+    @Column(precision = 32, scale = 16)
     private BigDecimal low = BigDecimal.ZERO;
 
     private long volume = 0;

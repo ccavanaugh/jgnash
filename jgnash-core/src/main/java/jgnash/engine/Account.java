@@ -111,11 +111,13 @@ public class Account extends StoredObject implements Comparable<Account> {
     /**
      * Balance of the account
      */
+    @Column(precision = 32, scale = 16)
     private BigDecimal accountBalance;
 
     /**
      * Reconciled balance of the account
      */
+    @Column(precision = 32, scale = 16)
     private BigDecimal reconciledBalance;
 
     /**

@@ -191,10 +191,16 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
     public List<Account> getInvestmentAccountList() {
         List<Account> list = new ArrayList<>();
 
-        for (Account a : getAccountList()) {
-            if (a.memberOf(AccountGroup.INVEST)) {
-                list.add(a);
+        try {
+            emLock.lock();
+
+            for (Account a : getAccountList()) {
+                if (a.memberOf(AccountGroup.INVEST)) {
+                    list.add(a);
+                }
             }
+        } finally {
+            emLock.unlock();
         }
 
         return list;
