@@ -82,6 +82,7 @@
             <property name="javax.persistence.jdbc.user" value=""/>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:eclipselink-database"/>
+            <property name="javax.persistence.lock.timeout" value="10000"/> <!-- Allow a 10 second stall for now -->
 
             <!--
              <property name="openjpa.ConnectionURL" value="jdbc:h2:openjpa-database"/>

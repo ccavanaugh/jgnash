@@ -19,9 +19,10 @@ package jgnash.engine.jpa;
 
 import jgnash.engine.dao.AbstractDAO;
 
-import javax.persistence.EntityManager;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
+
+import javax.persistence.EntityManager;
 
 /**
  * Abstract DAO

@@ -21,14 +21,14 @@ package jgnash.engine.jpa;
 import jgnash.engine.TrashObject;
 import jgnash.engine.dao.TrashDAO;
 
+import java.util.List;
+import java.util.logging.Logger;
+
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
-import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Trash DAO

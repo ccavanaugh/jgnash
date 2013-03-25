@@ -20,13 +20,17 @@ package jgnash.engine.jpa;
 import jgnash.engine.*;
 import jgnash.engine.dao.CommodityDAO;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.*;
-import java.util.logging.Logger;
+
 
 /**
  * Commodity DAO
@@ -34,9 +38,9 @@ import java.util.logging.Logger;
  * @author Craig Cavanaugh
  */
 
-class JpaCommodityDAO extends AbstractJpaDAO  implements CommodityDAO {
+class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
 
-    private static final Logger logger = Logger.getLogger(JpaCommodityDAO.class.getName());
+    //private static final Logger logger = Logger.getLogger(JpaCommodityDAO.class.getName());
 
     JpaCommodityDAO(final EntityManager entityManager, final boolean isRemote) {
         super(entityManager, isRemote);

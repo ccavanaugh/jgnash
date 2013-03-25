@@ -20,20 +20,20 @@ package jgnash.engine.jpa;
 import jgnash.engine.Config;
 import jgnash.engine.dao.ConfigDAO;
 
+import java.util.logging.Logger;
+
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
-import java.util.logging.Logger;
-
 /**
  * Config DAO
  *
  * @author Craig Cavanaugh
  */
-class JpaConfigDAO extends AbstractJpaDAO  implements ConfigDAO {
+class JpaConfigDAO extends AbstractJpaDAO implements ConfigDAO {
 
     private static final Logger logger = Logger.getLogger(JpaConfigDAO.class.getName());
 

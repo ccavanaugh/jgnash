@@ -21,15 +21,14 @@ package jgnash.engine.jpa;
 import jgnash.engine.dao.RecurringDAO;
 import jgnash.engine.recurring.Reminder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Reminder DAO
@@ -38,7 +37,7 @@ import java.util.logging.Logger;
  */
 class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
 
-    private static final Logger logger = Logger.getLogger(JpaRecurringDAO.class.getName());
+    //private static final Logger logger = Logger.getLogger(JpaRecurringDAO.class.getName());
 
     JpaRecurringDAO(final EntityManager entityManager, final boolean isRemote) {
         super(entityManager, isRemote);

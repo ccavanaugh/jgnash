@@ -20,6 +20,11 @@ package jgnash.engine.jpa;
 import jgnash.engine.*;
 import jgnash.engine.dao.AccountDAO;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
@@ -27,11 +32,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Account DAO
@@ -50,6 +50,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
      * @see jgnash.engine.AccountDAOInterface#getRootAccount()
      */
     @Override
+    @SuppressWarnings("unchecked")
     public RootAccount getRootAccount() {
 
         RootAccount root = null;
@@ -59,6 +60,9 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
         List<RootAccount> list = (List<RootAccount>) q.getResultList();
 
         if (list.size() == 1) {
+            root = list.get(0);
+        } else if (list.size() > 1) {
+            logger.log(Level.SEVERE, "More than one RootAccount was found: " + list.size(), new Exception());
             root = list.get(0);
         }
 
@@ -125,6 +129,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
         return true;
     }
 
+    @SuppressWarnings("unchecked")
     private List<Account> getAccountList(final AccountType type) {
 
         String queryString = "SELECT a FROM Account a WHERE a.accountType = :type";
@@ -174,8 +179,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
         Account account = null;
 
         try {
-
-        account = em.find(Account.class, uuid, LockModeType.PESSIMISTIC_READ);
+            account = em.find(Account.class, uuid, LockModeType.PESSIMISTIC_READ);
         } catch (Exception e) {
             logger.info("Did not find Account for uuid: " + uuid);
         }
@@ -220,7 +224,11 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
         if (em.contains(account)) { // don't try if the EntityManager does not contain the account
             try {
                 em.getTransaction().begin();
+                em.lock(account, LockModeType.PESSIMISTIC_WRITE);
+
                 em.persist(account);
+
+                em.lock(account, LockModeType.NONE);
                 em.getTransaction().commit();
 
                 result = true;
