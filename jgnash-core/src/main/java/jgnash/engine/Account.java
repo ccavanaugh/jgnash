@@ -95,9 +95,9 @@ public class Account extends StoredObject implements Comparable<Account> {
     /**
      * List of transactions for this account
      */
-    @OneToMany(orphanRemoval = true, cascade = {CascadeType.ALL})
+    @ManyToMany(cascade = {CascadeType.ALL})
     @OrderBy("date, number, dateEntered")
-    @JoinColumn()
+    @JoinTable
     List<Transaction> transactions = new ArrayList<>();
 
     /**
