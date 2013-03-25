@@ -34,27 +34,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jgnash.engine.Account;
-import jgnash.engine.CommodityNode;
-import jgnash.engine.Config;
-import jgnash.engine.CurrencyNode;
-import jgnash.engine.ExchangeRate;
-import jgnash.engine.ExchangeRateHistoryNode;
-import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.RootAccount;
-import jgnash.engine.SecurityHistoryNode;
-import jgnash.engine.SecurityNode;
-import jgnash.engine.StoredObject;
-import jgnash.engine.Transaction;
-import jgnash.engine.TransactionEntry;
-import jgnash.engine.TransactionEntryAddX;
-import jgnash.engine.TransactionEntryBuyX;
-import jgnash.engine.TransactionEntryDividendX;
-import jgnash.engine.TransactionEntryMergeX;
-import jgnash.engine.TransactionEntryReinvestDivX;
-import jgnash.engine.TransactionEntryRemoveX;
-import jgnash.engine.TransactionEntrySellX;
-import jgnash.engine.TransactionEntrySplitX;
+import jgnash.engine.*;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetGoal;
 import jgnash.engine.budget.BudgetPeriod;
@@ -147,9 +127,13 @@ abstract class AbstractXStreamContainer {
         xstream.useAttributeFor(StoredObject.class, "uuid");
 
         xstream.omitField(StoredObject.class, "markedForRemoval");
+
+        // Ignore required fields for JPA
         xstream.omitField(Account.class, "version");
         xstream.omitField(Budget.class, "version");
         xstream.omitField(CommodityNode.class, "version");
+        xstream.omitField(AmortizeObject.class, "id");
+        xstream.omitField(BudgetGoal.class, "id");
 
         return xstream;
     }
