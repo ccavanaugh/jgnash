@@ -139,7 +139,10 @@ public class JpaDataStore implements DataStore {
 
         // Remove the existing file so we don't mix entities and cause corruption
         if (file.exists()) {
-            file.delete();
+            if (!file.delete()) {
+                Logger.getLogger(JpaDataStore.class.getName()).log(Level.SEVERE, "Could not delete the old file for save");
+                return;
+            }
         }
 
         Properties properties = getProperties(file.getAbsolutePath(), "", "");
@@ -178,16 +181,22 @@ public class JpaDataStore implements DataStore {
      * @return file version
      */
     public static float getFileVersion(final File file) {
-
         float fileVersion = 0;
 
         Properties properties = getProperties(file.getAbsolutePath(), "", "");
+
+        // Amend the URL to make it readonly
+        String url = properties.getProperty("javax.persistence.jdbc.url");
+        url = url + ";ACCESS_MODE_DATA=r";
+
+        properties.setProperty("javax.persistence.jdbc.url", url);
 
         EntityManagerFactory factory = null;
         EntityManager em = null;
 
         try {
             factory = Persistence.createEntityManagerFactory("jgnash", properties);
+
             em = factory.createEntityManager();
 
             CriteriaBuilder cb = em.getCriteriaBuilder();
