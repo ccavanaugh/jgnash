@@ -21,6 +21,7 @@ package jgnash.engine.jpa;
 import jgnash.engine.TrashObject;
 import jgnash.engine.dao.TrashDAO;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -46,37 +47,54 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
     @Override
     public List<TrashObject> getTrashObjects() {
 
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<TrashObject> cq = cb.createQuery(TrashObject.class);
-        Root<TrashObject> root = cq.from(TrashObject.class);
-        cq.select(root);
+        try {
+            emLock.lock();
 
-        TypedQuery<TrashObject> q = em.createQuery(cq);
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<TrashObject> cq = cb.createQuery(TrashObject.class);
+            Root<TrashObject> root = cq.from(TrashObject.class);
+            cq.select(root);
 
-        return q.getResultList();
+            TypedQuery<TrashObject> q = em.createQuery(cq);
+
+            return new ArrayList<>(q.getResultList());
+        } finally {
+            emLock.unlock();
+        }
     }
 
     @Override
     public void add(final TrashObject trashObject) {
-        em.getTransaction().begin();
+        try {
+            emLock.lock();
+            em.getTransaction().begin();
 
-        em.persist(trashObject);
+            em.persist(trashObject);
 
-        em.getTransaction().commit();
-        commit();
+            em.getTransaction().commit();
+            commit();
+        } finally {
+            emLock.unlock();
+        }
     }
 
     @Override
     public void remove(final TrashObject trashObject) {
-        em.getTransaction().begin();
+        try {
+            emLock.lock();
 
-        em.remove(trashObject.getObject());
-        em.remove(trashObject);
+            em.getTransaction().begin();
 
-        em.getTransaction().commit();
+            em.remove(trashObject.getObject());
+            em.remove(trashObject);
 
-        commit();
+            em.getTransaction().commit();
 
-        logger.info("Removed TrashObject");
+            commit();
+
+            logger.info("Removed TrashObject");
+        } finally {
+            emLock.unlock();
+        }
     }
 }

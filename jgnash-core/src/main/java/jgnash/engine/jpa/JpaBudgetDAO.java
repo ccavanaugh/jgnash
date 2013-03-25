@@ -45,41 +45,66 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
 
     @Override
     public boolean add(final Budget budget) {
-        em.getTransaction().begin();
+        try {
+            emLock.lock();
 
-        em.persist(budget);
+            em.getTransaction().begin();
 
-        em.getTransaction().commit();
+            em.persist(budget);
 
-        return true;
+            em.getTransaction().commit();
+
+            return true;
+        } finally {
+            emLock.unlock();
+        }
     }
 
     @Override
     public boolean update(final Budget budget) {
-        em.getTransaction().begin();
 
-        em.persist(budget);
+        try {
+            emLock.lock();
+            em.getTransaction().begin();
 
-        em.getTransaction().commit();
+            em.persist(budget);
 
-        return true;
+            em.getTransaction().commit();
+
+            return true;
+        } finally {
+            emLock.unlock();
+        }
     }
 
     @Override
     public List<Budget> getBudgets() {
+        try {
+            emLock.lock();
 
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Budget> cq = cb.createQuery(Budget.class);
-        Root<Budget> b = cq.from(Budget.class);
-        cq.select(b);
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Budget> cq = cb.createQuery(Budget.class);
+            Root<Budget> b = cq.from(Budget.class);
+            cq.select(b);
 
-        TypedQuery<Budget> q = em.createQuery(cq);
+            TypedQuery<Budget> q = em.createQuery(cq);
 
-        return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
+            return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
+        } finally {
+            emLock.unlock();
+        }
     }
 
     @Override
     public void refreshBudget(final Budget budget) {
-        em.merge(budget);
+        try {
+            emLock.lock();
+
+            em.getTransaction().begin();
+            em.merge(budget);
+            em.getTransaction().commit();
+        } finally {
+            emLock.unlock();
+        }
     }
 }

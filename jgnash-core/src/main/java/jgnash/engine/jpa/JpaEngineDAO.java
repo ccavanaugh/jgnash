@@ -142,14 +142,18 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
     }
 
     @Override
-    public StoredObject getObjectByUuid(String uuid) {
+    public StoredObject getObjectByUuid(final String uuid) {
 
         StoredObject o = null;
 
         try {
+            emLock.lock();
+
             o = em.find(StoredObject.class, uuid, LockModeType.PESSIMISTIC_READ);
-        } catch (NoResultException ignore) {
+        } catch (NoResultException e) {
             logger.info("Did not find object for uuid: " + uuid);
+        } finally {
+            emLock.unlock();
         }
 
         return o;
@@ -157,16 +161,22 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
 
     @Override
     public List<StoredObject> getStoredObjects() {
-        ArrayList<StoredObject> list = new ArrayList<>();
+        try {
+            emLock.lock();
 
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<StoredObject> cq = cb.createQuery(StoredObject.class);
-        Root<StoredObject> root = cq.from(StoredObject.class);
-        cq.select(root);
+            ArrayList<StoredObject> list = new ArrayList<>();
 
-        TypedQuery<StoredObject> q = em.createQuery(cq);
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<StoredObject> cq = cb.createQuery(StoredObject.class);
+            Root<StoredObject> root = cq.from(StoredObject.class);
+            cq.select(root);
 
-        list.addAll(q.getResultList());
-        return list;
+            TypedQuery<StoredObject> q = em.createQuery(cq);
+
+            list.addAll(q.getResultList());
+            return list;
+        } finally {
+            emLock.unlock();
+        }
     }
 }

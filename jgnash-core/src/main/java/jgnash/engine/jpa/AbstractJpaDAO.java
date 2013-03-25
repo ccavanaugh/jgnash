@@ -45,6 +45,8 @@ abstract class AbstractJpaDAO extends AbstractDAO {
 
     private static final ReentrantLock commitLock = new ReentrantLock();
 
+    protected static ReentrantLock emLock = new ReentrantLock();
+
     EntityManager em;
 
     boolean isRemote = false;

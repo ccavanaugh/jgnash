@@ -46,33 +46,43 @@ class JpaConfigDAO extends AbstractJpaDAO implements ConfigDAO {
      */
     @Override
     public synchronized Config getDefaultConfig() {
-        Config defaultConfig;
-
         try {
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<Config> cq = cb.createQuery(Config.class);
-            Root<Config> root = cq.from(Config.class);
-            cq.select(root);
+            emLock.lock();
+            Config defaultConfig;
 
-            TypedQuery<Config> q = em.createQuery(cq);
+            try {
+                CriteriaBuilder cb = em.getCriteriaBuilder();
+                CriteriaQuery<Config> cq = cb.createQuery(Config.class);
+                Root<Config> root = cq.from(Config.class);
+                cq.select(root);
 
-            defaultConfig = q.getSingleResult();
+                TypedQuery<Config> q = em.createQuery(cq);
 
-        } catch (Exception e) {
-            defaultConfig = new Config();
-            commit(defaultConfig);
-            logger.info("Generating new default config");
+                defaultConfig = q.getSingleResult();
+
+            } catch (Exception e) {
+                defaultConfig = new Config();
+                commit(defaultConfig);
+                logger.info("Generating new default config");
+            }
+
+            return defaultConfig;
+        } finally {
+            emLock.unlock();
         }
-
-        return defaultConfig;
     }
 
     @Override
     public void commit(final Config config) {
-        em.getTransaction().begin();
+        try {
+            emLock.lock();
+            em.getTransaction().begin();
 
-        em.persist(config);
+            em.persist(config);
 
-        em.getTransaction().commit();
+            em.getTransaction().commit();
+        } finally {
+            emLock.unlock();
+        }
     }
 }

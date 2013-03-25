@@ -49,14 +49,20 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
     @Override
     public List<Reminder> getReminderList() {
 
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Reminder> cq = cb.createQuery(Reminder.class);
-        Root<Reminder> root = cq.from(Reminder.class);
-        cq.select(root);
+        try {
+            emLock.lock();
 
-        TypedQuery<Reminder> q = em.createQuery(cq);
+            CriteriaBuilder cb = em.getCriteriaBuilder();
+            CriteriaQuery<Reminder> cq = cb.createQuery(Reminder.class);
+            Root<Reminder> root = cq.from(Reminder.class);
+            cq.select(root);
 
-        return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
+            TypedQuery<Reminder> q = em.createQuery(cq);
+
+            return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
+        } finally {
+            emLock.unlock();
+        }
     }
 
     /*
@@ -64,13 +70,18 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
      */
     @Override
     public boolean addReminder(final Reminder reminder) {
-        em.getTransaction().begin();
+        try {
+            emLock.lock();
+            em.getTransaction().begin();
 
-        em.persist(reminder);
+            em.persist(reminder);
 
-        em.getTransaction().commit();
+            em.getTransaction().commit();
 
-        return true;
+            return true;
+        } finally {
+            emLock.unlock();
+        }
     }
 
     @Override
@@ -80,10 +91,15 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
 
     @Override
     public void refreshReminder(final Reminder reminder) {
-        em.getTransaction().begin();
+        try {
+            emLock.lock();
+            em.getTransaction().begin();
 
-        em.merge(reminder);
+            em.merge(reminder);
 
-        em.getTransaction().commit();
+            em.getTransaction().commit();
+        } finally {
+            emLock.unlock();
+        }
     }
 }
