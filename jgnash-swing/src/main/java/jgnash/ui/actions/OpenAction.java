@@ -20,6 +20,7 @@ package jgnash.ui.actions;
 import java.awt.EventQueue;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,21 +37,20 @@ import jgnash.util.Resource;
 
 /**
  * UI Action to open a database
- * 
- * @author Craig Cavanaugh
  *
+ * @author Craig Cavanaugh
  */
 public class OpenAction {
-    
+
     private static final Logger logger = Logger.getLogger(OpenAction.class.getName());
-    
+
     static {
-        logger.setLevel(Level.ALL);        
+        logger.setLevel(Level.ALL);
     }
 
     public static void openAction() {
 
-        final class BootEngine extends SimpleSwingWorker {                       
+        final class BootEngine extends SimpleSwingWorker {
 
             private OpenDatabaseDialog dialog;
 
@@ -65,7 +65,7 @@ public class OpenAction {
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
 
                 EngineFactory.closeEngine(EngineFactory.DEFAULT);
-                
+
                 Engine e = null;
 
                 if (dialog.isRemote()) {
@@ -80,9 +80,12 @@ public class OpenAction {
                     if (FileUtils.isFileLocked(dialog.getDatabasePath())) {
                         StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
                     } else {
+
+                        checkAndBackupOldVersion(dialog.getDatabasePath());
+
                         e = EngineFactory.bootLocalEngine(dialog.getDatabasePath(), EngineFactory.DEFAULT);
                     }
-                }               
+                }
 
                 if (e != null) {
                     e.getRootAccount(); // prime the engine
@@ -129,13 +132,13 @@ public class OpenAction {
     private static void warnOnDb4o() {
         DataStore dataStore = EngineFactory.getDataStore(EngineFactory.DEFAULT);
 
-        if (dataStore instanceof Db4oDataStore)  {
+        if (dataStore instanceof Db4oDataStore) {
             StaticUIMethods.displayWarning(Resource.get().getString("Message.Db4oWarning"));
         }
     }
 
-    public static void openAction(final File file) {        
-        
+    public static void openAction(final File file) {
+
         String database = file.getAbsolutePath();
 
         final class BootEngine extends SimpleSwingWorker {
@@ -149,12 +152,14 @@ public class OpenAction {
                 // Disk IO is heavy so delay and allow the UI to react before starting the boot operation
                 Thread.sleep(750);
 
+                checkAndBackupOldVersion(file.getAbsolutePath());
+
                 Engine e = EngineFactory.bootLocalEngine(file.getAbsolutePath(), EngineFactory.DEFAULT);
-                
+
                 if (e != null) {
                     e.getRootAccount(); // prime the engine
                 }
-                
+
                 logger.fine("Engine boot complete");
                 return null;
             }
@@ -209,6 +214,8 @@ public class OpenAction {
                         appLogger.warning(rb.getString("Message.ErrorServerConnection"));
                     }
                 } else {
+                    checkAndBackupOldVersion(EngineFactory.getLastDatabase());
+
                     engine = EngineFactory.bootLocalEngine(EngineFactory.getLastDatabase(), EngineFactory.DEFAULT);
 
                     if (engine == null) {
@@ -252,7 +259,7 @@ public class OpenAction {
     }
 
     public static void openRemote(final String host, final int port, final String user, final String password) {
-       
+
         final class BootEngine extends SimpleSwingWorker {
 
             @Override
@@ -277,6 +284,18 @@ public class OpenAction {
         }
 
         new BootEngine().execute();
+    }
+
+    private static void checkAndBackupOldVersion(final String fileName) {
+
+        if (Files.exists(new File(fileName).toPath())) {
+            float version = EngineFactory.getFileVersion(new File(fileName));
+
+            // make a versioned backup first
+            if (version < Engine.CURRENT_VERSION) {
+                FileUtils.copyFile(new File(fileName), new File(fileName + "." + version));
+            }
+        }
     }
 
     private OpenAction() {
