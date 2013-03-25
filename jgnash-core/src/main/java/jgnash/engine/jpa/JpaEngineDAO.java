@@ -29,8 +29,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -147,20 +147,9 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
         StoredObject o = null;
 
         try {
-            Query query = em.createQuery("SELECT x FROM StoredObject x WHERE x.uuid = :id");
-            query.setParameter("id", uuid);
-
-            List<StoredObject> results =  query.getResultList();
-
-            //StoredObject temp = (StoredObject) query.getSingleResult();
-
-            if (!results.isEmpty()) {
-                o = results.get(0);
-            }
+            o = em.find(StoredObject.class, uuid, LockModeType.PESSIMISTIC_READ);
         } catch (NoResultException ignore) {
-            // this is okay
             logger.info("Did not find object for uuid: " + uuid);
-
         }
 
         return o;

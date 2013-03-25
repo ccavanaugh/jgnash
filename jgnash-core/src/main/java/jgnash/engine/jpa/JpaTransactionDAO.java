@@ -27,6 +27,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,7 +58,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
 
         TypedQuery<Transaction> q = em.createQuery(cq);
 
-        return stripMarkedForRemoval(q.getResultList());
+        return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
     }
 
     @Override

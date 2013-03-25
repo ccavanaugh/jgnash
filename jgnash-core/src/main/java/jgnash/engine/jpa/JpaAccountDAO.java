@@ -21,6 +21,7 @@ import jgnash.engine.*;
 import jgnash.engine.dao.AccountDAO;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -130,9 +131,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
         Query query = em.createQuery(queryString);
         query.setParameter("type", type.name());
 
-        List<Account> list = new ArrayList<Account>(query.getResultList());
-
-        return list;
+        return stripMarkedForRemoval(new ArrayList<Account>(query.getResultList()));
     }
 
     /*
@@ -174,14 +173,11 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
     public Account getAccountByUuid(final String uuid) {
         Account account = null;
 
-        String queryString = "SELECT a FROM Account a WHERE a.uuid = :uuid";
-        Query query = em.createQuery(queryString);
-        query.setParameter("uuid", uuid);
+        try {
 
-        Account temp = (Account) query.getSingleResult();
-
-        if (temp != null) {
-            account = temp;
+        account = em.find(Account.class, uuid, LockModeType.PESSIMISTIC_READ);
+        } catch (Exception e) {
+            logger.info("Did not find Account for uuid: " + uuid);
         }
 
         return account;
@@ -214,7 +210,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
     }
 
     @Override
-    public void refreshAccount(Account account) {
+    public void refreshAccount(final Account account) {
         em.merge(account);
     }
 

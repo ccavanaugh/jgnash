@@ -117,13 +117,22 @@ class JpaCommodityDAO extends AbstractJpaDAO  implements CommodityDAO {
     @Override
     public synchronized ExchangeRate getExchangeNode(final String rateId) {
 
+        ExchangeRate exchangeRate = null;
+
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<ExchangeRate> cq = cb.createQuery(ExchangeRate.class);
         Root<ExchangeRate> root = cq.from(ExchangeRate.class);
         cq.select(root);
 
         TypedQuery<ExchangeRate> q = em.createQuery(cq);
-        return q.getSingleResult();
+
+        for (ExchangeRate rate : q.getResultList()) {
+            if (rate.getRateId().equals(rateId)) {
+                exchangeRate = rate;
+                break;
+            }
+        }
+        return exchangeRate;
     }
 
     /**

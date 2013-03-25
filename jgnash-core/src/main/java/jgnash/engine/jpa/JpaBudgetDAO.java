@@ -68,7 +68,6 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
 
     @Override
     public List<Budget> getBudgets() {
-        List<Budget> resultList = new ArrayList<>();
 
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Budget> cq = cb.createQuery(Budget.class);
@@ -76,16 +75,8 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
         cq.select(b);
 
         TypedQuery<Budget> q = em.createQuery(cq);
-        List<Budget> list = q.getResultList();
 
-        /* Flush any that have been marked for removal
-         * Returned list for query does not support iterator interface */
-        for (Budget budget : list) {
-            if (!budget.isMarkedForRemoval()) {
-                resultList.add(budget);
-            }
-        }
-        return resultList;
+        return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
     }
 
     @Override
