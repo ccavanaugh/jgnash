@@ -26,7 +26,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -212,7 +211,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
             Account account = null;
 
             try {
-                account = em.find(Account.class, uuid, LockModeType.PESSIMISTIC_READ);
+                account = em.find(Account.class, uuid);
             } catch (Exception e) {
                 logger.info("Did not find Account for uuid: " + uuid);
             }
@@ -271,11 +270,9 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
             if (em.contains(account)) { // don't try if the EntityManager does not contain the account
                 try {
                     em.getTransaction().begin();
-                    em.lock(account, LockModeType.PESSIMISTIC_WRITE);
 
                     em.persist(account);
 
-                    em.lock(account, LockModeType.NONE);
                     em.getTransaction().commit();
 
                     result = true;

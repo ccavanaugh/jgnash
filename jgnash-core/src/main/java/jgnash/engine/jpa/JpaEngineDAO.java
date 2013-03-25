@@ -29,7 +29,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
-import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -149,7 +148,7 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
         try {
             emLock.lock();
 
-            o = em.find(StoredObject.class, uuid, LockModeType.PESSIMISTIC_READ);
+            o = em.find(StoredObject.class, uuid);
         } catch (NoResultException e) {
             logger.info("Did not find object for uuid: " + uuid);
         } finally {
