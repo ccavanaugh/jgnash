@@ -133,7 +133,7 @@ class XMLContainer extends AbstractXStreamContainer {
             writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
             writer.write("<?fileVersion " + Engine.CURRENT_VERSION + "?>\n");
 
-            XStream xstream = configureXStream(new XStreamX(new PureJavaReflectionProvider(), new KXml2Driver()));
+            XStream xstream = configureXStream(new XStreamOut(new PureJavaReflectionProvider(), new KXml2Driver()));
 
             try (ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(writer))) {
                 out.writeObject(list);
@@ -160,7 +160,7 @@ class XMLContainer extends AbstractXStreamContainer {
 
             readWriteLock.writeLock().lock();
 
-            XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects),
+            XStream xstream = configureXStream(new XStreamIn(new StoredObjectReflectionProvider(objects),
                     new KXml2Driver()));
 
             try (ObjectInputStream in = xstream.createObjectInputStream(reader);

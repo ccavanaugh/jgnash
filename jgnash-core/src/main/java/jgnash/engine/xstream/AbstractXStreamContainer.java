@@ -38,7 +38,7 @@ import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.hibernate.converter.*;
 import com.thoughtworks.xstream.hibernate.mapper.HibernateMapper;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
-import com.thoughtworks.xstream.mapper.Mapper;
+import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 import jgnash.engine.*;
@@ -157,7 +157,7 @@ abstract class AbstractXStreamContainer {
             fileLock = lockChannel.tryLock();
             return true;
         } catch (IOException | OverlappingFileLockException ex) {
-            Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AbstractXStreamContainer.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -174,7 +174,7 @@ abstract class AbstractXStreamContainer {
                 lockChannel = null;
             }
         } catch (IOException ex) {
-            Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AbstractXStreamContainer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -276,14 +276,37 @@ abstract class AbstractXStreamContainer {
         return list;
     }
 
-    protected static class XStreamX extends XStream {
+    protected static class XStreamOut extends XStream {
 
-        public XStreamX(final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver hierarchicalStreamDriver) {
+        public XStreamOut(final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver hierarchicalStreamDriver) {
             super(reflectionProvider, hierarchicalStreamDriver);
         }
 
         protected MapperWrapper wrapMapper(final MapperWrapper next) {
             return new HibernateMapper(next);
+        }
+    }
+
+    /**
+     * Add a custom wrapper to gracefully ignore fields removed from updated objects
+     */
+    protected static class XStreamIn extends XStream {
+
+        public XStreamIn(final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver hierarchicalStreamDriver) {
+            super(reflectionProvider, hierarchicalStreamDriver);
+        }
+
+        protected MapperWrapper wrapMapper(final MapperWrapper next) {
+            return new MapperWrapper(next) {
+                public boolean shouldSerializeMember(final Class definedIn, final String fieldName) {
+                    try {
+                        return definedIn != Object.class || realClass(fieldName) != null;
+                    } catch(final CannotResolveClassException e) {
+                        Logger.getLogger(AbstractXStreamContainer.class.getName()).info("Dropping missing field: " + fieldName);
+                        return false;
+                    }
+                }
+            };
         }
     }
 }

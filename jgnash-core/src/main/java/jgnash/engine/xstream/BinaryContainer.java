@@ -126,7 +126,7 @@ class BinaryContainer extends AbstractXStreamContainer {
 
         try (OutputStream os = new BufferedOutputStream(new FileOutputStream(file))) {
 
-            XStream xstream = configureXStream(new XStreamX(new PureJavaReflectionProvider(), new BinaryStreamDriver()));
+            XStream xstream = configureXStream(new XStreamOut(new PureJavaReflectionProvider(), new BinaryStreamDriver()));
 
             try (ObjectOutputStream out = xstream.createObjectOutputStream(os)) {
                 out.writeObject(list);
@@ -147,7 +147,7 @@ class BinaryContainer extends AbstractXStreamContainer {
 
             readWriteLock.writeLock().lock();
 
-            XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects),
+            XStream xstream = configureXStream(new XStreamIn(new StoredObjectReflectionProvider(objects),
                     new BinaryStreamDriver()));
 
             try (ObjectInputStream in = xstream.createObjectInputStream(inputStream);
