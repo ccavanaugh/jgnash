@@ -17,9 +17,9 @@
  */
 package jgnash.engine;
 
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
 import java.math.BigDecimal;
+
+import javax.persistence.Embeddable;
 
 /**
  * Buy shares and reduce the (cash) balance of an account

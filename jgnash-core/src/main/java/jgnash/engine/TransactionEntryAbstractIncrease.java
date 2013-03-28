@@ -18,9 +18,9 @@
 package jgnash.engine;
 
 
-import javax.persistence.Embeddable;
-import javax.persistence.MappedSuperclass;
 import java.math.BigDecimal;
+
+import javax.persistence.Embeddable;
 
 /**
  * Abstract Add transaction

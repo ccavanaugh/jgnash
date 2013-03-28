@@ -17,9 +17,9 @@
  */
 package jgnash.engine;
 
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
 import java.math.BigDecimal;
+
+import javax.persistence.Embeddable;
 
 /**
  * Sell shares and increase the (cash) balance of an account

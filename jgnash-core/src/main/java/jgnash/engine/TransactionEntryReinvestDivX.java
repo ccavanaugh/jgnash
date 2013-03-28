@@ -17,12 +17,11 @@
  */
 package jgnash.engine;
 
-import java.math.BigDecimal;
-
 import jgnash.util.Resource;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Embeddable;
-import javax.persistence.Entity;
 
 /**
  * Reinvest dividend transaction

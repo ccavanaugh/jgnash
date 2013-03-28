@@ -17,12 +17,11 @@
  */
 package jgnash.engine;
 
-import java.math.BigDecimal;
-
 import jgnash.util.Resource;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Embeddable;
-import javax.persistence.Entity;
 
 /**
  * Add shares without impacting the cash balance. This is a single entry transaction

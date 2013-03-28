@@ -17,9 +17,9 @@
  */
 package jgnash.engine;
 
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
 import java.math.BigDecimal;
+
+import javax.persistence.Embeddable;
 
 /**
  * Add shares without impacting the cash balance.  This is a single
