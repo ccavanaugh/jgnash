@@ -22,6 +22,7 @@ package jgnash.engine;
  *
  * @author Craig Cavanaugh
  */
+@Deprecated
 public enum AccountProperty {
     AMORTIZEOBJECT,
     CREDITLIMIT,
