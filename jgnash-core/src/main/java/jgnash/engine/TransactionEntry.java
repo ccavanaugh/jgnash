@@ -43,9 +43,8 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
 
     private transient int hash = 0;
 
-    private String transactionTag = TransactionTag.BANK.name();
-
-    private transient TransactionTag cachedTransactionTag = TransactionTag.BANK;
+    @Enumerated(EnumType.STRING)
+    private TransactionTag transactionTag = TransactionTag.BANK;
 
     /**
      * Account with balance being decreased
@@ -355,18 +354,12 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     }
 
     public void setTransactionTag(final TransactionTag transactionTag) {
-        this.transactionTag = transactionTag.name();
-        cachedTransactionTag = transactionTag;
+        this.transactionTag = transactionTag;
+
     }
 
     public TransactionTag getTransactionTag() {       
-        return cachedTransactionTag;
-    }
-
-    @PostLoad
-    protected Object readResolve() {
-        cachedTransactionTag = TransactionTag.valueOf(transactionTag);
-        return this;
+        return transactionTag;
     }
 
     @Override

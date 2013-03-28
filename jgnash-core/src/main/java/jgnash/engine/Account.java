@@ -50,11 +50,8 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     private static final long serialVersionUID = 6886735664760113291L;
 
-    // TODO Fix me for XStream
-    private String accountType;
-
     @Enumerated(EnumType.STRING)
-    private AccountType cachedAccountType;
+    private AccountType accountType;
 
     private boolean placeHolder = false;
 
@@ -188,12 +185,11 @@ public class Account extends StoredObject implements Comparable<Account> {
             throw new RuntimeException("Null account type");
         }
 
-        if (cachedAccountType != null && !cachedAccountType.isMutable()) {
+        if (accountType != null && !accountType.isMutable()) {
             throw new RuntimeException("Immutable account type");
         }
 
-        accountType = type.name();
-        cachedAccountType = type;
+        accountType = type;
 
         proxy = null; // proxy will need to change
     }
@@ -1178,11 +1174,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     public AccountType getAccountType() {
-        if (cachedAccountType == null) {
-            cachedAccountType = AccountType.valueOf(accountType);
-        }
-
-        return cachedAccountType;
+        return accountType;
     }
 
     /**
