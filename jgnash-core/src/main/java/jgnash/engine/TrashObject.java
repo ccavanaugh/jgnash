@@ -17,9 +17,12 @@
  */
 package jgnash.engine;
 
-import javax.persistence.*;
-
 import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 /**
  * Wraps objects that have been removed from active use in the engine.
@@ -46,9 +49,8 @@ public class TrashObject extends StoredObject {
     /**
      * The stored object
      *
-     * Transparent in JPA applications
+     * Transparent in JPA applications, but still used for XStream persistence
      */
-    @SuppressWarnings("unused")
     @Transient
     private StoredObject object;
 
