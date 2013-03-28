@@ -300,8 +300,14 @@ abstract class AbstractXStreamContainer {
             return new MapperWrapper(next) {
                 public boolean shouldSerializeMember(final Class definedIn, final String fieldName) {
                     try {
+
+                        // Check and ignore the locale field in CurrencyNode because it is now obsolete
+                        if (definedIn == CurrencyNode.class && fieldName.equals("locale")) {
+                            return false;
+                        }
+
                         return definedIn != Object.class || realClass(fieldName) != null;
-                    } catch(final CannotResolveClassException e) {
+                    } catch (final CannotResolveClassException e) {
                         Logger.getLogger(AbstractXStreamContainer.class.getName()).info("Dropping missing field: " + fieldName);
                         return false;
                     }

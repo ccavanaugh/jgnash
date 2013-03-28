@@ -17,12 +17,10 @@
  */
 package jgnash.engine;
 
-import javax.persistence.Entity;
-import javax.persistence.Transient;
-import java.io.ObjectStreamException;
 import java.math.BigDecimal;
-import java.util.Locale;
 import java.util.logging.Logger;
+
+import javax.persistence.Entity;
 
 /**
  * Class for representing currency nodes
@@ -33,11 +31,6 @@ import java.util.logging.Logger;
 public class CurrencyNode extends CommodityNode {
 
     private static final long serialVersionUID = 1339921229356331512L;
-
-    // unused, but left to keep file compatibility with prior releases
-    @SuppressWarnings("unused")
-    @Transient
-    private Locale locale = Locale.getDefault();
 
     private transient ExchangeRateDAO exchangeRateDAO;
 
@@ -82,26 +75,5 @@ public class CurrencyNode extends CommodityNode {
         }
 
         return rate;
-    }
-
-    /**
-     * Work around a db4o java 7 bug with Locale
-     * 
-     * @return this object with a valid locale
-     * @throws ObjectStreamException exception
-     */
-    protected Object writeReplace() throws ObjectStreamException {
-        locale = Locale.getDefault();
-        return this;
-    }
-
-    /**
-     * Work around a db4o java 7 bug with Locale
-     * 
-     * @return this object with a valid locale
-     */
-    protected Object readResolve() {
-        locale = Locale.getDefault();
-        return this;
     }
 }
