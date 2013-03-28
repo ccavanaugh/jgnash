@@ -37,10 +37,6 @@ public class Config extends StoredObject {
     @ManyToOne(cascade = CascadeType.PERSIST)
     private CurrencyNode defaultCurrency;
 
-    @SuppressWarnings("unused")
-    @Transient
-    private String name = "DefaultConfig"; // left for compatibility
-
     private String accountSeparator = ":";
 
     private float fileVersion = 0f;
