@@ -197,6 +197,8 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
      * before the UI disappears
      */
     private void performControlledShutdown() {
+        cancelBackgroundUpdates();  // cancel any pending background updates
+
         closeAllWindows(); // close any open windows first
 
         displayWaitMessage(Resource.get().getString("Message.StoreWait"));
@@ -564,6 +566,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
             public void run() {
                 switch (event.getEvent()) {
                     case FILE_CLOSING:
+                        cancelBackgroundUpdates();  // cancel any pending background updates
                         setOpenState(false);
                         updateTitle();
                         removeViews();
@@ -676,6 +679,15 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         backgroundUpdateExecutor.resume();
     }
 
+    public void cancelBackgroundUpdates() {
+        try {
+            backgroundUpdateExecutor.shutdownNow();
+            LOG.log(Level.INFO, "Background updates canceled");
+        } catch (Exception e) {
+            LOG.log(Level.INFO, e.getMessage(), e);
+        }
+    }
+
     private void updateTitle() {
         new UpdateTitleWorker().execute();
     }
@@ -712,7 +724,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
         @Override
         public void windowClosing(final WindowEvent evt) {
-            
+
             // push the shutdown process outside the EDT so the UI effects work correctly
             Thread t = new Thread() {
                 @Override
