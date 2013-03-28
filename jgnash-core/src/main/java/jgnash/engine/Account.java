@@ -134,7 +134,6 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     private transient AccountProxy proxy;
 
-
     /**
      * String delimiter for reported account structure
      */
@@ -201,7 +200,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @param value actual object to add or set
      */
     @Deprecated
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "deprecation"})
     public void setProperty(final AccountProperty key, final Serializable value) {
         propertyMap.put(key.name(), value);
     }
@@ -213,6 +212,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @return true if this account contained the AccountProperty
      */
     @Deprecated
+    @SuppressWarnings("deprecation")
     boolean removeProperty(final AccountProperty key) {
         return propertyMap.remove(key.name()) != null;
     }
@@ -224,6 +224,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @return not null if the account contained the property
      */
     @Deprecated
+    @SuppressWarnings("deprecation")
     public Serializable getProperty(final AccountProperty key) {
         return propertyMap.get(key.name());
     }
@@ -235,6 +236,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      *         exist.
      */
     @Deprecated
+    @SuppressWarnings("deprecation")
     public Set<AccountProperty> getProperties() {
         Set<AccountProperty> properties = EnumSet.noneOf(AccountProperty.class);
 
