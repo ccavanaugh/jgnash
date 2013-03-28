@@ -68,8 +68,10 @@ public class JpaDataStore implements DataStore {
     private static Properties getProperties(final String fileName, final String user, final String password) {
         Properties properties = System.getProperties();
 
-        properties.setProperty("eclipselink.target-database", "org.eclipse.persistence.platform.database.H2Platform");
+        //properties.setProperty("eclipselink.target-database", "org.eclipse.persistence.platform.database.H2Platform");
         //properties.setProperty("eclipselink.ddl-generation", "create-or-extend-tables");
+
+        properties.setProperty("hibernate.hbm2ddl.auto", "update");
 
         properties.setProperty("javax.persistence.jdbc.url", "jdbc:h2:" + FileUtils.stripFileExtension(fileName));
         properties.setProperty("javax.persistence.jdbc.driver", "org.h2.Driver");
@@ -112,9 +114,9 @@ public class JpaDataStore implements DataStore {
         if (!isDatabaseLocked(fileName)) {
 
             try {
-                if (!new File(fileName).exists()) {
+                /*if (!new File(fileName).exists()) {
                     properties.setProperty("eclipselink.ddl-generation", "create-or-extend-tables");
-                }
+                }*/
 
                 factory = Persistence.createEntityManagerFactory("jgnash", properties);
 

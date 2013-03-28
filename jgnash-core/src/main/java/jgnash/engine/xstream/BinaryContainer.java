@@ -126,7 +126,7 @@ class BinaryContainer extends AbstractXStreamContainer {
 
         try (OutputStream os = new BufferedOutputStream(new FileOutputStream(file))) {
 
-            XStream xstream = configureXStream(new XStream(new PureJavaReflectionProvider(), new BinaryStreamDriver()));
+            XStream xstream = configureXStream(new XStreamX(new PureJavaReflectionProvider(), new BinaryStreamDriver()));
 
             try (ObjectOutputStream out = xstream.createObjectOutputStream(os)) {
                 out.writeObject(list);

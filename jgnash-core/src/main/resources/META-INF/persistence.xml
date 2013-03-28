@@ -35,7 +35,9 @@
         -->
 
         <provider>
-            org.eclipse.persistence.jpa.PersistenceProvider
+            <!-- org.eclipse.persistence.jpa.PersistenceProvider -->
+            org.hibernate.ejb.HibernatePersistence
+            <!-- org.apache.openjpa.persistence.PersistenceProviderImpl -->
         </provider>
 
         <!-- We must enumerate each entity in the persistence unit -->
@@ -75,8 +77,10 @@
         <class>jgnash.engine.TrashObject</class>
 
         <properties>
-            <property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.H2Platform"/>
+            <!-- <property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.H2Platform"/> -->
             <!-- <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/> -->
+
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
 
             <property name="javax.persistence.jdbc.password" value=""/>
             <property name="javax.persistence.jdbc.user" value=""/>

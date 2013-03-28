@@ -38,13 +38,6 @@ public class Budget extends StoredObject implements Comparable<Budget> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Version field for persistence purposes
-     */
-    @Version
-    @SuppressWarnings("unused")
-    private int version;
-
-    /**
      * Budget name
      */
     private String name = "Default";
@@ -306,9 +299,14 @@ public class Budget extends StoredObject implements Comparable<Budget> {
         this.liabilityAccountsIncluded = liabilityAccountsIncluded;
     }
 
-    @PostLoad
     protected Object readResolve() {
         workingYear = DateUtils.getCurrentYear();
         return this;
+    }
+
+    @PostLoad
+    @SuppressWarnings("unused")
+    protected void postLoad() {
+        workingYear = DateUtils.getCurrentYear();
     }
 }

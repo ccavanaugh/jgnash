@@ -34,6 +34,13 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+import com.thoughtworks.xstream.hibernate.converter.*;
+import com.thoughtworks.xstream.hibernate.mapper.HibernateMapper;
+import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+import com.thoughtworks.xstream.mapper.Mapper;
+import com.thoughtworks.xstream.mapper.MapperWrapper;
+
 import jgnash.engine.*;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetGoal;
@@ -128,12 +135,17 @@ abstract class AbstractXStreamContainer {
 
         xstream.omitField(StoredObject.class, "markedForRemoval");
 
-        // Ignore required fields for JPA
-        xstream.omitField(Account.class, "version");
-        xstream.omitField(Budget.class, "version");
+        // Ignore fields required for JPA
+        xstream.omitField(StoredObject.class, "version");
         xstream.omitField(CommodityNode.class, "version");
         xstream.omitField(AmortizeObject.class, "id");
         xstream.omitField(BudgetGoal.class, "id");
+
+        xstream.registerConverter(new HibernateProxyConverter());
+        xstream.registerConverter(new HibernatePersistentCollectionConverter(xstream.getMapper()));
+        xstream.registerConverter(new HibernatePersistentMapConverter(xstream.getMapper()));
+        xstream.registerConverter(new HibernatePersistentSortedMapConverter(xstream.getMapper()));
+        xstream.registerConverter(new HibernatePersistentSortedSetConverter(xstream.getMapper()));
 
         return xstream;
     }
@@ -262,5 +274,16 @@ abstract class AbstractXStreamContainer {
         }
 
         return list;
+    }
+
+    protected static class XStreamX extends XStream {
+
+        public XStreamX(final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver hierarchicalStreamDriver) {
+            super(reflectionProvider, hierarchicalStreamDriver);
+        }
+
+        protected MapperWrapper wrapMapper(final MapperWrapper next) {
+            return new HibernateMapper(next);
+        }
     }
 }

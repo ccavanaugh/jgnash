@@ -43,6 +43,7 @@ public class BudgetGoal implements Cloneable, Serializable {
     // cache the hash code
     private transient int hash;
 
+    @Lob    // must be stored as a blob
     private BigDecimal[] goals;
 
     @Enumerated(EnumType.STRING)

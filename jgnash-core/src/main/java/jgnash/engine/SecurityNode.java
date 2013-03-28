@@ -298,9 +298,14 @@ public class SecurityNode extends CommodityNode {
         return node;
     }
 
-    @PostLoad
     private Object readResolve() throws ObjectStreamException {
         lock = new ReentrantReadWriteLock(true);
         return this;
+    }
+
+    @PostLoad
+    @SuppressWarnings("unused")
+    private void postLoad() {
+        lock = new ReentrantReadWriteLock(true);
     }
 }

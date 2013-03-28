@@ -32,13 +32,6 @@ public abstract class CommodityNode extends StoredObject implements Comparable<C
 
     private static final long serialVersionUID = -8694706937407227601L;
 
-    /**
-     * Version field for persistence purposes
-     */
-    @SuppressWarnings("unused")
-    @Version
-    private int version;
-
     private String symbol;
 
     private byte scale = 2;

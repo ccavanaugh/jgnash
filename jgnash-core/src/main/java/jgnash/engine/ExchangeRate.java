@@ -209,9 +209,14 @@ public class ExchangeRate extends StoredObject {
         return super.hashCode() * 67 + rateId.hashCode();
     }
 
-    @PostLoad
     private Object readResolve() throws ObjectStreamException {
         lock = new ReentrantReadWriteLock();
         return this;
+    }
+
+    @PostLoad
+    @SuppressWarnings("unused")
+    private void postLoad() {
+        lock = new ReentrantReadWriteLock(true);
     }
 }

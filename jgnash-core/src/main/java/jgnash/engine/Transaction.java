@@ -583,10 +583,15 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         return tran;
     }
 
-    @PostLoad
     protected Object readResolve() {
         lock = new ReentrantReadWriteLock(true);
         return this;
+    }
+
+    @PostLoad
+    @SuppressWarnings("unused")
+    private void postLoad() {
+        lock = new ReentrantReadWriteLock(true);
     }
 
     @Override

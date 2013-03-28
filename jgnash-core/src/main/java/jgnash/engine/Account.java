@@ -50,16 +50,11 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     private static final long serialVersionUID = 6886735664760113291L;
 
-    /**
-     * Version field for persistence purposes
-     */
-    @SuppressWarnings("unused")
-    @Version
-    private int version;
-
+    // TODO Fix me for XStream
     private String accountType;
 
-    private transient AccountType cachedAccountType;
+    @Enumerated(EnumType.STRING)
+    private AccountType cachedAccountType;
 
     private boolean placeHolder = false;
 
