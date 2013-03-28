@@ -17,6 +17,8 @@
  */
 package jgnash.engine;
 
+import jgnash.util.DateUtils;
+
 import java.io.ObjectStreamException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -26,8 +28,6 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import jgnash.util.DateUtils;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -52,9 +52,7 @@ public class SecurityNode extends CommodityNode {
     /**
      * The currency that security values are reported in
      */
-    private String quoteSource = QuoteSource.NONE.name();
-
-    private transient QuoteSource cachedQuoteSource;
+    private QuoteSource quoteSource = QuoteSource.NONE;
 
     /**
      * ISIN or CUSIP.  Used for OFX and quote downloads
@@ -113,11 +111,7 @@ public class SecurityNode extends CommodityNode {
      * @return quote download source
      */
     public QuoteSource getQuoteSource() {
-        if (cachedQuoteSource == null) {
-            cachedQuoteSource = QuoteSource.valueOf(quoteSource);
-        }
-
-        return cachedQuoteSource;
+        return quoteSource;
     }
 
     /**
@@ -126,8 +120,7 @@ public class SecurityNode extends CommodityNode {
      * @param source QuoteSource to use
      */
     public void setQuoteSource(final QuoteSource source) {
-        quoteSource = source.name();
-        cachedQuoteSource = source;
+        quoteSource = source;
     }
 
     public String getISIN() {
