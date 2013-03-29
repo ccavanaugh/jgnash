@@ -29,14 +29,11 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.PostLoad;
+import javax.persistence.*;
 
 /**
  * Security Node
- *
+ * <p/>
  * The last market price is cached to improve performance
  *
  * @author Craig Cavanaugh
@@ -52,6 +49,7 @@ public class SecurityNode extends CommodityNode {
     /**
      * The currency that security values are reported in
      */
+    @Enumerated(EnumType.STRING)
     private QuoteSource quoteSource = QuoteSource.NONE;
 
     /**
@@ -209,7 +207,7 @@ public class SecurityNode extends CommodityNode {
      * Get a copy of SecurityHistoryNodes for this security
      *
      * @return Returns a shallow copy of the history nodes to protect against
-     * modification
+     *         modification
      */
     public List<SecurityHistoryNode> getHistoryNodes() {
         return new ArrayList<>(historyNodes);
@@ -259,7 +257,7 @@ public class SecurityNode extends CommodityNode {
                     break;
                 }
             }
-            
+
             return marketPrice;
         } finally {
             getLock().readLock().unlock();
