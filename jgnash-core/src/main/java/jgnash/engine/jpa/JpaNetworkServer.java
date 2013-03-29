@@ -17,18 +17,13 @@
  */
 package jgnash.engine.jpa;
 
-import com.db4o.Db4o;
-import com.db4o.ObjectContainer;
-import com.db4o.ObjectServer;
-import com.db4o.config.Configuration;
-import com.db4o.messaging.MessageRecipient;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
 import jgnash.engine.StoredObjectComparator;
 import jgnash.engine.TrashObject;
 import jgnash.message.LocalServerListener;
 import jgnash.message.MessageBusRemoteServer;
-import jgnash.message.StopServer;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
@@ -38,18 +33,23 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 /**
- * db4o network server
+ * JPA network server
  *
  * @author Craig Cavanaugh
  */
-public class JpaNetworkServer implements MessageRecipient {
+public class JpaNetworkServer {
 
     private volatile boolean stop = false;
 
@@ -57,21 +57,16 @@ public class JpaNetworkServer implements MessageRecipient {
 
     private volatile boolean dirty = false;
 
+    private EntityManagerFactory factory;
+
+    private EntityManager em;
+
     public synchronized void runServer(final String fileName, final int port, final String user, final String password) {
         stop = false;
 
-        final ObjectServer server = createObjectServer(fileName, port, user, password);
+        final Engine server = createLocalServer(fileName, port, user, password);
 
         if (server != null) {
-
-            // Using the messaging functionality to redirect all messages to this.processMessage
-            server.ext().configure().clientServer().setMessageRecipient(this);
-
-            // to identify the thread in a debugger
-            Thread.currentThread().setName(this.getClass().getName());
-
-            // We only need low priority since the db4o server has it's own thread.
-            Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 
             // Start the message bus
             MessageBusRemoteServer messageServer = new MessageBusRemoteServer(port + 1);
@@ -85,7 +80,6 @@ public class JpaNetworkServer implements MessageRecipient {
 
                 @Override
                 public void run() {
-
                     if (dirty) {
                         exportXML(server, fileName);
                         EngineFactory.removeOldCompressedXML(fileName);
@@ -101,7 +95,7 @@ public class JpaNetworkServer implements MessageRecipient {
                     dirty = true;
                 }
             });
-            
+
             try {
                 if (!stop) {
                     this.wait(Long.MAX_VALUE); // wait forever for notify() from close()
@@ -116,7 +110,8 @@ public class JpaNetworkServer implements MessageRecipient {
             EngineFactory.removeOldCompressedXML(fileName);
 
             messageServer.stopServer();
-            server.close();
+
+            EngineFactory.closeEngine(EngineFactory.DEFAULT);
         }
     }
 
@@ -128,12 +123,14 @@ public class JpaNetworkServer implements MessageRecipient {
         this.notify();
     }
 
-    private static ObjectServer createObjectServer(final String fileName, final int port, final String user, final String password) {
-        ObjectServer objectServer = null;
+    private Engine createLocalServer(final String fileName, final int port, final String user, final String password) {
 
-        /*try {
+        Properties properties = JpaConfiguration.getServerProperties(fileName, port, user, password);
+
+        Engine engine = null;
+
+        try {
             if (!FileUtils.isFileLocked(fileName)) {
-                Configuration config = Db4oDataStore.createConfig();
 
                 File file = new File(fileName);
 
@@ -149,38 +146,26 @@ public class JpaNetworkServer implements MessageRecipient {
                         }
                     }
                 }
-                objectServer = Db4o.openServer(config, fileName, port);
-                objectServer.grantAccess(user, password);
+                factory = Persistence.createEntityManagerFactory("jgnash", properties);
+
+                em = factory.createEntityManager();
+
+                Logger.getLogger(JpaDataStore.class.getName()).info("Created local JPA container and engine");
+                engine = new Engine(new JpaEngineDAO(em, false), EngineFactory.DEFAULT);
             } else {
                 Logger.getLogger(JpaNetworkServer.class.getName()).severe(Resource.get().getString("Message.FileIsLocked"));
             }
         } catch (FileNotFoundException e) {
             Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, e.toString(), e);
-        }*/
-
-        return objectServer;
-    }
-
-    /**
-     * messaging callback
-     *
-     * @param container ObjectContainer
-     * @param message   message to process
-     * @see com.db4o.messaging.MessageRecipient#processMessage(com.db4o.ObjectContainer, Object)
-     */
-    @Override
-    public void processMessage(final ObjectContainer container, final Object message) {
-        if (message instanceof StopServer) {
-            close();
         }
+
+        return engine;
     }
 
-    private static void exportXML(final ObjectServer server, final String fileName) {
-        ObjectContainer container = server.ext().objectContainer();
+    private static void exportXML(final Engine engine, final String fileName) {
+        ArrayList<StoredObject> list = new ArrayList<>(engine.getStoredObjects());
 
-        ArrayList<StoredObject> list = new ArrayList<>(container.query(StoredObject.class));
-
-        for (Iterator<StoredObject> i = list.iterator(); i.hasNext();) {
+        for (Iterator<StoredObject> i = list.iterator(); i.hasNext(); ) {
             StoredObject o = i.next();
 
             if (o instanceof TrashObject || o.isMarkedForRemoval()) {

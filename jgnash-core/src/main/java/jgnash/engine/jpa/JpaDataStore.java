@@ -65,23 +65,6 @@ public class JpaDataStore implements DataStore {
         }
     }
 
-    private static Properties getProperties(final String fileName, final String user, final String password) {
-        Properties properties = System.getProperties();
-
-        //properties.setProperty("eclipselink.target-database", "org.eclipse.persistence.platform.database.H2Platform");
-        //properties.setProperty("eclipselink.ddl-generation", "create-or-extend-tables");
-
-        properties.setProperty("hibernate.hbm2ddl.auto", "update");
-
-        properties.setProperty("javax.persistence.jdbc.url", "jdbc:h2:" + FileUtils.stripFileExtension(fileName));
-        properties.setProperty("javax.persistence.jdbc.driver", "org.h2.Driver");
-
-        properties.setProperty("javax.persistence.jdbc.user", user);
-        properties.setProperty("javax.persistence.jdbc.password", password);
-
-        return properties;
-    }
-
     @Override
     public Engine getClientEngine(final String host, final int port, final String user, final String password, final String engineName) {
         //Properties properties = getProperties("", user, password);
@@ -103,7 +86,7 @@ public class JpaDataStore implements DataStore {
 
     @Override
     public Engine getLocalEngine(final String fileName, final String engineName) {
-        Properties properties = getProperties(fileName, "", "");
+        Properties properties = JpaConfiguration.getProperties(fileName, "", "", false);
 
         Engine engine = null;
 
@@ -162,7 +145,7 @@ public class JpaDataStore implements DataStore {
             }
         }
 
-        Properties properties = getProperties(file.getAbsolutePath(), "", "");
+        Properties properties = JpaConfiguration.getProperties(file.getAbsolutePath(), "", "", false);
 
         EntityManagerFactory factory = null;
         EntityManager em = null;
@@ -200,13 +183,7 @@ public class JpaDataStore implements DataStore {
     public static float getFileVersion(final File file) {
         float fileVersion = 0;
 
-        Properties properties = getProperties(file.getAbsolutePath(), "", "");
-
-        // Amend the URL to make it readonly
-        String url = properties.getProperty("javax.persistence.jdbc.url");
-        url = url + ";ACCESS_MODE_DATA=r";
-
-        properties.setProperty("javax.persistence.jdbc.url", url);
+        Properties properties = JpaConfiguration.getProperties(file.getAbsolutePath(), "", "", true);
 
         EntityManagerFactory factory = null;
         EntityManager em = null;
