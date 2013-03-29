@@ -64,7 +64,7 @@ public class JpaConfiguration {
 
         String url = properties.getProperty(JAVAX_PERSISTENCE_JDBC_URL);
         url +=  ";AUTO_SERVER=TRUE";
-        url += ("AUTO_SERVER_PORT=" + port);
+        url += (";AUTO_SERVER_PORT=" + port);
 
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_URL, url);
 
