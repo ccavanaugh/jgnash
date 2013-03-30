@@ -190,7 +190,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
     private boolean confirmTransactionRemoval(final int count) {
         String message = count == 1 ? rb.getString("Message.ConfirmTransDelete") : rb.getString("Message.ConfirmMultipleTransDelete");
 
-        return YesNoDialog.showYesNoDialog(UIApplication.getFrame(), new JLabel(rb.getString(message)), rb.getString("Title.Confirm"));
+        return YesNoDialog.showYesNoDialog(UIApplication.getFrame(), new JLabel(message), rb.getString("Title.Confirm"));
     }
 
     protected void deleteAction() {
