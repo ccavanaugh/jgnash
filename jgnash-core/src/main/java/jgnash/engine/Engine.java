@@ -595,7 +595,7 @@ public class Engine {
 
     /**
      * Returns a <code>Collection</code> of all <code>StoredObjects</code> in a consistent order.
-     * <code>StoredObjects</code> marked for removal are filtered from the collection.
+     * <code>StoredObjects</code> marked for removal and <code>TrashObjects</code> are filtered from the collection.
      * 
      * @return <code>Collection</code> of <code>StoredObjects</code>
      * @see Collection
@@ -1260,7 +1260,7 @@ public class Engine {
 
             getCommodityDAO().addExchangeRateHistory(exchangeRate, historyNode);
 
-            Message message = new Message(MessageChannel.COMMODITY, ChannelEvent.EXCHANGERATE_ADD, this);
+            Message message = new Message(MessageChannel.COMMODITY, ChannelEvent.EXCHANGE_RATE_ADD, this);
             message.setObject(MessageProperty.EXCHANGERATE, exchangeRate);
 
             messageBus.fireEvent(message);
@@ -1281,9 +1281,9 @@ public class Engine {
                 exchangeRate.removeHistoryNode(history);
                 getCommodityDAO().removeExchangeRateHistory(exchangeRate, history);
 
-                message = new Message(MessageChannel.COMMODITY, ChannelEvent.EXCHANGERATE_REMOVE, this);
+                message = new Message(MessageChannel.COMMODITY, ChannelEvent.EXCHANGE_RATE_REMOVE, this);
             } else {
-                message = new Message(MessageChannel.COMMODITY, ChannelEvent.EXCHANGERATE_REMOVE_FAILED, this);
+                message = new Message(MessageChannel.COMMODITY, ChannelEvent.EXCHANGE_RATE_REMOVE_FAILED, this);
             }
 
             message.setObject(MessageProperty.EXCHANGERATE, exchangeRate);

@@ -418,8 +418,8 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
             @Override
             public void run() {
                 switch (event.getEvent()) {
-                    case EXCHANGERATE_ADD:
-                    case EXCHANGERATE_REMOVE:
+                    case EXCHANGE_RATE_ADD:
+                    case EXCHANGE_RATE_REMOVE:
                         ExchangeRate rate = (ExchangeRate) event.getObject(MessageProperty.EXCHANGERATE);
                         if (rate.equals(getSelectedExchangeRate())) {
                             updateModel();

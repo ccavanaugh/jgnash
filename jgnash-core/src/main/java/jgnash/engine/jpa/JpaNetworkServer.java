@@ -17,13 +17,18 @@
  */
 package jgnash.engine.jpa;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
+
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
 import jgnash.engine.StoredObjectComparator;
-import jgnash.engine.TrashObject;
+import jgnash.message.ChannelEvent;
 import jgnash.message.LocalServerListener;
+import jgnash.message.Message;
 import jgnash.message.MessageBusRemoteServer;
+import jgnash.message.MessageProperty;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
@@ -32,7 +37,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -57,16 +61,22 @@ public class JpaNetworkServer {
 
     private volatile boolean dirty = false;
 
-    private EntityManagerFactory factory;
+    protected EntityManager em;
 
-    private EntityManager em;
+    private XStream xstream;
+
+    public JpaNetworkServer() {
+        xstream = new XStream(new StaxDriver());
+        xstream.alias("Message", Message.class);
+        xstream.alias("MessageProperty", MessageProperty.class);
+    }
 
     public synchronized void runServer(final String fileName, final int port, final String user, final String password) {
         stop = false;
 
-        final Engine server = createLocalServer(fileName, port, user, password);
+        final Engine engine = createLocalServer(fileName, port, user, password);
 
-        if (server != null) {
+        if (engine != null) {
 
             // Start the message bus
             MessageBusRemoteServer messageServer = new MessageBusRemoteServer(port + 1);
@@ -81,7 +91,7 @@ public class JpaNetworkServer {
                 @Override
                 public void run() {
                     if (dirty) {
-                        exportXML(server, fileName);
+                        exportXML(engine, fileName);
                         EngineFactory.removeOldCompressedXML(fileName);
                         dirty = false;
                     }
@@ -92,13 +102,22 @@ public class JpaNetworkServer {
 
                 @Override
                 public void messagePosted(final String event) {
+
+                    if (event.startsWith("<Message")) {
+                        final Message message = (Message) xstream.fromXML(event);
+
+                        if (message.getEvent() == ChannelEvent.STOP_SERVER) {
+                            stopServer();
+                        }
+                    }
+
                     dirty = true;
                 }
             });
 
             try {
                 if (!stop) {
-                    this.wait(Long.MAX_VALUE); // wait forever for notify() from close()
+                    this.wait(Long.MAX_VALUE); // wait forever for notify() from stopServer()
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, null, ex);
@@ -106,7 +125,7 @@ public class JpaNetworkServer {
 
             backupExecutor.shutdown();
 
-            exportXML(server, fileName);
+            exportXML(engine, fileName);
             EngineFactory.removeOldCompressedXML(fileName);
 
             messageServer.stopServer();
@@ -116,9 +135,9 @@ public class JpaNetworkServer {
     }
 
     /**
-     * closes this server.
+     * stops this server.
      */
-    private synchronized void close() {
+    private synchronized void stopServer() {
         stop = true;
         this.notify();
     }
@@ -146,7 +165,7 @@ public class JpaNetworkServer {
                         }
                     }
                 }
-                factory = Persistence.createEntityManagerFactory("jgnash", properties);
+                EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", properties);
 
                 em = factory.createEntityManager();
 
@@ -164,14 +183,6 @@ public class JpaNetworkServer {
 
     private static void exportXML(final Engine engine, final String fileName) {
         ArrayList<StoredObject> list = new ArrayList<>(engine.getStoredObjects());
-
-        for (Iterator<StoredObject> i = list.iterator(); i.hasNext(); ) {
-            StoredObject o = i.next();
-
-            if (o instanceof TrashObject || o.isMarkedForRemoval()) {
-                i.remove();
-            }
-        }
 
         Collections.sort(list, new StoredObjectComparator());
 

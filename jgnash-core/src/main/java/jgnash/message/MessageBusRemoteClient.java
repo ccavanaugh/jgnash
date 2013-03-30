@@ -203,6 +203,8 @@ class MessageBusRemoteClient {
     private synchronized static void processRemoteMessage(final Message message) {
         logger.info("processing a remote message");
 
+        // TODO: Use class specific uuid search to improve performance and make database schema simpler
+
         Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
         if (message.getChannel() == MessageChannel.ACCOUNT) {
@@ -211,7 +213,7 @@ class MessageBusRemoteClient {
                 case ACCOUNT_ADD:
                 case ACCOUNT_REMOVE:
                     engine.refreshAccount(account);
-                    message.setObject(MessageProperty.ACCOUNT, engine.getStoredObjectByUuid(account.getUuid()));
+                    message.setObject(MessageProperty.ACCOUNT, engine.getAccountByUuid(account.getUuid()));
                     engine.refreshAccount(account.getParent());
                     break;
                 case ACCOUNT_MODIFY:
@@ -219,7 +221,7 @@ class MessageBusRemoteClient {
                 case ACCOUNT_SECURITY_REMOVE:
                 case ACCOUNT_VISIBILITY_CHANGE:
                     engine.refreshAccount(account);
-                    message.setObject(MessageProperty.ACCOUNT, engine.getStoredObjectByUuid(account.getUuid()));
+                    message.setObject(MessageProperty.ACCOUNT, engine.getAccountByUuid(account.getUuid()));
                     break;
                 default:
                     break;
@@ -250,8 +252,8 @@ class MessageBusRemoteClient {
                     engine.refreshCommodity(node);
                     message.setObject(MessageProperty.COMMODITY, engine.getStoredObjectByUuid(node.getUuid()));
                     break;
-                case EXCHANGERATE_ADD:
-                case EXCHANGERATE_REMOVE:
+                case EXCHANGE_RATE_ADD:
+                case EXCHANGE_RATE_REMOVE:
                     final ExchangeRate rate = (ExchangeRate) message.getObject(MessageProperty.EXCHANGERATE);
                     engine.refreshExchangeRate(rate);
                     message.setObject(MessageProperty.EXCHANGERATE, engine.getStoredObjectByUuid(rate.getUuid()));

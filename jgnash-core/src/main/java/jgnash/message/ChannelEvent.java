@@ -20,7 +20,7 @@ package jgnash.message;
 /**
  * Standard message channel events
  * 
- * @author Craig Cavanaugh $Id: ChannelEvent.java 3051 2012-01-02 11:27:23Z ccavanaugh $
+ * @author Craig Cavanaugh
  */
 public enum ChannelEvent {
     ACCOUNT_ADD,
@@ -52,9 +52,9 @@ public enum ChannelEvent {
     COMMODITY_HISTORY_ADD_FAILED,
     COMMODITY_HISTORY_REMOVE,
     COMMODITY_HISTORY_REMOVE_FAILED,
-    EXCHANGERATE_ADD,
-    EXCHANGERATE_REMOVE,
-    EXCHANGERATE_REMOVE_FAILED,
+    EXCHANGE_RATE_ADD,
+    EXCHANGE_RATE_REMOVE,
+    EXCHANGE_RATE_REMOVE_FAILED,
     REMINDER_ADD,
     REMINDER_ADD_FAILED,
     REMINDER_REMOVE,
@@ -68,7 +68,7 @@ public enum ChannelEvent {
     FILE_LOAD_FAILED,
     FILE_LOAD_SUCCESS,
     FILE_NEW_SUCCESS,
+    STOP_SERVER,    // Remote client request to stop the server
     UI_RESTARTED, // UI has restarted
-    UI_RESTARTING
-    // UI will restart
+    UI_RESTARTING // UI will restart
 }
