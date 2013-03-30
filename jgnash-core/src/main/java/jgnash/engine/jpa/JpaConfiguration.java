@@ -28,8 +28,20 @@ public class JpaConfiguration {
 
     public static final String JAVAX_PERSISTENCE_JDBC_URL = "javax.persistence.jdbc.url";
 
-    protected static Properties getProperties(final String fileName, final String user, final String password, boolean readOnly) {
+
+    private static Properties getBaseProperties() {
         Properties properties = System.getProperties();
+
+        properties.setProperty("javax.persistence.jdbc.driver", "org.h2.Driver");
+
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        properties.setProperty("hibernate.hbm2ddl.auto", "update");
+
+        return properties;
+    }
+
+    protected static Properties getLocalProperties(final String fileName, final String user, final String password, boolean readOnly) {
+        Properties properties = getBaseProperties();
 
         String url = "jdbc:h2:" + jgnash.util.FileUtils.stripFileExtension(fileName);
 
@@ -46,25 +58,26 @@ public class JpaConfiguration {
         }
 
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_URL, url);
-        properties.setProperty("javax.persistence.jdbc.driver", "org.h2.Driver");
         properties.setProperty("javax.persistence.jdbc.user", user);
         properties.setProperty("javax.persistence.jdbc.password", password);
-
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-        properties.setProperty("hibernate.hbm2ddl.auto", "update");
 
         return properties;
     }
 
-    protected static Properties getServerProperties(final String fileName, int port, final String user, final String password) {
+    protected static Properties getClientProperties(final String fileName, final String host, int port, final String user, final String password) {
+        Properties properties = getBaseProperties();
 
-        Properties properties = getProperties(fileName, user, password, false);
+        properties.setProperty("javax.persistence.jdbc.user", user);
+        properties.setProperty("javax.persistence.jdbc.password", password);
 
-        String url = properties.getProperty(JAVAX_PERSISTENCE_JDBC_URL);
-        url +=  ";AUTO_SERVER=TRUE";
-        url += (";AUTO_SERVER_PORT=" + port);
+        StringBuilder builder = new StringBuilder("jdbc:h2:ssl://");
+        builder.append(host).append(":").append(port);
+        builder.append(fileName);
 
-        properties.setProperty(JAVAX_PERSISTENCE_JDBC_URL, url);
+        builder.append(";USER=").append(user);
+        builder.append(";PASSWORD=").append(password);
+
+        properties.setProperty(JAVAX_PERSISTENCE_JDBC_URL, builder.toString());
 
         return properties;
     }

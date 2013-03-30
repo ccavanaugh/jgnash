@@ -75,7 +75,7 @@ public final class Main {
     @Option(name = "-portableFile", usage = "Location for portable file")
     private String portableFile;
 
-    @Option(name = "-port", usage = "Network port")
+    @Option(name = "-port", usage = "Network port; default is 5300")
     private int port;
 
     @Option(name = "-client", usage = "Server host name or address")
@@ -86,6 +86,9 @@ public final class Main {
 
     @Option(name = "-server", usage = "Act as a server using the specified file")
     private File server;
+
+    @Option(name = "-webConsole", usage = "Act as a server using the specified file")
+    private boolean webConsole;
 
     @Option(name = "-user", usage = "Client or Server user name")
     private String user;
@@ -250,13 +253,15 @@ public final class Main {
                 try {
                     if (!FileUtils.isFileLocked(server.getAbsolutePath())) {
                         JpaNetworkServer networkServer = new JpaNetworkServer();
-                        networkServer.runServer(server.getAbsolutePath(), port, user, password);
+                        networkServer.startServer(server.getAbsolutePath(), port, user, password, webConsole);
                     } else {
                         System.err.println(Resource.get().getString("Message.FileIsLocked"));
                     }
                 } catch (FileNotFoundException e) {
                     Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
                     System.err.println("File " + server.getAbsolutePath() + " was not found");
+                } catch (Exception e) {
+                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
                 }
             } else { // start the UI
                 if (portable || portableFile != null) { // must hook in the preferences implementation first for best operation

@@ -32,9 +32,11 @@ import jgnash.message.MessageProperty;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
+import org.h2.tools.Server;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Properties;
@@ -65,16 +67,37 @@ public class JpaNetworkServer {
 
     private XStream xstream;
 
+    private Server server;
+
     public JpaNetworkServer() {
+
+        // Configure XStream to decode messages
         xstream = new XStream(new StaxDriver());
         xstream.alias("Message", Message.class);
         xstream.alias("MessageProperty", MessageProperty.class);
     }
 
-    public synchronized void runServer(final String fileName, final int port, final String user, final String password) {
+    public synchronized void startServer(final String fileName, final int port, final String user, final String password, final boolean webConsole) {
         stop = false;
 
-        final Engine engine = createLocalServer(fileName, port, user, password);
+        // Start the H2 server
+        try {
+
+            String[] serverArgs;
+
+            if (webConsole) {
+                serverArgs = new String[]{"-tcpPort", String.valueOf(port), "-tcpAllowOthers", "-tcpSSL", "-web"};
+            } else {
+                serverArgs = new String[]{"-tcpPort", String.valueOf(port), "-tcpAllowOthers", "-tcpSSL"};
+            }
+
+            server = Server.createTcpServer(serverArgs);
+            server.start();
+        } catch (SQLException e) {
+            Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+        }
+
+        final Engine engine = createLocalEngine(fileName, port, user, password);
 
         if (engine != null) {
 
@@ -115,6 +138,8 @@ public class JpaNetworkServer {
                 }
             });
 
+
+            // wait here forever
             try {
                 if (!stop) {
                     this.wait(Long.MAX_VALUE); // wait forever for notify() from stopServer()
@@ -131,6 +156,8 @@ public class JpaNetworkServer {
             messageServer.stopServer();
 
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+            server.stop();
         }
     }
 
@@ -142,9 +169,11 @@ public class JpaNetworkServer {
         this.notify();
     }
 
-    private Engine createLocalServer(final String fileName, final int port, final String user, final String password) {
+    private Engine createLocalEngine(final String fileName, final int port, final String user, final String password) {
 
-        Properties properties = JpaConfiguration.getServerProperties(fileName, port, user, password);
+        Properties properties = JpaConfiguration.getClientProperties(fileName, "localhost", port, user, password);
+
+        Logger.getLogger(JpaNetworkServer.class.getName()).info("Connection url: " + properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL));
 
         Engine engine = null;
 
