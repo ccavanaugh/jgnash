@@ -160,7 +160,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
 
             String queryString = "SELECT a FROM Account a WHERE a.accountType = :type";
             Query query = em.createQuery(queryString);
-            query.setParameter("type", type.name());
+            query.setParameter("type", type);
 
             return stripMarkedForRemoval(new ArrayList<Account>(query.getResultList()));
         } finally {
