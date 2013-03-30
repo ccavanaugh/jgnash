@@ -17,16 +17,17 @@
  */
 package jgnash.engine;
 
-import javax.persistence.Embeddable;
-import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
+
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 /**
  * Investment Transaction Entry
  * 
  * @author Craig Cavanaugh
  */
-@Embeddable
+@Entity
 public abstract class AbstractInvestmentTransactionEntry extends TransactionEntry {
 
     /**
@@ -70,7 +71,7 @@ public abstract class AbstractInvestmentTransactionEntry extends TransactionEntr
         return securityNode;
     }
 
-    void setSecurityNode(SecurityNode securityNode) {
+    void setSecurityNode(final SecurityNode securityNode) {
         this.securityNode = securityNode;
     }
 
@@ -78,7 +79,7 @@ public abstract class AbstractInvestmentTransactionEntry extends TransactionEntr
         return price;
     }
 
-    void setPrice(BigDecimal price) {
+    void setPrice(final BigDecimal price) {
         this.price = price;
     }
 
@@ -89,7 +90,7 @@ public abstract class AbstractInvestmentTransactionEntry extends TransactionEntr
      * @param quantity the quantity of securities to assign to this account
      * @see #getSignedQuantity()
      */
-    void setQuantity(BigDecimal quantity) {
+    void setQuantity(final BigDecimal quantity) {
         this.quantity = quantity;
     }
 

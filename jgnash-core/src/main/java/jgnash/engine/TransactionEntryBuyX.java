@@ -19,7 +19,7 @@ package jgnash.engine;
 
 import java.math.BigDecimal;
 
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
 
 /**
  * Buy shares and reduce the (cash) balance of an account
@@ -32,7 +32,7 @@ import javax.persistence.Embeddable;
  *
  * @author Craig Cavanaugh
  */
-@Embeddable
+@Entity
 public class TransactionEntryBuyX extends AbstractInvestmentTransactionEntry {
     
     private static final long serialVersionUID = 1L;

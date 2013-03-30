@@ -83,7 +83,8 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     /**
      * Transaction entries
      */
-    @ElementCollection
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinTable
     List<TransactionEntry> transactionEntries = new ArrayList<>();
 
     /**

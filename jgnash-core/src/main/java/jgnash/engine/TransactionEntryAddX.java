@@ -19,7 +19,7 @@ package jgnash.engine;
 
 import java.math.BigDecimal;
 
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
 
 /**
  * Add shares without impacting the cash balance.  This is a single
@@ -27,7 +27,7 @@ import javax.persistence.Embeddable;
  *
  * @author Craig Cavanaugh
  */
-@Embeddable
+@Entity
 public class TransactionEntryAddX extends TransactionEntryAbstractIncrease {
     
     private static final long serialVersionUID = 1L;

@@ -316,6 +316,10 @@ public class InvestmentTransaction extends Transaction {
             return result;
         }
 
+        if (getTransactionType() == null) {
+            System.out.println("null transaction type!");
+        }
+
         result = getTransactionType().name().compareTo(tran.getTransactionType().name());
         if (result != 0) {
             return result;

@@ -20,14 +20,14 @@ package jgnash.engine;
 
 import java.math.BigDecimal;
 
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
 
 /**
  * Abstract Add transaction
  *
  * @author Craig Cavanaugh
  */
-@Embeddable
+@Entity
 public abstract class TransactionEntryAbstractIncrease extends AbstractInvestmentTransactionEntry {
 
     TransactionEntryAbstractIncrease() {
