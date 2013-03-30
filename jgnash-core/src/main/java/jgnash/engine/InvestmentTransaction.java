@@ -316,7 +316,7 @@ public class InvestmentTransaction extends Transaction {
             return result;
         }
 
-        result = getTransactionType().compareTo(tran.getTransactionType());
+        result = getTransactionType().name().compareTo(tran.getTransactionType().name());
         if (result != 0) {
             return result;
         }
