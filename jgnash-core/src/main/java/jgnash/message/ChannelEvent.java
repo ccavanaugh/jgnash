@@ -68,7 +68,6 @@ public enum ChannelEvent {
     FILE_LOAD_FAILED,
     FILE_LOAD_SUCCESS,
     FILE_NEW_SUCCESS,
-    STOP_SERVER,    // Remote client request to stop the server
     UI_RESTARTED, // UI has restarted
     UI_RESTARTING // UI will restart
 }

@@ -20,6 +20,7 @@ package jgnash.engine.jpa;
 import jgnash.engine.Config;
 import jgnash.engine.DataStore;
 import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
@@ -66,10 +67,24 @@ public class JpaDataStore implements DataStore {
     }
 
     @Override
-    public Engine getClientEngine(final String host, final int port, final String user, final String password, final String engineName) {
-        // Properties properties = JpaConfiguration.getClientProperties("fixme", host, port, user, password);
+    public Engine getClientEngine(final String host, final int port, final String user, final String password, final String dataBasePath) {
+        Properties properties = JpaConfiguration.getClientProperties(dataBasePath, host, port, user, password);
 
-        return null;  // TODO Fix me
+        Engine engine = null;
+
+        factory = Persistence.createEntityManagerFactory("jgnash", properties);
+
+        em = factory.createEntityManager();
+
+        if (em != null) {
+            engine = new Engine(new JpaEngineDAO(em, true), EngineFactory.DEFAULT);
+
+            Logger.getLogger(JpaDataStore.class.getName()).info("Created local JPA container and engine");
+            fileName = null;
+            remote = true;
+        }
+
+        return engine;
     }
 
     public static boolean isDatabaseLocked(final String fileName) {
@@ -95,12 +110,7 @@ public class JpaDataStore implements DataStore {
         }
 
         if (!isDatabaseLocked(fileName)) {
-
             try {
-                /*if (!new File(fileName).exists()) {
-                    properties.setProperty("eclipselink.ddl-generation", "create-or-extend-tables");
-                }*/
-
                 factory = Persistence.createEntityManagerFactory("jgnash", properties);
 
                 em = factory.createEntityManager();

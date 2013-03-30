@@ -76,7 +76,7 @@ public class Db4oNetworkServer implements MessageRecipient {
 
             // Start the message bus
             MessageBusRemoteServer messageServer = new MessageBusRemoteServer(port + 1);
-            messageServer.startServer();
+            messageServer.startServer("temp");
 
             // Start the backup thread that ensures an XML backup is created at set intervals
             ScheduledExecutorService backupExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());

@@ -263,8 +263,7 @@ public class EngineFactory {
     }
 
     public static synchronized Engine bootClientEngine(final String host, final int port, final String user, final String password, final String engineName, final boolean savePassword) {
-
-        return bootClientEngine(host, port, user, password, engineName, savePassword, DataStoreType.DB4O);
+        return bootClientEngine(host, port, user, password, engineName, savePassword, DataStoreType.H2_DATABASE);
     }
 
     private static synchronized Engine bootClientEngine(final String host, final int port, final String user, final String password, final String engineName, final boolean savePassword, final DataStoreType type) {
@@ -286,19 +285,26 @@ public class EngineFactory {
             pref.put(LAST_USER, user);
             pref.putBoolean(LAST_REMOTE, true);
 
+            // after starting the remote message bus, it should receive the path on the server
+            String remoteDataBasePath = MessageBus.getInstance(engineName).getRemoteDataBasePath();
+
+            logger.log(Level.INFO, "Remote path was {0}", remoteDataBasePath);
+            logger.log(Level.INFO, "Engine name was {0}", engineName);
+
             DataStore dataStore = type.getDataStore();
 
             // connect to the remote server
-            engine = dataStore.getClientEngine(host, port, user, password, engineName);
+            engine = dataStore.getClientEngine(host, port, user, password, remoteDataBasePath);
+
+
+
+            //if (engine )
 
             if (engine != null) {
                 logger.info(Resource.get().getString("Message.EngineStart"));
 
                 engineMap.put(engineName, engine);
                 dataStoreMap.put(engineName, dataStore);
-
-                Message message = new Message(MessageChannel.SYSTEM, ChannelEvent.FILE_LOAD_SUCCESS, engine);
-                MessageBus.getInstance(engineName).fireEvent(message);
 
                 if (password != null) {
                     // remember if the user used a password for the last session
@@ -313,6 +319,11 @@ public class EngineFactory {
                     pref.putBoolean(LAST_USED_PASSWORD, false);
                     pref.put(LAST_PASSWORD, "");
                 }
+
+                Message message = new Message(MessageChannel.SYSTEM, ChannelEvent.FILE_LOAD_SUCCESS, engine);
+                MessageBus.getInstance(engineName).fireEvent(message);
+
+                logger.log(Level.INFO, "Remote server has {0} objects", engine.getStoredObjects().size());
             }
         }
 
@@ -361,9 +372,9 @@ public class EngineFactory {
     public static synchronized String getDefaultDatabase() {
         String base = FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath();
         String userName = System.getProperty("user.name");
-        String filesep = System.getProperty("file.separator");
+        String fileSep = System.getProperty("file.separator");
 
-        return base + filesep + DEFAULT_DIR + filesep + userName;
+        return base + fileSep + DEFAULT_DIR + fileSep + userName;
     }
 
     /**

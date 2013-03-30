@@ -35,7 +35,6 @@ import jgnash.util.LogUtils;
  * Thread safe Message Bus
  *
  * @author Craig Cavanaugh
- *
  */
 
 /*
@@ -95,6 +94,13 @@ public class MessageBus {
         return bus;
     }
 
+    public String getRemoteDataBasePath() {
+        if (messageBusClient != null) {
+            return messageBusClient.getDataBasePath();
+        }
+        return "";
+    }
+
     private void disconnectFromServer() {
         if (messageBusClient != null) {
             messageBusClient.disconnectFromServer();
@@ -114,6 +120,12 @@ public class MessageBus {
         if (!result) {
             messageBusClient = null; //make sure bad client connections are dumped
         }
+
+        // wait for the server response
+        while (getRemoteDataBasePath() == null) {
+            Thread.yield();
+        }
+
         return result;
     }
 

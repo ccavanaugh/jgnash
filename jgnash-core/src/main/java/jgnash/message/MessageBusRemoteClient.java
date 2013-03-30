@@ -70,6 +70,8 @@ class MessageBusRemoteClient {
 
     private final XStream xstream;
 
+    private String dataBasePath;
+
     static {
         IoBuffer.setUseDirectBuffer(false);
         IoBuffer.setAllocator(new SimpleBufferAllocator());
@@ -82,6 +84,10 @@ class MessageBusRemoteClient {
         xstream = new XStream(new StaxDriver());
         xstream.alias("Message", Message.class);
         xstream.alias("MessageProperty", MessageProperty.class);
+    }
+
+    public String getDataBasePath() {
+        return dataBasePath;
     }
 
     private static int getConnectionTimeout() {
@@ -171,6 +177,9 @@ class MessageBusRemoteClient {
                         }
                     }, FORCED_LATENCY, TimeUnit.MILLISECONDS);
                 }
+            } else if (object instanceof String && ((String) object).startsWith(MessageBusRemoteServer.PATH_PREFIX)) {
+                dataBasePath = ((String)object).substring(MessageBusRemoteServer.PATH_PREFIX.length());
+                logger.log(Level.INFO, "Remote data path is: {0}", dataBasePath);
             } else {
                 logger.log(Level.SEVERE, "Unknown message: {0}", object.toString());
             }

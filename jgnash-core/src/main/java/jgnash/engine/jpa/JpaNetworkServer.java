@@ -17,18 +17,12 @@
  */
 package jgnash.engine.jpa;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
-
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
 import jgnash.engine.StoredObjectComparator;
-import jgnash.message.ChannelEvent;
 import jgnash.message.LocalServerListener;
-import jgnash.message.Message;
 import jgnash.message.MessageBusRemoteServer;
-import jgnash.message.MessageProperty;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
@@ -65,28 +59,18 @@ public class JpaNetworkServer {
 
     protected EntityManager em;
 
-    private XStream xstream;
-
     private Server server;
-
-    public JpaNetworkServer() {
-
-        // Configure XStream to decode messages
-        xstream = new XStream(new StaxDriver());
-        xstream.alias("Message", Message.class);
-        xstream.alias("MessageProperty", MessageProperty.class);
-    }
 
     public synchronized void startServer(final String fileName, final int port, final String user, final String password, final boolean webConsole) {
         stop = false;
 
         // Start the H2 server
         try {
-
             String[] serverArgs;
 
             if (webConsole) {
                 serverArgs = new String[]{"-tcpPort", String.valueOf(port), "-tcpAllowOthers", "-tcpSSL", "-web"};
+                Logger.getLogger(JpaNetworkServer.class.getName()).info("Web console is enabled");
             } else {
                 serverArgs = new String[]{"-tcpPort", String.valueOf(port), "-tcpAllowOthers", "-tcpSSL"};
             }
@@ -97,13 +81,13 @@ public class JpaNetworkServer {
             Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, e.getMessage(), e);
         }
 
-        final Engine engine = createLocalEngine(fileName, port, user, password);
+        final Engine engine = createEngine(fileName, port, user, password);
 
         if (engine != null) {
 
-            // Start the message bus
+            // Start the message bus and pass the file name so it can be reported to the client
             MessageBusRemoteServer messageServer = new MessageBusRemoteServer(port + 1);
-            messageServer.startServer();
+            messageServer.startServer(fileName);
 
             // Start the backup thread that ensures an XML backup is created at set intervals
             ScheduledExecutorService backupExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
@@ -126,18 +110,14 @@ public class JpaNetworkServer {
                 @Override
                 public void messagePosted(final String event) {
 
-                    if (event.startsWith("<Message")) {
-                        final Message message = (Message) xstream.fromXML(event);
-
-                        if (message.getEvent() == ChannelEvent.STOP_SERVER) {
-                            stopServer();
-                        }
+                    // look for a remote request to stop the server
+                    if (event.startsWith("<STOP_SERVER>")) {
+                        stopServer();
                     }
 
                     dirty = true;
                 }
             });
-
 
             // wait here forever
             try {
@@ -169,7 +149,7 @@ public class JpaNetworkServer {
         this.notify();
     }
 
-    private Engine createLocalEngine(final String fileName, final int port, final String user, final String password) {
+    private Engine createEngine(final String fileName, final int port, final String user, final String password) {
 
         Properties properties = JpaConfiguration.getClientProperties(fileName, "localhost", port, user, password);
 
@@ -199,7 +179,7 @@ public class JpaNetworkServer {
                 em = factory.createEntityManager();
 
                 Logger.getLogger(JpaDataStore.class.getName()).info("Created local JPA container and engine");
-                engine = new Engine(new JpaEngineDAO(em, false), EngineFactory.DEFAULT);
+                engine = new Engine(new JpaEngineDAO(em, true), EngineFactory.DEFAULT); // treat as a remote engine
             } else {
                 Logger.getLogger(JpaNetworkServer.class.getName()).severe(Resource.get().getString("Message.FileIsLocked"));
             }

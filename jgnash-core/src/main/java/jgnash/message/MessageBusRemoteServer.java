@@ -44,6 +44,8 @@ import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
  */
 public class MessageBusRemoteServer {
 
+    public static final String PATH_PREFIX = "<PATH>";
+
     private int port = 0;
 
     private IoAcceptor acceptor;
@@ -56,6 +58,8 @@ public class MessageBusRemoteServer {
 
     private final ReadWriteLock rwl = new ReentrantReadWriteLock(true);
 
+    private String dataBasePath = "";
+
     static {
         IoBuffer.setUseDirectBuffer(false);
         IoBuffer.setAllocator(new SimpleBufferAllocator());
@@ -65,7 +69,9 @@ public class MessageBusRemoteServer {
         this.port = port;
     }
 
-    public void startServer() {
+    public void startServer(final String dataBasePath) {
+        this.dataBasePath = dataBasePath;
+
         acceptor = new NioSocketAcceptor();
 
         acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new TextLineCodecFactory(Charset.forName("UTF-8"))));
@@ -178,6 +184,8 @@ public class MessageBusRemoteServer {
 
             try {
                 clientSessions.add(session);
+                logger.log(Level.INFO, "Remote connection from: {0}", session.toString());
+                session.write(PATH_PREFIX + dataBasePath);
             } finally {
                 rwl.writeLock().unlock();
             }
