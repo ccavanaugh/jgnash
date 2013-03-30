@@ -30,7 +30,6 @@ import java.util.prefs.Preferences;
 
 import javax.swing.filechooser.FileSystemView;
 
-import jgnash.engine.db4o.Db4oDataStore;
 import jgnash.engine.jpa.JpaDataStore;
 import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.engine.xstream.XMLDataStore;
@@ -333,9 +332,7 @@ public class EngineFactory {
     private static DataStoreType getDataStoreByType(final File file) {
         FileType type = FileMagic.magic(file);
 
-        if (type == FileType.db4o) {
-            return DataStoreType.DB4O;
-        } else if (type == FileType.jGnash2XML) {
+        if (type == FileType.jGnash2XML) {
             return DataStoreType.XML;
         } else if (type == FileType.BinaryXStream) {
             return DataStoreType.BINARY_XSTREAM;
@@ -351,9 +348,7 @@ public class EngineFactory {
 
         FileType type = FileMagic.magic(file);
 
-        if (type == FileType.db4o) {
-            return Db4oDataStore.getFileVersion(file);
-        } else if (type == FileType.jGnash2XML) {
+        if (type == FileType.jGnash2XML) {
             return XMLDataStore.getFileVersion(file);
         } else if (type == FileType.BinaryXStream) {
             return BinaryXStreamDataStore.getFileVersion(file);

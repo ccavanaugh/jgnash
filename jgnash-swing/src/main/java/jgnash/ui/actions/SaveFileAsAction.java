@@ -103,7 +103,7 @@ public class SaveFileAsAction extends AbstractEnabledAction {
 
                     String fileExtension = FileUtils.getFileExtension(destination);
 
-                    DataStoreType newFileType = DataStoreType.DB4O;
+                    DataStoreType newFileType = DataStoreType.BINARY_XSTREAM;   // default for a new file
 
                     if (fileExtension.length() > 0) {
                         for (DataStoreType type : types) {

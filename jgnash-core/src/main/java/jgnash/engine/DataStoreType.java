@@ -22,7 +22,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jgnash.engine.db4o.Db4oDataStore;
 import jgnash.engine.jpa.JpaDataStore;
 import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.engine.xstream.XMLDataStore;
@@ -35,11 +34,6 @@ import jgnash.util.Resource;
  */
 public enum DataStoreType {
 
-    DB4O(
-            Resource.get().getString("DataStoreType.Db4o"),
-            true,
-            true,
-            Db4oDataStore.class),
     BINARY_XSTREAM(
             Resource.get().getString("DataStoreType.Bxds"),
             true,
