@@ -31,6 +31,7 @@ Money market account type
 
 Release 2.13.0
 ----------------------
+03/30/13 Added command line option to enable the xrender pipeline for X11 based systems.
 03/28/13 Prevent background updates from running during a shutdown if performed right after startup
 03/21/13 Changed binary and xml file structure for amortization objects
 

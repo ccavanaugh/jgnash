@@ -32,7 +32,7 @@ import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
 
 import jgnash.engine.Engine;
-import jgnash.engine.db4o.Db4oNetworkServer;
+import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.net.NetworkAuthenticator;
 import jgnash.net.security.AbstractYahooParser;
 import jgnash.ui.MainFrame;
@@ -59,6 +59,9 @@ public final class Main {
     static {
         VERSION = Resource.getAppName() + " - " + Resource.getAppVersion();
     }
+
+    @Option(name = "-xrender", usage = "Enable the XRender-based Java 2D rendering pipeline")
+    private boolean xrender;
 
     @Option(name = "-opengl", usage = "Enable OpenGL acceleration")
     private boolean opengl;
@@ -101,9 +104,9 @@ public final class Main {
 
     final private static int DEFAULT_PORT = 5300;
     
-    final private static String DEFAULT_USER = "sa";
+    final private static String DEFAULT_USER = "";
     
-    final private static String DEFAULT_PASSWORD = "pass";
+    final private static String DEFAULT_PASSWORD = "";
 
     public static boolean checkEDT() {
         return enableEDT;
@@ -246,8 +249,8 @@ public final class Main {
             } else if (server != null) {
                 try {
                     if (!FileUtils.isFileLocked(server.getAbsolutePath())) {
-                        Db4oNetworkServer netserver = new Db4oNetworkServer(); // Start the db4o server
-                        netserver.runServer(server.getAbsolutePath(), port, user, password);
+                        JpaNetworkServer networkServer = new JpaNetworkServer();
+                        networkServer.runServer(server.getAbsolutePath(), port, user, password);
                     } else {
                         System.err.println(Resource.get().getString("Message.FileIsLocked"));
                     }
@@ -273,8 +276,11 @@ public final class Main {
                 enableAntialiasing();
 
                 if (opengl) {
-                    System.out.println(Resource.get().getString("Message.OpenGL"));
                     System.setProperty("sun.java2d.opengl", "True");
+                }
+
+                if (xrender) {
+                    System.setProperty("sun.java2d.xrender", "True");
                 }
 
                 if (OS.isSystemOSX()) {
@@ -305,8 +311,8 @@ public final class Main {
             exportFile = new File(portableFile);
         } else {
             String base = System.getProperty("user.dir");
-            String filesep = System.getProperty("file.separator");
-            exportFile = new File(base + filesep + "pref.xml");
+            String fileSep = System.getProperty("file.separator");
+            exportFile = new File(base + fileSep + "pref.xml");
         }
         return exportFile;
     }
@@ -339,12 +345,12 @@ public final class Main {
 
             File exportFile = getPreferenceFile();
 
-            Preferences prefs = Preferences.userRoot();
+            Preferences preferences = Preferences.userRoot();
     
             try( FileOutputStream os = new FileOutputStream(exportFile)) {              
                 try {
-                    if (prefs.nodeExists("/jgnash")) {
-                        Preferences p = prefs.node("/jgnash");
+                    if (preferences.nodeExists("/jgnash")) {
+                        Preferences p = preferences.node("/jgnash");
                         p.exportSubtree(os);
                     }
                     deleteUserPreferences();

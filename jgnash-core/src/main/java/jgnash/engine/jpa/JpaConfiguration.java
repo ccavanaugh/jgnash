@@ -31,11 +31,6 @@ public class JpaConfiguration {
     protected static Properties getProperties(final String fileName, final String user, final String password, boolean readOnly) {
         Properties properties = System.getProperties();
 
-        //properties.setProperty("eclipselink.target-database", "org.eclipse.persistence.platform.database.H2Platform");
-        //properties.setProperty("eclipselink.ddl-generation", "create-or-extend-tables");
-
-        properties.setProperty("hibernate.hbm2ddl.auto", "update");
-
         String url = "jdbc:h2:" + jgnash.util.FileUtils.stripFileExtension(fileName);
 
         if (readOnly) {
@@ -55,6 +50,9 @@ public class JpaConfiguration {
         properties.setProperty("javax.persistence.jdbc.user", user);
         properties.setProperty("javax.persistence.jdbc.password", password);
 
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        properties.setProperty("hibernate.hbm2ddl.auto", "update");
+
         return properties;
     }
 
@@ -69,8 +67,5 @@ public class JpaConfiguration {
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_URL, url);
 
         return properties;
-
     }
-
-
 }
