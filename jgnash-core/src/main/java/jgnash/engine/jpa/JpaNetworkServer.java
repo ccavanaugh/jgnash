@@ -153,7 +153,7 @@ public class JpaNetworkServer {
 
         Properties properties = JpaConfiguration.getClientProperties(fileName, "localhost", port, user, password);
 
-        Logger.getLogger(JpaNetworkServer.class.getName()).info("Connection url: " + properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL));
+        Logger.getLogger(JpaNetworkServer.class.getName()).info("Local connection url is: " + properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL));
 
         Engine engine = null;
 

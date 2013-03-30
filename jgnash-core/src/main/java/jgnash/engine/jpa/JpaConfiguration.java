@@ -71,7 +71,7 @@ public class JpaConfiguration {
         properties.setProperty("javax.persistence.jdbc.password", password);
 
         StringBuilder builder = new StringBuilder("jdbc:h2:ssl://");
-        builder.append(host).append(":").append(port);
+        builder.append(host).append(":").append(port).append("/");
         builder.append(fileName);
 
         builder.append(";USER=").append(user);
