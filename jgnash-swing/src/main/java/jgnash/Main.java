@@ -222,11 +222,11 @@ public final class Main {
 
         CmdLineParser parser = new CmdLineParser(this);
 
-        // Set as a system property
-        System.getProperties().put("ssl", Boolean.toString(ssl));
-
         try {
             parser.parseArgument(args);
+
+            // Set as a system property
+            System.getProperties().put("ssl", Boolean.toString(ssl));
 
             /* handle a file name passed in as an argument without use of the -file argument
                assumed behavior for windows users */
