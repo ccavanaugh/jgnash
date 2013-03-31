@@ -68,9 +68,9 @@ public class MessageBus {
      * @param port message server port
      * @return <code>true</code> if connection to the remote server was successful
      */
-    public synchronized boolean setRemote(final String host, final int port) {
+    public synchronized boolean setRemote(final String host, final int port, final String user, final char[] password) {
         disconnectFromServer();
-        return connectToServer(host, port);
+        return connectToServer(host, port, user, password);
     }
 
     /**
@@ -108,14 +108,14 @@ public class MessageBus {
         }
     }
 
-    private boolean connectToServer(final String remoteHost, final int remotePort) {             
+    private boolean connectToServer(final String remoteHost, final int remotePort, final String user, final char[] password) {
         if (remoteHost == null || remotePort <= 0) {            
             throw new IllegalArgumentException();
         }
 
         messageBusClient = new MessageBusRemoteClient(remoteHost, remotePort);
 
-        boolean result = messageBusClient.connectToServer();
+        boolean result = messageBusClient.connectToServer(user, password);
 
         if (!result) {
             messageBusClient = null; //make sure bad client connections are dumped

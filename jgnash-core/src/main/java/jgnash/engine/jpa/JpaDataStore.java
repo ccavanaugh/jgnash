@@ -67,7 +67,7 @@ public class JpaDataStore implements DataStore {
     }
 
     @Override
-    public Engine getClientEngine(final String host, final int port, final String user, final String password, final String dataBasePath) {
+    public Engine getClientEngine(final String host, final int port, final String user, final char[] password, final String dataBasePath) {
         Properties properties = JpaConfiguration.getClientProperties(dataBasePath, host, port, user, password);
 
         Engine engine = null;
@@ -101,7 +101,7 @@ public class JpaDataStore implements DataStore {
 
     @Override
     public Engine getLocalEngine(final String fileName, final String engineName) {
-        Properties properties = JpaConfiguration.getLocalProperties(fileName, "", "", false);
+        Properties properties = JpaConfiguration.getLocalProperties(fileName, "", new char[] {}, false);
 
         Engine engine = null;
 
@@ -154,7 +154,7 @@ public class JpaDataStore implements DataStore {
             }
         }
 
-        Properties properties = JpaConfiguration.getLocalProperties(file.getAbsolutePath(), "", "", false);
+        Properties properties = JpaConfiguration.getLocalProperties(file.getAbsolutePath(), "", new char[] {}, false);
 
         EntityManagerFactory factory = null;
         EntityManager em = null;
@@ -192,7 +192,7 @@ public class JpaDataStore implements DataStore {
     public static float getFileVersion(final File file) {
         float fileVersion = 0;
 
-        Properties properties = JpaConfiguration.getLocalProperties(file.getAbsolutePath(), "", "", true);
+        Properties properties = JpaConfiguration.getLocalProperties(file.getAbsolutePath(), "", new char[] {}, true);
 
         EntityManagerFactory factory = null;
         EntityManager em = null;

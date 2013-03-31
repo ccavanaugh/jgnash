@@ -186,16 +186,6 @@ public class EngineFactory {
     }
 
     /**
-     * Provides access to the engines <code>DataStore</code>.  This is intended for internal use only
-     *
-     * @param engineName name of the engine
-     * @return DataStore for the named engine.
-     */
-    public static synchronized DataStore getDataStore(final String engineName) {
-        return dataStoreMap.get(engineName);
-    }
-
-    /**
      * Boots a local Engine for a preexisting file. The API determines the
      * correct file type and uses the correct DataStoreType for engine
      * initialization. If successful, a new
@@ -261,11 +251,11 @@ public class EngineFactory {
         return engine;
     }
 
-    public static synchronized Engine bootClientEngine(final String host, final int port, final String user, final String password, final String engineName, final boolean savePassword) {
+    public static synchronized Engine bootClientEngine(final String host, final int port, final String user, final char[] password, final String engineName, final boolean savePassword) {
         return bootClientEngine(host, port, user, password, engineName, savePassword, DataStoreType.H2_DATABASE);
     }
 
-    private static synchronized Engine bootClientEngine(final String host, final int port, final String user, final String password, final String engineName, final boolean savePassword, final DataStoreType type) {
+    private static synchronized Engine bootClientEngine(final String host, final int port, final String user, final char[] password, final String engineName, final boolean savePassword, final DataStoreType type) {
 
         assert engineMap.get(engineName) == null;
 
@@ -278,7 +268,7 @@ public class EngineFactory {
         Engine engine = null;
 
         // start the client message bus
-        if (MessageBus.getInstance(engineName).setRemote(host, port + 1)) {
+        if (MessageBus.getInstance(engineName).setRemote(host, port + 1, user, password)) {
             pref.putInt(LAST_PORT, port);
             pref.put(LAST_HOST, host);
             pref.put(LAST_USER, user);
@@ -295,10 +285,6 @@ public class EngineFactory {
             // connect to the remote server
             engine = dataStore.getClientEngine(host, port, user, password, remoteDataBasePath);
 
-
-
-            //if (engine )
-
             if (engine != null) {
                 logger.info(Resource.get().getString("Message.EngineStart"));
 
@@ -307,10 +293,10 @@ public class EngineFactory {
 
                 if (password != null) {
                     // remember if the user used a password for the last session
-                    pref.putBoolean(LAST_USED_PASSWORD, password.length() > 0);
+                    pref.putBoolean(LAST_USED_PASSWORD, password.length > 0);
 
                     if (savePassword) {
-                        pref.put(LAST_PASSWORD, password);
+                        pref.put(LAST_PASSWORD, new String(password));
                     } else {
                         pref.put(LAST_PASSWORD, "");
                     }

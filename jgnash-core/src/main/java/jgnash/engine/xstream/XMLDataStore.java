@@ -113,12 +113,11 @@ public class XMLDataStore implements DataStore {
     /**
      * XMLDataStore will throw an exception if called
      *
-     * @see DataStore#getClientEngine(java.lang.String, int, java.lang.String,
-     * java.lang.String, java.lang.String)
+     * @see DataStore#getClientEngine(java.lang.String, int, java.lang.String, char[], java.lang.String)
      * @throws UnsupportedOperationException
      */
     @Override
-    public Engine getClientEngine(final String host, final int port, final String user, final String password, final String engineName) {
+    public Engine getClientEngine(final String host, final int port, final String user, final char[] password, final String engineName) {
         throw new UnsupportedOperationException("Client / Server operation not supported for this type.");
     }
 

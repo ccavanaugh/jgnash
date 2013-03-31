@@ -596,7 +596,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     }
 
-    void openRemote(final String host, final int port, final String user, final String password) {
+    void openRemote(final String host, final int port, final String user, final char[] password) {
         OpenAction.openRemote(host, port, user, password);
         startBackgroundUpdates();
     }

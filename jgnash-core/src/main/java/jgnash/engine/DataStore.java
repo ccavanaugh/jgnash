@@ -43,7 +43,7 @@ public interface DataStore {
      * @param engineName unique name to give the engine instance
      * @return Engine instance if a successful connection is made
      */
-    Engine getClientEngine(final String host, final int port, final String user, final String password, final String engineName);
+    Engine getClientEngine(final String host, final int port, final String user, final char[] password, final String engineName);
 
     /**
      * Create an engine instance that uses a file

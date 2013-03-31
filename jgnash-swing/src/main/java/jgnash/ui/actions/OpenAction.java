@@ -68,7 +68,7 @@ public class OpenAction {
 
                 if (dialog.isRemote()) {
                     String user = dialog.getUserName();
-                    String password = new String(dialog.getPassword());
+                    char[] password = dialog.getPassword();
                     String host = dialog.getHost();
                     int port = dialog.getPort();
                     boolean save = dialog.savePassword();
@@ -190,7 +190,7 @@ public class OpenAction {
 
                 if (EngineFactory.getLastRemote() && EngineFactory.getLastPassword().length() > 0) {
                     String user = EngineFactory.getLastUser();
-                    String password = EngineFactory.getLastPassword();
+                    char[] password = EngineFactory.getLastPassword().toCharArray();
                     String host = EngineFactory.getLastHost();
                     int port = EngineFactory.getLastPort();
 
@@ -242,7 +242,7 @@ public class OpenAction {
         }
     }
 
-    public static void openRemote(final String host, final int port, final String user, final String password) {
+    public static void openRemote(final String host, final int port, final String user, final char[] password) {
 
         final class BootEngine extends SimpleSwingWorker {
 

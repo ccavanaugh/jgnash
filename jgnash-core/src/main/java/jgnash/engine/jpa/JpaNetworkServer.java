@@ -62,7 +62,7 @@ public class JpaNetworkServer {
 
     private Server server;
 
-    public synchronized void startServer(final String fileName, final int port, final String user, final String password, final boolean webConsole) {
+    public synchronized void startServer(final String fileName, final int port, final String user, final char[] password, final boolean webConsole) {
         stop = false;
 
         // Start the H2 server
@@ -96,7 +96,7 @@ public class JpaNetworkServer {
 
             // Start the message bus and pass the file name so it can be reported to the client
             MessageBusRemoteServer messageServer = new MessageBusRemoteServer(port + 1);
-            messageServer.startServer(fileName);
+            messageServer.startServer(fileName, user, password);
 
             // Start the backup thread that ensures an XML backup is created at set intervals
             ScheduledExecutorService backupExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
@@ -158,7 +158,7 @@ public class JpaNetworkServer {
         this.notify();
     }
 
-    private Engine createEngine(final String fileName, final int port, final String user, final String password) {
+    private Engine createEngine(final String fileName, final int port, final String user, final char[] password) {
 
         Properties properties = JpaConfiguration.getClientProperties(fileName, "localhost", port, user, password);
 

@@ -17,6 +17,7 @@
  */
 package jgnash.engine.jpa;
 
+import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -47,7 +48,7 @@ public class JpaConfiguration {
         return properties;
     }
 
-    protected static Properties getLocalProperties(final String fileName, final String user, final String password, final boolean readOnly) {
+    protected static Properties getLocalProperties(final String fileName, final String user, final char[] password, final boolean readOnly) {
         Properties properties = getBaseProperties();
 
         String url = "jdbc:h2:" + jgnash.util.FileUtils.stripFileExtension(fileName);
@@ -60,25 +61,24 @@ public class JpaConfiguration {
             url += (USER + user);
         }
 
-        if (password != null && password.length() > 0) {
-            url += (PASSWORD + password);
+        if (password != null && password.length > 0) {
+            url += (PASSWORD + Arrays.toString(password));
         }
 
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_URL, url);
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_USER, user);
-        properties.setProperty(JAVAX_PERSISTENCE_JDBC_PASSWORD, password);
+        properties.setProperty(JAVAX_PERSISTENCE_JDBC_PASSWORD, new String(password));
 
         return properties;
     }
 
-    protected static Properties getClientProperties(final String fileName, final String host, final int port, final String user, final String password) {
+    protected static Properties getClientProperties(final String fileName, final String host, final int port, final String user, final char[]  password) {
         Properties properties = getBaseProperties();
 
         boolean useSSL = Boolean.parseBoolean(properties.getProperty("ssl"));
 
-
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_USER, user);
-        properties.setProperty(JAVAX_PERSISTENCE_JDBC_PASSWORD, password);
+        properties.setProperty(JAVAX_PERSISTENCE_JDBC_PASSWORD, new String(password));
 
         StringBuilder builder = new StringBuilder("jdbc:h2");
 

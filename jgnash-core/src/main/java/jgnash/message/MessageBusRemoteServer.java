@@ -60,6 +60,8 @@ public class MessageBusRemoteServer {
 
     private String dataBasePath = "";
 
+    private EncryptionFilter filter;
+
     static {
         IoBuffer.setUseDirectBuffer(false);
         IoBuffer.setAllocator(new SimpleBufferAllocator());
@@ -69,8 +71,15 @@ public class MessageBusRemoteServer {
         this.port = port;
     }
 
-    public void startServer(final String dataBasePath) {
+    public void startServer(final String dataBasePath, final String user, final char[] password) {
         this.dataBasePath = dataBasePath;
+
+        boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty("ssl"));
+
+        // If a user and password has been specified, enable an encryption filter
+        if (useSSL && user != null && password != null && !user.isEmpty() && password.length > 0) {
+            filter = new EncryptionFilter(user, password);
+        }
 
         acceptor = new NioSocketAcceptor();
 
@@ -153,20 +162,40 @@ public class MessageBusRemoteServer {
             }
         }
 
+        /**
+         * Utility method to encrypt a message
+         * @param message message to encrypt
+         * @return encrypted message
+         */
+        private String encrypt(final String message) {
+            if (filter != null) {
+                return filter.encrypt(message);
+            }
+            return message;
+        }
+
         @Override
         public void messageReceived(final IoSession session, final Object message) throws Exception {
 
-            String str = message.toString();
+            String str;
+
+            if (filter != null) {
+                str = filter.decrypt(message.toString());
+            } else {
+                str = message.toString();
+            }
 
             rwl.readLock().lock();
 
             try {
                 for (IoSession client : clientSessions) {
                     if (client.isConnected()) {
-                        client.write(str);
+                        //client.write(str);
+                        client.write(encrypt(str));
                     }
                 }
 
+                // Local listeners do not receive encrypted messages
                 for (LocalServerListener listener : listeners) {
                     listener.messagePosted(str);
                 }
@@ -185,7 +214,9 @@ public class MessageBusRemoteServer {
             try {
                 clientSessions.add(session);
                 logger.log(Level.INFO, "Remote connection from: {0}", session.toString());
-                session.write(PATH_PREFIX + dataBasePath);
+                session.write(encrypt(PATH_PREFIX + dataBasePath));
+
+                //session.write(PATH_PREFIX + dataBasePath);
             } finally {
                 rwl.writeLock().unlock();
             }

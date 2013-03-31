@@ -56,7 +56,6 @@ import org.apache.mina.transport.socket.nio.NioSocketConnector;
  * Remote message bus client
  * 
  * @author Craig Cavanaugh
- *
  */
 class MessageBusRemoteClient {
 
@@ -71,6 +70,8 @@ class MessageBusRemoteClient {
     private final XStream xstream;
 
     private String dataBasePath;
+
+    private EncryptionFilter filter = null;
 
     static {
         IoBuffer.setUseDirectBuffer(false);
@@ -94,9 +95,15 @@ class MessageBusRemoteClient {
         return ConnectionFactory.getConnectionTimeout();
     }
 
-    public boolean connectToServer() {
-
+    public boolean connectToServer(final String user, final char[] password) {
         boolean result = false;
+
+        boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty("ssl"));
+
+        // If a user and password has been specified, enable an encryption filter
+        if (useSSL && user != null && password != null && !user.isEmpty() && password.length > 0) {
+            filter = new EncryptionFilter(user, password);
+        }
 
         SocketConnector connector = new NioSocketConnector();
 
@@ -127,12 +134,15 @@ class MessageBusRemoteClient {
     }
 
     public synchronized void sendRemoteMessage(final Message message) {
-
-        logger.info("begin");
-
         CharArrayWriter writer = new CharArrayWriter();
         xstream.marshal(message, new CompactWriter(writer));
-        session.write(writer.toString());
+
+        if (filter != null) {
+            session.write(filter.encrypt(writer.toString()));
+            // logger.log(Level.INFO, "Encrypted message was: {0}", filter.encrypt(writer.toString()));
+        } else {
+            session.write(writer.toString());
+        }
 
         logger.log(Level.INFO, "sent: {0}", writer.toString());
     }
@@ -160,10 +170,20 @@ class MessageBusRemoteClient {
         @Override
         public void messageReceived(final IoSession s, final Object object) {
 
-            logger.log(Level.INFO, "messageReceived: {0}", object.toString());
+            String plainMessage;
 
-            if (object instanceof String && ((String) object).startsWith("<Message")) {
-                final Message message = (Message) xstream.fromXML((String) object);
+            if (filter != null) {
+                // logger.log(Level.INFO, "Encrypted message was: {0}", object.toString());
+                plainMessage = filter.decrypt(object.toString());
+            } else {
+                plainMessage = object.toString();
+            }
+
+            logger.log(Level.INFO, "messageReceived: {0}", plainMessage);
+
+
+            if (plainMessage.startsWith("<Message")) {
+                final Message message = (Message) xstream.fromXML(plainMessage);
 
                 // ignore our own messages
                 if (!EngineFactory.getEngine(EngineFactory.DEFAULT).getUuid().equals(message.getSource())) {
@@ -177,11 +197,11 @@ class MessageBusRemoteClient {
                         }
                     }, FORCED_LATENCY, TimeUnit.MILLISECONDS);
                 }
-            } else if (object instanceof String && ((String) object).startsWith(MessageBusRemoteServer.PATH_PREFIX)) {
-                dataBasePath = ((String)object).substring(MessageBusRemoteServer.PATH_PREFIX.length());
+            } else if (plainMessage.startsWith(MessageBusRemoteServer.PATH_PREFIX)) {
+                dataBasePath = plainMessage.substring(MessageBusRemoteServer.PATH_PREFIX.length());
                 logger.log(Level.INFO, "Remote data path is: {0}", dataBasePath);
             } else {
-                logger.log(Level.SEVERE, "Unknown message: {0}", object.toString());
+                logger.log(Level.SEVERE, "Unknown message: {0}", plainMessage);
             }
         }
 

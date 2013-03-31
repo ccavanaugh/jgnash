@@ -104,7 +104,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
         }
     }
 
-    public UIApplication(final String host, final int port, final String user, final String password) {
+    public UIApplication(final String host, final int port, final String user, final char[] password) {
         if (initFrame()) {         
 
             // try to connect to the remove host

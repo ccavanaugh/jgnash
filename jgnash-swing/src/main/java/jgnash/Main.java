@@ -259,7 +259,7 @@ public final class Main {
                 try {
                     if (!FileUtils.isFileLocked(server.getAbsolutePath())) {
                         JpaNetworkServer networkServer = new JpaNetworkServer();
-                        networkServer.startServer(server.getAbsolutePath(), port, user, password, webConsole);
+                        networkServer.startServer(server.getAbsolutePath(), port, user, password.toCharArray(), webConsole);
                     } else {
                         System.err.println(Resource.get().getString("Message.FileIsLocked"));
                     }
@@ -301,7 +301,7 @@ public final class Main {
                 setupNetworking();
 
                 if (client != null) {
-                    new UIApplication(client, port, user, password);
+                    new UIApplication(client, port, user, password.toCharArray());
                 } else if (file != null && file.exists()) {
                     new UIApplication(file);
                 } else {
