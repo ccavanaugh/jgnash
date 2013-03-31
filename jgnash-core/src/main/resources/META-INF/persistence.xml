@@ -8,9 +8,7 @@
     <persistence-unit name="jgnash" transaction-type="RESOURCE_LOCAL">
 
         <provider>
-            <!-- org.eclipse.persistence.jpa.PersistenceProvider -->
             org.hibernate.ejb.HibernatePersistence
-            <!-- org.apache.openjpa.persistence.PersistenceProviderImpl -->
         </provider>
 
         <!-- We must enumerate each entity in the persistence unit -->
@@ -50,13 +48,10 @@
         <class>jgnash.engine.TrashObject</class>
 
         <properties>
-            <!-- <property name="eclipselink.target-database" value="org.eclipse.persistence.platform.database.H2Platform"/> -->
-            <!-- <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/> -->
-
             <property name="javax.persistence.jdbc.password" value=""/>
             <property name="javax.persistence.jdbc.user" value=""/>
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:h2:eclipselink-database"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:h2-database"/>
             <property name="javax.persistence.lock.timeout" value="10000"/> <!-- Allow a 10 second stall for now -->
 
             <property name="hibernate.hbm2ddl.auto" value="update"/>
@@ -70,15 +65,6 @@
             <property name="hibernate.c3p0.max_statements" value="0" />
             <property name="hibernate.c3p0.timeout" value="100" />
             -->
-
-            <!--
-             <property name="openjpa.ConnectionURL" value="jdbc:h2:openjpa-database"/>
-             <property name="openjpa.ConnectionDriverName" value="org.h2.Driver"/>
-             <property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema"/>
-             <property name="openjpa.ConnectionUserName" value="test"/>
-             <property name="openjpa.ConnectionPassword" value=""/>
-            -->
-
         </properties>
     </persistence-unit>
     
