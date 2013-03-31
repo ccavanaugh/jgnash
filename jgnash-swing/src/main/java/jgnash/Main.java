@@ -96,6 +96,9 @@ public final class Main {
     @Option(name = "-password", usage = "Client or Server password")
     private String password;
 
+    @Option(name = "-ssl", usage = "Enable ssl for secure communications")
+    private boolean ssl;
+
     @Option(name = "-enableEDT", usage = "Check for EDT violations")
     private static boolean enableEDT;
 
@@ -218,6 +221,9 @@ public final class Main {
         configureLogging();
 
         CmdLineParser parser = new CmdLineParser(this);
+
+        // Set as a system property
+        System.getProperties().put("ssl", Boolean.toString(ssl));
 
         try {
             parser.parseArgument(args);

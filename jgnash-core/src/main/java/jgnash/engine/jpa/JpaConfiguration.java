@@ -74,10 +74,20 @@ public class JpaConfiguration {
     protected static Properties getClientProperties(final String fileName, final String host, final int port, final String user, final String password) {
         Properties properties = getBaseProperties();
 
+        boolean useSSL = Boolean.parseBoolean(properties.getProperty("ssl"));
+
+
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_USER, user);
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_PASSWORD, password);
 
-        StringBuilder builder = new StringBuilder("jdbc:h2:ssl://");
+        StringBuilder builder = new StringBuilder("jdbc:h2");
+
+        if (useSSL) {
+            builder.append(":ssl://");
+        } else {
+            builder.append(":tcp://");
+        }
+
         builder.append(host).append(":").append(port).append("/");
         builder.append(fileName);
 

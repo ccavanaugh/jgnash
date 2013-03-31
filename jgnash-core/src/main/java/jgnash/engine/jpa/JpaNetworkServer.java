@@ -33,6 +33,7 @@ import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -66,16 +67,24 @@ public class JpaNetworkServer {
 
         // Start the H2 server
         try {
-            String[] serverArgs;
 
-            if (webConsole) {
-                serverArgs = new String[]{"-tcpPort", String.valueOf(port), "-tcpAllowOthers", "-tcpSSL", "-web"};
-                Logger.getLogger(JpaNetworkServer.class.getName()).info("Web console is enabled");
-            } else {
-                serverArgs = new String[]{"-tcpPort", String.valueOf(port), "-tcpAllowOthers", "-tcpSSL"};
+            boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty("ssl"));
+
+            List<String> serverArgs= new ArrayList<>();
+
+            serverArgs.add("-tcpPort");
+            serverArgs.add(String.valueOf(port));
+            serverArgs.add("-tcpAllowOthers");
+
+            if (useSSL)  {
+                serverArgs.add("-tcpSSL");
             }
 
-            server = Server.createTcpServer(serverArgs);
+            if (webConsole) {
+                serverArgs.add("-web");
+            }
+
+            server = Server.createTcpServer(serverArgs.toArray(new String[serverArgs.size()]));
             server.start();
         } catch (SQLException e) {
             Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, e.getMessage(), e);
