@@ -27,15 +27,22 @@ import java.util.Properties;
 public class JpaConfiguration {
 
     public static final String JAVAX_PERSISTENCE_JDBC_URL = "javax.persistence.jdbc.url";
+    public static final String JAVAX_PERSISTENCE_JDBC_DRIVER = "javax.persistence.jdbc.driver";
+    public static final String JAVAX_PERSISTENCE_JDBC_USER = "javax.persistence.jdbc.user";
+    public static final String JAVAX_PERSISTENCE_JDBC_PASSWORD = "javax.persistence.jdbc.password";
+    public static final String HIBERNATE_DIALECT = "hibernate.dialect";
+    public static final String HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
+    public static final String USER = ";USER=";
+    public static final String PASSWORD = ";PASSWORD=";
 
 
     private static Properties getBaseProperties() {
         Properties properties = System.getProperties();
 
-        properties.setProperty("javax.persistence.jdbc.driver", "org.h2.Driver");
+        properties.setProperty(JAVAX_PERSISTENCE_JDBC_DRIVER, "org.h2.Driver");
 
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-        properties.setProperty("hibernate.hbm2ddl.auto", "update");
+        properties.setProperty(HIBERNATE_DIALECT, "org.hibernate.dialect.H2Dialect");
+        properties.setProperty(HIBERNATE_HBM2DDL_AUTO, "update");
 
         return properties;
     }
@@ -50,16 +57,16 @@ public class JpaConfiguration {
         }
 
         if (user != null && user.length() > 0) {
-            url += (";USER=" + user);
+            url += (USER + user);
         }
 
         if (password != null && password.length() > 0) {
-            url += (";PASSWORD=" + password);
+            url += (PASSWORD + password);
         }
 
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_URL, url);
-        properties.setProperty("javax.persistence.jdbc.user", user);
-        properties.setProperty("javax.persistence.jdbc.password", password);
+        properties.setProperty(JAVAX_PERSISTENCE_JDBC_USER, user);
+        properties.setProperty(JAVAX_PERSISTENCE_JDBC_PASSWORD, password);
 
         return properties;
     }
@@ -67,15 +74,15 @@ public class JpaConfiguration {
     protected static Properties getClientProperties(final String fileName, final String host, int port, final String user, final String password) {
         Properties properties = getBaseProperties();
 
-        properties.setProperty("javax.persistence.jdbc.user", user);
-        properties.setProperty("javax.persistence.jdbc.password", password);
+        properties.setProperty(JAVAX_PERSISTENCE_JDBC_USER, user);
+        properties.setProperty(JAVAX_PERSISTENCE_JDBC_PASSWORD, password);
 
         StringBuilder builder = new StringBuilder("jdbc:h2:ssl://");
         builder.append(host).append(":").append(port).append("/");
         builder.append(fileName);
 
-        builder.append(";USER=").append(user);
-        builder.append(";PASSWORD=").append(password);
+        builder.append(USER).append(user);
+        builder.append(PASSWORD).append(password);
 
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_URL, builder.toString());
 
