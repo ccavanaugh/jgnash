@@ -47,7 +47,7 @@ public class JpaConfiguration {
         return properties;
     }
 
-    protected static Properties getLocalProperties(final String fileName, final String user, final String password, boolean readOnly) {
+    protected static Properties getLocalProperties(final String fileName, final String user, final String password, final boolean readOnly) {
         Properties properties = getBaseProperties();
 
         String url = "jdbc:h2:" + jgnash.util.FileUtils.stripFileExtension(fileName);
@@ -71,7 +71,7 @@ public class JpaConfiguration {
         return properties;
     }
 
-    protected static Properties getClientProperties(final String fileName, final String host, int port, final String user, final String password) {
+    protected static Properties getClientProperties(final String fileName, final String host, final int port, final String user, final String password) {
         Properties properties = getBaseProperties();
 
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_USER, user);
