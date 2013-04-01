@@ -66,9 +66,10 @@ public class OpenAction {
 
                 Engine e = null;
 
+                final String user = dialog.getUserName();
+                final char[] password = dialog.getPassword();
+
                 if (dialog.isRemote()) {
-                    String user = dialog.getUserName();
-                    char[] password = dialog.getPassword();
                     String host = dialog.getHost();
                     int port = dialog.getPort();
                     boolean save = dialog.savePassword();
@@ -79,7 +80,7 @@ public class OpenAction {
                         StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
                     } else {
 
-                        checkAndBackupOldVersion(dialog.getDatabasePath(), "", new char[]{});
+                        checkAndBackupOldVersion(dialog.getDatabasePath(), user, password);
 
                         e = EngineFactory.bootLocalEngine(dialog.getDatabasePath(), EngineFactory.DEFAULT);
                     }
@@ -125,6 +126,7 @@ public class OpenAction {
         });
     }
 
+    //TODO Fix me, command line boot
     public static void openAction(final File file) {
 
         String database = file.getAbsolutePath();
@@ -190,9 +192,11 @@ public class OpenAction {
 
                 Engine engine;
 
+                final String user = EngineFactory.getLastUser();
+                final char[] password = EngineFactory.getLastPassword();
+
                 if (EngineFactory.getLastRemote() && EngineFactory.getLastPassword().length > 0) {
-                    String user = EngineFactory.getLastUser();
-                    char[] password = EngineFactory.getLastPassword();
+
                     String host = EngineFactory.getLastHost();
                     int port = EngineFactory.getLastPort();
 
@@ -202,7 +206,7 @@ public class OpenAction {
                         appLogger.warning(rb.getString("Message.ErrorServerConnection"));
                     }
                 } else {    // must be a local file with a user name and password
-                    checkAndBackupOldVersion(EngineFactory.getLastDatabase(), "", new char[]{});
+                    checkAndBackupOldVersion(EngineFactory.getLastDatabase(), user, password);
 
                     engine = EngineFactory.bootLocalEngine(EngineFactory.getLastDatabase(), EngineFactory.DEFAULT);
 
