@@ -42,7 +42,6 @@ import jgnash.util.Resource;
  * Open database dialog
  *
  * @author Craig Cavanaugh
- *
  */
 public class OpenDatabaseDialog extends JDialog implements ActionListener {
 
@@ -58,7 +57,7 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
 
     private final JTextField fileField = new JTextFieldEx();
 
-    private JCheckBox passwordBox = null;
+    private JCheckBox savePasswordBox = null;
 
     private final JButton fileButton = new JButton("...");
 
@@ -72,7 +71,7 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
 
     private boolean result = false;
 
-    public OpenDatabaseDialog(JFrame parent) {
+    public OpenDatabaseDialog(final JFrame parent) {
         super(parent, true);
         setTitle(rb.getString("Title.Open"));
         layoutMainPanel();
@@ -86,7 +85,7 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == fileButton) {
             String file = DatabasePathAction.databaseNameAction(this, DatabasePathAction.Type.OPEN);
             if (file.length() > 0) {
@@ -139,7 +138,7 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
     }
 
     private void initComponents() {
-        passwordBox = new JCheckBox(rb.getString("Button.RememberPassword"));
+        savePasswordBox = new JCheckBox(rb.getString("Button.RememberPassword"));
         remoteButton = new JCheckBox(rb.getString("Button.RemoteServer"));
 
         cancelButton = new JButton(rb.getString("Button.Cancel"));
@@ -160,15 +159,15 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
 
         builder.append(fileFieldLabel, fileField, fileButton);
 
-        builder.nextLine();
-        builder.appendUnrelatedComponentsGapRow();
-        builder.nextLine();
         builder.append(remoteButton, 4);
         builder.append(rb.getString("Label.DatabaseServer"), hostField, 3);
         builder.append(rb.getString("Label.Port"), portField, 3);
+
+        builder.appendSeparator(rb.getString("Title.FileLoginCredentials"));
         builder.append(rb.getString("Label.UserName"), nameField, 3);
         builder.append(rb.getString("Label.Password"), passwordField, 3);
-        builder.append(passwordBox, 4);
+        builder.append(savePasswordBox, 4);
+
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
@@ -178,35 +177,31 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
 
         updateForm();
 
-        nameField.setEnabled(false);
-        passwordField.setEnabled(false);
-
         pack();
     }
 
     public boolean savePassword() {
-        return passwordBox.isSelected();
+        return savePasswordBox.isSelected();
     }
 
-    public void setDatabasePath(String dataBase) {
+    public void setDatabasePath(final String dataBase) {
         fileField.setText(dataBase);
     }
 
-    public void setUserName(String userName) {
+    public void setUserName(final String userName) {
         nameField.setText(userName);
     }
 
-    public void setPassword(String password) {
-        passwordField.setText(password);
+    public void setPassword(final char[] password) {
+        passwordField.setText(new String(password));
     }
 
-    public void setRemote(boolean remote) {
+    public void setRemote(final boolean remote) {
         remoteButton.setSelected(remote);
         updateForm();
     }
 
     private void updateForm() {
-
         boolean remote = remoteButton.isSelected();
 
         fileField.setEnabled(!remote);
@@ -214,8 +209,5 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
 
         hostField.setEnabled(remote);
         portField.setEnabled(remote);
-        nameField.setEnabled(remote);
-        passwordField.setEnabled(remote);
-        passwordBox.setEnabled(remote);
     }
 }

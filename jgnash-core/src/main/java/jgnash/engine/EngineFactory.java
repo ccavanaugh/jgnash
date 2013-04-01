@@ -431,10 +431,10 @@ public class EngineFactory {
      *
      * @return Last database user or default
      */
-    public static synchronized String getLastPassword() {
+    public static synchronized char[] getLastPassword() {
         Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
 
-        return pref.get(LAST_PASSWORD, "");
+        return pref.get(LAST_PASSWORD, "").toCharArray();
     }
 
     public static synchronized void setExportXMLOnClose(final boolean export) {

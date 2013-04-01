@@ -190,9 +190,9 @@ public class OpenAction {
 
                 Engine engine;
 
-                if (EngineFactory.getLastRemote() && EngineFactory.getLastPassword().length() > 0) {
+                if (EngineFactory.getLastRemote() && EngineFactory.getLastPassword().length > 0) {
                     String user = EngineFactory.getLastUser();
-                    char[] password = EngineFactory.getLastPassword().toCharArray();
+                    char[] password = EngineFactory.getLastPassword();
                     String host = EngineFactory.getLastHost();
                     int port = EngineFactory.getLastPort();
 
