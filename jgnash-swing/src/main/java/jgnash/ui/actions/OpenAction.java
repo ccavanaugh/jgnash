@@ -79,7 +79,7 @@ public class OpenAction {
                         StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
                     } else {
 
-                        checkAndBackupOldVersion(dialog.getDatabasePath());
+                        checkAndBackupOldVersion(dialog.getDatabasePath(), "", new char[]{});
 
                         e = EngineFactory.bootLocalEngine(dialog.getDatabasePath(), EngineFactory.DEFAULT);
                     }
@@ -140,7 +140,9 @@ public class OpenAction {
                 // Disk IO is heavy so delay and allow the UI to react before starting the boot operation
                 Thread.sleep(750);
 
-                checkAndBackupOldVersion(file.getAbsolutePath());
+
+                //TODO Fix me
+                checkAndBackupOldVersion(file.getAbsolutePath(), "", new char[]{});
 
                 Engine e = EngineFactory.bootLocalEngine(file.getAbsolutePath(), EngineFactory.DEFAULT);
 
@@ -199,8 +201,8 @@ public class OpenAction {
                     if (engine == null) {
                         appLogger.warning(rb.getString("Message.ErrorServerConnection"));
                     }
-                } else {
-                    checkAndBackupOldVersion(EngineFactory.getLastDatabase());
+                } else {    // must be a local file with a user name and password
+                    checkAndBackupOldVersion(EngineFactory.getLastDatabase(), "", new char[]{});
 
                     engine = EngineFactory.bootLocalEngine(EngineFactory.getLastDatabase(), EngineFactory.DEFAULT);
 
@@ -270,10 +272,10 @@ public class OpenAction {
         new BootEngine().execute();
     }
 
-    private static void checkAndBackupOldVersion(final String fileName) {
+    private static void checkAndBackupOldVersion(final String fileName, final String user, final char[] password) {
 
         if (Files.exists(new File(fileName).toPath())) {
-            float version = EngineFactory.getFileVersion(new File(fileName));
+            float version = EngineFactory.getFileVersion(new File(fileName), user, password);
 
             // make a versioned backup first
             if (version < Engine.CURRENT_VERSION) {

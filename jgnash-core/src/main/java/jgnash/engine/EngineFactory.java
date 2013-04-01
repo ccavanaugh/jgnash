@@ -329,7 +329,7 @@ public class EngineFactory {
         return null;
     }
 
-    public static float getFileVersion(final File file) {
+    public static float getFileVersion(final File file, final String user, final char[] password) {
         float version = 0;
 
         FileType type = FileMagic.magic(file);
@@ -339,7 +339,7 @@ public class EngineFactory {
         } else if (type == FileType.BinaryXStream) {
             return BinaryXStreamDataStore.getFileVersion(file);
         }  else if (type == FileType.h2) {
-            return JpaDataStore.getFileVersion(file);
+            return JpaDataStore.getFileVersion(file, user, password);
         }
 
         return version;

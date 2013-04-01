@@ -189,10 +189,10 @@ public class JpaDataStore implements DataStore {
      * @param file <code>File</code> to open
      * @return file version
      */
-    public static float getFileVersion(final File file) {
+    public static float getFileVersion(final File file, final String user, final char[] password) {
         float fileVersion = 0;
 
-        Properties properties = JpaConfiguration.getLocalProperties(file.getAbsolutePath(), "", new char[] {}, true);
+        Properties properties = JpaConfiguration.getLocalProperties(file.getAbsolutePath(), user, password, true);
 
         EntityManagerFactory factory = null;
         EntityManager em = null;

@@ -59,7 +59,7 @@ public class JpaEngineTest extends EngineTest {
 
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-        float version = EngineFactory.getFileVersion(new File(localTestFile));
+        float version = EngineFactory.getFileVersion(new File(localTestFile), "", new char[] {});
 
         System.out.println(version);
 
