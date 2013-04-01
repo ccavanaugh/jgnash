@@ -78,7 +78,7 @@ public class NewFileOne extends JPanel implements WizardPage, ActionListener {
         dbNameButton = new JButton("...");
         dbNameButton.addActionListener(this);
 
-        overwriteLabel = new JLabel(rb.getString("Message.Overwritedb"));
+        overwriteLabel = new JLabel(rb.getString("Message.OverwriteDB"));
         overwriteLabel.setIcon(UIManager.getIcon("OptionPane.warningIcon"));
         overwriteLabel.setFont(overwriteLabel.getFont().deriveFont(Font.ITALIC));
 

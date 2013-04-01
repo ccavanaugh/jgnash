@@ -169,7 +169,7 @@ class AccountTools {
             tAccount.setExcludedFromBudget(dlg.isExcludedFromBudget());
 
             if (!engine.modifyAccount(tAccount, account)) {
-                StaticUIMethods.displayError(rb.getString("Message.Error.AccouuntUpdate"));
+                StaticUIMethods.displayError(rb.getString("Message.Error.AccountUpdate"));
             }
 
             if (account.getAccountType().getAccountGroup() == AccountGroup.INVEST) {

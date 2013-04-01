@@ -162,7 +162,7 @@ public final class Main {
     }
 
     private static void enableAntialiasing() {
-        System.out.println(Resource.get().getString("Message.Antialias"));
+        System.out.println(Resource.get().getString("Message.AntiAlias"));
         System.setProperty("swing.aatext", "true");
     }
 
