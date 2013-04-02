@@ -74,9 +74,8 @@ public class OpenAction {
                 if (dialog.isRemote()) {
                     String host = dialog.getHost();
                     int port = dialog.getPort();
-                    boolean save = dialog.savePassword();
 
-                    e = EngineFactory.bootClientEngine(host, port, user, password, EngineFactory.DEFAULT, save);
+                    e = EngineFactory.bootClientEngine(host, port, user, password, EngineFactory.DEFAULT);
 
                     if (e == null) {
                         remoteConnectionFailed = true;
@@ -85,9 +84,7 @@ public class OpenAction {
                     if (FileUtils.isFileLocked(dialog.getDatabasePath())) {
                         StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
                     } else {
-
                         checkAndBackupOldVersion(dialog.getDatabasePath(), user, password);
-
                         e = EngineFactory.bootLocalEngine(dialog.getDatabasePath(), EngineFactory.DEFAULT, user, password);
                     }
                 }
@@ -121,7 +118,6 @@ public class OpenAction {
                 d.setUserName(EngineFactory.getLastUser());
                 d.setPort(EngineFactory.getLastPort());
                 d.setHost(EngineFactory.getLastHost());
-                d.setPassword(EngineFactory.getLastPassword());
                 d.setRemote(EngineFactory.getLastRemote());
 
                 d.setVisible(true);
@@ -183,6 +179,9 @@ public class OpenAction {
         }
     }
 
+    /**
+     * Opens the last local file or remote connection automatically only if a password was not used last time
+     */
     public static void openLastAction() {
         final Logger appLogger = UIApplication.getLogger();
 
@@ -199,23 +198,21 @@ public class OpenAction {
 
                 Engine engine;
 
-                final String user = EngineFactory.getLastUser();
-                final char[] password = EngineFactory.getLastPassword();
+                final String user = EngineFactory.getLastUser();    // a prior user name may have been used
 
-                if (EngineFactory.getLastRemote() && EngineFactory.getLastPassword().length > 0) {
+                if (EngineFactory.getLastRemote() && !EngineFactory.usedPassword()) {  // must be a remote connection without use of a password
 
                     String host = EngineFactory.getLastHost();
                     int port = EngineFactory.getLastPort();
 
-                    engine = EngineFactory.bootClientEngine(host, port, user, password, EngineFactory.DEFAULT, true);
+                    engine = EngineFactory.bootClientEngine(host, port, user, new char[]{}, EngineFactory.DEFAULT);
 
                     if (engine == null) {
                         appLogger.warning(rb.getString("Message.ErrorServerConnection"));
                     }
                 } else {    // must be a local file with a user name and password
-                    checkAndBackupOldVersion(EngineFactory.getLastDatabase(), user, password);
-
-                    engine = EngineFactory.bootLocalEngine(EngineFactory.getLastDatabase(), EngineFactory.DEFAULT, user, password);
+                    checkAndBackupOldVersion(EngineFactory.getLastDatabase(), user, new char[]{});
+                    engine = EngineFactory.bootLocalEngine(EngineFactory.getLastDatabase(), EngineFactory.DEFAULT, user, new char[]{});
 
                     if (engine == null) {
                         appLogger.warning(rb.getString("Message.ErrorLoadingFile"));
@@ -273,7 +270,7 @@ public class OpenAction {
 
                 Thread.sleep(750);
 
-                EngineFactory.bootClientEngine(host, port, user, password, EngineFactory.DEFAULT, false);
+                EngineFactory.bootClientEngine(host, port, user, password, EngineFactory.DEFAULT);
 
                 EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount(); // prime the engine
                 logger.fine("Engine boot complete");

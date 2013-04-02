@@ -57,8 +57,6 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
 
     private final JTextField fileField = new JTextFieldEx();
 
-    private JCheckBox savePasswordBox = null;
-
     private final JButton fileButton = new JButton("...");
 
     private JButton okButton;
@@ -138,7 +136,6 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
     }
 
     private void initComponents() {
-        savePasswordBox = new JCheckBox(rb.getString("Button.RememberPassword"));
         remoteButton = new JCheckBox(rb.getString("Button.RemoteServer"));
 
         cancelButton = new JButton(rb.getString("Button.Cancel"));
@@ -166,7 +163,6 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
         builder.appendSeparator(rb.getString("Title.FileLoginCredentials"));
         builder.append(rb.getString("Label.UserName"), nameField, 3);
         builder.append(rb.getString("Label.Password"), passwordField, 3);
-        builder.append(savePasswordBox, 4);
 
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
@@ -180,20 +176,12 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
         pack();
     }
 
-    public boolean savePassword() {
-        return savePasswordBox.isSelected();
-    }
-
     public void setDatabasePath(final String dataBase) {
         fileField.setText(dataBase);
     }
 
     public void setUserName(final String userName) {
         nameField.setText(userName);
-    }
-
-    public void setPassword(final char[] password) {
-        passwordField.setText(new String(password));
     }
 
     public void setRemote(final boolean remote) {

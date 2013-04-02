@@ -60,8 +60,6 @@ public class EngineFactory {
 
     private static final String LAST_PORT = "LastPort";
 
-    private static final String LAST_PASSWORD = "LastPassword";
-
     private static final String USED_PASSWORD = "LastUsedPassword";
 
     private static final String LAST_REMOTE = "LastRemote";
@@ -251,11 +249,11 @@ public class EngineFactory {
         return engine;
     }
 
-    public static synchronized Engine bootClientEngine(final String host, final int port, final String user, final char[] password, final String engineName, final boolean savePassword) throws Exception {
-        return bootClientEngine(host, port, user, password, engineName, savePassword, DataStoreType.H2_DATABASE);
+    public static synchronized Engine bootClientEngine(final String host, final int port, final String user, final char[] password, final String engineName) throws Exception {
+        return bootClientEngine(host, port, user, password, engineName, DataStoreType.H2_DATABASE);
     }
 
-    private static synchronized Engine bootClientEngine(final String host, final int port, final String user, final char[] password, final String engineName, final boolean savePassword, final DataStoreType type) throws Exception {
+    private static synchronized Engine bootClientEngine(final String host, final int port, final String user, final char[] password, final String engineName, final DataStoreType type) throws Exception {
 
         if (engineMap.get(engineName) != null) {
             throw new RuntimeException("A stale engine was found in the map");
@@ -299,19 +297,8 @@ public class EngineFactory {
                 engineMap.put(engineName, engine);
                 dataStoreMap.put(engineName, dataStore);
 
-                if (password != null) {
-                    // remember if the user used a password for the last session
-                    pref.putBoolean(USED_PASSWORD, password.length > 0);
-
-                    if (savePassword) {
-                        pref.put(LAST_PASSWORD, new String(password));
-                    } else {
-                        pref.put(LAST_PASSWORD, "");
-                    }
-                } else {
-                    pref.putBoolean(USED_PASSWORD, false);
-                    pref.put(LAST_PASSWORD, "");
-                }
+                // remember if the user used a password for the last session
+                pref.putBoolean(USED_PASSWORD, password.length > 0);
 
                 Message message = new Message(MessageChannel.SYSTEM, ChannelEvent.FILE_LOAD_SUCCESS, engine);
                 MessageBus.getInstance(engineName).fireEvent(message);
@@ -434,18 +421,6 @@ public class EngineFactory {
         Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
 
         return pref.getBoolean(LAST_REMOTE, false);
-    }
-
-    /**
-     * Returns the password of the last open database. If a database has not
-     * been opened, then an empty password will be returned.
-     *
-     * @return Last database user or default
-     */
-    public static synchronized char[] getLastPassword() {
-        Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
-
-        return pref.get(LAST_PASSWORD, "").toCharArray();
     }
 
     public static synchronized boolean usedPassword() {
