@@ -85,7 +85,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
 
     private static JHelp jHelp;
 
-    public UIApplication(final File file) {
+    public UIApplication(final File file, final String user, final char[] password) {
 
         if (initFrame()) {
         
@@ -95,7 +95,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
                 @Override
                 public void run() {
                     if (file != null) {
-                        mainFrame.loadFile(file);
+                        mainFrame.loadFile(file, user, password);
                     } else if (EngineFactory.openLastOnStartup()) {
                         mainFrame.loadLast();
                     }

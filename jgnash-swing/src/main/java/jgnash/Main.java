@@ -303,9 +303,9 @@ public final class Main {
                 if (client != null) {
                     new UIApplication(client, port, user, password.toCharArray());
                 } else if (file != null && file.exists()) {
-                    new UIApplication(file);
+                    new UIApplication(file, user, password.toCharArray());
                 } else {
-                    new UIApplication(null);
+                    new UIApplication(null, null, null);
                 }
             }
         } catch (CmdLineException e) {

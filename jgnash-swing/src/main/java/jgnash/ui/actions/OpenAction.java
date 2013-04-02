@@ -127,7 +127,7 @@ public class OpenAction {
     }
 
     //TODO Fix me, command line boot
-    public static void openAction(final File file) {
+    public static void openAction(final File file, final String user, final char[] password) {
 
         String database = file.getAbsolutePath();
 
@@ -144,7 +144,7 @@ public class OpenAction {
 
 
                 //TODO Fix me
-                checkAndBackupOldVersion(file.getAbsolutePath(), "", new char[]{});
+                checkAndBackupOldVersion(file.getAbsolutePath(), user, password);
 
                 Engine e = EngineFactory.bootLocalEngine(file.getAbsolutePath(), EngineFactory.DEFAULT);
 

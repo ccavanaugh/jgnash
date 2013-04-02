@@ -100,25 +100,48 @@ import org.jdesktop.swingx.JXStatusBar;
 public class MainFrame extends JFrame implements MessageListener, ActionListener {
 
     private static final String REGISTER_KEY = "register";
+
     private static final String REGISTER_FOLLOWS_LIST = "RegisterFollowsList";
+
     private JMenuBar menuBar;
+
     private JMenu windowMenu;
+
     private JMenu viewMenu;
+
     private JMenu reportMenu;
+
     private MainViewPanel mainView;
+
     private final transient Resource rb = Resource.get();
+
     private WaitMessagePanel waitPanel;
+
     private static boolean registerFollowsTree;
+
     private MainRegisterPanel registerTreePanel;
+
     private transient Action editAction;
+
     private ExpandingAccountTablePanel expandingAccountPanel;
+
     private JTextField statusField;
+
     private static final Logger LOG = Logger.getLogger(MainFrame.class.getName());
-    private final transient PausableThreadPoolExecutor backgroundUpdateExecutor = new PausableThreadPoolExecutor();
+
+    /**
+     * Used to run background updates with a delayed start
+     */
+    private transient PausableThreadPoolExecutor backgroundUpdateExecutor;
+
     private static final int SCHEDULED_DELAY = 20;
+
     private JXBusyLabel backgroundOperationLabel;
+
     private final transient LogHandler logHandler = new LogHandler();
+
     private Color infoColor = null;
+
     private BusyLayerUI layerUI;
 
     static {
@@ -362,7 +385,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
             @Override
             public void actionPerformed(final ActionEvent e) {
                 OpenAction.openAction();
-                startBackgroundUpdates();
             }
         });
 
@@ -538,14 +560,12 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         super.dispose();
     }
 
-    void loadFile(final File file) {
-        OpenAction.openAction(file);
-        startBackgroundUpdates();
+    void loadFile(final File file, final String user, final char[] password) {
+        OpenAction.openAction(file, user, password);
     }
 
     void loadLast() {
         OpenAction.openLastAction();
-        startBackgroundUpdates();
     }
 
     private void mainViewAction() {
@@ -586,6 +606,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
                         setOpenState(true);
                         addViews();
                         updateTitle();
+                        startBackgroundUpdates();
                         break;
                     default:
                         // ignore any other messages that don't belong to us
@@ -598,7 +619,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     void openRemote(final String host, final int port, final String user, final char[] password) {
         OpenAction.openRemote(host, port, user, password);
-        startBackgroundUpdates();
     }
 
     private void registerLogHandler(final Class<?> clazz) {
@@ -656,6 +676,10 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     }
 
     private void startBackgroundUpdates() {
+        backgroundUpdateExecutor = new PausableThreadPoolExecutor();
+
+        LOG.log(Level.INFO, "Checking for needed background updates");
+
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {

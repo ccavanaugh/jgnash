@@ -307,8 +307,6 @@ public class EngineFactory {
 
                 Message message = new Message(MessageChannel.SYSTEM, ChannelEvent.FILE_LOAD_SUCCESS, engine);
                 MessageBus.getInstance(engineName).fireEvent(message);
-
-                logger.log(Level.INFO, "Remote server has {0} objects", engine.getStoredObjects().size());
             }
         }
 
