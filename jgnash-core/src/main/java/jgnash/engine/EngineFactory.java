@@ -44,7 +44,7 @@ import jgnash.util.Resource;
 
 /**
  * Factory class for obtaining an engine instance
- *
+ * <p/>
  * The filename of the database or remote server must be explicitly set before
  * an Engine instance will be returned
  *
@@ -62,7 +62,7 @@ public class EngineFactory {
 
     private static final String LAST_PASSWORD = "LastPassword";
 
-    private static final String LAST_USED_PASSWORD = "LastUsedPassword";
+    private static final String USED_PASSWORD = "LastUsedPassword";
 
     private static final String LAST_REMOTE = "LastRemote";
 
@@ -191,13 +191,13 @@ public class EngineFactory {
      * initialization. If successful, a new
      * <code>Engine</code> instance will be returned.
      *
-     * @param fileName filename to load
+     * @param fileName   filename to load
      * @param engineName engine identifier
      * @return new
-     * <code>Engine</code> instance if successful, null otherwise
+     *         <code>Engine</code> instance if successful, null otherwise
      * @see Engine
      */
-    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName, final String user, final char[] password) throws Exception{
+    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName, final String user, final char[] password) throws Exception {
         DataStoreType type = getDataStoreByType(new File(fileName));
 
         if (type != null) {
@@ -212,12 +212,12 @@ public class EngineFactory {
      * created. Otherwise it will be loaded. If successful, a new
      * <code>Engine</code> instance will be returned.
      *
-     * @param fileName filename to load or create
+     * @param fileName   filename to load or create
      * @param engineName engine identifier
-     * @param type
-     * <code>DataStoreType</code> type to use for storage
-     * @return new
-     * <code>Engine</code> instance if successful
+     * @param user       user name for the file
+     * @param password   password for the file
+     * @param type       <code>DataStoreType</code> type to use for storage
+     * @return new <code>Engine</code> instance if successful
      * @see Engine
      * @see DataStoreType
      */
@@ -251,7 +251,7 @@ public class EngineFactory {
         return engine;
     }
 
-    public static synchronized Engine bootClientEngine(final String host, final int port, final String user, final char[] password, final String engineName, final boolean savePassword) throws Exception{
+    public static synchronized Engine bootClientEngine(final String host, final int port, final String user, final char[] password, final String engineName, final boolean savePassword) throws Exception {
         return bootClientEngine(host, port, user, password, engineName, savePassword, DataStoreType.H2_DATABASE);
     }
 
@@ -276,7 +276,7 @@ public class EngineFactory {
             pref.put(LAST_USER, user);
             pref.putBoolean(LAST_REMOTE, true);
 
-            MessageBus messageBus =  MessageBus.getInstance(engineName);
+            MessageBus messageBus = MessageBus.getInstance(engineName);
 
             // after starting the remote message bus, it should receive the path on the server
             String remoteDataBasePath = messageBus.getRemoteDataBasePath();
@@ -301,7 +301,7 @@ public class EngineFactory {
 
                 if (password != null) {
                     // remember if the user used a password for the last session
-                    pref.putBoolean(LAST_USED_PASSWORD, password.length > 0);
+                    pref.putBoolean(USED_PASSWORD, password.length > 0);
 
                     if (savePassword) {
                         pref.put(LAST_PASSWORD, new String(password));
@@ -309,7 +309,7 @@ public class EngineFactory {
                         pref.put(LAST_PASSWORD, "");
                     }
                 } else {
-                    pref.putBoolean(LAST_USED_PASSWORD, false);
+                    pref.putBoolean(USED_PASSWORD, false);
                     pref.put(LAST_PASSWORD, "");
                 }
 
@@ -341,11 +341,16 @@ public class EngineFactory {
         FileType type = FileMagic.magic(file);
 
         if (type == FileType.jGnash2XML) {
-            return XMLDataStore.getFileVersion(file);
+            version = XMLDataStore.getFileVersion(file);
         } else if (type == FileType.BinaryXStream) {
-            return BinaryXStreamDataStore.getFileVersion(file);
-        }  else if (type == FileType.h2) {
-            return JpaDataStore.getFileVersion(file, user, password);
+            version = BinaryXStreamDataStore.getFileVersion(file);
+        } else if (type == FileType.h2) {
+            try {
+                version = JpaDataStore.getFileVersion(file, user, password);
+            } catch (final Exception e) {
+                logger.log(Level.SEVERE, e.getMessage());
+                version = -1;
+            }
         }
 
         return version;
@@ -433,7 +438,7 @@ public class EngineFactory {
 
     /**
      * Returns the password of the last open database. If a database has not
-     * been opened, then the default password will be returned.
+     * been opened, then an empty password will be returned.
      *
      * @return Last database user or default
      */
@@ -441,6 +446,12 @@ public class EngineFactory {
         Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
 
         return pref.get(LAST_PASSWORD, "").toCharArray();
+    }
+
+    public static synchronized boolean usedPassword() {
+        Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
+
+        return pref.getBoolean(USED_PASSWORD, false);
     }
 
     public static synchronized void setExportXMLOnClose(final boolean export) {

@@ -34,7 +34,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -47,7 +46,7 @@ import java.util.logging.Logger;
  */
 public class JpaDataStore implements DataStore {
 
-    public static final String FILE_EXT = "h2.db";
+    public static final String FILE_EXT = "db";
 
     private EntityManager em;
 
@@ -192,17 +191,13 @@ public class JpaDataStore implements DataStore {
      * @param file <code>File</code> to open
      * @return file version
      */
-    public static float getFileVersion(final File file, final String user, final char[] password) {
+    public static float getFileVersion(final File file, final String user, final char[] password) throws Exception {
         float fileVersion = 0;
 
         Properties properties = JpaConfiguration.getLocalProperties(file.getAbsolutePath(), user, password, true);
 
         EntityManagerFactory factory = null;
         EntityManager em = null;
-
-        /*for (String name : properties.stringPropertyNames()) {
-            logger.info(name + ": " + properties.get(name).toString());
-        }*/
 
         try {
             factory = Persistence.createEntityManagerFactory("jgnash", properties);
@@ -220,8 +215,8 @@ public class JpaDataStore implements DataStore {
 
             fileVersion = defaultConfig.getFileVersion();
         } catch (Exception e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-        } finally {
+            throw new Exception(e);
+        }  finally {
             if (em != null) {
                 em.close();
             }

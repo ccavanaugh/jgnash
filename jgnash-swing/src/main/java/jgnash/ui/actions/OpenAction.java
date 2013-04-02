@@ -237,10 +237,16 @@ public class OpenAction {
             }
         }
 
-        // check for locked file before trying the boot
+
         if (!EngineFactory.getLastRemote()) {
             String database = EngineFactory.getLastDatabase();
 
+            // if local and a password was used last time, don't even try
+            if (EngineFactory.usedPassword()) {
+                return;
+            }
+
+            // check for locked file before trying the boot
             if (EngineFactory.doesDatabaseExist(database)) {
                 try {
                     if (!FileUtils.isFileLocked(database)) {
