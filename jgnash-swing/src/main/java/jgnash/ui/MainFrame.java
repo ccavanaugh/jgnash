@@ -224,22 +224,25 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
         closeAllWindows(); // close any open windows first
 
-        displayWaitMessage(Resource.get().getString("Message.StoreWait"));
+        if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
 
-        try {
-            Thread.sleep(1800); // lets the UI start and get the users attention
-        } catch (InterruptedException ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            displayWaitMessage(Resource.get().getString("Message.StoreWait"));
 
-        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+            try {
+                Thread.sleep(1800); // lets the UI start and get the users attention
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-        stopWaitMessage();
+            EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-        try {
-            Thread.sleep(1800);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            stopWaitMessage();
+
+            try {
+                Thread.sleep(1800);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
         System.exit(0); // explicit exit  
