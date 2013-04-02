@@ -88,7 +88,7 @@ public class OpenAction {
 
                         checkAndBackupOldVersion(dialog.getDatabasePath(), user, password);
 
-                        e = EngineFactory.bootLocalEngine(dialog.getDatabasePath(), EngineFactory.DEFAULT);
+                        e = EngineFactory.bootLocalEngine(dialog.getDatabasePath(), EngineFactory.DEFAULT, user, password);
                     }
                 }
 
@@ -136,7 +136,6 @@ public class OpenAction {
         });
     }
 
-    //TODO Fix me, command line boot
     public static void openAction(final File file, final String user, final char[] password) {
 
         String database = file.getAbsolutePath();
@@ -152,11 +151,9 @@ public class OpenAction {
                 // Disk IO is heavy so delay and allow the UI to react before starting the boot operation
                 Thread.sleep(750);
 
-
-                //TODO Fix me
                 checkAndBackupOldVersion(file.getAbsolutePath(), user, password);
 
-                Engine e = EngineFactory.bootLocalEngine(file.getAbsolutePath(), EngineFactory.DEFAULT);
+                Engine e = EngineFactory.bootLocalEngine(file.getAbsolutePath(), EngineFactory.DEFAULT, user, password);
 
                 if (e != null) {
                     e.getRootAccount(); // prime the engine
@@ -218,7 +215,7 @@ public class OpenAction {
                 } else {    // must be a local file with a user name and password
                     checkAndBackupOldVersion(EngineFactory.getLastDatabase(), user, password);
 
-                    engine = EngineFactory.bootLocalEngine(EngineFactory.getLastDatabase(), EngineFactory.DEFAULT);
+                    engine = EngineFactory.bootLocalEngine(EngineFactory.getLastDatabase(), EngineFactory.DEFAULT, user, password);
 
                     if (engine == null) {
                         appLogger.warning(rb.getString("Message.ErrorLoadingFile"));

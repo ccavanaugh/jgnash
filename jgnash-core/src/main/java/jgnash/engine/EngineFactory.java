@@ -197,11 +197,11 @@ public class EngineFactory {
      * <code>Engine</code> instance if successful, null otherwise
      * @see Engine
      */
-    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName) throws Exception{
+    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName, final String user, final char[] password) throws Exception{
         DataStoreType type = getDataStoreByType(new File(fileName));
 
         if (type != null) {
-            return bootLocalEngine(fileName, engineName, type);
+            return bootLocalEngine(fileName, engineName, user, password, type);
         }
 
         return null;
@@ -221,7 +221,7 @@ public class EngineFactory {
      * @see Engine
      * @see DataStoreType
      */
-    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName, final DataStoreType type) throws Exception {
+    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName, final String user, final char[] password, final DataStoreType type) throws Exception {
 
         if (!type.supportsLocal) {
             throw new UnsupportedOperationException("Local operation not supported for this type.");
@@ -231,7 +231,7 @@ public class EngineFactory {
 
         DataStore dataStore = type.getDataStore();
 
-        Engine engine = dataStore.getLocalEngine(fileName, engineName);
+        Engine engine = dataStore.getLocalEngine(fileName, engineName, user, password);
 
         if (engine != null) {
             logger.info(Resource.get().getString("Message.EngineStart"));

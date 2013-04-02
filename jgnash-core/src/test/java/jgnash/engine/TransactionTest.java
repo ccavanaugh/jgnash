@@ -12,6 +12,10 @@ import org.junit.Test;
 
 public class TransactionTest {
 
+    public static final String USER = "";
+
+    public static final char[] PASSWORD = new char[]{};
+
     @Test
     public void test() {
         testBackEnd();
@@ -24,7 +28,7 @@ public class TransactionTest {
         EngineFactory.deleteDatabase(database);
 
         try {
-            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, DataStoreType.XML);
+            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, USER, PASSWORD, DataStoreType.XML);
 
             CurrencyNode defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
 
@@ -83,7 +87,7 @@ public class TransactionTest {
         EngineFactory.deleteDatabase(database);
 
         try {
-            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, DataStoreType.XML);
+            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, USER, PASSWORD, DataStoreType.XML);
 
             CurrencyNode defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
 

@@ -34,6 +34,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -58,6 +59,8 @@ public class JpaDataStore implements DataStore {
 
     private static final boolean DEBUG = false;
 
+    private static final Logger logger = Logger.getLogger(JpaDataStore.class.getName());
+
     @Override
     public void closeEngine() {
         if (em != null && factory != null) {
@@ -79,7 +82,7 @@ public class JpaDataStore implements DataStore {
         if (em != null) {
             engine = new Engine(new JpaEngineDAO(em, true), EngineFactory.DEFAULT);
 
-            Logger.getLogger(JpaDataStore.class.getName()).info("Created local JPA container and engine");
+            logger.info("Created local JPA container and engine");
             fileName = null;
             remote = true;
         }
@@ -100,8 +103,8 @@ public class JpaDataStore implements DataStore {
     }
 
     @Override
-    public Engine getLocalEngine(final String fileName, final String engineName) {
-        Properties properties = JpaConfiguration.getLocalProperties(fileName, "", new char[] {}, false);
+    public Engine getLocalEngine(final String fileName, final String engineName, final String user, final char[] password) {
+        Properties properties = JpaConfiguration.getLocalProperties(fileName, user, password, false);
 
         Engine engine = null;
 
@@ -115,13 +118,13 @@ public class JpaDataStore implements DataStore {
 
                 em = factory.createEntityManager();
 
-                Logger.getLogger(JpaDataStore.class.getName()).info("Created local JPA container and engine");
+                logger.info("Created local JPA container and engine");
                 engine = new Engine(new JpaEngineDAO(em, false), engineName);
 
                 this.fileName = fileName;
                 remote = false;
             } catch (final Exception e) {
-                Logger.getLogger(JpaDataStore.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+                logger.log(Level.SEVERE, e.getMessage(), e);
             }
         }
 
@@ -149,7 +152,7 @@ public class JpaDataStore implements DataStore {
         // Remove the existing file so we don't mix entities and cause corruption
         if (file.exists()) {
             if (!file.delete()) {
-                Logger.getLogger(JpaDataStore.class.getName()).log(Level.SEVERE, "Could not delete the old file for save");
+                logger.log(Level.SEVERE, "Could not delete the old file for save");
                 return;
             }
         }
@@ -171,7 +174,7 @@ public class JpaDataStore implements DataStore {
 
             em.getTransaction().commit();
         } catch (Exception e) {
-            Logger.getLogger(JpaDataStore.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         } finally {
             if (em != null) {
                 em.close();
@@ -197,6 +200,10 @@ public class JpaDataStore implements DataStore {
         EntityManagerFactory factory = null;
         EntityManager em = null;
 
+        /*for (String name : properties.stringPropertyNames()) {
+            logger.info(name + ": " + properties.get(name).toString());
+        }*/
+
         try {
             factory = Persistence.createEntityManagerFactory("jgnash", properties);
 
@@ -213,7 +220,7 @@ public class JpaDataStore implements DataStore {
 
             fileVersion = defaultConfig.getFileVersion();
         } catch (Exception e) {
-            Logger.getLogger(JpaDataStore.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         } finally {
             if (em != null) {
                 em.close();

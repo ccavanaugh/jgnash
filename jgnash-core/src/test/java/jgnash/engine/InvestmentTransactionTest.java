@@ -50,6 +50,10 @@ public class InvestmentTransactionTest {
 
     SecurityNode securityNode1;
 
+    public static final String USER = "";
+
+    public static final char[] PASSWORD = new char[]{};
+
     public InvestmentTransactionTest() {
     }
 
@@ -60,7 +64,7 @@ public class InvestmentTransactionTest {
         EngineFactory.deleteDatabase(database);
 
         try {
-            e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, DataStoreType.XML);
+            e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, USER, PASSWORD, DataStoreType.XML);
 
             // Creating currencies
             defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
@@ -118,6 +122,7 @@ public class InvestmentTransactionTest {
     @After
     public void tearDown() {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
+        EngineFactory.deleteDatabase(database);
     }
 
     @Test

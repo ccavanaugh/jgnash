@@ -52,7 +52,7 @@ public interface DataStore {
      * @param engineName unique name to give the engine instance
      * @return Engine instance.  A new file will be created if it does not exist
      */
-    Engine getLocalEngine(final String fileName, final String engineName);
+    Engine getLocalEngine(final String fileName, final String engineName, final String user, final char[] password);
 
     /**
      * Returns the default file extension for this DataStore

@@ -17,7 +17,8 @@
  */
 package jgnash.engine.jpa;
 
-import java.util.Arrays;
+import jgnash.util.FileUtils;
+
 import java.util.Properties;
 
 /**
@@ -51,21 +52,24 @@ public class JpaConfiguration {
     protected static Properties getLocalProperties(final String fileName, final String user, final char[] password, final boolean readOnly) {
         Properties properties = getBaseProperties();
 
-        String url = "jdbc:h2:" + jgnash.util.FileUtils.stripFileExtension(fileName);
 
-        if (readOnly) {
-            url += ";ACCESS_MODE_DATA=r";
-        }
+        StringBuilder urlBuilder = new StringBuilder("jdbc:h2:");
+
+        urlBuilder.append(FileUtils.stripFileExtension(fileName));
 
         if (user != null && user.length() > 0) {
-            url += (USER + user);
+            urlBuilder.append(USER).append(user);
         }
 
         if (password != null && password.length > 0) {
-            url += (PASSWORD + Arrays.toString(password));
+            urlBuilder.append(PASSWORD).append(password);
         }
 
-        properties.setProperty(JAVAX_PERSISTENCE_JDBC_URL, url);
+        if (readOnly) {
+            urlBuilder.append(";ACCESS_MODE_DATA=r");
+        }
+
+        properties.setProperty(JAVAX_PERSISTENCE_JDBC_URL, urlBuilder.toString());
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_USER, user);
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_PASSWORD, new String(password));
 
@@ -80,21 +84,21 @@ public class JpaConfiguration {
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_USER, user);
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_PASSWORD, new String(password));
 
-        StringBuilder builder = new StringBuilder("jdbc:h2");
+        StringBuilder urlBuilder = new StringBuilder("jdbc:h2");
 
         if (useSSL) {
-            builder.append(":ssl://");
+            urlBuilder.append(":ssl://");
         } else {
-            builder.append(":tcp://");
+            urlBuilder.append(":tcp://");
         }
 
-        builder.append(host).append(":").append(port).append("/");
-        builder.append(fileName);
+        urlBuilder.append(host).append(":").append(port).append("/");
+        urlBuilder.append(fileName);
 
-        builder.append(USER).append(user);
-        builder.append(PASSWORD).append(password);
+        urlBuilder.append(USER).append(user);
+        urlBuilder.append(PASSWORD).append(password);
 
-        properties.setProperty(JAVAX_PERSISTENCE_JDBC_URL, builder.toString());
+        properties.setProperty(JAVAX_PERSISTENCE_JDBC_URL, urlBuilder.toString());
 
         return properties;
     }

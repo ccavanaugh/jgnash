@@ -48,7 +48,7 @@ public class JpaEngineTest extends EngineTest {
         EngineFactory.deleteDatabase(testFile);
 
         try {
-            return EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, DataStoreType.H2_DATABASE);
+            return EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, USER, PASSWORD, DataStoreType.H2_DATABASE);
         } catch (final Exception e) {
             fail(e.getMessage());
             return null;
@@ -62,7 +62,7 @@ public class JpaEngineTest extends EngineTest {
         EngineFactory.deleteDatabase(localTestFile);
 
         try {
-            EngineFactory.bootLocalEngine(localTestFile, EngineFactory.DEFAULT, DataStoreType.H2_DATABASE);
+            EngineFactory.bootLocalEngine(localTestFile, EngineFactory.DEFAULT, USER, PASSWORD, DataStoreType.H2_DATABASE);
 
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
 

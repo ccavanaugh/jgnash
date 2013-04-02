@@ -35,6 +35,10 @@ import org.junit.Test;
  */
 public class CommodityNodeTest {
 
+    public static final String USER = "";
+
+    public static final char[] PASSWORD = new char[]{};
+
     @Test
     public void ExchangeTest1() {
         EngineFactory.deleteDatabase(EngineFactory.getDefaultDatabase() + "-exchange-test.xml");
@@ -42,7 +46,7 @@ public class CommodityNodeTest {
         // get an engine, create a commodity and then try to retrieve
 
         try {
-            Engine e = EngineFactory.bootLocalEngine(EngineFactory.getDefaultDatabase() + "-exchange-test.xml", EngineFactory.DEFAULT, DataStoreType.XML);
+            Engine e = EngineFactory.bootLocalEngine(EngineFactory.getDefaultDatabase() + "-exchange-test.xml", EngineFactory.DEFAULT, USER, PASSWORD, DataStoreType.XML);
 
             CurrencyNode usdNode = new CurrencyNode();
             usdNode.setSymbol("USD");
@@ -78,7 +82,7 @@ public class CommodityNodeTest {
 
         try {
             // get an engine, create a commodity and then try to retrieve
-            Engine e = EngineFactory.bootLocalEngine(EngineFactory.getDefaultDatabase() + "-exchange-test.xml", EngineFactory.DEFAULT, DataStoreType.XML);
+            Engine e = EngineFactory.bootLocalEngine(EngineFactory.getDefaultDatabase() + "-exchange-test.xml", EngineFactory.DEFAULT,  USER, PASSWORD, DataStoreType.XML);
 
             CurrencyNode usdNode = new CurrencyNode();
             usdNode.setSymbol("USD");
@@ -114,7 +118,7 @@ public class CommodityNodeTest {
             EngineFactory.deleteDatabase(EngineFactory.getDefaultDatabase() + "-commodity-test.xml");
 
             // get an engine, create a commodity and then try to retrieve
-            Engine e = EngineFactory.bootLocalEngine(EngineFactory.getDefaultDatabase() + "-commodity-test.xml", EngineFactory.DEFAULT, DataStoreType.XML);
+            Engine e = EngineFactory.bootLocalEngine(EngineFactory.getDefaultDatabase() + "-commodity-test.xml", EngineFactory.DEFAULT,  USER, PASSWORD, DataStoreType.XML);
 
             CurrencyNode node = new CurrencyNode();
 

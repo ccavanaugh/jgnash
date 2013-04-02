@@ -39,6 +39,10 @@ import javax.swing.SwingWorker;
  */
 public class ImportDialog extends WizardDialog {
 
+    private static final String USER = "";
+
+    private static final char[] PASSWORD = new char[]{};
+
     public enum Settings {
         IMPORT_FILE
     }
@@ -85,7 +89,7 @@ public class ImportDialog extends WizardDialog {
                     EngineFactory.deleteDatabase(database);
 
                     try {
-                        EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, type);
+                        EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, USER, PASSWORD, type);
 
                         new ImportFile(importFile).execute();
                     } catch (final Exception e) {

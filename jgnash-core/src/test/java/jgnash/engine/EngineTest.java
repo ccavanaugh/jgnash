@@ -17,22 +17,21 @@
  */
 package jgnash.engine;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetGoal;
 import jgnash.engine.budget.BudgetPeriod;
 import jgnash.engine.recurring.DailyReminder;
 import jgnash.engine.recurring.Reminder;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -48,6 +47,10 @@ public abstract class EngineTest {
     protected boolean oldExportState = EngineFactory.exportXMLOnClose();
 
     public abstract Engine createEngine() throws Exception;
+
+    public static final String USER = "";
+
+    public static final char[] PASSWORD = new char[]{};
 
     @Before
     public void setUp() throws Exception {
@@ -109,7 +112,7 @@ public abstract class EngineTest {
 
         // close and reopen to force check for persistence
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
-        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, USER, PASSWORD);
         assertEquals(e.getReminders().size(), 1);
 
         // remove a reminder
@@ -119,7 +122,7 @@ public abstract class EngineTest {
 
         // close and reopen to force check for persistence
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
-        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, USER, PASSWORD);
         assertEquals(0, e.getReminders().size());
         assertEquals(0, e.getPendingReminders().size());
     }
@@ -130,7 +133,7 @@ public abstract class EngineTest {
         // close and reopen to force check for persistence
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, USER, PASSWORD);
 
         assertNotNull(e);
 
@@ -149,7 +152,7 @@ public abstract class EngineTest {
         // close and reopen to force check for persistence
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, USER, PASSWORD);
 
         assertNotNull(e.getDefaultCurrency());
         assertNotNull(e.getCurrency("USD"));
@@ -225,7 +228,7 @@ public abstract class EngineTest {
         // close and reopen to force check for persistence
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, USER, PASSWORD);
 
         assertNotNull(e);
 
@@ -254,7 +257,7 @@ public abstract class EngineTest {
 
         // close and reopen to force check for persistence
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
-        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, USER, PASSWORD);
         assertEquals(0, e.getBudgetList().size());
     }
 
@@ -293,7 +296,7 @@ public abstract class EngineTest {
 
         // close and reopen to force check for persistence
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
-        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, USER, PASSWORD);
 
         List<CurrencyNode> nodes = e.getCurrencies();
         assertNotNull(nodes);
@@ -442,7 +445,7 @@ public abstract class EngineTest {
 
         // close and reopen to force check for persistence
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
-        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, USER, PASSWORD);
 
         assertTrue(e.getIncomeAccountList().size() > 0);
     }
@@ -457,7 +460,7 @@ public abstract class EngineTest {
 
         // close and reopen to force check for persistence
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
-        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, USER, PASSWORD);
 
         assertTrue(e.getExpenseAccountList().size() > 0);
     }
@@ -472,7 +475,7 @@ public abstract class EngineTest {
 
         // close and reopen to force check for persistence
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
-        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, USER, PASSWORD);
 
         assertTrue(e.getAccounts(AccountGroup.ASSET).size() > 0);
     }
@@ -487,7 +490,7 @@ public abstract class EngineTest {
 
         // close and reopen to force check for persistence
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
-        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, USER, PASSWORD);
 
         assertTrue(e.getInvestmentAccountList().size() > 0);
     }
@@ -549,7 +552,7 @@ public abstract class EngineTest {
 
         // close and reopen to force check for persistence
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
-        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, USER, PASSWORD);
 
         parent = e.getRootAccount();
 
@@ -632,14 +635,14 @@ public abstract class EngineTest {
 
         // close and reopen to force check for persistence
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
-        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, USER, PASSWORD);
 
         a = e.getAccountByName(ACCOUNT_NAME);
 
         e.removeAccount(a);
 
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
-        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, USER, PASSWORD);
 
         assertNull(e.getAccountByName(ACCOUNT_NAME));
     }
@@ -734,7 +737,7 @@ public abstract class EngineTest {
 
         // close and reopen to force check for persistence
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
-        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT);
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, USER, PASSWORD);
 
         a = e.getAccountByName(ACCOUNT_NAME);
         assertEquals(3, a.getTransactionCount());

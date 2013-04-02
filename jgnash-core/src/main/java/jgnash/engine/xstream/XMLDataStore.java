@@ -58,10 +58,10 @@ public class XMLDataStore implements DataStore {
     /**
      * Create an engine instance that uses a local XML file
      *
-     * @see DataStore#getLocalEngine(java.lang.String, java.lang.String)
+     * @see DataStore#getLocalEngine(java.lang.String, java.lang.String, java.lang.String, char[])
      */
     @Override
-    public Engine getLocalEngine(final String fileName, final String engineName) {
+    public Engine getLocalEngine(final String fileName, final String engineName, final String user, final char[] password) {
 
         File file = new File(fileName);
 

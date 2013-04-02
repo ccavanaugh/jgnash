@@ -31,7 +31,7 @@ public class XMLEngineTest extends EngineTest {
 
         EngineFactory.deleteDatabase(testFile);
 
-        return EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, DataStoreType.XML);
+        return EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, USER, PASSWORD, DataStoreType.XML);
     }
 
     @AfterClass

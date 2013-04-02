@@ -35,6 +35,10 @@ import static org.junit.Assert.assertTrue;
  */
 public class BudgetResultsExportTest {
 
+    public static final String USER = "";
+
+    public static final char[] PASSWORD = new char[]{};
+
     @Test
     public void testExportBudgetResultsModel() throws Exception {
 
@@ -44,7 +48,7 @@ public class BudgetResultsExportTest {
             file.deleteOnExit();
 
 
-            Engine e = EngineFactory.bootLocalEngine(file.getName(), EngineFactory.DEFAULT, DataStoreType.XML);
+            Engine e = EngineFactory.bootLocalEngine(file.getName(), EngineFactory.DEFAULT, USER, PASSWORD, DataStoreType.XML);
             CurrencyNode node = e.getDefaultCurrency();
 
             Account account1 = new Account(AccountType.EXPENSE, node);

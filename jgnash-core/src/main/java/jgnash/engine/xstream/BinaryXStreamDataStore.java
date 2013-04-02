@@ -58,10 +58,10 @@ public class BinaryXStreamDataStore implements DataStore {
     /**
      * Create an engine instance that uses a local XML file
      *
-     * @see jgnash.engine.DataStore#getLocalEngine(String, String)
+     * @see jgnash.engine.DataStore#getLocalEngine(String, String, String, char[])
      */
     @Override
-    public Engine getLocalEngine(final String fileName, final String engineName) {
+    public Engine getLocalEngine(final String fileName, final String engineName, final String user, final char[] password) {
 
         File file = new File(fileName);
 
