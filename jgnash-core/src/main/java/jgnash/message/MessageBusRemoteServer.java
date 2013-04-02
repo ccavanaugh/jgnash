@@ -190,7 +190,6 @@ public class MessageBusRemoteServer {
             try {
                 for (IoSession client : clientSessions) {
                     if (client.isConnected()) {
-                        //client.write(str);
                         client.write(encrypt(str));
                     }
                 }

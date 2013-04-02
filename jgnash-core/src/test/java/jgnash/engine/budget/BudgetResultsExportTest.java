@@ -36,7 +36,7 @@ import static org.junit.Assert.assertTrue;
 public class BudgetResultsExportTest {
 
     @Test
-    public void testExportBudgetResultsModel() {
+    public void testExportBudgetResultsModel() throws Exception {
 
 
         try {

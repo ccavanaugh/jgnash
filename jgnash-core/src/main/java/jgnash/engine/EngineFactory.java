@@ -197,7 +197,7 @@ public class EngineFactory {
      * <code>Engine</code> instance if successful, null otherwise
      * @see Engine
      */
-    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName) {
+    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName) throws Exception{
         DataStoreType type = getDataStoreByType(new File(fileName));
 
         if (type != null) {
@@ -221,7 +221,7 @@ public class EngineFactory {
      * @see Engine
      * @see DataStoreType
      */
-    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName, final DataStoreType type) {
+    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName, final DataStoreType type) throws Exception {
 
         if (!type.supportsLocal) {
             throw new UnsupportedOperationException("Local operation not supported for this type.");
@@ -251,16 +251,18 @@ public class EngineFactory {
         return engine;
     }
 
-    public static synchronized Engine bootClientEngine(final String host, final int port, final String user, final char[] password, final String engineName, final boolean savePassword) {
+    public static synchronized Engine bootClientEngine(final String host, final int port, final String user, final char[] password, final String engineName, final boolean savePassword) throws Exception{
         return bootClientEngine(host, port, user, password, engineName, savePassword, DataStoreType.H2_DATABASE);
     }
 
-    private static synchronized Engine bootClientEngine(final String host, final int port, final String user, final char[] password, final String engineName, final boolean savePassword, final DataStoreType type) {
+    private static synchronized Engine bootClientEngine(final String host, final int port, final String user, final char[] password, final String engineName, final boolean savePassword, final DataStoreType type) throws Exception {
 
-        assert engineMap.get(engineName) == null;
+        if (engineMap.get(engineName) != null) {
+            throw new RuntimeException("A stale engine was found in the map");
+        }
 
         if (!type.supportsRemote) {
-            throw new UnsupportedOperationException("Client / Server operation not supported for this type.");
+            throw new UnsupportedOperationException("Client / Server operation is not supported for this type.");
         }
 
         Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
@@ -274,8 +276,14 @@ public class EngineFactory {
             pref.put(LAST_USER, user);
             pref.putBoolean(LAST_REMOTE, true);
 
+            MessageBus messageBus =  MessageBus.getInstance(engineName);
+
             // after starting the remote message bus, it should receive the path on the server
-            String remoteDataBasePath = MessageBus.getInstance(engineName).getRemoteDataBasePath();
+            String remoteDataBasePath = messageBus.getRemoteDataBasePath();
+
+            if (remoteDataBasePath == null || remoteDataBasePath.isEmpty()) {
+                throw new Exception("Invalid connection wih the message bus");
+            }
 
             logger.log(Level.INFO, "Remote path was {0}", remoteDataBasePath);
             logger.log(Level.INFO, "Engine name was {0}", engineName);

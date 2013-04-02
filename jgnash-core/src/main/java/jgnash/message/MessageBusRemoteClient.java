@@ -54,7 +54,7 @@ import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
 /**
  * Remote message bus client
- * 
+ *
  * @author Craig Cavanaugh
  */
 class MessageBusRemoteClient {
@@ -119,7 +119,7 @@ class MessageBusRemoteClient {
             result = true;
             logger.info("Connected to remote message server");
         } catch (RuntimeIoException e) {
-            logger.log(Level.SEVERE, "Failed to connect to remote message bus", e);           
+            logger.log(Level.SEVERE, "Failed to connect to remote message bus", e);
 
             if (session != null) {
                 session.close(true);
@@ -164,12 +164,7 @@ class MessageBusRemoteClient {
         public void sessionOpened(IoSession s) {
         }
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void messageReceived(final IoSession s, final Object object) {
-
+        private String decrypt(final Object object) {
             String plainMessage;
 
             if (filter != null) {
@@ -179,8 +174,17 @@ class MessageBusRemoteClient {
                 plainMessage = object.toString();
             }
 
-            logger.log(Level.INFO, "messageReceived: {0}", plainMessage);
+            return plainMessage;
+        }
 
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public void messageReceived(final IoSession s, final Object object) {
+            String plainMessage = decrypt(object);
+
+            logger.log(Level.INFO, "messageReceived: {0}", plainMessage);
 
             if (plainMessage.startsWith("<Message")) {
                 final Message message = (Message) xstream.fromXML(plainMessage);
@@ -200,6 +204,13 @@ class MessageBusRemoteClient {
             } else if (plainMessage.startsWith(MessageBusRemoteServer.PATH_PREFIX)) {
                 dataBasePath = plainMessage.substring(MessageBusRemoteServer.PATH_PREFIX.length());
                 logger.log(Level.INFO, "Remote data path is: {0}", dataBasePath);
+            } else if (plainMessage.startsWith(EncryptionFilter.DECRYPTION_ERROR_TAG)) {    // decryption has failed, shut down the engine
+                /*new Thread() {
+                    @Override
+                    public void run() {
+                        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+                    }
+                }.start();*/
             } else {
                 logger.log(Level.SEVERE, "Unknown message: {0}", plainMessage);
             }
@@ -226,7 +237,7 @@ class MessageBusRemoteClient {
     /**
      * Takes a remote message and forces remote updates before sending the message to the MessageBus to notify UI
      * components of changes.
-     * 
+     *
      * @param message Message to process and send
      */
     private synchronized static void processRemoteMessage(final Message message) {

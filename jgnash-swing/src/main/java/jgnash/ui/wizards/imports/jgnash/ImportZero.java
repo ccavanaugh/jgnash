@@ -125,13 +125,13 @@ public class ImportZero extends JPanel implements WizardPage, ActionListener {
 
     @Override
     public void getSettings(Map<Enum<?>, Object> map) {
-        fileImportField.setText((String) map.get(ImportDialog.Settings.IMPORTFILE));
+        fileImportField.setText((String) map.get(ImportDialog.Settings.IMPORT_FILE));
         validateFile();
     }
 
     @Override
     public void putSettings(Map<Enum<?>, Object> map) {
-        map.put(ImportDialog.Settings.IMPORTFILE, fileImportField.getText());
+        map.put(ImportDialog.Settings.IMPORT_FILE, fileImportField.getText());
     }
 
     @Override

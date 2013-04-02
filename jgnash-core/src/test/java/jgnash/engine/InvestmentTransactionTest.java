@@ -8,6 +8,7 @@ import static jgnash.engine.TransactionFactory.generateSellXTransaction;
 import static jgnash.engine.TransactionFactory.generateSplitXTransaction;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
 import java.text.ParsePosition;
@@ -21,9 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * 
  * @author Peti
- * 
  */
 public class InvestmentTransactionTest {
 
@@ -59,56 +58,61 @@ public class InvestmentTransactionTest {
         // Creating database
         database = EngineFactory.getDefaultDatabase() + "-investtransaction-test.xml";
         EngineFactory.deleteDatabase(database);
-        e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, DataStoreType.XML);
 
-        // Creating currencies
-        defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
+        try {
+            e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, DataStoreType.XML);
 
-        e.addCommodity(defaultCurrency);
-        e.setDefaultCurrency(defaultCurrency);
+            // Creating currencies
+            defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
 
-        cadCurrency = DefaultCurrencies.buildCustomNode("CAD");
-        e.addCommodity(cadCurrency);
+            e.addCommodity(defaultCurrency);
+            e.setDefaultCurrency(defaultCurrency);
 
-        // Creating securities
-        securityNode1 = new SecurityNode(defaultCurrency);
+            cadCurrency = DefaultCurrencies.buildCustomNode("CAD");
+            e.addCommodity(cadCurrency);
 
-        securityNode1.setSymbol("GOOGLE");
-        e.addCommodity(securityNode1);
+            // Creating securities
+            securityNode1 = new SecurityNode(defaultCurrency);
 
-        // Creating accounts
-        incomeAccount = new Account(AccountType.INCOME, defaultCurrency);
-        incomeAccount.setName("Income Account");
-        e.addAccount(e.getRootAccount(), incomeAccount);
+            securityNode1.setSymbol("GOOGLE");
+            e.addCommodity(securityNode1);
 
-        expenseAccount = new Account(AccountType.EXPENSE, defaultCurrency);
-        expenseAccount.setName("Expense Account");
-        e.addAccount(e.getRootAccount(), expenseAccount);
+            // Creating accounts
+            incomeAccount = new Account(AccountType.INCOME, defaultCurrency);
+            incomeAccount.setName("Income Account");
+            e.addAccount(e.getRootAccount(), incomeAccount);
 
-        usdBankAccount = new Account(AccountType.BANK, defaultCurrency);
-        usdBankAccount.setName("USD Bank Account");
-        e.addAccount(e.getRootAccount(), usdBankAccount);
+            expenseAccount = new Account(AccountType.EXPENSE, defaultCurrency);
+            expenseAccount.setName("Expense Account");
+            e.addAccount(e.getRootAccount(), expenseAccount);
 
-        cadBankAccount = new Account(AccountType.BANK, cadCurrency);
-        cadBankAccount.setName("CAD Bank Account");
-        e.addAccount(e.getRootAccount(), cadBankAccount);
+            usdBankAccount = new Account(AccountType.BANK, defaultCurrency);
+            usdBankAccount.setName("USD Bank Account");
+            e.addAccount(e.getRootAccount(), usdBankAccount);
 
-        equityAccount = new Account(AccountType.EQUITY, defaultCurrency);
-        equityAccount.setName("Equity Account");
-        e.addAccount(e.getRootAccount(), equityAccount);
+            cadBankAccount = new Account(AccountType.BANK, cadCurrency);
+            cadBankAccount.setName("CAD Bank Account");
+            e.addAccount(e.getRootAccount(), cadBankAccount);
 
-        liabilityAccount = new Account(AccountType.LIABILITY, defaultCurrency);
-        liabilityAccount.setName("Liability Account");
-        e.addAccount(e.getRootAccount(), liabilityAccount);
+            equityAccount = new Account(AccountType.EQUITY, defaultCurrency);
+            equityAccount.setName("Equity Account");
+            e.addAccount(e.getRootAccount(), equityAccount);
 
-        investAccount = new Account(AccountType.INVEST, defaultCurrency);
-        investAccount.setName("Invest Account");
-        e.addAccount(e.getRootAccount(), investAccount);
+            liabilityAccount = new Account(AccountType.LIABILITY, defaultCurrency);
+            liabilityAccount.setName("Liability Account");
+            e.addAccount(e.getRootAccount(), liabilityAccount);
 
-        // Adding security to the invest account
-        List<SecurityNode> securityNodeList = new ArrayList<>();
-        securityNodeList.add(securityNode1);
-        e.updateAccountSecurities(investAccount, securityNodeList);
+            investAccount = new Account(AccountType.INVEST, defaultCurrency);
+            investAccount.setName("Invest Account");
+            e.addAccount(e.getRootAccount(), investAccount);
+
+            // Adding security to the invest account
+            List<SecurityNode> securityNodeList = new ArrayList<>();
+            securityNodeList.add(securityNode1);
+            e.updateAccountSecurities(investAccount, securityNodeList);
+        } catch (final Exception e) {
+            fail(e.getMessage());
+        }
     }
 
     @After
@@ -209,10 +213,10 @@ public class InvestmentTransactionTest {
         e.addTransaction(it);
 
         // Evaluating the result
-        Object actual[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), investAccount.getBalance(),
-                        investAccount.getMarketValue(), investAccount.getCashBalance() };
-        Object expected[] = { new BigDecimal("220.00"), new BigDecimal("30.00"), new BigDecimal("250.00"),
-                        new BigDecimal("250.00"), new BigDecimal("0.00") };
+        Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), investAccount.getBalance(),
+                investAccount.getMarketValue(), investAccount.getCashBalance()};
+        Object expected[] = {new BigDecimal("220.00"), new BigDecimal("30.00"), new BigDecimal("250.00"),
+                new BigDecimal("250.00"), new BigDecimal("0.00")};
         assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
 
@@ -290,10 +294,10 @@ public class InvestmentTransactionTest {
         e.addTransaction(it);
 
         // Checking the result
-        Object actual[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
-                        investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance() };
-        Object expected[] = { new BigDecimal("280.00"), new BigDecimal("60.00"), new BigDecimal("-30.00"),
-                        new BigDecimal("285.00"), new BigDecimal("285.00"), new BigDecimal("0.00") };
+        Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+                investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance()};
+        Object expected[] = {new BigDecimal("280.00"), new BigDecimal("60.00"), new BigDecimal("-30.00"),
+                new BigDecimal("285.00"), new BigDecimal("285.00"), new BigDecimal("0.00")};
         assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
 
@@ -339,10 +343,10 @@ public class InvestmentTransactionTest {
         e.addTransaction(transaction);
 
         // Checking the result
-        Object actual[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
-                        investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance() };
-        Object expected[] = { new BigDecimal("250.00"), BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("250.00"),
-                        BigDecimal.ZERO, new BigDecimal("250.00") };
+        Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+                investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance()};
+        Object expected[] = {new BigDecimal("250.00"), BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("250.00"),
+                BigDecimal.ZERO, new BigDecimal("250.00")};
         assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
 
@@ -408,10 +412,10 @@ public class InvestmentTransactionTest {
         e.addTransaction(transaction);
 
         // Checking the result
-        Object actual[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
-                        investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance() };
-        Object expected[] = { new BigDecimal("250.00"), new BigDecimal("125.00"), BigDecimal.ZERO,
-                        new BigDecimal("125.00"), BigDecimal.ZERO, new BigDecimal("125.00") };
+        Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+                investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance()};
+        Object expected[] = {new BigDecimal("250.00"), new BigDecimal("125.00"), BigDecimal.ZERO,
+                new BigDecimal("125.00"), BigDecimal.ZERO, new BigDecimal("125.00")};
         assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
 
@@ -468,10 +472,10 @@ public class InvestmentTransactionTest {
         e.addTransaction(it);
 
         // Checking the result
-        Object actual[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
-                        investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance() };
-        Object expected[] = { new BigDecimal("270.00"), new BigDecimal("30.00"), new BigDecimal("-50.00"),
-                        new BigDecimal("250.00"), new BigDecimal("250.00"), new BigDecimal("0.00") };
+        Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+                investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance()};
+        Object expected[] = {new BigDecimal("270.00"), new BigDecimal("30.00"), new BigDecimal("-50.00"),
+                new BigDecimal("250.00"), new BigDecimal("250.00"), new BigDecimal("0.00")};
         assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
 
@@ -542,10 +546,10 @@ public class InvestmentTransactionTest {
         e.addTransaction(it);
 
         // Checking the result
-        Object actual[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
-                        investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance() };
-        Object expected[] = { new BigDecimal("220.00"), new BigDecimal("50.00"), new BigDecimal("-50.00"),
-                        new BigDecimal("280.00"), new BigDecimal("280.00"), new BigDecimal("0.00") };
+        Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+                investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance()};
+        Object expected[] = {new BigDecimal("220.00"), new BigDecimal("50.00"), new BigDecimal("-50.00"),
+                new BigDecimal("280.00"), new BigDecimal("280.00"), new BigDecimal("0.00")};
         assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
 
@@ -602,11 +606,11 @@ public class InvestmentTransactionTest {
         e.addTransaction(it);
 
         // Checking the result
-        Object actual[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
-                        investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance() };
+        Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+                investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance()};
 
-        Object expected[] = { new BigDecimal("220.00"), new BigDecimal("30.00"), BigDecimal.ZERO,
-                        new BigDecimal("500.00"), new BigDecimal("500.00"), new BigDecimal("0.00") };
+        Object expected[] = {new BigDecimal("220.00"), new BigDecimal("30.00"), BigDecimal.ZERO,
+                new BigDecimal("500.00"), new BigDecimal("500.00"), new BigDecimal("0.00")};
 
         assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
@@ -664,11 +668,11 @@ public class InvestmentTransactionTest {
         e.addTransaction(it);
 
         // Checking the result
-        Object actual[] = { usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
-                        investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance() };
+        Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
+                investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance()};
 
-        Object expected[] = { new BigDecimal("220.00"), new BigDecimal("30.00"), BigDecimal.ZERO,
-                        new BigDecimal("200.00"), new BigDecimal("200.00"), new BigDecimal("0.00") };
+        Object expected[] = {new BigDecimal("220.00"), new BigDecimal("30.00"), BigDecimal.ZERO,
+                new BigDecimal("200.00"), new BigDecimal("200.00"), new BigDecimal("0.00")};
 
         assertArrayEquals("Account balances are not as expected!", expected, actual);
     }

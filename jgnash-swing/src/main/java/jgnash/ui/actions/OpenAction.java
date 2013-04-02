@@ -42,6 +42,8 @@ public class OpenAction {
 
     private static final Logger logger = Logger.getLogger(OpenAction.class.getName());
 
+    private static boolean remoteConnectionFailed = false;
+
     static {
         logger.setLevel(Level.ALL);
     }
@@ -75,6 +77,10 @@ public class OpenAction {
                     boolean save = dialog.savePassword();
 
                     e = EngineFactory.bootClientEngine(host, port, user, password, EngineFactory.DEFAULT, save);
+
+                    if (e == null) {
+                        remoteConnectionFailed = true;
+                    }
                 } else {
                     if (FileUtils.isFileLocked(dialog.getDatabasePath())) {
                         StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
@@ -97,6 +103,10 @@ public class OpenAction {
             protected void done() {
                 logger.info("openAction() done");
                 UIApplication.getFrame().stopWaitMessage();
+
+                if (remoteConnectionFailed) {
+                    StaticUIMethods.displayError(Resource.get().getString("Message.ErrorServerConnection"));
+                }
             }
         }
 

@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * @author Craig Cavanaugh
@@ -33,38 +34,47 @@ public class JpaEngineTest extends EngineTest {
     private static final float DELTA = .001f;
 
     @Override
-    public Engine createEngine() {
+    public Engine createEngine() throws Exception {
         testFile = "jpa-test." + JpaDataStore.FILE_EXT;
 
         try {
-            File temp = File.createTempFile("jpa-test", "." +JpaDataStore.FILE_EXT);
+            File temp = File.createTempFile("jpa-test", "." + JpaDataStore.FILE_EXT);
             temp.deleteOnExit();
             testFile = temp.getAbsolutePath();
-        } catch (IOException e1) {          
+        } catch (IOException e1) {
             System.err.println(e1.toString());
         }
 
         EngineFactory.deleteDatabase(testFile);
 
-        return EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, DataStoreType.H2_DATABASE);
+        try {
+            return EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, DataStoreType.H2_DATABASE);
+        } catch (final Exception e) {
+            fail(e.getMessage());
+            return null;
+        }
     }
 
     @Test
     public void testVersion() {
-        final String localTestFile = "jpa-version-test." + JpaDataStore.FILE_EXT ;
+        final String localTestFile = "jpa-version-test." + JpaDataStore.FILE_EXT;
 
         EngineFactory.deleteDatabase(localTestFile);
 
-        EngineFactory.bootLocalEngine(localTestFile, EngineFactory.DEFAULT, DataStoreType.H2_DATABASE);
+        try {
+            EngineFactory.bootLocalEngine(localTestFile, EngineFactory.DEFAULT, DataStoreType.H2_DATABASE);
 
-        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+            EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-        float version = EngineFactory.getFileVersion(new File(localTestFile), "", new char[] {});
+            float version = EngineFactory.getFileVersion(new File(localTestFile), "", new char[]{});
 
-        System.out.println(version);
+            System.out.println(version);
 
-        assertEquals(version, Engine.CURRENT_VERSION, DELTA);
+            assertEquals(version, Engine.CURRENT_VERSION, DELTA);
 
-        EngineFactory.deleteDatabase(localTestFile);
+            EngineFactory.deleteDatabase(localTestFile);
+        } catch (final Exception e) {
+            fail(e.getMessage());
+        }
     }
 }

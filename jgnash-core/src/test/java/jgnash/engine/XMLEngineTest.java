@@ -26,7 +26,7 @@ import org.junit.AfterClass;
 public class XMLEngineTest extends EngineTest {
 
     @Override
-    public Engine createEngine() {
+    public Engine createEngine() throws Exception {
         testFile = "xml-account-test.xml";
 
         EngineFactory.deleteDatabase(testFile);

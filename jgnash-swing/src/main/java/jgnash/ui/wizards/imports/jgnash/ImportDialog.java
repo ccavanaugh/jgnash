@@ -17,38 +17,39 @@
  */
 package jgnash.ui.wizards.imports.jgnash;
 
-import java.awt.EventQueue;
-import java.util.prefs.Preferences;
-
-import javax.swing.SwingWorker;
-
+import jgnash.convert.imports.jgnash.Import;
 import jgnash.engine.DataStoreType;
 import jgnash.engine.EngineFactory;
-import jgnash.convert.imports.jgnash.Import;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.wizard.WizardDialog;
 import jgnash.ui.wizards.file.NewFileDialog;
 import jgnash.util.Resource;
 
+import java.awt.EventQueue;
+import java.awt.Frame;
+import java.util.prefs.Preferences;
+
+import javax.swing.SwingWorker;
+
 /**
  * Dialog for creating a new file
  *
  * @author Craig Cavanaugh
- *
  */
 public class ImportDialog extends WizardDialog {
 
     public enum Settings {
-        IMPORTFILE
+        IMPORT_FILE
     }
 
-    private ImportDialog(java.awt.Frame parent) {
+    private ImportDialog(final Frame parent) {
         super(parent);
 
         setTitle(rb.getString("Title.NewFile"));
     }
 
-    public static void showDialog(final java.awt.Frame parent) {
+    public static void showDialog(final Frame parent) {
 
         EventQueue.invokeLater(new Runnable() {
             @Override
@@ -57,10 +58,10 @@ public class ImportDialog extends WizardDialog {
 
                 final String LAST_FILE = "file0";
                 Preferences pref = Preferences.userNodeForPackage(ImportDialog.class);
-                String lastfile = pref.get(LAST_FILE, "");
+                String lastFile = pref.get(LAST_FILE, "");
 
-                if (lastfile.length() > 0) {
-                    d.setSetting(ImportDialog.Settings.IMPORTFILE, lastfile);
+                if (lastFile.length() > 0) {
+                    d.setSetting(ImportDialog.Settings.IMPORT_FILE, lastFile);
                 }
 
                 d.setSetting(NewFileDialog.Settings.DATABASE_NAME, EngineFactory.getDefaultDatabase());
@@ -74,7 +75,7 @@ public class ImportDialog extends WizardDialog {
                 if (d.isWizardValid()) {
                     final String database = (String) d.getSetting(NewFileDialog.Settings.DATABASE_NAME);
 
-                    final String importFile = (String) d.getSetting(Settings.IMPORTFILE);
+                    final String importFile = (String) d.getSetting(Settings.IMPORT_FILE);
                     final DataStoreType type = (DataStoreType) d.getSetting(NewFileDialog.Settings.TYPE);
 
                     // have to close the engine first
@@ -83,9 +84,13 @@ public class ImportDialog extends WizardDialog {
                     // try to delete any existing database
                     EngineFactory.deleteDatabase(database);
 
-                    EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, type);
+                    try {
+                        EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, type);
 
-                    new ImportFile(importFile).execute();
+                        new ImportFile(importFile).execute();
+                    } catch (final Exception e) {
+                        StaticUIMethods.displayError(e.getMessage());
+                    }
                 }
 
             }

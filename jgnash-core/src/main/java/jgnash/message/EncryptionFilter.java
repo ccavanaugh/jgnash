@@ -34,7 +34,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
- * A Simple encryption filter based on a supplied user and password
+ * A Simple encryption class based on a supplied user and password
  *
  * @author Craig Cavanaugh
  */
@@ -43,6 +43,8 @@ public class EncryptionFilter {
     private Key key;
 
     private static final String ENCRYPTION_ALGORITHM = "AES";
+
+    public static final String DECRYPTION_ERROR_TAG = "<DecryptError>";
 
     private static Logger logger = Logger.getLogger(EncryptionFilter.class.getName());
 
@@ -59,7 +61,7 @@ public class EncryptionFilter {
             encryptionKey = md.digest(builder.toString().getBytes());
 
             builder.delete(0, builder.length() - 1);
-        } catch (NoSuchAlgorithmException e) {
+        } catch (final NoSuchAlgorithmException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
@@ -74,13 +76,20 @@ public class EncryptionFilter {
 
             return Base64.encodeBase64String(cipher.doFinal(plain.getBytes()));
 
-        } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
+        } catch (final InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
         return null;
     }
 
+    /**
+     * Decrypts the supplied string
+     *
+     * @param encrypted String to decrypt
+     * @return The decrypted string of <code>DECRYPTION_ERROR_TAG</code> if decryption fails
+     * @see #DECRYPTION_ERROR_TAG
+     */
     public String decrypt(final String encrypted) {
 
         try {
@@ -88,10 +97,9 @@ public class EncryptionFilter {
             cipher.init(Cipher.DECRYPT_MODE, key);
 
             return new String(cipher.doFinal(Base64.decodeBase64(encrypted)));
-        } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
+        } catch (final InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
+            logger.log(Level.SEVERE, "Invalid password");
+            return DECRYPTION_ERROR_TAG;
         }
-
-        return null;
     }
 }

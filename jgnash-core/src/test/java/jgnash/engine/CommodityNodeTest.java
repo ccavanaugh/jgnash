@@ -30,9 +30,8 @@ import org.junit.Test;
 
 /**
  * Commodity test
- * 
- * @author Craig Cavanaugh
  *
+ * @author Craig Cavanaugh
  */
 public class CommodityNodeTest {
 
@@ -41,62 +40,71 @@ public class CommodityNodeTest {
         EngineFactory.deleteDatabase(EngineFactory.getDefaultDatabase() + "-exchange-test.xml");
 
         // get an engine, create a commodity and then try to retrieve
-        Engine e = EngineFactory.bootLocalEngine(EngineFactory.getDefaultDatabase() + "-exchange-test.xml", EngineFactory.DEFAULT, DataStoreType.XML);
 
-        CurrencyNode usdNode = new CurrencyNode();
-        usdNode.setSymbol("USD");
-        usdNode.setPrefix("$");
-        usdNode.setDescription("US Dollar");
-        e.addCommodity(usdNode);
+        try {
+            Engine e = EngineFactory.bootLocalEngine(EngineFactory.getDefaultDatabase() + "-exchange-test.xml", EngineFactory.DEFAULT, DataStoreType.XML);
 
-        CurrencyNode cadNode = new CurrencyNode();
-        cadNode.setSymbol("CAD");
-        cadNode.setPrefix("$");
-        cadNode.setDescription("CAD Dollar");
-        e.addCommodity(cadNode);
+            CurrencyNode usdNode = new CurrencyNode();
+            usdNode.setSymbol("USD");
+            usdNode.setPrefix("$");
+            usdNode.setDescription("US Dollar");
+            e.addCommodity(usdNode);
 
-        assertNotNull(usdNode.getSymbol());
-        assertNotNull(cadNode.getSymbol());
+            CurrencyNode cadNode = new CurrencyNode();
+            cadNode.setSymbol("CAD");
+            cadNode.setPrefix("$");
+            cadNode.setDescription("CAD Dollar");
+            e.addCommodity(cadNode);
 
-        e.setExchangeRate(usdNode, cadNode, new BigDecimal("1.100"));
+            assertNotNull(usdNode.getSymbol());
+            assertNotNull(cadNode.getSymbol());
 
-        assertEquals(new BigDecimal("1.100"), usdNode.getExchangeRate(cadNode));
-        assertEquals(new BigDecimal("0.909"), cadNode.getExchangeRate(usdNode).setScale(3, RoundingMode.DOWN));
-        assertEquals(BigDecimal.ONE, usdNode.getExchangeRate(usdNode));
-        assertEquals(BigDecimal.ONE, cadNode.getExchangeRate(cadNode));
+            e.setExchangeRate(usdNode, cadNode, new BigDecimal("1.100"));
 
-        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+            assertEquals(new BigDecimal("1.100"), usdNode.getExchangeRate(cadNode));
+            assertEquals(new BigDecimal("0.909"), cadNode.getExchangeRate(usdNode).setScale(3, RoundingMode.DOWN));
+            assertEquals(BigDecimal.ONE, usdNode.getExchangeRate(usdNode));
+            assertEquals(BigDecimal.ONE, cadNode.getExchangeRate(cadNode));
+
+            EngineFactory.closeEngine(EngineFactory.DEFAULT);
+        } catch (final Exception e) {
+            fail(e.getMessage());
+        }
     }
 
     @Test
     public void ExchangeTest2() {
         EngineFactory.deleteDatabase(EngineFactory.getDefaultDatabase() + "-exchange-test.xml");
 
-        // get an engine, create a commodity and then try to retrieve
-        Engine e = EngineFactory.bootLocalEngine(EngineFactory.getDefaultDatabase() + "-exchange-test.xml", EngineFactory.DEFAULT, DataStoreType.XML);
+        try {
+            // get an engine, create a commodity and then try to retrieve
+            Engine e = EngineFactory.bootLocalEngine(EngineFactory.getDefaultDatabase() + "-exchange-test.xml", EngineFactory.DEFAULT, DataStoreType.XML);
 
-        CurrencyNode usdNode = new CurrencyNode();
-        usdNode.setSymbol("USD");
-        usdNode.setPrefix("$");
-        usdNode.setDescription("US Dollar");
-        e.addCommodity(usdNode);
+            CurrencyNode usdNode = new CurrencyNode();
+            usdNode.setSymbol("USD");
+            usdNode.setPrefix("$");
+            usdNode.setDescription("US Dollar");
+            e.addCommodity(usdNode);
 
-        CurrencyNode cadNode = new CurrencyNode();
-        cadNode.setSymbol("CAD");
-        cadNode.setPrefix("$");
-        cadNode.setDescription("CAD Dollar");
-        e.addCommodity(cadNode);
+            CurrencyNode cadNode = new CurrencyNode();
+            cadNode.setSymbol("CAD");
+            cadNode.setPrefix("$");
+            cadNode.setDescription("CAD Dollar");
+            e.addCommodity(cadNode);
 
-        assertNotNull(usdNode.getSymbol());
-        assertNotNull(cadNode.getSymbol());
+            assertNotNull(usdNode.getSymbol());
+            assertNotNull(cadNode.getSymbol());
 
-        // rate is inverted when added
-        e.setExchangeRate(cadNode, usdNode, new BigDecimal("0.909"));
+            // rate is inverted when added
+            e.setExchangeRate(cadNode, usdNode, new BigDecimal("0.909"));
 
-        assertEquals(new BigDecimal("1.100"), usdNode.getExchangeRate(cadNode).setScale(3, RoundingMode.DOWN));
-        assertEquals(new BigDecimal("0.909"), cadNode.getExchangeRate(usdNode).setScale(3, RoundingMode.DOWN));
+            assertEquals(new BigDecimal("1.100"), usdNode.getExchangeRate(cadNode).setScale(3, RoundingMode.DOWN));
+            assertEquals(new BigDecimal("0.909"), cadNode.getExchangeRate(usdNode).setScale(3, RoundingMode.DOWN));
 
-        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+            EngineFactory.closeEngine(EngineFactory.DEFAULT);
+        } catch (final Exception e) {
+            fail(e.getMessage());
+        }
     }
 
     @Test
@@ -141,7 +149,7 @@ public class CommodityNodeTest {
             }
 
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
-        } catch (Exception e) {            
+        } catch (Exception e) {
             fail(e.toString());
         }
     }

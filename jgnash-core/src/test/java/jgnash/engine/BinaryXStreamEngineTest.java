@@ -33,7 +33,7 @@ public class BinaryXStreamEngineTest extends EngineTest {
     static String tempFile;
 
     @Override
-    public Engine createEngine() {
+    public Engine createEngine() throws Exception {
         try {
             testFile = File.createTempFile("test", "").getAbsolutePath();
             tempFile = testFile;

@@ -704,11 +704,13 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     }
 
     public void cancelBackgroundUpdates() {
-        try {
-            backgroundUpdateExecutor.shutdownNow();
-            LOG.log(Level.INFO, "Background updates canceled");
-        } catch (Exception e) {
-            LOG.log(Level.INFO, e.getMessage(), e);
+        if (backgroundUpdateExecutor != null && !backgroundUpdateExecutor.isShutdown()) {
+            try {
+                backgroundUpdateExecutor.shutdownNow();
+                LOG.log(Level.INFO, "Background updates canceled");
+            } catch (Exception e) {
+                LOG.log(Level.INFO, e.getMessage(), e);
+            }
         }
     }
 

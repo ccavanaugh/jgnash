@@ -18,6 +18,7 @@
 package jgnash.message;
 
 import java.lang.ref.WeakReference;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -44,6 +45,8 @@ import jgnash.util.LogUtils;
  * set, not the iterator.
  */
 public class MessageBus {
+
+    private static final long MAX_LATENCY = 5 * 1000;
 
     private static final Logger logger = Logger.getLogger(MessageBus.class.getName());
 
@@ -109,7 +112,7 @@ public class MessageBus {
     }
 
     private boolean connectToServer(final String remoteHost, final int remotePort, final String user, final char[] password) {
-        if (remoteHost == null || remotePort <= 0) {            
+        if (remoteHost == null || remotePort <= 0) {
             throw new IllegalArgumentException();
         }
 
@@ -117,13 +120,22 @@ public class MessageBus {
 
         boolean result = messageBusClient.connectToServer(user, password);
 
-        if (!result) {
-            messageBusClient = null; //make sure bad client connections are dumped
-        }
+        if (result) {
+            long now = new Date().getTime();
 
-        // wait for the server response
-        while (getRemoteDataBasePath() == null) {
-            Thread.yield();
+            // wait for the server response to the remote database path for a max delay before timing out
+            // this is the handshake that a good connection was made
+            while (getRemoteDataBasePath() == null) {
+                if ((new Date().getTime() - now) > MAX_LATENCY) {
+                    disconnectFromServer();
+                    result = false;
+                    break;
+                }
+
+                Thread.yield(); // spin for awhile
+            }
+        } else {
+            messageBusClient = null; //make sure bad client connections are dumped
         }
 
         return result;
@@ -139,7 +151,7 @@ public class MessageBus {
 
             if (containsListener(listener, channel)) {
                 logger.severe("An attempt was made to install a duplicate listener");
-                LogUtils.logStackTrace(logger, Level.SEVERE);               
+                LogUtils.logStackTrace(logger, Level.SEVERE);
             } else {
                 set.add(new WeakReference<>(listener));
             }
