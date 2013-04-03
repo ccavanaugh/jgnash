@@ -18,18 +18,26 @@
 package jgnash.engine;
 
 
+import jgnash.engine.jpa.JpaConfiguration;
+import jgnash.engine.jpa.JpaDataStore;
 import org.junit.Test;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -38,14 +46,18 @@ public class JpaTests {
     @Test
     @SuppressWarnings("unchecked")
     public void simpleAccountTest() {
-        Properties properties = System.getProperties();
 
-        properties.setProperty("openjpa.ConnectionURL", "jdbc:h2:" + "testDatabase");
-        properties.setProperty("openjpa.ConnectionDriverName", "org.h2.Driver");
-        properties.setProperty("openjpa.jdbc.SynchronizeMappings", "buildSchema");
+        String testFile = "test";
 
-        properties.setProperty("openjpa.ConnectionUserName", "");
-        properties.setProperty("openjpa.ConnectionPassword", "");
+        try {
+            File temp = File.createTempFile("jpa-test", "." + JpaDataStore.FILE_EXT);
+            temp.deleteOnExit();
+            testFile = temp.getAbsolutePath();
+        } catch (IOException e) {
+            Logger.getLogger(JpaTests.class.getName()).log(Level.INFO, e.getMessage(), e);
+        }
+
+        Properties properties = JpaConfiguration.getLocalProperties(testFile, "", new char[]{}, false);
 
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", properties);
@@ -84,10 +96,23 @@ public class JpaTests {
 
         em.getTransaction().commit();
 
+
+        em.getTransaction().begin();
+        Account removable = new Account(AccountType.BANK, node);
+        account.setName("Test2");
+        account.setMarkedForRemoval(true);
+        em.persist(removable);
+        em.getTransaction().commit();
+
+        Query rq = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = true");
+        removable = (Account)rq.getSingleResult();
+
+        assertEquals("Test2", removable.getName());
+
         em.close();
         factory.close();
 
-        factory = Persistence.createEntityManagerFactory("jgnash", System.getProperties());
+        factory = Persistence.createEntityManagerFactory("jgnash", properties);
         EntityManager em2 = factory.createEntityManager();
 
         Query q = em2.createQuery("select a from Account a");
@@ -115,7 +140,19 @@ public class JpaTests {
     public void transactionTest() {
         final String ACC_NAME = "Test Tran";
 
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", System.getProperties());
+        String testFile = "test";
+
+        try {
+            File temp = File.createTempFile("jpa-test", "." + JpaDataStore.FILE_EXT);
+            temp.deleteOnExit();
+            testFile = temp.getAbsolutePath();
+        } catch (IOException e) {
+            Logger.getLogger(JpaTests.class.getName()).log(Level.INFO, e.getMessage(), e);
+        }
+
+        Properties properties = JpaConfiguration.getLocalProperties(testFile, "", new char[]{}, false);
+
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", properties);
 
         EntityManager em = factory.createEntityManager();
 
@@ -142,7 +179,7 @@ public class JpaTests {
         em.close();
         factory.close();
 
-        factory = Persistence.createEntityManagerFactory("jgnash", System.getProperties());
+        factory = Persistence.createEntityManagerFactory("jgnash", properties);
         EntityManager em2 = factory.createEntityManager();
 
         Query q = em2.createQuery("select a from Account a");
@@ -169,7 +206,20 @@ public class JpaTests {
 
     @Test
     public void securityNodeTest() {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", System.getProperties());
+        String testFile = "test";
+
+        try {
+            File temp = File.createTempFile("jpa-test", "." + JpaDataStore.FILE_EXT);
+            temp.deleteOnExit();
+            testFile = temp.getAbsolutePath();
+        } catch (IOException e) {
+            Logger.getLogger(JpaTests.class.getName()).log(Level.INFO, e.getMessage(), e);
+        }
+
+        Properties properties = JpaConfiguration.getLocalProperties(testFile, "", new char[]{}, false);
+
+
+        EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", properties);
 
         EntityManager em = factory.createEntityManager();
 

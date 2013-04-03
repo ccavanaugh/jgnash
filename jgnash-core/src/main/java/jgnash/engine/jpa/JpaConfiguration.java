@@ -49,7 +49,7 @@ public class JpaConfiguration {
         return properties;
     }
 
-    protected static Properties getLocalProperties(final String fileName, final String user, final char[] password, final boolean readOnly) {
+    public static Properties getLocalProperties(final String fileName, final String user, final char[] password, final boolean readOnly) {
         Properties properties = getBaseProperties();
 
 
