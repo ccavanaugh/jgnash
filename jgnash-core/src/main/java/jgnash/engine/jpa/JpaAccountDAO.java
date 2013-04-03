@@ -17,20 +17,20 @@
  */
 package jgnash.engine.jpa;
 
-import jgnash.engine.*;
+import jgnash.engine.Account;
+import jgnash.engine.AccountGroup;
+import jgnash.engine.AccountType;
+import jgnash.engine.RootAccount;
+import jgnash.engine.SecurityNode;
 import jgnash.engine.dao.AccountDAO;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 /**
  * Account DAO
@@ -77,18 +77,15 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
      * @see jgnash.engine.AccountDAOInterface#getAccountList()
      */
     @Override
+    @SuppressWarnings("unchecked")
     public List<Account> getAccountList() {
         try {
             emLock.lock();
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<Account> cq = cb.createQuery(Account.class);
-            Root<Account> root = cq.from(Account.class);
-            cq.select(root);
 
-            TypedQuery<Account> q = em.createQuery(cq);
+            Query q = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = false");
 
             // result lists are readonly
-            return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
+            return new ArrayList<Account>(q.getResultList());
         } finally {
             emLock.unlock();
         }
@@ -158,11 +155,11 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
         try {
             emLock.lock();
 
-            String queryString = "SELECT a FROM Account a WHERE a.accountType = :type";
+            String queryString = "SELECT a FROM Account a WHERE a.accountType = :type AND a.markedForRemoval = false";
             Query query = em.createQuery(queryString);
             query.setParameter("type", type);
 
-            return stripMarkedForRemoval(new ArrayList<Account>(query.getResultList()));
+            return new ArrayList<Account>(query.getResultList());
         } finally {
             emLock.unlock();
         }
@@ -194,7 +191,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
         try {
             emLock.lock();
 
-            for (Account a : getAccountList()) {
+            for (final Account a : getAccountList()) {
                 if (a.memberOf(AccountGroup.INVEST)) {
                     list.add(a);
                 }
