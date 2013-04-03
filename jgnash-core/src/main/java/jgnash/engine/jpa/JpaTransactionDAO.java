@@ -21,16 +21,13 @@ import jgnash.engine.Account;
 import jgnash.engine.Transaction;
 import jgnash.engine.dao.TransactionDAO;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 /**
  * Transaction DAO
@@ -50,17 +47,15 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
      * @see jgnash.engine.dao.TransactionDAO#getTransactions()
      */
     @Override
+    @SuppressWarnings("unchecked")
     public List<Transaction> getTransactions() {
         try {
             emLock.lock();
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<Transaction> cq = cb.createQuery(Transaction.class);
-            Root<Transaction> root = cq.from(Transaction.class);
-            cq.select(root);
 
-            TypedQuery<Transaction> q = em.createQuery(cq);
+            Query q = em.createQuery("SELECT t FROM Transaction t WHERE t.markedForRemoval = false");
 
-            return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
+            // result lists are readonly
+            return new ArrayList<Transaction>(q.getResultList());
         } finally {
             emLock.unlock();
         }
@@ -92,7 +87,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
 
             em.persist(transaction);
 
-            for (Account account : transaction.getAccounts()) {
+            for (final Account account : transaction.getAccounts()) {
                 em.persist(account);
             }
 
@@ -117,7 +112,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
             em.getTransaction().begin();
 
             // look at accounts this transaction impacted and update the accounts
-            for (Account account : transaction.getAccounts()) {
+            for (final Account account : transaction.getAccounts()) {
                 em.persist(account);
             }
 
