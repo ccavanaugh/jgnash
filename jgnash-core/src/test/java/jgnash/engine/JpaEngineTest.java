@@ -57,22 +57,15 @@ public class JpaEngineTest extends EngineTest {
 
     @Test
     public void testVersion() {
-        final String localTestFile = "jpa-version-test." + JpaDataStore.FILE_EXT;
-
-        EngineFactory.deleteDatabase(localTestFile);
-
         try {
-            EngineFactory.bootLocalEngine(localTestFile, EngineFactory.DEFAULT, USER, PASSWORD, DataStoreType.H2_DATABASE);
-
+            // close and reopen to force check for persistence
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-            float version = EngineFactory.getFileVersion(new File(localTestFile), "", new char[]{});
+            float version = EngineFactory.getFileVersion(new File(testFile), USER, PASSWORD);
 
             System.out.println(version);
 
             assertEquals(version, Engine.CURRENT_VERSION, DELTA);
-
-            EngineFactory.deleteDatabase(localTestFile);
         } catch (final Exception e) {
             fail(e.getMessage());
         }
