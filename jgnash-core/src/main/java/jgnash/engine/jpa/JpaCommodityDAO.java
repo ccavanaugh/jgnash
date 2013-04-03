@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -37,7 +38,6 @@ import javax.persistence.criteria.Root;
  *
  * @author Craig Cavanaugh
  */
-
 class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
 
     //private static final Logger logger = Logger.getLogger(JpaCommodityDAO.class.getName());
@@ -293,32 +293,27 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
     /*
      * @see jgnash.engine.CommodityDAOInterface#getActiveAccountCommodities()
      */
-
     @Override
+    @SuppressWarnings("unchecked")
     public Set<CurrencyNode> getActiveCurrencies() {
         try {
             emLock.lock();
 
-        CriteriaBuilder cb = em.getCriteriaBuilder();
-        CriteriaQuery<Account> cq = cb.createQuery(Account.class);
-        Root<Account> root = cq.from(Account.class);
-        cq.select(root);
+            Query q = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = false");
 
-        TypedQuery<Account> q = em.createQuery(cq);
+            List<Account> accountList = q.getResultList();
 
-        List<Account> accountList = stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
+            Set<CurrencyNode> currencies = new HashSet<>();
 
-        Set<CurrencyNode> currencies = new HashSet<>();
+            for (Account account : accountList) {
+                currencies.add(account.getCurrencyNode());
 
-        for (Account account : accountList) {
-            currencies.add(account.getCurrencyNode());
-
-            for (SecurityNode node : account.getSecurities()) {
-                currencies.add(node.getReportedCurrencyNode());
+                for (SecurityNode node : account.getSecurities()) {
+                    currencies.add(node.getReportedCurrencyNode());
+                }
             }
-        }
 
-        return currencies;
+            return currencies;
         } finally {
             emLock.unlock();
         }
