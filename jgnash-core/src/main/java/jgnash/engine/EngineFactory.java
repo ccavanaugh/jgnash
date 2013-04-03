@@ -242,6 +242,8 @@ public class EngineFactory {
             if (engineName.equals(EngineFactory.DEFAULT)) {
                 Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
 
+                pref.putBoolean(USED_PASSWORD, password.length > 0);
+                pref.put(LAST_USER, user);
                 pref.put(LAST_DATABASE, fileName);
                 pref.putBoolean(LAST_REMOTE, false);
             }
