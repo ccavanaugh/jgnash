@@ -46,7 +46,7 @@ import java.util.logging.Logger;
  */
 public class JpaDataStore implements DataStore {
 
-    public static final String FILE_EXT = "db";
+    public static final String FILE_EXT = "h2.db";
 
     private EntityManager em;
 
@@ -62,9 +62,14 @@ public class JpaDataStore implements DataStore {
 
     @Override
     public void closeEngine() {
+
+        logger.info("Closing");
+
         if (em != null && factory != null) {
             em.close();
             factory.close();
+        } else {
+            logger.severe("The EntityManger was already null!");
         }
     }
 
@@ -194,6 +199,8 @@ public class JpaDataStore implements DataStore {
     public static float getFileVersion(final File file, final String user, final char[] password) throws Exception {
         float fileVersion = 0;
 
+        logger.info("Here");
+
         Properties properties = JpaConfiguration.getLocalProperties(file.getAbsolutePath(), user, password, true);
 
         EntityManagerFactory factory = null;
@@ -226,6 +233,7 @@ public class JpaDataStore implements DataStore {
             }
         }
 
+        System.out.println(fileVersion);
         return fileVersion;
     }
 
