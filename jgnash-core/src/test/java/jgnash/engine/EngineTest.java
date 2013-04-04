@@ -48,14 +48,12 @@ public abstract class EngineTest {
 
     public abstract Engine createEngine() throws Exception;
 
-    public static final String USER = "";
-
     public static final char[] PASSWORD = new char[]{};
 
     private void closeEngine() throws Exception {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-        Thread.sleep(1000); // hack to allow the DataStore to completely settle out
+        Thread.sleep(1500); // hack to allow the DataStore to completely settle out
     }
 
     @Before
