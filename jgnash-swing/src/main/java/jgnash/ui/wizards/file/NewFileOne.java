@@ -160,8 +160,6 @@ public class NewFileOne extends JPanel implements WizardPage, ActionListener {
     public void putSettings(Map<Enum<?>, Object> map) {
         map.put(NewFileDialog.Settings.DATABASE_NAME, dbNameField.getText());
         map.put(NewFileDialog.Settings.TYPE, typeCombo.getSelectedDataStoreType());
-
-        // TODO: Fix me, allow the user to specify the password
         map.put(NewFileDialog.Settings.PASSWORD, "");
     }
 
