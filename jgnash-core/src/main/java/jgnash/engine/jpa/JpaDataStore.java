@@ -199,8 +199,6 @@ public class JpaDataStore implements DataStore {
     public static float getFileVersion(final File file, final String user, final char[] password) throws Exception {
         float fileVersion = 0;
 
-        logger.info("Here");
-
         Properties properties = JpaConfiguration.getLocalProperties(file.getAbsolutePath(), user, password, true);
 
         EntityManagerFactory factory = null;
@@ -233,7 +231,6 @@ public class JpaDataStore implements DataStore {
             }
         }
 
-        System.out.println(fileVersion);
         return fileVersion;
     }
 
