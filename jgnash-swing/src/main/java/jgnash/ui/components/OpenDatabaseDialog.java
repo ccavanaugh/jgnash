@@ -53,8 +53,6 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
 
     private final JTextField hostField = new JTextFieldEx();
 
-    private final JLabel fileFieldLabel = new JLabel(rb.getString("Label.DatabaseName"));
-
     private final JTextField fileField = new JTextFieldEx();
 
     private final JButton fileButton = new JButton("...");
@@ -154,7 +152,7 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
         builder.border(Borders.DIALOG);
 
-        builder.append(fileFieldLabel, fileField, fileButton);
+        builder.append(new JLabel(rb.getString("Label.DatabaseName")), fileField, fileButton);
 
         builder.append(remoteButton, 4);
         builder.append(rb.getString("Label.DatabaseServer"), hostField, 3);
