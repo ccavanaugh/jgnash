@@ -90,9 +90,6 @@ public final class Main {
     @Option(name = "-webConsole", usage = "Act as a server using the specified file")
     private boolean webConsole;
 
-    @Option(name = "-user", usage = "Client or Server user name")
-    private String user;
-
     @Option(name = "-password", usage = "Client or Server password")
     private String password;
 
@@ -109,8 +106,6 @@ public final class Main {
     private static boolean hangDetect;
 
     final private static int DEFAULT_PORT = 5300;
-    
-    final private static String DEFAULT_USER = "";
     
     final private static String DEFAULT_PASSWORD = "";
 
@@ -242,10 +237,6 @@ public final class Main {
 
             if (port <= 0) {
                 port = DEFAULT_PORT;
-            }
-            
-            if (user == null) {
-                user = DEFAULT_USER;
             }
             
             if (password == null) {
