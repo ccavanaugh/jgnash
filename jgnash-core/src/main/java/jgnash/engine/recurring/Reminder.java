@@ -103,9 +103,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
 
     /**
      * Reference to the transaction for this reminder.
-     * This transaction is not stored in the IDMap.
      */
-    @OneToOne
+    @OneToOne(optional = true, orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Transaction transaction;
 
     @Override
