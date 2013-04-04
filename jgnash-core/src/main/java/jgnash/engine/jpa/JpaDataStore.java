@@ -34,6 +34,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -74,8 +78,8 @@ public class JpaDataStore implements DataStore {
     }
 
     @Override
-    public Engine getClientEngine(final String host, final int port, final String user, final char[] password, final String dataBasePath) {
-        Properties properties = JpaConfiguration.getClientProperties(dataBasePath, host, port, user, password);
+    public Engine getClientEngine(final String host, final int port, final char[] password, final String dataBasePath) {
+        Properties properties = JpaConfiguration.getClientProperties(dataBasePath, host, port, password);
 
         Engine engine = null;
 
@@ -107,8 +111,8 @@ public class JpaDataStore implements DataStore {
     }
 
     @Override
-    public Engine getLocalEngine(final String fileName, final String engineName, final String user, final char[] password) {
-        Properties properties = JpaConfiguration.getLocalProperties(fileName, user, password, false);
+    public Engine getLocalEngine(final String fileName, final String engineName, final char[] password) {
+        Properties properties = JpaConfiguration.getLocalProperties(fileName, password, false);
 
         Engine engine = null;
 
@@ -161,7 +165,7 @@ public class JpaDataStore implements DataStore {
             }
         }
 
-        Properties properties = JpaConfiguration.getLocalProperties(file.getAbsolutePath(), "", new char[] {}, false);
+        Properties properties = JpaConfiguration.getLocalProperties(file.getAbsolutePath(), new char[]{}, false);
 
         EntityManagerFactory factory = null;
         EntityManager em = null;
@@ -196,10 +200,10 @@ public class JpaDataStore implements DataStore {
      * @param file <code>File</code> to open
      * @return file version
      */
-    public static float getFileVersion(final File file, final String user, final char[] password) throws Exception {
+    public static float getFileVersion(final File file, final char[] password) throws Exception {
         float fileVersion = 0;
 
-        Properties properties = JpaConfiguration.getLocalProperties(file.getAbsolutePath(), user, password, true);
+        Properties properties = JpaConfiguration.getLocalProperties(file.getAbsolutePath(), password, true);
 
         EntityManagerFactory factory = null;
         EntityManager em = null;
@@ -221,7 +225,7 @@ public class JpaDataStore implements DataStore {
             fileVersion = defaultConfig.getFileVersion();
         } catch (Exception e) {
             throw new Exception(e);
-        }  finally {
+        } finally {
             if (em != null) {
                 em.close();
             }
@@ -232,6 +236,31 @@ public class JpaDataStore implements DataStore {
         }
 
         return fileVersion;
+    }
+
+    public static boolean changeUserAndPassword(final String fileName, final char[] password, final char[] newPassword) {
+        boolean result = false;
+
+        if (!isDatabaseLocked(fileName)) {
+
+            Properties properties = JpaConfiguration.getLocalProperties(fileName, password, false);
+
+            String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
+
+            try (Connection connection = DriverManager.getConnection(url)) {
+                Statement statement = connection.createStatement();
+
+                statement.execute(String.format("SET PASSWORD '%s'", new String(newPassword)));
+
+                result = true;
+
+                statement.close();
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, e.getMessage(), e);
+            }
+        }
+
+        return result;
     }
 
     /**

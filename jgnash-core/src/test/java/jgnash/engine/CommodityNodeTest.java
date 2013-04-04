@@ -46,7 +46,7 @@ public class CommodityNodeTest {
         // get an engine, create a commodity and then try to retrieve
 
         try {
-            Engine e = EngineFactory.bootLocalEngine(EngineFactory.getDefaultDatabase() + "-exchange-test.xml", EngineFactory.DEFAULT, USER, PASSWORD, DataStoreType.XML);
+            Engine e = EngineFactory.bootLocalEngine(EngineFactory.getDefaultDatabase() + "-exchange-test.xml", EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
 
             CurrencyNode usdNode = new CurrencyNode();
             usdNode.setSymbol("USD");
@@ -82,7 +82,7 @@ public class CommodityNodeTest {
 
         try {
             // get an engine, create a commodity and then try to retrieve
-            Engine e = EngineFactory.bootLocalEngine(EngineFactory.getDefaultDatabase() + "-exchange-test.xml", EngineFactory.DEFAULT,  USER, PASSWORD, DataStoreType.XML);
+            Engine e = EngineFactory.bootLocalEngine(EngineFactory.getDefaultDatabase() + "-exchange-test.xml", EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
 
             CurrencyNode usdNode = new CurrencyNode();
             usdNode.setSymbol("USD");
@@ -118,7 +118,7 @@ public class CommodityNodeTest {
             EngineFactory.deleteDatabase(EngineFactory.getDefaultDatabase() + "-commodity-test.xml");
 
             // get an engine, create a commodity and then try to retrieve
-            Engine e = EngineFactory.bootLocalEngine(EngineFactory.getDefaultDatabase() + "-commodity-test.xml", EngineFactory.DEFAULT,  USER, PASSWORD, DataStoreType.XML);
+            Engine e = EngineFactory.bootLocalEngine(EngineFactory.getDefaultDatabase() + "-commodity-test.xml", EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
 
             CurrencyNode node = new CurrencyNode();
 

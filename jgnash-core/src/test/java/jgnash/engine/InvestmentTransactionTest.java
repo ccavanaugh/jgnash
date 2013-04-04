@@ -64,7 +64,7 @@ public class InvestmentTransactionTest {
         EngineFactory.deleteDatabase(database);
 
         try {
-            e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, USER, PASSWORD, DataStoreType.XML);
+            e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
 
             // Creating currencies
             defaultCurrency = DefaultCurrencies.buildCustomNode("USD");

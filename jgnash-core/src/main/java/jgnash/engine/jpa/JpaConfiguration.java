@@ -36,6 +36,7 @@ public class JpaConfiguration {
     public static final String HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
     public static final String USER = ";USER=";
     public static final String PASSWORD = ";PASSWORD=";
+    public static final String DEFAULT_USER = "JGNASH";
 
 
     private static Properties getBaseProperties() {
@@ -49,7 +50,7 @@ public class JpaConfiguration {
         return properties;
     }
 
-    public static Properties getLocalProperties(final String fileName, final String user, final char[] password, final boolean readOnly) {
+    public static Properties getLocalProperties(final String fileName, final char[] password, final boolean readOnly) {
         Properties properties = getBaseProperties();
 
 
@@ -57,9 +58,7 @@ public class JpaConfiguration {
 
         urlBuilder.append(FileUtils.stripFileExtension(fileName));
 
-        if (user != null && user.length() > 0) {
-            urlBuilder.append(USER).append(user);
-        }
+        urlBuilder.append(USER).append(DEFAULT_USER);
 
         if (password != null && password.length > 0) {
             urlBuilder.append(PASSWORD).append(password);
@@ -70,18 +69,18 @@ public class JpaConfiguration {
         }
 
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_URL, urlBuilder.toString());
-        properties.setProperty(JAVAX_PERSISTENCE_JDBC_USER, user);
+        properties.setProperty(JAVAX_PERSISTENCE_JDBC_USER, DEFAULT_USER);
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_PASSWORD, new String(password));
 
         return properties;
     }
 
-    protected static Properties getClientProperties(final String fileName, final String host, final int port, final String user, final char[]  password) {
+    protected static Properties getClientProperties(final String fileName, final String host, final int port, final char[]  password) {
         Properties properties = getBaseProperties();
 
         boolean useSSL = Boolean.parseBoolean(properties.getProperty("ssl"));
 
-        properties.setProperty(JAVAX_PERSISTENCE_JDBC_USER, user);
+        properties.setProperty(JAVAX_PERSISTENCE_JDBC_USER, DEFAULT_USER);
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_PASSWORD, new String(password));
 
         StringBuilder urlBuilder = new StringBuilder("jdbc:h2");
@@ -95,7 +94,7 @@ public class JpaConfiguration {
         urlBuilder.append(host).append(":").append(port).append("/");
         urlBuilder.append(fileName);
 
-        urlBuilder.append(USER).append(user);
+        urlBuilder.append(USER).append(DEFAULT_USER);
         urlBuilder.append(PASSWORD).append(password);
 
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_URL, urlBuilder.toString());

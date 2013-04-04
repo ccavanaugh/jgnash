@@ -47,6 +47,10 @@
             accel="Menu.New.KeyStroke"
             desc="Menu.New.Tooltip"/>
 
+    <action id="change-credentials-command"
+            name="Menu.ChangeCredentials.Name"
+            desc="Menu.ChangeCredentials.ToolTip"/>
+
     <action id="open-command"
             name="Menu.Open.Name"
             mnemonic="Menu.Open.Mnemonic"
@@ -316,6 +320,8 @@
             <action-node id="export-menu" idref="export-menu-command">
                 <action-node idref="exportAccounts-command"/>
             </action-node>
+            <empty/>
+            <action-node idref="change-credentials-command"/>
             <empty/>
             <action-node idref="close-command"/>
             <action-node idref="exit-command"/>

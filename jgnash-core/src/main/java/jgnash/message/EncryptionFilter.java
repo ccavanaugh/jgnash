@@ -48,14 +48,13 @@ public class EncryptionFilter {
 
     private static Logger logger = Logger.getLogger(EncryptionFilter.class.getName());
 
-    public EncryptionFilter(final String user, final char[] password) {
+    public EncryptionFilter(final char[] password) {
         byte[] encryptionKey = "fake".getBytes();
 
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
 
-            StringBuilder builder = new StringBuilder(user);
-            builder.append(password);
+            StringBuilder builder = new StringBuilder(new String(password));
 
             // generate the encryption key
             encryptionKey = md.digest(builder.toString().getBytes());

@@ -38,21 +38,21 @@ public interface DataStore {
      * 
      * @param host host name or IP address
      * @param port connection port
-     * @param user user name
      * @param password user password
      * @param engineName unique name to give the engine instance
      * @return Engine instance if a successful connection is made
      */
-    Engine getClientEngine(final String host, final int port, final String user, final char[] password, final String engineName);
+    Engine getClientEngine(final String host, final int port, final char[] password, final String engineName);
 
     /**
      * Create an engine instance that uses a file
      * 
      * @param fileName full path to the file
      * @param engineName unique name to give the engine instance
+     * @param password user password
      * @return Engine instance.  A new file will be created if it does not exist
      */
-    Engine getLocalEngine(final String fileName, final String engineName, final String user, final char[] password);
+    Engine getLocalEngine(final String fileName, final String engineName, final char[] password);
 
     /**
      * Returns the default file extension for this DataStore

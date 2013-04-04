@@ -95,14 +95,14 @@ class MessageBusRemoteClient {
         return ConnectionFactory.getConnectionTimeout();
     }
 
-    public boolean connectToServer(final String user, final char[] password) {
+    public boolean connectToServer(final char[] password) {
         boolean result = false;
 
         boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty("ssl"));
 
         // If a user and password has been specified, enable an encryption filter
-        if (useSSL && user != null && password != null && !user.isEmpty() && password.length > 0) {
-            filter = new EncryptionFilter(user, password);
+        if (useSSL &&  password != null && password.length > 0) {
+            filter = new EncryptionFilter(password);
         }
 
         SocketConnector connector = new NioSocketConnector();

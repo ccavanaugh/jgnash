@@ -28,7 +28,7 @@ public class TransactionTest {
         EngineFactory.deleteDatabase(database);
 
         try {
-            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, USER, PASSWORD, DataStoreType.XML);
+            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
 
             CurrencyNode defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
 
@@ -87,7 +87,7 @@ public class TransactionTest {
         EngineFactory.deleteDatabase(database);
 
         try {
-            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, USER, PASSWORD, DataStoreType.XML);
+            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
 
             CurrencyNode defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
 

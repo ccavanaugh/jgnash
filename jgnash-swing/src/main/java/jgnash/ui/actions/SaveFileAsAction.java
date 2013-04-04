@@ -125,7 +125,7 @@ public class SaveFileAsAction extends AbstractEnabledAction {
 
                         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-                        EngineFactory.bootLocalEngine(newFile.getAbsolutePath(), EngineFactory.DEFAULT, "", new char[]{});
+                        EngineFactory.bootLocalEngine(newFile.getAbsolutePath(), EngineFactory.DEFAULT, new char[]{});
                         EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount();
                     }
 

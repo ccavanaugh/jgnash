@@ -48,7 +48,7 @@ public class JpaEngineTest extends EngineTest {
         EngineFactory.deleteDatabase(testFile);
 
         try {
-            return EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, USER, PASSWORD, DataStoreType.H2_DATABASE);
+            return EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD, DataStoreType.H2_DATABASE);
         } catch (final Exception e) {
             fail(e.getMessage());
             return null;
@@ -61,7 +61,7 @@ public class JpaEngineTest extends EngineTest {
             // close and reopen to force check for persistence
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-            float version = EngineFactory.getFileVersion(new File(testFile), USER, PASSWORD);
+            float version = EngineFactory.getFileVersion(new File(testFile), PASSWORD);
 
             System.out.println(version);
 

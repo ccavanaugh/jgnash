@@ -62,7 +62,7 @@ public class JpaNetworkServer {
 
     private Server server;
 
-    public synchronized void startServer(final String fileName, final int port, final String user, final char[] password, final boolean webConsole) {
+    public synchronized void startServer(final String fileName, final int port, final char[] password, final boolean webConsole) {
         stop = false;
 
         // Start the H2 server
@@ -90,13 +90,13 @@ public class JpaNetworkServer {
             Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, e.getMessage(), e);
         }
 
-        final Engine engine = createEngine(fileName, port, user, password);
+        final Engine engine = createEngine(fileName, port, password);
 
         if (engine != null) {
 
             // Start the message bus and pass the file name so it can be reported to the client
             MessageBusRemoteServer messageServer = new MessageBusRemoteServer(port + 1);
-            messageServer.startServer(fileName, user, password);
+            messageServer.startServer(fileName, password);
 
             // Start the backup thread that ensures an XML backup is created at set intervals
             ScheduledExecutorService backupExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
@@ -158,9 +158,9 @@ public class JpaNetworkServer {
         this.notify();
     }
 
-    private Engine createEngine(final String fileName, final int port, final String user, final char[] password) {
+    private Engine createEngine(final String fileName, final int port, final char[] password) {
 
-        Properties properties = JpaConfiguration.getClientProperties(fileName, "localhost", port, user, password);
+        Properties properties = JpaConfiguration.getClientProperties(fileName, "localhost", port, password);
 
         Logger.getLogger(JpaNetworkServer.class.getName()).info("Local connection url is: " + properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL));
 

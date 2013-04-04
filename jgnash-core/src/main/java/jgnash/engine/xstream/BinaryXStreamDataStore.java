@@ -58,10 +58,10 @@ public class BinaryXStreamDataStore implements DataStore {
     /**
      * Create an engine instance that uses a local XML file
      *
-     * @see jgnash.engine.DataStore#getLocalEngine(String, String, String, char[])
+     * @see jgnash.engine.DataStore#getLocalEngine(String, String, char[])
      */
     @Override
-    public Engine getLocalEngine(final String fileName, final String engineName, final String user, final char[] password) {
+    public Engine getLocalEngine(final String fileName, final String engineName, final char[] password) {
 
         File file = new File(fileName);
 
@@ -113,11 +113,11 @@ public class BinaryXStreamDataStore implements DataStore {
     /**
      * XMLDataStore will throw an exception if called
      *
-     * @see jgnash.engine.DataStore#getClientEngine(String, int, String, char[], String)
+     * @see jgnash.engine.DataStore#getClientEngine(String, int, char[], String)
      * @throws UnsupportedOperationException
      */
     @Override
-    public Engine getClientEngine(final String host, final int port, final String user, final char[] password, final String engineName) {
+    public Engine getClientEngine(final String host, final int port, final char[] password, final String engineName) {
         throw new UnsupportedOperationException("Client / Server operation not supported for this type.");
     }
 

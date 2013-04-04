@@ -47,8 +47,6 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
 
     private final Resource rb = Resource.get();
 
-    private final JTextField nameField = new JTextFieldEx();
-
     private final JPasswordField passwordField = new JPasswordField();
 
     private final JTextField hostField = new JTextFieldEx();
@@ -121,10 +119,6 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
         portField.setIntValue(port);
     }
 
-    public String getUserName() {
-        return nameField.getText();
-    }
-
     public boolean isRemote() {
         return remoteButton.isSelected();
     }
@@ -159,7 +153,6 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
         builder.append(rb.getString("Label.Port"), portField, 3);
 
         builder.appendSeparator(rb.getString("Title.FileLoginCredentials"));
-        builder.append(rb.getString("Label.UserName"), nameField, 3);
         builder.append(rb.getString("Label.Password"), passwordField, 3);
 
         builder.nextLine();
@@ -176,10 +169,6 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
 
     public void setDatabasePath(final String dataBase) {
         fileField.setText(dataBase);
-    }
-
-    public void setUserName(final String userName) {
-        nameField.setText(userName);
     }
 
     public void setRemote(final boolean remote) {

@@ -85,7 +85,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
 
     private static JHelp jHelp;
 
-    public UIApplication(final File file, final String user, final char[] password) {
+    public UIApplication(final File file, final char[] password) {
 
         if (initFrame()) {
         
@@ -95,7 +95,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
                 @Override
                 public void run() {
                     if (file != null) {
-                        mainFrame.loadFile(file, user, password);
+                        mainFrame.loadFile(file, password);
                     } else if (EngineFactory.openLastOnStartup()) {
                         mainFrame.loadLast();
                     }
@@ -104,7 +104,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
         }
     }
 
-    public UIApplication(final String host, final int port, final String user, final char[] password) {
+    public UIApplication(final String host, final int port, final char[] password) {
         if (initFrame()) {         
 
             // try to connect to the remove host
@@ -112,7 +112,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
 
                 @Override
                 public void run() {
-                    mainFrame.openRemote(host, port, user, password);
+                    mainFrame.openRemote(host, port, password);
                 }
             });
         }

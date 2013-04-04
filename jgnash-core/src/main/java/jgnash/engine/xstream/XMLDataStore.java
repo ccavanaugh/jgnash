@@ -58,10 +58,10 @@ public class XMLDataStore implements DataStore {
     /**
      * Create an engine instance that uses a local XML file
      *
-     * @see DataStore#getLocalEngine(java.lang.String, java.lang.String, java.lang.String, char[])
+     * @see DataStore#getLocalEngine(java.lang.String, java.lang.String, char[])
      */
     @Override
-    public Engine getLocalEngine(final String fileName, final String engineName, final String user, final char[] password) {
+    public Engine getLocalEngine(final String fileName, final String engineName, final char[] password) {
 
         File file = new File(fileName);
 
@@ -113,11 +113,11 @@ public class XMLDataStore implements DataStore {
     /**
      * XMLDataStore will throw an exception if called
      *
-     * @see DataStore#getClientEngine(java.lang.String, int, java.lang.String, char[], java.lang.String)
+     * @see DataStore#getClientEngine(java.lang.String, int, char[], java.lang.String)
      * @throws UnsupportedOperationException
      */
     @Override
-    public Engine getClientEngine(final String host, final int port, final String user, final char[] password, final String engineName) {
+    public Engine getClientEngine(final String host, final int port, final char[] password, final String engineName) {
         throw new UnsupportedOperationException("Client / Server operation not supported for this type.");
     }
 

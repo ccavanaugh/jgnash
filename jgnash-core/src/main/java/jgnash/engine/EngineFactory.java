@@ -56,8 +56,6 @@ public class EngineFactory {
 
     private static final String LAST_HOST = "LastHost";
 
-    private static final String LAST_USER = "LastUser";
-
     private static final String LAST_PORT = "LastPort";
 
     private static final String USED_PASSWORD = "LastUsedPassword";
@@ -195,11 +193,11 @@ public class EngineFactory {
      *         <code>Engine</code> instance if successful, null otherwise
      * @see Engine
      */
-    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName, final String user, final char[] password) throws Exception {
+    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName, final char[] password) throws Exception {
         DataStoreType type = getDataStoreByType(new File(fileName));
 
         if (type != null) {
-            return bootLocalEngine(fileName, engineName, user, password, type);
+            return bootLocalEngine(fileName, engineName, password, type);
         }
 
         return null;
@@ -212,14 +210,13 @@ public class EngineFactory {
      *
      * @param fileName   filename to load or create
      * @param engineName engine identifier
-     * @param user       user name for the file
      * @param password   password for the file
      * @param type       <code>DataStoreType</code> type to use for storage
      * @return new <code>Engine</code> instance if successful
      * @see Engine
      * @see DataStoreType
      */
-    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName, final String user, final char[] password, final DataStoreType type) throws Exception {
+    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName, final char[] password, final DataStoreType type) throws Exception {
 
         if (!type.supportsLocal) {
             throw new UnsupportedOperationException("Local operation not supported for this type.");
@@ -229,7 +226,7 @@ public class EngineFactory {
 
         DataStore dataStore = type.getDataStore();
 
-        Engine engine = dataStore.getLocalEngine(fileName, engineName, user, password);
+        Engine engine = dataStore.getLocalEngine(fileName, engineName, password);
 
         if (engine != null) {
             logger.info(Resource.get().getString("Message.EngineStart"));
@@ -243,7 +240,6 @@ public class EngineFactory {
                 Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
 
                 pref.putBoolean(USED_PASSWORD, password.length > 0);
-                pref.put(LAST_USER, user);
                 pref.put(LAST_DATABASE, fileName);
                 pref.putBoolean(LAST_REMOTE, false);
             }
@@ -251,11 +247,11 @@ public class EngineFactory {
         return engine;
     }
 
-    public static synchronized Engine bootClientEngine(final String host, final int port, final String user, final char[] password, final String engineName) throws Exception {
-        return bootClientEngine(host, port, user, password, engineName, DataStoreType.H2_DATABASE);
+    public static synchronized Engine bootClientEngine(final String host, final int port, final char[] password, final String engineName) throws Exception {
+        return bootClientEngine(host, port, password, engineName, DataStoreType.H2_DATABASE);
     }
 
-    private static synchronized Engine bootClientEngine(final String host, final int port, final String user, final char[] password, final String engineName, final DataStoreType type) throws Exception {
+    private static synchronized Engine bootClientEngine(final String host, final int port, final char[] password, final String engineName, final DataStoreType type) throws Exception {
 
         if (engineMap.get(engineName) != null) {
             throw new RuntimeException("A stale engine was found in the map");
@@ -270,10 +266,9 @@ public class EngineFactory {
         Engine engine = null;
 
         // start the client message bus
-        if (MessageBus.getInstance(engineName).setRemote(host, port + 1, user, password)) {
+        if (MessageBus.getInstance(engineName).setRemote(host, port + 1, password)) {
             pref.putInt(LAST_PORT, port);
             pref.put(LAST_HOST, host);
-            pref.put(LAST_USER, user);
             pref.putBoolean(LAST_REMOTE, true);
 
             MessageBus messageBus = MessageBus.getInstance(engineName);
@@ -291,7 +286,7 @@ public class EngineFactory {
             DataStore dataStore = type.getDataStore();
 
             // connect to the remote server
-            engine = dataStore.getClientEngine(host, port, user, password, remoteDataBasePath);
+            engine = dataStore.getClientEngine(host, port, password, remoteDataBasePath);
 
             if (engine != null) {
                 logger.info(Resource.get().getString("Message.EngineStart"));
@@ -324,7 +319,7 @@ public class EngineFactory {
         return null;
     }
 
-    public static float getFileVersion(final File file, final String user, final char[] password) {
+    public static float getFileVersion(final File file, final char[] password) {
         float version = 0;
 
         FileType type = FileMagic.magic(file);
@@ -335,7 +330,7 @@ public class EngineFactory {
             version = BinaryXStreamDataStore.getFileVersion(file);
         } else if (type == FileType.h2) {
             try {
-                version = JpaDataStore.getFileVersion(file, user, password);
+                version = JpaDataStore.getFileVersion(file, password);
             } catch (final Exception e) {
                 version = 0;
             }
@@ -371,22 +366,10 @@ public class EngineFactory {
 
     public static synchronized String getActiveDatabase() {
         if (getLastRemote()) {
-            return getLastUser() + "@" + getLastHost();
+            return "@" + getLastHost();
         }
 
         return getLastDatabase();
-    }
-
-    /**
-     * Returns the user of the last open database. If a database has not been
-     * opened, then the default user will be returned.
-     *
-     * @return Last database user or default
-     */
-    public static synchronized String getLastUser() {
-        Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
-
-        return pref.get(LAST_USER, "sa");
     }
 
     /**

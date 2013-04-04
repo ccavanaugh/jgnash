@@ -57,7 +57,6 @@ public class NewFileDialog extends WizardDialog {
         DATABASE_NAME,
         ACCOUNT_SET,
         TYPE,
-        USER,
         PASSWORD
     }
 
@@ -99,10 +98,9 @@ public class NewFileDialog extends WizardDialog {
                 // create the directory if needed
                 Files.createDirectories(new File(new File(database).getParent()).toPath());
 
-                String user = (String)d.getSetting(Settings.USER);
                 String password = (String)d.getSetting(Settings.PASSWORD);
 
-                Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, user, password.toCharArray(), type);
+                Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, password.toCharArray(), type);
 
                 // match the existing default to the new default.  If they match, replace to prevent
                 // creation of a duplicate currency
@@ -151,7 +149,7 @@ public class NewFileDialog extends WizardDialog {
 
                 // force a save and reload of the file
                 EngineFactory.closeEngine(EngineFactory.DEFAULT);
-                EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, user, password.toCharArray(), type);
+                EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, password.toCharArray(), type);
 
                 return null;
             }

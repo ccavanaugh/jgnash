@@ -71,14 +71,14 @@ public class MessageBusRemoteServer {
         this.port = port;
     }
 
-    public void startServer(final String dataBasePath, final String user, final char[] password) {
+    public void startServer(final String dataBasePath, final char[] password) {
         this.dataBasePath = dataBasePath;
 
         boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty("ssl"));
 
         // If a user and password has been specified, enable an encryption filter
-        if (useSSL && user != null && password != null && !user.isEmpty() && password.length > 0) {
-            filter = new EncryptionFilter(user, password);
+        if (useSSL && password != null && password.length > 0) {
+            filter = new EncryptionFilter(password);
         }
 
         acceptor = new NioSocketAcceptor();

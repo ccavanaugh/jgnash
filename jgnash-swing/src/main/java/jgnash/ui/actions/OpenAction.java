@@ -68,14 +68,13 @@ public class OpenAction {
 
                 Engine e = null;
 
-                final String user = dialog.getUserName();
                 final char[] password = dialog.getPassword();
 
                 if (dialog.isRemote()) {
                     String host = dialog.getHost();
                     int port = dialog.getPort();
 
-                    e = EngineFactory.bootClientEngine(host, port, user, password, EngineFactory.DEFAULT);
+                    e = EngineFactory.bootClientEngine(host, port, password, EngineFactory.DEFAULT);
 
                     if (e == null) {
                         remoteConnectionFailed = true;
@@ -85,8 +84,8 @@ public class OpenAction {
                         StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
                     } else {
 
-                        if (checkAndBackupOldVersion(dialog.getDatabasePath(), user, password)) {
-                            e = EngineFactory.bootLocalEngine(dialog.getDatabasePath(), EngineFactory.DEFAULT, user, password);
+                        if (checkAndBackupOldVersion(dialog.getDatabasePath(), password)) {
+                            e = EngineFactory.bootLocalEngine(dialog.getDatabasePath(), EngineFactory.DEFAULT, password);
                         }
                     }
                 }
@@ -117,7 +116,6 @@ public class OpenAction {
                 OpenDatabaseDialog d = new OpenDatabaseDialog(UIApplication.getFrame());
 
                 d.setDatabasePath(EngineFactory.getLastDatabase());
-                d.setUserName(EngineFactory.getLastUser());
                 d.setPort(EngineFactory.getLastPort());
                 d.setHost(EngineFactory.getLastHost());
                 d.setRemote(EngineFactory.getLastRemote());
@@ -134,7 +132,7 @@ public class OpenAction {
         });
     }
 
-    public static void openAction(final File file, final String user, final char[] password) {
+    public static void openAction(final File file, final char[] password) {
 
         String database = file.getAbsolutePath();
 
@@ -149,8 +147,8 @@ public class OpenAction {
                 // Disk IO is heavy so delay and allow the UI to react before starting the boot operation
                 Thread.sleep(750);
 
-                if (checkAndBackupOldVersion(file.getAbsolutePath(), user, password)) {
-                    Engine e = EngineFactory.bootLocalEngine(file.getAbsolutePath(), EngineFactory.DEFAULT, user, password);
+                if (checkAndBackupOldVersion(file.getAbsolutePath(), password)) {
+                    Engine e = EngineFactory.bootLocalEngine(file.getAbsolutePath(), EngineFactory.DEFAULT, password);
                     if (e != null) {
                         e.getRootAccount(); // prime the engine
                     }
@@ -200,21 +198,20 @@ public class OpenAction {
 
                 Engine engine = null;
 
-                final String user = EngineFactory.getLastUser();    // a prior user name may have been used
 
                 if (EngineFactory.getLastRemote() && !EngineFactory.usedPassword()) {  // must be a remote connection without use of a password
 
                     String host = EngineFactory.getLastHost();
                     int port = EngineFactory.getLastPort();
 
-                    engine = EngineFactory.bootClientEngine(host, port, user, new char[]{}, EngineFactory.DEFAULT);
+                    engine = EngineFactory.bootClientEngine(host, port, new char[]{}, EngineFactory.DEFAULT);
 
                     if (engine == null) {
                         appLogger.warning(rb.getString("Message.ErrorServerConnection"));
                     }
                 } else {    // must be a local file with a user name and password
-                    if (checkAndBackupOldVersion(EngineFactory.getLastDatabase(), user, new char[]{})) {
-                        engine = EngineFactory.bootLocalEngine(EngineFactory.getLastDatabase(), EngineFactory.DEFAULT, user, new char[]{});
+                    if (checkAndBackupOldVersion(EngineFactory.getLastDatabase(), new char[]{})) {
+                        engine = EngineFactory.bootLocalEngine(EngineFactory.getLastDatabase(), EngineFactory.DEFAULT, new char[]{});
                     }
 
                     if (engine == null) {
@@ -261,7 +258,7 @@ public class OpenAction {
         }
     }
 
-    public static void openRemote(final String host, final int port, final String user, final char[] password) {
+    public static void openRemote(final String host, final int port, final char[] password) {
 
         final class BootEngine extends SimpleSwingWorker {
 
@@ -273,7 +270,7 @@ public class OpenAction {
 
                 Thread.sleep(750);
 
-                EngineFactory.bootClientEngine(host, port, user, password, EngineFactory.DEFAULT);
+                EngineFactory.bootClientEngine(host, port, password, EngineFactory.DEFAULT);
 
                 EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount(); // prime the engine
                 logger.fine("Engine boot complete");
@@ -289,12 +286,12 @@ public class OpenAction {
         new BootEngine().execute();
     }
 
-    private static boolean checkAndBackupOldVersion(final String fileName, final String user, final char[] password) {
+    private static boolean checkAndBackupOldVersion(final String fileName, final char[] password) {
 
         boolean result = false;
 
         if (Files.exists(new File(fileName).toPath())) {
-            float version = EngineFactory.getFileVersion(new File(fileName), user, password);
+            float version = EngineFactory.getFileVersion(new File(fileName), password);
 
             if (version <= 0) {
                 final String errorMessage = Resource.get().getString("Message.Error.InvalidUserPass");

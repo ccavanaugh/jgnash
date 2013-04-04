@@ -48,7 +48,7 @@ public class BudgetResultsExportTest {
             file.deleteOnExit();
 
 
-            Engine e = EngineFactory.bootLocalEngine(file.getName(), EngineFactory.DEFAULT, USER, PASSWORD, DataStoreType.XML);
+            Engine e = EngineFactory.bootLocalEngine(file.getName(), EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
             CurrencyNode node = e.getDefaultCurrency();
 
             Account account1 = new Account(AccountType.EXPENSE, node);
