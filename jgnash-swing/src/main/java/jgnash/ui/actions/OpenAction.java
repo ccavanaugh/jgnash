@@ -84,8 +84,10 @@ public class OpenAction {
                     if (FileUtils.isFileLocked(dialog.getDatabasePath())) {
                         StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
                     } else {
-                        checkAndBackupOldVersion(dialog.getDatabasePath(), user, password);
-                        e = EngineFactory.bootLocalEngine(dialog.getDatabasePath(), EngineFactory.DEFAULT, user, password);
+
+                        if (checkAndBackupOldVersion(dialog.getDatabasePath(), user, password)) {
+                            e = EngineFactory.bootLocalEngine(dialog.getDatabasePath(), EngineFactory.DEFAULT, user, password);
+                        }
                     }
                 }
 
@@ -147,15 +149,15 @@ public class OpenAction {
                 // Disk IO is heavy so delay and allow the UI to react before starting the boot operation
                 Thread.sleep(750);
 
-                checkAndBackupOldVersion(file.getAbsolutePath(), user, password);
+                if (checkAndBackupOldVersion(file.getAbsolutePath(), user, password)) {
+                    Engine e = EngineFactory.bootLocalEngine(file.getAbsolutePath(), EngineFactory.DEFAULT, user, password);
+                    if (e != null) {
+                        e.getRootAccount(); // prime the engine
+                    }
 
-                Engine e = EngineFactory.bootLocalEngine(file.getAbsolutePath(), EngineFactory.DEFAULT, user, password);
-
-                if (e != null) {
-                    e.getRootAccount(); // prime the engine
+                    logger.fine("Engine boot complete");
                 }
 
-                logger.fine("Engine boot complete");
                 return null;
             }
 
@@ -196,7 +198,7 @@ public class OpenAction {
                 // Disk IO is heavy so delay and allow the UI to react before starting the boot operation
                 Thread.sleep(750);
 
-                Engine engine;
+                Engine engine = null;
 
                 final String user = EngineFactory.getLastUser();    // a prior user name may have been used
 
@@ -211,8 +213,9 @@ public class OpenAction {
                         appLogger.warning(rb.getString("Message.ErrorServerConnection"));
                     }
                 } else {    // must be a local file with a user name and password
-                    checkAndBackupOldVersion(EngineFactory.getLastDatabase(), user, new char[]{});
-                    engine = EngineFactory.bootLocalEngine(EngineFactory.getLastDatabase(), EngineFactory.DEFAULT, user, new char[]{});
+                    if (checkAndBackupOldVersion(EngineFactory.getLastDatabase(), user, new char[]{})) {
+                        engine = EngineFactory.bootLocalEngine(EngineFactory.getLastDatabase(), EngineFactory.DEFAULT, user, new char[]{});
+                    }
 
                     if (engine == null) {
                         appLogger.warning(rb.getString("Message.ErrorLoadingFile"));
@@ -286,16 +289,35 @@ public class OpenAction {
         new BootEngine().execute();
     }
 
-    private static void checkAndBackupOldVersion(final String fileName, final String user, final char[] password) {
+    private static boolean checkAndBackupOldVersion(final String fileName, final String user, final char[] password) {
+
+        boolean result = false;
 
         if (Files.exists(new File(fileName).toPath())) {
             float version = EngineFactory.getFileVersion(new File(fileName), user, password);
 
-            // make a versioned backup first
-            if (version < Engine.CURRENT_VERSION) {
-                FileUtils.copyFile(new File(fileName), new File(fileName + "." + version));
+            if (version <= 0) {
+                final String errorMessage = Resource.get().getString("Message.Error.InvalidUserPass");
+
+                UIApplication.getLogger().warning(errorMessage);
+
+                new Thread() {  // pop an error dialog with the warning for immediate feedback
+                    public void run() {
+                        StaticUIMethods.displayError(errorMessage);
+                    }
+                }.start();
+
+            } else {
+                result = true;
+
+                // make a versioned backup first
+                if (version < Engine.CURRENT_VERSION) {
+                    FileUtils.copyFile(new File(fileName), new File(fileName + "." + version));
+                }
             }
         }
+
+        return result;
     }
 
     private OpenAction() {

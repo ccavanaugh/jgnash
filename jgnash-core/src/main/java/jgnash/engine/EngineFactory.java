@@ -337,8 +337,7 @@ public class EngineFactory {
             try {
                 version = JpaDataStore.getFileVersion(file, user, password);
             } catch (final Exception e) {
-                logger.log(Level.SEVERE, e.getMessage());
-                version = -1;
+                version = 0;
             }
         }
 
