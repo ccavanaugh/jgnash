@@ -108,7 +108,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     private Transaction transaction;
 
     @Override
-    public int compareTo(Reminder reminder) {
+    public int compareTo(final Reminder reminder) {
 
         int result = description.compareTo(reminder.description);
 
@@ -204,7 +204,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }      
@@ -245,28 +245,28 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * @param advanceRemindDays The advanceRemindDays to set.
      */
-    public void setDaysAdvance(int advanceRemindDays) {
+    public void setDaysAdvance(final int advanceRemindDays) {
         this.daysAdvance = advanceRemindDays;
     }
 
     /**
      * @param autoCreate The autoCreate to set.
      */
-    public void setAutoCreate(boolean autoCreate) {
+    public void setAutoCreate(final boolean autoCreate) {
         this.autoCreate = autoCreate;
     }
 
     /**
      * @param autoCreateNotify The autoCreateNotify to set.
      */
-    public void setAutoCreateNotify(boolean autoCreateNotify) {
+    public void setAutoCreateNotify(final boolean autoCreateNotify) {
         this.autoCreateNotify = autoCreateNotify;
     }
 
     /**
      * @param description The description to set.
      */
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -275,7 +275,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
      *
      * @param enabled New value of property enabled.
      */
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(final boolean enabled) {
         this.enabled = enabled;
     }
 
@@ -310,21 +310,21 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * @param removable The removable to set.
      */
-    public void setRemovable(boolean removable) {
+    public void setRemovable(final boolean removable) {
         this.removable = removable;
     }
 
     /**
      * @param startDate The startDate to set.
      */
-    public void setStartDate(Date startDate) {
+    public void setStartDate(final Date startDate) {
         this.startDate = DateUtils.trimDate(startDate);
     }
 
     /**
      * @param transaction The transaction to set.
      */
-    public void setTransaction(Transaction transaction) {
+    public void setTransaction(final Transaction transaction) {
         this.transaction = transaction;
     }
 
@@ -338,7 +338,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * @param increment The increment to set.
      */
-    public void setIncrement(int increment) {
+    public void setIncrement(final int increment) {
         this.increment = increment;
     }
 
@@ -350,7 +350,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * @param notes The notes to set.
      */
-    public void setNotes(String notes) {
+    public void setNotes(final String notes) {
         this.notes = notes;
     }
 
@@ -364,7 +364,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * @param account base account for this Reminder
      */
-    public void setAccount(Account account) {
+    public void setAccount(final Account account) {
         this.account = account;
     }
 
