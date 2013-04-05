@@ -24,7 +24,10 @@ import java.util.Date;
 import jgnash.util.DateUtils;
 
 import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -33,11 +36,15 @@ import javax.persistence.TemporalType;
  *
  * @author Craig Cavanaugh
  */
-
-@Embeddable
+@Entity
 public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Serializable {
     
     private static final long serialVersionUID = 1L;
+
+    @Id
+    @SuppressWarnings("unused")
+    @GeneratedValue(strategy= GenerationType.TABLE)
+    private long id;
 
     @Temporal(TemporalType.DATE)
     private Date date = DateUtils.today();

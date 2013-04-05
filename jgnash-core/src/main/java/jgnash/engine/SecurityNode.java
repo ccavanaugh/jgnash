@@ -24,12 +24,21 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
 
 /**
  * Security Node
@@ -57,8 +66,9 @@ public class SecurityNode extends CommodityNode {
      */
     private String isin;
 
-    @ElementCollection
-    private List<SecurityHistoryNode> historyNodes = new ArrayList<>();
+    @JoinTable
+    @OneToMany(cascade = {CascadeType.ALL})
+    private Set<SecurityHistoryNode> historyNodes = new HashSet<>();
 
     private transient ReadWriteLock lock;
 
@@ -155,13 +165,15 @@ public class SecurityNode extends CommodityNode {
         l.lock();
 
         try {
-            int index = Collections.binarySearch(historyNodes, node);
+           /* int index = Collections.binarySearch(historyNodes, node);
 
             if (index < 0) {
                 historyNodes.add(-index - 1, node);
             } else {
                 historyNodes.set(index, node);
-            }
+            }*/
+
+            historyNodes.add(node);
 
             result = true;
         } finally {
@@ -187,21 +199,39 @@ public class SecurityNode extends CommodityNode {
         return result;
     }
 
-    private SecurityHistoryNode getLastHistoryNode() {
+    /**
+     *
+     * @return A sorted list of the security history
+     */
+    private List<SecurityHistoryNode> getSortedList() {
+        getLock().readLock().lock();
+
+        try {
+            ArrayList<SecurityHistoryNode> sorted = new ArrayList<>(historyNodes);
+            Collections.sort(sorted);
+            return sorted;
+        } finally {
+            getLock().readLock().unlock();
+        }
+    }
+
+    /*private SecurityHistoryNode getLastHistoryNode() {
         getLock().readLock().lock();
 
         try {
             SecurityHistoryNode node = null;
 
             if (!historyNodes.isEmpty()) {
-                node = historyNodes.get(historyNodes.size() - 1);
+                List<SecurityHistoryNode> sorted = getSortedList();
+
+                node = sorted.get(sorted.size() - 1);
             }
 
             return node;
         } finally {
             getLock().readLock().unlock();
         }
-    }
+    }*/
 
     /**
      * Get a copy of SecurityHistoryNodes for this security
@@ -210,7 +240,7 @@ public class SecurityNode extends CommodityNode {
      *         modification
      */
     public List<SecurityHistoryNode> getHistoryNodes() {
-        return new ArrayList<>(historyNodes);
+        return getSortedList();
     }
 
     SecurityHistoryNode getHistoryNode(final Date date) {
@@ -218,12 +248,14 @@ public class SecurityNode extends CommodityNode {
 
         getLock().readLock().lock();
 
+        List<SecurityHistoryNode> sortedList = getSortedList();
+
         try {
 
             SecurityHistoryNode hNode = null;
 
-            for (int i = historyNodes.size() - 1; i >= 0; i--) {
-                SecurityHistoryNode node = historyNodes.get(i);
+            for (int i = sortedList.size() - 1; i >= 0; i--) {
+                SecurityHistoryNode node = sortedList.get(i);
 
                 if (testDate.compareTo(node.getDate()) >= 0) {
                     hNode = node;
@@ -232,7 +264,7 @@ public class SecurityNode extends CommodityNode {
             }
 
             if (hNode == null) {
-                hNode = getLastHistoryNode();
+                hNode = sortedList.get(sortedList.size() - 1);
             }
 
             return hNode;
@@ -283,7 +315,7 @@ public class SecurityNode extends CommodityNode {
     @Override
     public Object clone() throws CloneNotSupportedException {
         SecurityNode node = (SecurityNode) super.clone();
-        node.historyNodes = new ArrayList<>();
+        node.historyNodes = new HashSet<>();
         node.lock = new ReentrantReadWriteLock(true);
 
         return node;

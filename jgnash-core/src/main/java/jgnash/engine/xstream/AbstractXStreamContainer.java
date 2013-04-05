@@ -141,7 +141,9 @@ abstract class AbstractXStreamContainer {
         xstream.omitField(AmortizeObject.class, "id");
         xstream.omitField(BudgetGoal.class, "id");
         xstream.omitField(TransactionEntry.class, "id");
+        xstream.omitField(SecurityHistoryNode.class, "id");
 
+        // Filters out the hibernate
         xstream.registerConverter(new HibernateProxyConverter());
         xstream.registerConverter(new HibernatePersistentCollectionConverter(xstream.getMapper()));
         xstream.registerConverter(new HibernatePersistentMapConverter(xstream.getMapper()));
