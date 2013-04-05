@@ -19,10 +19,11 @@ package jgnash.engine;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 /**
  * Wraps objects that have been removed from active use in the engine.
@@ -36,11 +37,6 @@ public class TrashObject extends StoredObject {
     private static final long serialVersionUID = -5923174140959126059L;
 
     /**
-     * ID of the object to remove
-     */
-    private String objectID;
-
-    /**
      * Date object was added
      */
     @Temporal(TemporalType.TIMESTAMP)
@@ -48,10 +44,8 @@ public class TrashObject extends StoredObject {
 
     /**
      * The stored object
-     *
-     * Transparent in JPA applications, but still used for XStream persistence
      */
-    @Transient
+    @OneToOne(orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private StoredObject object;
 
     /**
@@ -63,7 +57,6 @@ public class TrashObject extends StoredObject {
 
     TrashObject(final StoredObject object) {
         this.object = object;
-        objectID = object.getUuid();
         object.setMarkedForRemoval(true);
         setMarkedForRemoval(true);
     }
@@ -72,22 +65,7 @@ public class TrashObject extends StoredObject {
         return object;
     }
 
-    public String getObjectId() {
-       return objectID;
-    }
-
     public Date getDate() {
         return date;
-    }
-
-    /*
-     Change from old storage format
-     */
-    protected Object readResolve() {
-        if (object != null) {
-            objectID = object.getUuid();
-        }
-
-        return this;
     }
 }

@@ -342,6 +342,9 @@ public class Engine {
                 setDefaultCurrency(this.getRootAccount().getCurrencyNode());
                 logger.warning("Forcing default currency");
             }
+
+            // Removal and modifications of reminders may have left behind orphan transactions
+            removeOrphanTransactions();
             
             // if the file version is not current, then update it
             if (getConfig().getFileVersion() != CURRENT_VERSION) {
@@ -400,6 +403,31 @@ public class Engine {
         for (ExchangeRate rate : getCommodityDAO().getExchangeRates()) {
             if (getBaseCurrencies(rate.getRateId()) == null) {
                 removeExchangeRate(rate);
+            }
+        }
+    }
+
+    /**
+     * Search and remove orphan transactions left behind from reminders
+     */
+    private void removeOrphanTransactions() {
+        List<Transaction> transactions = getTransactions();
+
+        List<Account> accounts = getAccountList();
+
+        for (Transaction transaction : transactions) {
+            boolean orphaned = true;
+
+            for (Account account : accounts) {
+                if (account.contains(transaction)) {
+                    orphaned = false;
+                    break;
+                }
+            }
+
+            if (orphaned) {
+                moveObjectToTrash(transaction);
+                logInfo("Removed an orphan transaction");
             }
         }
     }
@@ -538,6 +566,12 @@ public class Engine {
         boolean result = false;
 
         if (moveObjectToTrash(reminder)) {
+
+            if (reminder.getTransaction() != null) {
+                moveObjectToTrash(reminder.getTransaction());
+                reminder.setTransaction(null);
+            }
+
             Message message = new Message(MessageChannel.REMINDER, ChannelEvent.REMINDER_REMOVE, this);
 
             message.setObject(MessageProperty.REMINDER, reminder);
@@ -2344,7 +2378,7 @@ public class Engine {
             /* Remove the transaction from each account */
             for (Account account : transaction.getAccounts()) {
                 if (!account.removeTransaction(transaction)) {
-                    logSevere("Failed to add the Transaction");
+                    logSevere("Failed to remove the Transaction");
                 }
             }
 
