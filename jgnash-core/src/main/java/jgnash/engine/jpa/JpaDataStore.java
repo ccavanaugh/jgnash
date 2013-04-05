@@ -34,6 +34,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -120,20 +121,24 @@ public class JpaDataStore implements DataStore {
             System.out.println(FileUtils.stripFileExtension(fileName));
         }
 
-        if (!isDatabaseLocked(fileName)) {
-            try {
-                factory = Persistence.createEntityManagerFactory("jgnash", properties);
+        try {
+            if (!FileUtils.isFileLocked(fileName)) {
+                try {
+                    factory = Persistence.createEntityManagerFactory("jgnash", properties);
 
-                em = factory.createEntityManager();
+                    em = factory.createEntityManager();
 
-                logger.info("Created local JPA container and engine");
-                engine = new Engine(new JpaEngineDAO(em, false), engineName);
+                    logger.info("Created local JPA container and engine");
+                    engine = new Engine(new JpaEngineDAO(em, false), engineName);
 
-                this.fileName = fileName;
-                remote = false;
-            } catch (final Exception e) {
-                logger.log(Level.SEVERE, e.getMessage(), e);
+                    this.fileName = fileName;
+                    remote = false;
+                } catch (final Exception e) {
+                    logger.log(Level.SEVERE, e.getMessage(), e);
+                }
             }
+        } catch (FileNotFoundException e) {
+            logger.info(Resource.get().getString("Message.FileNotFound"));
         }
 
         return engine;

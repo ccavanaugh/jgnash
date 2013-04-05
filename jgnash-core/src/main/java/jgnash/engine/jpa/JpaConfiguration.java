@@ -38,6 +38,11 @@ public class JpaConfiguration {
     public static final String PASSWORD = ";PASSWORD=";
     public static final String DEFAULT_USER = "JGNASH";
 
+    /**
+     * The preferred file locking method is to use the OS
+     */
+    public static final String FILE_LOCK_FS = ";FILE_LOCK=FS";
+
 
     private static Properties getBaseProperties() {
         Properties properties = System.getProperties();
@@ -63,6 +68,8 @@ public class JpaConfiguration {
         if (password != null && password.length > 0) {
             urlBuilder.append(PASSWORD).append(password);
         }
+
+        urlBuilder.append(FILE_LOCK_FS);
 
         if (readOnly) {
             urlBuilder.append(";ACCESS_MODE_DATA=r");
