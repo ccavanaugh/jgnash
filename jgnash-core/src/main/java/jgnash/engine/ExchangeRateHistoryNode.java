@@ -43,7 +43,7 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
     @Temporal(TemporalType.DATE)
     private Date date = DateUtils.today();
 
-    @Column(precision = 32, scale = 16)
+    @Column(precision = 26, scale = 8)
     private BigDecimal rate = BigDecimal.ZERO;
 
     /**

@@ -19,6 +19,7 @@ package jgnash.engine;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -39,11 +40,13 @@ public abstract class AbstractInvestmentTransactionEntry extends TransactionEntr
     /**
      * share price
      */
+    @Column(precision = 26, scale = 8)
     private BigDecimal price;
 
     /**
      * number of shares
      */
+    @Column(precision = 26, scale = 8)
     private BigDecimal quantity;
 
     /**

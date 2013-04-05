@@ -42,13 +42,13 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
     @Temporal(TemporalType.DATE)
     private Date date = DateUtils.today();
 
-    @Column(precision = 32, scale = 16)
+    @Column(precision = 19, scale = 4)
     private BigDecimal price = BigDecimal.ZERO;
 
-    @Column(precision = 32, scale = 16)
+    @Column(precision = 19, scale = 4)
     private BigDecimal high = BigDecimal.ZERO;
 
-    @Column(precision = 32, scale = 16)
+    @Column(precision = 19, scale = 4)
     private BigDecimal low = BigDecimal.ZERO;
 
     private long volume = 0;
