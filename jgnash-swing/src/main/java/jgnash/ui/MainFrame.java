@@ -134,7 +134,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
      */
     private transient PausableThreadPoolExecutor backgroundUpdateExecutor;
 
-    private static final int SCHEDULED_DELAY = 20;
+    private static final int SCHEDULED_DELAY = 30;
 
     private JXBusyLabel backgroundOperationLabel;
 
@@ -700,6 +700,11 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     public void pauseBackgroundUpdates() {
         backgroundUpdateExecutor.pause();
+
+        // wait for active tasks to complete
+        while (backgroundUpdateExecutor.getActiveCount() != 0) {
+            Thread.yield();
+        }
     }
 
     public void resumeBackgroundUpdates() {
