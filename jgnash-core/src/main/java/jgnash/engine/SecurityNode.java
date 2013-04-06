@@ -42,8 +42,6 @@ import javax.persistence.PostLoad;
 
 /**
  * Security Node
- * <p/>
- * The last market price is cached to improve performance
  *
  * @author Craig Cavanaugh
  */
@@ -215,7 +213,7 @@ public class SecurityNode extends CommodityNode {
         }
     }
 
-    /*private SecurityHistoryNode getLastHistoryNode() {
+    private SecurityHistoryNode getLastHistoryNode() {
         getLock().readLock().lock();
 
         try {
@@ -231,7 +229,7 @@ public class SecurityNode extends CommodityNode {
         } finally {
             getLock().readLock().unlock();
         }
-    }*/
+    }
 
     /**
      * Get a copy of SecurityHistoryNodes for this security
@@ -264,7 +262,7 @@ public class SecurityNode extends CommodityNode {
             }
 
             if (hNode == null) {
-                hNode = sortedList.get(sortedList.size() - 1);
+                hNode = getLastHistoryNode();
             }
 
             return hNode;
