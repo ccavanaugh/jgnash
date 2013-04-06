@@ -11,6 +11,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,8 +50,6 @@ public class InvestmentTransactionTest {
     Account liabilityAccount;
 
     SecurityNode securityNode1;
-
-    public static final String USER = "";
 
     public static final char[] PASSWORD = new char[]{};
 
@@ -307,51 +306,26 @@ public class InvestmentTransactionTest {
     }
 
     @Test
-    public void TransferCashIn() {
+    public void TransferCashIn() throws ParseException {
         // Transferring some money to usdBankAccount
         Date transactionDate0;
-        transactionDate0 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-25", new ParsePosition(0));
-        TransactionEntry entry = new TransactionEntry();
+        transactionDate0 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-25");
 
-        entry.setDebitAccount(equityAccount);
-        entry.setDebitAmount(new BigDecimal("-500.00"));
-
-        entry.setCreditAmount(new BigDecimal("500.00"));
-        entry.setCreditAccount(usdBankAccount);
-
-        entry.setMemo("Equity transaction");
-
-        Transaction transaction = new Transaction();
-        transaction.addTransactionEntry(entry);
-        transaction.setDate(transactionDate0);
-
-        e.addTransaction(transaction);
+        e.addTransaction(TransactionFactory.generateDoubleEntryTransaction(usdBankAccount, equityAccount, new BigDecimal("500.00"), transactionDate0, "Equity transaction", "", "" ));
 
         // Adding cash in transaction
         Date transactionDate1;
-        transactionDate1 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-26", new ParsePosition(0));
+        transactionDate1 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-26");
 
-        entry = new TransactionEntry();
-
-        entry.setDebitAccount(usdBankAccount);
-        entry.setDebitAmount(new BigDecimal("-250.00"));
-
-        entry.setCreditAmount(new BigDecimal("250.00"));
-        entry.setCreditAccount(investAccount);
-
-        entry.setMemo("Cash in transaction");
-
-        transaction = new Transaction();
-        transaction.addTransactionEntry(entry);
-        transaction.setDate(transactionDate1);
-
-        e.addTransaction(transaction);
+        e.addTransaction(TransactionFactory.generateDoubleEntryTransaction(investAccount, usdBankAccount, new BigDecimal("250.00"), transactionDate1, "Cash in transaction", "", ""));
 
         // Checking the result
         Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), incomeAccount.getBalance(),
                 investAccount.getBalance(), investAccount.getMarketValue(), investAccount.getCashBalance()};
+
         Object expected[] = {new BigDecimal("250.00"), BigDecimal.ZERO, BigDecimal.ZERO, new BigDecimal("250.00"),
                 BigDecimal.ZERO, new BigDecimal("250.00")};
+
         assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
 
