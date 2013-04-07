@@ -17,11 +17,14 @@
  */
 package jgnash.engine;
 
+import jgnash.util.DateUtils;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -29,9 +32,15 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import jgnash.util.DateUtils;
-
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * Base class for transactions
@@ -85,7 +94,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      */
     @JoinTable
     @OneToMany(cascade = {CascadeType.ALL})
-    List<TransactionEntry> transactionEntries = new ArrayList<>();
+    Set<TransactionEntry> transactionEntries = new HashSet<>();
 
     /**
      * ReadWrite lock
@@ -195,7 +204,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
                     }
                 }
             } else { // double entry transaction, return the credit account by default
-                account = transactionEntries.get(0).getCreditAccount();
+                account = transactionEntries.iterator().next().getCreditAccount();
             }
         } finally {
             l.unlock();
@@ -220,7 +229,6 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
         try {
             transactionEntries.add(entry);
-            Collections.sort(transactionEntries);
         } finally {
             l.unlock();
         }
@@ -408,6 +416,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         try {
             // protect against write through by creating a new ArrayList
             list = new ArrayList<>(transactionEntries);
+            Collections.sort(list);
         } finally {
             l.unlock();
         }
@@ -470,7 +479,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
     public TransactionType getTransactionType() {
         if (size() == 1) {
-            TransactionEntry entry = transactionEntries.get(0);
+            TransactionEntry entry = transactionEntries.iterator().next();
 
             if (entry.isSingleEntry()) {
                 return TransactionType.SINGLENTRY;
@@ -570,7 +579,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
             tran = (Transaction) super.clone();
 
             // deep clone
-            tran.transactionEntries = new ArrayList<>(); // deep clone
+            tran.transactionEntries = new HashSet<>(); // deep clone
             tran.lock = new ReentrantReadWriteLock(true);
 
             for (TransactionEntry entry : transactionEntries) {
