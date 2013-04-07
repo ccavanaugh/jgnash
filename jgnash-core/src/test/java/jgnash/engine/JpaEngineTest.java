@@ -58,6 +58,11 @@ public class JpaEngineTest extends EngineTest {
     @Test
     public void testVersion() {
         try {
+            RootAccount account = e.getRootAccount();
+
+            Account temp = e.getStoredObjectByUuid(RootAccount.class, account.getUuid());
+            assertEquals(account, temp);
+
             // close and reopen to force check for persistence
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
 

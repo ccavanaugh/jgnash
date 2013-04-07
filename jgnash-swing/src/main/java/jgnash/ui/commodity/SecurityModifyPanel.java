@@ -247,7 +247,7 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
                     StaticUIMethods.displayError(MessageFormat.format(rb.getString("Message.Error.SecurityUpdate"), newNode.getSymbol()));
                 }
             } else {
-                engine.addCommodity(newNode);
+                engine.addSecurity(newNode);
             }
         }
     }
@@ -255,7 +255,7 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
     private void deleteSecurityNode() {
         SecurityNode node = securityList.getSelectedValue();
         if (node != null) {
-            if (!engine.removeCommodity(node)) {
+            if (!engine.removeSecurity(node)) {
                  throw new RuntimeException("Unable to remove the security");
             }
         }
@@ -298,28 +298,28 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
                 @Override
                 public void run() {
                     switch (event.getEvent()) {
-                        case CURRENCY_REMOVE:
+                        case SECURITY_REMOVE:
                             model.removeElement(node);
                             clearForm();
                             break;
-                        case CURRENCY_REMOVE_FAILED:
+                        case SECURITY_REMOVE_FAILED:
                             String message = "Commodity " + node.toString() + " cannot be removed";
                             JOptionPane.showMessageDialog(SecurityModifyPanel.this, message, rb.getString("Message.WarnCommodityInUse"), JOptionPane.WARNING_MESSAGE);
                             break;
-                        case CURRENCY_ADD:
+                        case SECURITY_ADD:
                             clearForm();
                             model.addElement(node);
                             break;
-                        case CURRENCY_ADD_FAILED:
+                        case SECURITY_ADD_FAILED:
                             JOptionPane.showMessageDialog(SecurityModifyPanel.this, rb.getString("Message.ErrorAddCommodity"), rb.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
                             break;
-                        case CURRENCY_MODIFY:
+                        case SECURITY_MODIFY:
                             clearForm();
                             model.removeElement(node); // force load of new instance
                             model.addElement(node);
                             model.fireContentsChanged();
                             break;
-                        case CURRENCY_MODIFY_FAILED:
+                        case SECURITY_MODIFY_FAILED:
                             JOptionPane.showMessageDialog(SecurityModifyPanel.this, rb.getString("Message.ErrorModifyCommodity"), rb.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
                             break;
                         default:

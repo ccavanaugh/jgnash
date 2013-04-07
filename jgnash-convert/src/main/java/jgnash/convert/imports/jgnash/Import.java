@@ -151,7 +151,7 @@ public class Import {
             CurrencyNode defaultCurrency = DefaultCurrencies.buildNode(Locale.getDefault());
 
             if (engine.getCurrency(defaultCurrency.getSymbol()) == null) {
-                engine.addCommodity(defaultCurrency);
+                engine.addCurrency(defaultCurrency);
                 engine.setDefaultCurrency(defaultCurrency);
             }
 
@@ -1105,7 +1105,7 @@ public class Import {
                                 node.setSuffix(elementMap.get("suffix"));
                                 node.setScale(Byte.parseByte(elementMap.get("scale")));
 
-                                engine.addCommodity(node);
+                                engine.addCurrency(node);
                             }
                             return;
                         }
@@ -1210,7 +1210,7 @@ public class Import {
                                     workQueue.add(thread);
                                 }
 
-                                engine.addCommodity(node);
+                                engine.addSecurity(node);
                             }
 
                             if (history != null) {
@@ -1313,7 +1313,7 @@ public class Import {
                 sNode.setSymbol(cNode.symbol);
                 sNode.setQuoteSource(QuoteSource.YAHOO);
 
-                engine.addCommodity(sNode);
+                engine.addSecurity(sNode);
             } else { // may be a currency... try to create a security
 
                 CurrencyNode currency = decodeCurrency(symbol);
@@ -1333,7 +1333,7 @@ public class Import {
                     sNode.setReportedCurrencyNode(currency);
                     sNode.setQuoteSource(QuoteSource.YAHOO);
 
-                    engine.addCommodity(sNode);
+                    engine.addSecurity(sNode);
                 }
             }
         }
@@ -1371,7 +1371,7 @@ public class Import {
                 node.setScale(cNode.scale);
                 node.setSymbol(cNode.symbol);
 
-                EngineFactory.getEngine(EngineFactory.DEFAULT).addCommodity(node);
+                EngineFactory.getEngine(EngineFactory.DEFAULT).addCurrency(node);
             } else {
                 // Convert security to currency.  For users who figured out how to push the limits of the jGnash 1.x commodity interface
                 SecurityNode sNode = EngineFactory.getEngine(EngineFactory.DEFAULT).getSecurity(symbol);
@@ -1384,7 +1384,7 @@ public class Import {
                     node.setScale(sNode.getScale());
                     node.setSymbol(sNode.getSymbol());
 
-                    EngineFactory.getEngine(EngineFactory.DEFAULT).addCommodity(node);
+                    EngineFactory.getEngine(EngineFactory.DEFAULT).addCurrency(node);
                 } else {
                     logger.log(Level.SEVERE, "Bad file, currency " + symbol + " not mapped", new Exception());
                 }

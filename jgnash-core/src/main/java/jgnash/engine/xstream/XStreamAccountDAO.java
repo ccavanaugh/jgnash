@@ -17,16 +17,15 @@
  */
 package jgnash.engine.xstream;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
-
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
 import jgnash.engine.RootAccount;
 import jgnash.engine.SecurityNode;
-import jgnash.engine.StoredObject;
 import jgnash.engine.dao.AccountDAO;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * XML Account DAO
@@ -105,15 +104,7 @@ public class XStreamAccountDAO extends AbstractXStreamDAO implements AccountDAO 
 
     @Override
     public Account getAccountByUuid(final String uuid) {
-        Account account = null;
-
-        StoredObject o = container.get(uuid);
-
-        if (o != null && o instanceof Account) {
-            account = (Account) o;
-        }
-
-        return account;
+        return getObjectByUuid(Account.class, uuid);
     }
 
     @Override

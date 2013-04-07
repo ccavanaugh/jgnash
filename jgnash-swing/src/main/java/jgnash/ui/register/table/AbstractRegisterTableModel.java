@@ -256,7 +256,7 @@ public abstract class AbstractRegisterTableModel extends AbstractTableModel impl
     @Override
     public void messagePosted(final Message event) {
 
-        if (event.getEvent() == ChannelEvent.CURRENCY_MODIFY) {
+        if (event.getEvent() == ChannelEvent.CURRENCY_MODIFY || event.getEvent() == ChannelEvent.SECURITY_MODIFY) {
             EventQueue.invokeLater(new Runnable() {
 
                 @Override

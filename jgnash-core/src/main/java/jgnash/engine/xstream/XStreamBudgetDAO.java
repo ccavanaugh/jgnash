@@ -17,10 +17,10 @@
  */
 package jgnash.engine.xstream;
 
-import java.util.List;
-
 import jgnash.engine.budget.Budget;
 import jgnash.engine.dao.BudgetDAO;
+
+import java.util.List;
 
 /**
  * XML Budget DAO
@@ -52,6 +52,11 @@ public class XStreamBudgetDAO extends AbstractXStreamDAO implements BudgetDAO {
     @Override
     public List<Budget> getBudgets() {
         return stripMarkedForRemoval(container.query(Budget.class));
+    }
+
+    @Override
+    public Budget getBudgetByUuid(final String uuid) {
+        return getObjectByUuid(Budget.class, uuid);
     }
 
     @Override

@@ -52,13 +52,13 @@ public class CommodityNodeTest {
             usdNode.setSymbol("USD");
             usdNode.setPrefix("$");
             usdNode.setDescription("US Dollar");
-            e.addCommodity(usdNode);
+            e.addCurrency(usdNode);
 
             CurrencyNode cadNode = new CurrencyNode();
             cadNode.setSymbol("CAD");
             cadNode.setPrefix("$");
             cadNode.setDescription("CAD Dollar");
-            e.addCommodity(cadNode);
+            e.addCurrency(cadNode);
 
             assertNotNull(usdNode.getSymbol());
             assertNotNull(cadNode.getSymbol());
@@ -88,13 +88,13 @@ public class CommodityNodeTest {
             usdNode.setSymbol("USD");
             usdNode.setPrefix("$");
             usdNode.setDescription("US Dollar");
-            e.addCommodity(usdNode);
+            e.addCurrency(usdNode);
 
             CurrencyNode cadNode = new CurrencyNode();
             cadNode.setSymbol("CAD");
             cadNode.setPrefix("$");
             cadNode.setDescription("CAD Dollar");
-            e.addCommodity(cadNode);
+            e.addCurrency(cadNode);
 
             assertNotNull(usdNode.getSymbol());
             assertNotNull(cadNode.getSymbol());
@@ -126,7 +126,7 @@ public class CommodityNodeTest {
             node.setPrefix("$");
             node.setDescription("US Dollar");
 
-            e.addCommodity(node);
+            e.addCurrency(node);
 
             node = e.getCurrency("USD");
 
@@ -149,7 +149,7 @@ public class CommodityNodeTest {
             Set<CurrencyNode> nodes = DefaultCurrencies.generateCurrencies();
 
             for (CurrencyNode n : nodes) {
-                e.addCommodity(n);
+                e.addCurrency(n);
             }
 
             EngineFactory.closeEngine(EngineFactory.DEFAULT);

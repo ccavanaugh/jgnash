@@ -34,7 +34,6 @@ import javax.persistence.criteria.Root;
  *
  * @author Craig Cavanaugh
  */
-
 public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
 
     // private final static Logger logger = Logger.getLogger(JpaBudgetDAO.class.getName());
@@ -93,6 +92,26 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
         } finally {
             emLock.unlock();
         }
+    }
+
+    @Override
+    public Budget getBudgetByUuid(final String uuid) {
+        /*try {
+            emLock.lock();
+
+            Budget budget = null;
+
+            try {
+                budget = em.find(Budget.class, uuid);
+            } catch (Exception e) {
+                logger.info("Did not find Budget for uuid: " + uuid);
+            }
+
+            return budget;
+        } finally {
+            emLock.unlock();
+        }*/
+        return getObjectByUuid(Budget.class, uuid);
     }
 
     @Override

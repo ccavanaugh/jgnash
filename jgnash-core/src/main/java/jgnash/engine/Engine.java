@@ -202,7 +202,7 @@ public class Engine {
                     node = DefaultCurrencies.buildNode(Locale.getDefault());
                     node.setExchangeRateDAO(exchangeRateDAO);
 
-                    addCommodity(node); // force the node to persisted
+                    addCurrency(node); // force the node to persisted
                 }
 
                 root = new RootAccount(node);
@@ -590,8 +590,11 @@ public class Engine {
      * @return List of reminders
      */
     public List<Reminder> getReminders() {
-
         return getReminderDAO().getReminderList();
+    }
+
+    public Reminder getReminderByUuid(final String uuid) {
+        return getReminderDAO().getReminderByUuid(uuid);
     }
 
     public List<PendingReminder> getPendingReminders() {
@@ -623,9 +626,8 @@ public class Engine {
         return pendingList;
     }
 
-    public StoredObject getStoredObjectByUuid(final String id) {
-
-        return eDAO.getObjectByUuid(id);
+    public <T extends StoredObject> T getStoredObjectByUuid(Class<T> tClass, final String uuid) {
+        return eDAO.getObjectByUuid(tClass, uuid);
     }
 
     /**
@@ -677,7 +679,7 @@ public class Engine {
             logSevere("Commodity uuid was not valid");
         }
 
-        if (node.getSymbol() == null || node.getSymbol().length() == 0) {
+        if (node.getSymbol() == null || node.getSymbol().isEmpty()) {
             result = false;
             logSevere("Commodity symbol was not valid");
         }
@@ -702,37 +704,27 @@ public class Engine {
     }
 
     /**
-     * Adds a new CommodityNode to the data set.
+     * Adds a new CurrencyNode to the data set.
      * <p/>
-     * Checks and prevents the addition of a duplicate CommodityNode. CurrencyNodes with the same symbol but difference
-     * locale are allowed.
+     * Checks and prevents the addition of a duplicate Currencies.
      *
-     * @param node new CommodityNode to add
+     * @param node new CurrencyNode to add
      * @return <code>true</code> if the add it successful
      */
-    public boolean addCommodity(final CommodityNode node) {
+    public boolean addCurrency(final CurrencyNode node) {
         WriteLock commodityWriteLock = commodityLock.writeLock();
 
         commodityWriteLock.lock();
 
         try {
-
             boolean status = isCommodityNodeValid(node);
 
             if (status) {
-                if (node instanceof CurrencyNode) {
+                node.setExchangeRateDAO(exchangeRateDAO);
 
-                    ((CurrencyNode) node).setExchangeRateDAO(exchangeRateDAO);
-
-                    if (getCurrency(node.getSymbol()) != null) {
-                        logger.log(Level.INFO, "Prevented addition of a duplicate CurrencyNode: {0}", node.getSymbol());
-                        status = false;
-                    }
-                } else {
-                    if (getSecurity(node.getSymbol()) != null) {
-                        logger.log(Level.INFO, "Prevented addition of a duplicate SecurityNode: {0}", node.getSymbol());
-                        status = false;
-                    }
+                if (getCurrency(node.getSymbol()) != null) {
+                    logger.log(Level.INFO, "Prevented addition of a duplicate CurrencyNode: {0}", node.getSymbol());
+                    status = false;
                 }
             }
 
@@ -746,6 +738,50 @@ public class Engine {
                 message = new Message(MessageChannel.COMMODITY, ChannelEvent.CURRENCY_ADD, this);
             } else {
                 message = new Message(MessageChannel.COMMODITY, ChannelEvent.CURRENCY_ADD_FAILED, this);
+            }
+
+            message.setObject(MessageProperty.COMMODITY, node);
+            messageBus.fireEvent(message);
+
+            return status;
+        } finally {
+            commodityWriteLock.unlock();
+        }
+    }
+
+    /**
+     * Adds a new SecurityNode to the data set.
+     * <p/>
+     * Checks and prevents the addition of a duplicate SecurityNode.
+     *
+     * @param node new SecurityNode to add
+     * @return <code>true</code> if the add it successful
+     */
+    public boolean addSecurity(final SecurityNode node) {
+        WriteLock commodityWriteLock = commodityLock.writeLock();
+
+        commodityWriteLock.lock();
+
+        try {
+            boolean status = isCommodityNodeValid(node);
+
+            if (status) {
+                if (getSecurity(node.getSymbol()) != null) {
+                    logger.log(Level.INFO, "Prevented addition of a duplicate SecurityNode: {0}", node.getSymbol());
+                    status = false;
+                }
+            }
+
+            if (status) {
+                status = getCommodityDAO().addCommodity(node);
+                logger.log(Level.FINE, "Adding: {0}", node.toString());
+            }
+
+            Message message;
+            if (status) {
+                message = new Message(MessageChannel.COMMODITY, ChannelEvent.SECURITY_ADD, this);
+            } else {
+                message = new Message(MessageChannel.COMMODITY, ChannelEvent.SECURITY_ADD_FAILED, this);
             }
 
             message.setObject(MessageProperty.COMMODITY, node);
@@ -793,9 +829,9 @@ public class Engine {
             Message message;
             if (status) {
                 clearCachedAccountBalance(node);
-                message = new Message(MessageChannel.COMMODITY, ChannelEvent.COMMODITY_HISTORY_ADD, this);
+                message = new Message(MessageChannel.COMMODITY, ChannelEvent.SECURITY_HISTORY_ADD, this);
             } else {
-                message = new Message(MessageChannel.COMMODITY, ChannelEvent.COMMODITY_HISTORY_ADD_FAILED, this);
+                message = new Message(MessageChannel.COMMODITY, ChannelEvent.SECURITY_HISTORY_ADD_FAILED, this);
             }
 
             message.setObject(MessageProperty.COMMODITY, node);
@@ -1003,6 +1039,10 @@ public class Engine {
         }
     }
 
+    public CurrencyNode getCurrencyNodeByUuid(final String uuid) {
+        return getCommodityDAO().getCurrencyByUuid(uuid);
+    }
+
     public List<SecurityHistoryNode> getSecurityHistory(final SecurityNode node) {
 
         ReadLock commodityReadLock = commodityLock.readLock();
@@ -1025,6 +1065,10 @@ public class Engine {
         } finally {
             commodityReadLock.unlock();
         }
+    }
+
+    public ExchangeRate getExchangeRateByUuid(final String uuid) {
+        return getCommodityDAO().getExchangeRateByUuid(uuid);
     }
 
     public List<SecurityNode> getSecurities() {
@@ -1065,6 +1109,10 @@ public class Engine {
         } finally {
             commodityReadLock.unlock();
         }
+    }
+
+    public SecurityNode getSecurityNodeByUuid(final String uuid) {
+        return getCommodityDAO().getSecurityByUuid(uuid);
     }
 
     private boolean isCommodityNodeUsed(final CommodityNode node) {
@@ -1108,8 +1156,37 @@ public class Engine {
         return false;
     }
 
-    public boolean removeCommodity(final CommodityNode node) {
+    public boolean removeCommodity(final CurrencyNode node) {
+        boolean status = true;
 
+        WriteLock commodityWriteLock = commodityLock.writeLock();
+        commodityWriteLock.lock();
+
+        try {
+            if (isCommodityNodeUsed(node)) {
+                status = false;
+            } else {
+                clearObsoleteExchangeRates();
+                moveObjectToTrash(node);
+            }
+
+            Message message;
+            if (status) {
+                message = new Message(MessageChannel.COMMODITY, ChannelEvent.CURRENCY_REMOVE, this);
+            } else {
+                message = new Message(MessageChannel.COMMODITY, ChannelEvent.CURRENCY_REMOVE_FAILED, this);
+            }
+            message.setObject(MessageProperty.COMMODITY, node);
+            messageBus.fireEvent(message);
+
+            return status;
+
+        } finally {
+            commodityWriteLock.unlock();
+        }
+    }
+
+    public boolean removeSecurity(final SecurityNode node) {
         boolean status = true;
 
         WriteLock commodityWriteLock = commodityLock.writeLock();
@@ -1120,25 +1197,22 @@ public class Engine {
                 status = false;
             } else {
                 // Remove all history nodes first so they are not left behind
-                if (node instanceof SecurityNode) {
-                    List<SecurityHistoryNode> hNodes = ((SecurityNode) node).getHistoryNodes();
 
-                    for (SecurityHistoryNode hNode : hNodes) {
-                        if (!removeSecurityHistory((SecurityNode) node, hNode)) {
-                            logSevere(MessageFormat.format(rb.getString("Message.Error.HistRemoval"), hNode.getDate(), node.getSymbol()));
-                        }
+                List<SecurityHistoryNode> hNodes = node.getHistoryNodes();
+
+                for (SecurityHistoryNode hNode : hNodes) {
+                    if (!removeSecurityHistory(node, hNode)) {
+                        logSevere(MessageFormat.format(rb.getString("Message.Error.HistRemoval"), hNode.getDate(), node.getSymbol()));
                     }
-                } else {
-                    clearObsoleteExchangeRates();
                 }
                 moveObjectToTrash(node);
             }
 
             Message message;
             if (status) {
-                message = new Message(MessageChannel.COMMODITY, ChannelEvent.CURRENCY_REMOVE, this);
+                message = new Message(MessageChannel.COMMODITY, ChannelEvent.SECURITY_REMOVE, this);
             } else {
-                message = new Message(MessageChannel.COMMODITY, ChannelEvent.CURRENCY_REMOVE_FAILED, this);
+                message = new Message(MessageChannel.COMMODITY, ChannelEvent.SECURITY_REMOVE_FAILED, this);
             }
             message.setObject(MessageProperty.COMMODITY, node);
             messageBus.fireEvent(message);
@@ -1163,9 +1237,9 @@ public class Engine {
             Message message;
             if (status) {
                 clearCachedAccountBalance(node);
-                message = new Message(MessageChannel.COMMODITY, ChannelEvent.COMMODITY_HISTORY_REMOVE, this);
+                message = new Message(MessageChannel.COMMODITY, ChannelEvent.SECURITY_HISTORY_REMOVE, this);
             } else {
-                message = new Message(MessageChannel.COMMODITY, ChannelEvent.COMMODITY_HISTORY_REMOVE_FAILED, this);
+                message = new Message(MessageChannel.COMMODITY, ChannelEvent.SECURITY_HISTORY_REMOVE_FAILED, this);
             }
 
             message.setObject(MessageProperty.COMMODITY, node);
@@ -1181,7 +1255,7 @@ public class Engine {
 
         // make sure the new default is persisted if it has not been
         if (!isStored(defaultCurrency)) {
-            addCommodity(defaultCurrency);
+            addCurrency(defaultCurrency);
         }
 
         WriteLock accountWriteLock = accountLock.writeLock();
@@ -1371,12 +1445,23 @@ public class Engine {
             }
 
             Message message;
-            if (status) {
-                message = new Message(MessageChannel.COMMODITY, ChannelEvent.CURRENCY_MODIFY, this);
-                message.setObject(MessageProperty.COMMODITY, oldNode);
+
+            if (templateNode instanceof SecurityNode) {
+                if (status) {
+                    message = new Message(MessageChannel.COMMODITY, ChannelEvent.SECURITY_MODIFY, this);
+                    message.setObject(MessageProperty.COMMODITY, oldNode);
+                } else {
+                    message = new Message(MessageChannel.COMMODITY, ChannelEvent.SECURITY_MODIFY_FAILED, this);
+                    message.setObject(MessageProperty.COMMODITY, templateNode);
+                }
             } else {
-                message = new Message(MessageChannel.COMMODITY, ChannelEvent.CURRENCY_MODIFY_FAILED, this);
-                message.setObject(MessageProperty.COMMODITY, templateNode);
+                if (status) {
+                    message = new Message(MessageChannel.COMMODITY, ChannelEvent.CURRENCY_MODIFY, this);
+                    message.setObject(MessageProperty.COMMODITY, oldNode);
+                } else {
+                    message = new Message(MessageChannel.COMMODITY, ChannelEvent.CURRENCY_MODIFY_FAILED, this);
+                    message.setObject(MessageProperty.COMMODITY, templateNode);
+                }
             }
 
             messageBus.fireEvent(message);
@@ -2241,6 +2326,10 @@ public class Engine {
         }
     }
 
+    public Budget getBudgetByUuid(final String uuid) {
+        return getBudgetDAO().getBudgetByUuid(uuid);
+    }
+
     public boolean isTransactionValid(final Transaction transaction) {
 
         for (Account a : transaction.getAccounts()) {
@@ -2444,8 +2533,11 @@ public class Engine {
      * @return all transactions
      */
     public List<Transaction> getTransactions() {
-
         return getTransactionDAO().getTransactions();
+    }
+
+    public Transaction getTransactionByUuid(final String uuid) {
+        return getTransactionDAO().getTransactionByUuid(uuid);
     }
 
     private void postTransactionAdd(final Transaction transaction, final boolean result) {

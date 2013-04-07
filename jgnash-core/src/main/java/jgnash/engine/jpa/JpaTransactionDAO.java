@@ -99,6 +99,25 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
         }
     }
 
+    @Override
+    public Transaction getTransactionByUuid(final String uuid) {
+        try {
+            emLock.lock();
+
+            Transaction budget = null;
+
+            try {
+                budget = em.find(Transaction.class, uuid);
+            } catch (Exception e) {
+                logger.info("Did not find Transaction for uuid: " + uuid);
+            }
+
+            return budget;
+        } finally {
+            emLock.unlock();
+        }
+    }
+
     /*
      * @see jgnash.engine.TransactionDAO#removeTransaction(jgnash.engine.Transaction)
      */

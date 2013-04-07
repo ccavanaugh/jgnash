@@ -78,7 +78,6 @@ import jgnash.util.Resource;
  * Panel for displaying a budget
  * 
  * @author Craig Cavanaugh
- * 
  */
 public final class BudgetPanel extends JPanel implements ActionListener, MessageListener {
 
@@ -191,7 +190,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
                 StoredObject o = null;
 
                 if (lastBudgetUUID != null) {
-                    o = engine.getStoredObjectByUuid(lastBudgetUUID);
+                    o = engine.getBudgetByUuid(lastBudgetUUID);
                 }
 
                 return o;
@@ -210,7 +209,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
                     if (activeBudget == null) {
                         List<Budget> budgets = engine.getBudgetList();
 
-                        if (budgets.size() > 0) {
+                        if (!budgets.isEmpty()) {
                             budgetCombo.setSelectedBudget(budgets.get(0));
                             activeBudget = budgets.get(0);
                         }

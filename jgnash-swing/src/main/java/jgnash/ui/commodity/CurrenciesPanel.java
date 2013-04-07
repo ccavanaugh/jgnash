@@ -161,7 +161,7 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
                 CurrencyNode node = DefaultCurrencies.buildCustomNode(customField.getText());
 
                 // the add could fail if the commodity symbol is a duplicate
-                if (engine.addCommodity(node)) {
+                if (engine.addCurrency(node)) {
                     cList.addElement(new CurrencyElement(node, true));
                     customField.setText(null);
                     return;
@@ -176,7 +176,7 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
             if (obj != null) {
                 aList.removeElement(obj);
                 cList.addElement(new CurrencyElement(obj, true));
-                engine.addCommodity(obj);
+                engine.addCurrency(obj);
             }
         }
     }

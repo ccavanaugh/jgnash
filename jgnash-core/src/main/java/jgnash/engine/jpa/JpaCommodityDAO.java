@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -40,14 +41,14 @@ import javax.persistence.criteria.Root;
  */
 class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
 
-    //private static final Logger logger = Logger.getLogger(JpaCommodityDAO.class.getName());
+    private static final Logger logger = Logger.getLogger(JpaCommodityDAO.class.getName());
 
     JpaCommodityDAO(final EntityManager entityManager, final boolean isRemote) {
         super(entityManager, isRemote);
     }
 
     /*
-     * @see jgnash.engine.CommodityDAOInterface#addCommodity(jgnash.engine.CommodityNode)
+     * @see jgnash.engine.CommodityDAOInterface#addCurrency(jgnash.engine.CommodityNode)
      */
     @Override
     public boolean addCommodity(final CommodityNode node) {
@@ -140,6 +141,25 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
         }
     }
 
+    @Override
+    public CurrencyNode getCurrencyByUuid(final String uuid) {
+        try {
+            emLock.lock();
+
+            CurrencyNode currency = null;
+
+            try {
+                currency = em.find(CurrencyNode.class, uuid);
+            } catch (Exception e) {
+                logger.info("Did not find CurrencyNode for uuid: " + uuid);
+            }
+
+            return currency;
+        } finally {
+            emLock.unlock();
+        }
+    }
+
     /*
      * @see jgnash.engine.CommodityDAOInterface#getExchangeNode(java.lang.String)
      */
@@ -163,6 +183,44 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
                 }
             }
             return exchangeRate;
+        } finally {
+            emLock.unlock();
+        }
+    }
+
+    @Override
+    public ExchangeRate getExchangeRateByUuid(String uuid) {
+        try {
+            emLock.lock();
+
+            ExchangeRate exchangeRate = null;
+
+            try {
+                exchangeRate = em.find( ExchangeRate.class, uuid);
+            } catch (Exception e) {
+                logger.info("Did not find  ExchangeRate for uuid: " + uuid);
+            }
+
+            return exchangeRate;
+        } finally {
+            emLock.unlock();
+        }
+    }
+
+    @Override
+    public SecurityNode getSecurityByUuid(final String uuid) {
+        try {
+            emLock.lock();
+
+            SecurityNode security = null;
+
+            try {
+                security = em.find(SecurityNode.class, uuid);
+            } catch (Exception e) {
+                logger.info("Did not find SecurityNode for uuid: " + uuid);
+            }
+
+            return security;
         } finally {
             emLock.unlock();
         }

@@ -32,11 +32,11 @@ public class TransactionTest {
 
             CurrencyNode defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
 
-            e.addCommodity(defaultCurrency);
+            e.addCurrency(defaultCurrency);
             e.setDefaultCurrency(defaultCurrency);
 
             CurrencyNode cadCurrency = DefaultCurrencies.buildCustomNode("CAD");
-            e.addCommodity(cadCurrency);
+            e.addCurrency(cadCurrency);
 
             Account incomeAccount = new Account(AccountType.INCOME, defaultCurrency);
             incomeAccount.setName("Income Account");
@@ -91,7 +91,7 @@ public class TransactionTest {
 
             CurrencyNode defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
 
-            e.addCommodity(defaultCurrency);
+            e.addCurrency(defaultCurrency);
             e.setDefaultCurrency(defaultCurrency);
 
             Account usdBankAccount = new Account(AccountType.BANK, defaultCurrency);

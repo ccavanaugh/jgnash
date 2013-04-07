@@ -149,6 +149,7 @@ public class Message implements Serializable, Cloneable {
 
         for (int i = 0; i < properties.size(); i++) {
             s.writeObject(keys[i]);
+            s.writeUTF(values[i].getClass().getName());
             s.writeUTF(values[i].getUuid());
         }
     }
@@ -175,7 +176,8 @@ public class Message implements Serializable, Cloneable {
 
         for (int i = 0; i < size; i++) {
             MessageProperty key = (MessageProperty) s.readObject();
-            StoredObject value = engine.getStoredObjectByUuid(s.readUTF());
+            Class clazz = Class.forName(s.readUTF());
+            StoredObject value = engine.getStoredObjectByUuid(clazz, s.readUTF());
             properties.put(key, value);
         }
     }

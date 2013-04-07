@@ -312,8 +312,8 @@ public final class ExpandingAccountTableModel extends AbstractExpandingTableMode
                             break;
                         case ACCOUNT_MODIFY:
                         case ACCOUNT_VISIBILITY_CHANGE:
-                        case COMMODITY_HISTORY_ADD:
-                        case COMMODITY_HISTORY_REMOVE:
+                        case SECURITY_HISTORY_ADD:
+                        case SECURITY_HISTORY_REMOVE:
                             fireNodeChanged();
                             break;
                         case FILE_LOAD_SUCCESS:

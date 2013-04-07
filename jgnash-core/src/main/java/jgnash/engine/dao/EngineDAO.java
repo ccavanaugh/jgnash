@@ -45,6 +45,8 @@ public interface EngineDAO {
 
     public StoredObject getObjectByUuid(String uuid);
 
+    public <T> T getObjectByUuid(Class<T> tClass, final String uuid);
+
     public List<StoredObject> getStoredObjects();
 
     public void shutdown();

@@ -139,7 +139,6 @@ class MessageBusRemoteClient {
 
         if (filter != null) {
             session.write(filter.encrypt(writer.toString()));
-            // logger.log(Level.INFO, "Encrypted message was: {0}", filter.encrypt(writer.toString()));
         } else {
             session.write(writer.toString());
         }
@@ -168,7 +167,6 @@ class MessageBusRemoteClient {
             String plainMessage;
 
             if (filter != null) {
-                // logger.log(Level.INFO, "Encrypted message was: {0}", object.toString());
                 plainMessage = filter.decrypt(object.toString());
             } else {
                 plainMessage = object.toString();
@@ -205,12 +203,7 @@ class MessageBusRemoteClient {
                 dataBasePath = plainMessage.substring(MessageBusRemoteServer.PATH_PREFIX.length());
                 logger.log(Level.INFO, "Remote data path is: {0}", dataBasePath);
             } else if (plainMessage.startsWith(EncryptionFilter.DECRYPTION_ERROR_TAG)) {    // decryption has failed, shut down the engine
-                /*new Thread() {
-                    @Override
-                    public void run() {
-                        EngineFactory.closeEngine(EngineFactory.DEFAULT);
-                    }
-                }.start();*/
+                logger.log(Level.SEVERE, "Unable to decrypt the remote message");
             } else {
                 logger.log(Level.SEVERE, "Unknown message: {0}", plainMessage);
             }
@@ -243,8 +236,6 @@ class MessageBusRemoteClient {
     private synchronized static void processRemoteMessage(final Message message) {
         logger.info("processing a remote message");
 
-        // TODO: Use class specific uuid search to improve performance and make database schema simpler
-
         Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
         if (message.getChannel() == MessageChannel.ACCOUNT) {
@@ -276,7 +267,7 @@ class MessageBusRemoteClient {
                 case BUDGET_REMOVE:
                 case BUDGET_GOAL_UPDATE:
                     engine.refreshBudget(budget);
-                    message.setObject(MessageProperty.BUDGET, engine.getStoredObjectByUuid(budget.getUuid()));
+                    message.setObject(MessageProperty.BUDGET, engine.getBudgetByUuid(budget.getUuid()));
                     break;
                 default:
                     break;
@@ -286,17 +277,22 @@ class MessageBusRemoteClient {
         if (message.getChannel() == MessageChannel.COMMODITY) {
             switch (message.getEvent()) {
                 case CURRENCY_MODIFY:
-                case COMMODITY_HISTORY_ADD:
-                case COMMODITY_HISTORY_REMOVE:
+                    final CommodityNode currency = (CommodityNode) message.getObject(MessageProperty.COMMODITY);
+                    engine.refreshCommodity(currency);
+                    message.setObject(MessageProperty.COMMODITY, engine.getCurrencyNodeByUuid(currency.getUuid()));
+                    break;
+                case SECURITY_MODIFY:
+                case SECURITY_HISTORY_ADD:
+                case SECURITY_HISTORY_REMOVE:
                     final CommodityNode node = (CommodityNode) message.getObject(MessageProperty.COMMODITY);
                     engine.refreshCommodity(node);
-                    message.setObject(MessageProperty.COMMODITY, engine.getStoredObjectByUuid(node.getUuid()));
+                    message.setObject(MessageProperty.COMMODITY, engine.getSecurityNodeByUuid(node.getUuid()));
                     break;
                 case EXCHANGE_RATE_ADD:
                 case EXCHANGE_RATE_REMOVE:
                     final ExchangeRate rate = (ExchangeRate) message.getObject(MessageProperty.EXCHANGERATE);
                     engine.refreshExchangeRate(rate);
-                    message.setObject(MessageProperty.EXCHANGERATE, engine.getStoredObjectByUuid(rate.getUuid()));
+                    message.setObject(MessageProperty.EXCHANGERATE, engine.getExchangeRateByUuid(rate.getUuid()));
                     break;
                 default:
                     break;
@@ -309,7 +305,7 @@ class MessageBusRemoteClient {
                 case REMINDER_REMOVE:
                     final Reminder reminder = (Reminder) message.getObject(MessageProperty.REMINDER);
                     engine.refreshReminder(reminder);
-                    message.setObject(MessageProperty.REMINDER, engine.getStoredObjectByUuid(reminder.getUuid()));
+                    message.setObject(MessageProperty.REMINDER, engine.getReminderByUuid(reminder.getUuid()));
                     break;
                 default:
                     break;
@@ -323,11 +319,11 @@ class MessageBusRemoteClient {
                 case TRANSACTION_REMOVE:
                     final Account account = (Account) message.getObject(MessageProperty.ACCOUNT);
                     engine.refreshAccount(account);
-                    message.setObject(MessageProperty.ACCOUNT, engine.getStoredObjectByUuid(account.getUuid()));
+                    message.setObject(MessageProperty.ACCOUNT, engine.getAccountByUuid(account.getUuid()));
 
                     final Transaction transaction = (Transaction) message.getObject(MessageProperty.TRANSACTION);
                     engine.refreshTransaction(transaction);
-                    message.setObject(MessageProperty.TRANSACTION, engine.getStoredObjectByUuid(transaction.getUuid()));
+                    message.setObject(MessageProperty.TRANSACTION, engine.getTransactionByUuid(transaction.getUuid()));
                     break;
                 default:
                     break;

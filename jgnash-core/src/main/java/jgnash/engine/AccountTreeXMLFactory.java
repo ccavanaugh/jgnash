@@ -235,7 +235,7 @@ public class AccountTreeXMLFactory {
                                     sNode.setReportedCurrencyNode(currencyNode);
                                 }
                             }
-                            engine.addCommodity(sNode);
+                            engine.addSecurity(sNode);
                         } catch (CloneNotSupportedException e) {
                             Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE,
                                     e.getLocalizedMessage(), e);
@@ -277,7 +277,7 @@ public class AccountTreeXMLFactory {
                             sNode = (SecurityNode) node.clone();
 
                             sNode.setReportedCurrencyNode(engine.getDefaultCurrency());
-                            engine.addCommodity(sNode);
+                            engine.addSecurity(sNode);
                         } catch (CloneNotSupportedException e) {
                             Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, e.toString(), e);
                         }

@@ -84,13 +84,13 @@ public class SecurityComboBox extends AbstractCommodityComboBox<SecurityNode> {
                 @Override
                 public void run() {
                     switch (event.getEvent()) {
-                        case CURRENCY_ADD:
+                        case SECURITY_ADD:
                             model.addElement((SecurityNode) node);
                             return;
-                        case CURRENCY_REMOVE:
+                        case SECURITY_REMOVE:
                             model.removeElement(node);
                             return;
-                        case CURRENCY_MODIFY:
+                        case SECURITY_MODIFY:
                             updateNode((SecurityNode) node);
                             return;
                         default:

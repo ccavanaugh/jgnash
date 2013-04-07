@@ -111,7 +111,7 @@ public class NewFileDialog extends WizardDialog {
                 // make sure a duplicate default is not added
                 for (CurrencyNode node : nodes) {
                     if (!node.matches(defaultCurrency)) {
-                        e.addCommodity(node);
+                        e.addCurrency(node);
                     }
                 }
 

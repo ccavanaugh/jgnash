@@ -271,7 +271,7 @@ public class CurrencyModifyDialog extends JDialog implements MessageListener, Li
                     StaticUIMethods.displayError(MessageFormat.format(rb.getString("Message.Error.CurrencyUpdate"), newNode.getSymbol()));
                 }
             } else {
-                getEngine().addCommodity(newNode);
+                getEngine().addCurrency(newNode);
             }
         }
     }

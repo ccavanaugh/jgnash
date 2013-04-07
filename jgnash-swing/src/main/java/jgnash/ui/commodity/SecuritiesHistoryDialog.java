@@ -478,8 +478,8 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
                         @Override
                         public void run() {
                             switch (event.getEvent()) {
-                                case COMMODITY_HISTORY_ADD:
-                                case COMMODITY_HISTORY_REMOVE:
+                                case SECURITY_HISTORY_ADD:
+                                case SECURITY_HISTORY_REMOVE:
                                     history = EngineFactory.getEngine(EngineFactory.DEFAULT).getSecurityHistory(node);
                                     fireTableDataChanged();
                                     updateChart();

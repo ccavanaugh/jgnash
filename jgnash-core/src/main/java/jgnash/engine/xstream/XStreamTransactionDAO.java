@@ -17,10 +17,10 @@
  */
 package jgnash.engine.xstream;
 
-import java.util.List;
-
 import jgnash.engine.Transaction;
 import jgnash.engine.dao.TransactionDAO;
+
+import java.util.List;
 
 /**
  * Transaction XML DAO
@@ -52,6 +52,11 @@ public class XStreamTransactionDAO extends AbstractXStreamDAO implements Transac
         commit();
 
         return true;
+    }
+
+    @Override
+    public Transaction getTransactionByUuid(final String uuid) {
+        return getObjectByUuid(Transaction.class, uuid);
     }
 
     @Override

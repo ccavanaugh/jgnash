@@ -84,6 +84,22 @@ abstract class AbstractJpaDAO extends AbstractDAO {
         }
     }
 
+    public <T> T getObjectByUuid(final Class<T> tClass, final String uuid) {
+        T object = null;
+
+        try {
+            emLock.lock();
+
+            object = em.find(tClass, uuid);
+        } catch (NoResultException e) {
+            Logger.getLogger(AbstractJpaDAO.class.getName()).info("Did not find object for uuid: " + uuid);
+        } finally {
+            emLock.unlock();
+        }
+
+        return object;
+    }
+
     public StoredObject getObjectByUuid(final String uuid) {
 
         StoredObject o = null;

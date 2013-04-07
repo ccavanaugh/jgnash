@@ -25,13 +25,14 @@ import jgnash.engine.recurring.Reminder;
  * Reminder DAO Interface
  *
  * @author Craig Cavanaugh
- *
  */
 public interface RecurringDAO {
 
     public List<Reminder> getReminderList();
 
     public boolean addReminder(Reminder reminder);
+
+    public Reminder getReminderByUuid(final String uuid);
 
     public void refreshReminder(Reminder reminder);
 

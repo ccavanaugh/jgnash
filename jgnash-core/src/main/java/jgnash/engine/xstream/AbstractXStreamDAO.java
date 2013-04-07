@@ -53,6 +53,17 @@ abstract class AbstractXStreamDAO extends AbstractDAO {
         return container.get(uuid);
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> T getObjectByUuid(final Class<T> clazz, final String uuid) {
+        Object o = getObjectByUuid(uuid);
+
+        if (clazz.isAssignableFrom(o.getClass())) {
+             return (T)o;
+        }
+
+        return null;
+    }
+
     final void commit() {
         if (commitCount.getAndIncrement() >= MAX_COMMIT_COUNT) {
             commitAndReset();

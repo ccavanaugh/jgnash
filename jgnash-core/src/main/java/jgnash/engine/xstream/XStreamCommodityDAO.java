@@ -28,6 +28,7 @@ import jgnash.engine.ExchangeRate;
 import jgnash.engine.ExchangeRateHistoryNode;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
+import jgnash.engine.StoredObject;
 import jgnash.engine.dao.CommodityDAO;
 
 /**
@@ -81,6 +82,16 @@ public class XStreamCommodityDAO extends AbstractXStreamDAO implements Commodity
     }
 
     @Override
+    public CurrencyNode getCurrencyByUuid(final String uuid) {
+        return getObjectByUuid(CurrencyNode.class, uuid);
+    }
+
+    @Override
+    public SecurityNode getSecurityByUuid(final String uuid) {
+        return getObjectByUuid(SecurityNode.class, uuid);
+    }
+
+    @Override
     public ExchangeRate getExchangeNode(final String rateId) {
         ExchangeRate rate = null;
 
@@ -92,6 +103,19 @@ public class XStreamCommodityDAO extends AbstractXStreamDAO implements Commodity
         }
 
         return rate;
+    }
+
+    @Override
+    public ExchangeRate getExchangeRateByUuid(final String uuid) {
+        ExchangeRate exchangeRate = null;
+
+        StoredObject o = container.get(uuid);
+
+        if (o != null && o instanceof ExchangeRate) {
+            exchangeRate = (ExchangeRate) o;
+        }
+
+        return exchangeRate;
     }
 
     @Override

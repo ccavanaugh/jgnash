@@ -72,7 +72,7 @@ public abstract class EngineTest {
             CurrencyNode defaultCurrency = DefaultCurrencies.buildNode(Locale.US);
 
             assertNotNull(defaultCurrency);
-            assertTrue(e.addCommodity(defaultCurrency));
+            assertTrue(e.addCurrency(defaultCurrency));
 
             e.setDefaultCurrency(defaultCurrency);
         }
@@ -84,7 +84,7 @@ public abstract class EngineTest {
 
             assertNotNull(node);
 
-            assertTrue(e.addCommodity(node));
+            assertTrue(e.addCurrency(node));
         }
     }
 
@@ -144,7 +144,7 @@ public abstract class EngineTest {
 
         String uuid = e.getDefaultCurrency().getUuid();
 
-        assertSame(e.getDefaultCurrency(), e.getStoredObjectByUuid(uuid));
+        assertSame(e.getDefaultCurrency(), e.getCurrencyNodeByUuid(uuid));
     }
 
     @Test
@@ -428,7 +428,7 @@ public abstract class EngineTest {
     public void testGetAccountByUuid() {
         String rootUUID = e.getRootAccount().getUuid();
 
-        assertEquals(e.getRootAccount(), e.getStoredObjectByUuid(rootUUID));
+        assertEquals(e.getRootAccount(), e.getAccountByUuid(rootUUID));
     }
 
     @Test

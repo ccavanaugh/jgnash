@@ -25,7 +25,6 @@ import jgnash.engine.Transaction;
  * Transaction DAO Interface
  *
  * @author Craig Cavanaugh
- *
  */
 public interface TransactionDAO {
 
@@ -40,8 +39,10 @@ public interface TransactionDAO {
      */
     public List<Transaction> getTransactions();
 
-    public boolean addTransaction(jgnash.engine.Transaction transaction);
+    public boolean addTransaction(Transaction transaction);
 
-    public boolean removeTransaction(jgnash.engine.Transaction transaction);
+    public Transaction getTransactionByUuid(final String uuid);
+
+    public boolean removeTransaction(Transaction transaction);
 
 }

@@ -404,7 +404,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
                     }
                 }
 
-                if (event.getEvent() == ChannelEvent.COMMODITY_HISTORY_ADD || event.getEvent() == ChannelEvent.COMMODITY_HISTORY_REMOVE) {
+                if (event.getEvent() == ChannelEvent.SECURITY_HISTORY_ADD || event.getEvent() == ChannelEvent.SECURITY_HISTORY_REMOVE) {
 
                     SecurityNode node = (SecurityNode) event.getObject(MessageProperty.COMMODITY);
 

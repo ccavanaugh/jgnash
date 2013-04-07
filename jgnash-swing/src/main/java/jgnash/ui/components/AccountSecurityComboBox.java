@@ -81,7 +81,7 @@ public class AccountSecurityComboBox extends AbstractCommodityComboBox<SecurityN
                         case ACCOUNT_SECURITY_ADD:
                             model.addElement(node);
                             break;
-                        case CURRENCY_REMOVE:
+                        case SECURITY_REMOVE:
                         case ACCOUNT_SECURITY_REMOVE:
                             CommodityNode snode = getSelectedNode();
                             model.removeElement(node);
@@ -92,7 +92,7 @@ public class AccountSecurityComboBox extends AbstractCommodityComboBox<SecurityN
                                 }
                             }
                             break;
-                        case CURRENCY_MODIFY:
+                        case SECURITY_MODIFY:
                             updateNode(node);
                             break;
                         default:

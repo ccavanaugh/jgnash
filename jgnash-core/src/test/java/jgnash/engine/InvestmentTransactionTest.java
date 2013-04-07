@@ -68,17 +68,17 @@ public class InvestmentTransactionTest {
             // Creating currencies
             defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
 
-            e.addCommodity(defaultCurrency);
+            e.addCurrency(defaultCurrency);
             e.setDefaultCurrency(defaultCurrency);
 
             cadCurrency = DefaultCurrencies.buildCustomNode("CAD");
-            e.addCommodity(cadCurrency);
+            e.addCurrency(cadCurrency);
 
             // Creating securities
             securityNode1 = new SecurityNode(defaultCurrency);
 
             securityNode1.setSymbol("GOOGLE");
-            e.addCommodity(securityNode1);
+            e.addSecurity(securityNode1);
 
             // Creating accounts
             incomeAccount = new Account(AccountType.INCOME, defaultCurrency);

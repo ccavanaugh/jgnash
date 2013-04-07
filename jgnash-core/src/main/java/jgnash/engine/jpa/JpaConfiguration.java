@@ -104,6 +104,8 @@ public class JpaConfiguration {
         urlBuilder.append(USER).append(DEFAULT_USER);
         urlBuilder.append(PASSWORD).append(password);
 
+        urlBuilder.append(";TRACE_LEVEL_FILE=3");
+
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_URL, urlBuilder.toString());
 
         return properties;

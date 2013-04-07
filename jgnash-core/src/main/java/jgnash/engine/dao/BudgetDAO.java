@@ -17,9 +17,9 @@
  */
 package jgnash.engine.dao;
 
-import java.util.List;
-
 import jgnash.engine.budget.Budget;
+
+import java.util.List;
 
 /**
  * Budget DAO
@@ -33,6 +33,8 @@ public interface BudgetDAO {
     public boolean update(Budget budget);
 
     public List<Budget> getBudgets();
+
+    public Budget getBudgetByUuid(final String uuid);
 
     public void refreshBudget(Budget budget);
 }

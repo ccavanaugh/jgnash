@@ -50,7 +50,13 @@ public interface CommodityDAO {
 
     public List<CurrencyNode> getCurrencies();
 
+    public CurrencyNode getCurrencyByUuid(final String uuid);
+
+    public SecurityNode getSecurityByUuid(final String uuid);
+
     public ExchangeRate getExchangeNode(final String rateId);
+
+    public ExchangeRate getExchangeRateByUuid(final String uuid);
 
     public List<SecurityNode> getSecurities();
 
