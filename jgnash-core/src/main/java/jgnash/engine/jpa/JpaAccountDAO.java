@@ -234,11 +234,6 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
     }
 
     @Override
-    public boolean setAccountProperty(final Account account, final Object object) {
-        return false;
-    }
-
-    @Override
     public boolean removeAccountProperty(final Account account, final Object object) {
         return false;
     }

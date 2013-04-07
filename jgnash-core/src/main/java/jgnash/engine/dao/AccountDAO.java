@@ -73,8 +73,6 @@ public interface AccountDAO {
 
     public boolean updateAccount(Account account);
 
-    public boolean setAccountProperty(Account account, Object object);
-
     public boolean removeAccountProperty(Account account, Object object);
 
     /**

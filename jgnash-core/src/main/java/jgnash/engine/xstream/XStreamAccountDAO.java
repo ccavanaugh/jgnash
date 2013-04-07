@@ -123,12 +123,6 @@ public class XStreamAccountDAO extends AbstractXStreamDAO implements AccountDAO 
     }
 
     @Override
-    public boolean setAccountProperty(final Account account, final Object object) {
-        commit();
-        return true;
-    }
-
-    @Override
     public boolean removeAccountProperty(final Account account, final Object object) {
         commit();
         return true;
