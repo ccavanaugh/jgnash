@@ -35,6 +35,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
@@ -93,7 +94,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * Transaction entries
      */
     @JoinTable
-    @OneToMany(cascade = {CascadeType.ALL})
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     Set<TransactionEntry> transactionEntries = new HashSet<>();
 
     /**
