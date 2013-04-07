@@ -118,7 +118,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     @JoinColumn()
     @OrderBy("symbol")
     @OneToMany(cascade = {CascadeType.PERSIST})
-    List<SecurityNode> securities = new ArrayList<>();
+    Set<SecurityNode> securities = new HashSet<>();
 
     /**
      * Balance of the account
@@ -1195,18 +1195,16 @@ public class Account extends StoredObject implements Comparable<Account> {
     public void setName(final String newName) {
         if (!newName.equals(name)) {
             name = newName;
-            /*if (this.getParent() != null) { // tell the parent to resort
-
-                getParent().sortChildren();
-            }*/
         }
     }
 
     public synchronized String getPathName() {
         final Account parent = getParent();
+
         if (parent != null && parent.getAccountType() != AccountType.ROOT) {
             return parent.getPathName() + getAccountSeparator() + getName();
         }
+
         return getName(); // this account is at the root level
     }
 
@@ -1266,7 +1264,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      */
     @Override
     public int compareTo(final Account acc) {
-        // sort on the full pathname, improves order for some cases.
+        // sort on the full path name, improves order for some cases.
         final int result = getPathName().compareToIgnoreCase(acc.getPathName());
 
         if (result == 0) {
@@ -1311,12 +1309,10 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @return true if successful
      */
     public boolean addSecurity(final SecurityNode node) {
-
         boolean result = false;
 
         if (node != null && memberOf(AccountGroup.INVEST) && !containsSecurity(node)) {
             securities.add(node);
-            Collections.sort(securities);
 
             result = true;
         }
@@ -1331,7 +1327,6 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @return true if successful, false if used by a transaction
      */
     boolean removeSecurity(final SecurityNode node) {
-
         if (getUsedSecurities().contains(node)) {
             return false;
         }
@@ -1354,14 +1349,13 @@ public class Account extends StoredObject implements Comparable<Account> {
         return getProxy().getMarketValue();
     }
 
+    /**
+     * Returns a defensive copy of the security set
+     *
+     * @return a sorted set
+     */
     public Set<SecurityNode> getSecurities() {
-        Set<SecurityNode> set = new TreeSet<>();
-
-        for (SecurityNode node : securities) {
-            set.add(node);
-        }
-
-        return set;
+        return new TreeSet<>(securities);
     }
 
     /**
@@ -1491,7 +1485,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     @Override
     public Object clone() throws CloneNotSupportedException {
         Account a = (Account) super.clone();
-        a.securities = new ArrayList<>(securities);
+        a.securities.clear();
         a.children.clear();
         a.transactions.clear();
 
