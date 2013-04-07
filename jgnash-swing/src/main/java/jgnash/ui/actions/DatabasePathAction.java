@@ -17,21 +17,21 @@
  */
 package jgnash.ui.actions;
 
+import jgnash.engine.DataStoreType;
+import jgnash.util.Resource;
+
 import java.awt.Component;
+import java.io.File;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import jgnash.engine.DataStoreType;
-import jgnash.util.Resource;
+import javax.swing.filechooser.FileFilter;
 
 /**
  * UI Action to request database path from the user
  *
  * @author Craig Cavanaugh
- *
  */
 public class DatabasePathAction {
 
@@ -76,7 +76,7 @@ public class DatabasePathAction {
 
         JFileChooser chooser = new JFileChooser(pref.get(LAST_DIR, null));
 
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(description.toString(), ext);
+        FileFilter filter = new DataStoreFilter(description.toString(), ext);
         chooser.addChoosableFileFilter(filter);
         chooser.setFileFilter(filter);
 
@@ -97,5 +97,47 @@ public class DatabasePathAction {
             }
         }
         return "";
+    }
+
+    private static class DataStoreFilter extends FileFilter {
+
+        private final String description;
+
+        private final String[] fileExtensions;
+
+        public DataStoreFilter(final String description, final String... extensions) {
+            this.description = description;
+            this.fileExtensions = extensions;
+        }
+
+        @Override
+        public boolean accept(final File f) {
+            if (f != null) {
+
+                if (f.isDirectory()) {
+                    return true;
+                }
+
+                String fileName = f.getName();
+
+                final int i = fileName.indexOf('.');
+
+                if (i > 0 && i < fileName.length() - 1) {
+                    final String extension = fileName.substring(i + 1);
+
+                    for (String fileExtension : fileExtensions) {
+                        if (extension.equalsIgnoreCase(fileExtension)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public String getDescription() {
+            return description;
+        }
     }
 }
