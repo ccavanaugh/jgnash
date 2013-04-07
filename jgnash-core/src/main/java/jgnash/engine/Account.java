@@ -97,14 +97,14 @@ public class Account extends StoredObject implements Comparable<Account> {
      */
     @OrderBy("name")
     @OneToMany(cascade = {CascadeType.PERSIST})
-    private List<Account> children = new ArrayList<>();
+    private Set<Account> children = new HashSet<>();
 
     /**
      * List of transactions for this account
      */
     @JoinTable
-    @ManyToMany(cascade = {CascadeType.ALL})
     @OrderBy("date, number, dateEntered")
+    @ManyToMany(cascade = {CascadeType.ALL})
     Set<Transaction> transactions = new HashSet<>();
 
     /**
@@ -115,7 +115,6 @@ public class Account extends StoredObject implements Comparable<Account> {
     /**
      * List of securities if this is an investment account
      */
-
     @JoinColumn()
     @OrderBy("symbol")
     @OneToMany(cascade = {CascadeType.PERSIST})
@@ -541,7 +540,7 @@ public class Account extends StoredObject implements Comparable<Account> {
             if (!children.contains(child) && child != this) {
                 if (child.setParent(this)) {
                     children.add(child);
-                    sortChildren();
+                    //sortChildren();
                     result = true;
                 }
             }
@@ -576,19 +575,8 @@ public class Account extends StoredObject implements Comparable<Account> {
         }
     }
 
-    private void sortChildren() {
-        Lock l = childLock.writeLock();
-        l.lock();
-
-        try {
-            Collections.sort(children);
-        } finally {
-            l.unlock();
-        }
-    }
-
     /**
-     * Returns account list of the children
+     * Returns a sorted list of the children
      *
      * @return List of children
      */
@@ -597,8 +585,11 @@ public class Account extends StoredObject implements Comparable<Account> {
         l.lock();
 
         try {
-            // return account defensive copy
-            return new ArrayList<>(children);
+            // return account defensive copy as a list
+            List<Account> list = new ArrayList<>(children);
+            Collections.sort(list);
+
+            return list;
         } finally {
             l.unlock();
         }
@@ -667,7 +658,6 @@ public class Account extends StoredObject implements Comparable<Account> {
         l.lock();
 
         try {
-
             boolean result = false;
 
             if (account != this) {
@@ -1205,10 +1195,10 @@ public class Account extends StoredObject implements Comparable<Account> {
     public void setName(final String newName) {
         if (!newName.equals(name)) {
             name = newName;
-            if (this.getParent() != null) { // tell the parent to resort
+            /*if (this.getParent() != null) { // tell the parent to resort
 
                 getParent().sortChildren();
-            }
+            }*/
         }
     }
 
