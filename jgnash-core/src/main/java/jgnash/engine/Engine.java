@@ -70,7 +70,7 @@ import jgnash.util.Resource;
  * <p/>
  * When objects are removed, they are wrapped in a TrashObject so they may still be referenced for messaging and cleanup
  * operations. After a predefined period of time, they are permanently removed.
- * 
+ *
  * @author Craig Cavanaugh
  */
 public class Engine {
@@ -332,20 +332,18 @@ public class Engine {
                 }
             }
 
-            // migrate amortization object to new storage format
+            // migrate amortization object to new storage format and remove and orphaned transactions from removal and modifications of reminders
             if (getConfig().getFileVersion() < 2.3f) {
                 migrateAmortizeObjects();
+                removeOrphanedTransactions();
             }
-            
+
             // check for improperly set default currency
             if (getDefaultCurrency() == null) {
                 setDefaultCurrency(this.getRootAccount().getCurrencyNode());
                 logger.warning("Forcing default currency");
             }
 
-            // Removal and modifications of reminders may have left behind orphan transactions
-            removeOrphanTransactions();
-            
             // if the file version is not current, then update it
             if (getConfig().getFileVersion() != CURRENT_VERSION) {
                 getConfig().setFileVersion(CURRENT_VERSION);
@@ -408,18 +406,21 @@ public class Engine {
     }
 
     /**
-     * Search and remove orphan transactions left behind from reminders
+     * Search and remove orphaned transactions left behind when reminders were removed
      */
-    private void removeOrphanTransactions() {
-        List<Transaction> transactions = getTransactions();
-
-        List<Account> accounts = getAccountList();
-
-        for (Transaction transaction : transactions) {
+    private void removeOrphanedTransactions() {
+        for (Transaction transaction : getTransactions()) {
             boolean orphaned = true;
 
-            for (Account account : accounts) {
+            for (Account account : getAccountList()) {
                 if (account.contains(transaction)) {
+                    orphaned = false;
+                    break;
+                }
+            }
+
+            for (Reminder reminder : getReminders()) {
+                if (reminder.getTransaction().equals(transaction)) {
                     orphaned = false;
                     break;
                 }
@@ -585,7 +586,7 @@ public class Engine {
 
     /**
      * Returns a list of reminders
-     * 
+     *
      * @return List of reminders
      */
     public List<Reminder> getReminders() {
@@ -630,7 +631,7 @@ public class Engine {
     /**
      * Returns a <code>Collection</code> of all <code>StoredObjects</code> in a consistent order.
      * <code>StoredObjects</code> marked for removal and <code>TrashObjects</code> are filtered from the collection.
-     * 
+     *
      * @return <code>Collection</code> of <code>StoredObjects</code>
      * @see Collection
      * @see StoredObjectComparator
@@ -645,7 +646,7 @@ public class Engine {
 
             List<StoredObject> objects = eDAO.getStoredObjects();
 
-            for (Iterator<StoredObject> i = objects.iterator(); i.hasNext();) {
+            for (Iterator<StoredObject> i = objects.iterator(); i.hasNext(); ) {
                 StoredObject o = i.next();
 
                 if (o instanceof TrashObject || o.isMarkedForRemoval()) {
@@ -663,7 +664,7 @@ public class Engine {
 
     /**
      * Validate a CommodityNode for correctness
-     * 
+     *
      * @param node CommodityNode to validate
      * @return true if valid
      */
@@ -705,7 +706,7 @@ public class Engine {
      * <p/>
      * Checks and prevents the addition of a duplicate CommodityNode. CurrencyNodes with the same symbol but difference
      * locale are allowed.
-     * 
+     *
      * @param node new CommodityNode to add
      * @return <code>true</code> if the add it successful
      */
@@ -758,8 +759,8 @@ public class Engine {
 
     /**
      * Add a SecurityHistoryNode node to a SecurityNode
-     * 
-     * @param node SecurityNode to add to
+     *
+     * @param node  SecurityNode to add to
      * @param hNode SecurityHistoryNode to add
      * @return true if successful
      */
@@ -808,7 +809,7 @@ public class Engine {
 
     /**
      * Returns a list of investment accounts that use the given security node
-     * 
+     *
      * @param node security node
      * @return list of investment accounts
      */
@@ -845,7 +846,8 @@ public class Engine {
 
         // no exact match yet, search the transactions
 
-        search: for (Transaction t : transactions) {
+        search:
+        for (Transaction t : transactions) {
             if (t instanceof InvestmentTransaction) {
 
                 BigDecimal p = ((InvestmentTransaction) t).getPrice();
@@ -885,7 +887,7 @@ public class Engine {
     /**
      * Forces all investment accounts containing the security to clear the cached account balance and reconciled account
      * balance and recalculate when queried.
-     * 
+     *
      * @param node SecurityNode that was changed
      */
     private void clearCachedAccountBalance(final SecurityNode node) {
@@ -897,7 +899,7 @@ public class Engine {
 
     /**
      * Clears an <code>Accounts</code> cached balance and recursively works up the tree to the root.
-     * 
+     *
      * @param account <code>Account</code> to clear
      */
     private void clearCachedAccountBalance(final Account account) {
@@ -935,7 +937,7 @@ public class Engine {
             for (CurrencyNode node1 : currencies) {
                 for (CurrencyNode node2 : currencies) {
                     if (node1 != node2 && buildExchangeRateId(node1, node2).equals(exchangeRateId)) {
-                        return new CurrencyNode[] { node1, node2 };
+                        return new CurrencyNode[]{node1, node2};
                     }
                 }
             }
@@ -947,7 +949,7 @@ public class Engine {
 
     /**
      * Returns an array of currencies being used in accounts
-     * 
+     *
      * @return Set of CurrencyNodes
      */
     public Set<CurrencyNode> getActiveCurrencies() {
@@ -965,7 +967,7 @@ public class Engine {
     /**
      * Returns a CurrencyNode given the symbol. This will not generate a new CurrencyNode. It must be explicitly created
      * and added.
-     * 
+     *
      * @param symbol Currency symbol
      * @return null if the CurrencyNode as not been defined
      */
@@ -1039,7 +1041,7 @@ public class Engine {
 
     /**
      * Find a SecurityNode given it's symbol
-     * 
+     *
      * @param symbol symbol of security to find
      * @return null if not found
      */
@@ -1329,8 +1331,8 @@ public class Engine {
 
     /**
      * Modifies an existing currency node in place. The supplied node should not be a reference to the original
-     * 
-     * @param oldNode old CommodityNode
+     *
+     * @param oldNode      old CommodityNode
      * @param templateNode template CommodityNode
      * @return true if successful
      */
@@ -1387,10 +1389,10 @@ public class Engine {
     public void updateReminder(final Reminder reminder) {
         getReminderDAO().updateReminder(reminder);
     }
-    
+
     /**
      * Returns the engine logger
-     * 
+     *
      * @return the engine logger
      */
     public static Logger getLogger() {
@@ -1399,7 +1401,7 @@ public class Engine {
 
     /**
      * Log a informational message
-     * 
+     *
      * @param message message to display
      */
     private static void logInfo(final String message) {
@@ -1408,7 +1410,7 @@ public class Engine {
 
     /**
      * Log a warning message
-     * 
+     *
      * @param message message to display
      */
     private static void logWarning(final String message) {
@@ -1418,7 +1420,7 @@ public class Engine {
 
     /**
      * Log a severe message
-     * 
+     *
      * @param message message to display
      */
     private static void logSevere(final String message) {
@@ -1462,7 +1464,7 @@ public class Engine {
 
     /**
      * Returns a list of all Accounts excluding the rootAccount
-     * 
+     *
      * @return List of accounts
      */
     public List<Account> getAccountList() {
@@ -1479,7 +1481,7 @@ public class Engine {
 
     /**
      * Search for an account with a matching account number
-     * 
+     *
      * @param accountName Account name to search for. <b>Must not be null</b>
      * @return The matching account. <code>null</code> if not found.
      */
@@ -1504,7 +1506,7 @@ public class Engine {
 
     /**
      * Returns a list of IncomeAccounts excluding the rootIncomeAccount
-     * 
+     *
      * @return List of income accounts
      */
     public List<Account> getIncomeAccountList() {
@@ -1514,7 +1516,7 @@ public class Engine {
 
     /**
      * Returns a list of ExpenseAccounts excluding the rootExpenseAccount
-     * 
+     *
      * @return List if expense accounts
      */
     public List<Account> getExpenseAccountList() {
@@ -1524,7 +1526,7 @@ public class Engine {
 
     /**
      * Returns a list of Accounts that are members of the group
-     * 
+     *
      * @param group the requested AccountGroup
      * @return member accounts
      */
@@ -1543,7 +1545,7 @@ public class Engine {
 
     /**
      * Returns a list of all accounts excluding the rootAccount and IncomeAccounts and ExpenseAccounts
-     * 
+     *
      * @return List of investment accounts
      */
     public List<Account> getInvestmentAccountList() {
@@ -1583,9 +1585,9 @@ public class Engine {
 
     /**
      * Adds a new account
-     * 
+     *
      * @param parent The parent account
-     * @param child A new Account object
+     * @param child  A new Account object
      * @return true if successful
      */
     public boolean addAccount(final Account parent, final Account child) {
@@ -1631,7 +1633,7 @@ public class Engine {
 
     /**
      * Return the root account
-     * 
+     *
      * @return RootAccount
      */
     public RootAccount getRootAccount() {
@@ -1651,8 +1653,8 @@ public class Engine {
 
     /**
      * Move an account to a new parent account
-     * 
-     * @param account account to move
+     *
+     * @param account   account to move
      * @param newParent the new parent account
      * @return true if successful
      */
@@ -1710,9 +1712,9 @@ public class Engine {
 
     /**
      * Modifies an existing account given an account as a template. The type of the account cannot be changed.
-     * 
+     *
      * @param template The Account object to use as a template
-     * @param account The existing account
+     * @param account  The existing account
      * @return true if successful
      */
     public boolean modifyAccount(final Account template, final Account account) {
@@ -1774,9 +1776,9 @@ public class Engine {
 
     /**
      * Sets the account number of an account
-     * 
+     *
      * @param account account to change
-     * @param number new account number
+     * @param number  new account number
      */
     public void setAccountNumber(final Account account, final String number) {
 
@@ -1799,7 +1801,7 @@ public class Engine {
 
     /**
      * Removes an existing account given it's ID.
-     * 
+     *
      * @param account The account to remove
      * @return true if successful
      */
@@ -1879,8 +1881,8 @@ public class Engine {
 
     /**
      * Sets the amortize object of an account
-     * 
-     * @param account The Liability account to change
+     *
+     * @param account        The Liability account to change
      * @param amortizeObject the new AmortizeObject
      * @return true if successful
      */
@@ -1908,7 +1910,7 @@ public class Engine {
 
     /**
      * Toggles the visibility of an account given its ID.
-     * 
+     *
      * @param account The account to toggle visibility
      * @return <tt>true</tt> if the supplied account ID was found <tt>false</tt> if the supplied account ID was not
      *         found
@@ -1945,9 +1947,9 @@ public class Engine {
 
     /**
      * Adds a SecurityNode from a InvestmentAccount
-     * 
+     *
      * @param account destination account
-     * @param node SecurityNode to add
+     * @param node    SecurityNode to add
      * @return true if add was successful
      */
     private boolean addAccountSecurity(final Account account, final SecurityNode node) {
@@ -1987,9 +1989,9 @@ public class Engine {
 
     /**
      * Removes a SecurityNode from an InvestmentAccount
-     * 
+     *
      * @param account Account to remove SecurityNode from
-     * @param node SecurityNode to remove
+     * @param node    SecurityNode to remove
      * @return true if successful
      */
     private boolean removeAccountSecurity(final Account account, final SecurityNode node) {
@@ -2031,8 +2033,8 @@ public class Engine {
     /**
      * Update an account's securities list. This compares the old list of securities and the supplied list and adds or
      * removes securities to make sure the lists are the same.
-     * 
-     * @param acc Destination account
+     *
+     * @param acc  Destination account
      * @param list Collection of SecurityNodes
      * @return true if successful
      */
@@ -2310,7 +2312,7 @@ public class Engine {
 
     /**
      * Determine if a StoredObject is persisted in the database
-     * 
+     *
      * @param object StoredObject to check
      * @return true if persisted
      */
@@ -2340,7 +2342,7 @@ public class Engine {
 
                 /* If successful, extract and enter a default exchange rate for the transaction date if a rate has not been set */
                 if (result) {
-                    for (TransactionEntry entry: transaction.getTransactionEntries()) {
+                    for (TransactionEntry entry : transaction.getTransactionEntries()) {
                         if (entry.isMultiCurrency()) {
                             final ExchangeRate rate = getExchangeRate(entry.getDebitAccount().getCurrencyNode(), entry.getCreditAccount().getCurrencyNode());
 
@@ -2401,10 +2403,10 @@ public class Engine {
 
     /**
      * Changes the reconciled state of a transaction
-     * 
+     *
      * @param transaction transaction to change
-     * @param account account to change state for
-     * @param state new reconciled state
+     * @param account     account to change state for
+     * @param state       new reconciled state
      */
     public void setTransactionReconciled(final Transaction transaction, final Account account, final ReconciledState state) {
         try {
@@ -2415,7 +2417,7 @@ public class Engine {
             if (removeTransaction(transaction)) {
                 addTransaction(clone);
             }
-        } catch (CloneNotSupportedException e) {           
+        } catch (CloneNotSupportedException e) {
             logger.log(Level.SEVERE, "Failed to reconcile the Transaction", e);
         }
     }
@@ -2436,9 +2438,9 @@ public class Engine {
 
     /**
      * Get all transactions
-     * <p>
+     * <p/>
      * The returned list may be altered by the caller without causing side effects
-     * 
+     *
      * @return all transactions
      */
     public List<Transaction> getTransactions() {
@@ -2482,7 +2484,7 @@ public class Engine {
 
     /**
      * Returns the unique identifier for this engine instance
-     * 
+     *
      * @return uuid
      */
     public String getUuid() {

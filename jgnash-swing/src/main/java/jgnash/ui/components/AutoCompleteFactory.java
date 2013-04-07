@@ -326,7 +326,7 @@ public class AutoCompleteFactory {
                         @Override
                         public void run() {
                             if (account != null) {
-                                for (Transaction t : account.getReadonlyTransactionList()) {
+                                for (Transaction t : account.getReadOnlySortedTransactionList()) {
                                     load(t);
                                 }
                             }

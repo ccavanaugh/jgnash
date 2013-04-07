@@ -17,18 +17,18 @@
  */
 package jgnash.engine;
 
+import jgnash.util.DateUtils;
+
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
-
-import jgnash.util.DateUtils;
 
 /**
  * Proxy class to locate account balance behaviors. Depending on account type, summation of transaction types are
  * handled differently.
- * 
- * @author Craig Cavanaugh
  *
+ * @author Craig Cavanaugh
  */
 class AccountProxy {
 
@@ -49,7 +49,7 @@ class AccountProxy {
 
     /**
      * Get the account balance up to a specified index.
-     * 
+     *
      * @param index the balance of this account at the specified index.
      * @return the balance of this account at the specified index.
      */
@@ -60,8 +60,10 @@ class AccountProxy {
         try {
             BigDecimal balance = BigDecimal.ZERO;
 
+            List<Transaction> transactions = account.getReadOnlySortedTransactionList();
+
             for (int i = 0; i <= index; i++) {
-                balance = balance.add(account.transactions.get(i).getAmount(account));
+                balance = balance.add(transactions.get(i).getAmount(account));
             }
             return balance;
         } finally {
@@ -71,9 +73,9 @@ class AccountProxy {
 
     /**
      * Returns the balance of the transactions inclusive of the start and end dates.
-     * 
+     *
      * @param start The inclusive start date
-     * @param end The inclusive end date
+     * @param end   The inclusive end date
      * @return The ending balance
      */
     public BigDecimal getBalance(final Date start, final Date end) {
@@ -83,11 +85,9 @@ class AccountProxy {
         try {
             BigDecimal balance = BigDecimal.ZERO;
 
-            final int count = account.transactions.size();
-
-            for (int i = 0; i < count; i++) {
-                final Transaction t = account.transactions.get(i);
+            for (final Transaction t : account.transactions) {
                 final Date d = t.getDate();
+
                 if (DateUtils.after(d, start) && DateUtils.before(d, end)) {
                     balance = balance.add(t.getAmount(account));
                 }
@@ -101,7 +101,7 @@ class AccountProxy {
 
     /**
      * Returns the account balance up to and inclusive of the supplied date
-     * 
+     *
      * @param date The inclusive ending date
      * @return The ending balance
      */
@@ -113,7 +113,7 @@ class AccountProxy {
             BigDecimal balance = BigDecimal.ZERO;
 
             if (!account.transactions.isEmpty()) {
-                balance = getBalance(account.transactions.get(0).getDate(), date);
+                balance = getBalance(account.getReadOnlySortedTransactionList().get(0).getDate(), date);
             }
 
             return balance;
@@ -124,7 +124,7 @@ class AccountProxy {
 
     /**
      * Returns the cash balance of this account
-     * 
+     *
      * @return exception thrown
      */
     public BigDecimal getCashBalance() {
@@ -133,41 +133,41 @@ class AccountProxy {
 
     /**
      * Returns the cash account balance up to and inclusive of the supplied date
-     * 
+     *
      * @param end The inclusive ending date
      * @return The ending cash balance
      */
-    public BigDecimal getCashBalance(Date end) {
+    public BigDecimal getCashBalance(final Date end) {
         throw new UnsupportedOperationException();
     }
 
     /**
      * Returns the balance of the transactions inclusive of the start and end dates.
-     * <p>
+     * <p/>
      * The balance includes the cash transactions and is based on current market value.
-     * 
+     *
      * @param start The inclusive start date
-     * @param end The inclusive end date
+     * @param end   The inclusive end date
      * @return The ending balance
      */
-    public BigDecimal getCashBalance(Date start, Date end) {
+    public BigDecimal getCashBalance(final Date start, final Date end) {
         throw new UnsupportedOperationException();
     }
 
     /**
      * Returns a market price for the commodity that is closest to the supplied date without exceeding it.
-     * 
+     *
      * @param node commodity to search against
      * @param date date to search against
      * @return share price
      */
-    public BigDecimal getMarketPrice(SecurityNode node, Date date) {
+    public BigDecimal getMarketPrice(final SecurityNode node, final Date date) {
         throw new UnsupportedOperationException();
     }
 
     /**
      * Returns the market value of this account
-     * 
+     *
      * @return exception thrown
      */
     public BigDecimal getMarketValue() {
@@ -177,29 +177,28 @@ class AccountProxy {
     /**
      * Returns the market value of the account at a specified date. The closest market price is used and only investment
      * transactions earlier and inclusive of the specified date are considered.
-     * 
+     *
      * @param date the end date to calculate the market value
      * @return the ending balance
      */
-    public BigDecimal getMarketValue(Date date) {
+    public BigDecimal getMarketValue(final Date date) {
         throw new UnsupportedOperationException();
     }
 
     /**
      * Returns the market value for an account
-     * 
+     *
      * @param start inclusive start date
-     * @param end inclusive end date
-     * 
+     * @param end   inclusive end date
      * @return market value
      */
-    public BigDecimal getMarketValue(Date start, Date end) {
+    public BigDecimal getMarketValue(final Date start, final Date end) {
         throw new UnsupportedOperationException();
     }
 
     /**
      * Calculates the reconciled balance of the account
-     * 
+     *
      * @return the reconciled balance of this account
      */
     public BigDecimal getReconciledBalance() {
@@ -223,7 +222,7 @@ class AccountProxy {
 
     /**
      * Get the default opening balance for reconciling the account
-     * 
+     *
      * @return Opening balance for reconciling the account
      */
     public BigDecimal getOpeningBalanceForReconcile() {
@@ -233,17 +232,18 @@ class AccountProxy {
         try {
             final Date date = account.getFirstUnreconciledTransactionDate();
 
+            final List<Transaction> transactions = account.getReadOnlySortedTransactionList();
+
             BigDecimal balance = BigDecimal.ZERO;
 
-            for (int i = 0; i < account.transactions.size(); i++) {
-                if (account.transactions.get(i).getDate().equals(date)) {
+            for (int i = 0; i < transactions.size(); i++) {
+                if (transactions.get(i).getDate().equals(date)) {
                     if (i > 0) {
                         balance = getBalanceAt(i - 1);
                     }
                     break;
                 }
             }
-
             return balance;
         } finally {
             l.unlock();

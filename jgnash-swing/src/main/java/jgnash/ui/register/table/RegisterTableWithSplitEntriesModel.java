@@ -162,7 +162,7 @@ public class RegisterTableWithSplitEntriesModel extends RegisterTableModel {
             data.remove(startIndex);
         }
 
-        for (Transaction t : account.getReadonlyTransactionList()) {
+        for (Transaction t : account.getReadOnlySortedTransactionList()) {
             if (data.size() >= startIndex) {
                 data.add(new TransactionWrapper(t));
                 if (t.getTransactionType() == TransactionType.SPLITENTRY && showSplitDetails) {

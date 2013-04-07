@@ -188,7 +188,7 @@ public class JpaTests {
             if (a.getName().equals(ACC_NAME)) {
                 System.out.println(a.getName());
 
-                List<Transaction> transactions = a.getTransactions();
+                List<Transaction> transactions = a.getReadOnlySortedTransactionList();
 
                 if (!transactions.isEmpty()) {
                     for (Transaction tran : transactions) {

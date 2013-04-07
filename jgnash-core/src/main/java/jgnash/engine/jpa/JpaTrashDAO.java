@@ -91,6 +91,7 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
 
             em.remove(object);
             em.remove(trashObject);
+            //em.
 
             em.getTransaction().commit();
 

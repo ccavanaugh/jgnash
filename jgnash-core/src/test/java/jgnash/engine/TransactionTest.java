@@ -100,7 +100,7 @@ public class TransactionTest {
 
             // ensure API does not break down
 
-            List<Transaction> transactions = usdBankAccount.getTransactions();
+            List<Transaction> transactions = usdBankAccount.getReadOnlySortedTransactionList();
 
             assertTrue(transactions.isEmpty());
 

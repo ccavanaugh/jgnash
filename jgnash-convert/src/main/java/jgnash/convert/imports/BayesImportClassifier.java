@@ -58,7 +58,7 @@ public class BayesImportClassifier {
     private static BayesClassifier<Account> generateClassifier(final Account baseAccount) {
         BayesClassifier<Account> classifier = new BayesClassifier<>(baseAccount);
 
-        for (Transaction t : baseAccount.getReadonlyTransactionList()) {
+        for (Transaction t : baseAccount.getReadOnlyTransactionCollection()) {
             Set<Account> accountSet = t.getAccounts();
             accountSet.remove(baseAccount);
 

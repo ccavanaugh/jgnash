@@ -20,13 +20,13 @@ package jgnash.engine;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 
 /**
  * Investment Account Proxy class
- * 
- * @author Craig Cavanaugh
  *
+ * @author Craig Cavanaugh
  */
 public class InvestmentAccountProxy extends AccountProxy {
 
@@ -41,7 +41,7 @@ public class InvestmentAccountProxy extends AccountProxy {
 
     /**
      * Returns the cash balance plus the market value of the shares
-     * 
+     *
      * @return cash balance
      */
     @Override
@@ -64,7 +64,7 @@ public class InvestmentAccountProxy extends AccountProxy {
 
     /**
      * Get the account's cash balance up to a specified index.
-     * 
+     *
      * @param index the balance of the account at the specified index.
      * @return the balance of the account at the specified index.
      */
@@ -74,11 +74,11 @@ public class InvestmentAccountProxy extends AccountProxy {
 
     /**
      * Returns the balance of the transactions inclusive of the start and end dates.
-     * <p>
+     * <p/>
      * The balance includes the cash transactions and is based on the current market value.
-     * 
+     *
      * @param start The inclusive start date
-     * @param end The inclusive end date
+     * @param end   The inclusive end date
      * @return The ending balance
      */
     @Override
@@ -88,7 +88,7 @@ public class InvestmentAccountProxy extends AccountProxy {
 
     /**
      * Returns the cash account balance up to and inclusive of the supplied date.
-     * 
+     *
      * @param end The inclusive ending date
      * @return The ending cash balance
      */
@@ -98,7 +98,7 @@ public class InvestmentAccountProxy extends AccountProxy {
         l.lock();
 
         try {
-            return !account.transactions.isEmpty() ? getCashBalance(account.transactions.get(0).getDate(), end) : BigDecimal.ZERO;
+            return !account.transactions.isEmpty() ? getCashBalance(account.getReadOnlySortedTransactionList().get(0).getDate(), end) : BigDecimal.ZERO;
         } finally {
             l.unlock();
         }
@@ -108,19 +108,19 @@ public class InvestmentAccountProxy extends AccountProxy {
      * Returns a market price for the supplied <code>SecurityNode</code> that is closest to the supplied date without
      * exceeding it. The history of the <code>SecurityNode</code> is searched as well as the account's transaction
      * history to find the closest market price without exceeding the supplied date.
-     * 
+     *
      * @param node security to search against
      * @param date date to search against
      * @return market price
      */
     @Override
     public BigDecimal getMarketPrice(final SecurityNode node, final Date date) {
-        return Engine.getMarketPrice(account.getReadonlyTransactionList(), node, account.getCurrencyNode(), date);
+        return Engine.getMarketPrice(account.getReadOnlySortedTransactionList(), node, account.getCurrencyNode(), date);
     }
 
     /**
      * Returns the market value of this account.
-     * 
+     *
      * @return the market value of the account
      */
     @Override
@@ -135,7 +135,7 @@ public class InvestmentAccountProxy extends AccountProxy {
             int count = account.getTransactionCount();
 
             if (count > 0) {
-                Date lastDate = account.transactions.get(count - 1).getDate();
+                Date lastDate = account.getReadOnlySortedTransactionList().get(count - 1).getDate();
 
                 /*
                  * If the user was to enter a date value greater than the current date, then
@@ -144,10 +144,12 @@ public class InvestmentAccountProxy extends AccountProxy {
                  * security price.
                  */
 
+                final Date startDate = account.getReadOnlySortedTransactionList().get(0).getDate();
+
                 if (lastDate.compareTo(new Date()) >= 0) {
-                    marketValue = getMarketValue(account.transactions.get(0).getDate(), lastDate);
+                    marketValue = getMarketValue(startDate, lastDate);
                 } else {
-                    marketValue = getMarketValue(account.transactions.get(0).getDate(), new Date());
+                    marketValue = getMarketValue(startDate, new Date());
                 }
             }
 
@@ -160,7 +162,7 @@ public class InvestmentAccountProxy extends AccountProxy {
     /**
      * Returns the market value of the account at a specified date. The closest market price is used and only investment
      * transactions earlier and inclusive of the specified date are considered.
-     * 
+     *
      * @param date the end date to calculate the market value
      * @return the ending balance
      */
@@ -173,7 +175,7 @@ public class InvestmentAccountProxy extends AccountProxy {
             BigDecimal marketValue = BigDecimal.ZERO;
 
             if (account.getTransactionCount() > 0) {
-                marketValue = getMarketValue(account.transactions.get(0).getDate(), date);
+                marketValue = getMarketValue(account.getReadOnlySortedTransactionList().get(0).getDate(), date);
             }
 
             return marketValue;
@@ -197,10 +199,7 @@ public class InvestmentAccountProxy extends AccountProxy {
 
             BigDecimal balance = BigDecimal.ZERO;
 
-            final int count = account.getTransactionCount();
-
-            for (int i = 0; i < count; i++) {
-                Transaction t = account.getTransactionAt(i);
+            for (Transaction t : account.transactions) {
                 if (t.getDate().compareTo(start) >= 0 && t.getDate().compareTo(end) <= 0) {
                     if (t instanceof InvestmentTransaction) {
                         balance = balance.add(((InvestmentTransaction) t).getMarketValue(priceMap.get(((InvestmentTransaction) t).getSecurityNode())));
@@ -216,7 +215,7 @@ public class InvestmentAccountProxy extends AccountProxy {
 
     /**
      * Calculates the accounts market value based on the latest security price
-     * 
+     *
      * @param index index to calculate the balance to
      * @return market value
      */
@@ -278,7 +277,7 @@ public class InvestmentAccountProxy extends AccountProxy {
 
     /**
      * Calculates the reconciled balance of the account
-     * 
+     *
      * @return the reconciled balance of this account
      */
     @Override
@@ -288,7 +287,7 @@ public class InvestmentAccountProxy extends AccountProxy {
 
     /**
      * Get the default opening balance for reconciling the account
-     * 
+     *
      * @return Opening balance for reconciling the account
      */
     @Override
@@ -302,8 +301,10 @@ public class InvestmentAccountProxy extends AccountProxy {
 
             BigDecimal balance = BigDecimal.ZERO;
 
-            for (int i = 0; i < account.transactions.size(); i++) {
-                if (account.transactions.get(i).getDate().equals(date)) {
+            final List<Transaction> transactions = account.getReadOnlySortedTransactionList();
+
+            for (int i = 0; i < transactions.size(); i++) {
+                if (transactions.get(i).getDate().equals(date)) {
                     if (i > 0) {
                         balance = getCashBalanceAt(i - 1).add(getMarketValueAt(i - 1));
                     }

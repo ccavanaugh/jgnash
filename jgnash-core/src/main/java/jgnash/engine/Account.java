@@ -17,13 +17,17 @@
  */
 package jgnash.engine;
 
+import jgnash.util.DateUtils;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,9 +39,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import jgnash.util.DateUtils;
-
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
+import javax.persistence.Transient;
 
 /**
  * Abstract Account class
@@ -80,24 +95,30 @@ public class Account extends StoredObject implements Comparable<Account> {
     /**
      * Sorted list of child accounts
      */
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @OrderBy("name")
+    @OneToMany(cascade = {CascadeType.PERSIST})
     private List<Account> children = new ArrayList<>();
 
     /**
      * List of transactions for this account
      */
+    @JoinTable
     @ManyToMany(cascade = {CascadeType.ALL})
     @OrderBy("date, number, dateEntered")
-    @JoinTable
-    List<Transaction> transactions = new ArrayList<>();
+    Set<Transaction> transactions = new HashSet<>();
+
+    /**
+     * Internally maintained cached list of sorted transactions
+     */
+    private transient List<Transaction> sortedTransactionList = null;
 
     /**
      * List of securities if this is an investment account
      */
-    @OneToMany(cascade = {CascadeType.ALL})
-    @OrderBy("symbol")
+
     @JoinColumn()
+    @OrderBy("symbol")
+    @OneToMany(cascade = {CascadeType.PERSIST})
     List<SecurityNode> securities = new ArrayList<>();
 
     /**
@@ -122,7 +143,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      */
     private String bankId;
 
-    @OneToOne(optional = true, orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(optional = true, orphanRemoval = true, cascade = {CascadeType.ALL})
     private AmortizeObject amortizeObject;
 
     @Transient  // we don't want this to be persisted by JPA and will become obsolete
@@ -145,7 +166,7 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     /**
      * No argument public constructor for reflection purposes.
-     * <p>
+     * <p/>
      * <b>Do not use to create account new instance</b>
      */
     public Account() {
@@ -236,7 +257,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      *         exist.
      */
     @Deprecated
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "unused"})
     public Set<AccountProperty> getProperties() {
         Set<AccountProperty> properties = EnumSet.noneOf(AccountProperty.class);
 
@@ -284,17 +305,16 @@ public class Account extends StoredObject implements Comparable<Account> {
             boolean result = false;
 
             if (!contains(tran)) {
-                // Search for the non-existent item
-                int index = Collections.binarySearch(transactions, tran);
+                transactions.add(tran);
+                clearCachedBalances();
 
-                if (index < 0) {
-                    transactions.add(-index - 1, tran);
-
-                    clearCachedBalances();
-
-                    result = true;
+                // Update the sorted cache if initialized
+                if (sortedTransactionList != null) {
+                    getSortedTransactionList().add(tran);
+                    Collections.sort(getSortedTransactionList());
                 }
 
+                result = true;
             } else {
                 StringBuilder log = new StringBuilder("Account: " + getName() + '(' + hashCode() + ")" + System.lineSeparator());
                 log.append("Already have transaction ID: ").append(tran.hashCode());
@@ -326,6 +346,11 @@ public class Account extends StoredObject implements Comparable<Account> {
                 transactions.remove(tran);
                 clearCachedBalances();
 
+                // update the internal cache if initialized
+                if (sortedTransactionList != null) {
+                    getSortedTransactionList().remove(tran);
+                }
+
                 result = true;
             } else {
                 final StringBuilder log = new StringBuilder("Account: " + getName() + '(' + getUuid() + ")" + System.lineSeparator());
@@ -342,8 +367,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     /**
      * Determines if the specified transaction is attach to this account
      *
-     * @param tran the
-     *             <code>Transaction</code> to look for
+     * @param tran the <code>Transaction</code> to look for
      * @return <tt>true</tt> the transaction is attached to this account
      *         <tt>false</tt> the transaction is not attached to this account
      */
@@ -376,38 +400,57 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns a shallow copy of the transaction array for this account
+     * Returns a sorted list of transactions for this account
+     * <p/>
+     * An internal cache is maintained to reduce the expense
      *
      * @return List of transactions
-     * @see #getReadonlyTransactionList()
+     * @see #getReadOnlyTransactionCollection()
      */
-    public List<Transaction> getTransactions() {
+    private List<Transaction> getSortedTransactionList() {
         Lock l = transactionLock.readLock();
         l.lock();
 
+        // Lazily create the list
         try {
-            return new ArrayList<>(transactions);
+            if (sortedTransactionList == null) {
+                sortedTransactionList = new ArrayList<>(transactions);
+                Collections.sort(sortedTransactionList);
+            }
+
+            return sortedTransactionList;
         } finally {
             l.unlock();
         }
     }
 
     /**
-     * Returns a readonly list that is a wrapper around the internal list. <p>
-     * Use of this method over
-     * <code>getTransactions()</code> will reduce GC and perform better. The
-     * List should not be held because internal updates will cause indeterminate
-     * changes
+     * Returns a readonly sorted list of transactions for this account
      *
      * @return List of transactions
-     * @see #getTransactions()
+     * @see #getReadOnlyTransactionCollection()
      */
-    public List<Transaction> getReadonlyTransactionList() {
+    public List<Transaction> getReadOnlySortedTransactionList() {
+        return Collections.unmodifiableList(getSortedTransactionList());
+    }
+
+    /**
+     * Returns a readonly collection that is a wrapper around the internal collection.
+     * <p/>
+     * Use of this method over <code>getReadOnlySortedTransactionList()</code> will reduce GC and perform better.
+     * The collection should not be held because internal updates will cause indeterminate changes
+     * <p/>
+     * Sort order is not guaranteed.
+     *
+     * @return Collection of transactions
+     * @see #getReadOnlySortedTransactionList()
+     */
+    public Collection<Transaction> getReadOnlyTransactionCollection() {
         Lock l = transactionLock.readLock();
         l.lock();
 
         try {
-            return Collections.unmodifiableList(transactions);
+            return Collections.unmodifiableCollection(transactions);
         } finally {
             l.unlock();
         }
@@ -424,8 +467,10 @@ public class Account extends StoredObject implements Comparable<Account> {
         Lock l = transactionLock.readLock();
         l.lock();
 
+        List<Transaction> sortedList = getReadOnlySortedTransactionList();
+
         try {
-            return transactions.get(index);
+            return sortedList.get(index);
         } finally {
             l.unlock();
         }
@@ -572,7 +617,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         l.lock();
 
         try {
-            return transactions.indexOf(tran);
+            return getSortedTransactionList().indexOf(tran);
         } finally {
             l.unlock();
         }
@@ -724,7 +769,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         BigDecimal balance = BigDecimal.ZERO;
 
         try {
-            int index = transactions.indexOf(transaction);
+            int index = indexOf(transaction);
 
             if (index >= 0) {
                 balance = getBalanceAt(index);
@@ -791,7 +836,7 @@ public class Account extends StoredObject implements Comparable<Account> {
             }
 
             if (date == null) {
-                date = transactions.get(transactions.size() - 1).getDate();
+                date = getReadOnlySortedTransactionList().get(getTransactionCount() - 1).getDate();
             }
 
             return date;
@@ -1447,8 +1492,9 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * When overridden, this should return account shallow copy only. Does not
-     * include transactions or child accounts
+     * When overridden, this should return account shallow copy only.
+     * <p/>
+     * The clone does not include transactions or child accounts
      *
      * @return clone of this account
      */

@@ -36,7 +36,6 @@ import jgnash.ui.register.AccountBalanceDisplayManager;
  * Sortable table model
  *
  * @author Craig Cavanaugh
- *
  */
 public class SortedTableModel extends RegisterTableModel implements SortableTableModel {
 
@@ -90,13 +89,13 @@ public class SortedTableModel extends RegisterTableModel implements SortableTabl
     }
 
     /**
-     * Creates a private clone of the account's transactions
+     * Creates a private clone of the account's transactions that can be manipulated
      */
     private void getTransactions() {
         lock.lock();
 
         try {
-            transactions = account.getTransactions();
+            transactions = new ArrayList<>(account.getReadOnlySortedTransactionList());
             Collections.sort(transactions, comparator);
         } finally {
             lock.unlock();
