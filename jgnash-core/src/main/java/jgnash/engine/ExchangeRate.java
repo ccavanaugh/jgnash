@@ -19,18 +19,23 @@ package jgnash.engine;
 
 import jgnash.util.DateUtils;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.PostLoad;
 import java.io.ObjectStreamException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
 
 /**
  * Exchange rate object
@@ -42,8 +47,9 @@ public class ExchangeRate extends StoredObject {
 
     private static final long serialVersionUID = -2365289994847042288L;
 
-    @ElementCollection
-    private final List<ExchangeRateHistoryNode> historyNodes = new ArrayList<>();
+    @JoinTable
+    @OneToMany(cascade = {CascadeType.ALL})
+    private final Set<ExchangeRateHistoryNode> historyNodes = new HashSet<>();
 
     /**
      * Cache the last exchange rate
@@ -62,6 +68,7 @@ public class ExchangeRate extends StoredObject {
 
     /**
      * No argument constructor for reflection purposes.
+     * <p>
      * <b>Do not use to create a new instance</b>
      */
     @SuppressWarnings("unused")
@@ -94,24 +101,20 @@ public class ExchangeRate extends StoredObject {
 
     public List<ExchangeRateHistoryNode> getHistory() {
         // return a defensive copy
-        return new ArrayList<>(historyNodes);
+        List<ExchangeRateHistoryNode> nodes = new ArrayList<>(historyNodes);
+        Collections.sort(nodes);
+
+        return nodes;
     }
 
     boolean addHistoryNode(final ExchangeRateHistoryNode node) {
-
         boolean result = false;
 
         Lock l = getLock().writeLock();
         l.lock();
 
         try {
-            int index = Collections.binarySearch(historyNodes, node);
-
-            if (index < 0) {
-                historyNodes.add(-index - 1, node);
-            } else {
-                historyNodes.set(index, node);
-            }
+            historyNodes.add(node);
 
             lastRate = null; // force an update
 
@@ -154,7 +157,10 @@ public class ExchangeRate extends StoredObject {
         try {
             if (lastRate == null) {
                 if (!historyNodes.isEmpty()) {
-                    lastRate = historyNodes.get(historyNodes.size() - 1).getRate();
+
+                    List<ExchangeRateHistoryNode> nodes = getHistory();
+
+                    lastRate = nodes.get(nodes.size() - 1).getRate();
                 } else {
                     lastRate = BigDecimal.ONE;
                 }

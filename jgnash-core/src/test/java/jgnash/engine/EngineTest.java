@@ -22,6 +22,7 @@ import jgnash.engine.budget.BudgetGoal;
 import jgnash.engine.budget.BudgetPeriod;
 import jgnash.engine.recurring.DailyReminder;
 import jgnash.engine.recurring.Reminder;
+import jgnash.util.DateUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -148,7 +149,7 @@ public abstract class EngineTest {
 
     @Test
     public void testGetStoredObjects() {
-        assertTrue(e.getStoredObjects().size() > 0);
+        assertTrue(!e.getStoredObjects().isEmpty());
     }
 
     @Test
@@ -271,10 +272,10 @@ public abstract class EngineTest {
 
         assertNotNull(nodes);
 
-        if (e.getTransactions().size() > 0) {
-            assertTrue(nodes.size() > 0);
+        if (!e.getTransactions().isEmpty()) {
+            assertTrue(!nodes.isEmpty());
         } else {
-            assertTrue(nodes.size() > 0);
+            assertTrue(!nodes.isEmpty());
         }
 
         System.out.println("Node count is " + nodes.size());
@@ -314,10 +315,27 @@ public abstract class EngineTest {
         fail("Not yet implemented");
     }
 
-    @Ignore
     @Test
-    public void testGetExchangeRate() {
-        fail("Not yet implemented");
+    public void testGetExchangeRate() throws Exception {
+
+        Date today = DateUtils.today();
+        Date yesterday = DateUtils.subtractDay(today);
+
+        CurrencyNode usd = e.getCurrency("USD");
+        CurrencyNode cad = e.getCurrency("CAD");
+
+        e.setExchangeRate(usd, cad, new BigDecimal("1.02"), today);
+        e.setExchangeRate(usd, cad, new BigDecimal("1.01"), yesterday);
+
+        closeEngine();
+
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD);
+
+        ExchangeRate rate = e.getExchangeRate(usd, cad);
+        assertNotNull(rate);
+
+        assertTrue(new BigDecimal("1.02").compareTo(rate.getRate()) == 0);
+        assertTrue(new BigDecimal("1.01").compareTo(rate.getRate(yesterday)) == 0);
     }
 
     @Ignore
@@ -360,18 +378,6 @@ public abstract class EngineTest {
 
     @Ignore
     @Test
-    public void testSetExchangeRateCurrencyNodeCurrencyNodeBigDecimal() {
-        fail("Not yet implemented");
-    }
-
-    @Ignore
-    @Test
-    public void testSetExchangeRateCurrencyNodeCurrencyNodeBigDecimalDate() {
-        fail("Not yet implemented");
-    }
-
-    @Ignore
-    @Test
     public void testRemoveExchangeRateHistory() {
         fail("Not yet implemented");
     }
@@ -409,7 +415,7 @@ public abstract class EngineTest {
         String sep = e.getAccountSeparator();
 
         assertNotNull(sep);
-        assertTrue(sep.length() > 0);
+        assertTrue(!sep.isEmpty());
     }
 
     @Ignore
@@ -451,7 +457,7 @@ public abstract class EngineTest {
         closeEngine();
         e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD);
 
-        assertTrue(e.getIncomeAccountList().size() > 0);
+        assertTrue(!e.getIncomeAccountList().isEmpty());
     }
 
     @Test
@@ -466,7 +472,7 @@ public abstract class EngineTest {
         closeEngine();
         e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD);
 
-        assertTrue(e.getExpenseAccountList().size() > 0);
+        assertTrue(!e.getExpenseAccountList().isEmpty());
     }
 
     @Test
@@ -481,7 +487,7 @@ public abstract class EngineTest {
         closeEngine();
         e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD);
 
-        assertTrue(e.getAccounts(AccountGroup.ASSET).size() > 0);
+        assertTrue(!e.getAccounts(AccountGroup.ASSET).isEmpty());
     }
 
     @Test
@@ -496,7 +502,7 @@ public abstract class EngineTest {
         closeEngine();
         e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD);
 
-        assertTrue(e.getInvestmentAccountList().size() > 0);
+        assertTrue(!e.getInvestmentAccountList().isEmpty());
     }
 
     @Ignore
@@ -751,7 +757,7 @@ public abstract class EngineTest {
     @Test
     public void testGetUuid() {
         assertTrue(e.getUuid() != null);
-        assertTrue(e.getUuid().length() > 0);
+        assertTrue(!e.getUuid().isEmpty());
     }
 
 }

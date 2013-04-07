@@ -137,10 +137,11 @@ abstract class AbstractXStreamContainer {
 
         // Ignore fields required for JPA
         xstream.omitField(StoredObject.class, "version");
-        xstream.omitField(CommodityNode.class, "version");
+
         xstream.omitField(AmortizeObject.class, "id");
         xstream.omitField(BudgetGoal.class, "id");
         xstream.omitField(TransactionEntry.class, "id");
+        xstream.omitField(ExchangeRateHistoryNode.class, "id");
         xstream.omitField(SecurityHistoryNode.class, "id");
 
         // Filters out the hibernate
