@@ -41,8 +41,18 @@
         </repository>
 
         <repository>
-            <id>EclipseLink</id>
-            <url>http://download.eclipse.org/rt/eclipselink/maven.repo</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </snapshots>
+            <id>hsqldb_snapshots</id>
+            <name>HyperSQL Snapshots</name>
+            <url>http://hsqldb.org/repos</url>
+            <layout>default</layout>
         </repository>
 
         <repository>
