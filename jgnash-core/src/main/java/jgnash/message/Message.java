@@ -163,6 +163,7 @@ public class Message implements Serializable, Cloneable {
      * @serialData Read serializable fields, if any exist. Read the integer count of properties. Read the key and value
      *             of each property
      */
+    @SuppressWarnings("unchecked")
     private void readObject(final ObjectInputStream s) throws IOException, ClassNotFoundException {
         s.defaultReadObject();
 
