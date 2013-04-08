@@ -18,6 +18,7 @@
 package jgnash.engine;
 
 
+import jgnash.engine.jpa.Database;
 import jgnash.engine.jpa.JpaConfiguration;
 import jgnash.engine.jpa.JpaDataStore;
 import org.junit.Test;
@@ -57,7 +58,7 @@ public class JpaTests {
             Logger.getLogger(JpaTests.class.getName()).log(Level.INFO, e.getMessage(), e);
         }
 
-        Properties properties = JpaConfiguration.getLocalProperties(testFile, new char[]{}, false);
+        Properties properties = JpaConfiguration.getLocalProperties(Database.H2, testFile, new char[]{}, false);
 
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", properties);
@@ -150,7 +151,7 @@ public class JpaTests {
             Logger.getLogger(JpaTests.class.getName()).log(Level.INFO, e.getMessage(), e);
         }
 
-        Properties properties = JpaConfiguration.getLocalProperties(testFile, new char[]{}, false);
+        Properties properties = JpaConfiguration.getLocalProperties(Database.H2, testFile, new char[]{}, false);
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", properties);
 
@@ -216,7 +217,7 @@ public class JpaTests {
             Logger.getLogger(JpaTests.class.getName()).log(Level.INFO, e.getMessage(), e);
         }
 
-        Properties properties = JpaConfiguration.getLocalProperties(testFile, new char[]{}, false);
+        Properties properties = JpaConfiguration.getLocalProperties(Database.H2, testFile, new char[]{}, false);
 
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", properties);

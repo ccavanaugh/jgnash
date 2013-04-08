@@ -32,6 +32,7 @@ import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
 
 import jgnash.engine.Engine;
+import jgnash.engine.jpa.Database;
 import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.net.NetworkAuthenticator;
 import jgnash.net.security.AbstractYahooParser;
@@ -51,7 +52,6 @@ import org.kohsuke.args4j.Option;
  * 
  * @author Craig Cavanaugh
  */
-
 public final class Main {
 
     public static final String VERSION;
@@ -86,9 +86,6 @@ public final class Main {
 
     @Option(name = "-server", usage = "Act as a server using the specified file")
     private File server;
-
-    @Option(name = "-webConsole", usage = "Act as a server using the specified file")
-    private boolean webConsole;
 
     @Option(name = "-password", usage = "Client or Server password")
     private String password;
@@ -250,7 +247,7 @@ public final class Main {
                 try {
                     if (!FileUtils.isFileLocked(server.getAbsolutePath())) {
                         JpaNetworkServer networkServer = new JpaNetworkServer();
-                        networkServer.startServer(server.getAbsolutePath(), port, password.toCharArray(), webConsole);
+                        networkServer.startServer(Database.H2, server.getAbsolutePath(), port, password.toCharArray());
                     } else {
                         System.err.println(Resource.get().getString("Message.FileIsLocked"));
                     }

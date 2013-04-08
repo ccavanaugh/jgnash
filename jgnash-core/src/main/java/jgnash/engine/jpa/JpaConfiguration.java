@@ -43,47 +43,66 @@ public class JpaConfiguration {
      */
     public static final String FILE_LOCK_FS = ";FILE_LOCK=FS";
 
-
-    private static Properties getBaseProperties() {
+    private static Properties getBaseProperties(final Database database) {
         Properties properties = System.getProperties();
 
-        properties.setProperty(JAVAX_PERSISTENCE_JDBC_DRIVER, "org.h2.Driver");
-
-        properties.setProperty(HIBERNATE_DIALECT, "org.hibernate.dialect.H2Dialect");
         properties.setProperty(HIBERNATE_HBM2DDL_AUTO, "update");
+
+        switch (database) {
+            case H2:
+                properties.setProperty(JAVAX_PERSISTENCE_JDBC_DRIVER, "org.h2.Driver");
+                properties.setProperty(HIBERNATE_DIALECT, "org.hibernate.dialect.H2Dialect");
+                break;
+            case HSQLDB:
+                properties.setProperty(JAVAX_PERSISTENCE_JDBC_DRIVER, "org.hsqldb.jdbcDriver");
+                properties.setProperty(HIBERNATE_DIALECT, "org.hibernate.dialect.HSQLDialect");
+        }
 
         return properties;
     }
 
-    public static Properties getLocalProperties(final String fileName, final char[] password, final boolean readOnly) {
-        Properties properties = getBaseProperties();
+    public static Properties getLocalProperties(final Database database, final String fileName, final char[] password, final boolean readOnly) {
+        StringBuilder urlBuilder = new StringBuilder();
 
+        if (database == Database.H2) {
+            urlBuilder.append("jdbc:h2:");
 
-        StringBuilder urlBuilder = new StringBuilder("jdbc:h2:");
+            urlBuilder.append(FileUtils.stripFileExtension(fileName));
 
-        urlBuilder.append(FileUtils.stripFileExtension(fileName));
+            urlBuilder.append(USER).append(DEFAULT_USER);
 
-        urlBuilder.append(USER).append(DEFAULT_USER);
+            if (password != null && password.length > 0) {
+                urlBuilder.append(PASSWORD).append(password);
+            }
 
-        if (password != null && password.length > 0) {
-            urlBuilder.append(PASSWORD).append(password);
+            urlBuilder.append(FILE_LOCK_FS);
+
+            if (readOnly) {
+                urlBuilder.append(";ACCESS_MODE_DATA=r");
+            }
+        } else {
+            urlBuilder.append("jdbc:hsqldb:file:");
+            urlBuilder.append(FileUtils.stripFileExtension(fileName));
+            urlBuilder.append(";create=true");
+
+            if (readOnly) {
+                urlBuilder.append(";readonly=true");
+            }
         }
 
-        urlBuilder.append(FILE_LOCK_FS);
-
-        if (readOnly) {
-            urlBuilder.append(";ACCESS_MODE_DATA=r");
-        }
+        Properties properties = getBaseProperties(database);
 
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_URL, urlBuilder.toString());
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_USER, DEFAULT_USER);
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_PASSWORD, new String(password));
 
+
+
         return properties;
     }
 
-    protected static Properties getClientProperties(final String fileName, final String host, final int port, final char[]  password) {
-        Properties properties = getBaseProperties();
+    protected static Properties getClientProperties(final Database database, final String fileName, final String host, final int port, final char[] password) {
+        Properties properties = getBaseProperties(database);
 
         boolean useSSL = Boolean.parseBoolean(properties.getProperty("ssl"));
 

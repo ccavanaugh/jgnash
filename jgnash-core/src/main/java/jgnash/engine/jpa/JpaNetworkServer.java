@@ -62,7 +62,7 @@ public class JpaNetworkServer {
 
     private Server server;
 
-    public synchronized void startServer(final String fileName, final int port, final char[] password, final boolean webConsole) {
+    public synchronized void startServer(final Database database, final String fileName, final int port, final char[] password) {
         stop = false;
 
         // Start the H2 server
@@ -80,17 +80,13 @@ public class JpaNetworkServer {
                 serverArgs.add("-tcpSSL");
             }
 
-            if (webConsole) {
-                serverArgs.add("-web");
-            }
-
             server = Server.createTcpServer(serverArgs.toArray(new String[serverArgs.size()]));
             server.start();
         } catch (SQLException e) {
             Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, e.getMessage(), e);
         }
 
-        final Engine engine = createEngine(fileName, port, password);
+        final Engine engine = createEngine(database, fileName, port, password);
 
         if (engine != null) {
 
@@ -158,9 +154,9 @@ public class JpaNetworkServer {
         this.notify();
     }
 
-    private Engine createEngine(final String fileName, final int port, final char[] password) {
+    private Engine createEngine(final Database database, final String fileName, final int port, final char[] password) {
 
-        Properties properties = JpaConfiguration.getClientProperties(fileName, "localhost", port, password);
+        Properties properties = JpaConfiguration.getClientProperties(database, fileName, "localhost", port, password);
 
         Logger.getLogger(JpaNetworkServer.class.getName()).info("Local connection url is: " + properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL));
 

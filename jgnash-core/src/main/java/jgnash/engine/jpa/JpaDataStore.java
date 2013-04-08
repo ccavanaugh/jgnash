@@ -80,7 +80,7 @@ public class JpaDataStore implements DataStore {
 
     @Override
     public Engine getClientEngine(final String host, final int port, final char[] password, final String dataBasePath) {
-        Properties properties = JpaConfiguration.getClientProperties(dataBasePath, host, port, password);
+        Properties properties = JpaConfiguration.getClientProperties(Database.H2, dataBasePath, host, port, password);
 
         Engine engine = null;
 
@@ -113,7 +113,7 @@ public class JpaDataStore implements DataStore {
 
     @Override
     public Engine getLocalEngine(final String fileName, final String engineName, final char[] password) {
-        Properties properties = JpaConfiguration.getLocalProperties(fileName, password, false);
+        Properties properties = JpaConfiguration.getLocalProperties(Database.H2, fileName, password, false);
 
         Engine engine = null;
 
@@ -170,7 +170,7 @@ public class JpaDataStore implements DataStore {
             }
         }
 
-        Properties properties = JpaConfiguration.getLocalProperties(file.getAbsolutePath(), new char[]{}, false);
+        Properties properties = JpaConfiguration.getLocalProperties(Database.H2, file.getAbsolutePath(), new char[]{}, false);
 
         EntityManagerFactory factory = null;
         EntityManager em = null;
@@ -208,7 +208,7 @@ public class JpaDataStore implements DataStore {
     public static float getFileVersion(final File file, final char[] password) throws Exception {
         float fileVersion = 0;
 
-        Properties properties = JpaConfiguration.getLocalProperties(file.getAbsolutePath(), password, true);
+        Properties properties = JpaConfiguration.getLocalProperties(Database.H2, file.getAbsolutePath(), password, true);
 
         EntityManagerFactory factory = null;
         EntityManager em = null;
@@ -248,7 +248,7 @@ public class JpaDataStore implements DataStore {
 
         if (!isDatabaseLocked(fileName)) {
 
-            Properties properties = JpaConfiguration.getLocalProperties(fileName, password, false);
+            Properties properties = JpaConfiguration.getLocalProperties(Database.H2, fileName, password, false);
 
             String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
