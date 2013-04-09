@@ -49,7 +49,7 @@ import java.util.logging.Logger;
  *
  * @author Craig Cavanaugh
  */
-public class JpaDataStore implements DataStore {
+public class JpaH2DataStore implements DataStore {
 
     public static final String FILE_EXT = "h2.db";
 
@@ -63,7 +63,7 @@ public class JpaDataStore implements DataStore {
 
     private static final boolean DEBUG = false;
 
-    private static final Logger logger = Logger.getLogger(JpaDataStore.class.getName());
+    private static final Logger logger = Logger.getLogger(JpaH2DataStore.class.getName());
 
     @Override
     public void closeEngine() {

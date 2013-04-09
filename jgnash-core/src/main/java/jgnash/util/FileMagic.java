@@ -52,7 +52,7 @@ public class FileMagic {
     private static final byte[] H2_HEADER = new byte[] {0x2D, 0x2D, 0x20, 0x48, 0x32, 0x20, 0x30, 0x2E, 0x35, 0x2F, 0x42, 0x20, 0x2D, 0x2D};
 
     public static enum FileType {
-        db4o, BinaryXStream, OfxV1, OfxV2, jGnash1XML, jGnash2XML, h2, unknown
+        db4o, BinaryXStream, OfxV1, OfxV2, jGnash1XML, jGnash2XML, h2, hsql, unknown
     }
 
     /**
@@ -78,6 +78,8 @@ public class FileMagic {
             return FileType.BinaryXStream;
         } else if (isH2File(file)) {
             return FileType.h2;
+        } else if (isHsqlFile(file)) {
+            return FileType.h2;
         }
 
         return FileType.unknown;
@@ -102,7 +104,7 @@ public class FileMagic {
                 while (line != null) {
                     line = line.trim();
 
-                    if (line.length() > 0) { // allow empty lines at the beginning of the file
+                    if (!line.isEmpty()) { // allow empty lines at the beginning of the file
                         if (line.startsWith("ENCODING:")) {
                             String[] splits = COLON_DELIMITER_PATTERN.split(line);
 
@@ -157,7 +159,7 @@ public class FileMagic {
                 while (line != null) {
                     line = line.trim();
 
-                    if (line.length() > 0) { // allow empty lines at the beginning of the file
+                    if (!line.isEmpty()) { // allow empty lines at the beginning of the file
                         if (line.startsWith("OFXHEADER:")) {
                             result = true;
                         }
@@ -187,12 +189,12 @@ public class FileMagic {
                     line = line.trim();
 
                     // consume any processing instructions and check for ofx 2.0 hints
-                    if (line.length() > 0 && line.startsWith("<?")) {
+                    if (!line.isEmpty() && line.startsWith("<?")) {
                         if (line.startsWith("<?OFX") && line.contains("OFXHEADER=\"200\"")) {
                             result = true;
                             break;
                         }
-                    } else if (line.length() > 0) { // allow empty lines at the beginning of the file
+                    } else if (!line.isEmpty()) { // allow empty lines at the beginning of the file
                         if (line.startsWith("<OFX>")) { //must be ofx
                             result = true;
                         }
@@ -215,6 +217,11 @@ public class FileMagic {
 
     public static boolean isH2File(final File file) {
         return isFile(file, H2_HEADER);
+    }
+
+    public static boolean isHsqlFile(final File file) {
+        // TODO: Look inside file and check for properties file existence
+        return file.getAbsolutePath().endsWith("script");
     }
 
     public static boolean isFile(final File file, final byte[] header) {

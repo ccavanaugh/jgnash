@@ -17,7 +17,7 @@
  */
 package jgnash.engine;
 
-import jgnash.engine.jpa.JpaDataStore;
+import jgnash.engine.jpa.JpaH2DataStore;
 import org.junit.Test;
 
 import java.io.File;
@@ -35,10 +35,10 @@ public class JpaEngineTest extends EngineTest {
 
     @Override
     public Engine createEngine() throws Exception {
-        testFile = "jpa-test." + JpaDataStore.FILE_EXT;
+        testFile = "jpa-test." + JpaH2DataStore.FILE_EXT;
 
         try {
-            File temp = File.createTempFile("jpa-test", "." + JpaDataStore.FILE_EXT);
+            File temp = File.createTempFile("jpa-test", "." + JpaH2DataStore.FILE_EXT);
             temp.deleteOnExit();
             testFile = temp.getAbsolutePath();
         } catch (IOException e1) {

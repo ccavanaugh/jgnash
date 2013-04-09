@@ -30,7 +30,8 @@ import java.util.prefs.Preferences;
 
 import javax.swing.filechooser.FileSystemView;
 
-import jgnash.engine.jpa.JpaDataStore;
+import jgnash.engine.jpa.JpaH2DataStore;
+import jgnash.engine.jpa.JpaHsqlDataStore;
 import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.engine.xstream.XMLDataStore;
 import jgnash.message.ChannelEvent;
@@ -330,7 +331,13 @@ public class EngineFactory {
             version = BinaryXStreamDataStore.getFileVersion(file);
         } else if (type == FileType.h2) {
             try {
-                version = JpaDataStore.getFileVersion(file, password);
+                version = JpaH2DataStore.getFileVersion(file, password);
+            } catch (final Exception e) {
+                version = 0;
+            }
+        }  else if (type == FileType.hsql) {
+            try {
+                version = JpaHsqlDataStore.getFileVersion(file, password);
             } catch (final Exception e) {
                 version = 0;
             }

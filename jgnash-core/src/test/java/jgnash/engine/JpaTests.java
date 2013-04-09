@@ -20,7 +20,7 @@ package jgnash.engine;
 
 import jgnash.engine.jpa.Database;
 import jgnash.engine.jpa.JpaConfiguration;
-import jgnash.engine.jpa.JpaDataStore;
+import jgnash.engine.jpa.JpaH2DataStore;
 import org.junit.Test;
 
 import javax.persistence.EntityManager;
@@ -51,7 +51,7 @@ public class JpaTests {
         String testFile = "test";
 
         try {
-            File temp = File.createTempFile("jpa-test", "." + JpaDataStore.FILE_EXT);
+            File temp = File.createTempFile("jpa-test", "." + JpaH2DataStore.FILE_EXT);
             temp.deleteOnExit();
             testFile = temp.getAbsolutePath();
         } catch (IOException e) {
@@ -144,7 +144,7 @@ public class JpaTests {
         String testFile = "test";
 
         try {
-            File temp = File.createTempFile("jpa-test", "." + JpaDataStore.FILE_EXT);
+            File temp = File.createTempFile("jpa-test", "." + JpaH2DataStore.FILE_EXT);
             temp.deleteOnExit();
             testFile = temp.getAbsolutePath();
         } catch (IOException e) {
@@ -210,7 +210,7 @@ public class JpaTests {
         String testFile = "test";
 
         try {
-            File temp = File.createTempFile("jpa-test", "." + JpaDataStore.FILE_EXT);
+            File temp = File.createTempFile("jpa-test", "." + JpaH2DataStore.FILE_EXT);
             temp.deleteOnExit();
             testFile = temp.getAbsolutePath();
         } catch (IOException e) {

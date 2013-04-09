@@ -22,7 +22,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jgnash.engine.jpa.JpaDataStore;
+import jgnash.engine.jpa.JpaH2DataStore;
+import jgnash.engine.jpa.JpaHsqlDataStore;
 import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.engine.xstream.XMLDataStore;
 import jgnash.util.Resource;
@@ -43,7 +44,12 @@ public enum DataStoreType {
             Resource.get().getString("DataStoreType.H2"),
             true,
             true,
-            JpaDataStore.class),
+            JpaH2DataStore.class),
+    HSQL_DATABASE (
+            Resource.get().getString("DataStoreType.HSQL"),
+            true,
+            true,
+            JpaHsqlDataStore.class),
     XML(
             Resource.get().getString("DataStoreType.XML"),
             true,

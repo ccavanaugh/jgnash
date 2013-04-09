@@ -26,7 +26,6 @@ import jgnash.message.MessageBusRemoteServer;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
-import org.h2.tools.Server;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -60,9 +59,20 @@ public class JpaNetworkServer {
 
     protected EntityManager em;
 
-    private Server server;
-
     public synchronized void startServer(final Database database, final String fileName, final int port, final char[] password) {
+        switch (database) {
+            case H2:
+                startH2Server(fileName, port, password);
+                break;
+            case HSQLDB:
+                startHsqldbServer(fileName, port, password);
+        }
+    }
+
+    private void startH2Server(final String fileName, final int port, final char[] password) {
+
+        org.h2.tools.Server server = null;
+
         stop = false;
 
         // Start the H2 server
@@ -70,23 +80,24 @@ public class JpaNetworkServer {
 
             boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty("ssl"));
 
-            List<String> serverArgs= new ArrayList<>();
+            List<String> serverArgs = new ArrayList<>();
 
             serverArgs.add("-tcpPort");
             serverArgs.add(String.valueOf(port));
             serverArgs.add("-tcpAllowOthers");
 
-            if (useSSL)  {
+            if (useSSL) {
                 serverArgs.add("-tcpSSL");
             }
 
-            server = Server.createTcpServer(serverArgs.toArray(new String[serverArgs.size()]));
+            server = org.h2.tools.Server.createTcpServer(serverArgs.toArray(new String[serverArgs.size()]));
             server.start();
+
         } catch (SQLException e) {
             Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, e.getMessage(), e);
         }
 
-        final Engine engine = createEngine(database, fileName, port, password);
+        final Engine engine = createEngine(Database.H2, fileName, port, password);
 
         if (engine != null) {
 
@@ -142,7 +153,78 @@ public class JpaNetworkServer {
 
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-            server.stop();
+            if (server != null) {
+                server.stop();
+            }
+        }
+    }
+
+    private void startHsqldbServer(final String fileName, final int port, final char[] password) {
+        org.hsqldb.server.Server hsqlServer = new org.hsqldb.server.Server();
+
+        hsqlServer.setPort(port);
+        hsqlServer.setDatabaseName(0, "jgnash");    // the alias
+        hsqlServer.setDatabasePath(0, "file:" + FileUtils.stripFileExtension(fileName));
+
+        hsqlServer.start();
+
+        final Engine engine = createEngine(Database.HSQLDB, fileName, port, password);
+
+        if (engine != null) {
+
+            // Start the message bus and pass the file name so it can be reported to the client
+            MessageBusRemoteServer messageServer = new MessageBusRemoteServer(port + 1);
+            messageServer.startServer(fileName, password);
+
+            // Start the backup thread that ensures an XML backup is created at set intervals
+            ScheduledExecutorService backupExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
+
+            // run commit every backup period after startup
+            backupExecutor.scheduleWithFixedDelay(new Runnable() {
+
+                @Override
+                public void run() {
+                    if (dirty) {
+                        exportXML(engine, fileName);
+                        EngineFactory.removeOldCompressedXML(fileName);
+                        dirty = false;
+                    }
+                }
+            }, BACKUP_PERIOD, BACKUP_PERIOD, TimeUnit.HOURS);
+
+            messageServer.addLocalListener(new LocalServerListener() {
+
+                @Override
+                public void messagePosted(final String event) {
+
+                    // look for a remote request to stop the server
+                    if (event.startsWith("<STOP_SERVER>")) {
+                        stopServer();
+                    }
+
+                    dirty = true;
+                }
+            });
+
+            // wait here forever
+            try {
+                if (!stop) {
+                    this.wait(Long.MAX_VALUE); // wait forever for notify() from stopServer()
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            backupExecutor.shutdown();
+
+            exportXML(engine, fileName);
+            EngineFactory.removeOldCompressedXML(fileName);
+
+            messageServer.stopServer();
+
+            EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+            hsqlServer.stop();
         }
     }
 
@@ -183,7 +265,7 @@ public class JpaNetworkServer {
 
                 em = factory.createEntityManager();
 
-                Logger.getLogger(JpaDataStore.class.getName()).info("Created local JPA container and engine");
+                Logger.getLogger(JpaH2DataStore.class.getName()).info("Created local JPA container and engine");
                 engine = new Engine(new JpaEngineDAO(em, true), EngineFactory.DEFAULT); // treat as a remote engine
             } else {
                 Logger.getLogger(JpaNetworkServer.class.getName()).severe(Resource.get().getString("Message.FileIsLocked"));

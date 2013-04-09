@@ -34,8 +34,6 @@ public class JpaConfiguration {
     public static final String JAVAX_PERSISTENCE_JDBC_PASSWORD = "javax.persistence.jdbc.password";
     public static final String HIBERNATE_DIALECT = "hibernate.dialect";
     public static final String HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
-    public static final String USER = ";USER=";
-    public static final String PASSWORD = ";PASSWORD=";
     public static final String DEFAULT_USER = "JGNASH";
 
     /**
@@ -64,30 +62,38 @@ public class JpaConfiguration {
     public static Properties getLocalProperties(final Database database, final String fileName, final char[] password, final boolean readOnly) {
         StringBuilder urlBuilder = new StringBuilder();
 
-        if (database == Database.H2) {
-            urlBuilder.append("jdbc:h2:");
+        switch (database) {
+            case H2:
+                urlBuilder.append("jdbc:h2:");
 
-            urlBuilder.append(FileUtils.stripFileExtension(fileName));
+                urlBuilder.append(FileUtils.stripFileExtension(fileName));
 
-            urlBuilder.append(USER).append(DEFAULT_USER);
+                urlBuilder.append(";USER=").append(DEFAULT_USER);
 
-            if (password != null && password.length > 0) {
-                urlBuilder.append(PASSWORD).append(password);
-            }
+                if (password != null && password.length > 0) {
+                    urlBuilder.append(";PASSWORD=").append(password);
+                }
 
-            urlBuilder.append(FILE_LOCK_FS);
+                urlBuilder.append(FILE_LOCK_FS);
 
-            if (readOnly) {
-                urlBuilder.append(";ACCESS_MODE_DATA=r");
-            }
-        } else {
-            urlBuilder.append("jdbc:hsqldb:file:");
-            urlBuilder.append(FileUtils.stripFileExtension(fileName));
-            urlBuilder.append(";create=true");
+                if (readOnly) {
+                    urlBuilder.append(";ACCESS_MODE_DATA=r");
+                }
+                break;
+            case HSQLDB:
+                urlBuilder.append("jdbc:hsqldb:file:");
+                urlBuilder.append(FileUtils.stripFileExtension(fileName));
 
-            if (readOnly) {
-                urlBuilder.append(";readonly=true");
-            }
+                urlBuilder.append(";user=").append(DEFAULT_USER);
+                if (password != null && password.length > 0) {
+                    urlBuilder.append(";password=").append(password);
+                }
+
+                urlBuilder.append(";create=true");
+
+                if (readOnly) {
+                    urlBuilder.append(";readonly=true");
+                }
         }
 
         Properties properties = getBaseProperties(database);
@@ -97,33 +103,48 @@ public class JpaConfiguration {
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_PASSWORD, new String(password));
 
 
-
         return properties;
     }
 
     protected static Properties getClientProperties(final Database database, final String fileName, final String host, final int port, final char[] password) {
+
+        StringBuilder urlBuilder = new StringBuilder();
+
         Properties properties = getBaseProperties(database);
 
         boolean useSSL = Boolean.parseBoolean(properties.getProperty("ssl"));
 
-        properties.setProperty(JAVAX_PERSISTENCE_JDBC_USER, DEFAULT_USER);
-        properties.setProperty(JAVAX_PERSISTENCE_JDBC_PASSWORD, new String(password));
+        switch (database) {
+            case H2:
+                urlBuilder.append("jdbc:h2");
 
-        StringBuilder urlBuilder = new StringBuilder("jdbc:h2");
+                if (useSSL) {
+                    urlBuilder.append(":ssl://");
+                } else {
+                    urlBuilder.append(":tcp://");
+                }
 
-        if (useSSL) {
-            urlBuilder.append(":ssl://");
-        } else {
-            urlBuilder.append(":tcp://");
+                urlBuilder.append(host).append(":").append(port).append("/");
+                urlBuilder.append(fileName);
+
+                urlBuilder.append(";USER=").append(DEFAULT_USER);
+                urlBuilder.append(";PASSWORD=").append(password);
+
+                //urlBuilder.append(";DB_CLOSE_DELAY=20");
+                break;
+            case HSQLDB:
+                urlBuilder.append("jdbc:hsqldb:hsql://");
+                urlBuilder.append(host).append(":").append(port).append("/jgnash"); // needs a public alias
+
+                urlBuilder.append(";user=").append(DEFAULT_USER);
+                if (password != null && password.length > 0) {
+                    urlBuilder.append(";password=").append(password);
+                }
         }
 
-        urlBuilder.append(host).append(":").append(port).append("/");
-        urlBuilder.append(fileName);
 
-        urlBuilder.append(USER).append(DEFAULT_USER);
-        urlBuilder.append(PASSWORD).append(password);
-
-        //urlBuilder.append(";DB_CLOSE_DELAY=20");
+        properties.setProperty(JAVAX_PERSISTENCE_JDBC_USER, DEFAULT_USER);
+        properties.setProperty(JAVAX_PERSISTENCE_JDBC_PASSWORD, new String(password));
 
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_URL, urlBuilder.toString());
 
