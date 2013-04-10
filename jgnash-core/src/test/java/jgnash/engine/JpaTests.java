@@ -76,7 +76,7 @@ public class JpaTests {
 
         String notes = "This is a character blob in the database";
 
-        for (int i = 0; i < 8192 ; i++) {
+        for (int i = 0; i < 8192 - notes.length() ; i++) {
             notes = notes + "z";
         }
 
