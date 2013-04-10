@@ -46,7 +46,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -83,7 +82,7 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     private String description = "";
 
-    @Lob
+    @Column(columnDefinition = "VARCHAR(8192)")
     private String notes = "";
 
     /**
