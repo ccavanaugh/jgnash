@@ -50,8 +50,6 @@
         <properties>
             <property name="javax.persistence.jdbc.password" value=""/>
             <property name="javax.persistence.jdbc.user" value=""/>
-            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:h2:h2-database"/>
             <property name="javax.persistence.lock.timeout" value="30000"/> <!-- Allow a 10 second stall for now -->
 
             <property name="hibernate.hbm2ddl.auto" value="update"/>
