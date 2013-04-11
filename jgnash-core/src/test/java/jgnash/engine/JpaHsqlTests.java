@@ -36,8 +36,6 @@ import javax.persistence.Query;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
@@ -68,23 +66,14 @@ public class JpaHsqlTests {
                 fail("Could not delete the temp file");
             }
 
+            JpaHsqlDataStore.initEmptyDatabase(fileName);
+
             hsqlServer = new Server();
             hsqlServer.setDatabaseName(0, "jgnash");    // the alias
             hsqlServer.setPort(port);
             hsqlServer.setDatabasePath(0, urlBuilder.toString());
 
             hsqlServer.start();
-
-            Class.forName("org.hsqldb.jdbcDriver");
-            Connection connection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/jgnash", "sa", ""); // can through sql exception
-            connection.prepareStatement("CREATE USER JGNASH PASSWORD \"\" ADMIN").execute();
-            connection.commit();
-            connection.close();
-
-            connection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/jgnash", "JGNASH", ""); // can through sql exception
-            connection.prepareStatement("DROP USER SA").execute();
-            connection.commit();
-            connection.close();
         } catch (IOException e) {
             Logger.getLogger(JpaHsqlTests.class.getName()).log(Level.INFO, e.getMessage(), e);
         }

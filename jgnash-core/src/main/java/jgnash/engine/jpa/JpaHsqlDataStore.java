@@ -24,6 +24,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
+import org.hsqldb.server.Server;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -67,6 +68,45 @@ public class JpaHsqlDataStore implements DataStore {
     private static final boolean DEBUG = false;
 
     private static final Logger logger = Logger.getLogger(JpaHsqlDataStore.class.getName());
+
+    /**
+     * Creates an empty database with the assumed default user name
+     * @param fileName file name to use
+     * @return true if successful
+     */
+    public static boolean initEmptyDatabase(final String fileName) {
+        boolean result = false;
+
+        StringBuilder urlBuilder = new StringBuilder("file:");
+        urlBuilder.append(FileUtils.stripFileExtension(fileName));
+
+        Server hsqlServer = new Server();
+        hsqlServer.setDatabaseName(0, "jgnash");    // the alias
+        hsqlServer.setDatabasePath(0, urlBuilder.toString());
+
+        hsqlServer.start();
+
+        try {
+            Class.forName("org.hsqldb.jdbcDriver");
+            Connection connection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/jgnash", "sa", "");
+            connection.prepareStatement("CREATE USER " + JpaConfiguration.DEFAULT_USER + " PASSWORD \"\" ADMIN").execute();
+            connection.commit();
+            connection.close();
+
+            connection = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/jgnash", JpaConfiguration.DEFAULT_USER, "");
+            connection.prepareStatement("DROP USER SA").execute();
+            connection.commit();
+            connection.close();
+
+            hsqlServer.stop();
+
+            result = true;
+        } catch (ClassNotFoundException | SQLException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
+
+        return result;
+    }
 
     @Override
     public void closeEngine() {
