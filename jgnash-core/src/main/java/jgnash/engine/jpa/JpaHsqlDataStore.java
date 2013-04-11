@@ -101,6 +101,8 @@ public class JpaHsqlDataStore implements DataStore {
             hsqlServer.stop();
 
             result = true;
+
+            logger.info("Initialized an empty database for " + FileUtils.stripFileExtension(fileName));
         } catch (ClassNotFoundException | SQLException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
@@ -154,6 +156,10 @@ public class JpaHsqlDataStore implements DataStore {
         return locked;
     }
 
+    private boolean exists(final String fileName) {
+        return Files.exists(Paths.get(FileUtils.stripFileExtension(fileName) + ".script"));
+    }
+
     @Override
     public Engine getLocalEngine(final String fileName, final String engineName, final char[] password) {
         Properties properties = JpaConfiguration.getLocalProperties(Database.HSQLDB, fileName, password, false);
@@ -162,6 +168,11 @@ public class JpaHsqlDataStore implements DataStore {
 
         if (DEBUG) {
             System.out.println(FileUtils.stripFileExtension(fileName));
+        }
+
+        // Check for existence of the file and init the database if needed
+        if (!exists(fileName)) {
+             initEmptyDatabase(fileName);
         }
 
         try {
@@ -256,6 +267,7 @@ public class JpaHsqlDataStore implements DataStore {
         EntityManagerFactory factory = null;
         EntityManager em = null;
 
+        // TODO, Just use SQL instead of booting JPA to find the version
         try {
             factory = Persistence.createEntityManagerFactory("jgnash", properties);
 
