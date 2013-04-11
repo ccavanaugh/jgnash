@@ -27,6 +27,9 @@ import jgnash.util.Resource;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -276,5 +279,15 @@ public class JpaHsqlDataStore implements DataStore {
     @Override
     public String toString() {
         return Resource.get().getString("DataStoreType.HSQL");
+    }
+
+    public static void deleteDatabase(final String fileName) throws IOException {
+        String[] extensions = new String[]{".log", ".properties", ".script", ".data", ".backup", ".tmp"};
+
+        String base = FileUtils.stripFileExtension(fileName);
+
+        for (String extension : extensions) {
+            Files.deleteIfExists(Paths.get(base + extension));
+        }
     }
 }

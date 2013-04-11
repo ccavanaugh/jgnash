@@ -20,6 +20,7 @@ package jgnash.engine.jpa;
 import jgnash.util.FileUtils;
 
 import java.util.Properties;
+import java.util.logging.Logger;
 
 /**
  * Utility class to help with JPA configuration
@@ -85,6 +86,7 @@ public class JpaConfiguration {
                 urlBuilder.append(FileUtils.stripFileExtension(fileName));
 
                 urlBuilder.append(";user=").append(DEFAULT_USER);
+
                 if (password != null && password.length > 0) {
                     urlBuilder.append(";password=").append(password);
                 }
@@ -106,7 +108,17 @@ public class JpaConfiguration {
         return properties;
     }
 
-    protected static Properties getClientProperties(final Database database, final String fileName, final String host, final int port, final char[] password) {
+    /**
+     * Generates and a JPA properties to connect to a remote database
+     *
+     * @param database Database type
+     * @param fileName remote file to connect to, ignored for HSQLDB connections
+     * @param host remote host
+     * @param port remote port
+     * @param password database password
+     * @return   JPA properties
+     */
+    public static Properties getClientProperties(final Database database, final String fileName, final String host, final int port, final char[] password) {
 
         StringBuilder urlBuilder = new StringBuilder();
 
@@ -140,6 +152,8 @@ public class JpaConfiguration {
                 if (password != null && password.length > 0) {
                     urlBuilder.append(";password=").append(password);
                 }
+
+                Logger.getLogger(JpaConfiguration.class.getName()).info(urlBuilder.toString());
         }
 
 

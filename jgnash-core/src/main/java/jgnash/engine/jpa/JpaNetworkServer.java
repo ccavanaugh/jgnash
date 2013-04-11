@@ -164,7 +164,7 @@ public class JpaNetworkServer {
 
         hsqlServer.setPort(port);
         hsqlServer.setDatabaseName(0, "jgnash");    // the alias
-        hsqlServer.setDatabasePath(0, "file:" + FileUtils.stripFileExtension(fileName));
+        hsqlServer.setDatabasePath(0, "file:" + FileUtils.stripFileExtension(fileName) + ";user=SA" + ";password=" + new String(password));
 
         hsqlServer.start();
 
