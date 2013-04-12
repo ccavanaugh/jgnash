@@ -51,8 +51,6 @@ public class JpaHsqlEngineTest extends EngineTest {
 
         Files.delete(Paths.get(testFile));
 
-        JpaHsqlDataStore.initEmptyDatabase(testFile);
-
         try {
             return EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD, DataStoreType.HSQL_DATABASE);
         } catch (final Exception e) {
