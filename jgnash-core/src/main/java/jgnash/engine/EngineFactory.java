@@ -315,6 +315,8 @@ public class EngineFactory {
             return DataStoreType.BINARY_XSTREAM;
         } else if (type == FileType.h2) {
             return DataStoreType.H2_DATABASE;
+        } else if (type == FileType.hsql) {
+            return DataStoreType.HSQL_DATABASE;
         }
 
         return null;

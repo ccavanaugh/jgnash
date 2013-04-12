@@ -164,4 +164,29 @@ public class JpaConfiguration {
 
         return properties;
     }
+
+    /*public static boolean changeUserAndPassword(final String fileName, final char[] password, final char[] newPassword, final Database database) {
+        boolean result = false;
+
+        //if (!isDatabaseLocked(fileName)) {
+
+            Properties properties = JpaConfiguration.getLocalProperties(database, fileName, password, false);
+
+            String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
+
+            try (Connection connection = DriverManager.getConnection(url)) {
+                Statement statement = connection.createStatement();
+
+                statement.execute(String.format("SET PASSWORD '%s'", new String(newPassword)));
+
+                result = true;
+
+                statement.close();
+            } catch (SQLException e) {
+                Logger.getLogger(JpaConfiguration.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+            }
+        //}
+
+        return result;
+    }*/
 }

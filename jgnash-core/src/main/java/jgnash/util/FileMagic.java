@@ -79,7 +79,7 @@ public class FileMagic {
         } else if (isH2File(file)) {
             return FileType.h2;
         } else if (isHsqlFile(file)) {
-            return FileType.h2;
+            return FileType.hsql;
         }
 
         return FileType.unknown;

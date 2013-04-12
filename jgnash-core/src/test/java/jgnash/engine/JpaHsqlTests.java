@@ -21,17 +21,9 @@ package jgnash.engine;
 import jgnash.engine.jpa.Database;
 import jgnash.engine.jpa.JpaConfiguration;
 import jgnash.engine.jpa.JpaHsqlDataStore;
-
-import jgnash.util.FileUtils;
-import org.hsqldb.server.Server;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,14 +36,16 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.Query;
+
 import static org.junit.Assert.*;
 
 public class JpaHsqlTests {
 
-    Server hsqlServer;
     String fileName;
-
-    final int port = 9001;
 
     @Before
     public void before() throws InterruptedException, ClassNotFoundException, SQLException {
@@ -59,21 +53,11 @@ public class JpaHsqlTests {
             File temp = File.createTempFile("jpatest-", "");
             fileName = temp.getAbsolutePath();
 
-            StringBuilder urlBuilder = new StringBuilder("file:");
-            urlBuilder.append(FileUtils.stripFileExtension(fileName));
-
             if (!temp.delete()) {
                 fail("Could not delete the temp file");
             }
 
             JpaHsqlDataStore.initEmptyDatabase(fileName);
-
-            hsqlServer = new Server();
-            hsqlServer.setDatabaseName(0, "jgnash");    // the alias
-            hsqlServer.setPort(port);
-            hsqlServer.setDatabasePath(0, urlBuilder.toString());
-
-            hsqlServer.start();
         } catch (IOException e) {
             Logger.getLogger(JpaHsqlTests.class.getName()).log(Level.INFO, e.getMessage(), e);
         }
@@ -81,15 +65,13 @@ public class JpaHsqlTests {
 
     @After
     public void after() throws IOException {
-        hsqlServer.stop();
         JpaHsqlDataStore.deleteDatabase(fileName);
     }
 
     @Test
     @SuppressWarnings("unchecked")
     public void simpleAccountTest() {
-
-        Properties properties = JpaConfiguration.getClientProperties(Database.HSQLDB, "", "localhost", port, new char[]{});
+        Properties properties = JpaConfiguration.getLocalProperties(Database.HSQLDB, fileName, new char[]{}, false);
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", properties);
 
@@ -171,7 +153,7 @@ public class JpaHsqlTests {
     public void transactionTest() {
         final String ACC_NAME = "Test Tran";
 
-        Properties properties = JpaConfiguration.getClientProperties(Database.HSQLDB, "", "localhost", port, new char[]{});
+        Properties properties = JpaConfiguration.getLocalProperties(Database.HSQLDB, fileName, new char[]{}, false);
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", properties);
 
@@ -227,7 +209,7 @@ public class JpaHsqlTests {
 
     @Test
     public void securityNodeTest() {
-        Properties properties = JpaConfiguration.getClientProperties(Database.HSQLDB, "", "localhost", port, new char[]{});
+        Properties properties = JpaConfiguration.getLocalProperties(Database.HSQLDB, fileName, new char[]{}, false);
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", properties);
 
