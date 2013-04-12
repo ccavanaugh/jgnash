@@ -84,8 +84,8 @@ public final class Main {
     @Option(name = "-file", usage = "File to load at start")
     private File file;
 
-    @Option(name = "-server", usage = "Act as a server using the specified file")
-    private File server;
+    @Option(name = "-serverFile", usage = "Act as a server using the specified file")
+    private File serverFile;
 
     @Option(name = "-password", usage = "Client or Server password")
     private String password;
@@ -243,17 +243,17 @@ public final class Main {
             /* Dump the registry settings if requested */
             if (uninstall) {
                 deleteUserPreferences();
-            } else if (server != null) {
+            } else if (serverFile != null) {
                 try {
-                    if (!FileUtils.isFileLocked(server.getAbsolutePath())) {
+                    if (!FileUtils.isFileLocked(serverFile.getAbsolutePath())) {
                         JpaNetworkServer networkServer = new JpaNetworkServer();
-                        networkServer.startServer(Database.H2, server.getAbsolutePath(), port, password.toCharArray());
+                        networkServer.startServer(serverFile.getAbsolutePath(), port, password.toCharArray());
                     } else {
                         System.err.println(Resource.get().getString("Message.FileIsLocked"));
                     }
                 } catch (FileNotFoundException e) {
                     Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
-                    System.err.println("File " + server.getAbsolutePath() + " was not found");
+                    System.err.println("File " + serverFile.getAbsolutePath() + " was not found");
                 } catch (Exception e) {
                     Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
                 }

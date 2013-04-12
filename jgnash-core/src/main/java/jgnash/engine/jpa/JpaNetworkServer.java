@@ -24,6 +24,7 @@ import jgnash.engine.StoredObjectComparator;
 import jgnash.message.LocalServerListener;
 import jgnash.message.MessageBusRemoteServer;
 import jgnash.util.DefaultDaemonThreadFactory;
+import jgnash.util.FileMagic;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
 
@@ -59,13 +60,19 @@ public class JpaNetworkServer {
 
     protected EntityManager em;
 
-    public synchronized void startServer(final Database database, final String fileName, final int port, final char[] password) {
-        switch (database) {
-            case H2:
+    public synchronized void startServer(final String fileName, final int port, final char[] password) {
+
+        FileMagic.FileType type = FileMagic.magic(new File(fileName));
+
+        switch (type) {
+            case h2:
                 startH2Server(fileName, port, password);
                 break;
-            case HSQLDB:
+            case hsql:
                 startHsqldbServer(fileName, port, password);
+                break;
+            default:
+                Logger.getLogger(JpaNetworkServer.class.getName()).severe("Not a valid file type for server usage");
         }
     }
 
@@ -164,7 +171,8 @@ public class JpaNetworkServer {
 
         hsqlServer.setPort(port);
         hsqlServer.setDatabaseName(0, "jgnash");    // the alias
-        hsqlServer.setDatabasePath(0, "file:" + FileUtils.stripFileExtension(fileName) + ";user=SA" + ";password=" + new String(password));
+        //hsqlServer.setDatabasePath(0, "file:" + FileUtils.stripFileExtension(fileName) + ";user=SA" + ";password=" + new String(password));
+        hsqlServer.setDatabasePath(0, "file:" + FileUtils.stripFileExtension(fileName));
 
         hsqlServer.start();
 
