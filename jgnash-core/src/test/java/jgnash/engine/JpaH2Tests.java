@@ -42,7 +42,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class JpaTests {
+public class JpaH2Tests {
 
     @Test
     @SuppressWarnings("unchecked")
@@ -55,7 +55,7 @@ public class JpaTests {
             temp.deleteOnExit();
             testFile = temp.getAbsolutePath();
         } catch (IOException e) {
-            Logger.getLogger(JpaTests.class.getName()).log(Level.INFO, e.getMessage(), e);
+            Logger.getLogger(JpaH2Tests.class.getName()).log(Level.INFO, e.getMessage(), e);
         }
 
         Properties properties = JpaConfiguration.getLocalProperties(Database.H2, testFile, new char[]{}, false);
@@ -148,7 +148,7 @@ public class JpaTests {
             temp.deleteOnExit();
             testFile = temp.getAbsolutePath();
         } catch (IOException e) {
-            Logger.getLogger(JpaTests.class.getName()).log(Level.INFO, e.getMessage(), e);
+            Logger.getLogger(JpaH2Tests.class.getName()).log(Level.INFO, e.getMessage(), e);
         }
 
         Properties properties = JpaConfiguration.getLocalProperties(Database.H2, testFile, new char[]{}, false);
@@ -214,7 +214,7 @@ public class JpaTests {
             temp.deleteOnExit();
             testFile = temp.getAbsolutePath();
         } catch (IOException e) {
-            Logger.getLogger(JpaTests.class.getName()).log(Level.INFO, e.getMessage(), e);
+            Logger.getLogger(JpaH2Tests.class.getName()).log(Level.INFO, e.getMessage(), e);
         }
 
         Properties properties = JpaConfiguration.getLocalProperties(Database.H2, testFile, new char[]{}, false);

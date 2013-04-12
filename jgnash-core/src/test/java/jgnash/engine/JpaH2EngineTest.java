@@ -29,7 +29,7 @@ import static org.junit.Assert.fail;
 /**
  * @author Craig Cavanaugh
  */
-public class JpaEngineTest extends EngineTest {
+public class JpaH2EngineTest extends EngineTest {
 
     private static final float DELTA = .001f;
 
