@@ -27,6 +27,7 @@ import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,7 +43,7 @@ import java.util.zip.ZipOutputStream;
 
 /**
  * File utilities
- * 
+ *
  * @author Craig Cavanaugh
  */
 public final class FileUtils {
@@ -58,32 +59,38 @@ public final class FileUtils {
     }
 
     /**
-     * Determines if a file has been locked for use. The lock check is performed
-     * at the OS level.
-     * 
-     * @param fileName
-     *            file name to check for locked state
-     * @return true if the file is locked at the OS level.
-     * @throws java.io.FileNotFoundException
-     *             thrown if file does not exist
+     * Determines if a file has been locked for use. A lock file check is performed
+     * at the filesystem level and the actual file is checked for a locked state at the OS level.
+     *
+     * @param fileName file name to check for locked state
+     * @return true if a lock file is found or the file is locked at the OS level.
+     * @throws java.io.FileNotFoundException thrown if file does not exist
      */
     public static boolean isFileLocked(final String fileName) throws FileNotFoundException {
 
-        boolean result = true;
+        boolean result = false;
 
+        String[] extensions = new String[]{".lck", ".lock"};
 
-
-
-        try (RandomAccessFile raf = new RandomAccessFile(new File(fileName), "rw");
-                FileChannel channel = raf.getChannel()) {
-
-            try (FileLock lock = channel.tryLock()) {
-                if (lock != null) {
-                    result = false;
-                }
+        for (final String extension : extensions) {
+            if (Files.exists(Paths.get(FileUtils.stripFileExtension(fileName) + extension))) {
+                result = true;
             }
-        } catch (IOException e) {
-            Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, e.toString(), e);
+        }
+
+        if (!result) {
+            try (RandomAccessFile raf = new RandomAccessFile(new File(fileName), "rw");
+                 FileChannel channel = raf.getChannel()) {
+
+                try (FileLock lock = channel.tryLock()) {
+                    if (lock == null) {
+                        result = true;
+                    }
+                }
+            } catch (IOException e) {
+                Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, e.toString(), e);
+                result = true;
+            }
         }
 
         return result;
@@ -92,9 +99,8 @@ public final class FileUtils {
     /**
      * Strips the extension off of the supplied filename. If the supplied
      * filename does not contain an extension then the original is returned
-     * 
-     * @param fileName
-     *            filename to strip the extension off
+     *
+     * @param fileName filename to strip the extension off
      * @return filename with extension removed
      */
     public static String stripFileExtension(final String fileName) {
@@ -103,9 +109,8 @@ public final class FileUtils {
 
     /**
      * Determine if the supplied file name has an extension
-     * 
-     * @param fileName
-     *            filename to check
+     *
+     * @param fileName filename to check
      * @return true if supplied file has an extension
      */
     public static boolean fileHasExtension(final String fileName) {
@@ -128,11 +133,9 @@ public final class FileUtils {
 
     /**
      * Make a copy of a file given a source and destination.
-     * 
-     * @param src
-     *            Source file
-     * @param dst
-     *            Destination file
+     *
+     * @param src Source file
+     * @param dst Destination file
      * @return true if the copy was successful
      */
     public static boolean copyFile(final File src, final File dst) {
@@ -156,7 +159,7 @@ public final class FileUtils {
 
         // Try to open the zip file for output
         try (FileOutputStream fos = new FileOutputStream(destination);
-                ZipOutputStream zipOut = new ZipOutputStream(fos)) {
+             ZipOutputStream zipOut = new ZipOutputStream(fos)) {
 
             // Try to obtain the lock on the output stream
             try (FileLock fosLock = fos.getChannel().tryLock()) {
@@ -201,11 +204,9 @@ public final class FileUtils {
     /**
      * Returns a sorted list of files in a specified directory that match a DOS
      * style wildcard search pattern.
-     * 
-     * @param directory
-     *            base directory for the search
-     * @param pattern
-     *            DOS search pattern
+     *
+     * @param directory base directory for the search
+     * @param pattern   DOS search pattern
      * @return a List of matching Files. The list will be empty if no matches
      *         are found or if the directory is not valid.
      */
