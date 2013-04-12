@@ -93,7 +93,10 @@ public class JpaHsqlDataStore implements DataStore {
             result = true;
 
             logger.info("Initialized an empty database for " + FileUtils.stripFileExtension(fileName));
-        } catch (ClassNotFoundException | SQLException e) {
+
+            // force immediate removal of the lock file
+            Files.deleteIfExists(Paths.get(FileUtils.stripFileExtension(fileName) + ".lck"));
+        } catch (ClassNotFoundException | SQLException | IOException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
@@ -108,6 +111,13 @@ public class JpaHsqlDataStore implements DataStore {
         if (em != null && factory != null) {
             em.close();
             factory.close();
+
+            // force immediate removal of the lock file
+            try {
+                Files.deleteIfExists(Paths.get(FileUtils.stripFileExtension(fileName) + ".lck"));
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, e.getMessage(), e);
+            }
         } else {
             logger.severe("The EntityManger was already null!");
         }
@@ -294,9 +304,9 @@ public class JpaHsqlDataStore implements DataStore {
      * @throws IOException
      */
     public static void deleteDatabase(final String fileName) throws IOException {
-        String[] extensions = new String[]{".log", ".properties", ".script", ".data", ".backup", ".tmp", ".lobs"};
+        final String[] extensions = new String[]{".log", ".properties", ".script", ".data", ".backup", ".tmp", ".lobs", ".lck"};
 
-        String base = FileUtils.stripFileExtension(fileName);
+        final String base = FileUtils.stripFileExtension(fileName);
 
         for (String extension : extensions) {
             Files.deleteIfExists(Paths.get(base + extension));
