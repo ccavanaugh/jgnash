@@ -21,6 +21,7 @@ import jgnash.engine.budget.Budget;
 import jgnash.engine.dao.BudgetDAO;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -78,39 +79,31 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
 
     @Override
     public List<Budget> getBudgets() {
-        try {
-            emLock.lock();
 
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<Budget> cq = cb.createQuery(Budget.class);
-            Root<Budget> b = cq.from(Budget.class);
-            cq.select(b);
+        @SuppressWarnings("unchecked")
+        List<Budget> results = Collections.EMPTY_LIST;
 
-            TypedQuery<Budget> q = em.createQuery(cq);
+        if (em.isOpen()) { // TODO: background threads may try to open a closed entity manage, is there a better way?
+            try {
+                emLock.lock();
 
-            return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
-        } finally {
-            emLock.unlock();
+                CriteriaBuilder cb = em.getCriteriaBuilder();
+                CriteriaQuery<Budget> cq = cb.createQuery(Budget.class);
+                Root<Budget> b = cq.from(Budget.class);
+                cq.select(b);
+
+                TypedQuery<Budget> q = em.createQuery(cq);
+
+                results =  stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
+            } finally {
+                emLock.unlock();
+            }
         }
+        return results;
     }
 
     @Override
     public Budget getBudgetByUuid(final String uuid) {
-        /*try {
-            emLock.lock();
-
-            Budget budget = null;
-
-            try {
-                budget = em.find(Budget.class, uuid);
-            } catch (Exception e) {
-                logger.info("Did not find Budget for uuid: " + uuid);
-            }
-
-            return budget;
-        } finally {
-            emLock.unlock();
-        }*/
         return getObjectByUuid(Budget.class, uuid);
     }
 
