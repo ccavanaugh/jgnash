@@ -56,6 +56,17 @@
         </repository>
 
         <repository>
+            <id>sonatype-oss-public</id>
+            <url>https://oss.sonatype.org/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
             <id>maven.jenkins-ci.org</id>
             <name>maven.jenkins-ci</name>
             <url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
