@@ -34,6 +34,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,6 +56,8 @@ public class JpaHsqlDataStore implements DataStore {
 
     public static final String FILE_EXT = "script";
 
+    public static final String LOCK_EXT = ".lck";
+
     private EntityManager em;
 
     private EntityManagerFactory factory;
@@ -66,6 +69,11 @@ public class JpaHsqlDataStore implements DataStore {
     private static final boolean DEBUG = false;
 
     private static final Logger logger = Logger.getLogger(JpaHsqlDataStore.class.getName());
+
+    /**
+     * Maximum amount of time to wait for the lock file to release after closure.  Typical time should be about 2 seconds.
+     */
+    private static final long MAX_LOCK_RELEASE_TIME = 10 * 1000;
 
     /**
      * Creates an empty database with the assumed default user name
@@ -276,6 +284,20 @@ public class JpaHsqlDataStore implements DataStore {
             if (factory != null) {
                 factory.close();
             }
+        }
+
+        // It may take awhile for the lock to be released.  Wait for removal so any later attempts to open the file won't see the lock file and fail.
+        long then = new Date().getTime();
+
+        while (Files.exists(Paths.get(FileUtils.stripFileExtension(file.getAbsolutePath()) + LOCK_EXT))) {
+            long now = new Date().getTime();
+
+            if ((now - then) > MAX_LOCK_RELEASE_TIME) {
+                logger.warning("Exceeded the maximum wait time for the file lock release");
+                break;
+            }
+
+            Thread.yield();
         }
 
         return fileVersion;
