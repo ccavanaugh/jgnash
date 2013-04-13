@@ -204,6 +204,9 @@ public class JpaHsqlDataStore implements DataStore {
             }
         }
 
+        // Create the empty database with default user and an empty password
+        initEmptyDatabase(file.getAbsolutePath());
+
         Properties properties = JpaConfiguration.getLocalProperties(Database.HSQLDB, file.getAbsolutePath(), new char[]{}, false);
 
         EntityManagerFactory factory = null;
