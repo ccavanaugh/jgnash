@@ -70,6 +70,8 @@ public class JpaHsqlDataStore implements DataStore {
 
     private static final Logger logger = Logger.getLogger(JpaHsqlDataStore.class.getName());
 
+    private char[] password;
+
     /**
      * Maximum amount of time to wait for the lock file to release after closure.  Typical time should be about 2 seconds.
      */
@@ -77,6 +79,7 @@ public class JpaHsqlDataStore implements DataStore {
 
     /**
      * Creates an empty database with the assumed default user name
+     *
      * @param fileName file name to use
      * @return true if successful
      */
@@ -96,12 +99,15 @@ public class JpaHsqlDataStore implements DataStore {
             connection = DriverManager.getConnection(urlBuilder.toString(), JpaConfiguration.DEFAULT_USER, "");
             connection.prepareStatement("DROP USER SA").execute();
             connection.commit();
+
+            connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for a correct shutdown
             connection.close();
 
             result = true;
 
-            logger.info("Initialized an empty database for " + FileUtils.stripFileExtension(fileName));
+            waitForLockFileRelease(fileName, new char[]{});
 
+            logger.info("Initialized an empty database for " + FileUtils.stripFileExtension(fileName));
         } catch (ClassNotFoundException | SQLException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
@@ -119,6 +125,10 @@ public class JpaHsqlDataStore implements DataStore {
             factory.close();
         } else {
             logger.severe("The EntityManger was already null!");
+        }
+
+        if (!remote) {
+            waitForLockFileRelease(fileName, password);
         }
     }
 
@@ -160,7 +170,7 @@ public class JpaHsqlDataStore implements DataStore {
 
         // Check for existence of the file and init the database if needed
         if (!exists(fileName)) {
-             initEmptyDatabase(fileName);
+            initEmptyDatabase(fileName);
         }
 
         try {
@@ -174,6 +184,8 @@ public class JpaHsqlDataStore implements DataStore {
                     engine = new Engine(new JpaEngineDAO(em, false), engineName);
 
                     this.fileName = fileName;
+                    this.password = password;
+
                     remote = false;
                 } catch (final Exception e) {
                     logger.log(Level.SEVERE, e.getMessage(), e);
@@ -242,6 +254,8 @@ public class JpaHsqlDataStore implements DataStore {
                 factory.close();
             }
         }
+
+        waitForLockFileRelease(file.getAbsolutePath(), new char[]{});
     }
 
     /**
@@ -286,10 +300,31 @@ public class JpaHsqlDataStore implements DataStore {
             }
         }
 
+        waitForLockFileRelease(file.getAbsolutePath(), password);
+
+        return fileVersion;
+    }
+
+    private static void waitForLockFileRelease(final String fileName, final char[] password) {
+
+        // Explicitly force the database closed, Required for hsqldb
+        try {
+            final StringBuilder urlBuilder = new StringBuilder("jdbc:hsqldb:file:");
+            urlBuilder.append(FileUtils.stripFileExtension(fileName));
+
+            Class.forName("org.hsqldb.jdbcDriver");
+            Connection connection = DriverManager.getConnection(urlBuilder.toString(), JpaConfiguration.DEFAULT_USER, new String(password));
+
+            connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for correct file closure
+            connection.close();
+        } catch (ClassNotFoundException | SQLException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
+
         // It may take awhile for the lock to be released.  Wait for removal so any later attempts to open the file won't see the lock file and fail.
         long then = new Date().getTime();
 
-        while (Files.exists(Paths.get(FileUtils.stripFileExtension(file.getAbsolutePath()) + LOCK_EXT))) {
+        while (Files.exists(Paths.get(FileUtils.stripFileExtension(fileName) + LOCK_EXT))) {
             long now = new Date().getTime();
 
             if ((now - then) > MAX_LOCK_RELEASE_TIME) {
@@ -299,8 +334,6 @@ public class JpaHsqlDataStore implements DataStore {
 
             Thread.yield();
         }
-
-        return fileVersion;
     }
 
     /**

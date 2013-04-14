@@ -93,8 +93,6 @@ public class JpaConfiguration {
 
                 if (readOnly) {
                     urlBuilder.append(";readonly=true");
-                } else {
-                    urlBuilder.append(";shutdown=true");  // database is not closed until JVM exit if this is not added
                 }
         }
 
