@@ -32,7 +32,6 @@ import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
 
 import jgnash.engine.Engine;
-import jgnash.engine.jpa.Database;
 import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.net.NetworkAuthenticator;
 import jgnash.net.security.AbstractYahooParser;
@@ -84,7 +83,7 @@ public final class Main {
     @Option(name = "-file", usage = "File to load at start")
     private File file;
 
-    @Option(name = "-serverFile", usage = "Act as a server using the specified file")
+    @Option(name = "-server", usage = "Act as a server using the specified file")
     private File serverFile;
 
     @Option(name = "-password", usage = "Client or Server password")
