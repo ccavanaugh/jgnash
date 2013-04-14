@@ -17,47 +17,6 @@
  */
 package jgnash.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.ComponentOrientation;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.File;
-import java.util.Locale;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-import java.util.prefs.Preferences;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JFrame;
-import javax.swing.JLayer;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JToolBar;
-import javax.swing.RepaintManager;
-import javax.swing.SwingWorker;
-import javax.swing.WindowConstants;
-import javax.swing.border.EmptyBorder;
-import javax.swing.text.DefaultEditorKit;
-
 import jgnash.Main;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -85,11 +44,49 @@ import jgnash.ui.register.RegisterFrame;
 import jgnash.ui.register.RegisterListener;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.builder.ActionParser;
-import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.Resource;
 
 import org.jdesktop.swingx.JXBusyLabel;
 import org.jdesktop.swingx.JXStatusBar;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.ComponentOrientation;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.File;
+import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JFrame;
+import javax.swing.JLayer;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.RepaintManager;
+import javax.swing.SwingWorker;
+import javax.swing.WindowConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.DefaultEditorKit;
 
 /**
  * The JFrame for the application.
@@ -132,7 +129,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     /**
      * Used to run background updates with a delayed start
      */
-    private transient PausableThreadPoolExecutor backgroundUpdateExecutor;
+    private transient ScheduledThreadPoolExecutor backgroundUpdateExecutor;
 
     private static final int SCHEDULED_DELAY = 30;
 
@@ -679,7 +676,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     }
 
     private void startBackgroundUpdates() {
-        backgroundUpdateExecutor = new PausableThreadPoolExecutor();
+        backgroundUpdateExecutor = new ScheduledThreadPoolExecutor(1);
 
         LOG.log(Level.INFO, "Checking for needed background updates");
 
@@ -698,24 +695,13 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         });
     }
 
-    public void pauseBackgroundUpdates() {
-        backgroundUpdateExecutor.pause();
-
-        // wait for active tasks to complete
-        while (backgroundUpdateExecutor.getActiveCount() != 0) {
-            Thread.yield();
-        }
-    }
-
-    public void resumeBackgroundUpdates() {
-        backgroundUpdateExecutor.resume();
-    }
-
     public void cancelBackgroundUpdates() {
         if (backgroundUpdateExecutor != null && !backgroundUpdateExecutor.isShutdown()) {
             try {
                 backgroundUpdateExecutor.shutdownNow();
                 LOG.log(Level.INFO, "Background updates canceled");
+
+                backgroundUpdateExecutor = new ScheduledThreadPoolExecutor(1);  // recreate for manual requests
             } catch (Exception e) {
                 LOG.log(Level.INFO, e.getMessage(), e);
             }
@@ -793,52 +779,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
                     d.toFront();
                 }
             });
-        }
-    }
-
-    static class PausableThreadPoolExecutor extends ScheduledThreadPoolExecutor {
-
-        private boolean isPaused;
-        private final ReentrantLock pauseLock = new ReentrantLock();
-        private final Condition pausedCondition = pauseLock.newCondition();
-
-        public PausableThreadPoolExecutor() {
-            super(1, new DefaultDaemonThreadFactory());
-        }
-
-        @Override
-        protected void beforeExecute(final Thread t, final Runnable r) {
-            super.beforeExecute(t, r);
-            pauseLock.lock();
-            try {
-                while (isPaused) {
-                    pausedCondition.await();
-                }
-            } catch (InterruptedException ie) {
-                LOG.log(Level.INFO, ie.getMessage(), ie);
-                t.interrupt();
-            } finally {
-                pauseLock.unlock();
-            }
-        }
-
-        public void pause() {
-            pauseLock.lock();
-            try {
-                isPaused = true;
-            } finally {
-                pauseLock.unlock();
-            }
-        }
-
-        public void resume() {
-            pauseLock.lock();
-            try {
-                isPaused = false;
-                pausedCondition.signalAll();
-            } finally {
-                pauseLock.unlock();
-            }
         }
     }
 

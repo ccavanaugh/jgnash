@@ -17,14 +17,6 @@
  */
 package jgnash.ui.actions;
 
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.util.Collection;
-import java.util.prefs.Preferences;
-
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import jgnash.engine.DataStoreType;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
@@ -33,6 +25,14 @@ import jgnash.ui.util.SimpleSwingWorker;
 import jgnash.ui.util.builder.Action;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
+
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.util.Collection;
+import java.util.prefs.Preferences;
+
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * UI Action to save the current database as a new name and reopen
@@ -97,7 +97,7 @@ public class SaveFileAsAction extends AbstractEnabledAction {
                 @Override
                 protected Void doInBackground() throws Exception {
 
-                    UIApplication.getFrame().pauseBackgroundUpdates();
+                    UIApplication.getFrame().cancelBackgroundUpdates();
 
                     UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
 
@@ -105,7 +105,7 @@ public class SaveFileAsAction extends AbstractEnabledAction {
 
                     DataStoreType newFileType = DataStoreType.BINARY_XSTREAM;   // default for a new file
 
-                    if (fileExtension.length() > 0) {
+                    if (!fileExtension.isEmpty()) {
                         for (DataStoreType type : types) {
                             if (type.getDataStore().getFileExt().equals(fileExtension)) {
                                 newFileType = type;
@@ -135,7 +135,6 @@ public class SaveFileAsAction extends AbstractEnabledAction {
                 @Override
                 protected void done() {
                     UIApplication.getFrame().stopWaitMessage();
-                    UIApplication.getFrame().resumeBackgroundUpdates();
                 }
             }
 
