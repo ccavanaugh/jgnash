@@ -70,7 +70,7 @@ public final class FileUtils {
 
         boolean result = false;
 
-        String[] extensions = new String[]{".lck", ".lock"};
+        String[] extensions = new String[]{".lck", ".lock.db", ".lock"};
 
         for (final String extension : extensions) {
             if (Files.exists(Paths.get(FileUtils.stripFileExtension(fileName) + extension))) {

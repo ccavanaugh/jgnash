@@ -37,11 +37,6 @@ public class JpaConfiguration {
     public static final String HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
     public static final String DEFAULT_USER = "JGNASH";
 
-    /**
-     * The preferred file locking method is to use the OS
-     */
-    public static final String FILE_LOCK_FS = ";FILE_LOCK=FS";
-
     private static Properties getBaseProperties(final Database database) {
         Properties properties = System.getProperties();
 
@@ -65,7 +60,7 @@ public class JpaConfiguration {
 
         switch (database) {
             case H2:
-                urlBuilder.append("jdbc:h2:");
+                urlBuilder.append("jdbc:h2:file:");
 
                 urlBuilder.append(FileUtils.stripFileExtension(fileName));
 
@@ -74,8 +69,6 @@ public class JpaConfiguration {
                 if (password != null && password.length > 0) {
                     urlBuilder.append(";PASSWORD=").append(password);
                 }
-
-                urlBuilder.append(FILE_LOCK_FS);
 
                 if (readOnly) {
                     urlBuilder.append(";ACCESS_MODE_DATA=r");
