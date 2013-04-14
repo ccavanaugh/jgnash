@@ -17,6 +17,7 @@
  */
 package jgnash.engine.jpa;
 
+import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
@@ -26,10 +27,8 @@ import jgnash.message.MessageBusRemoteServer;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.FileMagic;
 import jgnash.util.FileUtils;
-import jgnash.util.Resource;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,6 +61,21 @@ public class JpaNetworkServer {
 
     public synchronized void startServer(final String fileName, final int port, final char[] password) {
 
+        File file = new File(fileName);
+
+        // create the base directory if needed
+        if (!file.exists()) {
+            File parent = file.getParentFile();
+
+            if (parent != null && !parent.exists()) {
+                boolean result = parent.mkdirs();
+
+                if (!result) {
+                    throw new RuntimeException("Could not create directory for file: " + parent.getAbsolutePath());
+                }
+            }
+        }
+
         FileMagic.FileType type = FileMagic.magic(new File(fileName));
 
         switch (type) {
@@ -84,7 +98,6 @@ public class JpaNetworkServer {
 
         // Start the H2 server
         try {
-
             boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty("ssl"));
 
             List<String> serverArgs = new ArrayList<>();
@@ -110,7 +123,7 @@ public class JpaNetworkServer {
 
             // Start the message bus and pass the file name so it can be reported to the client
             MessageBusRemoteServer messageServer = new MessageBusRemoteServer(port + 1);
-            messageServer.startServer(fileName, password);
+            messageServer.startServer(DataStoreType.H2_DATABASE, fileName, password);
 
             // Start the backup thread that ensures an XML backup is created at set intervals
             ScheduledExecutorService backupExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
@@ -171,7 +184,6 @@ public class JpaNetworkServer {
 
         hsqlServer.setPort(port);
         hsqlServer.setDatabaseName(0, "jgnash");    // the alias
-        //hsqlServer.setDatabasePath(0, "file:" + FileUtils.stripFileExtension(fileName) + ";user=SA" + ";password=" + new String(password));
         hsqlServer.setDatabasePath(0, "file:" + FileUtils.stripFileExtension(fileName));
 
         hsqlServer.start();
@@ -182,7 +194,7 @@ public class JpaNetworkServer {
 
             // Start the message bus and pass the file name so it can be reported to the client
             MessageBusRemoteServer messageServer = new MessageBusRemoteServer(port + 1);
-            messageServer.startServer(fileName, password);
+            messageServer.startServer(DataStoreType.HSQL_DATABASE, fileName, password);
 
             // Start the backup thread that ensures an XML backup is created at set intervals
             ScheduledExecutorService backupExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
@@ -253,32 +265,13 @@ public class JpaNetworkServer {
         Engine engine = null;
 
         try {
-            if (!FileUtils.isFileLocked(fileName)) {
+            EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", properties);
 
-                File file = new File(fileName);
+            em = factory.createEntityManager();
 
-                // create the base directory if needed
-                if (!file.exists()) {
-                    File parent = file.getParentFile();
-
-                    if (parent != null && !parent.exists()) {
-                        boolean result = parent.mkdirs();
-
-                        if (!result) {
-                            throw new RuntimeException("Could not create directory for file: " + parent.getAbsolutePath());
-                        }
-                    }
-                }
-                EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", properties);
-
-                em = factory.createEntityManager();
-
-                Logger.getLogger(JpaH2DataStore.class.getName()).info("Created local JPA container and engine");
-                engine = new Engine(new JpaEngineDAO(em, true), EngineFactory.DEFAULT); // treat as a remote engine
-            } else {
-                Logger.getLogger(JpaNetworkServer.class.getName()).severe(Resource.get().getString("Message.FileIsLocked"));
-            }
-        } catch (FileNotFoundException e) {
+            Logger.getLogger(JpaH2DataStore.class.getName()).info("Created local JPA container and engine");
+            engine = new Engine(new JpaEngineDAO(em, true), EngineFactory.DEFAULT); // treat as a remote engine
+        } catch (final Exception e) {
             Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, e.toString(), e);
         }
 

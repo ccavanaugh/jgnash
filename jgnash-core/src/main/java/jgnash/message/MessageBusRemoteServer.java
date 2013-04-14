@@ -27,6 +27,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jgnash.engine.DataStoreType;
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.buffer.SimpleBufferAllocator;
 import org.apache.mina.core.service.IoAcceptor;
@@ -45,6 +46,7 @@ import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 public class MessageBusRemoteServer {
 
     public static final String PATH_PREFIX = "<PATH>";
+    public static final String DATA_STORE_TYPE_PREFIX = "<TYPE>";
 
     private int port = 0;
 
@@ -60,6 +62,8 @@ public class MessageBusRemoteServer {
 
     private String dataBasePath = "";
 
+    private String dataStoreType = "";
+
     private EncryptionFilter filter;
 
     static {
@@ -71,8 +75,9 @@ public class MessageBusRemoteServer {
         this.port = port;
     }
 
-    public void startServer(final String dataBasePath, final char[] password) {
+    public void startServer(final DataStoreType dataStoreType, final String dataBasePath, final char[] password) {
         this.dataBasePath = dataBasePath;
+        this.dataStoreType = dataStoreType.name();
 
         boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty("ssl"));
 
@@ -96,7 +101,6 @@ public class MessageBusRemoteServer {
     }
 
     public void stopServer() {
-
         rwl.writeLock().lock();
 
         try {
@@ -213,9 +217,10 @@ public class MessageBusRemoteServer {
             try {
                 clientSessions.add(session);
                 logger.log(Level.INFO, "Remote connection from: {0}", session.toString());
-                session.write(encrypt(PATH_PREFIX + dataBasePath));
 
-                //session.write(PATH_PREFIX + dataBasePath);
+                // Inform the client what they are talking with
+                session.write(encrypt(PATH_PREFIX + dataBasePath));
+                session.write(encrypt(DATA_STORE_TYPE_PREFIX + dataStoreType));
             } finally {
                 rwl.writeLock().unlock();
             }

@@ -29,6 +29,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jgnash.engine.DataStoreType;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.LogUtils;
 
@@ -46,6 +47,9 @@ import jgnash.util.LogUtils;
  */
 public class MessageBus {
 
+    /**
+     * Maximum wait to get a valid response from the remote message bus before giving up
+     */
     private static final long MAX_LATENCY = 5 * 1000;
 
     private static final Logger logger = Logger.getLogger(MessageBus.class.getName());
@@ -101,7 +105,14 @@ public class MessageBus {
         if (messageBusClient != null) {
             return messageBusClient.getDataBasePath();
         }
-        return "";
+        return null;
+    }
+
+    public DataStoreType getRemoteDataStoreType() {
+        if (messageBusClient != null) {
+            return messageBusClient.getDataStoreType();
+        }
+        return null;
     }
 
     private void disconnectFromServer() {
@@ -121,13 +132,14 @@ public class MessageBus {
         boolean result = messageBusClient.connectToServer(password);
 
         if (result) {
-            long now = new Date().getTime();
+            long then = new Date().getTime();
 
             // wait for the server response to the remote database path for a max delay before timing out
             // this is the handshake that a good connection was made
-            while (getRemoteDataBasePath() == null) {
-                if ((new Date().getTime() - now) > MAX_LATENCY) {
+            while (getRemoteDataBasePath() == null || getRemoteDataStoreType() == null) {
+                if ((new Date().getTime() - then) > MAX_LATENCY) {
                     disconnectFromServer();
+                    logger.warning("Did not receive a valid response from the server");
                     result = false;
                     break;
                 }
@@ -221,7 +233,7 @@ public class MessageBus {
 
             /* Post a remote message if configured to do so and filter system events.
              *
-             * Do not repost a remote message otherwise it will just loop through the
+             * Do not re-post a remote message otherwise it will just loop through the
              * remote message system */
             if (!message.isRemote()) {
                 if (messageBusClient != null && message.getChannel() != MessageChannel.SYSTEM) {

@@ -21,18 +21,9 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
-import java.io.CharArrayWriter;
-import java.net.InetSocketAddress;
-import java.nio.charset.Charset;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import jgnash.engine.Account;
 import jgnash.engine.CommodityNode;
+import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.ExchangeRate;
@@ -51,6 +42,15 @@ import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
 import org.apache.mina.transport.socket.SocketConnector;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
+
+import java.io.CharArrayWriter;
+import java.net.InetSocketAddress;
+import java.nio.charset.Charset;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Remote message bus client
@@ -71,6 +71,8 @@ class MessageBusRemoteClient {
 
     private String dataBasePath;
 
+    private DataStoreType dataBaseType;
+
     private EncryptionFilter filter = null;
 
     static {
@@ -89,6 +91,10 @@ class MessageBusRemoteClient {
 
     public String getDataBasePath() {
         return dataBasePath;
+    }
+
+    public DataStoreType getDataStoreType() {
+        return dataBaseType;
     }
 
     private static int getConnectionTimeout() {
@@ -202,6 +208,9 @@ class MessageBusRemoteClient {
             } else if (plainMessage.startsWith(MessageBusRemoteServer.PATH_PREFIX)) {
                 dataBasePath = plainMessage.substring(MessageBusRemoteServer.PATH_PREFIX.length());
                 logger.log(Level.INFO, "Remote data path is: {0}", dataBasePath);
+            } else if (plainMessage.startsWith(MessageBusRemoteServer.DATA_STORE_TYPE_PREFIX)) {
+                dataBaseType = DataStoreType.valueOf(plainMessage.substring(MessageBusRemoteServer.DATA_STORE_TYPE_PREFIX.length()));
+                logger.log(Level.INFO, "Remote dataBaseType type is: {0}", dataBaseType.name());
             } else if (plainMessage.startsWith(EncryptionFilter.DECRYPTION_ERROR_TAG)) {    // decryption has failed, shut down the engine
                 logger.log(Level.SEVERE, "Unable to decrypt the remote message");
             } else {

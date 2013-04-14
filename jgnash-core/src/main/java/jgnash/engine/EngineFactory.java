@@ -249,17 +249,9 @@ public class EngineFactory {
     }
 
     public static synchronized Engine bootClientEngine(final String host, final int port, final char[] password, final String engineName) throws Exception {
-        return bootClientEngine(host, port, password, engineName, DataStoreType.H2_DATABASE);
-    }
-
-    private static synchronized Engine bootClientEngine(final String host, final int port, final char[] password, final String engineName, final DataStoreType type) throws Exception {
 
         if (engineMap.get(engineName) != null) {
             throw new RuntimeException("A stale engine was found in the map");
-        }
-
-        if (!type.supportsRemote) {
-            throw new UnsupportedOperationException("Client / Server operation is not supported for this type.");
         }
 
         Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
@@ -276,15 +268,17 @@ public class EngineFactory {
 
             // after starting the remote message bus, it should receive the path on the server
             String remoteDataBasePath = messageBus.getRemoteDataBasePath();
+            DataStoreType dataStoreType = messageBus.getRemoteDataStoreType();
 
-            if (remoteDataBasePath == null || remoteDataBasePath.isEmpty()) {
+            if (remoteDataBasePath == null || remoteDataBasePath.isEmpty() || dataStoreType == null) {
                 throw new Exception("Invalid connection wih the message bus");
             }
 
             logger.log(Level.INFO, "Remote path was {0}", remoteDataBasePath);
+            logger.log(Level.INFO, "Remote data store was {0}", dataStoreType.name());
             logger.log(Level.INFO, "Engine name was {0}", engineName);
 
-            DataStore dataStore = type.getDataStore();
+            DataStore dataStore = dataStoreType.getDataStore();
 
             // connect to the remote server
             engine = dataStore.getClientEngine(host, port, password, remoteDataBasePath);
