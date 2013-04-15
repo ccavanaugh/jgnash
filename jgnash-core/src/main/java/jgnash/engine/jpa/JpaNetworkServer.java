@@ -51,6 +51,8 @@ import javax.persistence.Persistence;
  */
 public class JpaNetworkServer {
 
+    public static final String STOP_SERVER_MESSAGE = "<STOP_SERVER>";
+
     private volatile boolean stop = false;
 
     private static final int BACKUP_PERIOD = 2;
@@ -58,6 +60,8 @@ public class JpaNetworkServer {
     private volatile boolean dirty = false;
 
     protected EntityManager em;
+
+    public final static int DEFAULT_PORT = 5300;
 
     public synchronized void startServer(final String fileName, final int port, final char[] password) {
 
@@ -141,19 +145,21 @@ public class JpaNetworkServer {
                 }
             }, BACKUP_PERIOD, BACKUP_PERIOD, TimeUnit.HOURS);
 
-            messageServer.addLocalListener(new LocalServerListener() {
-
+            LocalServerListener listener =  new LocalServerListener() {
                 @Override
                 public void messagePosted(final String event) {
 
                     // look for a remote request to stop the server
-                    if (event.startsWith("<STOP_SERVER>")) {
+                    if (event.startsWith(STOP_SERVER_MESSAGE)) {
+                        Logger.getLogger(JpaNetworkServer.class.getName()).info("Remote shutdown request was received");
                         stopServer();
                     }
 
                     dirty = true;
                 }
-            });
+            };
+
+            messageServer.addLocalListener(listener);
 
             // wait here forever
             try {
@@ -164,18 +170,23 @@ public class JpaNetworkServer {
                 Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, null, ex);
             }
 
+            messageServer.removeLocalListener(listener);
+
             backupExecutor.shutdown();
 
             exportXML(engine, fileName);
-            EngineFactory.removeOldCompressedXML(fileName);
 
             messageServer.stopServer();
 
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
+            em.close();
+
             if (server != null) {
                 server.stop();
             }
+
+            EngineFactory.removeOldCompressedXML(fileName);
         }
     }
 
@@ -212,19 +223,22 @@ public class JpaNetworkServer {
                 }
             }, BACKUP_PERIOD, BACKUP_PERIOD, TimeUnit.HOURS);
 
-            messageServer.addLocalListener(new LocalServerListener() {
 
+            LocalServerListener listener =  new LocalServerListener() {
                 @Override
                 public void messagePosted(final String event) {
 
                     // look for a remote request to stop the server
-                    if (event.startsWith("<STOP_SERVER>")) {
+                    if (event.startsWith(STOP_SERVER_MESSAGE)) {
+                        Logger.getLogger(JpaNetworkServer.class.getName()).info("Remote shutdown request was received");
                         stopServer();
                     }
 
                     dirty = true;
                 }
-            });
+            };
+
+            messageServer.addLocalListener(listener);
 
             // wait here forever
             try {
@@ -235,16 +249,21 @@ public class JpaNetworkServer {
                 Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, null, ex);
             }
 
+            messageServer.removeLocalListener(listener);
+
             backupExecutor.shutdown();
 
             exportXML(engine, fileName);
-            EngineFactory.removeOldCompressedXML(fileName);
 
             messageServer.stopServer();
 
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
+            em.close();
+
             hsqlServer.stop();
+
+            EngineFactory.removeOldCompressedXML(fileName);
         }
     }
 

@@ -125,7 +125,7 @@ public class MessageBusRemoteServer {
         }
     }
 
-    /*public void removeLocalListener(final LocalServerListener listener) {
+    public void removeLocalListener(final LocalServerListener listener) {
         rwl.writeLock().lock();
 
         try {
@@ -133,7 +133,7 @@ public class MessageBusRemoteServer {
         } finally {
             rwl.writeLock().unlock();
         }
-    }*/
+    }
 
     private class MessageHandler extends IoHandlerAdapter {
 

@@ -100,8 +100,6 @@ public final class Main {
 
     @Option(name = "-enableHangDetect", usage = "Enable hang detection on the EDT")
     private static boolean hangDetect;
-
-    final private static int DEFAULT_PORT = 5300;
     
     final private static String DEFAULT_PASSWORD = "";
 
@@ -232,7 +230,7 @@ public final class Main {
             }
 
             if (port <= 0) {
-                port = DEFAULT_PORT;
+                port = JpaNetworkServer.DEFAULT_PORT;
             }
             
             if (password == null) {

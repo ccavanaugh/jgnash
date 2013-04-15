@@ -29,6 +29,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.ExchangeRate;
 import jgnash.engine.Transaction;
 import jgnash.engine.budget.Budget;
+import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.engine.recurring.Reminder;
 import jgnash.net.ConnectionFactory;
 
@@ -152,6 +153,10 @@ class MessageBusRemoteClient {
         logger.log(Level.INFO, "sent: {0}", writer.toString());
     }
 
+    public void sendRemoteShutdownRequest() {
+        session.write(JpaNetworkServer.STOP_SERVER_MESSAGE);
+    }
+
     private class ClientSessionHandler extends IoHandlerAdapter {
 
         private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -213,6 +218,9 @@ class MessageBusRemoteClient {
                 logger.log(Level.INFO, "Remote dataBaseType type is: {0}", dataBaseType.name());
             } else if (plainMessage.startsWith(EncryptionFilter.DECRYPTION_ERROR_TAG)) {    // decryption has failed, shut down the engine
                 logger.log(Level.SEVERE, "Unable to decrypt the remote message");
+            } else if (plainMessage.startsWith(JpaNetworkServer.STOP_SERVER_MESSAGE)) {
+                logger.info("Server is shutting down");
+                // TODO: If open (not the user closing), disconnect and display a warning
             } else {
                 logger.log(Level.SEVERE, "Unknown message: {0}", plainMessage);
             }

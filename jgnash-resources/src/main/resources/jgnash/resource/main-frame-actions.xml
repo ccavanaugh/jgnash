@@ -49,7 +49,11 @@
 
     <action id="change-credentials-command"
             name="Menu.ChangeCredentials.Name"
-            desc="Menu.ChangeCredentials.ToolTip"/>
+            desc="Menu.ChangeCredentials.Tooltip"/>
+
+    <action id="shutdown-server-command"
+            name="Menu.ShutdownServer.Name"
+            desc="Menu.ShutdownServer.Tooltip"/>
 
     <action id="open-command"
             name="Menu.Open.Name"
@@ -322,6 +326,7 @@
             </action-node>
             <empty/>
             <action-node idref="change-credentials-command"/>
+            <action-node idref="shutdown-server-command"/>
             <empty/>
             <action-node idref="close-command"/>
             <action-node idref="exit-command"/>

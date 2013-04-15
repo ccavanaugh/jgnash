@@ -122,6 +122,22 @@ public class MessageBus {
         }
     }
 
+    /**
+     * Issues a shutdown request to a remote server
+     */
+    public static void shutDownRemoteServer(final String remoteHost, final int remotePort, final char[] password) {
+        if (remoteHost == null || remotePort <= 0) {
+            throw new IllegalArgumentException();
+        }
+
+        MessageBusRemoteClient client =  new MessageBusRemoteClient(remoteHost, remotePort);
+
+        if (client.connectToServer(password)) {
+            client.sendRemoteShutdownRequest();
+            //client.disconnectFromServer();
+        }
+    }
+
     private boolean connectToServer(final String remoteHost, final int remotePort, final char[] password) {
         if (remoteHost == null || remotePort <= 0) {
             throw new IllegalArgumentException();
