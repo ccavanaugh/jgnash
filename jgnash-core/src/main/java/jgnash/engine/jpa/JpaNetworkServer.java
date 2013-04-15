@@ -94,17 +94,80 @@ public class JpaNetworkServer {
         }
     }
 
-    /*private void run() {
+    private boolean run(final DataStoreType dataStoreType, final String fileName, final int port, final char[] password) {
+        boolean result = true;
 
-    }*/
+        final Engine engine = createEngine(dataStoreType, fileName, port, password);
+
+        if (engine != null) {
+
+            // Start the message bus and pass the file name so it can be reported to the client
+            MessageBusRemoteServer messageServer = new MessageBusRemoteServer(port + 1);
+            messageServer.startServer(dataStoreType, fileName, password);
+
+            // Start the backup thread that ensures an XML backup is created at set intervals
+            ScheduledExecutorService backupExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
+
+            // run commit every backup period after startup
+            backupExecutor.scheduleWithFixedDelay(new Runnable() {
+
+                @Override
+                public void run() {
+                    if (dirty) {
+                        exportXML(engine, fileName);
+                        EngineFactory.removeOldCompressedXML(fileName);
+                        dirty = false;
+                    }
+                }
+            }, BACKUP_PERIOD, BACKUP_PERIOD, TimeUnit.HOURS);
+
+            LocalServerListener listener = new LocalServerListener() {
+                @Override
+                public void messagePosted(final String event) {
+
+                    // look for a remote request to stop the server
+                    if (event.startsWith(STOP_SERVER_MESSAGE)) {
+                        Logger.getLogger(JpaNetworkServer.class.getName()).info("Remote shutdown request was received");
+                        stopServer();
+                    }
+
+                    dirty = true;
+                }
+            };
+
+            messageServer.addLocalListener(listener);
+
+            // wait here forever
+            try {
+                if (!stop) {
+                    this.wait(Long.MAX_VALUE); // wait forever for notify() from stopServer()
+                }
+            } catch (InterruptedException ex) {
+                Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            messageServer.removeLocalListener(listener);
+
+            backupExecutor.shutdown();
+
+            exportXML(engine, fileName);
+
+            messageServer.stopServer();
+
+            EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+            em.close();
+
+            result = true;
+        }
+        return result;
+    }
 
     private void startH2Server(final String fileName, final int port, final char[] password) {
-
         org.h2.tools.Server server = null;
 
         stop = false;
 
-        // Start the H2_DATABASE server
         try {
             boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty("ssl"));
 
@@ -125,73 +188,14 @@ public class JpaNetworkServer {
             Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, e.getMessage(), e);
         }
 
-        final Engine engine = createEngine(DataStoreType.H2_DATABASE, fileName, port, password);
+        // Start the message server and engine
+        run(DataStoreType.H2_DATABASE, fileName, port, password);
 
-        if (engine != null) {
-
-            // Start the message bus and pass the file name so it can be reported to the client
-            MessageBusRemoteServer messageServer = new MessageBusRemoteServer(port + 1);
-            messageServer.startServer(DataStoreType.H2_DATABASE, fileName, password);
-
-            // Start the backup thread that ensures an XML backup is created at set intervals
-            ScheduledExecutorService backupExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
-
-            // run commit every backup period after startup
-            backupExecutor.scheduleWithFixedDelay(new Runnable() {
-
-                @Override
-                public void run() {
-                    if (dirty) {
-                        exportXML(engine, fileName);
-                        EngineFactory.removeOldCompressedXML(fileName);
-                        dirty = false;
-                    }
-                }
-            }, BACKUP_PERIOD, BACKUP_PERIOD, TimeUnit.HOURS);
-
-            LocalServerListener listener =  new LocalServerListener() {
-                @Override
-                public void messagePosted(final String event) {
-
-                    // look for a remote request to stop the server
-                    if (event.startsWith(STOP_SERVER_MESSAGE)) {
-                        Logger.getLogger(JpaNetworkServer.class.getName()).info("Remote shutdown request was received");
-                        stopServer();
-                    }
-
-                    dirty = true;
-                }
-            };
-
-            messageServer.addLocalListener(listener);
-
-            // wait here forever
-            try {
-                if (!stop) {
-                    this.wait(Long.MAX_VALUE); // wait forever for notify() from stopServer()
-                }
-            } catch (InterruptedException ex) {
-                Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            messageServer.removeLocalListener(listener);
-
-            backupExecutor.shutdown();
-
-            exportXML(engine, fileName);
-
-            messageServer.stopServer();
-
-            EngineFactory.closeEngine(EngineFactory.DEFAULT);
-
-            em.close();
-
-            if (server != null) {
-                server.stop();
-            }
-
-            EngineFactory.removeOldCompressedXML(fileName);
+        if (server != null) {
+            server.stop();
         }
+
+        EngineFactory.removeOldCompressedXML(fileName);
     }
 
     private void startHsqldbServer(final String fileName, final int port, final char[] password) {
@@ -203,72 +207,12 @@ public class JpaNetworkServer {
 
         hsqlServer.start();
 
-        final Engine engine = createEngine(DataStoreType.HSQL_DATABASE, fileName, port, password);
+        // Start the message server and engine
+        run(DataStoreType.HSQL_DATABASE, fileName, port, password);
 
-        if (engine != null) {
+        hsqlServer.stop();
 
-            // Start the message bus and pass the file name so it can be reported to the client
-            MessageBusRemoteServer messageServer = new MessageBusRemoteServer(port + 1);
-            messageServer.startServer(DataStoreType.HSQL_DATABASE, fileName, password);
-
-            // Start the backup thread that ensures an XML backup is created at set intervals
-            ScheduledExecutorService backupExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
-
-            // run commit every backup period after startup
-            backupExecutor.scheduleWithFixedDelay(new Runnable() {
-
-                @Override
-                public void run() {
-                    if (dirty) {
-                        exportXML(engine, fileName);
-                        EngineFactory.removeOldCompressedXML(fileName);
-                        dirty = false;
-                    }
-                }
-            }, BACKUP_PERIOD, BACKUP_PERIOD, TimeUnit.HOURS);
-
-
-            LocalServerListener listener =  new LocalServerListener() {
-                @Override
-                public void messagePosted(final String event) {
-
-                    // look for a remote request to stop the server
-                    if (event.startsWith(STOP_SERVER_MESSAGE)) {
-                        Logger.getLogger(JpaNetworkServer.class.getName()).info("Remote shutdown request was received");
-                        stopServer();
-                    }
-
-                    dirty = true;
-                }
-            };
-
-            messageServer.addLocalListener(listener);
-
-            // wait here forever
-            try {
-                if (!stop) {
-                    this.wait(Long.MAX_VALUE); // wait forever for notify() from stopServer()
-                }
-            } catch (InterruptedException ex) {
-                Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            messageServer.removeLocalListener(listener);
-
-            backupExecutor.shutdown();
-
-            exportXML(engine, fileName);
-
-            messageServer.stopServer();
-
-            EngineFactory.closeEngine(EngineFactory.DEFAULT);
-
-            em.close();
-
-            hsqlServer.stop();
-
-            EngineFactory.removeOldCompressedXML(fileName);
-        }
+        EngineFactory.removeOldCompressedXML(fileName);
     }
 
     /**
