@@ -63,7 +63,7 @@ public class DefaultAutoCompleteModel implements AutoCompleteModel {
 
     /** Perform a brute force linear search top down for the best match */
     private String doLookAhead(final String content, final boolean ignoreCase) {
-        if (content.length() > 0) {
+        if (!content.isEmpty()) {
             synchronized (list) {
                 for (String s : list) {
 

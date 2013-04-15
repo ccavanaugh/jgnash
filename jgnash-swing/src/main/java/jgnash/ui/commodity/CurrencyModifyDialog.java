@@ -62,7 +62,6 @@ import jgnash.util.Resource;
  * CurrencyModifyPanel is used for modifying currencies.
  * 
  * @author Craig Cavanaugh
- *
  */
 public class CurrencyModifyDialog extends JDialog implements MessageListener, ListSelectionListener, ActionListener {
 
@@ -243,7 +242,7 @@ public class CurrencyModifyDialog extends JDialog implements MessageListener, Li
         if (scaleField.getText().length() <= 0) {
             return false;
         }
-        return symbolField.getText().length() > 0;
+        return !symbolField.getText().isEmpty();
     }
 
     private CurrencyNode buildCommodityNode() {

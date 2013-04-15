@@ -109,7 +109,7 @@ public class JIntegerField extends JTextFieldEx {
 
         @Override
         public boolean verify(final JComponent input) {
-            if (((JTextField) input).getText().length() == 0) {
+            if (((JTextField) input).getText().isEmpty()) {
                 return true;
             }
             try {

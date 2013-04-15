@@ -82,7 +82,7 @@ public class OpenDatabaseDialog extends JDialog implements ActionListener {
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == fileButton) {
             String file = DatabasePathAction.databaseNameAction(this, DatabasePathAction.Type.OPEN);
-            if (file.length() > 0) {
+            if (!file.isEmpty()) {
                 fileField.setText(file);
             }
         } else if (e.getSource() == remoteButton) {

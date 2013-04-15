@@ -44,7 +44,6 @@ import jgnash.ui.util.IconUtils;
  * A JTable that renders a tree structure in the first column using <code>prepareRenderer</code>.
  *
  * @author Craig Cavanaugh
- *
  */
 public class ExpandingTable<E extends Comparable<? super E>> extends JTable {
 
@@ -213,7 +212,7 @@ public class ExpandingTable<E extends Comparable<? super E>> extends JTable {
 
             String searchString = model.getSearchString(object);
 
-            if (searchString.length() > 0 && Character.toUpperCase(searchString.charAt(0)) == Character.toUpperCase(c)) {
+            if (!searchString.isEmpty() && Character.toUpperCase(searchString.charAt(0)) == Character.toUpperCase(c)) {
                 setSelectedObject(object);
                 break;
             }

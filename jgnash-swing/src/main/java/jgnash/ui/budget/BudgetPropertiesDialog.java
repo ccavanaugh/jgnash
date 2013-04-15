@@ -163,7 +163,7 @@ public final class BudgetPropertiesDialog extends JDialog implements ActionListe
                 budget.setBudgetPeriod(getSelectedPeriod());
             }
 
-            if (descriptionField.getText().length() > 0 && !budget.getDescription().equals(descriptionField.getText())) {
+            if (!descriptionField.getText().isEmpty() && !budget.getDescription().equals(descriptionField.getText())) {
                 modified = true;
                 budget.setDescription(descriptionField.getText());
             }

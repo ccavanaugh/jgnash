@@ -83,7 +83,6 @@ import org.jfree.ui.RectangleInsets;
  * A Dialog for manipulation security histories.
  * 
  * @author Craig Cavanaugh
- *
  */
 public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
 
@@ -265,11 +264,11 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
         history.setPrice(closeField.getDecimal());
         history.setVolume(volumeField.longValue());
 
-        if (highField.getText().length() > 0) {
+        if (!highField.getText().isEmpty()) {
             history.setHigh(highField.getDecimal());
         }
 
-        if (lowField.getText().length() > 0) {
+        if (!lowField.getText().isEmpty()) {
             history.setLow(lowField.getDecimal());
         }
 

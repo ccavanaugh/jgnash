@@ -236,7 +236,7 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
 
         List<BudgetObject> values = budgetList.getSelectedValuesList();
 
-        if (values.size() > 0) {
+        if (!values.isEmpty()) {
 
             String message = values.size() == 1 ? rb.getString("Message.ConfirmBudgetDelete") : rb.getString("Message.ConfirmMultipleBudgetDelete");
 

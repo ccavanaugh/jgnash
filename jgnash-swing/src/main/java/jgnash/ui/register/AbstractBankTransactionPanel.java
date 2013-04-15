@@ -61,7 +61,6 @@ import jgnash.ui.util.ValidationFactory;
  * 
  * @author Craig Cavanaugh
  * @author axnotizes
- *
  */
 public abstract class AbstractBankTransactionPanel extends AbstractTransactionPanel implements ActionListener, MessageListener {
 
@@ -191,7 +190,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
      */
     @Override
     protected boolean validateForm() {
-        if (amountField.getText().length() == 0) {
+        if (amountField.getText().isEmpty()) {
             ValidationFactory.showValidationError(rb.getString("Message.Error.Value"), amountField);
             return false;
         }

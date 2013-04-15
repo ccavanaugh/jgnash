@@ -146,7 +146,7 @@ class AccountOptions extends JPanel implements ActionListener, FocusListener {
     @Override
     public void focusLost(final FocusEvent e) {
         if (e.getSource() == accountSeparatorField) {
-            if (accountSeparatorField.getText().length() > 0) {
+            if (!accountSeparatorField.getText().isEmpty()) {
                 EngineFactory.getEngine(EngineFactory.DEFAULT).setAccountSeparator(accountSeparatorField.getText());
             } else {
                 accountSeparatorField.setText(EngineFactory.getEngine(EngineFactory.DEFAULT).getAccountSeparator());

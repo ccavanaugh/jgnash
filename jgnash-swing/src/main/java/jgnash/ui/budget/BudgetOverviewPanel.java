@@ -219,7 +219,7 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
                         }
 
                         // create components and columns and add
-                        if (icons.size() > 0) {
+                        if (!icons.isEmpty()) {
                             layout.appendColumn(ColumnSpec.decode("d"));
                             sparklinePanel.add(getLabel(groups.get(0), icons.get(0)), CC.xy(1, 1));
 

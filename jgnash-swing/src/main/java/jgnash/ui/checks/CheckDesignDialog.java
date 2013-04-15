@@ -67,7 +67,6 @@ import jgnash.util.Resource;
  * Check design dialog.
  *
  * @author Craig Cavanaugh
- *
  */
 public class CheckDesignDialog extends JDialog implements ActionListener, ListSelectionListener, FocusListener {
 
@@ -418,13 +417,13 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
         if (activeObject == null) {
             CheckObject o = new CheckObject();
 
-            if (nameField.getText().length() > 0) {
+            if (!nameField.getText().isEmpty()) {
                 o.setName(nameField.getText());
             }
-            if (xPosField.getText().length() > 0) {
+            if (!xPosField.getText().isEmpty()) {
                 o.setX(Float.parseFloat(xPosField.getText()));
             }
-            if (yPosField.getText().length() > 0) {
+            if (!yPosField.getText().isEmpty()) {
                 o.setY(Float.parseFloat(yPosField.getText()));
             }
             o.setType((CheckObjectType) typeCombo.getSelectedItem());
@@ -454,14 +453,14 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
     }
 
     private void updateHeight() {
-        if (heightField.getText().length() > 0) {
+        if (!heightField.getText().isEmpty()) {
             checkLayout.setCheckHeight(Float.parseFloat(heightField.getText()));
             previewPanel.repaint();
         }
     }
 
     private void updateCount() {
-        if (countField.getText().length() > 0) {
+        if (!countField.getText().isEmpty()) {
             layout.setNumChecks(Integer.parseInt(countField.getText()));
             previewPanel.repaint();
         }

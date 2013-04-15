@@ -151,7 +151,7 @@ public class OfxV1ToV2 {
 
                 line = line.trim();
 
-                if (line.length() > 0) {
+                if (!line.isEmpty()) {
                     strings.add(line);
                 }
 

@@ -115,7 +115,7 @@ public class ImportOfxAction extends AbstractEnabledAction {
             /* Preset the best match for the downloaded account */
             String accountNumber = parser.getBank().accountId;
 
-            if (accountNumber != null && accountNumber.length() > 0) {
+            if (accountNumber != null && !accountNumber.isEmpty()) {
                 match = OfxImport.matchAccount(parser.getBank());
             }
 

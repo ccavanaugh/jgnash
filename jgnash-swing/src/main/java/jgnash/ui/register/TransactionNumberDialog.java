@@ -51,7 +51,6 @@ import jgnash.util.Resource;
  * Displays a list of default user configurable items for transaction numbers
  *
  * @author Craig Cavanaugh
- *
  */
 public class TransactionNumberDialog extends JDialog implements ActionListener {
 
@@ -198,7 +197,7 @@ public class TransactionNumberDialog extends JDialog implements ActionListener {
     }
 
     private void addAction() {
-        if (entryField.getText().length() > 0) {
+        if (!entryField.getText().isEmpty()) {
             if (list.getSelectedIndex() >= 0) {
                 model.add(list.getSelectedIndex(), entryField.getText());
             } else {

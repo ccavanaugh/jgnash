@@ -132,7 +132,7 @@ public class Resource {
         }
         
         KeyStroke keyStroke = KeyStroke.getKeyStroke(value);
-        if (keyStroke == null && value != null && value.length() != 0) {
+        if (keyStroke == null && value != null && !value.isEmpty()) {
             logger.log(Level.WARNING, "The value ''{0}'' for key ''{1}'' is not valid.", new Object[]{value, key});
         }
         return keyStroke;

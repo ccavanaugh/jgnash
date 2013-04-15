@@ -109,7 +109,7 @@ public class GenericImport {
 
                     { // check for matching check number
                         String checkNumber = oTran.checkNumber;
-                        if (checkNumber != null && checkNumber.length() > 0) {
+                        if (checkNumber != null && !checkNumber.isEmpty()) {
                             if (tran.getNumber() != null && tran.getNumber().equals(checkNumber)) {
                                 oTran.setState(OfxTransaction.ImportState.EQUAL);
                                 break;
@@ -121,7 +121,7 @@ public class GenericImport {
                     { // check for matching fitid number
                         if (oTran instanceof OfxTransaction) {
                             String id = ((OfxTransaction) oTran).transactionID;
-                            if (id != null && id.length() > 0) {
+                            if (id != null && !id.isEmpty()) {
                                 if (tran.getFitid() != null && tran.getFitid().equals(id)) {
                                     oTran.setState(OfxTransaction.ImportState.EQUAL);
                                     break;

@@ -256,7 +256,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
             List<Account> list = getAccountList(AccountType.getAccountTypes(group));
 
             boolean ascendingSortOrder = true;
-            if (list.size() > 0) {
+            if (!list.isEmpty()) {
                 if (list.get(0).getAccountType() == AccountType.EXPENSE) {
                     ascendingSortOrder = false;
                 }

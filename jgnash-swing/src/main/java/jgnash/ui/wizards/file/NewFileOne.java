@@ -123,7 +123,7 @@ public class NewFileOne extends JPanel implements WizardPage, ActionListener {
 
     @Override
     public boolean isPageValid() {
-        return dbNameField.getText().length() > 0;
+        return !dbNameField.getText().isEmpty();
     }
 
     /**
@@ -173,7 +173,7 @@ public class NewFileOne extends JPanel implements WizardPage, ActionListener {
     }
 
     private void updateFileExtensionAction() {
-        if (dbNameField.getText().length() > 0) {
+        if (!dbNameField.getText().isEmpty()) {
 
             EventQueue.invokeLater(new Runnable() {
 
@@ -189,7 +189,7 @@ public class NewFileOne extends JPanel implements WizardPage, ActionListener {
     private void databaseNameAction() {
         String result = DatabasePathAction.databaseNameAction(this, DatabasePathAction.Type.NEW, typeCombo.getSelectedDataStoreType());
 
-        if (result.length() > 0) {
+        if (!result.isEmpty()) {
             dbNameField.setText(result);
             checkForOverwrite();
         }

@@ -42,8 +42,6 @@ public abstract class CommodityFormat {
 
     private static CommodityFormat fullFormat;
 
-    // private static CommodityFormat simpleFormat;
-
     private static final Map<CommodityNode, DecimalFormat> fullInstanceMap = new HashMap<>();
 
     private static final Map<CommodityNode, DecimalFormat> simpleInstanceMap = new HashMap<>();
@@ -163,7 +161,7 @@ public abstract class CommodityFormat {
         // required for some locale
         df.setMinimumFractionDigits(df.getMaximumFractionDigits());
 
-        if (node.getSuffix() != null && node.getSuffix().length() > 0) {
+        if (node.getSuffix() != null && !node.getSuffix().isEmpty()) {
             df.setPositiveSuffix(node.getSuffix() + df.getPositiveSuffix());
             df.setNegativeSuffix(node.getSuffix() + df.getNegativeSuffix());
         }
@@ -198,13 +196,6 @@ public abstract class CommodityFormat {
         return df;
     }
 
-    /*public static CommodityFormat getSimpleFormat() {
-        if (simpleFormat != null) {
-            return simpleFormat;
-        }
-        return simpleFormat = new SimpleFormat();
-    }*/
-
     public static synchronized CommodityFormat getFullFormat() {
         if (fullFormat != null) {
             return fullFormat;
@@ -231,16 +222,6 @@ public abstract class CommodityFormat {
             return null;
         }
     }
-
-    /*private static class SimpleFormat extends CommodityFormat {
-        @Override
-        public String format(final BigDecimal value, final CommodityNode node) {
-            if (value != null) {
-                return getShortNumberFormat(node).format(value.doubleValue());
-            }
-            return null;
-        }
-    }*/
 
     private static class CommodityListener implements MessageListener {
 

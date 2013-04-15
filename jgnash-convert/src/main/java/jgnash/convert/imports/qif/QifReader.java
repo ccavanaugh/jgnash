@@ -26,7 +26,6 @@ import java.io.Reader;
  * a QIF file
  *
  * @author Craig Cavanaugh
- *
  */
 class QifReader extends LineNumberReader {
 
@@ -59,7 +58,7 @@ class QifReader extends LineNumberReader {
             if (peek != null) {
                 peek = peek.trim();
                 reset();
-                if (peek.length() == 0) {
+                if (peek.isEmpty()) {
                     readLine(); // eat the empty line
                     if (debug) {
                         System.out.println("*EMPTY LINE*");
@@ -81,7 +80,7 @@ class QifReader extends LineNumberReader {
                 if (debug) {
                     System.out.println("Line " + getLineNumber() + ": " + line);
                 }
-                if (line.length() > 0) {
+                if (!line.isEmpty()) {
                     return line;
                 }
                 if (debug) {

@@ -45,7 +45,6 @@ import jgnash.engine.CommodityNode;
  * operators, decimals, and locale specific numerical grouping separators.
  *
  * @author Craig Cavanaugh
- *
  */
 public class JFloatField extends JTextFieldEx {
 
@@ -193,7 +192,7 @@ public class JFloatField extends JTextFieldEx {
     }
 
     public BigDecimal getDecimal() {
-        if (getText().length() > 0) {
+        if (!getText().isEmpty()) {
             try {
                 return new BigDecimal(eval());
             } catch (NumberFormatException e) {
@@ -230,7 +229,7 @@ public class JFloatField extends JTextFieldEx {
     String eval() {
         String text = getText();
 
-        if (text.length() == 0) {
+        if (text.isEmpty()) {
             return "";
         }
 
@@ -348,7 +347,7 @@ public class JFloatField extends JTextFieldEx {
                     @Override
                     public void run() {
                         String t = eval();
-                        if (t.length() > 0) {
+                        if (!t.isEmpty()) {
                             // round the value to scale
                             setDecimal(new BigDecimal(t).setScale(scale, BigDecimal.ROUND_HALF_UP));
                         }

@@ -44,6 +44,8 @@ import javax.swing.JTextField;
 
 /**
  * Dialog to change credentials of a database
+ *
+ * @author Craig Cavanaugh
  */
 public class ChangeDatabasePasswordDialog extends JDialog implements ActionListener {
 
@@ -113,7 +115,7 @@ public class ChangeDatabasePasswordDialog extends JDialog implements ActionListe
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == fileButton) {
             String file = DatabasePathAction.databaseNameAction(this, DatabasePathAction.Type.OPEN);
-            if (file.length() > 0) {
+            if (!file.isEmpty()) {
                 fileField.setText(file);
             }
         } else if (e.getSource() == cancelButton) {

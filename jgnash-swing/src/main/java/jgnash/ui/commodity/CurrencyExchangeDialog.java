@@ -339,7 +339,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
 
     private boolean validateForm() {
 
-        if (rateField.getText().length() == 0) {
+        if (rateField.getText().isEmpty()) {
             return false;
         }
 
@@ -347,7 +347,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
             return false;
         }
 
-        return dateField.getDateField().getText().length() != 0;
+        return !dateField.getDateField().getText().isEmpty();
 
     }
 

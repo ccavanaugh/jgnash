@@ -62,7 +62,7 @@ public class ImportDialog extends WizardDialog {
                 Preferences pref = Preferences.userNodeForPackage(ImportDialog.class);
                 String lastFile = pref.get(LAST_FILE, "");
 
-                if (lastFile.length() > 0) {
+                if (!lastFile.isEmpty()) {
                     d.setSetting(ImportDialog.Settings.IMPORT_FILE, lastFile);
                 }
 

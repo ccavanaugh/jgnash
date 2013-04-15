@@ -46,7 +46,6 @@ import jgnash.util.Resource;
  * New file wizard panel
  *
  * @author Craig Cavanaugh
- *
  */
 public class ImportZero extends JPanel implements WizardPage, ActionListener {
 
@@ -144,7 +143,7 @@ public class ImportZero extends JPanel implements WizardPage, ActionListener {
     private void databaseNameAction() {
         String result = ImportPathAction.databaseNameAction(this);
 
-        if (result.length() > 0) {
+        if (!result.isEmpty()) {
             fileImportField.setText(result);
             validateFile();
         }

@@ -164,7 +164,7 @@ final class BudgetWizardDialog extends JDialog implements ActionListener {
         if (e.getSource() == cancelButton) {
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         } else if (e.getSource() == okButton) {
-            if (budgetNameField.getText().length() > 0) {
+            if (!budgetNameField.getText().isEmpty()) {
 
                 BudgetPeriod period =  (BudgetPeriod)budgetPeriodCombo.getSelectedItem();
 

@@ -34,9 +34,7 @@ import javax.swing.JTextField;
  * permanent. That must be done using the options configuration for http connect
  *
  * @author Craig Cavanaugh
- *
  */
-
 public class NetworkAuthenticator extends Authenticator {
 
     public static final String NODEHTTP = "/jgnash/http";
@@ -123,7 +121,7 @@ public class NetworkAuthenticator extends Authenticator {
         // get the password
         String _pass = auth.get(HTTPPASS, null);
         if (_pass != null) {
-            if (_pass.length() > 0) {
+            if (!_pass.isEmpty()) {
                 pass = _pass.toCharArray();
             }
         }

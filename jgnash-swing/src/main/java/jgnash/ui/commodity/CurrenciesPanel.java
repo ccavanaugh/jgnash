@@ -50,7 +50,6 @@ import jgnash.util.Resource;
  * Creates a panel for adding and removing currencies. A static method is provided for displaying the panel in a dialog.
  * 
  * @author Craig Cavanaugh
- *
  */
 public class CurrenciesPanel extends JPanel implements ActionListener {
 
@@ -153,7 +152,7 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
     }
 
     private void customAction() {
-        if (customField.getText().length() > 0) {
+        if (!customField.getText().isEmpty()) {
 
             if (engine.getCurrency(customField.getText()) != null) {
                 ValidationFactory.showValidationError(rb.getString("Message.Error.Duplicate"), customField);

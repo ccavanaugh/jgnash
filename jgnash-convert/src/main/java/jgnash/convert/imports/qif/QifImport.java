@@ -46,7 +46,6 @@ import jgnash.convert.imports.ImportUtils;
  * advanced imports
  * 
  * @author Craig Cavanaugh
- *
  */
 public class QifImport {
 
@@ -372,7 +371,7 @@ public class QifImport {
         Account acc = null;
 
         // nulls can happen and don't search on an empty category
-        if (category != null && category.length() > 0) {
+        if (category != null && !category.isEmpty()) {
             String name = category;
 
             if (isAccount(name)) { // account

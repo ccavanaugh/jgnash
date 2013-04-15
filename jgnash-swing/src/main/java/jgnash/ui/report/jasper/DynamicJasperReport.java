@@ -74,7 +74,6 @@ import net.sf.jasperreports.engine.data.JRTableModelDataSource;
  * Abstract report class that must be extended to create a report
  * 
  * @author Craig Cavanaugh
- *
  */
 public abstract class DynamicJasperReport {
 
@@ -450,7 +449,7 @@ public abstract class DynamicJasperReport {
                 }
 
                 // adds a group footer label if it is not null or zero length
-                if (getGroupFooterLabel() != null && getGroupFooterLabel().length() > 0) {
+                if (getGroupFooterLabel() != null && !getGroupFooterLabel().isEmpty()) {
                     DJGroupLabel label = new DJGroupLabel(getGroupFooterLabel(), getTypeFooterStyle(), LabelPosition.LEFT);
                     gb.setFooterLabel(label);
                 }

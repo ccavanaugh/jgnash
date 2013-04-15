@@ -180,7 +180,7 @@ class NetworkOptions extends JPanel implements ActionListener, FocusListener {
 
         NetworkAuthenticator.setPort(port);
 
-        if (portField.getText().length() != 0 && port > 0) {
+        if (!portField.getText().isEmpty() && port > 0) {
             System.getProperties().put("http.proxyPort", port);
         } else {
             System.getProperties().remove("http.proxyPort");
@@ -192,7 +192,7 @@ class NetworkOptions extends JPanel implements ActionListener, FocusListener {
 
         NetworkAuthenticator.setHost(host);
 
-        if (host.length() != 0) {
+        if (!host.isEmpty()) {
             System.getProperties().put("http.proxyHost", host);
         } else {
             System.getProperties().remove("http.proxyHost");

@@ -290,7 +290,7 @@ class PrintableCheckLayout implements Printable {
         float x = object.getX();
         float y = object.getY() + offset;
 
-        if (memo != null && memo.length() > 0) {
+        if (memo != null && !memo.isEmpty()) {
             text = new TextLayout(memo, font, frc);
             text.draw(g2, x, y);
         }
@@ -329,7 +329,7 @@ class PrintableCheckLayout implements Printable {
         float payeeX = object.getX();
         float payeeY = object.getY() + offset;
 
-        if (payee != null && payee.length() > 0) {
+        if (payee != null && !payee.isEmpty()) {
             TextLayout tpayee = new TextLayout(payee, font, frc);
             tpayee.draw(g2, payeeX, payeeY);
         }

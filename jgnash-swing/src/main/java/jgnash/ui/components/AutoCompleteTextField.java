@@ -31,7 +31,6 @@ import jgnash.ui.components.autocomplete.AutoCompleteModel;
  * An extended JTextField that performs text auto completion
  * 
  * @author Craig Cavanaugh
- *
  */
 @SuppressWarnings({ "RedundantStringConstructorCall" })
 public class AutoCompleteTextField extends JTextFieldEx {
@@ -51,7 +50,7 @@ public class AutoCompleteTextField extends JTextFieldEx {
             @Override
             public void focusLost(final FocusEvent e) {
                 String text = getText();
-                if (text != null && text.length() > 0) {
+                if (text != null && !text.isEmpty()) {
                     setCaretPosition(text.length());
                 }
             }

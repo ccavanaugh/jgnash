@@ -342,7 +342,7 @@ public final class ActionParser extends DefaultHandler {
 
             String accel = aa.getValue(ACCEL_INDEX);
 
-            if (accel != null && accel.trim().length() > 0) {
+            if (accel != null && !accel.trim().isEmpty()) {
                 KeyStroke stroke = rb.getKeyStroke(accel);
                 if (stroke != null) {
                     action.putValue(Action.ACCELERATOR_KEY, stroke);

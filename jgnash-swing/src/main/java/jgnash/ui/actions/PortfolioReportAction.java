@@ -32,7 +32,6 @@ import jgnash.ui.util.builder.Action;
  * UI Action to run the portfolio report
  *
  * @author Craig Cavanaugh
- *
  */
 @Action("report-portfolio-command")
 public class PortfolioReportAction extends AbstractEnabledAction {
@@ -96,7 +95,7 @@ public class PortfolioReportAction extends AbstractEnabledAction {
         Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
         if (e != null) {
-            return e.getInvestmentAccountList().size() > 0;
+            return !e.getInvestmentAccountList().isEmpty();
         }
         
         return false;

@@ -232,7 +232,7 @@ public class PayeePieChart {
                 String[] list = POUND_DELIMITER_PATTERN.split(pref.get(FILTERTAG + newAccount.hashCode(), ""));
                 filterList.clear();
                 for (String filter : list) {
-                    if (filter.length() > 0) {
+                    if (!filter.isEmpty()) {
                         //System.out.println("Adding filter: #" + filter + "#");
                         filterList.add(filter);
                     }
@@ -290,7 +290,7 @@ public class PayeePieChart {
             public void actionPerformed(final ActionEvent e) {
                 String newFilter = txtAddFilter.getText();
                 filterList.remove(newFilter);
-                if (newFilter.length() > 0) {
+                if (!newFilter.isEmpty()) {
                     filterList.add(newFilter);
                     filtersChanged = true;
                     txtAddFilter.setText("");
@@ -303,7 +303,7 @@ public class PayeePieChart {
 
             @Override
             public void actionPerformed(final ActionEvent e) {
-                if (filterList.size() > 0) {
+                if (!filterList.isEmpty()) {
                     String filter = (String) filterCombo.getSelectedItem();
                     filterList.remove(filter);
                     filtersChanged = true;

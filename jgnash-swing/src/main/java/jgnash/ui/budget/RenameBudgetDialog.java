@@ -44,7 +44,6 @@ import jgnash.util.Resource;
  * RenameBudgetDialog is for changing the name of a budget
  *
  * @author Craig Cavanaugh
- *
  */
 class RenameBudgetDialog extends JDialog implements ActionListener {
     private static final long serialVersionUID = 1L;
@@ -117,7 +116,7 @@ class RenameBudgetDialog extends JDialog implements ActionListener {
         if (e.getSource() == cancelButton) {
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         } else if (e.getSource() == okButton) {
-            if (budgetNameField.getText().length() > 0) {
+            if (!budgetNameField.getText().isEmpty()) {
                 budget.setName(budgetNameField.getText());
                 EngineFactory.getEngine(EngineFactory.DEFAULT).updateBudget(budget);
                 dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
