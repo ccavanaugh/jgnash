@@ -17,8 +17,6 @@
  */
 package jgnash.engine;
 
-
-import jgnash.engine.jpa.Database;
 import jgnash.engine.jpa.JpaConfiguration;
 import jgnash.engine.jpa.JpaHsqlDataStore;
 import org.junit.After;
@@ -71,7 +69,7 @@ public class JpaHsqlTests {
     @Test
     @SuppressWarnings("unchecked")
     public void simpleAccountTest() {
-        Properties properties = JpaConfiguration.getLocalProperties(Database.HSQLDB, fileName, new char[]{}, false);
+        Properties properties = JpaConfiguration.getLocalProperties(DataStoreType.HSQL_DATABASE, fileName, new char[]{}, false);
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", properties);
 
@@ -153,7 +151,7 @@ public class JpaHsqlTests {
     public void transactionTest() {
         final String ACC_NAME = "Test Tran";
 
-        Properties properties = JpaConfiguration.getLocalProperties(Database.HSQLDB, fileName, new char[]{}, false);
+        Properties properties = JpaConfiguration.getLocalProperties(DataStoreType.HSQL_DATABASE, fileName, new char[]{}, false);
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", properties);
 
@@ -209,7 +207,7 @@ public class JpaHsqlTests {
 
     @Test
     public void securityNodeTest() {
-        Properties properties = JpaConfiguration.getLocalProperties(Database.HSQLDB, fileName, new char[]{}, false);
+        Properties properties = JpaConfiguration.getLocalProperties(DataStoreType.HSQL_DATABASE, fileName, new char[]{}, false);
 
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", properties);
 

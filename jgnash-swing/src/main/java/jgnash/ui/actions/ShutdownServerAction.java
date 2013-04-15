@@ -19,7 +19,6 @@ package jgnash.ui.actions;
 
 import jgnash.message.MessageBus;
 import jgnash.ui.UIApplication;
-import jgnash.ui.components.ChangeDatabasePasswordDialog;
 import jgnash.ui.components.RemoteConnectionDialog;
 import jgnash.ui.util.builder.Action;
 

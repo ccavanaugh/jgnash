@@ -94,13 +94,17 @@ public class JpaNetworkServer {
         }
     }
 
+    /*private void run() {
+
+    }*/
+
     private void startH2Server(final String fileName, final int port, final char[] password) {
 
         org.h2.tools.Server server = null;
 
         stop = false;
 
-        // Start the H2 server
+        // Start the H2_DATABASE server
         try {
             boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty("ssl"));
 
@@ -121,7 +125,7 @@ public class JpaNetworkServer {
             Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, e.getMessage(), e);
         }
 
-        final Engine engine = createEngine(Database.H2, fileName, port, password);
+        final Engine engine = createEngine(DataStoreType.H2_DATABASE, fileName, port, password);
 
         if (engine != null) {
 
@@ -199,7 +203,7 @@ public class JpaNetworkServer {
 
         hsqlServer.start();
 
-        final Engine engine = createEngine(Database.HSQLDB, fileName, port, password);
+        final Engine engine = createEngine(DataStoreType.HSQL_DATABASE, fileName, port, password);
 
         if (engine != null) {
 
@@ -275,7 +279,7 @@ public class JpaNetworkServer {
         this.notify();
     }
 
-    private Engine createEngine(final Database database, final String fileName, final int port, final char[] password) {
+    private Engine createEngine(final DataStoreType database, final String fileName, final int port, final char[] password) {
 
         Properties properties = JpaConfiguration.getClientProperties(database, fileName, "localhost", port, password);
 

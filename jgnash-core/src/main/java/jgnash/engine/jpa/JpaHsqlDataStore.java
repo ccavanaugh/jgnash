@@ -19,6 +19,7 @@ package jgnash.engine.jpa;
 
 import jgnash.engine.Config;
 import jgnash.engine.DataStore;
+import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
@@ -134,7 +135,7 @@ public class JpaHsqlDataStore implements DataStore {
 
     @Override
     public Engine getClientEngine(final String host, final int port, final char[] password, final String dataBasePath) {
-        Properties properties = JpaConfiguration.getClientProperties(Database.HSQLDB, dataBasePath, host, port, password);
+        Properties properties = JpaConfiguration.getClientProperties(DataStoreType.HSQL_DATABASE, dataBasePath, host, port, password);
 
         Engine engine = null;
 
@@ -160,7 +161,7 @@ public class JpaHsqlDataStore implements DataStore {
     @Override
     public Engine getLocalEngine(final String fileName, final String engineName, final char[] password) {
 
-        Properties properties = JpaConfiguration.getLocalProperties(Database.HSQLDB, fileName, password, false);
+        Properties properties = JpaConfiguration.getLocalProperties(DataStoreType.HSQL_DATABASE, fileName, password, false);
 
         Engine engine = null;
 
@@ -227,7 +228,7 @@ public class JpaHsqlDataStore implements DataStore {
         // Create the empty database with default user and an empty password
         initEmptyDatabase(file.getAbsolutePath());
 
-        Properties properties = JpaConfiguration.getLocalProperties(Database.HSQLDB, file.getAbsolutePath(), new char[]{}, false);
+        Properties properties = JpaConfiguration.getLocalProperties(DataStoreType.HSQL_DATABASE, file.getAbsolutePath(), new char[]{}, false);
 
         EntityManagerFactory factory = null;
         EntityManager em = null;
@@ -267,7 +268,7 @@ public class JpaHsqlDataStore implements DataStore {
     public static float getFileVersion(final File file, final char[] password) throws Exception {
         float fileVersion = 0;
 
-        Properties properties = JpaConfiguration.getLocalProperties(Database.HSQLDB, file.getAbsolutePath(), password, false);
+        Properties properties = JpaConfiguration.getLocalProperties(DataStoreType.HSQL_DATABASE, file.getAbsolutePath(), password, false);
 
         EntityManagerFactory factory = null;
         EntityManager em = null;

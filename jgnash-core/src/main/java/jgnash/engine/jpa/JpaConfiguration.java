@@ -17,6 +17,7 @@
  */
 package jgnash.engine.jpa;
 
+import jgnash.engine.DataStoreType;
 import jgnash.util.FileUtils;
 
 import java.util.Properties;
@@ -37,17 +38,17 @@ public class JpaConfiguration {
     public static final String HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
     public static final String DEFAULT_USER = "JGNASH";
 
-    private static Properties getBaseProperties(final Database database) {
+    private static Properties getBaseProperties(final DataStoreType database) {
         Properties properties = System.getProperties();
 
         properties.setProperty(HIBERNATE_HBM2DDL_AUTO, "update");
 
         switch (database) {
-            case H2:
+            case H2_DATABASE:
                 properties.setProperty(JAVAX_PERSISTENCE_JDBC_DRIVER, "org.h2.Driver");
                 properties.setProperty(HIBERNATE_DIALECT, "org.hibernate.dialect.H2Dialect");
                 break;
-            case HSQLDB:
+            case HSQL_DATABASE:
                 properties.setProperty(JAVAX_PERSISTENCE_JDBC_DRIVER, "org.hsqldb.jdbcDriver");
                 properties.setProperty(HIBERNATE_DIALECT, "org.hibernate.dialect.HSQLDialect");
         }
@@ -55,11 +56,11 @@ public class JpaConfiguration {
         return properties;
     }
 
-    public static Properties getLocalProperties(final Database database, final String fileName, final char[] password, final boolean readOnly) {
+    public static Properties getLocalProperties(final DataStoreType database, final String fileName, final char[] password, final boolean readOnly) {
         StringBuilder urlBuilder = new StringBuilder();
 
         switch (database) {
-            case H2:
+            case H2_DATABASE:
                 urlBuilder.append("jdbc:h2:file:");
 
                 urlBuilder.append(FileUtils.stripFileExtension(fileName));
@@ -74,7 +75,7 @@ public class JpaConfiguration {
                     urlBuilder.append(";ACCESS_MODE_DATA=r");
                 }
                 break;
-            case HSQLDB:
+            case HSQL_DATABASE:
                 urlBuilder.append("jdbc:hsqldb:file:");
                 urlBuilder.append(FileUtils.stripFileExtension(fileName));
 
@@ -101,14 +102,14 @@ public class JpaConfiguration {
     /**
      * Generates and a JPA properties to connect to a remote database
      *
-     * @param database Database type
-     * @param fileName remote file to connect to, ignored for HSQLDB connections
+     * @param database DataStoreType type
+     * @param fileName remote file to connect to, ignored for HSQL_DATABASE connections
      * @param host remote host
      * @param port remote port
      * @param password database password
      * @return   JPA properties
      */
-    public static Properties getClientProperties(final Database database, final String fileName, final String host, final int port, final char[] password) {
+    public static Properties getClientProperties(final DataStoreType database, final String fileName, final String host, final int port, final char[] password) {
 
         StringBuilder urlBuilder = new StringBuilder();
 
@@ -117,7 +118,7 @@ public class JpaConfiguration {
         boolean useSSL = Boolean.parseBoolean(properties.getProperty("ssl"));
 
         switch (database) {
-            case H2:
+            case H2_DATABASE:
                 urlBuilder.append("jdbc:h2");
 
                 if (useSSL) {
@@ -134,7 +135,7 @@ public class JpaConfiguration {
 
                 //urlBuilder.append(";DB_CLOSE_DELAY=20");
                 break;
-            case HSQLDB:
+            case HSQL_DATABASE:
                 urlBuilder.append("jdbc:hsqldb:hsql://");
                 urlBuilder.append(host).append(":").append(port).append("/jgnash"); // needs a public alias
 
@@ -155,7 +156,7 @@ public class JpaConfiguration {
         return properties;
     }
 
-    /*public static boolean changeUserAndPassword(final String fileName, final char[] password, final char[] newPassword, final Database database) {
+    /*public static boolean changeUserAndPassword(final String fileName, final char[] password, final char[] newPassword, final DataStoreType database) {
         boolean result = false;
 
         //if (!isDatabaseLocked(fileName)) {

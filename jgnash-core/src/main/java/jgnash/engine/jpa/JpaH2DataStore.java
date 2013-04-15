@@ -19,6 +19,7 @@ package jgnash.engine.jpa;
 
 import jgnash.engine.Config;
 import jgnash.engine.DataStore;
+import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
@@ -80,7 +81,7 @@ public class JpaH2DataStore implements DataStore {
 
     @Override
     public Engine getClientEngine(final String host, final int port, final char[] password, final String dataBasePath) {
-        Properties properties = JpaConfiguration.getClientProperties(Database.H2, dataBasePath, host, port, password);
+        Properties properties = JpaConfiguration.getClientProperties(DataStoreType.H2_DATABASE, dataBasePath, host, port, password);
 
         Engine engine = null;
 
@@ -113,7 +114,7 @@ public class JpaH2DataStore implements DataStore {
 
     @Override
     public Engine getLocalEngine(final String fileName, final String engineName, final char[] password) {
-        Properties properties = JpaConfiguration.getLocalProperties(Database.H2, fileName, password, false);
+        Properties properties = JpaConfiguration.getLocalProperties(DataStoreType.H2_DATABASE, fileName, password, false);
 
         Engine engine = null;
 
@@ -170,7 +171,7 @@ public class JpaH2DataStore implements DataStore {
             }
         }
 
-        Properties properties = JpaConfiguration.getLocalProperties(Database.H2, file.getAbsolutePath(), new char[]{}, false);
+        Properties properties = JpaConfiguration.getLocalProperties(DataStoreType.H2_DATABASE, file.getAbsolutePath(), new char[]{}, false);
 
         EntityManagerFactory factory = null;
         EntityManager em = null;
@@ -208,7 +209,7 @@ public class JpaH2DataStore implements DataStore {
     public static float getFileVersion(final File file, final char[] password) throws Exception {
         float fileVersion = 0;
 
-        Properties properties = JpaConfiguration.getLocalProperties(Database.H2, file.getAbsolutePath(), password, true);
+        Properties properties = JpaConfiguration.getLocalProperties(DataStoreType.H2_DATABASE, file.getAbsolutePath(), password, true);
 
         EntityManagerFactory factory = null;
         EntityManager em = null;
@@ -248,7 +249,7 @@ public class JpaH2DataStore implements DataStore {
 
         if (!isDatabaseLocked(fileName)) {
 
-            Properties properties = JpaConfiguration.getLocalProperties(Database.H2, fileName, password, false);
+            Properties properties = JpaConfiguration.getLocalProperties(DataStoreType.H2_DATABASE, fileName, password, false);
 
             String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
