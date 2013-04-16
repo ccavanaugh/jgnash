@@ -61,6 +61,8 @@ public class JpaNetworkServer {
 
     private EntityManager em;
 
+    private EntityManagerFactory factory;
+
     public static final int DEFAULT_PORT = 5300;
 
     public static final String DEFAULT_PASSWORD = "";
@@ -160,6 +162,8 @@ public class JpaNetworkServer {
 
             em.close();
 
+            factory.close();
+
             result = true;
         }
         return result;
@@ -234,7 +238,7 @@ public class JpaNetworkServer {
         Engine engine = null;
 
         try {
-            EntityManagerFactory factory = Persistence.createEntityManagerFactory("jgnash", properties);
+            factory = Persistence.createEntityManagerFactory("jgnash", properties);
 
             em = factory.createEntityManager();
 
