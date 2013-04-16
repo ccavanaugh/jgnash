@@ -61,7 +61,9 @@ public class JpaNetworkServer {
 
     private EntityManager em;
 
-    public final static int DEFAULT_PORT = 5300;
+    public static final int DEFAULT_PORT = 5300;
+
+    public static final String DEFAULT_PASSWORD = "";
 
     public synchronized void startServer(final String fileName, final int port, final char[] password) {
 

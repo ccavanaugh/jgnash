@@ -33,6 +33,7 @@ import javax.swing.JOptionPane;
 
 import jgnash.engine.Engine;
 import jgnash.engine.jpa.JpaNetworkServer;
+import jgnash.message.MessageBus;
 import jgnash.net.NetworkAuthenticator;
 import jgnash.net.security.AbstractYahooParser;
 import jgnash.ui.MainFrame;
@@ -74,11 +75,14 @@ public final class Main {
     @Option(name = "-portableFile", usage = "Location for portable file")
     private String portableFile;
 
-    @Option(name = "-port", usage = "Network port; default is 5300")
+    @Option(name = "-shutdown", usage = "Issues a shutdown request to a server")
+    private boolean shutdown;
+
+    @Option(name = "-port", usage = "Network port server is running on; default is 5300")
     private int port;
 
-    @Option(name = "-client", usage = "Server host name or address")
-    private String client;
+    @Option(name = "-host", usage = "Server host name or address")
+    private String hostName;
 
     @Option(name = "-file", usage = "File to load at start")
     private File file;
@@ -100,8 +104,6 @@ public final class Main {
 
     @Option(name = "-enableHangDetect", usage = "Enable hang detection on the EDT")
     private static boolean hangDetect;
-    
-    final private static String DEFAULT_PASSWORD = "";
 
     public static boolean checkEDT() {
         return enableEDT;
@@ -214,9 +216,6 @@ public final class Main {
         try {
             parser.parseArgument(args);
 
-            // Set as a system property
-            System.getProperties().put("ssl", Boolean.toString(ssl));
-
             /* handle a file name passed in as an argument without use of the -file argument
                assumed behavior for windows users */
             if (args.length == 1 && args[0].charAt(0) != '-') {                           
@@ -229,16 +228,27 @@ public final class Main {
                 }
             }
 
+            // Set ssl as a system property
+            System.getProperties().put("ssl", Boolean.toString(ssl));
+
             if (port <= 0) {
                 port = JpaNetworkServer.DEFAULT_PORT;
             }
             
             if (password == null) {
-                password = DEFAULT_PASSWORD;
+                password = JpaNetworkServer.DEFAULT_PASSWORD;
             }
 
-            /* Dump the registry settings if requested */
-            if (uninstall) {
+            /* If a shutdown request is found, it trumps any other commandline options */
+            if (shutdown) {
+                String serverName = "localhost";
+
+                if (hostName != null) {
+                    serverName = hostName;
+                }
+
+                MessageBus.shutDownRemoteServer(serverName, port + 1, password.toCharArray());
+            } else if (uninstall) { /* Dump the registry settings if requested */
                 deleteUserPreferences();
             } else if (serverFile != null) {
                 try {
@@ -285,8 +295,8 @@ public final class Main {
 
                 setupNetworking();
 
-                if (client != null) {
-                    new UIApplication(client, port, password.toCharArray());
+                if (hostName != null) {
+                    new UIApplication(hostName, port, password.toCharArray());
                 } else if (file != null && file.exists()) {
                     new UIApplication(file, password.toCharArray());
                 } else {
