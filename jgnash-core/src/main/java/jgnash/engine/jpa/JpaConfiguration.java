@@ -31,11 +31,12 @@ import java.util.logging.Logger;
 public class JpaConfiguration {
 
     public static final String JAVAX_PERSISTENCE_JDBC_URL = "javax.persistence.jdbc.url";
-    public static final String JAVAX_PERSISTENCE_JDBC_DRIVER = "javax.persistence.jdbc.driver";
-    public static final String JAVAX_PERSISTENCE_JDBC_USER = "javax.persistence.jdbc.user";
-    public static final String JAVAX_PERSISTENCE_JDBC_PASSWORD = "javax.persistence.jdbc.password";
-    public static final String HIBERNATE_DIALECT = "hibernate.dialect";
-    public static final String HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
+    private static final String JAVAX_PERSISTENCE_JDBC_DRIVER = "javax.persistence.jdbc.driver";
+    private static final String JAVAX_PERSISTENCE_JDBC_USER = "javax.persistence.jdbc.user";
+    private static final String JAVAX_PERSISTENCE_JDBC_PASSWORD = "javax.persistence.jdbc.password";
+    private static final String HIBERNATE_DIALECT = "hibernate.dialect";
+    private static final String HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
+
     public static final String DEFAULT_USER = "JGNASH";
 
     private static Properties getBaseProperties(final DataStoreType database) {

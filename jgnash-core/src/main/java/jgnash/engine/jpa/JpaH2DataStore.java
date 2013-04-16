@@ -100,7 +100,7 @@ public class JpaH2DataStore implements DataStore {
         return engine;
     }
 
-    public static boolean isDatabaseLocked(final String fileName) {
+    private static boolean isDatabaseLocked(final String fileName) {
         boolean locked = false;
 
         String lockFile = FileUtils.stripFileExtension(fileName) + ".lock.db";

@@ -38,7 +38,7 @@ import java.util.prefs.Preferences;
 public class ExportTransactionsAction {
     private static final String CURRENT_DIR = "cwd";
 
-    public static final String OFX = "ofx";
+    private static final String OFX = "ofx";
 
     private ExportTransactionsAction() {}
 

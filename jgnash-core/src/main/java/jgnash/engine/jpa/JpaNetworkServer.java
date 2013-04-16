@@ -59,7 +59,7 @@ public class JpaNetworkServer {
 
     private volatile boolean dirty = false;
 
-    protected EntityManager em;
+    private EntityManager em;
 
     public final static int DEFAULT_PORT = 5300;
 

@@ -26,7 +26,7 @@ import java.io.Writer;
  *
  * @author Craig Cavanaugh
  */
-public class AutoCloseableCSVWriter extends CSVWriter {
+class AutoCloseableCSVWriter extends CSVWriter {
 
     public AutoCloseableCSVWriter(final Writer writer) {
         super(writer);

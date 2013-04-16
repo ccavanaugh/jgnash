@@ -57,9 +57,8 @@ import jgnash.util.Resource;
  *
  * @author Craig Cavanaugh
  * @author Don Brown
- *
  */
-public class SplitsDialog extends JDialog implements ListSelectionListener, ActionListener {
+class SplitsDialog extends JDialog implements ListSelectionListener, ActionListener {
 
     private final Resource rb = Resource.get();
 

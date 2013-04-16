@@ -255,7 +255,7 @@ public class RegisterPanel extends AbstractRegisterPanel implements ActionListen
     }
 
     @Override
-    public Account getAccount() {
+    protected Account getAccount() {
         return account;
     }
 

@@ -57,7 +57,7 @@ public class JpaHsqlDataStore implements DataStore {
 
     public static final String FILE_EXT = "script";
 
-    public static final String LOCK_EXT = ".lck";
+    private static final String LOCK_EXT = ".lck";
 
     private EntityManager em;
 

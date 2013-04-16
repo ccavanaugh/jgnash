@@ -37,7 +37,7 @@ public abstract class AbstractCommodityComboBox<T extends CommodityNode> extends
 
     final SortedComboBoxModel<T> model = new SortedComboBoxModel<>();
 
-    protected ExecutorService threadPool = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
+    private final ExecutorService threadPool = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
     @SuppressWarnings("unchecked")
 	AbstractCommodityComboBox() {

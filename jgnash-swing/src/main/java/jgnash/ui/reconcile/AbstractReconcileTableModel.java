@@ -53,7 +53,7 @@ import jgnash.util.Resource;
  * Model initializes itself by grabbing all of the transactions from the account and then filters for transactions that
  * have not been reconciled and are after the startDate(inclusive). Any new transactions added to the account that are
  * after the start date (reconciled or not) will be added to the list of transactions shown.
- * 
+ *
  * @author Craig Cavanaugh
  */
 public abstract class AbstractReconcileTableModel extends AbstractTableModel implements MessageListener, PackableTableModel {
@@ -68,12 +68,12 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
 
     private final Resource rb = Resource.get();
 
-    private final String[] cNames = { rb.getString("Column.Clr"), rb.getString("Column.Date"), rb.getString("Column.Num"),
-                    rb.getString("Column.Payee"), rb.getString("Column.Amount") };
+    private final String[] cNames = {rb.getString("Column.Clr"), rb.getString("Column.Date"), rb.getString("Column.Num"),
+            rb.getString("Column.Payee"), rb.getString("Column.Amount")};
 
-    private final Class<?>[] cClass = { String.class, String.class, String.class, String.class, BigDecimal.class };
+    private final Class<?>[] cClass = {String.class, String.class, String.class, String.class, BigDecimal.class};
 
-    private final int[] columnWidths = { 0, 0, 0, 99, 0 };
+    private final int[] columnWidths = {0, 0, 0, 99, 0};
 
     private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
 
@@ -122,7 +122,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
     /**
      * Returns the number of columns in the model. A <code>JTable</code> uses this method to determine how many columns
      * it should create and display by default.
-     * 
+     *
      * @return the number of columns in the model
      * @see #getRowCount
      */
@@ -144,7 +144,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
     /**
      * Returns the number of rows in the model. A <code>JTable</code> uses this method to determine how many rows it
      * should display. This method should be quick, as it is called frequently during rendering.
-     * 
+     *
      * @return the number of rows in the model
      * @see #getColumnCount
      */
@@ -161,8 +161,8 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
 
     /**
      * Returns the value for the cell at <code>columnIndex</code> and <code>rowIndex</code>.
-     * 
-     * @param rowIndex the row whose value is to be queried
+     *
+     * @param rowIndex    the row whose value is to be queried
      * @param columnIndex the column whose value is to be queried
      * @return the value Object at the specified cell
      */
@@ -324,25 +324,21 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
     }
 
     void commitChanges() {
-
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-
-        RecTransaction[] transactions = null;
+        List<RecTransaction> transactions = null;
 
         // create a copy of the list to prevent concurrent modification errors
         rwl.readLock().lock();
         try {
-            transactions = list.toArray(new RecTransaction[list.size()]);
+            transactions = new ArrayList<>(list);
         } finally {
             rwl.readLock().unlock();
         }
 
-        if (transactions != null) {
-            for (RecTransaction transaction : transactions) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-                if (transaction.getReconciled() != transaction.transaction.getReconciled(account)) {
-                    engine.setTransactionReconciled(transaction.transaction, account, transaction.getReconciled());
-                }
+        for (RecTransaction transaction : transactions) {
+            if (transaction.getReconciled() != transaction.transaction.getReconciled(account)) {
+                engine.setTransactionReconciled(transaction.transaction, account, transaction.getReconciled());
             }
         }
     }

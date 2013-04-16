@@ -38,15 +38,15 @@ import javax.crypto.spec.SecretKeySpec;
  *
  * @author Craig Cavanaugh
  */
-public class EncryptionFilter {
+class EncryptionFilter {
 
-    private Key key;
+    private final Key key;
 
     private static final String ENCRYPTION_ALGORITHM = "AES";
 
     public static final String DECRYPTION_ERROR_TAG = "<DecryptError>";
 
-    private static Logger logger = Logger.getLogger(EncryptionFilter.class.getName());
+    private static final Logger logger = Logger.getLogger(EncryptionFilter.class.getName());
 
     public EncryptionFilter(final char[] password) {
         byte[] encryptionKey = "fake".getBytes();

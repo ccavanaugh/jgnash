@@ -215,16 +215,16 @@ public class FileMagic {
         return isFile(file, BINARY_XSTREAM_HEADER);
     }
 
-    public static boolean isH2File(final File file) {
+    private static boolean isH2File(final File file) {
         return isFile(file, H2_HEADER);
     }
 
-    public static boolean isHsqlFile(final File file) {
+    private static boolean isHsqlFile(final File file) {
         // TODO: Look inside file and check for properties file existence
         return file.getAbsolutePath().endsWith("script");
     }
 
-    public static boolean isFile(final File file, final byte[] header) {
+    private static boolean isFile(final File file, final byte[] header) {
         boolean result = false;
 
         if (file.exists()) {

@@ -54,7 +54,7 @@ public class OpenAction {
 
             private OpenDatabaseDialog dialog;
 
-            protected BootEngine(final OpenDatabaseDialog dialog) {
+            BootEngine(final OpenDatabaseDialog dialog) {
                 this.dialog = dialog;
             }
 

@@ -529,7 +529,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @param child The child account to add to this account.
      * @return true if the account was added successfully, false otherwise.
      */
-    protected boolean addChild(final Account child) {
+    boolean addChild(final Account child) {
         Lock l = childLock.writeLock();
         l.lock();
 
@@ -1458,7 +1458,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         return amortizeObject;
     }
 
-    protected void setAmortizeObject(AmortizeObject amortizeObject) {
+    void setAmortizeObject(AmortizeObject amortizeObject) {
         this.amortizeObject = amortizeObject;
     }
 

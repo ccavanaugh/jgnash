@@ -234,6 +234,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
     }
 
     @Override
+    @Deprecated
     public boolean removeAccountProperty(final Account account, final Object object) {
         return false;
     }

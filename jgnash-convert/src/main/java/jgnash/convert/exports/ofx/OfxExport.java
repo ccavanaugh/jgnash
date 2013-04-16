@@ -43,13 +43,13 @@ public class OfxExport implements OfxTags {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
-    private Account account;
+    private final Account account;
 
-    private Date startDate;
+    private final Date startDate;
 
-    private Date endDate;
+    private final Date endDate;
 
-    private File file;
+    private final File file;
 
     private IndentedPrintWriter indentedWriter;
 
@@ -497,7 +497,7 @@ public class OfxExport implements OfxTags {
      */
     private static class IndentedPrintWriter extends PrintWriter {
 
-        private static String INDENT = "  ";
+        private static final String INDENT = "  ";
 
         public IndentedPrintWriter(final Writer out) {
             super(out);

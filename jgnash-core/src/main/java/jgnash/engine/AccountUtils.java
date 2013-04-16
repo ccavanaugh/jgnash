@@ -21,9 +21,8 @@ package jgnash.engine;
  * Static account utilities
  * 
  * @author Craig Cavanaugh
- *
  */
-public class AccountUtils {
+class AccountUtils {
 
     /**
      * Searches an account tree given the supplied parameters
@@ -34,7 +33,7 @@ public class AccountUtils {
      * @param depth Account depth
      * @return matched account if it exists
      */
-    protected static Account searchTree(final Account root, final String name, final AccountType type, final int depth) {
+    static Account searchTree(final Account root, final String name, final AccountType type, final int depth) {
         Account match = null;
 
         for (Account a : root.getChildren()) {
