@@ -316,6 +316,10 @@ public class EngineFactory {
         return null;
     }
 
+    public static DataStoreType getDataStoreByType(final String fileName) {
+        return getDataStoreByType(new File(fileName));
+    }
+
     public static float getFileVersion(final File file, final char[] password) {
         float version = 0;
 

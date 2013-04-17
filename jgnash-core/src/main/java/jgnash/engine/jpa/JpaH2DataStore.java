@@ -26,6 +26,13 @@ import jgnash.engine.StoredObject;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Collection;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -33,17 +40,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Collection;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * JPA specific code for data storage and creating an engine
@@ -98,18 +94,6 @@ public class JpaH2DataStore implements DataStore {
         }
 
         return engine;
-    }
-
-    private static boolean isDatabaseLocked(final String fileName) {
-        boolean locked = false;
-
-        String lockFile = FileUtils.stripFileExtension(fileName) + ".lock.db";
-
-        if (new File(lockFile).exists()) {
-            locked = true;
-        }
-
-        return locked;
     }
 
     @Override
@@ -242,31 +226,6 @@ public class JpaH2DataStore implements DataStore {
         }
 
         return fileVersion;
-    }
-
-    public static boolean changeUserAndPassword(final String fileName, final char[] password, final char[] newPassword) {
-        boolean result = false;
-
-        if (!isDatabaseLocked(fileName)) {
-
-            Properties properties = JpaConfiguration.getLocalProperties(DataStoreType.H2_DATABASE, fileName, password, false);
-
-            String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
-
-            try (Connection connection = DriverManager.getConnection(url)) {
-                Statement statement = connection.createStatement();
-
-                statement.execute(String.format("SET PASSWORD '%s'", new String(newPassword)));
-
-                result = true;
-
-                statement.close();
-            } catch (SQLException e) {
-                logger.log(Level.SEVERE, e.getMessage(), e);
-            }
-        }
-
-        return result;
     }
 
     /**
