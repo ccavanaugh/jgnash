@@ -24,6 +24,7 @@ import jgnash.util.FileUtils;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
@@ -69,5 +70,46 @@ public class SqlUtils {
         }
 
         return result;
+    }
+
+    /**
+     * Opens the database in readonly mode and reads the version of the file format.
+     *
+     * @param fileName <code>File</code> to open
+     * @return file version
+     */
+    public static float getFileVersion(final String fileName, final char[] password) {
+        float fileVersion = 0f;
+
+        try {
+            if (!FileUtils.isFileLocked(fileName)) {
+
+                DataStoreType dataStoreType = EngineFactory.getDataStoreByType(fileName);
+
+                Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password, true);
+
+                String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
+
+                try (Connection connection = DriverManager.getConnection(url)) {
+                    Statement statement = connection.createStatement();
+
+                    ResultSet resultSet = statement.executeQuery("SELECT FILEVERSION FROM CONFIG");
+                    resultSet.next();
+
+                    fileVersion = resultSet.getFloat("fileversion");
+
+                    resultSet.close();
+                    statement.close();
+                } catch (SQLException e) {
+                    Logger.getLogger(JpaConfiguration.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+                }
+            } else {
+                Logger.getLogger(JpaConfiguration.class.getName()).severe("File was locked");
+            }
+        } catch (FileNotFoundException e) {
+            Logger.getLogger(JpaConfiguration.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+        }
+
+        return fileVersion;
     }
 }

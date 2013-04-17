@@ -17,7 +17,6 @@
  */
 package jgnash.engine.jpa;
 
-import jgnash.engine.Config;
 import jgnash.engine.DataStore;
 import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
@@ -26,20 +25,16 @@ import jgnash.engine.StoredObject;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 /**
  * JPA specific code for data storage and creating an engine
@@ -182,50 +177,6 @@ public class JpaH2DataStore implements DataStore {
                 factory.close();
             }
         }
-    }
-
-    /**
-     * Opens the database in readonly mode and reads the version of the file format.
-     *
-     * @param file <code>File</code> to open
-     * @return file version
-     */
-    public static float getFileVersion(final File file, final char[] password) throws Exception {
-        float fileVersion = 0;
-
-        Properties properties = JpaConfiguration.getLocalProperties(DataStoreType.H2_DATABASE, file.getAbsolutePath(), password, true);
-
-        EntityManagerFactory factory = null;
-        EntityManager em = null;
-
-        try {
-            factory = Persistence.createEntityManagerFactory("jgnash", properties);
-
-            em = factory.createEntityManager();
-
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<Config> cq = cb.createQuery(Config.class);
-            Root<Config> root = cq.from(Config.class);
-            cq.select(root);
-
-            TypedQuery<Config> q = em.createQuery(cq);
-
-            Config defaultConfig = q.getSingleResult();
-
-            fileVersion = defaultConfig.getFileVersion();
-        } catch (Exception e) {
-            throw new Exception(e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-
-            if (factory != null) {
-                factory.close();
-            }
-        }
-
-        return fileVersion;
     }
 
     /**

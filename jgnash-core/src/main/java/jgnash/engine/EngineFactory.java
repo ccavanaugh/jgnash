@@ -17,21 +17,7 @@
  */
 package jgnash.engine;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.prefs.Preferences;
-
-import javax.swing.filechooser.FileSystemView;
-
-import jgnash.engine.jpa.JpaH2DataStore;
-import jgnash.engine.jpa.JpaHsqlDataStore;
+import jgnash.engine.jpa.SqlUtils;
 import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.engine.xstream.XMLDataStore;
 import jgnash.message.ChannelEvent;
@@ -42,6 +28,19 @@ import jgnash.util.FileMagic;
 import jgnash.util.FileMagic.FileType;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
+
+import javax.swing.filechooser.FileSystemView;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 
 /**
  * Factory class for obtaining an engine instance
@@ -329,15 +328,9 @@ public class EngineFactory {
             version = XMLDataStore.getFileVersion(file);
         } else if (type == FileType.BinaryXStream) {
             version = BinaryXStreamDataStore.getFileVersion(file);
-        } else if (type == FileType.h2) {
+        } else if (type == FileType.h2 || type == FileType.hsql) {
             try {
-                version = JpaH2DataStore.getFileVersion(file, password);
-            } catch (final Exception e) {
-                version = 0;
-            }
-        }  else if (type == FileType.hsql) {
-            try {
-                version = JpaHsqlDataStore.getFileVersion(file, password);
+                version = SqlUtils.getFileVersion(file.getAbsolutePath(), password);
             } catch (final Exception e) {
                 version = 0;
             }
