@@ -20,7 +20,7 @@ package jgnash.ui.components;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
-import jgnash.engine.jpa.JpaConfiguration;
+import jgnash.engine.jpa.SqlUtils;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.actions.DatabasePathAction;
@@ -129,7 +129,7 @@ public class ChangeDatabasePasswordDialog extends JDialog implements ActionListe
             } else if (!Arrays.equals(newPasswordField.getPassword(), newPasswordFieldVal.getPassword())) {
                 ValidationFactory.showValidationError(rb.getString("Message.Error.PasswordMatch"), newPasswordFieldVal);
             } else {
-                boolean result = JpaConfiguration.changeUserAndPassword(fileField.getText(), passwordField.getPassword(), newPasswordField.getPassword());
+                boolean result = SqlUtils.changeUserAndPassword(fileField.getText(), passwordField.getPassword(), newPasswordField.getPassword());
 
                 if (result) {   // display a success message
                     new Thread() {
