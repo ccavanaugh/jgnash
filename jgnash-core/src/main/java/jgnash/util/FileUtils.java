@@ -17,6 +17,9 @@
  */
 package jgnash.util;
 
+import jgnash.engine.jpa.JpaH2DataStore;
+import jgnash.engine.jpa.JpaHsqlDataStore;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -55,6 +58,8 @@ public final class FileUtils {
 
     private static final Pattern FILE_EXTENSION_SPLIT_PATTERN = Pattern.compile("\\.");
 
+    public static final String[] FILE_LOCK_EXTENSIONS = new String[]{JpaHsqlDataStore.LOCK_EXT, JpaH2DataStore.LOCK_EXT, ".lock"};
+
     private FileUtils() {
     }
 
@@ -70,9 +75,7 @@ public final class FileUtils {
 
         boolean result = false;
 
-        String[] extensions = new String[]{".lck", ".lock.db", ".lock"};
-
-        for (final String extension : extensions) {
+        for (final String extension : FILE_LOCK_EXTENSIONS) {
             if (Files.exists(Paths.get(FileUtils.stripFileExtension(fileName) + extension))) {
                 result = true;
             }

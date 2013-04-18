@@ -22,11 +22,14 @@ import jgnash.engine.EngineFactory;
 import jgnash.util.FileUtils;
 
 import java.io.FileNotFoundException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,6 +40,14 @@ import java.util.logging.Logger;
  * @author Craig Cavanaugh
  */
 public class SqlUtils {
+
+    private static final Logger logger = Logger.getLogger(JpaConfiguration.class.getName());
+
+    /**
+     * Maximum amount of time to wait for the lock file to release after closure.  Typical time should be about 2 seconds,
+     * but unit tests can sometimes take longer
+     */
+    private static final long MAX_LOCK_RELEASE_TIME = 15 * 1000;
 
     private SqlUtils() {
     }
@@ -62,11 +73,11 @@ public class SqlUtils {
 
                     statement.close();
                 } catch (SQLException e) {
-                    Logger.getLogger(JpaConfiguration.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+                    logger.log(Level.SEVERE, e.getMessage(), e);
                 }
             }
         } catch (FileNotFoundException e) {
-            Logger.getLogger(JpaConfiguration.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
         return result;
@@ -104,12 +115,50 @@ public class SqlUtils {
                     Logger.getLogger(JpaConfiguration.class.getName()).log(Level.SEVERE, e.getMessage(), e);
                 }
             } else {
-                Logger.getLogger(JpaConfiguration.class.getName()).severe("File was locked");
+                logger.severe("File was locked");
             }
         } catch (FileNotFoundException e) {
-            Logger.getLogger(JpaConfiguration.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
         return fileVersion;
+    }
+
+    /**
+     * Forces a database closed and waits for the lock file to disappear indicating the database server is closed
+     *
+     * @param dataStoreType DataStoreType to connect to
+     * @param fileName path of the file to close
+     * @param lockFileExtension lock file extension
+     * @param password password for the database
+     */
+    public static void waitForLockFileRelease(final DataStoreType dataStoreType, final String fileName, final String lockFileExtension, final char[] password) {
+
+        Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password, false);
+        String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
+
+        // Explicitly force the database closed, Required for hsqldb
+        try {
+            Connection connection = DriverManager.getConnection(url, JpaConfiguration.DEFAULT_USER, new String(password));
+
+            connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for correct file closure
+            connection.close();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
+
+        // It may take awhile for the lock to be released.  Wait for removal so any later attempts to open the file won't see the lock file and fail.
+        long then = new Date().getTime();
+
+        while (Files.exists(Paths.get(FileUtils.stripFileExtension(fileName) + lockFileExtension))) {
+            long now = new Date().getTime();
+
+            if ((now - then) > MAX_LOCK_RELEASE_TIME) {
+                logger.warning("Exceeded the maximum wait time for the file lock release");
+                break;
+            }
+
+            Thread.yield();
+        }
     }
 }

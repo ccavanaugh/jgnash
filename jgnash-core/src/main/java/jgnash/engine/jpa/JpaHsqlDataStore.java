@@ -25,10 +25,6 @@ import jgnash.engine.StoredObject;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,10 +34,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  * JPA specific code for data storage and creating an engine
@@ -52,7 +51,7 @@ public class JpaHsqlDataStore implements DataStore {
 
     public static final String FILE_EXT = "script";
 
-    private static final String LOCK_EXT = ".lck";
+    public static final String LOCK_EXT = ".lck";
 
     private EntityManager em;
 
@@ -67,11 +66,6 @@ public class JpaHsqlDataStore implements DataStore {
     private static final Logger logger = Logger.getLogger(JpaHsqlDataStore.class.getName());
 
     private char[] password;
-
-    /**
-     * Maximum amount of time to wait for the lock file to release after closure.  Typical time should be about 2 seconds.
-     */
-    private static final long MAX_LOCK_RELEASE_TIME = 10 * 1000;
 
     /**
      * Creates an empty database with the assumed default user name
@@ -258,30 +252,10 @@ public class JpaHsqlDataStore implements DataStore {
 
         // Explicitly force the database closed, Required for hsqldb
         try {
-            final StringBuilder urlBuilder = new StringBuilder("jdbc:hsqldb:file:");
-            urlBuilder.append(FileUtils.stripFileExtension(fileName));
-
             Class.forName("org.hsqldb.jdbcDriver");
-            Connection connection = DriverManager.getConnection(urlBuilder.toString(), JpaConfiguration.DEFAULT_USER, new String(password));
-
-            connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for correct file closure
-            connection.close();
-        } catch (ClassNotFoundException | SQLException e) {
+            SqlUtils.waitForLockFileRelease(DataStoreType.HSQL_DATABASE, fileName, FILE_EXT, password);
+        } catch (ClassNotFoundException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
-        }
-
-        // It may take awhile for the lock to be released.  Wait for removal so any later attempts to open the file won't see the lock file and fail.
-        long then = new Date().getTime();
-
-        while (Files.exists(Paths.get(FileUtils.stripFileExtension(fileName) + LOCK_EXT))) {
-            long now = new Date().getTime();
-
-            if ((now - then) > MAX_LOCK_RELEASE_TIME) {
-                logger.warning("Exceeded the maximum wait time for the file lock release");
-                break;
-            }
-
-            Thread.yield();
         }
     }
 

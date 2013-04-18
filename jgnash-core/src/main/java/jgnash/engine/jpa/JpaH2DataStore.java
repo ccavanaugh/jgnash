@@ -25,16 +25,16 @@ import jgnash.engine.StoredObject;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  * JPA specific code for data storage and creating an engine
@@ -44,6 +44,8 @@ import java.util.logging.Logger;
 public class JpaH2DataStore implements DataStore {
 
     public static final String FILE_EXT = "h2.db";
+
+    public static final String LOCK_EXT = ".lock.db";
 
     private EntityManager em;
 
@@ -57,6 +59,8 @@ public class JpaH2DataStore implements DataStore {
 
     private static final Logger logger = Logger.getLogger(JpaH2DataStore.class.getName());
 
+    private char[] password;
+
     @Override
     public void closeEngine() {
 
@@ -67,6 +71,10 @@ public class JpaH2DataStore implements DataStore {
             factory.close();
         } else {
             logger.severe("The EntityManger was already null!");
+        }
+
+        if (!remote) {
+            waitForLockFileRelease(fileName, password);
         }
     }
 
@@ -112,6 +120,8 @@ public class JpaH2DataStore implements DataStore {
                     engine = new Engine(new JpaEngineDAO(em, false), engineName);
 
                     this.fileName = fileName;
+                    this.password = password;
+
                     remote = false;
                 } catch (final Exception e) {
                     logger.log(Level.SEVERE, e.getMessage(), e);
@@ -177,6 +187,19 @@ public class JpaH2DataStore implements DataStore {
                 factory.close();
             }
         }
+
+        waitForLockFileRelease(file.getAbsolutePath(), new char[]{});
+    }
+
+    private static void waitForLockFileRelease(final String fileName, final char[] password) {
+        // Explicitly force the database closed, Required for h2
+        try {
+            Class.forName("org.h2.Driver");
+            SqlUtils.waitForLockFileRelease(DataStoreType.H2_DATABASE, fileName, LOCK_EXT, password);
+        } catch (final ClassNotFoundException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
+
     }
 
     /**
