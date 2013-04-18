@@ -51,6 +51,8 @@ public class FileMagic {
 
     private static final byte[] H2_HEADER = new byte[] {0x2D, 0x2D, 0x20, 0x48, 0x32, 0x20, 0x30, 0x2E, 0x35, 0x2F, 0x42, 0x20, 0x2D, 0x2D};
 
+    private static final byte[] HSQL_HEADER = "SET DATABASE UNIQUE NAME HSQLDB".getBytes();
+
     public static enum FileType {
         db4o, BinaryXStream, OfxV1, OfxV2, jGnash1XML, jGnash2XML, h2, hsql, unknown
     }
@@ -220,8 +222,8 @@ public class FileMagic {
     }
 
     private static boolean isHsqlFile(final File file) {
-        // TODO: Look inside file and check for properties file existence
-        return file.getAbsolutePath().endsWith("script");
+        return isFile(file, HSQL_HEADER);
+        //return file.getAbsolutePath().endsWith("script");
     }
 
     private static boolean isFile(final File file, final byte[] header) {
