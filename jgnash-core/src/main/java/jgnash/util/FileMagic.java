@@ -37,7 +37,7 @@ import javax.xml.stream.XMLStreamReader;
 
 /**
  * Class to identify file type
- * 
+ *
  * @author Craig Cavanaugh
  */
 public class FileMagic {
@@ -46,12 +46,14 @@ public class FileMagic {
 
     private static final String UTF_8 = "UTF-8";
 
-    private static final byte[] BINARY_XSTREAM_HEADER = new byte[] { 10, -127, 0, 13, 111, 98, 106, 101, 99, 116, 45,
-            115, 116, 114, 101, 97, 109, 11, -127, 10 };
+    private static final byte[] BINARY_XSTREAM_HEADER = new byte[]{10, -127, 0, 13, 111, 98, 106, 101, 99, 116, 45,
+            115, 116, 114, 101, 97, 109, 11, -127, 10};
 
-    private static final byte[] H2_HEADER = new byte[] {0x2D, 0x2D, 0x20, 0x48, 0x32, 0x20, 0x30, 0x2E, 0x35, 0x2F, 0x42, 0x20, 0x2D, 0x2D};
+    private static final byte[] H2_HEADER = new byte[]{0x2D, 0x2D, 0x20, 0x48, 0x32, 0x20, 0x30, 0x2E, 0x35, 0x2F, 0x42, 0x20, 0x2D, 0x2D};
 
     private static final byte[] HSQL_HEADER = "SET DATABASE UNIQUE NAME HSQLDB".getBytes();
+
+    private static final byte[] XML_HEADER = "<?xml version=\"1.0\"".getBytes();
 
     public static enum FileType {
         db4o, BinaryXStream, OfxV1, OfxV2, jGnash1XML, jGnash2XML, h2, hsql, unknown
@@ -59,29 +61,28 @@ public class FileMagic {
 
     /**
      * Returns the file type
-     * 
-     * @param file
-     *            file to identify
+     *
+     * @param file file to identify
      * @return identified file type
      */
     public static FileType magic(final File file) {
 
-        if (isdb4o(file)) {
-            return FileType.db4o;
-        } else if (isValidjGnash1File(file)) {
-            return FileType.jGnash1XML;
-        } else if (isValidjGnash2File(file)) {
+        if (isValidjGnash2File(file)) {
             return FileType.jGnash2XML;
-        } else if (isOfxV1(file)) {
-            return FileType.OfxV1;
-        } else if (isOfxV2(file)) {
-            return FileType.OfxV2;
         } else if (isBinaryXStreamFile(file)) {
             return FileType.BinaryXStream;
         } else if (isH2File(file)) {
             return FileType.h2;
         } else if (isHsqlFile(file)) {
             return FileType.hsql;
+        } else if (isValidjGnash1File(file)) {
+            return FileType.jGnash1XML;
+        } else if (isOfxV1(file)) {
+            return FileType.OfxV1;
+        } else if (isOfxV2(file)) {
+            return FileType.OfxV2;
+        } else if (isdb4o(file)) {
+            return FileType.db4o;
         }
 
         return FileType.unknown;
@@ -89,18 +90,17 @@ public class FileMagic {
 
     /**
      * Determine the correct character encoding of an OFX Version 1 file
-     * 
-     * @param file
-     *            File to look at
+     *
+     * @param file File to look at
      * @return encoding of the file
      */
     public static String getOfxV1Encoding(final File file) {
         String encoding = null;
         String charset = null;
 
-        if (file.exists()) {          
+        if (file.exists()) {
 
-            try( BufferedReader reader = new BufferedReader(new FileReader(file))) {               
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 String line = reader.readLine();
 
                 while (line != null) {
@@ -129,7 +129,7 @@ public class FileMagic {
                 }
             } catch (IOException e) {
                 Logger.getLogger(FileMagic.class.getName()).log(Level.SEVERE, e.toString(), e);
-            } 
+            }
         }
 
         if (encoding != null && charset != null) {
@@ -278,11 +278,18 @@ public class FileMagic {
     }
 
     private static boolean isValidjGnashX(final File file, final String majorVersion) {
+
         if (!file.exists() || !file.isFile() || !file.canRead()) {
             return false;
         }
 
-        return getjGnashXMLVersion(file).startsWith(majorVersion);
+        boolean result = false;
+
+        if (isFile(file, XML_HEADER)) {
+            result = getjGnashXMLVersion(file).startsWith(majorVersion);
+        }
+
+        return result;
     }
 
     public static String getjGnashXMLVersion(final File file) {
@@ -293,21 +300,22 @@ public class FileMagic {
 
             XMLStreamReader reader = inputFactory.createXMLStreamReader(input, UTF_8);
 
-            parse: while (reader.hasNext()) {
+            parse:
+            while (reader.hasNext()) {
                 int event = reader.next();
 
                 switch (event) {
-                case XMLStreamConstants.PROCESSING_INSTRUCTION:
-                    String name = reader.getPITarget();
-                    String data = reader.getPIData();
+                    case XMLStreamConstants.PROCESSING_INSTRUCTION:
+                        String name = reader.getPITarget();
+                        String data = reader.getPIData();
 
-                    if (name.equals("fileVersion")) {
-                        version = data;
-                        break parse;
-                    }
-                    break;
-                default:
-                    break;
+                        if (name.equals("fileVersion")) {
+                            version = data;
+                            break parse;
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
 
@@ -315,7 +323,7 @@ public class FileMagic {
         } catch (IOException e) {
             Logger.getLogger(FileMagic.class.getName()).log(Level.SEVERE, e.toString(), e);
         } catch (XMLStreamException e) {
-            Logger.getLogger(FileMagic.class.getName()).log(Level.INFO, "{0} was not a valid jGnash XML file",
+            Logger.getLogger(FileMagic.class.getName()).log(Level.INFO, "{0} was not a valid jGnash XML_HEADER file",
                     file.getAbsolutePath());
         }
 
