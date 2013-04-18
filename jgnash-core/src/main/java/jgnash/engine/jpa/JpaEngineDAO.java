@@ -18,14 +18,17 @@
 package jgnash.engine.jpa;
 
 import jgnash.engine.StoredObject;
-import jgnash.engine.dao.*;
-import jgnash.util.DefaultDaemonThreadFactory;
+import jgnash.engine.dao.AccountDAO;
+import jgnash.engine.dao.BudgetDAO;
+import jgnash.engine.dao.CommodityDAO;
+import jgnash.engine.dao.ConfigDAO;
+import jgnash.engine.dao.EngineDAO;
+import jgnash.engine.dao.RecurringDAO;
+import jgnash.engine.dao.TransactionDAO;
+import jgnash.engine.dao.TrashDAO;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -54,32 +57,15 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
 
     private TrashDAO trashDAO;
 
-    private ScheduledExecutorService commitExecutor;
-
     // private static final Logger logger = Logger.getLogger(JpaEngineDAO.class.getName());
 
     JpaEngineDAO(final EntityManager entityManager, final boolean isRemote) {
         super(entityManager, isRemote);
-
-        // scheduled thread to check and verify a commit occurs every 30 seconds at the minimum if needed.
-        commitExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
-
-        // run commit every 30 seconds, 30 seconds after startup
-        commitExecutor.scheduleWithFixedDelay(new Runnable() {
-
-            @Override
-            public void run() {
-                if (commitCount.get() > 0) {
-                    commitAndReset();
-                }
-            }
-        }, MAX_COMMIT_TIME, MAX_COMMIT_TIME, TimeUnit.SECONDS);
     }
 
     @Override
     public synchronized void shutdown() {
-        commitExecutor.shutdown();
-        commitExecutor = null;
+        // nothing special to do for JPA
     }
 
     @Override

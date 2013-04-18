@@ -74,7 +74,6 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
             em.persist(trashObject);
 
             em.getTransaction().commit();
-            commit();
         } finally {
             emLock.unlock();
         }
@@ -93,8 +92,6 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
             em.remove(trashObject);
 
             em.getTransaction().commit();
-
-            commit();
 
             logger.info("Removed TrashObject");
         } finally {
