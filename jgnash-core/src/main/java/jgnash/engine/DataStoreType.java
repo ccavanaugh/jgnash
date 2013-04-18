@@ -58,7 +58,7 @@ public enum DataStoreType {
 
 
     /* If true, then this DataStoreType can support remote connections */
-    final transient boolean supportsRemote;
+    public final transient boolean supportsRemote;
 
     /* If true, then this DataStoreType can support local connections */
     final transient boolean supportsLocal;

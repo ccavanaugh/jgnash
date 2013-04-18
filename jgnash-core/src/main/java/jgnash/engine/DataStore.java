@@ -69,6 +69,12 @@ public interface DataStore {
     String getFileName();
 
     /**
+     * Returns this DataStores type
+     * @return type of data store
+     */
+    DataStoreType getType();
+
+    /**
      * Remote connection indicator
      * 
      * @return true if connected to a remote server

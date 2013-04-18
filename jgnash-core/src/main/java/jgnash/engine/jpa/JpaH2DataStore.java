@@ -80,7 +80,7 @@ public class JpaH2DataStore implements DataStore {
 
     @Override
     public Engine getClientEngine(final String host, final int port, final char[] password, final String dataBasePath) {
-        Properties properties = JpaConfiguration.getClientProperties(DataStoreType.H2_DATABASE, dataBasePath, host, port, password);
+        Properties properties = JpaConfiguration.getClientProperties(getType(), dataBasePath, host, port, password);
 
         Engine engine = null;
 
@@ -101,7 +101,7 @@ public class JpaH2DataStore implements DataStore {
 
     @Override
     public Engine getLocalEngine(final String fileName, final String engineName, final char[] password) {
-        Properties properties = JpaConfiguration.getLocalProperties(DataStoreType.H2_DATABASE, fileName, password, false);
+        Properties properties = JpaConfiguration.getLocalProperties(getType(), fileName, password, false);
 
         Engine engine = null;
 
@@ -145,6 +145,11 @@ public class JpaH2DataStore implements DataStore {
     }
 
     @Override
+    public DataStoreType getType() {
+        return DataStoreType.H2_DATABASE;
+    }
+
+    @Override
     public boolean isRemote() {
         return remote;
     }
@@ -160,7 +165,7 @@ public class JpaH2DataStore implements DataStore {
             }
         }
 
-        Properties properties = JpaConfiguration.getLocalProperties(DataStoreType.H2_DATABASE, file.getAbsolutePath(), new char[]{}, false);
+        Properties properties = JpaConfiguration.getLocalProperties(getType(), file.getAbsolutePath(), new char[]{}, false);
 
         EntityManagerFactory factory = null;
         EntityManager em = null;
@@ -191,11 +196,11 @@ public class JpaH2DataStore implements DataStore {
         waitForLockFileRelease(file.getAbsolutePath(), new char[]{});
     }
 
-    private static void waitForLockFileRelease(final String fileName, final char[] password) {
+    private void waitForLockFileRelease(final String fileName, final char[] password) {
         // Explicitly force the database closed, Required for h2
         try {
             Class.forName("org.h2.Driver");
-            SqlUtils.waitForLockFileRelease(DataStoreType.H2_DATABASE, fileName, LOCK_EXT, password);
+            SqlUtils.waitForLockFileRelease(getType(), fileName, LOCK_EXT, password);
         } catch (final ClassNotFoundException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }

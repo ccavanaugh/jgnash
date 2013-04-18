@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 
 import jgnash.engine.Config;
 import jgnash.engine.DataStore;
+import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
 import jgnash.engine.StoredObject;
 import jgnash.util.Resource;
@@ -108,6 +109,11 @@ public class BinaryXStreamDataStore implements DataStore {
     @Override
     public final String getFileName() {
         return container.getFileName();
+    }
+
+    @Override
+    public DataStoreType getType() {
+        return DataStoreType.BINARY_XSTREAM;
     }
 
     /**

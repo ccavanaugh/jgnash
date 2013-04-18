@@ -106,8 +106,27 @@ public class EngineFactory {
         return new File(database).delete();
     }
 
+    /**
+     * Returns the engine with the given name
+     * @param name engine name to look for
+     *
+     * @return null if it does not exist
+     */
     public static synchronized Engine getEngine(final String name) {
         return engineMap.get(name);
+    }
+
+    /**
+     * Returns the DataStoreType for a given engine name
+     * @param name engine name to look for
+     *
+     * @return the DataStoreType
+     * @throws NullPointerException
+     */
+    public static synchronized DataStoreType getType(final String name) throws NullPointerException {
+        DataStore dataStore = dataStoreMap.get(name);
+
+        return dataStore.getType();
     }
 
     private static void exportCompressedXML(final String engineName) {

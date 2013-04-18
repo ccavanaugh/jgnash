@@ -124,7 +124,7 @@ public class JpaHsqlDataStore implements DataStore {
 
     @Override
     public Engine getClientEngine(final String host, final int port, final char[] password, final String dataBasePath) {
-        Properties properties = JpaConfiguration.getClientProperties(DataStoreType.HSQL_DATABASE, dataBasePath, host, port, password);
+        Properties properties = JpaConfiguration.getClientProperties(getType(), dataBasePath, host, port, password);
 
         Engine engine = null;
 
@@ -150,7 +150,7 @@ public class JpaHsqlDataStore implements DataStore {
     @Override
     public Engine getLocalEngine(final String fileName, final String engineName, final char[] password) {
 
-        Properties properties = JpaConfiguration.getLocalProperties(DataStoreType.HSQL_DATABASE, fileName, password, false);
+        Properties properties = JpaConfiguration.getLocalProperties(getType(), fileName, password, false);
 
         Engine engine = null;
 
@@ -196,6 +196,11 @@ public class JpaHsqlDataStore implements DataStore {
     @Override
     public String getFileName() {
         return fileName;
+    }
+
+    @Override
+    public DataStoreType getType() {
+        return DataStoreType.HSQL_DATABASE;
     }
 
     @Override
