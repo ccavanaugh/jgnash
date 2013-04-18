@@ -21,14 +21,10 @@ import jgnash.engine.budget.Budget;
 import jgnash.engine.dao.BudgetDAO;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import javax.persistence.Query;
 
 /**
  * Budget DAO
@@ -78,28 +74,19 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Budget> getBudgets() {
+        try {
+            emLock.lock();
 
-        @SuppressWarnings("unchecked")
-        List<Budget> results = Collections.EMPTY_LIST;
+            Query q = em.createQuery("SELECT b FROM Budget b WHERE b.markedForRemoval = false");
 
-        if (em.isOpen()) { // TODO: background threads may try to open a closed entity manage, is there a better way?
-            try {
-                emLock.lock();
+            // result lists are readonly
+            return new ArrayList<Budget>(q.getResultList());
 
-                CriteriaBuilder cb = em.getCriteriaBuilder();
-                CriteriaQuery<Budget> cq = cb.createQuery(Budget.class);
-                Root<Budget> b = cq.from(Budget.class);
-                cq.select(b);
-
-                TypedQuery<Budget> q = em.createQuery(cq);
-
-                results =  stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
-            } finally {
-                emLock.unlock();
-            }
+        } finally {
+            emLock.unlock();
         }
-        return results;
     }
 
     @Override
