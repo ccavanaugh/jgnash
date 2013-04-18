@@ -20,25 +20,26 @@ package jgnash.ui.actions;
 import jgnash.engine.DataStoreType;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
+import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.SimpleSwingWorker;
 import jgnash.ui.util.builder.Action;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Collection;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * UI Action to save the current database as a new name and reopen
- * 
- * @author Craig Cavanaugh
  *
+ * @author Craig Cavanaugh
  */
 @Action("saveas-command")
 public class SaveFileAsAction extends AbstractEnabledAction {
@@ -119,14 +120,35 @@ public class SaveFileAsAction extends AbstractEnabledAction {
                     // don't perform the save if the destination is going to overwrite the current database
                     if (!current.equals(newFile)) {
 
-                        Collection<StoredObject> objects = EngineFactory.getEngine(EngineFactory.DEFAULT).getStoredObjects();
+                        DataStoreType currentType = EngineFactory.getType(EngineFactory.DEFAULT);
 
-                        newFileType.getDataStore().saveAs(newFile, objects);
+                        if (currentType.supportsRemote && newFileType.supportsRemote) {
+                            File tempFile = File.createTempFile("jgnash", "." + BinaryXStreamDataStore.FILE_EXT);
 
-                        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+                            Collection<StoredObject> objects = EngineFactory.getEngine(EngineFactory.DEFAULT).getStoredObjects();
 
-                        EngineFactory.bootLocalEngine(newFile.getAbsolutePath(), EngineFactory.DEFAULT, new char[]{});
-                        EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount();
+                            DataStoreType.BINARY_XSTREAM.getDataStore().saveAs(tempFile, objects);
+                            EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+                            EngineFactory.bootLocalEngine(tempFile.getAbsolutePath(), EngineFactory.DEFAULT, new char[]{});
+                            objects = EngineFactory.getEngine(EngineFactory.DEFAULT).getStoredObjects();
+                            newFileType.getDataStore().saveAs(newFile, objects);
+                            EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+                            EngineFactory.bootLocalEngine(newFile.getAbsolutePath(), EngineFactory.DEFAULT, new char[]{});
+                            EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount();
+
+                            if (!tempFile.delete()) {
+                                Logger.getLogger(SaveFileAsAction.class.getName()).info("Unable to remove temporary file");
+                            }
+                        } else {
+                            Collection<StoredObject> objects = EngineFactory.getEngine(EngineFactory.DEFAULT).getStoredObjects();
+                            newFileType.getDataStore().saveAs(newFile, objects);
+                            EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+                            EngineFactory.bootLocalEngine(newFile.getAbsolutePath(), EngineFactory.DEFAULT, new char[]{});
+                            EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount();
+                        }
                     }
 
                     return null;

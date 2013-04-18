@@ -38,7 +38,7 @@ public class BinaryXStreamDataStore implements DataStore {
 
     private static final Logger logger = Logger.getLogger(BinaryXStreamDataStore.class.getName());
 
-    private static final String FILE_EXT = "bxds";
+    public static final String FILE_EXT = "bxds";
 
     private BinaryContainer container;
 
