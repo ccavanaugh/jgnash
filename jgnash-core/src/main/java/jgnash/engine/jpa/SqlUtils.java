@@ -109,6 +109,8 @@ public class SqlUtils {
 
                     fileVersion = resultSet.getFloat("fileversion");
 
+                    connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for correct file closure
+
                     resultSet.close();
                     statement.close();
                 } catch (SQLException e) {
