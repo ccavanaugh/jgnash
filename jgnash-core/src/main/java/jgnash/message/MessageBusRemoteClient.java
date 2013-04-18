@@ -220,7 +220,7 @@ class MessageBusRemoteClient {
                 logger.log(Level.SEVERE, "Unable to decrypt the remote message");
             } else if (plainMessage.startsWith(JpaNetworkServer.STOP_SERVER_MESSAGE)) {
                 logger.info("Server is shutting down");
-                // TODO: If open (not the user closing), disconnect and display a warning
+                EngineFactory.closeEngine(EngineFactory.DEFAULT);
             } else {
                 logger.log(Level.SEVERE, "Unknown message: {0}", plainMessage);
             }
