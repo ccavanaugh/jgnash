@@ -12,31 +12,35 @@
     <description>jGnash Swing UI</description>
     <packaging>jar</packaging>
 
+    <properties>
+        <jgnash.version>[2,)</jgnash.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jgnash-core</artifactId>
-            <version>${project.version}</version>
+            <version>${jgnash.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jgnash-convert</artifactId>
-            <version>${project.version}</version>
+            <version>${jgnash.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jgnash-help</artifactId>
-            <version>${project.version}</version>
+            <version>${jgnash.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jgnash-resources</artifactId>
-            <version>${project.version}</version>
+            <version>${jgnash.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jidesoft</artifactId>
-            <version>${project.version}</version>
+            <version>${jgnash.version}</version>
         </dependency>
         <dependency>
             <artifactId>itext</artifactId>

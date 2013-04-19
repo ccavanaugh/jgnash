@@ -46,8 +46,6 @@
             </releases>
             <snapshots>
                 <enabled>false</enabled>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>fail</checksumPolicy>
             </snapshots>
             <id>hsqldb_snapshots</id>
             <name>HyperSQL Snapshots</name>
@@ -62,7 +60,7 @@
                 <enabled>true</enabled>
             </releases>
             <snapshots>
-                <enabled>true</enabled>
+                <enabled>false</enabled>
             </snapshots>
         </repository>
 
@@ -70,6 +68,12 @@
             <id>maven.jenkins-ci.org</id>
             <name>maven.jenkins-ci</name>
             <url>http://maven.jenkins-ci.org:8081/content/repositories/releases/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
 
         <!--
