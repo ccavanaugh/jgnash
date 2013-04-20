@@ -45,8 +45,6 @@ public class BudgetResultsExportTest {
 
         try {
             File file = File.createTempFile("budget", "");
-            file.deleteOnExit();
-
 
             Engine e = EngineFactory.bootLocalEngine(file.getName(), EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
             CurrencyNode node = e.getDefaultCurrency();
@@ -69,6 +67,8 @@ public class BudgetResultsExportTest {
             BudgetResultsModel model = new BudgetResultsModel(budget, 2012, node);                    
 
             BudgetResultsExport.exportBudgetResultsModel(new File(System.getProperty("user.home")+File.separator + "testworkbook.xls"), model);
+
+            file.delete();
         } catch (IOException e) {        
             Logger.getLogger(BudgetResultsExportTest.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
