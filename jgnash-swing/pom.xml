@@ -54,6 +54,10 @@
                     <artifactId>bcprov-jdk14</artifactId>
                     <groupId>bouncycastle</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>jfreechart</artifactId>
+                    <groupId>jfree</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
