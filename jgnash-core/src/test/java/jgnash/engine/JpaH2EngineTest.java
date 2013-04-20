@@ -34,6 +34,12 @@ public class JpaH2EngineTest extends EngineTest {
     private static final float DELTA = .001f;
 
     @Override
+    protected void closeEngine() throws Exception {
+        super.closeEngine();
+        Thread.sleep(4500); // hack to allow the DataStore to completely settle out
+    }
+
+    @Override
     public Engine createEngine() throws Exception {
         testFile = "jpa-test." + JpaH2DataStore.FILE_EXT;
 

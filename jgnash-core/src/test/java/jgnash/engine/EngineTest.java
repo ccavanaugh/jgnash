@@ -51,10 +51,8 @@ public abstract class EngineTest {
 
     public static final char[] PASSWORD = new char[]{};
 
-    private void closeEngine() throws Exception {
+    protected void closeEngine() throws Exception {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
-
-        Thread.sleep(2500); // hack to allow the DataStore to completely settle out
     }
 
     @Before
