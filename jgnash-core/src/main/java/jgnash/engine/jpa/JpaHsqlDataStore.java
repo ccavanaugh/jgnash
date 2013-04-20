@@ -17,55 +17,25 @@
  */
 package jgnash.engine.jpa;
 
-import jgnash.engine.DataStore;
 import jgnash.engine.DataStoreType;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.StoredObject;
 import jgnash.util.FileUtils;
-import jgnash.util.Resource;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Properties;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 /**
  * JPA specific code for data storage and creating an engine
  *
  * @author Craig Cavanaugh
  */
-public class JpaHsqlDataStore implements DataStore {
+public class JpaHsqlDataStore extends AbstractJpaDataStore {
 
     public static final String FILE_EXT = "script";
 
     public static final String LOCK_EXT = ".lck";
-
-    private EntityManager em;
-
-    private EntityManagerFactory factory;
-
-    private boolean remote;
-
-    private String fileName;
-
-    private static final boolean DEBUG = false;
-
-    private static final Logger logger = Logger.getLogger(JpaHsqlDataStore.class.getName());
-
-    private char[] password;
 
     /**
      * Creates an empty database with the assumed default user name
@@ -73,119 +43,15 @@ public class JpaHsqlDataStore implements DataStore {
      * @param fileName file name to use
      * @return true if successful
      */
-    public static boolean initEmptyDatabase(final String fileName) {
-        boolean result = false;
-
-        StringBuilder urlBuilder = new StringBuilder("jdbc:hsqldb:file:");
-        urlBuilder.append(FileUtils.stripFileExtension(fileName));
-
+    @Override
+    public boolean initEmptyDatabase(final String fileName) {
         try {
             Class.forName("org.hsqldb.jdbcDriver");
-            Connection connection = DriverManager.getConnection(urlBuilder.toString(), "sa", "");
-            connection.prepareStatement("CREATE USER " + JpaConfiguration.DEFAULT_USER + " PASSWORD \"\" ADMIN").execute();
-            connection.commit();
-            connection.close();
-
-            connection = DriverManager.getConnection(urlBuilder.toString(), JpaConfiguration.DEFAULT_USER, "");
-            connection.prepareStatement("DROP USER SA").execute();
-            connection.commit();
-
-            connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for a correct shutdown
-            connection.close();
-
-            result = true;
-
-            waitForLockFileRelease(fileName, new char[]{});
-
-            logger.info("Initialized an empty database for " + FileUtils.stripFileExtension(fileName));
-        } catch (ClassNotFoundException | SQLException e) {
+            return super.initEmptyDatabase(fileName);
+        } catch (final ClassNotFoundException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
-
-        return result;
-    }
-
-    @Override
-    public void closeEngine() {
-
-        logger.info("Closing");
-
-        if (em != null && factory != null) {
-            em.close();
-            factory.close();
-        } else {
-            logger.severe("The EntityManger was already null!");
-        }
-
-        if (!remote) {
-            waitForLockFileRelease(fileName, password);
-        }
-    }
-
-    @Override
-    public Engine getClientEngine(final String host, final int port, final char[] password, final String dataBasePath) {
-        Properties properties = JpaConfiguration.getClientProperties(getType(), dataBasePath, host, port, password);
-
-        Engine engine = null;
-
-        factory = Persistence.createEntityManagerFactory("jgnash", properties);
-
-        em = factory.createEntityManager();
-
-        if (em != null) {
-            engine = new Engine(new JpaEngineDAO(em, true), EngineFactory.DEFAULT);
-
-            logger.info("Created local JPA container and engine");
-            fileName = null;
-            remote = true;
-        }
-
-        return engine;
-    }
-
-    private boolean exists(final String fileName) {
-        return Files.exists(Paths.get(FileUtils.stripFileExtension(fileName) + ".script"));
-    }
-
-    @Override
-    public Engine getLocalEngine(final String fileName, final String engineName, final char[] password) {
-
-        Properties properties = JpaConfiguration.getLocalProperties(getType(), fileName, password, false);
-
-        Engine engine = null;
-
-        if (DEBUG) {
-            System.out.println(FileUtils.stripFileExtension(fileName));
-        }
-
-        // Check for existence of the file and init the database if needed
-        if (!exists(fileName)) {
-            initEmptyDatabase(fileName);
-        }
-
-        try {
-            if (!FileUtils.isFileLocked(fileName)) {
-                try {
-                    factory = Persistence.createEntityManagerFactory("jgnash", properties);
-
-                    em = factory.createEntityManager();
-
-                    logger.info("Created local JPA container and engine");
-                    engine = new Engine(new JpaEngineDAO(em, false), engineName);
-
-                    this.fileName = fileName;
-                    this.password = password;
-
-                    remote = false;
-                } catch (final Exception e) {
-                    logger.log(Level.SEVERE, e.getMessage(), e);
-                }
-            }
-        } catch (FileNotFoundException e) {
-            logger.info(Resource.get().getString("Message.FileNotFound"));
-        }
-
-        return engine;
+        return false;
     }
 
     @Override
@@ -194,99 +60,36 @@ public class JpaHsqlDataStore implements DataStore {
     }
 
     @Override
-    public String getFileName() {
-        return fileName;
-    }
-
-    @Override
     public DataStoreType getType() {
         return DataStoreType.HSQL_DATABASE;
     }
 
     @Override
-    public boolean isRemote() {
-        return remote;
+    public void deleteDatabase(final File file) {
+        deleteDatabase(file.getAbsoluteFile());
     }
 
     @Override
-    public void saveAs(final File file, final Collection<StoredObject> objects) {
-
-        // Remove the existing file so we don't mix entities and cause corruption
-        if (file.exists()) {
-            if (!file.delete()) {
-                logger.log(Level.SEVERE, "Could not delete the old file for save");
-                return;
-            }
-        }
-
-        // Create the empty database with default user and an empty password
-        initEmptyDatabase(file.getAbsolutePath());
-
-        Properties properties = JpaConfiguration.getLocalProperties(DataStoreType.HSQL_DATABASE, file.getAbsolutePath(), new char[]{}, false);
-
-        EntityManagerFactory factory = null;
-        EntityManager em = null;
-
-        try {
-            factory = Persistence.createEntityManagerFactory("jgnash", properties);
-            em = factory.createEntityManager();
-
-            em.getTransaction().begin();
-
-            for (StoredObject o : objects) {
-                em.persist(o);
-            }
-
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-
-            if (factory != null) {
-                factory.close();
-            }
-        }
-
-        waitForLockFileRelease(file.getAbsolutePath(), new char[]{});
-    }
-
-    private static void waitForLockFileRelease(final String fileName, final char[] password) {
-
-        // Explicitly force the database closed, Required for hsqldb
-        try {
-            Class.forName("org.hsqldb.jdbcDriver");
-            SqlUtils.waitForLockFileRelease(DataStoreType.HSQL_DATABASE, fileName, FILE_EXT, password);
-        } catch (ClassNotFoundException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Returns the string representation of this <code>DataStore</code>.
-     *
-     * @return string representation of this <code>DataStore</code>.
-     */
-    @Override
-    public String toString() {
-        return Resource.get().getString("DataStoreType.HSQL");
+    public String getLockFileExtension() {
+        return LOCK_EXT;
     }
 
     /**
      * Deletes a Hsqldb database and associated files
      *
      * @param fileName one of the database files
-     * @throws IOException
      */
-    public static void deleteDatabase(final String fileName) throws IOException {
+    public static void deleteDatabase(final String fileName) {
         final String[] extensions = new String[]{".log", ".properties", ".script", ".data", ".backup", ".tmp", ".lobs", ".lck"};
 
         final String base = FileUtils.stripFileExtension(fileName);
 
         for (String extension : extensions) {
-            Files.deleteIfExists(Paths.get(base + extension));
+            try {
+                Files.deleteIfExists(Paths.get(base + extension));
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, e.getMessage(), e);
+            }
         }
     }
 }
