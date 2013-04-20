@@ -54,7 +54,7 @@ public abstract class EngineTest {
     private void closeEngine() throws Exception {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-        Thread.sleep(1500); // hack to allow the DataStore to completely settle out
+        Thread.sleep(2500); // hack to allow the DataStore to completely settle out
     }
 
     @Before
