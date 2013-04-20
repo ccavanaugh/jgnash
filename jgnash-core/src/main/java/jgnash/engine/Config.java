@@ -18,7 +18,9 @@
 package jgnash.engine;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jgnash.util.Resource;
 
@@ -46,6 +48,12 @@ public class Config extends StoredObject {
      */
     @ElementCollection
     private List<String> transactionNumberItems = new ArrayList<>();
+
+    /**
+     * Contains a list of custom transaction tags a user may apply
+     */
+    @ElementCollection
+    private Set<String> customTransactionTags = new HashSet<>();
 
     void initialize() {
         Account.setAccountSeparator(getAccountSeparator());

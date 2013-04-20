@@ -34,6 +34,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
@@ -49,7 +50,7 @@ import javax.persistence.TemporalType;
  * @author Craig Cavanaugh
  */
 @Entity
-@Table(name="TRANS") // cannot use "Transaction" as the table name or it causes an SQL error!!!!
+@Table(name="TRANSACT") // cannot use "Transaction" as the table name or it causes an SQL error!!!!
 public class Transaction extends StoredObject implements Comparable<Transaction> {
 
     private static final long serialVersionUID = 6312043631736158707L;
@@ -86,8 +87,15 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     private String fitid;
 
     /**
+     * External link to a file, path should be relative
+     */
+    @Column(columnDefinition = "VARCHAR(2048)", nullable = true)
+    private String externalLink;
+
+    /**
      * Transaction memo
      */
+    @Column(columnDefinition = "VARCHAR(1024)")
     private String memo;
 
     /**
@@ -566,6 +574,22 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         }
 
         return state;
+    }
+
+    /**
+     * External link to a file, path should be relative
+     *
+     * @return external path, null if not set
+     */
+    public String getExternalLink() {
+        return externalLink;
+    }
+
+    /**
+     * Sets and external link to a file, path should be relative
+     */
+    public void setExternalLink(final String externalLink) {
+        this.externalLink = externalLink;
     }
 
     @Override

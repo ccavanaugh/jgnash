@@ -17,7 +17,9 @@
  */
 package jgnash.util;
 
-import java.awt.*;
+import java.awt.Rectangle;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,6 +33,8 @@ import java.util.regex.Pattern;
 public class EncodeDecode {
 
     private static final Pattern COMMA_DELIMITER_PATTERN = Pattern.compile(",");
+
+    public static final char COMMA_DELIMITER = ',';
 
     private static final Pattern LOCALE_DELIMITER_PATTERN = Pattern.compile("\\x2E");
 
@@ -67,11 +71,11 @@ public class EncodeDecode {
     public static String encodeRectangle(final Rectangle bounds) {
         StringBuilder buf = new StringBuilder();
         buf.append(bounds.x);
-        buf.append(',');
+        buf.append(COMMA_DELIMITER);
         buf.append(bounds.y);
-        buf.append(',');
+        buf.append(COMMA_DELIMITER);
         buf.append(bounds.width);
-        buf.append(',');
+        buf.append(COMMA_DELIMITER);
         buf.append(bounds.height);
         return buf.toString();
     }
@@ -90,7 +94,7 @@ public class EncodeDecode {
                 rectangle.y = Integer.parseInt(array[1]);
                 rectangle.width = Integer.parseInt(array[2]);
                 rectangle.height = Integer.parseInt(array[3]);
-            } catch (NumberFormatException nfe) {                
+            } catch (NumberFormatException nfe) {
                 Logger.getLogger(EncodeDecode.class.getName()).log(Level.SEVERE, null, nfe);
                 rectangle = null;
             }
@@ -171,4 +175,32 @@ public class EncodeDecode {
         }
         return new boolean[0];
     }
+
+    public static String encodeStringCollection(final Collection<String> list) {
+
+        // precondition check for the delimiter existence
+        for (String string : list) {
+            if (string.indexOf(COMMA_DELIMITER) > -1) {
+                throw new RuntimeException("The list of strings may not contain a " + COMMA_DELIMITER);
+            }
+        }
+
+        StringBuilder result = new StringBuilder();
+
+        for (String string : list) {
+            result.append(string);
+            result.append(COMMA_DELIMITER);
+        }
+
+        return result.length() > 0 ? result.substring(0, result.length() - 1) : null;
+    }
+
+    public static Collection<String> decodeStringCollection(final String string) {
+        if (string == null || string.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return java.util.Arrays.asList(COMMA_DELIMITER_PATTERN.split(string));
+    }
+
 }

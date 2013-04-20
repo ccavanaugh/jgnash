@@ -17,8 +17,11 @@
  */
 package jgnash.engine;
 
+import jgnash.util.EncodeDecode;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -92,7 +95,14 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     /**
      * Memo for this entry
      */
+    @Column(columnDefinition = "VARCHAR(1024)")
     private String memo = "";
+
+    /**
+     * Field for user defined tags
+     */
+    @Column(columnDefinition = "VARCHAR(2048)", nullable = true)
+    private String customTags;
 
     /**
      * Public constructor
@@ -373,6 +383,19 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
 
     public TransactionTag getTransactionTag() {       
         return transactionTag;
+    }
+
+    /**
+     * Returns a delimited string of user defined customTags applied to the transaction
+     *
+     * @return custom tags or an empty collection if not set
+     */
+    public Collection<String> getCustomTags() {
+        return EncodeDecode.decodeStringCollection(customTags);
+    }
+
+    public void setCustomTags(final Collection<String> strings) {
+        customTags = EncodeDecode.encodeStringCollection(strings);
     }
 
     @Override

@@ -41,6 +41,7 @@ import java.util.regex.Pattern;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -146,6 +147,13 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     @Transient  // we don't want this to be persisted by JPA and will become obsolete
     private final Map<String, Serializable> propertyMap = new HashMap<>();
+
+    /**
+     * User definable attributes
+     */
+    @ElementCollection
+    @Column(columnDefinition = "varchar(8192)")
+    private Map<String, String> attributes = new HashMap<>(); // maps from attribute name to value
 
     private transient ReadWriteLock transactionLock;
 
@@ -1460,6 +1468,26 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     void setAmortizeObject(AmortizeObject amortizeObject) {
         this.amortizeObject = amortizeObject;
+    }
+
+    synchronized void setAttribute(final String key, final String value) {
+        if (key ==  null || key.isEmpty()) {
+            throw new RuntimeException("Attribute key may not be empty or null");
+        }
+
+        if (value == null) {
+            attributes.remove(key);
+        } else {
+            attributes.put(key, value);
+        }
+    }
+
+    public synchronized String getAttribute(final String key) {
+        if (key ==  null || key.isEmpty()) {
+            throw new RuntimeException("Attribute key may not be empty or null");
+        }
+
+        return attributes.get(key);
     }
 
     /**

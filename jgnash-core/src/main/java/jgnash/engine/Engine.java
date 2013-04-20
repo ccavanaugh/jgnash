@@ -1884,6 +1884,24 @@ public class Engine {
         }
     }
 
+    public void setAccountAttribute(final Account account, final String key, final String value) {
+        WriteLock accountWriteLock = accountLock.writeLock();
+        accountWriteLock.lock();
+
+        try {
+            account.setAttribute(key, value);
+            getAccountDAO().updateAccount(account);
+
+            Message message = new Message(MessageChannel.ACCOUNT, ChannelEvent.ACCOUNT_MODIFY, this);
+            message.setObject(MessageProperty.ACCOUNT, account);
+            messageBus.fireEvent(message);
+
+            logInfo(rb.getString("Message.AccountModify"));
+        } finally {
+            accountWriteLock.unlock();
+        }
+    }
+
     /**
      * Removes an existing account given it's ID.
      *

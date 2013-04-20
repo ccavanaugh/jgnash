@@ -591,6 +591,23 @@ public abstract class EngineTest {
     }
 
     @Test
+    public void testAccountAttributes() {
+        CurrencyNode node = e.getDefaultCurrency();
+
+        Account a = new Account(AccountType.BANK, node);
+        a.setName("AccountAttributes");
+
+        e.addAccount(e.getRootAccount(), a);
+
+        e.setAccountAttribute(a, "mystuff", "gobbledegook");
+
+        Account b = e.getAccountByUuid(a.getUuid());
+
+        assertEquals("gobbledegook", b.getAttribute("mystuff"));
+        assertEquals("gobbledegook", b.getAttribute("mystuff"));
+    }
+
+    @Test
     public void testAddAccount() {
         CurrencyNode node = e.getDefaultCurrency();
 
