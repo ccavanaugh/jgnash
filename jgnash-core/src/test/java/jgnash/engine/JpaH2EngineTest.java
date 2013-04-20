@@ -36,7 +36,7 @@ public class JpaH2EngineTest extends EngineTest {
     @Override
     protected void closeEngine() throws Exception {
         super.closeEngine();
-        Thread.sleep(4500); // hack to allow the DataStore to completely settle out
+        Thread.sleep(6000); // hack to allow the DataStore to completely settle out
     }
 
     @Override
