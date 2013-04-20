@@ -12,40 +12,35 @@
     <description>jGnash Swing UI</description>
     <packaging>jar</packaging>
 
-    <properties>
-        <jgnash.version>[2,)</jgnash.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jgnash-core</artifactId>
-            <version>${jgnash.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jgnash-convert</artifactId>
-            <version>${jgnash.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jgnash-help</artifactId>
-            <version>${jgnash.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jgnash-resources</artifactId>
-            <version>${jgnash.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jidesoft</artifactId>
-            <version>${jgnash.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>args4j</groupId>
+            <artifactId>args4j</artifactId>
         </dependency>
         <dependency>
             <artifactId>itext</artifactId>
             <groupId>com.lowagie</groupId>
-            <version>2.1.7</version>
+            <version>${itext.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>bcmail-jdk14</artifactId>
@@ -64,7 +59,7 @@
         <dependency>
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart</artifactId>
-            <version>1.0.14</version>
+            <version>${jfree.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>xml-apis</artifactId>
@@ -87,7 +82,7 @@
         <dependency>
             <groupId>com.github.insubstantial</groupId>
             <artifactId>substance-swingx</artifactId>
-            <version>7.2.1</version>
+            <version>${insubstantial.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>swingx-core</artifactId>
@@ -98,12 +93,12 @@
         <dependency>
             <groupId>com.github.insubstantial</groupId>
             <artifactId>substance</artifactId>
-            <version>7.2.1</version>
+            <version>${insubstantial.version}</version>
         </dependency>
         <dependency>
             <groupId>org.swinglabs.swingx</groupId>
             <artifactId>swingx-core</artifactId>
-            <version>1.6.5</version>
+            <version>${swingx.version}</version>
         </dependency>
         <dependency>
             <groupId>com.jgoodies</groupId>
@@ -123,7 +118,7 @@
         <dependency>
             <groupId>ar.com.fdvs</groupId>
             <artifactId>DynamicJasper</artifactId>
-            <version>4.0.3</version>
+            <version>${dynamic-jasper.version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>jcommon</artifactId>

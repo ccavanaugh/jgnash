@@ -14,24 +14,29 @@
 	<inceptionYear>2001</inceptionYear>
 
 	<dependencies>
+        <dependency>
+            <groupId>args4j</groupId>
+            <artifactId>args4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.help</groupId>
+            <artifactId>javahelp</artifactId>
+        </dependency>
 		<dependency>
 			<groupId>net.sf.docbook</groupId>
 			<artifactId>docbook-xsl</artifactId>
-			<version>1.76.1</version>
 			<type>zip</type>
 			<classifier>ns-resources</classifier>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.docbook</groupId>
 			<artifactId>docbook-xml</artifactId>
-			<version>5.0-all</version>
 			<type>zip</type>
 			<classifier>resources</classifier>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.plexus</groupId>
 			<artifactId>plexus-utils</artifactId>
-			<version>1.4.1</version>
 		</dependency>		
 	</dependencies>
 
@@ -365,7 +370,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -384,7 +389,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -405,7 +410,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -424,7 +429,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -443,7 +448,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore/>
 									</action>
 								</pluginExecution>
 							</pluginExecutions>

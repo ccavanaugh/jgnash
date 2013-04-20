@@ -8,21 +8,22 @@
   <artifactId>mt940</artifactId>
   <name>mt940</name>
   <description>mt940 Import Plugin</description>
+
   <dependencies>
   	<dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jgnash-core</artifactId>
-            <version>${project.version}</version>
+            <version>${jgnash.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jgnash-convert</artifactId>
-            <version>${project.version}</version>
+            <version>${jgnash.version}</version>
         </dependency>
          <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jgnash-swing</artifactId>
-            <version>${project.version}</version>
+            <version>${jgnash.version}</version>
         </dependency>
   </dependencies>
 
