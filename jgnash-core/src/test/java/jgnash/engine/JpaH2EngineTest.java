@@ -18,6 +18,7 @@
 package jgnash.engine;
 
 import jgnash.engine.jpa.JpaH2DataStore;
+import org.junit.After;
 import org.junit.Test;
 
 import java.io.File;
@@ -59,6 +60,11 @@ public class JpaH2EngineTest extends EngineTest {
             fail(e.getMessage());
             return null;
         }
+    }
+
+    @After
+    public void cleanup() throws IOException {
+        JpaH2DataStore.deleteDatabase(testFile);
     }
 
     @Test
