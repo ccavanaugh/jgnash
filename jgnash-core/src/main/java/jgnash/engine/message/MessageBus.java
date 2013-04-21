@@ -59,7 +59,7 @@ public class MessageBus {
 
     private final ExecutorService pool = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
-    private MessageBusRemoteClient messageBusClient = null;
+    private MessageBusClient messageBusClient = null;
 
     private static final Map<String, MessageBus> busMap = new HashMap<>();
 
@@ -130,7 +130,7 @@ public class MessageBus {
             throw new IllegalArgumentException();
         }
 
-        MessageBusRemoteClient client =  new MessageBusRemoteClient(remoteHost, remotePort);
+        MessageBusClient client =  new MessageBusClient(remoteHost, remotePort);
 
         if (client.connectToServer(password)) {
             client.sendRemoteShutdownRequest();
@@ -143,7 +143,7 @@ public class MessageBus {
             throw new IllegalArgumentException();
         }
 
-        messageBusClient = new MessageBusRemoteClient(remoteHost, remotePort);
+        messageBusClient = new MessageBusClient(remoteHost, remotePort);
 
         boolean result = messageBusClient.connectToServer(password);
 

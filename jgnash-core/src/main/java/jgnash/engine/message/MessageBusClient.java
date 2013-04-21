@@ -58,13 +58,13 @@ import java.util.logging.Logger;
  *
  * @author Craig Cavanaugh
  */
-class MessageBusRemoteClient {
+class MessageBusClient {
 
     private String host = "localhost";
 
     private int port = 0;
 
-    private static final Logger logger = Logger.getLogger(MessageBusRemoteClient.class.getName());
+    private static final Logger logger = Logger.getLogger(MessageBusClient.class.getName());
 
     private IoSession session;
 
@@ -81,7 +81,7 @@ class MessageBusRemoteClient {
         IoBuffer.setAllocator(new SimpleBufferAllocator());
     }
 
-    public MessageBusRemoteClient(final String host, final int port) {
+    public MessageBusClient(final String host, final int port) {
         this.host = host;
         this.port = port;
 
@@ -210,11 +210,11 @@ class MessageBusRemoteClient {
                         }
                     }, FORCED_LATENCY, TimeUnit.MILLISECONDS);
                 }
-            } else if (plainMessage.startsWith(MessageBusRemoteServer.PATH_PREFIX)) {
-                dataBasePath = plainMessage.substring(MessageBusRemoteServer.PATH_PREFIX.length());
+            } else if (plainMessage.startsWith(MessageBusServer.PATH_PREFIX)) {
+                dataBasePath = plainMessage.substring(MessageBusServer.PATH_PREFIX.length());
                 logger.log(Level.INFO, "Remote data path is: {0}", dataBasePath);
-            } else if (plainMessage.startsWith(MessageBusRemoteServer.DATA_STORE_TYPE_PREFIX)) {
-                dataBaseType = DataStoreType.valueOf(plainMessage.substring(MessageBusRemoteServer.DATA_STORE_TYPE_PREFIX.length()));
+            } else if (plainMessage.startsWith(MessageBusServer.DATA_STORE_TYPE_PREFIX)) {
+                dataBaseType = DataStoreType.valueOf(plainMessage.substring(MessageBusServer.DATA_STORE_TYPE_PREFIX.length()));
                 logger.log(Level.INFO, "Remote dataBaseType type is: {0}", dataBaseType.name());
             } else if (plainMessage.startsWith(EncryptionFilter.DECRYPTION_ERROR_TAG)) {    // decryption has failed, shut down the engine
                 logger.log(Level.SEVERE, "Unable to decrypt the remote message");
@@ -307,9 +307,9 @@ class MessageBusRemoteClient {
                     break;
                 case EXCHANGE_RATE_ADD:
                 case EXCHANGE_RATE_REMOVE:
-                    final ExchangeRate rate = (ExchangeRate) message.getObject(MessageProperty.EXCHANGERATE);
+                    final ExchangeRate rate = (ExchangeRate) message.getObject(MessageProperty.EXCHANGE_RATE);
                     engine.refreshExchangeRate(rate);
-                    message.setObject(MessageProperty.EXCHANGERATE, engine.getExchangeRateByUuid(rate.getUuid()));
+                    message.setObject(MessageProperty.EXCHANGE_RATE, engine.getExchangeRateByUuid(rate.getUuid()));
                     break;
                 default:
                     break;

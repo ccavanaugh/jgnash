@@ -23,7 +23,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
 import jgnash.engine.StoredObjectComparator;
 import jgnash.engine.message.LocalServerListener;
-import jgnash.engine.message.MessageBusRemoteServer;
+import jgnash.engine.message.MessageBusServer;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.FileMagic;
 import jgnash.util.FileUtils;
@@ -106,7 +106,7 @@ public class JpaNetworkServer {
         if (engine != null) {
 
             // Start the message bus and pass the file name so it can be reported to the client
-            MessageBusRemoteServer messageServer = new MessageBusRemoteServer(port + 1);
+            MessageBusServer messageServer = new MessageBusServer(port + 1);
             messageServer.startServer(dataStoreType, fileName, password);
 
             // Start the backup thread that ensures an XML backup is created at set intervals

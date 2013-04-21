@@ -1378,7 +1378,7 @@ public class Engine {
             getCommodityDAO().addExchangeRateHistory(exchangeRate, historyNode);
 
             Message message = new Message(MessageChannel.COMMODITY, ChannelEvent.EXCHANGE_RATE_ADD, this);
-            message.setObject(MessageProperty.EXCHANGERATE, exchangeRate);
+            message.setObject(MessageProperty.EXCHANGE_RATE, exchangeRate);
 
             messageBus.fireEvent(message);
         } finally {
@@ -1403,7 +1403,7 @@ public class Engine {
                 message = new Message(MessageChannel.COMMODITY, ChannelEvent.EXCHANGE_RATE_REMOVE_FAILED, this);
             }
 
-            message.setObject(MessageProperty.EXCHANGERATE, exchangeRate);
+            message.setObject(MessageProperty.EXCHANGE_RATE, exchangeRate);
             messageBus.fireEvent(message);
         } finally {
             commodityWriteLock.unlock();

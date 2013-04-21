@@ -43,7 +43,7 @@ import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
  * 
  * @author Craig Cavanaugh
  */
-public class MessageBusRemoteServer {
+public class MessageBusServer {
 
     public static final String PATH_PREFIX = "<PATH>";
     public static final String DATA_STORE_TYPE_PREFIX = "<TYPE>";
@@ -52,7 +52,7 @@ public class MessageBusRemoteServer {
 
     private IoAcceptor acceptor;
 
-    private static final Logger logger = Logger.getLogger(MessageBusRemoteServer.class.getName());
+    private static final Logger logger = Logger.getLogger(MessageBusServer.class.getName());
 
     private final Set<IoSession> clientSessions = new HashSet<>();
 
@@ -71,7 +71,7 @@ public class MessageBusRemoteServer {
         IoBuffer.setAllocator(new SimpleBufferAllocator());
     }
 
-    public MessageBusRemoteServer(final int port) {      
+    public MessageBusServer(final int port) {
         this.port = port;
     }
 
@@ -97,7 +97,7 @@ public class MessageBusRemoteServer {
             logger.log(Level.SEVERE, e.toString(), e);
         }
 
-        logger.info("MessageBusRemoteServer started");
+        logger.info("MessageBusServer started");
     }
 
     public void stopServer() {
