@@ -22,15 +22,11 @@ Direct Transaction entry option in the Ledger to avoid Transaction form.
 Formal Trial Balance report
 Better method of keeping preferences when updating computers
 
-Planned Future File Structure changes
--------------------------------------
-Add Broker ID, info to accounts etc to improve support for OFX import and export
-Class/Category tags for improved sorting.
-External links for transaction (External blobs)
-Money market account type
-
 Release 2.13.0
 ----------------------
+04/21/13 Added a Money Market account type
+04/20/13 New Engine and account api for setting and accessing custom text based account properties
+04/20/13 File schema changes to support external links to files and custom tags for transaction entries
 04/04/13 Discover and remove orphaned transactions left behind when Reminders were removed.
 04/03/13 Improve the shutdown experience if a file is not open.
 03/30/13 Added a new command line option to enable the xrender pipeline for X11 based systems.

@@ -46,6 +46,7 @@ public enum AccountType {
     INVEST(Resource.get().getString("AccountType.Investment"), AccountGroup.INVEST, InvestmentAccountProxy.class, false),
     SIMPLEINVEST(Resource.get().getString("AccountType.SimpleInvestment"), AccountGroup.INVEST, AccountProxy.class, true),
     LIABILITY(Resource.get().getString("AccountType.Liability"), AccountGroup.LIABILITY, AccountProxy.class, true),
+    MONEYMKRT(Resource.get().getString("AccountType.MoneyMkrt"), AccountGroup.ASSET, AccountProxy.class, true),
     MUTUAL(Resource.get().getString("AccountType.Mutual"), AccountGroup.INVEST, InvestmentAccountProxy.class, false),
     ROOT(Resource.get().getString("AccountType.Root"), AccountGroup.ROOT, AccountProxy.class, true);
 
