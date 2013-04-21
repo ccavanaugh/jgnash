@@ -131,7 +131,7 @@ public class JpaConfiguration {
                 }
 
                 urlBuilder.append(host).append(":").append(port).append("/");
-                urlBuilder.append(fileName);
+                urlBuilder.append(FileUtils.stripFileExtension(fileName));
 
                 urlBuilder.append(";USER=").append(DEFAULT_USER);
                 urlBuilder.append(";PASSWORD=").append(password);
