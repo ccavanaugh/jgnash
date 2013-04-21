@@ -19,7 +19,6 @@ package jgnash.engine;
 
 import jgnash.engine.jpa.JpaH2DataStore;
 import jgnash.engine.jpa.JpaHsqlDataStore;
-import org.junit.After;
 import org.junit.Test;
 
 import java.io.File;
@@ -36,12 +35,6 @@ import static org.junit.Assert.fail;
 public class JpaHsqlEngineTest extends EngineTest {
 
     private static final float DELTA = .001f;
-
-    @Override
-    protected void closeEngine() throws Exception {
-        super.closeEngine();
-        Thread.sleep(2500); // hack to allow the DataStore to completely settle out
-    }
 
     @Override
     public Engine createEngine() throws Exception {
@@ -65,10 +58,10 @@ public class JpaHsqlEngineTest extends EngineTest {
         }
     }
 
-    @After
+    /*@After
     public void cleanup() throws IOException {
         JpaHsqlDataStore.deleteDatabase(testFile);
-    }
+    }*/
 
     @Test
     public void testVersion() {
