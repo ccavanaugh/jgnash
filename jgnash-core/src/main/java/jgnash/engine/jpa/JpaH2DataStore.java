@@ -45,14 +45,7 @@ public class JpaH2DataStore extends AbstractJpaDataStore {
      */
     @Override
     public boolean initEmptyDatabase(final String fileName) {
-        /*try {
-            Class.forName("org.h2.Driver");
-            return super.initEmptyDatabase(fileName);
-        } catch (final ClassNotFoundException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-        }
-        return false;*/
-        return true; // H2 starts cleanly without a initial file
+        return true; // H2 starts cleanly without an initial file
     }
 
     @Override
@@ -82,6 +75,7 @@ public class JpaH2DataStore extends AbstractJpaDataStore {
 
         for (String extension : extensions) {
             try {
+                logger.info(base + extension);
                 Files.deleteIfExists(Paths.get(base + extension));
             } catch (IOException e) {
                 logger.log(Level.SEVERE, e.getMessage(), e);
