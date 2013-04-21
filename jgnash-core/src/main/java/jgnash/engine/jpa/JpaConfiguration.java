@@ -75,6 +75,8 @@ public class JpaConfiguration {
                 if (readOnly) {
                     urlBuilder.append(";ACCESS_MODE_DATA=r");
                 }
+
+                urlBuilder.append(";TRACE_LEVEL_SYSTEM_OUT=1"); // make sure errors are logged to the console
                 break;
             case HSQL_DATABASE:
                 urlBuilder.append("jdbc:hsqldb:file:");
@@ -133,8 +135,6 @@ public class JpaConfiguration {
 
                 urlBuilder.append(";USER=").append(DEFAULT_USER);
                 urlBuilder.append(";PASSWORD=").append(password);
-
-                //urlBuilder.append(";DB_CLOSE_DELAY=20");
                 break;
             case HSQL_DATABASE:
                 urlBuilder.append("jdbc:hsqldb:hsql://");
@@ -151,7 +151,6 @@ public class JpaConfiguration {
 
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_USER, DEFAULT_USER);
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_PASSWORD, new String(password));
-
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_URL, urlBuilder.toString());
 
         return properties;
