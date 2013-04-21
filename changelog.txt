@@ -24,14 +24,15 @@ Better method of keeping preferences when updating computers
 
 Release 2.13.0
 ----------------------
-04/21/13 Added a Money Market account type
-04/20/13 New Engine and account api for setting and accessing custom text based account properties
-04/20/13 File schema changes to support external links to files and custom tags for transaction entries
+04/21/13 Added a Money Market account type.
+04/20/13 New Engine and account api for setting and accessing custom text based account properties.
+04/20/13 File schema changes to support external links to files and custom tags for transaction entries.
 04/04/13 Discover and remove orphaned transactions left behind when Reminders were removed.
 04/03/13 Improve the shutdown experience if a file is not open.
 03/30/13 Added a new command line option to enable the xrender pipeline for X11 based systems.
-03/28/13 Prevent background updates from running during a shutdown if performed right after startup
-03/21/13 Changed binary and xml file structure for amortization objects
+03/28/13 Prevent background updates from running during a shutdown if performed right after startup.
+03/25/13 Create a versioned backup of the old file automatically if the file format has been changed.
+03/21/13 Changed binary and xml file structure for amortization objects.
 
 Release 2.12.0
 ----------------------
