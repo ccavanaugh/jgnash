@@ -940,8 +940,15 @@ public class Engine {
      */
     private void clearCachedAccountBalance(final Account account) {
 
-        account.clearCachedBalances();
-        getAccountDAO().updateAccount(account);
+        WriteLock writeLock = accountLock.writeLock();
+        writeLock.lock();
+
+        try {
+            account.clearCachedBalances();
+            getAccountDAO().updateAccount(account);
+        } finally {
+            writeLock.unlock();
+        }
 
         if (account.getParent() != null && account.getParent().getAccountType() != AccountType.ROOT) {
             clearCachedAccountBalance(account.getParent());
