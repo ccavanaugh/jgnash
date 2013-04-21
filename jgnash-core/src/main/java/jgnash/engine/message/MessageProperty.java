@@ -21,13 +21,12 @@ package jgnash.engine.message;
  * Message property Enums
  *
  * @author Craig Cavanaugh
- *
  */
 public enum MessageProperty {
     ACCOUNT,
     BUDGET,
     COMMODITY,
-    EXCHANGERATE,
+    EXCHANGE_RATE,
     REMINDER,
     TRANSACTION
 }
