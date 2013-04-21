@@ -45,9 +45,11 @@ public class SqlUtils {
 
     /**
      * Maximum amount of time to wait for the lock file to release after closure.  Typical time should be about 2 seconds,
-     * but unit tests can sometimes take longer
+     * but unit tests or large databases can sometimes take longer
      */
-    private static final long MAX_LOCK_RELEASE_TIME = 15 * 1000;
+    private static final long MAX_LOCK_RELEASE_TIME = 30 * 1000;
+
+    private static final int LOCK_WAIT_SLEEP = 750;
 
     private SqlUtils() {
     }
@@ -72,11 +74,11 @@ public class SqlUtils {
                     result = true;
 
                     statement.close();
-                } catch (SQLException e) {
+                } catch (final SQLException e) {
                     logger.log(Level.SEVERE, e.getMessage(), e);
                 }
             }
-        } catch (FileNotFoundException e) {
+        } catch (final FileNotFoundException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
@@ -95,11 +97,11 @@ public class SqlUtils {
         try {
             if (!FileUtils.isFileLocked(fileName)) {
 
-                DataStoreType dataStoreType = EngineFactory.getDataStoreByType(fileName);
+                final DataStoreType dataStoreType = EngineFactory.getDataStoreByType(fileName);
 
-                Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password, true);
+                final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password, true);
 
-                String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
+                final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
                 try (Connection connection = DriverManager.getConnection(url)) {
                     Statement statement = connection.createStatement();
@@ -113,13 +115,13 @@ public class SqlUtils {
 
                     resultSet.close();
                     statement.close();
-                } catch (SQLException e) {
+                } catch (final SQLException e) {
                     Logger.getLogger(JpaConfiguration.class.getName()).log(Level.SEVERE, e.getMessage(), e);
                 }
             } else {
                 logger.severe("File was locked");
             }
-        } catch (FileNotFoundException e) {
+        } catch (final FileNotFoundException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
@@ -129,38 +131,51 @@ public class SqlUtils {
     /**
      * Forces a database closed and waits for the lock file to disappear indicating the database server is closed
      *
-     * @param dataStoreType DataStoreType to connect to
-     * @param fileName path of the file to close
+     * @param dataStoreType     DataStoreType to connect to
+     * @param fileName          path of the file to close
      * @param lockFileExtension lock file extension
-     * @param password password for the database
+     * @param password          password for the database
      */
     public static void waitForLockFileRelease(final DataStoreType dataStoreType, final String fileName, final String lockFileExtension, final char[] password) {
 
-        Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password, false);
-        String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
+        final String lockFile = FileUtils.stripFileExtension(fileName) + lockFileExtension;
+        logger.info("Searching for lock file: " + lockFile);
 
-        // Explicitly force the database closed, Required for hsqldb
-        try {
-            Connection connection = DriverManager.getConnection(url, JpaConfiguration.DEFAULT_USER, new String(password));
+        // Don't try if the lock file does not exist
+        if (Files.exists(Paths.get(lockFile))) {
 
-            connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for correct file closure
-            connection.close();
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-        }
+            Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password, false);
+            String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
-        // It may take awhile for the lock to be released.  Wait for removal so any later attempts to open the file won't see the lock file and fail.
-        long then = new Date().getTime();
+            // Send shutdown to close the database
+            try {
+                final Connection connection = DriverManager.getConnection(url, JpaConfiguration.DEFAULT_USER, new String(password));
 
-        while (Files.exists(Paths.get(FileUtils.stripFileExtension(fileName) + lockFileExtension))) {
-            long now = new Date().getTime();
-
-            if ((now - then) > MAX_LOCK_RELEASE_TIME) {
-                logger.warning("Exceeded the maximum wait time for the file lock release");
-                break;
+                connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for correct file closure
+                connection.close();
+            } catch (final SQLException e) {
+                logger.log(Level.SEVERE, e.getMessage(), e);
             }
 
-            Thread.yield();
+            logger.info("SQL SHUTDOWN was issued");
+
+            // It may take awhile for the lock to be released.  Wait for removal so any later attempts to open the file won't see the lock file and fail.
+            final long then = new Date().getTime();
+
+            while (Files.exists(Paths.get(lockFile))) {
+                long now = new Date().getTime();
+
+                if ((now - then) > MAX_LOCK_RELEASE_TIME) {
+                    logger.warning("Exceeded the maximum wait time for the file lock release");
+                    break;
+                }
+
+                try {
+                    Thread.sleep(LOCK_WAIT_SLEEP);
+                } catch (final InterruptedException e) {
+                    logger.log(Level.SEVERE, e.getMessage(), e);
+                }
+            }
         }
     }
 }
