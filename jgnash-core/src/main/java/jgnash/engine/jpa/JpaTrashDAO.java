@@ -86,7 +86,7 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
 
             em.getTransaction().begin();
 
-            StoredObject object = getObjectByUuid(trashObject.getUuid());
+            StoredObject object = trashObject.getObject();
 
             em.remove(object);
             em.remove(trashObject);
