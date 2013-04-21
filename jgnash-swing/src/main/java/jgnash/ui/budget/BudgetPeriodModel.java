@@ -39,11 +39,11 @@ import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetPeriodDescriptor;
 import jgnash.engine.budget.BudgetPeriodResults;
 import jgnash.engine.budget.BudgetResultsModel;
-import jgnash.message.ChannelEvent;
-import jgnash.message.Message;
-import jgnash.message.MessageListener;
-import jgnash.message.MessageProperty;
-import jgnash.message.MessageProxy;
+import jgnash.engine.message.ChannelEvent;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageListener;
+import jgnash.engine.message.MessageProperty;
+import jgnash.engine.message.MessageProxy;
 import jgnash.util.Resource;
 
 import static javax.swing.event.TableModelEvent.*;

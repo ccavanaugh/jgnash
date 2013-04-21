@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
 import javax.swing.*;
 
 import jgnash.engine.CommodityNode;
-import jgnash.message.MessageListener;
+import jgnash.engine.message.MessageListener;
 import jgnash.util.DefaultDaemonThreadFactory;
 
 /**

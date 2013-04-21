@@ -24,8 +24,8 @@ import java.util.Arrays;
 import jgnash.engine.Account;
 import jgnash.engine.Comparators;
 import jgnash.engine.Transaction;
-import jgnash.message.Message;
-import jgnash.message.MessageProperty;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageProperty;
 
 /**
  * Sorts the account transactions.

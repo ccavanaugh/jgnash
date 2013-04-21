@@ -51,11 +51,11 @@ import java.util.Date;
 
 import jgnash.engine.Account;
 import jgnash.engine.MathConstants;
-import jgnash.message.Message;
-import jgnash.message.MessageBus;
-import jgnash.message.MessageChannel;
-import jgnash.message.MessageListener;
-import jgnash.message.MessageProperty;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageListener;
+import jgnash.engine.message.MessageProperty;
 import jgnash.text.CommodityFormat;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.FormattedJTable;

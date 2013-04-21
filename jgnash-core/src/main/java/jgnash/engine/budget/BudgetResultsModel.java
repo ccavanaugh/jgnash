@@ -17,6 +17,21 @@
  */
 package jgnash.engine.budget;
 
+import jgnash.engine.Account;
+import jgnash.engine.AccountGroup;
+import jgnash.engine.AccountType;
+import jgnash.engine.CurrencyNode;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.MathConstants;
+import jgnash.engine.Transaction;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageListener;
+import jgnash.engine.message.MessageProperty;
+import jgnash.engine.message.MessageProxy;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,26 +45,10 @@ import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import jgnash.engine.Account;
-import jgnash.engine.AccountGroup;
-import jgnash.engine.AccountType;
-import jgnash.engine.CurrencyNode;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.MathConstants;
-import jgnash.engine.Transaction;
-import jgnash.message.Message;
-import jgnash.message.MessageBus;
-import jgnash.message.MessageChannel;
-import jgnash.message.MessageListener;
-import jgnash.message.MessageProperty;
-import jgnash.message.MessageProxy;
-
 /**
  * Model for budget results
  *
  * @author Craig Cavanaugh
- *
  */
 public class BudgetResultsModel implements MessageListener {
 

@@ -38,10 +38,10 @@ import javax.swing.SwingConstants;
 
 import jgnash.Main;
 import jgnash.engine.EngineFactory;
-import jgnash.message.ChannelEvent;
-import jgnash.message.Message;
-import jgnash.message.MessageBus;
-import jgnash.message.MessageChannel;
+import jgnash.engine.message.ChannelEvent;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
 import jgnash.ui.components.ExceptionDialog;
 import jgnash.ui.splash.AboutDialog;
 import jgnash.ui.util.DialogUtils;

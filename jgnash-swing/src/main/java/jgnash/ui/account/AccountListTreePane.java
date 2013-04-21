@@ -37,7 +37,7 @@ import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.RootAccount;
-import jgnash.message.*;
+import jgnash.engine.message.*;
 
 /**
  * Extends <code>JScrollPane</code> to create a component that lists a tree of available accounts. A JTree is used for

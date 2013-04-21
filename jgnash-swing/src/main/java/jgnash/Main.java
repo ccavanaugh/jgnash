@@ -17,6 +17,22 @@
  */
 package jgnash;
 
+import jgnash.engine.Engine;
+import jgnash.engine.jpa.JpaNetworkServer;
+import jgnash.engine.message.MessageBus;
+import jgnash.net.NetworkAuthenticator;
+import jgnash.net.security.AbstractYahooParser;
+import jgnash.ui.MainFrame;
+import jgnash.ui.UIApplication;
+import jgnash.ui.actions.OpenAction;
+import jgnash.util.FileUtils;
+import jgnash.util.OS;
+import jgnash.util.Resource;
+
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,22 +46,6 @@ import java.util.prefs.InvalidPreferencesFormatException;
 import java.util.prefs.Preferences;
 
 import javax.swing.JOptionPane;
-
-import jgnash.engine.Engine;
-import jgnash.engine.jpa.JpaNetworkServer;
-import jgnash.message.MessageBus;
-import jgnash.net.NetworkAuthenticator;
-import jgnash.net.security.AbstractYahooParser;
-import jgnash.ui.MainFrame;
-import jgnash.ui.UIApplication;
-import jgnash.ui.actions.OpenAction;
-import jgnash.util.FileUtils;
-import jgnash.util.OS;
-import jgnash.util.Resource;
-
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
-import org.kohsuke.args4j.Option;
 
 /**
  * This is the main entry point for the jGnash application.

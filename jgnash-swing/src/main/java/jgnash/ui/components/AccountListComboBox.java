@@ -34,12 +34,12 @@ import javax.swing.ListCellRenderer;
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
 import jgnash.engine.EngineFactory;
-import jgnash.message.ChannelEvent;
-import jgnash.message.Message;
-import jgnash.message.MessageBus;
-import jgnash.message.MessageChannel;
-import jgnash.message.MessageListener;
-import jgnash.message.MessageProperty;
+import jgnash.engine.message.ChannelEvent;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageListener;
+import jgnash.engine.message.MessageProperty;
 
 /**
  * ComboBox for displaying a list of accounts. Automatically refreshes itself

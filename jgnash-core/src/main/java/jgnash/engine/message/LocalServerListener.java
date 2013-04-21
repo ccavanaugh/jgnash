@@ -15,11 +15,15 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.message;
+
+package jgnash.engine.message;
 
 /**
- * Default message channels used by the engine
+ * Classes must implement this interface to register and lister the message events
+ *
+ * @author Craig Cavanaugh
+ *
  */
-public enum MessageChannel {
-    ACCOUNT, BUDGET, COMMODITY, REMINDER, SYSTEM, TRANSACTION
+public interface LocalServerListener {
+    void messagePosted(String event);
 }

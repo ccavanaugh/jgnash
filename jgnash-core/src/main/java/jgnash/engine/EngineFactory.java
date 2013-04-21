@@ -18,18 +18,16 @@
 package jgnash.engine;
 
 import jgnash.engine.jpa.SqlUtils;
+import jgnash.engine.message.ChannelEvent;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
 import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.engine.xstream.XMLDataStore;
-import jgnash.message.ChannelEvent;
-import jgnash.message.Message;
-import jgnash.message.MessageBus;
-import jgnash.message.MessageChannel;
 import jgnash.util.FileMagic;
 import jgnash.util.FileMagic.FileType;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
-
-import javax.swing.filechooser.FileSystemView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -41,6 +39,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+
+import javax.swing.filechooser.FileSystemView;
 
 /**
  * Factory class for obtaining an engine instance

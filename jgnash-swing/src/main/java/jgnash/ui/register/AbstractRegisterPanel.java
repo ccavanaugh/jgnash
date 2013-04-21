@@ -37,10 +37,10 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTable;
 
 import jgnash.engine.*;
-import jgnash.message.ChannelEvent;
-import jgnash.message.Message;
-import jgnash.message.MessageListener;
-import jgnash.message.MessageProperty;
+import jgnash.engine.message.ChannelEvent;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageListener;
+import jgnash.engine.message.MessageProperty;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.YesNoDialog;
 import jgnash.ui.register.table.AbstractRegisterTableModel;

@@ -17,6 +17,31 @@
  */
 package jgnash.engine;
 
+import jgnash.engine.budget.Budget;
+import jgnash.engine.budget.BudgetGoal;
+import jgnash.engine.budget.BudgetPeriod;
+import jgnash.engine.budget.BudgetPeriodDescriptor;
+import jgnash.engine.budget.BudgetPeriodDescriptorFactory;
+import jgnash.engine.dao.AccountDAO;
+import jgnash.engine.dao.BudgetDAO;
+import jgnash.engine.dao.CommodityDAO;
+import jgnash.engine.dao.ConfigDAO;
+import jgnash.engine.dao.EngineDAO;
+import jgnash.engine.dao.RecurringDAO;
+import jgnash.engine.dao.TransactionDAO;
+import jgnash.engine.dao.TrashDAO;
+import jgnash.engine.message.ChannelEvent;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageProperty;
+import jgnash.engine.recurring.PendingReminder;
+import jgnash.engine.recurring.RecurringIterator;
+import jgnash.engine.recurring.Reminder;
+import jgnash.util.DateUtils;
+import jgnash.util.DefaultDaemonThreadFactory;
+import jgnash.util.Resource;
+
 import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -39,31 +64,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import jgnash.engine.budget.Budget;
-import jgnash.engine.budget.BudgetGoal;
-import jgnash.engine.budget.BudgetPeriod;
-import jgnash.engine.budget.BudgetPeriodDescriptor;
-import jgnash.engine.budget.BudgetPeriodDescriptorFactory;
-import jgnash.engine.dao.AccountDAO;
-import jgnash.engine.dao.BudgetDAO;
-import jgnash.engine.dao.CommodityDAO;
-import jgnash.engine.dao.ConfigDAO;
-import jgnash.engine.dao.EngineDAO;
-import jgnash.engine.dao.RecurringDAO;
-import jgnash.engine.dao.TransactionDAO;
-import jgnash.engine.dao.TrashDAO;
-import jgnash.engine.recurring.PendingReminder;
-import jgnash.engine.recurring.RecurringIterator;
-import jgnash.engine.recurring.Reminder;
-import jgnash.message.ChannelEvent;
-import jgnash.message.Message;
-import jgnash.message.MessageBus;
-import jgnash.message.MessageChannel;
-import jgnash.message.MessageProperty;
-import jgnash.util.DateUtils;
-import jgnash.util.DefaultDaemonThreadFactory;
-import jgnash.util.Resource;
 
 /**
  * Engine class

@@ -30,11 +30,11 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.QuoteSource;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
-import jgnash.message.ChannelEvent;
-import jgnash.message.Message;
-import jgnash.message.MessageBus;
-import jgnash.message.MessageChannel;
-import jgnash.message.MessageListener;
+import jgnash.engine.message.ChannelEvent;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageListener;
 import jgnash.ui.UIApplication;
 import jgnash.util.Resource;
 

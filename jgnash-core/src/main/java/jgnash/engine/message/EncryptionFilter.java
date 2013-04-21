@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package jgnash.message;
+package jgnash.engine.message;
 
 import org.apache.commons.codec.binary.Base64;
 

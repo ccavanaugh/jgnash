@@ -27,8 +27,8 @@ import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionType;
-import jgnash.message.Message;
-import jgnash.message.MessageProperty;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageProperty;
 import jgnash.ui.register.AccountBalanceDisplayManager;
 
 /**

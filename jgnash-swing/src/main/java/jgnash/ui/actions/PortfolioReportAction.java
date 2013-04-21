@@ -22,9 +22,9 @@ import java.awt.event.ActionEvent;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.message.Message;
-import jgnash.message.MessageBus;
-import jgnash.message.MessageChannel;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
 import jgnash.ui.report.compiled.PortfolioReport;
 import jgnash.ui.util.builder.Action;
 

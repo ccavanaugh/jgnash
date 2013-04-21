@@ -15,19 +15,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.message;
+package jgnash.engine.message;
 
 /**
- * Message property Enums
+ * Classes must implement this interface to register and lister the message events
  *
  * @author Craig Cavanaugh
  *
  */
-public enum MessageProperty {
-    ACCOUNT,
-    BUDGET,
-    COMMODITY,
-    EXCHANGERATE,
-    REMINDER,
-    TRANSACTION
+public interface MessageListener {
+    void messagePosted(Message event);
 }
