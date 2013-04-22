@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -54,8 +55,7 @@ public class MessageBus {
 
     private static final Logger logger = Logger.getLogger(MessageBus.class.getName());
 
-    @SuppressWarnings("MapReplaceableByEnumMap")
-    private final Map<MessageChannel, Set<WeakReference<MessageListener>>> map = new ConcurrentHashMap<>();
+    private final ConcurrentMap<MessageChannel, Set<WeakReference<MessageListener>>> map = new ConcurrentHashMap<>();
 
     private final ExecutorService pool = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
@@ -134,7 +134,6 @@ public class MessageBus {
 
         if (client.connectToServer(password)) {
             client.sendRemoteShutdownRequest();
-            //client.disconnectFromServer();
         }
     }
 
@@ -258,28 +257,4 @@ public class MessageBus {
             }
         }
     }
-
-    /*private void _shutdown() {
-    pool.shutdown();
-
-    try {
-    // Wait a while for existing tasks to terminate
-    if (!pool.awaitTermination(60, TimeUnit.SECONDS)) {
-    pool.shutdownNow(); // Cancel currently executing tasks
-    // Wait a while for tasks to respond to being canceled
-    if (!pool.awaitTermination(60, TimeUnit.SECONDS)) {
-    System.err.println("Pool did not terminate");
-    }
-    }
-    } catch (InterruptedException ie) {
-    // (Re-)Cancel if current thread also interrupted
-    pool.shutdownNow();
-    // Preserve interrupt status
-    Thread.currentThread().interrupt();
-    }
-    }*/
-
-    /*public static void shutdown() {
-    getInstance()._shutdown();
-    }*/
 }
