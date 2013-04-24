@@ -106,8 +106,8 @@ public class JpaNetworkServer {
         if (engine != null) {
 
             // Start the message bus and pass the file name so it can be reported to the client
-            MessageBusServer messageServer = new MessageBusServer(port + 1);
-            messageServer.startServer(dataStoreType, fileName, password);
+            MessageBusServer messageBusServer = new MessageBusServer(port + 1);
+            messageBusServer.startServer(dataStoreType, fileName, password);
 
             // Start the backup thread that ensures an XML backup is created at set intervals
             ScheduledExecutorService backupExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
@@ -139,7 +139,7 @@ public class JpaNetworkServer {
                 }
             };
 
-            messageServer.addLocalListener(listener);
+            messageBusServer.addLocalListener(listener);
 
             // wait here forever
             try {
@@ -150,13 +150,13 @@ public class JpaNetworkServer {
                 Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            messageServer.removeLocalListener(listener);
+            messageBusServer.removeLocalListener(listener);
 
             backupExecutor.shutdown();
 
             exportXML(engine, fileName);
 
-            messageServer.stopServer();
+            messageBusServer.stopServer();
 
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
