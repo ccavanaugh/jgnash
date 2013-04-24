@@ -91,6 +91,7 @@ public class MessageBusClient {
         xstream = new XStream(new StaxDriver());
         xstream.alias("Message", Message.class);
         xstream.alias("MessageProperty", MessageProperty.class);
+        xstream.alias("LockState", LockState.class);
     }
 
     public String getDataBasePath() {
@@ -182,6 +183,7 @@ public class MessageBusClient {
         }
 
         @Override
+        //TODO offload processing of the messages to an execution pool so the server is not blocked
         public void messageReceived(final ChannelHandlerContext ctx, final String msg) throws Exception {
             String plainMessage = decrypt(msg);
 
@@ -202,6 +204,8 @@ public class MessageBusClient {
                         }
                     }, FORCED_LATENCY, TimeUnit.MILLISECONDS);
                 }
+            } else if (plainMessage.startsWith("<LockState>")) {
+                // update the client lock map
             } else if (plainMessage.startsWith(MessageBusServer.PATH_PREFIX)) {
                 dataBasePath = plainMessage.substring(MessageBusServer.PATH_PREFIX.length());
                 logger.log(Level.INFO, "Remote data path is: {0}", dataBasePath);

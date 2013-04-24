@@ -56,6 +56,8 @@ public class MessageBusServer {
 
     public static final String DATA_STORE_TYPE_PREFIX = "<TYPE>";
 
+    public static final String LOCK_STATE_PREFIX = "<LockState>";
+
     public static final String EOL_DELIMITER = "\r\n";
 
     private int port = 0;
@@ -73,6 +75,8 @@ public class MessageBusServer {
     private final ChannelGroup channelGroup = new DefaultChannelGroup("all-connected");
 
     private EncryptionFilter filter;
+
+    private Set<LockState> lastLockState = new HashSet<>();
 
     public MessageBusServer(final int port) {
         this.port = port;
@@ -157,6 +161,7 @@ public class MessageBusServer {
 
     /**
      * Utility method to encrypt a message
+     *
      * @param message message to encrypt
      * @return encrypted message
      */
@@ -199,6 +204,9 @@ public class MessageBusServer {
 
             logger.log(Level.INFO, "Remote connection from: {0}", ctx.channel().remoteAddress().toString());
 
+            //TODO Dump current lock status to the client
+            // Use xtream to decode into a message and set every lock message in the set to the client
+
             // Inform the client what they are talking with
             ctx.write(encrypt(PATH_PREFIX + dataBasePath) + EOL_DELIMITER);
             ctx.write(encrypt(DATA_STORE_TYPE_PREFIX + dataStoreType) + EOL_DELIMITER);
@@ -222,6 +230,10 @@ public class MessageBusServer {
             }
 
             rwl.readLock().lock();
+
+            if (message.startsWith(LOCK_STATE_PREFIX)) {  // lock request, decode and cache the result for new connections
+                //lastLockState.add(decodedLockState)
+            }
 
             try {
                 channelGroup.write(encrypt(plainMessage) + EOL_DELIMITER).sync();
