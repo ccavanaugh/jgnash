@@ -20,22 +20,28 @@ package jgnash.engine.message;
 import java.io.Serializable;
 
 /**
- * A Serializable lock state message client must respect
+ * A Serializable and mutable lock state message clients must respect
+ *
  * @author Craig Cavanaugh
  */
 public class LockState implements Serializable {
 
     private String lockId;
 
-    private boolean locked;
+    // located state, will be accessed by multiple threads
+    private volatile boolean locked;
 
     public LockState(String lockId, boolean locked) {
         this.lockId = lockId;
         this.locked = locked;
     }
 
-    public boolean isLocked() {
+    public synchronized boolean isLocked() {
         return locked;
+    }
+
+    public synchronized void setLocked(final boolean locked) {
+        this.locked = locked;
     }
 
     public String getLockId() {
@@ -48,7 +54,7 @@ public class LockState implements Serializable {
     }
 
     @Override
-    public boolean equals(Object other) {
+    public boolean equals(final Object other) {
         if (other == this) {
             return true;
         }

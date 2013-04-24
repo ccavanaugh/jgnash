@@ -19,8 +19,6 @@ package jgnash.engine.message;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
-
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.BufType;
 import io.netty.channel.Channel;
@@ -38,7 +36,6 @@ import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
-
 import jgnash.engine.Account;
 import jgnash.engine.CommodityNode;
 import jgnash.engine.DataStoreType;
@@ -52,6 +49,8 @@ import jgnash.engine.recurring.Reminder;
 import jgnash.net.ConnectionFactory;
 
 import java.io.CharArrayWriter;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -84,14 +83,16 @@ public class MessageBusClient {
 
     private ChannelFuture lastWriteFuture = null;
 
+    /**
+     * Lookup map for remote states
+     */
+    private Map<String, LockState> remoteLockStates = new ConcurrentHashMap<>();
+
     public MessageBusClient(final String host, final int port) {
         this.host = host;
         this.port = port;
 
-        xstream = new XStream(new StaxDriver());
-        xstream.alias("Message", Message.class);
-        xstream.alias("MessageProperty", MessageProperty.class);
-        xstream.alias("LockState", LockState.class);
+        xstream = XStreamFactory.getInstance();
     }
 
     public String getDataBasePath() {
@@ -204,8 +205,8 @@ public class MessageBusClient {
                         }
                     }, FORCED_LATENCY, TimeUnit.MILLISECONDS);
                 }
-            } else if (plainMessage.startsWith("<LockState>")) {
-                // update the client lock map
+            } else if (plainMessage.startsWith("<LockState>")) {  // process immediately
+                updateLockState(plainMessage);
             } else if (plainMessage.startsWith(MessageBusServer.PATH_PREFIX)) {
                 dataBasePath = plainMessage.substring(MessageBusServer.PATH_PREFIX.length());
                 logger.log(Level.INFO, "Remote data path is: {0}", dataBasePath);
@@ -226,6 +227,17 @@ public class MessageBusClient {
         public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
             logger.log(Level.WARNING, "Unexpected exception from downstream.", cause);
             ctx.close();
+        }
+    }
+
+    private void updateLockState(final String message) {
+        final LockState newLockState = (LockState) xstream.fromXML(message);
+
+        if (!remoteLockStates.containsKey(newLockState.getLockId())) {
+             remoteLockStates.put(newLockState.getLockId(), newLockState);
+        } else { // update the existing lock state
+            LockState lockState = remoteLockStates.get(newLockState.getLockId());
+            lockState.setLocked(newLockState.isLocked());
         }
     }
 

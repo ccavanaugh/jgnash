@@ -17,6 +17,8 @@
  */
 package jgnash.engine.message;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.CompactWriter;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.BufType;
 import io.netty.channel.ChannelFuture;
@@ -36,8 +38,11 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import jgnash.engine.DataStoreType;
 
+import java.io.CharArrayWriter;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
@@ -76,7 +81,9 @@ public class MessageBusServer {
 
     private EncryptionFilter filter;
 
-    private Set<LockState> lastLockState = new HashSet<>();
+    private Map<String, LockState> lockStates = new ConcurrentHashMap<>();
+
+    private XStream xstream = XStreamFactory.getInstance();
 
     public MessageBusServer(final int port) {
         this.port = port;
@@ -199,15 +206,18 @@ public class MessageBusServer {
 
         @Override
         public void channelActive(final ChannelHandlerContext ctx) throws Exception {
-
             channelGroup.add(ctx.channel()); // maintain channels
 
             logger.log(Level.INFO, "Remote connection from: {0}", ctx.channel().remoteAddress().toString());
 
-            //TODO Dump current lock status to the client
-            // Use xtream to decode into a message and set every lock message in the set to the client
+            // Use XStream to decode and send every lock state to the newly connected client
+            for (LockState lockState : lockStates.values()) {
+                CharArrayWriter writer = new CharArrayWriter();
+                xstream.marshal(lockState, new CompactWriter(writer));
+                ctx.write(encrypt(writer.toString()) + EOL_DELIMITER);
+            }
 
-            // Inform the client what they are talking with
+            // Inform the client what they are talking with so they can establish a correct database url
             ctx.write(encrypt(PATH_PREFIX + dataBasePath) + EOL_DELIMITER);
             ctx.write(encrypt(DATA_STORE_TYPE_PREFIX + dataStoreType) + EOL_DELIMITER);
         }
@@ -220,7 +230,6 @@ public class MessageBusServer {
 
         @Override
         public void messageReceived(final ChannelHandlerContext ctx, final String message) throws Exception {
-
             final String plainMessage;
 
             if (filter != null) {
@@ -232,7 +241,7 @@ public class MessageBusServer {
             rwl.readLock().lock();
 
             if (message.startsWith(LOCK_STATE_PREFIX)) {  // lock request, decode and cache the result for new connections
-                //lastLockState.add(decodedLockState)
+                updateLockState(plainMessage);
             }
 
             try {
@@ -253,6 +262,21 @@ public class MessageBusServer {
         public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
             logger.log(Level.WARNING, "Unexpected exception from downstream.", cause);
             ctx.close();
+        }
+
+        /**
+         * Update the local cache of lock states
+         * @param message
+         */
+        private void updateLockState(final String message) {
+            final LockState newLockState = (LockState) xstream.fromXML(message);
+
+            if (!lockStates.containsKey(newLockState.getLockId())) {
+                lockStates.put(newLockState.getLockId(), newLockState);
+            } else { // update the existing lock state
+                LockState lockState = lockStates.get(newLockState.getLockId());
+                lockState.setLocked(newLockState.isLocked());
+            }
         }
     }
 }
