@@ -17,9 +17,25 @@
  */
 package jgnash.engine.message;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.charset.Charset;
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.BufType;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundMessageHandlerAdapter;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.DefaultChannelGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.Delimiters;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
+import jgnash.engine.DataStoreType;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -27,55 +43,46 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jgnash.engine.DataStoreType;
-import org.apache.mina.core.buffer.IoBuffer;
-import org.apache.mina.core.buffer.SimpleBufferAllocator;
-import org.apache.mina.core.service.IoAcceptor;
-import org.apache.mina.core.service.IoHandlerAdapter;
-import org.apache.mina.core.session.IdleStatus;
-import org.apache.mina.core.session.IoSession;
-import org.apache.mina.filter.codec.ProtocolCodecFilter;
-import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
-import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
-
 /**
- * Remote message bus server
- * 
+ * Message bus server for remote connections
+ *
  * @author Craig Cavanaugh
  */
 public class MessageBusServer {
 
-    public static final String PATH_PREFIX = "<PATH>";
-    public static final String DATA_STORE_TYPE_PREFIX = "<TYPE>";
-
-    private int port = 0;
-
-    private IoAcceptor acceptor;
-
     private static final Logger logger = Logger.getLogger(MessageBusServer.class.getName());
 
-    private final Set<IoSession> clientSessions = new HashSet<>();
+    public static final String PATH_PREFIX = "<PATH>";
 
-    private final Set<LocalServerListener> listeners = new HashSet<>();
+    public static final String DATA_STORE_TYPE_PREFIX = "<TYPE>";
 
-    private final ReadWriteLock rwl = new ReentrantReadWriteLock(true);
+    public static final String EOL_DELIMITER = "\r\n";
+
+    private int port = 0;
 
     private String dataBasePath = "";
 
     private String dataStoreType = "";
 
-    private EncryptionFilter filter;
+    private ServerBootstrap bootstrap;
 
-    static {
-        IoBuffer.setUseDirectBuffer(false);
-        IoBuffer.setAllocator(new SimpleBufferAllocator());
-    }
+    private final ReadWriteLock rwl = new ReentrantReadWriteLock(true);
+
+    private final Set<LocalServerListener> listeners = new HashSet<>();
+
+    private final ChannelGroup channelGroup = new DefaultChannelGroup("all-connected");
+
+    private EncryptionFilter filter;
 
     public MessageBusServer(final int port) {
         this.port = port;
     }
 
-    public void startServer(final DataStoreType dataStoreType, final String dataBasePath, final char[] password) {
+    public boolean startServer(final DataStoreType dataStoreType, final String dataBasePath, final char[] password) {
+        boolean result = false;
+
+        logger.info("Starting message bus server");
+
         this.dataBasePath = dataBasePath;
         this.dataStoreType = dataStoreType.name();
 
@@ -86,30 +93,43 @@ public class MessageBusServer {
             filter = new EncryptionFilter(password);
         }
 
-        acceptor = new NioSocketAcceptor();
-
-        acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new TextLineCodecFactory(Charset.forName("UTF-8"))));
-        acceptor.setHandler(new MessageHandler());
+        bootstrap = new ServerBootstrap();
 
         try {
-            acceptor.bind(new InetSocketAddress(port));
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, e.toString(), e);
+            bootstrap.group(new NioEventLoopGroup(), new NioEventLoopGroup())
+                    .channel(NioServerSocketChannel.class)
+                    .childHandler(new MessageBusRemoteInitializer());
+
+            final ChannelFuture future = bootstrap.bind(port);
+            future.sync();
+
+            if (future.isDone() && future.isSuccess()) {
+                logger.info("Message Bus Server started successfully");
+                result = true;
+            } else {
+                logger.info("Failed to start the Message Bus Server");
+            }
+        } catch (final InterruptedException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+            stopServer();
         }
 
-        logger.info("MessageBusServer started");
+        return result;
     }
 
     public void stopServer() {
         rwl.writeLock().lock();
 
         try {
-            for (IoSession client : clientSessions) {
-                client.close(true);
-            }
-            //acceptor.unbindAll();
-            acceptor.unbind();
+            channelGroup.close().sync();
+
+            bootstrap.shutdown();
+
             listeners.clear();
+
+            logger.info("MessageBusServer Stopped");
+        } catch (final InterruptedException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
             rwl.writeLock().unlock();
         }
@@ -135,95 +155,92 @@ public class MessageBusServer {
         }
     }
 
-    private class MessageHandler extends IoHandlerAdapter {
+    /**
+     * Utility method to encrypt a message
+     * @param message message to encrypt
+     * @return encrypted message
+     */
+    private String encrypt(final String message) {
+        if (filter != null) {
+            return filter.encrypt(message);
+        }
+        return message;
+    }
+
+    private class MessageBusRemoteInitializer extends ChannelInitializer<SocketChannel> {
+        private final StringDecoder DECODER = new StringDecoder();
+        private final StringEncoder ENCODER = new StringEncoder(BufType.BYTE);
+
+        private final MessageBusServerHandler SERVER_HANDLER = new MessageBusServerHandler();
 
         @Override
-        public void exceptionCaught(final IoSession session, final Throwable t) throws Exception {           
-            logger.log(Level.SEVERE, null, t);
+        public void initChannel(final SocketChannel ch) throws Exception {
+            ChannelPipeline pipeline = ch.pipeline();
 
-            rwl.writeLock().lock();
+            // Add the text line codec combination first,
+            pipeline.addLast("framer", new DelimiterBasedFrameDecoder(8192, true, Delimiters.lineDelimiter()));
 
-            try {
-                session.close(true);
-                clientSessions.remove(session);
-            } finally {
-                rwl.writeLock().unlock();
-            }
+            // the encoder and decoder are static as these are sharable
+            pipeline.addLast("decoder", DECODER);
+            pipeline.addLast("encoder", ENCODER);
+
+            // and then business logic.
+            pipeline.addLast("handler", SERVER_HANDLER);
+        }
+    }
+
+    @ChannelHandler.Sharable
+    private class MessageBusServerHandler extends ChannelInboundMessageHandlerAdapter<String> {
+
+        @Override
+        public void channelActive(final ChannelHandlerContext ctx) throws Exception {
+
+            channelGroup.add(ctx.channel()); // maintain channels
+
+            logger.log(Level.INFO, "Remote connection from: {0}", ctx.channel().remoteAddress().toString());
+
+            // Inform the client what they are talking with
+            ctx.write(encrypt(PATH_PREFIX + dataBasePath) + EOL_DELIMITER);
+            ctx.write(encrypt(DATA_STORE_TYPE_PREFIX + dataStoreType) + EOL_DELIMITER);
         }
 
         @Override
-        public void sessionIdle(final IoSession session, final IdleStatus status) {
-            logger.info("Disconnecting the idle client.");
-
-            // disconnect an idle client                                   
-            rwl.writeLock().lock();
-
-            try {
-                session.close(true);
-                clientSessions.remove(session);
-            } finally {
-                rwl.writeLock().unlock();
-            }
+        public void channelInactive(final ChannelHandlerContext ctx) throws Exception {
+            channelGroup.remove(ctx.channel());
+            super.channelInactive(ctx);
         }
 
-        /**
-         * Utility method to encrypt a message
-         * @param message message to encrypt
-         * @return encrypted message
-         */
-        private String encrypt(final String message) {
+        @Override
+        public void messageReceived(final ChannelHandlerContext ctx, final String message) throws Exception {
+
+            final String plainMessage;
+
             if (filter != null) {
-                return filter.encrypt(message);
-            }
-            return message;
-        }
-
-        @Override
-        public void messageReceived(final IoSession session, final Object message) throws Exception {
-
-            String str;
-
-            if (filter != null) {
-                str = filter.decrypt(message.toString());
+                plainMessage = filter.decrypt(message);
             } else {
-                str = message.toString();
+                plainMessage = message;
             }
 
             rwl.readLock().lock();
 
             try {
-                for (IoSession client : clientSessions) {
-                    if (client.isConnected()) {
-                        client.write(encrypt(str));
-                    }
-                }
+                channelGroup.write(encrypt(plainMessage) + EOL_DELIMITER).sync();
 
                 // Local listeners do not receive encrypted messages
                 for (LocalServerListener listener : listeners) {
-                    listener.messagePosted(str);
+                    listener.messagePosted(plainMessage);
                 }
             } finally {
                 rwl.readLock().unlock();
             }
 
-            logger.log(Level.INFO, "Broadcast: {0}", str);
+            logger.log(Level.INFO, "Broadcast: {0}", plainMessage);
         }
 
         @Override
-        public void sessionCreated(final IoSession session) throws Exception {
-
-            rwl.writeLock().lock();
-
-            try {
-                clientSessions.add(session);
-                logger.log(Level.INFO, "Remote connection from: {0}", session.toString());
-
-                // Inform the client what they are talking with
-                session.write(encrypt(PATH_PREFIX + dataBasePath));
-                session.write(encrypt(DATA_STORE_TYPE_PREFIX + dataStoreType));
-            } finally {
-                rwl.writeLock().unlock();
-            }
+        public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
+            logger.log(Level.WARNING, "Unexpected exception from downstream.", cause);
+            ctx.close();
         }
     }
 }

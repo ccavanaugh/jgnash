@@ -21,6 +21,24 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 
+import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.BufType;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundMessageHandlerAdapter;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.Delimiters;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
+
 import jgnash.engine.Account;
 import jgnash.engine.CommodityNode;
 import jgnash.engine.DataStoreType;
@@ -33,20 +51,7 @@ import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.engine.recurring.Reminder;
 import jgnash.net.ConnectionFactory;
 
-import org.apache.mina.core.RuntimeIoException;
-import org.apache.mina.core.buffer.IoBuffer;
-import org.apache.mina.core.buffer.SimpleBufferAllocator;
-import org.apache.mina.core.future.ConnectFuture;
-import org.apache.mina.core.service.IoHandlerAdapter;
-import org.apache.mina.core.session.IoSession;
-import org.apache.mina.filter.codec.ProtocolCodecFilter;
-import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
-import org.apache.mina.transport.socket.SocketConnector;
-import org.apache.mina.transport.socket.nio.NioSocketConnector;
-
 import java.io.CharArrayWriter;
-import java.net.InetSocketAddress;
-import java.nio.charset.Charset;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -54,19 +59,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Remote message bus client
+ * Message bus client for remote connections
  *
  * @author Craig Cavanaugh
  */
-class MessageBusClient {
-
+public class MessageBusClient {
     private String host = "localhost";
 
     private int port = 0;
 
     private static final Logger logger = Logger.getLogger(MessageBusClient.class.getName());
-
-    private IoSession session;
 
     private final XStream xstream;
 
@@ -76,10 +78,11 @@ class MessageBusClient {
 
     private EncryptionFilter filter = null;
 
-    static {
-        IoBuffer.setUseDirectBuffer(false);
-        IoBuffer.setAllocator(new SimpleBufferAllocator());
-    }
+    private Bootstrap bootstrap;
+
+    private Channel channel;
+
+    private ChannelFuture lastWriteFuture = null;
 
     public MessageBusClient(final String host, final int port) {
         this.host = host;
@@ -108,56 +111,55 @@ class MessageBusClient {
         boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty("ssl"));
 
         // If a user and password has been specified, enable an encryption filter
-        if (useSSL &&  password != null && password.length > 0) {
+        if (useSSL && password != null && password.length > 0) {
             filter = new EncryptionFilter(password);
         }
 
-        SocketConnector connector = new NioSocketConnector();
+        bootstrap = new Bootstrap();
 
-        connector.setConnectTimeoutMillis(getConnectionTimeout() * 1000L);
-        connector.setHandler(new ClientSessionHandler());
-        connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(new TextLineCodecFactory(Charset.forName("UTF-8"))));
+        bootstrap.group(new NioEventLoopGroup())
+                .channel(NioSocketChannel.class)
+                .handler(new MessageBusClientInitializer())
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, getConnectionTimeout() * 1000);
 
         try {
-            ConnectFuture future = connector.connect(new InetSocketAddress(host, port));
+            // Start the connection attempt.
+            channel = bootstrap.connect(host, port).sync().channel();
 
-            future.awaitUninterruptibly();
-            session = future.getSession();
             result = true;
             logger.info("Connected to remote message server");
-        } catch (RuntimeIoException e) {
+        } catch (final InterruptedException e) {
             logger.log(Level.SEVERE, "Failed to connect to remote message bus", e);
-
-            if (session != null) {
-                session.close(true);
-            }
+            disconnectFromServer();
         }
 
         return result;
     }
 
-    public void disconnectFromServer() {
-        session.close(true);
-    }
+    private class MessageBusClientInitializer extends ChannelInitializer<SocketChannel> {
+        private final StringDecoder DECODER = new StringDecoder();
+        private final StringEncoder ENCODER = new StringEncoder(BufType.BYTE);
+        private final MessageBusClientHandler CLIENT_HANDLER = new MessageBusClientHandler();
 
-    public synchronized void sendRemoteMessage(final Message message) {
-        CharArrayWriter writer = new CharArrayWriter();
-        xstream.marshal(message, new CompactWriter(writer));
+        @Override
+        public void initChannel(final SocketChannel ch) throws Exception {
+            ChannelPipeline pipeline = ch.pipeline();
 
-        if (filter != null) {
-            session.write(filter.encrypt(writer.toString()));
-        } else {
-            session.write(writer.toString());
+            // Add the text line codec combination first,
+            pipeline.addLast("framer", new DelimiterBasedFrameDecoder(8192, true, Delimiters.lineDelimiter()));
+            pipeline.addLast("decoder", DECODER);
+            pipeline.addLast("encoder", ENCODER);
+
+            // and then business logic.
+            pipeline.addLast("handler", CLIENT_HANDLER);
         }
-
-        logger.log(Level.INFO, "sent: {0}", writer.toString());
     }
 
-    public void sendRemoteShutdownRequest() {
-        session.write(JpaNetworkServer.STOP_SERVER_MESSAGE);
-    }
-
-    private class ClientSessionHandler extends IoHandlerAdapter {
+    /**
+     * Handles a client-side channel.
+     */
+    @ChannelHandler.Sharable
+    private class MessageBusClientHandler extends ChannelInboundMessageHandlerAdapter<String> {
 
         private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
@@ -166,13 +168,6 @@ class MessageBusClient {
          * message
          */
         private static final int FORCED_LATENCY = 2000;
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void sessionOpened(IoSession s) {
-        }
 
         private String decrypt(final Object object) {
             String plainMessage;
@@ -186,12 +181,9 @@ class MessageBusClient {
             return plainMessage;
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
-        public void messageReceived(final IoSession s, final Object object) {
-            String plainMessage = decrypt(object);
+        public void messageReceived(final ChannelHandlerContext ctx, final String msg) throws Exception {
+            String plainMessage = decrypt(msg);
 
             logger.log(Level.INFO, "messageReceived: {0}", plainMessage);
 
@@ -226,21 +218,54 @@ class MessageBusClient {
             }
         }
 
-        /**
-         * {@inheritDoc}
-         */
         @Override
-        public void exceptionCaught(final IoSession s, final Throwable cause) {
-            logger.log(Level.SEVERE, null, cause);
-            s.close(true);
+        public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
+            logger.log(Level.WARNING, "Unexpected exception from downstream.", cause);
+            ctx.close();
+        }
+    }
+
+    public void disconnectFromServer() {
+
+        // Wait until all messages are flushed before closing the channel.
+        if (lastWriteFuture != null) {
+            try {
+                lastWriteFuture.sync();
+            } catch (InterruptedException e) {
+                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+            }
         }
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void sessionClosed(final IoSession s) throws Exception {
-            s.close(true);
+        try {
+            channel.close().sync();
+        } catch (InterruptedException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
+        bootstrap.shutdown();
+
+        channel = null;
+        lastWriteFuture = null;
+        bootstrap = null;
+    }
+
+    public synchronized void sendRemoteMessage(final Message message) {
+        CharArrayWriter writer = new CharArrayWriter();
+        xstream.marshal(message, new CompactWriter(writer));
+
+        sendRemoteMessage(writer.toString());
+
+        logger.log(Level.INFO, "sent: {0}", writer.toString());
+    }
+
+    public void sendRemoteShutdownRequest() {
+        sendRemoteMessage(JpaNetworkServer.STOP_SERVER_MESSAGE);
+    }
+
+    private synchronized void sendRemoteMessage(final String message) {
+        if (filter != null) {
+            lastWriteFuture = channel.write(filter.encrypt(message) + MessageBusServer.EOL_DELIMITER);
+        } else {
+            lastWriteFuture = channel.write(message + MessageBusServer.EOL_DELIMITER);
         }
     }
 

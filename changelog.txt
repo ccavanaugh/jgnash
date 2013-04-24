@@ -24,6 +24,7 @@ Better method of keeping preferences when updating computers
 
 Release 2.13.0
 ----------------------
+04/23/13 Use Netty instead of Mina for performance and for improved protocol support
 04/21/13 Added a Money Market account type.
 04/20/13 New Engine and account api for setting and accessing custom text based account properties.
 04/20/13 File schema changes to support external links to files and custom tags for transaction entries.
