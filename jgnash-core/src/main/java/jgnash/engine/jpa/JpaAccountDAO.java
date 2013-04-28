@@ -28,6 +28,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,10 +52,10 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
     @Override
     @SuppressWarnings("unchecked")
     public RootAccount getRootAccount() {
+        RootAccount root = null;
+
         try {
             emLock.lock();
-
-            RootAccount root = null;
 
             Query q = em.createQuery("select a from RootAccount a");
 
@@ -66,11 +67,11 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
                 logger.log(Level.SEVERE, "More than one RootAccount was found: " + list.size(), new Exception());
                 root = list.get(0);
             }
-
-            return root;
         } finally {
             emLock.unlock();
         }
+
+        return root;
     }
 
     /*
@@ -79,16 +80,20 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
     @Override
     @SuppressWarnings("unchecked")
     public List<Account> getAccountList() {
+        List<Account> accountList = Collections.EMPTY_LIST;
+
         try {
             emLock.lock();
 
             Query q = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = false");
 
             // result lists are readonly
-            return new ArrayList<Account>(q.getResultList());
+            accountList = new ArrayList<Account>(q.getResultList());
         } finally {
             emLock.unlock();
         }
+
+        return accountList;
     }
 
     /*
@@ -96,6 +101,8 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
      */
     @Override
     public boolean addAccount(final Account parent, final Account child) {
+        boolean result = false;
+
         try {
             emLock.lock();
             em.getTransaction().begin();
@@ -103,12 +110,12 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
             em.persist(child);
             em.merge(parent);
 
-            em.getTransaction().commit();
-
-            return true;
+            result = true;
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
+        return result;
     }
 
     /*
@@ -116,18 +123,21 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
      */
     @Override
     public boolean addRootAccount(final RootAccount account) {
+        boolean result = false;
+
         try {
             emLock.lock();
             em.getTransaction().begin();
 
             em.persist(account);
 
-            em.getTransaction().commit();
-
-            return true;
+            result = true;
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
+
+        return result;
     }
 
     /*
@@ -135,6 +145,8 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
      */
     @Override
     public boolean addAccountSecurity(final Account account, final SecurityNode node) {
+        boolean result = false;
+
         try {
             emLock.lock();
             em.getTransaction().begin();
@@ -142,16 +154,19 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
             em.persist(node);
             em.merge(account);
 
-            em.getTransaction().commit();
-
-            return true;
+            result = true;
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
+
+        return result;
     }
 
     @SuppressWarnings("unchecked")
     private List<Account> getAccountList(final AccountType type) {
+        List<Account> accountList = Collections.EMPTY_LIST;
+
         try {
             emLock.lock();
 
@@ -159,10 +174,12 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
             Query query = em.createQuery(queryString);
             query.setParameter("type", type);
 
-            return new ArrayList<Account>(query.getResultList());
+            accountList =  new ArrayList<Account>(query.getResultList());
         } finally {
             emLock.unlock();
         }
+
+        return accountList;
     }
 
     /*
@@ -240,8 +257,8 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
 
             em.getTransaction().begin();
             em.refresh(account);
-            em.getTransaction().commit();
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
     }
@@ -251,14 +268,12 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
 
         try {
             emLock.lock();
+            em.getTransaction().begin();
 
             if (em.contains(account)) { // don't try if the EntityManager does not contain the account
+
                 try {
-                    em.getTransaction().begin();
-
                     em.merge(account);
-
-                    em.getTransaction().commit();
 
                     result = true;
                 } catch (Exception e) {
@@ -268,6 +283,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
                 logger.log(Level.SEVERE, "Tried to update an account that was not persisted", new Exception());
             }
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
 
