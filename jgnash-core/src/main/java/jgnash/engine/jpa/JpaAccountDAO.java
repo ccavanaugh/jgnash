@@ -208,21 +208,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
      */
     @Override
     public Account getAccountByUuid(final String uuid) {
-        try {
-            emLock.lock();
-
-            Account account = null;
-
-            try {
-                account = em.find(Account.class, uuid);
-            } catch (Exception e) {
-                logger.info("Did not find Account for uuid: " + uuid);
-            }
-
-            return account;
-        } finally {
-            emLock.unlock();
-        }
+        return getObjectByUuid(Account.class, uuid);
     }
 
     /*

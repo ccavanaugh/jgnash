@@ -23,7 +23,6 @@ import jgnash.engine.recurring.Reminder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -38,7 +37,7 @@ import javax.persistence.criteria.Root;
  */
 class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
 
-    private static final Logger logger = Logger.getLogger(JpaRecurringDAO.class.getName());
+    // private static final Logger logger = Logger.getLogger(JpaRecurringDAO.class.getName());
 
     JpaRecurringDAO(final EntityManager entityManager, final boolean isRemote) {
         super(entityManager, isRemote);
@@ -86,22 +85,8 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
     }
 
     @Override
-    public Reminder getReminderByUuid(String uuid) {
-        try {
-            emLock.lock();
-
-            Reminder reminder = null;
-
-            try {
-                reminder = em.find(Reminder.class, uuid);
-            } catch (Exception e) {
-                logger.info("Did not find Reminder for uuid: " + uuid);
-            }
-
-            return reminder;
-        } finally {
-            emLock.unlock();
-        }
+    public Reminder getReminderByUuid(final String uuid) {
+        return getObjectByUuid(Reminder.class, uuid);
     }
 
 
