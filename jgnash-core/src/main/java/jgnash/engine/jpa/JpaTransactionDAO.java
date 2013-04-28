@@ -25,6 +25,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,16 +50,20 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
     @Override
     @SuppressWarnings("unchecked")
     public List<Transaction> getTransactions() {
+        List<Transaction> transactionList = Collections.EMPTY_LIST;
+
         try {
             emLock.lock();
 
             Query q = em.createQuery("SELECT t FROM Transaction t WHERE t.markedForRemoval = false");
 
             // result lists are readonly
-            return new ArrayList<Transaction>(q.getResultList());
+            transactionList = new ArrayList<Transaction>(q.getResultList());
         } finally {
             emLock.unlock();
         }
+
+        return transactionList;
     }
 
     @Override
@@ -68,9 +73,8 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
             em.getTransaction().begin();
 
             em.refresh(transaction);
-
-            em.getTransaction().commit();
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
     }
@@ -80,9 +84,10 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
      */
     @Override
     public synchronized boolean addTransaction(final Transaction transaction) {
+        boolean result = false;
+
         try {
             emLock.lock();
-
             em.getTransaction().begin();
 
             em.persist(transaction);
@@ -91,12 +96,13 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
                 em.merge(account);
             }
 
-            em.getTransaction().commit();
-
-            return true;
+            result = true;
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
+
+        return result;
     }
 
     @Override
@@ -109,7 +115,6 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
      */
     @Override
     public synchronized boolean removeTransaction(final Transaction transaction) {
-
         boolean result = false;
 
         try {
@@ -123,10 +128,9 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
 
             em.persist(transaction);    // saved, removed with the trash
 
-            em.getTransaction().commit();
-
             result = true;
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
 

@@ -22,6 +22,7 @@ import jgnash.engine.dao.RecurringDAO;
 import jgnash.engine.recurring.Reminder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -47,7 +48,10 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
      * @see jgnash.engine.ReminderDAOInterface#getReminderList()
      */
     @Override
+    @SuppressWarnings("unchecked")
     public List<Reminder> getReminderList() {
+
+        List<Reminder> reminderList = Collections.EMPTY_LIST;
 
         try {
             emLock.lock();
@@ -59,10 +63,12 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
 
             TypedQuery<Reminder> q = em.createQuery(cq);
 
-            return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
+            reminderList = stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
         } finally {
             emLock.unlock();
         }
+
+        return reminderList;
     }
 
     /*
@@ -70,18 +76,21 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
      */
     @Override
     public boolean addReminder(final Reminder reminder) {
+        boolean result = false;
+
         try {
             emLock.lock();
             em.getTransaction().begin();
 
             em.persist(reminder);
 
-            em.getTransaction().commit();
-
-            return true;
+            result = true;
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
+
+        return result;
     }
 
     @Override
@@ -102,9 +111,8 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
             em.getTransaction().begin();
 
             em.refresh(reminder);
-
-            em.getTransaction().commit();
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
     }

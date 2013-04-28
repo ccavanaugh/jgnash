@@ -126,11 +126,11 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
 
     @Override
     public List<StoredObject> getStoredObjects() {
+        ArrayList<StoredObject> list = new ArrayList<>();
+
+        emLock.lock();
+
         try {
-            emLock.lock();
-
-            ArrayList<StoredObject> list = new ArrayList<>();
-
             CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery<StoredObject> cq = cb.createQuery(StoredObject.class);
             Root<StoredObject> root = cq.from(StoredObject.class);
@@ -139,9 +139,10 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
             TypedQuery<StoredObject> q = em.createQuery(cq);
 
             list.addAll(q.getResultList());
-            return list;
         } finally {
             emLock.unlock();
         }
+
+        return list;
     }
 }

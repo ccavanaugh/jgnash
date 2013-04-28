@@ -23,6 +23,7 @@ import jgnash.engine.TrashObject;
 import jgnash.engine.dao.TrashDAO;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -46,7 +47,10 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<TrashObject> getTrashObjects() {
+
+        List<TrashObject> trashObjectList = Collections.EMPTY_LIST;
 
         try {
             emLock.lock();
@@ -58,10 +62,12 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
 
             TypedQuery<TrashObject> q = em.createQuery(cq);
 
-            return new ArrayList<>(q.getResultList());
+            trashObjectList =  new ArrayList<>(q.getResultList());
         } finally {
             emLock.unlock();
         }
+
+        return trashObjectList;
     }
 
     @Override
@@ -72,9 +78,8 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
 
             em.merge(trashObject.getObject());
             em.persist(trashObject);
-
-            em.getTransaction().commit();
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
     }
@@ -91,10 +96,9 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
             em.remove(object);
             em.remove(trashObject);
 
-            em.getTransaction().commit();
-
             logger.info("Removed TrashObject");
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
     }
