@@ -23,11 +23,10 @@ import jgnash.engine.Config;
  * Configuration DAO Interface
  *
  * @author Craig Cavanaugh
- *
  */
 public interface ConfigDAO {
 
     public Config getDefaultConfig();
 
-    public void commit(Config config);
+    public void update(Config config);
 }

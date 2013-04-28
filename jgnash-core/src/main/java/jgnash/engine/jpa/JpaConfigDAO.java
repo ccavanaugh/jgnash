@@ -62,7 +62,7 @@ class JpaConfigDAO extends AbstractJpaDAO implements ConfigDAO {
 
             } catch (Exception e) {
                 defaultConfig = new Config();
-                commit(defaultConfig);
+                em.persist(defaultConfig);
                 logger.info("Generating new default config");
             }
 
@@ -73,12 +73,12 @@ class JpaConfigDAO extends AbstractJpaDAO implements ConfigDAO {
     }
 
     @Override
-    public void commit(final Config config) {
+    public void update(final Config config) {
         try {
             emLock.lock();
             em.getTransaction().begin();
 
-            em.persist(config);
+            em.merge(config);
 
             em.getTransaction().commit();
         } finally {

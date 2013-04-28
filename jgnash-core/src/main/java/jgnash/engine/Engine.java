@@ -347,7 +347,7 @@ public class Engine {
             // if the file version is not current, then update it
             if (getConfig().getFileVersion() != CURRENT_VERSION) {
                 getConfig().setFileVersion(CURRENT_VERSION);
-                getConfigDAO().commit(getConfig());
+                getConfigDAO().update(getConfig());
             }
         } finally {
             configWriteLock.unlock();
@@ -1276,7 +1276,7 @@ public class Engine {
         try {
             Config c = getConfig();
             c.setDefaultCurrency(defaultCurrency);
-            getConfigDAO().commit(c);
+            getConfigDAO().update(c);
 
             logInfo("Setting default currency: " + defaultCurrency.toString());
 
@@ -1531,7 +1531,7 @@ public class Engine {
 
             c.setAccountSeparator(separator);
 
-            getConfigDAO().commit(c);
+            getConfigDAO().update(c);
 
         } finally {
             configWriteLock.unlock();
@@ -2547,7 +2547,7 @@ public class Engine {
 
         c.setTransactionNumberList(list);
 
-        getConfigDAO().commit(c);
+        getConfigDAO().update(c);
     }
 
     /**

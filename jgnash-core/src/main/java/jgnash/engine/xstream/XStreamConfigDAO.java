@@ -58,7 +58,7 @@ public class XStreamConfigDAO extends AbstractXStreamDAO implements ConfigDAO {
     }
 
     @Override
-    public void commit(final Config config) {
+    public void update(final Config config) {
         container.set(config);
         commit();
     }
