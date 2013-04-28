@@ -67,13 +67,12 @@ import jgnash.util.Resource;
  * If this panel does not exist in the application, then events will not be fired.
  * 
  * @author Craig Cavanaugh
- *
  */
 public class RecurringPanel extends JPanel implements ActionListener, MessageListener {
 
-    private static final int DEFAULT_SNOOZE = 900000;
+    private static final int DEFAULT_SNOOZE = 15 * 60 * 1000;
 
-    private static final int START_UP_DELAY = 30000;
+    private static final int START_UP_DELAY = 2 * 60 * 1000;
 
     private final Resource rb = Resource.get();
 
@@ -91,11 +90,11 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
 
     private static boolean confirmReminderDelete = false;
 
-    private static final String CONFIRMDELETE = "confirmdelete";
+    private static final String CONFIRM_DELETE = "confirmdelete";
 
     static {
         Preferences p = Preferences.userNodeForPackage(RecurringPanel.class);
-        confirmReminderDelete = p.getBoolean(CONFIRMDELETE, true);
+        confirmReminderDelete = p.getBoolean(CONFIRM_DELETE, true);
     }
 
     /**
@@ -234,7 +233,7 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
     public static void setConfirmReminderDeleteEnabled(final boolean enabled) {
         confirmReminderDelete = enabled;
         Preferences p = Preferences.userNodeForPackage(RecurringPanel.class);
-        p.putBoolean(CONFIRMDELETE, confirmReminderDelete);
+        p.putBoolean(CONFIRM_DELETE, confirmReminderDelete);
     }
 
     /**
@@ -379,11 +378,11 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
             int snooze = p.getInt(SNOOZE, DEFAULT_SNOOZE);
 
             timer = new Timer(snooze, this);
-            timer.setInitialDelay(START_UP_DELAY); // wait 30 seconds to start.
+            timer.setInitialDelay(START_UP_DELAY);
 
             timer.start();
 
-            Logger.getLogger(RecurringPanel.class.getName()).info("Recurrinng timer started");
+            Logger.getLogger(RecurringPanel.class.getName()).info("Recurring timer started");
         }
     }
 
@@ -392,7 +391,7 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
             timer.stop();
             timer = null;
 
-            Logger.getLogger(RecurringPanel.class.getName()).info("Recurrinng timer stopped");
+            Logger.getLogger(RecurringPanel.class.getName()).info("Recurring timer stopped");
         }
     }
 
