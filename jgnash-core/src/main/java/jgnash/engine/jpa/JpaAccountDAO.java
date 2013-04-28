@@ -239,7 +239,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
             emLock.lock();
 
             em.getTransaction().begin();
-            em.merge(account);
+            em.refresh(account);
             em.getTransaction().commit();
         } finally {
             emLock.unlock();

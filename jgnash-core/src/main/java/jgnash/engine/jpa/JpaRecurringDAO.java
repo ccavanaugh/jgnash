@@ -101,7 +101,7 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
             emLock.lock();
             em.getTransaction().begin();
 
-            em.merge(reminder);
+            em.refresh(reminder);
 
             em.getTransaction().commit();
         } finally {

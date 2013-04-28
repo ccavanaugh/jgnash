@@ -270,7 +270,7 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
             emLock.lock();
             em.getTransaction().begin();
 
-            em.merge(node);
+            em.refresh(node);
 
             em.getTransaction().commit();
         } finally {
@@ -284,7 +284,7 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
             emLock.lock();
             em.getTransaction().begin();
 
-            em.merge(rate);
+            em.refresh(rate);
 
             em.getTransaction().commit();
         } finally {
