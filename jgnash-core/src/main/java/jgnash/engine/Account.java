@@ -160,6 +160,8 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     private transient ReadWriteLock childLock;
 
+    private transient ReadWriteLock securitiesLock;
+
     private transient AccountProxy proxy;
 
     /**
@@ -179,6 +181,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     public Account() {
         transactionLock = new ReentrantReadWriteLock(true);
         childLock = new ReentrantReadWriteLock(true);
+        securitiesLock = new ReentrantReadWriteLock(true);
     }
 
     public Account(final AccountType type, final CurrencyNode node) {
@@ -1335,17 +1338,28 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @return true if successful, false if used by a transaction
      */
     boolean removeSecurity(final SecurityNode node) {
-        if (getUsedSecurities().contains(node)) {
-            return false;
+        securitiesLock.writeLock().lock();
+
+        try {
+            if (getUsedSecurities().contains(node)) {
+                return false;
+            }
+
+            securities.remove(node);
+            return true;
+        } finally {
+            securitiesLock.writeLock().unlock();
         }
-
-        securities.remove(node);
-
-        return true;
     }
 
     public boolean containsSecurity(final SecurityNode node) {
-        return securities.contains(node);
+        securitiesLock.readLock().lock();
+
+        try {
+            return securities.contains(node);
+        } finally {
+            securitiesLock.readLock().unlock();
+        }
     }
 
     /**
@@ -1363,7 +1377,13 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @return a sorted set
      */
     public Set<SecurityNode> getSecurities() {
-        return new TreeSet<>(securities);
+        securitiesLock.readLock().lock();
+
+        try {
+            return new TreeSet<>(securities);
+        } finally {
+            securitiesLock.readLock().unlock();
+        }
     }
 
     /**
@@ -1374,8 +1394,8 @@ public class Account extends StoredObject implements Comparable<Account> {
     public Set<SecurityNode> getUsedSecurities() {
         Set<SecurityNode> set = new TreeSet<>();
 
-        Lock l = transactionLock.readLock();
-        l.lock();
+        transactionLock.readLock().lock();
+        securitiesLock.readLock().lock();
 
         try {
             for (Transaction t : transactions) {
@@ -1384,7 +1404,8 @@ public class Account extends StoredObject implements Comparable<Account> {
                 }
             }
         } finally {
-            l.unlock();
+            securitiesLock.readLock().unlock();
+            transactionLock.readLock().unlock();
         }
         return set;
     }
@@ -1467,12 +1488,12 @@ public class Account extends StoredObject implements Comparable<Account> {
         return amortizeObject;
     }
 
-    void setAmortizeObject(AmortizeObject amortizeObject) {
+    void setAmortizeObject(final AmortizeObject amortizeObject) {
         this.amortizeObject = amortizeObject;
     }
 
     synchronized void setAttribute(final String key, final String value) {
-        if (key ==  null || key.isEmpty()) {
+        if (key == null || key.isEmpty()) {
             throw new RuntimeException("Attribute key may not be empty or null");
         }
 
@@ -1484,7 +1505,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     public synchronized String getAttribute(final String key) {
-        if (key ==  null || key.isEmpty()) {
+        if (key == null || key.isEmpty()) {
             throw new RuntimeException("Attribute key may not be empty or null");
         }
 
@@ -1499,6 +1520,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     protected Object readResolve() {
         transactionLock = new ReentrantReadWriteLock(true);
         childLock = new ReentrantReadWriteLock(true);
+        securitiesLock = new ReentrantReadWriteLock(true);
 
         return this;
     }
