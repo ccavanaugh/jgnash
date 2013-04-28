@@ -346,8 +346,9 @@ public class Engine {
 
             // if the file version is not current, then update it
             if (getConfig().getFileVersion() != CURRENT_VERSION) {
-                getConfig().setFileVersion(CURRENT_VERSION);
-                getConfigDAO().update(getConfig());
+                Config config = getConfig();
+                config.setFileVersion(CURRENT_VERSION);
+                getConfigDAO().update(config);
             }
         } finally {
             configWriteLock.unlock();
