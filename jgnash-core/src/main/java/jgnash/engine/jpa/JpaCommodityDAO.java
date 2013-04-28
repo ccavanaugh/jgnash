@@ -27,6 +27,7 @@ import jgnash.engine.SecurityNode;
 import jgnash.engine.dao.CommodityDAO;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,19 +58,20 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
      */
     @Override
     public boolean addCommodity(final CommodityNode node) {
+        boolean result = false;
+
         try {
             emLock.lock();
-
             em.getTransaction().begin();
 
             em.persist(node);
 
-            em.getTransaction().commit();
-
-            return true;
+            result = true;
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
+        return result;
     }
 
     /*
@@ -77,40 +79,43 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
      */
     @Override
     public boolean addSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
+        boolean result = false;
 
         try {
             emLock.lock();
-
             em.getTransaction().begin();
 
             em.merge(node);
 
-            em.getTransaction().commit();
-
-            return true;
+            result = true;
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
+        return result;
     }
 
     @Override
     public boolean addExchangeRateHistory(final ExchangeRate rate, final ExchangeRateHistoryNode hNode) {
+        boolean result = false;
         try {
             emLock.lock();
-
             em.getTransaction().begin();
 
             em.merge(rate);
 
-            em.getTransaction().commit();
-            return true;
+            result = true;
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
+        return result;
     }
 
     @Override
     public boolean removeExchangeRateHistory(final ExchangeRate rate, final ExchangeRateHistoryNode hNode) {
+        boolean result = false;
+
         try {
             emLock.lock();
             em.getTransaction().begin();
@@ -118,20 +123,25 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
             em.remove(hNode);
             em.merge(rate);
 
-            em.getTransaction().commit();
-            return true;
+            result = true;
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
+        return result;
     }
 
     /*
      * @see jgnash.engine.CommodityDAOInterface#getCurrencies()
      */
     @Override
+    @SuppressWarnings("unchecked")
     public List<CurrencyNode> getCurrencies() {
+        List<CurrencyNode> currencyNodeList = Collections.EMPTY_LIST;
+
         try {
             emLock.lock();
+
             CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery<CurrencyNode> cq = cb.createQuery(CurrencyNode.class);
             Root<CurrencyNode> root = cq.from(CurrencyNode.class);
@@ -139,11 +149,12 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
 
             TypedQuery<CurrencyNode> q = em.createQuery(cq);
 
-
-            return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
+            currencyNodeList = stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
         } finally {
             emLock.unlock();
         }
+
+        return currencyNodeList;
     }
 
     @Override
@@ -156,9 +167,10 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
      */
     @Override
     public ExchangeRate getExchangeNode(final String rateId) {
+        ExchangeRate exchangeRate = null;
+
         try {
             emLock.lock();
-            ExchangeRate exchangeRate = null;
 
             CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery<ExchangeRate> cq = cb.createQuery(ExchangeRate.class);
@@ -173,10 +185,11 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
                     break;
                 }
             }
-            return exchangeRate;
         } finally {
             emLock.unlock();
         }
+
+        return exchangeRate;
     }
 
     @Override
@@ -193,9 +206,13 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
      * @see jgnash.engine.dao.CommodityDAO#getSecurities()
      */
     @Override
+    @SuppressWarnings("unchecked")
     public List<SecurityNode> getSecurities() {
+        List<SecurityNode> securityNodeList = Collections.EMPTY_LIST;
+
         try {
             emLock.lock();
+
             CriteriaBuilder cb = em.getCriteriaBuilder();
             CriteriaQuery<SecurityNode> cq = cb.createQuery(SecurityNode.class);
             Root<SecurityNode> root = cq.from(SecurityNode.class);
@@ -203,15 +220,19 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
 
             TypedQuery<SecurityNode> q = em.createQuery(cq);
 
-
-            return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
+            securityNodeList =  stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
         } finally {
             emLock.unlock();
         }
+
+        return securityNodeList;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<ExchangeRate> getExchangeRates() {
+        List<ExchangeRate> exchangeRateList = Collections.EMPTY_LIST;
+
         try {
             emLock.lock();
             CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -221,11 +242,12 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
 
             TypedQuery<ExchangeRate> q = em.createQuery(cq);
 
-
-            return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
+            exchangeRateList =  stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
         } finally {
             emLock.unlock();
         }
+
+        return exchangeRateList;
     }
 
     /*
@@ -233,6 +255,8 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
      */
     @Override
     public boolean removeSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
+        boolean result = false;
+
         try {
             emLock.lock();
             em.getTransaction().begin();
@@ -240,12 +264,13 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
             em.remove(hNode);
             em.merge(node);
 
-            em.getTransaction().commit();
-
-            return true;
+            result = true;
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
+
+        return result;
     }
 
     /*
@@ -258,9 +283,8 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
             em.getTransaction().begin();
 
             em.persist(eRate);
-
-            em.getTransaction().commit();
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
     }
@@ -272,9 +296,8 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
             em.getTransaction().begin();
 
             em.refresh(node);
-
-            em.getTransaction().commit();
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
     }
@@ -286,9 +309,8 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
             em.getTransaction().begin();
 
             em.refresh(rate);
-
-            em.getTransaction().commit();
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
     }
@@ -299,17 +321,22 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
 
     @Override
     public boolean updateCommodityNode(final CommodityNode node) {
+        boolean result = false;
+
         try {
             emLock.lock();
             em.getTransaction().begin();
 
             em.merge(node);
 
-            em.getTransaction().commit();
-            return true;
+
+            result = true;
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
+
+        return result;
     }
 
     /*
@@ -318,6 +345,8 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
     @Override
     @SuppressWarnings("unchecked")
     public Set<CurrencyNode> getActiveCurrencies() {
+        Set<CurrencyNode> currencyNodeSet = Collections.EMPTY_SET;
+
         try {
             emLock.lock();
 
@@ -335,9 +364,11 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
                 }
             }
 
-            return currencies;
+            currencyNodeSet = currencies;
         } finally {
             emLock.unlock();
         }
+
+        return currencyNodeSet;
     }
 }

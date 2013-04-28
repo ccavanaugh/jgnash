@@ -46,9 +46,10 @@ class JpaConfigDAO extends AbstractJpaDAO implements ConfigDAO {
      */
     @Override
     public synchronized Config getDefaultConfig() {
+        Config defaultConfig;
+
         try {
             emLock.lock();
-            Config defaultConfig;
 
             try {
                 CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -65,11 +66,11 @@ class JpaConfigDAO extends AbstractJpaDAO implements ConfigDAO {
                 em.persist(defaultConfig);
                 logger.info("Generating new default config");
             }
-
-            return defaultConfig;
         } finally {
             emLock.unlock();
         }
+
+        return defaultConfig;
     }
 
     @Override
@@ -79,9 +80,8 @@ class JpaConfigDAO extends AbstractJpaDAO implements ConfigDAO {
             em.getTransaction().begin();
 
             em.merge(config);
-
-            em.getTransaction().commit();
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
     }

@@ -21,6 +21,7 @@ import jgnash.engine.budget.Budget;
 import jgnash.engine.dao.BudgetDAO;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -41,6 +42,8 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
 
     @Override
     public boolean add(final Budget budget) {
+        boolean result = false;
+
         try {
             emLock.lock();
 
@@ -48,16 +51,17 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
 
             em.persist(budget);
 
-            em.getTransaction().commit();
-
-            return true;
+            result =  true;
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
+        return result;
     }
 
     @Override
     public boolean update(final Budget budget) {
+        boolean result = false;
 
         try {
             emLock.lock();
@@ -65,28 +69,31 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
 
             em.merge(budget);
 
-            em.getTransaction().commit();
-
-            return true;
+            result = true;
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
+        return result;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<Budget> getBudgets() {
+        List<Budget> budgetList = Collections.EMPTY_LIST;
+
         try {
             emLock.lock();
 
             Query q = em.createQuery("SELECT b FROM Budget b WHERE b.markedForRemoval = false");
 
             // result lists are readonly
-            return new ArrayList<Budget>(q.getResultList());
+            budgetList =  new ArrayList<Budget>(q.getResultList());
 
         } finally {
             emLock.unlock();
         }
+        return budgetList;
     }
 
     @Override
@@ -98,11 +105,11 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
     public void refreshBudget(final Budget budget) {
         try {
             emLock.lock();
-
             em.getTransaction().begin();
+
             em.refresh(budget);
-            em.getTransaction().commit();
         } finally {
+            em.getTransaction().commit();
             emLock.unlock();
         }
     }
