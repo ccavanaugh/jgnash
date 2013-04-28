@@ -70,7 +70,7 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
             emLock.lock();
             em.getTransaction().begin();
 
-            em.persist(trashObject.getObject());
+            em.merge(trashObject.getObject());
             em.persist(trashObject);
 
             em.getTransaction().commit();

@@ -88,7 +88,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
             em.persist(transaction);
 
             for (final Account account : transaction.getAccounts()) {
-                em.persist(account);
+                em.merge(account);
             }
 
             em.getTransaction().commit();
@@ -118,7 +118,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
 
             // look at accounts this transaction impacted and update the accounts
             for (final Account account : transaction.getAccounts()) {
-                em.persist(account);
+                em.merge(account);
             }
 
             em.persist(transaction);    // saved, removed with the trash

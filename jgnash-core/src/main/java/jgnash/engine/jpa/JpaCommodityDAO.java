@@ -83,7 +83,7 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
 
             em.getTransaction().begin();
 
-            em.persist(node);
+            em.merge(node);
 
             em.getTransaction().commit();
 
@@ -100,7 +100,7 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
 
             em.getTransaction().begin();
 
-            em.persist(rate);
+            em.merge(rate);
 
             em.getTransaction().commit();
             return true;
@@ -116,7 +116,7 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
             em.getTransaction().begin();
 
             em.remove(hNode);
-            em.persist(rate);
+            em.merge(rate);
 
             em.getTransaction().commit();
             return true;
@@ -237,7 +237,8 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
             emLock.lock();
             em.getTransaction().begin();
 
-            em.persist(node);
+            em.remove(hNode);
+            em.merge(node);
 
             em.getTransaction().commit();
 

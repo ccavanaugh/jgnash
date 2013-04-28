@@ -63,7 +63,7 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
             emLock.lock();
             em.getTransaction().begin();
 
-            em.persist(budget);
+            em.merge(budget);
 
             em.getTransaction().commit();
 

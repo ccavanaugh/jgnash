@@ -101,7 +101,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
             em.getTransaction().begin();
 
             em.persist(child);
-            em.persist(parent);
+            em.merge(parent);
 
             em.getTransaction().commit();
 
@@ -140,7 +140,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
             em.getTransaction().begin();
 
             em.persist(node);
-            em.persist(account);
+            em.merge(account);
 
             em.getTransaction().commit();
 
@@ -256,7 +256,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
                 try {
                     em.getTransaction().begin();
 
-                    em.persist(account);
+                    em.merge(account);
 
                     em.getTransaction().commit();
 
