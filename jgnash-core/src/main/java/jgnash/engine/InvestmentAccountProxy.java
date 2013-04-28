@@ -20,7 +20,9 @@ package jgnash.engine;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 
 /**
@@ -199,7 +201,10 @@ public class InvestmentAccountProxy extends AccountProxy {
 
             BigDecimal balance = BigDecimal.ZERO;
 
-            for (Transaction t : account.transactions) {
+            // Create a defensive copy, JPA lazy updates can have side effects
+            Set<Transaction> transactions = new HashSet<>(account.transactions);
+
+            for (Transaction t : transactions) {
                 if (t.getDate().compareTo(start) >= 0 && t.getDate().compareTo(end) <= 0) {
                     if (t instanceof InvestmentTransaction) {
                         balance = balance.add(((InvestmentTransaction) t).getMarketValue(priceMap.get(((InvestmentTransaction) t).getSecurityNode())));
@@ -263,7 +268,10 @@ public class InvestmentAccountProxy extends AccountProxy {
 
             BigDecimal balance = BigDecimal.ZERO;
 
-            for (Transaction t : account.transactions) {
+            // Create a defensive copy, JPA lazy updates can have side effects
+            Set<Transaction> transactions = new HashSet<>(account.transactions);
+
+            for (Transaction t : transactions) {
                 if (t instanceof InvestmentTransaction && t.getReconciled(account) == ReconciledState.RECONCILED) {
                     balance = balance.add(((InvestmentTransaction) t).getMarketValue(priceMap.get(((InvestmentTransaction) t).getSecurityNode())));
                 }
