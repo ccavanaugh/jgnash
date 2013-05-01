@@ -49,11 +49,8 @@ import jgnash.engine.recurring.Reminder;
 import jgnash.net.ConnectionFactory;
 
 import java.io.CharArrayWriter;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -82,11 +79,6 @@ public class MessageBusClient {
     private Channel channel;
 
     private ChannelFuture lastWriteFuture = null;
-
-    /**
-     * Lookup map for remote states
-     */
-    private Map<String, LockState> remoteLockStates = new ConcurrentHashMap<>();
 
     public MessageBusClient(final String host, final int port) {
         this.host = host;
@@ -163,13 +155,7 @@ public class MessageBusClient {
     @ChannelHandler.Sharable
     private class MessageBusClientHandler extends ChannelInboundMessageHandlerAdapter<String> {
 
-        private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-        /**
-         * Time in milliseconds to force an update latency to ensure client container is current before processing the
-         * message
-         */
-        private static final int FORCED_LATENCY = 2000;
+        private final ExecutorService scheduler = Executors.newSingleThreadExecutor();
 
         private String decrypt(final Object object) {
             String plainMessage;
@@ -184,7 +170,6 @@ public class MessageBusClient {
         }
 
         @Override
-        //TODO offload processing of the messages to an execution pool so the server is not blocked
         public void messageReceived(final ChannelHandlerContext ctx, final String msg) throws Exception {
             String plainMessage = decrypt(msg);
 
@@ -197,16 +182,14 @@ public class MessageBusClient {
                 if (!EngineFactory.getEngine(EngineFactory.DEFAULT).getUuid().equals(message.getSource())) {
 
                     // force latency and process after a fixed delay
-                    scheduler.schedule(new Runnable() {
+                    scheduler.submit(new Runnable() {
 
                         @Override
                         public void run() {
                             processRemoteMessage(message);
                         }
-                    }, FORCED_LATENCY, TimeUnit.MILLISECONDS);
+                    });
                 }
-            } else if (plainMessage.startsWith("<LockState>")) {  // process immediately
-                updateLockState(plainMessage);
             } else if (plainMessage.startsWith(MessageBusServer.PATH_PREFIX)) {
                 dataBasePath = plainMessage.substring(MessageBusServer.PATH_PREFIX.length());
                 logger.log(Level.INFO, "Remote data path is: {0}", dataBasePath);
@@ -227,17 +210,6 @@ public class MessageBusClient {
         public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
             logger.log(Level.WARNING, "Unexpected exception from downstream.", cause);
             ctx.close();
-        }
-    }
-
-    private void updateLockState(final String message) {
-        final LockState newLockState = (LockState) xstream.fromXML(message);
-
-        if (!remoteLockStates.containsKey(newLockState.getLockId())) {
-             remoteLockStates.put(newLockState.getLockId(), newLockState);
-        } else { // update the existing lock state
-            LockState lockState = remoteLockStates.get(newLockState.getLockId());
-            lockState.setLocked(newLockState.isLocked());
         }
     }
 
