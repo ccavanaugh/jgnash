@@ -109,11 +109,6 @@ public class Account extends StoredObject implements Comparable<Account> {
     Set<Transaction> transactions = new HashSet<>();
 
     /**
-     * Internally maintained cached list of sorted transactions
-     */
-    private transient List<Transaction> sortedTransactionList = null;
-
-    /**
      * List of securities if this is an investment account
      */
     @JoinColumn()
@@ -318,12 +313,6 @@ public class Account extends StoredObject implements Comparable<Account> {
                 transactions.add(tran);
                 clearCachedBalances();
 
-                // Update the sorted cache if initialized
-                if (sortedTransactionList != null) {
-                    getSortedTransactionList().add(tran);
-                    Collections.sort(getSortedTransactionList());
-                }
-
                 result = true;
             } else {
                 StringBuilder log = new StringBuilder("Account: " + getName() + '(' + hashCode() + ")" + System.lineSeparator());
@@ -355,11 +344,6 @@ public class Account extends StoredObject implements Comparable<Account> {
             if (contains(tran)) {
                 transactions.remove(tran);
                 clearCachedBalances();
-
-                // update the internal cache if initialized
-                if (sortedTransactionList != null) {
-                    getSortedTransactionList().remove(tran);
-                }
 
                 result = true;
             } else {
@@ -411,27 +395,25 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     /**
      * Returns a sorted list of transactions for this account
-     * <p/>
-     * An internal cache is maintained to reduce the expense
      *
      * @return List of transactions
      * @see #getReadOnlyTransactionCollection()
      */
     private List<Transaction> getSortedTransactionList() {
+        List<Transaction> sortedTransactionList = Collections.emptyList();
+
         Lock l = transactionLock.readLock();
         l.lock();
 
-        // Lazily create the list
         try {
-            if (sortedTransactionList == null) {
-                sortedTransactionList = new ArrayList<>(transactions);
-                Collections.sort(sortedTransactionList);
-            }
-
-            return sortedTransactionList;
+            sortedTransactionList = new ArrayList<>(transactions);
         } finally {
             l.unlock();
         }
+
+        Collections.sort(sortedTransactionList);
+
+        return sortedTransactionList;
     }
 
     /**
