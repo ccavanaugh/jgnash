@@ -761,6 +761,8 @@ public abstract class EngineTest {
 
         assertEquals(3, a.getTransactionCount());
 
+        assertEquals(3, e.getTransactions().size());
+
         // close and reopen to force check for persistence
         closeEngine();
         e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD);
