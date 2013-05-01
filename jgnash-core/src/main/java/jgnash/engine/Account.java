@@ -97,7 +97,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * Sorted list of child accounts
      */
     @OrderBy("name")
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private Set<Account> children = new HashSet<>();
 
     /**
@@ -113,7 +113,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      */
     @JoinColumn()
     @OrderBy("symbol")
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToMany(cascade = {CascadeType.ALL})
     Set<SecurityNode> securities = new HashSet<>();
 
     /**
