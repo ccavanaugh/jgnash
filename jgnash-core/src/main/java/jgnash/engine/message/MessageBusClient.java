@@ -306,11 +306,13 @@ public class MessageBusClient {
 
         if (message.getChannel() == MessageChannel.COMMODITY) {
             switch (message.getEvent()) {
+                case CURRENCY_ADD:
                 case CURRENCY_MODIFY:
                     final CommodityNode currency = (CommodityNode) message.getObject(MessageProperty.COMMODITY);
                     engine.refreshCommodity(currency);
                     message.setObject(MessageProperty.COMMODITY, engine.getCurrencyNodeByUuid(currency.getUuid()));
                     break;
+                case SECURITY_ADD:
                 case SECURITY_MODIFY:
                 case SECURITY_HISTORY_ADD:
                 case SECURITY_HISTORY_REMOVE:
