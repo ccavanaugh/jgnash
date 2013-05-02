@@ -263,7 +263,7 @@ public class MessageBusClient {
      *
      * @param message Message to process and send
      */
-    private synchronized static void processRemoteMessage(final Message message) {
+    private static void processRemoteMessage(final Message message) {
         logger.info("processing a remote message");
 
         Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
