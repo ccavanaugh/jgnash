@@ -291,28 +291,12 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
 
     @Override
     public void refreshCommodityNode(final CommodityNode node) {
-        try {
-            emLock.lock();
-            em.getTransaction().begin();
-
-            em.refresh(node);
-        } finally {
-            em.getTransaction().commit();
-            emLock.unlock();
-        }
+        refresh(node);
     }
 
     @Override
     public void refreshExchangeRate(final ExchangeRate rate) {
-        try {
-            emLock.lock();
-            em.getTransaction().begin();
-
-            em.refresh(rate);
-        } finally {
-            em.getTransaction().commit();
-            emLock.unlock();
-        }
+        refresh(rate);
     }
 
     /*

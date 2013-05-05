@@ -252,15 +252,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
 
     @Override
     public void refreshAccount(final Account account) {
-        try {
-            emLock.lock();
-
-            em.getTransaction().begin();
-            em.refresh(account);
-        } finally {
-            em.getTransaction().commit();
-            emLock.unlock();
-        }
+        refresh(account);
     }
 
     private boolean simpleUpdate(final Account account) {

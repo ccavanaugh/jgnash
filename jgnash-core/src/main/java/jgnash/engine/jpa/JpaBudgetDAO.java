@@ -103,14 +103,6 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
 
     @Override
     public void refreshBudget(final Budget budget) {
-        try {
-            emLock.lock();
-            em.getTransaction().begin();
-
-            em.refresh(budget);
-        } finally {
-            em.getTransaction().commit();
-            emLock.unlock();
-        }
+        refresh(budget);
     }
 }

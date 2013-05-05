@@ -106,14 +106,6 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
 
     @Override
     public void refreshReminder(final Reminder reminder) {
-        try {
-            emLock.lock();
-            em.getTransaction().begin();
-
-            em.refresh(reminder);
-        } finally {
-            em.getTransaction().commit();
-            emLock.unlock();
-        }
+        refresh(reminder);
     }
 }

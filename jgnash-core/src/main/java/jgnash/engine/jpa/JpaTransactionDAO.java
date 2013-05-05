@@ -68,15 +68,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
 
     @Override
     public void refreshTransaction(final Transaction transaction) {
-        try {
-            emLock.lock();
-            em.getTransaction().begin();
-
-            em.refresh(transaction);
-        } finally {
-            em.getTransaction().commit();
-            emLock.unlock();
-        }
+        refresh(transaction);
     }
 
     /*
