@@ -79,7 +79,7 @@ class JpaConfigDAO extends AbstractJpaDAO implements ConfigDAO {
             emLock.lock();
             em.getTransaction().begin();
 
-            em.merge(config);
+            em.persist(config);
         } finally {
             em.getTransaction().commit();
             emLock.unlock();

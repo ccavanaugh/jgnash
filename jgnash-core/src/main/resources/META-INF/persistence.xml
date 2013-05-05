@@ -47,6 +47,8 @@
         <class>jgnash.engine.StoredObject</class>
         <class>jgnash.engine.TrashObject</class>
 
+        <class>jgnash.engine.jpa.LockObject</class>
+
         <properties>
             <property name="javax.persistence.jdbc.password" value=""/>
             <property name="javax.persistence.jdbc.user" value=""/>
