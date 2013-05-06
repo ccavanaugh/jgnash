@@ -43,6 +43,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
@@ -84,6 +86,8 @@ public class MessageBusServer {
     private Map<String, LockState> lockStates = new ConcurrentHashMap<>();
 
     private XStream xstream = XStreamFactory.getInstance();
+
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     public MessageBusServer(final int port) {
         this.port = port;
@@ -133,6 +137,8 @@ public class MessageBusServer {
 
         try {
             channelGroup.close().sync();
+
+            executorService.shutdown();
 
             bootstrap.shutdown();
 
@@ -230,6 +236,15 @@ public class MessageBusServer {
 
         @Override
         public void messageReceived(final ChannelHandlerContext ctx, final String message) throws Exception {
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    processMessage(message);
+                }
+            });
+        }
+
+        private void processMessage(final String message) {
             final String plainMessage;
 
             if (filter != null) {
@@ -251,11 +266,13 @@ public class MessageBusServer {
                 for (LocalServerListener listener : listeners) {
                     listener.messagePosted(plainMessage);
                 }
+
+                logger.log(Level.INFO, "Broadcast: {0}", plainMessage);
+            } catch (InterruptedException e) {
+                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             } finally {
                 rwl.readLock().unlock();
             }
-
-            logger.log(Level.INFO, "Broadcast: {0}", plainMessage);
         }
 
         @Override
@@ -266,7 +283,7 @@ public class MessageBusServer {
 
         /**
          * Update the local cache of lock states
-         * @param message
+         * @param message lock state message
          */
         private void updateLockState(final String message) {
             final LockState newLockState = (LockState) xstream.fromXML(message);
