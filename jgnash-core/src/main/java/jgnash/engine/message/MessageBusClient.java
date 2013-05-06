@@ -155,7 +155,7 @@ public class MessageBusClient {
     @ChannelHandler.Sharable
     private class MessageBusClientHandler extends ChannelInboundMessageHandlerAdapter<String> {
 
-        private final ExecutorService scheduler = Executors.newSingleThreadExecutor();
+        private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         private String decrypt(final Object object) {
             String plainMessage;
@@ -171,25 +171,22 @@ public class MessageBusClient {
 
         @Override
         public void messageReceived(final ChannelHandlerContext ctx, final String msg) throws Exception {
-            String plainMessage = decrypt(msg);
+            final String plainMessage = decrypt(msg);
 
             logger.log(Level.INFO, "messageReceived: {0}", plainMessage);
 
             if (plainMessage.startsWith("<Message")) {
-                final Message message = (Message) xstream.fromXML(plainMessage);
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Message message = (Message) xstream.fromXML(plainMessage);
 
-                // ignore our own messages
-                if (!EngineFactory.getEngine(EngineFactory.DEFAULT).getUuid().equals(message.getSource())) {
-
-                    // force latency and process after a fixed delay
-                    scheduler.submit(new Runnable() {
-
-                        @Override
-                        public void run() {
+                        // ignore our own messages
+                        if (!EngineFactory.getEngine(EngineFactory.DEFAULT).getUuid().equals(message.getSource())) {
                             processRemoteMessage(message);
                         }
-                    });
-                }
+                    }
+                });
             } else if (plainMessage.startsWith(MessageBusServer.PATH_PREFIX)) {
                 dataBasePath = plainMessage.substring(MessageBusServer.PATH_PREFIX.length());
                 logger.log(Level.INFO, "Remote data path is: {0}", dataBasePath);
