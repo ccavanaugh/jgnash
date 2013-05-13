@@ -156,30 +156,16 @@ public class DistributedLockManager implements LockManager {
     }
 
     void lock(final String lockId, final String type) {
-        final Integer threadId = Thread.currentThread().hashCode();
-        final String message = MessageFormat.format(PATTERN, "lock", lockId, threadId.toString(), type);
-
-        final CountDownLatch responseLatch = getLatch(lockId);
-
-        logger.info("Sending lock request: " + message);
-
-        lastWriteFuture = channel.write(message + EOL_DELIMITER);   // send the lock request
-
-
-        logger.info("Blocking until response if received");
-
-        try {
-            responseLatch.await();    // block until a response is received
-        } catch (InterruptedException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        }
-
-        logger.info("Lock response was received");
+        changeLockState(lockId, type, "lock");
     }
 
     void unlock(final String lockId, final String type) {
+        changeLockState(lockId, type, "unlock");
+    }
+
+    void changeLockState(final String lockId, final String type, final String lockState) {
         final Integer threadId = Thread.currentThread().hashCode();
-        final String message = MessageFormat.format(PATTERN, "unlock", lockId, threadId.toString(), type);
+        final String message = MessageFormat.format(PATTERN, lockState, lockId, threadId.toString(), type);
         final CountDownLatch responseLatch = getLatch(lockId);
 
         // send the message to the server
@@ -203,11 +189,9 @@ public class DistributedLockManager implements LockManager {
         // decode the message into it's parts
         final String[] strings = EncodeDecode.decodeStringCollection(message).toArray(new String[4]);
 
-        //final String action = strings[0];
-        final String lockId = strings[1];
-        //final String lockType = strings[3];
-
+        final String lockId = strings[1];   // get the lock id
         final CountDownLatch responseLatch = getLatch(lockId);
+
         responseLatch.countDown();  // this should release the responseLatch allowing the thread to continue
 
         latchMap.remove(lockId);    // remove the used up latch

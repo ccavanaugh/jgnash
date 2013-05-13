@@ -79,8 +79,8 @@ public class DistributedLockServer {
     private void processMessage(final ChannelHandlerContext ctx, final String message) {
 
         /** lock_action, lock_id, thread_id, lock_type */
-        // unlock,account,3456384756384563,read
-        // lock,account,3456384756384563,write
+        // unlock,account,1194917570,read
+        // lock,account,1194917570,write
 
         // decode the message into it's parts
         final String[] strings = EncodeDecode.decodeStringCollection(message).toArray(new String[4]);
@@ -231,9 +231,7 @@ public class DistributedLockServer {
     /**
      * Reentrant Read Write lock.
      *
-     * The id of the thread is used to map reentrant reads
-     *
-     *  TODO The id needs to be a sting in combination with a session UUID.  Native thread id's are not very random
+     * A unique integer must be supplied to identify the thread
      */
     private class ReadWriteLock {
 
