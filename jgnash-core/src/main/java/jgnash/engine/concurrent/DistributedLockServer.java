@@ -87,7 +87,7 @@ public class DistributedLockServer {
 
         final String action = strings[0];
         final String lockId = strings[1];
-        final long remoteThread = Long.parseLong(strings[2]);
+        final int remoteThread = Integer.parseInt(strings[2]);
         final String lockType = strings[3];
 
         final ReadWriteLock lock = getLock(lockId);
@@ -237,13 +237,13 @@ public class DistributedLockServer {
      */
     private class ReadWriteLock {
 
-        private final Map<Long, Integer> readingThreads = new HashMap<>();
+        private final Map<Integer, Integer> readingThreads = new HashMap<>();
 
         private int writeAccesses = 0;
         private int writeRequests = 0;
         private long writingThread = -1;
 
-        synchronized void lockForRead(final long remoteThread) throws InterruptedException {
+        synchronized void lockForRead(final int remoteThread) throws InterruptedException {
 
             while (!canGrantReadAccess(remoteThread)) {
                 wait();
@@ -252,7 +252,7 @@ public class DistributedLockServer {
             readingThreads.put(remoteThread, (getReadAccessCount(remoteThread) + 1));
         }
 
-        synchronized void lockForWrite(final long remoteThread) throws InterruptedException {
+        synchronized void lockForWrite(final int remoteThread) throws InterruptedException {
             writeRequests++;
 
             while (!canGrantWriteAccess(remoteThread)) {
@@ -264,7 +264,7 @@ public class DistributedLockServer {
             writingThread = remoteThread;
         }
 
-        synchronized void unlockRead(final long remoteThread) {
+        synchronized void unlockRead(final int remoteThread) {
 
             if (!isRemoteReader(remoteThread)) {
                 throw new IllegalMonitorStateException("Remote Thread does not hold a read lock on this ReadWriteLock");
@@ -281,7 +281,7 @@ public class DistributedLockServer {
             notifyAll();
         }
 
-        synchronized void unlockWrite(final long remoteThread) throws InterruptedException {
+        synchronized void unlockWrite(final int remoteThread) throws InterruptedException {
 
             if (!isRemoteWriter(remoteThread)) {
                 throw new IllegalMonitorStateException("Remote Thread does not hold the write lock on this ReadWriteLock");
@@ -296,7 +296,7 @@ public class DistributedLockServer {
             notifyAll();
         }
 
-        private boolean canGrantReadAccess(final long remoteThread) {
+        private boolean canGrantReadAccess(final int remoteThread) {
 
             if (isRemoteWriter(remoteThread)) { // lock down grade is allowed
                 return true;
@@ -312,7 +312,7 @@ public class DistributedLockServer {
 
         }
 
-        private boolean canGrantWriteAccess(final long remoteThread) {
+        private boolean canGrantWriteAccess(final int remoteThread) {
 
             if (!readingThreads.isEmpty()) {
                 return false;
@@ -323,7 +323,7 @@ public class DistributedLockServer {
             return isRemoteWriter(remoteThread); // reentrant write
         }
 
-        private int getReadAccessCount(final long remoteThread) {
+        private int getReadAccessCount(final int remoteThread) {
             final Integer accessCount = readingThreads.get(remoteThread);
 
             if (accessCount == null) {
@@ -333,11 +333,11 @@ public class DistributedLockServer {
             return accessCount;
         }
 
-        private boolean isRemoteReader(final long remoteThread) {
+        private boolean isRemoteReader(final int remoteThread) {
             return readingThreads.get(remoteThread) != null;
         }
 
-        private boolean isRemoteWriter(final long remoteThread) {
+        private boolean isRemoteWriter(final int remoteThread) {
             return writingThread == remoteThread;
         }
     }

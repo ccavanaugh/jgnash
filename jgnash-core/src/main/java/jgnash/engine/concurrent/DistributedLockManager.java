@@ -156,8 +156,8 @@ public class DistributedLockManager implements LockManager {
     }
 
     void lock(final String lockId, final String type) {
-        final long threadId = Thread.currentThread().getId();
-        final String message = MessageFormat.format(PATTERN, "lock", lockId, threadId, type);
+        final Integer threadId = Thread.currentThread().hashCode();
+        final String message = MessageFormat.format(PATTERN, "lock", lockId, threadId.toString(), type);
 
         final CountDownLatch responseLatch = getLatch(lockId);
 
@@ -178,8 +178,8 @@ public class DistributedLockManager implements LockManager {
     }
 
     void unlock(final String lockId, final String type) {
-        final long threadId = Thread.currentThread().getId();
-        final String message = MessageFormat.format(PATTERN, "unlock", lockId, threadId, type);
+        final Integer threadId = Thread.currentThread().hashCode();
+        final String message = MessageFormat.format(PATTERN, "unlock", lockId, threadId.toString(), type);
         final CountDownLatch responseLatch = getLatch(lockId);
 
         // send the message to the server
