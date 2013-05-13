@@ -17,8 +17,6 @@
  */
 package jgnash.engine.message;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.CompactWriter;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.BufType;
 import io.netty.channel.ChannelFuture;
@@ -38,11 +36,8 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import jgnash.engine.DataStoreType;
 
-import java.io.CharArrayWriter;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -63,8 +58,6 @@ public class MessageBusServer {
 
     public static final String DATA_STORE_TYPE_PREFIX = "<TYPE>";
 
-    public static final String LOCK_STATE_PREFIX = "<LockState>";
-
     public static final String EOL_DELIMITER = "\r\n";
 
     private int port = 0;
@@ -82,10 +75,6 @@ public class MessageBusServer {
     private final ChannelGroup channelGroup = new DefaultChannelGroup("all-connected");
 
     private EncryptionFilter filter;
-
-    private Map<String, LockState> lockStates = new ConcurrentHashMap<>();
-
-    private XStream xstream = XStreamFactory.getInstance();
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -139,7 +128,6 @@ public class MessageBusServer {
             channelGroup.close().sync();
 
             executorService.shutdown();
-
             bootstrap.shutdown();
 
             listeners.clear();
@@ -185,6 +173,18 @@ public class MessageBusServer {
         return message;
     }
 
+    private String decrypt(final String message) {
+        String plainMessage;
+
+        if (filter != null) {
+            plainMessage = filter.decrypt(message);
+        } else {
+            plainMessage = message;
+        }
+
+        return plainMessage;
+    }
+
     private class MessageBusRemoteInitializer extends ChannelInitializer<SocketChannel> {
         private final StringDecoder DECODER = new StringDecoder();
         private final StringEncoder ENCODER = new StringEncoder(BufType.BYTE);
@@ -216,13 +216,6 @@ public class MessageBusServer {
 
             logger.log(Level.INFO, "Remote connection from: {0}", ctx.channel().remoteAddress().toString());
 
-            // Use XStream to decode and send every lock state to the newly connected client
-            for (LockState lockState : lockStates.values()) {
-                CharArrayWriter writer = new CharArrayWriter();
-                xstream.marshal(lockState, new CompactWriter(writer));
-                ctx.write(encrypt(writer.toString()) + EOL_DELIMITER);
-            }
-
             // Inform the client what they are talking with so they can establish a correct database url
             ctx.write(encrypt(PATH_PREFIX + dataBasePath) + EOL_DELIMITER);
             ctx.write(encrypt(DATA_STORE_TYPE_PREFIX + dataStoreType) + EOL_DELIMITER);
@@ -245,19 +238,9 @@ public class MessageBusServer {
         }
 
         private void processMessage(final String message) {
-            final String plainMessage;
-
-            if (filter != null) {
-                plainMessage = filter.decrypt(message);
-            } else {
-                plainMessage = message;
-            }
+            final String plainMessage = decrypt(message);
 
             rwl.readLock().lock();
-
-            if (message.startsWith(LOCK_STATE_PREFIX)) {  // lock request, decode and cache the result for new connections
-                updateLockState(plainMessage);
-            }
 
             try {
                 channelGroup.write(encrypt(plainMessage) + EOL_DELIMITER).sync();
@@ -279,21 +262,6 @@ public class MessageBusServer {
         public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
             logger.log(Level.WARNING, "Unexpected exception from downstream.", cause);
             ctx.close();
-        }
-
-        /**
-         * Update the local cache of lock states
-         * @param message lock state message
-         */
-        private void updateLockState(final String message) {
-            final LockState newLockState = (LockState) xstream.fromXML(message);
-
-            if (!lockStates.containsKey(newLockState.getLockId())) {
-                lockStates.put(newLockState.getLockId(), newLockState);
-            } else { // update the existing lock state
-                LockState lockState = lockStates.get(newLockState.getLockId());
-                lockState.setLocked(newLockState.isLocked());
-            }
         }
     }
 }

@@ -32,7 +32,6 @@ class XStreamFactory {
         XStream xstream = new XStream(new StaxDriver());
         xstream.alias("Message", Message.class);
         xstream.alias("MessageProperty", MessageProperty.class);
-        xstream.alias("LockState", LockState.class);
 
         return xstream;
     }
