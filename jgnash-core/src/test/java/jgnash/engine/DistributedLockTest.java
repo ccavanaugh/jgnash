@@ -23,6 +23,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Random;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import static org.junit.Assert.assertTrue;
@@ -59,7 +60,7 @@ public class DistributedLockTest {
     public void testStartUp() {
 
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1000); // helps with sort order of logging because it's so fast
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -70,16 +71,67 @@ public class DistributedLockTest {
     @Test
     public void simpleLock() {
 
-        ReadWriteLock lock = manager.getLock("account");
+        ReadWriteLock accountLock = manager.getLock("account");
+        ReadWriteLock transactionLock = manager.getLock("transaction");
 
         try {
-            lock.readLock().lock();
-
-            Thread.sleep(2000);
+            accountLock.readLock().lock();
+            transactionLock.writeLock().lock();
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
-            lock.readLock().unlock();
+            accountLock.readLock().unlock();
+            transactionLock.writeLock().unlock();
+        }
+
+        assertTrue(true);
+    }
+
+    @Test
+    public void multipleWriteLocks() {
+
+        class WriteLockTest extends Thread {
+            @Override
+            public void run() {
+                ReadWriteLock lock = manager.getLock("lock");
+
+                lock.writeLock().lock();
+
+                try {
+
+                    Random random = new Random();
+                    int num = random.nextInt(3000);
+
+                    try {
+                        Thread.sleep(num);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                } finally {
+                    lock.writeLock().unlock();
+                }
+            }
+        }
+
+        Thread thread1 = new  WriteLockTest();
+        Thread thread2 = new  WriteLockTest();
+        Thread thread3 = new  WriteLockTest();
+        Thread thread4 = new  WriteLockTest();
+
+        thread1.run();
+        thread2.run();
+        thread3.run();
+        thread4.run();
+
+        try {
+            thread1.join();
+            thread2.join();
+            thread3.join();
+            thread4.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         assertTrue(true);
