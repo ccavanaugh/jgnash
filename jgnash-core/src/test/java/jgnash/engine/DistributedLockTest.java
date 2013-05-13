@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import java.util.Random;
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.logging.Logger;
 
 import static org.junit.Assert.assertTrue;
 
@@ -40,6 +41,8 @@ public class DistributedLockTest {
     DistributedLockServer server;
 
     DistributedLockManager manager;
+
+    static Logger logger = Logger.getLogger(DistributedLockTest.class.getName());
 
     @Before
     public void setUp() {
@@ -89,14 +92,15 @@ public class DistributedLockTest {
     }
 
     @Test
-    public void multipleWriteLocks() {
+    public void multipleReadLocks() {
 
         class WriteLockTest extends Thread {
             @Override
             public void run() {
                 ReadWriteLock lock = manager.getLock("lock");
 
-                lock.writeLock().lock();
+                logger.info("locking: " + hashCode());
+                lock.readLock().lock();
 
                 try {
 
@@ -110,20 +114,21 @@ public class DistributedLockTest {
                     }
 
                 } finally {
-                    lock.writeLock().unlock();
+                    logger.info("unlocking: " + hashCode());
+                    lock.readLock().unlock();
                 }
             }
         }
 
-        Thread thread1 = new  WriteLockTest();
-        Thread thread2 = new  WriteLockTest();
-        Thread thread3 = new  WriteLockTest();
-        Thread thread4 = new  WriteLockTest();
+        Thread thread1 = new WriteLockTest();
+        Thread thread2 = new WriteLockTest();
+        Thread thread3 = new WriteLockTest();
+        Thread thread4 = new WriteLockTest();
 
-        thread1.run();
-        thread2.run();
-        thread3.run();
-        thread4.run();
+        thread1.start();
+        thread2.start();
+        thread3.start();
+        thread4.start();
 
         try {
             thread1.join();
