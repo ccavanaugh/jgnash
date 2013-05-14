@@ -74,7 +74,7 @@ public class DistributedLockManager implements LockManager {
 
     public static final String EOL_DELIMITER = "\r\n";
 
-    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
 
     public DistributedLockManager(final String host, final int port) {
         this.host = host;

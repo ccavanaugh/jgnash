@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import java.util.Random;
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.Assert.assertTrue;
@@ -140,5 +141,65 @@ public class DistributedLockTest {
         }
 
         assertTrue(true);
+    }
+
+    @Test
+    public void writeLockTest() throws InterruptedException {
+
+        ReadWriteLock rwLock = manager.getLock("test-lock");
+
+        Thread writeLockThread = new Thread(new WriteLockThread(rwLock));
+        Thread readLockThread = new Thread(this.new ReadLockThread(rwLock));
+
+        writeLockThread.start();
+        Thread.sleep(500);
+        readLockThread.start();
+
+        writeLockThread.join();
+        readLockThread.join();
+    }
+
+    class WriteLockThread implements Runnable {
+        private ReadWriteLock readWriteLock;
+
+        public WriteLockThread(final ReadWriteLock readWriteLock) {
+            this.readWriteLock = readWriteLock;
+        }
+
+        @Override
+        public void run() {
+            try {
+                logger.info("try write lock");
+                readWriteLock.writeLock().lock();
+                logger.info("got write lock");
+
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+            } finally {
+                logger.info("unlock write lock");
+                readWriteLock.writeLock().unlock();
+            }
+        }
+    }
+
+    class ReadLockThread implements Runnable {
+        private ReadWriteLock readWriteLock;
+
+        public ReadLockThread(final ReadWriteLock readWriteLock) {
+            this.readWriteLock = readWriteLock;
+        }
+
+        @Override
+        public void run() {
+            try {
+                logger.info("try read lock");
+                readWriteLock.readLock().lock();
+                logger.info("got read lock");
+            } finally {
+                logger.info("unlock read lock");
+                readWriteLock.readLock().unlock();
+            }
+        }
     }
 }
