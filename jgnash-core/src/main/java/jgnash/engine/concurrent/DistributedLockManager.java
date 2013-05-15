@@ -34,9 +34,11 @@ import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.util.CharsetUtil;
 import jgnash.net.ConnectionFactory;
 import jgnash.util.EncodeDecode;
 
+import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -198,9 +200,8 @@ public class DistributedLockManager implements LockManager {
     }
 
     private class Initializer extends ChannelInitializer<SocketChannel> {
-        private final StringDecoder DECODER = new StringDecoder();
-        private final StringEncoder ENCODER = new StringEncoder(BufType.BYTE);
-
+        private final StringDecoder DECODER = new StringDecoder(CharsetUtil.UTF_8);
+        private final StringEncoder ENCODER = new StringEncoder(BufType.BYTE, CharsetUtil.UTF_8);
         private final ClientHandler CLIENT_HANDLER = new ClientHandler();
 
         @Override
