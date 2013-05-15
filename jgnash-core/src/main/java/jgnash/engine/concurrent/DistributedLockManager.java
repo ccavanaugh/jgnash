@@ -88,7 +88,7 @@ public class DistributedLockManager implements LockManager {
 
         bootstrap.group(new NioEventLoopGroup())
                 .channel(NioSocketChannel.class)
-                .handler(new MessageBusClientInitializer())
+                .handler(new Initializer())
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, ConnectionFactory.getConnectionTimeout() * 1000);
 
         try {
@@ -197,9 +197,10 @@ public class DistributedLockManager implements LockManager {
         latchMap.remove(lockId);    // remove the used up latch
     }
 
-    private class MessageBusClientInitializer extends ChannelInitializer<SocketChannel> {
+    private class Initializer extends ChannelInitializer<SocketChannel> {
         private final StringDecoder DECODER = new StringDecoder();
         private final StringEncoder ENCODER = new StringEncoder(BufType.BYTE);
+
         private final ClientHandler CLIENT_HANDLER = new ClientHandler();
 
         @Override

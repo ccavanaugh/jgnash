@@ -141,7 +141,7 @@ public class DistributedLockServer {
         try {
             bootstrap.group(new NioEventLoopGroup(), new NioEventLoopGroup())
                     .channel(NioServerSocketChannel.class)
-                    .childHandler(new MessageBusRemoteInitializer());
+                    .childHandler(new Initializer());
 
             final ChannelFuture future = bootstrap.bind(port);
             future.sync();
@@ -206,7 +206,7 @@ public class DistributedLockServer {
         }
     }
 
-    private class MessageBusRemoteInitializer extends ChannelInitializer<SocketChannel> {
+    private class Initializer extends ChannelInitializer<SocketChannel> {
         private final StringDecoder DECODER = new StringDecoder();
         private final StringEncoder ENCODER = new StringEncoder(BufType.BYTE);
 
