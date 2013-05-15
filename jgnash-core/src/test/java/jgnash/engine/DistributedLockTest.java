@@ -28,6 +28,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -146,10 +147,54 @@ public class DistributedLockTest {
     @Test
     public void writeLockTest() throws InterruptedException {
 
+        class ReadLockThread implements Runnable {
+            private ReadWriteLock readWriteLock;
+
+            public ReadLockThread(final ReadWriteLock readWriteLock) {
+                this.readWriteLock = readWriteLock;
+            }
+
+            @Override
+            public void run() {
+                try {
+                    logger.info("try read lock");
+                    readWriteLock.readLock().lock();
+                    logger.info("got read lock");
+                } finally {
+                    logger.info("unlock read lock");
+                    readWriteLock.readLock().unlock();
+                }
+            }
+        }
+
+        class WriteLockThread implements Runnable {
+            private ReadWriteLock readWriteLock;
+
+            public WriteLockThread(final ReadWriteLock readWriteLock) {
+                this.readWriteLock = readWriteLock;
+            }
+
+            @Override
+            public void run() {
+                try {
+                    logger.info("try write lock");
+                    readWriteLock.writeLock().lock();
+                    logger.info("got write lock");
+
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+                } finally {
+                    logger.info("unlock write lock");
+                    readWriteLock.writeLock().unlock();
+                }
+            }
+        }
+
         ReadWriteLock rwLock = manager.getLock("test-lock");
 
         Thread writeLockThread = new Thread(new WriteLockThread(rwLock));
-        Thread readLockThread = new Thread(this.new ReadLockThread(rwLock));
+        Thread readLockThread = new Thread(new ReadLockThread(rwLock));
 
         writeLockThread.start();
         Thread.sleep(500);
@@ -159,47 +204,61 @@ public class DistributedLockTest {
         readLockThread.join();
     }
 
-    class WriteLockThread implements Runnable {
-        private ReadWriteLock readWriteLock;
+    @Test
+    public void reentrantWriteTest() {
+        int count = 0;
 
-        public WriteLockThread(final ReadWriteLock readWriteLock) {
-            this.readWriteLock = readWriteLock;
+        ReadWriteLock lock = manager.getLock("reentrant");
+
+        try {
+            lock.writeLock().lock();
+            count++;
+
+            lock.writeLock().lock();
+            count++;
+
+            lock.writeLock().lock();
+            count++;
+
+            lock.writeLock().lock();
+            count++;
+
+        } finally {
+            lock.writeLock().unlock();
+            lock.writeLock().unlock();
+            lock.writeLock().unlock();
+            lock.writeLock().unlock();
         }
 
-        @Override
-        public void run() {
-            try {
-                logger.info("try write lock");
-                readWriteLock.writeLock().lock();
-                logger.info("got write lock");
-
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-            } finally {
-                logger.info("unlock write lock");
-                readWriteLock.writeLock().unlock();
-            }
-        }
+        assertEquals(4, count);
     }
 
-    class ReadLockThread implements Runnable {
-        private ReadWriteLock readWriteLock;
+    @Test
+    public void reentrantReadTest() {
+        int count = 0;
 
-        public ReadLockThread(final ReadWriteLock readWriteLock) {
-            this.readWriteLock = readWriteLock;
+        ReadWriteLock lock = manager.getLock("reentrant");
+
+        try {
+            lock.readLock().lock();
+            count++;
+
+            lock.readLock().lock();
+            count++;
+
+            lock.readLock().lock();
+            count++;
+
+            lock.readLock().lock();
+            count++;
+
+        } finally {
+            lock.readLock().unlock();
+            lock.readLock().unlock();
+            lock.readLock().unlock();
+            lock.readLock().unlock();
         }
 
-        @Override
-        public void run() {
-            try {
-                logger.info("try read lock");
-                readWriteLock.readLock().lock();
-                logger.info("got read lock");
-            } finally {
-                logger.info("unlock read lock");
-                readWriteLock.readLock().unlock();
-            }
-        }
+        assertEquals(4, count);
     }
 }
