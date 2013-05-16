@@ -17,14 +17,25 @@
  */
 package jgnash.engine.concurrent;
 
-import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * Lock manger for all engine operations.  Locks may be local or distributed
- * depending on connection type
+ * Lock manger for all engine operations.
+ *
+ * Locks may be local or distributed depending on connection type
+ *
+ * @author Craig Cavanaugh
  */
 public interface LockManager {
 
-    public ReadWriteLock getLock(final String lockId);
+    /**
+     * Returns a named {@link ReentrantReadWriteLock}.
+     * Locks are cached and reused
+     *
+     * @param lockId id of the lock
+     *
+     * @return a new or cached ReentrantReadWriteLock
+     */
+    public ReentrantReadWriteLock getLock(final String lockId);
 
 }

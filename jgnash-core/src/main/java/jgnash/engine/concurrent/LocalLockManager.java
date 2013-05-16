@@ -19,17 +19,18 @@ package jgnash.engine.concurrent;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Lock manager for local engine instances
+ *
+ * @author Craig Cavanaugh
  */
 public class LocalLockManager implements LockManager {
     private Map<String, ReentrantReadWriteLock> lockMap = new ConcurrentHashMap<>();
 
     @Override
-    public ReadWriteLock getLock(final String lockId) {
+    public ReentrantReadWriteLock getLock(final String lockId) {
         ReentrantReadWriteLock lock = lockMap.get(lockId);
 
         if (lock == null) {

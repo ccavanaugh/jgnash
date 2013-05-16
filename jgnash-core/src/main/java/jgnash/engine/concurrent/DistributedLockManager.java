@@ -38,20 +38,20 @@ import io.netty.util.CharsetUtil;
 import jgnash.net.ConnectionFactory;
 import jgnash.util.EncodeDecode;
 
-import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * Lock manager for distributed engine instances
+ *
+ * @author Craig Cavanaugh
  */
 public class DistributedLockManager implements LockManager {
 
@@ -83,6 +83,11 @@ public class DistributedLockManager implements LockManager {
         this.port = port;
     }
 
+    /**
+     * Starts the connection with the lock server
+     *
+     * @return <code>true</code> if successful
+     */
     public boolean connectToServer() {
         boolean result = false;
 
@@ -107,6 +112,9 @@ public class DistributedLockManager implements LockManager {
         return result;
     }
 
+    /**
+     * Disconnects from the lock server
+     */
     public void disconnectFromServer() {
 
         // Wait until all messages are flushed before closing the channel.
@@ -135,7 +143,7 @@ public class DistributedLockManager implements LockManager {
     }
 
     @Override
-    public ReadWriteLock getLock(final String lockId) {
+    public ReentrantReadWriteLock getLock(final String lockId) {
         DistributedReadWriteLock lock = lockMap.get(lockId);
 
         if (lock == null) {
