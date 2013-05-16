@@ -208,26 +208,36 @@ public class DistributedLockTest {
     public void reentrantWriteTest() {
         int count = 0;
 
-        ReadWriteLock lock = manager.getLock("reentrant");
+        ReadWriteLock lock1 = manager.getLock("reentrant");
+        ReadWriteLock lock2 = manager.getLock("reentrant2");
 
         try {
-            lock.writeLock().lock();
+            lock1.writeLock().lock();
+            lock2.writeLock().lock();
             count++;
 
-            lock.writeLock().lock();
+            lock1.writeLock().lock();
+            lock2.writeLock().lock();
             count++;
 
-            lock.writeLock().lock();
+            lock1.writeLock().lock();
+            lock2.writeLock().lock();
             count++;
 
-            lock.writeLock().lock();
+            lock1.writeLock().lock();
+            lock2.writeLock().lock();
             count++;
 
         } finally {
-            lock.writeLock().unlock();
-            lock.writeLock().unlock();
-            lock.writeLock().unlock();
-            lock.writeLock().unlock();
+            lock1.writeLock().unlock();
+            lock1.writeLock().unlock();
+            lock1.writeLock().unlock();
+            lock1.writeLock().unlock();
+
+            lock2.writeLock().unlock();
+            lock2.writeLock().unlock();
+            lock2.writeLock().unlock();
+            lock2.writeLock().unlock();
         }
 
         assertEquals(4, count);
