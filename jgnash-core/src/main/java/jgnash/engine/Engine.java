@@ -22,6 +22,7 @@ import jgnash.engine.budget.BudgetGoal;
 import jgnash.engine.budget.BudgetPeriod;
 import jgnash.engine.budget.BudgetPeriodDescriptor;
 import jgnash.engine.budget.BudgetPeriodDescriptorFactory;
+import jgnash.engine.concurrent.LockManager;
 import jgnash.engine.dao.AccountDAO;
 import jgnash.engine.dao.BudgetDAO;
 import jgnash.engine.dao.CommodityDAO;
@@ -80,6 +81,13 @@ public class Engine {
      */
     public static final float CURRENT_VERSION = 2.3f;
 
+    // Lock names
+    public static final String ACCOUNT_LOCK = "account";
+    public static final String BUDGET_LOCK = "budget";
+    public static final String COMMODITY_LOCK = "commodity";
+    public static final String CONFIG_LOCK = "config";
+    public static final String ENGINE_LOCK = "engine";
+
     private final Resource rb = Resource.get();
 
     private static final Logger logger = Logger.getLogger(Engine.class.getName());
@@ -101,15 +109,15 @@ public class Engine {
 
     private ExchangeRateDAO exchangeRateDAO;
 
-    private final ReentrantReadWriteLock accountLock = new ReentrantReadWriteLock(true);
+    private final ReentrantReadWriteLock accountLock;
 
-    private final ReentrantReadWriteLock budgetLock = new ReentrantReadWriteLock(true);
+    private final ReentrantReadWriteLock budgetLock;
 
-    private final ReentrantReadWriteLock commodityLock = new ReentrantReadWriteLock(true);
+    private final ReentrantReadWriteLock commodityLock;
 
-    private final ReentrantReadWriteLock configLock = new ReentrantReadWriteLock(true);
+    private final ReentrantReadWriteLock configLock;
 
-    private final ReentrantReadWriteLock engineLock = new ReentrantReadWriteLock(true);
+    private final ReentrantReadWriteLock engineLock;
 
     private EngineDAO eDAO;
 
@@ -136,7 +144,7 @@ public class Engine {
         logger.setLevel(Level.ALL);
     }
 
-    public Engine(final EngineDAO eDAO, final String name) {
+    public Engine(final EngineDAO eDAO, final LockManager lockManager, final String name) {
 
         if (name == null) {
             throw new IllegalArgumentException("The engine name may not be null");
@@ -148,6 +156,13 @@ public class Engine {
 
         this.eDAO = eDAO;
         this.name = name;
+
+        // Generate locks
+        accountLock = new ReentrantReadWriteLock();
+        budgetLock = new ReentrantReadWriteLock();
+        commodityLock = new ReentrantReadWriteLock();
+        configLock = lockManager.getLock(CONFIG_LOCK);
+        engineLock = lockManager.getLock(ENGINE_LOCK);
 
         messageBus = MessageBus.getInstance(name);
 
@@ -2538,17 +2553,26 @@ public class Engine {
     }
 
     public List<String> getTransactionNumberList() {
+        configLock.readLock().lock();
 
-        return getConfig().getTransactionNumberList();
+        try {
+            return getConfig().getTransactionNumberList();
+        } finally {
+            configLock.readLock().unlock();
+        }
     }
 
     public void setTransactionNumberList(final List<String> list) {
+        configLock.writeLock().lock();
 
-        Config c = getConfig();
+        try {
+            Config c = getConfig();
 
-        c.setTransactionNumberList(list);
-
-        getConfigDAO().update(c);
+            c.setTransactionNumberList(list);
+            getConfigDAO().update(c);
+        } finally {
+            configLock.writeLock().unlock();
+        }
     }
 
     /**

@@ -40,6 +40,7 @@ import jgnash.util.EncodeDecode;
 
 import java.text.MessageFormat;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -61,7 +62,9 @@ public class DistributedLockManager implements LockManager {
 
     private Map<String, CountDownLatch> latchMap = new ConcurrentHashMap<>();
 
-    /** lock_action, lock_id, thread_id, lock_type */
+    /**
+     * lock_action, lock_id, thread_id, lock_type
+     */
     private static final String PATTERN = "{0},{1},{2},{3}";
 
     private Bootstrap bootstrap;
@@ -77,6 +80,11 @@ public class DistributedLockManager implements LockManager {
     public static final String EOL_DELIMITER = "\r\n";
 
     private final ExecutorService executorService = Executors.newCachedThreadPool();
+
+    /**
+     * Unique id to differentiate remote threads
+     */
+    private static final String uuid = UUID.randomUUID().toString();
 
     public DistributedLockManager(final String host, final int port) {
         this.host = host;
@@ -166,16 +174,16 @@ public class DistributedLockManager implements LockManager {
     }
 
     void lock(final String lockId, final String type) {
-        changeLockState(lockId, type, "lock");
+        changeLockState(lockId, type, DistributedLockServer.LOCK);
     }
 
     void unlock(final String lockId, final String type) {
-        changeLockState(lockId, type, "unlock");
+        changeLockState(lockId, type, DistributedLockServer.UNLOCK);
     }
 
     void changeLockState(final String lockId, final String type, final String lockState) {
-        final Integer threadId = Thread.currentThread().hashCode();
-        final String message = MessageFormat.format(PATTERN, lockState, lockId, threadId.toString(), type);
+        final String threadId = uuid + '-' + Thread.currentThread().getId();
+        final String message = MessageFormat.format(PATTERN, lockState, lockId, threadId, type);
         final CountDownLatch responseLatch = getLatch(lockId);
 
         // send the message to the server
@@ -183,6 +191,7 @@ public class DistributedLockManager implements LockManager {
 
         try {
             responseLatch.await();    // block until a response is received
+            // TODO, use a timed await instead to detect a dead lock
         } catch (InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
@@ -294,8 +303,8 @@ public class DistributedLockManager implements LockManager {
 
             @Override
             public void unlock() {
-                lockManager.unlock(lockId, DistributedLockServer.LOCK_TYPE_READ);
                 super.unlock();
+                lockManager.unlock(lockId, DistributedLockServer.LOCK_TYPE_READ);
             }
         }
 
@@ -313,8 +322,8 @@ public class DistributedLockManager implements LockManager {
 
             @Override
             public void unlock() {
-                lockManager.unlock(lockId, DistributedLockServer.LOCK_TYPE_WRITE);
                 super.unlock();
+                lockManager.unlock(lockId, DistributedLockServer.LOCK_TYPE_WRITE);
             }
         }
     }

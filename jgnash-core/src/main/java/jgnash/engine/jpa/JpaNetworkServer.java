@@ -22,6 +22,8 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
 import jgnash.engine.StoredObjectComparator;
+import jgnash.engine.concurrent.DistributedLockManager;
+import jgnash.engine.concurrent.DistributedLockServer;
 import jgnash.engine.message.LocalServerListener;
 import jgnash.engine.message.MessageBusServer;
 import jgnash.util.DefaultDaemonThreadFactory;
@@ -63,6 +65,8 @@ public class JpaNetworkServer {
 
     private EntityManagerFactory factory;
 
+    private DistributedLockManager distributedLockManager;
+
     public static final int DEFAULT_PORT = 5300;
 
     public static final String DEFAULT_PASSWORD = "";
@@ -100,6 +104,9 @@ public class JpaNetworkServer {
 
     private boolean run(final DataStoreType dataStoreType, final String fileName, final int port, final char[] password) {
         boolean result = true;
+
+        DistributedLockServer distributedLockServer = new DistributedLockServer(port + 2);
+        distributedLockServer.startServer();
 
         final Engine engine = createEngine(dataStoreType, fileName, port, password);
 
@@ -160,11 +167,16 @@ public class JpaNetworkServer {
 
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
+            distributedLockManager.disconnectFromServer();
+            distributedLockServer.stopServer();
+
             em.close();
 
             factory.close();
 
             result = true;
+        } else {
+            distributedLockServer.stopServer();
         }
         return result;
     }
@@ -242,8 +254,11 @@ public class JpaNetworkServer {
 
             em = factory.createEntityManager();
 
+            distributedLockManager = new DistributedLockManager("localhost", port + 2);
+            distributedLockManager.connectToServer();
+
             Logger.getLogger(JpaH2DataStore.class.getName()).info("Created local JPA container and engine");
-            engine = new Engine(new JpaEngineDAO(em, true), EngineFactory.DEFAULT); // treat as a remote engine
+            engine = new Engine(new JpaEngineDAO(em, true), distributedLockManager, EngineFactory.DEFAULT); // treat as a remote engine
         } catch (final Exception e) {
             Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, e.toString(), e);
         }

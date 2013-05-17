@@ -101,7 +101,7 @@ public class DistributedLockTest {
             public void run() {
                 ReadWriteLock lock = manager.getLock("lock");
 
-                logger.info("locking: " + hashCode());
+                logger.info("locking: " + getId());
                 lock.readLock().lock();
 
                 try {
@@ -116,7 +116,7 @@ public class DistributedLockTest {
                     }
 
                 } finally {
-                    logger.info("unlocking: " + hashCode());
+                    logger.info("unlocking: " + getId());
                     lock.readLock().unlock();
                 }
             }
@@ -205,7 +205,7 @@ public class DistributedLockTest {
     }
 
     @Test
-    public void reentrantWriteTest() {
+    public void reentrantWriteTest() throws InterruptedException {
         int count = 0;
 
         ReadWriteLock lock1 = manager.getLock("reentrant");
@@ -241,10 +241,12 @@ public class DistributedLockTest {
         }
 
         assertEquals(4, count);
+
+        Thread.sleep(1000);
     }
 
     @Test
-    public void reentrantReadTest() {
+    public void reentrantReadTest() throws InterruptedException {
         int count = 0;
 
         ReadWriteLock lock = manager.getLock("reentrant");
@@ -270,5 +272,7 @@ public class DistributedLockTest {
         }
 
         assertEquals(4, count);
+
+        Thread.sleep(1000);
     }
 }

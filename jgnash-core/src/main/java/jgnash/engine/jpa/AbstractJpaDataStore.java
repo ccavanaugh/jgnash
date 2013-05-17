@@ -21,6 +21,8 @@ import jgnash.engine.DataStore;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
+import jgnash.engine.concurrent.DistributedLockManager;
+import jgnash.engine.concurrent.LocalLockManager;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
 
@@ -94,7 +96,11 @@ public abstract class AbstractJpaDataStore implements DataStore {
         em = factory.createEntityManager();
 
         if (em != null) {
-            engine = new Engine(new JpaEngineDAO(em, true), EngineFactory.DEFAULT);
+
+            DistributedLockManager distributedLockManager = new DistributedLockManager(host, port + 2);
+            distributedLockManager.connectToServer();
+
+            engine = new Engine(new JpaEngineDAO(em, true), distributedLockManager, EngineFactory.DEFAULT);
 
             logger.info("Created local JPA container and engine");
             fileName = null;
@@ -126,7 +132,7 @@ public abstract class AbstractJpaDataStore implements DataStore {
                     em = factory.createEntityManager();
 
                     logger.info("Created local JPA container and engine");
-                    engine = new Engine(new JpaEngineDAO(em, false), engineName);
+                    engine = new Engine(new JpaEngineDAO(em, false), new LocalLockManager(), engineName);
 
                     this.fileName = fileName;
                     this.password = password;
