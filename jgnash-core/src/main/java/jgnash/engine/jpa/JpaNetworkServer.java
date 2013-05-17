@@ -150,10 +150,10 @@ public class JpaNetworkServer {
 
             // wait here forever
             try {
-                if (!stop) {
-                    this.wait(Long.MAX_VALUE); // wait forever for notify() from stopServer()
+                if (!stop) { // check for condition, handle a spurious wake up
+                    wait(); // wait forever for notify() from stopServer()
                 }
-            } catch (InterruptedException ex) {
+            } catch (final InterruptedException ex) {
                 Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, null, ex);
             }
 
