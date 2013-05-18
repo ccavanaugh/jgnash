@@ -39,12 +39,15 @@ import jgnash.net.ConnectionFactory;
 import jgnash.util.EncodeDecode;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,7 +63,9 @@ public class DistributedLockManager implements LockManager {
 
     private Map<String, DistributedReadWriteLock> lockMap = new ConcurrentHashMap<>();
 
-    private Map<String, CountDownLatch> latchMap = new ConcurrentHashMap<>();
+    private Map<String, CountDownLatch> latchMap = new HashMap<>();
+
+    private Lock latchLock = new ReentrantLock();
 
     /**
      * lock_action, lock_id, thread_id, lock_type
@@ -163,14 +168,20 @@ public class DistributedLockManager implements LockManager {
     }
 
     CountDownLatch getLatch(final String lockId) {
-        CountDownLatch semaphore = latchMap.get(lockId);
+        latchLock.lock();
 
-        if (semaphore == null) {
-            semaphore = new CountDownLatch(1);
-            latchMap.put(lockId, semaphore);
+        try {
+            CountDownLatch semaphore = latchMap.get(lockId);
+
+            if (semaphore == null) {
+                semaphore = new CountDownLatch(1);
+                latchMap.put(lockId, semaphore);
+            }
+
+            return semaphore;
+        } finally {
+            latchLock.unlock();
         }
-
-        return semaphore;
     }
 
     void lock(final String lockId, final String type) {
@@ -199,7 +210,7 @@ public class DistributedLockManager implements LockManager {
 
     public void processMessage(final String message) {
 
-        logger.info("message: " + message);
+        logger.info(message);
 
         /** lock_action, lock_id, thread_id, lock_type */
         // unlock,account,3456384756384563,read
@@ -209,11 +220,17 @@ public class DistributedLockManager implements LockManager {
         final String[] strings = EncodeDecode.decodeStringCollection(message).toArray(new String[4]);
 
         final String lockId = strings[1];   // get the lock id
-        final CountDownLatch responseLatch = getLatch(lockId);
 
-        responseLatch.countDown();  // this should release the responseLatch allowing the thread to continue
+        latchLock.lock();
 
-        latchMap.remove(lockId);    // remove the used up latch
+        try {
+            final CountDownLatch responseLatch = getLatch(lockId);
+
+            responseLatch.countDown();  // this should release the responseLatch allowing the thread to continue
+            latchMap.remove(lockId);    // remove the used up latch
+        } finally {
+            latchLock.unlock();
+        }
     }
 
     private class Initializer extends ChannelInitializer<SocketChannel> {
