@@ -158,9 +158,9 @@ public class Engine {
         this.name = name;
 
         // Generate locks
-        accountLock = new ReentrantReadWriteLock();
-        budgetLock = new ReentrantReadWriteLock();
-        commodityLock = new ReentrantReadWriteLock();
+        accountLock = lockManager.getLock(ACCOUNT_LOCK);
+        budgetLock = lockManager.getLock(BUDGET_LOCK);
+        commodityLock = lockManager.getLock(COMMODITY_LOCK);
         configLock = lockManager.getLock(CONFIG_LOCK);
         engineLock = lockManager.getLock(ENGINE_LOCK);
 
