@@ -53,6 +53,8 @@ public abstract class AbstractJpaDataStore implements DataStore {
 
     private EntityManagerFactory factory;
 
+    private DistributedLockManager distributedLockManager;
+
     private boolean remote;
 
     private String fileName;
@@ -76,6 +78,7 @@ public abstract class AbstractJpaDataStore implements DataStore {
         if (em != null && factory != null) {
             em.close();
             factory.close();
+            distributedLockManager.disconnectFromServer();
         } else {
             logger.severe("The EntityManger was already null!");
         }
@@ -97,7 +100,7 @@ public abstract class AbstractJpaDataStore implements DataStore {
 
         if (em != null) {
 
-            DistributedLockManager distributedLockManager = new DistributedLockManager(host, port + 2);
+            distributedLockManager = new DistributedLockManager(host, port + 2);
             distributedLockManager.connectToServer();
 
             engine = new Engine(new JpaEngineDAO(em, true), distributedLockManager, EngineFactory.DEFAULT);
