@@ -57,7 +57,7 @@ public class DistributedLockServer {
 
     private ServerBootstrap bootstrap;
 
-    private final ChannelGroup channelGroup = new DefaultChannelGroup("all-connected");
+    private final ChannelGroup channelGroup = new DefaultChannelGroup("lock-server");
 
     private final int port;
 
@@ -94,6 +94,8 @@ public class DistributedLockServer {
         final ReadWriteLock lock = getLock(lockId);
 
         try {
+
+            // request a lock or unlock.  This may block
             switch (action) {
                 case LOCK:
                     switch (lockType) {
@@ -117,7 +119,8 @@ public class DistributedLockServer {
                     break;
             }
 
-            ctx.write(message + EOL_DELIMITER).sync();  // return the message as an acknowledgment lock state has changed
+            // return the message as an acknowledgment lock state has changed
+            ctx.write(message + EOL_DELIMITER).sync();
         } catch (final Exception e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
@@ -186,6 +189,8 @@ public class DistributedLockServer {
 
         @Override
         public void channelInactive(final ChannelHandlerContext ctx) throws Exception {
+            logger.log(Level.INFO, "Remote connection {0} closed", ctx.channel().remoteAddress().toString());
+
             channelGroup.remove(ctx.channel());
             super.channelInactive(ctx);
         }
