@@ -46,6 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -160,7 +161,7 @@ public class DistributedLockManager implements LockManager {
         DistributedReadWriteLock lock = lockMap.get(lockId);
 
         if (lock == null) {
-            lock = new DistributedReadWriteLock(this, lockId);
+            lock = new DistributedReadWriteLock(lockId);
             lockMap.put(lockId, lock);
         }
 
@@ -195,14 +196,37 @@ public class DistributedLockManager implements LockManager {
     void changeLockState(final String lockId, final String type, final String lockState) {
         final String threadId = uuid + '-' + Thread.currentThread().getId();
         final String message = MessageFormat.format(PATTERN, lockState, lockId, threadId, type);
+
         final CountDownLatch responseLatch = getLatch(lockId);
 
         // send the message to the server
         lastWriteFuture = channel.write(message + EOL_DELIMITER);
 
+        boolean result = false;
+
         try {
-            responseLatch.await();    // block until a response is received
-            // TODO, use a timed await instead to detect a dead lock
+            for (int i = 0; i < 2; i++) {
+                result = responseLatch.await(60L, TimeUnit.SECONDS);
+
+                if (!result) {
+                    logger.warning("Excessive wait for release of the lock latch");
+                } else {
+                    break;
+                }
+            }
+
+            if (!result) {
+                logger.severe("Failed to release the lock latch");
+
+                latchLock.lock();
+
+                try {
+                    responseLatch.countDown();  // force a countdown to occur
+                    latchMap.remove(lockId);    // force removal
+                } finally {
+                    latchLock.unlock();
+                }
+            }
         } catch (InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
@@ -284,13 +308,10 @@ public class DistributedLockManager implements LockManager {
 
         private final DistributedReadWriteLock.WriteLock writeLock;
 
-        private final DistributedLockManager lockManager;
-
-        DistributedReadWriteLock(final DistributedLockManager lockManager, final String lockId) {
+        DistributedReadWriteLock(final String lockId) {
             super();
 
             this.lockId = lockId;
-            this.lockManager = lockManager;
 
             readLock = new DistributedReadWriteLock.ReadLock(this);
             writeLock = new DistributedReadWriteLock.WriteLock(this);
@@ -314,14 +335,14 @@ public class DistributedLockManager implements LockManager {
 
             @Override
             public void lock() {
-                lockManager.lock(lockId, DistributedLockServer.LOCK_TYPE_READ);
+                DistributedLockManager.this.lock(lockId, DistributedLockServer.LOCK_TYPE_READ);
                 super.lock();
             }
 
             @Override
             public void unlock() {
                 super.unlock();
-                lockManager.unlock(lockId, DistributedLockServer.LOCK_TYPE_READ);
+                DistributedLockManager.this.unlock(lockId, DistributedLockServer.LOCK_TYPE_READ);
             }
         }
 
@@ -333,14 +354,14 @@ public class DistributedLockManager implements LockManager {
 
             @Override
             public void lock() {
-                lockManager.lock(lockId, DistributedLockServer.LOCK_TYPE_WRITE);
+                DistributedLockManager.this.lock(lockId, DistributedLockServer.LOCK_TYPE_WRITE);
                 super.lock();
             }
 
             @Override
             public void unlock() {
                 super.unlock();
-                lockManager.unlock(lockId, DistributedLockServer.LOCK_TYPE_WRITE);
+                DistributedLockManager.this.unlock(lockId, DistributedLockServer.LOCK_TYPE_WRITE);
             }
         }
     }
