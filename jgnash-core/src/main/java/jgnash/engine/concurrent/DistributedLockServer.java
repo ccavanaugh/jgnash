@@ -295,8 +295,7 @@ public class DistributedLockServer {
         synchronized void unlockWrite(final String remoteThread) throws InterruptedException {
 
             if (!isWriteLockedByCurrentThread(remoteThread)) {
-                throw new IllegalMonitorStateException("Remote Thread: " + remoteThread +
-                        " does not hold the write lock: " + id);
+                throw new IllegalMonitorStateException("Remote Thread: " + remoteThread + " does not hold the write lock: " + id);
             }
 
             writeAccesses--;
@@ -308,7 +307,7 @@ public class DistributedLockServer {
             notifyAll();
         }
 
-        private boolean canGrantReadAccess(final String remoteThread) {
+        synchronized private boolean canGrantReadAccess(final String remoteThread) {
 
             if (isWriteLockedByCurrentThread(remoteThread)) { // lock down grade is allowed
                 return true;
@@ -324,7 +323,7 @@ public class DistributedLockServer {
 
         }
 
-        private boolean canGrantWriteAccess(final String remoteThread) {
+        synchronized private boolean canGrantWriteAccess(final String remoteThread) {
 
             if (!readingThreads.isEmpty()) {
                 return false;
@@ -335,7 +334,7 @@ public class DistributedLockServer {
             return isWriteLockedByCurrentThread(remoteThread); // reentrant write
         }
 
-        private int getReadHoldCount(final String remoteThread) {
+        synchronized private int getReadHoldCount(final String remoteThread) {
             final Integer accessCount = readingThreads.get(remoteThread);
 
             if (accessCount == null) {
@@ -345,11 +344,11 @@ public class DistributedLockServer {
             return accessCount;
         }
 
-        private boolean isReadLockedByCurrentThread(final String remoteThread) {
+        synchronized private boolean isReadLockedByCurrentThread(final String remoteThread) {
             return readingThreads.get(remoteThread) != null;
         }
 
-        private boolean isWriteLockedByCurrentThread(final String remoteThread) {
+        synchronized private boolean isWriteLockedByCurrentThread(final String remoteThread) {
             if (writingThread != null) {
                 return writingThread.equals(remoteThread);
             }
