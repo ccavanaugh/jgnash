@@ -157,7 +157,7 @@ public class DistributedLockManager implements LockManager {
     }
 
     @Override
-    public ReentrantReadWriteLock getLock(final String lockId) {
+    public synchronized ReentrantReadWriteLock getLock(final String lockId) {
         DistributedReadWriteLock lock = lockMap.get(lockId);
 
         if (lock == null) {
@@ -198,37 +198,42 @@ public class DistributedLockManager implements LockManager {
         final String message = MessageFormat.format(PATTERN, lockState, lockId, threadId, type);
 
         final CountDownLatch responseLatch = getLatch(lockId);
+        final ReentrantReadWriteLock lock = getLock(lockId);
 
-        // send the message to the server
-        lastWriteFuture = channel.write(message + EOL_DELIMITER);
+        //noinspection SynchronizationOnLocalVariableOrMethodParameter
+        synchronized (lock) {   // synchronize on the lock to prevent concurrency errors
 
-        boolean result = false;
+            // send the message to the server
+            lastWriteFuture = channel.write(message + EOL_DELIMITER);
 
-        try {
-            for (int i = 0; i < 2; i++) {
-                result = responseLatch.await(60L, TimeUnit.SECONDS);
+            boolean result = false;
 
-                if (!result) {
-                    logger.warning("Excessive wait for release of the lock latch");
-                } else {
-                    break;
+            try {
+                for (int i = 0; i < 2; i++) {
+                    result = responseLatch.await(45L, TimeUnit.SECONDS);
+
+                    if (!result) {
+                        logger.warning("Excessive wait for release of the lock latch for: " + lockId);
+                    } else {
+                        break;
+                    }
                 }
-            }
 
-            if (!result) {
-                logger.severe("Failed to release the lock latch");
+                if (!result) {  // check for a failed release or deadlock
+                    logger.severe("Failed to release the lock latch for: " + lockId);
 
-                latchLock.lock();
+                    latchLock.lock();
 
-                try {
-                    responseLatch.countDown();  // force a countdown to occur
-                    latchMap.remove(lockId);    // force removal
-                } finally {
-                    latchLock.unlock();
+                    try {
+                        responseLatch.countDown();  // force a countdown to occur
+                        latchMap.remove(lockId);    // force removal
+                    } finally {
+                        latchLock.unlock();
+                    }
                 }
+            } catch (InterruptedException e) {
+                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
-        } catch (InterruptedException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
     }
 
@@ -250,7 +255,7 @@ public class DistributedLockManager implements LockManager {
         try {
             final CountDownLatch responseLatch = getLatch(lockId);
 
-            responseLatch.countDown();  // this should release the responseLatch allowing the thread to continue
+            responseLatch.countDown();  // this should release the responseLatch allowing a blocked thread to continue
             latchMap.remove(lockId);    // remove the used up latch
         } finally {
             latchLock.unlock();
@@ -341,8 +346,8 @@ public class DistributedLockManager implements LockManager {
 
             @Override
             public void unlock() {
-                super.unlock();
                 DistributedLockManager.this.unlock(lockId, DistributedLockServer.LOCK_TYPE_READ);
+                super.unlock();
             }
         }
 
@@ -360,8 +365,8 @@ public class DistributedLockManager implements LockManager {
 
             @Override
             public void unlock() {
-                super.unlock();
                 DistributedLockManager.this.unlock(lockId, DistributedLockServer.LOCK_TYPE_WRITE);
+                super.unlock();
             }
         }
     }
