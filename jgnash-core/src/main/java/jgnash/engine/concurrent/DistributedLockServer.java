@@ -277,7 +277,7 @@ public class DistributedLockServer {
         synchronized void unlockRead(final String remoteThread) {
 
             if (!isReadLockedByCurrentThread(remoteThread)) {
-                throw new IllegalMonitorStateException("Remote Thread: " + remoteThread + " does not hold a read lock: " + id);
+                throw new IllegalMonitorStateException("Remote Thread: " + remoteThread + " does not hold a read lock for: " + id);
             }
 
             int holdCount = getReadHoldCount(remoteThread);
@@ -294,7 +294,7 @@ public class DistributedLockServer {
         synchronized void unlockWrite(final String remoteThread) throws InterruptedException {
 
             if (!isWriteLockedByCurrentThread(remoteThread)) {
-                throw new IllegalMonitorStateException("Remote Thread: " + remoteThread + " does not hold the write lock: " + id);
+                throw new IllegalMonitorStateException("Remote Thread: " + remoteThread + " does not hold the write lock for: " + id);
             }
 
             writeAccesses--;
