@@ -810,39 +810,33 @@ public class Engine {
     }
 
     /**
-     * Add a SecurityHistoryNode node to a SecurityNode
+     * Add a SecurityHistoryNode node to a SecurityNode.  If the SecurityNode already contains
+     * an equivalent SecurityHistoryNode, the old SecurityHistoryNode is removed first.
      *
      * @param node  SecurityNode to add to
      * @param hNode SecurityHistoryNode to add
-     * @return true if successful
+     * @return <tt>true</tt> if successful
      */
     public boolean addSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
 
-        WriteLock commodityWriteLock = commodityLock.writeLock();
+        if (node.contains(hNode)) {
+            if (!removeSecurityHistory(node, hNode)) {
+                logSevere(MessageFormat.format(rb.getString("Message.Error.HistRemoval"), hNode.getDate(), node.getSymbol()));
+                return false;
+            }
+        }
 
-        commodityWriteLock.lock();
+        commodityLock.writeLock().lock();
 
         try {
+            boolean status = node.addHistoryNode(hNode);
 
-            boolean status;
-
-            // must delete any equivalent history nodes by identity
-            List<SecurityHistoryNode> list = node.getHistoryNodes();
-
-            for (SecurityHistoryNode h : list) {
-                if (h.equals(hNode)) {
-                    if (!removeSecurityHistory(node, h)) {
-                        logSevere(MessageFormat.format(rb.getString("Message.Error.HistRemoval"), hNode.getDate(), node.getSymbol()));
-                    }
-                    break;
-                }
+            if (status) {
+                status = getCommodityDAO().addSecurityHistory(node, hNode);
             }
 
-            node.addHistoryNode(hNode);
-
-            status = getCommodityDAO().addSecurityHistory(node, hNode);
-
             Message message;
+
             if (status) {
                 clearCachedAccountBalance(node);
                 message = new Message(MessageChannel.COMMODITY, ChannelEvent.SECURITY_HISTORY_ADD, this);
@@ -855,7 +849,7 @@ public class Engine {
 
             return status;
         } finally {
-            commodityWriteLock.unlock();
+            commodityLock.writeLock().unlock();
         }
     }
 
@@ -956,14 +950,13 @@ public class Engine {
      */
     private void clearCachedAccountBalance(final Account account) {
 
-        WriteLock writeLock = accountLock.writeLock();
-        writeLock.lock();
+       accountLock.writeLock().lock();
 
         try {
             account.clearCachedBalances();
             getAccountDAO().updateAccount(account);
         } finally {
-            writeLock.unlock();
+            accountLock.writeLock().unlock();
         }
 
         if (account.getParent() != null && account.getParent().getAccountType() != AccountType.ROOT) {
@@ -1249,15 +1242,17 @@ public class Engine {
 
     public boolean removeSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
 
-        WriteLock commodityWriteLock = commodityLock.writeLock();
-        commodityWriteLock.lock();
+        commodityLock.writeLock().lock();
 
         try {
-            node.removeHistoryNode(hNode);
+            boolean status = node.removeHistoryNode(hNode);
 
-            boolean status = getCommodityDAO().removeSecurityHistory(node, hNode);
+            if (status) {
+                status = getCommodityDAO().removeSecurityHistory(node, hNode);
+            }
 
             Message message;
+
             if (status) {
                 clearCachedAccountBalance(node);
                 message = new Message(MessageChannel.COMMODITY, ChannelEvent.SECURITY_HISTORY_REMOVE, this);
@@ -1270,7 +1265,7 @@ public class Engine {
 
             return status;
         } finally {
-            commodityWriteLock.unlock();
+            commodityLock.writeLock().unlock();
         }
     }
 
