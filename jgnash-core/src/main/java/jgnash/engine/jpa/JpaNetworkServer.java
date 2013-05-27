@@ -21,7 +21,6 @@ import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
-import jgnash.engine.StoredObjectComparator;
 import jgnash.engine.concurrent.DistributedLockManager;
 import jgnash.engine.concurrent.DistributedLockServer;
 import jgnash.engine.message.LocalServerListener;
@@ -30,10 +29,13 @@ import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.FileMagic;
 import jgnash.util.FileUtils;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.Executors;
@@ -41,10 +43,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 /**
  * JPA network server
@@ -268,8 +266,6 @@ public class JpaNetworkServer {
 
     private static void exportXML(final Engine engine, final String fileName) {
         ArrayList<StoredObject> list = new ArrayList<>(engine.getStoredObjects());
-
-        Collections.sort(list, new StoredObjectComparator());
 
         EngineFactory.exportCompressedXML(fileName, list);
     }
