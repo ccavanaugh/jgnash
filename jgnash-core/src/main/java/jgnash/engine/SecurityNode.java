@@ -27,7 +27,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -77,10 +76,6 @@ public class SecurityNode extends CommodityNode {
     public SecurityNode(final CurrencyNode node) {
         this();
         setReportedCurrencyNode(node);
-    }
-
-    private ReadWriteLock getLock() {
-        return lock;
     }
 
     /**
@@ -157,44 +152,40 @@ public class SecurityNode extends CommodityNode {
 
     boolean addHistoryNode(final SecurityHistoryNode node) {
 
-        boolean result = false;
-
-        Lock l = getLock().writeLock();
-        l.lock();
+        lock.writeLock().lock();
 
         try {
-           /* int index = Collections.binarySearch(historyNodes, node);
-
-            if (index < 0) {
-                historyNodes.add(-index - 1, node);
-            } else {
-                historyNodes.set(index, node);
-            }*/
-
-            historyNodes.add(node);
-
-            result = true;
+            return historyNodes.add(node);
         } finally {
-            l.unlock();
+            lock.writeLock().unlock();
         }
-
-        return result;
     }
 
     boolean removeHistoryNode(final SecurityHistoryNode hNode) {
 
-        Lock l = getLock().writeLock();
-        l.lock();
-
-        boolean result = false;
+        lock.writeLock().lock();
 
         try {
-            result = historyNodes.remove(hNode);
+            return historyNodes.remove(hNode);
         } finally {
-            l.unlock();
+            lock.writeLock().unlock();
         }
+    }
 
-        return result;
+    /**
+     * Returns <tt>true</tt> if this SecurityNode contains the specified element.
+     *
+     * @param historyNode SecurityHistoryNode whose presence in this SecurityNode is to be tested
+     * @return <tt>true</tt> if this SecurityNode contains the specified SecurityHistoryNode
+     */
+    public boolean contains(final SecurityHistoryNode historyNode) {
+        lock.readLock().lock();
+
+        try {
+            return historyNodes.contains(historyNode);
+        } finally {
+            lock.readLock().unlock();
+        }
     }
 
     /**
@@ -202,19 +193,19 @@ public class SecurityNode extends CommodityNode {
      * @return A sorted list of the security history
      */
     private List<SecurityHistoryNode> getSortedList() {
-        getLock().readLock().lock();
+        lock.readLock().lock();
 
         try {
             ArrayList<SecurityHistoryNode> sorted = new ArrayList<>(historyNodes);
             Collections.sort(sorted);
             return sorted;
         } finally {
-            getLock().readLock().unlock();
+            lock.readLock().unlock();
         }
     }
 
     private SecurityHistoryNode getLastHistoryNode() {
-        getLock().readLock().lock();
+        lock.readLock().lock();
 
         try {
             SecurityHistoryNode node = null;
@@ -227,7 +218,7 @@ public class SecurityNode extends CommodityNode {
 
             return node;
         } finally {
-            getLock().readLock().unlock();
+            lock.readLock().unlock();
         }
     }
 
@@ -244,7 +235,7 @@ public class SecurityNode extends CommodityNode {
     SecurityHistoryNode getHistoryNode(final Date date) {
         Date testDate = DateUtils.trimDate(date);
 
-        getLock().readLock().lock();
+        lock.readLock().lock();
 
         List<SecurityHistoryNode> sortedList = getSortedList();
 
@@ -267,7 +258,7 @@ public class SecurityNode extends CommodityNode {
 
             return hNode;
         } finally {
-            getLock().readLock().unlock();
+            lock.readLock().unlock();
         }
     }
 
@@ -276,7 +267,7 @@ public class SecurityNode extends CommodityNode {
 
         Date testDate = DateUtils.trimDate(date);
 
-        getLock().readLock().lock();
+        lock.readLock().lock();
 
         try {
 
@@ -290,7 +281,7 @@ public class SecurityNode extends CommodityNode {
 
             return marketPrice;
         } finally {
-            getLock().readLock().unlock();
+            lock.readLock().unlock();
         }
     }
 
