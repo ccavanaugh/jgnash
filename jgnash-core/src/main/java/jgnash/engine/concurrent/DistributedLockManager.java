@@ -35,7 +35,6 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.CharsetUtil;
 import jgnash.net.ConnectionFactory;
-import jgnash.util.EncodeDecode;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -184,7 +183,7 @@ public class DistributedLockManager implements LockManager {
         final String threadId = uuid + '-' + Thread.currentThread().getId();
         final String message = MessageFormat.format(PATTERN, lockState, lockId, threadId, type);
 
-        final CountDownLatch responseLatch = getLatch(lockId);
+        final CountDownLatch responseLatch = getLatch(message);
         final ReentrantReadWriteLock lock = getLock(lockId);
 
         //noinspection SynchronizationOnLocalVariableOrMethodParameter
@@ -233,18 +232,13 @@ public class DistributedLockManager implements LockManager {
         // unlock,account,3456384756384563,read
         // lock,account,3456384756384563,write
 
-        // decode the message into it's parts
-        final String[] strings = EncodeDecode.decodeStringCollection(message).toArray(new String[4]);
-
-        final String lockId = strings[1];   // get the lock id
-
         latchLock.lock();
 
         try {
-            final CountDownLatch responseLatch = getLatch(lockId);
+            final CountDownLatch responseLatch = getLatch(message);
 
             responseLatch.countDown();  // this should release the responseLatch allowing a blocked thread to continue
-            latchMap.remove(lockId);    // remove the used up latch
+            latchMap.remove(message);    // remove the used up latch
         } finally {
             latchLock.unlock();
         }
