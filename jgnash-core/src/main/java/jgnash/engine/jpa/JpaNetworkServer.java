@@ -150,7 +150,7 @@ public class JpaNetworkServer {
 
             // wait here forever
             try {
-                if (!stop) { // check for condition, handle a spurious wake up
+                while (!stop) { // check for condition, handle a spurious wake up
                     wait(); // wait forever for notify() from stopServer()
                 }
             } catch (final InterruptedException ex) {
