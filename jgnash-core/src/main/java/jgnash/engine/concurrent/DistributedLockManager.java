@@ -20,7 +20,6 @@ package jgnash.engine.concurrent;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.BufType;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundMessageHandlerAdapter;
@@ -81,8 +80,6 @@ public class DistributedLockManager implements LockManager {
 
     private Channel channel;
 
-    private ChannelFuture lastWriteFuture = null;
-
     public static final String EOL_DELIMITER = "\r\n";
 
     private final ExecutorService executorService = Executors.newCachedThreadPool();
@@ -131,15 +128,6 @@ public class DistributedLockManager implements LockManager {
      */
     public void disconnectFromServer() {
 
-        // Wait until all messages are flushed before closing the channel.
-        if (lastWriteFuture != null) {
-            try {
-                lastWriteFuture.sync();
-            } catch (InterruptedException e) {
-                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-            }
-        }
-
         try {
             channel.close().sync();
         } catch (InterruptedException e) {
@@ -150,7 +138,6 @@ public class DistributedLockManager implements LockManager {
         bootstrap.shutdown();
 
         channel = null;
-        lastWriteFuture = null;
         bootstrap = null;
 
         logger.info("Disconnected from the Distributed Lock Server");
@@ -203,12 +190,13 @@ public class DistributedLockManager implements LockManager {
         //noinspection SynchronizationOnLocalVariableOrMethodParameter
         synchronized (lock) {   // synchronize on the lock to prevent concurrency errors
 
-            // send the message to the server
-            lastWriteFuture = channel.write(message + EOL_DELIMITER);
-
             boolean result = false;
 
             try {
+
+                // send the message to the server and wait until it if flushed
+                channel.write(message + EOL_DELIMITER).sync();
+
                 for (int i = 0; i < 2; i++) {
                     result = responseLatch.await(45L, TimeUnit.SECONDS);
 
