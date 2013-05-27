@@ -95,6 +95,29 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
         return result;
     }
 
+    /*
+     * @see jgnash.engine.CommodityDAOInterface#removeSecurityHistory(jgnash.engine.SecurityNode, jgnash.engine.SecurityHistoryNode)
+     */
+    @Override
+    public boolean removeSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
+        boolean result = false;
+
+        try {
+            emLock.lock();
+            em.getTransaction().begin();
+
+            em.remove(hNode);
+            em.persist(node);
+
+            result = true;
+        } finally {
+            em.getTransaction().commit();
+            emLock.unlock();
+        }
+
+        return result;
+    }
+
     @Override
     public boolean addExchangeRateHistory(final ExchangeRate rate, final ExchangeRateHistoryNode hNode) {
         boolean result = false;
@@ -248,29 +271,6 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
         }
 
         return exchangeRateList;
-    }
-
-    /*
-     * @see jgnash.engine.CommodityDAOInterface#removeSecurityHistory(jgnash.engine.SecurityNode, jgnash.engine.SecurityHistoryNode)
-     */
-    @Override
-    public boolean removeSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
-        boolean result = false;
-
-        try {
-            emLock.lock();
-            em.getTransaction().begin();
-
-            em.remove(hNode);
-            em.persist(node);
-
-            result = true;
-        } finally {
-            em.getTransaction().commit();
-            emLock.unlock();
-        }
-
-        return result;
     }
 
     /*
