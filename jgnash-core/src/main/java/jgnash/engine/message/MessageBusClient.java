@@ -36,6 +36,7 @@ import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.util.CharsetUtil;
 import jgnash.engine.Account;
 import jgnash.engine.CommodityNode;
 import jgnash.engine.DataStoreType;
@@ -131,8 +132,8 @@ public class MessageBusClient {
     }
 
     private class MessageBusClientInitializer extends ChannelInitializer<SocketChannel> {
-        private final StringDecoder DECODER = new StringDecoder();
-        private final StringEncoder ENCODER = new StringEncoder(BufType.BYTE);
+        private final StringDecoder DECODER = new StringDecoder(CharsetUtil.UTF_8);
+        private final StringEncoder ENCODER = new StringEncoder(BufType.BYTE, CharsetUtil.UTF_8);
         private final MessageBusClientHandler CLIENT_HANDLER = new MessageBusClientHandler();
 
         @Override
