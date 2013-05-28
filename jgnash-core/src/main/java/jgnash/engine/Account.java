@@ -119,14 +119,14 @@ public class Account extends StoredObject implements Comparable<Account> {
     /**
      * Balance of the account
      */
-    @Column(precision = 22, scale = 4)
-    private BigDecimal accountBalance;
+    /*@Column(precision = 22, scale = 4)
+    private BigDecimal accountBalance;*/
 
     /**
      * Reconciled balance of the account
      */
-    @Column(precision = 22, scale = 4)
-    private BigDecimal reconciledBalance;
+   /* @Column(precision = 22, scale = 4)
+    private BigDecimal reconciledBalance;*/
 
     /**
      * User definable account number
@@ -285,8 +285,8 @@ public class Account extends StoredObject implements Comparable<Account> {
      * Clear cached account balances so they will be recalculated
      */
     void clearCachedBalances() {
-        accountBalance = null;
-        reconciledBalance = null;
+        //accountBalance = null;
+        //reconciledBalance = null;
     }
 
     /**
@@ -692,10 +692,12 @@ public class Account extends StoredObject implements Comparable<Account> {
         l.lock();
 
         try {
-            if (accountBalance != null) {
+           /* if (accountBalance != null) {
                 return accountBalance;
             }
-            return accountBalance = getProxy().getBalance();
+            return accountBalance = getProxy().getBalance();*/
+
+            return getProxy().getBalance();
         } finally {
             l.unlock();
         }
@@ -776,11 +778,13 @@ public class Account extends StoredObject implements Comparable<Account> {
         l.lock();
 
         try {
-            if (reconciledBalance != null) {
+            /*if (reconciledBalance != null) {
                 return reconciledBalance;
             }
 
-            return reconciledBalance = getProxy().getReconciledBalance();
+            return reconciledBalance = getProxy().getReconciledBalance();*/
+
+            return getProxy().getReconciledBalance();
         } finally {
             l.unlock();
         }
