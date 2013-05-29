@@ -18,7 +18,6 @@
 package jgnash.engine.message;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.BufType;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -67,7 +66,7 @@ public class MessageBusServer {
 
     private String dataStoreType = "";
 
-    private ServerBootstrap bootstrap;
+    private NioEventLoopGroup eventLoopGroup;
 
     private final ReadWriteLock rwl = new ReentrantReadWriteLock(true);
 
@@ -98,10 +97,12 @@ public class MessageBusServer {
             filter = new EncryptionFilter(password);
         }
 
-        bootstrap = new ServerBootstrap();
+        eventLoopGroup = new NioEventLoopGroup();
+
+        final ServerBootstrap bootstrap = new ServerBootstrap();
 
         try {
-            bootstrap.group(new NioEventLoopGroup(), new NioEventLoopGroup())
+            bootstrap.group(eventLoopGroup)
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new MessageBusRemoteInitializer());
 
@@ -129,7 +130,9 @@ public class MessageBusServer {
             channelGroup.close().sync();
 
             executorService.shutdown();
-            bootstrap.shutdown();
+            eventLoopGroup.shutdownGracefully();
+
+            eventLoopGroup = null;
 
             listeners.clear();
 
@@ -188,7 +191,7 @@ public class MessageBusServer {
 
     private class MessageBusRemoteInitializer extends ChannelInitializer<SocketChannel> {
         private final StringDecoder DECODER = new StringDecoder(CharsetUtil.UTF_8);
-        private final StringEncoder ENCODER = new StringEncoder(BufType.BYTE, CharsetUtil.UTF_8);
+        private final StringEncoder ENCODER = new StringEncoder(CharsetUtil.UTF_8);
 
         private final MessageBusServerHandler SERVER_HANDLER = new MessageBusServerHandler();
 

@@ -20,7 +20,6 @@ package jgnash.engine.message;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.BufType;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
@@ -75,7 +74,7 @@ public class MessageBusClient {
 
     private EncryptionFilter filter = null;
 
-    private Bootstrap bootstrap;
+    private NioEventLoopGroup eventLoopGroup;
 
     private Channel channel;
 
@@ -110,9 +109,11 @@ public class MessageBusClient {
             filter = new EncryptionFilter(password);
         }
 
-        bootstrap = new Bootstrap();
+        eventLoopGroup = new NioEventLoopGroup();
 
-        bootstrap.group(new NioEventLoopGroup())
+        final Bootstrap bootstrap = new Bootstrap();
+
+        bootstrap.group(eventLoopGroup)
                 .channel(NioSocketChannel.class)
                 .handler(new MessageBusClientInitializer())
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, getConnectionTimeout() * 1000);
@@ -133,7 +134,7 @@ public class MessageBusClient {
 
     private class MessageBusClientInitializer extends ChannelInitializer<SocketChannel> {
         private final StringDecoder DECODER = new StringDecoder(CharsetUtil.UTF_8);
-        private final StringEncoder ENCODER = new StringEncoder(BufType.BYTE, CharsetUtil.UTF_8);
+        private final StringEncoder ENCODER = new StringEncoder(CharsetUtil.UTF_8);
         private final MessageBusClientHandler CLIENT_HANDLER = new MessageBusClientHandler();
 
         @Override
@@ -227,11 +228,13 @@ public class MessageBusClient {
         } catch (InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
-        bootstrap.shutdown();
+
+        eventLoopGroup.shutdownGracefully();
+
 
         channel = null;
         lastWriteFuture = null;
-        bootstrap = null;
+        eventLoopGroup = null;
     }
 
     public synchronized void sendRemoteMessage(final Message message) {

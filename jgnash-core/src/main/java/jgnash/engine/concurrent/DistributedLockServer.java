@@ -18,7 +18,6 @@
 package jgnash.engine.concurrent;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.BufType;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -55,9 +54,9 @@ public class DistributedLockServer {
 
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
-    private ServerBootstrap bootstrap;
-
     private final ChannelGroup channelGroup = new DefaultChannelGroup("lock-server");
+
+    private NioEventLoopGroup eventLoopGroup;
 
     private final int port;
 
@@ -140,10 +139,12 @@ public class DistributedLockServer {
     public boolean startServer() {
         boolean result = false;
 
-        bootstrap = new ServerBootstrap();
+        eventLoopGroup = new NioEventLoopGroup();
+
+        final ServerBootstrap bootstrap = new ServerBootstrap();
 
         try {
-            bootstrap.group(new NioEventLoopGroup(), new NioEventLoopGroup())
+            bootstrap.group(eventLoopGroup)
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new Initializer());
 
@@ -168,7 +169,9 @@ public class DistributedLockServer {
         try {
             channelGroup.close().sync();
             executorService.shutdown();
-            bootstrap.shutdown();
+            eventLoopGroup.shutdownGracefully();
+
+            eventLoopGroup = null;
 
             logger.info("Distributed Lock Server Stopped");
         } catch (final InterruptedException e) {
@@ -214,7 +217,7 @@ public class DistributedLockServer {
 
     private class Initializer extends ChannelInitializer<SocketChannel> {
         private final StringDecoder DECODER = new StringDecoder(CharsetUtil.UTF_8);
-        private final StringEncoder ENCODER = new StringEncoder(BufType.BYTE, CharsetUtil.UTF_8);
+        private final StringEncoder ENCODER = new StringEncoder(CharsetUtil.UTF_8);
 
         private final ServerHandler SERVER_HANDLER = new ServerHandler();
 

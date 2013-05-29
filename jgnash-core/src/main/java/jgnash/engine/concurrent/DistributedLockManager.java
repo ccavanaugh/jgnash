@@ -18,7 +18,6 @@
 package jgnash.engine.concurrent;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.BufType;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -71,7 +70,7 @@ public class DistributedLockManager implements LockManager {
      */
     private static final String PATTERN = "{0},{1},{2},{3}";
 
-    private Bootstrap bootstrap;
+    private NioEventLoopGroup eventLoopGroup;
 
     private final int port;
 
@@ -101,9 +100,11 @@ public class DistributedLockManager implements LockManager {
     public boolean connectToServer() {
         boolean result = false;
 
-        bootstrap = new Bootstrap();
+        final Bootstrap bootstrap = new Bootstrap();
 
-        bootstrap.group(new NioEventLoopGroup())
+        eventLoopGroup = new NioEventLoopGroup();
+
+        bootstrap.group(eventLoopGroup)
                 .channel(NioSocketChannel.class)
                 .handler(new Initializer())
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, ConnectionFactory.getConnectionTimeout() * 1000);
@@ -134,10 +135,10 @@ public class DistributedLockManager implements LockManager {
         }
 
         executorService.shutdown();
-        bootstrap.shutdown();
+        eventLoopGroup.shutdownGracefully();
 
+        eventLoopGroup = null;
         channel = null;
-        bootstrap = null;
 
         logger.info("Disconnected from the Distributed Lock Server");
     }
@@ -246,7 +247,7 @@ public class DistributedLockManager implements LockManager {
 
     private class Initializer extends ChannelInitializer<SocketChannel> {
         private final StringDecoder DECODER = new StringDecoder(CharsetUtil.UTF_8);
-        private final StringEncoder ENCODER = new StringEncoder(BufType.BYTE, CharsetUtil.UTF_8);
+        private final StringEncoder ENCODER = new StringEncoder(CharsetUtil.UTF_8);
         private final ClientHandler CLIENT_HANDLER = new ClientHandler();
 
         @Override
