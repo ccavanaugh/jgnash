@@ -78,12 +78,13 @@ public abstract class AbstractJpaDataStore implements DataStore {
         if (em != null && factory != null) {
             em.close();
             factory.close();
-            distributedLockManager.disconnectFromServer();
         } else {
             logger.severe("The EntityManger was already null!");
         }
 
-        if (!remote) {
+        if (remote) {
+            distributedLockManager.disconnectFromServer();
+        } else {
             waitForLockFileRelease(fileName, password);
         }
     }
