@@ -66,7 +66,7 @@ public class JpaHsqlDataStore extends AbstractJpaDataStore {
 
     @Override
     public void deleteDatabase(final File file) {
-        deleteDatabase(file.getAbsoluteFile());
+        deleteDatabase(file.getAbsolutePath());
     }
 
     @Override
