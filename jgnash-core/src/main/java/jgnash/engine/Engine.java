@@ -61,8 +61,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -136,7 +134,8 @@ public class Engine {
     private final String name;
 
     /**
-     * Unique identifier for this engine instance
+     * Unique identifier for this engine instance.
+     * Used by this distributed lock manager to keep track of who has a lock
      */
     private final String uuid = UUIDUtil.getUID();
 
@@ -188,11 +187,8 @@ public class Engine {
      */
     private void initialize() {
 
-        WriteLock commodityWriteLock = commodityLock.writeLock();
-        WriteLock accountWriteLock = accountLock.writeLock();
-
-        commodityWriteLock.lock();
-        accountWriteLock.lock();
+        commodityLock.writeLock().lock();
+        accountLock.writeLock().lock();
 
         try {
 
@@ -237,8 +233,8 @@ public class Engine {
             }
 
         } finally {
-            accountWriteLock.unlock();
-            commodityWriteLock.unlock();
+            accountLock.writeLock().unlock();
+            commodityLock.writeLock().unlock();
         }
 
         logInfo("Engine initialization is complete");
@@ -250,13 +246,9 @@ public class Engine {
     @SuppressWarnings("ConstantConditions")
     private void checkAndCorrect() {
 
-        WriteLock commodityWriteLock = commodityLock.writeLock();
-        WriteLock accountWriteLock = accountLock.writeLock();
-        WriteLock configWriteLock = configLock.writeLock();
-
-        commodityWriteLock.lock();
-        accountWriteLock.lock();
-        configWriteLock.lock();
+        commodityLock.writeLock().lock();
+        accountLock.writeLock().lock();
+        configLock.writeLock().lock();
 
         try {
 
@@ -366,9 +358,9 @@ public class Engine {
                 getConfigDAO().update(config);
             }
         } finally {
-            configWriteLock.unlock();
-            accountWriteLock.unlock();
-            commodityWriteLock.unlock();
+            configLock.writeLock().unlock();
+            accountLock.writeLock().unlock();
+            commodityLock.writeLock().unlock();
         }
     }
 
@@ -450,9 +442,8 @@ public class Engine {
     }
 
     private void removeExchangeRate(final ExchangeRate rate) {
-        WriteLock commodityWriteLock = commodityLock.writeLock();
 
-        commodityWriteLock.lock();
+        commodityLock.writeLock().lock();
 
         try {
             for (ExchangeRateHistoryNode node : rate.getHistory()) {
@@ -460,7 +451,7 @@ public class Engine {
             }
             moveObjectToTrash(rate);
         } finally {
-            commodityWriteLock.unlock();
+            commodityLock.writeLock().unlock();
         }
     }
 
@@ -513,8 +504,7 @@ public class Engine {
     private boolean moveObjectToTrash(final StoredObject object) {
         boolean result = false;
 
-        WriteLock engineWriteLock = engineLock.writeLock();
-        engineWriteLock.lock();
+        engineLock.writeLock().lock();
 
         try {
 
@@ -523,7 +513,7 @@ public class Engine {
 
             result = true;
         } finally {
-            engineWriteLock.unlock();
+            engineLock.writeLock().unlock();
         }
 
         return result;
@@ -534,9 +524,7 @@ public class Engine {
      */
     private void emptyTrash() {
 
-        WriteLock engineWriteLock = engineLock.writeLock();
-
-        engineWriteLock.lock();
+        engineLock.writeLock().lock();
 
         try {
 
@@ -561,7 +549,7 @@ public class Engine {
                 }
             }
         } finally {
-            engineWriteLock.unlock();
+            engineLock.writeLock().unlock();
         }
     }
 
@@ -647,7 +635,7 @@ public class Engine {
         return pendingList;
     }
 
-    public <T extends StoredObject> T getStoredObjectByUuid(Class<T> tClass, final String uuid) {
+    public <T extends StoredObject> T getStoredObjectByUuid(final Class<T> tClass, final String uuid) {
         return eDAO.getObjectByUuid(tClass, uuid);
     }
 
@@ -661,9 +649,7 @@ public class Engine {
      */
     public Collection<StoredObject> getStoredObjects() {
 
-        ReadLock engineReadLock = engineLock.readLock();
-
-        engineReadLock.lock();
+        engineLock.readLock().lock();
 
         try {
 
@@ -681,7 +667,7 @@ public class Engine {
 
             return objects;
         } finally {
-            engineReadLock.unlock();
+            engineLock.readLock().unlock();
         }
     }
 
@@ -733,9 +719,8 @@ public class Engine {
      * @return <code>true</code> if the add it successful
      */
     public boolean addCurrency(final CurrencyNode node) {
-        WriteLock commodityWriteLock = commodityLock.writeLock();
 
-        commodityWriteLock.lock();
+        commodityLock.writeLock().lock();
 
         try {
             boolean status = isCommodityNodeValid(node);
@@ -766,7 +751,7 @@ public class Engine {
 
             return status;
         } finally {
-            commodityWriteLock.unlock();
+            commodityLock.writeLock().unlock();
         }
     }
 
@@ -779,9 +764,7 @@ public class Engine {
      * @return <code>true</code> if the add it successful
      */
     public boolean addSecurity(final SecurityNode node) {
-        WriteLock commodityWriteLock = commodityLock.writeLock();
-
-        commodityWriteLock.lock();
+        commodityLock.writeLock().lock();
 
         try {
             boolean status = isCommodityNodeValid(node);
@@ -810,7 +793,7 @@ public class Engine {
 
             return status;
         } finally {
-            commodityWriteLock.unlock();
+            commodityLock.writeLock().unlock();
         }
     }
 
@@ -824,6 +807,7 @@ public class Engine {
      */
     public boolean addSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
 
+        // Remove old history of the same date if it exists
         if (node.contains(hNode)) {
             if (!removeSecurityHistory(node, hNode)) {
                 logSevere(MessageFormat.format(rb.getString("Message.Error.HistRemoval"), hNode.getDate(), node.getSymbol()));
@@ -982,8 +966,7 @@ public class Engine {
 
     CurrencyNode[] getBaseCurrencies(final String exchangeRateId) {
 
-        ReadLock commodityReadLock = commodityLock.readLock();
-        commodityReadLock.lock();
+        commodityLock.readLock().lock();
 
         try {
             List<CurrencyNode> currencies = getCurrencies();
@@ -1000,7 +983,7 @@ public class Engine {
             }
             return null;
         } finally {
-            commodityReadLock.unlock();
+            commodityLock.readLock().unlock();
         }
     }
 
@@ -1011,13 +994,12 @@ public class Engine {
      */
     public Set<CurrencyNode> getActiveCurrencies() {
 
-        ReadLock commodityReadLock = commodityLock.readLock();
-        commodityReadLock.lock();
+        commodityLock.readLock().lock();
 
         try {
             return getCommodityDAO().getActiveCurrencies();
         } finally {
-            commodityReadLock.unlock();
+            commodityLock.readLock().unlock();
         }
     }
 
@@ -1030,8 +1012,7 @@ public class Engine {
      */
     public CurrencyNode getCurrency(final String symbol) {
 
-        ReadLock commodityReadLock = commodityLock.readLock();
-        commodityReadLock.lock();
+        commodityLock.readLock().lock();
 
         try {
             CurrencyNode rNode = null;
@@ -1044,19 +1025,18 @@ public class Engine {
             }
             return rNode;
         } finally {
-            commodityReadLock.unlock();
+            commodityLock.readLock().unlock();
         }
     }
 
     public List<CurrencyNode> getCurrencies() {
 
-        ReadLock commodityReadLock = commodityLock.readLock();
-        commodityReadLock.lock();
+        commodityLock.readLock().lock();
 
         try {
             return getCommodityDAO().getCurrencies();
         } finally {
-            commodityReadLock.unlock();
+            commodityLock.readLock().unlock();
         }
     }
 
@@ -1066,25 +1046,23 @@ public class Engine {
 
     public List<SecurityHistoryNode> getSecurityHistory(final SecurityNode node) {
 
-        ReadLock commodityReadLock = commodityLock.readLock();
-        commodityReadLock.lock();
+        commodityLock.readLock().lock();
 
         try {
             return node.getHistoryNodes();
         } finally {
-            commodityReadLock.unlock();
+            commodityLock.readLock().unlock();
         }
     }
 
     public ExchangeRate getExchangeRate(final CurrencyNode baseCurrency, final CurrencyNode exchangeCurrency) {
 
-        ReadLock commodityReadLock = commodityLock.readLock();
-        commodityReadLock.lock();
+        commodityLock.readLock().lock();
 
         try {
             return exchangeRateDAO.getExchangeRateNode(baseCurrency, exchangeCurrency);
         } finally {
-            commodityReadLock.unlock();
+            commodityLock.readLock().unlock();
         }
     }
 
@@ -1094,13 +1072,12 @@ public class Engine {
 
     public List<SecurityNode> getSecurities() {
 
-        ReadLock commodityReadLock = commodityLock.readLock();
-        commodityReadLock.lock();
+        commodityLock.readLock().lock();
 
         try {
             return getCommodityDAO().getSecurities();
         } finally {
-            commodityReadLock.unlock();
+            commodityLock.readLock().unlock();
         }
     }
 
@@ -1112,8 +1089,7 @@ public class Engine {
      */
     public SecurityNode getSecurity(final String symbol) {
 
-        ReadLock commodityReadLock = commodityLock.readLock();
-        commodityReadLock.lock();
+        commodityLock.readLock().lock();
 
         try {
             List<SecurityNode> list = getSecurities();
@@ -1128,7 +1104,7 @@ public class Engine {
             }
             return sNode;
         } finally {
-            commodityReadLock.unlock();
+            commodityLock.readLock().unlock();
         }
     }
 
@@ -1138,11 +1114,8 @@ public class Engine {
 
     private boolean isCommodityNodeUsed(final CommodityNode node) {
 
-        ReadLock commodityReadLock = commodityLock.readLock();
-        ReadLock accountReadLock = accountLock.readLock();
-
-        commodityReadLock.lock();
-        accountReadLock.lock();
+        commodityLock.readLock().lock();
+        accountLock.readLock().lock();
 
         try {
             List<Account> list = getAccountList();
@@ -1170,8 +1143,8 @@ public class Engine {
             }
 
         } finally {
-            accountReadLock.unlock();
-            commodityReadLock.unlock();
+            accountLock.readLock().unlock();
+            commodityLock.readLock().unlock();
         }
 
         return false;
@@ -1180,8 +1153,7 @@ public class Engine {
     public boolean removeCommodity(final CurrencyNode node) {
         boolean status = true;
 
-        WriteLock commodityWriteLock = commodityLock.writeLock();
-        commodityWriteLock.lock();
+        commodityLock.writeLock().lock();
 
         try {
             if (isCommodityNodeUsed(node)) {
@@ -1203,15 +1175,14 @@ public class Engine {
             return status;
 
         } finally {
-            commodityWriteLock.unlock();
+            commodityLock.writeLock().unlock();
         }
     }
 
     public boolean removeSecurity(final SecurityNode node) {
         boolean status = true;
 
-        WriteLock commodityWriteLock = commodityLock.writeLock();
-        commodityWriteLock.lock();
+        commodityLock.writeLock().lock();
 
         try {
             if (isCommodityNodeUsed(node)) {
@@ -1241,7 +1212,7 @@ public class Engine {
             return status;
 
         } finally {
-            commodityWriteLock.unlock();
+            commodityLock.writeLock().unlock();
         }
     }
 
@@ -1281,13 +1252,9 @@ public class Engine {
             addCurrency(defaultCurrency);
         }
 
-        WriteLock accountWriteLock = accountLock.writeLock();
-        WriteLock configWriteLock = configLock.writeLock();
-        WriteLock commodityWriteLock = commodityLock.writeLock();
-
-        accountWriteLock.lock();
-        configWriteLock.lock();
-        commodityWriteLock.lock();
+        accountLock.writeLock().lock();
+        configLock.writeLock().lock();
+        commodityLock.writeLock().lock();
 
         try {
             Config c = getConfig();
@@ -1303,16 +1270,15 @@ public class Engine {
             getAccountDAO().updateAccount(root);
 
         } finally {
-            commodityWriteLock.unlock();
-            configWriteLock.unlock();
-            accountWriteLock.unlock();
+            commodityLock.writeLock().unlock();
+            configLock.writeLock().unlock();
+            accountLock.writeLock().unlock();
         }
     }
 
     private Config getConfig() {
 
-        ReadLock configReadLock = configLock.readLock();
-        configReadLock.lock();
+        configLock.readLock().lock();
 
         try {
             if (config == null) {
@@ -1321,17 +1287,14 @@ public class Engine {
             return config;
 
         } finally {
-            configReadLock.unlock();
+            configLock.readLock().unlock();
         }
     }
 
     public CurrencyNode getDefaultCurrency() {
 
-        ReadLock configReadLock = configLock.readLock();
-        ReadLock commodityReadLock = commodityLock.readLock();
-
-        configReadLock.lock();
-        commodityReadLock.lock();
+        configLock.readLock().lock();
+        commodityLock.readLock().lock();
 
         try {
             CurrencyNode node = getConfig().getDefaultCurrency();
@@ -1342,8 +1305,8 @@ public class Engine {
 
             return node;
         } finally {
-            commodityReadLock.unlock();
-            configReadLock.unlock();
+            commodityLock.readLock().unlock();
+            configLock.readLock().unlock();
         }
     }
 
@@ -1360,8 +1323,7 @@ public class Engine {
             return;
         }
 
-        WriteLock commodityWriteLock = commodityLock.writeLock();
-        commodityWriteLock.lock();
+        commodityLock.writeLock().lock();
 
         try {
             // find the correct ExchangeRate and create if needed
@@ -1398,14 +1360,13 @@ public class Engine {
 
             messageBus.fireEvent(message);
         } finally {
-            commodityWriteLock.unlock();
+            commodityLock.writeLock().unlock();
         }
     }
 
     public void removeExchangeRateHistory(final ExchangeRate exchangeRate, final ExchangeRateHistoryNode history) {
 
-        WriteLock commodityWriteLock = commodityLock.writeLock();
-        commodityWriteLock.lock();
+        commodityLock.writeLock().lock();
 
         try {
             Message message;
@@ -1422,7 +1383,7 @@ public class Engine {
             message.setObject(MessageProperty.EXCHANGE_RATE, exchangeRate);
             messageBus.fireEvent(message);
         } finally {
-            commodityWriteLock.unlock();
+            commodityLock.writeLock().unlock();
         }
     }
 
@@ -1438,8 +1399,7 @@ public class Engine {
         assert oldNode != null && templateNode != null;
         assert oldNode != templateNode;
 
-        WriteLock commodityWriteLock = commodityLock.writeLock();
-        commodityWriteLock.lock();
+        commodityLock.writeLock().lock();
 
         try {
             boolean status = true;
@@ -1490,7 +1450,7 @@ public class Engine {
             messageBus.fireEvent(message);
             return status;
         } finally {
-            commodityWriteLock.unlock();
+            commodityLock.writeLock().unlock();
         }
     }
 
@@ -1522,7 +1482,6 @@ public class Engine {
      * @param message message to display
      */
     private static void logWarning(final String message) {
-
         logger.warning(message);
     }
 
@@ -1532,14 +1491,12 @@ public class Engine {
      * @param message message to display
      */
     private static void logSevere(final String message) {
-
         logger.severe(message);
     }
 
     public void setAccountSeparator(final String separator) {
 
-        WriteLock configWriteLock = configLock.writeLock();
-        configWriteLock.lock();
+        configLock.writeLock().lock();
 
         try {
             accountSeparator = separator;
@@ -1550,14 +1507,13 @@ public class Engine {
             getConfigDAO().update(c);
 
         } finally {
-            configWriteLock.unlock();
+            configLock.writeLock().unlock();
         }
     }
 
     public String getAccountSeparator() {
 
-        ReadLock configReadLock = configLock.readLock();
-        configReadLock.lock();
+        configLock.readLock().lock();
 
         try {
             if (accountSeparator == null) {
@@ -1566,7 +1522,7 @@ public class Engine {
             return accountSeparator;
 
         } finally {
-            configReadLock.unlock();
+            configLock.readLock().unlock();
         }
     }
 
@@ -1707,8 +1663,7 @@ public class Engine {
             throw new RuntimeException("Invalid Account");
         }
 
-        WriteLock accountWriteLock = accountLock.writeLock();
-        accountWriteLock.lock();
+        accountLock.writeLock().lock();
 
         try {
             Message message;
@@ -1735,7 +1690,7 @@ public class Engine {
             }
             return result;
         } finally {
-            accountWriteLock.unlock();
+            accountLock.writeLock().unlock();
         }
     }
 
@@ -1746,8 +1701,7 @@ public class Engine {
      */
     public RootAccount getRootAccount() {
 
-        ReadLock accountReadLock = accountLock.readLock();
-        accountReadLock.lock();
+        accountLock.readLock().lock();
 
         try {
             if (rootAccount == null) {
@@ -1755,7 +1709,7 @@ public class Engine {
             }
             return rootAccount;
         } finally {
-            accountReadLock.unlock();
+            accountLock.readLock().unlock();
         }
     }
 
@@ -1770,8 +1724,7 @@ public class Engine {
 
         assert account != null && newParent != null;
 
-        WriteLock accountWriteLock = accountLock.writeLock();
-        accountWriteLock.lock();
+        accountLock.writeLock().lock();
 
         try {
             // cannot invert the child/parent relationship of an account
@@ -1814,7 +1767,7 @@ public class Engine {
 
             return true;
         } finally {
-            accountWriteLock.unlock();
+            accountLock.writeLock().unlock();
         }
     }
 
@@ -1830,8 +1783,7 @@ public class Engine {
         boolean result;
         Message message;
 
-        WriteLock accountWriteLock = accountLock.writeLock();
-        accountWriteLock.lock();
+        accountLock.writeLock().lock();
 
         try {
             account.setName(template.getName());
@@ -1878,7 +1830,7 @@ public class Engine {
 
             return result;
         } finally {
-            accountWriteLock.unlock();
+            accountLock.writeLock().unlock();
         }
     }
 
@@ -1890,8 +1842,7 @@ public class Engine {
      */
     public void setAccountNumber(final Account account, final String number) {
 
-        WriteLock accountWriteLock = accountLock.writeLock();
-        accountWriteLock.lock();
+        accountLock.writeLock().lock();
 
         try {
             account.setAccountNumber(number);
@@ -1903,13 +1854,13 @@ public class Engine {
 
             logInfo(rb.getString("Message.AccountModify"));
         } finally {
-            accountWriteLock.unlock();
+            accountLock.writeLock().unlock();
         }
     }
 
     public void setAccountAttribute(final Account account, final String key, final String value) {
-        WriteLock accountWriteLock = accountLock.writeLock();
-        accountWriteLock.lock();
+
+        accountLock.writeLock().lock();
 
         try {
             account.setAttribute(key, value);
@@ -1921,7 +1872,7 @@ public class Engine {
 
             logInfo(rb.getString("Message.AccountModify"));
         } finally {
-            accountWriteLock.unlock();
+            accountLock.writeLock().unlock();
         }
     }
 
@@ -1933,8 +1884,7 @@ public class Engine {
      */
     public boolean removeAccount(final Account account) {
 
-        WriteLock accountWriteLock = accountLock.writeLock();
-        accountWriteLock.lock();
+        accountLock.writeLock().lock();
 
         try {
             boolean result = false;
@@ -1977,15 +1927,14 @@ public class Engine {
 
             return result;
         } finally {
-            accountWriteLock.unlock();
+            accountLock.writeLock().unlock();
         }
     }
 
     @SuppressWarnings("deprecation")
     private void migrateAmortizeObjects() {
 
-        WriteLock accountWriteLock = accountLock.writeLock();
-        accountWriteLock.lock();
+        accountLock.writeLock().lock();
 
         try {
 
@@ -2001,7 +1950,7 @@ public class Engine {
                 }
             }
         } finally {
-            accountWriteLock.unlock();
+            accountLock.writeLock().unlock();
         }
     }
 
@@ -2014,8 +1963,7 @@ public class Engine {
      */
     public boolean setAmortizeObject(final Account account, final AmortizeObject amortizeObject) {
 
-        WriteLock accountWriteLock = accountLock.writeLock();
-        accountWriteLock.lock();
+        accountLock.writeLock().lock();
 
         try {
             if (account != null && amortizeObject != null && account.getAccountType() == AccountType.LIABILITY) {
@@ -2030,7 +1978,7 @@ public class Engine {
             }
             return false;
         } finally {
-            accountWriteLock.unlock();
+            accountLock.writeLock().unlock();
         }
     }
 
@@ -2043,8 +1991,7 @@ public class Engine {
      */
     public boolean toggleAccountVisibility(final Account account) {
 
-        WriteLock accountWriteLock = accountLock.writeLock();
-        accountWriteLock.lock();
+        accountLock.writeLock().lock();
 
         try {
             boolean result = false;
@@ -2067,7 +2014,7 @@ public class Engine {
 
             return result;
         } finally {
-            accountWriteLock.unlock();
+            accountLock.writeLock().unlock();
         }
     }
 
@@ -2080,11 +2027,8 @@ public class Engine {
      */
     private boolean addAccountSecurity(final Account account, final SecurityNode node) {
 
-        WriteLock accountWriteLock = accountLock.writeLock();
-        WriteLock commodityWriteLock = commodityLock.writeLock();
-
-        accountWriteLock.lock();
-        commodityWriteLock.lock();
+        accountLock.writeLock().lock();
+        commodityLock.writeLock().lock();
 
         try {
             Message message;
@@ -2108,8 +2052,8 @@ public class Engine {
             return result;
 
         } finally {
-            commodityWriteLock.unlock();
-            accountWriteLock.unlock();
+            commodityLock.writeLock().unlock();
+            accountLock.writeLock().unlock();
         }
     }
 
@@ -2124,11 +2068,8 @@ public class Engine {
 
         assert node != null;
 
-        WriteLock accountWriteLock = accountLock.writeLock();
-        WriteLock commodityWriteLock = commodityLock.writeLock();
-
-        accountWriteLock.lock();
-        commodityWriteLock.lock();
+        accountLock.writeLock().lock();
+        commodityLock.writeLock().lock();
 
         try {
             Message message;
@@ -2151,8 +2092,8 @@ public class Engine {
             return result;
 
         } finally {
-            commodityWriteLock.unlock();
-            accountWriteLock.unlock();
+            commodityLock.writeLock().unlock();
+            accountLock.writeLock().unlock();
         }
     }
 
@@ -2170,11 +2111,8 @@ public class Engine {
 
         if (acc.memberOf(AccountGroup.INVEST)) {
 
-            WriteLock accountWriteLock = accountLock.writeLock();
-            WriteLock commodityWriteLock = commodityLock.writeLock();
-
-            accountWriteLock.lock();
-            commodityWriteLock.lock();
+            accountLock.writeLock().lock();
+            commodityLock.writeLock().lock();
 
             try {
                 final Collection<SecurityNode> oldList = acc.getSecurities();
@@ -2193,8 +2131,8 @@ public class Engine {
 
                 result = true;
             } finally {
-                commodityWriteLock.unlock();
-                accountWriteLock.unlock();
+                commodityLock.writeLock().unlock();
+                accountLock.writeLock().unlock();
             }
         }
 
@@ -2205,9 +2143,7 @@ public class Engine {
 
         boolean result;
 
-        WriteLock budgetWriteLock = budgetLock.writeLock();
-
-        budgetWriteLock.lock();
+        budgetLock.writeLock().lock();
 
         try {
             Message message;
@@ -2226,7 +2162,7 @@ public class Engine {
             return result;
 
         } finally {
-            budgetWriteLock.unlock();
+            budgetLock.writeLock().unlock();
         }
     }
 
@@ -2234,9 +2170,7 @@ public class Engine {
 
         boolean result = false;
 
-        WriteLock writeLock = budgetLock.writeLock();
-
-        writeLock.lock();
+        budgetLock.writeLock().lock();
 
         try {
             Message message;
@@ -2250,16 +2184,15 @@ public class Engine {
 
             result = true;
         } finally {
-            writeLock.unlock();
+            budgetLock.writeLock().unlock();
         }
 
         return result;
     }
 
     public void updateBudgetGoals(final Budget budget, final Account account, final BudgetGoal newGoals) {
-        WriteLock writeLock = budgetLock.writeLock();
 
-        writeLock.lock();
+        budgetLock.writeLock().lock();
 
         try {
             BudgetPeriod budgetPeriod = budget.getBudgetPeriod();
@@ -2283,14 +2216,13 @@ public class Engine {
             updateBudgetGoals(budget, account, changedDescriptors);
 
         } finally {
-            writeLock.unlock();
+            budgetLock.writeLock().unlock();
         }
     }
 
     private void updateBudgetGoals(final Budget budget, final Account account, final List<BudgetPeriodDescriptor> changedPeriods) {
-        WriteLock writeLock = budgetLock.writeLock();
 
-        writeLock.lock();
+        budgetLock.writeLock().lock();
 
         try {
             Message baseMessage;
@@ -2320,7 +2252,7 @@ public class Engine {
 
             logger.log(Level.FINE, "Budget goal updated for {0}", account.getPathName());
         } finally {
-            writeLock.unlock();
+            budgetLock.writeLock().unlock();
         }
     }
 
@@ -2328,9 +2260,7 @@ public class Engine {
 
         boolean result;
 
-        WriteLock writeLock = budgetLock.writeLock();
-
-        writeLock.lock();
+        budgetLock.writeLock().lock();
 
         try {
             Message message;
@@ -2351,19 +2281,18 @@ public class Engine {
             return result;
 
         } finally {
-            writeLock.unlock();
+            budgetLock.writeLock().unlock();
         }
     }
 
     public List<Budget> getBudgetList() {
 
-        ReadLock readLock = budgetLock.readLock();
-        readLock.lock();
+        budgetLock.readLock().lock();
 
         try {
             return getBudgetDAO().getBudgets();
         } finally {
-            readLock.unlock();
+            budgetLock.readLock().unlock();
         }
     }
 
@@ -2453,8 +2382,7 @@ public class Engine {
 
     public boolean addTransaction(final Transaction transaction) {
 
-        WriteLock accountWriteLock = accountLock.writeLock();
-        accountWriteLock.lock();
+        accountLock.writeLock().lock();
 
         try {
             boolean result = isTransactionValid(transaction);
@@ -2490,14 +2418,13 @@ public class Engine {
 
             return result;
         } finally {
-            accountWriteLock.unlock();
+            accountLock.writeLock().unlock();
         }
     }
 
     public boolean removeTransaction(final Transaction transaction) {
 
-        WriteLock accountWriteLock = accountLock.writeLock();
-        accountWriteLock.lock();
+        accountLock.writeLock().lock();
 
         try {
             for (Account account : transaction.getAccounts()) {
@@ -2527,7 +2454,7 @@ public class Engine {
 
             return result;
         } finally {
-            accountWriteLock.unlock();
+            accountLock.writeLock().unlock();
         }
     }
 
@@ -2630,7 +2557,6 @@ public class Engine {
      * @return uuid
      */
     public String getUuid() {
-
         return uuid;
     }
 }
