@@ -30,9 +30,8 @@ import javax.persistence.TemporalType;
  *
  * @author Craig Cavanaugh
  */
-
 @Entity
-public class TrashObject extends StoredObject {
+public class TrashObject extends StoredObject implements Comparable<TrashObject> {
 
     private static final long serialVersionUID = -5923174140959126059L;
 
@@ -67,5 +66,10 @@ public class TrashObject extends StoredObject {
 
     public Date getDate() {
         return date;
+    }
+
+    @Override
+    public int compareTo(final TrashObject o) {
+        return date.compareTo(o.date);
     }
 }
