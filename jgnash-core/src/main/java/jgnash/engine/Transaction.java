@@ -36,7 +36,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
@@ -102,7 +101,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * Transaction entries
      */
     @JoinTable
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @OneToMany(cascade = {CascadeType.ALL})
     Set<TransactionEntry> transactionEntries = new HashSet<>();
 
     /**
@@ -619,14 +618,14 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     protected Object readResolve() {
-        lock = new ReentrantReadWriteLock(true);
+        postLoad();
         return this;
     }
 
     @PostLoad
-    @SuppressWarnings("unused")
     private void postLoad() {
         lock = new ReentrantReadWriteLock(true);
+        transactionEntries.iterator().hasNext();  // Force initialization of a lazily loaded collection
     }
 
     @Override

@@ -45,7 +45,6 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -53,6 +52,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.PostLoad;
 import javax.persistence.Transient;
 
 /**
@@ -97,7 +97,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * Sorted list of child accounts
      */
     @OrderBy("name")
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @OneToMany(cascade = {CascadeType.ALL})
     private Set<Account> children = new HashSet<>();
 
     /**
@@ -113,7 +113,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      */
     @JoinColumn()
     @OrderBy("symbol")
-    @OneToMany(cascade = {CascadeType.ALL})
+    @OneToMany(cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE})
     Set<SecurityNode> securities = new HashSet<>();
 
     /**
@@ -1504,11 +1504,20 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @return Properly initialized Account
      */
     protected Object readResolve() {
+        postLoad();
+        return this;
+    }
+
+    @PostLoad
+    private void postLoad() {
         transactionLock = new ReentrantReadWriteLock(true);
         childLock = new ReentrantReadWriteLock(true);
         securitiesLock = new ReentrantReadWriteLock(true);
 
-        return this;
+        // Force initialization of a lazily collection
+        transactions.iterator().hasNext();
+        children.iterator().hasNext();
+        securities.iterator().hasNext();
     }
 
     /**
