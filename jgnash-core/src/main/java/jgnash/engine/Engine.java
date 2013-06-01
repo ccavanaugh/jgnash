@@ -544,6 +544,11 @@ public class Engine {
 
             List<TrashObject> trash = getTrashDAO().getTrashObjects();
 
+            /* always sort by the timestamp of the trash object to prevent
+             * foreign key removal exceptions when multiple related accounts
+             * or objects are removed */
+            Collections.sort(trash);
+
             if (trash.isEmpty()) {
                 logger.info("No trash was found");
             }
@@ -950,7 +955,7 @@ public class Engine {
      */
     private void clearCachedAccountBalance(final Account account) {
 
-       accountLock.writeLock().lock();
+        accountLock.writeLock().lock();
 
         try {
             account.clearCachedBalances();
