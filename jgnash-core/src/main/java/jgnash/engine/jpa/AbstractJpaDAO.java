@@ -19,6 +19,7 @@ package jgnash.engine.jpa;
 
 import jgnash.engine.StoredObject;
 import jgnash.engine.dao.AbstractDAO;
+import org.hibernate.Hibernate;
 
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
@@ -56,6 +57,8 @@ abstract class AbstractJpaDAO extends AbstractDAO {
 
         try {
             em.refresh(object);
+
+            Hibernate.initialize(object); // Hibernate specific code, force initialization of the object
         } finally {
             emLock.unlock();
         }

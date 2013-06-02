@@ -625,7 +625,8 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     @PostLoad
     private void postLoad() {
         lock = new ReentrantReadWriteLock(true);
-        transactionEntries.iterator().hasNext();  // Force initialization of a lazily loaded collection
+
+        transactionEntries.iterator().next();
     }
 
     @Override
