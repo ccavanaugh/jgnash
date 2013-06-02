@@ -354,13 +354,13 @@ public class MessageBusClient {
             switch (message.getEvent()) {
                 case TRANSACTION_ADD:
                 case TRANSACTION_REMOVE:
-                    final Account account = (Account) message.getObject(MessageProperty.ACCOUNT);
-                    engine.refreshAccount(account);
-                    message.setObject(MessageProperty.ACCOUNT, engine.getAccountByUuid(account.getUuid()));
-
                     final Transaction transaction = (Transaction) message.getObject(MessageProperty.TRANSACTION);
                     engine.refreshTransaction(transaction);
                     message.setObject(MessageProperty.TRANSACTION, engine.getTransactionByUuid(transaction.getUuid()));
+
+                    final Account account = (Account) message.getObject(MessageProperty.ACCOUNT);
+                    engine.refreshAccount(account);
+                    message.setObject(MessageProperty.ACCOUNT, engine.getAccountByUuid(account.getUuid()));
                     break;
                 default:
                     break;
