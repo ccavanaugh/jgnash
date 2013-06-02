@@ -21,7 +21,6 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundMessageHandlerAdapter;
@@ -77,8 +76,6 @@ public class MessageBusClient {
     private NioEventLoopGroup eventLoopGroup;
 
     private Channel channel;
-
-    private ChannelFuture lastWriteFuture = null;
 
     static {
         logger.setLevel(Level.INFO);
@@ -218,15 +215,6 @@ public class MessageBusClient {
 
     public void disconnectFromServer() {
 
-        // Wait until all messages are flushed before closing the channel.
-        if (lastWriteFuture != null) {
-            try {
-                lastWriteFuture.sync();
-            } catch (InterruptedException e) {
-                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-            }
-        }
-
         try {
             channel.close().sync();
         } catch (InterruptedException e) {
@@ -235,9 +223,7 @@ public class MessageBusClient {
 
         eventLoopGroup.shutdownGracefully();
 
-
         channel = null;
-        lastWriteFuture = null;
         eventLoopGroup = null;
     }
 
@@ -255,10 +241,14 @@ public class MessageBusClient {
     }
 
     private synchronized void sendRemoteMessage(final String message) {
-        if (filter != null) {
-            lastWriteFuture = channel.write(filter.encrypt(message) + MessageBusServer.EOL_DELIMITER);
-        } else {
-            lastWriteFuture = channel.write(message + MessageBusServer.EOL_DELIMITER);
+        try {
+            if (filter != null) {
+                channel.write(filter.encrypt(message) + MessageBusServer.EOL_DELIMITER).sync();
+            } else {
+                channel.write(message + MessageBusServer.EOL_DELIMITER).sync();
+            }
+        } catch (InterruptedException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
     }
 
