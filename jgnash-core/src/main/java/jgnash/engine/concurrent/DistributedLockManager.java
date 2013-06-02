@@ -87,6 +87,10 @@ public class DistributedLockManager implements LockManager {
      */
     private static final String uuid = UUID.randomUUID().toString();
 
+    static {
+        logger.setLevel(Level.INFO);
+    }
+
     public DistributedLockManager(final String host, final int port) {
         this.host = host;
         this.port = port;
@@ -227,7 +231,7 @@ public class DistributedLockManager implements LockManager {
 
     public void processMessage(final String message) {
 
-        logger.info(message);
+        //logger.info(message);
 
         /** lock_action, lock_id, thread_id, lock_type */
         // unlock,account,3456384756384563,read

@@ -80,6 +80,10 @@ public class MessageBusClient {
 
     private ChannelFuture lastWriteFuture = null;
 
+    static {
+        logger.setLevel(Level.INFO);
+    }
+
     public MessageBusClient(final String host, final int port) {
         this.host = host;
         this.port = port;
@@ -175,7 +179,7 @@ public class MessageBusClient {
         public void messageReceived(final ChannelHandlerContext ctx, final String msg) throws Exception {
             final String plainMessage = decrypt(msg);
 
-            logger.log(Level.INFO, "messageReceived: {0}", plainMessage);
+            logger.log(Level.FINE, "messageReceived: {0}", plainMessage);
 
             if (plainMessage.startsWith("<Message")) {
                 executorService.submit(new Runnable() {
@@ -191,10 +195,10 @@ public class MessageBusClient {
                 });
             } else if (plainMessage.startsWith(MessageBusServer.PATH_PREFIX)) {
                 dataBasePath = plainMessage.substring(MessageBusServer.PATH_PREFIX.length());
-                logger.log(Level.INFO, "Remote data path is: {0}", dataBasePath);
+                logger.log(Level.FINE, "Remote data path is: {0}", dataBasePath);
             } else if (plainMessage.startsWith(MessageBusServer.DATA_STORE_TYPE_PREFIX)) {
                 dataBaseType = DataStoreType.valueOf(plainMessage.substring(MessageBusServer.DATA_STORE_TYPE_PREFIX.length()));
-                logger.log(Level.INFO, "Remote dataBaseType type is: {0}", dataBaseType.name());
+                logger.log(Level.FINE, "Remote dataBaseType type is: {0}", dataBaseType.name());
             } else if (plainMessage.startsWith(EncryptionFilter.DECRYPTION_ERROR_TAG)) {    // decryption has failed, shut down the engine
                 logger.log(Level.SEVERE, "Unable to decrypt the remote message");
             } else if (plainMessage.startsWith(JpaNetworkServer.STOP_SERVER_MESSAGE)) {
@@ -243,7 +247,7 @@ public class MessageBusClient {
 
         sendRemoteMessage(writer.toString());
 
-        logger.log(Level.INFO, "sent: {0}", writer.toString());
+        logger.log(Level.FINE, "sent: {0}", writer.toString());
     }
 
     public void sendRemoteShutdownRequest() {
@@ -265,7 +269,7 @@ public class MessageBusClient {
      * @param message Message to process and send
      */
     private static void processRemoteMessage(final Message message) {
-        logger.info("processing a remote message");
+        logger.fine("processing a remote message");
 
         Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
@@ -366,7 +370,7 @@ public class MessageBusClient {
         /* Flag the message as remote */
         message.setRemote(true);
 
-        logger.info("fire remote message");
+        logger.fine("fire remote message");
         MessageBus.getInstance().fireEvent(message);
     }
 }

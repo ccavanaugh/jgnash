@@ -78,6 +78,10 @@ public class MessageBusServer {
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
+    static {
+        logger.setLevel(Level.INFO);
+    }
+
     public MessageBusServer(final int port) {
         this.port = port;
     }
@@ -254,7 +258,7 @@ public class MessageBusServer {
                     listener.messagePosted(plainMessage);
                 }
 
-                logger.log(Level.INFO, "Broadcast: {0}", plainMessage);
+                logger.log(Level.FINE, "Broadcast: {0}", plainMessage);
             } catch (InterruptedException e) {
                 logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             } finally {
