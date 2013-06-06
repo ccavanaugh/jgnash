@@ -24,6 +24,11 @@ import jgnash.engine.recurring.Reminder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -38,7 +43,7 @@ import javax.persistence.criteria.Root;
  */
 class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
 
-    // private static final Logger logger = Logger.getLogger(JpaRecurringDAO.class.getName());
+    private static final Logger logger = Logger.getLogger(JpaRecurringDAO.class.getName());
 
     JpaRecurringDAO(final EntityManager entityManager, final boolean isRemote) {
         super(entityManager, isRemote);
@@ -53,17 +58,27 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
 
         List<Reminder> reminderList = Collections.EMPTY_LIST;
 
+        emLock.lock();
+
         try {
-            emLock.lock();
+            Future<List<Reminder>> future = executorService.submit(new Callable<List<Reminder>>() {
+                @Override
+                public List<Reminder> call() throws Exception {
 
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<Reminder> cq = cb.createQuery(Reminder.class);
-            Root<Reminder> root = cq.from(Reminder.class);
-            cq.select(root);
+                    CriteriaBuilder cb = em.getCriteriaBuilder();
+                    CriteriaQuery<Reminder> cq = cb.createQuery(Reminder.class);
+                    Root<Reminder> root = cq.from(Reminder.class);
+                    cq.select(root);
 
-            TypedQuery<Reminder> q = em.createQuery(cq);
+                    TypedQuery<Reminder> q = em.createQuery(cq);
 
-            reminderList = stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
+                    return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
+                }
+            });
+
+            reminderList = future.get();
+        } catch (final InterruptedException | ExecutionException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
             emLock.unlock();
         }
@@ -78,15 +93,24 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
     public boolean addReminder(final Reminder reminder) {
         boolean result = false;
 
+        emLock.lock();
+
         try {
-            emLock.lock();
-            em.getTransaction().begin();
+            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+                    em.getTransaction().begin();
+                    em.persist(reminder);
+                    em.getTransaction().commit();
 
-            em.persist(reminder);
+                    return true;
+                }
+            });
 
-            result = true;
+            result = future.get();
+        } catch (final InterruptedException | ExecutionException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
-            em.getTransaction().commit();
             emLock.unlock();
         }
 

@@ -27,6 +27,9 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,13 +55,21 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
     public List<Transaction> getTransactions() {
         List<Transaction> transactionList = Collections.EMPTY_LIST;
 
+        emLock.lock();
+
         try {
-            emLock.lock();
+            Future<List<Transaction>> future = executorService.submit(new Callable<List<Transaction>>() {
+                @Override
+                public List<Transaction> call() throws Exception {
+                    Query q = em.createQuery("SELECT t FROM Transaction t WHERE t.markedForRemoval = false");
 
-            Query q = em.createQuery("SELECT t FROM Transaction t WHERE t.markedForRemoval = false");
+                    return new ArrayList<Transaction>(q.getResultList());
+                }
+            });
 
-            // result lists are readonly
-            transactionList = new ArrayList<Transaction>(q.getResultList());
+            transactionList = future.get();
+        } catch (final InterruptedException | ExecutionException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
             emLock.unlock();
         }
@@ -78,19 +89,28 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
     public synchronized boolean addTransaction(final Transaction transaction) {
         boolean result = false;
 
+        emLock.lock();
+
         try {
-            emLock.lock();
-            em.getTransaction().begin();
+            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+                    em.getTransaction().begin();
+                    em.persist(transaction);
 
-            em.persist(transaction);
+                    for (final Account account : transaction.getAccounts()) {
+                        em.persist(account);
+                    }
+                    em.getTransaction().commit();
 
-            for (final Account account : transaction.getAccounts()) {
-                em.persist(account);
-            }
+                    return true;
+                }
+            });
 
-            result = true;
+            result = future.get();
+        } catch (final InterruptedException | ExecutionException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
-            em.getTransaction().commit();
             emLock.unlock();
         }
 
@@ -109,20 +129,30 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
     public synchronized boolean removeTransaction(final Transaction transaction) {
         boolean result = false;
 
+        emLock.lock();
+
         try {
-            emLock.lock();
-            em.getTransaction().begin();
+            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+                    em.getTransaction().begin();
 
-            // look at accounts this transaction impacted and update the accounts
-            for (final Account account : transaction.getAccounts()) {
-                em.persist(account);
-            }
+                    // look at accounts this transaction impacted and update the accounts
+                    for (final Account account : transaction.getAccounts()) {
+                        em.persist(account);
+                    }
 
-            em.persist(transaction);    // saved, removed with the trash
+                    em.persist(transaction);    // saved, removed with the trash
+                    em.getTransaction().commit();
 
-            result = true;
+                    return true;
+                }
+            });
+
+            result = future.get();
+        } catch (final InterruptedException | ExecutionException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
-            em.getTransaction().commit();
             emLock.unlock();
         }
 

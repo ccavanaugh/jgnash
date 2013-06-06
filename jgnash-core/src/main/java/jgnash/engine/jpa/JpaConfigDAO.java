@@ -20,6 +20,10 @@ package jgnash.engine.jpa;
 import jgnash.engine.Config;
 import jgnash.engine.dao.ConfigDAO;
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
@@ -46,26 +50,37 @@ class JpaConfigDAO extends AbstractJpaDAO implements ConfigDAO {
      */
     @Override
     public synchronized Config getDefaultConfig() {
-        Config defaultConfig;
+        Config defaultConfig = null;
+
+        emLock.lock();
 
         try {
-            emLock.lock();
+            Future<Config> future = executorService.submit(new Callable<Config>() {
+                @Override
+                public Config call() throws Exception {
+                    Config defaultConfig;
+                    try {
+                        CriteriaBuilder cb = em.getCriteriaBuilder();
+                        CriteriaQuery<Config> cq = cb.createQuery(Config.class);
+                        Root<Config> root = cq.from(Config.class);
+                        cq.select(root);
 
-            try {
-                CriteriaBuilder cb = em.getCriteriaBuilder();
-                CriteriaQuery<Config> cq = cb.createQuery(Config.class);
-                Root<Config> root = cq.from(Config.class);
-                cq.select(root);
+                        TypedQuery<Config> q = em.createQuery(cq);
 
-                TypedQuery<Config> q = em.createQuery(cq);
+                        defaultConfig = q.getSingleResult();
 
-                defaultConfig = q.getSingleResult();
+                    } catch (Exception e) {
+                        defaultConfig = new Config();
+                        em.persist(defaultConfig);
+                        logger.info("Generating new default config");
+                    }
+                    return defaultConfig;
+                }
+            });
 
-            } catch (Exception e) {
-                defaultConfig = new Config();
-                em.persist(defaultConfig);
-                logger.info("Generating new default config");
-            }
+            defaultConfig = future.get();
+        } catch (final InterruptedException | ExecutionException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
             emLock.unlock();
         }
@@ -75,13 +90,24 @@ class JpaConfigDAO extends AbstractJpaDAO implements ConfigDAO {
 
     @Override
     public void update(final Config config) {
-        try {
-            emLock.lock();
-            em.getTransaction().begin();
 
-            em.persist(config);
+        emLock.lock();
+
+        try {
+            Future<Void> future = executorService.submit(new Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    em.getTransaction().begin();
+                    em.persist(config);
+                    em.getTransaction().commit();
+                    return null;
+                }
+            });
+
+            future.get(); // block
+        } catch (final InterruptedException | ExecutionException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
-            em.getTransaction().commit();
             emLock.unlock();
         }
     }

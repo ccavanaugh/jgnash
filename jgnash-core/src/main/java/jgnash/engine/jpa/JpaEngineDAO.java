@@ -28,7 +28,13 @@ import jgnash.engine.dao.TransactionDAO;
 import jgnash.engine.dao.TrashDAO;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -57,7 +63,7 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
 
     private TrashDAO trashDAO;
 
-    // private static final Logger logger = Logger.getLogger(JpaEngineDAO.class.getName());
+    private static final Logger logger = Logger.getLogger(JpaEngineDAO.class.getName());
 
     JpaEngineDAO(final EntityManager entityManager, final boolean isRemote) {
         super(entityManager, isRemote);
@@ -125,20 +131,30 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<StoredObject> getStoredObjects() {
-        ArrayList<StoredObject> list = new ArrayList<>();
+        List<StoredObject> list = Collections.EMPTY_LIST;
 
         emLock.lock();
 
         try {
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<StoredObject> cq = cb.createQuery(StoredObject.class);
-            Root<StoredObject> root = cq.from(StoredObject.class);
-            cq.select(root);
+            Future<List<StoredObject>> future = executorService.submit(new Callable<List<StoredObject>>() {
+                @Override
+                public List<StoredObject> call() throws Exception {
+                    CriteriaBuilder cb = em.getCriteriaBuilder();
+                    CriteriaQuery<StoredObject> cq = cb.createQuery(StoredObject.class);
+                    Root<StoredObject> root = cq.from(StoredObject.class);
+                    cq.select(root);
 
-            TypedQuery<StoredObject> q = em.createQuery(cq);
+                    TypedQuery<StoredObject> q = em.createQuery(cq);
 
-            list.addAll(q.getResultList());
+                    return new ArrayList<>(q.getResultList());
+                }
+            });
+
+            list = future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
             emLock.unlock();
         }
