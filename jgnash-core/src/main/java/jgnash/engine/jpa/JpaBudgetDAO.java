@@ -23,6 +23,11 @@ import jgnash.engine.dao.BudgetDAO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -34,7 +39,7 @@ import javax.persistence.Query;
  */
 public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
 
-    // private final static Logger logger = Logger.getLogger(JpaBudgetDAO.class.getName());
+    private final static Logger logger = Logger.getLogger(JpaBudgetDAO.class.getName());
 
     JpaBudgetDAO(final EntityManager entityManager, final boolean isRemote) {
         super(entityManager, isRemote);
@@ -44,18 +49,27 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
     public boolean add(final Budget budget) {
         boolean result = false;
 
+        emLock.lock();
+
         try {
-            emLock.lock();
+            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+                    em.getTransaction().begin();
+                    em.persist(budget);
+                    em.getTransaction().commit();
 
-            em.getTransaction().begin();
+                    return true;
+                }
+            });
 
-            em.persist(budget);
-
-            result =  true;
+            result = future.get();
+        } catch (final InterruptedException | ExecutionException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
-            em.getTransaction().commit();
             emLock.unlock();
         }
+
         return result;
     }
 
@@ -63,17 +77,27 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
     public boolean update(final Budget budget) {
         boolean result = false;
 
+        emLock.lock();
+
         try {
-            emLock.lock();
-            em.getTransaction().begin();
+            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+                    em.getTransaction().begin();
+                    em.persist(budget);
+                    em.getTransaction().commit();
 
-            em.persist(budget);
+                    return true;
+                }
+            });
 
-            result = true;
+            result = future.get();
+        } catch (final InterruptedException | ExecutionException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
-            em.getTransaction().commit();
             emLock.unlock();
         }
+
         return result;
     }
 
@@ -82,17 +106,25 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
     public List<Budget> getBudgets() {
         List<Budget> budgetList = Collections.EMPTY_LIST;
 
+        emLock.lock();
+
         try {
-            emLock.lock();
+            Future<List<Budget>> future = executorService.submit(new Callable<List<Budget>>() {
+                @Override
+                public List<Budget> call() throws Exception {
+                    Query q = em.createQuery("SELECT b FROM Budget b WHERE b.markedForRemoval = false");
 
-            Query q = em.createQuery("SELECT b FROM Budget b WHERE b.markedForRemoval = false");
+                    return new ArrayList<Budget>(q.getResultList());
+                }
+            });
 
-            // result lists are readonly
-            budgetList =  new ArrayList<Budget>(q.getResultList());
-
+            budgetList = future.get(); // block until complete
+        } catch (final InterruptedException | ExecutionException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
             emLock.unlock();
         }
+
         return budgetList;
     }
 

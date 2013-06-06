@@ -25,6 +25,10 @@ import jgnash.engine.dao.TrashDAO;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
@@ -49,20 +53,28 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
     @Override
     @SuppressWarnings("unchecked")
     public List<TrashObject> getTrashObjects() {
-
         List<TrashObject> trashObjectList = Collections.EMPTY_LIST;
 
+        emLock.lock();
+
         try {
-            emLock.lock();
+            Future<List<TrashObject>> future = executorService.submit(new Callable<List<TrashObject>>() {
+                @Override
+                public List<TrashObject> call() throws Exception {
+                    CriteriaBuilder cb = em.getCriteriaBuilder();
+                    CriteriaQuery<TrashObject> cq = cb.createQuery(TrashObject.class);
+                    Root<TrashObject> root = cq.from(TrashObject.class);
+                    cq.select(root);
 
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<TrashObject> cq = cb.createQuery(TrashObject.class);
-            Root<TrashObject> root = cq.from(TrashObject.class);
-            cq.select(root);
+                    TypedQuery<TrashObject> q = em.createQuery(cq);
 
-            TypedQuery<TrashObject> q = em.createQuery(cq);
+                    return new ArrayList<>(q.getResultList());
+                }
+            });
 
-            trashObjectList =  new ArrayList<>(q.getResultList());
+            trashObjectList = future.get();
+        } catch (final InterruptedException | ExecutionException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
             emLock.unlock();
         }
@@ -72,33 +84,56 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
 
     @Override
     public void add(final TrashObject trashObject) {
-        try {
-            emLock.lock();
-            em.getTransaction().begin();
+        emLock.lock();
 
-            em.persist(trashObject.getObject());
-            em.persist(trashObject);
+        try {
+            Future<Void> future = executorService.submit(new Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    em.getTransaction().begin();
+
+                    em.persist(trashObject.getObject());
+                    em.persist(trashObject);
+                    em.getTransaction().commit();
+
+                    return null;
+                }
+            });
+
+            future.get();   // block
+        } catch (final InterruptedException | ExecutionException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
-            em.getTransaction().commit();
             emLock.unlock();
         }
     }
 
     @Override
     public void remove(final TrashObject trashObject) {
+        emLock.lock();
+
         try {
-            emLock.lock();
+            Future<Void> future = executorService.submit(new Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    em.getTransaction().begin();
 
-            em.getTransaction().begin();
+                    StoredObject object = trashObject.getObject();
 
-            StoredObject object = trashObject.getObject();
+                    em.remove(object);
+                    em.remove(trashObject);
 
-            em.remove(object);
-            em.remove(trashObject);
+                    logger.info("Removed TrashObject");
 
-            logger.info("Removed TrashObject");
+                    em.getTransaction().commit();
+                    return null;
+                }
+            });
+
+            future.get(); // block
+        } catch (final InterruptedException | ExecutionException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
-            em.getTransaction().commit();
             emLock.unlock();
         }
     }
