@@ -98,6 +98,8 @@ public class JpaNetworkServer {
             default:
                 Logger.getLogger(JpaNetworkServer.class.getName()).severe("Not a valid file type for server usage");
         }
+
+        System.exit(0);
     }
 
     private boolean run(final DataStoreType dataStoreType, final String fileName, final int port, final char[] password) {
