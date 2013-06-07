@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 
 import jgnash.engine.MathConstants;
+import jgnash.engine.UUIDUtil;
 
 import javax.persistence.*;
 
@@ -38,8 +39,8 @@ public class BudgetGoal implements Cloneable, Serializable {
     private static final long serialVersionUID = 1L;
 
     @SuppressWarnings("unused")
-    @Id @GeneratedValue(strategy= GenerationType.TABLE)
-    private long id;
+    @Id @Column(nullable = false, length = 36)
+    private String id = UUIDUtil.getUID();
 
     /** 366 days per year */
     public static final int PERIODS = 366;
@@ -135,6 +136,7 @@ public class BudgetGoal implements Cloneable, Serializable {
 
         // deep copy
         goal.goals = new BigDecimal[PERIODS];
+        goal.id = UUIDUtil.getUID();
         System.arraycopy(goals, 0, goal.goals, 0, goals.length);
 
         return goal;

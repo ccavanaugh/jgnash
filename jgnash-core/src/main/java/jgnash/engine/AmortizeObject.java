@@ -17,7 +17,12 @@
  */
 package jgnash.engine;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -38,10 +43,9 @@ public class AmortizeObject implements Serializable {
 
     private static final long serialVersionUID = 4823735664756113291L;
 
-    @Id
     @SuppressWarnings("unused")
-    @GeneratedValue(strategy=GenerationType.TABLE)
-    private int id;
+    @Id @Column(nullable = false, length = 36)
+    private String id = UUIDUtil.getUID();
 
     @ManyToOne
     private Account interestAccount; // account for interest payment

@@ -19,20 +19,18 @@ package jgnash.engine;
 
 import jgnash.util.EncodeDecode;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 /**
  * Transaction Entry
@@ -54,10 +52,9 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
 
     private transient int hash = 0;
 
-    @Id
     @SuppressWarnings("unused")
-    @GeneratedValue(strategy=GenerationType.TABLE)
-    private long id;
+    @Id @Column(nullable = false, length = 36)
+    private String id = UUIDUtil.getUID();
 
     @Enumerated(EnumType.STRING)
     private TransactionTag transactionTag = TransactionTag.BANK;
@@ -404,7 +401,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
 
         try {
             e = (TransactionEntry) super.clone();
-            e.id = 0; // clones id must be reset for JPA
+            e.id = UUIDUtil.getUID(); // clones id must be reset
         } catch (CloneNotSupportedException ex) {
             Logger.getLogger(TransactionEntry.class.getName()).log(Level.SEVERE, ex.toString(), ex);
         }
