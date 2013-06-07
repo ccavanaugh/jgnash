@@ -24,7 +24,7 @@ import java.util.UUID;
  *
  * @author Craig Cavanaugh
  */
-class UUIDUtil {
+public class UUIDUtil {
 
     /**
      * Generates a unique id that does not repeat.
@@ -32,7 +32,7 @@ class UUIDUtil {
      *
      * @return the unique id
      */
-    static String getUID() {
+    public static String getUID() {
         return UUID.randomUUID().toString();
     }
 
