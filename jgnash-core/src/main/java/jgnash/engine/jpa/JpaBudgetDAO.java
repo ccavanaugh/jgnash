@@ -84,7 +84,7 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
                 @Override
                 public Boolean call() throws Exception {
                     em.getTransaction().begin();
-                    em.persist(budget);
+                    em.merge(budget);
                     em.getTransaction().commit();
 
                     return true;

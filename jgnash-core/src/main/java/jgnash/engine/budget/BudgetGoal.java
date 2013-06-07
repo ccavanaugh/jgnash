@@ -32,10 +32,14 @@ import javax.persistence.*;
  * 
  * @author Craig Cavanaugh
  */
-@Embeddable
+@Entity
 public class BudgetGoal implements Cloneable, Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    @SuppressWarnings("unused")
+    @Id @GeneratedValue(strategy= GenerationType.AUTO)
+    private long id;
 
     /** 366 days per year */
     public static final int PERIODS = 366;

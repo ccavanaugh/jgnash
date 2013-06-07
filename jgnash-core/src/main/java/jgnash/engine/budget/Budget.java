@@ -56,7 +56,7 @@ public class Budget extends StoredObject implements Comparable<Budget> {
     /**
      * Account goals are stored internally by the account UUID.
      */
-    @ElementCollection
+    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
     private Map<String, BudgetGoal> accountGoals = new HashMap<>();
 
     private boolean assetAccountsIncluded = false;
@@ -300,12 +300,11 @@ public class Budget extends StoredObject implements Comparable<Budget> {
     }
 
     protected Object readResolve() {
-        workingYear = DateUtils.getCurrentYear();
+        postLoad();
         return this;
     }
 
     @PostLoad
-    @SuppressWarnings("unused")
     protected void postLoad() {
         workingYear = DateUtils.getCurrentYear();
     }
