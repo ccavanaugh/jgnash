@@ -38,7 +38,7 @@ public class BudgetGoal implements Cloneable, Serializable {
     private static final long serialVersionUID = 1L;
 
     @SuppressWarnings("unused")
-    @Id @GeneratedValue(strategy= GenerationType.AUTO)
+    @Id @GeneratedValue(strategy= GenerationType.TABLE)
     private long id;
 
     /** 366 days per year */
