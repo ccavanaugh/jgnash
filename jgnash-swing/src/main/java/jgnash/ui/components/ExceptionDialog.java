@@ -67,6 +67,7 @@ public class ExceptionDialog extends JDialog implements ActionListener {
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         DialogUtils.addBoundsListener(this);
+        setLocationRelativeTo(parent); // force location
     }
 
     private void layoutMainPanel() {
