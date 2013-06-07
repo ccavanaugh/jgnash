@@ -90,16 +90,16 @@ public class JpaNetworkServer {
 
         switch (type) {
             case h2:
-                startH2Server(fileName, port, password);
+                runH2Server(fileName, port, password);
                 break;
             case hsql:
-                startHsqldbServer(fileName, port, password);
+                runHsqldbServer(fileName, port, password);
                 break;
             default:
                 Logger.getLogger(JpaNetworkServer.class.getName()).severe("Not a valid file type for server usage");
         }
 
-        System.exit(0);
+        System.exit(0); // force exit
     }
 
     private boolean run(final DataStoreType dataStoreType, final String fileName, final int port, final char[] password) {
@@ -181,7 +181,7 @@ public class JpaNetworkServer {
         return result;
     }
 
-    private void startH2Server(final String fileName, final int port, final char[] password) {
+    private void runH2Server(final String fileName, final int port, final char[] password) {
         org.h2.tools.Server server = null;
 
         stop = false;
@@ -216,7 +216,7 @@ public class JpaNetworkServer {
         EngineFactory.removeOldCompressedXML(fileName);
     }
 
-    private void startHsqldbServer(final String fileName, final int port, final char[] password) {
+    private void runHsqldbServer(final String fileName, final int port, final char[] password) {
         org.hsqldb.server.Server hsqlServer = new org.hsqldb.server.Server();
 
         hsqlServer.setPort(port);
