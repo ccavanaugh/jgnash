@@ -38,6 +38,7 @@ import jgnash.util.EncodeDecode;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -62,6 +63,8 @@ public class DistributedLockServer {
 
     private Map<String, ReadWriteLock> lockMap = new HashMap<>();
 
+    private Map<ChannelHandlerContext, String> handlerContextMap = new HashMap<>();
+
     static final String LOCK = "lock";
 
     static final String UNLOCK = "unlock";
@@ -77,6 +80,12 @@ public class DistributedLockServer {
     }
 
     private void processMessage(final ChannelHandlerContext ctx, final String message) {
+
+        // Look for a uuid announcement for a channel
+        if (message.startsWith(DistributedLockManager.UUID_PREFIX)) {
+            handlerContextMap.put(ctx, message.substring(DistributedLockManager.UUID_PREFIX.length()));
+            return;
+        }
 
         /** lock_action, lock_id, thread_id, lock_type */
         // unlock,account,1194917570,read
@@ -194,6 +203,24 @@ public class DistributedLockServer {
         public void channelInactive(final ChannelHandlerContext ctx) throws Exception {
             logger.log(Level.INFO, "Remote connection {0} closed", ctx.channel().remoteAddress().toString());
 
+            String uuid = handlerContextMap.get(ctx);
+
+            // Search through the lock map and remove any stale locks
+            if (uuid != null) {
+                for (ReadWriteLock readWriteLock : lockMap.values()) {  // look at every lock
+                    for (String remoteThread : readWriteLock.readingThreads.keySet()) { // if the remoteThread starts with the uuid, request a cleanup
+                        if (remoteThread.startsWith(uuid)) {    // cleanup a stale lock
+                            readWriteLock.cleanupStaleThread(remoteThread);
+                        }
+                    }
+
+                    if (readWriteLock.writingThread != null && readWriteLock.writingThread.startsWith(uuid)) {
+                        readWriteLock.cleanupStaleThread(readWriteLock.writingThread);
+                    }
+                }
+            }
+
+            handlerContextMap.remove(ctx);
             channelGroup.remove(ctx.channel());
             super.channelInactive(ctx);
         }
@@ -246,7 +273,12 @@ public class DistributedLockServer {
 
         private final String id;
 
-        private final Map<String, Integer> readingThreads = new HashMap<>();
+        /**
+         * The key is the uuid of the manager plus the remote thread id
+         *
+         * uuid-integer
+         */
+        private final Map<String, Integer> readingThreads = new ConcurrentHashMap<>();
 
         private int writeAccesses = 0;
         private int writeRequests = 0;
@@ -254,6 +286,22 @@ public class DistributedLockServer {
 
         private ReadWriteLock(final String id) {
             this.id = id;
+        }
+
+        synchronized void cleanupStaleThread(final String remoteThread) {
+            if (readingThreads.containsKey(remoteThread)) {
+                unlockRead(remoteThread);
+                logger.warning("Removed a stale read lock for: " + id);
+            }
+
+            if (writingThread != null && writingThread.equals(remoteThread)) {
+                try {
+                    unlockWrite(remoteThread);
+                    logger.warning("Removed a stale write lock for: " + id);
+                } catch (InterruptedException e) {
+                    logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+                }
+            }
         }
 
         synchronized void lockForRead(final String remoteThread) throws InterruptedException {

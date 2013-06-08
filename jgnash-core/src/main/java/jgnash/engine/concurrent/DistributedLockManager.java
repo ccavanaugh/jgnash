@@ -70,6 +70,8 @@ public class DistributedLockManager implements LockManager {
      */
     private static final String PATTERN = "{0},{1},{2},{3}";
 
+    static final String UUID_PREFIX = "UUID:";
+
     private NioEventLoopGroup eventLoopGroup;
 
     private final int port;
@@ -116,6 +118,8 @@ public class DistributedLockManager implements LockManager {
         try {
             // Start the connection attempt.
             channel = bootstrap.connect(host, port).sync().channel();
+
+            channel.write(UUID_PREFIX + uuid + EOL_DELIMITER).sync();   // send this channels uuid
 
             result = true;
             logger.info("Connection made with Distributed Lock Server");
