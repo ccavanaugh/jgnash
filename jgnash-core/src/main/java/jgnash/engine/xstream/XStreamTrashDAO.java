@@ -17,12 +17,11 @@
  */
 package jgnash.engine.xstream;
 
-import java.util.List;
-import java.util.logging.Logger;
-
-import jgnash.engine.StoredObject;
 import jgnash.engine.TrashObject;
 import jgnash.engine.dao.TrashDAO;
+
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * XML trash DAO
@@ -50,9 +49,7 @@ public class XStreamTrashDAO extends AbstractXStreamDAO implements TrashDAO {
 
     @Override
     public void remove(final TrashObject trashObject) {
-        StoredObject storedObject = getObjectByUuid(trashObject.getUuid());
-
-        container.delete(storedObject);
+        container.delete(trashObject.getObject());
         container.delete(trashObject);
 
         commit();
