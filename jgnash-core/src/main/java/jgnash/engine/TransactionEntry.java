@@ -23,6 +23,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
@@ -53,8 +55,8 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     private transient int hash = 0;
 
     @SuppressWarnings("unused")
-    @Id @Column(nullable = false, length = 36)
-    private String id = UUIDUtil.getUID();
+    @Id @GeneratedValue(strategy= GenerationType.TABLE)
+    private long id;
 
     @Enumerated(EnumType.STRING)
     private TransactionTag transactionTag = TransactionTag.BANK;
@@ -401,7 +403,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
 
         try {
             e = (TransactionEntry) super.clone();
-            e.id = UUIDUtil.getUID(); // clones id must be reset
+            e.id = 0; // clones id must be reset
         } catch (CloneNotSupportedException ex) {
             Logger.getLogger(TransactionEntry.class.getName()).log(Level.SEVERE, ex.toString(), ex);
         }

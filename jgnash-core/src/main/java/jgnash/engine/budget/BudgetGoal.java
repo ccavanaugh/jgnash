@@ -17,14 +17,19 @@
  */
 package jgnash.engine.budget;
 
+import jgnash.engine.MathConstants;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
-import jgnash.engine.MathConstants;
-import jgnash.engine.UUIDUtil;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
 
 /**
  * Budget Goal Object
@@ -39,8 +44,8 @@ public class BudgetGoal implements Cloneable, Serializable {
     private static final long serialVersionUID = 1L;
 
     @SuppressWarnings("unused")
-    @Id @Column(nullable = false, length = 36)
-    private String id = UUIDUtil.getUID();
+    @Id @GeneratedValue(strategy= GenerationType.TABLE)
+    private long id;
 
     /** 366 days per year */
     public static final int PERIODS = 366;
@@ -136,7 +141,7 @@ public class BudgetGoal implements Cloneable, Serializable {
 
         // deep copy
         goal.goals = new BigDecimal[PERIODS];
-        goal.id = UUIDUtil.getUID();
+        goal.id = 0;    // clones id must be reset for JPA
         System.arraycopy(goals, 0, goal.goals, 0, goals.length);
 
         return goal;
