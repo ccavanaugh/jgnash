@@ -19,7 +19,6 @@ package jgnash.engine.jpa;
 
 import jgnash.engine.StoredObject;
 import jgnash.engine.dao.AbstractDAO;
-import org.hibernate.Hibernate;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -72,7 +71,6 @@ abstract class AbstractJpaDAO extends AbstractDAO {
                 @Override
                 public Void call() {
                     em.refresh(object);
-                    Hibernate.initialize(object); // Hibernate specific code, force initialization of the object
                     return null;
                 }
             });

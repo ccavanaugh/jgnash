@@ -46,6 +46,7 @@
         <class>jgnash.engine.recurring.YearlyReminder</class>
         <class>jgnash.engine.StoredObject</class>
         <class>jgnash.engine.TrashObject</class>
+        <class>jgnash.engine.jpa.JpaTrashEntity</class>
 
         <properties>
             <property name="javax.persistence.jdbc.password" value=""/>

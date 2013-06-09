@@ -21,6 +21,8 @@ import jgnash.util.DateUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -37,12 +39,11 @@ import java.util.Date;
  */
 @Entity
 public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNode>, Serializable {
-    
+
     private static final long serialVersionUID = 1L;
 
-    @SuppressWarnings("unused")
-    @Id @Column(nullable = false, length = 36)
-    private String id = UUIDUtil.getUID();
+    @Id @GeneratedValue(strategy = GenerationType.TABLE)
+    public long id;
 
     @Temporal(TemporalType.DATE)
     private Date date = DateUtils.today();
@@ -61,7 +62,7 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
     /**
      * public constructor
      *
-     * @param date date for this history node
+     * @param date date for this history node.  The date will be trimmed
      * @param rate exchange rate for the given date
      */
     ExchangeRateHistoryNode(final Date date, final BigDecimal rate) {
@@ -76,21 +77,11 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
         return getDate().compareTo(node.getDate());
     }
 
-    @Override
-    public boolean equals(final Object other) {
-        return this == other || other instanceof ExchangeRateHistoryNode && date.equals(((ExchangeRateHistoryNode) other).date);
-    }
-
     public Date getDate() {
         return date;
     }
 
     public BigDecimal getRate() {
         return rate;
-    }
-
-    @Override
-    public int hashCode() {
-        return date.hashCode();
     }
 }

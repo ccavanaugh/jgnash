@@ -290,9 +290,9 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
         List<SecurityHistoryNode> history = node.getHistoryNodes();
 
         /* Capture a list of references */
-        SecurityHistoryNode[] temp = new SecurityHistoryNode[selection.length];
+        Date[] temp = new Date[selection.length];
         for (int i = 0; i < selection.length; i++) {
-            temp[i] = history.get(selection[i]);
+            temp[i] = history.get(selection[i]).getDate();
         }
 
         for (int i = selection.length - 1; i >= 0; i--) {

@@ -21,6 +21,8 @@ import jgnash.util.DateUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -39,9 +41,8 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
     
     private static final long serialVersionUID = 1L;
 
-    @SuppressWarnings("unused")
-    @Id @Column(nullable = false, length = 36)
-    private String id = UUIDUtil.getUID();
+    @Id @GeneratedValue(strategy= GenerationType.TABLE)
+    public long id;
 
     @Temporal(TemporalType.DATE)
     private Date date = DateUtils.today();
@@ -121,15 +122,5 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
     @Override
     public int compareTo(final SecurityHistoryNode node) {
         return getDate().compareTo(node.getDate());
-    }
-
-    @Override
-    public int hashCode() {
-        return date.hashCode();
-    }
-
-    @Override
-    public boolean equals(final Object other) {
-        return this == other || other instanceof SecurityHistoryNode && date.equals(((SecurityHistoryNode) other).date);
     }
 }

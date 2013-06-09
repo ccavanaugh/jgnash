@@ -94,34 +94,11 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
      */
     @Override
     public boolean addSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
-        boolean result = false;
-
-        emLock.lock();
-
-        try {
-            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
-                @Override
-                public Boolean call() throws Exception {
-                    em.getTransaction().begin();
-                    em.persist(node);
-                    em.getTransaction().commit();
-
-                    return true;
-                }
-            });
-
-            result = future.get();
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
-        }
-
-        return result;
+        return updateCommodityNode(node);
     }
 
     /*
-     * @see jgnash.engine.CommodityDAOInterface#removeSecurityHistory(jgnash.engine.SecurityNode, jgnash.engine.SecurityHistoryNode)
+     * @see jgnash.engine.CommodityDAOInterface#removeSecurityHistory(jgnash.engine.SecurityNode)
      */
     @Override
     public boolean removeSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
@@ -135,8 +112,8 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
                 public Boolean call() throws Exception {
                     em.getTransaction().begin();
 
-                    em.remove(hNode);
-                    em.persist(node);
+                    em.persist(new JpaTrashEntity(hNode, hNode.id));    // move the history node to the entity trash
+                    em.merge(node);
 
                     em.getTransaction().commit();
 
@@ -165,7 +142,7 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
                 @Override
                 public Boolean call() throws Exception {
                     em.getTransaction().begin();
-                    em.persist(rate);
+                    em.merge(rate);
                     em.getTransaction().commit();
                     return true;
                 }
@@ -192,10 +169,8 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
                 @Override
                 public Boolean call() throws Exception {
                     em.getTransaction().begin();
-
-                    em.remove(hNode);
-                    em.persist(rate);
-
+                    em.persist(new JpaTrashEntity(hNode, hNode.id));    // move the history node to the entity trash
+                    em.merge(rate);
                     em.getTransaction().commit();
 
                     return true;
@@ -424,7 +399,7 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
                 @Override
                 public Boolean call() throws Exception {
                     em.getTransaction().begin();
-                    em.persist(node);
+                    em.merge(node);
                     em.getTransaction().commit();
 
                     return true;

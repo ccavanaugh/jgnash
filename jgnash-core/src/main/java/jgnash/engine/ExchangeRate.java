@@ -35,6 +35,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.PostLoad;
 
 /**
@@ -48,8 +49,9 @@ public class ExchangeRate extends StoredObject {
     private static final long serialVersionUID = -2365289994847042288L;
 
     @JoinTable
+    @OrderBy("date")    //applying a sort order prevents refresh issues
     @OneToMany(cascade = {CascadeType.ALL})
-    private final Set<ExchangeRateHistoryNode> historyNodes = new HashSet<>();
+    private Set<ExchangeRateHistoryNode> historyNodes = new HashSet<>();
 
     /**
      * Cache the last exchange rate
@@ -216,12 +218,11 @@ public class ExchangeRate extends StoredObject {
     }
 
     private Object readResolve() throws ObjectStreamException {
-        lock = new ReentrantReadWriteLock();
+        postLoad();
         return this;
     }
 
     @PostLoad
-    @SuppressWarnings("unused")
     private void postLoad() {
         lock = new ReentrantReadWriteLock(true);
     }

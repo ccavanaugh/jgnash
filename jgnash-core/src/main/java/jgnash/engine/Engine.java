@@ -808,8 +808,8 @@ public class Engine {
     public boolean addSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
 
         // Remove old history of the same date if it exists
-        if (node.contains(hNode)) {
-            if (!removeSecurityHistory(node, hNode)) {
+        if (node.contains(hNode.getDate())) {
+            if (!removeSecurityHistory(node, hNode.getDate())) {
                 logSevere(MessageFormat.format(rb.getString("Message.Error.HistRemoval"), hNode.getDate(), node.getSymbol()));
                 return false;
             }
@@ -1193,7 +1193,7 @@ public class Engine {
                 List<SecurityHistoryNode> hNodes = node.getHistoryNodes();
 
                 for (SecurityHistoryNode hNode : hNodes) {
-                    if (!removeSecurityHistory(node, hNode)) {
+                    if (!removeSecurityHistory(node, hNode.getDate())) {
                         logSevere(MessageFormat.format(rb.getString("Message.Error.HistRemoval"), hNode.getDate(), node.getSymbol()));
                     }
                 }
@@ -1216,12 +1216,14 @@ public class Engine {
         }
     }
 
-    public boolean removeSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
+    public boolean removeSecurityHistory(final SecurityNode node, final Date date) {
 
         commodityLock.writeLock().lock();
 
         try {
-            boolean status = node.removeHistoryNode(hNode);
+            final SecurityHistoryNode hNode = node.getHistoryNode(date);
+
+            boolean status = node.removeHistoryNode(date);
 
             if (status) {
                 status = getCommodityDAO().removeSecurityHistory(node, hNode);
@@ -1337,17 +1339,16 @@ public class Engine {
             ExchangeRateHistoryNode historyNode;
 
             if (baseCurrency.getSymbol().compareToIgnoreCase(exchangeCurrency.getSymbol()) > 0) {
-                historyNode = new ExchangeRateHistoryNode(DateUtils.trimDate(date), rate);
+                historyNode = new ExchangeRateHistoryNode(date, rate);
             } else {
-                historyNode = new ExchangeRateHistoryNode(DateUtils.trimDate(date), BigDecimal.ONE.divide(rate, MathConstants.mathContext));
+                historyNode = new ExchangeRateHistoryNode(date, BigDecimal.ONE.divide(rate, MathConstants.mathContext));
             }
 
             // remove the old history node first if it exists
-            List<ExchangeRateHistoryNode> history = exchangeRate.getHistory();
-
-            for (ExchangeRateHistoryNode node : history) {
-                if (node.equals(historyNode)) {
+            for (ExchangeRateHistoryNode node : exchangeRate.getHistory()) {
+                if (node.getDate().equals(historyNode.getDate())) {
                     removeExchangeRateHistory(exchangeRate, node);
+                    break;
                 }
             }
 

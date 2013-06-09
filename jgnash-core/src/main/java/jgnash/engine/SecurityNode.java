@@ -37,6 +37,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.PostLoad;
 
 /**
@@ -64,6 +65,7 @@ public class SecurityNode extends CommodityNode {
     private String isin;
 
     @JoinTable
+    @OrderBy("date")    //applying a sort order prevents refresh issues
     @OneToMany(cascade = {CascadeType.ALL})
     private Set<SecurityHistoryNode> historyNodes = new HashSet<>();
 
@@ -161,31 +163,60 @@ public class SecurityNode extends CommodityNode {
         }
     }
 
-    boolean removeHistoryNode(final SecurityHistoryNode hNode) {
+    boolean removeHistoryNode(final Date date) {
+
+        boolean result = false;
+
+        SecurityHistoryNode nodeToRemove = null;
+
+        final Date testDate = DateUtils.trimDate(date);
 
         lock.writeLock().lock();
 
         try {
-            return historyNodes.remove(hNode);
+            for (SecurityHistoryNode node : historyNodes) {
+                if (node.getDate().compareTo(testDate) == 0) {
+                    nodeToRemove = node;
+                    break;
+                }
+            }
+
+            // Remove outside the iterator
+            if (nodeToRemove != null) {
+                result = historyNodes.remove(nodeToRemove);
+            }
         } finally {
             lock.writeLock().unlock();
         }
+
+        return result;
     }
 
     /**
      * Returns <tt>true</tt> if this SecurityNode contains the specified element.
      *
-     * @param historyNode SecurityHistoryNode whose presence in this SecurityNode is to be tested
-     * @return <tt>true</tt> if this SecurityNode contains the specified SecurityHistoryNode
+     * @param date Date whose presence in this SecurityNode is to be tested
+     * @return <tt>true</tt> if this SecurityNode contains a SecurityHistoryNode with the specified date
      */
-    public boolean contains(final SecurityHistoryNode historyNode) {
+    public boolean contains(final Date date) {
+        boolean result = false;
+
+        final Date testDate = DateUtils.trimDate(date);
+
         lock.readLock().lock();
 
         try {
-            return historyNodes.contains(historyNode);
+            for (SecurityHistoryNode node : historyNodes) {
+                if (node.getDate().compareTo(testDate) == 0) {
+                    result = true;
+                    break;
+                }
+            }
         } finally {
             lock.readLock().unlock();
         }
+
+        return result;
     }
 
     /**
@@ -232,8 +263,8 @@ public class SecurityNode extends CommodityNode {
         return getSortedList();
     }
 
-    SecurityHistoryNode getHistoryNode(final Date date) {
-        Date testDate = DateUtils.trimDate(date);
+    public SecurityHistoryNode getHistoryNode(final Date date) {
+        final Date testDate = DateUtils.trimDate(date);
 
         lock.readLock().lock();
 
@@ -311,12 +342,11 @@ public class SecurityNode extends CommodityNode {
     }
 
     private Object readResolve() throws ObjectStreamException {
-        lock = new ReentrantReadWriteLock(true);
+        postLoad();
         return this;
     }
 
     @PostLoad
-    @SuppressWarnings("unused")
     private void postLoad() {
         lock = new ReentrantReadWriteLock(true);
     }

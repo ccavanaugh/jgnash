@@ -21,13 +21,18 @@ package jgnash.engine.jpa;
 import jgnash.engine.StoredObject;
 import jgnash.engine.TrashObject;
 import jgnash.engine.dao.TrashDAO;
+import jgnash.util.DefaultDaemonThreadFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,8 +51,23 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
 
     private static final Logger logger = Logger.getLogger(JpaTrashDAO.class.getName());
 
+    private static final long MAXIMUM_ENTITY_TRASH_AGE = 2000;
+
+    private ScheduledExecutorService trashExecutor;
+
     JpaTrashDAO(final EntityManager entityManager, final boolean isRemote) {
         super(entityManager, isRemote);
+
+        trashExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
+
+        // run trash cleanup every 2 minutes 1 minute after startup
+        trashExecutor.scheduleWithFixedDelay(new Runnable() {
+
+            @Override
+            public void run() {
+                cleanupEntityTrash();
+            }
+        }, 1, 2, TimeUnit.MINUTES);
     }
 
     @Override
@@ -131,6 +151,57 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
             });
 
             future.get(); // block
+        } catch (final InterruptedException | ExecutionException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+        } finally {
+            emLock.unlock();
+        }
+    }
+
+    public void cleanupEntityTrash() {
+        emLock.lock();
+
+        logger.info("Checking for entity trash");
+
+        try {
+            Future<Void> future = executorService.submit(new Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+
+                    if (!em.isOpen()) {
+                        trashExecutor.shutdown();
+                    }
+
+                    CriteriaBuilder cb = em.getCriteriaBuilder();
+                    CriteriaQuery<JpaTrashEntity> cq = cb.createQuery(JpaTrashEntity.class);
+                    Root<JpaTrashEntity> root = cq.from(JpaTrashEntity.class);
+                    cq.select(root);
+
+                    TypedQuery<JpaTrashEntity> q = em.createQuery(cq);
+
+                    for (JpaTrashEntity trashEntity : q.getResultList()) {
+                        final long now = new Date().getTime();
+
+                        if (now - trashEntity.getDate().getTime() >= MAXIMUM_ENTITY_TRASH_AGE) {
+                            Class<?> clazz = Class.forName(trashEntity.getClassName());
+                            Object entity = em.find(clazz, trashEntity.getEntityId());
+
+                            em.getTransaction().begin();
+
+                            if (entity != null) {
+                                em.remove(entity);
+                                logger.info("Removed entity trash: " + trashEntity.getClassName() + "@" + trashEntity.getEntityId());
+                            }
+                            em.remove(trashEntity);
+
+                            em.getTransaction().commit();
+                        }
+                    }
+                    return null;
+                }
+            });
+
+            future.get();
         } catch (final InterruptedException | ExecutionException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
