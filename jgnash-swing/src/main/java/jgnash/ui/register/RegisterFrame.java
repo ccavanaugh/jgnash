@@ -81,7 +81,6 @@ public final class RegisterFrame extends JFrame implements MessageListener {
         // set a default size and position
         Dimension d = UIApplication.getFrame().getSize();
         setSize(new Dimension((int) (d.getWidth() * 0.7), (int) (d.getHeight() * 0.7)));
-        setLocationRelativeTo(UIApplication.getFrame());
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 

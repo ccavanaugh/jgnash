@@ -42,6 +42,7 @@ import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.MultiLineLabel;
 import jgnash.ui.components.YesNoDialog;
+import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.TextResource;
 import jgnash.ui.util.builder.Action;
 import jgnash.ui.wizards.imports.qif.PartialDialog;
@@ -143,8 +144,9 @@ public class ImportQifAction extends AbstractEnabledAction {
                     return;
                 }
                 PartialDialog dlg = new PartialDialog(imp.getParser());
-                dlg.setLocationRelativeTo(null);
+                DialogUtils.addBoundsListener(dlg);
                 dlg.setVisible(true);
+
                 if (dlg.isWizardValid()) {
                     imp.doPartialImport(dlg.getAccount());
                     if (imp.getDuplicateCount() > 0) {

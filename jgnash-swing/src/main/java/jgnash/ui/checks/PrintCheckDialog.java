@@ -43,6 +43,7 @@ import jgnash.engine.checks.CheckLayoutSerializationFactory;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.JTextFieldEx;
+import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
 
 /**
@@ -85,7 +86,7 @@ class PrintCheckDialog extends JDialog implements ActionListener {
 
         layoutMainPanel();
 
-        this.setLocationRelativeTo(UIApplication.getFrame());
+        DialogUtils.addBoundsListener(this);
 
         if (pref.get(LAST_LAYOUT, null) != null) {
             loadLayout(pref.get(LAST_LAYOUT, null));

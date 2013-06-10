@@ -54,6 +54,7 @@ import jgnash.ui.components.JIntegerField;
 import jgnash.ui.components.JTextFieldEx;
 import jgnash.ui.components.QuoteSourceComboBox;
 import jgnash.ui.components.SortedListModel;
+import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
 
 /**
@@ -89,7 +90,7 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
             public void run() {
                 GenericCloseDialog d = new GenericCloseDialog(parent, new SecurityModifyPanel(), rb.getString("Title.CreateModifyCommodities"));
                 d.setMinimumSize(d.getSize());
-                d.setLocationRelativeTo(parent);
+                DialogUtils.addBoundsListener(d);
                 d.setVisible(true);
             }
         });

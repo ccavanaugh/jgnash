@@ -43,6 +43,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.components.SortedListModel;
+import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.ValidationFactory;
 import jgnash.util.Resource;
 
@@ -80,10 +81,10 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
 
             @Override
             public void run() {
-                GenericCloseDialog d = new GenericCloseDialog(null, new CurrenciesPanel(), rb.getString("Title.AddRemCurr"));
+                GenericCloseDialog d = new GenericCloseDialog(parent, new CurrenciesPanel(), rb.getString("Title.AddRemCurr"));
                 d.pack();
                 d.setMinimumSize(d.getSize());
-                d.setLocationRelativeTo(parent);
+                DialogUtils.addBoundsListener(d);
                 d.setVisible(true);
             }
         });

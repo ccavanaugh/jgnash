@@ -290,7 +290,6 @@ final class AccountPanel extends JPanel implements ActionListener {
 
     private void showSecuritiesDialog() {
         AccountSecuritiesDialog dlg = new AccountSecuritiesDialog(null, commodityList, this);
-        dlg.setLocationRelativeTo(null);
         dlg.setVisible(true);
 
         if (dlg.getReturnValue()) {

@@ -70,8 +70,6 @@ public class InvestmentTransactionDialog extends JDialog implements RegisterList
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-        setLocationRelativeTo(UIApplication.getFrame());
-
         setMinimumSize(getSize());
 
         DialogUtils.addBoundsListener(this);

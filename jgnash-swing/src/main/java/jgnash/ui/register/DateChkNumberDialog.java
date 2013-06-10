@@ -73,8 +73,6 @@ class DateChkNumberDialog extends JDialog implements ActionListener {
     DateChkNumberDialog(final Account a, final String title) {
         super(UIApplication.getFrame(), ModalityType.APPLICATION_MODAL);
 
-        setLocationRelativeTo(UIApplication.getFrame());
-
         setTitle(title);
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

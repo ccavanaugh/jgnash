@@ -266,7 +266,6 @@ public class ConsoleDialog {
 
             dialog.pack();
             dialog.setMinimumSize(dialog.getSize()); // Minimum size
-            dialog.setLocationRelativeTo(null);
             dialog.setFocusableWindowState(false);
 
             dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

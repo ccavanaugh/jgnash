@@ -69,7 +69,6 @@ public class RemoteConnectionDialog extends JDialog implements ActionListener {
         setMinimumSize(getSize());
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(parent);
 
         DialogUtils.addBoundsListener(this);
     }

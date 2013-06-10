@@ -104,8 +104,6 @@ class RecurringEntryDialog extends JDialog implements ActionListener {
 
         layoutMainPanel();
 
-        setLocationRelativeTo(UIApplication.getFrame());
-
         // update the form with the selected reminder
         if (reminder != null) {
             displayReminder(reminder);

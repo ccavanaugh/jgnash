@@ -66,7 +66,6 @@ class RenameBudgetDialog extends JDialog implements ActionListener {
             public void run() {
                 RenameBudgetDialog d = new RenameBudgetDialog(budget, parent);
                 DialogUtils.addBoundsListener(d);
-                d.setLocationRelativeTo(parent);
                 d.setVisible(true);
             }
         });

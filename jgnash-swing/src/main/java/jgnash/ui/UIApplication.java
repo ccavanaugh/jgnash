@@ -217,7 +217,6 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
                 helpDialog.getContentPane().add(jHelp, SwingConstants.CENTER);
                 helpDialog.setMinimumSize(new Dimension(500, 400));
                 helpDialog.setSize(new Dimension(500, 640));
-                helpDialog.setLocationRelativeTo(UIApplication.getFrame());
                 helpDialog.setModalExclusionType(Dialog.ModalExclusionType.TOOLKIT_EXCLUDE);
 
                 DialogUtils.addBoundsListener(helpDialog);

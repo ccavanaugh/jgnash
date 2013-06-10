@@ -80,8 +80,6 @@ public class TransactionDialog extends JDialog implements RegisterListener {
 
         layoutMainPanel();
 
-        setLocationRelativeTo(UIApplication.getFrame());
-
         DialogUtils.addBoundsListener(this);
     }
 

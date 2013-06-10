@@ -71,8 +71,6 @@ public class ChangeDatabasePasswordDialog extends JDialog implements ActionListe
         setMinimumSize(getSize());
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(UIApplication.getFrame());
-
         DialogUtils.addBoundsListener(this);
     }
 

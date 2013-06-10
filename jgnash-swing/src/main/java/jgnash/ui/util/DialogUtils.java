@@ -17,6 +17,8 @@
  */
 package jgnash.ui.util;
 
+import jgnash.util.EncodeDecode;
+
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,8 +30,6 @@ import java.util.prefs.Preferences;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.KeyStroke;
-
-import jgnash.util.EncodeDecode;
 
 /**
  * Static Dialog Utilities
@@ -71,6 +71,13 @@ public class DialogUtils {
             } else {
                 w.setBounds(EncodeDecode.decodeRectangle(bounds));
             }
+
+            Window owner = w.getOwner();
+
+            if (owner != null) {
+                w.setLocationRelativeTo(owner);
+            }
+
         }
 
         /* listen for a window closing event and deal with it */

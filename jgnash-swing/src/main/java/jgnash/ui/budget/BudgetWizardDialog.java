@@ -85,7 +85,6 @@ final class BudgetWizardDialog extends JDialog implements ActionListener {
             public void run() {
                 BudgetWizardDialog d = new BudgetWizardDialog();
                 DialogUtils.addBoundsListener(d);
-                d.setLocationRelativeTo(UIApplication.getFrame());
                 d.setVisible(true);
             }
         });

@@ -99,8 +99,6 @@ class NotificationDialog extends JDialog implements ActionListener, ListSelectio
 
         layoutMainPanel();
 
-        setLocationRelativeTo(UIApplication.getFrame());
-
         DialogUtils.addBoundsListener(this);
 
         cancelButton.addActionListener(this);
