@@ -17,7 +17,10 @@
  */
 package jgnash.engine.jpa;
 
+import java.lang.reflect.Field;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -58,9 +61,9 @@ public class JpaTrashEntity {
 
     }
 
-    public JpaTrashEntity(final Object entity, final long entityId) {
+    public JpaTrashEntity(final Object entity) {
         className = entity.getClass().getName();
-        this.entityId = entityId;
+        entityId = getBasicEntityId(entity);
     }
 
     public Date getDate() {
@@ -73,5 +76,18 @@ public class JpaTrashEntity {
 
     public long getEntityId() {
         return entityId;
+    }
+
+    private static long getBasicEntityId(final Object object) {
+        for (Field field : object.getClass().getDeclaredFields()) {
+            if (field.isAnnotationPresent(Id.class)) {
+                try {
+                    return field.getLong(object);
+                } catch (IllegalAccessException e) {
+                    Logger.getLogger(JpaTrashEntity.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                }
+            }
+        }
+        return -1;
     }
 }

@@ -501,17 +501,19 @@ public class Engine {
         return eDAO.getTrashDAO();
     }
 
-    private boolean moveObjectToTrash(final StoredObject object) {
+    private boolean moveObjectToTrash(final Object object) {
         boolean result = false;
 
         engineLock.writeLock().lock();
 
         try {
-
-            TrashObject trash = new TrashObject(object);
-            getTrashDAO().add(trash);
-
-            result = true;
+            if (object instanceof StoredObject) {
+                getTrashDAO().add(new TrashObject((StoredObject) object));
+                result = true;
+            } else {    // simple object with an annotated JPA entity id of type long is assumed
+                getTrashDAO().addEntityTrash(object);
+                result = true;
+            }
         } finally {
             engineLock.writeLock().unlock();
         }
@@ -1226,6 +1228,7 @@ public class Engine {
             boolean status = node.removeHistoryNode(date);
 
             if (status) {
+                moveObjectToTrash(hNode);
                 status = getCommodityDAO().removeSecurityHistory(node, hNode);
             }
 
@@ -1325,31 +1328,29 @@ public class Engine {
             return;
         }
 
+        // find the correct ExchangeRate and create if needed
+        ExchangeRate exchangeRate = getExchangeRate(baseCurrency, exchangeCurrency);
+
+        if (exchangeRate == null) {
+            exchangeRate = new ExchangeRate(buildExchangeRateId(baseCurrency, exchangeCurrency));
+            getCommodityDAO().addExchangeRate(exchangeRate);
+        }
+
+        // Remove old history of the same date if it exists
+        if (exchangeRate.contains(date)) {
+            removeExchangeRateHistory(exchangeRate, exchangeRate.getHistory(date));
+        }
+
         commodityLock.writeLock().lock();
 
         try {
-            // find the correct ExchangeRate and create if needed
-            ExchangeRate exchangeRate = getExchangeRate(baseCurrency, exchangeCurrency);
-
-            if (exchangeRate == null) {
-                exchangeRate = new ExchangeRate(buildExchangeRateId(baseCurrency, exchangeCurrency));
-            }
-
-            // create the history node
+            // create the new history node
             ExchangeRateHistoryNode historyNode;
 
             if (baseCurrency.getSymbol().compareToIgnoreCase(exchangeCurrency.getSymbol()) > 0) {
                 historyNode = new ExchangeRateHistoryNode(date, rate);
             } else {
                 historyNode = new ExchangeRateHistoryNode(date, BigDecimal.ONE.divide(rate, MathConstants.mathContext));
-            }
-
-            // remove the old history node first if it exists
-            for (ExchangeRateHistoryNode node : exchangeRate.getHistory()) {
-                if (node.getDate().equals(historyNode.getDate())) {
-                    removeExchangeRateHistory(exchangeRate, node);
-                    break;
-                }
             }
 
             exchangeRate.addHistoryNode(historyNode);
@@ -1373,8 +1374,10 @@ public class Engine {
             Message message;
 
             if (exchangeRate.contains(history)) {
-                exchangeRate.removeHistoryNode(history);
-                getCommodityDAO().removeExchangeRateHistory(exchangeRate, history);
+                if (exchangeRate.removeHistoryNode(history)) {
+                    moveObjectToTrash(history);
+                    getCommodityDAO().removeExchangeRateHistory(exchangeRate, history);
+                }
 
                 message = new Message(MessageChannel.COMMODITY, ChannelEvent.EXCHANGE_RATE_REMOVE, this);
             } else {
@@ -2214,8 +2217,9 @@ public class Engine {
 
             budget.setBudgetGoal(account, newGoals);
 
-            updateBudgetGoals(budget, account, changedDescriptors);
+            moveObjectToTrash(oldGoals);    // need to keep the old goal around, will be cleaned up later, orphan removal causes refresh issues
 
+            updateBudgetGoals(budget, account, changedDescriptors);
         } finally {
             budgetLock.writeLock().unlock();
         }

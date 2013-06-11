@@ -56,4 +56,9 @@ public class XStreamTrashDAO extends AbstractXStreamDAO implements TrashDAO {
 
         logger.info("Removed TrashObject");
     }
+
+    @Override
+    public void addEntityTrash(Object entity) {
+        // XStream does not need to do anything with entity trash
+    }
 }

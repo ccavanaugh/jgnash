@@ -34,4 +34,6 @@ public interface TrashDAO {
     public void add(TrashObject trashObject);
 
     public void remove(TrashObject trashObject);
+
+    public void addEntityTrash(Object entity);
 }

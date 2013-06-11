@@ -111,10 +111,7 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
                 @Override
                 public Boolean call() throws Exception {
                     em.getTransaction().begin();
-
-                    em.persist(new JpaTrashEntity(hNode, hNode.id));    // move the history node to the entity trash
                     em.merge(node);
-
                     em.getTransaction().commit();
 
                     return true;
@@ -169,7 +166,6 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
                 @Override
                 public Boolean call() throws Exception {
                     em.getTransaction().begin();
-                    em.persist(new JpaTrashEntity(hNode, hNode.id));    // move the history node to the entity trash
                     em.merge(rate);
                     em.getTransaction().commit();
 

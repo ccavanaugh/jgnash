@@ -56,7 +56,8 @@ public class Budget extends StoredObject implements Comparable<Budget> {
     /**
      * Account goals are stored internally by the account UUID.
      */
-    @OneToMany(cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @JoinTable
+    @OneToMany(cascade = {CascadeType.ALL})
     private Map<String, BudgetGoal> accountGoals = new HashMap<>();
 
     private boolean assetAccountsIncluded = false;

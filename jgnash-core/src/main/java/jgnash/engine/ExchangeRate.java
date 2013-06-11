@@ -70,7 +70,7 @@ public class ExchangeRate extends StoredObject {
 
     /**
      * No argument constructor for reflection purposes.
-     * <p>
+     * <p/>
      * <b>Do not use to create a new instance</b>
      */
     @SuppressWarnings("unused")
@@ -101,6 +101,28 @@ public class ExchangeRate extends StoredObject {
         return result;
     }
 
+    public boolean contains(final Date date) {
+
+        lock.readLock().lock();
+
+        boolean result = false;
+
+        final Date testDate = DateUtils.trimDate(date);
+
+        try {
+            for (ExchangeRateHistoryNode node : historyNodes) {
+                if (testDate.compareTo(node.getDate()) == 0) {
+                    result = true;
+                    break;
+                }
+            }
+        } finally {
+            lock.readLock().unlock();
+        }
+
+        return result;
+    }
+
     public List<ExchangeRateHistoryNode> getHistory() {
         // return a defensive copy
         List<ExchangeRateHistoryNode> nodes = new ArrayList<>(historyNodes);
@@ -126,6 +148,27 @@ public class ExchangeRate extends StoredObject {
         }
 
         return result;
+    }
+
+    ExchangeRateHistoryNode getHistory(final Date date) {
+        ExchangeRateHistoryNode node = null;
+
+        final Date testDate = DateUtils.trimDate(date);
+
+        lock.readLock().lock();
+
+        try {
+            for (ExchangeRateHistoryNode historyNode : historyNodes) {
+                if (testDate.compareTo(historyNode.getDate()) == 0) {
+                    node = historyNode;
+                    break;
+                }
+            }
+        } finally {
+            lock.readLock().unlock();
+        }
+
+        return node;
     }
 
     boolean removeHistoryNode(final ExchangeRateHistoryNode hNode) {
@@ -176,11 +219,10 @@ public class ExchangeRate extends StoredObject {
 
     /**
      * Returns the exchange rate for a given date.
-     * <p>
+     * <p/>
      * If a rate has not be set, <code>BigDecimal.ZERO</code> is returned
      *
      * @param date Date for exchange
-     *
      * @return the exchange rate if known, otherwise <code>BigDecimal.ZERO</code>
      */
     public BigDecimal getRate(final Date date) {

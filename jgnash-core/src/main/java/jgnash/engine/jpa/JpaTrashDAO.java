@@ -158,6 +158,31 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
         }
     }
 
+    @Override
+    public void addEntityTrash(final Object entity) {
+        emLock.lock();
+
+        try {
+            Future<Void> future = executorService.submit(new Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    em.getTransaction().begin();
+                    em.persist(entity);
+                    em.persist(new JpaTrashEntity(entity));
+                    em.getTransaction().commit();
+
+                    return null;
+                }
+            });
+
+            future.get();   // block
+        } catch (final InterruptedException | ExecutionException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+        } finally {
+            emLock.unlock();
+        }
+    }
+
     public void cleanupEntityTrash() {
         emLock.lock();
 
