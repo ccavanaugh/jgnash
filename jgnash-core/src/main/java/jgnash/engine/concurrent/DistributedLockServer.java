@@ -128,7 +128,9 @@ public class DistributedLockServer {
             }
 
             // return the message as an acknowledgment lock state has changed
-            ctx.write(message + EOL_DELIMITER).sync();
+            if (ctx.channel().isOpen()) {
+                ctx.write(message + EOL_DELIMITER).sync();
+            }
         } catch (final Exception e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
