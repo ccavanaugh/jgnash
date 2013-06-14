@@ -193,10 +193,9 @@ public class DistributedLockManager implements LockManager {
         final String lockMessage = MessageFormat.format(PATTERN, lockState, lockId, threadId, type);
 
         final CountDownLatch responseLatch = getLatch(lockMessage);
-        final ReentrantReadWriteLock lock = getLock(lockId);
 
         //noinspection SynchronizationOnLocalVariableOrMethodParameter
-        synchronized (lock) {   // synchronize on the lock to prevent concurrency errors
+        synchronized (responseLatch) {   // synchronize on the lock to prevent concurrency errors
 
             boolean result = false;
 
