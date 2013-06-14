@@ -163,15 +163,15 @@ public class DistributedLockManager implements LockManager {
         return lock;
     }
 
-    CountDownLatch getLatch(final String lockId) {
+    CountDownLatch getLatch(final String lockMessage) {
         latchLock.lock();
 
         try {
-            CountDownLatch semaphore = latchMap.get(lockId);
+            CountDownLatch semaphore = latchMap.get(lockMessage);
 
             if (semaphore == null) {
                 semaphore = new CountDownLatch(1);
-                latchMap.put(lockId, semaphore);
+                latchMap.put(lockMessage, semaphore);
             }
 
             return semaphore;
@@ -190,9 +190,9 @@ public class DistributedLockManager implements LockManager {
 
     void changeLockState(final String lockId, final String type, final String lockState) {
         final String threadId = uuid + '-' + Thread.currentThread().getId();
-        final String message = MessageFormat.format(PATTERN, lockState, lockId, threadId, type);
+        final String lockMessage = MessageFormat.format(PATTERN, lockState, lockId, threadId, type);
 
-        final CountDownLatch responseLatch = getLatch(message);
+        final CountDownLatch responseLatch = getLatch(lockMessage);
         final ReentrantReadWriteLock lock = getLock(lockId);
 
         //noinspection SynchronizationOnLocalVariableOrMethodParameter
@@ -203,7 +203,7 @@ public class DistributedLockManager implements LockManager {
             try {
 
                 // send the message to the server and wait until it if flushed
-                channel.write(message + EOL_DELIMITER).sync();
+                channel.write(lockMessage + EOL_DELIMITER).sync();
 
                 for (int i = 0; i < 2; i++) {
                     result = responseLatch.await(45L, TimeUnit.SECONDS);
@@ -233,9 +233,9 @@ public class DistributedLockManager implements LockManager {
         }
     }
 
-    public void processMessage(final String message) {
+    public void processMessage(final String lockMessage) {
 
-        //logger.info(message);
+        //logger.info(lockMessage);
 
         /** lock_action, lock_id, thread_id, lock_type */
         // unlock,account,3456384756384563,read
@@ -244,10 +244,10 @@ public class DistributedLockManager implements LockManager {
         latchLock.lock();
 
         try {
-            final CountDownLatch responseLatch = getLatch(message);
+            final CountDownLatch responseLatch = getLatch(lockMessage);
 
             responseLatch.countDown();  // this should release the responseLatch allowing a blocked thread to continue
-            latchMap.remove(message);    // remove the used up latch
+            latchMap.remove(lockMessage);    // remove the used up latch
         } finally {
             latchLock.unlock();
         }
