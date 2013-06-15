@@ -675,10 +675,16 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
                 });
                 break;
             case BUDGET_UPDATE:
-                if (activeBudget.equals(event.getObject(MessageProperty.BUDGET))) {
-                    refreshDisplay();
-                    updateControlsState();
-                }
+                EventQueue.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (activeBudget.equals(event.getObject(MessageProperty.BUDGET))) {
+                            refreshDisplay();
+                            updateControlsState();
+                        }
+                    }
+                });
+
                 break;
             case ACCOUNT_ADD:
             case ACCOUNT_REMOVE:
