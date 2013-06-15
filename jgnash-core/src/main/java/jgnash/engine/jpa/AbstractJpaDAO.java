@@ -59,6 +59,38 @@ abstract class AbstractJpaDAO extends AbstractDAO {
     }
 
     /**
+     * Merge / Update the object in place
+     *
+     * @param object Object to merge
+     * @return the merged object or null if an error occurred
+     */
+    <T extends StoredObject> T merge(final T object) {
+        emLock.lock();
+
+        try {
+            Future<T> future = executorService.submit(new Callable<T>() {
+                @Override
+                public T call() throws Exception {
+
+                    em.getTransaction().begin();
+                    T mergedObject = em.merge(object);
+                    em.getTransaction().commit();
+
+                    return mergedObject;
+                }
+            });
+
+            return future.get();
+
+        } catch (final InterruptedException | ExecutionException e) {
+            Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            return null;
+        } finally {
+            emLock.unlock();
+        }
+    }
+
+    /**
      * Refresh a managed object
      *
      * @param object object to re

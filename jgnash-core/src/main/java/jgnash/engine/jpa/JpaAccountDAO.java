@@ -186,32 +186,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
      */
     @Override
     public boolean addAccountSecurity(final Account account, final SecurityNode node) {
-        boolean result = false;
-
-        emLock.lock();
-
-        try {
-            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
-                @Override
-                public Boolean call() throws Exception {
-                    em.getTransaction().begin();
-
-                    em.persist(node);
-                    em.merge(account);
-                    em.getTransaction().commit();
-
-                    return true;
-                }
-            });
-
-            result = future.get();
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
-        }
-
-        return result;
+        return merge(account) != null;
     }
 
     @SuppressWarnings("unchecked")
@@ -293,7 +268,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
      */
     @Override
     public boolean updateAccount(final Account account) {
-        return simpleUpdate(account);
+        return merge(account) != null;
     }
 
     @Override
@@ -307,53 +282,11 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
      */
     @Override
     public boolean toggleAccountVisibility(final Account account) {
-        return simpleUpdate(account);
+        return merge(account) != null;
     }
 
     @Override
     public void refreshAccount(final Account account) {
         refresh(account);
-    }
-
-    private boolean simpleUpdate(final Account account) {
-        boolean result = false;
-
-        emLock.lock();
-
-        try {
-
-            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
-                @Override
-                public Boolean call() throws Exception {
-
-                    boolean result = false;
-                    em.getTransaction().begin();
-
-                    if (em.contains(account)) { // don't try if the EntityManager does not contain the account
-                        try {
-                            em.merge(account);
-
-                            result = true;
-                        } catch (Exception e) {
-                            logger.log(Level.SEVERE, e.getMessage(), e);
-                        }
-                    } else {
-                        logger.log(Level.SEVERE, "Tried to update an account that was not persisted", new Exception());
-                    }
-
-                    em.getTransaction().commit();
-
-                    return result;
-                }
-            });
-
-            result = future.get();
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
-        }
-
-        return result;
     }
 }

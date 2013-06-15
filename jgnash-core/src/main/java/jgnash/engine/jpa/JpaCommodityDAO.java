@@ -102,30 +102,7 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
      */
     @Override
     public boolean removeSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
-        boolean result = false;
-
-        emLock.lock();
-
-        try {
-            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
-                @Override
-                public Boolean call() throws Exception {
-                    em.getTransaction().begin();
-                    em.merge(node);
-                    em.getTransaction().commit();
-
-                    return true;
-                }
-            });
-
-            result = future.get();
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
-        }
-
-        return result;
+        return merge(node) != null;
     }
 
     @Override
@@ -386,30 +363,7 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
 
     @Override
     public boolean updateCommodityNode(final CommodityNode node) {
-        boolean result = false;
-
-        emLock.lock();
-
-        try {
-            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
-                @Override
-                public Boolean call() throws Exception {
-                    em.getTransaction().begin();
-                    em.merge(node);
-                    em.getTransaction().commit();
-
-                    return true;
-                }
-            });
-
-            result = future.get();
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
-        }
-
-        return result;
+        return merge(node) != null;
     }
 
     /*
