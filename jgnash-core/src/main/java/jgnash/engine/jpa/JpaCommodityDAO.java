@@ -107,57 +107,12 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
 
     @Override
     public boolean addExchangeRateHistory(final ExchangeRate rate, final ExchangeRateHistoryNode hNode) {
-        boolean result = false;
-
-        emLock.lock();
-
-        try {
-            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
-                @Override
-                public Boolean call() throws Exception {
-                    em.getTransaction().begin();
-                    em.merge(rate);
-                    em.getTransaction().commit();
-                    return true;
-                }
-            });
-
-            result = future.get();
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
-        }
-
-        return result;
+        return merge(rate) != null;
     }
 
     @Override
     public boolean removeExchangeRateHistory(final ExchangeRate rate, final ExchangeRateHistoryNode hNode) {
-        boolean result = false;
-
-        emLock.lock();
-
-        try {
-            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
-                @Override
-                public Boolean call() throws Exception {
-                    em.getTransaction().begin();
-                    em.merge(rate);
-                    em.getTransaction().commit();
-
-                    return true;
-                }
-            });
-
-            result = future.get();
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
-        }
-
-        return result;
+        return merge(rate) != null;
     }
 
     /*
