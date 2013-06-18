@@ -76,7 +76,7 @@ import jgnash.util.Resource;
 
 /**
  * Panel for displaying a budget
- * 
+ *
  * @author Craig Cavanaugh
  */
 public final class BudgetPanel extends JPanel implements ActionListener, MessageListener {
@@ -637,10 +637,6 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
     @Override
     public void messagePosted(final Message event) {
         switch (event.getEvent()) {
-            case TRANSACTION_ADD:
-            case TRANSACTION_REMOVE:
-                overviewPanel.updateSparkLines();
-                break;
             case BUDGET_ADD:
                 EventQueue.invokeLater(new Runnable() {
 
@@ -689,6 +685,8 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
             case ACCOUNT_ADD:
             case ACCOUNT_REMOVE:
             case ACCOUNT_MODIFY:
+            case TRANSACTION_ADD:
+            case TRANSACTION_REMOVE:
             case BUDGET_GOAL_UPDATE:
                 overviewPanel.updateSparkLines();
                 break;
