@@ -17,19 +17,17 @@
  */
 package jgnash.engine.xstream;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import jgnash.engine.Account;
 import jgnash.engine.CommodityNode;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.ExchangeRate;
-import jgnash.engine.ExchangeRateHistoryNode;
-import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.engine.StoredObject;
 import jgnash.engine.dao.CommodityDAO;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Hides all the db4o commodity code
@@ -50,13 +48,13 @@ public class XStreamCommodityDAO extends AbstractXStreamDAO implements Commodity
     }
 
     @Override
-    public boolean addExchangeRateHistory(final ExchangeRate rate, final ExchangeRateHistoryNode hNode) {
+    public boolean addExchangeRateHistory(final ExchangeRate rate) {
         commit();
         return true;
     }
 
     @Override
-    public boolean addSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
+    public boolean addSecurityHistory(final SecurityNode node) {
         commit();
         return true;
     }
@@ -139,13 +137,13 @@ public class XStreamCommodityDAO extends AbstractXStreamDAO implements Commodity
     }
 
     @Override
-    public boolean removeExchangeRateHistory(final ExchangeRate rate, final ExchangeRateHistoryNode hNode) {
+    public boolean removeExchangeRateHistory(final ExchangeRate rate) {
         commit();
         return true;
     }
 
     @Override
-    public boolean removeSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
+    public boolean removeSecurityHistory(final SecurityNode node) {
         commit();
         return true;
     }

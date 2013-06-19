@@ -17,15 +17,13 @@
  */
 package jgnash.engine.dao;
 
-import java.util.List;
-import java.util.Set;
-
 import jgnash.engine.CommodityNode;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.ExchangeRate;
-import jgnash.engine.ExchangeRateHistoryNode;
-import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Commodity DAO Interface
@@ -37,9 +35,23 @@ public interface CommodityDAO {
 
     public boolean addCommodity(CommodityNode node);
 
-    public boolean addExchangeRateHistory(final ExchangeRate rate, final ExchangeRateHistoryNode hNode);
+    /**
+     * Call after a <code>ExchangeRateHistoryNode</code> has been added.  This pushes the update
+     * to the underlying database
+     * @param rate ExchangeRate to update
+     *
+     * @return true if successful
+     */
+    public boolean addExchangeRateHistory(final ExchangeRate rate);
 
-    public boolean addSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode);
+    /**
+     * Call after a <code>SecurityHistoryNode</code> has been added.  This pushes the update
+     * to the underlying database
+     * @param node SecurityHistory to update
+     *
+     * @return true if successful
+     */
+    public boolean addSecurityHistory(final SecurityNode node);
 
     /**
      * Returns the active currencies
@@ -64,9 +76,23 @@ public interface CommodityDAO {
 
     public void refreshExchangeRate(ExchangeRate rate);
 
-    public boolean removeExchangeRateHistory(final ExchangeRate rate, final ExchangeRateHistoryNode hNode);
+    /**
+     * Call after a <code>ExchangeRateHistoryNode</code> has been removed.  This pushes the update
+     * to the underlying database
+     * @param rate ExchangeRate to update
+     *
+     * @return true if successful
+     */
+    public boolean removeExchangeRateHistory(final ExchangeRate rate);
 
-    public boolean removeSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode);
+    /**
+     * Call after a <code>SecurityHistoryNode</code> has been removed.  This pushes the update
+     * to the underlying database
+     * @param node SecurityHistory to update
+     *
+     * @return true if successful
+     */
+    public boolean removeSecurityHistory(final SecurityNode node);
 
     public void addExchangeRate(ExchangeRate eRate);
 

@@ -823,7 +823,7 @@ public class Engine {
             boolean status = node.addHistoryNode(hNode);
 
             if (status) {
-                status = getCommodityDAO().addSecurityHistory(node, hNode);
+                status = getCommodityDAO().addSecurityHistory(node);
             }
 
             Message message;
@@ -1229,7 +1229,7 @@ public class Engine {
 
             if (status) {
                 moveObjectToTrash(hNode);
-                status = getCommodityDAO().removeSecurityHistory(node, hNode);
+                status = getCommodityDAO().removeSecurityHistory(node);
             }
 
             Message message;
@@ -1355,7 +1355,7 @@ public class Engine {
 
             exchangeRate.addHistoryNode(historyNode);
 
-            getCommodityDAO().addExchangeRateHistory(exchangeRate, historyNode);
+            getCommodityDAO().addExchangeRateHistory(exchangeRate);
 
             Message message = new Message(MessageChannel.COMMODITY, ChannelEvent.EXCHANGE_RATE_ADD, this);
             message.setObject(MessageProperty.EXCHANGE_RATE, exchangeRate);
@@ -1376,7 +1376,7 @@ public class Engine {
             if (exchangeRate.contains(history)) {
                 if (exchangeRate.removeHistoryNode(history)) {
                     moveObjectToTrash(history);
-                    getCommodityDAO().removeExchangeRateHistory(exchangeRate, history);
+                    getCommodityDAO().removeExchangeRateHistory(exchangeRate);
                 }
 
                 message = new Message(MessageChannel.COMMODITY, ChannelEvent.EXCHANGE_RATE_REMOVE, this);

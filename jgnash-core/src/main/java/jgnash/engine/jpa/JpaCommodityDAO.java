@@ -21,8 +21,6 @@ import jgnash.engine.Account;
 import jgnash.engine.CommodityNode;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.ExchangeRate;
-import jgnash.engine.ExchangeRateHistoryNode;
-import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.engine.dao.CommodityDAO;
 
@@ -43,7 +41,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-
 
 /**
  * Commodity DAO
@@ -89,29 +86,24 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
         return result;
     }
 
-    /*
-     * @see jgnash.engine.CommodityDAOInterface#addSecurityHistory(jgnash.engine.SecurityNode, jgnash.engine.SecurityHistoryNode)
-     */
     @Override
-    public boolean addSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
+    public boolean addSecurityHistory(final SecurityNode node) {
         return updateCommodityNode(node);
     }
 
-    /*
-     * @see jgnash.engine.CommodityDAOInterface#removeSecurityHistory(jgnash.engine.SecurityNode)
-     */
+
     @Override
-    public boolean removeSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
+    public boolean removeSecurityHistory(final SecurityNode node) {
         return merge(node) != null;
     }
 
     @Override
-    public boolean addExchangeRateHistory(final ExchangeRate rate, final ExchangeRateHistoryNode hNode) {
+    public boolean addExchangeRateHistory(final ExchangeRate rate) {
         return merge(rate) != null;
     }
 
     @Override
-    public boolean removeExchangeRateHistory(final ExchangeRate rate, final ExchangeRateHistoryNode hNode) {
+    public boolean removeExchangeRateHistory(final ExchangeRate rate) {
         return merge(rate) != null;
     }
 
