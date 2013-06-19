@@ -25,7 +25,6 @@ import jgnash.engine.StoredObject;
  * Engine DAO Interface
  *
  * @author Craig Cavanaugh
- *
  */
 public interface EngineDAO {
 
@@ -48,6 +47,14 @@ public interface EngineDAO {
     public <T> T getObjectByUuid(Class<T> tClass, final String uuid);
 
     public List<StoredObject> getStoredObjects();
+
+    /**
+     * Force the object to be reloaded from the underlying database
+     * Intended for client / server use
+     *
+     * @param object object to refresh
+     */
+    public void refresh(StoredObject object);
 
     public void shutdown();
 }

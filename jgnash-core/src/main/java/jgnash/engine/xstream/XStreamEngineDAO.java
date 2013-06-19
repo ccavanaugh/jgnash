@@ -156,4 +156,9 @@ public class XStreamEngineDAO extends AbstractXStreamDAO implements EngineDAO {
     public List<StoredObject> getStoredObjects() {
         return container.asList();
     }
+
+    @Override
+    public void refresh(final StoredObject object) {
+        return;
+    }
 }

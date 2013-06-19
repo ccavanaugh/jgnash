@@ -26,6 +26,7 @@ public enum MessageProperty {
     ACCOUNT,
     BUDGET,
     COMMODITY,
+    CONFIG,
     EXCHANGE_RATE,
     REMINDER,
     TRANSACTION

@@ -37,6 +37,7 @@ import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.CharsetUtil;
 import jgnash.engine.Account;
 import jgnash.engine.CommodityNode;
+import jgnash.engine.Config;
 import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -320,6 +321,18 @@ public class MessageBusClient {
                     final ExchangeRate rate = (ExchangeRate) message.getObject(MessageProperty.EXCHANGE_RATE);
                     engine.refreshExchangeRate(rate);
                     message.setObject(MessageProperty.EXCHANGE_RATE, engine.getExchangeRateByUuid(rate.getUuid()));
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        if (message.getChannel() == MessageChannel.CONFIG) {
+            switch (message.getEvent()) {
+                case CONFIG_MODIFY:
+                    final Config config = (Config) message.getObject(MessageProperty.CONFIG);
+                    engine.refresh(config);
+                    message.setObject(MessageProperty.CONFIG, engine.getStoredObjectByUuid(Config.class, config.getUuid()));
                     break;
                 default:
                     break;

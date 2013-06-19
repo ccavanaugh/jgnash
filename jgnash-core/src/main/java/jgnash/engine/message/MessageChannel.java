@@ -19,7 +19,9 @@ package jgnash.engine.message;
 
 /**
  * Default message channels used by the engine
+ *
+ * @author Craig Cavanaugh
  */
 public enum MessageChannel {
-    ACCOUNT, BUDGET, COMMODITY, REMINDER, SYSTEM, TRANSACTION
+    ACCOUNT, BUDGET, COMMODITY, CONFIG, REMINDER, SYSTEM, TRANSACTION
 }

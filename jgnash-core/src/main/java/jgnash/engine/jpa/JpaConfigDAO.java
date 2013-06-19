@@ -91,7 +91,9 @@ class JpaConfigDAO extends AbstractJpaDAO implements ConfigDAO {
     @Override
     public void update(final Config config) {
 
-        emLock.lock();
+        merge(config);
+
+        /*emLock.lock();
 
         try {
             Future<Void> future = executorService.submit(new Callable<Void>() {
@@ -109,6 +111,6 @@ class JpaConfigDAO extends AbstractJpaDAO implements ConfigDAO {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
             emLock.unlock();
-        }
+        }*/
     }
 }

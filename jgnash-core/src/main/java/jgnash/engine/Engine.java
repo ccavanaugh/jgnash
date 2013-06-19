@@ -1262,11 +1262,15 @@ public class Engine {
         commodityLock.writeLock().lock();
 
         try {
-            Config c = getConfig();
-            c.setDefaultCurrency(defaultCurrency);
-            getConfigDAO().update(c);
+            Config config = getConfig();
+            config.setDefaultCurrency(defaultCurrency);
+            getConfigDAO().update(config);
 
             logInfo("Setting default currency: " + defaultCurrency.toString());
+
+            Message message = new Message(MessageChannel.CONFIG, ChannelEvent.CONFIG_MODIFY, this);
+            message.setObject(MessageProperty.CONFIG, config);
+            messageBus.fireEvent(message);
 
             Account root = getRootAccount();
 
@@ -1274,6 +1278,9 @@ public class Engine {
             root.setCurrencyNode(defaultCurrency);
             getAccountDAO().updateAccount(root);
 
+            message = new Message(MessageChannel.ACCOUNT, ChannelEvent.ACCOUNT_MODIFY, this);
+            message.setObject(MessageProperty.ACCOUNT, root);
+            messageBus.fireEvent(message);
         } finally {
             commodityLock.writeLock().unlock();
             configLock.writeLock().unlock();
@@ -1504,12 +1511,16 @@ public class Engine {
 
         try {
             accountSeparator = separator;
-            Config c = getConfig();
+            Config config = getConfig();
 
-            c.setAccountSeparator(separator);
+            config.setAccountSeparator(separator);
 
-            getConfigDAO().update(c);
+            getConfigDAO().update(config);
 
+            Message message = new Message(MessageChannel.CONFIG, ChannelEvent.CONFIG_MODIFY, this);
+            message.setObject(MessageProperty.CONFIG, config);
+
+            messageBus.fireEvent(message);
         } finally {
             configLock.writeLock().unlock();
         }
@@ -1649,6 +1660,10 @@ public class Engine {
     public void refreshTransaction(final Transaction transaction) {
 
         getTransactionDAO().refreshTransaction(transaction);
+    }
+
+    public void refresh(final StoredObject object) {
+        eDAO.refresh(object);
     }
 
     /**
@@ -2498,10 +2513,15 @@ public class Engine {
         configLock.writeLock().lock();
 
         try {
-            Config c = getConfig();
+            Config config = getConfig();
 
-            c.setTransactionNumberList(list);
-            getConfigDAO().update(c);
+            config.setTransactionNumberList(list);
+            getConfigDAO().update(config);
+
+            Message message = new Message(MessageChannel.CONFIG, ChannelEvent.CONFIG_MODIFY, this);
+            message.setObject(MessageProperty.CONFIG, config);
+
+            messageBus.fireEvent(message);
         } finally {
             configLock.writeLock().unlock();
         }

@@ -95,7 +95,7 @@ abstract class AbstractJpaDAO extends AbstractDAO {
      *
      * @param object object to re
      */
-    void refresh(final StoredObject object) {
+    public void refresh(final StoredObject object) {
         emLock.lock();
 
         try {
