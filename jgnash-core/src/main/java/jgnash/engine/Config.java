@@ -86,7 +86,8 @@ public class Config extends StoredObject {
 
     public void setTransactionNumberList(final List<String> transactionNumberItems) {
         if (transactionNumberItems != null) {
-            this.transactionNumberItems = transactionNumberItems;
+            this.transactionNumberItems.clear();
+            this.transactionNumberItems.addAll(transactionNumberItems);
         }
     }
 
