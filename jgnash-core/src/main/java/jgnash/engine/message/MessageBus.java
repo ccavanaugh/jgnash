@@ -130,7 +130,7 @@ public class MessageBus {
             throw new IllegalArgumentException();
         }
 
-        MessageBusClient client =  new MessageBusClient(remoteHost, remotePort);
+        MessageBusClient client = new MessageBusClient(remoteHost, remotePort);
 
         if (client.connectToServer(password)) {
             client.sendRemoteShutdownRequest();
@@ -215,46 +215,33 @@ public class MessageBus {
     }
 
     public void fireEvent(final Message message) {
-        Set<WeakReference<MessageListener>> set = map.get(message.getChannel());
 
-        if (set != null) {
-            pool.execute(new MessageHandler(message, set));
-        }
-    }
+        pool.execute(new Runnable() {
+            @Override
+            public void run() {
+                // Look for and post to local listeners
+                final Set<WeakReference<MessageListener>> set = map.get(message.getChannel());
 
-    /**
-     * This nested class is used to update any listeners in a separate thread and post the message to the remote message
-     * bus if running.
-     */
-    private final class MessageHandler implements Runnable {
+                if (set != null) {
+                    for (WeakReference<MessageListener> ref : set) {
+                        MessageListener l = ref.get();
+                        if (l != null) {
+                            l.messagePosted(message);
+                        }
+                    }
+                }
 
-        final Message message;
-
-        final Set<WeakReference<MessageListener>> set;
-
-        MessageHandler(final Message event, final Set<WeakReference<MessageListener>> set) {
-            this.message = event;
-            this.set = set;
-        }
-
-        @Override
-        public void run() {
-            for (WeakReference<MessageListener> ref : set) {
-                MessageListener l = ref.get();
-                if (l != null) {
-                    l.messagePosted(message);
+                /* Post a remote message if configured to do so and filter system events.
+                 *
+                 * Do not re-post a remote message otherwise it will just loop through the
+                 * remote message system
+                 * */
+                if (!message.isRemote()) {
+                    if (messageBusClient != null && message.getChannel() != MessageChannel.SYSTEM) {
+                        messageBusClient.sendRemoteMessage(message);
+                    }
                 }
             }
-
-            /* Post a remote message if configured to do so and filter system events.
-             *
-             * Do not re-post a remote message otherwise it will just loop through the
-             * remote message system */
-            if (!message.isRemote()) {
-                if (messageBusClient != null && message.getChannel() != MessageChannel.SYSTEM) {
-                    messageBusClient.sendRemoteMessage(message);
-                }
-            }
-        }
+        });
     }
 }
