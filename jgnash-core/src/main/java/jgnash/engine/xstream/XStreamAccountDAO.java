@@ -126,11 +126,6 @@ public class XStreamAccountDAO extends AbstractXStreamDAO implements AccountDAO 
         return true;
     }
 
-    @Override
-    public void refreshAccount(final Account account) {
-        // do nothing for an XStream DAO
-    }
-
     private List<Account> getAccountByType(final AccountType type) {
         List<Account> list = new ArrayList<>();
 

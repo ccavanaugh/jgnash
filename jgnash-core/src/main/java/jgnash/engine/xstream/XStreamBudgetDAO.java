@@ -58,9 +58,4 @@ public class XStreamBudgetDAO extends AbstractXStreamDAO implements BudgetDAO {
     public Budget getBudgetByUuid(final String uuid) {
         return getObjectByUuid(Budget.class, uuid);
     }
-
-    @Override
-    public void refreshBudget(final Budget budget) {
-        // do nothing for XML DAO
-    }
 }

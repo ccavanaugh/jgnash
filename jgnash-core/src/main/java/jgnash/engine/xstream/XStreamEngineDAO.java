@@ -159,6 +159,6 @@ public class XStreamEngineDAO extends AbstractXStreamDAO implements EngineDAO {
 
     @Override
     public void refresh(final StoredObject object) {
-        return;
+        // do nothing for XStream
     }
 }

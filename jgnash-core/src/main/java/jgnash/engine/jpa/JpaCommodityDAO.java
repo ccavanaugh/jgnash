@@ -294,16 +294,6 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
         }
     }
 
-    @Override
-    public void refreshCommodityNode(final CommodityNode node) {
-        refresh(node);
-    }
-
-    @Override
-    public void refreshExchangeRate(final ExchangeRate rate) {
-        refresh(rate);
-    }
-
     /*
      * @see jgnash.engine.CommodityDAOInterface#updateCommodityNode(jgnash.engine.CommodityNode)
      */

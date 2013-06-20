@@ -77,11 +77,6 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
         return transactionList;
     }
 
-    @Override
-    public void refreshTransaction(final Transaction transaction) {
-        refresh(transaction);
-    }
-
     /*
      * @see jgnash.engine.TransactionDAO#addTransaction(jgnash.engine.Transaction)
      */

@@ -109,9 +109,4 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
     public Budget getBudgetByUuid(final String uuid) {
         return getObjectByUuid(Budget.class, uuid);
     }
-
-    @Override
-    public void refreshBudget(final Budget budget) {
-        refresh(budget);
-    }
 }

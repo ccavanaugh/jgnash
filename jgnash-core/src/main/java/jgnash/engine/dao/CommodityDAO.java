@@ -72,10 +72,6 @@ public interface CommodityDAO {
 
     public List<SecurityNode> getSecurities();
 
-    public void refreshCommodityNode(CommodityNode node);
-
-    public void refreshExchangeRate(ExchangeRate rate);
-
     /**
      * Call after a <code>ExchangeRateHistoryNode</code> has been removed.  This pushes the update
      * to the underlying database

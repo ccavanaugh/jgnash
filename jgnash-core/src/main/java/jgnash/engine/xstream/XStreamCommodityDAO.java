@@ -127,16 +127,6 @@ public class XStreamCommodityDAO extends AbstractXStreamDAO implements Commodity
     }
 
     @Override
-    public void refreshCommodityNode(final CommodityNode node) {
-        // do nothing
-    }
-
-    @Override
-    public void refreshExchangeRate(final ExchangeRate rate) {
-        // do nothing
-    }
-
-    @Override
     public boolean removeExchangeRateHistory(final ExchangeRate rate) {
         commit();
         return true;

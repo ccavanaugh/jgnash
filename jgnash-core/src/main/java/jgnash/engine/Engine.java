@@ -1632,36 +1632,6 @@ public class Engine {
         return getAccountDAO().getInvestmentAccountList();
     }
 
-    public void refreshAccount(final Account account) {
-
-        getAccountDAO().refreshAccount(account);
-    }
-
-    public void refreshBudget(final Budget budget) {
-
-        getBudgetDAO().refreshBudget(budget);
-    }
-
-    public void refreshCommodity(final CommodityNode node) {
-
-        getCommodityDAO().refreshCommodityNode(node);
-    }
-
-    public void refreshExchangeRate(final ExchangeRate rate) {
-
-        getCommodityDAO().refreshExchangeRate(rate);
-    }
-
-    public void refreshReminder(final Reminder reminder) {
-
-        getReminderDAO().refreshReminder(reminder);
-    }
-
-    public void refreshTransaction(final Transaction transaction) {
-
-        getTransactionDAO().refreshTransaction(transaction);
-    }
-
     public void refresh(final StoredObject object) {
         eDAO.refresh(object);
     }

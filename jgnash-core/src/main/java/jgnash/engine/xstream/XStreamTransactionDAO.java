@@ -33,11 +33,6 @@ public class XStreamTransactionDAO extends AbstractXStreamDAO implements Transac
         super(container);
     }
 
-    @Override
-    public void refreshTransaction(final Transaction transaction) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     /**
      * @see TransactionDAO#getTransactions()    
      */

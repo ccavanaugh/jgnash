@@ -28,8 +28,6 @@ import jgnash.engine.Transaction;
  */
 public interface TransactionDAO {
 
-    public void refreshTransaction(Transaction transaction);
-
     /**
      * Returns a list of transactions.  
      * <p>

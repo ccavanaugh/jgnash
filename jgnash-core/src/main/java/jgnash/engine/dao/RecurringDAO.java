@@ -34,7 +34,5 @@ public interface RecurringDAO {
 
     public Reminder getReminderByUuid(final String uuid);
 
-    public void refreshReminder(Reminder reminder);
-
     public boolean updateReminder(Reminder reminder);
 }

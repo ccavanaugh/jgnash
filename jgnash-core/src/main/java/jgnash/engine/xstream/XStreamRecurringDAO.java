@@ -51,11 +51,6 @@ public class XStreamRecurringDAO extends AbstractXStreamDAO implements Recurring
     }
 
     @Override
-    public void refreshReminder(final Reminder reminder) {
-        // do nothing for this DAO
-    }
-
-    @Override
     public boolean updateReminder(final Reminder reminder) {
         commit();
         return true;

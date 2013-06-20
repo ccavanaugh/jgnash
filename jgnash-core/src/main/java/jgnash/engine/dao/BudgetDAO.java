@@ -35,6 +35,4 @@ public interface BudgetDAO {
     public List<Budget> getBudgets();
 
     public Budget getBudgetByUuid(final String uuid);
-
-    public void refreshBudget(Budget budget);
 }

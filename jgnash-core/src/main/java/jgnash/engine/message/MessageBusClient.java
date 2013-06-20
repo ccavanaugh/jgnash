@@ -269,15 +269,15 @@ public class MessageBusClient {
             switch (message.getEvent()) {
                 case ACCOUNT_ADD:
                 case ACCOUNT_REMOVE:
-                    engine.refreshAccount(account);
+                    engine.refresh(account);
                     message.setObject(MessageProperty.ACCOUNT, engine.getAccountByUuid(account.getUuid()));
-                    engine.refreshAccount(account.getParent());
+                    engine.refresh(account.getParent());
                     break;
                 case ACCOUNT_MODIFY:
                 case ACCOUNT_SECURITY_ADD:
                 case ACCOUNT_SECURITY_REMOVE:
                 case ACCOUNT_VISIBILITY_CHANGE:
-                    engine.refreshAccount(account);
+                    engine.refresh(account);
                     message.setObject(MessageProperty.ACCOUNT, engine.getAccountByUuid(account.getUuid()));
                     break;
                 default:
@@ -292,7 +292,7 @@ public class MessageBusClient {
                 case BUDGET_UPDATE:
                 case BUDGET_REMOVE:
                 case BUDGET_GOAL_UPDATE:
-                    engine.refreshBudget(budget);
+                    engine.refresh(budget);
                     message.setObject(MessageProperty.BUDGET, engine.getBudgetByUuid(budget.getUuid()));
                     break;
                 default:
@@ -305,7 +305,7 @@ public class MessageBusClient {
                 case CURRENCY_ADD:
                 case CURRENCY_MODIFY:
                     final CommodityNode currency = (CommodityNode) message.getObject(MessageProperty.COMMODITY);
-                    engine.refreshCommodity(currency);
+                    engine.refresh(currency);
                     message.setObject(MessageProperty.COMMODITY, engine.getCurrencyNodeByUuid(currency.getUuid()));
                     break;
                 case SECURITY_ADD:
@@ -313,13 +313,13 @@ public class MessageBusClient {
                 case SECURITY_HISTORY_ADD:
                 case SECURITY_HISTORY_REMOVE:
                     final CommodityNode node = (CommodityNode) message.getObject(MessageProperty.COMMODITY);
-                    engine.refreshCommodity(node);
+                    engine.refresh(node);
                     message.setObject(MessageProperty.COMMODITY, engine.getSecurityNodeByUuid(node.getUuid()));
                     break;
                 case EXCHANGE_RATE_ADD:
                 case EXCHANGE_RATE_REMOVE:
                     final ExchangeRate rate = (ExchangeRate) message.getObject(MessageProperty.EXCHANGE_RATE);
-                    engine.refreshExchangeRate(rate);
+                    engine.refresh(rate);
                     message.setObject(MessageProperty.EXCHANGE_RATE, engine.getExchangeRateByUuid(rate.getUuid()));
                     break;
                 default:
@@ -344,7 +344,7 @@ public class MessageBusClient {
                 case REMINDER_ADD:
                 case REMINDER_REMOVE:
                     final Reminder reminder = (Reminder) message.getObject(MessageProperty.REMINDER);
-                    engine.refreshReminder(reminder);
+                    engine.refresh(reminder);
                     message.setObject(MessageProperty.REMINDER, engine.getReminderByUuid(reminder.getUuid()));
                     break;
                 default:
@@ -358,11 +358,11 @@ public class MessageBusClient {
                 case TRANSACTION_ADD:
                 case TRANSACTION_REMOVE:
                     final Transaction transaction = (Transaction) message.getObject(MessageProperty.TRANSACTION);
-                    engine.refreshTransaction(transaction);
+                    engine.refresh(transaction);
                     message.setObject(MessageProperty.TRANSACTION, engine.getTransactionByUuid(transaction.getUuid()));
 
                     final Account account = (Account) message.getObject(MessageProperty.ACCOUNT);
-                    engine.refreshAccount(account);
+                    engine.refresh(account);
                     message.setObject(MessageProperty.ACCOUNT, engine.getAccountByUuid(account.getUuid()));
                     break;
                 default:

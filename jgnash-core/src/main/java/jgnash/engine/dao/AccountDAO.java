@@ -85,12 +85,4 @@ public interface AccountDAO {
      */
     public boolean toggleAccountVisibility(final Account account);
 
-    /**
-     * Force the engine to refresh the loading account.
-     * Intended for client / server use
-     *
-     * @param account account to refresh
-     */
-    public void refreshAccount(Account account);
-
 }

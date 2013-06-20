@@ -127,9 +127,4 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
     public boolean updateReminder(final Reminder reminder) {
         return addReminder(reminder);   // call add, same code
     }
-
-    @Override
-    public void refreshReminder(final Reminder reminder) {
-        refresh(reminder);
-    }
 }

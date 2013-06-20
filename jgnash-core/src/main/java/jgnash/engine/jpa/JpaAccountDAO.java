@@ -284,9 +284,4 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
     public boolean toggleAccountVisibility(final Account account) {
         return merge(account) != null;
     }
-
-    @Override
-    public void refreshAccount(final Account account) {
-        refresh(account);
-    }
 }
