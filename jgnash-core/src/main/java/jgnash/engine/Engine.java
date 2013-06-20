@@ -704,7 +704,7 @@ public class Engine {
         }
 
         // ensure the UUID being used is unique
-        if (eDAO.getObjectByUuid(node.getUuid()) != null) {
+        if (eDAO.getObjectByUuid(CommodityNode.class, node.getUuid()) != null) {
             result = false;
             logSevere("Commodity " + node.toString() + " was not unique");
         }
@@ -2304,7 +2304,7 @@ public class Engine {
             return false;
         }
 
-        if (eDAO.getObjectByUuid(transaction.getUuid()) != null) {
+        if (eDAO.getObjectByUuid(Transaction.class, transaction.getUuid()) != null) {
             logger.log(Level.WARNING, "Transaction UUID was not unique");
             return false;
         }
@@ -2356,7 +2356,6 @@ public class Engine {
         }
 
         return !(transaction instanceof InvestmentTransaction) || transaction.getTransactionType() != null;
-
     }
 
     /**
@@ -2366,8 +2365,7 @@ public class Engine {
      * @return true if persisted
      */
     public boolean isStored(final StoredObject object) {
-
-        return eDAO.getObjectByUuid(object.getUuid()) != null;
+        return eDAO.getObjectByUuid(StoredObject.class, object.getUuid()) != null;
     }
 
     public boolean addTransaction(final Transaction transaction) {

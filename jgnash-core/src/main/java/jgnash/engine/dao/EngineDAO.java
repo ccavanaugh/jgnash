@@ -42,8 +42,6 @@ public interface EngineDAO {
 
     public TrashDAO getTrashDAO();
 
-    public StoredObject getObjectByUuid(String uuid);
-
     public <T> T getObjectByUuid(Class<T> tClass, final String uuid);
 
     public List<StoredObject> getStoredObjects();

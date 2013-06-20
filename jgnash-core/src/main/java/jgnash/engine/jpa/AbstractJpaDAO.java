@@ -139,8 +139,4 @@ abstract class AbstractJpaDAO extends AbstractDAO {
 
         return object;
     }
-
-    public StoredObject getObjectByUuid(final String uuid) {
-        return getObjectByUuid(StoredObject.class, uuid);
-    }
 }
