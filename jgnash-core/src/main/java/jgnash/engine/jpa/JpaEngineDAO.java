@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -71,7 +72,17 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
 
     @Override
     public synchronized void shutdown() {
-        // nothing special to do for JPA
+
+        // Stop the trash executor service
+        ((JpaTrashDAO)getTrashDAO()).stopTrashExecutor();
+
+        // Stop the shared executor server, wait for all tasks to complete
+        executorService.shutdown();
+        try {
+            executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
     }
 
     @Override

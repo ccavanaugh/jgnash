@@ -70,6 +70,16 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
         }, 1, 2, TimeUnit.MINUTES);
     }
 
+    void stopTrashExecutor() {
+        trashExecutor.shutdown();
+
+        try {
+            trashExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public List<TrashObject> getTrashObjects() {
@@ -192,10 +202,6 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
             Future<Void> future = executorService.submit(new Callable<Void>() {
                 @Override
                 public Void call() throws Exception {
-
-                    if (!em.isOpen()) {
-                        trashExecutor.shutdown();
-                    }
 
                     CriteriaBuilder cb = em.getCriteriaBuilder();
                     CriteriaQuery<JpaTrashEntity> cq = cb.createQuery(JpaTrashEntity.class);
