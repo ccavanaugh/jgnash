@@ -277,7 +277,7 @@ public class DistributedLockServer {
 
         /**
          * The key is the uuid of the manager plus the remote thread id
-         *
+         * <p/>
          * uuid-integer
          */
         private final Map<String, Integer> readingThreads = new ConcurrentHashMap<>();
@@ -297,12 +297,8 @@ public class DistributedLockServer {
             }
 
             if (writingThread != null && writingThread.equals(remoteThread)) {
-                try {
-                    unlockWrite(remoteThread);
-                    logger.warning("Removed a stale write lock for: " + id);
-                } catch (InterruptedException e) {
-                    logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-                }
+                unlockWrite(remoteThread);
+                logger.warning("Removed a stale write lock for: " + id);
             }
         }
 
@@ -344,7 +340,7 @@ public class DistributedLockServer {
             notifyAll();
         }
 
-        synchronized void unlockWrite(final String remoteThread) throws InterruptedException {
+        synchronized void unlockWrite(final String remoteThread) {
 
             if (!isWriteLockedByCurrentThread(remoteThread)) {
                 throw new IllegalMonitorStateException("Remote Thread: " + remoteThread + " does not hold the write lock for: " + id);
