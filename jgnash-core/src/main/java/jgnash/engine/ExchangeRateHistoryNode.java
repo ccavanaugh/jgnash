@@ -42,6 +42,7 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
 
     private static final long serialVersionUID = 1L;
 
+    @SuppressWarnings("UnusedDeclaration")
     @Id @GeneratedValue(strategy = GenerationType.TABLE)
     public long id;
 
