@@ -115,7 +115,7 @@ public abstract class AbstractYahooParser implements SecurityParser {
     protected abstract boolean useISIN();
 
     @Override
-    public synchronized boolean parse(final SecurityNode node) throws IOException {
+    public synchronized boolean parse(final SecurityNode node) {
 
         boolean result = false;
 

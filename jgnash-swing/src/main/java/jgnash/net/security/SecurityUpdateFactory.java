@@ -40,7 +40,7 @@ import jgnash.util.Resource;
 
 /**
  * Fetches latest stock prices in the background
- * 
+ *
  * @author Craig Cavanaugh
  */
 public class SecurityUpdateFactory {
@@ -76,30 +76,26 @@ public class SecurityUpdateFactory {
 
         SecurityParser parser = node.getQuoteSource().getParser();
 
-        try {
-            if (parser.parse(node)) {
-                SecurityHistoryNode history = new SecurityHistoryNode();
-                history.setPrice(parser.getPrice());
-                history.setVolume(parser.getVolume());
-                history.setHigh(parser.getHigh());
-                history.setLow(parser.getLow());
-                history.setDate(parser.getDate());  // returned date from the parser
 
-                Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        if (parser.parse(node)) {
+            SecurityHistoryNode history = new SecurityHistoryNode();
+            history.setPrice(parser.getPrice());
+            history.setVolume(parser.getVolume());
+            history.setHigh(parser.getHigh());
+            history.setLow(parser.getLow());
+            history.setDate(parser.getDate());  // returned date from the parser
 
-                if (e != null) {
-                    e.addSecurityHistory(node, history);
-                }
+            Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-                String message = MessageFormat.format(rb.getString("Message.UpdatedPrice"), node.getSymbol());
-
-                logger.info(message);
-
-                return true;
+            if (e != null) {
+                e.addSecurityHistory(node, history);
             }
-        } catch (IOException e) {
-            logger.severe(e.toString());
-            return false;
+
+            String message = MessageFormat.format(rb.getString("Message.UpdatedPrice"), node.getSymbol());
+
+            logger.info(message);
+
+            return true;
         }
 
         return false;
@@ -113,11 +109,11 @@ public class SecurityUpdateFactory {
 
         public SecurityUpdateWorker() {
             super();
-            registerListeners();            
+            registerListeners();
         }
-        
+
         private void registerListeners() {
-          MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);  
+            MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
         }
 
         @Override
@@ -141,7 +137,7 @@ public class SecurityUpdateFactory {
                                 setProgress(100);
                                 break;
                             }
-                        }                     
+                        }
                     }
                     setProgress((int) ((i + 1f) / size * 100f));
                 }

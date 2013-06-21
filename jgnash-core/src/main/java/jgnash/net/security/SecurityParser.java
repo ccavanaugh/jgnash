@@ -40,5 +40,5 @@ public interface SecurityParser {
         
     Date getDate();
       
-    boolean parse(SecurityNode node) throws IOException;
+    boolean parse(SecurityNode node);
 }

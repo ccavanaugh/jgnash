@@ -235,7 +235,7 @@ public class EngineFactory {
      * @see Engine
      * @see DataStoreType
      */
-    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName, final char[] password, final DataStoreType type) throws Exception {
+    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName, final char[] password, final DataStoreType type) {
 
         if (!type.supportsLocal) {
             throw new UnsupportedOperationException("Local operation not supported for this type.");
