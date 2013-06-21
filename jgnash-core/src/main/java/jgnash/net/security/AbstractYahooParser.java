@@ -17,8 +17,11 @@
  */
 package jgnash.net.security;
 
+import jgnash.engine.SecurityNode;
+import jgnash.net.ConnectionFactory;
+import jgnash.util.DateUtils;
+
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.SocketTimeoutException;
@@ -31,10 +34,6 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-
-import jgnash.engine.SecurityNode;
-import jgnash.net.ConnectionFactory;
-import jgnash.util.DateUtils;
 
 /**
  * An abstract CommodityParser for the Yahoo! financial web sites.
