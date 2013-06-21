@@ -90,30 +90,7 @@ abstract class AbstractJpaDAO extends AbstractDAO {
         }
     }
 
-    /**
-     * Refresh a managed object
-     *
-     * @param object object to re
-     */
-    public void refresh(final StoredObject object) {
-        emLock.lock();
 
-        try {
-            Future<Void> future = executorService.submit(new Callable<Void>() {
-                @Override
-                public Void call() {
-                    em.refresh(object);
-                    return null;
-                }
-            });
-
-            future.get();
-        } catch (ExecutionException | InterruptedException e) {
-            Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
-        }
-    }
 
     public <T> T getObjectByUuid(final Class<T> tClass, final String uuid) {
         T object = null;
