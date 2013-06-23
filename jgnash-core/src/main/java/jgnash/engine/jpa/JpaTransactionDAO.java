@@ -156,7 +156,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Transaction> getTransactionsWithExternalLinks() {
+    public List<Transaction> getTransactionsWithAttachments() {
         List<Transaction> transactionList = Collections.EMPTY_LIST;
 
         emLock.lock();
@@ -165,7 +165,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
             Future<List<Transaction>> future = executorService.submit(new Callable<List<Transaction>>() {
                 @Override
                 public List<Transaction> call() throws Exception {
-                    Query q = em.createQuery("SELECT t FROM Transaction t WHERE t.markedForRemoval = false AND t.externalLink is not null");
+                    Query q = em.createQuery("SELECT t FROM Transaction t WHERE t.markedForRemoval = false AND t.attachment is not null");
 
                     return new ArrayList<Transaction>(q.getResultList());
                 }

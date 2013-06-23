@@ -2509,8 +2509,8 @@ public class Engine {
      *
      * @return List of transactions that may be altered without concern of side effects
      */
-    public List<Transaction> getTransactionsWithExternalLinks() {
-        return getTransactionDAO().getTransactionsWithExternalLinks();
+    public List<Transaction> getTransactionsWithAttachments() {
+        return getTransactionDAO().getTransactionsWithAttachments();
     }
 
     public Transaction getTransactionByUuid(final String uuid) {

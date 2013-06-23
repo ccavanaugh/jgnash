@@ -90,7 +90,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * External link to a file, path should be relative
      */
     @Column(columnDefinition = "VARCHAR(2048)", nullable = true)
-    private String externalLink;
+    private String attachment;
 
     /**
      * Transaction memo
@@ -581,16 +581,16 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      *
      * @return external path, null if not set
      */
-    public String getExternalLink() {
-        return externalLink;
+    public String getAttachment() {
+        return attachment;
     }
 
     /**
      * Sets an external link to a file, the path should be relative to the data file for portability.
      * May be set to null.
      */
-    public void setExternalLink(final String externalLink) {
-        this.externalLink = externalLink;
+    public void setAttachment(final String attachment) {
+        this.attachment = attachment;
     }
 
     @Override

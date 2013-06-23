@@ -62,11 +62,11 @@ public class XStreamTransactionDAO extends AbstractXStreamDAO implements Transac
     }
 
     @Override
-    public List<Transaction> getTransactionsWithExternalLinks() {
+    public List<Transaction> getTransactionsWithAttachments() {
         List<Transaction> transactionList = new ArrayList<>();
 
         for (Transaction transaction : container.query(Transaction.class)) {
-            if (!transaction.isMarkedForRemoval() && transaction.getExternalLink() != null) {
+            if (!transaction.isMarkedForRemoval() && transaction.getAttachment() != null) {
                 transactionList.add(transaction);
             }
         }

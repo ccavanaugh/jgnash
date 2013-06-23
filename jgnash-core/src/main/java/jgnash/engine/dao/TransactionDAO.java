@@ -46,6 +46,6 @@ public interface TransactionDAO {
      *
      * @return List of transactions
      */
-    public List<Transaction> getTransactionsWithExternalLinks();
+    public List<Transaction> getTransactionsWithAttachments();
 
 }

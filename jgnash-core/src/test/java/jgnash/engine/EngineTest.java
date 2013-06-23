@@ -772,7 +772,7 @@ public abstract class EngineTest {
     }
 
     @Test
-    public void testGetTransactionsWithExternalLinks() throws Exception {
+    public void testGetTransactionsWithAttachments() throws Exception {
         final String ACCOUNT_NAME = "testAccount";
 
         CurrencyNode node = e.getDefaultCurrency();
@@ -785,19 +785,19 @@ public abstract class EngineTest {
         e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), true, "memo", "payee", "1"));
 
         Transaction link = TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), true, "memo", "payee", "1");
-        link.setExternalLink("external link");
+        link.setAttachment("external link");
 
         e.addTransaction(link);
 
         assertEquals(2, e.getTransactions().size());
-        assertEquals(1, e.getTransactionsWithExternalLinks().size());
+        assertEquals(1, e.getTransactionsWithAttachments().size());
 
         // close and reopen to force check for persistence
         closeEngine();
         e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD);
 
         assertEquals(2, e.getTransactions().size());
-        assertEquals(1, e.getTransactionsWithExternalLinks().size());
+        assertEquals(1, e.getTransactionsWithAttachments().size());
     }
 
     @Test
