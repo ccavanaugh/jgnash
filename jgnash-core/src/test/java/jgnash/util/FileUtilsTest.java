@@ -34,7 +34,6 @@ import org.junit.Test;
  * File utilities test
  * 
  * @author Craig Cavanaugh
- * 
  */
 public class FileUtilsTest {
 
@@ -58,16 +57,39 @@ public class FileUtilsTest {
 
     @Test
     public void fileCopyToSelf() throws IOException {
-        File tempfile = File.createTempFile("jgnash-test", "jdb");
-        String absolutepath = tempfile.getAbsolutePath();
-        String testdata = "42";
+        File tempFile = File.createTempFile("jgnash-test", ".jdb");
+        tempFile.deleteOnExit();
+
+        String absolutePath = tempFile.getAbsolutePath();
+        String testData = "42";
 
         // Write the data to a file
-        writeTestData(testdata, tempfile);
-        checkTestData(testdata, absolutepath);
+        writeTestData(testData, tempFile);
+        checkTestData(testData, absolutePath);
 
         // Copy the file to itself: the file should not be emptied :)
-        assertFalse(FileUtils.copyFile(new File(absolutepath), new File(absolutepath)));
+        assertFalse(FileUtils.copyFile(new File(absolutePath), new File(absolutePath)));
+    }
+
+    @Test
+    public void testAttachmentDirectory() throws IOException {
+        String tempDir = System.getProperty("java.io.tmpdir");
+
+        File tempFile = new File(tempDir + File.separator + "temp.txt");
+
+        File base = FileUtils.getAttachmentDirectory(tempFile);
+
+        assertEquals(tempDir + File.separator + FileUtils.ATTACHMENT_BASE, base.toString());
+
+        File temp2 = new File(base.toString() + File.separator + "attach.txt");
+
+        File relative = FileUtils.relativize(tempFile, temp2);
+
+        assertEquals(".." + File.separator + FileUtils.ATTACHMENT_BASE + File.separator + "attach.txt", relative.toString());
+
+        File absolute = FileUtils.resolve(tempFile, relative.toString());
+
+        assertEquals(absolute.toString(), absolute.toString());
     }
 
     private static void checkTestData(final String testdata, final String absolutepath) throws IOException {

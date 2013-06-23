@@ -17,9 +17,6 @@
  */
 package jgnash.util;
 
-import jgnash.engine.jpa.JpaH2DataStore;
-import jgnash.engine.jpa.JpaHsqlDataStore;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,6 +27,7 @@ import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -43,6 +41,9 @@ import java.util.regex.Pattern;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import jgnash.engine.jpa.JpaH2DataStore;
+import jgnash.engine.jpa.JpaHsqlDataStore;
 
 /**
  * File utilities
@@ -59,6 +60,8 @@ public final class FileUtils {
     private static final Pattern FILE_EXTENSION_SPLIT_PATTERN = Pattern.compile("\\.");
 
     public static final String[] FILE_LOCK_EXTENSIONS = new String[]{JpaHsqlDataStore.LOCK_EXT, JpaH2DataStore.LOCK_EXT, ".lock"};
+
+    public static final String ATTACHMENT_BASE = "attachments";
 
     private FileUtils() {
     }
@@ -233,5 +236,40 @@ public final class FileUtils {
         }
 
         return fileList;
+    }
+
+    /**
+     * @see Path#resolve(java.nio.file.Path)
+     */
+    public static File resolve(final File baseFile, final String relativePath) {
+        Path basePath = baseFile.toPath();
+
+        return basePath.resolve(relativePath).toFile();
+    }
+
+    /**
+     * @see Path#relativize(java.nio.file.Path)
+     */
+    public static File relativize(final File baseFile, final File attachmentFile) {
+        Path basePath = baseFile.toPath();
+        Path attachmentPath = attachmentFile.toPath();
+
+        Path relative = basePath.relativize(attachmentPath);
+
+        return relative.toFile();
+    }
+
+    /**
+     * Returns the default attachment directory for the given base file
+     *
+     * @param baseFile base file for attachment directory
+     * @return directory for all attachments
+     */
+    public static File getAttachmentDirectory(final File baseFile) {
+        if (baseFile.getParent() != null) {
+            return new File(baseFile.getParent() + File.separator + ATTACHMENT_BASE);
+        }
+
+        return null;
     }
 }
