@@ -256,9 +256,6 @@ public class DistributedLockManager implements LockManager {
     }
 
     private class Initializer extends ChannelInitializer<SocketChannel> {
-        private final StringDecoder DECODER = new StringDecoder(CharsetUtil.UTF_8);
-        private final StringEncoder ENCODER = new StringEncoder(CharsetUtil.UTF_8);
-        private final ClientHandler CLIENT_HANDLER = new ClientHandler();
 
         @Override
         public void initChannel(final SocketChannel ch) throws Exception {
@@ -266,11 +263,11 @@ public class DistributedLockManager implements LockManager {
 
             // Add the text line codec combination first,
             pipeline.addLast("framer", new DelimiterBasedFrameDecoder(8192, true, Delimiters.lineDelimiter()));
-            pipeline.addLast("decoder", DECODER);
-            pipeline.addLast("encoder", ENCODER);
+            pipeline.addLast("decoder", new StringDecoder(CharsetUtil.UTF_8));
+            pipeline.addLast("encoder", new StringEncoder(CharsetUtil.UTF_8));
 
             // and then business logic.
-            pipeline.addLast("handler", CLIENT_HANDLER);
+            pipeline.addLast("handler", new ClientHandler());
         }
     }
 

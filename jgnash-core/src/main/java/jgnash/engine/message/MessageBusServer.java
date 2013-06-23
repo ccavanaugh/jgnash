@@ -199,10 +199,6 @@ public class MessageBusServer {
     }
 
     private class MessageBusRemoteInitializer extends ChannelInitializer<SocketChannel> {
-        private final StringDecoder DECODER = new StringDecoder(CharsetUtil.UTF_8);
-        private final StringEncoder ENCODER = new StringEncoder(CharsetUtil.UTF_8);
-
-        private final MessageBusServerHandler SERVER_HANDLER = new MessageBusServerHandler();
 
         @Override
         public void initChannel(final SocketChannel ch) throws Exception {
@@ -212,11 +208,11 @@ public class MessageBusServer {
             pipeline.addLast("framer", new DelimiterBasedFrameDecoder(8192, true, Delimiters.lineDelimiter()));
 
             // the encoder and decoder are static as these are sharable
-            pipeline.addLast("decoder", DECODER);
-            pipeline.addLast("encoder", ENCODER);
+            pipeline.addLast("decoder", new StringDecoder(CharsetUtil.UTF_8));
+            pipeline.addLast("encoder", new StringEncoder(CharsetUtil.UTF_8));
 
             // and then business logic.
-            pipeline.addLast("handler", SERVER_HANDLER);
+            pipeline.addLast("handler", new MessageBusServerHandler());
         }
     }
 
