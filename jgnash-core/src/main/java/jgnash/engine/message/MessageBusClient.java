@@ -17,24 +17,12 @@
  */
 package jgnash.engine.message;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.CompactWriter;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundMessageHandlerAdapter;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.DelimiterBasedFrameDecoder;
-import io.netty.handler.codec.Delimiters;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
-import io.netty.util.CharsetUtil;
+import java.io.CharArrayWriter;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import jgnash.engine.Account;
 import jgnash.engine.CommodityNode;
 import jgnash.engine.Config;
@@ -48,11 +36,25 @@ import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.engine.recurring.Reminder;
 import jgnash.net.ConnectionFactory;
 
-import java.io.CharArrayWriter;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.CompactWriter;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.MessageList;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.Delimiters;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
+import io.netty.util.CharsetUtil;
 
 /**
  * Message bus client for remote connections
@@ -157,7 +159,7 @@ public class MessageBusClient {
      * Handles a client-side channel.
      */
     @ChannelHandler.Sharable
-    private class MessageBusClientHandler extends ChannelInboundMessageHandlerAdapter<String> {
+    private class MessageBusClientHandler extends ChannelInboundHandlerAdapter {
 
         private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -174,36 +176,38 @@ public class MessageBusClient {
         }
 
         @Override
-        public void messageReceived(final ChannelHandlerContext ctx, final String msg) throws Exception {
-            final String plainMessage = decrypt(msg);
+        public void messageReceived(final ChannelHandlerContext ctx, final MessageList<Object> messageList) throws Exception {
+            for (final Object msg : messageList) {
+                final String plainMessage = decrypt(msg);
 
-            logger.log(Level.FINE, "messageReceived: {0}", plainMessage);
+                logger.log(Level.FINE, "messageReceived: {0}", plainMessage);
 
-            if (plainMessage.startsWith("<Message")) {
-                executorService.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        final Message message = (Message) xstream.fromXML(plainMessage);
+                if (plainMessage.startsWith("<Message")) {
+                    executorService.submit(new Runnable() {
+                        @Override
+                        public void run() {
+                            final Message message = (Message) xstream.fromXML(plainMessage);
 
-                        // ignore our own messages
-                        if (!EngineFactory.getEngine(EngineFactory.DEFAULT).getUuid().equals(message.getSource())) {
-                            processRemoteMessage(message);
+                            // ignore our own messages
+                            if (!EngineFactory.getEngine(EngineFactory.DEFAULT).getUuid().equals(message.getSource())) {
+                                processRemoteMessage(message);
+                            }
                         }
-                    }
-                });
-            } else if (plainMessage.startsWith(MessageBusServer.PATH_PREFIX)) {
-                dataBasePath = plainMessage.substring(MessageBusServer.PATH_PREFIX.length());
-                logger.log(Level.FINE, "Remote data path is: {0}", dataBasePath);
-            } else if (plainMessage.startsWith(MessageBusServer.DATA_STORE_TYPE_PREFIX)) {
-                dataBaseType = DataStoreType.valueOf(plainMessage.substring(MessageBusServer.DATA_STORE_TYPE_PREFIX.length()));
-                logger.log(Level.FINE, "Remote dataBaseType type is: {0}", dataBaseType.name());
-            } else if (plainMessage.startsWith(EncryptionFilter.DECRYPTION_ERROR_TAG)) {    // decryption has failed, shut down the engine
-                logger.log(Level.SEVERE, "Unable to decrypt the remote message");
-            } else if (plainMessage.startsWith(JpaNetworkServer.STOP_SERVER_MESSAGE)) {
-                logger.info("Server is shutting down");
-                EngineFactory.closeEngine(EngineFactory.DEFAULT);
-            } else {
-                logger.log(Level.SEVERE, "Unknown message: {0}", plainMessage);
+                    });
+                } else if (plainMessage.startsWith(MessageBusServer.PATH_PREFIX)) {
+                    dataBasePath = plainMessage.substring(MessageBusServer.PATH_PREFIX.length());
+                    logger.log(Level.FINE, "Remote data path is: {0}", dataBasePath);
+                } else if (plainMessage.startsWith(MessageBusServer.DATA_STORE_TYPE_PREFIX)) {
+                    dataBaseType = DataStoreType.valueOf(plainMessage.substring(MessageBusServer.DATA_STORE_TYPE_PREFIX.length()));
+                    logger.log(Level.FINE, "Remote dataBaseType type is: {0}", dataBaseType.name());
+                } else if (plainMessage.startsWith(EncryptionFilter.DECRYPTION_ERROR_TAG)) {    // decryption has failed, shut down the engine
+                    logger.log(Level.SEVERE, "Unable to decrypt the remote message");
+                } else if (plainMessage.startsWith(JpaNetworkServer.STOP_SERVER_MESSAGE)) {
+                    logger.info("Server is shutting down");
+                    EngineFactory.closeEngine(EngineFactory.DEFAULT);
+                } else {
+                    logger.log(Level.SEVERE, "Unknown message: {0}", plainMessage);
+                }
             }
         }
 

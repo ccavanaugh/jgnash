@@ -17,13 +17,24 @@
  */
 package jgnash.engine.concurrent;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import jgnash.util.EncodeDecode;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundMessageHandlerAdapter;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
+import io.netty.channel.MessageList;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -34,15 +45,7 @@ import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.CharsetUtil;
-import jgnash.util.EncodeDecode;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import io.netty.util.concurrent.GlobalEventExecutor;
 
 /**
  * Distributed Lock Server
@@ -55,7 +58,7 @@ public class DistributedLockServer {
 
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
-    private final ChannelGroup channelGroup = new DefaultChannelGroup("lock-server");
+    private final ChannelGroup channelGroup = new DefaultChannelGroup("lock-server", GlobalEventExecutor.INSTANCE);
 
     private NioEventLoopGroup eventLoopGroup;
 
@@ -192,7 +195,7 @@ public class DistributedLockServer {
 
 
     @ChannelHandler.Sharable
-    private class ServerHandler extends ChannelInboundMessageHandlerAdapter<String> {
+    private class ServerHandler extends ChannelInboundHandlerAdapter {
 
         @Override
         public void channelActive(final ChannelHandlerContext ctx) throws Exception {
@@ -228,13 +231,15 @@ public class DistributedLockServer {
         }
 
         @Override
-        public void messageReceived(final ChannelHandlerContext ctx, final String message) throws Exception {
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    processMessage(ctx, message);
-                }
-            });
+        public void messageReceived(final ChannelHandlerContext ctx, final MessageList<Object> messageList) throws Exception {
+            for (final Object msg : messageList) {
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        processMessage(ctx, msg.toString());
+                    }
+                });
+            }
         }
 
         @Override

@@ -17,13 +17,25 @@
  */
 package jgnash.engine.message;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import jgnash.engine.DataStoreType;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundMessageHandlerAdapter;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
+import io.netty.channel.MessageList;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -34,16 +46,7 @@ import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.CharsetUtil;
-import jgnash.engine.DataStoreType;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import io.netty.util.concurrent.GlobalEventExecutor;
 
 /**
  * Message bus server for remote connections
@@ -72,7 +75,7 @@ public class MessageBusServer {
 
     private final Set<LocalServerListener> listeners = new HashSet<>();
 
-    private final ChannelGroup channelGroup = new DefaultChannelGroup("all-connected");
+    private final ChannelGroup channelGroup = new DefaultChannelGroup("all-connected", GlobalEventExecutor.INSTANCE);
 
     private EncryptionFilter filter;
 
@@ -216,7 +219,7 @@ public class MessageBusServer {
     }
 
     @ChannelHandler.Sharable
-    private class MessageBusServerHandler extends ChannelInboundMessageHandlerAdapter<String> {
+    private class MessageBusServerHandler extends ChannelInboundHandlerAdapter {
 
         @Override
         public void channelActive(final ChannelHandlerContext ctx) throws Exception {
@@ -236,13 +239,15 @@ public class MessageBusServer {
         }
 
         @Override
-        public void messageReceived(final ChannelHandlerContext ctx, final String message) throws Exception {
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    processMessage(message);
-                }
-            });
+        public void messageReceived(final ChannelHandlerContext ctx, final MessageList<Object> messageList) throws Exception {
+            for (final Object msg : messageList) {
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        processMessage(msg.toString());
+                    }
+                });
+            }
         }
 
         private void processMessage(final String message) {

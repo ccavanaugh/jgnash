@@ -17,24 +17,6 @@
  */
 package jgnash.engine.concurrent;
 
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundMessageHandlerAdapter;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.DelimiterBasedFrameDecoder;
-import io.netty.handler.codec.Delimiters;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
-import io.netty.util.CharsetUtil;
-import jgnash.net.ConnectionFactory;
-
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,6 +31,26 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import jgnash.net.ConnectionFactory;
+
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.MessageList;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.Delimiters;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
+import io.netty.util.CharsetUtil;
 
 /**
  * Lock manager for distributed engine instances
@@ -275,16 +277,18 @@ public class DistributedLockManager implements LockManager {
      * Handles a client-side channel.
      */
     @ChannelHandler.Sharable
-    private class ClientHandler extends ChannelInboundMessageHandlerAdapter<String> {
+    private class ClientHandler extends ChannelInboundHandlerAdapter {
 
         @Override
-        public void messageReceived(final ChannelHandlerContext ctx, final String msg) throws Exception {
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    processMessage(msg);
-                }
-            });
+        public void messageReceived(final ChannelHandlerContext ctx, final MessageList<Object> messageList) throws Exception {
+            for (final Object msg : messageList) {
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        processMessage(msg.toString());
+                    }
+                });
+            }
         }
 
         @Override
