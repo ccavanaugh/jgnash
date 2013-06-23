@@ -20,17 +20,12 @@ package jgnash.engine.jpa;
 import jgnash.engine.StoredObject;
 import jgnash.engine.dao.AbstractDAO;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 
 /**
  * Abstract DAO
@@ -49,13 +44,24 @@ abstract class AbstractJpaDAO extends AbstractDAO {
      * This ExecutorService is to be used whenever the entity manager is
      * accessed because and EntityManager is not thread safe
      */
-    static final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    static ExecutorService executorService;
 
     AbstractJpaDAO(final EntityManager entityManager, final boolean isRemote) {
         assert entityManager != null;
 
         this.isRemote = isRemote;
         em = entityManager;
+
+        emLock.lock();
+
+        // Regenerate the executor service if needed
+        try {
+            if (executorService == null || executorService.isShutdown()) {
+                executorService = Executors.newSingleThreadExecutor();
+            }
+        } finally {
+            emLock.unlock();
+        }
     }
 
     /**
@@ -89,7 +95,6 @@ abstract class AbstractJpaDAO extends AbstractDAO {
             emLock.unlock();
         }
     }
-
 
 
     public <T> T getObjectByUuid(final Class<T> tClass, final String uuid) {
