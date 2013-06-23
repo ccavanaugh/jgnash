@@ -17,13 +17,6 @@
  */
 package jgnash.engine.jpa;
 
-import jgnash.engine.Account;
-import jgnash.engine.Transaction;
-import jgnash.engine.dao.TransactionDAO;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,6 +25,13 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
+import jgnash.engine.Account;
+import jgnash.engine.Transaction;
+import jgnash.engine.dao.TransactionDAO;
 
 /**
  * Transaction DAO
