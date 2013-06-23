@@ -20,6 +20,7 @@ package jgnash.engine.xstream;
 import jgnash.engine.Transaction;
 import jgnash.engine.dao.TransactionDAO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,5 +59,18 @@ public class XStreamTransactionDAO extends AbstractXStreamDAO implements Transac
     public boolean removeTransaction(final Transaction transaction) {
         commit();
         return true;
+    }
+
+    @Override
+    public List<Transaction> getTransactionsWithExternalLinks() {
+        List<Transaction> transactionList = new ArrayList<>();
+
+        for (Transaction transaction : container.query(Transaction.class)) {
+            if (!transaction.isMarkedForRemoval() && transaction.getExternalLink() != null) {
+                transactionList.add(transaction);
+            }
+        }
+
+        return transactionList;
     }
 }

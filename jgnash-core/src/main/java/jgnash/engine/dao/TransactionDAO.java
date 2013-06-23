@@ -29,9 +29,7 @@ import jgnash.engine.Transaction;
 public interface TransactionDAO {
 
     /**
-     * Returns a list of transactions.  
-     * <p>
-     * The list may be altered by the caller and not cause any side effects to the underlying database.
+     * Returns a list of transactions.
      * 
      * @return List of transactions
      */
@@ -42,5 +40,12 @@ public interface TransactionDAO {
     public Transaction getTransactionByUuid(final String uuid);
 
     public boolean removeTransaction(Transaction transaction);
+
+    /**
+     * Returns a list of transactions with external links.
+     *
+     * @return List of transactions
+     */
+    public List<Transaction> getTransactionsWithExternalLinks();
 
 }

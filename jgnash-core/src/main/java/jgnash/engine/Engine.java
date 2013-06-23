@@ -2497,13 +2497,20 @@ public class Engine {
 
     /**
      * Get all transactions
-     * <p/>
-     * The returned list may be altered by the caller without causing side effects
      *
-     * @return all transactions
+     * @return List of transactions that may be altered without concern of side effects
      */
     public List<Transaction> getTransactions() {
         return getTransactionDAO().getTransactions();
+    }
+
+    /**
+     * Returns a list of transactions with external links.
+     *
+     * @return List of transactions that may be altered without concern of side effects
+     */
+    public List<Transaction> getTransactionsWithExternalLinks() {
+        return getTransactionDAO().getTransactionsWithExternalLinks();
     }
 
     public Transaction getTransactionByUuid(final String uuid) {

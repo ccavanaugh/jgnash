@@ -577,7 +577,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
-     * External link to a file, path should be relative
+     * Returns an external link to a file.
      *
      * @return external path, null if not set
      */
@@ -586,7 +586,8 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
-     * Sets and external link to a file, path should be relative
+     * Sets an external link to a file, the path should be relative to the data file for portability.
+     * May be set to null.
      */
     public void setExternalLink(final String externalLink) {
         this.externalLink = externalLink;

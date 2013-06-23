@@ -772,6 +772,35 @@ public abstract class EngineTest {
     }
 
     @Test
+    public void testGetTransactionsWithExternalLinks() throws Exception {
+        final String ACCOUNT_NAME = "testAccount";
+
+        CurrencyNode node = e.getDefaultCurrency();
+
+        Account a = new Account(AccountType.BANK, node);
+        a.setName(ACCOUNT_NAME);
+
+        e.addAccount(e.getRootAccount(), a);
+
+        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), true, "memo", "payee", "1"));
+
+        Transaction link = TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), true, "memo", "payee", "1");
+        link.setExternalLink("external link");
+
+        e.addTransaction(link);
+
+        assertEquals(2, e.getTransactions().size());
+        assertEquals(1, e.getTransactionsWithExternalLinks().size());
+
+        // close and reopen to force check for persistence
+        closeEngine();
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD);
+
+        assertEquals(2, e.getTransactions().size());
+        assertEquals(1, e.getTransactionsWithExternalLinks().size());
+    }
+
+    @Test
     public void testGetUuid() {
         assertTrue(e.getUuid() != null);
         assertTrue(!e.getUuid().isEmpty());
