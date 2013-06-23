@@ -115,7 +115,8 @@ public class DistributedLockManager implements LockManager {
         bootstrap.group(eventLoopGroup)
                 .channel(NioSocketChannel.class)
                 .handler(new Initializer())
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, ConnectionFactory.getConnectionTimeout() * 1000);
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, ConnectionFactory.getConnectionTimeout() * 1000)
+                .option(ChannelOption.SO_KEEPALIVE, true);
 
         try {
             // Start the connection attempt.

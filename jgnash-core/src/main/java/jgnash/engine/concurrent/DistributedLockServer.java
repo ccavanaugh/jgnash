@@ -33,6 +33,7 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.MessageList;
 import io.netty.channel.group.ChannelGroup;
@@ -160,7 +161,8 @@ public class DistributedLockServer {
         try {
             bootstrap.group(eventLoopGroup)
                     .channel(NioServerSocketChannel.class)
-                    .childHandler(new Initializer());
+                    .childHandler(new Initializer())
+                    .childOption(ChannelOption.SO_KEEPALIVE, true);
 
             final ChannelFuture future = bootstrap.bind(port);
             future.sync();

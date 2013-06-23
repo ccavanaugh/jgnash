@@ -120,7 +120,8 @@ public class MessageBusClient {
         bootstrap.group(eventLoopGroup)
                 .channel(NioSocketChannel.class)
                 .handler(new MessageBusClientInitializer())
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, getConnectionTimeout() * 1000);
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, getConnectionTimeout() * 1000)
+                .option(ChannelOption.SO_KEEPALIVE, true);
 
         try {
             // Start the connection attempt.
