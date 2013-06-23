@@ -207,6 +207,8 @@ public class MessageBusClient {
                     logger.log(Level.SEVERE, "Unknown message: {0}", plainMessage);
                 }
             }
+
+            messageList.releaseAllAndRecycle();
         }
 
         @Override

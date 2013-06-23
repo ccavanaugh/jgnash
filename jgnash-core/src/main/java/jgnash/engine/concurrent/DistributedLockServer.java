@@ -235,13 +235,17 @@ public class DistributedLockServer {
         @Override
         public void messageReceived(final ChannelHandlerContext ctx, final MessageList<Object> messageList) throws Exception {
             for (final Object msg : messageList) {
+                final String message = msg.toString();
+
                 executorService.submit(new Runnable() {
                     @Override
                     public void run() {
-                        processMessage(ctx, msg.toString());
+                        processMessage(ctx, message);
                     }
                 });
             }
+
+            messageList.releaseAllAndRecycle();
         }
 
         @Override

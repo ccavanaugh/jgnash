@@ -280,13 +280,18 @@ public class DistributedLockManager implements LockManager {
         @Override
         public void messageReceived(final ChannelHandlerContext ctx, final MessageList<Object> messageList) throws Exception {
             for (final Object msg : messageList) {
+
+                final String message = msg.toString();
+
                 executorService.submit(new Runnable() {
                     @Override
                     public void run() {
-                        processMessage(msg.toString());
+                        processMessage(message);
                     }
                 });
             }
+
+            messageList.releaseAllAndRecycle();
         }
 
         @Override
