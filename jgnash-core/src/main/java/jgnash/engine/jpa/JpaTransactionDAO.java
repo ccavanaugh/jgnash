@@ -155,6 +155,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Transaction> getTransactionsWithExternalLinks() {
         List<Transaction> transactionList = Collections.EMPTY_LIST;
 
