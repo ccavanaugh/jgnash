@@ -146,7 +146,16 @@ public class Resource {
      * @return icon
      */
     public static ImageIcon getIcon(final String icon) {
-        return new ImageIcon(resource.getClass().getResource(icon));
+
+        ImageIcon imageIcon;
+
+        try {
+            imageIcon =  new ImageIcon(resource.getClass().getResource(icon));
+        } catch (NullPointerException e) {
+            imageIcon = null;
+        }
+
+        return imageIcon;
     }
 
     /**
