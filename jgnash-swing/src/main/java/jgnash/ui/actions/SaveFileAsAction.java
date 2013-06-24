@@ -61,6 +61,7 @@ public class SaveFileAsAction extends AbstractEnabledAction {
         final File current = new File(EngineFactory.getActiveDatabase());
 
         JFileChooser chooser = new JFileChooser(pref.get(CURRENT_DIR, null));
+        chooser.setMultiSelectionEnabled(false);
 
         chooser.setDialogTitle(rb.getString("Title.SaveAs"));
 

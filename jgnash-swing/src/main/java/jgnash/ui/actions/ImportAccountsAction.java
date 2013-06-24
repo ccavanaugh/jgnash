@@ -36,7 +36,6 @@ import jgnash.util.Resource;
  * Import a tree of accounts
  *
  * @author Craig Cavanaugh
- *
  */
 @Action("accountsimport-command")
 public class ImportAccountsAction extends AbstractEnabledAction {
@@ -52,6 +51,7 @@ public class ImportAccountsAction extends AbstractEnabledAction {
 
         JFileChooser chooser = new JFileChooser(pref.get(ACCOUNTS_IMPORT_DIR, null));
         chooser.addChoosableFileFilter(new FileNameExtensionFilter(rb.getString("Label.XMLFiles") + " (*.xml)", "xml"));
+        chooser.setMultiSelectionEnabled(false);
 
         if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             final File file = chooser.getSelectedFile();

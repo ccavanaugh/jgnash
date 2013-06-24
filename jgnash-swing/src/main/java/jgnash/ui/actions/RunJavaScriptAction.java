@@ -36,7 +36,6 @@ import jgnash.ui.util.builder.Action;
  * UI Action to open the currencies dialog
  *
  * @author Craig Cavanaugh
- *
  */
 @Action("javascript-command")
 public class RunJavaScriptAction extends AbstractEnabledAction {
@@ -51,6 +50,7 @@ public class RunJavaScriptAction extends AbstractEnabledAction {
         final Preferences pref = Preferences.userNodeForPackage(RunJavaScriptAction.class);
 
         JFileChooser chooser = new JFileChooser(pref.get(JAVASCRIPT_DIR, null));
+        chooser.setMultiSelectionEnabled(false);
 
         if (chooser.showOpenDialog(UIApplication.getFrame()) == JFileChooser.APPROVE_OPTION) {
             pref.put(JAVASCRIPT_DIR, chooser.getCurrentDirectory().getAbsolutePath());

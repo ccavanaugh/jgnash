@@ -36,7 +36,6 @@ import jgnash.util.Resource;
  * UI Action to export the current account tree
  *
  * @author Craig Cavanaugh
- *
  */
 @Action("exportAccounts-command")
 public class ExportAccountsAction extends AbstractEnabledAction {
@@ -53,6 +52,7 @@ public class ExportAccountsAction extends AbstractEnabledAction {
 
         JFileChooser chooser = new JFileChooser(pref.get(CURRENT_DIR, null));
         chooser.addChoosableFileFilter(new FileNameExtensionFilter(rb.getString("Label.XMLFiles") + " (*.xml)", "xml"));
+        chooser.setMultiSelectionEnabled(false);
 
         if (chooser.showSaveDialog(UIApplication.getFrame()) == JFileChooser.APPROVE_OPTION) {
             pref.put(CURRENT_DIR, chooser.getCurrentDirectory().getAbsolutePath());

@@ -55,6 +55,7 @@ public class ExportTransactionsAction {
         chooser.addChoosableFileFilter(csvFilter);
         chooser.addChoosableFileFilter(ofxFilter);
         chooser.setAcceptAllFileFilterUsed(false);
+        chooser.setMultiSelectionEnabled(false);
         chooser.setFileFilter(csvFilter);
 
         if (chooser.showSaveDialog(UIApplication.getFrame()) == JFileChooser.APPROVE_OPTION) {

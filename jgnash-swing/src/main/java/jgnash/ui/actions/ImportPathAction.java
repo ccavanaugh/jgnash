@@ -28,7 +28,6 @@ import jgnash.util.Resource;
  * UI Action to request database path from the user
  *
  * @author Craig Cavanaugh
- *
  */
 public class ImportPathAction {
 
@@ -43,6 +42,7 @@ public class ImportPathAction {
         Preferences pref = Preferences.userNodeForPackage(ImportPathAction.class);
 
         JFileChooser chooser = new JFileChooser(pref.get(LAST_DIR, null));
+        chooser.setMultiSelectionEnabled(false);
         chooser.setApproveButtonText(rb.getString("Button.Ok"));
         chooser.setDialogTitle(rb.getString("Title.NewFile"));
 

@@ -307,6 +307,8 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
         String fn = null;
 
         JFileChooser chooser = createFileChooser(pref.get(CURRENT_DIR, null));
+        chooser.setMultiSelectionEnabled(false);
+
         if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             pref.put(CURRENT_DIR, chooser.getCurrentDirectory().getAbsolutePath());
             fn = chooser.getSelectedFile().getAbsolutePath();
@@ -327,6 +329,7 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
 
     private void openLayout() {
         JFileChooser chooser = createFileChooser(pref.get(CURRENT_DIR, null));
+        chooser.setMultiSelectionEnabled(false);
 
         String fn = null;
         if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -367,6 +370,8 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
     private static JFileChooser createFileChooser(final String dir) {
         JFileChooser chooser = new JFileChooser(dir);
         chooser.addChoosableFileFilter(new FileNameExtensionFilter("jGnash Files(*.xml)", "xml"));
+        chooser.setMultiSelectionEnabled(false);
+
         return chooser;
     }
 

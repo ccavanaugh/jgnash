@@ -715,6 +715,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
         final Resource rb = Resource.get();
 
         JFileChooser chooser = new JFileChooser(pref.get(CURRENT_DIR, null));
+        chooser.setMultiSelectionEnabled(false);
         chooser.setAcceptAllFileFilterUsed(false);
         chooser.addChoosableFileFilter(new FileNameExtensionFilter(rb.getString("Label.SpreadsheetFiles")
                 + " (*.xls, *.xlsx)", "xls", "xlsx"));

@@ -79,6 +79,7 @@ public class DatabasePathAction {
         FileFilter filter = new DataStoreFilter(description.toString(), ext);
         chooser.addChoosableFileFilter(filter);
         chooser.setFileFilter(filter);
+        chooser.setMultiSelectionEnabled(false);
 
         chooser.setApproveButtonText(rb.getString("Button.Ok"));
 

@@ -546,6 +546,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
         Preferences p = Preferences.userNodeForPackage(DynamicJasperReportPanel.class);
 
         JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setMultiSelectionEnabled(false);
 
         for (JRSaveContributor saveContributor : saveContributors) {
             fileChooser.addChoosableFileFilter(saveContributor);
