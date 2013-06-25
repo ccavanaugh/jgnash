@@ -240,11 +240,12 @@ public final class FileUtils {
 
     /**
      * @see Path#resolve(java.nio.file.Path)
+     * @see java.nio.file.Path#normalize()
      */
     public static File resolve(final File baseFile, final String relativePath) {
         Path basePath = baseFile.toPath();
 
-        return basePath.resolve(relativePath).toFile();
+        return basePath.resolve(relativePath).normalize().toFile();
     }
 
     /**
