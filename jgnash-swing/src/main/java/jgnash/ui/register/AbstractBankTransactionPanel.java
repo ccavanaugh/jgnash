@@ -25,12 +25,21 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.text.MessageFormat;
 import java.util.Date;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
+
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -46,12 +55,17 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
+import jgnash.ui.StaticUIMethods;
+import jgnash.ui.UIApplication;
 import jgnash.ui.components.AutoCompleteFactory;
 import jgnash.ui.components.AutoCompleteTextField;
 import jgnash.ui.components.DatePanel;
+import jgnash.ui.components.ExceptionDialog;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.components.TransactionNumberComboBox;
+import jgnash.ui.components.YesNoDialog;
 import jgnash.ui.util.ValidationFactory;
+import jgnash.util.FileUtils;
 import jgnash.util.Resource;
 
 /**
@@ -59,11 +73,13 @@ import jgnash.util.Resource;
  * layout or container assignment.
  * <p/>
  * Any extending class may assign the KeyListener member to additional components to improve focus traversal.
- * 
+ *
  * @author Craig Cavanaugh
  * @author axnotizes
  */
 public abstract class AbstractBankTransactionPanel extends AbstractTransactionPanel implements ActionListener, MessageListener {
+
+    private static final String LAST_DIR = "LastDir";
 
     final JButton attachmentButton;
 
@@ -89,15 +105,19 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
 
     private boolean autoComplete = true;
 
+    File attachment = null;
+
+    boolean moveAttachment = false;
+
     /**
      * Abstract transaction panel
-     * 
+     *
      * @param account The account that this transaction panel will be used for
      */
     AbstractBankTransactionPanel(final Account account) {
         this.account = account;
 
-        attachmentButton = new JButton(Resource.getIcon("mail-attachment.png"));
+        attachmentButton = new JButton(Resource.getIcon("/jgnash/resource/mail-attachment.png"));
         enterButton = new JButton(rb.getString("Button.Enter"));
         cancelButton = new JButton(rb.getString("Button.Clear"));
 
@@ -176,12 +196,16 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
         numberField.setText(null);
         payeeField.setText(null);
         reconciledButton.setSelected(false);
+
+        moveAttachment = false;
+        attachment = null;
+
         modTrans = null;
     }
 
     /**
      * Enables / Disables auto fill
-     * 
+     *
      * @param complete true to allow auto fill to happen
      */
     public void setAutoComplete(final boolean complete) {
@@ -190,7 +214,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
 
     /**
      * Validates the form
-     * 
+     *
      * @return True if the form is valid
      */
     @Override
@@ -222,6 +246,17 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
                 Transaction newTrans = buildTransaction();
                 ReconcileManager.reconcileTransaction(getAccount(), newTrans, reconciledButton.isSelected());
 
+                if (attachment != null) {
+
+                    System.out.println("enter Action");
+                    if (moveAttachment) {   // move the attachment first
+                        moveAttachment();
+                    }
+
+                    final File baseFile = new File(EngineFactory.getActiveDatabase());
+                    newTrans.setAttachment(FileUtils.relativize(baseFile, attachment).toString());
+                }
+
                 EngineFactory.getEngine(EngineFactory.DEFAULT).addTransaction(newTrans);
             } else {
                 Transaction newTrans = buildTransaction();
@@ -239,6 +274,15 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
                  * This must be performed last to ensure consistent results per the ReconcileManager rules
                  */
                 ReconcileManager.reconcileTransaction(getAccount(), newTrans, reconciledButton.isSelected());
+
+                if (attachment != null) {
+                    if (moveAttachment) {   // move the attachment first
+                        moveAttachment();
+                    }
+
+                    final File baseFile = new File(EngineFactory.getActiveDatabase());
+                    newTrans.setAttachment(FileUtils.relativize(baseFile, attachment).toString());
+                }
 
                 Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
@@ -269,7 +313,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
 
     /**
      * Action notification
-     * 
+     *
      * @param e the action event to process
      */
     @Override
@@ -284,12 +328,74 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
     }
 
     private void attachmentAction() {
-        //TODO, Select file... need dialog warning when deleting attachments
+        final Preferences pref = Preferences.userNodeForPackage(AbstractBankTransactionPanel.class);
+        final File baseFile = new File(EngineFactory.getActiveDatabase());
+
+        final JFileChooser chooser = new JFileChooser(pref.get(LAST_DIR, null));
+        chooser.setMultiSelectionEnabled(false);
+
+        if (attachment != null) {
+            chooser.setSelectedFile(attachment);
+        }
+
+        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            pref.put(LAST_DIR, chooser.getCurrentDirectory().getAbsolutePath());
+
+            File selectedFile = chooser.getSelectedFile();
+
+            if (selectedFile != null) {
+
+                boolean result = true;
+
+                if (!FileUtils.getAttachmentDirectory(baseFile).toString().equals(selectedFile.getParent())) {
+
+                    String message = MessageFormat.format(rb.getString("Message.WarnMoveFile"), selectedFile.toString(),
+                            FileUtils.getAttachmentDirectory(baseFile).toString());
+
+                    result = YesNoDialog.showYesNoDialog(UIApplication.getFrame(), new JLabel(message), rb.getString("Title.MoveFile"));
+
+                    if (result) {
+                        moveAttachment = true;
+
+                        Path newPath = new File(FileUtils.getAttachmentDirectory(baseFile).toString() +
+                                File.separator + selectedFile.getName()).toPath();
+
+                        if (newPath.toFile().exists()) {
+                            message = MessageFormat.format(rb.getString("Message.WarnSameFile"), selectedFile.toString(),
+                                    FileUtils.getAttachmentDirectory(baseFile).toString());
+
+                            StaticUIMethods.displayWarning(message);
+                            moveAttachment = false;
+                            result = false;
+                        }
+                    }
+                }
+
+                if (result) {
+                    attachment = selectedFile;
+                }
+            }
+        }
+    }
+
+    private void moveAttachment() {
+        final File baseFile = new File(EngineFactory.getActiveDatabase());
+
+        Path newPath = new File(FileUtils.getAttachmentDirectory(baseFile).toString() +
+                File.separator + attachment.getName()).toPath();
+
+        try {
+            Files.move(attachment.toPath(), newPath, StandardCopyOption.ATOMIC_MOVE);
+            attachment = newPath.toFile(); // update reference
+        } catch (final IOException e) {
+            Logger.getLogger(AbstractBankTransactionPanel.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            new ExceptionDialog(UIApplication.getFrame(), e).setVisible(true);
+        }
     }
 
     /**
      * Determines if the transaction can be modified with this transaction panel
-     * 
+     *
      * @param t The transaction to modify
      * @return True if the transaction can be modified in this panel
      */
@@ -299,7 +405,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
      * Modify a transaction before it is used to complete the panel for auto fill. The supplied transaction must be a
      * new or cloned transaction. It can't be a transaction that lives in the map. The returned transaction can be the
      * supplied reference or may be a new instance
-     * 
+     *
      * @param t The transaction to modify
      * @return the modified transaction
      */
@@ -322,10 +428,19 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
             t.clearTransactionEntries();
             t.addTransactionEntries(newTrans.getTransactionEntries());
         }
-                
+
         // preserve any preexisting memo field info
         if (!memoField.getText().isEmpty()) {
             t.setMemo(memoField.getText());
+        }
+
+        // preserve any prior attachments
+        if (t.getAttachment() != null && !t.getAttachment().isEmpty()) {
+            final File baseFile = new File(EngineFactory.getActiveDatabase());
+
+            attachment = FileUtils.resolve(baseFile, t.getAttachment());
+        } else {
+            attachment = null;
         }
 
         return t;
@@ -338,8 +453,8 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
      */
     private class PayeeFocusListener extends FocusAdapter {
 
-        /**         
-         * @see FocusAdapter#focusLost(java.awt.event.FocusEvent) 
+        /**
+         * @see FocusAdapter#focusLost(java.awt.event.FocusEvent)
          */
         @Override
         public void focusLost(final FocusEvent e) {

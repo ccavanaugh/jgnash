@@ -22,6 +22,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -41,6 +42,7 @@ import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.util.ValidationFactory;
+import jgnash.util.FileUtils;
 
 /**
  * Transaction Panel Handles the creation and modification of a transaction.
@@ -347,6 +349,15 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
                 accountPanel.setSelectedAccount(entry.getDebitAccount());
                 accountPanel.setExchangedAmount(entry.getDebitAmount().abs());
             }
+        }
+
+        // preserve any prior attachments
+        if (t.getAttachment() != null && !t.getAttachment().isEmpty()) {
+            final File baseFile = new File(EngineFactory.getActiveDatabase());
+
+            attachment = FileUtils.resolve(baseFile, t.getAttachment());
+        } else {
+            attachment = null;
         }
     }
 
