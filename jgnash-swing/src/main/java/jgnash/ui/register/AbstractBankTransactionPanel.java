@@ -36,12 +36,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
@@ -331,8 +334,27 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
         final Preferences pref = Preferences.userNodeForPackage(AbstractBankTransactionPanel.class);
         final File baseFile = new File(EngineFactory.getActiveDatabase());
 
+        final String[] fileSuffixes = ImageIO.getReaderFileSuffixes();
+
+        StringBuilder description = new StringBuilder("Image Files (");
+
+        for (int i = 0; i < fileSuffixes.length; i++) {
+            description.append("*.");
+            description.append(fileSuffixes[i]);
+            if (i < fileSuffixes.length - 1) {
+                description.append(", ");
+            }
+        }
+
+        description.append(")");
+
+        FileFilter fileFilter =  new FileNameExtensionFilter(description.toString(), fileSuffixes);
+
         final JFileChooser chooser = new JFileChooser(pref.get(LAST_DIR, null));
+        chooser.addChoosableFileFilter(fileFilter);
+        chooser.setFileFilter(fileFilter);
         chooser.setMultiSelectionEnabled(false);
+        chooser.setAcceptAllFileFilterUsed(false);
 
         if (attachment != null) {
             chooser.setSelectedFile(attachment);
