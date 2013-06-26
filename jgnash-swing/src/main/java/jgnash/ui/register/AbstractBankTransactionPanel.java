@@ -250,8 +250,6 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
                 ReconcileManager.reconcileTransaction(getAccount(), newTrans, reconciledButton.isSelected());
 
                 if (attachment != null) {
-
-                    System.out.println("enter Action");
                     if (moveAttachment) {   // move the attachment first
                         moveAttachment();
                     }
@@ -336,7 +334,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
 
         final String[] fileSuffixes = ImageIO.getReaderFileSuffixes();
 
-        StringBuilder description = new StringBuilder("Image Files (");
+        StringBuilder description = new StringBuilder(rb.getString("Title.ImageFiles")).append(" (");
 
         for (int i = 0; i < fileSuffixes.length; i++) {
             description.append("*.");
