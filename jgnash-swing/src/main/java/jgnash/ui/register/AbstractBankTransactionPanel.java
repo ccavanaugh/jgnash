@@ -25,26 +25,14 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.text.MessageFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 
-import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
@@ -58,17 +46,12 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
-import jgnash.ui.StaticUIMethods;
-import jgnash.ui.UIApplication;
 import jgnash.ui.components.AutoCompleteFactory;
 import jgnash.ui.components.AutoCompleteTextField;
 import jgnash.ui.components.DatePanel;
-import jgnash.ui.components.ExceptionDialog;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.components.TransactionNumberComboBox;
-import jgnash.ui.components.YesNoDialog;
 import jgnash.ui.util.ValidationFactory;
-import jgnash.util.FileUtils;
 import jgnash.util.Resource;
 
 /**
@@ -82,7 +65,7 @@ import jgnash.util.Resource;
  */
 public abstract class AbstractBankTransactionPanel extends AbstractTransactionPanel implements ActionListener, MessageListener {
 
-    private static final String LAST_DIR = "LastDir";
+    //private static final String LAST_DIR = "LastDir";
 
     final JButton attachmentButton;
 
@@ -108,9 +91,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
 
     private boolean autoComplete = true;
 
-    File attachment = null;
-
-    boolean moveAttachment = false;
+    AttachmentPanel attachmentPanel = new AttachmentPanel();
 
     /**
      * Abstract transaction panel
@@ -200,8 +181,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
         payeeField.setText(null);
         reconciledButton.setSelected(false);
 
-        moveAttachment = false;
-        attachment = null;
+        attachmentPanel.clear();
 
         modTrans = null;
     }
@@ -249,14 +229,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
                 Transaction newTrans = buildTransaction();
                 ReconcileManager.reconcileTransaction(getAccount(), newTrans, reconciledButton.isSelected());
 
-                if (attachment != null) {
-                    if (moveAttachment) {   // move the attachment first
-                        moveAttachment();
-                    }
-
-                    final File baseFile = new File(EngineFactory.getActiveDatabase());
-                    newTrans.setAttachment(FileUtils.relativize(baseFile, attachment).toString());
-                }
+                newTrans = attachmentPanel.buildTransaction(newTrans);  // chain the transaction build
 
                 EngineFactory.getEngine(EngineFactory.DEFAULT).addTransaction(newTrans);
             } else {
@@ -276,14 +249,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
                  */
                 ReconcileManager.reconcileTransaction(getAccount(), newTrans, reconciledButton.isSelected());
 
-                if (attachment != null) {
-                    if (moveAttachment) {   // move the attachment first
-                        moveAttachment();
-                    }
-
-                    final File baseFile = new File(EngineFactory.getActiveDatabase());
-                    newTrans.setAttachment(FileUtils.relativize(baseFile, attachment).toString());
-                }
+                newTrans = attachmentPanel.buildTransaction(newTrans);  // chain the transaction build
 
                 Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
@@ -320,96 +286,11 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == attachmentButton) {
-            attachmentAction();
+            attachmentPanel.attachmentAction();
         } else if (e.getSource() == cancelButton) {
             cancelAction();
         } else if (e.getSource() == enterButton) {
             enterAction();
-        }
-    }
-
-    private void attachmentAction() {
-        final Preferences pref = Preferences.userNodeForPackage(AbstractBankTransactionPanel.class);
-        final File baseFile = new File(EngineFactory.getActiveDatabase());
-
-        final String[] fileSuffixes = ImageIO.getReaderFileSuffixes();
-
-        StringBuilder description = new StringBuilder(rb.getString("Title.ImageFiles")).append(" (");
-
-        for (int i = 0; i < fileSuffixes.length; i++) {
-            description.append("*.");
-            description.append(fileSuffixes[i]);
-            if (i < fileSuffixes.length - 1) {
-                description.append(", ");
-            }
-        }
-
-        description.append(")");
-
-        FileFilter fileFilter =  new FileNameExtensionFilter(description.toString(), fileSuffixes);
-
-        final JFileChooser chooser = new JFileChooser(pref.get(LAST_DIR, null));
-        chooser.addChoosableFileFilter(fileFilter);
-        chooser.setFileFilter(fileFilter);
-        chooser.setMultiSelectionEnabled(false);
-        chooser.setAcceptAllFileFilterUsed(false);
-
-        if (attachment != null) {
-            chooser.setSelectedFile(attachment);
-        }
-
-        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            pref.put(LAST_DIR, chooser.getCurrentDirectory().getAbsolutePath());
-
-            File selectedFile = chooser.getSelectedFile();
-
-            if (selectedFile != null) {
-
-                boolean result = true;
-
-                if (!FileUtils.getAttachmentDirectory(baseFile).toString().equals(selectedFile.getParent())) {
-
-                    String message = MessageFormat.format(rb.getString("Message.WarnMoveFile"), selectedFile.toString(),
-                            FileUtils.getAttachmentDirectory(baseFile).toString());
-
-                    result = YesNoDialog.showYesNoDialog(UIApplication.getFrame(), new JLabel(message), rb.getString("Title.MoveFile"));
-
-                    if (result) {
-                        moveAttachment = true;
-
-                        Path newPath = new File(FileUtils.getAttachmentDirectory(baseFile).toString() +
-                                File.separator + selectedFile.getName()).toPath();
-
-                        if (newPath.toFile().exists()) {
-                            message = MessageFormat.format(rb.getString("Message.WarnSameFile"), selectedFile.toString(),
-                                    FileUtils.getAttachmentDirectory(baseFile).toString());
-
-                            StaticUIMethods.displayWarning(message);
-                            moveAttachment = false;
-                            result = false;
-                        }
-                    }
-                }
-
-                if (result) {
-                    attachment = selectedFile;
-                }
-            }
-        }
-    }
-
-    private void moveAttachment() {
-        final File baseFile = new File(EngineFactory.getActiveDatabase());
-
-        Path newPath = new File(FileUtils.getAttachmentDirectory(baseFile).toString() +
-                File.separator + attachment.getName()).toPath();
-
-        try {
-            Files.move(attachment.toPath(), newPath, StandardCopyOption.ATOMIC_MOVE);
-            attachment = newPath.toFile(); // update reference
-        } catch (final IOException e) {
-            Logger.getLogger(AbstractBankTransactionPanel.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-            new ExceptionDialog(UIApplication.getFrame(), e).setVisible(true);
         }
     }
 
@@ -454,14 +335,8 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
             t.setMemo(memoField.getText());
         }
 
-        // preserve any prior attachments
-        if (t.getAttachment() != null && !t.getAttachment().isEmpty()) {
-            final File baseFile = new File(EngineFactory.getActiveDatabase());
-
-            attachment = FileUtils.resolve(baseFile, t.getAttachment());
-        } else {
-            attachment = null;
-        }
+        // Do not copy over attachments
+        t.setAttachment(null);
 
         return t;
     }
