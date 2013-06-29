@@ -141,7 +141,7 @@ public class StaticUIMethods {
      * @param buttons an array of buttons to add
      * @return a left aligned button bar with the given buttons
      */
-    public static JPanel buildLeftAlignedBar(final JButton... buttons) {
+    public static JPanel buildLeftAlignedBar(final AbstractButton... buttons) {
         return new ButtonBarBuilder().addButton(buttons).addGlue().build();
     }
 
@@ -151,7 +151,7 @@ public class StaticUIMethods {
      * @param buttons an array of buttons to add
      * @return a right aligned button bar with the given buttons
      */
-    public static JPanel buildRightAlignedBar(final JButton... buttons) {
+    public static JPanel buildRightAlignedBar(final AbstractButton... buttons) {
         ButtonBarBuilder builder = new ButtonBarBuilder();
         builder.addGlue();
         builder.addButton(buttons);
@@ -180,7 +180,7 @@ public class StaticUIMethods {
      * @param buttons an array of buttons to add
      * @return a right aligned button bar with the given buttons
      */
-    public static JPanel buildHelpBar(final JButton help, final JButton... buttons) {
+    public static JPanel buildHelpBar(final JButton help, final AbstractButton... buttons) {
         ButtonBarBuilder builder = new ButtonBarBuilder();
         builder.addButton(help);
         builder.addUnrelatedGap();
