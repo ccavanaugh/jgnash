@@ -257,9 +257,9 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
 
         newTransaction(t); // load the form
 
-        attachmentPanel.modifyTransaction(t);
-
         modTrans = t; // save reference to old transaction
+
+        modTrans = attachmentPanel.modifyTransaction(modTrans);
 
         if (!canModifyTransaction(t) && t.getTransactionType() == TransactionType.SPLITENTRY) {
             for (TransactionEntry entry : t.getTransactionEntries()) {

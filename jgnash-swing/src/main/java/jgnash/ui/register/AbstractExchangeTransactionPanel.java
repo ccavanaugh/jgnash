@@ -69,7 +69,7 @@ public abstract class AbstractExchangeTransactionPanel extends AbstractBankTrans
 
     protected JPanel createBottomPanel() {
 
-        FormLayout layout = new FormLayout("m, 8dlu, m, 8dlu, right:m:g", "f:d");
+        FormLayout layout = new FormLayout("m, $ugap, m, $ugap, right:m:g", "f:d");
 
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 

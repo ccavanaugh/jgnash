@@ -55,7 +55,7 @@ import com.jgoodies.forms.layout.FormLayout;
  *
  * @author Craig Cavanaugh
  */
-class AttachmentPanel extends JPanel implements ActionListener{
+class AttachmentPanel extends JPanel implements ActionListener {
 
     private static final String LAST_DIR = "LastDir";
 
@@ -69,24 +69,34 @@ class AttachmentPanel extends JPanel implements ActionListener{
 
     final JButton attachmentButton;
 
+    final JButton deleteButton;
+
     AttachmentPanel() {
         attachmentButton = new JButton(Resource.getIcon("/jgnash/resource/mail-attachment.png"));
-        viewAttachmentButton = new JButton("view");
+        deleteButton = new JButton(Resource.getIcon("/jgnash/resource/edit-delete.png"));
+        viewAttachmentButton = new JButton(Resource.getIcon("/jgnash/resource/zoom-fit-best.png"));
 
-        FormLayout layout = new FormLayout("m, 4dlu, m", "f:d");
+        attachmentButton.setToolTipText(rb.getString("ToolTip.AddAttachment"));
+        deleteButton.setToolTipText(rb.getString("ToolTip.DeleteAttachment"));
+        viewAttachmentButton.setToolTipText(rb.getString("ToolTip.ViewAttachment"));
+
+        FormLayout layout = new FormLayout("m, $rgap, m, $rgap, m", "f:d");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
 
-        builder.append(attachmentButton, viewAttachmentButton);
+        builder.append(attachmentButton, viewAttachmentButton, deleteButton);
 
         registerListeners();
+
+        updateControlStates();
     }
 
     private void registerListeners() {
         attachmentButton.addActionListener(this);
+        deleteButton.addActionListener(this);
         viewAttachmentButton.addActionListener(this);
     }
 
-   void modifyTransaction(final Transaction transaction) {
+    Transaction modifyTransaction(final Transaction transaction) {
         // preserve any prior attachments
         if (transaction.getAttachment() != null && !transaction.getAttachment().isEmpty()) {
             final File baseFile = new File(EngineFactory.getActiveDatabase());
@@ -95,19 +105,26 @@ class AttachmentPanel extends JPanel implements ActionListener{
         } else {
             attachment = null;
         }
+
+        updateControlStates();
+
+        return transaction;
     }
 
     void clear() {
         moveAttachment = false;
         attachment = null;
+
+        updateControlStates();
     }
 
     /**
      * Chain builder for a new transaction
+     *
      * @param transaction Transaction to work with
      * @return chained return of the passed transaction
      */
-   Transaction buildTransaction(final Transaction transaction) {
+    Transaction buildTransaction(final Transaction transaction) {
 
         if (attachment != null) {
             if (moveAttachment) {   // move the attachment first
@@ -116,7 +133,11 @@ class AttachmentPanel extends JPanel implements ActionListener{
 
             final File baseFile = new File(EngineFactory.getActiveDatabase());
             transaction.setAttachment(FileUtils.relativize(baseFile, attachment).toString());
+        } else {
+            transaction.setAttachment(null);
         }
+
+        updateControlStates();
 
         return transaction;
     }
@@ -213,12 +234,23 @@ class AttachmentPanel extends JPanel implements ActionListener{
         }
     }
 
+    void updateControlStates() {
+        attachmentButton.setEnabled(attachment == null);
+        deleteButton.setEnabled(attachment != null);
+        viewAttachmentButton.setEnabled(attachment != null);
+    }
+
     @Override
     public void actionPerformed(final ActionEvent e) {
-       if (e.getSource() == attachmentButton) {
-           attachmentAction();
-       } else if (e.getSource() == viewAttachmentButton) {
-           showImageAction();
-       }
+        if (e.getSource() == attachmentButton) {
+            attachmentAction();
+        } else if (e.getSource() == deleteButton) {
+            attachment = null;
+
+        } else if (e.getSource() == viewAttachmentButton) {
+            showImageAction();
+        }
+
+        updateControlStates();
     }
 }

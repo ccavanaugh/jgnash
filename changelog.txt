@@ -28,6 +28,7 @@ Exceptions occur when entering Chinese text with Autocomplete enabled.
 
 Release 2.13.0
 ----------------------
+06/29/13 Added a new feature; Transactions may now have image attachments.
 06/20/13 New client server architecture based on Hibernate/JPA2 with H2 or HSQLDB SQL database.  db4o support
          has been purged from the code base.
 06/10/13 Improve dialog positioning when using multiple monitors and when using fewer monitors than last run.

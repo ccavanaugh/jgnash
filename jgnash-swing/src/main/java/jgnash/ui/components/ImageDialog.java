@@ -34,6 +34,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import jgnash.ui.util.DialogUtils;
+import jgnash.util.Resource;
 
 import org.jdesktop.swingx.util.GraphicsUtilities;
 
@@ -44,13 +45,11 @@ import org.jdesktop.swingx.util.GraphicsUtilities;
  */
 public class ImageDialog extends JDialog {
 
-    ImagePanel imagePanel;
+    final ImagePanel imagePanel;
 
     public static void showImage(final File file) {
         ImageDialog dialog = new ImageDialog();
-
         dialog.setImage(file);
-        dialog.setMinimumSize(new Dimension(300, 300));
 
         DialogUtils.addBoundsListener(dialog);
 
@@ -58,9 +57,13 @@ public class ImageDialog extends JDialog {
     }
 
     ImageDialog() {
+        setTitle(Resource.get().getString("Title.ViewImage"));
+        setIconImage(Resource.getImage("/jgnash/resource/gnome-money.png"));
+
         imagePanel = new ImagePanel();
 
         getContentPane().add(imagePanel);
+        setMinimumSize(new Dimension(250, 250));
 
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -81,6 +84,8 @@ public class ImageDialog extends JDialog {
     }
 
     private class ImagePanel extends JPanel {
+        public static final int MARGIN = 5;
+
         private BufferedImage image;
         private BufferedImage scaledImage;
 
@@ -134,8 +139,8 @@ public class ImageDialog extends JDialog {
 
             int _width, _height;
 
-            _width = (int) ((float) originalImage.getWidth() * ratio);
-            _height = (int) ((float) originalImage.getHeight() * ratio);
+            _width = (int) ((float) originalImage.getWidth() * ratio) - MARGIN * 2;
+            _height = (int) ((float) originalImage.getHeight() * ratio) - MARGIN * 2;
 
             if (_width >= originalImage.getWidth() || _height >= originalImage.getHeight()) {
                 Graphics2D g2 = null;
