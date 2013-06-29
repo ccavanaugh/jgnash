@@ -52,7 +52,6 @@ import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.components.TransactionNumberComboBox;
 import jgnash.ui.util.ValidationFactory;
-import jgnash.util.Resource;
 
 /**
  * Abstract JPanel that implements common code used in all bank TransactionPanels. This class does not perform any
@@ -64,10 +63,6 @@ import jgnash.util.Resource;
  * @author axnotizes
  */
 public abstract class AbstractBankTransactionPanel extends AbstractTransactionPanel implements ActionListener, MessageListener {
-
-    //private static final String LAST_DIR = "LastDir";
-
-    final JButton attachmentButton;
 
     final JButton enterButton;
 
@@ -101,7 +96,6 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
     AbstractBankTransactionPanel(final Account account) {
         this.account = account;
 
-        attachmentButton = new JButton(Resource.getIcon("/jgnash/resource/mail-attachment.png"));
         enterButton = new JButton(rb.getString("Button.Enter"));
         cancelButton = new JButton(rb.getString("Button.Clear"));
 
@@ -151,7 +145,6 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
     }
 
     private void registerListeners() {
-        attachmentButton.addActionListener(this);
         cancelButton.addActionListener(this);
         enterButton.addActionListener(this);
     }
@@ -285,9 +278,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if (e.getSource() == attachmentButton) {
-            attachmentPanel.attachmentAction();
-        } else if (e.getSource() == cancelButton) {
+        if (e.getSource() == cancelButton) {
             cancelAction();
         } else if (e.getSource() == enterButton) {
             enterAction();

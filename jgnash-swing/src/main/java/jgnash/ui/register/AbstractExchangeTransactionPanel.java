@@ -17,13 +17,13 @@
  */
 package jgnash.ui.register;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-
 import javax.swing.JPanel;
 
 import jgnash.engine.Account;
 import jgnash.ui.StaticUIMethods;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Extends AbstractBankTransactionPanel and adds fields and labels for transactions
@@ -73,7 +73,7 @@ public abstract class AbstractExchangeTransactionPanel extends AbstractBankTrans
 
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 
-        builder.append(reconciledButton, attachmentButton, StaticUIMethods.buildOKCancelBar(enterButton, cancelButton));
+        builder.append(reconciledButton, attachmentPanel, StaticUIMethods.buildOKCancelBar(enterButton, cancelButton));
         return builder.getPanel();
     }
 }

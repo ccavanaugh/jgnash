@@ -17,6 +17,8 @@
  */
 package jgnash.ui.register;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,8 +30,10 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -38,27 +42,49 @@ import jgnash.engine.Transaction;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.ExceptionDialog;
+import jgnash.ui.components.ImageDialog;
 import jgnash.ui.components.YesNoDialog;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Manages transaction attachments
  *
  * @author Craig Cavanaugh
  */
-class AttachmentPanel {
+class AttachmentPanel extends JPanel implements ActionListener{
 
     private static final String LAST_DIR = "LastDir";
 
-    /**
-     * Resource bundle
-     */
     private final Resource rb = Resource.get();
 
     File attachment = null;
 
     boolean moveAttachment = false;
+
+    final JButton viewAttachmentButton;
+
+    final JButton attachmentButton;
+
+    AttachmentPanel() {
+        attachmentButton = new JButton(Resource.getIcon("/jgnash/resource/mail-attachment.png"));
+        viewAttachmentButton = new JButton("view");
+
+        FormLayout layout = new FormLayout("m, 4dlu, m", "f:d");
+        DefaultFormBuilder builder = new DefaultFormBuilder(layout, this);
+
+        builder.append(attachmentButton, viewAttachmentButton);
+
+        registerListeners();
+    }
+
+    private void registerListeners() {
+        attachmentButton.addActionListener(this);
+        viewAttachmentButton.addActionListener(this);
+    }
 
    void modifyTransaction(final Transaction transaction) {
         // preserve any prior attachments
@@ -149,6 +175,7 @@ class AttachmentPanel {
 
                 boolean result = true;
 
+                // TODO, add option to copy the file
                 if (!FileUtils.getAttachmentDirectory(baseFile).toString().equals(selectedFile.getParent())) {
 
                     String message = MessageFormat.format(rb.getString("Message.WarnMoveFile"), selectedFile.toString(),
@@ -178,5 +205,20 @@ class AttachmentPanel {
                 }
             }
         }
+    }
+
+    void showImageAction() {
+        if (attachment != null) {
+            ImageDialog.showImage(attachment);
+        }
+    }
+
+    @Override
+    public void actionPerformed(final ActionEvent e) {
+       if (e.getSource() == attachmentButton) {
+           attachmentAction();
+       } else if (e.getSource() == viewAttachmentButton) {
+           showImageAction();
+       }
     }
 }
