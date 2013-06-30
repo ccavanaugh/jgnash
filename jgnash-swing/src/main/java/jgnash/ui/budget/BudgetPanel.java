@@ -344,7 +344,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
 
         logger.entering(BudgetPanel.class.getName(), "showBudgetPane");
 
-        // unregister the listener
+        // unregister the listener so we don't leak by listening to stale models
         if (tableModel != null) {
             tableModel.removeMessageListener(this);
         }
