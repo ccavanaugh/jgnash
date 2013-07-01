@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
+import jgnash.engine.AttachmentUtils;
+
 import org.junit.Test;
 
 /**
@@ -77,17 +79,17 @@ public class FileUtilsTest {
 
         File tempFile = new File(tempDir + File.separator + "temp.txt");
 
-        File base = FileUtils.getAttachmentDirectory(tempFile);
+        File base = AttachmentUtils.getAttachmentDirectory(tempFile);
 
-        assertEquals(tempDir + File.separator + FileUtils.ATTACHMENT_BASE, base.toString());
+        assertEquals(tempDir + File.separator + AttachmentUtils.ATTACHMENT_BASE, base.toString());
 
         File temp2 = new File(base.toString() + File.separator + "attach.txt");
 
-        File relative = FileUtils.relativize(tempFile, temp2);
+        File relative = AttachmentUtils.relativize(tempFile, temp2);
 
-        assertEquals(".." + File.separator + FileUtils.ATTACHMENT_BASE + File.separator + "attach.txt", relative.toString());
+        assertEquals(".." + File.separator + AttachmentUtils.ATTACHMENT_BASE + File.separator + "attach.txt", relative.toString());
 
-        File absolute = FileUtils.resolve(tempFile, relative.toString());
+        File absolute = AttachmentUtils.resolve(tempFile, relative.toString());
 
         assertEquals(absolute.toString(), absolute.toString());
     }

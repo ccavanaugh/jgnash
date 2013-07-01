@@ -37,6 +37,7 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import jgnash.engine.AttachmentUtils;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.ui.StaticUIMethods;
@@ -44,7 +45,6 @@ import jgnash.ui.UIApplication;
 import jgnash.ui.components.ExceptionDialog;
 import jgnash.ui.components.ImageDialog;
 import jgnash.ui.components.YesNoDialog;
-import jgnash.util.FileUtils;
 import jgnash.util.Resource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -101,7 +101,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
         if (transaction.getAttachment() != null && !transaction.getAttachment().isEmpty()) {
             final File baseFile = new File(EngineFactory.getActiveDatabase());
 
-            attachment = FileUtils.resolve(baseFile, transaction.getAttachment());
+            attachment = AttachmentUtils.resolve(baseFile, transaction.getAttachment());
         } else {
             attachment = null;
         }
@@ -132,7 +132,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
             }
 
             final File baseFile = new File(EngineFactory.getActiveDatabase());
-            transaction.setAttachment(FileUtils.relativize(baseFile, attachment).toString());
+            transaction.setAttachment(AttachmentUtils.relativize(baseFile, attachment).toString());
         } else {
             transaction.setAttachment(null);
         }
@@ -144,7 +144,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
 
     private void moveAttachment() {
         final File baseFile = new File(EngineFactory.getActiveDatabase());
-        final File baseDirectory = FileUtils.getAttachmentDirectory(baseFile);
+        final File baseDirectory = AttachmentUtils.getAttachmentDirectory(baseFile);
 
         boolean directoryExists = true;
 
@@ -205,22 +205,22 @@ class AttachmentPanel extends JPanel implements ActionListener {
                 boolean result = true;
 
                 // TODO, add option to copy the file
-                if (!FileUtils.getAttachmentDirectory(baseFile).toString().equals(selectedFile.getParent())) {
+                if (!AttachmentUtils.getAttachmentDirectory(baseFile).toString().equals(selectedFile.getParent())) {
 
                     String message = MessageFormat.format(rb.getString("Message.WarnMoveFile"), selectedFile.toString(),
-                            FileUtils.getAttachmentDirectory(baseFile).toString());
+                            AttachmentUtils.getAttachmentDirectory(baseFile).toString());
 
                     result = YesNoDialog.showYesNoDialog(UIApplication.getFrame(), new JLabel(message), rb.getString("Title.MoveFile"));
 
                     if (result) {
                         moveAttachment = true;
 
-                        Path newPath = new File(FileUtils.getAttachmentDirectory(baseFile).toString() +
+                        Path newPath = new File(AttachmentUtils.getAttachmentDirectory(baseFile).toString() +
                                 File.separator + selectedFile.getName()).toPath();
 
                         if (newPath.toFile().exists()) {
                             message = MessageFormat.format(rb.getString("Message.WarnSameFile"), selectedFile.toString(),
-                                    FileUtils.getAttachmentDirectory(baseFile).toString());
+                                    AttachmentUtils.getAttachmentDirectory(baseFile).toString());
 
                             StaticUIMethods.displayWarning(message);
                             moveAttachment = false;
