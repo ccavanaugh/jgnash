@@ -15,23 +15,18 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.engine;
+package jgnash.engine.attachment;
 
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.MessageList;
-import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -58,13 +53,9 @@ public class AttachmentTransferServer {
 
     private final int port;
 
-    EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
+    private final EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
 
     private final ChannelGroup channelGroup = new DefaultChannelGroup("file-server", GlobalEventExecutor.INSTANCE);
-
-    public static final String START_FILE = "<START_FILE>";
-    public static final String END_FILE = "<END_FILE>";
-    public static final String FILE_CHUNK = "<FILE_CHUNK>";
 
     public AttachmentTransferServer(final int port) {
         this.port = port;
@@ -85,7 +76,7 @@ public class AttachmentTransferServer {
                         public void initChannel(final SocketChannel ch) throws Exception {
 
                             ch.pipeline().addLast(
-                                    new LoggingHandler(),
+                                    //new LoggingHandler(),
                                     new LineBasedFrameDecoder(8192),
 
                                     new StringEncoder(CharsetUtil.UTF_8),
@@ -94,7 +85,7 @@ public class AttachmentTransferServer {
                                     new Base64Encoder(),
                                     new Base64Decoder(),
 
-                                    new FileHandler());
+                                    new ServerTransferHandler());
                         }
                     });
 
@@ -115,13 +106,8 @@ public class AttachmentTransferServer {
     public void stopServer() {
         try {
             channelGroup.close().sync();
-            //executorService.shutdown();
 
             eventLoopGroup.shutdownGracefully();
-
-
-            eventLoopGroup = null;
-
 
             logger.info("File Transfer Server stopped");
         } catch (final InterruptedException e) {
@@ -129,8 +115,7 @@ public class AttachmentTransferServer {
         }
     }
 
-    @ChannelHandler.Sharable
-    private final class FileHandler extends SimpleChannelInboundHandler<String> {
+    private final class ServerTransferHandler extends TransferHandler {
 
         @Override
         public void channelActive(final ChannelHandlerContext ctx) throws Exception {
@@ -138,46 +123,5 @@ public class AttachmentTransferServer {
 
             logger.log(Level.INFO, "Remote connection from: {0}", ctx.channel().remoteAddress().toString());
         }
-
-        @Override
-        public void messageReceived(final ChannelHandlerContext ctx, final String msg) throws Exception {
-
-            File file = new File(msg);
-            if (file.exists()) {
-
-                if (!file.isFile()) {
-                    ctx.write("Not a file: " + file + '\n');
-                    return;
-                }
-                ctx.write(START_FILE + file.getName() + ":" + file.length() + '\n');
-
-                MessageList<String> out = MessageList.newInstance();
-
-                try (FileInputStream fileInputStream = new FileInputStream(file)) {
-                    byte[] bytes = new byte[4096];  // leave room for base 64 expansion
-
-                    int bytesRead;
-
-                    while ((bytesRead = fileInputStream.read(bytes)) != -1) {
-                        if (bytesRead > 0) {
-                            out.add(FILE_CHUNK + file.getName() + ':');
-                            out.add(new String(bytes, 0, bytesRead) + '\n');
-                        }
-                    }
-                    out.add(END_FILE + file.getName() + '\n');
-                }
-
-                ctx.write(out);
-            } else {
-                ctx.write("File not found: " + file + '\n');
-            }
-        }
-
-        @Override
-        public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
-            cause.printStackTrace();
-            ctx.close();
-        }
     }
-
 }

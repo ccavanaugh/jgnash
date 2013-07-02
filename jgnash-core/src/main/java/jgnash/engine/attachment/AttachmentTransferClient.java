@@ -15,14 +15,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.engine;
+package jgnash.engine.attachment;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,10 +25,8 @@ import jgnash.net.ConnectionFactory;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
-import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -56,8 +49,6 @@ public class AttachmentTransferClient {
     private NioEventLoopGroup eventLoopGroup;
 
     private Channel channel;
-
-    private Map<String, Attachment> fileMap = new ConcurrentHashMap<>();
 
     /**
      * Starts the connection with the lock server
@@ -106,13 +97,13 @@ public class AttachmentTransferClient {
                     new Base64Encoder(),
                     new Base64Decoder(),
 
-                    new FileHandler());
+                    new TransferHandler());
         }
     }
 
     public void requestFile(final File file) {
         try {
-            channel.write(file.toString() + '\n').sync();
+            channel.write(TransferHandler.FILE_REQUEST + file.toString() + '\n').sync();
         } catch (InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
@@ -135,89 +126,5 @@ public class AttachmentTransferClient {
         channel = null;
 
         logger.info("Disconnected from the File Transfer Server");
-
-        for (Attachment object : fileMap.values()) {
-            try {
-                object.fileOutputStream.close();
-            } catch (IOException e) {
-                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-            }
-        }
-    }
-
-    private final class FileHandler extends SimpleChannelInboundHandler<String> {
-
-        @Override
-        protected void messageReceived(final ChannelHandlerContext ctx, final String msg) throws Exception {
-            if (msg.startsWith(AttachmentTransferServer.START_FILE)) {
-                openOutputStream(msg.substring(AttachmentTransferServer.START_FILE.length()));
-            } else if (msg.startsWith(AttachmentTransferServer.FILE_CHUNK)) {
-                writeOutputStream(msg.substring(AttachmentTransferServer.FILE_CHUNK.length()));
-            } else if (msg.startsWith(AttachmentTransferServer.END_FILE)) {
-                closeOutputStream(msg.substring(AttachmentTransferServer.END_FILE.length()));
-            }
-        }
-
-        private void closeOutputStream(final String msg) {
-            Attachment attachment = fileMap.get(msg);
-
-            try {
-                attachment.fileOutputStream.close();
-                fileMap.remove(msg);
-            } catch (final IOException e) {
-                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-            }
-
-            if (attachment.file.length() != attachment.fileSize) {
-                logger.severe("Invalid file length");
-            }
-        }
-
-        private void writeOutputStream(final String msg) {
-            String[] msgParts = msg.split(":");
-
-            Attachment attachment = fileMap.get(msgParts[0]);
-
-            if (attachment != null) {
-                try {
-                    attachment.fileOutputStream.write(msgParts[1].getBytes());
-                } catch (final IOException e) {
-                    logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-                }
-            }
-        }
-
-        private void openOutputStream(final String msg) {
-            String[] msgParts = msg.split(":");
-
-            final String fileName = msgParts[0];
-            final long fileLength = Long.parseLong(msgParts[1]);
-
-            if (AttachmentUtils.createAttachmentDirectory()) {
-                final File baseFile = new File(AttachmentUtils.getAttachmentDirectory().toString() + File.separator + fileName);
-                try {
-                    fileMap.put(fileName, new Attachment(baseFile, fileLength));
-                } catch (FileNotFoundException e) {
-                    logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-                }
-            } else {
-                logger.severe("Could not create attachment directory");
-            }
-
-        }
-    }
-
-    private static class Attachment {
-        final File file;
-
-        final FileOutputStream fileOutputStream;
-
-        final long fileSize;
-
-        Attachment(final File file, long fileSize) throws FileNotFoundException {
-            this.file = file;
-            this.fileOutputStream = new FileOutputStream(file);
-            this.fileSize = fileSize;
-        }
     }
 }
