@@ -17,6 +17,7 @@
  */
 package jgnash.engine.jpa;
 
+import jgnash.engine.attachment.AttachmentTransferServer;
 import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -108,6 +109,9 @@ public class JpaNetworkServer {
         DistributedLockServer distributedLockServer = new DistributedLockServer(port + 2);
         distributedLockServer.startServer();
 
+        AttachmentTransferServer attachmentTransferServer = new AttachmentTransferServer(port + 3);
+        attachmentTransferServer.startServer();
+
         final Engine engine = createEngine(dataStoreType, fileName, port, password);
 
         if (engine != null) {
@@ -169,6 +173,8 @@ public class JpaNetworkServer {
 
             distributedLockManager.disconnectFromServer();
             distributedLockServer.stopServer();
+
+            attachmentTransferServer.stopServer();
 
             em.close();
 
