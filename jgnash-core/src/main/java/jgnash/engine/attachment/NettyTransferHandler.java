@@ -40,7 +40,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
  * @author Craig Cavanaugh
  */
 @ChannelHandler.Sharable
-public class TransferHandler extends SimpleChannelInboundHandler<String> {
+public class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
 
     public static final String FILE_REQUEST = "<FILE_REQUEST>";
     public static final String FILE_STARTS = "<FILE_STARTS>";
@@ -48,7 +48,7 @@ public class TransferHandler extends SimpleChannelInboundHandler<String> {
     public static final String FILE_CHUNK = "<FILE_CHUNK>";
     public static final String ERROR = "<ERROR>";
 
-    private static final Logger logger = Logger.getLogger(TransferHandler.class.getName());
+    private static final Logger logger = Logger.getLogger(NettyTransferHandler.class.getName());
 
     private Map<String, Attachment> fileMap = new ConcurrentHashMap<>();
 

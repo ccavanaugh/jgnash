@@ -87,6 +87,12 @@ public class AttachmentUtils {
         return basePath.resolve(relativePath).normalize().toFile();
     }
 
+    public static File resolve(final String relativePath) {
+        final File baseFile = new File(EngineFactory.getActiveDatabase());
+
+        return resolve(baseFile, relativePath);
+    }
+
     /**
      * @see java.nio.file.Path#relativize(java.nio.file.Path)
      */

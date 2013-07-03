@@ -97,13 +97,13 @@ public class AttachmentTransferClient {
                     new Base64Encoder(),
                     new Base64Decoder(),
 
-                    new TransferHandler());
+                    new NettyTransferHandler());
         }
     }
 
     public void requestFile(final File file) {
         try {
-            channel.write(TransferHandler.FILE_REQUEST + file.toString() + '\n').sync();
+            channel.write(NettyTransferHandler.FILE_REQUEST + file.toString() + '\n').sync();
         } catch (InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }

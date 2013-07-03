@@ -115,7 +115,7 @@ public class AttachmentTransferServer {
         }
     }
 
-    private final class ServerTransferHandler extends TransferHandler {
+    private final class ServerTransferHandler extends NettyTransferHandler {
 
         @Override
         public void channelActive(final ChannelHandlerContext ctx) throws Exception {
