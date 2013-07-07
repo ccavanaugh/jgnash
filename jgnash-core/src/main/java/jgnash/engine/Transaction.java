@@ -89,7 +89,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     /**
      * File name for the attachment, should not contain any preceding paths
      */
-    @Column(columnDefinition = "VARCHAR(1024)", nullable = true)
+    @Column(columnDefinition = "VARCHAR(256)", nullable = true)
     private String attachment;
 
     /**
