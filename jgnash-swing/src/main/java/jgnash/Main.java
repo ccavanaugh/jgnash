@@ -247,7 +247,7 @@ public final class Main {
                     serverName = hostName;
                 }
 
-                MessageBus.shutDownRemoteServer(serverName, port + 1, password.toCharArray());
+                MessageBus.getInstance().shutDownRemoteServer(serverName, port + 1, password.toCharArray());
             } else if (uninstall) { /* Dump the registry settings if requested */
                 deleteUserPreferences();
             } else if (serverFile != null) {
