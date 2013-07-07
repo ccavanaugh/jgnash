@@ -1925,6 +1925,10 @@ public class Engine {
         return result;
     }
 
+    public boolean removeAttachment(final String attachment) {
+        return attachmentManager.removeAttachment(attachment);
+    }
+
     @SuppressWarnings("deprecation")
     private void migrateAmortizeObjects() {
 

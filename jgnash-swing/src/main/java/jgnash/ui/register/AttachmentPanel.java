@@ -20,6 +20,7 @@ package jgnash.ui.register;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
@@ -224,7 +225,11 @@ class AttachmentPanel extends JPanel implements ActionListener {
 
     void showImageAction() {
         if (attachment != null) {
-            ImageDialog.showImage(attachment.toFile());
+            if (Files.exists(attachment)) {
+                ImageDialog.showImage(attachment.toFile());
+            } else {
+                StaticUIMethods.displayError(MessageFormat.format(rb.getString("Message.Error.MissingAttachment"), attachment.toString()));
+            }
         }
     }
 

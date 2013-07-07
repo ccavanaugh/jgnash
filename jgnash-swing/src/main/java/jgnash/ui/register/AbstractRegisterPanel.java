@@ -17,7 +17,9 @@
  */
 package jgnash.ui.register;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.EventQueue;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -36,7 +38,15 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTable;
 
-import jgnash.engine.*;
+import jgnash.engine.Account;
+import jgnash.engine.CommodityNode;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.InvestmentTransaction;
+import jgnash.engine.ReconciledState;
+import jgnash.engine.SecurityNode;
+import jgnash.engine.Transaction;
+import jgnash.engine.TransactionType;
 import jgnash.engine.message.ChannelEvent;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageListener;
@@ -53,18 +63,13 @@ import jgnash.util.Resource;
  * Account register panels should extend this class
  *
  * @author Craig Cavanaugh
- *
  */
 public abstract class AbstractRegisterPanel extends JPanel implements MessageListener, KeyListener {
 
     private static final String NODE_REG_POS = "/jgnash/ui/register/positions";
-
     private static final String NODE_REG_WIDTH = "/jgnash/ui/register/widths";
-
     private static final String NODE_REG_VIS = "/jgnash/ui/register/visibility";
-
     protected final Resource rb = Resource.get();
-
     private final TransactionPopup popup = new TransactionPopup();
 
     protected abstract Account getAccount();
@@ -202,9 +207,19 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
             }
         }
 
+        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
         // walk through the array and delete each transaction
         for (Transaction tran : trans) {
-            EngineFactory.getEngine(EngineFactory.DEFAULT).removeTransaction(tran);
+            if (engine.removeTransaction(tran)) {
+                if (tran.getAttachment() != null) {
+                    if (YesNoDialog.showYesNoDialog(UIApplication.getFrame(),
+                            new JLabel(rb.getString("Question.DeleteAttachment")),
+                            rb.getString("Title.DeleteAttachment"))) {
+                        engine.removeAttachment(tran.getAttachment());
+                    }
+                }
+            }
         }
     }
 
@@ -276,6 +291,14 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         return null;
     }
 
+    public void setSelectedTransaction(final Transaction t) {
+        int row = getTableModel().indexOf(t);
+
+        if (row >= 0) {
+            setSelectedRow(row);
+        }
+    }
+
     private Transaction[] getSelectedTransactions() {
         int rows[] = getTable().getSelectedRows();
 
@@ -285,14 +308,6 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
             trans[i] = getTableModel().getTransactionAt(rows[i]);
         }
         return trans;
-    }
-
-    public void setSelectedTransaction(final Transaction t) {
-        int row = getTableModel().indexOf(t);
-
-        if (row >= 0) {
-            setSelectedRow(row);
-        }
     }
 
     void setSelectedRow(final int row) {
@@ -311,7 +326,8 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         return getAccount().getPathName();
     }
 
-    /**        \
+    /**
+     * \
      * Watch for arrow keys and wrap the table if at the top or bottom
      *
      * @param e key event
@@ -436,13 +452,9 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
     class TransactionPopup extends JPopupMenu implements ActionListener {
 
         private final JMenuItem duplicate;
-
         private final JMenuItem delete;
-
         private final JRadioButtonMenuItem reconciled;
-
         private final JRadioButtonMenuItem unreconciled;
-
         private final JMenuItem jump;
 
         public TransactionPopup() {
