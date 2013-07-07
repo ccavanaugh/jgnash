@@ -27,6 +27,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import jgnash.engine.AttachmentUtils;
 
@@ -71,27 +73,6 @@ public class FileUtilsTest {
 
         // Copy the file to itself: the file should not be emptied :)
         assertFalse(FileUtils.copyFile(new File(absolutePath), new File(absolutePath)));
-    }
-
-    @Test
-    public void testAttachmentDirectory() throws IOException {
-        String tempDir = System.getProperty("java.io.tmpdir");
-
-        File tempFile = new File(tempDir + File.separator + "temp.txt");
-
-        File base = AttachmentUtils.getAttachmentDirectory(tempFile.toPath()).toFile();
-
-        assertEquals(tempDir + File.separator + AttachmentUtils.ATTACHMENT_BASE, base.toString());
-
-        File temp2 = new File(base.toString() + File.separator + "attach.txt");
-
-        File relative = AttachmentUtils.relativize(tempFile, temp2);
-
-        assertEquals(".." + File.separator + AttachmentUtils.ATTACHMENT_BASE + File.separator + "attach.txt", relative.toString());
-
-        File absolute = AttachmentUtils.resolve(tempFile.toPath(), relative.toString());
-
-        assertEquals(absolute.toString(), absolute.toString());
     }
 
     private static void checkTestData(final String testdata, final String absolutepath) throws IOException {

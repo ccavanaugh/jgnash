@@ -93,9 +93,8 @@ public class DistributedAttachmentManager implements AttachmentManager {
     }
 
     @Override
-    public boolean removeAttachment(final Path path) {
-        fileClient.deleteFile(path);
-
+    public boolean removeAttachment(final String attachment) {
+        fileClient.deleteFile(attachment);
         return true;
     }
 

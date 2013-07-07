@@ -77,29 +77,7 @@ public class AttachmentUtils {
         return null;
     }
 
-    /**
-     * @see java.nio.file.Path#resolve(java.nio.file.Path)
-     * @see java.nio.file.Path#normalize()
-     */
-    public static File resolve(final Path baseFile, final String relativePath) {
-        return baseFile.resolve(relativePath).normalize().toFile();
-    }
-
-    public static File resolve(final String relativePath) {
-        final Path baseFile = Paths.get(EngineFactory.getActiveDatabase());
-
-        return resolve(baseFile, relativePath);
-    }
-
-    /**
-     * @see java.nio.file.Path#relativize(java.nio.file.Path)
-     */
-    public static File relativize(final File baseFile, final File attachmentFile) {
-        Path basePath = baseFile.toPath();
-        Path attachmentPath = attachmentFile.toPath();
-
-        Path relative = basePath.relativize(attachmentPath);
-
-        return relative.toFile();
+    public static Path getAttachmentPath() {
+        return getAttachmentDirectory(Paths.get(EngineFactory.getActiveDatabase()));
     }
 }

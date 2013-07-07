@@ -50,9 +50,8 @@ public class LocalAttachmentManager implements AttachmentManager {
         Path baseFile = Paths.get(EngineFactory.getActiveDatabase());
 
         if (AttachmentUtils.createAttachmentDirectory(baseFile)) {  // create if needed
-            final Path baseDirectory = AttachmentUtils.getAttachmentDirectory(baseFile);
 
-            Path newPath = new File(baseDirectory.toString() + File.separator + path.getFileName()).toPath();
+            Path newPath = new File(AttachmentUtils.getAttachmentPath() + File.separator + path.getFileName()).toPath();
 
             try {
                 if (copy) {
@@ -71,8 +70,10 @@ public class LocalAttachmentManager implements AttachmentManager {
     }
 
     @Override
-    public boolean removeAttachment(final Path path) {
+    public boolean removeAttachment(final String attachment) {
         boolean result = false;
+
+        Path path = Paths.get(AttachmentUtils.getAttachmentPath() + File.separator + attachment);
 
         try {
             Files.delete(path);
@@ -89,7 +90,7 @@ public class LocalAttachmentManager implements AttachmentManager {
         return executorService.submit(new Callable<Path>() {
             @Override
             public Path call() throws Exception {
-                return AttachmentUtils.resolve(attachment).toPath();
+                return Paths.get(AttachmentUtils.getAttachmentPath() + File.separator + attachment);
             }
         });
     }

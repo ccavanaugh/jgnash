@@ -19,6 +19,7 @@ package jgnash.engine.attachment;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -97,9 +98,9 @@ public class AttachmentTransferClient {
         }
     }
 
-    public void deleteFile(final Path file) {
+    public void deleteFile(final String attachment) {
         try {
-            channel.write(NettyTransferHandler.DELETE + file.toString() + '\n').sync();
+            channel.write(NettyTransferHandler.DELETE + Paths.get(attachment).getFileName() + '\n').sync();
         } catch (final InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }

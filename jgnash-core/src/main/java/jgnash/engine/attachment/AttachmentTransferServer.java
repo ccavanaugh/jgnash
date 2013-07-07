@@ -63,8 +63,6 @@ public class AttachmentTransferServer {
     public AttachmentTransferServer(final int port, final Path attachmentPath) {
         this.port = port;
         this.attachmentPath = attachmentPath;
-
-        //System.out.println(port);
     }
 
     public void startServer() {

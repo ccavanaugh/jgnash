@@ -29,7 +29,7 @@ import java.util.concurrent.Future;
 public interface AttachmentManager {
     boolean addAttachment(Path path, boolean copy) throws IOException;
 
-    boolean removeAttachment(Path path);
+    boolean removeAttachment(String attachment);
 
     Future<Path> getAttachment(String attachment);
 

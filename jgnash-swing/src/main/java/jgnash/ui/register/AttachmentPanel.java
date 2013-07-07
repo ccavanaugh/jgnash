@@ -137,8 +137,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
                 moveAttachment();
             }
 
-            final File baseFile = new File(EngineFactory.getActiveDatabase());
-            transaction.setAttachment(AttachmentUtils.relativize(baseFile, attachment.toFile()).toString());
+            transaction.setAttachment(attachment.getFileName().toString());
         } else {
             transaction.setAttachment(null);
         }
@@ -149,29 +148,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
     }
 
     private void moveAttachment() {
-
         EngineFactory.getEngine(EngineFactory.DEFAULT).addAttachment(attachment, false);
-
-        /*final File baseFile = new File(EngineFactory.getActiveDatabase());
-        final File baseDirectory = AttachmentUtils.getAttachmentDirectory(baseFile);
-
-        boolean directoryExists = true;
-
-        if (!baseDirectory.exists()) {
-            directoryExists = baseDirectory.mkdir();
-        }
-
-        if (directoryExists) {
-            Path newPath = new File(baseDirectory.toString() + File.separator + attachment.getFileName()).toPath();
-
-            try {
-                Files.move(attachment, newPath, StandardCopyOption.ATOMIC_MOVE);
-                attachment = newPath; // update reference
-            } catch (final IOException e) {
-                Logger.getLogger(AttachmentPanel.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-                new ExceptionDialog(UIApplication.getFrame(), e).setVisible(true);
-            }
-        }*/
     }
 
     void attachmentAction() {

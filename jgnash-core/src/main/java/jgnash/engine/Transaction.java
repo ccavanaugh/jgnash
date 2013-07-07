@@ -87,9 +87,9 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     private String fitid;
 
     /**
-     * External link to a file, path should be relative
+     * File name for the attachment, should not contain any preceding paths
      */
-    @Column(columnDefinition = "VARCHAR(2048)", nullable = true)
+    @Column(columnDefinition = "VARCHAR(1024)", nullable = true)
     private String attachment;
 
     /**
