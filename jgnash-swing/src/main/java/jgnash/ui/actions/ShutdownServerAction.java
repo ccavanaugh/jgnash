@@ -49,7 +49,7 @@ public class ShutdownServerAction extends AbstractEnabledAction {
                     final String host = dialog.getHost();
                     final char[] password = dialog.getPassword();
 
-                    MessageBus.shutDownRemoteServer(host, port, password);
+                    MessageBus.getInstance().shutDownRemoteServer(host, port, password);
                 }
             }
         });

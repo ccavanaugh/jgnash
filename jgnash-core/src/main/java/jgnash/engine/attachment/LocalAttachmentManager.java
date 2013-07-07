@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,28 +31,29 @@ import jgnash.engine.EngineFactory;
 
 /**
  * Attachment handler for a local database
+ *
+ * @author Craig Cavanaugh
  */
 public class LocalAttachmentManager implements AttachmentManager {
 
     @Override
-    public boolean addAttachment(File file) throws IOException {
+    public boolean addAttachment(final Path path, final boolean copy) throws IOException {
 
         boolean result = false;
 
-        final File baseFile = new File(EngineFactory.getActiveDatabase());
-        final File baseDirectory = AttachmentUtils.getAttachmentDirectory(baseFile);
+        Path baseFile = Paths.get(EngineFactory.getActiveDatabase());
 
-        boolean directoryExists = true;
+        if (AttachmentUtils.createAttachmentDirectory(baseFile)) {  // create if needed
+            final Path baseDirectory = AttachmentUtils.getAttachmentDirectory(baseFile);
 
-        if (!baseDirectory.exists()) {
-            directoryExists = baseDirectory.mkdir();
-        }
-
-        if (directoryExists) {
-            Path newPath = new File(baseDirectory.toString() + File.separator + file.getName()).toPath();
+            Path newPath = new File(baseDirectory.toString() + File.separator + path.getFileName()).toPath();
 
             try {
-                Files.move(file.toPath(), newPath, StandardCopyOption.ATOMIC_MOVE);
+                if (copy) {
+                    Files.copy(path, newPath);
+                } else {
+                    Files.move(path, newPath, StandardCopyOption.ATOMIC_MOVE);
+                }
                 result = true;
             } catch (final IOException e) {
                 Logger.getLogger(LocalAttachmentManager.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
@@ -63,12 +65,31 @@ public class LocalAttachmentManager implements AttachmentManager {
     }
 
     @Override
-    public boolean removeAttachment(final File file) {
-        return file.delete();
+    public boolean removeAttachment(final Path path) {
+        boolean result = false;
+
+        try {
+            Files.delete(path);
+            result = true;
+        } catch (IOException e) {
+            Logger.getLogger(LocalAttachmentManager.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
+
+        return result;
     }
 
     @Override
-    public File getAttachment(String attachment) {
-        return AttachmentUtils.resolve(attachment);
+    public Path getAttachment(final String attachment) {
+        return AttachmentUtils.resolve(attachment).toPath();
+    }
+
+    @Override
+    public void connectToServer() {
+        // Do nothing for local implementation
+    }
+
+    @Override
+    public void disconnectFromServer() {
+        // Do nothing for local implementation
     }
 }

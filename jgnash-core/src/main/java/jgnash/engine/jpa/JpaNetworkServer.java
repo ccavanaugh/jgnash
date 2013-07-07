@@ -17,11 +17,13 @@
  */
 package jgnash.engine.jpa;
 
+import jgnash.engine.AttachmentUtils;
 import jgnash.engine.attachment.AttachmentTransferServer;
 import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
+import jgnash.engine.attachment.DistributedAttachmentManager;
 import jgnash.engine.concurrent.DistributedLockManager;
 import jgnash.engine.concurrent.DistributedLockServer;
 import jgnash.engine.message.LocalServerListener;
@@ -35,6 +37,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,9 +69,13 @@ public class JpaNetworkServer {
 
     private DistributedLockManager distributedLockManager;
 
+    private DistributedAttachmentManager distributedAttachmentManager;
+
     public static final int DEFAULT_PORT = 5300;
 
     public static final String DEFAULT_PASSWORD = "";
+
+    private static final String SERVER_ENGINE = "server";
 
     public synchronized void startServer(final String fileName, final int port, final char[] password) {
 
@@ -109,7 +116,7 @@ public class JpaNetworkServer {
         DistributedLockServer distributedLockServer = new DistributedLockServer(port + 2);
         distributedLockServer.startServer();
 
-        AttachmentTransferServer attachmentTransferServer = new AttachmentTransferServer(port + 3);
+        AttachmentTransferServer attachmentTransferServer = new AttachmentTransferServer(port + 3, AttachmentUtils.getAttachmentDirectory(Paths.get(fileName)));
         attachmentTransferServer.startServer();
 
         final Engine engine = createEngine(dataStoreType, fileName, port, password);
@@ -169,9 +176,11 @@ public class JpaNetworkServer {
 
             messageBusServer.stopServer();
 
-            EngineFactory.closeEngine(EngineFactory.DEFAULT);
+            EngineFactory.closeEngine(SERVER_ENGINE);
 
             distributedLockManager.disconnectFromServer();
+            distributedAttachmentManager.disconnectFromServer();
+
             distributedLockServer.stopServer();
 
             attachmentTransferServer.stopServer();
@@ -242,7 +251,7 @@ public class JpaNetworkServer {
     /**
      * stops this server.
      */
-    private synchronized void stopServer() {
+    public synchronized void stopServer() {
         stop = true;
         this.notify();
     }
@@ -263,8 +272,11 @@ public class JpaNetworkServer {
             distributedLockManager = new DistributedLockManager("localhost", port + 2);
             distributedLockManager.connectToServer();
 
+            distributedAttachmentManager = new DistributedAttachmentManager("localhost", port + 3);
+            distributedAttachmentManager.connectToServer();
+
             Logger.getLogger(JpaH2DataStore.class.getName()).info("Created local JPA container and engine");
-            engine = new Engine(new JpaEngineDAO(em, true), distributedLockManager, EngineFactory.DEFAULT); // treat as a remote engine
+            engine = new Engine(new JpaEngineDAO(em, true), distributedLockManager, distributedAttachmentManager, SERVER_ENGINE); // treat as a remote engine
         } catch (final Exception e) {
             Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, e.toString(), e);
         }

@@ -21,6 +21,8 @@ import jgnash.engine.DataStore;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
+import jgnash.engine.attachment.DistributedAttachmentManager;
+import jgnash.engine.attachment.LocalAttachmentManager;
 import jgnash.engine.concurrent.DistributedLockManager;
 import jgnash.engine.concurrent.LocalLockManager;
 import jgnash.util.FileUtils;
@@ -55,6 +57,8 @@ public abstract class AbstractJpaDataStore implements DataStore {
 
     private DistributedLockManager distributedLockManager;
 
+    private DistributedAttachmentManager distributedAttachmentManager;
+
     private boolean remote;
 
     private String fileName;
@@ -84,6 +88,7 @@ public abstract class AbstractJpaDataStore implements DataStore {
 
         if (remote) {
             distributedLockManager.disconnectFromServer();
+            distributedAttachmentManager.disconnectFromServer();
         } else {
             waitForLockFileRelease(fileName, password);
         }
@@ -100,11 +105,13 @@ public abstract class AbstractJpaDataStore implements DataStore {
         em = factory.createEntityManager();
 
         if (em != null) {
-
             distributedLockManager = new DistributedLockManager(host, port + 2);
             distributedLockManager.connectToServer();
 
-            engine = new Engine(new JpaEngineDAO(em, true), distributedLockManager, EngineFactory.DEFAULT);
+            distributedAttachmentManager = new DistributedAttachmentManager(host, port + 3);
+            distributedAttachmentManager.connectToServer();
+
+            engine = new Engine(new JpaEngineDAO(em, true), distributedLockManager, distributedAttachmentManager, EngineFactory.DEFAULT);
 
             logger.info("Created local JPA container and engine");
             fileName = null;
@@ -136,7 +143,7 @@ public abstract class AbstractJpaDataStore implements DataStore {
                     em = factory.createEntityManager();
 
                     logger.info("Created local JPA container and engine");
-                    engine = new Engine(new JpaEngineDAO(em, false), new LocalLockManager(), engineName);
+                    engine = new Engine(new JpaEngineDAO(em, false), new LocalLockManager(), new LocalAttachmentManager(), engineName);
 
                     this.fileName = fileName;
                     this.password = password;

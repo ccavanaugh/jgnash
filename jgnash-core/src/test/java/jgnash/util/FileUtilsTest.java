@@ -79,7 +79,7 @@ public class FileUtilsTest {
 
         File tempFile = new File(tempDir + File.separator + "temp.txt");
 
-        File base = AttachmentUtils.getAttachmentDirectory(tempFile);
+        File base = AttachmentUtils.getAttachmentDirectory(tempFile.toPath()).toFile();
 
         assertEquals(tempDir + File.separator + AttachmentUtils.ATTACHMENT_BASE, base.toString());
 
@@ -89,7 +89,7 @@ public class FileUtilsTest {
 
         assertEquals(".." + File.separator + AttachmentUtils.ATTACHMENT_BASE + File.separator + "attach.txt", relative.toString());
 
-        File absolute = AttachmentUtils.resolve(tempFile, relative.toString());
+        File absolute = AttachmentUtils.resolve(tempFile.toPath(), relative.toString());
 
         assertEquals(absolute.toString(), absolute.toString());
     }

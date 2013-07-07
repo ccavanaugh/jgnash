@@ -18,6 +18,7 @@
 package jgnash.engine.attachment;
 
 
+import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -57,8 +58,13 @@ public class AttachmentTransferServer {
 
     private final ChannelGroup channelGroup = new DefaultChannelGroup("file-server", GlobalEventExecutor.INSTANCE);
 
-    public AttachmentTransferServer(final int port) {
+    private final Path attachmentPath;
+
+    public AttachmentTransferServer(final int port, final Path attachmentPath) {
         this.port = port;
+        this.attachmentPath = attachmentPath;
+
+        //System.out.println(port);
     }
 
     public void startServer() {
@@ -68,7 +74,7 @@ public class AttachmentTransferServer {
             ServerBootstrap b = new ServerBootstrap();
             b.group(eventLoopGroup)
                     .channel(NioServerSocketChannel.class)
-                    .option(ChannelOption.SO_BACKLOG, 100)
+                    .option(ChannelOption.SO_KEEPALIVE, true)
                     .handler(new LoggingHandler(LogLevel.INFO))
                     .childHandler(new ChannelInitializer<SocketChannel>() {
 
@@ -76,7 +82,7 @@ public class AttachmentTransferServer {
                         public void initChannel(final SocketChannel ch) throws Exception {
 
                             ch.pipeline().addLast(
-                                    //new LoggingHandler(),
+                                    new LoggingHandler(),
                                     new LineBasedFrameDecoder(8192),
 
                                     new StringEncoder(CharsetUtil.UTF_8),
@@ -116,6 +122,10 @@ public class AttachmentTransferServer {
     }
 
     private final class ServerTransferHandler extends NettyTransferHandler {
+
+        public ServerTransferHandler() {
+            super(attachmentPath);
+        }
 
         @Override
         public void channelActive(final ChannelHandlerContext ctx) throws Exception {

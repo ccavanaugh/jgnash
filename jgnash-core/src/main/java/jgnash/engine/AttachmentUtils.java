@@ -18,7 +18,12 @@
 package jgnash.engine;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Support methods for handling attachments
@@ -41,26 +46,21 @@ public class AttachmentUtils {
      * @return <code>true</code> if and only if the directory was created or if
      *         it already exists; <code>false</code> otherwise
      */
-    public static boolean createAttachmentDirectory() {
-        boolean result = true;
+    public static boolean createAttachmentDirectory(final Path baseFile) {
+        boolean result = false;
 
-        File attachmentDirectory = getAttachmentDirectory();
+        Path attachmentPath = getAttachmentDirectory(baseFile);
 
-        if (attachmentDirectory != null) {
-            if (!attachmentDirectory.exists()) {
-                result = attachmentDirectory.mkdirs();
+        if (Files.notExists(attachmentPath)) {
+            try {
+                Files.createDirectories(attachmentPath);
+                result = true;
+            } catch (IOException e) {
+                Logger.getLogger(AttachmentUtils.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
-        } else {
-            result = false;
         }
 
         return result;
-    }
-
-    public static File getAttachmentDirectory() {
-        final File baseFile = new File(EngineFactory.getActiveDatabase());
-
-        return getAttachmentDirectory(baseFile);
     }
 
     /**
@@ -69,9 +69,9 @@ public class AttachmentUtils {
      * @param baseFile base file for attachment directory
      * @return directory for all attachments
      */
-    public static File getAttachmentDirectory(final File baseFile) {
+    public static Path getAttachmentDirectory(final Path baseFile) {
         if (baseFile.getParent() != null) {
-            return new File(baseFile.getParent() + File.separator + ATTACHMENT_BASE);
+            return Paths.get(baseFile.getParent() + File.separator + ATTACHMENT_BASE);
         }
 
         return null;
@@ -81,14 +81,12 @@ public class AttachmentUtils {
      * @see java.nio.file.Path#resolve(java.nio.file.Path)
      * @see java.nio.file.Path#normalize()
      */
-    public static File resolve(final File baseFile, final String relativePath) {
-        Path basePath = baseFile.toPath();
-
-        return basePath.resolve(relativePath).normalize().toFile();
+    public static File resolve(final Path baseFile, final String relativePath) {
+        return baseFile.resolve(relativePath).normalize().toFile();
     }
 
     public static File resolve(final String relativePath) {
-        final File baseFile = new File(EngineFactory.getActiveDatabase());
+        final Path baseFile = Paths.get(EngineFactory.getActiveDatabase());
 
         return resolve(baseFile, relativePath);
     }

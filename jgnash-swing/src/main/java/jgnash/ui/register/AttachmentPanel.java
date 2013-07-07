@@ -20,13 +20,9 @@ package jgnash.ui.register;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.Paths;
 import java.text.MessageFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
@@ -42,7 +38,6 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
-import jgnash.ui.components.ExceptionDialog;
 import jgnash.ui.components.ImageDialog;
 import jgnash.ui.components.YesNoDialog;
 import jgnash.util.Resource;
@@ -61,7 +56,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
 
     private final Resource rb = Resource.get();
 
-    File attachment = null;
+    Path attachment = null;
 
     boolean moveAttachment = false;
 
@@ -99,9 +94,12 @@ class AttachmentPanel extends JPanel implements ActionListener {
     Transaction modifyTransaction(final Transaction transaction) {
         // preserve any prior attachments
         if (transaction.getAttachment() != null && !transaction.getAttachment().isEmpty()) {
-            final File baseFile = new File(EngineFactory.getActiveDatabase());
 
-            attachment = AttachmentUtils.resolve(baseFile, transaction.getAttachment());
+            //final File baseFile = new File(EngineFactory.getActiveDatabase());
+
+            //attachment = AttachmentUtils.resolve(baseFile, transaction.getAttachment());
+
+            attachment = EngineFactory.getEngine(EngineFactory.DEFAULT).getAttachment(transaction.getAttachment());
         } else {
             attachment = null;
         }
@@ -132,7 +130,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
             }
 
             final File baseFile = new File(EngineFactory.getActiveDatabase());
-            transaction.setAttachment(AttachmentUtils.relativize(baseFile, attachment).toString());
+            transaction.setAttachment(AttachmentUtils.relativize(baseFile, attachment.toFile()).toString());
         } else {
             transaction.setAttachment(null);
         }
@@ -143,7 +141,11 @@ class AttachmentPanel extends JPanel implements ActionListener {
     }
 
     private void moveAttachment() {
-        final File baseFile = new File(EngineFactory.getActiveDatabase());
+
+
+        EngineFactory.getEngine(EngineFactory.DEFAULT).addAttachment(attachment, false);
+
+        /*final File baseFile = new File(EngineFactory.getActiveDatabase());
         final File baseDirectory = AttachmentUtils.getAttachmentDirectory(baseFile);
 
         boolean directoryExists = true;
@@ -153,21 +155,21 @@ class AttachmentPanel extends JPanel implements ActionListener {
         }
 
         if (directoryExists) {
-            Path newPath = new File(baseDirectory.toString() + File.separator + attachment.getName()).toPath();
+            Path newPath = new File(baseDirectory.toString() + File.separator + attachment.getFileName()).toPath();
 
             try {
-                Files.move(attachment.toPath(), newPath, StandardCopyOption.ATOMIC_MOVE);
-                attachment = newPath.toFile(); // update reference
+                Files.move(attachment, newPath, StandardCopyOption.ATOMIC_MOVE);
+                attachment = newPath; // update reference
             } catch (final IOException e) {
                 Logger.getLogger(AttachmentPanel.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
                 new ExceptionDialog(UIApplication.getFrame(), e).setVisible(true);
             }
-        }
+        }*/
     }
 
     void attachmentAction() {
         final Preferences pref = Preferences.userNodeForPackage(AbstractBankTransactionPanel.class);
-        final File baseFile = new File(EngineFactory.getActiveDatabase());
+        final Path baseFile = Paths.get(EngineFactory.getActiveDatabase());
 
         final String[] fileSuffixes = ImageIO.getReaderFileSuffixes();
 
@@ -192,7 +194,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
         chooser.setAcceptAllFileFilterUsed(false);
 
         if (attachment != null) {
-            chooser.setSelectedFile(attachment);
+            chooser.setSelectedFile(attachment.toFile());
         }
 
         if (chooser.showOpenDialog(UIApplication.getFrame()) == JFileChooser.APPROVE_OPTION) {
@@ -230,7 +232,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
                 }
 
                 if (result) {
-                    attachment = selectedFile;
+                    attachment = selectedFile.toPath();
                 }
             }
         }
@@ -238,7 +240,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
 
     void showImageAction() {
         if (attachment != null) {
-            ImageDialog.showImage(attachment);
+            ImageDialog.showImage(attachment.toFile());
         }
     }
 

@@ -19,18 +19,21 @@ package jgnash.engine;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-import jgnash.engine.attachment.AttachmentTransferClient;
-import jgnash.engine.attachment.AttachmentTransferServer;
+import jgnash.engine.jpa.JpaH2DataStore;
+import jgnash.engine.jpa.JpaNetworkServer;
 
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * File transfer test
@@ -39,58 +42,88 @@ import static org.junit.Assert.assertTrue;
  */
 public class FileTransferTest {
 
+    private static final char[] PASSWORD = new char[]{};
+
+    private static final int PORT = 5300;
+
     @Test
-    public void testTransfer() throws InterruptedException {
+    public void networkedTest() throws Exception {
+
         String testFile = null;
 
         try {
-
-            File tempFile = File.createTempFile("test", ".tmp");
-            tempFile.deleteOnExit();
-            tempFile.delete();
-
-            testFile = tempFile.getAbsolutePath();
+            File temp = File.createTempFile("jpa-test", "." + JpaH2DataStore.FILE_EXT);
+            temp.deleteOnExit();
+            testFile = temp.getAbsolutePath();
         } catch (IOException e1) {
-            Logger.getLogger(BinaryXStreamEngineTest.class.getName()).log(Level.SEVERE, e1.getLocalizedMessage(), e1);
+            System.err.println(e1.toString());
+            fail();
         }
 
-        EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, new char[]{}, DataStoreType.BINARY_XSTREAM);
+        // Start an engine and close so we have a populated file
+        EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD, DataStoreType.H2_DATABASE);
+        EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-        int port = 5003;
+        final JpaNetworkServer networkServer = new JpaNetworkServer();
 
-        AttachmentTransferServer fileServer = new AttachmentTransferServer(port);
-        AttachmentTransferClient fileClient = new AttachmentTransferClient();
+        final String serverFile = testFile;
 
-        fileServer.startServer();
-        fileClient.connectToServer("localhost", port);
+        new Thread() {
+
+            @Override
+            public void run() {
+                System.out.println("starting server");
+                networkServer.startServer(serverFile, PORT, PASSWORD);
+            }
+        }.start();
+
+        Thread.sleep(4000);
 
         try {
-            File temp = File.createTempFile("tempfile", ".txt");
-            temp.deleteOnExit();
+            Engine e = EngineFactory.bootClientEngine("localhost", PORT, PASSWORD, EngineFactory.DEFAULT);
+
+            Account account = new Account(AccountType.CASH, e.getDefaultCurrency());
+            account.setName("test");
+            e.addAccount(e.getRootAccount(), account);
+
+            Path tempAttachment = Files.createTempFile("tempfile-", ".txt");
+            tempAttachment.toFile().deleteOnExit();
 
             //write it
-            BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
+            BufferedWriter bw = Files.newBufferedWriter(tempAttachment, Charset.defaultCharset());
             bw.write("This is the temporary file content.");
             bw.close();
 
-            fileClient.requestFile(temp);
+            e.addAttachment(tempAttachment, true);  // push a copy of the attachment
 
-            Thread.sleep(2000);
+            Thread.sleep(1000); // wait for transfer to finish
 
-            File transferFile = new File(AttachmentUtils.getAttachmentDirectory().toString() + File.separator + temp.getName());
+            Path newPath = Paths.get(AttachmentUtils.getAttachmentDirectory(Paths.get(testFile)) + File.separator + tempAttachment.getFileName());
+            newPath.toFile().deleteOnExit();
 
-            assertTrue(transferFile.exists());
+            // Verify copy has occurred
+            assertEquals(tempAttachment.toFile().length(), newPath.toFile().length()); // same length?
+            assertNotEquals(tempAttachment.toString(), newPath.toString()); // different files?
 
-            transferFile.deleteOnExit();
 
-            assertEquals(temp.length(), transferFile.length());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            fileClient.disconnectFromServer();
-            fileServer.stopServer();
+            // Create a new temp file in the directory
+            tempAttachment = Files.createTempFile(AttachmentUtils.getAttachmentDirectory(Paths.get(testFile)), "tempfile2-", ".txt");
+            tempAttachment.toFile().deleteOnExit();
+
+            //write it
+            bw = Files.newBufferedWriter(tempAttachment, Charset.defaultCharset());
+            bw.write("This is the temporary file content 2.");
+            bw.close();
+
+            Path remoteTemp = e.getAttachment(tempAttachment.getFileName().toString());
+
+            assertTrue(Files.exists(remoteTemp));
+            assertNotEquals(remoteTemp.toString(), tempAttachment.toString());
+
+            EngineFactory.closeEngine(EngineFactory.DEFAULT);
+        } catch (Exception e) {
+            fail();
         }
 
-        EngineFactory.closeEngine(EngineFactory.DEFAULT);
     }
 }

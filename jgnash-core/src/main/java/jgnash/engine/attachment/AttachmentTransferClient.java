@@ -18,6 +18,7 @@
 package jgnash.engine.attachment;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,10 +46,14 @@ import io.netty.util.CharsetUtil;
  */
 public class AttachmentTransferClient {
     private static final Logger logger = Logger.getLogger(AttachmentTransferClient.class.getName());
-
     private NioEventLoopGroup eventLoopGroup;
-
     private Channel channel;
+    private NettyTransferHandler transferHandler;
+    private Path tempDirectory;
+
+    public AttachmentTransferClient(final Path tempPath) {
+        tempDirectory = tempPath;
+    }
 
     /**
      * Starts the connection with the lock server
@@ -61,6 +66,8 @@ public class AttachmentTransferClient {
         final Bootstrap bootstrap = new Bootstrap();
 
         eventLoopGroup = new NioEventLoopGroup();
+
+        transferHandler = new NettyTransferHandler(tempDirectory);
 
         bootstrap.group(eventLoopGroup)
                 .channel(NioSocketChannel.class)
@@ -82,30 +89,25 @@ public class AttachmentTransferClient {
         return result;
     }
 
-    private class Initializer extends ChannelInitializer<SocketChannel> {
-
-        @Override
-        public void initChannel(final SocketChannel ch) throws Exception {
-
-            ch.pipeline().addLast(
-                    new LoggingHandler(),
-                    new LineBasedFrameDecoder(8192),
-
-                    new StringEncoder(CharsetUtil.UTF_8),
-                    new StringDecoder(CharsetUtil.UTF_8),
-
-                    new Base64Encoder(),
-                    new Base64Decoder(),
-
-                    new NettyTransferHandler());
+    public void requestFile(final Path file) {
+        try {
+            channel.write(NettyTransferHandler.FILE_REQUEST + file.toString() + '\n').sync();
+        } catch (final InterruptedException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
     }
 
-    public void requestFile(final File file) {
+    public void deleteFile(final Path file) {
         try {
-            channel.write(NettyTransferHandler.FILE_REQUEST + file.toString() + '\n').sync();
-        } catch (InterruptedException e) {
+            channel.write(NettyTransferHandler.DELETE + file.toString() + '\n').sync();
+        } catch (final InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
+    }
+
+    public void sendFile(final File file) {
+        if (transferHandler != null) {
+            transferHandler.sendFile(channel, file.getAbsolutePath());
         }
     }
 
@@ -126,5 +128,24 @@ public class AttachmentTransferClient {
         channel = null;
 
         logger.info("Disconnected from the File Transfer Server");
+    }
+
+    private class Initializer extends ChannelInitializer<SocketChannel> {
+
+        @Override
+        public void initChannel(final SocketChannel ch) throws Exception {
+
+            ch.pipeline().addLast(
+                    new LoggingHandler(),
+                    new LineBasedFrameDecoder(8192),
+
+                    new StringEncoder(CharsetUtil.UTF_8),
+                    new StringDecoder(CharsetUtil.UTF_8),
+
+                    new Base64Encoder(),
+                    new Base64Decoder(),
+
+                    transferHandler);
+        }
     }
 }

@@ -27,6 +27,7 @@ import jgnash.engine.DataStore;
 import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
 import jgnash.engine.StoredObject;
+import jgnash.engine.attachment.LocalAttachmentManager;
 import jgnash.engine.concurrent.LocalLockManager;
 import jgnash.util.Resource;
 
@@ -73,7 +74,7 @@ public class XMLDataStore implements DataStore {
             container.readXML();
         }
 
-        Engine engine = new Engine(new XStreamEngineDAO(container), new LocalLockManager(), engineName);
+        Engine engine = new Engine(new XStreamEngineDAO(container), new LocalLockManager(), new LocalAttachmentManager(), engineName);
 
         logger.info("Created local XML container and engine");
 

@@ -17,16 +17,22 @@
  */
 package jgnash.engine.attachment;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Interface for handling attachments
+ *
+ * @author Craig Cavanaugh
  */
 public interface AttachmentManager {
-    boolean addAttachment(File file) throws IOException;
+    boolean addAttachment(Path path, boolean copy) throws IOException;
 
-    boolean removeAttachment(File file);
+    boolean removeAttachment(Path path);
 
-    File getAttachment(String attachment);
+    Path getAttachment(String attachment);
+
+    void connectToServer();
+
+    void disconnectFromServer();
 }
