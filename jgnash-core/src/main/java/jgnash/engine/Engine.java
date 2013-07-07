@@ -17,6 +17,30 @@
  */
 package jgnash.engine;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.nio.file.Path;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import jgnash.engine.attachment.AttachmentManager;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetGoal;
 import jgnash.engine.budget.BudgetPeriod;
@@ -43,27 +67,6 @@ import jgnash.util.DateUtils;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.Resource;
 
-import java.math.BigDecimal;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * Engine class
  * <p/>
@@ -78,61 +81,24 @@ public class Engine {
      * Current version for the file format
      */
     public static final float CURRENT_VERSION = 2.3f;
-
     // Lock names
     public static final String ACCOUNT_LOCK = "account";
     public static final String BUDGET_LOCK = "budget";
     public static final String COMMODITY_LOCK = "commodity";
     public static final String CONFIG_LOCK = "config";
     public static final String ENGINE_LOCK = "engine";
-
-    private final Resource rb = Resource.get();
-
     private static final Logger logger = Logger.getLogger(Engine.class.getName());
-
-    /**
-     * All engine instances will share the same message bus
-     */
-    private MessageBus messageBus = null;
-
-    /**
-     * Cached for performance
-     */
-    private Config config;
-
-    /**
-     * Cached for performance
-     */
-    private RootAccount rootAccount;
-
-    private ExchangeRateDAO exchangeRateDAO;
-
-    private final ReentrantReadWriteLock accountLock;
-
-    private final ReentrantReadWriteLock budgetLock;
-
-    private final ReentrantReadWriteLock commodityLock;
-
-    private final ReentrantReadWriteLock configLock;
-
-    private final ReentrantReadWriteLock engineLock;
-
-    private EngineDAO eDAO;
-
-    /**
-     * Cached for performance
-     */
-    private String accountSeparator = null;
-
-    private ScheduledExecutorService trashExecutor;
-
     private final static long MAXIMUM_TRASH_AGE = 5 * 60 * 1000; // 5 minutes
-
+    private final Resource rb = Resource.get();
+    private final ReentrantReadWriteLock accountLock;
+    private final ReentrantReadWriteLock budgetLock;
+    private final ReentrantReadWriteLock commodityLock;
+    private final ReentrantReadWriteLock configLock;
+    private final ReentrantReadWriteLock engineLock;
     /**
      * Named identifier for this engine instance
      */
     private final String name;
-
     /**
      * Unique identifier for this engine instance.
      * Used by this distributed lock manager to keep track of who has a lock
@@ -143,7 +109,28 @@ public class Engine {
         logger.setLevel(Level.ALL);
     }
 
-    public Engine(final EngineDAO eDAO, final LockManager lockManager, final String name) {
+    /**
+     * All engine instances will share the same message bus
+     */
+    private MessageBus messageBus = null;
+    /**
+     * Cached for performance
+     */
+    private Config config;
+    /**
+     * Cached for performance
+     */
+    private RootAccount rootAccount;
+    private ExchangeRateDAO exchangeRateDAO;
+    private EngineDAO eDAO;
+    private AttachmentManager attachmentManager;
+    /**
+     * Cached for performance
+     */
+    private String accountSeparator = null;
+    private ScheduledExecutorService trashExecutor;
+
+    public Engine(final EngineDAO eDAO, final LockManager lockManager, final AttachmentManager attachmentManager, final String name) {
 
         if (name == null) {
             throw new IllegalArgumentException("The engine name may not be null");
@@ -153,6 +140,7 @@ public class Engine {
             throw new IllegalArgumentException("The engineDAO may not be null");
         }
 
+        this.attachmentManager = attachmentManager;
         this.eDAO = eDAO;
         this.name = name;
 
@@ -180,6 +168,112 @@ public class Engine {
                 emptyTrash();
             }
         }, 1, 5, TimeUnit.MINUTES);
+    }
+
+    public static BigDecimal getMarketPrice(final Collection<Transaction> transactions, final SecurityNode node, final CurrencyNode baseCurrency, final Date date) {
+
+        Date testDate = DateUtils.trimDate(date);
+
+        // the best history node record
+        SecurityHistoryNode hNode = node.getHistoryNode(testDate);
+
+        // Get the current exchange rate for the security node
+        BigDecimal rate = node.getReportedCurrencyNode().getExchangeRate(baseCurrency);
+
+        // return if dates are exact match
+        if (hNode != null && testDate.equals(DateUtils.trimDate(hNode.getDate()))) {
+            // return the price and factor in the exchange rate
+            return hNode.getPrice().multiply(rate);
+        }
+
+        Date priceDate = null;
+        BigDecimal price = BigDecimal.ZERO;
+
+        // no exact match yet, search the transactions
+
+        search:
+        for (Transaction t : transactions) {
+            if (t instanceof InvestmentTransaction) {
+
+                BigDecimal p = ((InvestmentTransaction) t).getPrice();
+
+                // Dividend transactions, etc return BigDecimal.Zero; Protect against setting a price equal to zero
+                if (((InvestmentTransaction) t).getSecurityNode() == node && p != null && p.compareTo(BigDecimal.ZERO) == 1) {
+                    switch (t.getDate().compareTo(testDate)) {
+                        case -1:
+                            price = p;
+                            priceDate = t.getDate();
+                            break;
+                        case 0: // found an exact match, return it
+                            return p;
+                        case 1:
+                        default:
+                            break search; // stop the loop
+                    }
+                }
+            }
+        }
+
+        // determine the closest date
+        if (hNode == null && priceDate == null) {
+            return BigDecimal.ZERO; // nothing found
+        } else if (priceDate != null && hNode != null) {
+            if (priceDate.compareTo(hNode.getDate()) >= 0) {
+                return price;
+            }
+        } else if (hNode == null) {
+            return price;
+        }
+
+        // return the price and factor in the exchange rate
+        return hNode.getPrice().multiply(rate);
+    }
+
+    static String buildExchangeRateId(final CurrencyNode baseCurrency, final CurrencyNode exchangeCurrency) {
+
+        String rateId;
+        if (baseCurrency.getSymbol().compareToIgnoreCase(exchangeCurrency.getSymbol()) > 0) {
+            rateId = baseCurrency.getSymbol() + exchangeCurrency.getSymbol();
+        } else {
+            rateId = exchangeCurrency.getSymbol() + baseCurrency.getSymbol();
+        }
+        return rateId;
+    }
+
+    /**
+     * Returns the engine logger
+     *
+     * @return the engine logger
+     */
+    public static Logger getLogger() {
+        return logger;
+    }
+
+    /**
+     * Log a informational message
+     *
+     * @param message message to display
+     */
+    private static void logInfo(final String message) {
+        logger.log(Level.INFO, message);
+    }
+
+    /**
+     * Log a warning message
+     *
+     * @param message message to display
+     */
+    private static void logWarning(final String message) {
+        logger.warning(message);
+    }
+
+    /**
+     * Log a severe message
+     *
+     * @param message message to display
+     */
+    private static void logSevere(final String message) {
+        logger.severe(message);
     }
 
     /**
@@ -862,65 +956,6 @@ public class Engine {
         return accounts;
     }
 
-    public static BigDecimal getMarketPrice(final Collection<Transaction> transactions, final SecurityNode node, final CurrencyNode baseCurrency, final Date date) {
-
-        Date testDate = DateUtils.trimDate(date);
-
-        // the best history node record
-        SecurityHistoryNode hNode = node.getHistoryNode(testDate);
-
-        // Get the current exchange rate for the security node
-        BigDecimal rate = node.getReportedCurrencyNode().getExchangeRate(baseCurrency);
-
-        // return if dates are exact match
-        if (hNode != null && testDate.equals(DateUtils.trimDate(hNode.getDate()))) {
-            // return the price and factor in the exchange rate
-            return hNode.getPrice().multiply(rate);
-        }
-
-        Date priceDate = null;
-        BigDecimal price = BigDecimal.ZERO;
-
-        // no exact match yet, search the transactions
-
-        search:
-        for (Transaction t : transactions) {
-            if (t instanceof InvestmentTransaction) {
-
-                BigDecimal p = ((InvestmentTransaction) t).getPrice();
-
-                // Dividend transactions, etc return BigDecimal.Zero; Protect against setting a price equal to zero
-                if (((InvestmentTransaction) t).getSecurityNode() == node && p != null && p.compareTo(BigDecimal.ZERO) == 1) {
-                    switch (t.getDate().compareTo(testDate)) {
-                        case -1:
-                            price = p;
-                            priceDate = t.getDate();
-                            break;
-                        case 0: // found an exact match, return it
-                            return p;
-                        case 1:
-                        default:
-                            break search; // stop the loop
-                    }
-                }
-            }
-        }
-
-        // determine the closest date
-        if (hNode == null && priceDate == null) {
-            return BigDecimal.ZERO; // nothing found
-        } else if (priceDate != null && hNode != null) {
-            if (priceDate.compareTo(hNode.getDate()) >= 0) {
-                return price;
-            }
-        } else if (hNode == null) {
-            return price;
-        }
-
-        // return the price and factor in the exchange rate
-        return hNode.getPrice().multiply(rate);
-    }
-
     /**
      * Forces all investment accounts containing the security to clear the cached account balance and reconciled account
      * balance and recalculate when queried.
@@ -953,17 +988,6 @@ public class Engine {
         if (account.getParent() != null && account.getParent().getAccountType() != AccountType.ROOT) {
             clearCachedAccountBalance(account.getParent());
         }
-    }
-
-    static String buildExchangeRateId(final CurrencyNode baseCurrency, final CurrencyNode exchangeCurrency) {
-
-        String rateId;
-        if (baseCurrency.getSymbol().compareToIgnoreCase(exchangeCurrency.getSymbol()) > 0) {
-            rateId = baseCurrency.getSymbol() + exchangeCurrency.getSymbol();
-        } else {
-            rateId = exchangeCurrency.getSymbol() + baseCurrency.getSymbol();
-        }
-        return rateId;
     }
 
     CurrencyNode[] getBaseCurrencies(final String exchangeRateId) {
@@ -1250,6 +1274,40 @@ public class Engine {
         }
     }
 
+    private Config getConfig() {
+
+        configLock.readLock().lock();
+
+        try {
+            if (config == null) {
+                config = getConfigDAO().getDefaultConfig();
+            }
+            return config;
+
+        } finally {
+            configLock.readLock().unlock();
+        }
+    }
+
+    public CurrencyNode getDefaultCurrency() {
+
+        configLock.readLock().lock();
+        commodityLock.readLock().lock();
+
+        try {
+            CurrencyNode node = getConfig().getDefaultCurrency();
+
+            if (node == null) {
+                logger.warning("No default currency assigned");
+            }
+
+            return node;
+        } finally {
+            commodityLock.readLock().unlock();
+            configLock.readLock().unlock();
+        }
+    }
+
     public void setDefaultCurrency(final CurrencyNode defaultCurrency) {
 
         // make sure the new default is persisted if it has not been
@@ -1285,40 +1343,6 @@ public class Engine {
             commodityLock.writeLock().unlock();
             configLock.writeLock().unlock();
             accountLock.writeLock().unlock();
-        }
-    }
-
-    private Config getConfig() {
-
-        configLock.readLock().lock();
-
-        try {
-            if (config == null) {
-                config = getConfigDAO().getDefaultConfig();
-            }
-            return config;
-
-        } finally {
-            configLock.readLock().unlock();
-        }
-    }
-
-    public CurrencyNode getDefaultCurrency() {
-
-        configLock.readLock().lock();
-        commodityLock.readLock().lock();
-
-        try {
-            CurrencyNode node = getConfig().getDefaultCurrency();
-
-            if (node == null) {
-                logger.warning("No default currency assigned");
-            }
-
-            return node;
-        } finally {
-            commodityLock.readLock().unlock();
-            configLock.readLock().unlock();
         }
     }
 
@@ -1469,40 +1493,19 @@ public class Engine {
         getReminderDAO().updateReminder(reminder);
     }
 
-    /**
-     * Returns the engine logger
-     *
-     * @return the engine logger
-     */
-    public static Logger getLogger() {
-        return logger;
-    }
+    public String getAccountSeparator() {
 
-    /**
-     * Log a informational message
-     *
-     * @param message message to display
-     */
-    private static void logInfo(final String message) {
-        logger.log(Level.INFO, message);
-    }
+        configLock.readLock().lock();
 
-    /**
-     * Log a warning message
-     *
-     * @param message message to display
-     */
-    private static void logWarning(final String message) {
-        logger.warning(message);
-    }
+        try {
+            if (accountSeparator == null) {
+                accountSeparator = getConfig().getAccountSeparator();
+            }
+            return accountSeparator;
 
-    /**
-     * Log a severe message
-     *
-     * @param message message to display
-     */
-    private static void logSevere(final String message) {
-        logger.severe(message);
+        } finally {
+            configLock.readLock().unlock();
+        }
     }
 
     public void setAccountSeparator(final String separator) {
@@ -1523,21 +1526,6 @@ public class Engine {
             messageBus.fireEvent(message);
         } finally {
             configLock.writeLock().unlock();
-        }
-    }
-
-    public String getAccountSeparator() {
-
-        configLock.readLock().lock();
-
-        try {
-            if (accountSeparator == null) {
-                accountSeparator = getConfig().getAccountSeparator();
-            }
-            return accountSeparator;
-
-        } finally {
-            configLock.readLock().unlock();
         }
     }
 
@@ -1918,6 +1906,22 @@ public class Engine {
         } finally {
             accountLock.writeLock().unlock();
         }
+    }
+
+    public Path getAttachment(final String attachment) {
+        return attachmentManager.getAttachment(attachment);
+    }
+
+    public boolean addAttachment(final Path path, final boolean copy) {
+        boolean result = false;
+
+        try {
+            result = attachmentManager.addAttachment(path, copy);
+        } catch (IOException e) {
+            logSevere(e.getLocalizedMessage());
+        }
+
+        return result;
     }
 
     @SuppressWarnings("deprecation")
