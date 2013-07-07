@@ -80,13 +80,16 @@ public class MessageBusClient {
 
     private Channel channel;
 
+    private final String name;
+
     static {
         logger.setLevel(Level.INFO);
     }
 
-    public MessageBusClient(final String host, final int port) {
+    public MessageBusClient(final String host, final int port, final String name) {
         this.host = host;
         this.port = port;
+        this.name = name;
 
         xstream = XStreamFactory.getInstance();
     }
@@ -187,7 +190,7 @@ public class MessageBusClient {
                             final Message message = (Message) xstream.fromXML(plainMessage);
 
                             // ignore our own messages
-                            if (!EngineFactory.getEngine(EngineFactory.DEFAULT).getUuid().equals(message.getSource())) {
+                            if (!EngineFactory.getEngine(name).getUuid().equals(message.getSource())) {
                                 processRemoteMessage(message);
                             }
                         }
@@ -202,7 +205,7 @@ public class MessageBusClient {
                     logger.log(Level.SEVERE, "Unable to decrypt the remote message");
                 } else if (plainMessage.startsWith(JpaNetworkServer.STOP_SERVER_MESSAGE)) {
                     logger.info("Server is shutting down");
-                    EngineFactory.closeEngine(EngineFactory.DEFAULT);
+                    EngineFactory.closeEngine(name);
                 } else {
                     logger.log(Level.SEVERE, "Unknown message: {0}", plainMessage);
                 }
@@ -252,8 +255,14 @@ public class MessageBusClient {
             } else {
                 channel.write(message + MessageBusServer.EOL_DELIMITER).sync();
             }
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+        } catch (final NullPointerException e) {
+            if (channel == null) {
+                logger.info("Channel was null");
+            }
+
+            logger.info("Tried to send message: " + message + " through a null channel");
         }
     }
 
@@ -263,10 +272,10 @@ public class MessageBusClient {
      *
      * @param message Message to process and send
      */
-    private static void processRemoteMessage(final Message message) {
+    private void processRemoteMessage(final Message message) {
         logger.fine("processing a remote message");
 
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Engine engine = EngineFactory.getEngine(name);
 
         if (message.getChannel() == MessageChannel.ACCOUNT) {
             final Account account = (Account) message.getObject(MessageProperty.ACCOUNT);
@@ -378,6 +387,6 @@ public class MessageBusClient {
         message.setRemote(true);
 
         logger.fine("fire remote message");
-        MessageBus.getInstance().fireEvent(message);
+        MessageBus.getInstance(name).fireEvent(message);
     }
 }

@@ -65,7 +65,11 @@ public class MessageBus {
 
     private static final String DEFAULT = "default";
 
-    private MessageBus() {
+    /** Name given to this message bus instance */
+    private final String busName;
+
+    private MessageBus(final String busName) {
+        this.busName = busName;
     }
 
     /**
@@ -87,6 +91,11 @@ public class MessageBus {
         disconnectFromServer();
     }
 
+    /**
+     * Returns the message bus instance intended for UI use only.
+     *
+     * @return an instance of a MessageBus
+     */
     public static synchronized MessageBus getInstance() {
         return getInstance(DEFAULT);
     }
@@ -95,7 +104,7 @@ public class MessageBus {
         MessageBus bus = busMap.get(name);
 
         if (bus == null) {
-            bus = new MessageBus();
+            bus = new MessageBus(name);
             busMap.put(name, bus);
         }
         return bus;
@@ -125,12 +134,12 @@ public class MessageBus {
     /**
      * Issues a shutdown request to a remote server
      */
-    public static void shutDownRemoteServer(final String remoteHost, final int remotePort, final char[] password) {
+    public void shutDownRemoteServer(final String remoteHost, final int remotePort, final char[] password) {
         if (remoteHost == null || remotePort <= 0) {
             throw new IllegalArgumentException();
         }
 
-        MessageBusClient client = new MessageBusClient(remoteHost, remotePort);
+        MessageBusClient client = new MessageBusClient(remoteHost, remotePort, busName);
 
         if (client.connectToServer(password)) {
             client.sendRemoteShutdownRequest();
@@ -142,7 +151,7 @@ public class MessageBus {
             throw new IllegalArgumentException();
         }
 
-        messageBusClient = new MessageBusClient(remoteHost, remotePort);
+        messageBusClient = new MessageBusClient(remoteHost, remotePort, busName);
 
         boolean result = messageBusClient.connectToServer(password);
 
