@@ -34,6 +34,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -1908,7 +1909,7 @@ public class Engine {
         }
     }
 
-    public Path getAttachment(final String attachment) {
+    public Future<Path> getAttachment(final String attachment) {
         return attachmentManager.getAttachment(attachment);
     }
 

@@ -19,6 +19,7 @@ package jgnash.engine.attachment;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.concurrent.Future;
 
 /**
  * Interface for handling attachments
@@ -30,7 +31,7 @@ public interface AttachmentManager {
 
     boolean removeAttachment(Path path);
 
-    Path getAttachment(String attachment);
+    Future<Path> getAttachment(String attachment);
 
     void connectToServer();
 

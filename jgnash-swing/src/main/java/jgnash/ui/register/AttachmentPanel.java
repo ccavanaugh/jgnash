@@ -23,6 +23,10 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import javax.imageio.ImageIO;
@@ -30,6 +34,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -53,18 +58,12 @@ import com.jgoodies.forms.layout.FormLayout;
 class AttachmentPanel extends JPanel implements ActionListener {
 
     private static final String LAST_DIR = "LastDir";
-
-    private final Resource rb = Resource.get();
-
-    Path attachment = null;
-
-    boolean moveAttachment = false;
-
     final JButton viewAttachmentButton;
-
     final JButton attachmentButton;
-
     final JButton deleteButton;
+    private final Resource rb = Resource.get();
+    Path attachment = null;
+    boolean moveAttachment = false;
 
     AttachmentPanel() {
         attachmentButton = new JButton(Resource.getIcon("/jgnash/resource/mail-attachment.png"));
@@ -92,19 +91,28 @@ class AttachmentPanel extends JPanel implements ActionListener {
     }
 
     Transaction modifyTransaction(final Transaction transaction) {
-        // preserve any prior attachments
-        if (transaction.getAttachment() != null && !transaction.getAttachment().isEmpty()) {
+        // preserve any prior attachments, push file request into the background
+        new SwingWorker<Path, Void>() {
 
-            //final File baseFile = new File(EngineFactory.getActiveDatabase());
+            @Override
+            protected Path doInBackground() throws Exception {
+                if (transaction.getAttachment() != null && !transaction.getAttachment().isEmpty()) {
+                    final Future<Path> pathFuture = EngineFactory.getEngine(EngineFactory.DEFAULT).getAttachment(transaction.getAttachment());
+                    return pathFuture.get();
+                }
+                return null;
+            }
 
-            //attachment = AttachmentUtils.resolve(baseFile, transaction.getAttachment());
-
-            attachment = EngineFactory.getEngine(EngineFactory.DEFAULT).getAttachment(transaction.getAttachment());
-        } else {
-            attachment = null;
-        }
-
-        updateControlStates();
+            @Override
+            protected void done() {
+                try {
+                    attachment = get();
+                    updateControlStates();
+                } catch (final ExecutionException | InterruptedException e) {
+                    Logger.getLogger(AttachmentPanel.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                }
+            }
+        }.execute();
 
         return transaction;
     }
@@ -141,7 +149,6 @@ class AttachmentPanel extends JPanel implements ActionListener {
     }
 
     private void moveAttachment() {
-
 
         EngineFactory.getEngine(EngineFactory.DEFAULT).addAttachment(attachment, false);
 

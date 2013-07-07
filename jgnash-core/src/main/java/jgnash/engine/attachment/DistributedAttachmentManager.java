@@ -30,6 +30,10 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,6 +43,8 @@ import java.util.logging.Logger;
  * @author Craig Cavanaugh
  */
 public class DistributedAttachmentManager implements AttachmentManager {
+
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
 
     private static final String TEMP_ATTACHMENT_PATH = "jgnash-";
     private final String host;
@@ -94,34 +100,39 @@ public class DistributedAttachmentManager implements AttachmentManager {
     }
 
     @Override
-    public Path getAttachment(final String attachment) {
+    public Future<Path> getAttachment(final String attachment) {
 
-        Path path = Paths.get(tempAttachmentPath + File.separator + Paths.get(attachment).getFileName().toString());
+        return executorService.submit(new Callable<Path>() {
+            @Override
+            public Path call() throws Exception {
+                Path path = Paths.get(tempAttachmentPath + File.separator + Paths.get(attachment).getFileName().toString());
 
-        if (Files.notExists(path)) {
-            fileClient.requestFile(Paths.get(attachment));  // Request the file and place in a a temp location
+                if (Files.notExists(path)) {
+                    fileClient.requestFile(Paths.get(attachment));  // Request the file and place in a a temp location
 
-            Date now = new Date();
+                    long now = new Date().getTime();
 
-            while (new Date().getTime() - now.getTime() < 5000) {
-                if (Files.exists(path)) {
-                    break;
+                    while ((new Date().getTime() - now) < 5000) {
+                        if (Files.exists(path)) {
+                            break;
+                        }
+
+                        //try {
+                        //Thread.sleep(1000);
+                        Thread.yield();
+                        //} catch (InterruptedException e) {
+                        //    Logger.getLogger(DistributedAttachmentManager.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                        //}
+                    }
                 }
 
-                // TODO, run in background
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    Logger.getLogger(DistributedAttachmentManager.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                if (Files.notExists(path)) {
+                    path = null;
                 }
+
+                return path;
             }
-        }
-
-        if (Files.notExists(path)) {
-            path = null;
-        }
-
-        return path;
+        });
     }
 
     @Override

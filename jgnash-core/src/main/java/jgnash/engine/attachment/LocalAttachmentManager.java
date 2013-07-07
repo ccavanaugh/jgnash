@@ -23,6 +23,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,6 +39,8 @@ import jgnash.engine.EngineFactory;
  * @author Craig Cavanaugh
  */
 public class LocalAttachmentManager implements AttachmentManager {
+
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
 
     @Override
     public boolean addAttachment(final Path path, final boolean copy) throws IOException {
@@ -79,8 +85,13 @@ public class LocalAttachmentManager implements AttachmentManager {
     }
 
     @Override
-    public Path getAttachment(final String attachment) {
-        return AttachmentUtils.resolve(attachment).toPath();
+    public Future<Path> getAttachment(final String attachment) {
+        return executorService.submit(new Callable<Path>() {
+            @Override
+            public Path call() throws Exception {
+                return AttachmentUtils.resolve(attachment).toPath();
+            }
+        });
     }
 
     @Override

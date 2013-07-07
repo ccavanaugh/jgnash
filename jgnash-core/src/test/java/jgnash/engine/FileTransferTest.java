@@ -24,6 +24,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.Future;
 
 import jgnash.engine.jpa.JpaH2DataStore;
 import jgnash.engine.jpa.JpaNetworkServer;
@@ -115,7 +116,9 @@ public class FileTransferTest {
             bw.write("This is the temporary file content 2.");
             bw.close();
 
-            Path remoteTemp = e.getAttachment(tempAttachment.getFileName().toString());
+            Future<Path> pathFuture = e.getAttachment(tempAttachment.getFileName().toString());
+
+            Path remoteTemp = pathFuture.get();
 
             assertTrue(Files.exists(remoteTemp));
             assertNotEquals(remoteTemp.toString(), tempAttachment.toString());
