@@ -38,7 +38,7 @@
         <kxml.version>2.3.0</kxml.version>
         <apachi-poi.version>3.9</apachi-poi.version>
         <itext.version>4.2.0</itext.version>
-        <jfree.version>1.0.14</jfree.version>
+        <jfree.version>1.0.15</jfree.version>
         <insubstantial.version>7.2.1</insubstantial.version>
         <swingx.version>1.6.5-1</swingx.version>
         <dynamic-jasper.version>4.0.3</dynamic-jasper.version>
