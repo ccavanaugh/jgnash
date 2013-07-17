@@ -400,20 +400,17 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @see #getReadOnlyTransactionCollection()
      */
     private List<Transaction> getSortedTransactionList() {
-        List<Transaction> sortedTransactionList = Collections.emptyList();
-
         Lock l = transactionLock.readLock();
         l.lock();
 
         try {
-            sortedTransactionList = new ArrayList<>(transactions);
+            List<Transaction> sortedTransactionList = new ArrayList<>(transactions);
+
+            Collections.sort(sortedTransactionList);
+            return sortedTransactionList;
         } finally {
             l.unlock();
         }
-
-        Collections.sort(sortedTransactionList);
-
-        return sortedTransactionList;
     }
 
     /**
