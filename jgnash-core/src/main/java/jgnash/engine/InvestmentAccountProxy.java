@@ -100,7 +100,7 @@ public class InvestmentAccountProxy extends AccountProxy {
         l.lock();
 
         try {
-            return !account.transactions.isEmpty() ? getCashBalance(account.getReadOnlySortedTransactionList().get(0).getDate(), end) : BigDecimal.ZERO;
+            return !account.transactions.isEmpty() ? getCashBalance(account.getSortedTransactionList().get(0).getDate(), end) : BigDecimal.ZERO;
         } finally {
             l.unlock();
         }
@@ -117,7 +117,13 @@ public class InvestmentAccountProxy extends AccountProxy {
      */
     @Override
     public BigDecimal getMarketPrice(final SecurityNode node, final Date date) {
-        return Engine.getMarketPrice(account.getReadOnlySortedTransactionList(), node, account.getCurrencyNode(), date);
+        account.getTransactionLock().readLock().lock();
+
+        try {
+            return Engine.getMarketPrice(account.getSortedTransactionList(), node, account.getCurrencyNode(), date);
+        } finally {
+            account.getTransactionLock().readLock().unlock();
+        }
     }
 
     /**
@@ -137,7 +143,7 @@ public class InvestmentAccountProxy extends AccountProxy {
             int count = account.getTransactionCount();
 
             if (count > 0) {
-                Date lastDate = account.getReadOnlySortedTransactionList().get(count - 1).getDate();
+                Date lastDate = account.getSortedTransactionList().get(count - 1).getDate();
 
                 /*
                  * If the user was to enter a date value greater than the current date, then
@@ -146,7 +152,7 @@ public class InvestmentAccountProxy extends AccountProxy {
                  * security price.
                  */
 
-                final Date startDate = account.getReadOnlySortedTransactionList().get(0).getDate();
+                final Date startDate = account.getSortedTransactionList().get(0).getDate();
 
                 if (lastDate.compareTo(new Date()) >= 0) {
                     marketValue = getMarketValue(startDate, lastDate);
@@ -177,7 +183,7 @@ public class InvestmentAccountProxy extends AccountProxy {
             BigDecimal marketValue = BigDecimal.ZERO;
 
             if (account.getTransactionCount() > 0) {
-                marketValue = getMarketValue(account.getReadOnlySortedTransactionList().get(0).getDate(), date);
+                marketValue = getMarketValue(account.getSortedTransactionList().get(0).getDate(), date);
             }
 
             return marketValue;
@@ -309,7 +315,7 @@ public class InvestmentAccountProxy extends AccountProxy {
 
             BigDecimal balance = BigDecimal.ZERO;
 
-            final List<Transaction> transactions = account.getReadOnlySortedTransactionList();
+            final List<Transaction> transactions = account.getSortedTransactionList();
 
             for (int i = 0; i < transactions.size(); i++) {
                 if (transactions.get(i).getDate().equals(date)) {

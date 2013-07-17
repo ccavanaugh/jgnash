@@ -399,7 +399,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @return List of transactions
      * @see #getReadOnlyTransactionCollection()
      */
-    private List<Transaction> getSortedTransactionList() {
+    public List<Transaction> getSortedTransactionList() {
         Lock l = transactionLock.readLock();
         l.lock();
 
@@ -414,16 +414,6 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns a readonly sorted list of transactions for this account
-     *
-     * @return List of transactions
-     * @see #getReadOnlyTransactionCollection()
-     */
-    public List<Transaction> getReadOnlySortedTransactionList() {
-        return Collections.unmodifiableList(getSortedTransactionList());
-    }
-
-    /**
      * Returns a readonly collection that is a wrapper around the internal collection.
      * <p/>
      * Use of this method over <code>getReadOnlySortedTransactionList()</code> will reduce GC and perform better.
@@ -432,7 +422,6 @@ public class Account extends StoredObject implements Comparable<Account> {
      * Sort order is not guaranteed.
      *
      * @return Collection of transactions
-     * @see #getReadOnlySortedTransactionList()
      */
     public Collection<Transaction> getReadOnlyTransactionCollection() {
         Lock l = transactionLock.readLock();
@@ -456,7 +445,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         Lock l = transactionLock.readLock();
         l.lock();
 
-        List<Transaction> sortedList = getReadOnlySortedTransactionList();
+        List<Transaction> sortedList = getSortedTransactionList();
 
         try {
             return sortedList.get(index);
@@ -820,7 +809,7 @@ public class Account extends StoredObject implements Comparable<Account> {
             }
 
             if (date == null) {
-                date = getReadOnlySortedTransactionList().get(getTransactionCount() - 1).getDate();
+                date = getSortedTransactionList().get(getTransactionCount() - 1).getDate();
             }
 
             return date;

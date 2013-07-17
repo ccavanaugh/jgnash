@@ -12,8 +12,6 @@ import org.junit.Test;
 
 public class TransactionTest {
 
-    public static final String USER = "";
-
     public static final char[] PASSWORD = new char[]{};
 
     @Test
@@ -100,7 +98,7 @@ public class TransactionTest {
 
             // ensure API does not break down
 
-            List<Transaction> transactions = usdBankAccount.getReadOnlySortedTransactionList();
+            List<Transaction> transactions = usdBankAccount.getSortedTransactionList();
 
             assertTrue(transactions.isEmpty());
 

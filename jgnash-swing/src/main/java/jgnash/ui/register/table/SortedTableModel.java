@@ -95,7 +95,7 @@ public class SortedTableModel extends RegisterTableModel implements SortableTabl
         lock.lock();
 
         try {
-            transactions = new ArrayList<>(account.getReadOnlySortedTransactionList());
+            transactions = new ArrayList<>(account.getSortedTransactionList());
             Collections.sort(transactions, comparator);
         } finally {
             lock.unlock();

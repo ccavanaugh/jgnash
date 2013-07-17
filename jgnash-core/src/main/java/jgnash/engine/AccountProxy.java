@@ -60,7 +60,7 @@ class AccountProxy {
         try {
             BigDecimal balance = BigDecimal.ZERO;
 
-            List<Transaction> transactions = account.getReadOnlySortedTransactionList();
+            List<Transaction> transactions = account.getSortedTransactionList();
 
             for (int i = 0; i <= index; i++) {
                 balance = balance.add(transactions.get(i).getAmount(account));
@@ -113,7 +113,7 @@ class AccountProxy {
             BigDecimal balance = BigDecimal.ZERO;
 
             if (!account.transactions.isEmpty()) {
-                balance = getBalance(account.getReadOnlySortedTransactionList().get(0).getDate(), date);
+                balance = getBalance(account.getSortedTransactionList().get(0).getDate(), date);
             }
 
             return balance;
@@ -232,7 +232,7 @@ class AccountProxy {
         try {
             final Date date = account.getFirstUnreconciledTransactionDate();
 
-            final List<Transaction> transactions = account.getReadOnlySortedTransactionList();
+            final List<Transaction> transactions = account.getSortedTransactionList();
 
             BigDecimal balance = BigDecimal.ZERO;
 

@@ -103,7 +103,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
         rwl.writeLock().lock();
 
         try {
-            for (Transaction t : account.getReadOnlySortedTransactionList()) {
+            for (Transaction t : account.getSortedTransactionList()) {
                 if (reconcilable(t)) {
                     list.add(new RecTransaction(t));
                 }
