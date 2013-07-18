@@ -109,6 +109,12 @@ public class Account extends StoredObject implements Comparable<Account> {
     Set<Transaction> transactions = new HashSet<>();
 
     /**
+     * Cached list of sorted transactions that is not persisted
+     */
+    @Transient
+    private transient List<Transaction> cachedTransactionList = new ArrayList<>();
+
+    /**
      * List of securities if this is an investment account
      */
     @JoinColumn()
@@ -307,14 +313,17 @@ public class Account extends StoredObject implements Comparable<Account> {
             return false;
         }
 
-        Lock l = transactionLock.writeLock();
-        l.lock();
+        transactionLock.writeLock().lock();
 
         try {
             boolean result = false;
 
             if (!contains(tran)) {
                 transactions.add(tran);
+
+                cachedTransactionList.add(tran);
+                Collections.sort(cachedTransactionList);
+
                 clearCachedBalances();
 
                 result = true;
@@ -326,7 +335,7 @@ public class Account extends StoredObject implements Comparable<Account> {
 
             return result;
         } finally {
-            l.unlock();
+            transactionLock.writeLock().unlock();
         }
     }
 
@@ -339,14 +348,14 @@ public class Account extends StoredObject implements Comparable<Account> {
      *         <tt>false</tt> the transaction could not be found within this account
      */
     boolean removeTransaction(final Transaction tran) {
-        Lock l = transactionLock.writeLock();
-        l.lock();
+        transactionLock.writeLock().lock();
 
         try {
             boolean result = false;
 
             if (contains(tran)) {
                 transactions.remove(tran);
+                cachedTransactionList.remove(tran);
                 clearCachedBalances();
 
                 result = true;
@@ -358,7 +367,7 @@ public class Account extends StoredObject implements Comparable<Account> {
 
             return result;
         } finally {
-            l.unlock();
+            transactionLock.writeLock().unlock();
         }
     }
 
@@ -404,16 +413,12 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @see #getReadOnlyTransactionCollection()
      */
     public List<Transaction> getSortedTransactionList() {
-        Lock l = transactionLock.readLock();
-        l.lock();
+        transactionLock.readLock().lock();
 
         try {
-            List<Transaction> sortedTransactionList = new ArrayList<>(transactions);
-
-            Collections.sort(sortedTransactionList);
-            return sortedTransactionList;
+            return Collections.unmodifiableList(cachedTransactionList);
         } finally {
-            l.unlock();
+            transactionLock.readLock().unlock();
         }
     }
 
@@ -446,15 +451,12 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @throws IndexOutOfBoundsException if the index is out of bounds
      */
     public Transaction getTransactionAt(final int index) throws IndexOutOfBoundsException {
-        Lock l = transactionLock.readLock();
-        l.lock();
-
-        List<Transaction> sortedList = getSortedTransactionList();
+        transactionLock.readLock().lock();
 
         try {
-            return sortedList.get(index);
+            return cachedTransactionList.get(index);
         } finally {
-            l.unlock();
+            transactionLock.readLock().unlock();
         }
     }
 
@@ -587,13 +589,12 @@ public class Account extends StoredObject implements Comparable<Account> {
      *         <tt>Account</tt> does not contain the <tt>Transaction</tt>.
      */
     public int indexOf(final Transaction tran) {
-        Lock l = transactionLock.readLock();
-        l.lock();
+        transactionLock.readLock().lock();
 
         try {
-            return getSortedTransactionList().indexOf(tran);
+            return cachedTransactionList.indexOf(tran);
         } finally {
-            l.unlock();
+            transactionLock.readLock().unlock();
         }
     }
 
@@ -799,8 +800,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @return Date of first unreconciled transaction
      */
     public Date getFirstUnreconciledTransactionDate() {
-        Lock l = transactionLock.readLock();
-        l.lock();
+        transactionLock.readLock().lock();
 
         try {
             Date date = null;
@@ -813,12 +813,12 @@ public class Account extends StoredObject implements Comparable<Account> {
             }
 
             if (date == null) {
-                date = getSortedTransactionList().get(getTransactionCount() - 1).getDate();
+                date = cachedTransactionList.get(getTransactionCount() -1).getDate();
             }
 
             return date;
         } finally {
-            l.unlock();
+            transactionLock.readLock().unlock();
         }
     }
 
@@ -1504,8 +1504,11 @@ public class Account extends StoredObject implements Comparable<Account> {
         childLock = new ReentrantReadWriteLock(true);
         securitiesLock = new ReentrantReadWriteLock(true);
 
+        cachedTransactionList = new ArrayList<>(transactions);
+        Collections.sort(cachedTransactionList);
+
         // Force initialization of a lazily collection
-        transactions.iterator().hasNext();
+        // transactions.iterator().hasNext();
         children.iterator().hasNext();
         securities.iterator().hasNext();
     }
@@ -1523,6 +1526,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         a.securities.clear();
         a.children.clear();
         a.transactions.clear();
+        a.cachedTransactionList.clear();
 
         return a;
     }
