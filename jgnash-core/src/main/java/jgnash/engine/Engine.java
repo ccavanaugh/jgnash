@@ -1548,7 +1548,7 @@ public class Engine {
     }
 
     /**
-     * Search for an account with a matching account number
+     * Search for an account with a matching account name
      *
      * @param accountName Account name to search for. <b>Must not be null</b>
      * @return The matching account. <code>null</code> if not found.
