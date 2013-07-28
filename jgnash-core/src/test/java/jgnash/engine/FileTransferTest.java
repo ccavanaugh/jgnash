@@ -125,6 +125,7 @@ public class FileTransferTest {
 
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
         } catch (Exception e) {
+            e.printStackTrace();
             fail();
         }
 
