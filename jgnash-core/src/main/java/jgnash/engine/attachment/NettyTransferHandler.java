@@ -32,7 +32,6 @@ import java.util.logging.Logger;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.MessageList;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 /**
@@ -63,7 +62,7 @@ public class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
     }
 
     @Override
-    protected void messageReceived(final ChannelHandlerContext ctx, final String msg) throws Exception {
+    public void channelRead0(final ChannelHandlerContext ctx, final String msg) {
 
         if (msg.startsWith(FILE_REQUEST)) {
             sendFile(ctx, attachmentPath + File.separator + msg.substring(FILE_REQUEST.length()));
@@ -116,14 +115,12 @@ public class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
         if (Files.exists(path)) {
 
             if (Files.isDirectory(path)) {
-                channel.write(ERROR + "Not a file: " + path + '\n');
+                channel.writeAndFlush(ERROR + "Not a file: " + path + '\n');
                 return;
             }
 
             try (InputStream fileInputStream = Files.newInputStream(path)) {
-                channel.write(FILE_STARTS + path.getFileName() + ":" + Files.size(path) + '\n');
-
-                MessageList<String> out = MessageList.newInstance();
+                channel.writeAndFlush(FILE_STARTS + path.getFileName() + ":" + Files.size(path) + '\n');
 
                 byte[] bytes = new byte[4096];  // leave room for base 64 expansion
 
@@ -131,18 +128,17 @@ public class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
 
                 while ((bytesRead = fileInputStream.read(bytes)) != -1) {
                     if (bytesRead > 0) {
-                        out.add(FILE_CHUNK + path.getFileName() + ':');
-                        out.add(new String(bytes, 0, bytesRead) + '\n');
+                        channel.write(FILE_CHUNK + path.getFileName() + ':');
+                        channel.write(new String(bytes, 0, bytesRead) + '\n');
                     }
                 }
-                out.add(FILE_ENDS + path.getFileName() + '\n');
+                channel.writeAndFlush(FILE_ENDS + path.getFileName() + '\n').sync();
 
-                channel.write(out).sync();
             } catch (IOException | InterruptedException e) {
                 logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
         } else {
-            channel.write(ERROR + "File not found: " + path + '\n');
+            channel.writeAndFlush(ERROR + "File not found: " + path + '\n');
             logger.warning("File not found: " + path);
         }
     }

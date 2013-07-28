@@ -42,7 +42,6 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
-import io.netty.channel.MessageList;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -122,7 +121,7 @@ public class DistributedLockManager implements LockManager {
             // Start the connection attempt.
             channel = bootstrap.connect(host, port).sync().channel();
 
-            channel.write(UUID_PREFIX + uuid + EOL_DELIMITER).sync();   // send this channels uuid
+            channel.writeAndFlush(UUID_PREFIX + uuid + EOL_DELIMITER).sync();   // send this channels uuid
 
             result = true;
             logger.info("Connection made with Distributed Lock Server");
@@ -205,7 +204,7 @@ public class DistributedLockManager implements LockManager {
             try {
 
                 // send the message to the server and wait until it if flushed
-                channel.write(lockMessage + EOL_DELIMITER).sync();
+                channel.writeAndFlush(lockMessage + EOL_DELIMITER).sync();
 
                 for (int i = 0; i < 2; i++) {
                     result = responseLatch.await(45L, TimeUnit.SECONDS);
@@ -278,20 +277,13 @@ public class DistributedLockManager implements LockManager {
     private class ClientHandler extends ChannelInboundHandlerAdapter {
 
         @Override
-        public void messageReceived(final ChannelHandlerContext ctx, final MessageList<Object> messageList) throws Exception {
-            for (final Object msg : messageList) {
-
-                final String message = msg.toString();
-
-                executorService.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        processMessage(message);
-                    }
-                });
-            }
-
-            messageList.releaseAllAndRecycle();
+        public void channelRead(final ChannelHandlerContext ctx, final Object msg) {
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    processMessage(msg.toString());
+                }
+            });
         }
 
         @Override

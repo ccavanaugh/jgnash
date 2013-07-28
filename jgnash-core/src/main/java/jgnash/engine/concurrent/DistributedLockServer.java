@@ -35,7 +35,6 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
-import io.netty.channel.MessageList;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -133,7 +132,7 @@ public class DistributedLockServer {
 
             // return the message as an acknowledgment lock state has changed
             if (ctx.channel().isOpen()) {
-                ctx.write(message + EOL_DELIMITER).sync();
+                ctx.writeAndFlush(message + EOL_DELIMITER).sync();
             }
         } catch (final Exception e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
@@ -233,19 +232,13 @@ public class DistributedLockServer {
         }
 
         @Override
-        public void messageReceived(final ChannelHandlerContext ctx, final MessageList<Object> messageList) throws Exception {
-            for (final Object msg : messageList) {
-                final String message = msg.toString();
-
-                executorService.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        processMessage(ctx, message);
-                    }
-                });
-            }
-
-            messageList.releaseAllAndRecycle();
+        public void channelRead(final ChannelHandlerContext ctx, final Object msg) {
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    processMessage(ctx, msg.toString());
+                }
+            });
         }
 
         @Override

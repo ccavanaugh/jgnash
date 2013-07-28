@@ -92,7 +92,7 @@ public class AttachmentTransferClient {
 
     public void requestFile(final Path file) {
         try {
-            channel.write(NettyTransferHandler.FILE_REQUEST + file.toString() + '\n').sync();
+            channel.writeAndFlush(NettyTransferHandler.FILE_REQUEST + file.toString() + '\n').sync();
         } catch (final InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
@@ -100,7 +100,7 @@ public class AttachmentTransferClient {
 
     public void deleteFile(final String attachment) {
         try {
-            channel.write(NettyTransferHandler.DELETE + Paths.get(attachment).getFileName() + '\n').sync();
+            channel.writeAndFlush(NettyTransferHandler.DELETE + Paths.get(attachment).getFileName() + '\n').sync();
         } catch (final InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }

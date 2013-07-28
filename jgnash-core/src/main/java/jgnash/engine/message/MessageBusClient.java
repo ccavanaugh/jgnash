@@ -46,7 +46,6 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
-import io.netty.channel.MessageList;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -177,41 +176,37 @@ public class MessageBusClient {
         }
 
         @Override
-        public void messageReceived(final ChannelHandlerContext ctx, final MessageList<Object> messageList) throws Exception {
-            for (final Object msg : messageList) {
-                final String plainMessage = decrypt(msg);
+        public void channelRead(final ChannelHandlerContext ctx, final Object msg) {
+            final String plainMessage = decrypt(msg);
 
-                logger.log(Level.FINE, "messageReceived: {0}", plainMessage);
+            logger.log(Level.FINE, "messageReceived: {0}", plainMessage);
 
-                if (plainMessage.startsWith("<Message")) {
-                    executorService.submit(new Runnable() {
-                        @Override
-                        public void run() {
-                            final Message message = (Message) xstream.fromXML(plainMessage);
+            if (plainMessage.startsWith("<Message")) {
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Message message = (Message) xstream.fromXML(plainMessage);
 
-                            // ignore our own messages
-                            if (!EngineFactory.getEngine(name).getUuid().equals(message.getSource())) {
-                                processRemoteMessage(message);
-                            }
+                        // ignore our own messages
+                        if (!EngineFactory.getEngine(name).getUuid().equals(message.getSource())) {
+                            processRemoteMessage(message);
                         }
-                    });
-                } else if (plainMessage.startsWith(MessageBusServer.PATH_PREFIX)) {
-                    dataBasePath = plainMessage.substring(MessageBusServer.PATH_PREFIX.length());
-                    logger.log(Level.FINE, "Remote data path is: {0}", dataBasePath);
-                } else if (plainMessage.startsWith(MessageBusServer.DATA_STORE_TYPE_PREFIX)) {
-                    dataBaseType = DataStoreType.valueOf(plainMessage.substring(MessageBusServer.DATA_STORE_TYPE_PREFIX.length()));
-                    logger.log(Level.FINE, "Remote dataBaseType type is: {0}", dataBaseType.name());
-                } else if (plainMessage.startsWith(EncryptionFilter.DECRYPTION_ERROR_TAG)) {    // decryption has failed, shut down the engine
-                    logger.log(Level.SEVERE, "Unable to decrypt the remote message");
-                } else if (plainMessage.startsWith(JpaNetworkServer.STOP_SERVER_MESSAGE)) {
-                    logger.info("Server is shutting down");
-                    EngineFactory.closeEngine(name);
-                } else {
-                    logger.log(Level.SEVERE, "Unknown message: {0}", plainMessage);
-                }
+                    }
+                });
+            } else if (plainMessage.startsWith(MessageBusServer.PATH_PREFIX)) {
+                dataBasePath = plainMessage.substring(MessageBusServer.PATH_PREFIX.length());
+                logger.log(Level.FINE, "Remote data path is: {0}", dataBasePath);
+            } else if (plainMessage.startsWith(MessageBusServer.DATA_STORE_TYPE_PREFIX)) {
+                dataBaseType = DataStoreType.valueOf(plainMessage.substring(MessageBusServer.DATA_STORE_TYPE_PREFIX.length()));
+                logger.log(Level.FINE, "Remote dataBaseType type is: {0}", dataBaseType.name());
+            } else if (plainMessage.startsWith(EncryptionFilter.DECRYPTION_ERROR_TAG)) {    // decryption has failed, shut down the engine
+                logger.log(Level.SEVERE, "Unable to decrypt the remote message");
+            } else if (plainMessage.startsWith(JpaNetworkServer.STOP_SERVER_MESSAGE)) {
+                logger.info("Server is shutting down");
+                EngineFactory.closeEngine(name);
+            } else {
+                logger.log(Level.SEVERE, "Unknown message: {0}", plainMessage);
             }
-
-            messageList.releaseAllAndRecycle();
         }
 
         @Override
@@ -251,9 +246,9 @@ public class MessageBusClient {
     private synchronized void sendRemoteMessage(final String message) {
         try {
             if (filter != null) {
-                channel.write(filter.encrypt(message) + MessageBusServer.EOL_DELIMITER).sync();
+                channel.writeAndFlush(filter.encrypt(message) + MessageBusServer.EOL_DELIMITER).sync();
             } else {
-                channel.write(message + MessageBusServer.EOL_DELIMITER).sync();
+                channel.writeAndFlush(message + MessageBusServer.EOL_DELIMITER).sync();
             }
         } catch (final InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);

@@ -36,7 +36,6 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
-import io.netty.channel.MessageList;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -226,8 +225,8 @@ public class MessageBusServer {
             logger.log(Level.INFO, "Remote connection from: {0}", ctx.channel().remoteAddress().toString());
 
             // Inform the client what they are talking with so they can establish a correct database url
-            ctx.write(encrypt(PATH_PREFIX + dataBasePath) + EOL_DELIMITER);
-            ctx.write(encrypt(DATA_STORE_TYPE_PREFIX + dataStoreType) + EOL_DELIMITER);
+            ctx.writeAndFlush(encrypt(PATH_PREFIX + dataBasePath) + EOL_DELIMITER);
+            ctx.writeAndFlush(encrypt(DATA_STORE_TYPE_PREFIX + dataStoreType) + EOL_DELIMITER);
         }
 
         @Override
@@ -237,21 +236,13 @@ public class MessageBusServer {
         }
 
         @Override
-        public void messageReceived(final ChannelHandlerContext ctx, final MessageList<Object> messageList) throws Exception {
-            for (final Object msg : messageList) {
-
-                final String message = msg.toString();
-
-                executorService.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        processMessage(message);
-
-                    }
-                });
-            }
-
-            messageList.releaseAllAndRecycle();
+        public void channelRead(final ChannelHandlerContext ctx, final Object msg) {
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    processMessage(msg.toString());
+                }
+            });
         }
 
         private void processMessage(final String message) {
@@ -260,7 +251,7 @@ public class MessageBusServer {
             rwl.readLock().lock();
 
             try {
-                channelGroup.write(encrypt(plainMessage) + EOL_DELIMITER).sync();
+                channelGroup.flushAndWrite(encrypt(plainMessage) + EOL_DELIMITER).sync();
 
                 // Local listeners do not receive encrypted messages
                 for (LocalServerListener listener : listeners) {
