@@ -143,6 +143,9 @@ public class EngineFactory {
 
         File xmlFile = new File(FileUtils.stripFileExtension(fileName) + "-" + dateFormat.format(new Date()) + "." + xmlDataStore.getFileExt());
 
+        // push the intermediary file to the temporary directory
+        xmlFile = new File(System.getProperty("java.io.tmpdir"), xmlFile.getName());
+
         File zipFile = new File(FileUtils.stripFileExtension(fileName) + "-" + dateFormat.format(new Date()) + ".zip");
 
         xmlDataStore.saveAs(xmlFile, objects);
