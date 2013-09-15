@@ -28,6 +28,7 @@ Exceptions occur when entering Chinese text with Autocomplete enabled.
 
 Release 2.13.0
 ----------------------
+08/13/13 Improve UI performance of the busy indicator on slower machines (Klemen Zagar)
 08/11/13 When saving a compressed backup on exit, use the OS's temporary directory to play nice with cloud services (Patch #55, Klemen Zagar)
 07/10/13 Update to the latest JFreeChart
 06/29/13 Added a new feature; Transactions may now have image attachments.

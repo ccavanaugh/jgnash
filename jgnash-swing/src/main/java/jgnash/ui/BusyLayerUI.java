@@ -50,6 +50,7 @@ import javax.swing.plaf.LayerUI;
  * A busy layer for the UI
  * 
  * @author Craig Cavanaugh
+ * @author Klemen Zagar
  */
 class BusyLayerUI extends LayerUI<JPanel> implements ActionListener {
 
@@ -57,11 +58,11 @@ class BusyLayerUI extends LayerUI<JPanel> implements ActionListener {
     private static final int TIMER_TICK = 1000 / FPS;
 
     private boolean isRunning;
-    private boolean isFadingOut;
     private Timer timer = new Timer(TIMER_TICK, this);
     private int angle;
-    private int fadeCount;
-    private final int fadeLimit = 24;
+    private long fadeInStart;
+    private long fadeOutStart;
+    private final int fadeLimit = 1000;
 
     @Override
     public void paint(final Graphics g, final JComponent c) {
@@ -75,9 +76,21 @@ class BusyLayerUI extends LayerUI<JPanel> implements ActionListener {
             return;
         }
 
-        Graphics2D g2 = (Graphics2D) g.create();
+        float fade = 1.0f;
+        if (fadeOutStart != 0) {
+	        long timeSinceFadeStart = System.currentTimeMillis() - fadeOutStart;
+	        if (timeSinceFadeStart > fadeLimit) { 
+	        	return;
+	        }
+	        fade = 1.0f - ((float) timeSinceFadeStart / (float) fadeLimit);
+        } else {
+	        long timeSinceFadeStart = System.currentTimeMillis() - fadeInStart;
+	        if (timeSinceFadeStart < fadeLimit) { 
+		        fade = ((float) timeSinceFadeStart / (float) fadeLimit);
+	        }
+        }
 
-        float fade = (float) fadeCount / (float) fadeLimit;
+        Graphics2D g2 = (Graphics2D) g.create();
 
         // Gray it out.
         Composite urComposite = g2.getComposite();
@@ -113,13 +126,12 @@ class BusyLayerUI extends LayerUI<JPanel> implements ActionListener {
             if (angle >= 360) {
                 angle = 0;
             }
-            if (isFadingOut) {
-                if (--fadeCount == 0) {
+            if (fadeOutStart != 0) {
+    	        long timeSinceFade = System.currentTimeMillis() - fadeOutStart;
+                if (timeSinceFade > fadeLimit) {
                     isRunning = false;
                     timer.stop();
                 }
-            } else if (fadeCount < fadeLimit) {
-                fadeCount++;
             }
         }
     }
@@ -131,15 +143,15 @@ class BusyLayerUI extends LayerUI<JPanel> implements ActionListener {
 
         // Run a thread for animation.
         isRunning = true;
-        isFadingOut = false;
-        fadeCount = 0;
+        fadeInStart = System.currentTimeMillis();
+        fadeOutStart = 0;
 
         timer = new Timer(TIMER_TICK, this);
         timer.start();
     }
 
     public void stop() {
-        isFadingOut = true;
+    	fadeOutStart = System.currentTimeMillis();
     }
 
     @Override
