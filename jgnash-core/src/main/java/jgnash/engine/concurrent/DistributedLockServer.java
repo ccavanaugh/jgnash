@@ -64,9 +64,9 @@ public class DistributedLockServer {
 
     private final int port;
 
-    private Map<String, ReadWriteLock> lockMap = new HashMap<>();
+    private final Map<String, ReadWriteLock> lockMap = new HashMap<>();
 
-    private Map<ChannelHandlerContext, String> handlerContextMap = new HashMap<>();
+    private final Map<ChannelHandlerContext, String> handlerContextMap = new HashMap<>();
 
     static final String LOCK = "lock";
 
@@ -76,7 +76,7 @@ public class DistributedLockServer {
 
     static final String LOCK_TYPE_WRITE = "WRITE";
 
-    public static final String EOL_DELIMITER = "\r\n";
+    private static final String EOL_DELIMITER = "\r\n";
 
     public DistributedLockServer(final int port) {
         this.port = port;

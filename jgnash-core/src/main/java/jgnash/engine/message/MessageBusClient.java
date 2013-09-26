@@ -60,7 +60,7 @@ import io.netty.util.CharsetUtil;
  *
  * @author Craig Cavanaugh
  */
-public class MessageBusClient {
+class MessageBusClient {
     private String host = "localhost";
 
     private int port = 0;

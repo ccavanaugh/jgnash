@@ -41,17 +41,17 @@ import static org.junit.Assert.*;
  */
 public abstract class EngineTest {
 
-    protected Engine e;
+    Engine e;
 
-    protected String testFile;
+    String testFile;
 
-    protected final boolean oldExportState = EngineFactory.exportXMLOnClose();
+    private final boolean oldExportState = EngineFactory.exportXMLOnClose();
 
-    public abstract Engine createEngine() throws Exception;
+    protected abstract Engine createEngine() throws Exception;
 
-    public static final char[] PASSWORD = new char[]{};
+    static final char[] PASSWORD = new char[]{};
 
-    protected void closeEngine() throws Exception {
+    void closeEngine() throws Exception {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
     }
 

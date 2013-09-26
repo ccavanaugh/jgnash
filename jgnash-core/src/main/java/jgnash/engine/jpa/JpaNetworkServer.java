@@ -251,7 +251,7 @@ public class JpaNetworkServer {
     /**
      * stops this server.
      */
-    public synchronized void stopServer() {
+    synchronized void stopServer() {
         stop = true;
         this.notify();
     }

@@ -68,7 +68,7 @@ public class JpaH2DataStore extends AbstractJpaDataStore {
         return LOCK_EXT;
     }
 
-    public static void deleteDatabase(final String fileName) {
+    private static void deleteDatabase(final String fileName) {
         final String[] extensions = new String[]{".h2.db", LOCK_EXT};
 
         final String base = FileUtils.stripFileExtension(fileName);

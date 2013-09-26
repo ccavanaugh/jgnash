@@ -35,9 +35,9 @@ import static org.junit.Assert.assertTrue;
  */
 public class BudgetResultsExportTest {
 
-    public static final String USER = "";
+    //public static final String USER = "";
 
-    public static final char[] PASSWORD = new char[]{};
+    private static final char[] PASSWORD = new char[]{};
 
     @Test
     public void testExportBudgetResultsModel() throws Exception {

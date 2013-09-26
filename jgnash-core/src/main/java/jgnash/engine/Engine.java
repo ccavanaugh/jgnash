@@ -82,24 +82,31 @@ public class Engine {
      * Current version for the file format
      */
     public static final float CURRENT_VERSION = 2.3f;
+
     // Lock names
-    public static final String ACCOUNT_LOCK = "account";
-    public static final String BUDGET_LOCK = "budget";
-    public static final String COMMODITY_LOCK = "commodity";
-    public static final String CONFIG_LOCK = "config";
-    public static final String ENGINE_LOCK = "engine";
+    private static final String ACCOUNT_LOCK = "account";
+    private static final String BUDGET_LOCK = "budget";
+    private static final String COMMODITY_LOCK = "commodity";
+    private static final String CONFIG_LOCK = "config";
+    private static final String ENGINE_LOCK = "engine";
+
     private static final Logger logger = Logger.getLogger(Engine.class.getName());
+
     private final static long MAXIMUM_TRASH_AGE = 5 * 60 * 1000; // 5 minutes
+
     private final Resource rb = Resource.get();
+
     private final ReentrantReadWriteLock accountLock;
     private final ReentrantReadWriteLock budgetLock;
     private final ReentrantReadWriteLock commodityLock;
     private final ReentrantReadWriteLock configLock;
     private final ReentrantReadWriteLock engineLock;
+
     /**
      * Named identifier for this engine instance
      */
     private final String name;
+
     /**
      * Unique identifier for this engine instance.
      * Used by this distributed lock manager to keep track of who has a lock
@@ -114,17 +121,21 @@ public class Engine {
      * All engine instances will share the same message bus
      */
     private MessageBus messageBus = null;
+
     /**
      * Cached for performance
      */
     private Config config;
+
     /**
      * Cached for performance
      */
     private RootAccount rootAccount;
+
     private ExchangeRateDAO exchangeRateDAO;
     private EngineDAO eDAO;
     private AttachmentManager attachmentManager;
+
     /**
      * Cached for performance
      */

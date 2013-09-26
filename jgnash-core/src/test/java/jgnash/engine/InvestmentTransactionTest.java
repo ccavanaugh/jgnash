@@ -27,31 +27,31 @@ import org.junit.Test;
  */
 public class InvestmentTransactionTest {
 
-    String database;
+    private String database;
 
-    Engine e;
+    private Engine e;
 
-    CurrencyNode defaultCurrency;
+    private CurrencyNode defaultCurrency;
 
-    CurrencyNode cadCurrency;
+    private CurrencyNode cadCurrency;
 
-    Account incomeAccount;
+    private Account incomeAccount;
 
-    Account expenseAccount;
+    private Account expenseAccount;
 
-    Account usdBankAccount;
+    private Account usdBankAccount;
 
-    Account cadBankAccount;
+    private Account cadBankAccount;
 
-    Account equityAccount;
+    private Account equityAccount;
 
-    Account investAccount;
+    private Account investAccount;
 
-    Account liabilityAccount;
+    private Account liabilityAccount;
 
-    SecurityNode securityNode1;
+    private SecurityNode securityNode1;
 
-    public static final char[] PASSWORD = new char[]{};
+    private static final char[] PASSWORD = new char[]{};
 
     public InvestmentTransactionTest() {
     }

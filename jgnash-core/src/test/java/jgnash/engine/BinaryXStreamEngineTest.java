@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  */
 public class BinaryXStreamEngineTest extends EngineTest {
 
-    static String tempFile;
+    private static String tempFile;
 
     @Override
     public Engine createEngine() throws Exception {

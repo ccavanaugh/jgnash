@@ -60,11 +60,11 @@ public class DistributedLockManager implements LockManager {
 
     private static final Logger logger = Logger.getLogger(DistributedLockManager.class.getName());
 
-    private Map<String, DistributedReadWriteLock> lockMap = new ConcurrentHashMap<>();
+    private final Map<String, DistributedReadWriteLock> lockMap = new ConcurrentHashMap<>();
 
-    private Map<String, CountDownLatch> latchMap = new HashMap<>();
+    private final Map<String, CountDownLatch> latchMap = new HashMap<>();
 
-    private Lock latchLock = new ReentrantLock();
+    private final Lock latchLock = new ReentrantLock();
 
     /**
      * lock_action, lock_id, thread_id, lock_type
@@ -81,7 +81,7 @@ public class DistributedLockManager implements LockManager {
 
     private Channel channel;
 
-    public static final String EOL_DELIMITER = "\r\n";
+    private static final String EOL_DELIMITER = "\r\n";
 
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -234,7 +234,7 @@ public class DistributedLockManager implements LockManager {
         }
     }
 
-    public void processMessage(final String lockMessage) {
+    void processMessage(final String lockMessage) {
 
         //logger.info(lockMessage);
 
@@ -321,9 +321,9 @@ public class DistributedLockManager implements LockManager {
             return writeLock;
         }
 
-        protected class ReadLock extends ReentrantReadWriteLock.ReadLock {
+        class ReadLock extends ReentrantReadWriteLock.ReadLock {
 
-            protected ReadLock(final ReentrantReadWriteLock lock) {
+            ReadLock(final ReentrantReadWriteLock lock) {
                 super(lock);
             }
 
@@ -340,9 +340,9 @@ public class DistributedLockManager implements LockManager {
             }
         }
 
-        protected class WriteLock extends ReentrantReadWriteLock.WriteLock {
+        class WriteLock extends ReentrantReadWriteLock.WriteLock {
 
-            protected WriteLock(final ReentrantReadWriteLock lock) {
+            WriteLock(final ReentrantReadWriteLock lock) {
                 super(lock);
             }
 

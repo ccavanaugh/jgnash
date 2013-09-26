@@ -35,9 +35,9 @@ import org.junit.Test;
  */
 public class CommodityNodeTest {
 
-    public static final String USER = "";
+    //public static final String USER = "";
 
-    public static final char[] PASSWORD = new char[]{};
+    private static final char[] PASSWORD = new char[]{};
 
     @Test
     public void ExchangeTest1() {
@@ -141,6 +141,7 @@ public class CommodityNodeTest {
 
             System.out.println(cNode.toString());
 
+            //noinspection ConstantConditions
             assertTrue("Returned object extends CurrencyNode", cNode instanceof CurrencyNode);
 
             //noinspection ConstantConditions

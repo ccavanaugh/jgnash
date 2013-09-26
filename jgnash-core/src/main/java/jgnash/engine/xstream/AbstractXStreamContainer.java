@@ -280,7 +280,7 @@ abstract class AbstractXStreamContainer {
         return list;
     }
 
-    protected static class XStreamOut extends XStream {
+    static class XStreamOut extends XStream {
 
         public XStreamOut(final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver hierarchicalStreamDriver) {
             super(reflectionProvider, hierarchicalStreamDriver);
@@ -294,7 +294,7 @@ abstract class AbstractXStreamContainer {
     /**
      * Add a custom wrapper to gracefully ignore fields removed from updated objects
      */
-    protected static class XStreamIn extends XStream {
+    static class XStreamIn extends XStream {
 
         public XStreamIn(final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver hierarchicalStreamDriver) {
             super(reflectionProvider, hierarchicalStreamDriver);

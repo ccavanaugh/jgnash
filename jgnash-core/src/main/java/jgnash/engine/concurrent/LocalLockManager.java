@@ -27,7 +27,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @author Craig Cavanaugh
  */
 public class LocalLockManager implements LockManager {
-    private Map<String, ReentrantReadWriteLock> lockMap = new ConcurrentHashMap<>();
+    private final Map<String, ReentrantReadWriteLock> lockMap = new ConcurrentHashMap<>();
 
     @Override
     public ReentrantReadWriteLock getLock(final String lockId) {

@@ -34,7 +34,7 @@ public class EncodeDecode {
 
     private static final Pattern COMMA_DELIMITER_PATTERN = Pattern.compile(",");
 
-    public static final char COMMA_DELIMITER = ',';
+    private static final char COMMA_DELIMITER = ',';
 
     private static final Pattern LOCALE_DELIMITER_PATTERN = Pattern.compile("\\x2E");
 

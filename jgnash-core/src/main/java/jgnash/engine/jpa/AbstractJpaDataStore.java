@@ -67,9 +67,9 @@ public abstract class AbstractJpaDataStore implements DataStore {
 
     private char[] password;
 
-    protected static final Logger logger = Logger.getLogger(AbstractJpaDataStore.class.getName());
+    static final Logger logger = Logger.getLogger(AbstractJpaDataStore.class.getName());
 
-    protected void waitForLockFileRelease(final String fileName, final char[] password) {
+    void waitForLockFileRelease(final String fileName, final char[] password) {
 
         // Explicitly force the database closed, Required for hsqldb and h2
         SqlUtils.waitForLockFileRelease(getType(), fileName, getLockFileExtension(), password);
@@ -227,7 +227,7 @@ public abstract class AbstractJpaDataStore implements DataStore {
         return Files.exists(Paths.get(FileUtils.stripFileExtension(fileName) + "." + getFileExt()));
     }
 
-    public boolean initEmptyDatabase(final String fileName) {
+    boolean initEmptyDatabase(final String fileName) {
         boolean result = false;
 
         final Properties properties = JpaConfiguration.getLocalProperties(getType(), fileName, new char[]{}, false);
@@ -263,12 +263,12 @@ public abstract class AbstractJpaDataStore implements DataStore {
      *
      * @param file one of the primary database files
      */
-    public abstract void deleteDatabase(final File file);
+    protected abstract void deleteDatabase(final File file);
 
     /**
      * Return the extension used by the lock file with the preceding period
      *
      * @return lock file extension
      */
-    public abstract String getLockFileExtension();
+    protected abstract String getLockFileExtension();
 }

@@ -45,12 +45,12 @@ import io.netty.util.CharsetUtil;
  *
  * @author Craig Cavanaugh
  */
-public class AttachmentTransferClient {
+class AttachmentTransferClient {
     private static final Logger logger = Logger.getLogger(AttachmentTransferClient.class.getName());
     private NioEventLoopGroup eventLoopGroup;
     private Channel channel;
     private NettyTransferHandler transferHandler;
-    private Path tempDirectory;
+    private final Path tempDirectory;
 
     public AttachmentTransferClient(final Path tempPath) {
         tempDirectory = tempPath;

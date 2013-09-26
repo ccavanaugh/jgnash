@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  */
 public class AttachmentUtils {
 
-    public static final String ATTACHMENT_BASE = "attachments";
+    private static final String ATTACHMENT_BASE = "attachments";
 
     /**
      * Utility class

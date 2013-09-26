@@ -24,7 +24,7 @@ import java.util.UUID;
  *
  * @author Craig Cavanaugh
  */
-public class UUIDUtil {
+class UUIDUtil {
 
     /**
      * Generates a unique id that does not repeat.

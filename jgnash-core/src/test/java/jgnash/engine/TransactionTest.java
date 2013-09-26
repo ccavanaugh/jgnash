@@ -12,7 +12,7 @@ import org.junit.Test;
 
 public class TransactionTest {
 
-    public static final char[] PASSWORD = new char[]{};
+    private static final char[] PASSWORD = new char[]{};
 
     @Test
     public void test() {

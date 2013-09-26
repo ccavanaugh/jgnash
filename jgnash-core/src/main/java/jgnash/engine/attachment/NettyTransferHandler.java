@@ -40,17 +40,17 @@ import io.netty.channel.SimpleChannelInboundHandler;
  * @author Craig Cavanaugh
  */
 @ChannelHandler.Sharable
-public class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
+class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
 
     public static final String FILE_REQUEST = "<FILE_REQUEST>";
-    public static final String FILE_STARTS = "<FILE_STARTS>";
-    public static final String FILE_ENDS = "<FILE_ENDS>";
-    public static final String FILE_CHUNK = "<FILE_CHUNK>";
-    public static final String ERROR = "<ERROR>";
+    private static final String FILE_STARTS = "<FILE_STARTS>";
+    private static final String FILE_ENDS = "<FILE_ENDS>";
+    private static final String FILE_CHUNK = "<FILE_CHUNK>";
+    private static final String ERROR = "<ERROR>";
     public static final String DELETE = "<DELETE>";
     private static final Logger logger = Logger.getLogger(NettyTransferHandler.class.getName());
-    private Map<String, Attachment> fileMap = new ConcurrentHashMap<>();
-    private Path attachmentPath;
+    private final Map<String, Attachment> fileMap = new ConcurrentHashMap<>();
+    private final Path attachmentPath;
 
     /**
      * Netty Handler.  The specified path may be a temporary location for clients or a persistent location for servers.

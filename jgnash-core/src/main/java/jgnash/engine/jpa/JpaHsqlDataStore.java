@@ -79,7 +79,7 @@ public class JpaHsqlDataStore extends AbstractJpaDataStore {
      *
      * @param fileName one of the database files
      */
-    public static void deleteDatabase(final String fileName) {
+    private static void deleteDatabase(final String fileName) {
         final String[] extensions = new String[]{".log", ".properties", ".script", ".data", ".backup", ".tmp", ".lobs", ".lck"};
 
         final String base = FileUtils.stripFileExtension(fileName);

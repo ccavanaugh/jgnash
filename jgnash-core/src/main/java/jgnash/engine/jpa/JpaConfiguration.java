@@ -28,7 +28,7 @@ import java.util.logging.Logger;
  *
  * @author Craig Cavanaugh
  */
-public class JpaConfiguration {
+class JpaConfiguration {
 
     public static final String JAVAX_PERSISTENCE_JDBC_URL = "javax.persistence.jdbc.url";
     private static final String JAVAX_PERSISTENCE_JDBC_DRIVER = "javax.persistence.jdbc.driver";

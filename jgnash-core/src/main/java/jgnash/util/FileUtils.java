@@ -58,7 +58,7 @@ public final class FileUtils {
 
     private static final Pattern FILE_EXTENSION_SPLIT_PATTERN = Pattern.compile("\\.");
 
-    public static final String[] FILE_LOCK_EXTENSIONS = new String[]{JpaHsqlDataStore.LOCK_EXT, JpaH2DataStore.LOCK_EXT, ".lock"};
+    private static final String[] FILE_LOCK_EXTENSIONS = new String[]{JpaHsqlDataStore.LOCK_EXT, JpaH2DataStore.LOCK_EXT, ".lock"};
 
     private FileUtils() {
     }
