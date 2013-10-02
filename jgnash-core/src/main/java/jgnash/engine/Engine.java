@@ -44,9 +44,6 @@ import java.util.logging.Logger;
 import jgnash.engine.attachment.AttachmentManager;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetGoal;
-import jgnash.engine.budget.BudgetPeriod;
-import jgnash.engine.budget.BudgetPeriodDescriptor;
-import jgnash.engine.budget.BudgetPeriodDescriptorFactory;
 import jgnash.engine.concurrent.LockManager;
 import jgnash.engine.dao.AccountDAO;
 import jgnash.engine.dao.BudgetDAO;
@@ -2204,61 +2201,37 @@ public class Engine {
         budgetLock.writeLock().lock();
 
         try {
-            BudgetPeriod budgetPeriod = budget.getBudgetPeriod();
-
             BudgetGoal oldGoals = budget.getBudgetGoal(account);
-
-            List<BudgetPeriodDescriptor> descriptorList = BudgetPeriodDescriptorFactory.getDescriptors(DateUtils.getCurrentYear(), budgetPeriod);
-            List<BudgetPeriodDescriptor> changedDescriptors = new ArrayList<>();
-
-            for (BudgetPeriodDescriptor descriptor : descriptorList) {
-                BigDecimal oldAmount = oldGoals.getGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod());
-                BigDecimal newAmount = newGoals.getGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod());
-
-                if (oldAmount.compareTo(newAmount) != 0) {
-                    changedDescriptors.add(descriptor);
-                }
-            }
 
             budget.setBudgetGoal(account, newGoals);
 
             moveObjectToTrash(oldGoals);    // need to keep the old goal around, will be cleaned up later, orphan removal causes refresh issues
 
-            updateBudgetGoals(budget, account, changedDescriptors);
+            updateBudgetGoals(budget, account);
         } finally {
             budgetLock.writeLock().unlock();
         }
     }
 
-    private void updateBudgetGoals(final Budget budget, final Account account, final List<BudgetPeriodDescriptor> changedPeriods) {
+    private void updateBudgetGoals(final Budget budget, final Account account) {
 
         budgetLock.writeLock().lock();
 
         try {
-            Message baseMessage;
+            Message message;
 
             boolean result = getBudgetDAO().update(budget);
 
             if (result) {
-                baseMessage = new Message(MessageChannel.BUDGET, ChannelEvent.BUDGET_GOAL_UPDATE, this);
+                message = new Message(MessageChannel.BUDGET, ChannelEvent.BUDGET_GOAL_UPDATE, this);
             } else {
-                baseMessage = new Message(MessageChannel.BUDGET, ChannelEvent.BUDGET_GOAL_UPDATE_FAILED, this);
+                message = new Message(MessageChannel.BUDGET, ChannelEvent.BUDGET_GOAL_UPDATE_FAILED, this);
             }
 
-            baseMessage.setObject(MessageProperty.BUDGET, budget);
-            baseMessage.setObject(MessageProperty.ACCOUNT, account);
+            message.setObject(MessageProperty.BUDGET, budget);
+            message.setObject(MessageProperty.ACCOUNT, account);
 
-            for (BudgetPeriodDescriptor period : changedPeriods) {
-                Message message;
-                try {
-                    message = baseMessage.clone();
-                    message.setMessage(BudgetPeriodDescriptor.encodeToString(period));
-
-                    messageBus.fireEvent(message);
-                } catch (CloneNotSupportedException e) {
-                    logger.log(Level.SEVERE, e.toString(), e);
-                }
-            }
+            messageBus.fireEvent(message);
 
             logger.log(Level.FINE, "Budget goal updated for {0}", account.getPathName());
         } finally {

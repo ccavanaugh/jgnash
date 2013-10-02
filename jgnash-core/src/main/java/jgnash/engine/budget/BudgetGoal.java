@@ -114,6 +114,9 @@ public class BudgetGoal implements Cloneable, Serializable {
 
         BigDecimal portion = amount.divide(divisor, MathConstants.mathContext);
 
+        //System.out.println("Goals Size: " + goals.length);
+        //System.out.println(endPeriod);
+
         for (int i = startPeriod; i <= endPeriod; i++) {
             goals[i] = portion;
         }

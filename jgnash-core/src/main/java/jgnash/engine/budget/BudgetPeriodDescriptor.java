@@ -27,7 +27,6 @@ import jgnash.util.Resource;
  * Immutable descriptor for a budget period
  * 
  * @author Craig Cavanaugh
- *
  */
 public class BudgetPeriodDescriptor {
 
@@ -196,27 +195,4 @@ public class BudgetPeriodDescriptor {
 
         return budgetPeriod == other.budgetPeriod && budgetYear == other.budgetYear && startPeriod == other.startPeriod;
     }
-
-    public static String encodeToString(final BudgetPeriodDescriptor descriptor) {
-        return String.format("%d,%s,%d", descriptor.budgetYear, descriptor.budgetPeriod.name(), descriptor.startPeriod);
-    }
-
-    public static BudgetPeriodDescriptor decodeFromString(final String string) throws IllegalArgumentException {
-        if (string == null) {
-            throw new IllegalArgumentException("parameter may not be null");
-        }
-
-        String[] p = string.split(",");
-
-        if (p.length != 3) {
-            throw new IllegalArgumentException("poorly formatted parameter");
-        }
-
-        int budgetYear = Integer.parseInt(p[0]);
-        BudgetPeriod budgetPeriod = Enum.valueOf(BudgetPeriod.class, p[1]);
-        int startPeriod = Integer.parseInt(p[2]);
-
-        return new BudgetPeriodDescriptor(budgetYear, budgetPeriod, startPeriod);
-    }
-
 }
