@@ -44,8 +44,6 @@ public class Message implements Serializable, Cloneable {
 
     private String source;
 
-    private String message = "";
-
     transient private EnumMap<MessageProperty, StoredObject> properties = new EnumMap<>(MessageProperty.class);
 
     /**
@@ -83,18 +81,6 @@ public class Message implements Serializable, Cloneable {
 
     public ChannelEvent getEvent() {
         return event;
-    }
-
-    public void setMessage(final String message) {
-        if (message == null) {
-            throw new IllegalArgumentException("data may not be null");
-        }
-
-        this.message = message;
-    }
-
-    public String getMessage() {
-        return message;
     }
 
     /**
@@ -139,8 +125,6 @@ public class Message implements Serializable, Cloneable {
     private void writeObject(final ObjectOutputStream s) throws IOException {
         s.defaultWriteObject();
 
-        s.writeUTF(message);
-
         // write the property count
         s.writeInt(properties.size());
 
@@ -167,8 +151,6 @@ public class Message implements Serializable, Cloneable {
     private void readObject(final ObjectInputStream s) throws IOException, ClassNotFoundException {
         s.defaultReadObject();
 
-        message = s.readUTF();
-
         properties = new EnumMap<>(MessageProperty.class);
 
         int size = s.readInt();
@@ -189,7 +171,6 @@ public class Message implements Serializable, Cloneable {
 
         try {
             m = (Message) super.clone();
-            m.message = message;
             m.properties = properties.clone();
         } catch (CloneNotSupportedException e) {
             Logger.getLogger(Message.class.getName()).log(Level.SEVERE, e.toString(), e);
@@ -206,6 +187,6 @@ public class Message implements Serializable, Cloneable {
      */
     @Override
     public String toString() {
-        return String.format("Message [event=%s, channel=%s, source=%s %n\tmessage=%s]", event, channel, source, message);
+        return String.format("Message [event=%s, channel=%s, source=%s]", event, channel, source);
     }
 }
