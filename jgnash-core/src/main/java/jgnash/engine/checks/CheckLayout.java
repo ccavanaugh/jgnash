@@ -27,7 +27,6 @@ import javax.print.attribute.PrintRequestAttributeSet;
  * Check layout object
  *
  * @author Craig Cavanaugh
- *
  */
 public class CheckLayout {
     private final List<CheckObject> checkObjects = new ArrayList<>();
@@ -64,10 +63,6 @@ public class CheckLayout {
 
     public int getNumberOfChecks() {
         return numberOfChecks;
-    }
-
-    public void setPrintAttributes(PrintRequestAttributeSet printAttributes) {
-        this.printAttributes = printAttributes;
     }
 
     public PrintRequestAttributeSet getPrintAttributes() {
