@@ -94,14 +94,4 @@ public class LocalAttachmentManager implements AttachmentManager {
             }
         });
     }
-
-    @Override
-    public void connectToServer() {
-        // Do nothing for local implementation
-    }
-
-    @Override
-    public void disconnectFromServer() {
-        // Do nothing for local implementation
-    }
 }

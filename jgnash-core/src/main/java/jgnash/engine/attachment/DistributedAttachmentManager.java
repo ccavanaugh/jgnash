@@ -134,12 +134,10 @@ public class DistributedAttachmentManager implements AttachmentManager {
         });
     }
 
-    @Override
     public void connectToServer() {
         fileClient.connectToServer(host, port);
     }
 
-    @Override
     public void disconnectFromServer() {
         fileClient.disconnectFromServer();
 

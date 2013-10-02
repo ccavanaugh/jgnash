@@ -32,8 +32,4 @@ public interface AttachmentManager {
     boolean removeAttachment(String attachment);
 
     Future<Path> getAttachment(String attachment);
-
-    void connectToServer();
-
-    void disconnectFromServer();
 }
