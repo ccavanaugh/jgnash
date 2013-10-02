@@ -132,67 +132,11 @@ class AccountProxy {
     }
 
     /**
-     * Returns the cash account balance up to and inclusive of the supplied date
-     *
-     * @param end The inclusive ending date
-     * @return The ending cash balance
-     */
-    public BigDecimal getCashBalance(final Date end) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Returns the balance of the transactions inclusive of the start and end dates.
-     * <p/>
-     * The balance includes the cash transactions and is based on current market value.
-     *
-     * @param start The inclusive start date
-     * @param end   The inclusive end date
-     * @return The ending balance
-     */
-    public BigDecimal getCashBalance(final Date start, final Date end) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Returns a market price for the commodity that is closest to the supplied date without exceeding it.
-     *
-     * @param node commodity to search against
-     * @param date date to search against
-     * @return share price
-     */
-    public BigDecimal getMarketPrice(final SecurityNode node, final Date date) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
      * Returns the market value of this account
      *
      * @return exception thrown
      */
     public BigDecimal getMarketValue() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Returns the market value of the account at a specified date. The closest market price is used and only investment
-     * transactions earlier and inclusive of the specified date are considered.
-     *
-     * @param date the end date to calculate the market value
-     * @return the ending balance
-     */
-    public BigDecimal getMarketValue(final Date date) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Returns the market value for an account
-     *
-     * @param start inclusive start date
-     * @param end   inclusive end date
-     * @return market value
-     */
-    public BigDecimal getMarketValue(final Date start, final Date end) {
         throw new UnsupportedOperationException();
     }
 

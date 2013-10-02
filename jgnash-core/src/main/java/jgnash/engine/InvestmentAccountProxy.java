@@ -83,7 +83,6 @@ public class InvestmentAccountProxy extends AccountProxy {
      * @param end   The inclusive end date
      * @return The ending balance
      */
-    @Override
     public BigDecimal getCashBalance(final Date start, final Date end) {
         return super.getBalance(start, end);
     }
@@ -94,7 +93,6 @@ public class InvestmentAccountProxy extends AccountProxy {
      * @param end The inclusive ending date
      * @return The ending cash balance
      */
-    @Override
     public BigDecimal getCashBalance(final Date end) {
         final Lock l = account.getTransactionLock().readLock();
         l.lock();
@@ -115,7 +113,6 @@ public class InvestmentAccountProxy extends AccountProxy {
      * @param date date to search against
      * @return market price
      */
-    @Override
     public BigDecimal getMarketPrice(final SecurityNode node, final Date date) {
         account.getTransactionLock().readLock().lock();
 
@@ -174,7 +171,6 @@ public class InvestmentAccountProxy extends AccountProxy {
      * @param date the end date to calculate the market value
      * @return the ending balance
      */
-    @Override
     public BigDecimal getMarketValue(final Date date) {
         final Lock l = account.getTransactionLock().readLock();
         l.lock();
@@ -192,7 +188,13 @@ public class InvestmentAccountProxy extends AccountProxy {
         }
     }
 
-    @Override
+    /**
+     * Returns the market value for an account
+     *
+     * @param start inclusive start date
+     * @param end   inclusive end date
+     * @return market value
+     */
     public BigDecimal getMarketValue(final Date start, final Date end) {
         final Lock l = account.getTransactionLock().readLock();
         l.lock();
