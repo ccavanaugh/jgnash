@@ -21,8 +21,8 @@ package jgnash.net.security;
  * A SecurityParser for the Yahoo! US financial web site.
  *
  * @author Craig Cavanaugh
- *
  */
+@SuppressWarnings("unused")
 public class YahooParser extends AbstractYahooParser {
 
     @Override

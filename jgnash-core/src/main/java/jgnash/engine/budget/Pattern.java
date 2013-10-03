@@ -25,6 +25,7 @@ import jgnash.util.Resource;
  *
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("unused")
 public enum Pattern {
     EveryRow(Resource.get().getString("Sequence.EveryRow")),
     EveryOtherRow(Resource.get().getString("Sequence.EveryOtherRow")),

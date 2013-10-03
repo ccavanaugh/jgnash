@@ -21,8 +21,8 @@ package jgnash.net.security;
  * A CommodityParser for the Yahoo! UK financial site.
  *
  * @author Craig Cavanaugh
- *
  */
+@SuppressWarnings("unused")
 public class YahooUKParser extends AbstractYahooParser {
 
     @Override

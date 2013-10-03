@@ -41,6 +41,7 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
     
     private static final long serialVersionUID = 1L;
 
+    @SuppressWarnings("unused")
     @Id @GeneratedValue(strategy= GenerationType.TABLE)
     public long id;
 
@@ -114,7 +115,7 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
     }
 
     /**
-     * Compare using on the month, day and year of the node ignoring hours and
+     * Compare using only the month, day and year of the node ignoring hours and
      * seconds
      *
      * @param node node to compare

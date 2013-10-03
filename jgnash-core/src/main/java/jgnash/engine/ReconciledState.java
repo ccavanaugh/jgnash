@@ -23,14 +23,12 @@ import jgnash.util.Resource;
  * Reconciled State of a transaction
  *
  * @author Craig Cavanaugh
- *
  */
 
 public enum ReconciledState {
-    CLEARED(Resource.get().getString("State.Cleared")),
+    @SuppressWarnings("unused")CLEARED(Resource.get().getString("State.Cleared")),
     NOT_RECONCILED(Resource.get().getString("State.NotReconciled")),
     RECONCILED(Resource.get().getString("State.Reconciled"));
-
     private final transient String symbol;
 
     private ReconciledState(String symbol) {
