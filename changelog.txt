@@ -24,10 +24,11 @@ Better method of keeping preferences when updating computers
 
 KNOWN ISSUES
 ----------------------
-Exceptions occur when entering Chinese text with Autocomplete enabled.
+Exceptions occur when entering Chinese text with Autocomplete enabled and using Google Input tools.
 
 Release 2.13.0
 ----------------------
+10/02/13 Fixed an exception that would occur when filling in a bi-weekly budget.
 08/13/13 Improve UI performance of the busy indicator on slower machines (Klemen Zagar)
 08/11/13 When saving a compressed backup on exit, use the OS's temporary directory to play nice with cloud services (Patch #55, Klemen Zagar)
 07/10/13 Update to the latest JFreeChart

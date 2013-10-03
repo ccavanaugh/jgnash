@@ -19,6 +19,7 @@ package jgnash.engine.budget;
 
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;
@@ -114,6 +115,12 @@ public class BudgetPeriodDescriptor {
                 endPeriod = startPeriod;
                 endDate = new Date();
                 periodDescription = "";
+        }
+
+        // Periods especially bi-weekly can get weird, for a correct ending period if needed.
+        if (endPeriod > BudgetGoal.PERIODS) {
+            endPeriod = BudgetGoal.PERIODS - 1;
+            endDate = DateUtils.getLastDayOfTheYear(startDate);
         }
     }
 
