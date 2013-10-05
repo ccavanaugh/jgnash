@@ -160,7 +160,7 @@ class XMLContainer extends AbstractXStreamContainer {
 
             readWriteLock.writeLock().lock();
 
-            XStream xstream = configureXStream(new XStreamIn(new StoredObjectReflectionProvider(objects),
+            XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects),
                     new KXml2Driver()));
 
             try (ObjectInputStream in = xstream.createObjectInputStream(reader);

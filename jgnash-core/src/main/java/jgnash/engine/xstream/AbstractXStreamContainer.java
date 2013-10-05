@@ -38,7 +38,6 @@ import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.hibernate.converter.*;
 import com.thoughtworks.xstream.hibernate.mapper.HibernateMapper;
 import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
-import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 import jgnash.engine.*;
@@ -85,6 +84,8 @@ abstract class AbstractXStreamContainer {
     }
 
     static XStream configureXStream(final XStream xstream) {
+        xstream.ignoreUnknownElements();    // gracefully ignore fields in the file that do not have object members
+
         xstream.setMode(XStream.ID_REFERENCES);
 
         xstream.alias("Account", Account.class);
@@ -288,35 +289,6 @@ abstract class AbstractXStreamContainer {
 
         protected MapperWrapper wrapMapper(final MapperWrapper next) {
             return new HibernateMapper(next);
-        }
-    }
-
-    /**
-     * Add a custom wrapper to gracefully ignore fields removed from updated objects
-     */
-    static class XStreamIn extends XStream {
-
-        public XStreamIn(final ReflectionProvider reflectionProvider, final HierarchicalStreamDriver hierarchicalStreamDriver) {
-            super(reflectionProvider, hierarchicalStreamDriver);
-        }
-
-        protected MapperWrapper wrapMapper(final MapperWrapper next) {
-            return new MapperWrapper(next) {
-                public boolean shouldSerializeMember(final Class definedIn, final String fieldName) {
-                    try {
-
-                        // Check and ignore the locale field in CurrencyNode because it is now obsolete
-                        if (definedIn == CurrencyNode.class && fieldName.equals("locale")) {
-                            return false;
-                        }
-
-                        return definedIn != Object.class || realClass(fieldName) != null;
-                    } catch (final CannotResolveClassException e) {
-                        Logger.getLogger(AbstractXStreamContainer.class.getName()).info("Dropping missing field: " + fieldName);
-                        return false;
-                    }
-                }
-            };
         }
     }
 }
