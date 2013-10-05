@@ -17,8 +17,6 @@
  */
 package jgnash.engine;
 
-import jgnash.util.DateUtils;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -55,6 +53,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.PostLoad;
 import javax.persistence.Transient;
 
+import jgnash.util.DateUtils;
+
 /**
  * Abstract Account class
  *
@@ -66,15 +66,43 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     private static final long serialVersionUID = 6886735664760113291L;
 
+    private static final Pattern numberPattern = Pattern.compile("\\d+");
+
+    private static final Logger logger = Logger.getLogger(Account.class.getName());
+
+    /**
+     * String delimiter for reported account structure
+     */
+    private static String accountSeparator = ":";
+
+    @Transient  // we don't want this to be persisted by JPA and will become obsolete
+    private final Map<String, Serializable> propertyMap = new HashMap<>();
+
+    @ManyToOne
+    Account parentAccount;
+
+    /**
+     * List of transactions for this account
+     */
+    @JoinTable
+    @OrderBy("date, number, dateEntered")
+    @ManyToMany(cascade = {CascadeType.ALL})
+    Set<Transaction> transactions = new HashSet<>();
+
+    /**
+     * List of securities if this is an investment account
+     */
+    @JoinColumn()
+    @OrderBy("symbol")
+    @OneToMany(cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE})
+    Set<SecurityNode> securities = new HashSet<>();
+
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
 
     private boolean placeHolder = false;
 
     private boolean locked = false;
-
-    @ManyToOne
-    Account parentAccount;
 
     private boolean visible = true;
 
@@ -101,30 +129,14 @@ public class Account extends StoredObject implements Comparable<Account> {
     private Set<Account> children = new HashSet<>();
 
     /**
-     * List of transactions for this account
-     */
-    @JoinTable
-    @OrderBy("date, number, dateEntered")
-    @ManyToMany(cascade = {CascadeType.ALL})
-    Set<Transaction> transactions = new HashSet<>();
-
-    /**
      * Cached list of sorted transactions that is not persisted
      */
     @Transient
-    private transient List<Transaction> cachedTransactionList = new ArrayList<>();
-
-    /**
-     * List of securities if this is an investment account
-     */
-    @JoinColumn()
-    @OrderBy("symbol")
-    @OneToMany(cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE})
-    Set<SecurityNode> securities = new HashSet<>();
+    private transient List<Transaction> cachedSortedTransactionList;
 
     /**
      * Balance of the account
-     *
+     * <p/>
      * Cached balances cannot be persisted to do nature of JPA
      */
     @Transient
@@ -132,7 +144,7 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     /**
      * Reconciled balance of the account
-     *
+     * <p/>
      * Cached balances cannot be persisted to do nature of JPA
      */
     @Transient
@@ -151,9 +163,6 @@ public class Account extends StoredObject implements Comparable<Account> {
     @OneToOne(optional = true, orphanRemoval = true, cascade = {CascadeType.ALL})
     private AmortizeObject amortizeObject;
 
-    @Transient  // we don't want this to be persisted by JPA and will become obsolete
-    private final Map<String, Serializable> propertyMap = new HashMap<>();
-
     /**
      * User definable attributes
      */
@@ -168,15 +177,6 @@ public class Account extends StoredObject implements Comparable<Account> {
     private transient ReadWriteLock securitiesLock;
 
     private transient AccountProxy proxy;
-
-    /**
-     * String delimiter for reported account structure
-     */
-    private static String accountSeparator = ":";
-
-    private static final Pattern numberPattern = Pattern.compile("\\d+");
-
-    private static final Logger logger = Logger.getLogger(Account.class.getName());
 
     /**
      * No argument public constructor for reflection purposes.
@@ -204,6 +204,14 @@ public class Account extends StoredObject implements Comparable<Account> {
         setCurrencyNode(node);
     }
 
+    private static String getAccountSeparator() {
+        return accountSeparator;
+    }
+
+    static void setAccountSeparator(final String separator) {
+        accountSeparator = separator;
+    }
+
     ReadWriteLock getTransactionLock() {
         return transactionLock;
     }
@@ -213,20 +221,6 @@ public class Account extends StoredObject implements Comparable<Account> {
             proxy = getAccountType().getProxy(this);
         }
         return proxy;
-    }
-
-    final void setAccountType(final AccountType type) {
-        if (type == null) {
-            throw new RuntimeException("Null account type");
-        }
-
-        if (accountType != null && !accountType.isMutable()) {
-            throw new RuntimeException("Immutable account type");
-        }
-
-        accountType = type;
-
-        proxy = null; // proxy will need to change
     }
 
     /**
@@ -283,14 +277,6 @@ public class Account extends StoredObject implements Comparable<Account> {
         return properties;
     }
 
-    static void setAccountSeparator(final String separator) {
-        accountSeparator = separator;
-    }
-
-    private static String getAccountSeparator() {
-        return accountSeparator;
-    }
-
     /**
      * Clear cached account balances so they will be recalculated
      */
@@ -321,8 +307,8 @@ public class Account extends StoredObject implements Comparable<Account> {
             if (!contains(tran)) {
                 transactions.add(tran);
 
-                cachedTransactionList.add(tran);
-                Collections.sort(cachedTransactionList);
+                getCachedSortedTransactionList().add(tran);
+                Collections.sort(getCachedSortedTransactionList());
 
                 clearCachedBalances();
 
@@ -355,7 +341,7 @@ public class Account extends StoredObject implements Comparable<Account> {
 
             if (contains(tran)) {
                 transactions.remove(tran);
-                cachedTransactionList.remove(tran);
+                getCachedSortedTransactionList().remove(tran);
                 clearCachedBalances();
 
                 result = true;
@@ -414,7 +400,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         transactionLock.readLock().lock();
 
         try {
-            return Collections.unmodifiableList(cachedTransactionList);
+            return Collections.unmodifiableList(getCachedSortedTransactionList());
         } finally {
             transactionLock.readLock().unlock();
         }
@@ -451,7 +437,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         transactionLock.readLock().lock();
 
         try {
-            return cachedTransactionList.get(index);
+            return getCachedSortedTransactionList().get(index);
         } finally {
             transactionLock.readLock().unlock();
         }
@@ -519,7 +505,6 @@ public class Account extends StoredObject implements Comparable<Account> {
             if (!children.contains(child) && child != this) {
                 if (child.setParent(this)) {
                     children.add(child);
-                    //sortChildren();
                     result = true;
                 }
             }
@@ -584,7 +569,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         transactionLock.readLock().lock();
 
         try {
-            return cachedTransactionList.indexOf(tran);
+            return getCachedSortedTransactionList().indexOf(tran);
         } finally {
             transactionLock.readLock().unlock();
         }
@@ -792,7 +777,7 @@ public class Account extends StoredObject implements Comparable<Account> {
             }
 
             if (date == null) {
-                date = cachedTransactionList.get(getTransactionCount() -1).getDate();
+                date = getCachedSortedTransactionList().get(getTransactionCount() - 1).getDate();
             }
 
             return date;
@@ -1086,6 +1071,15 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
+     * Returns the commodity node for this account.
+     *
+     * @return the commodity node for this account.
+     */
+    public final CurrencyNode getCurrencyNode() {
+        return currencyNode;
+    }
+
+    /**
      * Sets the commodity node for this account.
      *
      * @param node The new commodity node for this account.
@@ -1096,15 +1090,6 @@ public class Account extends StoredObject implements Comparable<Account> {
         }
 
         currencyNode = node;
-    }
-
-    /**
-     * Returns the commodity node for this account.
-     *
-     * @return the commodity node for this account.
-     */
-    public final CurrencyNode getCurrencyNode() {
-        return currencyNode;
     }
 
     public boolean isLocked() {
@@ -1155,6 +1140,20 @@ public class Account extends StoredObject implements Comparable<Account> {
         return accountType;
     }
 
+    final void setAccountType(final AccountType type) {
+        if (type == null) {
+            throw new RuntimeException("Null account type");
+        }
+
+        if (accountType != null && !accountType.isMutable()) {
+            throw new RuntimeException("Immutable account type");
+        }
+
+        accountType = type;
+
+        proxy = null; // proxy will need to change
+    }
+
     /**
      * Returns the visibility of the account
      *
@@ -1174,21 +1173,21 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Sets the notes for this account
-     *
-     * @param notes the notes for this account
-     */
-    public void setNotes(final String notes) {
-        this.notes = notes;
-    }
-
-    /**
      * Returns the notes for this account
      *
      * @return the notes for this account
      */
     public String getNotes() {
         return notes;
+    }
+
+    /**
+     * Sets the notes for this account
+     *
+     * @param notes the notes for this account
+     */
+    public void setNotes(final String notes) {
+        this.notes = notes;
     }
 
     /**
@@ -1231,10 +1230,6 @@ public class Account extends StoredObject implements Comparable<Account> {
         return getUuid().hashCode();
     }
 
-    public void setAccountNumber(final String account) {
-        accountNumber = account;
-    }
-
     /**
      * Returns the account number. A non-null value is guaranteed
      *
@@ -1242,6 +1237,10 @@ public class Account extends StoredObject implements Comparable<Account> {
      */
     public String getAccountNumber() {
         return accountNumber;
+    }
+
+    public void setAccountNumber(final String account) {
+        accountNumber = account;
     }
 
     /**
@@ -1445,6 +1444,22 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
+     * Provides access to a cached and sorted list of transactions
+     *
+     * @return List of sorted transactions
+     */
+    private List<Transaction> getCachedSortedTransactionList() {
+
+        // Lazy initialization
+        if (cachedSortedTransactionList == null) {
+            cachedSortedTransactionList = new ArrayList<>(transactions);
+            Collections.sort(cachedSortedTransactionList);
+        }
+
+        return cachedSortedTransactionList;
+    }
+
+    /**
      * Needed by XStream for proper initialization
      *
      * @return Properly initialized Account
@@ -1460,10 +1475,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         childLock = new ReentrantReadWriteLock(true);
         securitiesLock = new ReentrantReadWriteLock(true);
 
-        cachedTransactionList = new ArrayList<>(transactions);
-        Collections.sort(cachedTransactionList);
-
-        // Force initialization of a lazily collection
+        // HACK: Force initialization of a lazily collection for hibernate
         // transactions.iterator().hasNext();
         children.iterator().hasNext();
         securities.iterator().hasNext();
@@ -1482,7 +1494,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         a.securities.clear();
         a.children.clear();
         a.transactions.clear();
-        a.cachedTransactionList.clear();
+        a.cachedSortedTransactionList.clear();
 
         return a;
     }
