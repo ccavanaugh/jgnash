@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -33,6 +34,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * Handles the details of bi-directional transfer of files between a client and server.
@@ -43,13 +45,25 @@ import io.netty.channel.SimpleChannelInboundHandler;
 class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
 
     public static final String FILE_REQUEST = "<FILE_REQUEST>";
-    private static final String FILE_STARTS = "<FILE_STARTS>";
-    private static final String FILE_ENDS = "<FILE_ENDS>";
-    private static final String FILE_CHUNK = "<FILE_CHUNK>";
-    private static final String ERROR = "<ERROR>";
+
     public static final String DELETE = "<DELETE>";
+
+    private static final String FILE_STARTS = "<FILE_STARTS>";
+
+    private static final String FILE_ENDS = "<FILE_ENDS>";
+
+    private static final String FILE_CHUNK = "<FILE_CHUNK>";
+
+    private static final String ERROR = "<ERROR>";
+
     private static final Logger logger = Logger.getLogger(NettyTransferHandler.class.getName());
+
+    public static final int TRANSFER_BUFFER_SIZE = 4096;
+
+    public static final int PATH_MAX = 4096;
+
     private final Map<String, Attachment> fileMap = new ConcurrentHashMap<>();
+
     private final Path attachmentPath;
 
     /**
@@ -122,14 +136,14 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
             try (InputStream fileInputStream = Files.newInputStream(path)) {
                 channel.writeAndFlush(FILE_STARTS + path.getFileName() + ":" + Files.size(path) + '\n');
 
-                byte[] bytes = new byte[4096];  // leave room for base 64 expansion
+                byte[] bytes = new byte[TRANSFER_BUFFER_SIZE];  // leave room for base 64 expansion
 
                 int bytesRead;
 
                 while ((bytesRead = fileInputStream.read(bytes)) != -1) {
                     if (bytesRead > 0) {
                         channel.write(FILE_CHUNK + path.getFileName() + ':');
-                        channel.write(new String(bytes, 0, bytesRead) + '\n');
+                        channel.write(new String(Base64.encodeBase64(Arrays.copyOfRange(bytes, 0, bytesRead))) + '\n');
                     }
                 }
                 channel.writeAndFlush(FILE_ENDS + path.getFileName() + '\n').sync();
@@ -169,7 +183,7 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
 
         if (attachment != null) {
             try {
-                attachment.fileOutputStream.write(msgParts[1].getBytes());
+                attachment.fileOutputStream.write(Base64.decodeBase64(msgParts[1]));
             } catch (final IOException e) {
                 logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
@@ -202,7 +216,9 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
 
     private static class Attachment {
         final Path path;
+
         final OutputStream fileOutputStream;
+
         final long fileSize;
 
         private Attachment(final Path path, long fileSize) throws IOException {

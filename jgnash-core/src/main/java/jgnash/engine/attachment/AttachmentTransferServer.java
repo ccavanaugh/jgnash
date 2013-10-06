@@ -81,7 +81,7 @@ public class AttachmentTransferServer {
 
                             ch.pipeline().addLast(
                                     new LoggingHandler(),
-                                    new LineBasedFrameDecoder(8192),
+                                    new LineBasedFrameDecoder(((NettyTransferHandler.TRANSFER_BUFFER_SIZE + 2) / 3) * 4 + NettyTransferHandler.PATH_MAX),
 
                                     new StringEncoder(CharsetUtil.UTF_8),
                                     new StringDecoder(CharsetUtil.UTF_8),

@@ -47,10 +47,14 @@ import io.netty.util.CharsetUtil;
  */
 class AttachmentTransferClient {
     private static final Logger logger = Logger.getLogger(AttachmentTransferClient.class.getName());
-    private NioEventLoopGroup eventLoopGroup;
-    private Channel channel;
-    private NettyTransferHandler transferHandler;
+
     private final Path tempDirectory;
+
+    private NioEventLoopGroup eventLoopGroup;
+
+    private Channel channel;
+
+    private NettyTransferHandler transferHandler;
 
     public AttachmentTransferClient(final Path tempPath) {
         tempDirectory = tempPath;
@@ -138,7 +142,7 @@ class AttachmentTransferClient {
 
             ch.pipeline().addLast(
                     new LoggingHandler(),
-                    new LineBasedFrameDecoder(8192),
+                    new LineBasedFrameDecoder(((NettyTransferHandler.TRANSFER_BUFFER_SIZE + 2) / 3) * 4 + NettyTransferHandler.PATH_MAX),
 
                     new StringEncoder(CharsetUtil.UTF_8),
                     new StringDecoder(CharsetUtil.UTF_8),
