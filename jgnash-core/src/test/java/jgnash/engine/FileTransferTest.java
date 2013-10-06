@@ -20,6 +20,7 @@ package jgnash.engine;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -87,13 +88,11 @@ public class FileTransferTest {
             account.setName("test");
             e.addAccount(e.getRootAccount(), account);
 
-            Path tempAttachment = Files.createTempFile("tempfile-", ".txt");
-            tempAttachment.toFile().deleteOnExit();
+            //File tempFile = new File(Object.class.getResource("/jgnash-logo.png").toURI());
+            //assertTrue(Files.exists(tempFile.toPath()));
 
-            //write it
-            BufferedWriter bw = Files.newBufferedWriter(tempAttachment, Charset.defaultCharset());
-            bw.write("This is the temporary file content.");
-            bw.close();
+            Path tempAttachment = Paths.get(Object.class.getResource("/jgnash-logo.png").toURI());
+            assertTrue(Files.exists(tempAttachment));
 
             e.addAttachment(tempAttachment, true);  // push a copy of the attachment
 
@@ -112,7 +111,7 @@ public class FileTransferTest {
             tempAttachment.toFile().deleteOnExit();
 
             //write it
-            bw = Files.newBufferedWriter(tempAttachment, Charset.defaultCharset());
+            BufferedWriter bw = Files.newBufferedWriter(tempAttachment, Charset.defaultCharset());
             bw.write("This is the temporary file content 2.");
             bw.close();
 
