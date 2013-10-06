@@ -84,6 +84,8 @@ public class EngineFactory {
 
     private static final Map<String, DataStore> dataStoreMap = new HashMap<>();
 
+    public static final String REMOTE_PREFIX = "@";
+
     private EngineFactory() {
     }
 
@@ -388,7 +390,7 @@ public class EngineFactory {
 
     public static synchronized String getActiveDatabase() {
         if (getLastRemote()) {
-            return "@" + getLastHost();
+            return REMOTE_PREFIX + getLastHost();
         }
 
         return getLastDatabase();
