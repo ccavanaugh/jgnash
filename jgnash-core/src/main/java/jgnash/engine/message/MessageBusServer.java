@@ -27,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.engine.DataStoreType;
+import jgnash.util.EncryptionManager;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -77,7 +78,7 @@ public class MessageBusServer {
 
     private final ChannelGroup channelGroup = new DefaultChannelGroup("all-connected", GlobalEventExecutor.INSTANCE);
 
-    private EncryptionFilter filter;
+    private EncryptionManager filter;
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -101,7 +102,7 @@ public class MessageBusServer {
 
         // If a user and password has been specified, enable an encryption filter
         if (useSSL && password != null && password.length > 0) {
-            filter = new EncryptionFilter(password);
+            filter = new EncryptionManager(password);
         }
 
         eventLoopGroup = new NioEventLoopGroup();

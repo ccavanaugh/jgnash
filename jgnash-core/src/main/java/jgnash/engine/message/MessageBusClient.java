@@ -35,6 +35,7 @@ import jgnash.engine.budget.Budget;
 import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.engine.recurring.Reminder;
 import jgnash.net.ConnectionFactory;
+import jgnash.util.EncryptionManager;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
@@ -73,7 +74,7 @@ class MessageBusClient {
 
     private DataStoreType dataBaseType;
 
-    private EncryptionFilter filter = null;
+    private EncryptionManager filter = null;
 
     private NioEventLoopGroup eventLoopGroup;
 
@@ -112,7 +113,7 @@ class MessageBusClient {
 
         // If a user and password has been specified, enable an encryption filter
         if (useSSL && password != null && password.length > 0) {
-            filter = new EncryptionFilter(password);
+            filter = new EncryptionManager(password);
         }
 
         eventLoopGroup = new NioEventLoopGroup();
@@ -199,7 +200,7 @@ class MessageBusClient {
             } else if (plainMessage.startsWith(MessageBusServer.DATA_STORE_TYPE_PREFIX)) {
                 dataBaseType = DataStoreType.valueOf(plainMessage.substring(MessageBusServer.DATA_STORE_TYPE_PREFIX.length()));
                 logger.log(Level.FINE, "Remote dataBaseType type is: {0}", dataBaseType.name());
-            } else if (plainMessage.startsWith(EncryptionFilter.DECRYPTION_ERROR_TAG)) {    // decryption has failed, shut down the engine
+            } else if (plainMessage.startsWith(EncryptionManager.DECRYPTION_ERROR_TAG)) {    // decryption has failed, shut down the engine
                 logger.log(Level.SEVERE, "Unable to decrypt the remote message");
             } else if (plainMessage.startsWith(JpaNetworkServer.STOP_SERVER_MESSAGE)) {
                 logger.info("Server is shutting down");

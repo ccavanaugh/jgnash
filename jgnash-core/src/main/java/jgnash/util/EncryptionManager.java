@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package jgnash.engine.message;
+package jgnash.util;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -38,7 +38,7 @@ import javax.crypto.spec.SecretKeySpec;
  *
  * @author Craig Cavanaugh
  */
-class EncryptionFilter {
+public class EncryptionManager {
 
     private final Key key;
 
@@ -46,9 +46,9 @@ class EncryptionFilter {
 
     public static final String DECRYPTION_ERROR_TAG = "<DecryptError>";
 
-    private static final Logger logger = Logger.getLogger(EncryptionFilter.class.getName());
+    private static final Logger logger = Logger.getLogger(EncryptionManager.class.getName());
 
-    public EncryptionFilter(final char[] password) {
+    public EncryptionManager(final char[] password) {
         byte[] encryptionKey = "fake".getBytes();
 
         try {
@@ -67,6 +67,12 @@ class EncryptionFilter {
         key = new SecretKeySpec(encryptionKey, ENCRYPTION_ALGORITHM);
     }
 
+    /**
+     * Encrypts the supplied string
+     *
+     * @param plain String to encrypt
+     * @return the encrypted string
+     */
     public String encrypt(final String plain) {
 
         try {
