@@ -14,7 +14,6 @@ Search option in the Registers. ( to find any particular transaction by entering
 Moving option for a Transaction from one Register to other Register.
 Date filtering option for the Accounts view & Register view
 Hyperlink option from the results in the Reports and Graphs to the concerned Transactions of the Registers.
-External File attachment in transaction entries.
 Drill down of split entries in Split Transactions by right clicking on ledger view.
 Class/Tag option to Transaction entries. ( to categorize the Expense & Income further in more categorized way )
 Hiding option of Transaction form which can help to see more transactions in Register view.
@@ -24,18 +23,20 @@ Better method of keeping preferences when updating computers
 
 KNOWN ISSUES
 ----------------------
-Exceptions occur when entering Chinese text with Autocomplete enabled and using Google Input tools.
+Exceptions occur when entering Chinese text with auto complete enabled in conjunction with Google Input tools. This
+appears to be a JDK and Google interaction bug.
 
 Release 2.13.0
 ----------------------
+10/02/13 Excess UI updates could occur when updating a budget goal and create performance issues.
 10/02/13 Fixed an exception that would occur when filling in a bi-weekly budget.
-08/13/13 Improve UI performance of the busy indicator on slower machines (Klemen Zagar)
+08/13/13 Improved UI performance of the busy indicator on slower machines (Klemen Zagar)
 08/11/13 When saving a compressed backup on exit, use the OS's temporary directory to play nice with cloud services (Patch #55, Klemen Zagar)
 07/10/13 Update to the latest JFreeChart
 06/29/13 Added a new feature; Transactions may now have image attachments.
 06/20/13 New client server architecture based on Hibernate/JPA2 with H2 or HSQLDB SQL database.  db4o support
          has been purged from the code base.
-06/10/13 Improve dialog positioning when using multiple monitors and when using fewer monitors than last run.
+06/10/13 Improve dialog positioning when using multiple monitors and when using fewer monitors than the last run.
 04/23/13 Use Netty instead of Mina for performance and for improved protocol support
 04/21/13 Added a Money Market account type.
 04/20/13 New Engine and account api for setting and accessing custom text based account properties.
