@@ -211,6 +211,7 @@ class MessageBusClient {
 
         @Override
         public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
+            super.exceptionCaught(ctx, cause);
             logger.log(Level.WARNING, "Unexpected exception from downstream.", cause);
             ctx.close();
         }
