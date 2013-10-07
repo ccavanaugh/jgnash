@@ -94,6 +94,8 @@ public class DistributedAttachmentManager implements AttachmentManager {
         // Transfer the file to the remote location
         fileClient.sendFile(path.toFile());
 
+
+
         // Determine the cache location the file needs to go to so it does not have to be requested
         Path newPath = Paths.get(tempAttachmentPath + File.separator + path.getFileName());
 
@@ -102,7 +104,7 @@ public class DistributedAttachmentManager implements AttachmentManager {
             Files.copy(path, newPath);
         } else {
             Files.copy(path, newPath);
-            Files.delete(path);
+            //Files.delete(path);   // TODO: Need to wait for file send to complete first!
         }
 
         return true;
