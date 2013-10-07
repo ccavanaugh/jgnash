@@ -23,7 +23,6 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
@@ -44,15 +43,21 @@ import java.util.logging.Logger;
  */
 public class DistributedAttachmentManager implements AttachmentManager {
 
+    private static final String TEMP_ATTACHMENT_PATH = "jgnashTemp-";
+
+    public static final int TRANSFER_TIMEOUT = 5000;
+
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
-    private static final String TEMP_ATTACHMENT_PATH = "jgnash-";
     private final String host;
+
     private final int port;
+
     /**
      * Path to temporary attachment cache location
      */
     private Path tempAttachmentPath;
+
     private AttachmentTransferClient fileClient;
 
     public DistributedAttachmentManager(final String host, final int port) {
@@ -73,6 +78,16 @@ public class DistributedAttachmentManager implements AttachmentManager {
         }
     }
 
+    /**
+     * Add a file attachment.
+     * When moving a file, it must be copied and then deleted.  Moves can not be done atomically across file systems
+     * which is a high probability.
+     *
+     * @param path Path to the attachment to add
+     * @param copy true if only copying the file
+     * @return true if successful
+     * @throws IOException
+     */
     @Override
     public boolean addAttachment(final Path path, boolean copy) throws IOException {
 
@@ -86,7 +101,8 @@ public class DistributedAttachmentManager implements AttachmentManager {
         if (copy) {
             Files.copy(path, newPath);
         } else {
-            Files.move(path, newPath, StandardCopyOption.ATOMIC_MOVE);
+            Files.copy(path, newPath);
+            Files.delete(path);
         }
 
         return true;
@@ -111,17 +127,12 @@ public class DistributedAttachmentManager implements AttachmentManager {
 
                     long now = new Date().getTime();
 
-                    while ((new Date().getTime() - now) < 5000) {
+                    while ((new Date().getTime() - now) < TRANSFER_TIMEOUT) {
                         if (Files.exists(path)) {
                             break;
                         }
 
-                        //try {
-                        //Thread.sleep(1000);
                         Thread.yield();
-                        //} catch (InterruptedException e) {
-                        //    Logger.getLogger(DistributedAttachmentManager.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-                        //}
                     }
                 }
 

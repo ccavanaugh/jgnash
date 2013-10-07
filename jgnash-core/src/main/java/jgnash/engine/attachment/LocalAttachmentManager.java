@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -42,6 +41,16 @@ public class LocalAttachmentManager implements AttachmentManager {
 
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
+    /**
+     * Add a file attachment.
+     * When moving a file, it must be copied and then deleted.  Moves can not be done atomically across file systems
+     * which is a high probability.
+     *
+     * @param path Path to the attachment to add
+     * @param copy true if only copying the file
+     * @return true if successful
+     * @throws IOException
+     */
     @Override
     public boolean addAttachment(final Path path, final boolean copy) throws IOException {
 
@@ -57,7 +66,8 @@ public class LocalAttachmentManager implements AttachmentManager {
                 if (copy) {
                     Files.copy(path, newPath);
                 } else {
-                    Files.move(path, newPath, StandardCopyOption.ATOMIC_MOVE);
+                    Files.copy(path, newPath);
+                    Files.delete(path);
                 }
                 result = true;
             } catch (final IOException e) {
