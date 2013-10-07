@@ -152,7 +152,11 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
                 logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
         } else {
-            channel.writeAndFlush(ERROR + "File not found: " + path + '\n');
+            try {
+                channel.writeAndFlush(ERROR + "File not found: " + path + '\n').sync();
+            } catch (final InterruptedException e) {
+                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+            }
             logger.warning("File not found: " + path);
         }
     }
