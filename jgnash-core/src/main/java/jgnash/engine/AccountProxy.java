@@ -17,12 +17,12 @@
  */
 package jgnash.engine;
 
-import jgnash.util.DateUtils;
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
+
+import jgnash.util.DateUtils;
 
 /**
  * Proxy class to locate account balance behaviors. Depending on account type, summation of transaction types are
@@ -38,13 +38,26 @@ class AccountProxy {
         this.account = account;
     }
 
+    /**
+     * Get the balance of all account transactions
+     *
+     * @return the balance of this account
+     */
     public BigDecimal getBalance() {
-        int count = account.getTransactionCount();
+        Lock l = account.getTransactionLock().readLock();
+        l.lock();
 
-        if (count > 0) {
-            return getBalanceAt(count - 1);
+        try {
+            BigDecimal balance = BigDecimal.ZERO;
+
+            for (Transaction transaction : account.transactions) {
+                balance = balance.add(transaction.getAmount(account));
+            }
+
+            return balance;
+        } finally {
+            l.unlock();
         }
-        return BigDecimal.ZERO;
     }
 
     /**
