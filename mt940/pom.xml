@@ -3,7 +3,7 @@
   <parent>
     <groupId>jgnash</groupId>
     <artifactId>jgnash2</artifactId>
-    <version>2.13.0-snapshot</version>
+    <version>2.13.0</version>
   </parent>
   <artifactId>mt940</artifactId>
   <name>mt940</name>
