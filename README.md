@@ -25,12 +25,12 @@ jGnash is not compatible with the GCJ Java installation preinstalled on older Li
 You will need to install the OpenJDK or Oracle Java Platform and correctly set the default for jGnash
 to operate correctly.
 
-## OSX Installation:
+## Mac OS X Installation:
 
-For OSX users, a minimum of OSX 10.5 is required unless you want to experiment with the SoyLatte Java distribution.
+For Mac OS X users, a minimum of Mac OS X 10.7 is required unless you want to experiment with the SoyLatte Java distribution.
 
 1.  Copy the jGnash folder to ```/Applications```.
-2.  Open Script Editor.
+2.  Open AppleScript Editor.
 3.  Create the following script:
 
     try
@@ -51,7 +51,7 @@ jGnash requires Ant and Maven to build.  The Maven based ```jgnash-help``` proje
 must be run and installed into your local maven repository.  See the jgnash-help
 README for details.
 
-Install that Ant and Maven build systems and then try:
+Install the Ant and Maven build systems and then try:
 
 ```mvn package``` to create the distribution zip file
 
