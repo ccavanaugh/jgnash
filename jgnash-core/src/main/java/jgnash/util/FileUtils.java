@@ -19,7 +19,6 @@ package jgnash.util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -69,9 +68,9 @@ public final class FileUtils {
      *
      * @param fileName file name to check for locked state
      * @return true if a lock file is found or the file is locked at the OS level.
-     * @throws java.io.FileNotFoundException thrown if file does not exist
+     * @throws java.io.IOException thrown if file does not exist or it is a directory
      */
-    public static boolean isFileLocked(final String fileName) throws FileNotFoundException {
+    public static boolean isFileLocked(final String fileName) throws IOException {
 
         boolean result = false;
 
@@ -92,7 +91,7 @@ public final class FileUtils {
                 }
             } catch (IOException e) {
                 Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, e.toString(), e);
-                result = true;
+                throw e;
             }
         }
 

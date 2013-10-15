@@ -17,11 +17,7 @@
  */
 package jgnash.engine.jpa;
 
-import jgnash.engine.DataStoreType;
-import jgnash.engine.EngineFactory;
-import jgnash.util.FileUtils;
-
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -33,6 +29,10 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import jgnash.engine.DataStoreType;
+import jgnash.engine.EngineFactory;
+import jgnash.util.FileUtils;
 
 /**
  * Utility class to perform low level SQL related stuff with the database
@@ -78,7 +78,7 @@ public class SqlUtils {
                     logger.log(Level.SEVERE, e.getMessage(), e);
                 }
             }
-        } catch (final FileNotFoundException e) {
+        } catch (final IOException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
@@ -121,7 +121,7 @@ public class SqlUtils {
             } else {
                 logger.severe("File was locked");
             }
-        } catch (final FileNotFoundException e) {
+        } catch (final IOException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
