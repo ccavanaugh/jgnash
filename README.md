@@ -1,15 +1,28 @@
+![jGnash Logo](https://sourceforge.net/apps/mediawiki/jgnash/nfs/project/j/jg/jgnash/f/f3/Jgnash-logo.png)
+
 # jGnash README
 
-jGnash 2.x requires that version 7 or newer of the Java Platform be installed.
+[jGnash](https://sourceforge.net/apps/mediawiki/jgnash/index.php?title=Main_Page) is a free (no strings attached!) personal finance manager with many of the same features as commercially-available software. It was created in order to make tracking your personal finances easy, but also provides the functionality required by advanced users. jGnash is cross-platform: jGnash 2 will run on any operating system that has a working Java 7 Runtime Environment (e.g., Linux, Mac OS X, and Microsoft Windows)
+
+jGnash 2.x requires that the Java Platform version 7 or newer be installed.
 jGnash has been tested with the Oracle JVM as well as the open source OpenJDK Platform.
+
 
 ## Getting Java
 
-Most users of jGNash will want the latest version of [Oracle Java Runtime Environment](http://www.java.com/en/download/).
+Most users of jGnash will want the latest version of [Oracle Java Runtime Environment](http://www.java.com/en/download/).
 
 Developers will want the Java Development Kit (see build instructions below.)
 
-## To Install jGNash:
+## Learn about jGnash
+
+To learn about the features of jGnash, visit the [jGnash Website](https://sourceforge.net/apps/mediawiki/jgnash/index.php?title=Main_Page).
+
+## Download jGnash
+
+You can downlaod jGnash from the [jGnash Download Page](https://sourceforge.net/projects/jgnash/files/Active%20Stable%202.x/).
+
+## To Install jGnash:
 
 1. Unzip all files into a directory of your choice leaving the directory structure unchanged.
 
