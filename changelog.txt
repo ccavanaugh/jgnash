@@ -28,6 +28,7 @@ appears to be a JDK and Google interaction bug.
 
 Release 2.13.0
 ----------------------
+10/15/13 Correctly report and handle an attempt to open a wrong file type. (Bug #206)
 10/15/13 Correctly report an attempt to open a directory instead of a file. (Bug #205)
 10/02/13 Excess UI updates could occur when updating a budget goal and create performance issues.
 10/02/13 Fixed an exception that would occur when filling in a bi-weekly budget.

@@ -86,11 +86,8 @@ public class OpenAction {
                     try {
                         if (FileUtils.isFileLocked(dialog.getDatabasePath())) {
                             StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
-                        } else {
-
-                            if (checkAndBackupOldVersion(dialog.getDatabasePath(), password)) {
-                                engine = EngineFactory.bootLocalEngine(dialog.getDatabasePath(), EngineFactory.DEFAULT, password);
-                            }
+                        } else if (checkAndBackupOldVersion(dialog.getDatabasePath(), password)) {
+                            engine = EngineFactory.bootLocalEngine(dialog.getDatabasePath(), EngineFactory.DEFAULT, password);
                         }
                     } catch (final Exception e) {
                         StaticUIMethods.displayError(e.getLocalizedMessage());
