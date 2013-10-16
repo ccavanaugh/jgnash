@@ -1,4 +1,4 @@
-![jGnash Logo](https://github.com/ccavanaugh/jgnash/blob/master/jgnash-resources/src/main/resources/jgnash/resource/jgnash-logo.png)
+![jGnash Logo](https://raw.github.com/ccavanaugh/jgnash/master/jgnash-resources/src/main/resources/jgnash/resource/jgnash-logo.png)
 
 # jGnash README
 
