@@ -33,6 +33,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
 
@@ -46,15 +47,6 @@ import org.jdesktop.swingx.util.GraphicsUtilities;
 public class ImageDialog extends JDialog {
 
     final ImagePanel imagePanel;
-
-    public static void showImage(final File file) {
-        ImageDialog dialog = new ImageDialog();
-        dialog.setImage(file);
-
-        DialogUtils.addBoundsListener(dialog);
-
-        dialog.setVisible(true);
-    }
 
     ImageDialog() {
         setTitle(Resource.get().getString("Title.ViewImage"));
@@ -75,7 +67,24 @@ public class ImageDialog extends JDialog {
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
     }
 
-    private void setImage(final File file) {
+    public static void showImage(final File file) {
+        ImageDialog dialog = null;
+
+        try {
+            dialog = new ImageDialog();
+            dialog.setImage(file);
+
+            DialogUtils.addBoundsListener(dialog);
+
+            dialog.setVisible(true);
+        } catch (final IOException e) {
+            dialog.dispose();
+
+            StaticUIMethods.displayError(e.getLocalizedMessage());
+        }
+    }
+
+    private void setImage(final File file) throws IOException {
         imagePanel.loadImage(file);
 
         if (imagePanel.image != null) {
@@ -87,14 +96,11 @@ public class ImageDialog extends JDialog {
         public static final int MARGIN = 5;
 
         private BufferedImage image;
+
         private BufferedImage scaledImage;
 
-        void loadImage(final File file) {
-            try {
-                image = ImageIO.read(file);
-            } catch (final IOException e) {
-                Logger.getLogger(ImagePanel.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-            }
+        void loadImage(final File file) throws IOException {
+            image = ImageIO.read(file);
         }
 
         void resizeImage() {
