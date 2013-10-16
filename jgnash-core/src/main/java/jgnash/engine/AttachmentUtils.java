@@ -58,6 +58,8 @@ public class AttachmentUtils {
             } catch (IOException e) {
                 Logger.getLogger(AttachmentUtils.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
+        } else {
+            result = true;
         }
 
         return result;
