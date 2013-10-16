@@ -20,7 +20,7 @@ To learn about the features of jGnash, visit the [jGnash Website](https://source
 
 ## Download jGnash
 
-You can downlaod jGnash from the [jGnash Download Page](https://sourceforge.net/projects/jgnash/files/Active%20Stable%202.x/).
+You can download jGnash from the [jGnash Download Page](https://sourceforge.net/projects/jgnash/files/Active%20Stable%202.x/).
 
 ## To Install jGnash:
 
@@ -66,7 +66,7 @@ See the integrated help for command line options.
 
 ## Building jGnash:
 
-To build JGnash you'll need the following software installed on your system:
+To build jGnash you'll need the following software installed on your system:
 
 1. [JDK 7](http://www.oracle.com/technetwork/java/javase/downloads/index.html) or later.
 1. [Apache Ant](http://ant.apache.org) 1.7.0 or later
