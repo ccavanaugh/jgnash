@@ -17,6 +17,13 @@
  */
 package jgnash.ui.actions;
 
+import java.awt.EventQueue;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.ui.StaticUIMethods;
@@ -25,13 +32,6 @@ import jgnash.ui.components.OpenDatabaseDialog;
 import jgnash.ui.util.SimpleSwingWorker;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
-
-import java.awt.EventQueue;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.nio.file.Files;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * UI Action to open a database
@@ -46,6 +46,9 @@ public class OpenAction {
 
     static {
         logger.setLevel(Level.ALL);
+    }
+
+    private OpenAction() {
     }
 
     public static void openAction() {
@@ -66,7 +69,7 @@ public class OpenAction {
 
                 EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-                Engine e = null;
+                Engine engine = null;
 
                 final char[] password = dialog.getPassword();
 
@@ -74,24 +77,25 @@ public class OpenAction {
                     String host = dialog.getHost();
                     int port = dialog.getPort();
 
-                    e = EngineFactory.bootClientEngine(host, port, password, EngineFactory.DEFAULT);
+                    engine = EngineFactory.bootClientEngine(host, port, password, EngineFactory.DEFAULT);
 
-                    if (e == null) {
+                    if (engine == null) {
                         remoteConnectionFailed = true;
                     }
                 } else {
-                    if (FileUtils.isFileLocked(dialog.getDatabasePath())) {
-                        StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
-                    } else {
-
-                        if (checkAndBackupOldVersion(dialog.getDatabasePath(), password)) {
-                            e = EngineFactory.bootLocalEngine(dialog.getDatabasePath(), EngineFactory.DEFAULT, password);
+                    try {
+                        if (FileUtils.isFileLocked(dialog.getDatabasePath())) {
+                            StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
+                        } else if (checkAndBackupOldVersion(dialog.getDatabasePath(), password)) {
+                            engine = EngineFactory.bootLocalEngine(dialog.getDatabasePath(), EngineFactory.DEFAULT, password);
                         }
+                    } catch (final Exception e) {
+                        StaticUIMethods.displayError(e.getLocalizedMessage());
                     }
                 }
 
-                if (e != null) {
-                    e.getRootAccount(); // prime the engine
+                if (engine != null) {
+                    engine.getRootAccount(); // prime the engine
                 }
 
                 return null;
@@ -173,7 +177,7 @@ public class OpenAction {
                 } else {
                     StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
                 }
-            } catch (FileNotFoundException e) {
+            } catch (final IOException e) {
                 logger.log(Level.SEVERE, e.toString(), e);
             }
         }
@@ -251,7 +255,7 @@ public class OpenAction {
                     } else {
                         StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
                     }
-                } catch (FileNotFoundException e) {
+                } catch (final IOException e) {
                     appLogger.log(Level.SEVERE, e.toString(), e);
                 }
             }
@@ -315,8 +319,5 @@ public class OpenAction {
         }
 
         return result;
-    }
-
-    private OpenAction() {
     }
 }

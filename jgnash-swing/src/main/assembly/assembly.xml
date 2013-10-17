@@ -8,11 +8,12 @@
 	</formats>
 	<fileSets>
 		<fileSet>
-			<directory>${project.basedir}</directory>
+			<directory>../${project.basedir}</directory>
 			<outputDirectory>/</outputDirectory>
 			<includes>
 				<include>changelog*</include>
 				<include>README*</include>
+                <include>readme*</include>
 				<include>LICENSE*</include>
 				<include>NOTICE*</include>
 			</includes>

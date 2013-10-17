@@ -17,19 +17,8 @@
  */
 package jgnash.engine.jpa;
 
-import jgnash.engine.DataStore;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.StoredObject;
-import jgnash.engine.attachment.DistributedAttachmentManager;
-import jgnash.engine.attachment.LocalAttachmentManager;
-import jgnash.engine.concurrent.DistributedLockManager;
-import jgnash.engine.concurrent.LocalLockManager;
-import jgnash.util.FileUtils;
-import jgnash.util.Resource;
-
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -43,6 +32,16 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+
+import jgnash.engine.DataStore;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.StoredObject;
+import jgnash.engine.attachment.DistributedAttachmentManager;
+import jgnash.engine.attachment.LocalAttachmentManager;
+import jgnash.engine.concurrent.DistributedLockManager;
+import jgnash.engine.concurrent.LocalLockManager;
+import jgnash.util.FileUtils;
 
 /**
  * Abstract JPA DataStore
@@ -153,8 +152,8 @@ public abstract class AbstractJpaDataStore implements DataStore {
                     logger.log(Level.SEVERE, e.getMessage(), e);
                 }
             }
-        } catch (FileNotFoundException e) {
-            logger.info(Resource.get().getString("Message.FileNotFound"));
+        } catch (final IOException e) {
+            logger.info(e.getLocalizedMessage());
         }
 
         return engine;

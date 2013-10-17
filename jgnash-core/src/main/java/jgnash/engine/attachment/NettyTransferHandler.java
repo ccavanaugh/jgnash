@@ -30,6 +30,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jgnash.engine.AttachmentUtils;
+
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -203,12 +205,9 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
         final Path filePath = Paths.get(attachmentPath + File.separator + fileName);
 
         // Lazy creation of the attachment path if needed
-        if (Files.notExists(attachmentPath)) {
-            try {
-                Files.createDirectories(attachmentPath);
-            } catch (IOException e) {
-                logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-            }
+        if (!AttachmentUtils.createAttachmentDirectory(attachmentPath)) {
+            logger.severe("Unable to find or create the attachment directory");
+            return;
         }
 
         try {
