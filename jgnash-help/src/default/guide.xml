@@ -3,7 +3,8 @@
 <!ENTITY gpl SYSTEM "gpl.xml">
 <!ENTITY fdl SYSTEM "fdl-1.3.xml">
 ]>
-<book version="5.0" xsi:schemaLocation="http://www.w3.org/1999/xlink "
+<book version="5.0"
+      xsi:schemaLocation="http://www.w3.org/1999/xlink http://docbook.org/ns/docbook "
       xml:id="top" xmlns="http://docbook.org/ns/docbook"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -29,61 +30,62 @@
 
     <legalnotice xml:id="legalnotice">
       <para>jGnash comes with<emphasis role="bold">ABSOLUTELY NO
-      WARRANTY</emphasis>.</para>
+      WARRANTY</emphasis>. </para>
 
       <para>This program is free software: you can redistribute it and/or
       modify it under the terms of the GNU General Public License as published
       by the Free Software Foundation, either version 3 of the License, or (at
-      your option) any later version.</para>
+      your option) any later version. </para>
 
       <para>This program is distributed in the hope that it will be useful,
       but WITHOUT ANY WARRANTY; without even the implied warranty of
       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the <link
-      linkend="gpl">GNU General Public License </link> for more
-      details.</para>
+      linkend="gpl">GNU General Public License </link> for more details.
+      </para>
 
       <para>You should have received a copy of the GNU General Public License
-      along with this program. If not, see http://www.gnu.org/licenses/</para>
+      along with this program. If not, see http://www.gnu.org/licenses/
+      </para>
     </legalnotice>
 
     <legalnotice xml:id="legalnotice2">
       <para>Permission is granted to copy, distribute and/or modify this
       document under the terms of the GNU Free Documentation License, Version
       1.3 or any later version published by the Free Software Foundation; with
-      no Invariant Sections, no Front-Cover Texts and no Back-Cover
-      Texts.</para>
+      no Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.
+      </para>
 
       <para>A copy of the license is included in the section entitled<link
-      linkend="fdl">"GNU Free Documentation License"</link>.</para>
+      linkend="fdl">"GNU Free Documentation License"</link>. </para>
     </legalnotice>
 
     <legalnotice>
-      <para><trademark class="registered">Linux</trademark> is the registered
+      <para> <trademark class="registered">Linux</trademark> is the registered
       trademark of Linus Torvalds in the U.S. and other countries. Windows is
       a registered trademark of Microsoft Corporation in the United States and
       other countries. <trademark class="trade">Java</trademark> and
       <trademark>OpenJDK</trademark> are registered trademarks of Sun in the
-      United States and other countries.</para>
+      United States and other countries. </para>
     </legalnotice>
   </info>
 
   <chapter xml:id="Introduction">
     <title>Introduction</title>
 
-    <para><mediaobject>
+    <para> <mediaobject>
         <imageobject>
           <imagedata fileref="../images/jgnash-logo-small.png" scale="75"/>
         </imageobject>
       </mediaobject> jGnash is an open source application for personal
     finances. jGnash enables you to record detailed account and transaction
-    information using proven double entry accounting principles.</para>
+    information using proven double entry accounting principles. </para>
 
-    <para>You do not have to be an accountant to understand or use
-    jGnash.</para>
+    <para>You do not have to be an accountant to understand or use jGnash.
+    </para>
 
     <para>jGnash is not intended for use as a business accounting application.
     If you require business specific features, you may be better served
-    looking for a different solution.</para>
+    looking for a different solution. </para>
 
     <section>
       <title>Installation</title>
@@ -91,25 +93,25 @@
       <para>jGnash is not currently distributed with an automatic installation
       tool. You will be required to perform a couple of manual operations that
       are easily performed for those with a basic understanding of how to use
-      a zip file. Also, you must have <trademark>Java</trademark> 6 or newer
-      installed on your computer.</para>
+      a zip file. Also, you must have <trademark>Java</trademark> 7 or newer
+      installed on your computer. </para>
 
       <para>Java can be downloaded and installed from<link
       xlink:href="http://java.com">http://java.com</link>. Java installation
       is a simple matter of downloading the correct version for your operating
-      system and using the automated installer.</para>
+      system and using the automated installer. </para>
 
       <sidebar>
-        <para>If you are using a <trademark
-        class="registered">Linux</trademark> based operating system,
-        <trademark class="trade">OpenJDK </trademark> or IcedTea may have been
+        <para>If you are using a <trademark class="registered">Linux
+        </trademark> based operating system, <trademark
+        class="trade">OpenJDK</trademark> or IcedTea may have been
         preinstalled. jGnash will run on the latest version of OpenJDK or
         IcedTea, but you may experience some minor glitches with the
         appearance of jGnash depending on the version installed and fonts
-        available.</para>
+        available. </para>
 
-        <para>If in doubt, install Java 6 or newer and configure your system
-        accordingly.</para>
+        <para>If in doubt, install <trademark>Java</trademark> 7 or newer and configure your system
+        accordingly. </para>
       </sidebar>
 
       <para>After Java is installed, you are ready to install jGnash. Simply
@@ -119,7 +121,7 @@
       in my home directory and keep the <filename>jGnash</filename> directory
       in it to better organize my computer. When upgrading between versions of
       jGnash, do not unzip to the same location and overwrite the existing
-      files. Use a new location or delete the existing files first.</para>
+      files. Use a new location or delete the existing files first. </para>
     </section>
 
     <section>
@@ -127,25 +129,24 @@
 
       <para>After the <filename>jGnash</filename> directory has been extracted
       from the zip file, you should see several files in the directory. Of
-      interest at this point are the jar and exe files.</para>
+      interest at this point are the jar and exe files. </para>
 
-      <para>If you are running on a <trademark
-      class="registered">Windows</trademark> based computer, you can simply
-      double click on the <filename>jGnash2.exe</filename> file to start
-      jGnash. If you want, you can also double click on the
-      <filename>jGnash2.jar</filename> file as an alternate means for starting
-      the application.</para>
+      <para>If you are running on a <trademark class="registered">Windows
+      </trademark> based computer, you can simply double click on the
+      <filename>jGnash2.exe</filename> file to start jGnash. If you want, you
+      can also double click on the <filename>jGnash2.jar</filename> file as an
+      alternate means for starting the application. </para>
 
       <para>If you are running on a Unix based system you can start jGnash
       from a terminal as shown below. Alternatively, you can create your own
-      application launcher in your desktop environment of choice.</para>
+      application launcher in your desktop environment of choice. </para>
 
       <para><screen>java -jar jGnash2.jar</screen>jGnash has several advanced
       features such as running as a portable application or using jGnash as a
       multi-user home networked application. These advanced features are
       accessible via the command line. Please see <link
-      linkend="commandline">Command Line Options</link> for more
-      details.</para>
+      linkend="commandline">Command Line Options </link> for more details.
+      </para>
     </section>
 
     <section>
@@ -156,7 +157,7 @@
       short of the license agreement is jGnash is a freely available program
       comprised of other freely available software, and should anything bad
       happen during use, the authors involved are not libel for any damages.
-      The license also details how jGnash may be distributed and used.</para>
+      The license also details how jGnash may be distributed and used. </para>
 
       <sidebar>
         <para>If the license agreement sounds daunting, take a look at the
@@ -167,7 +168,7 @@
         well and as intended. Sometimes bugs do creep in and it does not work
         quite as planned. The advantage of free software is you generally have
         direct access to the authors, and you have a much larger voice in
-        helping the application grow and evolve over time.</para>
+        helping the application grow and evolve over time. </para>
       </sidebar>
     </section>
 
@@ -178,7 +179,7 @@
       using jGnash. Despite my best attempts, there are those who need a
       little bit of extra help or have a special need or circumstance and
       require the help of others that have already been around the block a few
-      times.</para>
+      times. </para>
 
       <para>The best place to start is the jGnash user group hosted at<link
       xlink:href="http://groups.google.com/group/jgnash-user">
@@ -186,17 +187,17 @@
       contains a well rounded group of individuals who can help answer just
       about any question. As a courtesy to others, I encourage you to search
       the group prior to asking a question to see if it's already been
-      answered.</para>
+      answered. </para>
 
       <para>If you have found a bug, or have suggestions for improvement, the
       group page has links to a bug and feature request tracker that can be
       used to log and track your requests. The group forum can be used to post
       a bug or request, but use of the tracker ensures the request is not lost
-      in the mix of discussions.</para>
+      in the mix of discussions. </para>
 
       <para>If you are well versed in use of jGnash and other personal finance
       applications, you are encouraged to give back a little time and
-      contribute your experience to the group and help others.</para>
+      contribute your experience to the group and help others. </para>
     </section>
   </chapter>
 
@@ -204,14 +205,14 @@
     <title>Getting Started</title>
 
     <para>Every account is assigned a currency and every transaction is
-    associated with at least one account.</para>
+    associated with at least one account. </para>
 
     <para>Transactions are used to record daily expenditures as well as income
-    from the sale of personal items, investments, or paychecks.</para>
+    from the sale of personal items, investments, or paychecks. </para>
 
     <para>Most of the effort involved in getting started with jGnash is
     creating a personalized income and expense account structure that best
-    suits your needs.</para>
+    suits your needs. </para>
 
     <para>If you are familiar with other personal finance applications, you
     may notice that jGnash uses income and expense
@@ -219,17 +220,17 @@
     expense<emphasis>categories</emphasis>. Functionally, there is no
     difference, other than jGnash allows you see a detailed transaction
     register of the income and expense accounts as easily as you would look at
-    your bank accounts.</para>
+    your bank accounts. </para>
 
     <section xml:id="newFile">
       <title>Creating a New File</title>
 
       <para>When you start jGnash for the first time, you will be presented
       with a very simple screen. At the bottom of the screen, program
-      notifications and memory consumption information are displayed.</para>
+      notifications and memory consumption information are displayed. </para>
 
-      <bridgehead>Creating a new file is done in 5 steps using the
-      wizard</bridgehead>
+      <bridgehead>Creating a new file is done in 5 steps using the wizard
+      </bridgehead>
 
       <orderedlist>
         <listitem>
@@ -238,11 +239,11 @@
 
               <guimenuitem>New</guimenuitem>
             </menuchoice> command and follow the prompts in the new file
-          wizard. When given the choice to select the <link
+          wizard. When given the choice to select the<link
           linkend="FileTypes">storage type</link>, leave it as the default
           value for now. A default filename and location will be provided that
           you can change if desired. If the file already exists, you will be
-          warned you are about to overwrite it.</para>
+          warned you are about to overwrite it. </para>
         </listitem>
 
         <listitem>
@@ -250,13 +251,13 @@
           asked to choose the default currency. The default currency can be
           changed at a latter time, and if for some reason your currency of
           choice is not available, you can create a custom currency and set it
-          as the default after the file is created.</para>
+          as the default after the file is created. </para>
         </listitem>
 
         <listitem>
           <para>Next you can choose the currencies that are available for use.
           Currencies may be added and removed as needed at a later time if
-          needed.</para>
+          needed. </para>
 
           <para>If needed, custom currencies may be added using the
           <menuchoice>
@@ -266,7 +267,7 @@
             </menuchoice> command. As locales change, default currency
           availability will change as Java is updated. The typical need for a
           custom currency is to support legacy accounting information as
-          countries standardize on the Euro.</para>
+          countries standardize on the Euro. </para>
 
           <!--Link to a section detail currency dialog usage-->
         </listitem>
@@ -276,18 +277,18 @@
           be selected if desired. If you are new to personal finance software,
           the defaults will be a good starting point. The accounts structure
           can be easily changed as needed to accommodate your own personal
-          needs.</para>
+          needs. </para>
         </listitem>
 
         <listitem>
           <para>The last step is the Summary page of the wizard. Verify
           everything is to your liking and click on the Finish button to
-          create your new file.</para>
+          create your new file. </para>
         </listitem>
       </orderedlist>
 
       <para>After the file is created, you are now ready to change, add, or
-      remove accounts as need and begin entering transactions.</para>
+      remove accounts as need and begin entering transactions. </para>
 
       <sidebar>
         <para>Encryption and password protection options do not exist in
@@ -295,11 +296,11 @@
         operation. Encryption becomes a sticky subject when it involves
         exporting and distributing software throughout the world. jGnash is
         designed to support many nationalities, so control of distribution
-        would be become very difficult if encryption was integrated.</para>
+        would be become very difficult if encryption was integrated. </para>
 
         <para>If you do have the desire to encrypt your jGnash data, the best
         choice is to use the encryption capabilities of your operating system
-        or install a freely available third party encryption tool.</para>
+        or install a freely available third party encryption tool. </para>
       </sidebar>
     </section>
 
@@ -308,33 +309,33 @@
 
       <para>Accounts are what you use to organize how you spend your money and
       where it comes from. Account structure can be changed to organize the
-      display of information to suit your specific needs.</para>
+      display of information to suit your specific needs. </para>
 
       <para>Typically, you will have a separate jGnash account for each
       savings, checking, investment account, etc. that you have at a financial
       institution. Accounts can be organized under "placeholder" accounts to
-      add different levels of organization.</para>
+      add different levels of organization. </para>
 
       <para>For example, if you would like to see a summary of your accounts
       by financial institution, you can create a placeholder account that
       represents a single financial institution and group your savings and
-      checking accounts from that particular institution.</para>
+      checking accounts from that particular institution. </para>
 
       <para>Maybe you want to see all savings accounts grouped together and
       checking accounts grouped together. It's just a mater of creating
       placeholder accounts for checking and savings and placing the respective
-      accounts under them.</para>
+      accounts under them. </para>
 
       <para>The account structure can be easily changed at any time with the
       exception of removing accounts after they have transaction in them.
       Transactions must be manually deleted from an account before you can
-      remove it.</para>
+      remove it. </para>
 
       <section xml:id="NewAccount">
         <title>Creating Accounts</title>
 
         <para>A new account is created by clicking on the
-        <guibutton>New</guibutton> button in the account list view.</para>
+        <guibutton>New</guibutton> button in the account list view. </para>
 
         <para>
           <inlinemediaobject>
@@ -345,7 +346,7 @@
         </para>
 
         <para>A new dialog box will be displayed that allows you to create a
-        new account to suit your particular needs.</para>
+        new account to suit your particular needs. </para>
 
         <para>
           <inlinemediaobject>
@@ -364,7 +365,7 @@
             <listitem>
               <para>The name for the account. The name will be used to
               identify the account when creating transactions. Account names
-              do not have to be unique, but may not be left blank.</para>
+              do not have to be unique, but may not be left blank. </para>
             </listitem>
           </varlistentry>
 
@@ -373,7 +374,7 @@
 
             <listitem>
               <para>A description for the account. This field may be left
-              blank if desired.</para>
+              blank if desired. </para>
             </listitem>
           </varlistentry>
 
@@ -383,7 +384,7 @@
             <listitem>
               <para>The Account ID can be a bank account number, another
               helpful description, or it could be an accounting code of some
-              sort. This field may be left blank if desired.</para>
+              sort. This field may be left blank if desired. </para>
             </listitem>
           </varlistentry>
 
@@ -392,7 +393,7 @@
 
             <listitem>
               <para>The currency for the account. Account currencies cannot be
-              changed if the account contains transactions.</para>
+              changed if the account contains transactions. </para>
             </listitem>
           </varlistentry>
 
@@ -405,7 +406,7 @@
               type may be changed after it is created to another type only if
               it is similar in function. For example, an Investment Account
               can be change to a Mutual Fund account and vice-versa, buy they
-              may not be changed into Bank or Credit accounts.</para>
+              may not be changed into Bank or Credit accounts. </para>
             </listitem>
           </varlistentry>
 
@@ -422,7 +423,7 @@
                       <para>If selected, the account will be locked and
                       further changes will be prevented. This is useful to
                       lock accounts that have been closed while retaining your
-                      historical data.</para>
+                      historical data. </para>
                     </listitem>
                   </varlistentry>
 
@@ -433,7 +434,7 @@
                       <para>If selected, child accounts may be placed under
                       this account and the account will not accept
                       transactions. This is useful for organizing accounts
-                      into a hierarchical structure.</para>
+                      into a hierarchical structure. </para>
                     </listitem>
                   </varlistentry>
 
@@ -458,7 +459,7 @@
               you select the account this account resides under. If you want
               the account to be placed at the top most level, then choose the
               Root account as the parent. Parent accounts may be changed as
-              needed to suit your needs.</para>
+              needed to suit your needs. </para>
             </listitem>
           </varlistentry>
 
@@ -466,19 +467,19 @@
             <term>Notes</term>
 
             <listitem>
-              <para>Room for extra information about the account if
-              desired.</para>
+              <para>Room for extra information about the account if desired.
+              </para>
             </listitem>
           </varlistentry>
         </variablelist>
 
         <para>At any later time, the <guibutton>Modify</guibutton> button may
         be used to change an existing account. If the account contains
-        transactions, certain options may not be changed.</para>
+        transactions, certain options may not be changed. </para>
 
         <sidebar>
           <para>jGnash does not have a place to specify an opening balance in
-          keeping with correct practices for double entry accounting.</para>
+          keeping with correct practices for double entry accounting. </para>
 
           <para>However, it is still possible to set and opening balance. To
           add an opening balance, create a transaction with an appropriate
@@ -486,7 +487,7 @@
           people will choose or create an "Opening Balance" account. This
           follows well known accounting practices. If you are not concerned
           about correct accounting practices, you can create an Adjustment
-          Transaction instead.</para>
+          Transaction instead. </para>
         </sidebar>
       </section>
     </section>
@@ -496,8 +497,8 @@
 
       <para>jGnash offers several account types to make organization easier.
       The account type chosen can have a significant impact on how reports are
-      generated and displayed, and the types of transactions you can
-      create.</para>
+      generated and displayed, and the types of transactions you can create.
+      </para>
 
       <section>
         <title>Asset</title>
@@ -507,14 +508,14 @@
         items can be adjusted over time against Income accounts to show gain
         or loss of value. If you were to sell an item and convert it cash, the
         sale of the item can be tracked against the Asset accounts containing
-        the item.</para>
+        the item. </para>
       </section>
 
       <section>
         <title>Bank</title>
 
         <para>Bank accounts are used for the savings accounts you would have
-        at a bank.</para>
+        at a bank. </para>
       </section>
 
       <section>
@@ -522,14 +523,14 @@
 
         <para>Cash accounts represent the cash you carry with you. Cash
         accounts are also good for representing deposits and withdrawals from
-        Flexible Spending Accounts.</para>
+        Flexible Spending Accounts. </para>
       </section>
 
       <section>
         <title>Checking</title>
 
         <para>Checking accounts are used for the checking account you would
-        have at a bank.</para>
+        have at a bank. </para>
       </section>
 
       <section>
@@ -538,7 +539,7 @@
         <para>Credit accounts are used to record purchases and payments made
         to a credit card account. Credit accounts are primary used for
         short-term liabilities and great for representing overdraft and line
-        of credit accounts at banks.</para>
+        of credit accounts at banks. </para>
       </section>
 
       <section>
@@ -547,49 +548,49 @@
         <para>Equity accounts are used to record opening account balances
         against. Typically, you will have only one Equity account. Equity
         accounts are representative of another accounts net worth at the time
-        you begin tracking it's value.</para>
+        you begin tracking it's value. </para>
       </section>
 
       <section>
         <title>Expense</title>
 
         <para>Expense accounts are used to record expenses such as food,
-        utilities, taxes, investment expenses, etc.</para>
+        utilities, taxes, investment expenses, etc. </para>
       </section>
 
       <section>
         <title>Income</title>
 
         <para>Income accounts are used to record income such as salary,
-        dividends, investment income, etc.</para>
+        dividends, investment income, etc. </para>
       </section>
 
       <section>
         <title>Investment</title>
 
         <para>Investment accounts are used to buy and sell Securities.
-        Investment accounts can be used to track 401k, IRA's, etc.</para>
+        Investment accounts can be used to track 401k, IRA's, etc. </para>
 
         <itemizedlist>
           <listitem>
             <para>Investment Accounts have a cash balance if you buy or sell
-            transactions against the account.</para>
+            transactions against the account. </para>
           </listitem>
 
           <listitem>
             <para>Investment purchases and sales fees can be made against the
             cash balance of the investment account or other specified
-            accounts.</para>
+            accounts. </para>
           </listitem>
 
           <listitem>
             <para>Multiple investment fee entries per transaction may be
-            entered.</para>
+            entered. </para>
           </listitem>
 
           <listitem>
-            <para>Multiple gains/loss entries per transaction may be
-            entered.</para>
+            <para>Multiple gains/loss entries per transaction may be entered.
+            </para>
           </listitem>
 
           <listitem>
@@ -598,7 +599,7 @@
 
           <listitem>
             <para>Investment Accounts can be used to model an on-line
-            brokerage account.</para>
+            brokerage account. </para>
           </listitem>
         </itemizedlist>
       </section>
@@ -609,15 +610,24 @@
         <para>Liability accounts are used to track long term loans or
         liabilities. Liability accounts have the added feature of allowing you
         to set-up a loan payment that takes some of the effort out of entering
-        periodic loan payment transactions.</para>
+        periodic loan payment transactions. </para>
+      </section>
+
+      <section>
+        <title>Money Market</title>
+
+        <para>Money Market accounts are typically a high interest yield
+        account with withdrawal rules or limitations. They are generally used
+        for long term savings accounts with the intent of keeping your cash
+        readily accessible. </para>
       </section>
 
       <section>
         <title>Mutual Fund</title>
 
         <para>Mutual fund accounts are a specialized version of an Investment
-        account and generally used to track mutual fund type
-        investments.</para>
+        account and generally used to track mutual fund type investments.
+        </para>
       </section>
 
       <section>
@@ -628,7 +638,7 @@
         securities. The typical scenario would be a company pension plan that
         only provides cash balance information. Sometimes, these types of
         investment accounts are called Annuities or Guaranteed Retirement
-        Accounts</para>
+        Accounts </para>
       </section>
 
       <section>
@@ -636,7 +646,7 @@
 
         <para>The root account is the top level account that holds all other
         accounts. You cannot remove or modify the root account. Normally, it
-        is not visible unless you are changing the account structure.</para>
+        is not visible unless you are changing the account structure. </para>
       </section>
     </section>
 
@@ -645,11 +655,11 @@
 
       <para>The jGnash editing environment is not much different then in other
       application with the exception that it provides a few shortcuts to speed
-      up entry of transactions.</para>
+      up entry of transactions. </para>
 
       <para>jGnash knows and understands just about any known locale and
       country setting. Depending on your settings, the decimal symbol will
-      change accordingly as well as the displayed format of dates.</para>
+      change accordingly as well as the displayed format of dates. </para>
 
       <section xml:id="dateFields">
         <title>Date Fields</title>
@@ -657,7 +667,7 @@
         <para>The date field is freely editable and jGnash will make the best
         attempt at interpreting an invalid entry, but the results are
         indeterminate. Clicking on the button to the right of the field will
-        display a calendar dialog where you can select a date as well.</para>
+        display a calendar dialog where you can select a date as well. </para>
 
         <para>
           <inlinemediaobject>
@@ -668,7 +678,7 @@
         </para>
 
         <para>Also, dates can be modified using the keyboard shortcuts defined
-        in the<link linkend="dateShortcuts">appendix</link>.</para>
+        in the<link linkend="dateShortcuts">appendix</link>. </para>
       </section>
 
       <section xml:id="numberFields">
@@ -676,7 +686,7 @@
 
         <para>Numerical entry in jGnash is as easy as typing the desired value
         into the field. Decimal separators are handled according to the
-        configured locale.</para>
+        configured locale. </para>
 
         <para>
           <inlinemediaobject>
@@ -688,12 +698,12 @@
         </para>
 
         <para>You may also enter arithmetic operators and calculate values
-        within the entry field.</para>
+        within the entry field. </para>
 
         <para>The arithmetic operators that may be used are () + − ∗ /.</para>
 
         <para>Traditional arithmetic operator precedence is followed for all
-        calculations.</para>
+        calculations. </para>
 
         <para>
           <inlinemediaobject>
@@ -715,20 +725,20 @@
 
           <guimenuitem>Save As</guimenuitem>
         </menuchoice> command and naming the new file with the appropriate
-      file extension.</para>
+      file extension. </para>
 
       <para>The current file will be saved in the new format and automatically
-      opened.</para>
+      opened. </para>
 
       <para>Regardless of file type used, jGnash automatically saves the data
       if changed every 30 seconds to minimize the chance of accidental data
-      loss.</para>
+      loss. </para>
 
       <note>
         <title>Client/Server</title>
 
         <para>If you are using jGnash in the Client/Server mode, all changes
-        are committed immediately.</para>
+        are committed immediately. </para>
       </note>
 
       <section>
@@ -737,24 +747,24 @@
         <para>An H2 or HyperSql relational database is required when using the
         client / server functionality of jGnash. jGnash already embeds the
         database server so that no additional configuration or installation of
-        software is required to use a relational database.</para>
+        software is required to use a relational database. </para>
 
         <para>The relational database may be used for a single user. If
         startup and shutdown performance is important to you, then the binary
-        file format described below is a better choice.</para>
+        file format described below is a better choice. </para>
 
         <para>The advantage of the relational database outside the requirement
         for client / server capability is the ability to use several available
-        tools to browse and query your jGnash data.</para>
+        tools to browse and query your jGnash data. </para>
 
         <para>The disadvantage of the relational database is a bit slower
-        operation and more memory consumption.</para>
+        operation and more memory consumption. </para>
 
         <note>
           <title>Database Administrator</title>
 
           <para>The default administrator for a jGnash relational databases is
-          JGNASH and is not configurable at this time.</para>
+          JGNASH and is not configurable at this time. </para>
         </note>
       </section>
 
@@ -767,13 +777,13 @@
         may take longer. The advantage of the XML file is easier parsing and
         manipulation of the file using another program external to jGnash. If
         you have a large amount of data, jGnash will use less system memory
-        when using the XML file format.</para>
+        when using the XML file format. </para>
 
         <note>
           <title>Backups</title>
 
           <para>The XML format is also used for saving automatic backups of
-          jGnash files if enabled.</para>
+          jGnash files if enabled. </para>
         </note>
       </section>
 
@@ -782,7 +792,7 @@
 
         <para>The binary file format is the most compact file format and will
         open and close the quickest. This is the recommended file format if
-        you do not need client / server functionality.</para>
+        you do not need client / server functionality. </para>
       </section>
     </section>
   </chapter>
@@ -794,10 +804,10 @@
     spending and income goals by account and bump those goals up against your
     actual transactions. A compact graphical overview of each budgeting period
     is provided to highlight how well you are following your budget based on
-    selectable periods.</para>
+    selectable periods. </para>
 
     <para>Tracking how well you follow your budget can be an eye opening
-    experience and can lead to better financial health.</para>
+    experience and can lead to better financial health. </para>
 
     <bridgehead>Budget Features</bridgehead>
 
@@ -805,28 +815,28 @@
       <listitem>
         <para>Multiple budgets are supported and may be copied making it easy
         to try out different scenarios and create year specific budgets if
-        desired.</para>
+        desired. </para>
       </listitem>
 
       <listitem>
         <para>Allowed accounts for budget are limited to Income and Expense
-        accounts.</para>
+        accounts. </para>
       </listitem>
 
       <listitem>
         <para>Accounts may be excluded from showing in a budget by setting the
-        exclude flag in the account properties dialog.</para>
+        exclude flag in the account properties dialog. </para>
       </listitem>
 
       <listitem>
         <para>The reporting period for budgets may be daily, weekly,
-        bi-weekly, monthly, or quarterly and can be changed as needed.</para>
+        bi-weekly, monthly, or quarterly and can be changed as needed. </para>
       </listitem>
 
       <listitem>
         <para>The per account budget goals may also be entered in daily,
         weekly, bi-weekly, monthly, or quarterly periods and are independent
-        of the budget reporting period.</para>
+        of the budget reporting period. </para>
       </listitem>
 
       <listitem>
@@ -838,15 +848,15 @@
       <title>Budget Periods</title>
 
       <para>The reported period of the budget is independent of the per
-      account budget goal period.</para>
+      account budget goal period. </para>
 
       <para>Example: Your salary is paid in bi-weekly intervals, but you want
       to see your budget reported by month. You can change the period for the
-      income account to weekly or daily and enter your salary.</para>
+      income account to weekly or daily and enter your salary. </para>
 
       <para>When reported by month, jGnash automatically handles the
       difference in the periods 1and distributes your bi-weekly salary income
-      across monthly boundaries.</para>
+      across monthly boundaries. </para>
     </tip>
 
     <section>
@@ -864,19 +874,19 @@
 
       <para>The width of the account column is adjustable by placing the
       cursor between the Account header and the period header columns and then
-      clicking and dragging the mouse cursor right or left.</para>
+      clicking and dragging the mouse cursor right or left. </para>
 
       <para>At the top of the panel, a toolbar exists that allows you to
       change how much information is displayed, modify the budgets, and export
-      the active budget to a spreadsheet.</para>
+      the active budget to a spreadsheet. </para>
 
       <para>The budget drop down list lets you quickly select between
-      different budgets you have created. The <guibutton>Budget
-      Manager</guibutton> button displays a dialog that let you create,
-      duplicate, and delete budgets.</para>
+      different budgets you have created. The <guibutton>Budget Manager
+      </guibutton> button displays a dialog that let you create, duplicate,
+      and delete budgets. </para>
 
       <para>The <guibutton>Properties</guibutton> button will display the
-      dialog shown below with various options for the active budget.</para>
+      dialog shown below with various options for the active budget. </para>
 
       <para>
         <inlinemediaobject>
@@ -888,15 +898,15 @@
 
       <para>The period used for the budget display can be changed in this
       dialog as well as the budget description. You may also select the
-      account groups that are visible for the selected budget.</para>
+      account groups that are visible for the selected budget. </para>
 
       <para>The year spinner allows you to bump the selected budget up against
       the selected year's transaction data. The selected year also effects the
-      calendar periods when editing period amounts.</para>
+      calendar periods when editing period amounts. </para>
 
       <para>Double clicking on an account name to the left of the panel will
       display a dialog that allows you to change the account specific budget
-      period and period amounts.</para>
+      period and period amounts. </para>
 
       <para>
         <inlinemediaobject>
@@ -909,56 +919,57 @@
       <para>The Smart Fill panel may used to enter repeating patterns or fill
       in the amounts automatically based on the last 12 months. Alternatively,
       you may directly edit the amount of each period by clicking and typing
-      in a table cell.</para>
+      in a table cell. </para>
 
       <para>The per account budget amounts as well as the <emphasis
-      role="bold">Change</emphasis> and <emphasis role="bold">Remaining
+      role="bold">Change </emphasis> and <emphasis role="bold">Remaining
       </emphasis> values are hierarchical in that the values of the child
       account are summed and are added to the parent account. If a parent
       account is not configured has a placeholder, it may also be assigned
-      period goals that are inclusive of any children.</para>
+      period goals that are inclusive of any children. </para>
 
       <para>At the bottom of each reported budget period, a summary by account
       group is displayed. To the right, a summary by account is displayed. The
       summary's made be disabled if desired by unselecting the appropriate
-      checkboxes.</para>
+      checkboxes. </para>
 
       <para>The <guibutton>Export Spreadsheet</guibutton> button will export a
       file to your choice of an <filename>xls</filename> or
       <filename>xlsx</filename> file. The exported spreadsheet does contain
-      formulas which makes it easier to manipulate the file externally.</para>
+      formulas which makes it easier to manipulate the file externally.
+      </para>
     </section>
 
     <section>
       <title>Budgeting Tips</title>
 
       <para>When planing a budget, you need to consider how you spend and
-      receive your money versus how you want to report your budget.</para>
+      receive your money versus how you want to report your budget. </para>
 
       <para>jGnash has to make assumptions when entering per account period
       amounts. Internally, jGnash is keeping a list of 366 days (365 + 1 leap
       day) per account with the list starting at the first calendar day of the
-      year.</para>
+      year. </para>
 
       <para>When a period goal for an account is entered, the amount is
       averaged across each day of the period. Entry of amounts is also
       sensitive to the current year. If you select Monthly for the account
       period, the monthly boundary for days is established by the current year
       calendar months and the amount is then averaged across the number of
-      days per each month.</para>
+      days per each month. </para>
 
       <para>Averaging of periods has an impact on how exact the tracking of
       your budget is. If you choose to enter a monthly average for income, but
       are paid on certain days on the month, your budget will show slight
-      variations through the year.</para>
+      variations through the year. </para>
 
       <para>If you want the budgeted vs. Remaining amounts to be exact for a
       particular account, then you will want to set the account period to be
-      Daily and take the effort to enter your daily amount goals.</para>
+      Daily and take the effort to enter your daily amount goals. </para>
 
       <para>You will not be able to export a spreadsheet when the report
       period is daily due to memory requirements and limitations of some
-      spreadsheet applications.</para>
+      spreadsheet applications. </para>
     </section>
   </chapter>
 
@@ -972,7 +983,7 @@
     and exported to a graphic file, or printed using the context sensitive
     pop-up menu. Tabular type reports may be printed or saved to various file
     formats including <filename>CSV</filename> or <filename>PDF</filename>
-    files.</para>
+    files. </para>
 
     <section>
       <title>Tabular Reports</title>
@@ -980,7 +991,7 @@
       <para>Tabular reports are displayed in a specialized viewer that allows
       you to change the page and print or export the report. The font size of
       the displayed report can be changed from the toolbar of the report
-      window.</para>
+      window. </para>
 
       <para>The fonts used to display the report may be changed in the
       <menuchoice>
@@ -990,8 +1001,8 @@
         </menuchoice> dialog shown below. The
       <guilabel>Proportional</guilabel> font is typically used for report
       headers and footers. The <guilabel>Monospace</guilabel> font, also
-      called a fixed-width font, is used to display the reported
-      values.</para>
+      called a fixed-width font, is used to display the reported values.
+      </para>
 
       <para>
         <inlinemediaobject>
@@ -1003,7 +1014,7 @@
 
       <para>If a proportional spaced font is chosen for the
       <guilabel>Monospace</guilabel> font, numeric report values may not line
-      up correctly in the report.</para>
+      up correctly in the report. </para>
 
       <tip>
         <title>Font Information</title>
@@ -1011,7 +1022,7 @@
         <para>Information on font types as well as a wide selection of freely
         available fonts can be found on the Internet. Once a new font is
         properly installed in your operating system, it will be available for
-        use in jGnash the next time it is started.</para>
+        use in jGnash the next time it is started. </para>
       </tip>
     </section>
 
@@ -1021,15 +1032,15 @@
       <para>Depending on your operating system, you may need to change the
       font type and font size to achieve the best looking report. The font
       size can be changed on the report toolbar and is remember for each
-      report type.</para>
+      report type. </para>
 
       <section>
-        <title>Nothing displays in the report and I'm not getting any
-        errors</title>
+        <title>Nothing displays in the report and I'm not getting any errors
+        </title>
 
         <para>Try increasing your font size, and if that does not work, choose
         a different font. Depending on your operation system, fonts may not
-        render correctly at reduced sizes.</para>
+        render correctly at reduced sizes. </para>
       </section>
 
       <section>
@@ -1039,17 +1050,17 @@
         correctly. You will need to choose a smaller font size. Many times,
         the column heading text may dictate the displayed width of a column.
         Try choosing a proportional font with condensed spacing. You may also
-        want to check the default paper size and adjust if needed.</para>
+        want to check the default paper size and adjust if needed. </para>
       </section>
 
       <section>
         <title>My PDF exports are missing information or don't look correct on
-        a different computers</title>
+        a different computers </title>
 
         <para>Not all fonts are able to be embedded within a
         <filename>PDF</filename> file. You may need to experiment with
         different fonts to achieve good portability. In most cases, the
-        defaults jGnash chooses will give you good results.</para>
+        defaults jGnash chooses will give you good results. </para>
       </section>
     </section>
   </chapter>
@@ -1058,20 +1069,20 @@
     <title>Administration</title>
 
     <para>Several administration options and tools are provided to help with
-    management of your data.</para>
+    management of your data. </para>
 
-    <section xml:id="saveas"><title>File | Save As</title><para>An open file
+    <section xml:id="saveas"> <title>File | Save As</title> <para>An open file
     may be saved as a new file of the same type, or a new file with a new file
     type. To save the file as a different type, you must change the file
-    extension to a supported type. Correct file extensions are shown
-    below.</para><table>
+    extension to a supported type. Correct file extensions are shown below.
+    </para> <table>
         <title>File Formats</title>
 
         <tgroup cols="2">
           <tbody>
             <row>
               <entry>Object Database <emphasis>(Depreciated in release 2.12.0,
-              removed in the later releases)</emphasis></entry>
+              removed in the later releases) </emphasis> </entry>
 
               <entry>.jdb</entry>
             </row>
@@ -1098,23 +1109,23 @@
               <entry>HyperSql (hslqb) Relational Database</entry>
 
               <entry>.script (.lobs, .log, .properties are used as support
-              files)</entry>
+              files) </entry>
             </row>
           </tbody>
         </tgroup>
-      </table>If you are saving from one relational database format to another
-    relational database, a temporary intermediate binary file will be created.
-    After completion of the Save As operation, the temporary file will be
-    removed automatically. Newly copied relational database files will not be
-    password protected.</section>
+      </table> If you are saving from one relational database format to
+    another relational database, a temporary intermediate binary file will be
+    created. After completion of the Save As operation, the temporary file
+    will be removed automatically. Newly copied relational database files will
+    not be password protected. </section>
 
     <section>
       <title>File | Export | Export Accounts and File | Import | Import
-      Accounts</title>
+      Accounts </title>
 
       <para>Use of these commands allows you to export your account structure
       and import it back into and new file. This is handy if you want to start
-      a new file without manually recreating your accounts.</para>
+      a new file without manually recreating your accounts. </para>
     </section>
 
     <section>
@@ -1125,14 +1136,14 @@
       does not encrypt your data, so a person wit the right tools can easily
       access your data. It is useful for casual protection only. If encryption
       is important, use OS level encryption capability available on any modern
-      operating system. This is disabled while a file is open.</para>
+      operating system. This is disabled while a file is open. </para>
     </section>
 
     <section>
       <title>Shutdown Server</title>
 
       <para>Issues a shutdown request to a remote server. This is disabled
-      while a file is open.</para>
+      while a file is open. </para>
     </section>
   </chapter>
 
@@ -1140,7 +1151,7 @@
     <title>Plugins and JavaScript</title>
 
     <para>jGnash support the addition of JavaScript and Plugins to add
-    additional functionality to the application.</para>
+    additional functionality to the application. </para>
 
     <section>
       <title>Plugins</title>
@@ -1148,17 +1159,17 @@
       <para>Plugins are tightly integrated into jGnash, and once loaded,
       behave as if they are a standard part of the application. Plugins are
       coded in Java using a jGnash specific API as the entry point so they may
-      be loaded into jGnash.</para>
+      be loaded into jGnash. </para>
 
       <para>Plugins are packaged into <filename>JAR</filename> files and are
       located within the <filename>plugins</filename> directory located in the
       directory jGnash is installed. Installation of a Plugin is as simple as
       placing the supplied JAR file into the <filename>plugins</filename>
-      directory and restarting jGnash.</para>
+      directory and restarting jGnash. </para>
 
       <para>The jGnash JavaDoc may be referenced if you are interested in
       creating a jGnash Plugin. The MT940 import is written as a standard
-      Plugin and may be referenced as an example of how to write one.</para>
+      Plugin and may be referenced as an example of how to write one. </para>
     </section>
 
     <section>
@@ -1167,13 +1178,13 @@
       <para>In addition to use of Plugins, jGnash allows you to create and run
       JavaScript programs. The internals of the jGnash engine and some user
       interface functions can be accessed to create custom reports, create and
-      modify transactions, etc.</para>
+      modify transactions, etc. </para>
 
       <para>Running a JavaScript program is as simple as using <menuchoice>
           <guimenu>Tools</guimenu>
 
           <guimenuitem>Run JavaScript</guimenuitem>
-        </menuchoice> command from the menu bar.</para>
+        </menuchoice> command from the menu bar. </para>
 
       <para>Below is an example JavaScript program that displays the accounts
       in the currently loaded file and demonstrates how to display a simple
@@ -1183,7 +1194,7 @@
           <guimenu>Tools</guimenu>
 
           <guimenuitem>Run JavaScript</guimenuitem>
-        </menuchoice> command to select the program and run it.</para>
+        </menuchoice> command to select the program and run it. </para>
 
       <programlisting language="java">importPackage(javax.swing);
                 importPackage(Packages.jgnash.ui);
@@ -1217,7 +1228,7 @@
       <para>JavaScript programs have the advantage of not requiring the use of
       an IDE or Java compiler to create and test a program. The disadvantage
       is troubleshooting syntax and logic errors can be more difficult than
-      writing a jGnash Plugin.</para>
+      writing a jGnash Plugin. </para>
     </section>
   </chapter>
 
@@ -1225,7 +1236,7 @@
     <title>Command Line Options</title>
 
     <para xreflabel="Command Line Options">jGnash has several command line
-    options for advanced users.</para>
+    options for advanced users. </para>
 
     <bridgehead>Options</bridgehead>
 
@@ -1236,12 +1247,12 @@
         <listitem>
           <para>Primarily used for development and debugging the graphical
           user interface. When enabled, this detects and warns of bad UI
-          programing practice.</para>
+          programing practice. </para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term>-file <option>filename</option></term>
+        <term>-file <option>filename</option> </term>
 
         <listitem>
           <para>Specifies a file to load at startup.</para>
@@ -1253,7 +1264,7 @@
 
         <listitem>
           <para>Enables OpenGL support for platforms and video drivers that
-          support it. Disable use if strange graphics errors occur.</para>
+          support it. Disable use if strange graphics errors occur. </para>
         </listitem>
       </varlistentry>
 
@@ -1263,7 +1274,7 @@
         <listitem>
           <para>Enables 2D rendering pipeline for modern X11 based desktop
           environments. The performance improvement can be significant for
-          some systems. This has no effect on OSX or Windows systems.</para>
+          some systems. This has no effect on OSX or Windows systems. </para>
         </listitem>
       </varlistentry>
 
@@ -1272,24 +1283,24 @@
 
         <listitem>
           <para>If portable is specified on the command line, jGnash
-          preferences will be stored to a file name <emphasis
+          preferences will be stored to a file name<emphasis
           role="bold">pref.xml</emphasis>instead of using the system registry.
           Use of this option is intended for users who want to run jGnash from
           a thumb drive on multiple computers and maintain their preferences
           without using the system registry. The <emphasis
-          role="bold">pref.xml</emphasis> file will usually be stored at the
-          location jGnash was started from.</para>
+          role="bold">pref.xml </emphasis> file will usually be stored at the
+          location jGnash was started from. </para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term>-portableFile <option>filename</option></term>
+        <term>-portableFile <option>filename</option> </term>
 
         <listitem>
           <para>If you don't like the location the <emphasis
-          role="bold">pref.xml</emphasis> file is stored, or wish to use a
-          different name, use this option to change location and name to
-          suit.</para>
+          role="bold">pref.xml </emphasis> file is stored, or wish to use a
+          different name, use this option to change location and name to suit.
+          </para>
         </listitem>
       </varlistentry>
 
@@ -1299,7 +1310,7 @@
         <listitem>
           <para>Removes all registry and configuration settings jGnash has
           created. This will not have any effect if you have been using the
-          <emphasis role="bold">-portable</emphasis> option.</para>
+          <emphasis role="bold">-portable</emphasis> option. </para>
         </listitem>
       </varlistentry>
     </variablelist>
@@ -1308,24 +1319,24 @@
 
     <variablelist>
       <varlistentry>
-        <term>-server <option>filename</option></term>
+        <term>-server <option>filename</option> </term>
 
         <listitem>
           <para>Starts the jGnash server using the specified file. The file
           must exist and not be in use by another program. A user interface
           will not be displayed. The file must be in the Object Database (jdb)
-          format.</para>
+          format. </para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term>-host <option>servername</option></term>
+        <term>-host <option>servername</option> </term>
 
         <listitem>
           <para>Specifies the name of the remote server. This starts jGnash
           and automatically connects to the specified server. If running on
           the same computer as the server, localhost may be used as the name
-          of the server.</para>
+          of the server. </para>
         </listitem>
       </varlistentry>
 
@@ -1334,7 +1345,7 @@
 
         <listitem>
           <para>Issues a shutdown request to a server. If -host is not
-          specified, then localhost is assumed for the server name</para>
+          specified, then localhost is assumed for the server name </para>
         </listitem>
       </varlistentry>
 
@@ -1343,27 +1354,27 @@
 
         <listitem>
           <para>Enables encrypted client / server communication if supported
-          by the relational database</para>
+          by the relational database </para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term>-password <option>password</option></term>
+        <term>-password <option>password</option> </term>
 
         <listitem>
           <para>The password that the client must correctly specify to connect
           to the jGnash database. This is not required if the database is not
-          protected.</para>
+          protected. </para>
         </listitem>
       </varlistentry>
 
       <varlistentry>
-        <term>-port <option>port</option></term>
+        <term>-port <option>port</option> </term>
 
         <listitem>
           <para>An empty port for network communications. The specified port
           and port + 1 may not be used by any other application at the same
-          time. The default port is 5300.</para>
+          time. The default port is 5300. </para>
         </listitem>
       </varlistentry>
     </variablelist>
@@ -1376,36 +1387,45 @@
           <guimenu>File</guimenu>
 
           <guimenuitem>Open</guimenuitem>
-        </menuchoice> dialog.</para>
+        </menuchoice> dialog. </para>
     </tip>
 
     <bridgehead>Client/Server Examples</bridgehead>
 
     <para>
       <emphasis role="bold">Start the jGnash server using the default port
-      with a password protected database</emphasis>
+      with a password protected database </emphasis>
 
-      <screen>java -jar jGnash2.jar -server <replaceable>/home/craig/jgnash.jdb</replaceable> -password<replaceable> fh56dy</replaceable>
+      <screen>java -jar jGnash2.jar -server
+                <replaceable>/home/craig/jgnash.jdb</replaceable>
+                -password
+                <replaceable>fh56dy</replaceable>
             </screen>
 
       <emphasis role="bold">Start the jGnash client and connect to the local
-      server running a password protected database</emphasis>
+      server running a password protected database </emphasis>
 
-      <screen>java -jar jGnash2.jar -host <replaceable>localhost</replaceable> -password <replaceable>fh56dy</replaceable>
+      <screen>java -jar jGnash2.jar -host
+                <replaceable>localhost</replaceable>
+                -password
+                <replaceable>fh56dy</replaceable>
             </screen>
 
       <emphasis role="bold">Issue a shutdown request to a remote server that
-      is password protected</emphasis>
+      is password protected </emphasis>
 
-      <screen>java -jar jGnash2.jar -shutdown -host <replaceable>localhost</replaceable> -password <replaceable>fh56dy</replaceable>
+      <screen>java -jar jGnash2.jar -shutdown -host
+                <replaceable>localhost</replaceable>
+                -password
+                <replaceable>fh56dy</replaceable>
             </screen>
 
       <emphasis role="bold">Issue a shutdown request to a local server that is
-      not password protected</emphasis>
+      not password protected </emphasis>
 
-      <screen>java -jar jGnash2.jar -shutdown 
+      <screen>java -jar jGnash2.jar -shutdown
             </screen>
-    </para>    
+    </para>
   </chapter>
 
   <chapter>
@@ -1421,7 +1441,7 @@
           <para>Most commercial personal finance applications use categories
           to help track spending and income. jGnash uses Income and Expense
           accounts instead of categories for tracking where your money comes
-          from and where it goes.</para>
+          from and where it goes. </para>
         </answer>
       </qandaentry>
 
@@ -1432,35 +1452,35 @@
 
         <answer>
           <para>Yes! The Tools|Currencies|Add/Remove menu will let you add
-          additional currencies.</para>
+          additional currencies. </para>
 
           <para>After adding new currencies, simple create new accounts that
           use the new currency. When creating a transaction between accounts
           with different currencies, a field for the exchange rate will be
-          enabled.</para>
+          enabled. </para>
         </answer>
       </qandaentry>
 
       <qandaentry>
         <question>
           <para>How do I add Securities / Stocks to my Investment and Mutual
-          Fund Account?</para>
+          Fund Account? </para>
         </question>
 
         <answer>
           <para>First, you need to have created your stocks/securities.
-          Tools|Commodities:Create / Modify</para>
+          Tools|Commodities:Create / Modify </para>
 
           <para>When creating the securities, the scale field must be filled
           in and the prefix field should be filled in. The scale will general
           be the same scale as the currency the securities value is reported
           in. In most cases, a scale of 2 will work fine. For the prefix, the
-          currency prefix of the reported value should be used.</para>
+          currency prefix of the reported value should be used. </para>
 
           <para>After creating your securities, you can go back and modify the
           existing account or select the securities when creating a new
-          account. Use the Securities button in the dialog to make
-          changes.</para>
+          account. Use the Securities button in the dialog to make changes.
+          </para>
         </answer>
       </qandaentry>
     </qandaset>
@@ -1470,10 +1490,10 @@
     <title>Keyboard Shortcuts</title>
 
     <para>This Appendix contains application keyboard shortcuts that are
-    available to you throughout jGnash</para>
+    available to you throughout jGnash </para>
 
     <para>Depending on your operating system and how you have it configured,
-    other shortcuts may be available that perform the same function.</para>
+    other shortcuts may be available that perform the same function. </para>
 
     <table>
       <title>Shortcut Keys</title>
@@ -1493,8 +1513,8 @@
               <keycap>CTRL-F4</keycap>
             </entry>
 
-            <entry>Closes the active register window if you have one
-            open</entry>
+            <entry>Closes the active register window if you have one open
+            </entry>
           </row>
 
           <row>
@@ -1562,13 +1582,13 @@
 
         <tbody>
           <row>
-            <entry><keycap>+</keycap>, <keycap>↑</keycap></entry>
+            <entry><keycap>+</keycap>, <keycap>↑</keycap> </entry>
 
             <entry>Increase the date by one day</entry>
           </row>
 
           <row>
-            <entry><keycap>-</keycap>, <keycap>↓</keycap></entry>
+            <entry><keycap>-</keycap>, <keycap>↓</keycap> </entry>
 
             <entry>Decrease the date by one day</entry>
           </row>
@@ -1590,7 +1610,7 @@
           </row>
 
           <row>
-            <entry><keycap>t</keycap>, <keycap>T</keycap></entry>
+            <entry><keycap>t</keycap>, <keycap>T</keycap> </entry>
 
             <entry>Change to todays date</entry>
           </row>
