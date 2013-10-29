@@ -23,9 +23,8 @@ import java.math.BigDecimal;
  * A list class to cache BigDecimals at specified indexes. BigDecimalCache operates under the assumption that it may
  * need to expand the size of the list if an index larger than the current capacity is being set. A returned value of
  * null on a get(index) operation means that the value at that index has not been set.
- * 
- * @author Craig Cavanaugh
  *
+ * @author Craig Cavanaugh
  */
 public final class BigDecimalCache {
 
@@ -37,7 +36,7 @@ public final class BigDecimalCache {
 
     /**
      * Trims the capacity of this <tt>BigDecimalCache</tt> instance to the specified size.
-     * 
+     *
      * @param size the new capacity of the cache
      */
     public void trimToSize(final int size) {
@@ -52,7 +51,7 @@ public final class BigDecimalCache {
     /**
      * Increases the capacity of this <tt>BigDecimalCache</tt> instance, if necessary, to ensure that it can hold at
      * least the number of BigDecimals specified by the minimum capacity argument.
-     * 
+     *
      * @param minCapacity the desired minimum capacity.
      */
     public void ensureCapacity(final int minCapacity) {
@@ -70,18 +69,20 @@ public final class BigDecimalCache {
 
     /**
      * Returns the <tt>BigDecimal</tt> at the specified position in the cache
-     * 
+     *
      * @param index index of the <tt>BigDecimal</tt> to return.
      * @return the <tt>BigDecimal</tt> at the specified position in this list.
+     *         Null wil be returned if a value has not been set for the index
      */
     public BigDecimal get(final int index) {
+        ensureCapacity(index + 1); // capacity is one more than index
         return cache[index];
     }
 
     /**
      * Sets the <tt>BigDecimal</tt> at the specified position in this cache.
-     * 
-     * @param index index of the <tt>BigDecimal</tt> to replace.
+     *
+     * @param index   index of the <tt>BigDecimal</tt> to replace.
      * @param element <tt>BigDecimal</tt> to be stored at the specified position.
      */
     public void set(final int index, final BigDecimal element) {
@@ -98,7 +99,7 @@ public final class BigDecimalCache {
 
     /**
      * Clears the cache all of <tt>BigDecimals</tt> starting at fromIndex.
-     * 
+     *
      * @param fromIndex index of first BigDecimal to be cleared.
      */
     public void clear(final int fromIndex) {
