@@ -44,7 +44,6 @@ import jgnash.util.Resource;
  * This model does some internal manipulation to make it possible to hide specific columns.
  *
  * @author Craig Cavanaugh
- *
  */
 public abstract class AbstractRegisterTableModel extends AbstractTableModel implements MessageListener, AccountTableModel, PackableTableModel {
 
@@ -318,10 +317,15 @@ public abstract class AbstractRegisterTableModel extends AbstractTableModel impl
      * @return balance at the given index
      */
     BigDecimal getBalanceAt(final int index) {
-        if (balanceCache.get(index) != null) {
-            return AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(), balanceCache.get(index));
+
+        BigDecimal balance = balanceCache.get(index);
+
+        if (balance != null) {
+            return AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(), balance);
         }
-        BigDecimal balance = account.getBalanceAt(index);
+
+        balance = account.getBalanceAt(index);
+
         balanceCache.set(index, balance);
         return AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(), balance);
     }
