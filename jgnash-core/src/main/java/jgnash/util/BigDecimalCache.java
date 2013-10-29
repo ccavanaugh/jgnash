@@ -28,7 +28,7 @@ import java.math.BigDecimal;
  */
 public final class BigDecimalCache {
 
-    public static final int CAPACITY_BUMP_SIZE = 5;
+    private static final int CAPACITY_BUMP_SIZE = 5;
 
     private BigDecimal cache[] = new BigDecimal[0];
 
