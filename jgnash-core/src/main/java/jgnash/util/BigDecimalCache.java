@@ -28,6 +28,8 @@ import java.math.BigDecimal;
  */
 public final class BigDecimalCache {
 
+    public static final int CAPACITY_BUMP_SIZE = 5;
+
     private BigDecimal cache[] = new BigDecimal[0];
 
     public BigDecimalCache(final int capacity) {
@@ -58,7 +60,7 @@ public final class BigDecimalCache {
         if (minCapacity > cache.length) {
             int oldCapacity = cache.length;
             BigDecimal oldCache[] = cache;
-            int newCapacity = oldCapacity + 5;
+            int newCapacity = oldCapacity + CAPACITY_BUMP_SIZE;
             if (newCapacity < minCapacity) {
                 newCapacity = minCapacity;
             }
