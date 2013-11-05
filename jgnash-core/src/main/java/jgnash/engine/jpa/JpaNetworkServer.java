@@ -117,7 +117,7 @@ public class JpaNetworkServer {
         distributedLockServer.startServer();
 
         AttachmentTransferServer attachmentTransferServer = new AttachmentTransferServer(port + 3, AttachmentUtils.getAttachmentDirectory(Paths.get(fileName)));
-        attachmentTransferServer.startServer();
+        attachmentTransferServer.startServer(password);
 
         final Engine engine = createEngine(dataStoreType, fileName, port, password);
 
@@ -273,7 +273,7 @@ public class JpaNetworkServer {
             distributedLockManager.connectToServer();
 
             distributedAttachmentManager = new DistributedAttachmentManager("localhost", port + 3);
-            distributedAttachmentManager.connectToServer();
+            distributedAttachmentManager.connectToServer(password);
 
             Logger.getLogger(JpaH2DataStore.class.getName()).info("Created local JPA container and engine");
             engine = new Engine(new JpaEngineDAO(em, true), distributedLockManager, distributedAttachmentManager, SERVER_ENGINE); // treat as a remote engine

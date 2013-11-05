@@ -65,7 +65,7 @@ public class AttachmentTransferServer {
         this.attachmentPath = attachmentPath;
     }
 
-    public void startServer() {
+    public void startServer(final char[] password) {
         // Configure the server.
 
         try {

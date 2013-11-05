@@ -65,7 +65,7 @@ class AttachmentTransferClient {
      *
      * @return <code>true</code> if successful
      */
-    public boolean connectToServer(final String host, final int port) {
+    public boolean connectToServer(final String host, final int port, final char[] password) {
         boolean result = false;
 
         final Bootstrap bootstrap = new Bootstrap();
