@@ -26,6 +26,11 @@ KNOWN ISSUES
 Exceptions occur when entering Chinese text with auto complete enabled in conjunction with Google Input tools. This
 appears to be a JDK and Google interaction bug.
 
+Release 2.13.1
+----------------------
+10/29/13 Fix a race condition that was causing an ArrayIndexOutOfBoundsException in the GUI when
+         adding a new transaction.
+
 Release 2.13.0
 ----------------------
 10/15/13 Correctly report and handle an attempt to open a wrong file type. (Bug #206)
