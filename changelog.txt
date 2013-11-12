@@ -28,6 +28,8 @@ appears to be a JDK and Google interaction bug.
 
 Release 2.13.1
 ----------------------
+11/12/13 Update to latest Netty, H2, and Hibernate dependencies.  Users using H2 database may notice more consistent
+         shutdown times.
 10/29/13 Fix a race condition that was causing an ArrayIndexOutOfBoundsException in the GUI when
          adding a new transaction.
 
