@@ -305,12 +305,14 @@ public class Account extends StoredObject implements Comparable<Account> {
             boolean result = false;
 
             if (!contains(tran)) {
-                transactions.add(tran);
 
+                /* The cached list must be updated first to prevent duplicates from showing up if the cache has not been initialized */
                 getCachedSortedTransactionList().add(tran);
                 Collections.sort(getCachedSortedTransactionList());
 
                 clearCachedBalances();
+
+                transactions.add(tran);
 
                 result = true;
             } else {

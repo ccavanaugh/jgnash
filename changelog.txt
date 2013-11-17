@@ -26,6 +26,11 @@ KNOWN ISSUES
 Exceptions occur when entering Chinese text with auto complete enabled in conjunction with Google Input tools. This
 appears to be a JDK and Google interaction bug.
 
+Release 2.13.2
+----------------------
+11/17/13 A caching bug was causing the first transaction added to an account after restart of jGnash to show up twice.
+         After restart the duplicate transaction would go away.
+
 Release 2.13.1
 ----------------------
 11/12/13 Update to latest Netty, H2, and Hibernate dependencies.  Users using H2 database may notice more consistent
