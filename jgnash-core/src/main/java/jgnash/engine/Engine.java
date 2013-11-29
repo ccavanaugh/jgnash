@@ -354,6 +354,14 @@ public class Engine {
         configLock.writeLock().lock();
 
         try {
+            /* Check for more than one config object */
+            List<Config> list = eDAO.getStoredObjects(Config.class);
+            if (list.size() > 1) {
+                // Delete all but the first found config object
+                for (int i = 1; i < list.size(); i++) {
+                    moveObjectToTrash(list.get(i));
+                }
+            }
 
             /* Check for detached accounts */
             if (getConfig().getFileVersion() < 2.02f) {

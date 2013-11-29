@@ -158,6 +158,11 @@ public class XStreamEngineDAO extends AbstractXStreamDAO implements EngineDAO {
     }
 
     @Override
+    public <T extends StoredObject> List<T> getStoredObjects(Class<T> tClass) {
+        return stripMarkedForRemoval(container.query(tClass));
+    }
+
+    @Override
     public void refresh(final StoredObject object) {
         // do nothing for XStream
     }

@@ -46,6 +46,8 @@ public interface EngineDAO {
 
     public List<StoredObject> getStoredObjects();
 
+    public <T extends StoredObject> List<T> getStoredObjects(Class<T> tClass);
+
     /**
      * Force the object to be reloaded from the underlying database
      * Intended for client / server use

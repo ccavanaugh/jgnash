@@ -171,7 +171,8 @@ public class XMLDataStore implements DataStore {
                 if (list.size() == 1) {
                     fileVersion = list.get(0).getFileVersion();
                 } else {
-                    Logger.getLogger(XMLDataStore.class.getName()).severe("Invalid file");
+                    fileVersion = list.get(0).getFileVersion();
+                    Logger.getLogger(XMLDataStore.class.getName()).severe("A duplicate config object was found");
                 }
             } finally {
                 container.close();

@@ -173,6 +173,39 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
         return list;
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends StoredObject> List<T> getStoredObjects(final Class<T> tClass) {
+        List<T> list = Collections.EMPTY_LIST;
+
+        emLock.lock();
+
+        try {
+
+            Future<List<T>> future = executorService.submit(new Callable<List<T>>() {
+                @Override
+                public List<T> call() throws Exception {
+                    CriteriaBuilder cb = em.getCriteriaBuilder();
+                    CriteriaQuery<T> cq = cb.createQuery(tClass);
+                    Root<T> root = cq.from(tClass);
+                    cq.select(root);
+
+                    TypedQuery<T> q = em.createQuery(cq);
+
+                    return new ArrayList<>(q.getResultList());
+                }
+            });
+
+            list = future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+        } finally {
+            emLock.unlock();
+        }
+
+        return stripMarkedForRemoval(list);
+    }
+
     /**
      * Refresh a managed object
      *
