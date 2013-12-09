@@ -22,6 +22,8 @@ import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jgnash.util.EncryptionManager;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -60,6 +62,8 @@ public class AttachmentTransferServer {
 
     private final Path attachmentPath;
 
+    private EncryptionManager encryptionManager = null;
+
     public AttachmentTransferServer(final int port, final Path attachmentPath) {
         this.port = port;
         this.attachmentPath = attachmentPath;
@@ -67,6 +71,13 @@ public class AttachmentTransferServer {
 
     public void startServer(final char[] password) {
         // Configure the server.
+
+        boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty("ssl"));
+
+        // If a user and password has been specified, enable an encryption encryptionManager
+        if (useSSL && password != null && password.length > 0) {
+            encryptionManager = new EncryptionManager(password);
+        }
 
         try {
             ServerBootstrap b = new ServerBootstrap();
@@ -122,7 +133,7 @@ public class AttachmentTransferServer {
     private final class ServerTransferHandler extends NettyTransferHandler {
 
         public ServerTransferHandler() {
-            super(attachmentPath);
+            super(attachmentPath, encryptionManager);
         }
 
         @Override

@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.net.ConnectionFactory;
+import jgnash.util.EncryptionManager;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -56,6 +57,8 @@ class AttachmentTransferClient {
 
     private NettyTransferHandler transferHandler;
 
+    private EncryptionManager encryptionManager = null;
+
     public AttachmentTransferClient(final Path tempPath) {
         tempDirectory = tempPath;
     }
@@ -68,11 +71,18 @@ class AttachmentTransferClient {
     public boolean connectToServer(final String host, final int port, final char[] password) {
         boolean result = false;
 
+        boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty("ssl"));
+
+        // If a user and password has been specified, enable an encryption encryptionManager
+        if (useSSL && password != null && password.length > 0) {
+            encryptionManager = new EncryptionManager(password);
+        }
+
         final Bootstrap bootstrap = new Bootstrap();
 
         eventLoopGroup = new NioEventLoopGroup();
 
-        transferHandler = new NettyTransferHandler(tempDirectory);
+        transferHandler = new NettyTransferHandler(tempDirectory, encryptionManager);
 
         bootstrap.group(eventLoopGroup)
                 .channel(NioSocketChannel.class)
@@ -94,9 +104,16 @@ class AttachmentTransferClient {
         return result;
     }
 
+    private String encrypt(final String message) {
+        if (encryptionManager != null) {
+            return encryptionManager.encrypt(message);
+        }
+        return message;
+    }
+
     public void requestFile(final Path file) {
         try {
-            channel.writeAndFlush(NettyTransferHandler.FILE_REQUEST + file.toString() + '\n').sync();
+            channel.writeAndFlush(encrypt(NettyTransferHandler.FILE_REQUEST + file.toString()) + '\n').sync();
         } catch (final InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
@@ -104,7 +121,7 @@ class AttachmentTransferClient {
 
     public void deleteFile(final String attachment) {
         try {
-            channel.writeAndFlush(NettyTransferHandler.DELETE + Paths.get(attachment).getFileName() + '\n').sync();
+            channel.writeAndFlush(encrypt(NettyTransferHandler.DELETE + Paths.get(attachment).getFileName()) + '\n').sync();
         } catch (final InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }

@@ -31,6 +31,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.engine.AttachmentUtils;
+import jgnash.util.EncryptionManager;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
@@ -68,28 +69,39 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
 
     private final Path attachmentPath;
 
+    private EncryptionManager encryptionManager;
+
     /**
      * Netty Handler.  The specified path may be a temporary location for clients or a persistent location for servers.
      *
      * @param attachmentPath Path for attachments.
      */
-    public NettyTransferHandler(final Path attachmentPath) {
+    public NettyTransferHandler(final Path attachmentPath, final EncryptionManager encryptionManager) {
         this.attachmentPath = attachmentPath;
+        this.encryptionManager = encryptionManager;
     }
 
     @Override
     public void channelRead0(final ChannelHandlerContext ctx, final String msg) {
 
-        if (msg.startsWith(FILE_REQUEST)) {
-            sendFile(ctx, attachmentPath + File.separator + msg.substring(FILE_REQUEST.length()));
-        } else if (msg.startsWith(FILE_STARTS)) {
-            openOutputStream(msg.substring(FILE_STARTS.length()));
-        } else if (msg.startsWith(FILE_CHUNK)) {
-            writeOutputStream(msg.substring(FILE_CHUNK.length()));
-        } else if (msg.startsWith(FILE_ENDS)) {
-            closeOutputStream(msg.substring(FILE_ENDS.length()));
-        } else if (msg.startsWith(DELETE)) {
-            deleteFile(msg.substring(FILE_ENDS.length()));
+        final String plainMessage;
+
+        if (encryptionManager != null) {
+            plainMessage = encryptionManager.decrypt(msg);
+        } else {
+            plainMessage = msg;
+        }
+
+        if (plainMessage.startsWith(FILE_REQUEST)) {
+            sendFile(ctx, attachmentPath + File.separator + plainMessage.substring(FILE_REQUEST.length()));
+        } else if (plainMessage.startsWith(FILE_STARTS)) {
+            openOutputStream(plainMessage.substring(FILE_STARTS.length()));
+        } else if (plainMessage.startsWith(FILE_CHUNK)) {
+            writeOutputStream(plainMessage.substring(FILE_CHUNK.length()));
+        } else if (plainMessage.startsWith(FILE_ENDS)) {
+            closeOutputStream(plainMessage.substring(FILE_ENDS.length()));
+        } else if (plainMessage.startsWith(DELETE)) {
+            deleteFile(plainMessage.substring(FILE_ENDS.length()));
         }
     }
 
@@ -125,18 +137,25 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
         ctx.close();
     }
 
+    private String encrypt(final String message) {
+        if (encryptionManager != null) {
+            return encryptionManager.encrypt(message);
+        }
+        return message;
+    }
+
     public void sendFile(final Channel channel, final String fileName) {
         Path path = Paths.get(fileName);
 
         if (Files.exists(path)) {
 
             if (Files.isDirectory(path)) {
-                channel.writeAndFlush(ERROR + "Not a file: " + path + '\n');
+                channel.writeAndFlush(encrypt(ERROR + "Not a file: " + path) + '\n');
                 return;
             }
 
             try (InputStream fileInputStream = Files.newInputStream(path)) {
-                channel.writeAndFlush(FILE_STARTS + path.getFileName() + ":" + Files.size(path) + '\n');
+                channel.writeAndFlush(encrypt(FILE_STARTS + path.getFileName() + ":" + Files.size(path)) + '\n');
 
                 byte[] bytes = new byte[TRANSFER_BUFFER_SIZE];  // leave room for base 64 expansion
 
@@ -144,18 +163,18 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
 
                 while ((bytesRead = fileInputStream.read(bytes)) != -1) {
                     if (bytesRead > 0) {
-                        channel.write(FILE_CHUNK + path.getFileName() + ':');
-                        channel.write(new String(Base64.encodeBase64(Arrays.copyOfRange(bytes, 0, bytesRead))) + '\n');
+                        channel.write(encrypt(FILE_CHUNK + path.getFileName() + ':' +
+                                new String(Base64.encodeBase64(Arrays.copyOfRange(bytes, 0, bytesRead)))) + '\n');
                     }
                 }
-                channel.writeAndFlush(FILE_ENDS + path.getFileName() + '\n').sync();
+                channel.writeAndFlush(encrypt(FILE_ENDS + path.getFileName()) + '\n').sync();
 
             } catch (IOException | InterruptedException e) {
                 logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
         } else {
             try {
-                channel.writeAndFlush(ERROR + "File not found: " + path + '\n').sync();
+                channel.writeAndFlush(encrypt(ERROR + "File not found: " + path) + '\n').sync();
             } catch (final InterruptedException e) {
                 logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
