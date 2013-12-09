@@ -78,7 +78,7 @@ public class MessageBusServer {
 
     private final ChannelGroup channelGroup = new DefaultChannelGroup("all-connected", GlobalEventExecutor.INSTANCE);
 
-    private EncryptionManager filter;
+    private EncryptionManager encryptionManager;
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
@@ -100,9 +100,9 @@ public class MessageBusServer {
 
         boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty("ssl"));
 
-        // If a user and password has been specified, enable an encryption filter
+        // If a user and password has been specified, enable an encryption encryptionManager
         if (useSSL && password != null && password.length > 0) {
-            filter = new EncryptionManager(password);
+            encryptionManager = new EncryptionManager(password);
         }
 
         eventLoopGroup = new NioEventLoopGroup();
@@ -180,8 +180,8 @@ public class MessageBusServer {
      * @return encrypted message
      */
     private String encrypt(final String message) {
-        if (filter != null) {
-            return filter.encrypt(message);
+        if (encryptionManager != null) {
+            return encryptionManager.encrypt(message);
         }
         return message;
     }
@@ -189,8 +189,8 @@ public class MessageBusServer {
     private String decrypt(final String message) {
         String plainMessage;
 
-        if (filter != null) {
-            plainMessage = filter.decrypt(message);
+        if (encryptionManager != null) {
+            plainMessage = encryptionManager.decrypt(message);
         } else {
             plainMessage = message;
         }

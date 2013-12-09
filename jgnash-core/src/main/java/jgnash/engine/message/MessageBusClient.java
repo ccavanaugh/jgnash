@@ -74,7 +74,7 @@ class MessageBusClient {
 
     private DataStoreType dataBaseType;
 
-    private EncryptionManager filter = null;
+    private EncryptionManager encryptionManager = null;
 
     private NioEventLoopGroup eventLoopGroup;
 
@@ -111,9 +111,9 @@ class MessageBusClient {
 
         boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty("ssl"));
 
-        // If a user and password has been specified, enable an encryption filter
+        // If a user and password has been specified, enable an encryption encryptionManager
         if (useSSL && password != null && password.length > 0) {
-            filter = new EncryptionManager(password);
+            encryptionManager = new EncryptionManager(password);
         }
 
         eventLoopGroup = new NioEventLoopGroup();
@@ -167,8 +167,8 @@ class MessageBusClient {
         private String decrypt(final Object object) {
             String plainMessage;
 
-            if (filter != null) {
-                plainMessage = filter.decrypt(object.toString());
+            if (encryptionManager != null) {
+                plainMessage = encryptionManager.decrypt(object.toString());
             } else {
                 plainMessage = object.toString();
             }
@@ -247,8 +247,8 @@ class MessageBusClient {
 
     private synchronized void sendRemoteMessage(final String message) {
         try {
-            if (filter != null) {
-                channel.writeAndFlush(filter.encrypt(message) + MessageBusServer.EOL_DELIMITER).sync();
+            if (encryptionManager != null) {
+                channel.writeAndFlush(encryptionManager.encrypt(message) + MessageBusServer.EOL_DELIMITER).sync();
             } else {
                 channel.writeAndFlush(message + MessageBusServer.EOL_DELIMITER).sync();
             }
