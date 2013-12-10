@@ -27,8 +27,11 @@ import java.nio.file.Paths;
 import java.util.concurrent.Future;
 
 import jgnash.engine.jpa.JpaH2DataStore;
+import jgnash.engine.jpa.JpaHsqlDataStore;
 import jgnash.engine.jpa.JpaNetworkServer;
+import jgnash.util.EncryptionManager;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -43,17 +46,20 @@ import static org.junit.Assert.fail;
  */
 public class FileTransferTest {
 
-    private static final char[] PASSWORD = new char[]{};
-
-    private static final int PORT = 5300;
-
     @Test
-    public void networkedTest() throws Exception {
+    public void encryptedNetworkedTest() throws Exception {
+
+        final char[] password = new char[]{'p','a','s','s','w','o','r','d'};
+        final int port = 5300;
+
+        System.setProperty(EncryptionManager.ENCRYPTION_FLAG, "true");
+        System.setProperty("ssl", "true");
 
         String testFile = null;
 
         try {
-            File temp = File.createTempFile("jpa-test", "." + JpaH2DataStore.FILE_EXT);
+            File temp = File.createTempFile("jpa-test-e", "." + JpaH2DataStore.FILE_EXT);
+            Assert.assertTrue(temp.delete());
             temp.deleteOnExit();
             testFile = temp.getAbsolutePath();
         } catch (IOException e1) {
@@ -62,7 +68,7 @@ public class FileTransferTest {
         }
 
         // Start an engine and close so we have a populated file
-        EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD, DataStoreType.H2_DATABASE);
+        EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, password, DataStoreType.H2_DATABASE);
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
         final JpaNetworkServer networkServer = new JpaNetworkServer();
@@ -74,21 +80,103 @@ public class FileTransferTest {
             @Override
             public void run() {
                 System.out.println("starting server");
-                networkServer.startServer(serverFile, PORT, PASSWORD);
+                networkServer.startServer(serverFile, port, password);
             }
         }.start();
 
         Thread.sleep(4000);
 
         try {
-            Engine e = EngineFactory.bootClientEngine("localhost", PORT, PASSWORD, EngineFactory.DEFAULT);
+            Engine e = EngineFactory.bootClientEngine("localhost", port, password, EngineFactory.DEFAULT);
 
             Account account = new Account(AccountType.CASH, e.getDefaultCurrency());
             account.setName("test");
             e.addAccount(e.getRootAccount(), account);
 
-            //File tempFile = new File(Object.class.getResource("/jgnash-logo.png").toURI());
-            //assertTrue(Files.exists(tempFile.toPath()));
+            Path tempAttachment = Paths.get(Object.class.getResource("/jgnash-logo.png").toURI());
+            assertTrue(Files.exists(tempAttachment));
+
+            e.addAttachment(tempAttachment, true);  // push a copy of the attachment
+
+            Thread.sleep(1000); // wait for transfer to finish
+
+            Path newPath = Paths.get(AttachmentUtils.getAttachmentDirectory(Paths.get(testFile)) + File.separator + tempAttachment.getFileName());
+            newPath.toFile().deleteOnExit();
+
+            // Verify copy has occurred
+            assertEquals(tempAttachment.toFile().length(), newPath.toFile().length()); // same length?
+            assertNotEquals(tempAttachment.toString(), newPath.toString()); // different files?
+
+
+            // Create a new temp file in the directory
+            tempAttachment = Files.createTempFile(AttachmentUtils.getAttachmentDirectory(Paths.get(testFile)), "tempfile2-", ".txt");
+            tempAttachment.toFile().deleteOnExit();
+
+            //write it
+            BufferedWriter bw = Files.newBufferedWriter(tempAttachment, Charset.defaultCharset());
+            bw.write("This is the temporary file content 2.");
+            bw.close();
+
+            Future<Path> pathFuture = e.getAttachment(tempAttachment.getFileName().toString());
+
+            Path remoteTemp = pathFuture.get();
+
+            assertTrue(Files.exists(remoteTemp));
+            assertNotEquals(remoteTemp.toString(), tempAttachment.toString());
+
+            EngineFactory.closeEngine(EngineFactory.DEFAULT);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+
+    }
+
+    @Test
+    public void networkedTest() throws Exception {
+        final char[] password = new char[]{};
+        final int port = 5400;
+
+        System.setProperty(EncryptionManager.ENCRYPTION_FLAG, "false");
+        System.setProperty("ssl", "false");
+
+        String testFile = null;
+
+        try {
+            File temp = File.createTempFile("jpa-test", "." + JpaHsqlDataStore.FILE_EXT);
+            Assert.assertTrue(temp.delete());
+            temp.deleteOnExit();
+            testFile = temp.getAbsolutePath();
+        } catch (IOException e1) {
+            System.err.println(e1.toString());
+            fail();
+        }
+
+        // Start an engine and close so we have a populated file
+        EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, password, DataStoreType.HSQL_DATABASE);
+        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+        final JpaNetworkServer networkServer = new JpaNetworkServer();
+
+        final String serverFile = testFile;
+
+        new Thread() {
+
+            @Override
+            public void run() {
+                System.out.println("starting server");
+                networkServer.startServer(serverFile, port, password);
+            }
+        }.start();
+
+        Thread.sleep(4000);
+
+        try {
+            Engine e = EngineFactory.bootClientEngine("localhost", port, password, EngineFactory.DEFAULT);
+
+            Account account = new Account(AccountType.CASH, e.getDefaultCurrency());
+            account.setName("test");
+            e.addAccount(e.getRootAccount(), account);
 
             Path tempAttachment = Paths.get(Object.class.getResource("/jgnash-logo.png").toURI());
             assertTrue(Files.exists(tempAttachment));
