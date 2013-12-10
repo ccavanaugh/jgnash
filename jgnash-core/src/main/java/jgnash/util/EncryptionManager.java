@@ -42,6 +42,8 @@ public class EncryptionManager {
 
     private final Key key;
 
+    public static final String ENCRYPTION_FLAG = "encrypt";
+
     private static final String ENCRYPTION_ALGORITHM = "AES";
 
     public static final String DECRYPTION_ERROR_TAG = "<DecryptError>";

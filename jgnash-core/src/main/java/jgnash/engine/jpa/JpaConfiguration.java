@@ -18,6 +18,7 @@
 package jgnash.engine.jpa;
 
 import jgnash.engine.DataStoreType;
+import jgnash.util.EncryptionManager;
 import jgnash.util.FileUtils;
 
 import java.util.Properties;
@@ -118,7 +119,7 @@ class JpaConfiguration {
 
         Properties properties = getBaseProperties(database);
 
-        boolean useSSL = Boolean.parseBoolean(properties.getProperty("ssl"));
+        boolean useSSL = Boolean.parseBoolean(properties.getProperty(EncryptionManager.ENCRYPTION_FLAG));
 
         switch (database) {
             case H2_DATABASE:

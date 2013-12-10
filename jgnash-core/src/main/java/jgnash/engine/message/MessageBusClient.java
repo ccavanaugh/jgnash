@@ -109,7 +109,7 @@ class MessageBusClient {
     public boolean connectToServer(final char[] password) {
         boolean result = false;
 
-        boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty("ssl"));
+        boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty(EncryptionManager.ENCRYPTION_FLAG));
 
         // If a user and password has been specified, enable an encryption encryptionManager
         if (useSSL && password != null && password.length > 0) {

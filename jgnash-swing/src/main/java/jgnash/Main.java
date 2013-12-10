@@ -25,6 +25,7 @@ import jgnash.net.security.AbstractYahooParser;
 import jgnash.ui.MainFrame;
 import jgnash.ui.UIApplication;
 import jgnash.ui.actions.OpenAction;
+import jgnash.util.EncryptionManager;
 import jgnash.util.FileUtils;
 import jgnash.util.OS;
 import jgnash.util.Resource;
@@ -93,8 +94,8 @@ public final class Main {
     @Option(name = "-password", usage = "Client or Server password")
     private String password;
 
-    @Option(name = "-ssl", usage = "Enable ssl for secure communications")
-    private boolean ssl;
+    @Option(name = "-encrypt", usage = "Enable encryption for network communication")
+    private boolean encrypt;
 
     @Option(name = "-enableEDT", usage = "Check for EDT violations")
     private static boolean enableEDT;
@@ -228,8 +229,9 @@ public final class Main {
                 }
             }
 
-            // Set ssl as a system property
-            System.getProperties().put("ssl", Boolean.toString(ssl));
+            // Set encrypt as a system property
+            System.getProperties().put(EncryptionManager.ENCRYPTION_FLAG, Boolean.toString(encrypt));
+            System.getProperties().put("ssl", Boolean.toString(encrypt));
 
             if (port <= 0) {
                 port = JpaNetworkServer.DEFAULT_PORT;

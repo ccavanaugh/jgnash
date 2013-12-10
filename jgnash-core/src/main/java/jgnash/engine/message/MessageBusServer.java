@@ -98,10 +98,10 @@ public class MessageBusServer {
         this.dataBasePath = dataBasePath;
         this.dataStoreType = dataStoreType.name();
 
-        boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty("ssl"));
+        boolean useEncryption = Boolean.parseBoolean(System.getProperties().getProperty(EncryptionManager.ENCRYPTION_FLAG));
 
         // If a user and password has been specified, enable an encryption encryptionManager
-        if (useSSL && password != null && password.length > 0) {
+        if (useEncryption && password != null && password.length > 0) {
             encryptionManager = new EncryptionManager(password);
         }
 

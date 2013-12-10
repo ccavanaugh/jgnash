@@ -29,6 +29,7 @@ import jgnash.engine.concurrent.DistributedLockServer;
 import jgnash.engine.message.LocalServerListener;
 import jgnash.engine.message.MessageBusServer;
 import jgnash.util.DefaultDaemonThreadFactory;
+import jgnash.util.EncryptionManager;
 import jgnash.util.FileMagic;
 import jgnash.util.FileUtils;
 
@@ -111,7 +112,7 @@ public class JpaNetworkServer {
     }
 
     private boolean run(final DataStoreType dataStoreType, final String fileName, final int port, final char[] password) {
-        boolean result = true;
+        boolean result = false;
 
         DistributedLockServer distributedLockServer = new DistributedLockServer(port + 2);
         distributedLockServer.startServer();
@@ -202,7 +203,7 @@ public class JpaNetworkServer {
         stop = false;
 
         try {
-            boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty("ssl"));
+            boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty(EncryptionManager.ENCRYPTION_FLAG));
 
             List<String> serverArgs = new ArrayList<>();
 
