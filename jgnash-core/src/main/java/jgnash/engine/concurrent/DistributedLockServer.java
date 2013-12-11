@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.util.EncodeDecode;
+import jgnash.util.EncryptionManager;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -78,11 +79,28 @@ public class DistributedLockServer {
 
     private static final String EOL_DELIMITER = "\r\n";
 
+    private EncryptionManager encryptionManager = null;
+
     public DistributedLockServer(final int port) {
         this.port = port;
     }
 
-    private void processMessage(final ChannelHandlerContext ctx, final String message) {
+    private String encrypt(final String message) {
+        if (encryptionManager != null) {
+            return encryptionManager.encrypt(message);
+        }
+        return message;
+    }
+
+    private void processMessage(final ChannelHandlerContext ctx, final String msg) {
+
+        final String message;
+
+        if (encryptionManager != null) {
+            message = encryptionManager.decrypt(msg);
+        } else {
+            message = msg;
+        }
 
         // Look for a uuid announcement for a channel
         if (message.startsWith(DistributedLockManager.UUID_PREFIX)) {
@@ -132,7 +150,7 @@ public class DistributedLockServer {
 
             // return the message as an acknowledgment lock state has changed
             if (ctx.channel().isOpen()) {
-                ctx.writeAndFlush(message + EOL_DELIMITER).sync();
+                ctx.writeAndFlush(encrypt(message) + EOL_DELIMITER).sync();
             }
         } catch (final Exception e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
@@ -150,8 +168,15 @@ public class DistributedLockServer {
         return readWriteLock;
     }
 
-    public boolean startServer() {
+    public boolean startServer(final char[] password) {
         boolean result = false;
+
+        boolean useEncryption = Boolean.parseBoolean(System.getProperties().getProperty(EncryptionManager.ENCRYPTION_FLAG));
+
+        // If a user and password has been specified, enable an encryption encryptionManager
+        if (useEncryption && password != null && password.length > 0) {
+            encryptionManager = new EncryptionManager(password);
+        }
 
         eventLoopGroup = new NioEventLoopGroup();
 

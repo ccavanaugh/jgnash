@@ -38,21 +38,23 @@ import static org.junit.Assert.assertTrue;
  */
 public class DistributedLockTest {
 
-    private static final int PORT = 5002;
+    static final int PORT = 5002;
 
-    private DistributedLockServer server;
+    DistributedLockServer server;
 
-    private DistributedLockManager manager;
+    DistributedLockManager manager;
 
     private static final Logger logger = Logger.getLogger(DistributedLockTest.class.getName());
 
     @Before
     public void setUp() {
+        final char[] password = new char[]{};
+
         server = new DistributedLockServer(PORT);
-        server.startServer();
+        server.startServer(password);
 
         manager = new DistributedLockManager("localhost", PORT);
-        manager.connectToServer();
+        manager.connectToServer(password);
     }
 
     @After

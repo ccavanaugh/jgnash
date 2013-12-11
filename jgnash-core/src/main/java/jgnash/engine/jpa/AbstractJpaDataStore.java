@@ -105,7 +105,7 @@ public abstract class AbstractJpaDataStore implements DataStore {
 
         if (em != null) {
             distributedLockManager = new DistributedLockManager(host, port + 2);
-            distributedLockManager.connectToServer();
+            distributedLockManager.connectToServer(password);
 
             distributedAttachmentManager = new DistributedAttachmentManager(host, port + 3);
             distributedAttachmentManager.connectToServer(password);

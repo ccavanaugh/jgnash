@@ -33,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.net.ConnectionFactory;
+import jgnash.util.EncryptionManager;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -85,6 +86,8 @@ public class DistributedLockManager implements LockManager {
 
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
+    private EncryptionManager encryptionManager = null;
+
     /**
      * Unique id to differentiate remote threads
      */
@@ -99,13 +102,27 @@ public class DistributedLockManager implements LockManager {
         this.port = port;
     }
 
+    private String encrypt(final String message) {
+        if (encryptionManager != null) {
+            return encryptionManager.encrypt(message);
+        }
+        return message;
+    }
+
     /**
      * Starts the connection with the lock server
      *
      * @return <code>true</code> if successful
      */
-    public boolean connectToServer() {
+    public boolean connectToServer(final char[] password) {
         boolean result = false;
+
+        boolean useEncryption = Boolean.parseBoolean(System.getProperties().getProperty(EncryptionManager.ENCRYPTION_FLAG));
+
+        // If a user and password has been specified, enable an encryption encryptionManager
+        if (useEncryption && password != null && password.length > 0) {
+            encryptionManager = new EncryptionManager(password);
+        }
 
         final Bootstrap bootstrap = new Bootstrap();
 
@@ -121,7 +138,7 @@ public class DistributedLockManager implements LockManager {
             // Start the connection attempt.
             channel = bootstrap.connect(host, port).sync().channel();
 
-            channel.writeAndFlush(UUID_PREFIX + uuid + EOL_DELIMITER).sync();   // send this channels uuid
+            channel.writeAndFlush(encrypt(UUID_PREFIX + uuid) + EOL_DELIMITER).sync();   // send this channels uuid
 
             result = true;
             logger.info("Connection made with Distributed Lock Server");
@@ -204,7 +221,7 @@ public class DistributedLockManager implements LockManager {
             try {
 
                 // send the message to the server and wait until it if flushed
-                channel.writeAndFlush(lockMessage + EOL_DELIMITER).sync();
+                channel.writeAndFlush(encrypt(lockMessage) + EOL_DELIMITER).sync();
 
                 for (int i = 0; i < 2; i++) {
                     result = responseLatch.await(45L, TimeUnit.SECONDS);
@@ -236,7 +253,15 @@ public class DistributedLockManager implements LockManager {
 
     void processMessage(final String lockMessage) {
 
-        //logger.info(lockMessage);
+        final String plainMessage;
+
+        if (encryptionManager != null) {
+            plainMessage = encryptionManager.decrypt(lockMessage);
+        } else {
+            plainMessage = lockMessage;
+        }
+
+        //logger.info(plainMessage);
 
         /** lock_action, lock_id, thread_id, lock_type */
         // unlock,account,3456384756384563,read
@@ -245,10 +270,10 @@ public class DistributedLockManager implements LockManager {
         latchLock.lock();
 
         try {
-            final CountDownLatch responseLatch = getLatch(lockMessage);
+            final CountDownLatch responseLatch = getLatch(plainMessage);
 
             responseLatch.countDown();  // this should release the responseLatch allowing a blocked thread to continue
-            latchMap.remove(lockMessage);    // remove the used up latch
+            latchMap.remove(plainMessage);    // remove the used up latch
         } finally {
             latchLock.unlock();
         }

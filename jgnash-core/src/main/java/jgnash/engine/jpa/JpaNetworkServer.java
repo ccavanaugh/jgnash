@@ -115,7 +115,7 @@ public class JpaNetworkServer {
         boolean result = false;
 
         DistributedLockServer distributedLockServer = new DistributedLockServer(port + 2);
-        distributedLockServer.startServer();
+        distributedLockServer.startServer(password);
 
         AttachmentTransferServer attachmentTransferServer = new AttachmentTransferServer(port + 3, AttachmentUtils.getAttachmentDirectory(Paths.get(fileName)));
         attachmentTransferServer.startServer(password);
@@ -271,7 +271,7 @@ public class JpaNetworkServer {
             em = factory.createEntityManager();
 
             distributedLockManager = new DistributedLockManager("localhost", port + 2);
-            distributedLockManager.connectToServer();
+            distributedLockManager.connectToServer(password);
 
             distributedAttachmentManager = new DistributedAttachmentManager("localhost", port + 3);
             distributedAttachmentManager.connectToServer(password);
