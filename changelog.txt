@@ -28,7 +28,7 @@ appears to be a JDK and Google interaction bug.
 
 Release 2.13.3
 ----------------------
-12/05/13 Client/Server communications may be fully encrypted if enabled
+12/05/13 Client/Server communications are now fully encrypted if enabled from command line for supported locales.
 11/29/13 Allow loading of a file with duplicate Config objects.  The file will be corrected at load time.
 
 Release 2.13.2
