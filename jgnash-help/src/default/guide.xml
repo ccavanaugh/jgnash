@@ -110,8 +110,8 @@
         appearance of jGnash depending on the version installed and fonts
         available. </para>
 
-        <para>If in doubt, install <trademark>Java</trademark> 7 or newer and configure your system
-        accordingly. </para>
+        <para>If in doubt, install <trademark>Java</trademark> 7 or newer and
+        configure your system accordingly. </para>
       </sidebar>
 
       <para>After Java is installed, you are ready to install jGnash. Simply
@@ -162,7 +162,7 @@
       <sidebar>
         <para>If the license agreement sounds daunting, take a look at the
         license agreements of commercially available personal finance
-        applications and you will see a similar agreement. Myself and just
+        applications and you will see similar agreements. Myself and just
         about every other person making software available for free or
         purchase tries their best to ensure the software they create works
         well and as intended. Sometimes bugs do creep in and it does not work
@@ -241,13 +241,13 @@
             </menuchoice> command and follow the prompts in the new file
           wizard. When given the choice to select the<link
           linkend="FileTypes">storage type</link>, leave it as the default
-          value for now. A default filename and location will be provided that
+          value for now. A default file name and location will be provided that
           you can change if desired. If the file already exists, you will be
           warned you are about to overwrite it. </para>
         </listitem>
 
         <listitem>
-          <para>After selecting the storage type and filename, you will be
+          <para>After selecting the storage type and file name, you will be
           asked to choose the default currency. The default currency can be
           changed at a latter time, and if for some reason your currency of
           choice is not available, you can create a custom currency and set it
@@ -755,10 +755,17 @@
 
         <para>The advantage of the relational database outside the requirement
         for client / server capability is the ability to use several available
-        tools to browse and query your jGnash data. </para>
+        tools to browse and query your jGnash data. Also, a relational
+        database will be more fault tolerant of system crashes or power
+        outages vs. use of an XML or Binary file.</para>
 
         <para>The disadvantage of the relational database is a bit slower
         operation and more memory consumption. </para>
+
+        <para>If using the H2 Database and operating over a network using
+        Client/Server mode, you have the option of enabling encryption for
+        network communication. This will not encrypt your database file. See
+        the Command line options for specifics.</para>
 
         <note>
           <title>Database Administrator</title>
@@ -1081,8 +1088,8 @@
         <tgroup cols="2">
           <tbody>
             <row>
-              <entry>Object Database <emphasis>(Depreciated in release 2.12.0,
-              removed in the later releases) </emphasis> </entry>
+              <entry>Object Database <emphasis>(Depreciated in 2.12.0, removed
+              in the 2.13.0 and later releases) </emphasis> </entry>
 
               <entry>.jdb</entry>
             </row>
@@ -1133,7 +1140,7 @@
 
       <para>By default, when a new relational database is created, a password
       is not specified. This allows you to password protect your file. This
-      does not encrypt your data, so a person wit the right tools can easily
+      does not encrypt your data, so a person with the right tools can easily
       access your data. It is useful for casual protection only. If encryption
       is important, use OS level encryption capability available on any modern
       operating system. This is disabled while a file is open. </para>
@@ -1350,11 +1357,16 @@
       </varlistentry>
 
       <varlistentry>
-        <term>-ssl</term>
+        <term>-encrypt</term>
 
         <listitem>
           <para>Enables encrypted client / server communication if supported
-          by the relational database </para>
+          by the relational database (H2 Only). Remote file transfers and
+          client communications, etc will be encrypted. This will not encrypt
+          your database file. A password must be used, otherwise encryption
+          will be disabled. Depending on your locale and export laws,
+          encryption may not be available and will fail if not supported in
+          your installed JVM.</para>
         </listitem>
       </varlistentry>
 
