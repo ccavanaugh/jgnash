@@ -17,13 +17,16 @@
  */
 package jgnash.engine.budget;
 
-import jgnash.engine.*;
-import org.junit.Test;
-
 import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import jgnash.engine.Account;
+import jgnash.engine.AccountType;
+import jgnash.engine.CurrencyNode;
+import jgnash.engine.DataStoreType;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+
+import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
@@ -31,47 +34,41 @@ import static org.junit.Assert.assertTrue;
  * JUnit test class to export a <code>BudgetResultsModel</code>
  *
  * @author Craig Cavanaugh
- *
  */
 public class BudgetResultsExportTest {
-
-    //public static final String USER = "";
 
     private static final char[] PASSWORD = new char[]{};
 
     @Test
     public void testExportBudgetResultsModel() throws Exception {
 
+        File file = File.createTempFile("budget", ".xml");
+        file.deleteOnExit();
 
-        try {
-            File file = File.createTempFile("budget", "");
+        Engine e = EngineFactory.bootLocalEngine(file.getName(), EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
+        CurrencyNode node = e.getDefaultCurrency();
 
-            Engine e = EngineFactory.bootLocalEngine(file.getName(), EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
-            CurrencyNode node = e.getDefaultCurrency();
+        Account account1 = new Account(AccountType.EXPENSE, node);
+        account1.setName("Expense 1");
+        e.addAccount(e.getRootAccount(), account1);
 
-            Account account1 = new Account(AccountType.EXPENSE, node);
-            account1.setName("Expense 1");
-            e.addAccount(e.getRootAccount(), account1);
-            
-            Account account2 = new Account(AccountType.EXPENSE, node);
-            account2.setName("Expense 2");
-            e.addAccount(e.getRootAccount(), account2);
+        Account account2 = new Account(AccountType.EXPENSE, node);
+        account2.setName("Expense 2");
+        e.addAccount(e.getRootAccount(), account2);
 
-            Budget budget = new Budget();
-            budget.setName("My Budget");
-            budget.setDescription("Test");
-            budget.setBudgetPeriod(BudgetPeriod.MONTHLY);
+        Budget budget = new Budget();
+        budget.setName("My Budget");
+        budget.setDescription("Test");
+        budget.setBudgetPeriod(BudgetPeriod.MONTHLY);
 
-            e.addBudget(budget);
+        e.addBudget(budget);
 
-            BudgetResultsModel model = new BudgetResultsModel(budget, 2012, node);                    
+        BudgetResultsModel model = new BudgetResultsModel(budget, 2012, node);
 
-            BudgetResultsExport.exportBudgetResultsModel(new File(System.getProperty("user.home")+File.separator + "testworkbook.xls"), model);
+        BudgetResultsExport.exportBudgetResultsModel(new File(System.getProperty("java.io.tmpdir") + File.separator + "testworkbook.xls"), model);
 
-            file.delete();
-        } catch (IOException e) {        
-            Logger.getLogger(BudgetResultsExportTest.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-        }
+
+        //file.delete();
 
         assertTrue(true);
     }
