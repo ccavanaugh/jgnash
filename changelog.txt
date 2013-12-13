@@ -26,6 +26,10 @@ KNOWN ISSUES
 Exceptions occur when entering Chinese text with auto complete enabled in conjunction with Google Input tools. This
 appears to be a JDK and Google interaction bug.
 
+Release 2.13.4
+----------------------
+12/07/13 Changed the name of the Budget Column from "Change" to "Actual" to clarify intent.
+
 Release 2.13.3
 ----------------------
 12/05/13 Client/Server communications are now fully encrypted if enabled from command line for supported locales.

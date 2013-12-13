@@ -277,7 +277,7 @@ public class AccountRowFooterPanel extends JPanel {
         private transient TableModelListener listener;
 
         private final String[] columnNames = {Resource.get().getString("Column.Budgeted"),
-            Resource.get().getString("Column.Change"), Resource.get().getString("Column.Remaining")};
+            Resource.get().getString("Column.Actual"), Resource.get().getString("Column.Remaining")};
 
         AccountRowSummaryModel(final ExpandingBudgetTableModel model) {
             this.model = model;

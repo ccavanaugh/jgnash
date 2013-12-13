@@ -149,7 +149,7 @@ public class BudgetResultsExport {
                 c.setCellStyle(headerStyle);
 
                 c = r.createCell(i * 3 + 2);
-                c.setCellValue(createHelper.createRichTextString(rb.getString("Column.Change")));
+                c.setCellValue(createHelper.createRichTextString(rb.getString("Column.Actual")));
                 c.setCellStyle(headerStyle);
 
                 c = r.createCell(i * 3 + 3);

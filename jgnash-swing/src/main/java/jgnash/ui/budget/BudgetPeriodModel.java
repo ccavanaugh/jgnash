@@ -82,7 +82,7 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
     private static final Logger logger = Logger.getLogger(BudgetPeriodModel.class.getName());
 
     private final String[] columnNames = {Resource.get().getString("Column.Budgeted"),
-            Resource.get().getString("Column.Change"), Resource.get().getString("Column.Remaining")};
+            Resource.get().getString("Column.Actual"), Resource.get().getString("Column.Remaining")};
 
     static {
         logger.setLevel(Level.ALL);
