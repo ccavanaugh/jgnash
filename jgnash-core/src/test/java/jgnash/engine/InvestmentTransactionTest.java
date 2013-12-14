@@ -31,23 +31,15 @@ public class InvestmentTransactionTest {
 
     private Engine e;
 
-    private CurrencyNode defaultCurrency;
-
-    private CurrencyNode cadCurrency;
-
     private Account incomeAccount;
 
     private Account expenseAccount;
 
     private Account usdBankAccount;
 
-    private Account cadBankAccount;
-
     private Account equityAccount;
 
     private Account investAccount;
-
-    private Account liabilityAccount;
 
     private SecurityNode securityNode1;
 
@@ -66,12 +58,12 @@ public class InvestmentTransactionTest {
             e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
 
             // Creating currencies
-            defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
+            CurrencyNode defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
 
             e.addCurrency(defaultCurrency);
             e.setDefaultCurrency(defaultCurrency);
 
-            cadCurrency = DefaultCurrencies.buildCustomNode("CAD");
+            CurrencyNode cadCurrency = DefaultCurrencies.buildCustomNode("CAD");
             e.addCurrency(cadCurrency);
 
             // Creating securities
@@ -93,7 +85,7 @@ public class InvestmentTransactionTest {
             usdBankAccount.setName("USD Bank Account");
             e.addAccount(e.getRootAccount(), usdBankAccount);
 
-            cadBankAccount = new Account(AccountType.BANK, cadCurrency);
+            Account cadBankAccount = new Account(AccountType.BANK, cadCurrency);
             cadBankAccount.setName("CAD Bank Account");
             e.addAccount(e.getRootAccount(), cadBankAccount);
 
@@ -101,7 +93,7 @@ public class InvestmentTransactionTest {
             equityAccount.setName("Equity Account");
             e.addAccount(e.getRootAccount(), equityAccount);
 
-            liabilityAccount = new Account(AccountType.LIABILITY, defaultCurrency);
+            Account liabilityAccount = new Account(AccountType.LIABILITY, defaultCurrency);
             liabilityAccount.setName("Liability Account");
             e.addAccount(e.getRootAccount(), liabilityAccount);
 
