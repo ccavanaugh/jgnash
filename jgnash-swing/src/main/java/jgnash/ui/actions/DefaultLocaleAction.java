@@ -100,7 +100,12 @@ public class DefaultLocaleAction extends AbstractAction {
 
         private final String display;
 
-        LocaleObject(Locale locale) {
+        LocaleObject(final Locale locale) {
+
+            if (locale == null) {
+                throw new IllegalArgumentException("Locale may not be null");
+            }
+
             this.locale = locale;
             display = locale.getDisplayName() + " - " + locale.toString() + "  [" + locale.getDisplayName(locale) + "]";
         }
@@ -111,12 +116,12 @@ public class DefaultLocaleAction extends AbstractAction {
         }
 
         @Override
-        public int compareTo(LocaleObject o) {
+        public int compareTo(final LocaleObject o) {
             return toString().compareTo(o.toString());
         }
 
         @Override
-        public boolean equals(Object obj) {
+        public boolean equals(final Object obj) {
             assert obj instanceof LocaleObject;
 
             return equals((LocaleObject) obj);
@@ -125,11 +130,11 @@ public class DefaultLocaleAction extends AbstractAction {
         @Override
         public int hashCode() {
             int hash = 7;
-            hash = 47 * hash + (this.locale != null ? this.locale.hashCode() : 0);
-            return 47 * hash + (this.display != null ? this.display.hashCode() : 0);
+            hash = 47 * hash + this.locale.hashCode();
+            return 47 * hash + this.display.hashCode();
         }
 
-        public boolean equals(LocaleObject obj) {
+        public boolean equals(final LocaleObject obj) {
             return obj.locale.equals(locale);
         }
     }
