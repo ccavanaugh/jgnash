@@ -318,9 +318,8 @@ public class Account extends StoredObject implements Comparable<Account> {
 
                 result = true;
             } else {
-                StringBuilder log = new StringBuilder("Account: " + getName() + '(' + hashCode() + ")" + System.lineSeparator());
-                log.append("Already have transaction ID: ").append(tran.hashCode());
-                logger.severe(log.toString());
+                logger.severe("Account: " + getName() + '(' + hashCode() + ")" + System.lineSeparator()
+                        + "Already have transaction ID: " + tran.hashCode());
             }
 
             return result;
@@ -350,9 +349,8 @@ public class Account extends StoredObject implements Comparable<Account> {
 
                 result = true;
             } else {
-                final StringBuilder log = new StringBuilder("Account: " + getName() + '(' + getUuid() + ")" + System.lineSeparator());
-                log.append("Did not contain transaction ID: ").append(tran.getUuid());
-                Logger.getLogger(Account.class.toString()).severe(log.toString());
+                Logger.getLogger(Account.class.toString()).severe("Account: " + getName() + '(' + getUuid() + ")"
+                        + System.lineSeparator() + "Did not contain transaction ID: " + tran.getUuid());
             }
 
             return result;

@@ -31,7 +31,6 @@ import jgnash.util.Resource;
  * Transaction Factory
  * 
  * @author Craig Cavanaugh
- *
  */
 public class TransactionFactory {
 
@@ -207,11 +206,9 @@ public class TransactionFactory {
         Resource rb = Resource.get();
         CommodityFormat format = CommodityFormat.getFullFormat();
 
-        StringBuilder payee = new StringBuilder(rb.getString("Word.Dividend") + " : ");
-        payee.append(node.getSymbol()).append(" @ ");
-        payee.append(format.format(dividend, incomeAccount.getCurrencyNode()));
+        transaction.setPayee(rb.getString("Word.Dividend") + " : " + node.getSymbol() + " @ "
+                + format.format(dividend, incomeAccount.getCurrencyNode()));
 
-        transaction.setPayee(payee.toString());
         transaction.addTransactionEntry(entry);
 
         if (!cashAccount.equals(investmentAccount)) {
@@ -262,11 +259,9 @@ public class TransactionFactory {
         Resource rb = Resource.get();
         CommodityFormat format = CommodityFormat.getFullFormat();
 
-        StringBuilder payee = new StringBuilder(rb.getString("Word.ReturnOfCapital") + " : ");
-        payee.append(node.getSymbol()).append(" @ ");
-        payee.append(format.format(dividend, incomeAccount.getCurrencyNode()));
+        transaction.setPayee(rb.getString("Word.ReturnOfCapital") + " : " + node.getSymbol() + " @ "
+                + format.format(dividend, incomeAccount.getCurrencyNode()));
 
-        transaction.setPayee(payee.toString());
         transaction.addTransactionEntry(entry);
 
         if (!cashAccount.equals(investmentAccount)) {
@@ -429,13 +424,9 @@ public class TransactionFactory {
         Resource rb = Resource.get();
         CommodityFormat format = CommodityFormat.getFullFormat();
 
-        StringBuilder payee = new StringBuilder(rb.getString("Word.ReInvDiv") + " : ");
-        payee.append(node.getSymbol()).append(' ');
-        payee.append(quantity.toString());
-        payee.append(" @ ");
-        payee.append(format.format(quantity, node));
+        transaction.setPayee(rb.getString("Word.ReInvDiv") + " : " + node.getSymbol() + ' ' + quantity.toString()
+                + " @ " + format.format(quantity, node));
 
-        transaction.setPayee(payee.toString());
         transaction.addTransactionEntry(entry);
 
         if (!fees.isEmpty()) {
@@ -716,14 +707,8 @@ public class TransactionFactory {
         Resource rb = Resource.get();
         CommodityFormat format = CommodityFormat.getFullFormat();
 
-        StringBuilder payee = new StringBuilder();
-        payee.append(rb.getString(wordProperty)).append(" : ");
-        payee.append(node.getSymbol()).append(' ');
-        payee.append(quantity.toString());
-        payee.append(" @ ");
-        payee.append(format.format(price, node));
-
-        return payee.toString();
+        return rb.getString(wordProperty) + " : " + node.getSymbol() + ' ' + quantity.toString() + " @ "
+                + format.format(price, node);
     }
 
     private TransactionFactory() {

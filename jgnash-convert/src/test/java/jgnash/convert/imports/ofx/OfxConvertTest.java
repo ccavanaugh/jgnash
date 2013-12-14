@@ -37,7 +37,7 @@ public class OfxConvertTest {
     @Test
     public void parseBankOne() {
         
-        try (InputStream stream = new Object().getClass().getResourceAsStream("/bank1.ofx")) {
+        try (InputStream stream = Object.class.getResourceAsStream("/bank1.ofx")) {
             String result = OfxV1ToV2.convertToXML(stream);
 
             System.out.println(result);            

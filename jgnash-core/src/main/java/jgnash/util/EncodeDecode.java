@@ -69,15 +69,8 @@ public class EncodeDecode {
     }*/
 
     public static String encodeRectangle(final Rectangle bounds) {
-        StringBuilder buf = new StringBuilder();
-        buf.append(bounds.x);
-        buf.append(COMMA_DELIMITER);
-        buf.append(bounds.y);
-        buf.append(COMMA_DELIMITER);
-        buf.append(bounds.width);
-        buf.append(COMMA_DELIMITER);
-        buf.append(bounds.height);
-        return buf.toString();
+        return String.valueOf(bounds.x) + COMMA_DELIMITER + bounds.y + COMMA_DELIMITER + bounds.width
+                + COMMA_DELIMITER + bounds.height;
     }
 
     public static Rectangle decodeRectangle(final String bounds) {

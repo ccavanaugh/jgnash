@@ -25,7 +25,7 @@ import javax.persistence.ManyToOne;
 
 /**
  * Investment Transaction Entry
- * 
+ *
  * @author Craig Cavanaugh
  */
 @Entity
@@ -59,10 +59,10 @@ public abstract class AbstractInvestmentTransactionEntry extends TransactionEntr
     /**
      * Calculates the total of the value of the shares, gains, fees, etc. as it
      * pertains to an account.
-     * <p>
+     * <p/>
      * <p/>
      * <b>Not intended for use to calculate account balances</b>
-     * 
+     *
      * @return total resulting total for this entry
      * @see InvestmentTransaction#getTotal(jgnash.engine.Account)
      */
@@ -89,7 +89,7 @@ public abstract class AbstractInvestmentTransactionEntry extends TransactionEntr
     /**
      * Assigns the number of shares for this transaction. The value should be
      * always be a positive value.
-     * 
+     *
      * @param quantity the quantity of securities to assign to this account
      * @see #getSignedQuantity()
      */
@@ -99,7 +99,7 @@ public abstract class AbstractInvestmentTransactionEntry extends TransactionEntr
 
     /**
      * Returns the number of shares assigned to this transaction.
-     * 
+     *
      * @return the quantity of securities for this transaction
      * @see #getSignedQuantity()
      */
@@ -110,26 +110,24 @@ public abstract class AbstractInvestmentTransactionEntry extends TransactionEntr
     /**
      * Returns the number of shares as it would impact the sum of the investment
      * accounts shares. Useful for summing share quantities
-     * 
+     *
      * @return the quantity of securities for this transaction
      */
     public abstract BigDecimal getSignedQuantity();
 
     /**
      * Returns the type of this transaction entry
-     * 
+     *
      * @return the transaction type
      */
     public abstract TransactionType getTransactionType();
 
     @Override
     public String toString() {
-        StringBuilder b = new StringBuilder(super.toString());
 
-        b.append("Security:       ").append(getSecurityNode().getSymbol()).append(System.lineSeparator());
-        b.append("Quantity:       ").append(getQuantity().toPlainString()).append(System.lineSeparator());
-        b.append("Price:          ").append(getPrice().toPlainString()).append(System.lineSeparator());
-
-        return b.toString();
+        return super.toString() + "Security:       " + getSecurityNode().getSymbol()
+                + System.lineSeparator() + "Quantity:       " + getQuantity().toPlainString()
+                + System.lineSeparator() + "Price:          " + getPrice().toPlainString()
+                + System.lineSeparator();
     }
 }

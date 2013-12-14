@@ -236,15 +236,7 @@ class RegisterOptions extends JPanel implements ActionListener {
     }
 
     private static String buildColorString(final Color c) {
-        StringBuilder buf = new StringBuilder("[");
-        buf.append(c.getRed());
-        buf.append(',');
-        buf.append(c.getGreen());
-        buf.append(',');
-        buf.append(c.getBlue());
-        buf.append(']');
-
-        return buf.toString();
+        return "[" + c.getRed() + ',' + c.getGreen() + ',' + c.getBlue() + ']';
     }
 
     private void registerFollowsAccountListAction() {

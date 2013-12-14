@@ -53,10 +53,6 @@ public class QifAccount {
 
     @Override
     public String toString() {
-        StringBuilder buf = new StringBuilder();
-        buf.append("Name: ").append(name).append('\n');
-        buf.append("Type: ").append(type).append('\n');
-        buf.append("Description: ").append(description).append('\n');
-        return buf.toString();
+        return "Name: " + name + '\n' + "Type: " + type + '\n' + "Description: " + description + '\n';
     }
 }
