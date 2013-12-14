@@ -183,11 +183,11 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
         proxy.addMessageListener(messageListener);
     }
 
-    public synchronized void removeMessageListener(final MessageListener messageListener) {
+    /*public synchronized void removeMessageListener(final MessageListener messageListener) {
         proxy.removeMessageListener(messageListener);
 
         unregisterListeners();
-    }
+    }*/
 
     public ExpandingBudgetTableModel getExpandingBudgetTableModel() {
         return expandingBudgetTableModel;
