@@ -44,13 +44,10 @@ import java.util.logging.Logger;
  * to parsing QIF files
  * 
  * @author Craig Cavanaugh
- * 
  */
 public final class QifParser {
 
     private String dateFormat = QifUtils.US_FORMAT;
-
-    private final boolean debug = false;
 
     public final ArrayList<QifCategory> categories = new ArrayList<>();
 
@@ -158,9 +155,8 @@ public final class QifParser {
                 QifAccount acc = new QifAccount(); // "unknown" holding account
                 if (parseAccountTransactions(in, acc)) {
                     accountList.add(acc);
-                    if (debug) {
-                        System.out.println("*** Added account ***");
-                    }
+
+                    logger.finest("*** Added account ***");
                    
                     return true; // only look for transactions for one account
                 }
@@ -200,6 +196,7 @@ public final class QifParser {
                     acc.statementBalance = line.substring(1);
                 } else if (line.startsWith("X")) {
                     // must be GnuCashToQIF... not sure what it is??? ignore it.
+                    logger.warning("Ignoring 'X' attribute" );
                 } else if (line.startsWith("^")) {
                     String peek = in.peekLine();
                     if (peek == null) { // end of the file in empty account list
@@ -281,6 +278,7 @@ public final class QifParser {
                     result = false;
                     break;
                 }
+
                 line = in.readLine();
             }
         } catch (IOException e) {
@@ -370,9 +368,7 @@ public final class QifParser {
                     tran.price = line.substring(1);
                 } else if (line.startsWith("^")) {
                     acc.addTransaction(tran);
-                    if (debug) {
-                        System.out.println("*** Added a Transaction ***");
-                    }
+                    logger.finest("*** Added a Transaction ***");
                     tran = new QifTransaction();
                 } else if (startsWith(line, "!Account")) {
                     in.reset();
@@ -387,9 +383,7 @@ public final class QifParser {
                     QifSplitTransaction split = parseSplitTransaction(in);
                     if (split != null) {
                         tran.addSplit(split);
-                        if (debug) {
-                            System.out.println("*** Added a Split Transaction ***");
-                        }
+                        logger.finest("*** Added a Split Transaction ***");
                     }
                 } else if (line.charAt(0) == '$') {
                     tran.amountTrans = line.substring(1);
@@ -547,9 +541,8 @@ public final class QifParser {
      *            <code>QifReader</code>
      */
     private void parseMemorizedTransactions(final QifReader in) {
-        if (debug) {
-            System.out.println("*** Start: parseMemorizedTransactions ***");
-        }
+        logger.finest("*** Start: parseMemorizedTransactions ***");
+
         String line;
         try {
             line = in.readLine();
