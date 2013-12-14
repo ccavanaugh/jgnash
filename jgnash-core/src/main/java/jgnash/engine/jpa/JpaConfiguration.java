@@ -59,6 +59,10 @@ class JpaConfiguration {
     }
 
     public static Properties getLocalProperties(final DataStoreType database, final String fileName, final char[] password, final boolean readOnly) {
+        if (password == null) {
+            throw new IllegalArgumentException();
+        }
+
         StringBuilder urlBuilder = new StringBuilder();
 
         switch (database) {
@@ -69,7 +73,7 @@ class JpaConfiguration {
 
                 urlBuilder.append(";USER=").append(DEFAULT_USER);
 
-                if (password != null && password.length > 0) {
+                if (password.length > 0) {
                     urlBuilder.append(";PASSWORD=").append(password);
                 }
 
@@ -85,7 +89,7 @@ class JpaConfiguration {
 
                 urlBuilder.append(";user=").append(DEFAULT_USER);
 
-                if (password != null && password.length > 0) {
+                if (password.length > 0) {
                     urlBuilder.append(";password=").append(password);
                 }
 
@@ -114,6 +118,9 @@ class JpaConfiguration {
      * @return   JPA properties
      */
     public static Properties getClientProperties(final DataStoreType database, final String fileName, final String host, final int port, final char[] password) {
+        if (password == null) {
+            throw new IllegalArgumentException();
+        }
 
         StringBuilder urlBuilder = new StringBuilder();
 
@@ -142,7 +149,8 @@ class JpaConfiguration {
                 urlBuilder.append(host).append(":").append(port).append("/jgnash"); // needs a public alias
 
                 urlBuilder.append(";user=").append(DEFAULT_USER);
-                if (password != null && password.length > 0) {
+
+                if (password.length > 0) {
                     urlBuilder.append(";password=").append(password);
                 }
 
