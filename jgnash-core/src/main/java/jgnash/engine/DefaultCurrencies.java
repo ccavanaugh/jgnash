@@ -17,6 +17,7 @@
  */
 package jgnash.engine;
 
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Locale;
@@ -27,7 +28,7 @@ import java.util.logging.Logger;
 
 /**
  * Static methods for currency generation and discovery
- *
+ * <p/>
  * These are known to not show up because Java 1.4.2 and older does not have
  * a default NumberFormat defined for the currency:<br>
  * "SGD"<br>
@@ -49,10 +50,20 @@ public class DefaultCurrencies {
      * @return An array of default CurrencyNodes
      */
     public static Set<CurrencyNode> generateCurrencies() {
-        final TreeSet<CurrencyNode> set = new TreeSet<>();
+        TreeSet<CurrencyNode> set = new TreeSet<>();
 
-        for (Currency currency : Currency.getAvailableCurrencies()) {
-            set.add(buildNode(currency));
+        for (Locale locale : NumberFormat.getAvailableLocales()) {
+
+            // only try if a valid county length is returned
+            if (locale.getCountry().length() == 2) {
+                try {
+                    if (Currency.getInstance(locale) != null) {
+                        set.add(buildNode(locale));
+                    }
+                } catch (Exception ex) {
+                    Logger.getLogger(DefaultCurrencies.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
 
         return set;
@@ -83,26 +94,33 @@ public class DefaultCurrencies {
     }
 
     /**
-     * Creates a valid CurrencyNode given a Currency
+     * Creates a valid CurrencyNode given a locale
      *
-     * @param currency Currency to create a CurrencyNode for
+     * @param locale Locale to create a CurrencyNode for
      * @return The new CurrencyNode
      */
-    public static CurrencyNode buildNode(final Currency currency) {
-        final CurrencyNode node = new CurrencyNode();
+    public static CurrencyNode buildNode(final Locale locale) {
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols(locale);
+        Currency c = symbols.getCurrency();
 
-        node.setSymbol(currency.getCurrencyCode());
-        node.setPrefix(currency.getSymbol());
-        node.setScale((byte)currency.getDefaultFractionDigits());
+        CurrencyNode node = new CurrencyNode();
+        node.setSymbol(c.getCurrencyCode());
+        node.setPrefix(symbols.getCurrencySymbol());
+        node.setScale((byte) c.getDefaultFractionDigits());
 
         return node;
     }
 
     /**
      * Generates the default CurrencyNode for the current locale
+     *
      * @return The new CurrencyNode
      */
     public static CurrencyNode getDefault() {
-        return buildNode(NumberFormat.getCurrencyInstance().getCurrency());
+        try {
+            return buildNode(Locale.getDefault());
+        } catch (final Exception e) {
+            return buildNode(Locale.US);
+        }
     }
 }

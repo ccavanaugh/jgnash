@@ -29,7 +29,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.Currency;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -68,7 +67,7 @@ public abstract class EngineTest {
         CurrencyNode node = e.getDefaultCurrency();
 
         if (!node.getSymbol().equals("USD")) {
-            CurrencyNode defaultCurrency = DefaultCurrencies.buildNode(Currency.getInstance(Locale.US));
+            CurrencyNode defaultCurrency = DefaultCurrencies.buildNode(Locale.US);
 
             assertNotNull(defaultCurrency);
             assertTrue(e.addCurrency(defaultCurrency));
@@ -79,7 +78,7 @@ public abstract class EngineTest {
         node = e.getCurrency("CAD");
 
         if (node == null) {
-            node = DefaultCurrencies.buildNode(Currency.getInstance(Locale.CANADA));
+            node = DefaultCurrencies.buildNode(Locale.CANADA);
 
             assertNotNull(node);
 
