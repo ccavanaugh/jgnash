@@ -412,7 +412,7 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
         public GoalTable(final TableModel model) {
             super(model);
-            commodityFormatter = CommodityFormat.getShortNumberFormat(account.getCurrencyNode());
+            commodityFormatter = CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
         }
 
         @Override

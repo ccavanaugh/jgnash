@@ -28,6 +28,7 @@ appears to be a JDK and Google interaction bug.
 
 Release 2.13.4
 ----------------------
+12/15/13 Show full currency formatting in the Budget display, otherwise, currency of the account is not obvious.
 12/15/13 A Java bug was preventing new files from being created if a default currency was not determinable.
 12/12/13 Changed the name of the Budget Column from "Change" to "Actual" to clarify intent.
 

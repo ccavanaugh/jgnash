@@ -102,7 +102,7 @@ final class BudgetPeriodPanel extends JPanel {
 
         setLayout(layout);
 
-        NumberFormat format = CommodityFormat.getShortNumberFormat(model.getCurrency());
+        NumberFormat format = CommodityFormat.getFullNumberFormat(model.getCurrency());
 
         table = new BudgetResultsTable(model, format);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -142,7 +142,7 @@ final class BudgetPeriodPanel extends JPanel {
 
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, new JPanel());
 
-        NumberFormat format = CommodityFormat.getShortNumberFormat(EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency());
+        NumberFormat format = CommodityFormat.getFullNumberFormat(EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency());
 
         footerTable = new BudgetResultsTable(new FooterModel(), format);
         footerTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);

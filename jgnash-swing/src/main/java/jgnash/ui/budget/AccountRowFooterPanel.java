@@ -158,7 +158,7 @@ public class AccountRowFooterPanel extends JPanel {
 
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, new JXPanel());
 
-        NumberFormat format = CommodityFormat.getShortNumberFormat(resultsModel.getBaseCurrency());
+        NumberFormat format = CommodityFormat.getFullNumberFormat(resultsModel.getBaseCurrency());
 
         footerTable = new BudgetResultsTable(new FooterModel(), format);
         footerTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -183,9 +183,9 @@ public class AccountRowFooterPanel extends JPanel {
         }
 
         @Override
-        protected NumberFormat getNumberFormat(int row) {
+        protected NumberFormat getNumberFormat(final int row) {
             Account account = model.get(row);
-            return CommodityFormat.getShortNumberFormat(account.getCurrencyNode());
+            return CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
         }
     }
 
