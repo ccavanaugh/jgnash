@@ -17,7 +17,6 @@
  */
 package jgnash.engine;
 
-import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Locale;
@@ -35,7 +34,6 @@ import java.util.logging.Logger;
  * "MYR"
  *
  * @author Craig Cavanaugh
- *
  */
 public class DefaultCurrencies {
 
@@ -51,20 +49,10 @@ public class DefaultCurrencies {
      * @return An array of default CurrencyNodes
      */
     public static Set<CurrencyNode> generateCurrencies() {
-        TreeSet<CurrencyNode> set = new TreeSet<>();
+        final TreeSet<CurrencyNode> set = new TreeSet<>();
 
-        for (Locale locale : NumberFormat.getAvailableLocales()) {
-
-             // only try if a valid county length is returned
-            if (locale.getCountry().length() == 2) {
-                try {
-                    if (Currency.getInstance(locale) != null) {
-                        set.add(buildNode(locale));
-                    }
-                } catch (Exception ex) {
-                    Logger.getLogger(DefaultCurrencies.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+        for (Currency currency : Currency.getAvailableCurrencies()) {
+            set.add(buildNode(currency));
         }
 
         return set;
@@ -78,8 +66,8 @@ public class DefaultCurrencies {
      * @param ISOCode The custom currency to generate
      * @return The custom CurrencyNode
      */
-    public static CurrencyNode buildCustomNode(String ISOCode) {
-        CurrencyNode node = new CurrencyNode();
+    public static CurrencyNode buildCustomNode(final String ISOCode) {
+        final CurrencyNode node = new CurrencyNode();
         Currency c;
 
         try {
@@ -95,20 +83,26 @@ public class DefaultCurrencies {
     }
 
     /**
-     * Creates a valid CurrencyNode given a locale
+     * Creates a valid CurrencyNode given a Currency
      *
-     * @param locale Locale to create a CurrencyNode for
+     * @param currency Currency to create a CurrencyNode for
      * @return The new CurrencyNode
      */
-    public static CurrencyNode buildNode(final Locale locale) {
-        DecimalFormatSymbols symbols = new DecimalFormatSymbols(locale);
-        Currency c = symbols.getCurrency();
+    public static CurrencyNode buildNode(final Currency currency) {
+        final CurrencyNode node = new CurrencyNode();
 
-        CurrencyNode node = new CurrencyNode();
-        node.setSymbol(c.getCurrencyCode());
-        node.setPrefix(symbols.getCurrencySymbol());
-        node.setScale((byte) c.getDefaultFractionDigits());
+        node.setSymbol(currency.getCurrencyCode());
+        node.setPrefix(currency.getSymbol());
+        node.setScale((byte)currency.getDefaultFractionDigits());
 
         return node;
+    }
+
+    /**
+     * Generates the default CurrencyNode for the current locale
+     * @return The new CurrencyNode
+     */
+    public static CurrencyNode getDefault() {
+        return buildNode(NumberFormat.getCurrencyInstance().getCurrency());
     }
 }

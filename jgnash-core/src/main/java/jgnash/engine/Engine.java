@@ -313,7 +313,7 @@ public class Engine {
                 CurrencyNode node = getDefaultCurrency();
 
                 if (node == null) {
-                    node = DefaultCurrencies.buildNode(Locale.getDefault());
+                    node = DefaultCurrencies.getDefault();
                     node.setExchangeRateDAO(exchangeRateDAO);
 
                     addCurrency(node); // force the node to persisted

@@ -17,13 +17,9 @@
  */
 package jgnash.ui.wizards.file;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-import java.util.Currency;
-
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
@@ -31,16 +27,19 @@ import javax.swing.JPanel;
 import javax.swing.text.StyledEditorKit;
 
 import jgnash.engine.CurrencyNode;
+import jgnash.engine.DefaultCurrencies;
 import jgnash.ui.components.SortedComboBoxModel;
 import jgnash.ui.components.wizard.WizardPage;
 import jgnash.ui.util.TextResource;
 import jgnash.util.Resource;
 
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
+
 /**
  * New file wizard panel
  *
  * @author Craig Cavanaugh
- *
  */
 public class NewFileTwo extends JPanel implements WizardPage {
 
@@ -99,23 +98,27 @@ public class NewFileTwo extends JPanel implements WizardPage {
     @Override
     @SuppressWarnings("unchecked")
 
-    public void getSettings(Map<Enum<?>, Object> map) {
+    public void getSettings(final Map<Enum<?>, Object> map) {
         Set<CurrencyNode> currencies = (Set<CurrencyNode>) map.get(NewFileDialog.Settings.DEFAULT_CURRENCIES);
 
         currencyCombo.setModel(new SortedComboBoxModel<>(currencies));
 
-        String currencyCode = Currency.getInstance(Locale.getDefault()).getCurrencyCode();
+        try {
+            String symbol = DefaultCurrencies.getDefault().getSymbol();
 
-        // set the default currency by matching the default locale
-        for (CurrencyNode node : currencies) {
-            if (currencyCode.equals(node.getSymbol())) {
-                currencyCombo.setSelectedItem(node);
+            // set the default currency by matching the default locale
+            for (CurrencyNode node : currencies) {
+                if (symbol.equals(node.getSymbol())) {
+                    currencyCombo.setSelectedItem(node);
+                }
             }
+        } catch (final IllegalArgumentException e) {
+            Logger.getLogger(NewFileTwo.class.getName()).warning("Unable to construct the default currency from the default system Locale");
         }
     }
 
     @Override
-    public void putSettings(Map<Enum<?>, Object> map) {
+    public void putSettings(final Map<Enum<?>, Object> map) {
         map.put(NewFileDialog.Settings.DEFAULT_CURRENCY, currencyCombo.getSelectedItem());
     }
 }

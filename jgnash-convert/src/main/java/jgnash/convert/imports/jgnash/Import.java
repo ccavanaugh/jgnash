@@ -29,7 +29,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -148,7 +147,7 @@ public class Import {
         try {
             Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-            CurrencyNode defaultCurrency = DefaultCurrencies.buildNode(Locale.getDefault());
+            CurrencyNode defaultCurrency = DefaultCurrencies.getDefault();
 
             if (engine.getCurrency(defaultCurrency.getSymbol()) == null) {
                 engine.addCurrency(defaultCurrency);
