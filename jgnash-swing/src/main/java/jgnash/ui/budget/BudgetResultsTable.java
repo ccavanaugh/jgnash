@@ -25,13 +25,12 @@ import javax.swing.table.TableModel;
  * JTable for displaying budget results using the specified format
  *
  * @author Craig Cavanaugh
- *
  */
 class BudgetResultsTable extends AbstractResultsTable {
 
     private final NumberFormat format;
 
-    public BudgetResultsTable(final TableModel model, NumberFormat format) {
+    public BudgetResultsTable(final TableModel model, final NumberFormat format) {
         super(model);
         this.format = format;
     }

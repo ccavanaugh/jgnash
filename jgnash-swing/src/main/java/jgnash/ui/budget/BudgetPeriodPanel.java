@@ -102,9 +102,10 @@ final class BudgetPeriodPanel extends JPanel {
 
         setLayout(layout);
 
-        NumberFormat format = CommodityFormat.getFullNumberFormat(model.getCurrency());
+        //NumberFormat format = CommodityFormat.getFullNumberFormat(model.getCurrency());
 
-        table = new BudgetResultsTable(model, format);
+        table = new AccountPeriodResultsTable(model);
+
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setFocusable(false);
         table.setCellSelectionEnabled(false);

@@ -52,7 +52,6 @@ import static javax.swing.event.TableModelEvent.*;
  * A display model for a budget period/descriptor.
  *
  * @author Craig Cavanaugh
- *
  */
 public final class BudgetPeriodModel implements TableModel, MessageListener {
 
@@ -162,6 +161,10 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
             default:
                 return BigDecimal.ZERO;
         }
+    }
+
+    Account getAccountAt(final int rowIndex) {
+        return expandingBudgetTableModel.get(rowIndex);
     }
 
     @Override
