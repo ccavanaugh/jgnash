@@ -42,7 +42,6 @@ import javax.swing.table.AbstractTableModel;
  * An table model for hierarchical objects of the same type that can be expanded and collapsed
  *
  * @author Craig Cavanaugh
- *
  */
 public abstract class AbstractExpandingTableModel<E extends Comparable<? super E>> extends AbstractTableModel {
 
