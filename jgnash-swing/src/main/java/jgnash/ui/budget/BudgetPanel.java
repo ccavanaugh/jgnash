@@ -96,7 +96,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
     private JButton budgetManagerButton;
     private JButton budgetPropertiesButton;
     private JButton budgetExportButton;
-    private final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+    private Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
     private ExpandingBudgetTableModel tableModel;
     private JideScrollPane scrollPane;
     private transient AccountRowHeaderResizeHandler rowHeaderResizeHandler;
@@ -334,6 +334,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
 
         // listen for budget events
         MessageBus.getInstance().registerListener(this, MessageChannel.BUDGET);
+        MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
 
         if (budgetCombo.getSelectedBudget() != null) {
             showBudgetPane();
@@ -689,6 +690,12 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
             case TRANSACTION_REMOVE:
             case BUDGET_GOAL_UPDATE:
                 overviewPanel.updateSparkLines();
+                break;
+            case FILE_CLOSING:
+                MessageBus.getInstance().unregisterListener(this, MessageChannel.BUDGET);
+                MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM);
+                removeBudgetPane();
+                engine = null;
                 break;
             default:
                 break;
