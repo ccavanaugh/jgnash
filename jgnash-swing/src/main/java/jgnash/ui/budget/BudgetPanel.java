@@ -694,7 +694,12 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
             case FILE_CLOSING:
                 MessageBus.getInstance().unregisterListener(this, MessageChannel.BUDGET);
                 MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM);
-                removeBudgetPane();
+                EventQueue.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        removeBudgetPane();
+                    }
+                });
                 engine = null;
                 break;
             default:
