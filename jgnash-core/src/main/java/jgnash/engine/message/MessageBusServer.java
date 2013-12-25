@@ -252,7 +252,7 @@ public class MessageBusServer {
             rwl.readLock().lock();
 
             try {
-                channelGroup.flushAndWrite(encrypt(plainMessage) + EOL_DELIMITER).sync();
+                channelGroup.writeAndFlush(encrypt(plainMessage) + EOL_DELIMITER).sync();
 
                 // Local listeners do not receive encrypted messages
                 for (LocalServerListener listener : listeners) {
