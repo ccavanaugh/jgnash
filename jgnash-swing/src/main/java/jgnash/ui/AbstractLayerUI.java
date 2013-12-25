@@ -45,7 +45,6 @@ import java.awt.geom.AffineTransform;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.beans.PropertyChangeEvent;
 
 /**
  * The {@code AbstractLayerUI} provided default implementation for most of the
@@ -62,6 +61,7 @@ import java.beans.PropertyChangeEvent;
  *
  * @see JLayer#setUI(LayerUI)
  */
+@SuppressWarnings("UnusedParameters")
 public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 
     private static final long serialVersionUID = 1L;
@@ -83,24 +83,6 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
         ((JLayer) c).setLayerEventMask(0);
-    }
-
-    public void handlePropertyChangeEvent(PropertyChangeEvent evt, JLayer<? extends V> l) {
-        if (!"dirty".equals(evt.getPropertyName()) || evt.getNewValue() == Boolean.TRUE) {
-            l.repaint();
-        }
-    }
-
-    /**
-     * Returns the "dirty bit". If {@code true}, then the
-     * {@code AbstractLayerUI} is considered dirty and in need of being
-     * repainted.
-     *
-     * @return {@code true} if the {@code AbstractLayerUI} state has changed and
-     *         the {@link JLayer}s it is set to need to be repainted.
-     */
-    protected boolean isDirty() {
-        return isDirty;
     }
 
     /**
