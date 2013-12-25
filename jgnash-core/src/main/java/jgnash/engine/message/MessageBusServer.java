@@ -47,6 +47,7 @@ import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.CharsetUtil;
+import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
 /**
@@ -242,6 +243,8 @@ public class MessageBusServer {
                 @Override
                 public void run() {
                     processMessage(msg.toString());
+
+                    ReferenceCountUtil.release(msg);
                 }
             });
         }

@@ -55,6 +55,7 @@ import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.CharsetUtil;
+import io.netty.util.ReferenceCountUtil;
 
 /**
  * Message bus client for remote connections
@@ -178,35 +179,40 @@ class MessageBusClient {
 
         @Override
         public void channelRead(final ChannelHandlerContext ctx, final Object msg) {
-            final String plainMessage = decrypt(msg);
 
-            logger.log(Level.FINE, "messageReceived: {0}", plainMessage);
+            try {
+                final String plainMessage = decrypt(msg);
 
-            if (plainMessage.startsWith("<Message")) {
-                executorService.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        final Message message = (Message) xstream.fromXML(plainMessage);
+                logger.log(Level.FINE, "messageReceived: {0}", plainMessage);
 
-                        // ignore our own messages
-                        if (!EngineFactory.getEngine(name).getUuid().equals(message.getSource())) {
-                            processRemoteMessage(message);
+                if (plainMessage.startsWith("<Message")) {
+                    executorService.submit(new Runnable() {
+                        @Override
+                        public void run() {
+                            final Message message = (Message) xstream.fromXML(plainMessage);
+
+                            // ignore our own messages
+                            if (!EngineFactory.getEngine(name).getUuid().equals(message.getSource())) {
+                                processRemoteMessage(message);
+                            }
                         }
-                    }
-                });
-            } else if (plainMessage.startsWith(MessageBusServer.PATH_PREFIX)) {
-                dataBasePath = plainMessage.substring(MessageBusServer.PATH_PREFIX.length());
-                logger.log(Level.FINE, "Remote data path is: {0}", dataBasePath);
-            } else if (plainMessage.startsWith(MessageBusServer.DATA_STORE_TYPE_PREFIX)) {
-                dataBaseType = DataStoreType.valueOf(plainMessage.substring(MessageBusServer.DATA_STORE_TYPE_PREFIX.length()));
-                logger.log(Level.FINE, "Remote dataBaseType type is: {0}", dataBaseType.name());
-            } else if (plainMessage.startsWith(EncryptionManager.DECRYPTION_ERROR_TAG)) {    // decryption has failed, shut down the engine
-                logger.log(Level.SEVERE, "Unable to decrypt the remote message");
-            } else if (plainMessage.startsWith(JpaNetworkServer.STOP_SERVER_MESSAGE)) {
-                logger.info("Server is shutting down");
-                EngineFactory.closeEngine(name);
-            } else {
-                logger.log(Level.SEVERE, "Unknown message: {0}", plainMessage);
+                    });
+                } else if (plainMessage.startsWith(MessageBusServer.PATH_PREFIX)) {
+                    dataBasePath = plainMessage.substring(MessageBusServer.PATH_PREFIX.length());
+                    logger.log(Level.FINE, "Remote data path is: {0}", dataBasePath);
+                } else if (plainMessage.startsWith(MessageBusServer.DATA_STORE_TYPE_PREFIX)) {
+                    dataBaseType = DataStoreType.valueOf(plainMessage.substring(MessageBusServer.DATA_STORE_TYPE_PREFIX.length()));
+                    logger.log(Level.FINE, "Remote dataBaseType type is: {0}", dataBaseType.name());
+                } else if (plainMessage.startsWith(EncryptionManager.DECRYPTION_ERROR_TAG)) {    // decryption has failed, shut down the engine
+                    logger.log(Level.SEVERE, "Unable to decrypt the remote message");
+                } else if (plainMessage.startsWith(JpaNetworkServer.STOP_SERVER_MESSAGE)) {
+                    logger.info("Server is shutting down");
+                    EngineFactory.closeEngine(name);
+                } else {
+                    logger.log(Level.SEVERE, "Unknown message: {0}", plainMessage);
+                }
+            } finally {
+                ReferenceCountUtil.release(msg);
             }
         }
 

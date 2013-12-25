@@ -19,6 +19,8 @@ package jgnash.engine;
 
 import jgnash.engine.concurrent.DistributedLockManager;
 import jgnash.engine.concurrent.DistributedLockServer;
+
+import io.netty.util.ResourceLeakDetector;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,6 +51,8 @@ public class DistributedLockTest {
     @Before
     public void setUp() {
         final char[] password = new char[]{};
+
+        ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
 
         server = new DistributedLockServer(PORT);
         server.startServer(password);

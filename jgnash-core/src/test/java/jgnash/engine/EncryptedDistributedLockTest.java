@@ -22,6 +22,7 @@ import jgnash.engine.concurrent.DistributedLockManager;
 import jgnash.engine.concurrent.DistributedLockServer;
 import jgnash.util.EncryptionManager;
 
+import io.netty.util.ResourceLeakDetector;
 import org.junit.Before;
 
 /**
@@ -35,6 +36,8 @@ public class EncryptedDistributedLockTest extends DistributedLockTest {
     @Override
     public void setUp() {
         final char[] password = new char[]{'P', 'a', 's', 's', 'w', 'o', 'r', 'd'};
+
+        ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
 
         System.setProperty(EncryptionManager.ENCRYPTION_FLAG, "true");
         System.setProperty("ssl", "true");

@@ -46,6 +46,7 @@ import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.CharsetUtil;
+import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
 /**
@@ -262,6 +263,8 @@ public class DistributedLockServer {
                 @Override
                 public void run() {
                     processMessage(ctx, msg.toString());
+
+                    ReferenceCountUtil.release(msg);
                 }
             });
         }

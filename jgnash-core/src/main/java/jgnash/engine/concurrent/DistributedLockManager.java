@@ -51,6 +51,7 @@ import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.CharsetUtil;
+import io.netty.util.ReferenceCountUtil;
 
 /**
  * Lock manager for distributed engine instances
@@ -307,6 +308,8 @@ public class DistributedLockManager implements LockManager {
                 @Override
                 public void run() {
                     processMessage(msg.toString());
+
+                    ReferenceCountUtil.release(msg);
                 }
             });
         }

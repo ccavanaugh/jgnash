@@ -158,7 +158,6 @@ class AttachmentTransferClient {
         public void initChannel(final SocketChannel ch) throws Exception {
 
             ch.pipeline().addLast(
-                    new LoggingHandler(),
                     new LineBasedFrameDecoder(((NettyTransferHandler.TRANSFER_BUFFER_SIZE + 2) / 3) * 4 + NettyTransferHandler.PATH_MAX),
 
                     new StringEncoder(CharsetUtil.UTF_8),
