@@ -19,7 +19,6 @@ package jgnash.engine.budget;
 
 import java.text.MessageFormat;
 import java.util.Date;
-import java.util.logging.Logger;
 
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;

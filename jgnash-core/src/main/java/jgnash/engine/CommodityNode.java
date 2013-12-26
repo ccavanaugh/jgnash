@@ -18,8 +18,6 @@
 package jgnash.engine;
 
 import javax.persistence.Entity;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Version;
 import java.math.BigDecimal;
 
 /**

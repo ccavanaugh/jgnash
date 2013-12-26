@@ -31,7 +31,6 @@ import jgnash.engine.jpa.JpaHsqlDataStore;
 import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.util.EncryptionManager;
 
-import io.netty.util.ResourceLeakDetector;
 import org.junit.Assert;
 import org.junit.Test;
 

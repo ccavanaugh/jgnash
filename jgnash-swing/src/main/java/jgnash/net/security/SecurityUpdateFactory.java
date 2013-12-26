@@ -17,7 +17,6 @@
  */
 package jgnash.net.security;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.logging.Logger;

@@ -27,10 +27,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import jgnash.engine.AttachmentUtils;
 
 import org.junit.Test;
 

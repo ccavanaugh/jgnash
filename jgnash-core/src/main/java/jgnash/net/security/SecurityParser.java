@@ -17,7 +17,6 @@
  */
 package jgnash.net.security;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 

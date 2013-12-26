@@ -31,12 +31,12 @@
 
 package jgnash.ui;
 
-import javax.swing.JLayer;
-
-import javax.swing.*;
-import javax.swing.plaf.LayerUI;
-
-import java.awt.*;
+import java.awt.AWTEvent;
+import java.awt.Composite;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -45,6 +45,10 @@ import java.awt.geom.AffineTransform;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.swing.JComponent;
+import javax.swing.JLayer;
+import javax.swing.plaf.LayerUI;
 
 /**
  * The {@code AbstractLayerUI} provided default implementation for most of the
