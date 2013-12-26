@@ -21,8 +21,8 @@ import java.awt.*;
  * <p/>
  * To fully leverage the power of JideScrollPane, we also create a class called <code>TableScrollPane</code> which is
  * part of JIDE Grids package. It will allow you to easily create table with row header, row footer and column footer.
- * <p><code>JideScrollPane</code> also provides support for scrollbar corners. You can set them using {@link
- * #setScrollBarCorner(String, java.awt.Component)}. Available key for scroll bar corner is defined at {@link
+ * <p><code>JideScrollPane</code> also provides support for scrollbar corners. You can set them using
+ * setScrollBarCorner(String, java.awt.Component). Available key for scroll bar corner is defined at {@link
  * JideScrollPaneConstants}  which can be access from <code>JideScrollPane</code>.
  * <p/>
  * <b>Credit:</b> This implementation of scroll bar corner is based on work from Santhosh Kumar -
@@ -63,37 +63,9 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
      */
     private JViewport _columnFooter;
 
-    /**
-     * The component to the left of horizontal scroll bar.
-     */
-    private Component _hLeft;
-    /**
-     * The component to the right of horizontal scroll bar.
-     */
-    private Component _hRight;
-
-    /**
-     * The component to the top of vertical scroll bar.
-     */
-    private Component _vTop;
-
-    /**
-     * The component to the bottom of vertical scroll bar.
-     */
-    private Component _vBottom;
-
-    private boolean _keepCornerVisible = false;
-
-    private boolean _horizontalScrollBarCoversWholeWidth;
-    private boolean _verticalScrollBarCoversWholeHeight;
-
-    private static final String PROPERTY_HORIZONTAL_SCROLL_BAR_COVERS_WHOLE_WIDTH = "horizontalScrollBarCoversWholeWidth";
-    private static final String PROPERTY_VERTICAL_SCROLL_BAR_COVERS_WHOLE_HEIGHT = "verticalScrollBarCoversWholeHeight";
-
     private boolean _columnHeadersHeightUnified;
-    private boolean _columnFootersHeightUnified;
+
     private static final String PROPERTY_COLUMN_HEADERS_HEIGHT_UNIFIED = "columnHeadersHeightUnified";
-    private static final String PROPERTY_COLUMN_FOOTERS_HEIGHT_UNIFIED = "columnFootersHeightUnified";
 
     public static final String CLIENT_PROPERTY_SLAVE_VIEWPORT = "synchronizeViewSlaveViewport";
     public static final String CLIENT_PROPERTY_MASTER_VIEWPORT = "synchronizeViewMasterViewport";
@@ -128,33 +100,6 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
             viewport.setViewPosition(new Point(Integer.MAX_VALUE, 0));
         }
     }
-
-
-    /**
-     * Creates a <code>JideScrollPane</code> that displays the contents of the specified component, where both
-     * horizontal and vertical scrollbars appear whenever the component's contents are larger than the view.
-     *
-     * @param view the component to display in the scrollpane's viewport
-     * @see #setViewportView(java.awt.Component)
-     */
-    public JideScrollPane(Component view) {
-        this(view, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_AS_NEEDED);
-    }
-
-
-    /**
-     * Creates an empty (no viewport view) <code>JideScrollPane</code> with specified scrollbar policies. The available
-     * policy settings are listed at {@link #setVerticalScrollBarPolicy(int)} and {@link
-     * #setHorizontalScrollBarPolicy(int)}.
-     *
-     * @param vsbPolicy an integer that specifies the vertical scrollbar policy
-     * @param hsbPolicy an integer that specifies the horizontal scrollbar policy
-     * @see #setViewportView(java.awt.Component)
-     */
-    public JideScrollPane(int vsbPolicy, int hsbPolicy) {
-        this(null, vsbPolicy, hsbPolicy);
-    }
-
 
     /**
      * Creates an empty (no viewport view) <code>JideScrollPane</code> where both horizontal and vertical scrollbars
@@ -419,21 +364,6 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
         getColumnFooter().setView(view);
     }
 
-    /**
-     * Creates a sub-column-header viewport if necessary, sets its view, and then adds the sub-column-header viewport to
-     * the scrollpane.
-     *
-     * @param view the component to display as the sub column header
-     * @see #setSubColumnHeader(javax.swing.JViewport)
-     * @see JViewport#setView(java.awt.Component)
-     */
-    public void setSubColumnHeaderView(Component view) {
-        if (null == getSubColumnHeader()) {
-            setSubColumnHeader(createViewport());
-        }
-        getSubColumnHeader().setView(view);
-    }
-
     @Override
     public Component getCorner(String key) {
         if (key == null) {
@@ -498,81 +428,10 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
             key = isLeftToRight ? HORIZONTAL_RIGHT : HORIZONTAL_LEFT;
         }
 
-        if (key.equals(HORIZONTAL_LEFT)) {
-            return _hLeft;
+        switch (key) {
+            default:
+                return null;
         }
-        else if (key.equals(HORIZONTAL_RIGHT)) {
-            return _hRight;
-        }
-        else if (key.equals(VERTICAL_BOTTOM)) {
-            return _vBottom;
-        }
-        else if (key.equals(VERTICAL_TOP)) {
-            return _vTop;
-        }
-        else {
-            return null;
-        }
-    }
-
-
-    /**
-     * Adds a child that will appear in one of the scroll bars corners. Scroll bar will make room to show the corner
-     * component. Legal values for the <b>key</b> are: <ul> <li>{@link JideScrollPane#HORIZONTAL_LEFT} <li>{@link
-     * JideScrollPane#HORIZONTAL_RIGHT} <li>{@link JideScrollPane#VERTICAL_TOP} <li>{@link
-     * JideScrollPane#VERTICAL_BOTTOM} <li>{@link JideScrollPane#HORIZONTAL_LEADING} <li>{@link
-     * JideScrollPane#HORIZONTAL_TRAILING} </ul>
-     * <p/>
-     * Although "corner" doesn't match any beans property signature, <code>PropertyChange</code> events are generated
-     * with the property name set to the corner key.
-     *
-     * @param key    identifies which corner the component will appear in
-     * @param corner one of the following components: <ul> <li>lowerLeft <li>lowerRight <li>upperLeft <li>upperRight
-     *               </ul>
-     * @throws IllegalArgumentException if corner key is invalid
-     */
-    public void setScrollBarCorner(String key, Component corner) {
-        Component old;
-        boolean isLeftToRight = getComponentOrientation().isLeftToRight();
-        if (key.equals(HORIZONTAL_LEADING)) {
-            key = isLeftToRight ? HORIZONTAL_LEFT : HORIZONTAL_RIGHT;
-        }
-        else if (key.equals(HORIZONTAL_TRAILING)) {
-            key = isLeftToRight ? HORIZONTAL_RIGHT : HORIZONTAL_LEFT;
-        }
-
-        if (key.equals(HORIZONTAL_LEFT)) {
-            old = _hLeft;
-            _hLeft = corner;
-        }
-        else if (key.equals(HORIZONTAL_RIGHT)) {
-            old = _hRight;
-            _hRight = corner;
-        }
-        else if (key.equals(VERTICAL_TOP)) {
-            old = _vTop;
-            _vTop = corner;
-        }
-        else if (key.equals(VERTICAL_BOTTOM)) {
-            old = _vBottom;
-            _vBottom = corner;
-        }
-        else {
-            throw new IllegalArgumentException("invalid scroll bar corner key");
-        }
-
-        if (null != old) {
-            remove(old);
-        }
-        if (null != corner) {
-            add(corner, key);
-        }
-        if (corner != null) {
-            corner.setComponentOrientation(getComponentOrientation());
-        }
-        firePropertyChange(key, old, corner);
-        revalidate();
-        repaint();
     }
 
     @Override
@@ -595,37 +454,11 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
     }
 
     public boolean isVerticalScrollBarCoversWholeHeight() {
-        return _verticalScrollBarCoversWholeHeight;
-    }
-
-    public void setHorizontalScrollBarCoversWholeWidth(boolean horizontalScrollBarCoversWholeWidth) {
-        boolean old = _horizontalScrollBarCoversWholeWidth;
-        if (old != horizontalScrollBarCoversWholeWidth) {
-            _horizontalScrollBarCoversWholeWidth = horizontalScrollBarCoversWholeWidth;
-            firePropertyChange(PROPERTY_HORIZONTAL_SCROLL_BAR_COVERS_WHOLE_WIDTH, old, _horizontalScrollBarCoversWholeWidth);
-            invalidate();
-            doLayout();
-            if (getHorizontalScrollBar() != null) {
-                getHorizontalScrollBar().doLayout();
-            }
-        }
+        return false;
     }
 
     public boolean isHorizontalScrollBarCoversWholeWidth() {
-        return _horizontalScrollBarCoversWholeWidth;
-    }
-
-    public void setVerticalScrollBarCoversWholeHeight(boolean verticalScrollBarCoversWholeHeight) {
-        boolean old = _verticalScrollBarCoversWholeHeight;
-        if (old != verticalScrollBarCoversWholeHeight) {
-            _verticalScrollBarCoversWholeHeight = verticalScrollBarCoversWholeHeight;
-            firePropertyChange(PROPERTY_VERTICAL_SCROLL_BAR_COVERS_WHOLE_HEIGHT, old, _verticalScrollBarCoversWholeHeight);
-            invalidate();
-            doLayout();
-            if (getVerticalScrollBar() != null) {
-                getVerticalScrollBar().doLayout();
-            }
-        }
+        return false;
     }
 
     /**
@@ -648,7 +481,7 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
         boolean old = _columnHeadersHeightUnified;
         if (old != columnHeadersHeightUnified) {
             _columnHeadersHeightUnified = columnHeadersHeightUnified;
-            firePropertyChange(PROPERTY_COLUMN_HEADERS_HEIGHT_UNIFIED, old, _horizontalScrollBarCoversWholeWidth);
+            firePropertyChange(PROPERTY_COLUMN_HEADERS_HEIGHT_UNIFIED, old, false);
             invalidate();
             doLayout();
         }
@@ -661,23 +494,7 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
      * @return true or false.
      */
     public boolean isColumnFootersHeightUnified() {
-        return _columnFootersHeightUnified;
-    }
-
-    /**
-     * Sets the flag if the bottom-right, bottom-left corner and the column footer will have the same height or
-     * different heights.
-     *
-     * @param columnFootersHeightUnified true or false.
-     */
-    public void setColumnFootersHeightUnified(boolean columnFootersHeightUnified) {
-        boolean old = _columnFootersHeightUnified;
-        if (old != columnFootersHeightUnified) {
-            _columnFootersHeightUnified = columnFootersHeightUnified;
-            firePropertyChange(PROPERTY_COLUMN_FOOTERS_HEIGHT_UNIFIED, old, _horizontalScrollBarCoversWholeWidth);
-            invalidate();
-            doLayout();
-        }
+        return false;
     }
 
     /**
@@ -692,16 +509,6 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
      * @return the flag.
      */
     public boolean isKeepCornerVisible() {
-        return _keepCornerVisible;
-    }
-
-    /**
-     * Set the flag indicating if JideScrollPane should keep the corner visible when it has corner components defined
-     * even when the scroll bar is not visible.
-     *
-     * @param keepCornerVisible the flag
-     */
-    public void setKeepCornerVisible(boolean keepCornerVisible) {
-        _keepCornerVisible = keepCornerVisible;
+        return false;
     }
 }

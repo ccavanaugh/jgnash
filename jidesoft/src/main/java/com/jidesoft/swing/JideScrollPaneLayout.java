@@ -14,7 +14,6 @@ import java.awt.Rectangle;
 
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.ScrollPaneLayout;
 import javax.swing.Scrollable;
 import javax.swing.ViewportLayout;
@@ -114,26 +113,37 @@ public class JideScrollPaneLayout extends ScrollPaneLayout implements JideScroll
 
     @Override
     public void addLayoutComponent(String s, Component c) {
-        if (s.equals(ROW_FOOTER)) {
-            _rowFoot = (JViewport) addSingletonComponent(_rowFoot, c);
-        } else if (s.equals(SUB_COLUMN_HEADER)) {
-            _subColHead = (JViewport) addSingletonComponent(_subColHead, c);
-        } else if (s.equals(COLUMN_FOOTER)) {
-            _colFoot = (JViewport) addSingletonComponent(_colFoot, c);
-        } else if (s.equals(HORIZONTAL_LEFT)) {
-            _hLeft = addSingletonComponent(_hLeft, c);
-        } else if (s.equals(HORIZONTAL_RIGHT)) {
-            _hRight = addSingletonComponent(_hRight, c);
-        } else if (s.equals(VERTICAL_TOP)) {
-            _vTop = addSingletonComponent(_vTop, c);
-        } else if (s.equals(VERTICAL_BOTTOM)) {
-            _vBottom = addSingletonComponent(_vBottom, c);
-        } else if (s.equals(SUB_UPPER_LEFT)) {
-            _subUpperLeft = addSingletonComponent(_subUpperLeft, c);
-        } else if (s.equals(SUB_UPPER_RIGHT)) {
-            _subUpperRight = addSingletonComponent(_subUpperRight, c);
-        } else {
-            super.addLayoutComponent(s, c);
+        switch (s) {
+            case ROW_FOOTER:
+                _rowFoot = (JViewport) addSingletonComponent(_rowFoot, c);
+                break;
+            case SUB_COLUMN_HEADER:
+                _subColHead = (JViewport) addSingletonComponent(_subColHead, c);
+                break;
+            case COLUMN_FOOTER:
+                _colFoot = (JViewport) addSingletonComponent(_colFoot, c);
+                break;
+            case HORIZONTAL_LEFT:
+                _hLeft = addSingletonComponent(_hLeft, c);
+                break;
+            case HORIZONTAL_RIGHT:
+                _hRight = addSingletonComponent(_hRight, c);
+                break;
+            case VERTICAL_TOP:
+                _vTop = addSingletonComponent(_vTop, c);
+                break;
+            case VERTICAL_BOTTOM:
+                _vBottom = addSingletonComponent(_vBottom, c);
+                break;
+            case SUB_UPPER_LEFT:
+                _subUpperLeft = addSingletonComponent(_subUpperLeft, c);
+                break;
+            case SUB_UPPER_RIGHT:
+                _subUpperRight = addSingletonComponent(_subUpperRight, c);
+                break;
+            default:
+                super.addLayoutComponent(s, c);
+                break;
         }
     }
 
@@ -159,66 +169,6 @@ public class JideScrollPaneLayout extends ScrollPaneLayout implements JideScroll
             _subUpperRight = null;
         } else {
             super.removeLayoutComponent(c);
-        }
-    }
-
-    /**
-     * Returns the <code>JViewport</code> object that is the row footer.
-     * 
-     * @return the <code>JViewport</code> object that is the row footer
-     * 
-     * @see JideScrollPane#getRowFooter
-     */
-    public JViewport getRowFooter() {
-        return _rowFoot;
-    }
-
-    /**
-     * Returns the <code>JViewport</code> object that is the row sub column header.
-     * 
-     * @return the <code>JViewport</code> object that is the row sub column header.
-     * 
-     * @see com.jidesoft.swing.JideScrollPane#getSubColumnHeader()
-     */
-    public JViewport getRowSubColumnHeader() {
-        return _subColHead;
-    }
-
-    /**
-     * Returns the <code>JViewport</code> object that is the column footer.
-     * 
-     * @return the <code>JViewport</code> object that is the column footer
-     * 
-     * @see JideScrollPane#getColumnFooter
-     */
-    public JViewport getColumnFooter() {
-        return _colFoot;
-    }
-
-    /**
-     * Returns the <code>Component</code> at the specified corner.
-     * 
-     * @param key the <code>String</code> specifying the corner
-     * @return the <code>Component</code> at the specified corner, as defined in {@link ScrollPaneConstants}; if
-     *         <code>key</code> is not one of the four corners, <code>null</code> is returned
-     * 
-     * @see JScrollPane#getCorner
-     */
-    public Component getScrollBarCorner(String key) {
-        if (key.equals(HORIZONTAL_LEFT)) {
-            return _hLeft;
-        } else if (key.equals(HORIZONTAL_RIGHT)) {
-            return _hRight;
-        } else if (key.equals(VERTICAL_BOTTOM)) {
-            return _vBottom;
-        } else if (key.equals(VERTICAL_TOP)) {
-            return _vTop;
-        } else if (key.equals(SUB_UPPER_LEFT)) {
-            return _subUpperLeft;
-        } else if (key.equals(SUB_UPPER_RIGHT)) {
-            return _subUpperRight;
-        } else {
-            return super.getCorner(key);
         }
     }
 
