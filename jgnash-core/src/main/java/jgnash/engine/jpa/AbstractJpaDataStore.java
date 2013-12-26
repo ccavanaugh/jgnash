@@ -105,16 +105,26 @@ public abstract class AbstractJpaDataStore implements DataStore {
 
         if (em != null) {
             distributedLockManager = new DistributedLockManager(host, port + 2);
-            distributedLockManager.connectToServer(password);
+            boolean lockManagerResult = distributedLockManager.connectToServer(password);
 
             distributedAttachmentManager = new DistributedAttachmentManager(host, port + 3);
-            distributedAttachmentManager.connectToServer(password);
+            boolean attachmentManagerResult = distributedAttachmentManager.connectToServer(password);
 
-            engine = new Engine(new JpaEngineDAO(em, true), distributedLockManager, distributedAttachmentManager, EngineFactory.DEFAULT);
+            if (attachmentManagerResult && lockManagerResult) {
+                engine = new Engine(new JpaEngineDAO(em, true), distributedLockManager, distributedAttachmentManager, EngineFactory.DEFAULT);
 
-            logger.info("Created local JPA container and engine");
-            fileName = null;
-            remote = true;
+                logger.info("Created local JPA container and engine");
+                fileName = null;
+                remote = true;
+            } else {
+                distributedLockManager.disconnectFromServer();
+                distributedAttachmentManager.disconnectFromServer();
+
+                em.close();
+                factory.close();
+                em = null;
+                factory = null;
+            }
         }
 
         return engine;

@@ -147,8 +147,8 @@ public class DistributedAttachmentManager implements AttachmentManager {
         });
     }
 
-    public void connectToServer(final char[] password) {
-        fileClient.connectToServer(host, port, password);
+    public boolean connectToServer(final char[] password) {
+        return fileClient.connectToServer(host, port, password);
     }
 
     public void disconnectFromServer() {
