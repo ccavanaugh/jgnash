@@ -59,6 +59,7 @@ public final class Main {
 
     static {
         VERSION = Resource.getAppName() + " - " + Resource.getAppVersion();
+        System.setProperty("awt.useSystemAAFontSettings", "lcd"); // force proper antialias setting
     }
 
     @Option(name = "-xrender", usage = "Enable the XRender-based Java 2D rendering pipeline")
