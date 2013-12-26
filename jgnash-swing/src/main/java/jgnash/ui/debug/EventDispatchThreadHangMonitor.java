@@ -16,13 +16,10 @@ package jgnash.ui.debug;
  * along with this library; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
+
 import java.awt.AWTEvent;
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
@@ -30,7 +27,6 @@ import java.lang.management.ThreadMXBean;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
-import javax.swing.*;
 
 /**
  * Monitors the AWT event dispatch thread for events that take longer than a
@@ -304,194 +300,6 @@ public final class EventDispatchThreadHangMonitor extends EventQueue {
 
     private synchronized static int getNewHangNumber() {
         return ++hangCount;
-    }
-
-    public static void main(String[] args) {
-        initMonitoring();
-        //special case for deadlock test
-        if (args.length > 0 && "deadlock".equals(args[0])) {
-            EventDispatchThreadHangMonitor.INSTANCE.haveShownSomeComponent = true;
-            Tests.runDeadlockTest();
-            return;
-        }
-        Tests.main(args);
-    }
-
-    private static class Tests {
-
-        public static void main(final String[] args) {
-
-            java.awt.EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    for (String arg : args) {
-                        final JFrame frame = new JFrame();
-                        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                        frame.setLocationRelativeTo(null);
-                        switch (arg) {
-                            case "exception":
-                                runExceptionTest(frame);
-                                break;
-                            case "focus":
-                                runFocusTest(frame);
-                                break;
-                            case "modal-hang":
-                                runModalTest(frame, true);
-                                break;
-                            case "modal-no-hang":
-                                runModalTest(frame, false);
-                                break;
-                            default:
-                                System.err.println("unknown regression test '" + arg + "'");
-                                System.exit(1);
-                        }
-                        frame.pack();
-                        frame.setVisible(true);
-                    }
-                }
-            });
-        }
-
-        private static void runDeadlockTest() {
-            class Locker {
-
-                private Locker locker;
-
-                public void setLocker(Locker locker) {
-                    this.locker = locker;
-                }
-
-                public synchronized void tryToDeadlock() {
-                    locker.toString();
-                }
-
-                @Override
-                public synchronized String toString() {
-                    try {
-                        Thread.sleep(50);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    return super.toString();
-                }
-            }
-            final Locker one = new Locker();
-            final Locker two = new Locker();
-            one.setLocker(two);
-            two.setLocker(one);
-
-            //Deadlock expected here:
-            for (int i = 0; i < 100; i++) {
-                SwingUtilities.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        one.tryToDeadlock();
-                    }
-                });
-                two.tryToDeadlock();
-            }
-        }
-
-        // If we don't do our post-dispatch activity in a finally block, we'll
-        // report bogus hangs.
-        private static void runExceptionTest(final JFrame frame) {
-            JButton button = new JButton("Throw Exception");
-            button.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    // This shouldn't cause us to report a hang.
-                    throw new RuntimeException("Nobody expects the Spanish Inquisition!");
-                }
-            });
-            frame.add(button);
-        }
-
-        // A demonstration of nested calls to dispatchEvent caused by SequencedEvent.
-        private static void runFocusTest(final JFrame frame) {
-            final JDialog dialog = new JDialog(frame, "Non-Modal Dialog");
-            dialog.add(new JLabel("Close me!"));
-            dialog.pack();
-            dialog.setLocationRelativeTo(frame);
-            dialog.addWindowFocusListener(new WindowAdapter() {
-
-                @Override
-                public void windowGainedFocus(WindowEvent e) {
-                    System.out.println("FocusTest.windowGainedFocus");
-                    // If you don't cope with nested calls to dispatchEvent, you won't detect this.
-                    // See java.awt.SequencedEvent for an example.
-                    sleep(2500);
-                }
-            });
-            JButton button = new JButton("Show Non-Modal Dialog");
-            button.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    dialog.setVisible(true);
-                }
-            });
-            frame.add(button);
-        }
-
-        // A demonstration of the problems of dealing with modal dialogs.
-        private static void runModalTest(final JFrame frame, final boolean shouldSleep) {
-            System.out.println(shouldSleep ? "Expect hangs!" : "There should be no hangs...");
-            JButton button = new JButton("Show Modal Dialog");
-            button.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (shouldSleep) {
-                        sleep(2500); // This is easy.
-                    }
-                    JDialog dialog = new JDialog(frame, "Modal dialog", true);
-                    dialog.setLayout(new FlowLayout());
-                    dialog.add(new JLabel("Close this dialog!"));
-                    final JLabel label = new JLabel(" ");
-                    dialog.add(label);
-                    dialog.pack();
-                    dialog.setLocation(frame.getX() - 100, frame.getY());
-
-                    // Make sure the new event pump has some work to do, each unit of which is insufficient to cause a hang.
-                    new Thread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            for (int i = 0; i <= 100000; ++i) {
-                                final int value = i;
-                                EventQueue.invokeLater(new Runnable() {
-
-                                    @Override
-                                    public void run() {
-                                        label.setText(Integer.toString(value));
-                                    }
-                                });
-                            }
-                        }
-                    }, "runModalTest").start();
-
-                    dialog.setVisible(true);
-
-                    if (shouldSleep) {
-                        sleep(2500); // If you don't distinguish different stack traces, you won't report this.
-                    }
-                }
-            });
-            frame.add(button);
-        }
-
-        private static void sleep(long ms) {
-            try {
-                System.out.println("Sleeping for " + ms + " ms on " + Thread.currentThread() + "...");
-                Thread.sleep(ms);
-                System.out.println("Finished sleeping...");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
     }
 
     private static class Log {
