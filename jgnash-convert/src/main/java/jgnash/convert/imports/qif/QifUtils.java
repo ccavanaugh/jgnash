@@ -91,7 +91,7 @@ public class QifUtils {
                 day = Integer.parseInt(chunks[1].trim());
                 year = Integer.parseInt(chunks[2].trim());
             } catch (Exception e) {
-                Logger.getAnonymousLogger().severe(e.toString());
+                Logger.getLogger(QifUtils.class.getName()).severe(e.toString());
             }
             break;
         case EU_FORMAT:
@@ -100,11 +100,11 @@ public class QifUtils {
                 month = Integer.parseInt(chunks[1].trim());
                 year = Integer.parseInt(chunks[2].trim());
             } catch (Exception e) {
-                Logger.getAnonymousLogger().severe(e.toString());
+                Logger.getLogger(QifUtils.class.getName()).severe(e.toString());
             }
             break;
         default:
-            Logger.getAnonymousLogger().severe("Invalid date format specified");
+            Logger.getLogger(QifUtils.class.getName()).severe("Invalid date format specified");
             return new Date();
         }
 
@@ -147,7 +147,7 @@ public class QifUtils {
                     try {
                         return new BigDecimal(buf.toString());
                     } catch (final NumberFormatException e2) {
-                        Logger l = Logger.getAnonymousLogger();
+                        Logger l = Logger.getLogger(QifUtils.class.getName());
                         l.info("second parse attempt failed");
                         l.info(buf.toString());
                         l.info("falling back to rounding");
@@ -215,9 +215,9 @@ public class QifUtils {
                     result = false;
                     break;
                 } else if (startsWith(line, "!Option:AutoSwitch")) {
-                    // eat the line
+                    Logger.getLogger(QifUtils.class.getName()).fine("!Option:AutoSwitch");
                 } else if (startsWith(line, "!Clear:AutoSwitch")) {
-                    // eat the line
+                    Logger.getLogger(QifUtils.class.getName()).fine("!Clear:AutoSwitch");
                 } else {
                     System.out.println("Error: " + line);
                     break;
