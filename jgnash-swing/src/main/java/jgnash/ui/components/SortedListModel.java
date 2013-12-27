@@ -73,15 +73,6 @@ public class SortedListModel<E extends Comparable<? super E>> extends AbstractLi
     }
 
     /**
-     * @param index index for the object
-     * @return object at the given index
-     * @see ArrayList#get(int)
-     */
-    public E get(final int index) {
-        return list.get(index);
-    }
-
-    /**
      * Add a list of objects, does not fire a notification
      * 
      * @param aList collection of objects to add
@@ -167,34 +158,6 @@ public class SortedListModel<E extends Comparable<? super E>> extends AbstractLi
      */
     public List<E> asList() {
         return new ArrayList<>(list);
-    }
-
-    /**
-     * Removes the element at the specified position in this list. Returns the element that was removed from the list.
-     * <p/>
-     * Throws an <tt>ArrayIndexOutOfBoundsException</tt> if the index is out of range (index &lt; 0 || index &gt;=
-     * size()).
-     * 
-     * @param index the index of the element to removed.
-     * @return the object that was removed
-     */
-    public Object remove(final int index) {
-        Object rv = list.get(index);
-        list.remove(index);
-        fireIntervalRemoved(this, index, index);
-        return rv;
-    }
-
-    /**
-     * Removes all of the elements from this list. The list will be empty after this call returns (unless it throws an
-     * exception).
-     */
-    public void clear() {
-        int index1 = list.size() - 1;
-        list.clear();
-        if (index1 >= 0) {
-            fireIntervalRemoved(this, 0, index1);
-        }
     }
 
     /**

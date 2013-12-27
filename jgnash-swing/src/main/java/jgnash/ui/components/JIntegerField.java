@@ -52,9 +52,9 @@ public class JIntegerField extends JTextFieldEx {
         setInputVerifier(new IntegerVerifier());
     }
 
-    public void setLongValue(final long val) {
+    /*public void setLongValue(final long val) {
         setText(Long.toString(val));
-    }
+    }*/
 
     public void setIntValue(final int val) {
         setText(Integer.toString(val));

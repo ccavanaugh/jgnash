@@ -40,8 +40,6 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
 
     /**
      * The component under column header.  Default is <code>null</code>.
-     *
-     * @see #setSubColumnHeader(javax.swing.JViewport)
      */
     private JViewport _subColumnHeader;
     /**
@@ -305,43 +303,9 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
      * Returns the sub column header.
      *
      * @return the <code>rowSubColumnHeader</code> property
-     *
-     * @see #setSubColumnHeader(javax.swing.JViewport)
      */
     public JViewport getSubColumnHeader() {
         return _subColumnHeader;
-    }
-
-    /**
-     * Removes the old sub column header, if it exists.  If the new sub column header isn't <code>null</code>, sync the
-     * x coordinate of the its viewPosition with the viewport (if there is one) and then add it to the scroll pane.
-     *
-     * @param subColumnHeader the new sub column header to be used; if <code>null</code> the old sub column header is
-     *                        still removed and the new sub column header is set to <code>null</code>
-     * @see #getSubColumnHeader()
-     */
-    void setSubColumnHeader(JViewport subColumnHeader) {
-        JViewport old = getSubColumnHeader();
-        _subColumnHeader = subColumnHeader;
-        if (null != subColumnHeader) {
-            add(subColumnHeader, SUB_COLUMN_HEADER);
-        }
-        else if (null != old) {
-            remove(old);
-        }
-        firePropertyChange("subColumnHeader", old, subColumnHeader);
-
-        revalidate();
-        repaint();
-
-        if (old != null) {
-            JideSwingUtilities.unsynchronizeView(old, getViewport());
-            JideSwingUtilities.unsynchronizeView(getViewport(), old);
-        }
-        if (_subColumnHeader != null) {
-            JideSwingUtilities.synchronizeView(_subColumnHeader, getViewport(), SwingConstants.HORIZONTAL);
-            JideSwingUtilities.synchronizeView(getViewport(), _subColumnHeader, SwingConstants.HORIZONTAL);
-        }
     }
 
     /**

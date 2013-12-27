@@ -17,7 +17,6 @@
  */
 package jgnash.ui.util;
 
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Locale;
 
@@ -64,7 +63,7 @@ public class HTMLResource {
      * 
      * @param fileName the file name of the html file to look for.
      * @return a URL for reading the resource, or null if the resource could not be found
-     */
+     *//*
     public static InputStream getInputStream(final String fileName) {
         String lang = Locale.getDefault().getLanguage();
 
@@ -76,5 +75,5 @@ public class HTMLResource {
 
         // try to get the default
         return Object.class.getResourceAsStream(DEFAULT + fileName);
-    }
+    }*/
 }

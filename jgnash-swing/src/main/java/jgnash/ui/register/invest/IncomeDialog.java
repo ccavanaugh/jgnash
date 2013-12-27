@@ -30,7 +30,6 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -57,7 +56,6 @@ import jgnash.util.Resource;
  * Edit investment transaction gains and loss
  *
  * @author Craig Cavanaugh
- *
  */
 class IncomeDialog extends JDialog implements ListSelectionListener, ActionListener {
 
@@ -224,7 +222,7 @@ class IncomeDialog extends JDialog implements ListSelectionListener, ActionListe
         table.clearSelection();
     }
 
-    private void modifyTransaction(int index) {
+    private void modifyTransaction(final int index) {
         TransactionEntry t = model.getTransactionAt(index);
 
         if (t.getCreditAccount() == account) { // this is a credit
@@ -240,17 +238,8 @@ class IncomeDialog extends JDialog implements ListSelectionListener, ActionListe
         return model.getSplits();
     }
 
-    /**
-     * Calculate the balance of the splits
-     *
-     * @return balance of the splits
-     */
-    public BigDecimal getBalance() {
-        return model.getBalance();
-    }
-
     @Override
-    public void valueChanged(ListSelectionEvent e) {
+    public void valueChanged(final ListSelectionEvent e) {
         if (e.getValueIsAdjusting()) {
             return;
         } // ignore extra messages
@@ -267,7 +256,7 @@ class IncomeDialog extends JDialog implements ListSelectionListener, ActionListe
      * @param e action event
      */
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == cancelButton) {
             closeDialog();
         } else if (e.getSource() == deleteButton) {

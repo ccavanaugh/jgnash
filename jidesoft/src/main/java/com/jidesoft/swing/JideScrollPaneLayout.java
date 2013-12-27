@@ -35,8 +35,6 @@ public class JideScrollPaneLayout extends ScrollPaneLayout implements JideScroll
 
     /**
      * The row sub column header component. Default is <code>null</code>.
-     * 
-     * @see JideScrollPane#setSubColumnHeader
      */
     private JViewport _subColHead;
 
