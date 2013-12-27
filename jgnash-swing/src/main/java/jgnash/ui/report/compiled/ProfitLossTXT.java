@@ -59,8 +59,6 @@ public class ProfitLossTXT {
 
     private NumberFormat numberFormat;
 
-    private static final boolean SHOW_EMPTY_ACCOUNT = false;
-
     private ArrayList<BigDecimal> balance = new ArrayList<>();
 
     private final ArrayList<String> pl = new ArrayList<>();
@@ -260,7 +258,7 @@ public class ProfitLossTXT {
 
         for (Account child : a.getChildren()) {
             int len = child.getTransactionCount();
-            if ((SHOW_EMPTY_ACCOUNT || len > 0) && type == child.getAccountType()) {
+            if ((len > 0) && type == child.getAccountType()) {
                 String acctName = child.getName();
 
                 BigDecimal acctBal = AccountBalanceDisplayManager.convertToSelectedBalanceMode(child.getAccountType(), child.getBalance(dates1[0], dates1[1], baseCommodity));

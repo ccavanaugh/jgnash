@@ -65,9 +65,8 @@ import jgnash.util.Resource;
  * @author Tom Edelson
  */
 
+@SuppressWarnings("ConstantConditions")
 public final class MonthBalanceCSV {
-
-    private static final boolean SHOW_EMPTY_ACCOUNT = false;
 
     private final ArrayList<Account> accounts = new ArrayList<>();
 
@@ -172,10 +171,11 @@ public final class MonthBalanceCSV {
 
     } // end method getLastDays
 
+    @SuppressWarnings("ConstantConditions")
     private void buildLists(final Account a, final Date[] dates) {
         for (Account child : a.getChildren()) {
             int len = child.getTransactionCount();
-            if (SHOW_EMPTY_ACCOUNT || len > 0) {
+            if (len > 0) {
                 accounts.add(child); // add the account
                 BigDecimal[] b = new BigDecimal[dates.length];
                 for (int j = 0; j < dates.length; j++) {
