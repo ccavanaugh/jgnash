@@ -341,6 +341,7 @@ public class SecurityNode extends CommodityNode {
         return node;
     }
 
+    @SuppressWarnings("RedundantThrows")
     private Object readResolve() throws ObjectStreamException {
         postLoad();
         return this;

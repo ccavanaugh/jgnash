@@ -30,6 +30,8 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -134,8 +136,7 @@ public class ExchangeRate extends StoredObject {
     boolean addHistoryNode(final ExchangeRateHistoryNode node) {
         boolean result = false;
 
-        Lock l = getLock().writeLock();
-        l.lock();
+        getLock().writeLock().lock();
 
         try {
             historyNodes.add(node);
@@ -143,8 +144,10 @@ public class ExchangeRate extends StoredObject {
             lastRate = null; // force an update
 
             result = true;
+        } catch (final Exception ex) {
+            Logger.getLogger(ExchangeRate.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
         } finally {
-            l.unlock();
+            getLock().writeLock().unlock();
         }
 
         return result;
@@ -259,6 +262,7 @@ public class ExchangeRate extends StoredObject {
         return super.hashCode() * 67 + rateId.hashCode();
     }
 
+    @SuppressWarnings("RedundantThrows")
     private Object readResolve() throws ObjectStreamException {
         postLoad();
         return this;
