@@ -28,6 +28,7 @@ appears to be a JDK and Google interaction bug.
 
 Release 2.13.4
 ----------------------
+12/27/13 Update to the latest XStream
 12/26/13 Improve font appearance when running under KDE
 12/21/13 Correct Budget UI exceptions that were occurring when performing SaveAs operations.
 12/15/13 Show full currency formatting in the Budget display, otherwise, currency of the account is not obvious.
