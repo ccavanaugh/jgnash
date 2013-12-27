@@ -73,7 +73,9 @@ class BinaryContainer extends AbstractXStreamContainer {
             releaseFileLock();
             writeBinary(objects, file);
         } finally {
-            acquireFileLock();
+            if (!acquireFileLock()) { // lock the file on open
+                Logger.getLogger(BinaryContainer.class.getName()).severe("Could not acquire the file lock");
+            }
             readWriteLock.readLock().unlock();
         }
     }
@@ -84,7 +86,7 @@ class BinaryContainer extends AbstractXStreamContainer {
      * it will be overwritten.
      *
      * @param objects Collection of StoredObjects to write
-     * @param file file to write
+     * @param file    file to write
      */
     public static synchronized void writeBinary(final Collection<StoredObject> objects, final File file) {
         Logger logger = Logger.getLogger(BinaryContainer.class.getName());
@@ -143,7 +145,7 @@ class BinaryContainer extends AbstractXStreamContainer {
 
     void readBinary() {
         try (FileInputStream fis = new FileInputStream(file);
-                BufferedInputStream inputStream = new BufferedInputStream(fis)) {
+             BufferedInputStream inputStream = new BufferedInputStream(fis)) {
 
             readWriteLock.writeLock().lock();
 
@@ -151,7 +153,7 @@ class BinaryContainer extends AbstractXStreamContainer {
                     new BinaryStreamDriver()));
 
             try (ObjectInputStream in = xstream.createObjectInputStream(inputStream);
-                    FileLock readLock = fis.getChannel().tryLock(0, Long.MAX_VALUE, true)) {
+                 FileLock readLock = fis.getChannel().tryLock(0, Long.MAX_VALUE, true)) {
                 if (readLock != null) {
                     in.readObject();
                 }
@@ -160,7 +162,9 @@ class BinaryContainer extends AbstractXStreamContainer {
         } catch (IOException | ClassNotFoundException e) {
             Logger.getLogger(BinaryContainer.class.getName()).log(Level.SEVERE, null, e);
         } finally {
-            acquireFileLock(); // lock the file on open
+            if (!acquireFileLock()) { // lock the file on open
+                Logger.getLogger(BinaryContainer.class.getName()).severe("Could not acquire the file lock");
+            }
             readWriteLock.writeLock().unlock();
         }
     }

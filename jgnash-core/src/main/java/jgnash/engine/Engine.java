@@ -624,6 +624,8 @@ public class Engine {
                 getTrashDAO().addEntityTrash(object);
                 result = true;
             }
+        } catch (final Exception ex) {
+            logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
         } finally {
             engineLock.writeLock().unlock();
         }
@@ -2186,16 +2188,16 @@ public class Engine {
         budgetLock.writeLock().lock();
 
         try {
-            Message message;
-
             moveObjectToTrash(budget);
 
-            message = new Message(MessageChannel.BUDGET, ChannelEvent.BUDGET_REMOVE, this);
+            Message message = new Message(MessageChannel.BUDGET, ChannelEvent.BUDGET_REMOVE, this);
 
             message.setObject(MessageProperty.BUDGET, budget);
             messageBus.fireEvent(message);
 
             result = true;
+        } catch (final Exception ex) {
+            logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
         } finally {
             budgetLock.writeLock().unlock();
         }

@@ -189,29 +189,29 @@ abstract class AbstractXStreamContainer {
 
         boolean result = false;
 
-        Lock l = readWriteLock.writeLock();
-        l.lock();
+        readWriteLock.writeLock().lock();
 
         try {
             if (get(object.getUuid()) == null) { // make sure the UUID is unique before adding
                 objects.add(object);
             }
             result = true;
+        } catch (final Exception ex) {
+            Logger.getLogger(AbstractXStreamContainer.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            l.unlock();
+            readWriteLock.writeLock().unlock();
         }
 
         return result;
     }
 
     void delete(final StoredObject object) {
-        Lock l = readWriteLock.writeLock();
-        l.lock();
+        readWriteLock.writeLock().lock();
 
         try {
             objects.remove(object);
         } finally {
-            l.unlock();
+            readWriteLock.writeLock().unlock();
         }
     }
 
