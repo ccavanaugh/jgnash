@@ -13,7 +13,7 @@
     <inceptionYear>2001</inceptionYear>
 
     <prerequisites>
-        <maven>3.0.0</maven>
+        <maven>3.1.0</maven>
     </prerequisites>
 
     <properties>
@@ -198,7 +198,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.0</version>
+                <version>3.1</version>
                 <configuration>
                     <source>${java-version}</source>
                     <target>${java-version}</target>
@@ -215,7 +215,7 @@
         <module>jgnash-swing</module>
         <module>jgnash-convert</module>
         <module>jidesoft</module>
-        <module>mt940</module>      
+        <module>mt940</module>
     </modules>
 
 </project>
