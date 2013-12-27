@@ -17,10 +17,6 @@
  */
 package jgnash.util;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.binary.BinaryStreamDriver;
-import org.junit.Test;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -30,6 +26,10 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.binary.BinaryStreamDriver;
+import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
@@ -63,42 +63,42 @@ public class BinaryXStreamTest {
         try {
             tempFile = File.createTempFile("test", "");
             tempFile.deleteOnExit();
-        } catch (IOException e) {            
+        } catch (IOException e) {
             fail(e.toString());
         }
 
-        if (tempFile != null) {
-            try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-                BinaryStreamDriver bsd = new BinaryStreamDriver();
-                XStream xstream = new XStream(bsd);
 
-                try (ObjectOutputStream out = xstream.createObjectOutputStream(fos)) {
-                    out.writeObject(stringData);
-                    out.writeObject(integerData);
-                }
-            } catch (IOException e) {
-               fail(e.toString());
+        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+            BinaryStreamDriver bsd = new BinaryStreamDriver();
+            XStream xstream = new XStream(bsd);
+
+            try (ObjectOutputStream out = xstream.createObjectOutputStream(fos)) {
+                out.writeObject(stringData);
+                out.writeObject(integerData);
             }
-
-            assertTrue(FileMagic.isBinaryXStreamFile(tempFile));
-            assertFalse(FileMagic.isOfxV2(tempFile));
-
-            try (FileInputStream fis = new FileInputStream(tempFile)) {
-                BinaryStreamDriver bsd = new BinaryStreamDriver();
-                XStream xstream = new XStream(bsd);
-
-                try (ObjectInputStream in = xstream.createObjectInputStream(fis)) {
-                    List<?> strings = (List<?>) in.readObject();
-                    List<?> integers = (List<?>) in.readObject();
-
-                    assertArrayEquals(strings.toArray(), stringData.toArray());
-                    assertArrayEquals(integers.toArray(), integerData.toArray());
-                } catch (ClassNotFoundException e) {                    
-                    fail(e.toString());
-                }
-            } catch (IOException e) {
-               fail(e.toString());
-            }
+        } catch (IOException e) {
+            fail(e.toString());
         }
+
+        assertTrue(FileMagic.isBinaryXStreamFile(tempFile));
+        assertFalse(FileMagic.isOfxV2(tempFile));
+
+        try (FileInputStream fis = new FileInputStream(tempFile)) {
+            BinaryStreamDriver bsd = new BinaryStreamDriver();
+            XStream xstream = new XStream(bsd);
+
+            try (ObjectInputStream in = xstream.createObjectInputStream(fis)) {
+                List<?> strings = (List<?>) in.readObject();
+                List<?> integers = (List<?>) in.readObject();
+
+                assertArrayEquals(strings.toArray(), stringData.toArray());
+                assertArrayEquals(integers.toArray(), integerData.toArray());
+            } catch (ClassNotFoundException e) {
+                fail(e.toString());
+            }
+        } catch (IOException e) {
+            fail(e.toString());
+        }
+
     }
 }

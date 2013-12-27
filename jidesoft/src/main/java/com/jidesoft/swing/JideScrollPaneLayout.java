@@ -520,6 +520,7 @@ public class JideScrollPaneLayout extends ScrollPaneLayout implements JideScroll
      * 
      * @param parent the <code>Container</code> to lay out
      */
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void layoutContainer(Container parent) {
         /* Sync the (now obsolete) policy fields with the

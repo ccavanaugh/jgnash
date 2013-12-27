@@ -383,7 +383,6 @@ public class MonthlyAccountBalanceChartCompare {
         */
     }
 
-    //private static BigDecimal calculateTotal(final Date start, final Date end, final Account account, final CurrencyNode baseCurrency) {
     private static BigDecimal calculateTotal(final Date start, final Date end, final Account account, boolean recursive, final CurrencyNode baseCurrency) {
         BigDecimal amount;
         AccountType type = account.getAccountType();
@@ -394,7 +393,7 @@ public class MonthlyAccountBalanceChartCompare {
         if (recursive) {
             // add the amount of every sub accounts
             for (Account child : account.getChildren()) {
-                amount = amount.add(calculateTotal(start, end, child, recursive, baseCurrency));
+                amount = amount.add(calculateTotal(start, end, child, true, baseCurrency));
             }
         }
 
