@@ -33,7 +33,6 @@ import javax.swing.table.TableModel;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
-import jgnash.engine.CurrencyNode;
 import jgnash.engine.Transaction;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetPeriodDescriptor;
@@ -202,10 +201,6 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
         }
 
         return resultsModel.getResults(descriptor, account);
-    }
-
-    public CurrencyNode getCurrency() {
-        return resultsModel.getBaseCurrency();
     }
 
     private void fireUpdate(final Collection<Account> accounts) {
