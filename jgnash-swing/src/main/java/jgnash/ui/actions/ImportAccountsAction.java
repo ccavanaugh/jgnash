@@ -40,8 +40,6 @@ import jgnash.util.Resource;
 @Action("accountsimport-command")
 public class ImportAccountsAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = -2708791260270035876L;
-
     private static final String ACCOUNTS_IMPORT_DIR = "AccountsImportDirectroy";
 
     private static void importAccounts() {

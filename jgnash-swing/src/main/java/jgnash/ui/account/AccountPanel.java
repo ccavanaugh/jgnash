@@ -50,7 +50,6 @@ import jgnash.util.Resource;
  * @author Craig Cavanaugh
  */
 final class AccountPanel extends JPanel implements ActionListener {
-    private static final long serialVersionUID = 1L;
 
     private final transient Resource rb = Resource.get();
 

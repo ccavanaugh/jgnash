@@ -25,8 +25,6 @@ package jgnash.ui.register;
  */
 public class RegisterEvent extends java.util.EventObject {
 
-    private static final long serialVersionUID = 3874537818635582561L;
-
     public enum Action {
         CANCEL,
         CLOSE,

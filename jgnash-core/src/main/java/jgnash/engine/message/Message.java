@@ -36,8 +36,6 @@ import jgnash.engine.StoredObject;
  */
 public class Message implements Serializable, Cloneable {
 
-    private static final long serialVersionUID = 2351895771349706585L;
-
     private ChannelEvent event;
 
     private MessageChannel channel;

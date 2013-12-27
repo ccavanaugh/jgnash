@@ -31,8 +31,6 @@ import jgnash.ui.util.builder.Action;
 @Action("budget-manager-command")
 public class BudgetManagerAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = 0L;
-
     @Override
     public void actionPerformed(ActionEvent e) {
         BudgetManagerDialog.showDialog();

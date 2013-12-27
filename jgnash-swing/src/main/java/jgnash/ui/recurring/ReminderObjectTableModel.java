@@ -33,8 +33,6 @@ import jgnash.util.Resource;
  */
 public class ReminderObjectTableModel extends AbstractTableModel {
 
-    private static final long serialVersionUID = -7267851227687408645L;
-
     private final Resource rb = Resource.get();
 
     private final String[] cNames = { rb.getString("Column.Approve"), rb.getString("Column.Description"),

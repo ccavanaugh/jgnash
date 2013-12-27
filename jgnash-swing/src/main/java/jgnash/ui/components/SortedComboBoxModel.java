@@ -35,8 +35,6 @@ import javax.swing.MutableComboBoxModel;
 
 public class SortedComboBoxModel<E extends Comparable<? super E>> extends AbstractListModel<E> implements MutableComboBoxModel<E> {
 
-    private static final long serialVersionUID = 4137642143757238233L;
-
     private Object selectedObject;
 
     private List<E> list = new ArrayList<>();

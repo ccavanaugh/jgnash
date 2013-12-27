@@ -46,7 +46,6 @@ import jgnash.util.Resource;
  * @author Craig Cavanaugh
  */
 class RenameBudgetDialog extends JDialog implements ActionListener {
-    private static final long serialVersionUID = 1L;
 
     private final Resource rb = Resource.get();
 

@@ -32,8 +32,6 @@ import java.awt.event.ActionEvent;
 @Action("recurringList-command")
 public class RecurringAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = 0L;
-
     @Override
     public void actionPerformed(final ActionEvent e) {
         RecurringPanel.showDialog(UIApplication.getFrame());

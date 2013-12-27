@@ -103,7 +103,6 @@ public class AccountRegisterReport extends DynamicJasperReport {
         filterCheckBox = new JCheckBox(rb.getString("Button.Filter"));
         filterCheckBox.setSelected(getPreferences().getBoolean(FILTERTAG, false));
         filterCheckBox.addActionListener(new AbstractAction() {
-            private static final long serialVersionUID = 1L;
 
             @Override
             public void actionPerformed(final ActionEvent ae) {
@@ -119,7 +118,6 @@ public class AccountRegisterReport extends DynamicJasperReport {
         detailSplitsCheckBox = new JCheckBox(rb.getString("Button.DetailSplits"));
         detailSplitsCheckBox.setSelected(getPreferences().getBoolean(SHOW_DETAILS, false));
         detailSplitsCheckBox.addActionListener(new AbstractAction() {
-            private static final long serialVersionUID = 1L;
 
             @Override
             public void actionPerformed(final ActionEvent ae) {
@@ -128,7 +126,6 @@ public class AccountRegisterReport extends DynamicJasperReport {
         });
 
         refreshButton.addActionListener(new AbstractAction() {
-            private static final long serialVersionUID = 1L;
 
             @Override
             public void actionPerformed(final ActionEvent ae) {
@@ -268,8 +265,6 @@ public class AccountRegisterReport extends DynamicJasperReport {
     private class ReportTableModel extends AbstractReportTableModel {
 
         private final RegisterModel model;
-
-        private static final long serialVersionUID = 1L;
 
         /* if sumAmounts is true, any column with a ShortCommodityStyle class will be summed
          * at the end of the report

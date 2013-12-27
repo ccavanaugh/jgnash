@@ -50,8 +50,6 @@ import net.bzzt.swift.mt940.parser.Mt940Parser;
  */
 public class ImportMt940Action extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = 1L;
-
     public ImportMt940Action() {
 
         Resource rb = Resource.get();

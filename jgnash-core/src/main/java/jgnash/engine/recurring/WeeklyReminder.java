@@ -32,8 +32,6 @@ import javax.persistence.Entity;
 @Entity
 public class WeeklyReminder extends Reminder {
 
-    private static final long serialVersionUID = -1083131503417503307L;
-
     public WeeklyReminder() {
 
     }

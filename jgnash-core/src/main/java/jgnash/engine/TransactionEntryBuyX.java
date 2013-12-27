@@ -34,8 +34,6 @@ import javax.persistence.Entity;
  */
 @Entity
 public class TransactionEntryBuyX extends AbstractInvestmentTransactionEntry {
-    
-    private static final long serialVersionUID = 1L;
 
     /**
      * No argument constructor for reflection purposes.

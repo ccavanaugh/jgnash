@@ -43,8 +43,6 @@ import org.jdesktop.swingx.calendar.DateSelectionModel.SelectionMode;
  */
 public class DateSelectDialog extends GenericCloseDialog {
 
-    private static final long serialVersionUID = 1L;
-    
     private JXMonthView view;
 
     public static Date showDialog(final Window parent, final Date date) {

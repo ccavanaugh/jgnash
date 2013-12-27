@@ -48,8 +48,6 @@ import javax.persistence.PostLoad;
 @Entity
 public class SecurityNode extends CommodityNode {
 
-    private static final long serialVersionUID = -8377663762619941498L;
-
     @ManyToOne
     private CurrencyNode reportedCurrency;
 

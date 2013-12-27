@@ -37,8 +37,6 @@ import java.awt.event.ActionEvent;
 @Action("currency-default-command")
 public class DefaultCurrencyAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = 0L;
-
     @Override
     public void actionPerformed(final ActionEvent e) {
         EventQueue.invokeLater(new Runnable() {

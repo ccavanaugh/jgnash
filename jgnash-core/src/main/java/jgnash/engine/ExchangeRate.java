@@ -48,8 +48,6 @@ import javax.persistence.PostLoad;
 @Entity
 public class ExchangeRate extends StoredObject {
 
-    private static final long serialVersionUID = -2365289994847042288L;
-
     @JoinTable
     @OrderBy("date")    //applying a sort order prevents refresh issues
     @OneToMany(cascade = {CascadeType.ALL})

@@ -31,8 +31,6 @@ import jgnash.ui.util.builder.Action;
 @Action("report-accrunbal-command")
 public class RunningAccountBalanceChartAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = 0L;
-
     @Override
     public void actionPerformed(final ActionEvent e) {
         RunningAccountBalanceChart.show();

@@ -42,8 +42,6 @@ import javax.persistence.TemporalType;
 @Entity
 public class AmortizeObject implements Serializable {
 
-    private static final long serialVersionUID = 4823735664756113291L;
-
     @SuppressWarnings("unused")
     @Id @GeneratedValue(strategy= GenerationType.TABLE)
     private long id;

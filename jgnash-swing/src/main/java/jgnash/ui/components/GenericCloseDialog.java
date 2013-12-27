@@ -41,7 +41,6 @@ import jgnash.util.Resource;
  *
  */
 public class GenericCloseDialog extends JDialog implements ActionListener {
-    private static final long serialVersionUID = 1L;
 
     private final Resource rb = Resource.get();
 

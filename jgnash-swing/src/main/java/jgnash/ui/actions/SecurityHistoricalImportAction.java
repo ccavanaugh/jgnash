@@ -31,8 +31,6 @@ import java.awt.event.ActionEvent;
 @Action("commodity-historyimport-command")
 public class SecurityHistoricalImportAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = 0L;
-
     @Override
     public void actionPerformed(final ActionEvent e) {
         new YahooSecurityHistoryImportDialog().setVisible(true);

@@ -33,8 +33,6 @@ import java.util.List;
 @Entity
 public class InvestmentTransaction extends Transaction {
 
-    private static final long serialVersionUID = -7026047119534296655L;
-
     public InvestmentTransaction() {
         super();
     }

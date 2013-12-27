@@ -34,8 +34,6 @@ import jgnash.engine.message.MessageListener;
  */
 public abstract class AbstractEnabledAction extends AbstractAction implements MessageListener {
 
-    private static final long serialVersionUID = -7931923279511599388L;
-
     public AbstractEnabledAction() {
         registerListener();
         setEnabled(false);

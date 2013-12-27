@@ -31,8 +31,6 @@ import java.awt.event.ActionEvent;
 @Action("report-payeepiechart-command")
 public class PayeePieChartAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = 0L;
-
     @Override
     public void actionPerformed(final ActionEvent e) {
        PayeePieChart.show();

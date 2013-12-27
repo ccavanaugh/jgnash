@@ -54,8 +54,6 @@ import org.jdesktop.swingx.JXTitledPanel;
  */
 final class BudgetPeriodPanel extends JPanel {
 
-    private static final long serialVersionUID = 1L;
-
     private JXTitledPanel periodHeader;
 
     private JPanel periodFooter;

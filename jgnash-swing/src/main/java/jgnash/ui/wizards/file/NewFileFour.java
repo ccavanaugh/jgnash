@@ -229,8 +229,6 @@ public class NewFileFour extends JPanel implements WizardPage {
 
     private static final class AccountModel extends DefaultTreeModel {
 
-        private static final long serialVersionUID = 754534776718585809L;
-
         public AccountModel(final RootAccount root) {
             super(null);
             loadAccountTree(root);

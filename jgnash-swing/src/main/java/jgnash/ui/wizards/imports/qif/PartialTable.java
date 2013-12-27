@@ -73,8 +73,6 @@ class PartialTable extends FormattedJTable {
 
     class Model extends AbstractTableModel {
 
-        private static final long serialVersionUID = 7054758354758853979L;
-
         private final String[] cNames = { rb.getString("Column.Date"), rb.getString("Column.Payee"),
                         rb.getString("Column.Account"), rb.getString("Column.Amount") };
 

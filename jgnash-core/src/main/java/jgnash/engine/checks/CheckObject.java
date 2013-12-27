@@ -25,11 +25,8 @@ import jgnash.util.Resource;
  * Check Object
  *
  * @author Craig Cavanaugh
- *
  */
 public class CheckObject implements Serializable {
-
-    private static final long serialVersionUID = -4851501186847325498L;
 
     public enum CheckObjectType {
         AMOUNT(Resource.get().getString("Item.Amount")),

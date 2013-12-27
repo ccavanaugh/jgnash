@@ -146,8 +146,6 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
         refreshButton.addActionListener(new AbstractAction() {
 
-            private static final long serialVersionUID = 1L;
-
             @Override
             public void actionPerformed(final ActionEvent ae) {
                 refreshReport();
@@ -431,8 +429,6 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
         private final CurrencyNode baseCurrency;
 
         private List<Account> accountList = Collections.emptyList();
-
-        private static final long serialVersionUID = -2526030825754030630L;
 
         ReportModel(final List<Account> accountList, final CurrencyNode currency) {
             this.accountList = accountList;

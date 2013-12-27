@@ -625,8 +625,6 @@ public final class ActionParser extends DefaultHandler {
      */
     static class ReflectiveAction extends AbstractAction {
 
-        private static final long serialVersionUID = 1L;
-
         private transient Method method;
 
         private transient Object clazz;

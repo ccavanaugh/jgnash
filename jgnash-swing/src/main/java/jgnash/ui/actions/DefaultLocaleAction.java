@@ -43,8 +43,6 @@ import jgnash.util.Resource;
 @Action("locale-command")
 public class DefaultLocaleAction extends AbstractAction {
 
-    private static final long serialVersionUID = 0L;
-
     @Override
     public void actionPerformed(final ActionEvent e) {
         final Resource rb = Resource.get();

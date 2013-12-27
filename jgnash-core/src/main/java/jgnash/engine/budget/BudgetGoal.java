@@ -41,8 +41,6 @@ import javax.persistence.Lob;
 @Entity
 public class BudgetGoal implements Cloneable, Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     @SuppressWarnings("unused")
     @Id @GeneratedValue(strategy= GenerationType.TABLE)
     public long id;

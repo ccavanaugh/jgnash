@@ -58,8 +58,6 @@ import jgnash.util.Resource;
  */
 public abstract class AbstractReconcileTableModel extends AbstractTableModel implements MessageListener, PackableTableModel {
 
-    private static final long serialVersionUID = 6081316944824965273L;
-
     final Account account;
 
     private final Date openingDate;

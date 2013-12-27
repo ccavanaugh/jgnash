@@ -58,8 +58,6 @@ import java.util.logging.Logger;
  */
 public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
-    private static final long serialVersionUID = 1L;
-
     private static final Logger LOGGER = Logger.getLogger(BudgetGoalDialog.class.getName());
 
     private static final int SCROLLPANE_WIDTH = 120;
@@ -325,8 +323,6 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
     }
 
     class PeriodTableModel extends AbstractTableModel {
-
-        private static final long serialVersionUID = 1L;
 
         private List<BudgetPeriodDescriptor> periodDescriptors;
 

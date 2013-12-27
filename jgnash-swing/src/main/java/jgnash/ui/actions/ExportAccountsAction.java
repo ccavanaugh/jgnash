@@ -40,8 +40,6 @@ import jgnash.util.Resource;
 @Action("exportAccounts-command")
 public class ExportAccountsAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = -3058427716241671433L;
-
     private static final String CURRENT_DIR = "cwd";
 
     private static void exportAccounts() {

@@ -86,7 +86,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
     private static final String LAST_BUDGET = "lastBudget";
     private static final String ROW_VISIBLE = "rowVisible";
     private final Preferences preferences = Preferences.userNodeForPackage(BudgetPanel.class);
-    private static final long serialVersionUID = 1L;
+
     private static final int COMBO_BOX_WIDTH = 180;
     private Budget activeBudget;
     private BudgetOverviewPanel overviewPanel;

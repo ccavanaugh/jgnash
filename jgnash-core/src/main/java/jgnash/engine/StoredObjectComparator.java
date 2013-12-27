@@ -27,8 +27,6 @@ import java.util.Comparator;
  */
 public class StoredObjectComparator implements Comparator<StoredObject>, Serializable {
 
-    private static final long serialVersionUID = -9025058338656398978L;
-
     @Override
     public int compare(final StoredObject o1, final StoredObject o2) {
 

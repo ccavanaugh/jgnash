@@ -58,7 +58,6 @@ import jgnash.util.Resource;
  */
 final class BudgetWizardDialog extends JDialog implements ActionListener {
 
-    private static final long serialVersionUID = 1L;
     private static final int DLU_X = 150;
     private static final int DLU_Y = 60;
 

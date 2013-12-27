@@ -32,8 +32,6 @@ import java.awt.event.ActionEvent;
 @Action("currency-addremove-command")
 public class CurrenciesAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = 0L;
-
     @Override
     public void actionPerformed(ActionEvent e) {
         CurrenciesPanel.showDialog(UIApplication.getFrame());

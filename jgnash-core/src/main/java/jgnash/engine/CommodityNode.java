@@ -28,8 +28,6 @@ import java.math.BigDecimal;
 @Entity
 public abstract class CommodityNode extends StoredObject implements Comparable<CommodityNode> {
 
-    private static final long serialVersionUID = -8694706937407227601L;
-
     private String symbol;
 
     private byte scale = 2;

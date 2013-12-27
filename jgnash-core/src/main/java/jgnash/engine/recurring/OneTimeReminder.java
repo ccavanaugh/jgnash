@@ -28,8 +28,6 @@ import java.util.Date;
 @Entity
 public class OneTimeReminder extends Reminder {
 
-    private static final long serialVersionUID = -5004255823120090993L;
-
     public OneTimeReminder() {
     }
 

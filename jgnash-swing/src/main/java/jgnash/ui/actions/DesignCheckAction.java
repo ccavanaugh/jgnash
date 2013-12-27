@@ -35,8 +35,6 @@ import jgnash.ui.util.builder.Action;
 @Action("designchecks-command")
 public final class DesignCheckAction extends AbstractAction {
 
-    private static final long serialVersionUID = 299645809136156798L;
-
     /**
      * Invoked when an action occurs.
      *

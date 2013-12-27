@@ -759,8 +759,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     private static class WindowAction extends AbstractAction {
 
-        private static final long serialVersionUID = -598477156303870342L;
-
         WindowAction(RegisterFrame d) {
             super(d.toString());
             putValue(REGISTER_KEY, d);

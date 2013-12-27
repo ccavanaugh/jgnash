@@ -171,8 +171,6 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
 
     protected static abstract class AbstractModel extends AbstractListModel<Account> implements ComboBoxModel<Account> {
 
-        private static final long serialVersionUID = -4037152571034212252L;
-
         List<Account> accounts = new ArrayList<>();
 
         Account baseAccount = null;
@@ -299,8 +297,6 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
 
     private final static class FullModel extends AbstractModel {
 
-        private static final long serialVersionUID = 8022713346636034921L;
-
         public FullModel() {
             super();
             loadAccounts();
@@ -319,8 +315,6 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
     }
 
     private final static class ParentTypeModel extends AbstractModel {
-
-        private static final long serialVersionUID = 6101812950546413007L;
 
         public ParentTypeModel(final Account base, final Set<AccountType> types) {
             super(base, types);
@@ -345,8 +339,6 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
 
     private final static class AccountTypeModel extends AbstractModel {
 
-        private static final long serialVersionUID = 8040377907241948715L;
-
         public AccountTypeModel(final Set<AccountType> types) {
             super(null, types);
             loadAccounts();
@@ -369,8 +361,6 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
     }
 
     private final static class DefaultModel extends AbstractModel {
-
-        private static final long serialVersionUID = -6114581770341251371L;
 
         public DefaultModel(final Account exclude) {
             super(exclude);

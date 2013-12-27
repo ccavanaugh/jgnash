@@ -22,11 +22,8 @@ package jgnash.convert.imports.qif;
  * destination account.
  *
  * @author Craig Cavanaugh
- *
  */
 public class NoAccountException extends Exception {
-
-    private static final long serialVersionUID = -7897613718263004629L;
 
     /**
      * Constructs a <code>NoAccountException</code> with no detail  message.

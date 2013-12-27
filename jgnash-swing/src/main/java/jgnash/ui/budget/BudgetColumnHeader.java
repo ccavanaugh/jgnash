@@ -32,7 +32,6 @@ import javax.swing.JPanel;
  *
  */
 class BudgetColumnHeader extends JPanel{
-    private static final long serialVersionUID = 1L;
 
     private final List<BudgetPeriodPanel> panels;
 

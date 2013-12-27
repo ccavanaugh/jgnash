@@ -35,8 +35,6 @@ import javax.persistence.*;
 @Entity
 public class Budget extends StoredObject implements Comparable<Budget> {
 
-    private static final long serialVersionUID = 1L;
-
     /**
      * Budget name
      */

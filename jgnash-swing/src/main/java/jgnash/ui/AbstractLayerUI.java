@@ -68,8 +68,6 @@ import javax.swing.plaf.LayerUI;
 @SuppressWarnings("UnusedParameters")
 public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 
-    private static final long serialVersionUID = 1L;
-
     private static final Map<RenderingHints.Key, Object> emptyRenderingHintMap = Collections
             .unmodifiableMap(new HashMap<RenderingHints.Key, Object>(0));
 

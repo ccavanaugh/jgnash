@@ -34,8 +34,6 @@ import javax.persistence.*;
 @Entity
 public class Config extends StoredObject {
 
-    private static final long serialVersionUID = -7317806359608639763L;
-
     @ManyToOne(cascade = CascadeType.PERSIST)
     private CurrencyNode defaultCurrency;
 
@@ -63,6 +61,7 @@ public class Config extends StoredObject {
         return fileVersion;
     }
 
+    @SuppressWarnings("SameParameterValue")
     void setFileVersion(final float fileVersion) {
         this.fileVersion = fileVersion;
     }

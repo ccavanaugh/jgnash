@@ -40,8 +40,6 @@ import jgnash.ui.util.builder.Action;
 @Action("javascript-command")
 public class RunJavaScriptAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = 0L;
-
     private static final String JAVASCRIPT_DIR = "javascriptdir";
 
     @Override

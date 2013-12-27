@@ -35,8 +35,6 @@ import jgnash.engine.message.MessageProperty;
  */
 public class SortedInvestmentTableModel extends InvestmentRegisterTableModel implements SortableTableModel {
 
-    private static final long serialVersionUID = -7368576333237936954L;
-
     private Transaction transactions[] = new Transaction[0];
     private int sortColumn = 0;
     private boolean ascending = true;

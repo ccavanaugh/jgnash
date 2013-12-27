@@ -82,7 +82,6 @@ public class PortfolioReport extends DynamicJasperReport {
         refreshButton = new JButton(rb.getString("Button.Refresh"), Resource.getIcon("/jgnash/resource/view-refresh.png"));
 
         refreshButton.addActionListener(new AbstractAction() {
-            private static final long serialVersionUID = 1L;
 
             @Override
             public void actionPerformed(final ActionEvent ae) {
@@ -184,8 +183,6 @@ public class PortfolioReport extends DynamicJasperReport {
     }
 
     public class PortfolioReportTableModel extends AbstractReportTableModel {
-
-        private static final long serialVersionUID = 568338829426628458L;       
 
         boolean verbose;
 

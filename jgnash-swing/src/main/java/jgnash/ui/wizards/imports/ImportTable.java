@@ -168,8 +168,6 @@ class ImportTable extends FormattedJTable {
 
     class Model extends AbstractTableModel {
 
-        private static final long serialVersionUID = -6597047721167146695L;
-
         private ImageIcon equalIcon = null;
 
         private ImageIcon addIcon = null;

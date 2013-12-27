@@ -52,8 +52,6 @@ import jgnash.util.Resource;
  */
 public final class BudgetPropertiesDialog extends JDialog implements ActionListener {
 
-    private static final long serialVersionUID = 1L;
-
     private final Resource rb = Resource.get();
 
     private JComboBox<BudgetPeriod> budgetPeriodCombo;

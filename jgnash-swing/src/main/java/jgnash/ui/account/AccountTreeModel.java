@@ -35,8 +35,6 @@ import jgnash.engine.RootAccount;
  */
 public class AccountTreeModel extends DefaultTreeModel {
 
-    private static final long serialVersionUID = 5396760949185898321L;
-
     private boolean incomeVisible = true;
 
     private boolean expenseVisible = true;

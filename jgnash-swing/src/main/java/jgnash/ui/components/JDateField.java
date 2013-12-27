@@ -104,8 +104,6 @@ public final class JDateField extends JTextFieldEx {
 
     class DateDocument extends PlainDocument {
 
-        private static final long serialVersionUID = 7524547195996054009L;
-
         @Override
         public void insertString(final int offs, final String str, final AttributeSet a)
                 throws BadLocationException {

@@ -32,8 +32,6 @@ import java.awt.event.ActionEvent;
 @Action("exchangerate-modify-command")
 public class CurrencyExchangeAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = 0L;
-
     @Override
     public void actionPerformed(final ActionEvent e) {
         CurrencyExchangeDialog.showDialog(UIApplication.getFrame());

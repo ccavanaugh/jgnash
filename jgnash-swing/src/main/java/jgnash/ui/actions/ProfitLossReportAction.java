@@ -31,8 +31,6 @@ import java.awt.event.ActionEvent;
 @Action("report-profitloss-command")
 public class ProfitLossReportAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = 0L;
-
     @Override
     public void actionPerformed(final ActionEvent e) {
         new ProfitLossReport().showReport();

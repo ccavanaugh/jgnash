@@ -120,8 +120,6 @@ public class TransactionNumberComboBox extends JComboBox<String> {
 
     private class SelectionDocument extends PlainDocument {
 
-        private static final long serialVersionUID = 1987215600385777190L;
-
         @Override
         public void insertString(int offs, String str, AttributeSet a)
                 throws BadLocationException {

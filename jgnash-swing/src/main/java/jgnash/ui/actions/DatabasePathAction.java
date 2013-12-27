@@ -45,6 +45,7 @@ public class DatabasePathAction {
     private DatabasePathAction() {
     }
 
+    @SuppressWarnings("SameParameterValue")
     public static String databaseNameAction(final Component parent, final Type type) {
         return databaseNameAction(parent, type, DataStoreType.values());
     }

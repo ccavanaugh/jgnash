@@ -35,8 +35,6 @@ import jgnash.ui.components.autocomplete.AutoCompleteModel;
 @SuppressWarnings({ "RedundantStringConstructorCall" })
 public class AutoCompleteTextField extends JTextFieldEx {
 
-    private static final long serialVersionUID = -7122559240136664049L;
-
     private volatile boolean setText = false;
 
     private final AutoCompleteModel model;
@@ -76,8 +74,6 @@ public class AutoCompleteTextField extends JTextFieldEx {
     }
 
     protected class AutoCompleteDocument extends PlainDocument {
-
-        private static final long serialVersionUID = -1369307873189366733L;
 
         String currText = null;
 

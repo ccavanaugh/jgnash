@@ -32,8 +32,6 @@ import jgnash.ui.util.builder.Action;
 @Action("close-all-windows-command")
 public class CloseRegisterFramesAction extends AbstractAction {
 
-    private static final long serialVersionUID = 0L;
-
     @Override
     public void actionPerformed(final ActionEvent e) {
         UIApplication.getFrame().closeAllWindows();

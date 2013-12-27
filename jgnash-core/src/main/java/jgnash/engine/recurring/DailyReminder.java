@@ -32,8 +32,6 @@ import javax.persistence.Entity;
 @Entity
 public class DailyReminder extends Reminder {
 
-    private static final long serialVersionUID = -6999664985694769498L;
-
     public DailyReminder() {
     }
 

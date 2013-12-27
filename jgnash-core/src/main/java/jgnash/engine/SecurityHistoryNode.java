@@ -38,8 +38,6 @@ import java.util.Date;
  */
 @Entity
 public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Serializable {
-    
-    private static final long serialVersionUID = 1L;
 
     @SuppressWarnings("unused")
     @Id @GeneratedValue(strategy= GenerationType.TABLE)

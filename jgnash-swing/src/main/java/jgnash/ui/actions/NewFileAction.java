@@ -34,8 +34,6 @@ import javax.swing.*;
 @Action("new-command")
 public class NewFileAction extends AbstractAction {
 
-    private static final long serialVersionUID = 0L;
-
     @Override
     public void actionPerformed(final ActionEvent e) {
         NewFileDialog.showDialog(UIApplication.getFrame());

@@ -44,8 +44,6 @@ import java.util.prefs.Preferences;
 @Action("saveas-command")
 public class SaveFileAsAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = -8365579381939716138L;
-
     private static final String CURRENT_DIR = "cwd";
 
     /**

@@ -31,8 +31,6 @@ import jgnash.ui.util.builder.Action;
 @Action("report-accmonthbal-command")
 public class MonthlyAccountBalanceChartAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = 0L;
-
     @Override
     public void actionPerformed(final ActionEvent e) {
         MonthlyAccountBalanceChart.show();

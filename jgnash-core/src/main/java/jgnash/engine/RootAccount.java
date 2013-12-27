@@ -27,8 +27,6 @@ import javax.persistence.Entity;
 @Entity
 public class RootAccount extends Account {
 
-    private static final long serialVersionUID = 566641506784882611L;
-
     /**
      * No argument constructor for reflection purposes.
      * <b>Do not use to create a new instance</b>

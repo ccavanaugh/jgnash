@@ -31,8 +31,6 @@ import java.awt.event.ActionEvent;
 @Action("change-credentials-command")
 public class ChangeCredentialsAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = 0L;
-
     @Override
     public void actionPerformed(final ActionEvent e) {
         EventQueue.invokeLater(new Runnable() {

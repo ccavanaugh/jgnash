@@ -33,8 +33,6 @@ import jgnash.engine.Transaction;
 
 public class InvestmentRegisterTableModel extends AbstractRegisterTableModel {
 
-    private static final long serialVersionUID = -8280207838778167891L;
-
     private static final String[] names = { rb.getString("Column.Date"), rb.getString("Column.Action"),
                     rb.getString("Column.Investment"), rb.getString("Column.Clr"), rb.getString("Column.Quantity"),
                     rb.getString("Column.Price"), rb.getString("Column.Total") };

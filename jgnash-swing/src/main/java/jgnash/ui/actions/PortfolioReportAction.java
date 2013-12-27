@@ -36,8 +36,6 @@ import jgnash.ui.util.builder.Action;
 @Action("report-portfolio-command")
 public class PortfolioReportAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = 1L;
-
 
     public PortfolioReportAction() {
         super();

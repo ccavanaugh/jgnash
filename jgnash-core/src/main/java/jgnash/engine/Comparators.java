@@ -57,7 +57,6 @@ public class Comparators {
     }
 
     private static class TransactionByDate implements Comparator<Transaction>, Serializable {
-        private static final long serialVersionUID = 2952335785972287877L;
 
         @Override
         public int compare(final Transaction o1, final Transaction o2) {
@@ -73,7 +72,6 @@ public class Comparators {
     }
 
     private static class AccountByName implements Comparator<Account>, Serializable {
-        private static final long serialVersionUID = -4850018176347371999L;
 
         @Override
         public int compare(final Account a1, final Account a2) {
@@ -83,8 +81,6 @@ public class Comparators {
 
     private static class AccountByPathName implements Comparator<Account>, Serializable {
 
-        private static final long serialVersionUID = -4850018176347371999L;
-
         @Override
         public int compare(Account a1, Account a2) {
             return a1.getPathName().compareTo(a2.getPathName());
@@ -92,8 +88,6 @@ public class Comparators {
     }
 
     private static class AccountByBalance implements Comparator<Account>, Serializable {
-
-        private static final long serialVersionUID = -4850018176347371999L;
 
         private final Date startDate;
 
@@ -121,7 +115,6 @@ public class Comparators {
     }
 
     private static class TransactionByAmount implements Comparator<Transaction>, Serializable {
-        private static final long serialVersionUID = -4850098176317371999L;
 
         @Override
         public int compare(final Transaction o1, final Transaction o2) {
@@ -141,7 +134,6 @@ public class Comparators {
      * Comparator for sorting transactions by account
      */
     public static class TransactionByAccount implements Comparator<Transaction>, Serializable {
-        private static final long serialVersionUID = -7736644080763766670L;
 
         private final Account baseAccount;
 
@@ -186,7 +178,6 @@ public class Comparators {
     }
 
     private static class TransactionByPayee implements Comparator<Transaction>, Serializable {
-        private static final long serialVersionUID = 449668146646303461L;
 
         @Override
         public int compare(final Transaction o1, final Transaction o2) {
@@ -207,7 +198,6 @@ public class Comparators {
     }
 
     private static class TransactionByMemo implements Comparator<Transaction>, Serializable {
-        private static final long serialVersionUID = -8403231536773788664L;
 
         @Override
         public int compare(final Transaction o1, final Transaction o2) {
@@ -228,7 +218,6 @@ public class Comparators {
     }
 
     private static class TransactionByNumber implements Comparator<Transaction>, Serializable {
-        private static final long serialVersionUID = -6249244600475940336L;
 
         @Override
         public int compare(final Transaction o1, final Transaction o2) {
@@ -249,7 +238,6 @@ public class Comparators {
     }
 
     private static class TransactionBySecurity implements Comparator<Transaction>, Serializable {
-        private static final long serialVersionUID = -7693459048730293939L;
 
         @Override
         public int compare(final Transaction o1, final Transaction o2) {
@@ -278,7 +266,6 @@ public class Comparators {
     }
 
     private static class TransactionByType implements Comparator<Transaction>, Serializable {
-        private static final long serialVersionUID = -5608504681905338120L;
 
         @Override
         public int compare(final Transaction o1, final Transaction o2) {

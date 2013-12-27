@@ -36,8 +36,6 @@ import javax.persistence.*;
 @Entity
 public abstract class Reminder extends StoredObject implements Comparable<Reminder> {
 
-    private static final long serialVersionUID = 585114642710839171L;
-
     /**
      * Number of days to notify in advance
      */

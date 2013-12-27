@@ -41,8 +41,6 @@ import jgnash.ui.register.AccountBalanceDisplayManager;
  */
 public class RegisterTableWithSplitEntriesModel extends RegisterTableModel {
 
-    private static final long serialVersionUID = 6691702130271087845L;
-
     private ArrayList<TransactionWrapper> data; // internal data is a list which contains all account transactions *including their possible split entries*
 
     private boolean showSplitDetails = false;

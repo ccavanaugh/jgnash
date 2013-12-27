@@ -40,8 +40,6 @@ import java.awt.*;
  */
 public class ShadowBorder extends AbstractBorder {
 
-    private static final long serialVersionUID = 968811869101234057L;
-
     private static final Insets INSETS = new Insets(1, 1, 3, 3);
 
     public static Border getCompondShadowBorder() {

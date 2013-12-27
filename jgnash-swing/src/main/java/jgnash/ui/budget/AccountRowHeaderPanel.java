@@ -52,8 +52,6 @@ import org.jdesktop.swingx.JXTitledPanel;
  */
 final class AccountRowHeaderPanel extends JPanel {
 
-    private static final long serialVersionUID = 1L;
-
     private final ExpandingBudgetTableModel tableModel;
 
     private final Budget budget;

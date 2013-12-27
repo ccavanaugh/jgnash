@@ -32,8 +32,6 @@ import java.awt.event.ActionEvent;
 @Action("report-iepiechart-command")
 public class IncomeExpensePieChartAction extends AbstractAction {
 
-    private static final long serialVersionUID = 0L;
-
     @Override
     public void actionPerformed(final ActionEvent e) {
         IncomeExpensePieChart.show();

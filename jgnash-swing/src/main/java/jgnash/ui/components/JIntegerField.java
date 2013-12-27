@@ -85,8 +85,6 @@ public class JIntegerField extends JTextFieldEx {
 
     static class IntegerDocument extends PlainDocument {
 
-        private static final long serialVersionUID = 4630752138733958783L;
-
         @Override
         public void insertString(final int offs, final String str, final AttributeSet a)
                 throws BadLocationException {

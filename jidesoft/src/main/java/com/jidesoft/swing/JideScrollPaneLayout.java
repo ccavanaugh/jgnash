@@ -77,8 +77,6 @@ public class JideScrollPaneLayout extends ScrollPaneLayout implements JideScroll
      */
     private Component _subUpperRight;
 
-    private static final long serialVersionUID = 7897026041296359186L;
-
     @Override
     public void syncWithScrollPane(JScrollPane sp) {
         super.syncWithScrollPane(sp);
@@ -1044,6 +1042,5 @@ public class JideScrollPaneLayout extends ScrollPaneLayout implements JideScroll
      */
     static class UIResource extends JideScrollPaneLayout implements javax.swing.plaf.UIResource {
 
-        private static final long serialVersionUID = 1057343395078846689L;
     }
 }

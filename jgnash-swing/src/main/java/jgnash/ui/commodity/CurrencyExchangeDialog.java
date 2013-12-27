@@ -434,8 +434,6 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
 
     private class HistoryModel extends DefaultTableModel {
 
-        private static final long serialVersionUID = -2260325388942357562L;
-
         private ExchangeRate exchangeRate;
 
         private final String[] cNames = { rb.getString("Column.Date"), rb.getString("Column.ExchangeRate") };

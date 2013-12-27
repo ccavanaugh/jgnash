@@ -32,8 +32,6 @@ import java.awt.event.ActionEvent;
 @Action("commodity-history-command")
 public class CommodityHistoryAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = 0L;
-
     @Override
     public void actionPerformed(final ActionEvent e) {
         SecuritiesHistoryDialog.showDialog(UIApplication.getFrame());

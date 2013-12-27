@@ -32,8 +32,6 @@ import java.util.logging.Logger;
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class StoredObject implements Cloneable, Serializable {
 
-    private static final long serialVersionUID = -6989773226655555899L;
-
     /**
      * Version field for persistence purposes
      */

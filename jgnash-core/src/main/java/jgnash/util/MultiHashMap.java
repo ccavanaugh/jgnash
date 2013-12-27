@@ -35,8 +35,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class MultiHashMap<K, V> extends HashMap<K, Object> {
 
-    private static final long serialVersionUID = -631344712179108976L;
-
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
     @SuppressWarnings("unchecked")

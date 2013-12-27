@@ -64,8 +64,6 @@ import jgnash.util.DateUtils;
 @Entity
 public class Account extends StoredObject implements Comparable<Account> {
 
-    private static final long serialVersionUID = 6886735664760113291L;
-
     private static final Pattern numberPattern = Pattern.compile("\\d+");
 
     private static final Logger logger = Logger.getLogger(Account.class.getName());
@@ -242,7 +240,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @return true if this account contained the AccountProperty
      */
     @Deprecated
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "SameParameterValue"})
     boolean removeProperty(final AccountProperty key) {
         return propertyMap.remove(key.name()) != null;
     }
@@ -254,7 +252,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @return not null if the account contained the property
      */
     @Deprecated
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "SameParameterValue"})
     public Serializable getProperty(final AccountProperty key) {
         return propertyMap.get(key.name());
     }
@@ -1437,6 +1435,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     public synchronized String getAttribute(final String key) {
         if (key == null || key.isEmpty()) {
             throw new RuntimeException("Attribute key may not be empty or null");

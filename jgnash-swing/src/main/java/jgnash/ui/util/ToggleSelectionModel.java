@@ -28,8 +28,6 @@ import javax.swing.DefaultListSelectionModel;
  */
 public class ToggleSelectionModel extends DefaultListSelectionModel {
 
-    private static final long serialVersionUID = -7130173076073478534L;
-
     private boolean adjusting = false;
 
     @Override

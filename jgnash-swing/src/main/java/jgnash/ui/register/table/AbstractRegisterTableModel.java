@@ -47,8 +47,6 @@ import jgnash.util.Resource;
  */
 public abstract class AbstractRegisterTableModel extends AbstractTableModel implements MessageListener, AccountTableModel, PackableTableModel {
 
-    private static final long serialVersionUID = 1545319678064522849L;
-
     static final Resource rb = Resource.get();
 
     Account account;

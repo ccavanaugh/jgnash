@@ -34,8 +34,6 @@ import javax.persistence.Entity;
 @Entity
 public class MonthlyReminder extends Reminder {
 
-    private static final long serialVersionUID = 11516039436649194L;
-
     /**
      * Defines if increment is by day of the week or day of the month
      */

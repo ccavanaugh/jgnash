@@ -26,12 +26,9 @@ import java.awt.event.ActionEvent;
  * UI Action to open the currencies dialog
  *
  * @author Craig Cavanaugh
- *
  */
 @Action("printchecks-command")
 public class PrintChecksAction extends AbstractEnabledAction {
-
-    private static final long serialVersionUID = 0L;
 
     @Override
     public void actionPerformed(final ActionEvent e) {

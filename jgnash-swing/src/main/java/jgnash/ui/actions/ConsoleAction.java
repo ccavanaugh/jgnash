@@ -32,8 +32,6 @@ import java.awt.event.ActionEvent;
 @Action("console-command")
 public class ConsoleAction extends AbstractAction {
 
-    private static final long serialVersionUID = 0L;
-
     @Override
     public void actionPerformed(final ActionEvent e) {
         ConsoleDialog.show();

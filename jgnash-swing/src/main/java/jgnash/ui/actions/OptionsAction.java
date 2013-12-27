@@ -31,8 +31,6 @@ import java.awt.event.ActionEvent;
 @Action("options-command")
 public class OptionsAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = 0L;
-
     @Override
     public void actionPerformed(ActionEvent e) {
         OptionDialog.showDialog();

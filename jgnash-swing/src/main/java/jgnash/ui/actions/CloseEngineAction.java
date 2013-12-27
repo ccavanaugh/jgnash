@@ -35,8 +35,6 @@ import jgnash.util.Resource;
 @Action("close-command")
 public class CloseEngineAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = -779857509372374400L;
-
     private static void closeEngine() {
 
         final class CloseEngine extends SwingWorker<Void, Void> {

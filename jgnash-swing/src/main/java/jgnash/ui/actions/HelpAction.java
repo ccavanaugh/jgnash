@@ -34,8 +34,6 @@ import jgnash.ui.util.builder.Action;
 @Action("help-command")
 public final class HelpAction extends AbstractAction {
 
-    private static final long serialVersionUID = 299645809136156798L;    
-
     /**
      * Invoked when an action occurs.
      *

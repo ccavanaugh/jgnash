@@ -32,8 +32,6 @@ import javax.swing.AbstractListModel;
 
 public class SortedListModel<E extends Comparable<? super E>> extends AbstractListModel<E> {
 
-    private static final long serialVersionUID = -5321417365496715895L;
-
     final private List<E> list = new ArrayList<>();
 
     public SortedListModel() {

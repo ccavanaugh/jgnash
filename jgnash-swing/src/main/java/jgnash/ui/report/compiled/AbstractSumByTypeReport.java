@@ -103,7 +103,6 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
                 Resource.getIcon("/jgnash/resource/view-refresh.png"));
 
         refreshButton.addActionListener(new AbstractAction() {
-            private static final long serialVersionUID = 1L;
 
             @Override
             public void actionPerformed(final ActionEvent ae) {

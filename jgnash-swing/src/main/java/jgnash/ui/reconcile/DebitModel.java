@@ -28,8 +28,6 @@ import jgnash.engine.Transaction;
  */
 class DebitModel extends AbstractReconcileTableModel {
 
-    private static final long serialVersionUID = -1719518895082299667L;
-
     DebitModel(final Account account, final Date openingDate) {
         super(account, openingDate);
     }

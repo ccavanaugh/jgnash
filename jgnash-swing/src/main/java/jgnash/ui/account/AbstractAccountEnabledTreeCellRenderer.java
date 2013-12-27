@@ -74,8 +74,6 @@ abstract class AbstractAccountEnabledTreeCellRenderer implements TreeCellRendere
      */
     private class SelectionModel extends DefaultTreeSelectionModel {
 
-        private static final long serialVersionUID = -1484099294329591524L;
-
         public SelectionModel() {
             super();
             setSelectionMode(SINGLE_TREE_SELECTION);

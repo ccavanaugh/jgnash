@@ -30,8 +30,6 @@ import javax.persistence.Entity;
  */
 @Entity
 public class TransactionEntryReinvestDivX extends TransactionEntryAbstractIncrease {
-    
-    private static final long serialVersionUID = 1L;
 
     /**
      * No argument constructor for reflection purposes.

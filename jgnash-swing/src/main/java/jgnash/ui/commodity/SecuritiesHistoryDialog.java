@@ -388,8 +388,6 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
 
     private class HistoryModel extends DefaultTableModel implements MessageListener {
 
-        private static final long serialVersionUID = -1928531589902526946L;
-
         SecurityNode node = null;
 
         List<SecurityHistoryNode> history;        

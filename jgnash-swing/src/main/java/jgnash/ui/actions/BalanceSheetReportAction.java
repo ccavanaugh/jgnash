@@ -30,8 +30,6 @@ import java.awt.event.ActionEvent;
 @Action("report-balancesheet-command")
 public class BalanceSheetReportAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = 0L;
-
     @Override
     public void actionPerformed(final ActionEvent e) {
         new BalanceSheetReport().showReport();

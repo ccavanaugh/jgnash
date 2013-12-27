@@ -305,8 +305,6 @@ public class JFloatField extends JTextFieldEx {
 
     private class FloatDocument extends PlainDocument {
 
-        private static final long serialVersionUID = 6266828450216708242L;
-
         @Override
         public void insertString(final int offs, final String str, final AttributeSet a)
                 throws BadLocationException {

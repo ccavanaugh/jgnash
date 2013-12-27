@@ -28,8 +28,6 @@ import jgnash.engine.Transaction;
  */
 class CreditModel extends AbstractReconcileTableModel {
 
-    private static final long serialVersionUID = 5429979414946862872L;
-
     CreditModel(final Account account, final Date openingDate) {
         super(account, openingDate);
     }

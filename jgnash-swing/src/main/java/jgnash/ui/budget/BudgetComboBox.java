@@ -44,8 +44,6 @@ import jgnash.util.Resource;
  */
 public final class BudgetComboBox extends JComboBox<Budget> {
 
-    private static final long serialVersionUID = 1L;
-
     @SuppressWarnings("CallToThreadStartDuringObjectConstruction")
     public BudgetComboBox() {
         super();
@@ -94,8 +92,6 @@ public final class BudgetComboBox extends JComboBox<Budget> {
     }
 
     protected static final class BudgetModel extends SortedComboBoxModel<Budget> implements MessageListener {
-
-        private static final long serialVersionUID = 1L;
 
         public BudgetModel() {
             super();

@@ -29,12 +29,9 @@ import jgnash.ui.util.builder.Action;
  * UI Action to open the new file dialog
  *
  * @author Craig Cavanaugh
- *
  */
 @Action("about-command")
 public class AboutAction extends AbstractAction {
-
-    private static final long serialVersionUID = 0L;
 
     @Override
     public void actionPerformed(ActionEvent e) {

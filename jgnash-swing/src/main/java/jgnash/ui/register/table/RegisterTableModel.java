@@ -32,8 +32,6 @@ import jgnash.engine.Transaction;
  */
 public class RegisterTableModel extends AbstractRegisterTableModel {
 
-    private static final long serialVersionUID = 4178160188729546976L;
-
     static final String split = rb.getString("Button.Splits");
 
     private static final int[] PREF_COLUMN_WEIGHTS = { 0, 0, 20, 20, 20, 0, 0, 0, 0 };

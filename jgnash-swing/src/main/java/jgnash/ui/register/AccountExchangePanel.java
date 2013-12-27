@@ -62,8 +62,6 @@ import jgnash.util.Resource;
  */
 public class AccountExchangePanel extends JPanel implements ActionListener, FocusListener, PopupMenuListener, ItemListener, MessageListener {
 
-    private static final long serialVersionUID = -4082990561708078467L;
-
     private CurrencyNode baseCurrency;
 
     private AccountListComboBox accountCombo;

@@ -49,8 +49,6 @@ import java.util.logging.Logger;
  */
 @Entity
 public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable, Serializable {
-    
-    private static final long serialVersionUID = 1L;
 
     private transient int hash = 0;
 

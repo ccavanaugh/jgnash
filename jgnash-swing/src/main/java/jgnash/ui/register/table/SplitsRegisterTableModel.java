@@ -37,8 +37,6 @@ import jgnash.util.Resource;
  */
 public class SplitsRegisterTableModel extends AbstractTableModel implements AccountTableModel {
 
-    private static final long serialVersionUID = -8915685858944811662L;
-
     private final Resource rb = Resource.get();
 
     /**

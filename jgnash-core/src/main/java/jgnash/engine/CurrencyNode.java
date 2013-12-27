@@ -30,8 +30,6 @@ import javax.persistence.Entity;
 @Entity
 public class CurrencyNode extends CommodityNode {
 
-    private static final long serialVersionUID = 1339921229356331512L;
-
     private transient ExchangeRateDAO exchangeRateDAO;
 
     public CurrencyNode() {

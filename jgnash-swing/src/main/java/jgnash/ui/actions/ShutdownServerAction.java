@@ -33,8 +33,6 @@ import java.awt.event.ActionEvent;
 @Action("shutdown-server-command")
 public class ShutdownServerAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = 0L;
-
     @Override
     public void actionPerformed(final ActionEvent e) {
         EventQueue.invokeLater(new Runnable() {

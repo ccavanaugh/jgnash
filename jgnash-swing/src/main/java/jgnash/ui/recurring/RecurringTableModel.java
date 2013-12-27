@@ -39,8 +39,6 @@ import jgnash.util.Resource;
  */
 public class RecurringTableModel extends AbstractTableModel implements MessageListener {
 
-    private static final long serialVersionUID = -4775197077477737505L;
-
     private List<Reminder> reminders;
 
     private final Resource rb = Resource.get();

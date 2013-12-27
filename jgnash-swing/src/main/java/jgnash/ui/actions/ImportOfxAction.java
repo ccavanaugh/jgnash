@@ -51,8 +51,6 @@ import jgnash.util.Resource;
 @Action("ofximport-command")
 public class ImportOfxAction extends AbstractEnabledAction {
 
-    private static final long serialVersionUID = -2360990715662934442L;
-
     private static final String OFX_DIR = "OfxDirectory";
 
     private static void importOfx() {

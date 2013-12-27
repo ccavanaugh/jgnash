@@ -40,8 +40,6 @@ import java.util.Date;
 @Entity
 public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNode>, Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     @SuppressWarnings("UnusedDeclaration")
     @Id @GeneratedValue(strategy = GenerationType.TABLE)
     public long id;

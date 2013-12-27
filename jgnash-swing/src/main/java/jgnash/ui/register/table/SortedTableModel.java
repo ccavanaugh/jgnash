@@ -39,8 +39,6 @@ import jgnash.ui.register.AccountBalanceDisplayManager;
  */
 public class SortedTableModel extends RegisterTableModel implements SortableTableModel {
 
-    private static final long serialVersionUID = -7009845379286807436L;
-
     private List<Transaction> transactions = new ArrayList<>();
 
     private int sortColumn = 0;

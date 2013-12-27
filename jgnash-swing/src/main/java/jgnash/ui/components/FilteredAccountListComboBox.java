@@ -52,8 +52,6 @@ public class FilteredAccountListComboBox extends AccountListComboBox {
 
     private final static class FilteredModel extends AbstractModel {
 
-        private static final long serialVersionUID = -6114581770341251372L;
-
         private final boolean hideLocked;
 
         private final boolean hidePlaceholder;

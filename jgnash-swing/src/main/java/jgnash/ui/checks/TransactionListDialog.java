@@ -211,8 +211,6 @@ class TransactionListDialog extends JDialog implements ActionListener, ListSelec
 
     private class Model extends AbstractTableModel {
 
-        private static final long serialVersionUID = 6665735758964949493L;
-
         private final ArrayList<Wrapper> wrapperList = new ArrayList<>(); // list of transactions
 
         private final String[] columnNames = { rb.getString("Column.Print"), rb.getString("Column.Date"),
