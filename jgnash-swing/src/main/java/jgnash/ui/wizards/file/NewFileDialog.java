@@ -49,8 +49,6 @@ import jgnash.util.Resource;
 public class NewFileDialog extends WizardDialog {
 
     public enum Settings {
-
-        BACKEND,
         CURRENCIES,
         DEFAULT_CURRENCIES,
         DEFAULT_CURRENCY,
