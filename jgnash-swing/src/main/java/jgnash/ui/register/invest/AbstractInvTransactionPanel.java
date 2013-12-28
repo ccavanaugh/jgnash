@@ -58,7 +58,6 @@ public abstract class AbstractInvTransactionPanel extends AbstractTransactionPan
         reconciledButton.setMargin(new Insets(0, 0, 0, 0));
     }
 
-    @Override
     protected Account getAccount() {
         return account;
     }

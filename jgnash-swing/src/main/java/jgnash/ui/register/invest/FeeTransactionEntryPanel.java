@@ -62,8 +62,7 @@ public class FeeTransactionEntryPanel extends AbstractTransactionEntryPanel {
         return entry;
     }
 
-    @Override
-    public void modifyTransaction(TransactionEntry entry) {
+    public void modifyTransaction(final TransactionEntry entry) {
         oldEntry = entry;
 
         memoField.setText(entry.getMemo());

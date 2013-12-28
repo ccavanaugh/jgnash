@@ -93,6 +93,4 @@ public abstract class AbstractTransactionPanel extends AbstractEntryFormPanel {
      * @return The generated transaction
      */
     protected abstract Transaction buildTransaction();
-
-    protected abstract Account getAccount();
 }

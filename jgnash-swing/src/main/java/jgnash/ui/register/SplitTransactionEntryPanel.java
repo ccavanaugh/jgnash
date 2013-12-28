@@ -25,7 +25,6 @@ import jgnash.ui.register.table.SplitsRegisterTableModel;
  * Entry panel for spit transactions
  *
  * @author Craig Cavanaugh
- *
  */
 public class SplitTransactionEntryPanel extends AbstractTransactionEntryPanel {
 
@@ -75,8 +74,7 @@ public class SplitTransactionEntryPanel extends AbstractTransactionEntryPanel {
         return entry;
     }
 
-    @Override
-    public void modifyTransaction(TransactionEntry entry) {
+    public void modifyTransaction(final TransactionEntry entry) {
         oldEntry = entry;
 
         memoField.setText(entry.getMemo());

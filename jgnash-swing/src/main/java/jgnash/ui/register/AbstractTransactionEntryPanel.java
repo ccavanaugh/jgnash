@@ -157,8 +157,6 @@ public abstract class AbstractTransactionEntryPanel extends AbstractEntryFormPan
 
     protected abstract TransactionEntry buildTransactionEntry();
 
-    public abstract void modifyTransaction(TransactionEntry entry);
-
     @Override
     public void clearForm() {
 
