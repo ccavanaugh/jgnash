@@ -26,13 +26,6 @@ package jgnash.convert.imports.qif;
 public class NoAccountException extends Exception {
 
     /**
-     * Constructs a <code>NoAccountException</code> with no detail  message.
-     */
-    public NoAccountException() {
-        super();
-    }
-
-    /**
      * Constructs a <code>NoAccountException</code> with the
      * specified detail message.
      *

@@ -142,7 +142,7 @@ public final class QifParser {
         }
         
         if (!accountFound) {
-            throw new NoAccountException();
+            throw new NoAccountException("The account was not found");
         }
     }
 
