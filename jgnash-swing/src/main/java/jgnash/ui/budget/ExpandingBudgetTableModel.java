@@ -146,10 +146,6 @@ public class ExpandingBudgetTableModel extends AbstractExpandingTableModel<Accou
         return model.getAccountGroupList();
     }
 
-    public boolean contains(final Account account) {
-        return model.getAccounts().contains(account);
-    }
-
     /**
      * @see AbstractExpandingTableModel#getVisibleDepth(Comparable)
      */
