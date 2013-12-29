@@ -69,7 +69,7 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
 
     private final Path attachmentPath;
 
-    private EncryptionManager encryptionManager;
+    private final EncryptionManager encryptionManager;
 
     /**
      * Netty Handler.  The specified path may be a temporary location for clients or a persistent location for servers.

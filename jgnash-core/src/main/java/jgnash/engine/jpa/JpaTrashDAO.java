@@ -75,6 +75,7 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
 
         try {
             trashExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+            trashExecutor = null;
         } catch (InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }

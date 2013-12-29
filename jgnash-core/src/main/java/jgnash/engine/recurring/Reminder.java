@@ -50,6 +50,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
      * Display notice of the automatically created transaction
      */
     @Deprecated
+    @SuppressWarnings("unused")
     private boolean autoCreateNotify;
 
     /**
@@ -90,6 +91,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
      * Delete on completion
      */
     @Deprecated
+    @SuppressWarnings("unused")
     private boolean removable = false;
 
     /**

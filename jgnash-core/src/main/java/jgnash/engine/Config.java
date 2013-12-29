@@ -51,6 +51,7 @@ public class Config extends StoredObject {
      * Contains a list of custom transaction tags a user may apply
      */
     @ElementCollection
+    @SuppressWarnings("unused")
     private Set<String> customTransactionTags = new HashSet<>();
 
     void initialize() {

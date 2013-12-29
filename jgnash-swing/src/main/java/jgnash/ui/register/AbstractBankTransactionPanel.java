@@ -86,7 +86,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
 
     private boolean autoComplete = true;
 
-    AttachmentPanel attachmentPanel = new AttachmentPanel();
+    final AttachmentPanel attachmentPanel = new AttachmentPanel();
 
     /**
      * Abstract transaction panel

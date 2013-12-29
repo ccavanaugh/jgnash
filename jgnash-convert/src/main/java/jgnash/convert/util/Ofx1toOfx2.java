@@ -36,10 +36,10 @@ import java.util.logging.Logger;
 public class Ofx1toOfx2 {
 
     @Option(name = "-in", usage = "File to convert")
-    private File inFile = null;
+    private final File inFile = null;
 
     @Option(name = "-out", usage = "File to save to")
-    private File outFile = null;
+    private final File outFile = null;
 
     public static void main(final String args[]) {
         Ofx1toOfx2 main = new Ofx1toOfx2();

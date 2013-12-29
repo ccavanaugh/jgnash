@@ -387,10 +387,12 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
      *
      * @return custom tags or an empty collection if not set
      */
+    @SuppressWarnings("unused")
     public Collection<String> getCustomTags() {
         return EncodeDecode.decodeStringCollection(customTags);
     }
 
+    @SuppressWarnings("unused")
     public void setCustomTags(final Collection<String> strings) {
         customTags = EncodeDecode.encodeStringCollection(strings);
     }
