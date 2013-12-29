@@ -26,7 +26,6 @@ import java.util.prefs.Preferences;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import jgnash.engine.Account;
 import jgnash.engine.Transaction;
 
 /**

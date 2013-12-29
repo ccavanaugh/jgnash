@@ -49,6 +49,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * Display notice of the automatically created transaction
      */
+    @Deprecated
     private boolean autoCreateNotify;
 
     /**
@@ -88,6 +89,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * Delete on completion
      */
+    @Deprecated
     private boolean removable = false;
 
     /**
@@ -218,13 +220,6 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
-     * @return Returns the autoCreateNotify.
-     */
-    public boolean isAutoCreateNotify() {
-        return autoCreateNotify;
-    }
-
-    /**
      * Getter for property enabled.
      *
      * @return Value of property enabled.
@@ -233,12 +228,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
         return enabled;
     }
 
-    /**
-     * @return Returns the removable.
-     */
-    public boolean isRemovable() {
-        return removable;
-    }
+
 
     /**
      * @param advanceRemindDays The advanceRemindDays to set.
@@ -252,13 +242,6 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
      */
     public void setAutoCreate(final boolean autoCreate) {
         this.autoCreate = autoCreate;
-    }
-
-    /**
-     * @param autoCreateNotify The autoCreateNotify to set.
-     */
-    public void setAutoCreateNotify(final boolean autoCreateNotify) {
-        this.autoCreateNotify = autoCreateNotify;
     }
 
     /**
@@ -303,13 +286,6 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     public Date setLastDate() {
         setLastDate(getIterator().next());
         return getLastDate();
-    }
-
-    /**
-     * @param removable The removable to set.
-     */
-    public void setRemovable(final boolean removable) {
-        this.removable = removable;
     }
 
     /**
