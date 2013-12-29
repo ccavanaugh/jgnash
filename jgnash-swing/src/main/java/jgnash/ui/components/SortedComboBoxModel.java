@@ -32,7 +32,6 @@ import javax.swing.MutableComboBoxModel;
  *
  * @param <E> Model type
  */
-
 public class SortedComboBoxModel<E extends Comparable<? super E>> extends AbstractListModel<E> implements MutableComboBoxModel<E> {
 
     private Object selectedObject;
@@ -56,11 +55,11 @@ public class SortedComboBoxModel<E extends Comparable<? super E>> extends Abstra
         }
     }
 
-    public void clear() {
+    /*public void clear() {
         int size = list.size();
         list.clear();
         fireIntervalRemoved(this, 0, size - 1);
-    }
+    }*/
 
     public void addAll(final Collection<E> items) {
         list.addAll(items);
