@@ -21,11 +21,6 @@ public interface JideScrollPaneConstants extends ScrollPaneConstants {
      * lower left corner and the lower right corner.
      */
     public static final String COLUMN_FOOTER = "COLUMN_FOOTER";
-    /**
-     * Identifies the area at the top where the viewport is between the
-     * column header and main viewport.
-     */
-    public static final String SUB_COLUMN_HEADER = "SUB_COLUMN_HEADER";
 
     public static final String HORIZONTAL_LEFT = "HORIZONTAL_LEFT";      //NOI18N
     public static final String HORIZONTAL_RIGHT = "HORIZONTAL_RIGHT";    //NOI18N

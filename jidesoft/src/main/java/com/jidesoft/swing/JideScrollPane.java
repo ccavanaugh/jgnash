@@ -37,11 +37,6 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
      */
     private JViewport _rowFooter;
 
-
-    /**
-     * The component under column header.  Default is <code>null</code>.
-     */
-    private JViewport _subColumnHeader;
     /**
      * The component under upper left corner.  Default is <code>null</code>.
      *
@@ -126,10 +121,6 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
             if (columnHeader != null) {
                 JideSwingUtilities.unsynchronizeView(columnHeader, old);
             }
-            if (_subColumnHeader != null) {
-                JideSwingUtilities.unsynchronizeView(_subColumnHeader, old);
-                JideSwingUtilities.unsynchronizeView(old, _subColumnHeader);
-            }
         }
         if (viewport != null) {
             if (rowHeader != null) {
@@ -145,10 +136,6 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
             }
             if (columnHeader != null) {
                 JideSwingUtilities.synchronizeView(columnHeader, getViewport(), SwingConstants.HORIZONTAL);
-            }
-            if (_subColumnHeader != null) {
-                JideSwingUtilities.synchronizeView(_subColumnHeader, getViewport(), SwingConstants.HORIZONTAL);
-                JideSwingUtilities.synchronizeView(getViewport(), _subColumnHeader, SwingConstants.HORIZONTAL);
             }
         }
     }
@@ -297,15 +284,6 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
         if (getColumnHeader() != null) {
             JideSwingUtilities.synchronizeView(getColumnHeader(), getViewport(), SwingConstants.HORIZONTAL);
         }
-    }
-
-    /**
-     * Returns the sub column header.
-     *
-     * @return the <code>rowSubColumnHeader</code> property
-     */
-    public JViewport getSubColumnHeader() {
-        return _subColumnHeader;
     }
 
     /**

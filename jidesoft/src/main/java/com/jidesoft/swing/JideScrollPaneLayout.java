@@ -34,11 +34,6 @@ public class JideScrollPaneLayout extends ScrollPaneLayout implements JideScroll
     private JViewport _rowFoot;
 
     /**
-     * The row sub column header component. Default is <code>null</code>.
-     */
-    private JViewport _subColHead;
-
-    /**
      * The column footer child. Default is <code>null</code>.
      * 
      * @see JideScrollPane#setColumnFooter
@@ -81,7 +76,6 @@ public class JideScrollPaneLayout extends ScrollPaneLayout implements JideScroll
         if (sp instanceof JideScrollPane) {
             _rowFoot = ((JideScrollPane) sp).getRowFooter();
             _colFoot = ((JideScrollPane) sp).getColumnFooter();
-            _subColHead = ((JideScrollPane) sp).getSubColumnHeader();
             _hLeft = ((JideScrollPane) sp).getScrollBarCorner(HORIZONTAL_LEFT);
             _hRight = ((JideScrollPane) sp).getScrollBarCorner(HORIZONTAL_RIGHT);
             _vTop = ((JideScrollPane) sp).getScrollBarCorner(VERTICAL_TOP);
@@ -112,9 +106,6 @@ public class JideScrollPaneLayout extends ScrollPaneLayout implements JideScroll
         switch (s) {
             case ROW_FOOTER:
                 _rowFoot = (JViewport) addSingletonComponent(_rowFoot, c);
-                break;
-            case SUB_COLUMN_HEADER:
-                _subColHead = (JViewport) addSingletonComponent(_subColHead, c);
                 break;
             case COLUMN_FOOTER:
                 _colFoot = (JViewport) addSingletonComponent(_colFoot, c);
@@ -147,8 +138,6 @@ public class JideScrollPaneLayout extends ScrollPaneLayout implements JideScroll
     public void removeLayoutComponent(Component c) {
         if (c == _rowFoot) {
             _rowFoot = null;
-        } else if (c == _subColHead) {
-            _subColHead = null;
         } else if (c == _colFoot) {
             _colFoot = null;
         } else if (c == _hLeft) {
@@ -316,9 +305,6 @@ public class JideScrollPaneLayout extends ScrollPaneLayout implements JideScroll
             subUpperHeight = Math.max(_subUpperRight.getPreferredSize().height, subUpperHeight);
         }
 
-        if (_subColHead != null && _subColHead.isVisible()) {
-            subUpperHeight = Math.max(_subColHead.getPreferredSize().height, subUpperHeight);
-        }
         return subUpperHeight;
     }
 
@@ -439,12 +425,6 @@ public class JideScrollPaneLayout extends ScrollPaneLayout implements JideScroll
             subUpperHeight = Math.max(_subUpperRight.getMinimumSize().height, subUpperHeight);
         }
 
-        if (_subColHead != null && _subColHead.isVisible()) {
-            Dimension size = _subColHead.getMinimumSize();
-            minWidth = Math.max(minWidth, size.width);
-            subUpperHeight = Math.max(size.height, subUpperHeight);
-        }
-
         minHeight += subUpperHeight;
 
         // JIDE: added for JideScrollPaneLayout
@@ -551,14 +531,8 @@ public class JideScrollPaneLayout extends ScrollPaneLayout implements JideScroll
             availR.height -= colHeadHeight;
         }
 
-        int subUpperHeight = getSubUpperHeight();
+        //int subUpperHeight = getSubUpperHeight();
         Rectangle subColHeadR = new Rectangle(0, availR.y, 0, 0);
-        if (_subColHead != null && _subColHead.isVisible()) {
-            int subColHeadHeight = Math.min(availR.height, subUpperHeight);
-            subColHeadR.height = subColHeadHeight;
-            availR.y += subColHeadHeight;
-            availR.height -= subColHeadHeight;
-        }
 
         /* If there's a visible row header remove the space it needs
          * from the left or right of availR.  The row header is treated
@@ -852,10 +826,6 @@ public class JideScrollPaneLayout extends ScrollPaneLayout implements JideScroll
         if (colHead != null) {
             int height = isColumnHeadersHeightUnified(scrollPane) ? columnHeaderHeight : Math.min(colHeadR.height, colHead.getPreferredSize().height);
             colHead.setBounds(adjustBounds(parent, new Rectangle(colHeadR.x, colHeadR.y + colHeadR.height - height, colHeadR.width, height), ltr));
-        }
-
-        if (_subColHead != null) {
-            _subColHead.setBounds(adjustBounds(parent, subColHeadR, ltr));
         }
 
         if (_colFoot != null) {
