@@ -114,10 +114,6 @@ public class OfxV2Parser implements OfxTags {
         parse(new ByteArrayInputStream(string.getBytes()), encoding);
     }
 
-    public void parse(final String string) {
-        parse(new ByteArrayInputStream(string.getBytes()));
-    }
-
     @SuppressWarnings("fallthrough")
     private void readOfx(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "readOfx");
