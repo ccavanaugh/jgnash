@@ -19,7 +19,6 @@ package jgnash.convert.imports.qif;
 
 /**
  * @author Craig Cavanaugh
- *
  */
 class QifCategory {
 
@@ -27,13 +26,7 @@ class QifCategory {
 
     public String description;
 
-    boolean taxRelated = false;
-
     public String type;
-
-    public String budgetAmount;
-
-    public String taxSchedule;
 
     public QifCategory() {
         type = "E";

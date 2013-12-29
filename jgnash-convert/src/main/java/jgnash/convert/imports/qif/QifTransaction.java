@@ -27,7 +27,6 @@ import jgnash.engine.Account;
  * Transaction object for a QIF transaction
  *
  * @author Craig Cavanaugh
- *
  */
 public class QifTransaction {
 
@@ -46,7 +45,7 @@ public class QifTransaction {
     public String memo = "";
     public String category = null;
     public Account _category = null;
-    String U;
+    //String U;
     String security;
     String price;
     String quantity;

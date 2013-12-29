@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 /**
  * @author Craig Cavanaugh
- *
  */
 public class QifAccount {
 
@@ -30,12 +29,6 @@ public class QifAccount {
     public String type;
 
     public String description = "";
-
-    public String creditLimit;
-
-    public String statementBalanceDate;
-
-    public String statementBalance;
 
     public final ArrayList<QifTransaction> items = new ArrayList<>();
 

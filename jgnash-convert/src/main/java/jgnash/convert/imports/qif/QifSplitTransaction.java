@@ -23,7 +23,6 @@ import java.math.BigDecimal;
  * Class for QIF split transaction import
  * 
  * @author Craig Cavanaugh
- *
  */
 class QifSplitTransaction {
 
@@ -33,7 +32,7 @@ class QifSplitTransaction {
 
     public BigDecimal amount;
 
-    public String percentage;
+    //public String percentage;
 
     public QifSplitTransaction() {
         amount = BigDecimal.ZERO;

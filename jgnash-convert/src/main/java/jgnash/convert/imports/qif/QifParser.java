@@ -189,11 +189,11 @@ public final class QifParser {
                 } else if (line.startsWith("D")) {
                     acc.description = line.substring(1);
                 } else if (line.startsWith("L")) {
-                    acc.creditLimit = line.substring(1);
+                    logger.finest("Ignoring credit limit");
                 } else if (line.startsWith("/")) {
-                    acc.statementBalanceDate = line.substring(1);
+                    logger.finest("statement balance date");
                 } else if (line.startsWith("$")) {
-                    acc.statementBalance = line.substring(1);
+                    logger.finest("Ignoring statement balance");
                 } else if (line.startsWith("X")) {
                     // must be GnuCashToQIF... not sure what it is??? ignore it.
                     logger.warning("Ignoring 'X' attribute" );
@@ -349,7 +349,7 @@ public final class QifParser {
                     tran.oDate = line.substring(1);
                     tran.date = QifUtils.parseDate(tran.oDate, dateFormat);
                 } else if (line.startsWith("U")) {
-                    tran.U = line.substring(1);
+                    logger.finest("Ignoring U");
                 } else if (line.startsWith("T")) {
                     tran.amount = QifUtils.parseMoney(line.substring(1));
                 } else if (line.startsWith("C")) {
@@ -426,7 +426,8 @@ public final class QifParser {
                     tran.oDate = line.substring(1);
                     tran.date = QifUtils.parseDate(tran.oDate, dateFormat);
                 } else if (line.startsWith("U")) {
-                    tran.U = line.substring(1);
+                    //tran.U = line.substring(1);
+                    logger.finest("Ignoring U");
                 } else if (line.startsWith("T")) {
                     tran.amount = QifUtils.parseMoney(line.substring(1));
                 } else if (line.startsWith("C")) {
@@ -517,7 +518,7 @@ public final class QifParser {
                         return split;
                     }
                     percentage = true;
-                    split.percentage = line.substring(1);
+                    // split.percentage = line.substring(1);
                 } else if (line.startsWith("^")) {
                     in.reset();
                     return split;
@@ -582,15 +583,15 @@ public final class QifParser {
                 } else if (line.startsWith("D")) {
                     cat.description = line.substring(1);
                 } else if (line.startsWith("T")) {
-                    cat.taxRelated = true;
+                    logger.finest("Ignoring tax releated flag");
                 } else if (line.startsWith("I")) {
                     cat.type = "I";
                 } else if (line.startsWith("E")) {
                     cat.type = "E";
                 } else if (line.startsWith("B")) {
-                    cat.budgetAmount = line.substring(1);
+                    logger.finest("Ignoring budget amount");
                 } else if (line.startsWith("R")) {
-                    cat.taxSchedule = line.substring(1);
+                    logger.finest("Ignoring tax schedule");
                 } else if (line.startsWith("^")) { // a complete category item
                     categories.add(cat); // add it to the list
                     cat = new QifCategory(); // start a new one
