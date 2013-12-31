@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
  * @author Craig Cavanaugh
  *
  */
+@SuppressWarnings("WeakerAccess")
 @Action("commodity-history-command")
 public class CommodityHistoryAction extends AbstractEnabledAction {
 

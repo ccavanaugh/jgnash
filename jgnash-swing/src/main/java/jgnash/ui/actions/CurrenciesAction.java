@@ -27,8 +27,8 @@ import java.awt.event.ActionEvent;
  * UI Action to open the currencies dialog
  *
  * @author Craig Cavanaugh
- *
  */
+@SuppressWarnings("WeakerAccess")
 @Action("currency-addremove-command")
 public class CurrenciesAction extends AbstractEnabledAction {
 

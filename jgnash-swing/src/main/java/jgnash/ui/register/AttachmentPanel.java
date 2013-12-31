@@ -53,12 +53,12 @@ import java.util.prefs.Preferences;
 class AttachmentPanel extends JPanel implements ActionListener {
 
     private static final String LAST_DIR = "LastDir";
-    final JButton viewAttachmentButton;
-    final JButton attachmentButton;
-    final JButton deleteButton;
+    private final JButton viewAttachmentButton;
+    private final JButton attachmentButton;
+    private final JButton deleteButton;
     private final Resource rb = Resource.get();
-    Path attachment = null;
-    boolean moveAttachment = false;
+    private Path attachment = null;
+    private boolean moveAttachment = false;
 
     AttachmentPanel() {
         attachmentButton = new JButton(Resource.getIcon("/jgnash/resource/mail-attachment.png"));

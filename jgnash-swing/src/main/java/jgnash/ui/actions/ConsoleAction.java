@@ -27,8 +27,8 @@ import java.awt.event.ActionEvent;
  * UI Action to open the new file dialog
  *
  * @author Craig Cavanaugh
- *
  */
+@SuppressWarnings("WeakerAccess")
 @Action("console-command")
 public class ConsoleAction extends AbstractAction {
 

@@ -41,7 +41,7 @@ import org.jdesktop.swingx.calendar.DateSelectionModel.SelectionMode;
  * @author Craig Cavanaugh
  *
  */
-public class DateSelectDialog extends GenericCloseDialog {
+class DateSelectDialog extends GenericCloseDialog {
 
     private JXMonthView view;
 

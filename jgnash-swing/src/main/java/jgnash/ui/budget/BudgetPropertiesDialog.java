@@ -48,9 +48,8 @@ import jgnash.util.Resource;
  * Dialog for displaying and changing a budget's properties
  *
  * @author Craig Cavanaugh
- *
  */
-public final class BudgetPropertiesDialog extends JDialog implements ActionListener {
+final class BudgetPropertiesDialog extends JDialog implements ActionListener {
 
     private final Resource rb = Resource.get();
 

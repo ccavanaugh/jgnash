@@ -32,6 +32,7 @@ import jgnash.util.Resource;
  * @author Craig Cavanaugh
  *
  */
+@SuppressWarnings("WeakerAccess")
 @Action("close-command")
 public class CloseEngineAction extends AbstractEnabledAction {
 

@@ -73,7 +73,7 @@ public class AutoCompleteTextField extends JTextFieldEx {
         setText = false;
     }
 
-    protected class AutoCompleteDocument extends PlainDocument {
+    class AutoCompleteDocument extends PlainDocument {
 
         String currText = null;
 
