@@ -18,7 +18,6 @@
 package jgnash.ui.components;
 
 import java.awt.EventQueue;
-import java.util.Collection;
 import java.util.List;
 
 import jgnash.engine.CommodityNode;
@@ -50,15 +49,15 @@ public class CurrencyComboBox extends AbstractCommodityComboBox<CurrencyNode> {
         MessageBus.getInstance().registerListener(this, MessageChannel.COMMODITY);
     }
 
-    /**
-     * This constructor does not listen to engine events because the source of the objects is not known
-     *
-     * @param list CurrencyNode list
-     */
-    public CurrencyComboBox(Collection<CurrencyNode> list) {
-        super();
-        model.addAll(list);
-    }
+//    /**
+//     * This constructor does not listen to engine events because the source of the objects is not known
+//     *
+//     * @param list CurrencyNode list
+//     */
+//    public CurrencyComboBox(Collection<CurrencyNode> list) {
+//        super();
+//        model.addAll(list);
+//    }
 
     @Override
     public void messagePosted(final Message event) {
