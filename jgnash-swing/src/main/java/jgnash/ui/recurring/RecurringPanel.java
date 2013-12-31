@@ -86,7 +86,7 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
 
     private JTable reminderTable;
 
-    private Timer timer;
+    private Timer timer = null;
 
     private static boolean confirmReminderDelete = false;
 
@@ -130,7 +130,6 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
 
         worker.execute();
 
-        timer = null;
         startTimer();
     }
 
@@ -380,9 +379,15 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
             timer = new Timer(snooze, this);
             timer.setInitialDelay(START_UP_DELAY);
 
-            timer.start();
+            // Don't start until the UI has caught up
+            EventQueue.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    timer.start();
 
-            Logger.getLogger(RecurringPanel.class.getName()).info("Recurring timer started");
+                    Logger.getLogger(RecurringPanel.class.getName()).info("Recurring timer started");
+                }
+            });
         }
     }
 

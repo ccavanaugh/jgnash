@@ -28,6 +28,7 @@ appears to be a JDK and Google interaction bug.
 
 Release 2.13.4
 ----------------------
+12/31/13 Fixed a race condition that could hang the UI at startup when loading a large file.
 12/31/13 In some cases, a file would not reopen if a relational database was not closed cleanly.
 12/27/13 Update to the latest XStream
 12/26/13 Improve font appearance when running under KDE

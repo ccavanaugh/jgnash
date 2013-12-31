@@ -678,8 +678,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     private void startBackgroundUpdates() {
         backgroundUpdateExecutor = new ScheduledThreadPoolExecutor(1);
 
-        LOG.log(Level.INFO, "Checking for needed background updates");
-
+        // Don't start until the UI has caught up
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -691,6 +690,8 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
                 if (CurrencyUpdateFactory.getUpdateOnStartup()) {
                     backgroundUpdateExecutor.schedule(CurrencyUpdateFactory.getUpdateWorker(), SCHEDULED_DELAY, TimeUnit.SECONDS);
                 }
+
+                LOG.log(Level.INFO, "Checking for needed background updates");
             }
         });
     }
