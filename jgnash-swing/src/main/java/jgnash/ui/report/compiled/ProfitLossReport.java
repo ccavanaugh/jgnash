@@ -26,9 +26,12 @@ import jgnash.engine.AccountGroup;
  * Profit and Loss Report
  *
  * @author Craig Cavanaugh
- *
  */
 public class ProfitLossReport extends AbstractCrosstabReport {
+
+    public ProfitLossReport() {
+        super();
+    }
 
     @Override
     protected List<AccountGroup> getAccountGroups() {

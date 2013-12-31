@@ -118,7 +118,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
     private static final String USE_LONG_NAMES = "useLongNames";
 
-    AbstractCrosstabReport() {
+    public AbstractCrosstabReport() {
 
         Preferences p = getPreferences();
 
