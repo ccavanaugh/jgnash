@@ -29,7 +29,6 @@ import jgnash.util.DateUtils;
  * A decorator that wraps an AbstractRegisterTableModel to clip the transactions displayed using a start and end date.
  * 
  * @author Craig Cavanaugh
- *
  */
 public final class ClippingDecorator implements ClippingModel {
 
@@ -69,19 +68,19 @@ public final class ClippingDecorator implements ClippingModel {
         startIndex = start;
     }
 
-    /**
-     * @see jgnash.ui.register.table.ClippingModel#getStartDate()
-     */
-    @Override
-    public Date getStartDate() {
-        Date date = new Date();
-
-        /* Do not assume the model/account as any transactions */
-        if (model.getRowCount() > 0) {
-            date = model.getTransactionAt(startIndex).getDate();
-        }
-        return date;
-    }
+//    /**
+//     * @see jgnash.ui.register.table.ClippingModel#getStartDate()
+//     */
+//    @Override
+//    public Date getStartDate() {
+//        Date date = new Date();
+//
+//        /* Do not assume the model/account as any transactions */
+//        if (model.getRowCount() > 0) {
+//            date = model.getTransactionAt(startIndex).getDate();
+//        }
+//        return date;
+//    }
 
     /**
      * @see jgnash.ui.register.table.ClippingModel#setEndDate(java.util.Date)
@@ -96,14 +95,11 @@ public final class ClippingDecorator implements ClippingModel {
         endIndex = end;
     }
 
-    /**
-     * @see jgnash.ui.register.table.ClippingModel#getEndDate()
-     */
-    @Override
+
     public Date getEndDate() {
         Date date = new Date();
 
-        /* Do not assume the model/account as any transactions */
+        /* Do not assume the model/account has any transactions */
         if (model.getRowCount() > 0) {
             date = model.getTransactionAt(endIndex).getDate();
         }

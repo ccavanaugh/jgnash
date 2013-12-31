@@ -33,20 +33,20 @@ public interface ClippingModel extends RegisterModel {
      */
     public void setStartDate(Date startDate);
 
-    /**
-     * @return Returns the startDate.
-     */
-    public Date getStartDate();
+//    /**
+//     * @return Returns the startDate.
+//     */
+//    public Date getStartDate();
 
     /**
      * @param stopDate The stopDate to set.
      */
     public void setEndDate(Date stopDate);
 
-    /**
-     * @return Returns the stopDate.
-     */
-    public Date getEndDate();
+//    /**
+//     * @return Returns the stopDate.
+//     */
+//    public Date getEndDate();
 
     public void setEndIndex(int end);
 
