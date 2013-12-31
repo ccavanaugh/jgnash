@@ -99,7 +99,7 @@ public class SqlUtils {
 
                 final DataStoreType dataStoreType = EngineFactory.getDataStoreByType(fileName);
 
-                final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password, true);
+                final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password, false);
 
                 final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
