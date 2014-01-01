@@ -24,6 +24,7 @@ import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.MathConstants;
+import jgnash.engine.RootAccount;
 import jgnash.engine.Transaction;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
@@ -127,6 +128,22 @@ public class BudgetResultsModel implements MessageListener {
         return depth;
     }
 
+    public boolean areParentsIncluded(final Account account) {
+        boolean result = true;
+
+        Account parent = account.getParent();
+
+        if (parent != null && !(parent instanceof RootAccount)) {
+            if (!includeAccount(parent)) {
+                result = false;
+            } else {
+                result = areParentsIncluded(parent);
+            }
+        }
+
+        return result;
+    }
+
     public List<BudgetPeriodDescriptor> getDescriptorList() {
         return descriptorList;
     }
@@ -168,6 +185,10 @@ public class BudgetResultsModel implements MessageListener {
             } else if (account.memberOf(AccountGroup.LIABILITY) && budget.areLiabilityAccountsIncluded()) {
                 result = true;
             }
+        }
+
+        if (result) {
+            result = areParentsIncluded(account);
         }
 
         return result;
