@@ -241,9 +241,9 @@
             </menuchoice> command and follow the prompts in the new file
           wizard. When given the choice to select the<link
           linkend="FileTypes">storage type</link>, leave it as the default
-          value for now. A default file name and location will be provided that
-          you can change if desired. If the file already exists, you will be
-          warned you are about to overwrite it. </para>
+          value for now. A default file name and location will be provided
+          that you can change if desired. If the file already exists, you will
+          be warned you are about to overwrite it. </para>
         </listitem>
 
         <listitem>
@@ -831,8 +831,9 @@
       </listitem>
 
       <listitem>
-        <para>Accounts may be excluded from showing in a budget by setting the
-        exclude flag in the account properties dialog. </para>
+        <para>Accounts may be excluded from budgets by setting the exclude
+        flag in the account properties dialog. Sub-accounts will not be
+        displayed if the parent account is excluded.</para>
       </listitem>
 
       <listitem>
