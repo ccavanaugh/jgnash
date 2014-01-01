@@ -51,6 +51,8 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
 
     public static final String DELETE = "<DELETE>";
 
+    public static final String EOL_DELIMITER = "\r\n";
+
     private static final String FILE_STARTS = "<FILE_STARTS>";
 
     private static final String FILE_ENDS = "<FILE_ENDS>";
@@ -61,7 +63,7 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
 
     private static final Logger logger = Logger.getLogger(NettyTransferHandler.class.getName());
 
-    public static final int TRANSFER_BUFFER_SIZE = 4096;
+    public static final int TRANSFER_BUFFER_SIZE = 1024; // too large can break netty... bug?
 
     public static final int PATH_MAX = 4096;
 
@@ -150,12 +152,12 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
         if (Files.exists(path)) {
 
             if (Files.isDirectory(path)) {
-                channel.writeAndFlush(encrypt(ERROR + "Not a file: " + path) + '\n');
+                channel.writeAndFlush(encrypt(ERROR + "Not a file: " + path) + EOL_DELIMITER);
                 return;
             }
 
             try (InputStream fileInputStream = Files.newInputStream(path)) {
-                channel.writeAndFlush(encrypt(FILE_STARTS + path.getFileName() + ":" + Files.size(path)) + '\n');
+                channel.writeAndFlush(encrypt(FILE_STARTS + path.getFileName() + ":" + Files.size(path)) + EOL_DELIMITER);
 
                 byte[] bytes = new byte[TRANSFER_BUFFER_SIZE];  // leave room for base 64 expansion
 
@@ -164,17 +166,17 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
                 while ((bytesRead = fileInputStream.read(bytes)) != -1) {
                     if (bytesRead > 0) {
                         channel.write(encrypt(FILE_CHUNK + path.getFileName() + ':' +
-                                new String(Base64.encodeBase64(Arrays.copyOfRange(bytes, 0, bytesRead)))) + '\n');
+                                new String(Base64.encodeBase64(Arrays.copyOfRange(bytes, 0, bytesRead)))) + EOL_DELIMITER);
                     }
                 }
-                channel.writeAndFlush(encrypt(FILE_ENDS + path.getFileName()) + '\n').sync();
+                channel.writeAndFlush(encrypt(FILE_ENDS + path.getFileName()) + EOL_DELIMITER).sync();
 
             } catch (IOException | InterruptedException e) {
                 logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
         } else {
             try {
-                channel.writeAndFlush(encrypt(ERROR + "File not found: " + path) + '\n').sync();
+                channel.writeAndFlush(encrypt(ERROR + "File not found: " + path) + EOL_DELIMITER).sync();
             } catch (final InterruptedException e) {
                 logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             }

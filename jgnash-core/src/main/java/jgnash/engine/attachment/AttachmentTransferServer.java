@@ -35,7 +35,8 @@ import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.LineBasedFrameDecoder;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.base64.Base64Decoder;
 import io.netty.handler.codec.base64.Base64Encoder;
 import io.netty.handler.codec.string.StringDecoder;
@@ -44,6 +45,9 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
+
+import static jgnash.engine.attachment.NettyTransferHandler.PATH_MAX;
+import static jgnash.engine.attachment.NettyTransferHandler.TRANSFER_BUFFER_SIZE;
 
 /**
  * File server for attachments.
@@ -91,7 +95,8 @@ public class AttachmentTransferServer {
                         public void initChannel(final SocketChannel ch) throws Exception {
 
                             ch.pipeline().addLast(
-                                    new LineBasedFrameDecoder(((NettyTransferHandler.TRANSFER_BUFFER_SIZE + 2) / 3) * 4 + NettyTransferHandler.PATH_MAX),
+                                    new DelimiterBasedFrameDecoder(((TRANSFER_BUFFER_SIZE + 2) / 3) * 4 + PATH_MAX,
+                                            true, Delimiters.lineDelimiter()),
 
                                     new StringEncoder(CharsetUtil.UTF_8),
                                     new StringDecoder(CharsetUtil.UTF_8),

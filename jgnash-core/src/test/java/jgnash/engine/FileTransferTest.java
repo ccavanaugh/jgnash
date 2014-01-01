@@ -31,6 +31,7 @@ import jgnash.engine.jpa.JpaHsqlDataStore;
 import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.util.EncryptionManager;
 
+import io.netty.util.ResourceLeakDetector;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -55,9 +56,7 @@ public class FileTransferTest {
         System.setProperty(EncryptionManager.ENCRYPTION_FLAG, "true");
         System.setProperty("ssl", "true");
 
-
-        // ResourceLeakDetector seems to break the test code??
-        // ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
+        ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
 
         String testFile = null;
 

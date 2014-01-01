@@ -33,12 +33,19 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.LineBasedFrameDecoder;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.base64.Base64Decoder;
 import io.netty.handler.codec.base64.Base64Encoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.CharsetUtil;
+
+import static jgnash.engine.attachment.NettyTransferHandler.DELETE;
+import static jgnash.engine.attachment.NettyTransferHandler.EOL_DELIMITER;
+import static jgnash.engine.attachment.NettyTransferHandler.FILE_REQUEST;
+import static jgnash.engine.attachment.NettyTransferHandler.PATH_MAX;
+import static jgnash.engine.attachment.NettyTransferHandler.TRANSFER_BUFFER_SIZE;
 
 /**
  * Client for sending and receiving files
@@ -112,7 +119,7 @@ class AttachmentTransferClient {
 
     public void requestFile(final Path file) {
         try {
-            channel.writeAndFlush(encrypt(NettyTransferHandler.FILE_REQUEST + file.toString()) + '\n').sync();
+            channel.writeAndFlush(encrypt(FILE_REQUEST + file.toString()) + EOL_DELIMITER).sync();
         } catch (final InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
@@ -120,7 +127,7 @@ class AttachmentTransferClient {
 
     public void deleteFile(final String attachment) {
         try {
-            channel.writeAndFlush(encrypt(NettyTransferHandler.DELETE + Paths.get(attachment).getFileName()) + '\n').sync();
+            channel.writeAndFlush(encrypt(DELETE + Paths.get(attachment).getFileName()) + EOL_DELIMITER).sync();
         } catch (final InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
@@ -157,7 +164,8 @@ class AttachmentTransferClient {
         public void initChannel(final SocketChannel ch) throws Exception {
 
             ch.pipeline().addLast(
-                    new LineBasedFrameDecoder(((NettyTransferHandler.TRANSFER_BUFFER_SIZE + 2) / 3) * 4 + NettyTransferHandler.PATH_MAX),
+                    new DelimiterBasedFrameDecoder(((TRANSFER_BUFFER_SIZE + 2) / 3) * 4 + PATH_MAX,
+                            true, Delimiters.lineDelimiter()),
 
                     new StringEncoder(CharsetUtil.UTF_8),
                     new StringDecoder(CharsetUtil.UTF_8),
