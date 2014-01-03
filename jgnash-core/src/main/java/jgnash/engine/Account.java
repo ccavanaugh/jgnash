@@ -240,7 +240,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @return true if this account contained the AccountProperty
      */
     @Deprecated
-    @SuppressWarnings({"deprecation", "SameParameterValue"})
+    @SuppressWarnings({"deprecation", "SameParameterValue", "UnusedReturnValue"})
     boolean removeProperty(final AccountProperty key) {
         return propertyMap.remove(key.name()) != null;
     }
