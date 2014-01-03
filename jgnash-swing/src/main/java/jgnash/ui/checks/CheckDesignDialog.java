@@ -17,11 +17,6 @@
  */
 package jgnash.ui.checks;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Frame;
@@ -62,6 +57,11 @@ import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.JTextFieldEx;
 import jgnash.ui.components.RollOverButton;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 /**
  * Check design dialog.
@@ -304,26 +304,28 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
     private static final String CURRENT_DIR = "cwd";
 
     private void saveLayout() {
-        String fn = null;
+        String fileName = null;
 
         JFileChooser chooser = createFileChooser(pref.get(CURRENT_DIR, null));
         chooser.setMultiSelectionEnabled(false);
 
         if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             pref.put(CURRENT_DIR, chooser.getCurrentDirectory().getAbsolutePath());
-            fn = chooser.getSelectedFile().getAbsolutePath();
-            if (!fn.endsWith(".lay.xml")) {
-                if (!fn.endsWith(".lay")) {
-                    fn += ".lay.xml";
+            fileName = chooser.getSelectedFile().getAbsolutePath();
+            if (!fileName.endsWith(".lay.xml")) {
+                if (!fileName.endsWith(".lay")) {
+                    fileName += ".lay.xml";
                 } else {
-                    fn += ".xml";
+                    fileName += ".xml";
                 }
             }
         }
 
         // must have a valid filename
-        if (fn != null) {
-            CheckLayoutSerializationFactory.saveLayout(fn, layout.getCheckLayout());
+        if (fileName != null) {
+            if (!CheckLayoutSerializationFactory.saveLayout(fileName, layout.getCheckLayout())) {
+                StaticUIMethods.displayError("Failed to save the check layout");
+            }
         }
     }
 
