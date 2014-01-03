@@ -17,26 +17,6 @@
  */
 package jgnash.engine.jpa;
 
-import jgnash.engine.AttachmentUtils;
-import jgnash.engine.attachment.AttachmentTransferServer;
-import jgnash.engine.DataStoreType;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.StoredObject;
-import jgnash.engine.attachment.DistributedAttachmentManager;
-import jgnash.engine.concurrent.DistributedLockManager;
-import jgnash.engine.concurrent.DistributedLockServer;
-import jgnash.engine.message.LocalServerListener;
-import jgnash.engine.message.MessageBusServer;
-import jgnash.util.DefaultDaemonThreadFactory;
-import jgnash.util.EncryptionManager;
-import jgnash.util.FileMagic;
-import jgnash.util.FileUtils;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
 import java.io.File;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -48,6 +28,26 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
+import jgnash.engine.AttachmentUtils;
+import jgnash.engine.DataStoreType;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.StoredObject;
+import jgnash.engine.attachment.AttachmentTransferServer;
+import jgnash.engine.attachment.DistributedAttachmentManager;
+import jgnash.engine.concurrent.DistributedLockManager;
+import jgnash.engine.concurrent.DistributedLockServer;
+import jgnash.engine.message.LocalServerListener;
+import jgnash.engine.message.MessageBusServer;
+import jgnash.util.DefaultDaemonThreadFactory;
+import jgnash.util.EncryptionManager;
+import jgnash.util.FileMagic;
+import jgnash.util.FileUtils;
 
 /**
  * JPA network server
@@ -126,71 +126,71 @@ public class JpaNetworkServer {
 
             // Start the message bus and pass the file name so it can be reported to the client
             MessageBusServer messageBusServer = new MessageBusServer(port + 1);
-            messageBusServer.startServer(dataStoreType, fileName, password);
+            result = messageBusServer.startServer(dataStoreType, fileName, password);
 
-            // Start the backup thread that ensures an XML backup is created at set intervals
-            ScheduledExecutorService backupExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
+            if (result) { // don't continue if the server is not started successfully
+                // Start the backup thread that ensures an XML backup is created at set intervals
+                ScheduledExecutorService backupExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
 
-            // run commit every backup period after startup
-            backupExecutor.scheduleWithFixedDelay(new Runnable() {
+                // run commit every backup period after startup
+                backupExecutor.scheduleWithFixedDelay(new Runnable() {
 
-                @Override
-                public void run() {
-                    if (dirty) {
-                        exportXML(engine, fileName);
-                        EngineFactory.removeOldCompressedXML(fileName);
-                        dirty = false;
+                    @Override
+                    public void run() {
+                        if (dirty) {
+                            exportXML(engine, fileName);
+                            EngineFactory.removeOldCompressedXML(fileName);
+                            dirty = false;
+                        }
                     }
-                }
-            }, BACKUP_PERIOD, BACKUP_PERIOD, TimeUnit.HOURS);
+                }, BACKUP_PERIOD, BACKUP_PERIOD, TimeUnit.HOURS);
 
-            LocalServerListener listener = new LocalServerListener() {
-                @Override
-                public void messagePosted(final String event) {
+                LocalServerListener listener = new LocalServerListener() {
+                    @Override
+                    public void messagePosted(final String event) {
 
-                    // look for a remote request to stop the server
-                    if (event.startsWith(STOP_SERVER_MESSAGE)) {
-                        Logger.getLogger(JpaNetworkServer.class.getName()).info("Remote shutdown request was received");
-                        stopServer();
+                        // look for a remote request to stop the server
+                        if (event.startsWith(STOP_SERVER_MESSAGE)) {
+                            Logger.getLogger(JpaNetworkServer.class.getName()).info("Remote shutdown request was received");
+                            stopServer();
+                        }
+
+                        dirty = true;
                     }
+                };
 
-                    dirty = true;
+                messageBusServer.addLocalListener(listener);
+
+                // wait here forever
+                try {
+                    while (!stop) { // check for condition, handle a spurious wake up
+                        wait(); // wait forever for notify() from stopServer()
+                    }
+                } catch (final InterruptedException ex) {
+                    Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            };
 
-            messageBusServer.addLocalListener(listener);
+                messageBusServer.removeLocalListener(listener);
 
-            // wait here forever
-            try {
-                while (!stop) { // check for condition, handle a spurious wake up
-                    wait(); // wait forever for notify() from stopServer()
-                }
-            } catch (final InterruptedException ex) {
-                Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, null, ex);
+                backupExecutor.shutdown();
+
+                exportXML(engine, fileName);
+
+                messageBusServer.stopServer();
+
+                EngineFactory.closeEngine(SERVER_ENGINE);
+
+                distributedLockManager.disconnectFromServer();
+                distributedAttachmentManager.disconnectFromServer();
+
+                distributedLockServer.stopServer();
+
+                attachmentTransferServer.stopServer();
+
+                em.close();
+
+                factory.close();
             }
-
-            messageBusServer.removeLocalListener(listener);
-
-            backupExecutor.shutdown();
-
-            exportXML(engine, fileName);
-
-            messageBusServer.stopServer();
-
-            EngineFactory.closeEngine(SERVER_ENGINE);
-
-            distributedLockManager.disconnectFromServer();
-            distributedAttachmentManager.disconnectFromServer();
-
-            distributedLockServer.stopServer();
-
-            attachmentTransferServer.stopServer();
-
-            em.close();
-
-            factory.close();
-
-            result = true;
         } else {
             distributedLockServer.stopServer();
         }
