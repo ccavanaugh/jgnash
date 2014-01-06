@@ -21,7 +21,6 @@ package jgnash.util;
  * OS specific detection code
  * 
  * @author Craig Cavanaugh
- *
  */
 public final class OS {
 

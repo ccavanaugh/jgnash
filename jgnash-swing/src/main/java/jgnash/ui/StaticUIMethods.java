@@ -30,6 +30,7 @@ import javax.swing.*;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import jgnash.util.Resource;
+import jgnash.util.Version;
 
 /**
  * Keep various odds and ends here instead of in the main class
@@ -92,7 +93,7 @@ public class StaticUIMethods {
             try {
                 Field awtAppClassNameField = toolkit.getClass().getDeclaredField("awtAppClassName");
                 awtAppClassNameField.setAccessible(true);
-                awtAppClassNameField.set(toolkit, Resource.getAppName());
+                awtAppClassNameField.set(toolkit, Version.getAppName());
             } catch (NoSuchFieldException | IllegalAccessException ex) {
                 Logger.getLogger(StaticUIMethods.class.getName()).log(Level.INFO, ex.getLocalizedMessage(), ex);
             }

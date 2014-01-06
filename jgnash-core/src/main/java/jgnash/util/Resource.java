@@ -179,14 +179,4 @@ public class Resource {
         p.put(LOCALE, EncodeDecode.encodeLocale(l));
         resource.loadBundle(); // reload the resource bundle
     }
-
-    public static String getAppVersion() {
-        ResourceBundle rb = ResourceBundle.getBundle("jgnash/resource/constants");
-        return rb.getString("version");
-    }
-
-    public static String getAppName() {
-       ResourceBundle rb = ResourceBundle.getBundle("jgnash/resource/constants");
-        return rb.getString("name");
-    }
 }

@@ -29,6 +29,7 @@ import jgnash.util.EncryptionManager;
 import jgnash.util.FileUtils;
 import jgnash.util.OS;
 import jgnash.util.Resource;
+import jgnash.util.Version;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -58,7 +59,7 @@ public final class Main {
     public static final String VERSION;
 
     static {
-        VERSION = Resource.getAppName() + " - " + Resource.getAppVersion();
+        VERSION = Version.getAppName() + " - " + Version.getAppVersion();
         System.setProperty("awt.useSystemAAFontSettings", "lcd"); // force proper antialias setting
     }
 
