@@ -1216,7 +1216,9 @@ public class Import {
                                 SecurityNode node = engine.getSecurity(elementMap.get("symbol"));
                                 if (node != null) {
                                     for (SecurityHistoryNode hNode : history) {
-                                        engine.addSecurityHistory(node, hNode);
+                                        if (!engine.addSecurityHistory(node, hNode)) {
+                                            logger.warning("Failed to add security history");
+                                        }
                                     }
                                 }
                             }

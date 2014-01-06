@@ -108,7 +108,7 @@ public abstract class EngineTest {
         r.setIncrement(1);
         r.setEndDate(null);
 
-        e.addReminder(r);
+        assertTrue(e.addReminder(r));
 
         assertEquals(1, e.getReminders().size());
         assertEquals(1, e.getPendingReminders().size());

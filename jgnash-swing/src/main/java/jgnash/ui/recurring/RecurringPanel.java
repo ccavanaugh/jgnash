@@ -54,6 +54,7 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.ui.components.GenericCloseDialog;
@@ -271,7 +272,12 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
     private static void showNewDialog() {
         Reminder r = RecurringEntryDialog.showDialog();
         if (r != null) {
-            EngineFactory.getEngine(EngineFactory.DEFAULT).addReminder(r);
+
+            if (!EngineFactory.getEngine(EngineFactory.DEFAULT).addReminder(r)) {
+                final Resource rb = Resource.get();
+
+                StaticUIMethods.displayError(rb.getString("Message.Error.ReminderAdd"));
+            }
         }
     }
 
@@ -288,7 +294,11 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
                     Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
                     if (engine.removeReminder(old)) { // remove the old
-                        engine.addReminder(modified); // add the new
+                        if (!engine.addReminder(modified)) { // add the new
+                            StaticUIMethods.displayError(rb.getString("Message.Error.ReminderUpdate"));
+                        }
+                    }  else {
+                        StaticUIMethods.displayError(rb.getString("Message.Error.ReminderUpdate"));
                     }
                 }
             } catch (CloneNotSupportedException e) {

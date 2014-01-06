@@ -61,7 +61,6 @@ import jgnash.util.Resource;
  * CommodityModifyPanel is used for modifying the currency list and exchange rates.
  *
  * @author Craig Cavanaugh
- *
  */
 public class SecurityModifyPanel extends JPanel implements MessageListener, ActionListener {
 
@@ -213,17 +212,7 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
             return false;
         }
 
-        if (currencyCombo.getSelectedNode() == null) {
-            return false;
-        }
-
-        //        if (!sourceComboBox.getSelectedItem().equals(QuoteSource.NONE)) {
-        //            if (isinField.getText().equals("")) {
-        //                return false;
-        //            }
-        //        }
-
-        return true;
+        return currencyCombo.getSelectedNode() != null;
     }
 
     private SecurityNode buildSecurityNode() {
@@ -248,7 +237,9 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
                     StaticUIMethods.displayError(MessageFormat.format(rb.getString("Message.Error.SecurityUpdate"), newNode.getSymbol()));
                 }
             } else {
-                engine.addSecurity(newNode);
+                if (!engine.addSecurity(newNode)) {
+                    StaticUIMethods.displayError(MessageFormat.format(rb.getString("Message.Error.SecurityAdd"), newNode.getSymbol()));
+                }
             }
         }
     }

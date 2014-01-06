@@ -17,11 +17,6 @@
  */
 package jgnash.engine;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
-import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -38,9 +33,16 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jgnash.util.Resource;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
+import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
+
 /**
  * Import and export a tree of accounts
- * 
+ *
  * @author Craig Cavanaugh
  */
 public class AccountTreeXMLFactory {
@@ -85,7 +87,7 @@ public class AccountTreeXMLFactory {
         XStream xstream = getStream();
 
         try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), ENCODING);
-                ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(writer))) {
+             ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(writer))) {
             out.writeObject(account);
         } catch (IOException e) {
             Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
@@ -94,9 +96,8 @@ public class AccountTreeXMLFactory {
 
     /**
      * Load an account tree given a reader
-     * 
-     * @param reader
-     *            Reader to use
+     *
+     * @param reader Reader to use
      * @return RootAccount if reader is valid
      */
     private static RootAccount loadAccountTree(final Reader reader) {
@@ -119,9 +120,8 @@ public class AccountTreeXMLFactory {
 
     /**
      * Load an account tree given a reader
-     * 
-     * @param file
-     *            file name to use
+     *
+     * @param file file name to use
      * @return RootAccount if file name is valid
      */
     public static RootAccount loadAccountTree(final File file) {
@@ -138,9 +138,8 @@ public class AccountTreeXMLFactory {
 
     /**
      * Load an account tree given an InputStream
-     * 
-     * @param stream
-     *            InputStream to use
+     *
+     * @param stream InputStream to use
      * @return RootAccount if stream is valid
      */
     public static RootAccount loadAccountTree(final InputStream stream) {
@@ -156,11 +155,9 @@ public class AccountTreeXMLFactory {
     /**
      * Imports an account tree into the existing account tree. Account
      * currencies are forced to the engine's default
-     * 
-     * @param engine
-     *            current engine to merge into
-     * @param root
-     *            root of account structure to merge
+     *
+     * @param engine current engine to merge into
+     * @param root   root of account structure to merge
      */
     public static void importAccountTree(final Engine engine, final RootAccount root) {
         AccountImport accountImport = new AccountImport();
@@ -170,11 +167,9 @@ public class AccountTreeXMLFactory {
     /**
      * Merges an account tree into the existing account tree. Duplicate
      * currencies are prevented
-     * 
-     * @param engine
-     *            current engine to merge into
-     * @param root
-     *            root of account structure to merge
+     *
+     * @param engine current engine to merge into
+     * @param root   root of account structure to merge
      */
     public static void mergeAccountTree(final Engine engine, final RootAccount root) {
         AccountImport accountImport = new AccountImport();
@@ -205,11 +200,9 @@ public class AccountTreeXMLFactory {
         /**
          * Ensures that duplicate currencies are not created when the accounts
          * are merged
-         * 
-         * @param engine
-         *            Engine with existing currencies
-         * @param account
-         *            account to correct
+         *
+         * @param engine  Engine with existing currencies
+         * @param account account to correct
          */
         private void fixCurrencies(final Engine engine, final Account account) {
 
@@ -235,7 +228,10 @@ public class AccountTreeXMLFactory {
                                     sNode.setReportedCurrencyNode(currencyNode);
                                 }
                             }
-                            engine.addSecurity(sNode);
+                            if (!engine.addSecurity(sNode)) {
+                                final Resource rb = Resource.get();
+                                Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, rb.getString("Message.Error.SecurityAdd"), sNode.getSymbol());
+                            }
                         } catch (CloneNotSupportedException e) {
                             Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE,
                                     e.getLocalizedMessage(), e);
@@ -255,11 +251,9 @@ public class AccountTreeXMLFactory {
         /**
          * Ensures that duplicate currencies are not created when the accounts
          * are merged
-         * 
-         * @param engine
-         *            Engine with existing currencies
-         * @param account
-         *            account to correct
+         *
+         * @param engine  Engine with existing currencies
+         * @param account account to correct
          */
         private void forceCurrency(final Engine engine, final Account account) {
 
@@ -277,7 +271,11 @@ public class AccountTreeXMLFactory {
                             sNode = (SecurityNode) node.clone();
 
                             sNode.setReportedCurrencyNode(engine.getDefaultCurrency());
-                            engine.addSecurity(sNode);
+
+                            if (!engine.addSecurity(sNode)) {
+                                final Resource rb = Resource.get();
+                                Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, rb.getString("Message.Error.SecurityAdd"), sNode.getSymbol());
+                            }
                         } catch (CloneNotSupportedException e) {
                             Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, e.toString(), e);
                         }

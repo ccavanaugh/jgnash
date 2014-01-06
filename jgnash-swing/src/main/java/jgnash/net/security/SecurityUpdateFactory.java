@@ -65,39 +65,32 @@ public class SecurityUpdateFactory {
     }
 
     public static boolean updateOne(final SecurityNode node) {
+        boolean result = false;
 
-        Resource rb = Resource.get();
+        final Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+        final Resource rb = Resource.get();
 
         // if source is set to none, do not try to parse
-        if (node.getQuoteSource() == QuoteSource.NONE) {
-            return false;
-        }
+        if (e != null && node.getQuoteSource() != QuoteSource.NONE) {
+            SecurityParser parser = node.getQuoteSource().getParser();
 
-        SecurityParser parser = node.getQuoteSource().getParser();
+            if (parser.parse(node)) {
+                SecurityHistoryNode history = new SecurityHistoryNode();
+                history.setPrice(parser.getPrice());
+                history.setVolume(parser.getVolume());
+                history.setHigh(parser.getHigh());
+                history.setLow(parser.getLow());
+                history.setDate(parser.getDate());  // returned date from the parser
 
-
-        if (parser.parse(node)) {
-            SecurityHistoryNode history = new SecurityHistoryNode();
-            history.setPrice(parser.getPrice());
-            history.setVolume(parser.getVolume());
-            history.setHigh(parser.getHigh());
-            history.setLow(parser.getLow());
-            history.setDate(parser.getDate());  // returned date from the parser
-
-            Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
-
-            if (e != null) {
-                e.addSecurityHistory(node, history);
+                if (e.addSecurityHistory(node, history)) {
+                    logger.info(MessageFormat.format(rb.getString("Message.UpdatedPrice"), node.getSymbol()));
+                    result = true;
+                }
             }
-
-            String message = MessageFormat.format(rb.getString("Message.UpdatedPrice"), node.getSymbol());
-
-            logger.info(message);
-
-            return true;
         }
 
-        return false;
+        return result;
     }
 
     public static SecurityUpdateWorker getUpdateWorker() {

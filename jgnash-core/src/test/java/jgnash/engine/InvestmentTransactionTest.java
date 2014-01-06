@@ -70,7 +70,7 @@ public class InvestmentTransactionTest {
             securityNode1 = new SecurityNode(defaultCurrency);
 
             securityNode1.setSymbol("GOOGLE");
-            e.addSecurity(securityNode1);
+            assertTrue(e.addSecurity(securityNode1));
 
             // Creating accounts
             incomeAccount = new Account(AccountType.INCOME, defaultCurrency);
@@ -194,7 +194,7 @@ public class InvestmentTransactionTest {
         history.setDate(transactionDate1);
         history.setPrice(securityPrice1);
 
-        e.addSecurityHistory(securityNode1, history);
+        assertTrue(e.addSecurityHistory(securityNode1, history));
 
         // Creating the list of fees
         List<TransactionEntry> fees = new ArrayList<>();
@@ -248,7 +248,7 @@ public class InvestmentTransactionTest {
         history.setDate(transactionDate1);
         history.setPrice(securityPrice1);
 
-        e.addSecurityHistory(securityNode1, history);
+        assertTrue(e.addSecurityHistory(securityNode1, history));
 
         // Creating the list of buying fees
         List<TransactionEntry> buyingFees = new ArrayList<>();
@@ -270,7 +270,7 @@ public class InvestmentTransactionTest {
         history.setDate(transactionDate2);
         history.setPrice(securityPrice2);
 
-        e.addSecurityHistory(securityNode1, history);
+        assertTrue(e.addSecurityHistory(securityNode1, history));
 
         // Creating the list of selling fees
         List<TransactionEntry> sellingFees = new ArrayList<>();
@@ -422,7 +422,7 @@ public class InvestmentTransactionTest {
         history.setDate(transactionDate1);
         history.setPrice(securityPrice1);
 
-        e.addSecurityHistory(securityNode1, history);
+        assertTrue(e.addSecurityHistory(securityNode1, history));
 
         // Creating the list of buying fees
         List<TransactionEntry> buyingFees = new ArrayList<>();
@@ -482,7 +482,7 @@ public class InvestmentTransactionTest {
         history.setDate(transactionDate1);
         history.setPrice(securityPrice1);
 
-        e.addSecurityHistory(securityNode1, history);
+        assertTrue(e.addSecurityHistory(securityNode1, history));
 
         // Creating the list of buying fees
         List<TransactionEntry> buyingFees = new ArrayList<>();
@@ -556,7 +556,7 @@ public class InvestmentTransactionTest {
         history.setDate(transactionDate1);
         history.setPrice(securityPrice1);
 
-        e.addSecurityHistory(securityNode1, history);
+        assertTrue(e.addSecurityHistory(securityNode1, history));
 
         // Creating the list of buying fees
         List<TransactionEntry> buyingFees = new ArrayList<>();
@@ -618,7 +618,7 @@ public class InvestmentTransactionTest {
         history.setDate(transactionDate1);
         history.setPrice(securityPrice1);
 
-        e.addSecurityHistory(securityNode1, history);
+        assertTrue(e.addSecurityHistory(securityNode1, history));
 
         // Creating the list of buying fees
         List<TransactionEntry> buyingFees = new ArrayList<>();
