@@ -1898,7 +1898,9 @@ public class Engine {
                         // clear budget history
                         for (Budget budget : getBudgetList()) {
                             budget.removeBudgetGoal(account);
-                            updateBudget(budget);
+                            if (!updateBudget(budget)) {
+                                logWarning("Unable to remove account goals from the budget");
+                            }
                         }
                     }
                 }
