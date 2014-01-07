@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.junit.Assert.assertTrue;
+
 /**
  * @author Craig Cavanaugh
  *
@@ -48,7 +50,7 @@ public class BinaryXStreamEngineTest extends EngineTest {
 
     @AfterClass
     public static void cleanup() {
-        EngineFactory.deleteDatabase(tempFile);
-        EngineFactory.deleteDatabase(tempFile + ".backup");
+        assertTrue(EngineFactory.deleteDatabase(tempFile));
+        assertTrue(EngineFactory.deleteDatabase(tempFile + ".backup"));
     }
 }
