@@ -26,6 +26,11 @@ KNOWN ISSUES
 Exceptions occur when entering Chinese text with auto complete enabled in conjunction with Google Input tools. This
 appears to be a JDK and Google interaction bug.
 
+Release 2.13.5
+----------------------
+01/11/14 When an account register was open in it's own window, window focus could be lost when deleting and duplicating
+         transactions.
+
 Release 2.13.4
 ----------------------
 01/01/14 Accounts appearing in the budget model now respect the budget visibility of the ancestor accounts.

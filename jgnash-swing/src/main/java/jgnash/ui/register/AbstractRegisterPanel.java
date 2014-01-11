@@ -221,6 +221,9 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
                 }
             }
         }
+
+        // Request focus as it may have been lost
+        requestFocusInWindow();
     }
 
     protected void duplicateAction() {
@@ -242,6 +245,9 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
 
             }
         }
+
+        // Request focus as it may have been lost
+        requestFocusInWindow();
     }
 
     /**
