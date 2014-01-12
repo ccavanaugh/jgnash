@@ -31,9 +31,8 @@ import jgnash.engine.RootAccount;
  * Account tree model
  * 
  * @author Craig Cavanaugh
- *
  */
-public class AccountTreeModel extends DefaultTreeModel {
+class AccountTreeModel extends DefaultTreeModel {
 
     private boolean incomeVisible = true;
 

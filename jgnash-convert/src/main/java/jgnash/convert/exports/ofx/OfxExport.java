@@ -53,7 +53,7 @@ public class OfxExport implements OfxTags {
 
     private IndentedPrintWriter indentedWriter;
 
-    int indentLevel = 0;
+    private int indentLevel = 0;
 
     public OfxExport(final Account account, final Date startDate, final Date endDate, final File file) {
         this.account = account;

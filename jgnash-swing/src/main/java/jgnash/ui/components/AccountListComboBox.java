@@ -169,7 +169,7 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
         });
     }
 
-    protected static abstract class AbstractModel extends AbstractListModel<Account> implements ComboBoxModel<Account> {
+    static abstract class AbstractModel extends AbstractListModel<Account> implements ComboBoxModel<Account> {
 
         List<Account> accounts = new ArrayList<>();
 

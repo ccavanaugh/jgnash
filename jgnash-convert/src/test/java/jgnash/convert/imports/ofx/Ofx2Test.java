@@ -36,11 +36,10 @@ import org.junit.Test;
  * JUnit 4 test class
  * 
  * @author Craig Cavanaugh
- * 
  */
 public class Ofx2Test {
 
-    OfxV2Parser parser;
+    private OfxV2Parser parser;
 
     @Before
     public void setUp() throws Exception {

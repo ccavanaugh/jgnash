@@ -24,7 +24,7 @@ import javax.swing.border.Border;
  * components: a viewport, two scrollbars, a row header, a column header, a row footer, a column footer, and four
  * "corner" components.
  */
-public class JideScrollPaneLayout extends ScrollPaneLayout implements JideScrollPaneConstants {
+class JideScrollPaneLayout extends ScrollPaneLayout implements JideScrollPaneConstants {
 
     /**
      * The row footer child. Default is <code>null</code>.

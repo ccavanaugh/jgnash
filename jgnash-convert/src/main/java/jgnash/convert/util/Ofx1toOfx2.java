@@ -33,7 +33,7 @@ import java.util.logging.Logger;
  *
  * @author Craig Cavanaugh
  */
-public class Ofx1toOfx2 {
+class Ofx1toOfx2 {
 
     @Option(name = "-in", usage = "File to convert")
     private final File inFile = null;
