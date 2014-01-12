@@ -139,7 +139,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     private Color infoColor = null;
 
-    private BusyLayerUI layerUI;
+    private BusyLayerUI busyLayerUI;
 
     static {
         registerFollowsTree = doesRegisterFollowTree();
@@ -473,8 +473,8 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
         waitPanel = new WaitMessagePanel();
 
-        layerUI = new BusyLayerUI();
-        JLayer<JPanel> rootLayer = new JLayer<>(rootPanel, layerUI);
+        busyLayerUI = new BusyLayerUI();
+        JLayer<JPanel> rootLayer = new JLayer<>(rootPanel, busyLayerUI);
 
         getContentPane().add(rootLayer, BorderLayout.CENTER);
 
@@ -512,12 +512,11 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                layerUI.start();
+                busyLayerUI.start();
                 waitPanel.setMessage(message);
                 waitPanel.setWaiting(true);
             }
         });
-
     }
 
     public void stopWaitMessage() {
@@ -525,7 +524,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
             @Override
             public void run() {
                 waitPanel.setWaiting(false);
-                layerUI.stop();
+                busyLayerUI.stop();
             }
         });
     }
