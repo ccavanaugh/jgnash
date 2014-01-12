@@ -99,7 +99,7 @@ public class FileTransferTest {
             Path tempAttachment = Paths.get(Object.class.getResource("/jgnash-logo.png").toURI());
             assertTrue(Files.exists(tempAttachment));
 
-            e.addAttachment(tempAttachment, true);  // push a copy of the attachment
+            assertTrue(e.addAttachment(tempAttachment, true));  // push a copy of the attachment
 
             Thread.sleep(1000); // wait for transfer to finish
 
@@ -184,7 +184,7 @@ public class FileTransferTest {
             Path tempAttachment = Paths.get(Object.class.getResource("/jgnash-logo.png").toURI());
             assertTrue(Files.exists(tempAttachment));
 
-            e.addAttachment(tempAttachment, true);  // push a copy of the attachment
+            assertTrue(e.addAttachment(tempAttachment, true));  // push a copy of the attachment
 
             Thread.sleep(1000); // wait for transfer to finish
 

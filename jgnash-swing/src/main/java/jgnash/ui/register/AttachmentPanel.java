@@ -126,13 +126,19 @@ class AttachmentPanel extends JPanel implements ActionListener {
      * @return chained return of the passed transaction
      */
     Transaction buildTransaction(final Transaction transaction) {
-
         if (attachment != null) {
             if (moveAttachment) {   // move the attachment first
-                moveAttachment();
-            }
+                if (moveAttachment()) {
+                    transaction.setAttachment(attachment.getFileName().toString());
+                } else {
+                    transaction.setAttachment(null);
 
-            transaction.setAttachment(attachment.getFileName().toString());
+                    final String message = MessageFormat.format(rb.getString("Message.Error.TransferAttachment"),
+                            attachment.getFileName().toString());
+
+                    StaticUIMethods.displayError(message);
+                }
+            }
         } else {
             transaction.setAttachment(null);
         }
@@ -142,8 +148,8 @@ class AttachmentPanel extends JPanel implements ActionListener {
         return transaction;
     }
 
-    private void moveAttachment() {
-        EngineFactory.getEngine(EngineFactory.DEFAULT).addAttachment(attachment, false);
+    private boolean moveAttachment() {
+        return EngineFactory.getEngine(EngineFactory.DEFAULT).addAttachment(attachment, false);
     }
 
     void attachmentAction() {
