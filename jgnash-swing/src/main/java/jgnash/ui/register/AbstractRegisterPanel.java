@@ -302,10 +302,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         int row = getTableModel().indexOf(t);
 
         if (row >= 0) {
-            System.out.println(row);
             setSelectedRow(row);
-        } else {
-            System.out.println("did not find transaction");
         }
     }
 
