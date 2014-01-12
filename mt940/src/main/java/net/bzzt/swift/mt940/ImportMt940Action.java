@@ -63,7 +63,7 @@ public class ImportMt940Action extends AbstractEnabledAction {
         final Resource rb = Resource.get();
 
         if (EngineFactory.getEngine(EngineFactory.DEFAULT) == null || EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount().getChildCount() == 0) {
-            StaticUIMethods.displayError(rb.getString("Message.ErrorCreateBasicAccounts"));
+            StaticUIMethods.displayError(rb.getString("Message.Error.CreateBasicAccounts"));
             return;
         }
 

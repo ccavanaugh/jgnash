@@ -107,7 +107,7 @@ public class OpenAction {
                 UIApplication.getFrame().stopWaitMessage();
 
                 if (remoteConnectionFailed) {
-                    StaticUIMethods.displayError(Resource.get().getString("Message.ErrorServerConnection"));
+                    StaticUIMethods.displayError(Resource.get().getString("Message.Error.ServerConnection"));
                 }
             }
         }
@@ -211,7 +211,7 @@ public class OpenAction {
                     engine = EngineFactory.bootClientEngine(host, port, new char[]{}, EngineFactory.DEFAULT);
 
                     if (engine == null) {
-                        appLogger.warning(rb.getString("Message.ErrorServerConnection"));
+                        appLogger.warning(rb.getString("Message.Error.ServerConnection"));
                     }
                 } else {    // must be a local file with a user name and password
                     if (checkAndBackupOldVersion(EngineFactory.getLastDatabase(), new char[]{})) {
@@ -219,7 +219,7 @@ public class OpenAction {
                     }
 
                     if (engine == null) {
-                        appLogger.warning(rb.getString("Message.ErrorLoadingFile"));
+                        appLogger.warning(rb.getString("Message.Error.LoadingFile"));
                     }
                 }
 

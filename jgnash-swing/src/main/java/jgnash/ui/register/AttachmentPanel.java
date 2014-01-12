@@ -197,7 +197,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
                     moveAttachment = true;
                 } else if (!AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)).toString().equals(selectedFile.getParent())) {
 
-                    String message = MessageFormat.format(rb.getString("Message.WarnMoveFile"), selectedFile.toString(),
+                    String message = MessageFormat.format(rb.getString("Message.Warn.MoveFile"), selectedFile.toString(),
                             AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)).toString());
 
                     result = YesNoDialog.showYesNoDialog(UIApplication.getFrame(), new JLabel(message), rb.getString("Title.MoveFile"));
@@ -209,7 +209,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
                                 File.separator + selectedFile.getName()).toPath();
 
                         if (newPath.toFile().exists()) {
-                            message = MessageFormat.format(rb.getString("Message.WarnSameFile"), selectedFile.toString(),
+                            message = MessageFormat.format(rb.getString("Message.Warn.SameFile"), selectedFile.toString(),
                                     AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)).toString());
 
                             StaticUIMethods.displayWarning(message);

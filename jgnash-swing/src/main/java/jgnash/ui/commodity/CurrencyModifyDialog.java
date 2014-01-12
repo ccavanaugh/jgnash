@@ -313,7 +313,7 @@ public class CurrencyModifyDialog extends JDialog implements MessageListener, Li
                             }
                             break;
                         case CURRENCY_REMOVE_FAILED:
-                            JOptionPane.showMessageDialog(CurrencyModifyDialog.this, rb.getString("Message.WarnCurrencyInUse"), rb.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(CurrencyModifyDialog.this, rb.getString("Message.Warn.CurrencyInUse"), rb.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
                             break;
                         case CURRENCY_ADD:
 
@@ -322,7 +322,7 @@ public class CurrencyModifyDialog extends JDialog implements MessageListener, Li
 
                             break;
                         case CURRENCY_ADD_FAILED:
-                            JOptionPane.showMessageDialog(CurrencyModifyDialog.this, rb.getString("Message.ErrorAddCurrency"), rb.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(CurrencyModifyDialog.this, rb.getString("Message.Error.AddCurrency"), rb.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
                             break;
                         case CURRENCY_MODIFY:
 
@@ -336,7 +336,7 @@ public class CurrencyModifyDialog extends JDialog implements MessageListener, Li
 
                             break;
                         case CURRENCY_MODIFY_FAILED:
-                            JOptionPane.showMessageDialog(CurrencyModifyDialog.this, rb.getString("Message.ErrorModifyCurrency"), rb.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(CurrencyModifyDialog.this, rb.getString("Message.Error.ModifyCurrency"), rb.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
                             break;
                         default:
                             break;

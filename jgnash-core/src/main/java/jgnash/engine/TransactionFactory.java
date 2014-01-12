@@ -123,7 +123,7 @@ public class TransactionFactory {
         // verify fees are tagged correctly
         for (TransactionEntry fee : fees) {
             if (fee.getTransactionTag() != TransactionTag.INVESTMENT_FEE) {
-                throw new RuntimeException(Resource.get().getString("Message.ErrorInvalidTransactionTag"));
+                throw new RuntimeException(Resource.get().getString("Message.Error.InvalidTransactionTag"));
             }
         }
 
@@ -403,13 +403,13 @@ public class TransactionFactory {
 
         for (TransactionEntry fee : fees) {
             if (fee.getTransactionTag() != TransactionTag.INVESTMENT_FEE) {
-                throw new RuntimeException(Resource.get().getString("Message.ErrorInvalidTransactionTag"));
+                throw new RuntimeException(Resource.get().getString("Message.Error.InvalidTransactionTag"));
             }
         }
 
         for (TransactionEntry gain : gains) {
             if (gain.getTransactionTag() != TransactionTag.GAIN_LOSS) {
-                throw new RuntimeException(Resource.get().getString("Message.ErrorInvalidTransactionTag"));
+                throw new RuntimeException(Resource.get().getString("Message.Error.InvalidTransactionTag"));
             }
         }
 
@@ -564,14 +564,14 @@ public class TransactionFactory {
         // verify fees are tagged correctly
         for (TransactionEntry fee : fees) {
             if (fee.getTransactionTag() != TransactionTag.INVESTMENT_FEE) {
-                throw new RuntimeException(Resource.get().getString("Message.ErrorInvalidTransactionTag"));
+                throw new RuntimeException(Resource.get().getString("Message.Error.InvalidTransactionTag"));
             }
         }
 
         // verify gains are tagged correctly
         for (TransactionEntry gain : gains) {
             if (gain.getTransactionTag() != TransactionTag.GAIN_LOSS) {
-                throw new RuntimeException(Resource.get().getString("Message.ErrorInvalidTransactionTag"));
+                throw new RuntimeException(Resource.get().getString("Message.Error.InvalidTransactionTag"));
             }
         }
 

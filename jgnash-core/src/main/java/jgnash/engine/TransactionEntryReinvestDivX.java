@@ -43,7 +43,7 @@ public class TransactionEntryReinvestDivX extends TransactionEntryAbstractIncrea
     public TransactionEntryReinvestDivX(final Account investmentAccount, final SecurityNode securityNode, final BigDecimal price, final BigDecimal quantity) {
 
         if (investmentAccount.getAccountType().getAccountGroup() != AccountGroup.INVEST) {
-            throw new RuntimeException(Resource.get().getString("Message.ErrorInvalidAccountGroup"));
+            throw new RuntimeException(Resource.get().getString("Message.Error.InvalidAccountGroup"));
         }
 
         setSecurityNode(securityNode);

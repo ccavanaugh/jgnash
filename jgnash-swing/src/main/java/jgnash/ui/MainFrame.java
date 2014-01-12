@@ -599,7 +599,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
                     case FILE_LOAD_FAILED:
                         break; // ignore for now
                     case ACCOUNT_REMOVE_FAILED:
-                        StaticUIMethods.displayError(rb.getString("Message.ErrorAccountRemove"));
+                        StaticUIMethods.displayError(rb.getString("Message.Error.AccountRemove"));
                         break;
                     case FILE_LOAD_SUCCESS:
                     case FILE_NEW_SUCCESS:

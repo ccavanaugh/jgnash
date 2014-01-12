@@ -59,7 +59,7 @@ public class ImportOfxAction extends AbstractEnabledAction {
         final Preferences pref = Preferences.userNodeForPackage(ImportOfxAction.class);
 
         if (EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount().getChildCount() == 0) {
-            StaticUIMethods.displayError(rb.getString("Message.ErrorCreateBasicAccounts"));
+            StaticUIMethods.displayError(rb.getString("Message.Error.CreateBasicAccounts"));
             return;
         }
 

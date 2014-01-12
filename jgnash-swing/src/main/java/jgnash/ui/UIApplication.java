@@ -130,7 +130,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
             if (AboutDialog.showAcceptLicenseDialog()) {
                 pref.putBoolean(ACCEPT_LICENSE, true);
             } else {
-                System.err.println(Resource.get().getString("Message.ErrorLicense"));
+                System.err.println(Resource.get().getString("Message.Error.License"));
             }
         }
 

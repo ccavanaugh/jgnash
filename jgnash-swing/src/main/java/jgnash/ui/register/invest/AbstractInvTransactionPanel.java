@@ -48,7 +48,7 @@ public abstract class AbstractInvTransactionPanel extends AbstractTransactionPan
     AbstractInvTransactionPanel(final Account account) {
 
         if (!account.memberOf(AccountGroup.INVEST)) {
-            throw new RuntimeException(rb.getString("Message.ErrorInvalidAccountGroup"));
+            throw new RuntimeException(rb.getString("Message.Error.InvalidAccountGroup"));
         }
 
         this.account = account;

@@ -83,7 +83,7 @@ public class ImportQifAction extends AbstractEnabledAction {
         Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
         if (engine.getRootAccount() == null) {
-            StaticUIMethods.displayError(rb.getString("Message.ErrorCreateBasicAccounts"));
+            StaticUIMethods.displayError(rb.getString("Message.Error.CreateBasicAccounts"));
             return;
         }
 
@@ -138,7 +138,7 @@ public class ImportQifAction extends AbstractEnabledAction {
                 imp.doPartialParse(chooser.getSelectedFile());
                 imp.dumpStats();
                 if (imp.getParser().accountList.isEmpty()) {
-                    StaticUIMethods.displayError(rb.getString("Message.ErrorParseTransactions"));
+                    StaticUIMethods.displayError(rb.getString("Message.Error.ParseTransactions"));
                     return;
                 }
                 PartialDialog dlg = new PartialDialog(imp.getParser());

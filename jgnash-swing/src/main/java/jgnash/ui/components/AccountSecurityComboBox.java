@@ -43,7 +43,7 @@ public class AccountSecurityComboBox extends AbstractCommodityComboBox<SecurityN
         super();
 
         if (acc == null || acc.getAccountType().getAccountGroup() != AccountGroup.INVEST) {
-            throw new IllegalArgumentException(Resource.get().getString("Message.ErrorInvalidAccountGroup"));
+            throw new IllegalArgumentException(Resource.get().getString("Message.Error.InvalidAccountGroup"));
         }
 
         this.account = acc;
