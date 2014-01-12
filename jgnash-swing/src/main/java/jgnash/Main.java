@@ -17,6 +17,20 @@
  */
 package jgnash;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.prefs.BackingStoreException;
+import java.util.prefs.InvalidPreferencesFormatException;
+import java.util.prefs.Preferences;
+
+import javax.swing.JOptionPane;
+
 import jgnash.engine.Engine;
 import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.engine.message.MessageBus;
@@ -35,23 +49,9 @@ import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.prefs.BackingStoreException;
-import java.util.prefs.InvalidPreferencesFormatException;
-import java.util.prefs.Preferences;
-
-import javax.swing.JOptionPane;
-
 /**
  * This is the main entry point for the jGnash application.
- * 
+ *
  * @author Craig Cavanaugh
  */
 public final class Main {
@@ -131,7 +131,7 @@ public final class Main {
             System.out.println(Resource.get().getString("Message.Version") + " " + System.getProperty("java.version") + "\n");
 
             // try and show a dialog
-            JOptionPane.showMessageDialog(null,Resource.get().getString("Message.JVM7"), Resource.get().getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, Resource.get().getString("Message.JVM7"), Resource.get().getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
 
             result = false;
         }
@@ -162,7 +162,7 @@ public final class Main {
 
     /**
      * main method
-     * 
+     *
      * @param args command line arguments
      */
     @SuppressWarnings("unused")
@@ -208,10 +208,10 @@ public final class Main {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, bse.toString(), bse);
             System.err.println(Resource.get().getString("Message.UninstallBad"));
         }
-    }    
-    
+    }
+
     @SuppressWarnings("ResultOfObjectAllocationIgnored")
-    private void init(final String args[]) {        
+    private void init(final String args[]) {
         configureLogging();
 
         CmdLineParser parser = new CmdLineParser(this);
@@ -221,7 +221,7 @@ public final class Main {
 
             /* handle a file name passed in as an argument without use of the -file argument
                assumed behavior for windows users */
-            if (args.length == 1 && args[0].charAt(0) != '-') {                           
+            if (args.length == 1 && args[0].charAt(0) != '-') {
                 File testFile = new File(args[0]);
 
                 if (testFile.exists()) {
@@ -238,7 +238,7 @@ public final class Main {
             if (port <= 0) {
                 port = JpaNetworkServer.DEFAULT_PORT;
             }
-            
+
             if (password == null) {
                 password = JpaNetworkServer.DEFAULT_PASSWORD;
             }
@@ -272,12 +272,7 @@ public final class Main {
                 if (portable || portableFile != null) { // must hook in the preferences implementation first for best operation
                     System.setProperty("java.util.prefs.PreferencesFactory", "jgnash.util.prefs.MapPreferencesFactory");
 
-                    try {
-                        importPreferences();
-                    } catch (FileNotFoundException e) {
-                        Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
-                        System.err.println("Preferences file " + getPreferenceFile().getAbsolutePath() + " was not found");
-                    }
+                    importPreferences();
 
                     // add a shutdown hook to export user preferences
                     Runtime.getRuntime().addShutdownHook(new ExportPreferencesThread());
@@ -310,7 +305,7 @@ public final class Main {
         } catch (CmdLineException e) {
             System.err.println(e.getMessage());
             parser.printUsage(System.err);
-        }        
+        }
     }
 
     private File getPreferenceFile() {
@@ -329,20 +324,21 @@ public final class Main {
 
     /**
      * Import jGnash preferences from the file system
-     * 
-     * @throws FileNotFoundException thrown if defined preferences file cannot be found
      */
-    private void importPreferences() throws FileNotFoundException {
-        File importFile = getPreferenceFile();
+    private void importPreferences() {
+        final File importFile = getPreferenceFile();
 
         if (importFile.canRead()) {
-            Logger.getLogger(Main.class.getName()).info("Importing preferences");        
+            Logger.getLogger(Main.class.getName()).info("Importing preferences");
 
-            try(FileInputStream is = new FileInputStream(importFile)) {
+            try (FileInputStream is = new FileInputStream(importFile)) {
                 Preferences.importPreferences(is);
             } catch (InvalidPreferencesFormatException | IOException e) {
+                System.err.println("Preferences file " + importFile.getAbsolutePath() + " could not be read");
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
-            } 
+            }
+        } else {
+            System.err.println("Preferences file " + importFile.getAbsolutePath() + " was not found");
         }
     }
 
@@ -356,8 +352,8 @@ public final class Main {
             File exportFile = getPreferenceFile();
 
             Preferences preferences = Preferences.userRoot();
-    
-            try( FileOutputStream os = new FileOutputStream(exportFile)) {              
+
+            try (FileOutputStream os = new FileOutputStream(exportFile)) {
                 try {
                     if (preferences.nodeExists("/jgnash")) {
                         Preferences p = preferences.node("/jgnash");
@@ -366,7 +362,7 @@ public final class Main {
                     deleteUserPreferences();
                 } catch (BackingStoreException e) {
                     Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
-                } 
+                }
             } catch (IOException e) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
             }
