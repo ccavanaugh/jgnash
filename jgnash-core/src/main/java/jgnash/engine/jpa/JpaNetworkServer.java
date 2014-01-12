@@ -115,84 +115,92 @@ public class JpaNetworkServer {
         boolean result = false;
 
         DistributedLockServer distributedLockServer = new DistributedLockServer(port + 2);
-        distributedLockServer.startServer(password);
+        final boolean lockServerStarted = distributedLockServer.startServer(password);
 
         AttachmentTransferServer attachmentTransferServer = new AttachmentTransferServer(port + 3, AttachmentUtils.getAttachmentDirectory(Paths.get(fileName)));
-        attachmentTransferServer.startServer(password);
+        final boolean attachmentServerStarted = attachmentTransferServer.startServer(password);
 
-        final Engine engine = createEngine(dataStoreType, fileName, port, password);
+        if (attachmentServerStarted && lockServerStarted) {
+            final Engine engine = createEngine(dataStoreType, fileName, port, password);
 
-        if (engine != null) {
+            if (engine != null) {
 
-            // Start the message bus and pass the file name so it can be reported to the client
-            MessageBusServer messageBusServer = new MessageBusServer(port + 1);
-            result = messageBusServer.startServer(dataStoreType, fileName, password);
+                // Start the message bus and pass the file name so it can be reported to the client
+                MessageBusServer messageBusServer = new MessageBusServer(port + 1);
+                result = messageBusServer.startServer(dataStoreType, fileName, password);
 
-            if (result) { // don't continue if the server is not started successfully
-                // Start the backup thread that ensures an XML backup is created at set intervals
-                ScheduledExecutorService backupExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
+                if (result) { // don't continue if the server is not started successfully
+                    // Start the backup thread that ensures an XML backup is created at set intervals
+                    ScheduledExecutorService backupExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
 
-                // run commit every backup period after startup
-                backupExecutor.scheduleWithFixedDelay(new Runnable() {
+                    // run commit every backup period after startup
+                    backupExecutor.scheduleWithFixedDelay(new Runnable() {
 
-                    @Override
-                    public void run() {
-                        if (dirty) {
-                            exportXML(engine, fileName);
-                            EngineFactory.removeOldCompressedXML(fileName);
-                            dirty = false;
+                        @Override
+                        public void run() {
+                            if (dirty) {
+                                exportXML(engine, fileName);
+                                EngineFactory.removeOldCompressedXML(fileName);
+                                dirty = false;
+                            }
                         }
-                    }
-                }, BACKUP_PERIOD, BACKUP_PERIOD, TimeUnit.HOURS);
+                    }, BACKUP_PERIOD, BACKUP_PERIOD, TimeUnit.HOURS);
 
-                LocalServerListener listener = new LocalServerListener() {
-                    @Override
-                    public void messagePosted(final String event) {
+                    LocalServerListener listener = new LocalServerListener() {
+                        @Override
+                        public void messagePosted(final String event) {
 
-                        // look for a remote request to stop the server
-                        if (event.startsWith(STOP_SERVER_MESSAGE)) {
-                            Logger.getLogger(JpaNetworkServer.class.getName()).info("Remote shutdown request was received");
-                            stopServer();
+                            // look for a remote request to stop the server
+                            if (event.startsWith(STOP_SERVER_MESSAGE)) {
+                                Logger.getLogger(JpaNetworkServer.class.getName()).info("Remote shutdown request was received");
+                                stopServer();
+                            }
+
+                            dirty = true;
                         }
+                    };
 
-                        dirty = true;
+                    messageBusServer.addLocalListener(listener);
+
+                    // wait here forever
+                    try {
+                        while (!stop) { // check for condition, handle a spurious wake up
+                            wait(); // wait forever for notify() from stopServer()
+                        }
+                    } catch (final InterruptedException ex) {
+                        Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                };
 
-                messageBusServer.addLocalListener(listener);
+                    messageBusServer.removeLocalListener(listener);
 
-                // wait here forever
-                try {
-                    while (!stop) { // check for condition, handle a spurious wake up
-                        wait(); // wait forever for notify() from stopServer()
-                    }
-                } catch (final InterruptedException ex) {
-                    Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, null, ex);
+                    backupExecutor.shutdown();
+
+                    exportXML(engine, fileName);
+
+                    messageBusServer.stopServer();
+
+                    EngineFactory.closeEngine(SERVER_ENGINE);
+
+                    distributedLockManager.disconnectFromServer();
+                    distributedAttachmentManager.disconnectFromServer();
+
+                    distributedLockServer.stopServer();
+
+                    attachmentTransferServer.stopServer();
+
+                    em.close();
+
+                    factory.close();
                 }
-
-                messageBusServer.removeLocalListener(listener);
-
-                backupExecutor.shutdown();
-
-                exportXML(engine, fileName);
-
-                messageBusServer.stopServer();
-
-                EngineFactory.closeEngine(SERVER_ENGINE);
-
-                distributedLockManager.disconnectFromServer();
-                distributedAttachmentManager.disconnectFromServer();
-
-                distributedLockServer.stopServer();
-
-                attachmentTransferServer.stopServer();
-
-                em.close();
-
-                factory.close();
             }
         } else {
-            distributedLockServer.stopServer();
+            if (lockServerStarted) {
+                distributedLockServer.stopServer();
+            }
+
+            if (attachmentServerStarted) {
+                attachmentTransferServer.stopServer();
+            }
         }
         return result;
     }
@@ -222,8 +230,10 @@ public class JpaNetworkServer {
             Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, e.getMessage(), e);
         }
 
-        // Start the message server and engine
-        run(DataStoreType.H2_DATABASE, fileName, port, password);
+        // Start the message server and engine, this should block until closed
+        if (!run(DataStoreType.H2_DATABASE, fileName, port, password)) {
+            Logger.getLogger(JpaNetworkServer.class.getName()).severe("Failed to start the server");
+        }
 
         if (server != null) {
             server.stop();
@@ -241,8 +251,10 @@ public class JpaNetworkServer {
 
         hsqlServer.start();
 
-        // Start the message server and engine
-        run(DataStoreType.HSQL_DATABASE, fileName, port, password);
+        // Start the message server and engine, this should block until closed
+        if (!run(DataStoreType.HSQL_DATABASE, fileName, port, password)) {
+            Logger.getLogger(JpaNetworkServer.class.getName()).severe("Failed to start the server");
+        }
 
         hsqlServer.stop();
 

@@ -55,7 +55,7 @@ public class DistributedLockTest {
         ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
 
         server = new DistributedLockServer(PORT);
-        server.startServer(password);
+        assertTrue(server.startServer(password));
 
         manager = new DistributedLockManager("localhost", PORT);
         manager.connectToServer(password);

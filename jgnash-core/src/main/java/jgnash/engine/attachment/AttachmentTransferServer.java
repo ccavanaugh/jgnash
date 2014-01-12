@@ -73,8 +73,8 @@ public class AttachmentTransferServer {
         this.attachmentPath = attachmentPath;
     }
 
-    public void startServer(final char[] password) {
-        // Configure the server.
+    public boolean startServer(final char[] password) {
+        boolean result = false;
 
         boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty(EncryptionManager.ENCRYPTION_FLAG));
 
@@ -112,6 +112,7 @@ public class AttachmentTransferServer {
             final ChannelFuture future = b.bind(port).sync();
 
             if (future.isDone() && future.isSuccess()) {
+                result = true;
                 logger.info("File Transfer Server started successfully");
             } else {
                 logger.info("Failed to start the File Transfer Server");
@@ -120,6 +121,8 @@ public class AttachmentTransferServer {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             stopServer();
         }
+
+        return result;
     }
 
     public void stopServer() {

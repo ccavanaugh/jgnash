@@ -25,6 +25,8 @@ import jgnash.util.EncryptionManager;
 import io.netty.util.ResourceLeakDetector;
 import org.junit.Before;
 
+import static org.junit.Assert.assertTrue;
+
 /**
  * Test to validate the Distributed lock manager
  *
@@ -43,7 +45,7 @@ public class EncryptedDistributedLockTest extends DistributedLockTest {
         System.setProperty("ssl", "true");
 
         server = new DistributedLockServer(PORT);
-        server.startServer(password);
+        assertTrue(server.startServer(password));
 
         manager = new DistributedLockManager("localhost", PORT);
         manager.connectToServer(password);
