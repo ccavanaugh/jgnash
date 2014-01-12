@@ -125,14 +125,14 @@ public class ImageDialog extends JDialog {
 
                 try {
                     scaledImage = resizeImage(image, this.getWidth(), this.getHeight());
-                } catch (final IOException e) {
+                } catch (final Exception e) {
                     Logger.getLogger(ImagePanel.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
                     scaledImage = image;
                 }
             }
         }
 
-        private BufferedImage resizeImage(final BufferedImage originalImage, final int targetWidth, final int targetHeight) throws IOException {
+        private BufferedImage resizeImage(final BufferedImage originalImage, final int targetWidth, final int targetHeight) {
 
             if (targetHeight == 0 || targetWidth == 0) {
                 return originalImage;
