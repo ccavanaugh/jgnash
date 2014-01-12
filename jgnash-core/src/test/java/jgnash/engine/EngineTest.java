@@ -664,7 +664,7 @@ public abstract class EngineTest {
 
         a = e.getAccountByName(ACCOUNT_NAME);
 
-        e.removeAccount(a);
+        assertTrue(e.removeAccount(a));
 
         closeEngine();
 

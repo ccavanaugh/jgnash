@@ -45,6 +45,7 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.RollOverButton;
 import jgnash.ui.register.RegisterFrame;
 import jgnash.util.Resource;
@@ -53,7 +54,6 @@ import jgnash.util.Resource;
  * Displays a list of accounts using a table and adds a toolbar for common account methods
  * 
  * @author Craig Cavanaugh
- *
  */
 public class ExpandingAccountTablePanel extends JPanel implements ActionListener, MessageListener {
 
@@ -189,7 +189,9 @@ public class ExpandingAccountTablePanel extends JPanel implements ActionListener
         if (getEngine().getRootAccount() != null) {
             Account account = getSelectedAccount();
             if (account != null) {
-                getEngine().removeAccount(account);
+                if (!getEngine().removeAccount(account)) {
+                    StaticUIMethods.displayError(rb.getString("Message.Error.AccountRemove"));
+                }
             }
         }
     }
