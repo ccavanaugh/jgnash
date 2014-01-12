@@ -1402,11 +1402,20 @@ public class Engine {
                 historyNode = new ExchangeRateHistoryNode(date, BigDecimal.ONE.divide(rate, MathConstants.mathContext));
             }
 
-            exchangeRate.addHistoryNode(historyNode);
+            Message message;
 
-            getCommodityDAO().addExchangeRateHistory(exchangeRate);
+            boolean result = false;
 
-            Message message = new Message(MessageChannel.COMMODITY, ChannelEvent.EXCHANGE_RATE_ADD, this);
+            if (exchangeRate.addHistoryNode(historyNode)) {
+                result = getCommodityDAO().addExchangeRateHistory(exchangeRate);
+            }
+
+            if (result) {
+                message = new Message(MessageChannel.COMMODITY, ChannelEvent.EXCHANGE_RATE_ADD, this);
+            } else {
+                message = new Message(MessageChannel.COMMODITY, ChannelEvent.EXCHANGE_RATE_ADD_FAILED, this);
+            }
+
             message.setObject(MessageProperty.EXCHANGE_RATE, exchangeRate);
 
             messageBus.fireEvent(message);
@@ -1422,12 +1431,16 @@ public class Engine {
         try {
             Message message;
 
+            boolean result = false;
+
             if (exchangeRate.contains(history)) {
                 if (exchangeRate.removeHistoryNode(history)) {
                     moveObjectToTrash(history);
-                    getCommodityDAO().removeExchangeRateHistory(exchangeRate);
+                    result = getCommodityDAO().removeExchangeRateHistory(exchangeRate);
                 }
+            }
 
+            if (result) {
                 message = new Message(MessageChannel.COMMODITY, ChannelEvent.EXCHANGE_RATE_REMOVE, this);
             } else {
                 message = new Message(MessageChannel.COMMODITY, ChannelEvent.EXCHANGE_RATE_REMOVE_FAILED, this);
