@@ -299,11 +299,18 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
     }
 
     public void setSelectedTransaction(final Transaction t) {
-        int row = getTableModel().indexOf(t);
 
-        if (row >= 0) {
-            setSelectedRow(row);
-        }
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                final int row = getTableModel().indexOf(t);
+
+                if (row >= 0) {
+                    setSelectedRow(row);
+                }
+            }
+        });
+
     }
 
     private Transaction[] getSelectedTransactions() {
@@ -410,13 +417,14 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
                             updateAccountInfo();
                             break;
                         case TRANSACTION_ADD:
-                            Transaction t = (Transaction) event.getObject(MessageProperty.TRANSACTION);
+                            final Transaction t = (Transaction) event.getObject(MessageProperty.TRANSACTION);
+                            final int index = account.indexOf(t);
 
-                            int index = account.indexOf(t);
                             if (index == account.getTransactionCount() - 1) {
                                 autoScroll();
                             }
 
+                            setSelectedTransaction(t);
                             updateAccountInfo();
                             break;
                         case TRANSACTION_REMOVE:

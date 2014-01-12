@@ -28,6 +28,7 @@ appears to be a JDK and Google interaction bug.
 
 Release 2.13.5
 ----------------------
+01/12/14 Any newly added or modified transactions will be highlighted in the register table for easy identification.
 01/11/14 Fixed a race condition that was preventing newly duplicated transactions from gaining focus in the register.
 01/11/14 When an account register was open in it's own window, window focus could be lost when deleting and duplicating
          transactions.
