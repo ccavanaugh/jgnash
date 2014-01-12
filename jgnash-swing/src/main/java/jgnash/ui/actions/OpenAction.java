@@ -193,12 +193,10 @@ public class OpenAction {
 
             @Override
             protected Void doInBackground() throws Exception {
-                Resource rb = Resource.get();
+                final Resource rb = Resource.get();
+
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
                 logger.fine("Booting the engine");
-
-                // Disk IO is heavy so delay and allow the UI to react before starting the boot operation
-                Thread.sleep(750);
 
                 Engine engine = null;
 
