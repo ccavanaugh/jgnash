@@ -282,12 +282,9 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
 
     /**
      * Sets the last date fired to the next iterator date in the series
-     *
-     * @return the next iterator date
      */
-    public Date setLastDate() {
+    public void setLastDate() {
         setLastDate(getIterator().next());
-        return getLastDate();
     }
 
     /**
