@@ -17,13 +17,10 @@
  */
 package jgnash.convert.imports.ofx;
 
-import jgnash.convert.common.OfxTags;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -40,6 +37,8 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
+import jgnash.convert.common.OfxTags;
 
 /**
  * Parses a 2.x OFX (XML) file
@@ -81,7 +80,7 @@ public class OfxV2Parser implements OfxTags {
     /**
      * Parses an InputStream using a specified encoding
      *
-     * @param stream InputStream to parse
+     * @param stream   InputStream to parse
      * @param encoding encoding to use
      */
     void parse(final InputStream stream, final String encoding) {
@@ -90,24 +89,24 @@ public class OfxV2Parser implements OfxTags {
         bank = new OfxBank();
 
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-                
+
         try (InputStream input = new BufferedInputStream(stream)) {
             XMLStreamReader reader = inputFactory.createXMLStreamReader(input, encoding);
-            readOfx(reader);            
+            readOfx(reader);
         } catch (IOException | XMLStreamException e) {
             logger.log(Level.SEVERE, e.toString(), e);
-        }                             
+        }
 
         logger.exiting(OfxV2Parser.class.getName(), "parse");
     }
 
-    public void parse(final File file) throws FileNotFoundException {
-        
+    public void parse(final File file) {
+
         try (InputStream stream = new FileInputStream(file)) {
             parse(stream);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             logger.log(Level.SEVERE, e.toString(), e);
-        }                
+        }
     }
 
     public void parse(final String string, final String encoding) {

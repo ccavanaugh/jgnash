@@ -51,7 +51,7 @@ public abstract class EngineTest {
 
     static final char[] PASSWORD = new char[]{};
 
-    void closeEngine() throws Exception {
+    void closeEngine() {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
     }
 

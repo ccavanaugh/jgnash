@@ -217,14 +217,16 @@ public class EngineFactory {
      *         <code>Engine</code> instance if successful, null otherwise
      * @see Engine
      */
-    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName, final char[] password) throws Exception {
+    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName, final char[] password) {
         DataStoreType type = getDataStoreByType(new File(fileName));
 
+        Engine engine = null;
+
         if (type != null) {
-            return bootLocalEngine(fileName, engineName, password, type);
+            engine = bootLocalEngine(fileName, engineName, password, type);
         }
 
-        return null;
+        return engine;
     }
 
     /**
