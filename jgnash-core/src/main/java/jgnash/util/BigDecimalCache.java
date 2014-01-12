@@ -37,20 +37,6 @@ public final class BigDecimalCache {
     }
 
     /**
-     * Trims the capacity of this <tt>BigDecimalCache</tt> instance to the specified size.
-     *
-     * @param size the new capacity of the cache
-     */
-    public void trimToSize(final int size) {
-        int oldCapacity = cache.length;
-        if (size < oldCapacity) {
-            BigDecimal oldData[] = cache;
-            cache = new BigDecimal[size];
-            System.arraycopy(oldData, 0, cache, 0, size);
-        }
-    }
-
-    /**
      * Increases the capacity of this <tt>BigDecimalCache</tt> instance, if necessary, to ensure that it can hold at
      * least the number of BigDecimals specified by the minimum capacity argument.
      *

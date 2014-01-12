@@ -295,7 +295,6 @@ public abstract class AbstractRegisterTableModel extends AbstractTableModel impl
     void unregister() {
         MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM, MessageChannel.TRANSACTION);
 
-        balanceCache.trimToSize(0);
         account = null;
     }
 
