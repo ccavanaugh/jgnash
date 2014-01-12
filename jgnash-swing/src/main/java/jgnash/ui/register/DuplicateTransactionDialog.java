@@ -18,13 +18,11 @@
 package jgnash.ui.register;
 
 import java.util.Date;
-import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.SwingWorker;
-
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
@@ -41,7 +39,7 @@ class DuplicateTransactionDialog extends DateChkNumberDialog {
 
     private Transaction transaction;
 
-    private SwingWorker<Transaction, Void> worker;
+    private Transaction newTransaction;
 
     /**
      * Creates new DuplicateTransactionDialog.<b> null transactions and SplitEntryTransactions are ignored to prevent
@@ -95,65 +93,38 @@ class DuplicateTransactionDialog extends DateChkNumberDialog {
 
     @Override
     public void okAction() {
+        Transaction clone = null; // get a clone
 
-        worker = new SwingWorker<Transaction, Void>() {
+        try {
+            clone = (Transaction) transaction.clone();
 
-            @Override
-            public Transaction doInBackground() {
-                Transaction clone = null; // get a clone
+            Date today = DateUtils.today(); // get today's date
 
-                try {
-                    clone = (Transaction) transaction.clone();
-
-                    Date today = DateUtils.today(); // get today's date
-
-                    if (today.equals(datePanel.getDate())) {
-                        clone.setDate(new Date()); // maintain entry order
-                    } else {
-                        clone.setDate(datePanel.getDate()); // set the new date
-                    }
-
-                    clone.setNumber(numberCombo.getText()); // set the transaction number
-
-                    // clear the reconciled state of the transaction
-                    clone.setReconciled(ReconciledState.NOT_RECONCILED);
-                } catch (CloneNotSupportedException e) {
-                    Logger.getLogger(DuplicateTransactionDialog.class.getName()).log(Level.SEVERE, e.toString(), e);
-                }
-
-                return clone;
+            if (today.equals(datePanel.getDate())) {
+                clone.setDate(new Date()); // maintain entry order
+            } else {
+                clone.setDate(datePanel.getDate()); // set the new date
             }
 
-            @Override
-            protected void done() {
-                try {
-                    Transaction clone = get();
+            clone.setNumber(numberCombo.getText()); // set the transaction number
 
-                    EngineFactory.getEngine(EngineFactory.DEFAULT).addTransaction(clone); // add the transaction
+            // clear the reconciled state of the transaction
+            clone.setReconciled(ReconciledState.NOT_RECONCILED);
+        } catch (final CloneNotSupportedException e) {
+            Logger.getLogger(DuplicateTransactionDialog.class.getName()).log(Level.SEVERE, e.toString(), e);
+        }
 
-                } catch (InterruptedException | ExecutionException e) {
-                    Logger.getLogger(DuplicateTransactionDialog.class.getName()).log(Level.SEVERE, e.toString(), e);
-                }
-            }
-        };
+        if (clone != null) {
+            Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-        worker.execute();
+            e.addTransaction(clone); // add the transaction
+            newTransaction = e.getTransactionByUuid(clone.getUuid());
+        }
 
         super.okAction();
     }
 
     public Transaction getTransaction() {
-
-        Transaction newTransaction = null;
-
-        try {
-            if (worker != null) {   // null if duplicate action was canceled
-                newTransaction = worker.get();
-            }
-        } catch (InterruptedException | ExecutionException e) {
-            Logger.getLogger(DuplicateTransactionDialog.class.getName()).log(Level.SEVERE, e.toString(), e);
-        }
-
         return newTransaction;
     }
 }

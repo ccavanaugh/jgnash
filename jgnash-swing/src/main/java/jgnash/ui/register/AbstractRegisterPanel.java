@@ -233,16 +233,17 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         for (Transaction tran : trans) {
             final DuplicateTransactionDialog d = DuplicateTransactionDialog.showDialog(getAccount(), tran);
 
-            if (d.getTransaction() != null) {
+            final Transaction transaction = d.getTransaction();
+
+            if (transaction != null) {
                 EventQueue.invokeLater(new Runnable() {
 
                     @Override
                     public void run() {
                         clear();
-                        setSelectedTransaction(d.getTransaction());
+                        setSelectedTransaction(transaction);
                     }
                 });
-
             }
         }
 
@@ -301,7 +302,10 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         int row = getTableModel().indexOf(t);
 
         if (row >= 0) {
+            System.out.println(row);
             setSelectedRow(row);
+        } else {
+            System.out.println("did not find transaction");
         }
     }
 
