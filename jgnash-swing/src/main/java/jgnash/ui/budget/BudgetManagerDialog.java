@@ -228,7 +228,9 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
         newBudget.setName(name);
         newBudget.setDescription(rb.getString("Word.NewBudget"));
 
-        e.addBudget(newBudget);
+        if (!e.addBudget(newBudget)) {
+            StaticUIMethods.displayError(rb.getString("Message.Error.NewBudget"));
+        }
     }
 
     private void deleteBudget() {
@@ -242,7 +244,9 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
 
             if (YesNoDialog.showYesNoDialog(UIApplication.getFrame(), new JLabel(message), rb.getString("Title.Confirm"))) {
                 for (BudgetObject value : values) {
-                    e.removeBudget(value.getBudget());
+                    if (!e.removeBudget(value.getBudget())) {
+                        StaticUIMethods.displayError(rb.getString("Message.Error.BudgetRemove"));
+                    }
                 }
             }
         }
@@ -256,7 +260,9 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
             Budget newBudget;
             try {
                 newBudget = (Budget) ((BudgetObject) value).getBudget().clone();
-                e.addBudget(newBudget);
+                if (!e.addBudget(newBudget)) {
+                    StaticUIMethods.displayError(rb.getString("Message.Error.BudgetDuplicate"));
+                }
             } catch (CloneNotSupportedException e1) {
                 Logger.getLogger(BudgetManagerDialog.class.getName()).log(Level.SEVERE, e1.toString(), e1);
             }

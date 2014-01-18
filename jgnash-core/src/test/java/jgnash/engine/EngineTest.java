@@ -224,7 +224,7 @@ public abstract class EngineTest {
         budget.setBudgetGoal(a, goal);
         budget.setBudgetPeriod(BudgetPeriod.WEEKLY);
 
-        e.addBudget(budget);
+        assertTrue(e.addBudget(budget));
 
         assertEquals(1, e.getBudgetList().size());
 
@@ -255,7 +255,7 @@ public abstract class EngineTest {
         }
 
         // remove a budget
-        e.removeBudget(e.getBudgetList().get(0));
+        assertTrue(e.removeBudget(e.getBudgetList().get(0)));
         assertEquals(0, e.getBudgetList().size());
 
         // close and reopen to force check for persistence

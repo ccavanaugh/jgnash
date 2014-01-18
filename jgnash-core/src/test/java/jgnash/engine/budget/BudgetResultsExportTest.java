@@ -61,7 +61,7 @@ public class BudgetResultsExportTest {
         budget.setDescription("Test");
         budget.setBudgetPeriod(BudgetPeriod.MONTHLY);
 
-        e.addBudget(budget);
+        assertTrue(e.addBudget(budget));
 
         BudgetResultsModel model = new BudgetResultsModel(budget, 2012, node);
 

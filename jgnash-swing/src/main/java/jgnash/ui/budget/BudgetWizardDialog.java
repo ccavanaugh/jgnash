@@ -168,7 +168,9 @@ final class BudgetWizardDialog extends JDialog implements ActionListener {
 
                 Budget budget = BudgetFactory.buildAverageBudget(period, budgetNameField.getText(), roundButton.isSelected());
 
-                EngineFactory.getEngine(EngineFactory.DEFAULT).addBudget(budget);
+                if (!EngineFactory.getEngine(EngineFactory.DEFAULT).addBudget(budget)) {
+                    StaticUIMethods.displayError(rb.getString("Message.Error.NewBudget"));
+                }
 
                 dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
             } else {
