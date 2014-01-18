@@ -117,12 +117,10 @@ public abstract class DynamicJasperReport {
         p.putInt(BASE_FONT_SIZE, size);
     }
 
-    private Page assignPageFormat(final DynamicReportBuilder builder) {
-        PageFormat format = getPageFormat();
-
-        Paper paper = format.getPaper();
-
-        int orientation = format.getOrientation();
+    private void assignPageFormat(final DynamicReportBuilder builder) {
+        final PageFormat format = getPageFormat();
+        final Paper paper = format.getPaper();
+        final int orientation = format.getOrientation();
 
         int topMargin;
         int rightMargin;
@@ -147,8 +145,6 @@ public abstract class DynamicJasperReport {
 
         builder.setPageSizeAndOrientation(page);
         builder.setMargins(topMargin, bottomMargin, leftMargin, rightMargin);
-
-        return page;
     }
 
     public final Preferences getPreferences() {
