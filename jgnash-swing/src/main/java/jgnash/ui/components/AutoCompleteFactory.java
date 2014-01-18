@@ -262,8 +262,7 @@ public class AutoCompleteFactory {
                 @Override
                 public void run() {
                     try {
-                        List<Transaction> transactions = EngineFactory.getEngine(EngineFactory.DEFAULT)
-                                .getTransactions();
+                        List<Transaction> transactions = EngineFactory.getEngine(EngineFactory.DEFAULT) .getTransactions();
 
                         // sort the transactions for consistent order
                         Collections.sort(transactions);
@@ -276,8 +275,7 @@ public class AutoCompleteFactory {
                             }
                         }
                     } catch (Exception e) {
-                        Logger.getLogger(AutoCompleteFactory.class.getName()).log(Level.INFO, e.getLocalizedMessage(),
-                                e);
+                        Logger.getLogger(AutoCompleteFactory.class.getName()).log(Level.INFO, e.getLocalizedMessage(), e);
                     }
                 }
             });
@@ -403,10 +401,15 @@ public class AutoCompleteFactory {
          * @param t transaction to remove
          */
         void removeExtraInfo(final Transaction t) {
-            if (ignoreCase) {
-                transactions.remove(t.getPayee().toLowerCase(Locale.getDefault()), t);
-            }
-            transactions.remove(t.getPayee(), t);
+            pool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    if (ignoreCase) {
+                        transactions.remove(t.getPayee().toLowerCase(Locale.getDefault()), t);
+                    }
+                    transactions.remove(t.getPayee(), t);
+                }
+            });
         }
 
         @Override
