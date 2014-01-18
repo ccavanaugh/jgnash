@@ -19,7 +19,6 @@ package jgnash.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -39,16 +38,14 @@ public class MultiHashMap<K, V> extends HashMap<K, Object> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Object put(K key, Object value) {
+    public Object put(final K key, final Object value) {
         if (value instanceof ArrayList<?>) {
             throw new IllegalArgumentException("ArrayLists are not allowed");
         }
 
-        Lock writeLock = lock.writeLock();
+        lock.writeLock().lock();
 
         try {
-            writeLock.lock();
-
             if (containsKey(key)) {
                 Object val = super.get(key);
                 if (val instanceof ArrayList<?>) {
@@ -64,7 +61,7 @@ public class MultiHashMap<K, V> extends HashMap<K, Object> {
             }
             return super.put(key, value);
         } finally {
-            writeLock.unlock();
+            lock.writeLock().unlock();
         }
     }
 
@@ -73,12 +70,10 @@ public class MultiHashMap<K, V> extends HashMap<K, Object> {
      */
     @SuppressWarnings("rawtypes")
     @Override
-    public Object get(Object key) {
-        Lock readLock = lock.readLock();
+    public Object get(final Object key) {
+        lock.readLock().lock();
 
         try {
-            readLock.lock();
-
             Object v = super.get(key);
             if (v instanceof ArrayList<?>) {
                 ArrayList l = (ArrayList) v;
@@ -86,7 +81,7 @@ public class MultiHashMap<K, V> extends HashMap<K, Object> {
             }
             return v;
         } finally {
-            readLock.unlock();
+            lock.readLock().unlock();
         }
     }
 
@@ -119,12 +114,11 @@ public class MultiHashMap<K, V> extends HashMap<K, Object> {
     
     @SuppressWarnings({"unchecked", "rawtypes", "element-type-mismatch"})
     @Override
-    public Object remove(Object key) {
-        Lock writeLock = lock.writeLock();
+    public Object remove(final Object key) {
+
+        lock.writeLock().lock();
 
         try {
-            writeLock.lock();
-         
             Object v = super.get(key);
             if (v instanceof ArrayList) {
                 ArrayList l = (ArrayList) v;
@@ -138,7 +132,7 @@ public class MultiHashMap<K, V> extends HashMap<K, Object> {
             }
             return super.remove(key);
         } finally {
-            writeLock.unlock();
+            lock.writeLock().unlock();
         }
     }
 
@@ -147,15 +141,16 @@ public class MultiHashMap<K, V> extends HashMap<K, Object> {
      *
      * @param key   The key of the value to remove
      * @param value The specific value to remove
-     * @return the remove value, null if it was not found in the map
+     * @return <code>true</code> if the map changed
      */
     @SuppressWarnings("rawtypes")
-    public Object remove(K key, V value) {
-        Lock writeLock = lock.writeLock();
+    public Object remove(final K key, final V value) {
+
+        boolean result = false;
+
+        lock.writeLock().lock();
 
         try {
-            writeLock.lock();
-
             Object v = super.get(key);
             if (v instanceof ArrayList) {
                 ArrayList l = (ArrayList) v;
@@ -163,15 +158,15 @@ public class MultiHashMap<K, V> extends HashMap<K, Object> {
                     if (l.size() == 1) { // remove the ArrayList
                         super.put(key, value);
                     }
-                    return value;
+                    result = true;
                 }
-                return null;
             } else if (v != null && v.equals(value)) {
-                return super.remove(key);
+                result = super.remove(key) != null;
             }
-            return null;
         } finally {
-            writeLock.unlock();
+            lock.writeLock().unlock();
         }
+
+        return result;
     }
 }
