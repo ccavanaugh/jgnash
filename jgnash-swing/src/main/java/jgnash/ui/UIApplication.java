@@ -79,7 +79,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
 
     private static volatile HelpBroker helpBroker;
 
-    private static final Logger LOG = Logger.getLogger(UIApplication.class.getName());
+    private static final Logger logger = Logger.getLogger(UIApplication.class.getName());
 
     private static JDialog helpDialog;
 
@@ -90,17 +90,21 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
         if (initFrame()) {
         
             // try to load the last open file
-            EventQueue.invokeLater(new Runnable() {
+            try {
+                EventQueue.invokeAndWait(new Runnable() {
 
-                @Override
-                public void run() {
-                    if (file != null) {
-                        mainFrame.loadFile(file, password);
-                    } else if (EngineFactory.openLastOnStartup()) {
-                        mainFrame.loadLast();
+                    @Override
+                    public void run() {
+                        if (file != null) {
+                            mainFrame.loadFile(file, password);
+                        } else if (EngineFactory.openLastOnStartup()) {
+                            mainFrame.loadLast();
+                        }
                     }
-                }
-            });
+                });
+            } catch (final InterruptedException | InvocationTargetException e) {
+                logger.log(Level.SEVERE, e.getMessage(), e);
+            }
         }
     }
 
@@ -153,7 +157,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
 
         if (result) {
             if (Main.enableHangDetection()) {
-                Logger.getLogger(UIApplication.class.getName()).info("Installing Event Dispatch Thread Hang Monitor");
+                logger.info("Installing Event Dispatch Thread Hang Monitor");
                 jgnash.ui.debug.EventDispatchThreadHangMonitor.initMonitoring();
             }
         }
@@ -206,7 +210,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
                     jHelp.setCurrentID(id);
                 }
             } catch (javax.help.BadIDException e) {
-                LOG.log(Level.INFO, "Invalid help ID: " + id, e);               
+                logger.log(Level.INFO, "Invalid help ID: " + id, e);
             }
 
             if (helpDialog == null) {
@@ -254,7 +258,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
             return;
         }
 
-        LOG.log(Level.SEVERE, e.getMessage(), e);
+        logger.log(Level.SEVERE, e.getMessage(), e);
 
         EventQueue.invokeLater(new Runnable() {
 
@@ -307,11 +311,11 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
     }
 
     /**
-     * Returns a common application level LOG. Intended for user readable information and warnings
+     * Returns a common application level logger. Intended for user readable information and warnings
      *
      * @return Logger
      */
     public static Logger getLogger() {
-        return LOG;
+        return logger;
     }
 }
