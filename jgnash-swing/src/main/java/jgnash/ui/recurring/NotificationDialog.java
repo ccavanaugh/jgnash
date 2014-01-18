@@ -55,7 +55,6 @@ import jgnash.util.Resource;
  *
  * @author Craig Cavanaugh
  * @author Clemens Wacha
- *
  */
 class NotificationDialog extends JDialog implements ActionListener, ListSelectionListener {
 
@@ -176,7 +175,14 @@ class NotificationDialog extends JDialog implements ActionListener, ListSelectio
                     }
                     // update the last fired date... date returned from the iterator
                     reminder.setLastDate(); // mark as complete
-                    EngineFactory.getEngine(EngineFactory.DEFAULT).updateReminder(reminder);
+                    if (!EngineFactory.getEngine(EngineFactory.DEFAULT).updateReminder(reminder)) {
+                        EventQueue.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                StaticUIMethods.displayError(rb.getString("Message.Error.ReminderUpdate"));
+                            }
+                        });
+                    }
                 }
             }
 

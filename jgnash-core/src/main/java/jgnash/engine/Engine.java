@@ -1520,8 +1520,8 @@ public class Engine {
         }
     }
 
-    public void updateReminder(final Reminder reminder) {
-        getReminderDAO().updateReminder(reminder);
+    public boolean updateReminder(final Reminder reminder) {
+        return getReminderDAO().updateReminder(reminder);
     }
 
     public String getAccountSeparator() {
