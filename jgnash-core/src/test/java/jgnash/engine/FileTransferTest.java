@@ -101,7 +101,7 @@ public class FileTransferTest {
 
             assertTrue(e.addAttachment(tempAttachment, true));  // push a copy of the attachment
 
-            Thread.sleep(1000); // wait for transfer to finish
+            Thread.sleep(2000); // wait for the transfer to finish, it may have been pushed into the background
 
             Path newPath = Paths.get(AttachmentUtils.getAttachmentDirectory(Paths.get(testFile)) + File.separator + tempAttachment.getFileName());
             newPath.toFile().deleteOnExit();
