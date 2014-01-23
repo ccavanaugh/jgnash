@@ -18,6 +18,7 @@
 package jgnash.engine.budget;
 
 import java.io.File;
+import java.nio.file.Files;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
@@ -42,7 +43,8 @@ public class BudgetResultsExportTest {
     @Test
     public void testExportBudgetResultsModel() throws Exception {
 
-        File file = File.createTempFile("budget", ".xml");
+        File file = Files.createTempFile("budget-", DataStoreType.XML.getDataStore().getFileExt()).toFile();
+
         file.deleteOnExit();
 
         Engine e = EngineFactory.bootLocalEngine(file.getName(), EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
@@ -65,11 +67,14 @@ public class BudgetResultsExportTest {
 
         BudgetResultsModel model = new BudgetResultsModel(budget, 2012, node);
 
-        BudgetResultsExport.exportBudgetResultsModel(new File(System.getProperty("java.io.tmpdir") + File.separator + "testworkbook.xls"), model);
+        File exportFile = Files.createTempFile("testworkbook", ".xls").toFile();
 
+        BudgetResultsExport.exportBudgetResultsModel(exportFile, model);
 
-        //file.delete();
+        assertTrue(exportFile.exists());
 
-        assertTrue(true);
+        assertTrue(exportFile.delete());
+
+        assertTrue(file.delete());
     }
 }
