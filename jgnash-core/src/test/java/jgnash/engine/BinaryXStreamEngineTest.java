@@ -19,8 +19,8 @@ package jgnash.engine;
 
 import org.junit.AfterClass;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,7 +28,6 @@ import static org.junit.Assert.assertTrue;
 
 /**
  * @author Craig Cavanaugh
- *
  */
 public class BinaryXStreamEngineTest extends EngineTest {
 
@@ -37,7 +36,7 @@ public class BinaryXStreamEngineTest extends EngineTest {
     @Override
     public Engine createEngine() throws Exception {
         try {
-            testFile = File.createTempFile("test", "").getAbsolutePath();
+            testFile = Files.createTempFile("test", "." + DataStoreType.BINARY_XSTREAM.getDataStore().getFileExt()).toFile().getAbsolutePath();
             tempFile = testFile;
         } catch (IOException e1) {
             Logger.getLogger(BinaryXStreamEngineTest.class.getName()).log(Level.SEVERE, e1.getLocalizedMessage(), e1);

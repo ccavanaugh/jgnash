@@ -32,6 +32,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -122,7 +123,7 @@ public class SaveFileAsAction extends AbstractEnabledAction {
                         DataStoreType currentType = EngineFactory.getType(EngineFactory.DEFAULT);
 
                         if (currentType.supportsRemote && newFileType.supportsRemote) {
-                            File tempFile = File.createTempFile("jgnash", "." + BinaryXStreamDataStore.FILE_EXT);
+                            File tempFile = Files.createTempFile("jgnash", "." + BinaryXStreamDataStore.FILE_EXT).toFile();
 
                             Collection<StoredObject> objects = EngineFactory.getEngine(EngineFactory.DEFAULT).getStoredObjects();
 
