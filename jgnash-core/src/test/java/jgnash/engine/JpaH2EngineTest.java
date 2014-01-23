@@ -17,11 +17,13 @@
  */
 package jgnash.engine;
 
-import jgnash.engine.jpa.JpaH2DataStore;
-import org.junit.Test;
-
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+
+import jgnash.engine.jpa.JpaH2DataStore;
+
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -38,9 +40,10 @@ public class JpaH2EngineTest extends EngineTest {
         testFile = "jpa-test." + JpaH2DataStore.FILE_EXT;
 
         try {
-            File temp = File.createTempFile("jpa-test", "." + JpaH2DataStore.FILE_EXT);
-            temp.deleteOnExit();
-            testFile = temp.getAbsolutePath();
+            //File temp = Files.createTempFile("jpa-test", "." + JpaH2DataStore.FILE_EXT).toFile();
+            //temp.deleteOnExit();
+            testFile = Files.createTempFile("jpa-test", "." + JpaH2DataStore.FILE_EXT).toString();
+
         } catch (IOException e1) {
             System.err.println(e1.toString());
         }

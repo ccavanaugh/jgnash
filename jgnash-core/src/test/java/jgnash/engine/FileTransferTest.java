@@ -61,7 +61,7 @@ public class FileTransferTest {
         String testFile = null;
 
         try {
-            File temp = File.createTempFile("jpa-test-e", "." + JpaH2DataStore.FILE_EXT);
+            File temp = Files.createTempFile("jpa-test-e", "." + JpaH2DataStore.FILE_EXT).toFile();
             Assert.assertTrue(temp.delete());
             temp.deleteOnExit();
             testFile = temp.getAbsolutePath();
@@ -146,7 +146,7 @@ public class FileTransferTest {
         String testFile = null;
 
         try {
-            File temp = File.createTempFile("jpa-test", "." + JpaHsqlDataStore.FILE_EXT);
+            File temp = Files.createTempFile("jpa-test", "." + JpaHsqlDataStore.FILE_EXT).toFile();
             Assert.assertTrue(temp.delete());
             temp.deleteOnExit();
             testFile = temp.getAbsolutePath();

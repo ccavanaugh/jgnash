@@ -24,6 +24,7 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.junit.Assert.assertEquals;
@@ -41,9 +42,7 @@ public class JpaHsqlEngineTest extends EngineTest {
         testFile = "jpa-test." + JpaH2DataStore.FILE_EXT;
 
         try {
-            File temp = File.createTempFile("jpa-test", "." + JpaHsqlDataStore.FILE_EXT);
-            testFile = temp.getAbsolutePath();
-
+            testFile = Files.createTempFile("jpa-test", "." + JpaHsqlDataStore.FILE_EXT).toString();
         } catch (IOException e1) {
             System.err.println(e1.toString());
         }

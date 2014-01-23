@@ -21,10 +21,9 @@ import org.junit.AfterClass;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Craig Cavanaugh
@@ -48,8 +47,9 @@ public class BinaryXStreamEngineTest extends EngineTest {
     }
 
     @AfterClass
-    public static void cleanup() {
-        assertTrue(EngineFactory.deleteDatabase(tempFile));
-        assertTrue(EngineFactory.deleteDatabase(tempFile + ".backup"));
+    public static void cleanup() throws IOException {
+
+        Files.deleteIfExists(Paths.get(tempFile));
+        Files.deleteIfExists(Paths.get(tempFile + ".backup"));
     }
 }

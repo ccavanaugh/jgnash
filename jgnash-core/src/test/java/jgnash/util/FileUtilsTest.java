@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.file.Files;
 
 import org.junit.Test;
 
@@ -57,7 +58,7 @@ public class FileUtilsTest {
 
     @Test
     public void fileCopyToSelf() throws IOException {
-        File tempFile = File.createTempFile("jgnash-test", ".jdb");
+        File tempFile = Files.createTempFile("jgnash-test", ".jdb").toFile();
         tempFile.deleteOnExit();
 
         String absolutePath = tempFile.getAbsolutePath();

@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -61,7 +62,7 @@ public class BinaryXStreamTest {
         File tempFile = null;
 
         try {
-            tempFile = File.createTempFile("test", "");
+            tempFile = Files.createTempFile("test", "").toFile();
             tempFile.deleteOnExit();
         } catch (IOException e) {
             fail(e.toString());
