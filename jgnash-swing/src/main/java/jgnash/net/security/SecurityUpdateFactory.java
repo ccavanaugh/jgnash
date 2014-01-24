@@ -17,7 +17,6 @@
  */
 package jgnash.net.security;
 
-import java.text.MessageFormat;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -84,7 +83,7 @@ public class SecurityUpdateFactory {
                 history.setDate(parser.getDate());  // returned date from the parser
 
                 if (e.addSecurityHistory(node, history)) {
-                    logger.info(MessageFormat.format(rb.getString("Message.UpdatedPrice"), node.getSymbol()));
+                    logger.info(rb.getString("Message.UpdatedPrice", node.getSymbol()));
                     result = true;
                 }
             }

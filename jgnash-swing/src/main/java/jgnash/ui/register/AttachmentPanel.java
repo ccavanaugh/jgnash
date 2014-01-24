@@ -38,7 +38,6 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.MessageFormat;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -133,7 +132,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
                 } else {
                     transaction.setAttachment(null);
 
-                    final String message = MessageFormat.format(rb.getString("Message.Error.TransferAttachment"),
+                    final String message = rb.getString("Message.Error.TransferAttachment",
                             attachment.getFileName().toString());
 
                     StaticUIMethods.displayError(message);
@@ -197,7 +196,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
                     moveAttachment = true;
                 } else if (!AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)).toString().equals(selectedFile.getParent())) {
 
-                    String message = MessageFormat.format(rb.getString("Message.Warn.MoveFile"), selectedFile.toString(),
+                    String message = rb.getString("Message.Warn.MoveFile", selectedFile.toString(),
                             AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)).toString());
 
                     result = YesNoDialog.showYesNoDialog(UIApplication.getFrame(), new JLabel(message), rb.getString("Title.MoveFile"));
@@ -209,7 +208,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
                                 File.separator + selectedFile.getName()).toPath();
 
                         if (newPath.toFile().exists()) {
-                            message = MessageFormat.format(rb.getString("Message.Warn.SameFile"), selectedFile.toString(),
+                            message = rb.getString("Message.Warn.SameFile", selectedFile.toString(),
                                     AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)).toString());
 
                             StaticUIMethods.displayWarning(message);
@@ -231,7 +230,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
             if (Files.exists(attachment)) {
                 ImageDialog.showImage(attachment.toFile());
             } else {
-                StaticUIMethods.displayError(MessageFormat.format(rb.getString("Message.Error.MissingAttachment"), attachment.toString()));
+                StaticUIMethods.displayError(rb.getString("Message.Error.MissingAttachment", attachment.toString()));
             }
         }
     }

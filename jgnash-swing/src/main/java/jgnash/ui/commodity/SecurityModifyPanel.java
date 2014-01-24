@@ -17,15 +17,9 @@
  */
 package jgnash.ui.commodity;
 
-import com.jgoodies.forms.builder.ButtonBarBuilder;
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.MessageFormat;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -56,6 +50,11 @@ import jgnash.ui.components.QuoteSourceComboBox;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 /**
  * CommodityModifyPanel is used for modifying the currency list and exchange rates.
@@ -234,11 +233,11 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
             SecurityNode newNode = buildSecurityNode();
             if (isModifying && oldNode != null) {
                 if (!engine.updateCommodity(oldNode, newNode)) {
-                    StaticUIMethods.displayError(MessageFormat.format(rb.getString("Message.Error.SecurityUpdate"), newNode.getSymbol()));
+                    StaticUIMethods.displayError(rb.getString("Message.Error.SecurityUpdate", newNode.getSymbol()));
                 }
             } else {
                 if (!engine.addSecurity(newNode)) {
-                    StaticUIMethods.displayError(MessageFormat.format(rb.getString("Message.Error.SecurityAdd"), newNode.getSymbol()));
+                    StaticUIMethods.displayError(rb.getString("Message.Error.SecurityAdd", newNode.getSymbol()));
                 }
             }
         }

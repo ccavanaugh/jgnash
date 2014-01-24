@@ -17,22 +17,17 @@
  */
 package jgnash.ui.commodity;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JList;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.WindowConstants;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.MessageFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,10 +36,17 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import com.jgoodies.forms.factories.Borders;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JList;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.WindowConstants;
+
 import jgnash.engine.EngineFactory;
 import jgnash.engine.QuoteSource;
 import jgnash.engine.SecurityHistoryNode;
@@ -60,11 +62,8 @@ import jgnash.util.DateUtils;
 import jgnash.util.Resource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
-
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.logging.Level;
 
 import static jgnash.util.Arrays.intListToArray;
 
@@ -331,7 +330,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
                     }
                 }               
 
-                String message = MessageFormat.format(rb.getString("Message.UpdatedPrice"), sNode.getSymbol());
+                String message = rb.getString("Message.UpdatedPrice", sNode.getSymbol());
                 Logger.getLogger(SecurityUpdateFactory.class.getName()).info(message);
 
             } catch (IOException | ParseException | NumberFormatException ex) {

@@ -17,18 +17,12 @@
  */
 package jgnash.ui.commodity;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import java.text.MessageFormat;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -57,6 +51,11 @@ import jgnash.ui.components.JTextFieldEx;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 /**
  * CurrencyModifyPanel is used for modifying currencies.
@@ -267,7 +266,7 @@ public class CurrencyModifyDialog extends JDialog implements MessageListener, Li
             CurrencyNode newNode = buildCommodityNode();
             if (getEngine().getCurrency(newNode.getSymbol()) != null && oldNode != null) {
                 if (!getEngine().updateCommodity(oldNode, newNode)) {
-                    StaticUIMethods.displayError(MessageFormat.format(rb.getString("Message.Error.CurrencyUpdate"), newNode.getSymbol()));
+                    StaticUIMethods.displayError(rb.getString("Message.Error.CurrencyUpdate", newNode.getSymbol()));
                 }
             } else {
                 getEngine().addCurrency(newNode);

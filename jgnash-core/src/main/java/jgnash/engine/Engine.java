@@ -20,7 +20,6 @@ package jgnash.engine;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Path;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -924,7 +923,7 @@ public class Engine {
         // Remove old history of the same date if it exists
         if (node.contains(hNode.getDate())) {
             if (!removeSecurityHistory(node, hNode.getDate())) {
-                logSevere(MessageFormat.format(rb.getString("Message.Error.HistRemoval"), hNode.getDate(), node.getSymbol()));
+                logSevere(rb.getString("Message.Error.HistRemoval", hNode.getDate(), node.getSymbol()));
                 return false;
             }
         }
@@ -1238,7 +1237,7 @@ public class Engine {
 
                 for (SecurityHistoryNode hNode : hNodes) {
                     if (!removeSecurityHistory(node, hNode.getDate())) {
-                        logSevere(MessageFormat.format(rb.getString("Message.Error.HistRemoval"), hNode.getDate(), node.getSymbol()));
+                        logSevere(rb.getString("Message.Error.HistRemoval", hNode.getDate(), node.getSymbol()));
                     }
                 }
                 moveObjectToTrash(node);
