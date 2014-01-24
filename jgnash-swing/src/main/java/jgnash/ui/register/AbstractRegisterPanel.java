@@ -51,6 +51,7 @@ import jgnash.engine.message.ChannelEvent;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.YesNoDialog;
 import jgnash.ui.register.table.AbstractRegisterTableModel;
@@ -216,7 +217,9 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
                     if (YesNoDialog.showYesNoDialog(UIApplication.getFrame(),
                             new JLabel(rb.getString("Question.DeleteAttachment")),
                             rb.getString("Title.DeleteAttachment"))) {
-                        engine.removeAttachment(tran.getAttachment());
+                        if (engine.removeAttachment(tran.getAttachment())) {
+                            StaticUIMethods.displayError(rb.getString("Message.Error.DeleteAttachment", tran.getAttachment()));
+                        }
                     }
                 }
             }
