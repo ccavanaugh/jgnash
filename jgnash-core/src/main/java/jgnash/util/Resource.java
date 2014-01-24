@@ -18,6 +18,7 @@
 package jgnash.util;
 
 import java.awt.Image;
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -95,7 +96,23 @@ public class Resource {
     public String getString(final String key) {
         try {
             return resourceBundle.getString(key);
-        } catch (MissingResourceException mre) {
+        } catch (final MissingResourceException mre) {
+            logger.log(Level.WARNING, "Missing resource for: " + key, mre);
+            return key;
+        }
+    }
+
+    /**
+     * Gets a localized string with arguments
+     *
+     * @param key The key for the localized string
+     * @param arguments arguments to pass the the message formatter
+     * @return The localized string
+     */
+    public String getString(final String key, final Object... arguments) {
+        try {
+            return MessageFormat.format(resourceBundle.getString(key), arguments);
+        } catch (final MissingResourceException mre) {
             logger.log(Level.WARNING, "Missing resource for: " + key, mre);
             return key;
         }
