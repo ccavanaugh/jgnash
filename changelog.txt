@@ -13,18 +13,18 @@ FIFO, and Lot performance calculations for securities. (http://groups.google.com
 Search option in the Registers. ( to find any particular transaction by entering part of Text in search criteria )
 Moving option for a Transaction from one Register to other Register.
 Date filtering option for the Accounts view & Register view
+Multi-Column Sort in the register (Payee / Date)
 Hyperlink option from the results in the Reports and Graphs to the concerned Transactions of the Registers.
 Drill down of split entries in Split Transactions by right clicking on ledger view.
 Class/Tag option to Transaction entries. ( to categorize the Expense & Income further in more categorized way )
+- Flag budget exceptions?
 Hiding option of Transaction form which can help to see more transactions in Register view.
 Direct Transaction entry option in the Ledger to avoid Transaction form.
 Formal Trial Balance report
 Better method of keeping preferences when updating computers
-
-KNOWN ISSUES
-----------------------
-Exceptions occur when entering Chinese text with auto complete enabled in conjunction with Google Input tools. This
-appears to be a JDK and Google interaction bug.
+Budgeting
+- an option for Total Year OR YTD Total – this is actually quite useful, since the user can be under / over budget in any given period, but on-budget YTD.
+- annotation, similar to transaction annotation, so the user can reference the reason for an exception in any given period.
 
 Release 2.13.5
 ----------------------
