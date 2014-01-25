@@ -203,7 +203,7 @@ public class InvestmentAccountProxy extends AccountProxy {
             final HashMap<SecurityNode, BigDecimal> priceMap = new HashMap<>();
 
             // build lookup map for market prices
-            for (SecurityNode node : account.securities) {
+            for (SecurityNode node : account.getSecurities()) {
                 priceMap.put(node, getMarketPrice(node, end));
             }
 
@@ -242,7 +242,7 @@ public class InvestmentAccountProxy extends AccountProxy {
             Date today = new Date();
 
             // build lookup map for market prices
-            for (SecurityNode node : account.securities) {
+            for (SecurityNode node : account.getSecurities()) {
                 priceMap.put(node, getMarketPrice(node, today));
             }
 
@@ -270,7 +270,7 @@ public class InvestmentAccountProxy extends AccountProxy {
             final HashMap<SecurityNode, BigDecimal> priceMap = new HashMap<>();
 
             // build lookup map for market prices
-            for (SecurityNode node : account.securities) {
+            for (SecurityNode node :account.getSecurities()) {
                 priceMap.put(node, getMarketPrice(node, new Date()));
             }
 
