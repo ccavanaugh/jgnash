@@ -921,7 +921,9 @@ public class Import {
             ao.setUseDailyRate(Boolean.parseBoolean(elementMap.get("useDailyRate")));
 
             Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-            engine.setAmortizeObject(liabilityAccount, ao);
+            if (!engine.setAmortizeObject(liabilityAccount, ao)) {
+                logger.warning("Failed to import amortization object");
+            }
         }
     }
 

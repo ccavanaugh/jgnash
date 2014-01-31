@@ -93,7 +93,9 @@ public class LiabilityRegisterPanel extends RegisterPanel {
         d.setVisible(true);
 
         if (d.getResult()) {
-            engine.setAmortizeObject(account, d.getAmortizeObject());
+            if (!engine.setAmortizeObject(account, d.getAmortizeObject())) {
+                StaticUIMethods.displayError(rb.getString("Message.Error.AmortizationSave"));
+            }
         }
     }
 

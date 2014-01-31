@@ -2015,16 +2015,12 @@ public class Engine {
      * Toggles the visibility of an account given its ID.
      *
      * @param account The account to toggle visibility
-     * @return <tt>true</tt> if the supplied account ID was found <tt>false</tt> if the supplied account ID was not
-     *         found
      */
-    public boolean toggleAccountVisibility(final Account account) {
+    public void toggleAccountVisibility(final Account account) {
 
         accountLock.writeLock().lock();
 
         try {
-            boolean result = false;
-
             Message message;
 
             account.setVisible(!account.isVisible());
@@ -2033,15 +2029,11 @@ public class Engine {
                 message = new Message(MessageChannel.ACCOUNT, ChannelEvent.ACCOUNT_VISIBILITY_CHANGE, this);
                 message.setObject(MessageProperty.ACCOUNT, account);
                 messageBus.fireEvent(message);
-
-                result = true;
             } else {
                 message = new Message(MessageChannel.ACCOUNT, ChannelEvent.ACCOUNT_VISIBILITY_CHANGE_FAILED, this);
                 message.setObject(MessageProperty.ACCOUNT, account);
                 messageBus.fireEvent(message);
             }
-
-            return result;
         } finally {
             accountLock.writeLock().unlock();
         }
