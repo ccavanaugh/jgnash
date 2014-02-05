@@ -30,6 +30,9 @@ import jgnash.util.FileUtils;
 import jgnash.util.Resource;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
@@ -105,7 +108,12 @@ public class EngineFactory {
     }
 
     public static boolean deleteDatabase(final String database) {
-        return new File(database).delete();
+        try {
+            return Files.deleteIfExists(Paths.get(database));
+        } catch (final IOException e) {
+            logger.warning(e.getLocalizedMessage());
+            return false;
+        }
     }
 
     /**
