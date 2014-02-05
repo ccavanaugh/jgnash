@@ -20,6 +20,7 @@ package jgnash.ui.wizards.file;
 import java.awt.Frame;
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -37,6 +38,7 @@ import jgnash.engine.DefaultCurrencies;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.RootAccount;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.wizard.WizardDialog;
 import jgnash.util.Resource;
@@ -91,7 +93,11 @@ public class NewFileDialog extends WizardDialog {
                 EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
                 // try to delete any existing database
-                EngineFactory.deleteDatabase(database);
+                if (Files.exists(Paths.get(database))) {
+                    if (!EngineFactory.deleteDatabase(database)) {
+                        StaticUIMethods.displayError(rb.getString("Message.Error.DeleteExistingFile", database));
+                    }
+                }
 
                 // create the directory if needed
                 Files.createDirectories(new File(new File(database).getParent()).toPath());
