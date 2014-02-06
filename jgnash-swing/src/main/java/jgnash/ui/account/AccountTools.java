@@ -173,7 +173,9 @@ class AccountTools {
             }
 
             if (account.getAccountType().getAccountGroup() == AccountGroup.INVEST) {
-                engine.updateAccountSecurities(account, dlg.getAccountSecurities());
+                if (!engine.updateAccountSecurities(account, dlg.getAccountSecurities())) {
+                    StaticUIMethods.displayError(rb.getString("Message.Error.SecurityAccountUpdate"));
+                }
             }
         }
     }

@@ -2128,7 +2128,7 @@ public class Engine {
      */
     public boolean updateAccountSecurities(final Account acc, final Collection<SecurityNode> list) {
 
-        boolean result = false;
+        boolean result = true;
 
         if (acc.memberOf(AccountGroup.INVEST)) {
 
@@ -2140,17 +2140,21 @@ public class Engine {
 
                 for (SecurityNode node : oldList) {
                     if (!list.contains(node)) {
-                        removeAccountSecurity(acc, node);
+                        if (!removeAccountSecurity(acc, node)) {
+                            logWarning(rb.getString("Message.Error.SecurityAccountRemove", node.toString(), acc.getName()));
+                            result = false;
+                        }
                     }
                 }
 
                 for (SecurityNode node : list) {
                     if (!oldList.contains(node)) {
-                        addAccountSecurity(acc, node);
+                        if (!addAccountSecurity(acc, node)) {
+                            logWarning(rb.getString("Message.Error.SecurityAccountRemove", node.toString(), acc.getName()));
+                            result = false;
+                        }
                     }
                 }
-
-                result = true;
             } finally {
                 commodityLock.writeLock().unlock();
                 accountLock.writeLock().unlock();
