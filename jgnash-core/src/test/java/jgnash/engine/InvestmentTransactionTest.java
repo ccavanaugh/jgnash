@@ -23,7 +23,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
+ * Unit tests for investment account transactions
+ *
  * @author Peti
+ * @author Craig Cavanaugh
  */
 public class InvestmentTransactionTest {
 
@@ -104,7 +107,7 @@ public class InvestmentTransactionTest {
             // Adding security to the invest account
             List<SecurityNode> securityNodeList = new ArrayList<>();
             securityNodeList.add(securityNode1);
-            e.updateAccountSecurities(investAccount, securityNodeList);
+            assertTrue(e.updateAccountSecurities(investAccount, securityNodeList));
         } catch (final Exception e) {
             fail(e.getMessage());
         }
@@ -136,7 +139,7 @@ public class InvestmentTransactionTest {
         transaction.addTransactionEntry(entry);
         transaction.setDate(transactionDate0);
 
-        e.addTransaction(transaction);
+        assertTrue(e.addTransaction(transaction));
 
         // Adding securityPrice to the security price history
         Date transactionDate1;
@@ -157,9 +160,9 @@ public class InvestmentTransactionTest {
         // Buying shares
         InvestmentTransaction it;
         it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", false, fees);
-        e.addTransaction(it);
+        assertTrue(e.addTransaction(it));
 
-        assertTrue(true);
+        //assertTrue(true);
     }
 
     @Test
@@ -181,7 +184,7 @@ public class InvestmentTransactionTest {
         transaction.addTransactionEntry(entry);
         transaction.setDate(transactionDate0);
 
-        e.addTransaction(transaction);
+        assertTrue(e.addTransaction(transaction));
 
         // Adding securityPrice to the security price history
         Date transactionDate1;
@@ -206,7 +209,7 @@ public class InvestmentTransactionTest {
         // Buying shares
         InvestmentTransaction it;
         it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", false, fees);
-        e.addTransaction(it);
+        assertTrue(e.addTransaction(it));
 
         // Evaluating the result
         Object actual[] = {usdBankAccount.getBalance(), expenseAccount.getBalance(), investAccount.getBalance(),
@@ -648,7 +651,7 @@ public class InvestmentTransactionTest {
         assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
 
-    private static TransactionEntry createTransactionEntry(Account debitAccount, Account creditAccount, BigDecimal amount, String memo, TransactionTag transactionTag) {
+    private static TransactionEntry createTransactionEntry(final Account debitAccount, final Account creditAccount, final BigDecimal amount, final String memo, final TransactionTag transactionTag) {
         TransactionEntry entry = new TransactionEntry();
 
         entry.setMemo(memo);
