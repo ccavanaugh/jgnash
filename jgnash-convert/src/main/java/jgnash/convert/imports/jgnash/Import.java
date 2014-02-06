@@ -69,6 +69,7 @@ import jgnash.engine.TransactionEntryRemoveX;
 import jgnash.engine.TransactionEntrySplitX;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionTag;
+import jgnash.util.Resource;
 
 /**
  * Import jGnash 1.11.x files. Older versions are not supported
@@ -134,7 +135,7 @@ public class Import {
             logger.addHandler(fh);
             logger.setLevel(Level.FINE);
         } catch (IOException ioe) {
-            logger.severe("Could not install file handler");
+            logger.severe(Resource.get().getString("Message.Error.LogFileHandler"));
         }
     }
 

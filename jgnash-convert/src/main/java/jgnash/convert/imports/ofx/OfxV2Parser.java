@@ -39,6 +39,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import jgnash.convert.common.OfxTags;
+import jgnash.util.Resource;
 
 /**
  * Parses a 2.x OFX (XML) file
@@ -62,8 +63,8 @@ public class OfxV2Parser implements OfxTags {
                 fh.setFormatter(new SimpleFormatter());
                 logger.addHandler(fh);
                 logger.setLevel(Level.FINEST);
-            } catch (IOException ioe) {
-                logger.severe("Could not install file handler");
+            } catch (final IOException ioe) {
+                logger.severe(Resource.get().getString("Message.Error.LogFileHandler"));
             }
         }
     }
