@@ -26,8 +26,13 @@ Budgeting
 - an option for Total Year OR YTD Total – this is actually quite useful, since the user can be under / over budget in any given period, but on-budget YTD.
 - annotation, similar to transaction annotation, so the user can reference the reason for an exception in any given period.
 
+Known Issues
+---------------------
+Substance look and feels do not work well with Java 8, visual artifacts may occur.
+
 Release 2.13.5
 ----------------------
+02/09/15 Minor API changes to allow operation using Java 8
 01/25/15 Fixed a rare ConcurrentModificationException that would occur when updating stock prices.
 01/12/14 Fixed another race condition that could freeze the UI at startup if loading a very large file.
 01/12/14 Any newly added or modified transactions will be highlighted in the register table for easy identification.
