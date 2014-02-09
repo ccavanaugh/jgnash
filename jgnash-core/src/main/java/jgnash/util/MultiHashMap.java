@@ -144,7 +144,7 @@ public class MultiHashMap<K, V> extends HashMap<K, Object> {
      * @return <code>true</code> if the map changed
      */
     @SuppressWarnings("rawtypes")
-    public boolean remove(final K key, final V value) {
+    public boolean removeValue(final K key, final V value) {
 
         boolean result = false;
 

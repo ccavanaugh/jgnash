@@ -405,9 +405,9 @@ public class AutoCompleteFactory {
                 @Override
                 public void run() {
                     if (ignoreCase) {
-                        transactions.remove(t.getPayee().toLowerCase(Locale.getDefault()), t);
+                        transactions.removeValue(t.getPayee().toLowerCase(Locale.getDefault()), t);
                     }
-                    transactions.remove(t.getPayee(), t);
+                    transactions.removeValue(t.getPayee(), t);
                 }
             });
         }
