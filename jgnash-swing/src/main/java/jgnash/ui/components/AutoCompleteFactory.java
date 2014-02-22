@@ -48,15 +48,15 @@ import jgnash.util.MultiHashMap;
 /**
  * This factory class generates AutoCompleteTextFields that share a common model
  * to reduce the amount of overhead.
- * 
+ *
  * @author Craig Cavanaugh
  * @author Don Brown
  */
 public class AutoCompleteFactory {
 
     // volatile because accessor method is not synchronized
-    private static volatile MemoModel memoModel;    
-    
+    private static volatile MemoModel memoModel;
+
     private static boolean autoComplete;
 
     private static boolean fuzzyMatch;
@@ -96,7 +96,7 @@ public class AutoCompleteFactory {
 
     /**
      * Sets the availability of the auto-completion ability
-     * 
+     *
      * @param auto enabled state
      */
     public static void setEnabled(final boolean auto) {
@@ -112,7 +112,7 @@ public class AutoCompleteFactory {
 
     /**
      * Sets the case sensitivity of auto completion
-     * 
+     *
      * @param notCaseSensitive case sensitivity state
      */
     public static void setIgnoreCase(final boolean notCaseSensitive) {
@@ -128,7 +128,7 @@ public class AutoCompleteFactory {
 
     /**
      * Sets if fuzzy match is used for auto completion
-     * 
+     *
      * @param doFuzzyMatch case sensitivity state
      */
     public static void setFuzzyMatch(final boolean doFuzzyMatch) {
@@ -144,7 +144,7 @@ public class AutoCompleteFactory {
 
     /**
      * Returns the status of auto completion
-     * 
+     *
      * @return true is auto completion is enabled, false otherwise
      */
     public static boolean isEnabled() {
@@ -153,7 +153,7 @@ public class AutoCompleteFactory {
 
     /**
      * Returns the case sensitivity of the lookup process
-     * 
+     *
      * @return true if match is case sensitive
      */
     public static boolean ignoreCase() {
@@ -162,7 +162,7 @@ public class AutoCompleteFactory {
 
     /**
      * Returns the state of fuzzy match
-     * 
+     *
      * @return true if fuzzy match is enabled
      */
     public static boolean fuzzyMatch() {
@@ -171,7 +171,7 @@ public class AutoCompleteFactory {
 
     /**
      * Returns an auto-complete field that knows about transaction memos.
-     * 
+     *
      * @return A plain JTextField or an AutoCompleteTextField.
      */
     public static JTextField getMemoField() {
@@ -186,7 +186,7 @@ public class AutoCompleteFactory {
 
     /**
      * Returns an auto-complete field that knows about transaction payees.
-     * 
+     *
      * @param account account this payee field will match
      * @return A plain JTextField or an AutoCompleteTextField.
      */
@@ -262,7 +262,7 @@ public class AutoCompleteFactory {
                 @Override
                 public void run() {
                     try {
-                        List<Transaction> transactions = EngineFactory.getEngine(EngineFactory.DEFAULT) .getTransactions();
+                        List<Transaction> transactions = EngineFactory.getEngine(EngineFactory.DEFAULT).getTransactions();
 
                         // sort the transactions for consistent order
                         Collections.sort(transactions);
@@ -397,7 +397,7 @@ public class AutoCompleteFactory {
         /**
          * Removes the transaction associated with the payee. This is done so
          * that deleted transactions can be garbage collected.
-         * 
+         *
          * @param t transaction to remove
          */
         void removeExtraInfo(final Transaction t) {
@@ -406,8 +406,9 @@ public class AutoCompleteFactory {
                 public void run() {
                     if (ignoreCase) {
                         transactions.removeValue(t.getPayee().toLowerCase(Locale.getDefault()), t);
+                    } else {
+                        transactions.removeValue(t.getPayee(), t);
                     }
-                    transactions.removeValue(t.getPayee(), t);
                 }
             });
         }
