@@ -32,6 +32,7 @@ Substance look and feels do not work well with Java 8, visual artifacts may occu
 
 Release 2.13.5
 ----------------------
+02/22/15 Update to latest XStream, security vulnerability CVE-2013-7285, an arbitrary execution of commands when unmarshalling
 02/09/15 Minor API changes to allow operation using Java 8
 01/25/15 Fixed a rare ConcurrentModificationException that would occur when updating stock prices.
 01/12/14 Fixed another race condition that could freeze the UI at startup if loading a very large file.
