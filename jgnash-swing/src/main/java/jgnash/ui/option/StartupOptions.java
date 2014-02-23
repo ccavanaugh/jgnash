@@ -50,7 +50,7 @@ class StartupOptions extends JPanel implements ActionListener {
 
     private JCheckBox updateSecuritiesButton;
 
-    private JCheckBox timeStampButton;
+    private JCheckBox saveBackupButton;
 
     private JCheckBox removeBackupButton;
 
@@ -68,13 +68,13 @@ class StartupOptions extends JPanel implements ActionListener {
         updateSecuritiesButton = new JCheckBox(rb.getString("Button.UpdateSecuritiesStartup"));
         openLastOnStartup = new JCheckBox(rb.getString("Button.OpenLastOnStartup"));
         removeBackupButton = new JCheckBox(rb.getString("Button.RemoveOldBackups"));
-        timeStampButton = new JCheckBox(rb.getString("Button.CreateTimeFile"));
+        saveBackupButton = new JCheckBox(rb.getString("Button.CreateTimeFile"));
 
         removeBackupCountSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
 
         updateCurrenciesButton.setSelected(CurrencyUpdateFactory.getUpdateOnStartup());
         updateSecuritiesButton.setSelected(SecurityUpdateFactory.getUpdateOnStartup());
-        timeStampButton.setSelected(EngineFactory.exportXMLOnClose());
+        saveBackupButton.setSelected(EngineFactory.exportXMLOnClose());
         removeBackupButton.setSelected(EngineFactory.removeOldBackups());
         openLastOnStartup.setSelected(EngineFactory.openLastOnStartup());
 
@@ -82,7 +82,7 @@ class StartupOptions extends JPanel implements ActionListener {
 
         updateCurrenciesButton.addActionListener(this);
         updateSecuritiesButton.addActionListener(this);
-        timeStampButton.addActionListener(this);
+        saveBackupButton.addActionListener(this);
         removeBackupButton.addActionListener(this);
         openLastOnStartup.addActionListener(this);
 
@@ -113,7 +113,7 @@ class StartupOptions extends JPanel implements ActionListener {
         builder.append(openLastOnStartup, 3);
 
         builder.appendSeparator(rb.getString("Title.Shutdown"));
-        builder.append(timeStampButton, 3);
+        builder.append(saveBackupButton, 3);
         builder.append(removeBackupButton, 3);
         builder.append(rb.getString("Label.MaxBackupCount"), removeBackupCountSpinner);
 
@@ -131,8 +131,8 @@ class StartupOptions extends JPanel implements ActionListener {
             CurrencyUpdateFactory.setUpdateOnStartup(updateCurrenciesButton.isSelected());
         } else if (e.getSource() == updateSecuritiesButton) {
             SecurityUpdateFactory.setUpdateOnStartup(updateSecuritiesButton.isSelected());
-        } else if (e.getSource() == timeStampButton) {
-            EngineFactory.setExportXMLOnClose(timeStampButton.isSelected());
+        } else if (e.getSource() == saveBackupButton) {
+            EngineFactory.setExportXMLOnClose(saveBackupButton.isSelected());
         } else if (e.getSource() == removeBackupButton) {
             removeBackupCountSpinner.setEnabled(removeBackupButton.isSelected());
             EngineFactory.setRemoveOldBackups(removeBackupButton.isSelected());
