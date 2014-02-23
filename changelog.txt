@@ -32,6 +32,7 @@ Substance look and feels do not work well with Java 8, visual artifacts may occu
 
 Release 2.13.5
 ----------------------
+02/23/14 Fixed an NPE when cleaning out orphaned transactions from a prior jGnash bug
 02/22/14 Update to the latest HSQLDB database release
 02/22/14 Update to the latest H2 database release
 02/22/14 Update to latest XStream, security vulnerability CVE-2013-7285, an arbitrary execution of commands when unmarshalling

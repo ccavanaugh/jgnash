@@ -206,12 +206,12 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
+    public boolean equals(final Object other) {
+        if (this == other) {
             return true;
         }      
         
-        return obj != null && getClass() == obj.getClass() && this.getUuid().equals(((Reminder) obj).getUuid());
+        return other != null && getClass() == other.getClass() && this.getUuid().equals(((Reminder) other).getUuid());
     }
 
     /**

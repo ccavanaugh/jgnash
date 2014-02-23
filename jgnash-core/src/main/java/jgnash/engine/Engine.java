@@ -537,7 +537,7 @@ public class Engine {
             }
 
             for (Reminder reminder : getReminders()) {
-                if (reminder.getTransaction().equals(transaction)) {
+                if (transaction.equals(reminder.getTransaction())) {    // reminder transaction may be null
                     orphaned = false;
                     break;
                 }
