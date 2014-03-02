@@ -207,15 +207,38 @@
         </plugins>
     </build>
 
-    <modules>
-        <module>jgnash-bayes</module>
-        <module>jgnash-help</module>
-        <module>jgnash-resources</module>
-        <module>jgnash-core</module>
-        <module>jgnash-swing</module>
-        <module>jgnash-convert</module>
-        <module>jidesoft</module>
-        <module>mt940</module>
-    </modules>
+    <profiles>
+        <profile>
+            <id>jGnash2</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>jgnash-bayes</module>
+                <module>jgnash-help</module>
+                <module>jgnash-resources</module>
+                <module>jgnash-core</module>
+                <module>jgnash-swing</module>
+                <module>jgnash-convert</module>
+                <module>jidesoft</module>
+                <module>mt940</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>jGnash3</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>jgnash-bayes</module>
+                <module>jgnash-help</module>
+                <module>jgnash-resources</module>
+                <module>jgnash-core</module>
+                <module>jgnash-fx</module>
+                <module>jgnash-convert</module>
+                <module>mt940</module>
+            </modules>
+        </profile>
+    </profiles>
 
 </project>
