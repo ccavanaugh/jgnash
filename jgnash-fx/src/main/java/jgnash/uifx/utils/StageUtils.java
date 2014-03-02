@@ -31,12 +31,16 @@ import javafx.stage.Stage;
  */
 public class StageUtils {
 
-    public static void addBoundsListener(final Stage stage) {
-        addBoundsListener(stage, "bounds");
-    }
+    public static final String DEFAULT_KEY = "bounds";
 
-    public static void addBoundsListener(final Stage stage, final String key) {
-        addBoundsListener(stage, stage.getClass().getName().replace('.', '/'), key);
+    /**
+     * Restores and saves the size and location of a stage
+     *
+     * @param stage The stage to save and restore size and position
+     * @param prefNode This should typically be the calling controller
+     */
+    public static void addBoundsListener(final Stage stage, final Class prefNode) {
+        addBoundsListener(stage, prefNode.getName().replace('.', '/'), DEFAULT_KEY);
     }
 
     private static void addBoundsListener(final Stage stage, final String prefNode, final String key) {

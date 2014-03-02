@@ -41,11 +41,14 @@ public class MainApplication extends Application
 
     private static final Logger logger = Logger.getLogger(MainApplication.class.getName());
 
+    protected static Stage primaryStage;
+
     @Override
     public void start(final Stage stage) throws Exception
     {
+        primaryStage = stage;
 
-        MenuBar menuBar = FXMLLoader.load(MainFX.class.getResource("fxml/mainMenu.fxml"));
+        MenuBar menuBar = FXMLLoader.load(MainFX.class.getResource("fxml/MainMenuBar.fxml"));
 
         VBox root = new VBox();
         Scene scene = new Scene(root, 300, 150);
@@ -56,9 +59,18 @@ public class MainApplication extends Application
         stage.setScene(scene);
         stage.setResizable(true);
 
-        StageUtils.addBoundsListener(stage);
+        StageUtils.addBoundsListener(stage, getClass());
 
         stage.show();
+    }
+
+    /**
+     * Provides access to the primary stage.
+     *
+     * @return the primary stage
+     */
+    public static Stage getPrimaryStage() {
+        return primaryStage;
     }
 
     @Override

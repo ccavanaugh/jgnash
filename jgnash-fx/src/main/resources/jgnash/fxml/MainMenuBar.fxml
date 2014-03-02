@@ -3,13 +3,13 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 
-<MenuBar id="menuBar" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="jgnash.uifx.MenuBarController">
+<MenuBar fx:id="menuBar" cache="true" cacheHint="SPEED" maxWidth="1.7976931348623157E308" useSystemMenuBar="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="jgnash.uifx.MenuBarController">
   <menus>
     <Menu mnemonicParsing="false" text="File">
       <items>
-        <MenuItem fx:id="openMenuItem" mnemonicParsing="false" text="Open" />
+        <MenuItem mnemonicParsing="false" onAction="#handleOpenAction" text="Open" fx:id="openMenuItem" />
         <SeparatorMenuItem mnemonicParsing="false" />
-        <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#handleExitAction" text="Exit" />
+        <MenuItem mnemonicParsing="false" onAction="#handleExitAction" text="Exit" fx:id="exitMenuItem" />
       </items>
     </Menu>
     <Menu mnemonicParsing="false" text="Edit">

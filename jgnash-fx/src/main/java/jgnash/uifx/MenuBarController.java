@@ -17,13 +17,23 @@
  */
 package jgnash.uifx;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import jgnash.MainFX;
+import jgnash.uifx.utils.StageUtils;
+import jgnash.util.ResourceUtils;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  * Primary Menu Controller
@@ -39,5 +49,22 @@ public class MenuBarController implements Initializable {
 
     @FXML protected void handleExitAction(final ActionEvent event) {
         Platform.exit();
+    }
+
+    @FXML protected void handleOpenAction(final ActionEvent event) {
+        try {
+            Stage dialog = new Stage(StageStyle.DECORATED);
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.initOwner(MainApplication.getPrimaryStage());
+            dialog.setScene(new Scene(FXMLLoader.load(MainFX.class.getResource("fxml/OpenDatabaseForm.fxml"), ResourceUtils.getBundle())));
+
+            dialog.setResizable(false);
+
+            StageUtils.addBoundsListener(dialog, getClass());
+
+            dialog.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
