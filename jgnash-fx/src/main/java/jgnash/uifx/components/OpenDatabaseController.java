@@ -19,8 +19,12 @@ package jgnash.uifx.components;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
+import jgnash.engine.DataStoreType;
 import jgnash.uifx.MainApplication;
 
 import javafx.event.ActionEvent;
@@ -39,6 +43,8 @@ import javafx.stage.Stage;
  * @author Craig Cavanaugh
  */
 public class OpenDatabaseController implements Initializable {
+
+    private static final String LAST_DIR = "LastDir";
 
     private ResourceBundle resources;
 
@@ -83,10 +89,18 @@ public class OpenDatabaseController implements Initializable {
 
     @FXML
     protected void handleSelectFileAction(final ActionEvent event) {
+
         FileChooser fileChooser = new FileChooser();
         configureFileChooser(fileChooser);
 
-        fileChooser.showOpenDialog(MainApplication.getPrimaryStage());
+        File file = fileChooser.showOpenDialog(MainApplication.getPrimaryStage());
+
+        if (file != null) {
+            Preferences pref = Preferences.userNodeForPackage(OpenDatabaseController.class);
+            pref.put(LAST_DIR, file.getParentFile().getAbsolutePath());
+
+            localDatabaseField.setText(file.getAbsolutePath());
+        }
     }
 
     private void updateControlsState() {
@@ -96,15 +110,30 @@ public class OpenDatabaseController implements Initializable {
     }
 
     private void configureFileChooser(final FileChooser fileChooser) {
+        Preferences pref = Preferences.userNodeForPackage(OpenDatabaseController.class);
 
         fileChooser.setTitle(resources.getString("Title.Open"));
-        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+
+        fileChooser.setInitialDirectory(new File(pref.get(LAST_DIR, System.getProperty("user.home"))));
+
+        List<String> types = new ArrayList<>();
+
+        for (DataStoreType type : DataStoreType.values()) {
+            types.add("*." + type.getDataStore().getFileExt());
+        }
+
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("All Files", "*.*"),
-                new FileChooser.ExtensionFilter("XStream", "*.bxds"),
-                new FileChooser.ExtensionFilter("XML", "*.xml"),
-                new FileChooser.ExtensionFilter("HSQLDB", "*.script"),
-                new FileChooser.ExtensionFilter("H2", "*.db")
+                new FileChooser.ExtensionFilter(resources.getString("Label.jGnashFiles"), types)
+        );
+
+        for (DataStoreType type : DataStoreType.values()) {
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter(type.toString(), "*." + type.getDataStore().getFileExt())
+            );
+        }
+
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("All Files", "*.*")
         );
     }
 
