@@ -47,8 +47,6 @@ public class Resource {
      */
     private static final String LOCALE = "locale";
 
-    private static final String DEFAULT_BUNDLE = "jgnash/resource/resource";
-
     private static final Logger logger = Logger.getLogger(Resource.class.getName());
 
     /**
@@ -70,12 +68,7 @@ public class Resource {
     }
 
     private void loadBundle() {
-        try {
-            resourceBundle = ResourceBundle.getBundle(DEFAULT_BUNDLE);
-        } catch (MissingResourceException e) {            
-            logger.log(Level.WARNING, "Could not find correct resource bundle", e );            
-            resourceBundle = ResourceBundle.getBundle(DEFAULT_BUNDLE, Locale.ENGLISH);
-        }
+        resourceBundle = ResourceUtils.getBundle();
     }
 
     /**
