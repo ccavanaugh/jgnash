@@ -37,6 +37,10 @@
             <artifactId>args4j</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+        </dependency>
+        <dependency>
             <artifactId>itext</artifactId>
             <groupId>com.lowagie</groupId>
             <version>${itext.version}</version>
@@ -82,42 +86,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>com.github.insubstantial</groupId>
-            <artifactId>substance-swingx</artifactId>
-            <version>${insubstantial.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>swingx-core</artifactId>
-                    <groupId>org.swinglabs</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.github.insubstantial</groupId>
-            <artifactId>substance</artifactId>
-            <version>${insubstantial.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.swinglabs.swingx</groupId>
-            <artifactId>swingx-core</artifactId>
-            <version>${swingx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jgoodies</groupId>
-            <artifactId>jgoodies-common</artifactId>
-            <version>1.6.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jgoodies</groupId>
-            <artifactId>jgoodies-forms</artifactId>
-            <version>1.7.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jgoodies</groupId>
-            <artifactId>jgoodies-looks</artifactId>
-            <version>2.5.3</version>
-        </dependency>
+
         <dependency>
             <groupId>ar.com.fdvs</groupId>
             <artifactId>DynamicJasper</artifactId>

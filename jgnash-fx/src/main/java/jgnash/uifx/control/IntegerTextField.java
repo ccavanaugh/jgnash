@@ -17,6 +17,9 @@
  */
 package jgnash.uifx.control;
 
+import java.io.IOException;
+
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
 
 /**
@@ -25,6 +28,19 @@ import javafx.scene.control.TextField;
  * @author Craig Cavanaugh
  */
 public class IntegerTextField extends TextField {
+
+    public IntegerTextField() {
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("IntegerTextField.fxml"));
+        loader.setRoot(this);
+        loader.setController(this);
+
+        try {
+            loader.load();
+        } catch (final IOException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
 
     public void setInteger(final Integer value) {
         setText(value.toString());

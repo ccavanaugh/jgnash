@@ -21,7 +21,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.MainFX;
+import jgnash.engine.EngineFactory;
 import jgnash.uifx.utils.StageUtils;
+import jgnash.util.ResourceUtils;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -37,8 +39,6 @@ import javafx.stage.Stage;
  */
 public class MainApplication extends Application
 {
-    //private final Resource rb = Resource.get();
-
     private static final Logger logger = Logger.getLogger(MainApplication.class.getName());
 
     protected static Stage primaryStage;
@@ -48,7 +48,7 @@ public class MainApplication extends Application
     {
         primaryStage = stage;
 
-        MenuBar menuBar = FXMLLoader.load(MainFX.class.getResource("fxml/MainMenuBar.fxml"));
+        MenuBar menuBar = FXMLLoader.load(MainFX.class.getResource("fxml/MainMenuBar.fxml"), ResourceUtils.getBundle());
 
         VBox root = new VBox();
         Scene scene = new Scene(root, 300, 150);
@@ -78,6 +78,8 @@ public class MainApplication extends Application
         System.out.println("Shutting down");
 
         try {
+            EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
             super.stop();
         } catch (final Exception e) {
             logger.log(Level.SEVERE, e.getMessage(), e);

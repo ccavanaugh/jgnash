@@ -25,7 +25,10 @@ import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import jgnash.engine.DataStoreType;
+import jgnash.engine.EngineFactory;
 import jgnash.uifx.MainApplication;
+import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.control.IntegerTextField;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -58,7 +61,7 @@ public class OpenDatabaseController implements Initializable {
     protected TextField databaseServerField;
 
     @FXML
-    protected TextField portField;
+    protected IntegerTextField portField;
 
     @FXML
     protected PasswordField passwordField;
@@ -66,10 +69,17 @@ public class OpenDatabaseController implements Initializable {
     @FXML
     private Button cancelButton;
 
+    @FXML
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         this.resources = resources;
+
         updateControlsState();
+
+        localDatabaseField.setText(EngineFactory.getLastDatabase());
+        databaseServerField.setText(EngineFactory.getLastHost());
+        portField.setInteger(EngineFactory.getLastPort());
+        remoteServerCheckBox.setSelected(EngineFactory.getLastRemote());
     }
 
     @FXML
@@ -80,6 +90,13 @@ public class OpenDatabaseController implements Initializable {
     @FXML
     protected void handleOkAction(final ActionEvent event) {
         ((Stage) cancelButton.getScene().getWindow()).close();
+
+        if (remoteServerCheckBox.isSelected() || localDatabaseField.getText().length() > 0) {
+
+            bootEngine(localDatabaseField.getText(), passwordField.getText().toCharArray(),
+                    remoteServerCheckBox.isSelected(), databaseServerField.getText(),
+                    Integer.getInteger(portField.getText()));
+        }
     }
 
     @FXML
@@ -135,6 +152,23 @@ public class OpenDatabaseController implements Initializable {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("All Files", "*.*")
         );
+    }
+
+
+    public static void bootEngine(final String localFile, final char[] password, final boolean remote, final String serverName, final int port) {
+
+
+        StaticUIMethods.displayError("Test Error");
+
+        /*if (remote) {
+            try {
+                EngineFactory.bootClientEngine(serverName, port, password, EngineFactory.DEFAULT);
+            } catch (Exception e) {
+                StaticUIMethods.displayError(e.getLocalizedMessage());
+            }
+        } else {
+            EngineFactory.bootLocalEngine(localFile, EngineFactory.DEFAULT, password);
+        }*/
     }
 
 }

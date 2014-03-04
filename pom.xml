@@ -26,7 +26,7 @@
         <java-version>1.7</java-version>
         <junit-version>4.11</junit-version>
         <javahelp-version>2.0.05</javahelp-version>
-        <args4j-version>2.0.23</args4j-version>
+        <args4j.version>2.0.23</args4j.version>
         <xstream.version>1.4.7</xstream.version>
         <h2.version>1.3.175</h2.version>
         <hibernate-entitymanager.version>4.2.9.Final</hibernate-entitymanager.version>
@@ -47,6 +47,7 @@
         <plexus-utils.version>3.0.10</plexus-utils.version>
         <opencsv.version>2.3</opencsv.version>
         <netty.version>4.0.17.Final</netty.version>
+        <controlsfx.version>8.0.4</controlsfx.version>
 
     </properties>
 
@@ -140,7 +141,12 @@
             <dependency>
                 <groupId>args4j</groupId>
                 <artifactId>args4j</artifactId>
-                <version>${args4j-version}</version>
+                <version>${args4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.controlsfx</groupId>
+                <artifactId>controlsfx</artifactId>
+                <version>${controlsfx.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.sf.opencsv</groupId>

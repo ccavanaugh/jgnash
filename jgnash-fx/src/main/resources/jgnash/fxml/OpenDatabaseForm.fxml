@@ -4,6 +4,8 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import jgnash.uifx.control.IntegerTextField?>
+
 <?scenebuilder-preview-i18n-resource ../../../../../../jgnash-resources/src/main/resources/jgnash/resource/resource.properties?>
 
 <GridPane gridLinesVisible="false" hgap="14.0" maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-1.0" minWidth="-Infinity" prefHeight="-1.0" vgap="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="jgnash.uifx.components.OpenDatabaseController">
@@ -24,7 +26,7 @@
     <fx:reference source="databaseServerField" />
     <Label text="%Label.Port" GridPane.columnIndex="0" GridPane.rowIndex="3">
       <labelFor>
-        <TextField fx:id="portField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+        <IntegerTextField fx:id="portField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
       </labelFor>
     </Label>
     <fx:reference source="portField" />
