@@ -38,4 +38,12 @@ public class StaticUIMethods {
                 .showError();
 
     }
+
+    public static void displayException(final Throwable exception) {
+        Dialogs.create()
+                .owner(MainApplication.getPrimaryStage())
+                .title(ResourceUtils.getBundle().getString("Title.Error"))
+                .message(exception.getLocalizedMessage())
+                .showException(exception);
+    }
 }

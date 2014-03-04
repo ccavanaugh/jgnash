@@ -30,6 +30,7 @@ import jgnash.uifx.MainApplication;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.IntegerTextField;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -94,8 +95,8 @@ public class OpenDatabaseController implements Initializable {
         if (remoteServerCheckBox.isSelected() || localDatabaseField.getText().length() > 0) {
 
             bootEngine(localDatabaseField.getText(), passwordField.getText().toCharArray(),
-                    remoteServerCheckBox.isSelected(), databaseServerField.getText(),
-                    Integer.getInteger(portField.getText()));
+                    remoteServerCheckBox.isSelected(), databaseServerField.getText(), portField.getInteger());
+
         }
     }
 
@@ -155,20 +156,20 @@ public class OpenDatabaseController implements Initializable {
     }
 
 
-    public static void bootEngine(final String localFile, final char[] password, final boolean remote, final String serverName, final int port) {
-
-
-        StaticUIMethods.displayError("Test Error");
-
-        /*if (remote) {
-            try {
-                EngineFactory.bootClientEngine(serverName, port, password, EngineFactory.DEFAULT);
-            } catch (Exception e) {
-                StaticUIMethods.displayError(e.getLocalizedMessage());
+    private static void bootEngine(final String localFile, final char[] password, final boolean remote, final String serverName, final int port) {
+        new Thread() {
+            public void run() {
+                if (remote) {
+                    try {
+                        EngineFactory.bootClientEngine(serverName, port, password, EngineFactory.DEFAULT);
+                    } catch (final Exception exception) {
+                        Platform.runLater(() -> StaticUIMethods.displayException(exception));
+                    }
+                } else {
+                    EngineFactory.bootLocalEngine(localFile, EngineFactory.DEFAULT, password);
+                }
             }
-        } else {
-            EngineFactory.bootLocalEngine(localFile, EngineFactory.DEFAULT, password);
-        }*/
+        }.start();
     }
 
 }

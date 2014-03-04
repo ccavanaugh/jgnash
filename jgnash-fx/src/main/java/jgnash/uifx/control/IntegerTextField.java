@@ -42,8 +42,30 @@ public class IntegerTextField extends TextField {
         }
     }
 
+    /**
+     * Sets the integer value of the field
+     *
+     * @param value integer value, if null, the field will be cleared
+     */
     public void setInteger(final Integer value) {
-        setText(value.toString());
+        if (value != null) {
+            setText(value.toString());
+        } else {
+            setText("");
+        }
+    }
+
+    /**
+     * Returns the integer value of the field
+     *
+     * @return the integer, zero if the field is empty
+     */
+    public Integer getInteger() {
+        if (getText() != null && getText().length() > 0) {
+            return Integer.parseInt(getText());
+        }
+
+        return 0;
     }
 
     @Override
