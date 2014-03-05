@@ -19,6 +19,7 @@ package jgnash.uifx;
 
 import jgnash.util.ResourceUtils;
 
+import javafx.concurrent.Task;
 import org.controlsfx.dialog.Dialogs;
 
 /**
@@ -45,5 +46,13 @@ public class StaticUIMethods {
                 .title(ResourceUtils.getBundle().getString("Title.Error"))
                 .message(exception.getLocalizedMessage())
                 .showException(exception);
+    }
+
+    public static void displayTaskProgress(final Task task) {
+        Dialogs.create()
+                .owner(MainApplication.getPrimaryStage())
+                .lightweight()
+                .title(ResourceUtils.getBundle().getString("Title.PleaseWait"))
+                .showWorkerProgress(task);
     }
 }

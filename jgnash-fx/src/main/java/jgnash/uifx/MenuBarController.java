@@ -22,10 +22,12 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import jgnash.MainFX;
+import jgnash.engine.EngineFactory;
 import jgnash.uifx.utils.StageUtils;
 import jgnash.util.ResourceUtils;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -42,13 +44,39 @@ import javafx.stage.StageStyle;
  */
 public class MenuBarController implements Initializable {
 
+    public static final int FORCED_DELAY = 1000;
+
+    public static final int INDETERMINATE = -1;
+
+    private ResourceBundle resources;
+
     @Override
     public void initialize(final URL url, final ResourceBundle resourceBundle) {
-
+        resources = resourceBundle;
     }
 
     @FXML protected void handleExitAction(final ActionEvent event) {
-        Platform.exit();
+
+        Task<String> task = new Task<String>() {
+            @Override
+            protected String call() throws Exception {
+                try {
+                    updateMessage(resources.getString("Message.SavingFile"));
+                    updateProgress(INDETERMINATE, Long.MAX_VALUE);
+                    EngineFactory.closeEngine(EngineFactory.DEFAULT);
+                    updateMessage(resources.getString("Message.FileSaveComplete"));
+                    Thread.sleep(FORCED_DELAY);
+                } catch (final Exception exception) {
+                    Platform.runLater(() -> StaticUIMethods.displayException(exception));
+                } finally {
+                    Platform.exit();
+                }
+                return resources.getString("Message.FileSaveComplete");
+            }
+        };
+
+        new Thread(task).start();
+        StaticUIMethods.displayTaskProgress(task);
     }
 
     @FXML protected void handleOpenAction(final ActionEvent event) {

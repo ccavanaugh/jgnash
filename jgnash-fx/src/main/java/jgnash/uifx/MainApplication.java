@@ -17,11 +17,7 @@
  */
 package jgnash.uifx;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import jgnash.MainFX;
-import jgnash.engine.EngineFactory;
 import jgnash.uifx.utils.StageUtils;
 import jgnash.util.ResourceUtils;
 
@@ -37,15 +33,13 @@ import javafx.stage.Stage;
  *
  * @author Craig Cavanaugh
  */
-public class MainApplication extends Application
-{
-    private static final Logger logger = Logger.getLogger(MainApplication.class.getName());
+public class MainApplication extends Application {
+    // private static final Logger logger = Logger.getLogger(MainApplication.class.getName());
 
     protected static Stage primaryStage;
 
     @Override
-    public void start(final Stage stage) throws Exception
-    {
+    public void start(final Stage stage) throws Exception {
         primaryStage = stage;
 
         MenuBar menuBar = FXMLLoader.load(MainFX.class.getResource("fxml/MainMenuBar.fxml"), ResourceUtils.getBundle());
@@ -76,13 +70,5 @@ public class MainApplication extends Application
     @Override
     public void stop() {
         System.out.println("Shutting down");
-
-        try {
-            EngineFactory.closeEngine(EngineFactory.DEFAULT);
-
-            super.stop();
-        } catch (final Exception e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-        }
     }
 }

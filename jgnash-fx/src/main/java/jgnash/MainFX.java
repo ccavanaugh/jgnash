@@ -35,7 +35,7 @@ public class MainFX {
         VERSION = Version.getAppName() + " - " + Version.getAppVersion();
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         Application.launch(MainApplication.class, args);
     }
 }
