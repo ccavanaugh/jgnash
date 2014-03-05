@@ -18,10 +18,13 @@
 package jgnash.uifx;
 
 import jgnash.MainFX;
+import jgnash.engine.EngineFactory;
+import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.utils.StageUtils;
 import jgnash.util.ResourceUtils;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
@@ -53,9 +56,26 @@ public class MainApplication extends Application {
         stage.setScene(scene);
         stage.setResizable(true);
 
+        installHandlers();
+
         StageUtils.addBoundsListener(stage, getClass());
 
         stage.show();
+    }
+
+    private void installHandlers() {
+
+        // Close the file cleanly if it is still open
+        primaryStage.setOnHiding(windowEvent -> {
+            if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
+                CloseFileTask closeFileTask = new CloseFileTask();
+                closeFileTask.setOnSucceeded(event -> Platform.exit());
+
+                Thread thread = new Thread(closeFileTask);
+                thread.setDaemon(true);
+                thread.start();
+            }
+        });
     }
 
     /**
