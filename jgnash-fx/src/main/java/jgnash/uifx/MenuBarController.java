@@ -22,6 +22,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import jgnash.MainFX;
+import jgnash.engine.EngineFactory;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.utils.StageUtils;
 import jgnash.util.ResourceUtils;
@@ -48,18 +49,24 @@ public class MenuBarController implements Initializable {
 
     }
 
-    @FXML protected void handleExitAction(final ActionEvent actionEvent) {
-        CloseFileTask closeFileTask = new CloseFileTask();
-        closeFileTask.setOnSucceeded(event -> Platform.exit());
+    @FXML
+    protected void handleExitAction(final ActionEvent actionEvent) {
+        if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
+            CloseFileTask closeFileTask = new CloseFileTask();
+            closeFileTask.setOnSucceeded(event -> Platform.exit());
 
-        Thread thread = new Thread(closeFileTask);
-        thread.setDaemon(true);
-        thread.start();
+            Thread thread = new Thread(closeFileTask);
+            thread.setDaemon(true);
+            thread.start();
 
-        StaticUIMethods.displayTaskProgress(closeFileTask);
+            StaticUIMethods.displayTaskProgress(closeFileTask);
+        } else {
+            Platform.exit();
+        }
     }
 
-    @FXML protected void handleOpenAction(final ActionEvent event) {
+    @FXML
+    protected void handleOpenAction(final ActionEvent event) {
         try {
             Stage dialog = new Stage(StageStyle.DECORATED);
             dialog.initModality(Modality.WINDOW_MODAL);

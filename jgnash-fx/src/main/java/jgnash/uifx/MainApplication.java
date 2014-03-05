@@ -30,6 +30,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * JavaFX version of jGnash.
@@ -66,14 +67,19 @@ public class MainApplication extends Application {
     private void installHandlers() {
 
         // Close the file cleanly if it is still open
-        primaryStage.setOnHiding(windowEvent -> {
+        //   primaryStage.setOnHiding(windowEvent -> {... does not work, bug?
+        getPrimaryStage().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> {
             if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
+                windowEvent.consume();  // consume the event and let Platform.exit() do the work after task completion
+
                 CloseFileTask closeFileTask = new CloseFileTask();
                 closeFileTask.setOnSucceeded(event -> Platform.exit());
 
                 Thread thread = new Thread(closeFileTask);
                 thread.setDaemon(true);
                 thread.start();
+
+                StaticUIMethods.displayTaskProgress(closeFileTask);
             }
         });
     }
