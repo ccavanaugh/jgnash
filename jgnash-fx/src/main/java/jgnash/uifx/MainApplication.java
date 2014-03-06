@@ -70,7 +70,7 @@ public class MainApplication extends Application {
         getPrimaryStage().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> {
             if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
                 windowEvent.consume();  // consume the event and let the shutdown handler deal with closure
-                CloseFileTask.handleShutdown();
+                CloseFileTask.initiateShutdown();
             }
         });
     }

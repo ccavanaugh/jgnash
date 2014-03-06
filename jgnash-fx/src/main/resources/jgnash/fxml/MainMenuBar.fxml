@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 
 <MenuBar fx:id="menuBar" cache="true" cacheHint="SPEED" maxWidth="1.7976931348623157E308" useSystemMenuBar="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="jgnash.uifx.MenuBarController">
   <menus>
-    <Menu mnemonicParsing="false" text="File">
+    <Menu mnemonicParsing="false" text="%Menu.File.Name">
       <items>
-        <MenuItem mnemonicParsing="false" onAction="#handleOpenAction" text="Open" fx:id="openMenuItem" />
+        <MenuItem mnemonicParsing="false" onAction="#handleOpenAction" text="%Menu.Open.Name" fx:id="openMenuItem" />
         <SeparatorMenuItem mnemonicParsing="false" />
-        <MenuItem mnemonicParsing="false" onAction="#handleExitAction" text="Exit" fx:id="exitMenuItem" />
+        <MenuItem mnemonicParsing="false" onAction="#handleCloseAction" text="%Menu.Close.Name" fx:id="closeMenuItem" />
+        <MenuItem mnemonicParsing="false" onAction="#handleExitAction" text="%Menu.Exit.Name" fx:id="exitMenuItem" />
       </items>
     </Menu>
-    <Menu mnemonicParsing="false" text="Edit">
+    <Menu mnemonicParsing="false" text="%Menu.Edit.Name">
       <items>
-        <MenuItem mnemonicParsing="false" text="Delete" />
+        <MenuItem mnemonicParsing="false" text="%Menu.Delete.Name" />
       </items>
     </Menu>
-    <Menu mnemonicParsing="false" text="Help">
+    <Menu mnemonicParsing="false" text="%Menu.Help.Name">
       <items>
-        <MenuItem mnemonicParsing="false" text="About" />
+        <MenuItem mnemonicParsing="false" text="%Menu.About.Name" />
       </items>
     </Menu>
   </menus>

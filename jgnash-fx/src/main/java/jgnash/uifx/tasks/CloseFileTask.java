@@ -36,7 +36,17 @@ public class CloseFileTask extends Task<String> {
     private static final int FORCED_DELAY = 1000;
     private static final int INDETERMINATE = -1;
 
-    public static void handleShutdown() {
+    public static void initiateClose() {
+        CloseFileTask closeFileTask = new CloseFileTask();
+
+        Thread thread = new Thread(closeFileTask);
+        thread.setDaemon(true);
+        thread.start();
+
+        StaticUIMethods.displayTaskProgress(closeFileTask);
+    }
+
+    public static void initiateShutdown() {
         CloseFileTask closeFileTask = new CloseFileTask();
         closeFileTask.setOnSucceeded(event -> Platform.exit());
 

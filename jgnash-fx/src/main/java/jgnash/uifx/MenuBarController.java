@@ -52,9 +52,16 @@ public class MenuBarController implements Initializable {
     @FXML
     protected void handleExitAction(final ActionEvent actionEvent) {
         if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
-            CloseFileTask.handleShutdown();
+            CloseFileTask.initiateShutdown();
         } else {
             Platform.exit();
+        }
+    }
+
+    @FXML
+    protected void handleCloseAction(final ActionEvent event) {
+        if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
+            CloseFileTask.initiateClose();
         }
     }
 
