@@ -36,6 +36,17 @@ public class CloseFileTask extends Task<String> {
     private static final int FORCED_DELAY = 1000;
     private static final int INDETERMINATE = -1;
 
+    public static void handleShutdown() {
+        CloseFileTask closeFileTask = new CloseFileTask();
+        closeFileTask.setOnSucceeded(event -> Platform.exit());
+
+        Thread thread = new Thread(closeFileTask);
+        thread.setDaemon(true);
+        thread.start();
+
+        StaticUIMethods.displayTaskProgress(closeFileTask);
+    }
+
     @Override
     protected String call() throws Exception {
         ResourceBundle resources = ResourceUtils.getBundle();

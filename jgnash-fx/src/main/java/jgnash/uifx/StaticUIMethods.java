@@ -17,12 +17,16 @@
  */
 package jgnash.uifx;
 
+import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.util.ResourceUtils;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import org.controlsfx.dialog.Dialogs;
 
 /**
+ * Various static UI support methods
+ *
  * @author Craig Cavanaugh
  */
 public class StaticUIMethods {
