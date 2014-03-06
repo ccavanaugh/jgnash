@@ -23,6 +23,10 @@ import java.util.ResourceBundle;
 
 import jgnash.MainFX;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageListener;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.utils.StageUtils;
 import jgnash.util.ResourceUtils;
@@ -33,6 +37,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -42,11 +48,19 @@ import javafx.stage.StageStyle;
  *
  * @author Craig Cavanaugh
  */
-public class MenuBarController implements Initializable {
+public class MenuBarController implements Initializable, MessageListener{
+
+    @FXML private MenuBar menuBar;
+
+    @FXML private MenuItem closeMenuItem;
 
     @Override
     public void initialize(final URL url, final ResourceBundle resourceBundle) {
+        assert menuBar != null;
 
+        closeMenuItem.setDisable(true);
+
+        MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
     }
 
     @FXML
@@ -81,5 +95,26 @@ public class MenuBarController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void messagePosted(final Message event) {
+        Platform.runLater(() -> {
+            switch (event.getEvent()) {
+                case FILE_LOAD_SUCCESS:
+                case FILE_NEW_SUCCESS:
+                    closeMenuItem.setDisable(false);
+                    break;
+                case FILE_CLOSING:
+                    closeMenuItem.setDisable(true);
+                    break;
+                case FILE_IO_ERROR:
+                case FILE_LOAD_FAILED:
+                case FILE_NOT_FOUND:
+                    StaticUIMethods.displayError("File system error TBD");  // TODO: need a description
+                default:
+                    break;
+            }
+        });
     }
 }
