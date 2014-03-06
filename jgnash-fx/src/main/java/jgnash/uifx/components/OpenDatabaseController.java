@@ -27,10 +27,9 @@ import java.util.prefs.Preferences;
 import jgnash.engine.DataStoreType;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.MainApplication;
-import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.IntegerTextField;
+import jgnash.uifx.tasks.BootEngineTask;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -93,10 +92,8 @@ public class OpenDatabaseController implements Initializable {
         ((Stage) cancelButton.getScene().getWindow()).close();
 
         if (remoteServerCheckBox.isSelected() || localDatabaseField.getText().length() > 0) {
-
-            bootEngine(localDatabaseField.getText(), passwordField.getText().toCharArray(),
+            BootEngineTask.initiateBoot(localDatabaseField.getText(), passwordField.getText().toCharArray(),
                     remoteServerCheckBox.isSelected(), databaseServerField.getText(), portField.getInteger());
-
         }
     }
 
@@ -154,22 +151,4 @@ public class OpenDatabaseController implements Initializable {
                 new FileChooser.ExtensionFilter("All Files", "*.*")
         );
     }
-
-
-    private static void bootEngine(final String localFile, final char[] password, final boolean remote, final String serverName, final int port) {
-        new Thread() {
-            public void run() {
-                if (remote) {
-                    try {
-                        EngineFactory.bootClientEngine(serverName, port, password, EngineFactory.DEFAULT);
-                    } catch (final Exception exception) {
-                        Platform.runLater(() -> StaticUIMethods.displayException(exception));
-                    }
-                } else {
-                    EngineFactory.bootLocalEngine(localFile, EngineFactory.DEFAULT, password);
-                }
-            }
-        }.start();
-    }
-
 }
