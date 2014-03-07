@@ -25,8 +25,14 @@ import jgnash.util.ResourceUtils;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Orientation;
+import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.ToolBar;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -41,16 +47,34 @@ public class MainApplication extends Application {
 
     protected static Stage primaryStage;
 
+    private ToolBar viewToolBar;
+
     @Override
     public void start(final Stage stage) throws Exception {
         primaryStage = stage;
 
         MenuBar menuBar = FXMLLoader.load(MainFX.class.getResource("fxml/MainMenuBar.fxml"), ResourceUtils.getBundle());
+        ToolBar mainToolBar = FXMLLoader.load(MainFX.class.getResource("fxml/MainToolBar.fxml"), ResourceUtils.getBundle());
 
-        VBox root = new VBox();
-        Scene scene = new Scene(root, 300, 150);
+        viewToolBar = new ToolBar();
+        viewToolBar.setOrientation(Orientation.VERTICAL);
 
-        root.getChildren().add(menuBar);
+        Button button = new Button();
+        Label  label  = new Label("Accounts");
+        label.setRotate(-90);
+        button.setGraphic(new Group(label));
+
+        viewToolBar.getItems().addAll(button);
+
+        VBox top = new VBox();
+        top.getChildren().addAll(menuBar, mainToolBar);
+        top.setFillWidth(true);
+
+        BorderPane borderPane = new BorderPane();
+        borderPane.setTop(top);
+        borderPane.setLeft(viewToolBar);
+
+        Scene scene = new Scene(borderPane, 600, 400);
 
         stage.setTitle(MainFX.VERSION);
         stage.setScene(scene);

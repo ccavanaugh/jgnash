@@ -17,38 +17,29 @@
  */
 package jgnash.uifx;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import jgnash.MainFX;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.tasks.CloseFileTask;
-import jgnash.uifx.utils.StageUtils;
-import jgnash.util.ResourceUtils;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 /**
  * Primary Menu Controller
  *
  * @author Craig Cavanaugh
  */
-public class MenuBarController implements Initializable, MessageListener{
+public class MenuBarController implements Initializable, MessageListener {
 
     @FXML private MenuBar menuBar;
 
@@ -81,20 +72,7 @@ public class MenuBarController implements Initializable, MessageListener{
 
     @FXML
     protected void handleOpenAction(final ActionEvent event) {
-        try {
-            Stage dialog = new Stage(StageStyle.DECORATED);
-            dialog.initModality(Modality.WINDOW_MODAL);
-            dialog.initOwner(MainApplication.getPrimaryStage());
-            dialog.setScene(new Scene(FXMLLoader.load(MainFX.class.getResource("fxml/OpenDatabaseForm.fxml"), ResourceUtils.getBundle())));
-
-            dialog.setResizable(false);
-
-            StageUtils.addBoundsListener(dialog, getClass());
-
-            dialog.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        StaticUIMethods.handleOpenAction(event);
     }
 
     @Override

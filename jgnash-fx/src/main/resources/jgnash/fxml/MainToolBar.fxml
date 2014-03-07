@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ToolBar?>
+<ToolBar xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+         fx:controller="jgnash.uifx.MainToolBarController">
+    <items>
+        <Button fx:id="openButton" mnemonicParsing="false" onAction="#handleOpenAction" text="Open"/>
+        <Button mnemonicParsing="false" text="Cut"/>
+        <Button mnemonicParsing="false" text="Copy"/>
+        <Button mnemonicParsing="false" text="Paste"/>
+    </items>
+</ToolBar>

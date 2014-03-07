@@ -17,9 +17,19 @@
  */
 package jgnash.uifx;
 
+import java.io.IOException;
+
+import jgnash.MainFX;
+import jgnash.uifx.utils.StageUtils;
 import jgnash.util.ResourceUtils;
 
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.controlsfx.dialog.Dialogs;
 
 /**
@@ -31,6 +41,23 @@ public class StaticUIMethods {
 
     private StaticUIMethods() {
         // Utility class
+    }
+
+    public static void handleOpenAction(final ActionEvent event) {
+        try {
+            Stage dialog = new Stage(StageStyle.DECORATED);
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.initOwner(MainApplication.getPrimaryStage());
+            dialog.setScene(new Scene(FXMLLoader.load(MainFX.class.getResource("fxml/OpenDatabaseForm.fxml"), ResourceUtils.getBundle())));
+
+            dialog.setResizable(false);
+
+            StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
+
+            dialog.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void displayError(final String message) {
