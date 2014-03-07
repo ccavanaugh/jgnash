@@ -50,6 +50,11 @@ public class BootEngineTask extends Task<String> {
         updateMessage(resources.getString("Message.LoadingFile"));
         updateProgress(INDETERMINATE, Long.MAX_VALUE);
 
+        // Close an open files or connections first
+        if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
+            EngineFactory.closeEngine(EngineFactory.DEFAULT);
+        }
+
         if (remote) {
             try {
                 EngineFactory.bootClientEngine(serverName, port, password, EngineFactory.DEFAULT);
