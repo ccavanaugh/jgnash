@@ -6,8 +6,8 @@
          fx:controller="jgnash.uifx.MainToolBarController">
     <items>
         <Button fx:id="openButton" mnemonicParsing="false" onAction="#handleOpenAction" text="Open"/>
-        <Button mnemonicParsing="false" text="Cut"/>
-        <Button mnemonicParsing="false" text="Copy"/>
-        <Button mnemonicParsing="false" text="Paste"/>
+        <Button fx:id="cutButton" mnemonicParsing="false" text="Cut"/>
+        <Button fx:id="copyButton" mnemonicParsing="false" text="Copy"/>
+        <Button fx:id="pasteButton" mnemonicParsing="false" text="Paste"/>
     </items>
 </ToolBar>

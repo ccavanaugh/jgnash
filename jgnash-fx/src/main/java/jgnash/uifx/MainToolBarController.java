@@ -38,13 +38,25 @@ public class MainToolBarController implements Initializable, MessageListener {
     Button openButton;
 
     @FXML
+    Button cutButton;
+
+    @FXML
+    Button copyButton;
+
+    @FXML
+    Button pasteButton;
+
+    @FXML
     protected void handleOpenAction(final ActionEvent event) {
         StaticUIMethods.handleOpenAction(event);
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        cutButton.setGraphic(FontAwesome.Glyph.CUT.create());
+        copyButton.setGraphic(FontAwesome.Glyph.COPY.create());
         openButton.setGraphic(FontAwesome.Glyph.FOLDER_OPEN.create());
+        pasteButton.setGraphic(FontAwesome.Glyph.PASTE.create());
     }
 
     @Override
