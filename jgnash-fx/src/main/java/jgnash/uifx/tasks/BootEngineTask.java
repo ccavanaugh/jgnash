@@ -1,9 +1,13 @@
 package jgnash.uifx.tasks;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.ResourceBundle;
 
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 
 import javafx.application.Platform;
@@ -62,11 +66,46 @@ public class BootEngineTask extends Task<String> {
                 Platform.runLater(() -> StaticUIMethods.displayException(exception));
             }
         } else {
-            EngineFactory.bootLocalEngine(localFile, EngineFactory.DEFAULT, password);
+            if (FileUtils.isFileLocked(localFile)) {
+                Platform.runLater(() -> StaticUIMethods.displayError(resources.getString("Message.FileIsLocked")));
+            } else if (checkAndBackupOldVersion(localFile, password)) {
+                EngineFactory.bootLocalEngine(localFile, EngineFactory.DEFAULT, password);
+                updateMessage(resources.getString("Message.FileLoadComplete"));
+            }
         }
 
-        updateMessage(resources.getString("Message.FileLoadComplete"));
-
         return resources.getString("Message.FileLoadComplete");
+    }
+
+    /**
+     * Check and determine if the file is an old format and backup in necessary
+     * @param fileName fileName to verify
+     * @param password assumed password
+     *
+     * @return true if no errors are encountered
+     */
+    private static boolean checkAndBackupOldVersion(final String fileName, final char[] password) {
+
+        boolean result = false;
+
+        if (Files.exists(new File(fileName).toPath())) {
+            float version = EngineFactory.getFileVersion(new File(fileName), password);
+
+            if (version <= 0) {
+                final String errorMessage = ResourceUtils.getBundle().getString("Message.Error.InvalidUserPass");
+
+                Platform.runLater(() -> StaticUIMethods.displayError(errorMessage));
+
+            } else {
+                result = true;
+
+                // make a versioned backup first
+                if (version < Engine.CURRENT_VERSION) {
+                    FileUtils.copyFile(new File(fileName), new File(fileName + "." + version));
+                }
+            }
+        }
+
+        return result;
     }
 }
