@@ -15,25 +15,30 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.uifx.view.accounts;
+package jgnash.uifx.controllers;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import jgnash.engine.Account;
-import jgnash.uifx.components.AccountTreeController;
 
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import org.controlsfx.glyphfont.FontAwesome;
 
 /**
+ * Accounts view controller
+ *
  * @author Craig Cavanaugh
  */
-public class AccountsController extends AccountTreeController implements Initializable {
+public class AccountsViewController extends AccountTreeController implements Initializable {
 
     @FXML
     TreeTableView<Account> treeTableView;
@@ -76,8 +81,26 @@ public class AccountsController extends AccountTreeController implements Initial
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void initializeTreeTableView() {
         super.initializeTreeTableView();
+
+        TreeTableColumn<Account, Integer> entriesColumn = new TreeTableColumn<>(getResources().getString("Column.Entries"));
+        entriesColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getTransactionCount()));
+
+        TreeTableColumn<Account, BigDecimal> balanceColumn = new TreeTableColumn<>(getResources().getString("Column.Balance"));
+        balanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getBalance()));
+
+        TreeTableColumn<Account, BigDecimal> reconciledBalanceColumn = new TreeTableColumn<>(getResources().getString("Column.ReconciledBalance"));
+        reconciledBalanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getReconciledBalance()));
+
+        TreeTableColumn<Account, String> currencyColumn = new TreeTableColumn<>(getResources().getString("Column.Currency"));
+        currencyColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getCurrencyNode().getSymbol()));
+
+        TreeTableColumn<Account, String> typeColumn = new TreeTableColumn<>(getResources().getString("Column.Type"));
+        typeColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getAccountType().toString()));
+
+        treeTableView.getColumns().addAll(entriesColumn, balanceColumn, reconciledBalanceColumn, currencyColumn, typeColumn);
     }
 
     @Override

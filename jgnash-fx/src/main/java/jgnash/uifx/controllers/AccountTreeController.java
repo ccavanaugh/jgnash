@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.uifx.components;
+package jgnash.uifx.controllers;
 
 import java.util.ResourceBundle;
 
@@ -25,11 +25,9 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.RootAccount;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
-import javafx.util.Callback;
 
 /**
  * Abstract controller for handling display of the account structure
@@ -52,19 +50,16 @@ public abstract class AccountTreeController {
 
     protected abstract ResourceBundle getResources();
 
+    /**
+     * Generates and adds the default tree column for the table
+     */
     protected void initializeTreeTableView() {
         TreeTableView<Account> treeTableView = getTreeTableView();
 
         TreeTableColumn<Account, String> column = new TreeTableColumn<>(getResources().getString("Column.Account"));
-        column.setCellValueFactory(new Callback<TreeTableColumn.CellDataFeatures<Account, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TreeTableColumn.CellDataFeatures<Account, String> param) {
-                return new ReadOnlyStringWrapper(param.getValue().getValue().getName());
-            }
-        });
+        column.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getName()));
 
         treeTableView.getColumns().add(column);
-
     }
 
     protected void loadAccountTree() {
@@ -89,6 +84,8 @@ public abstract class AccountTreeController {
             for (Account child : parent.getChildren()) {
                 if (isAccountVisible(child)) {
                     TreeItem<Account> childItem = new TreeItem<>(child);
+                    childItem.setExpanded(true);
+
                     parentItem.getChildren().add(childItem);
 
                     if (child.getChildCount() > 0) {
@@ -109,7 +106,7 @@ public abstract class AccountTreeController {
      * @param a account to check for visibility
      * @return true is account should be displayed
      */
-    private synchronized boolean isAccountVisible(Account a) {
+    private synchronized boolean isAccountVisible(final Account a) {
         AccountType type = a.getAccountType();
         if (type == AccountType.INCOME && incomeVisible) {
             if (!a.isVisible() && hiddenVisible || a.isVisible()) {
@@ -127,21 +124,21 @@ public abstract class AccountTreeController {
         return false;
     }
 
-    public synchronized void setHiddenVisible(boolean visible) {
+    public synchronized void setHiddenVisible(final boolean visible) {
         if (hiddenVisible != visible) {
             hiddenVisible = visible;
             reload();
         }
     }
 
-    public synchronized void setIncomeVisible(boolean visible) {
+    public synchronized void setIncomeVisible(final boolean visible) {
         if (incomeVisible != visible) {
             incomeVisible = visible;
             reload();
         }
     }
 
-    public synchronized void setExpenseVisible(boolean visible) {
+    public synchronized void setExpenseVisible(final boolean visible) {
         if (expenseVisible != visible) {
             expenseVisible = visible;
             reload();

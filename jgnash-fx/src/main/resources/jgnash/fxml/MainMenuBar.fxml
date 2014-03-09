@@ -2,7 +2,7 @@
 
 <?import javafx.scene.control.*?>
 
-<MenuBar fx:id="menuBar" useSystemMenuBar="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="jgnash.uifx.MenuBarController">
+<MenuBar fx:id="menuBar" useSystemMenuBar="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="jgnash.uifx.controllers.MenuBarController">
   <menus>
     <Menu mnemonicParsing="false" text="%Menu.File.Name">
       <items>

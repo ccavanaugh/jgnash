@@ -115,7 +115,7 @@ public class MainApplication extends Application implements MessageListener {
 
     private void addViews() {
         try {
-            Pane pane = FXMLLoader.load(MainFX.class.getResource("fxml/Accounts.fxml"), ResourceUtils.getBundle());
+            Pane pane = FXMLLoader.load(MainFX.class.getResource("fxml/AccountsView.fxml"), ResourceUtils.getBundle());
 
             tabViewPane.addTab(pane, rb.getString("Tab.Accounts"));
             tabViewPane.addTab(null, rb.getString("Tab.Register"));

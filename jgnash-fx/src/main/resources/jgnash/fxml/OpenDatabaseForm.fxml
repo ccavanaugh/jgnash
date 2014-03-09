@@ -8,7 +8,7 @@
 
 <?scenebuilder-preview-i18n-resource ../../../../../../jgnash-resources/src/main/resources/jgnash/resource/resource.properties?>
 
-<GridPane gridLinesVisible="false" hgap="14.0" maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-1.0" minWidth="-Infinity" prefHeight="-1.0" vgap="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="jgnash.uifx.components.OpenDatabaseController">
+<GridPane gridLinesVisible="false" hgap="14.0" maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-1.0" minWidth="-Infinity" prefHeight="-1.0" vgap="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="jgnash.uifx.controllers.OpenDatabaseController">
   <children>
     <Label text="%Label.DatabaseName" GridPane.columnIndex="0" GridPane.rowIndex="0">
       <labelFor>
