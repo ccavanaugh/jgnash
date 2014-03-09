@@ -1,0 +1,9 @@
+.root{
+    -fx-font-size: 0.9em;
+}
+
+.view-title {
+    -fx-font-size: 1.1em;
+    -fx-font-weight: bold;
+    -fx-background-color: #CCFF99;
+}

@@ -31,6 +31,8 @@ import javafx.scene.layout.BorderPane;
  */
 public class TabViewPane extends TabPane {
 
+    public static final String VIEW_TITLE = "view-title";
+
     public TabViewPane() {
         setSide(Side.LEFT);
         setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
@@ -42,7 +44,8 @@ public class TabViewPane extends TabPane {
         titledPane.setCollapsible(false);
         titledPane.setExpanded(false);
         titledPane.setFocusTraversable(false);
-        titledPane.setStyle("-fx-font-size: 1.2em;");
+
+        titledPane.getStyleClass().add(VIEW_TITLE);
 
         borderPane.setTop(titledPane);
         borderPane.setCenter(node);

@@ -18,8 +18,12 @@
 package jgnash.uifx;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import jgnash.MainFX;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
@@ -28,6 +32,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.uifx.control.TabViewPane;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.utils.StageUtils;
+import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.ResourceUtils;
 
 import javafx.application.Application;
@@ -52,6 +57,11 @@ import javafx.stage.WindowEvent;
  * @author Craig Cavanaugh
  */
 public class MainApplication extends Application implements MessageListener {
+    /**
+     * Default style sheet
+     */
+    public static final String DEFAULT_CSS = "jgnash/skin/default.css";
+
     // private static final Logger logger = Logger.getLogger(MainApplication.class.getName());
 
     protected static Stage primaryStage;
@@ -60,12 +70,16 @@ public class MainApplication extends Application implements MessageListener {
 
     private TabViewPane tabViewPane;
 
+    private Executor backgroundExecutor = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
+
+    private ResourceBundle rb = ResourceUtils.getBundle();
+
     @Override
     public void start(final Stage stage) throws Exception {
         primaryStage = stage;
 
-        MenuBar menuBar = FXMLLoader.load(MainFX.class.getResource("fxml/MainMenuBar.fxml"), ResourceUtils.getBundle());
-        ToolBar mainToolBar = FXMLLoader.load(MainFX.class.getResource("fxml/MainToolBar.fxml"), ResourceUtils.getBundle());
+        MenuBar menuBar = FXMLLoader.load(MainFX.class.getResource("fxml/MainMenuBar.fxml"), rb);
+        ToolBar mainToolBar = FXMLLoader.load(MainFX.class.getResource("fxml/MainToolBar.fxml"), rb);
         tabViewPane = new TabViewPane();
 
         VBox top = new VBox();
@@ -81,9 +95,10 @@ public class MainApplication extends Application implements MessageListener {
         borderPane.setBottom(bottom);
         borderPane.setCenter(tabViewPane);
         BorderPane.setAlignment(tabViewPane, Pos.CENTER);
-        BorderPane.setMargin(bottom, new Insets(8,8,8,8));
+        BorderPane.setMargin(bottom, new Insets(8, 8, 8, 8));
 
         Scene scene = new Scene(borderPane, 600, 400);
+        scene.getStylesheets().add(DEFAULT_CSS);
 
         stage.setTitle(MainFX.VERSION);
         stage.setScene(scene);
@@ -98,8 +113,7 @@ public class MainApplication extends Application implements MessageListener {
         stage.show();
     }
 
-
-    private void setPrimaryView() {
+    private void addViews() {
         try {
             Pane pane = FXMLLoader.load(MainFX.class.getResource("fxml/Accounts.fxml"), ResourceUtils.getBundle());
 
@@ -111,6 +125,10 @@ public class MainApplication extends Application implements MessageListener {
         } catch (final IOException e) {
             StaticUIMethods.displayException(e);
         }
+    }
+
+    private void removeViews() {
+        tabViewPane.getTabs().clear();
     }
 
     private void installHandlers() {
@@ -134,7 +152,7 @@ public class MainApplication extends Application implements MessageListener {
         return primaryStage;
     }
 
-    private void updateStatus(final String status) {
+    private void displayStatus(final String status) {
         Platform.runLater(() -> statusLabel.setText(status));
     }
 
@@ -149,20 +167,39 @@ public class MainApplication extends Application implements MessageListener {
             switch (event.getEvent()) {
                 case FILE_LOAD_SUCCESS:
                 case FILE_NEW_SUCCESS:
-                    updateStatus("File loaded");
-                    setPrimaryView();
+                    updateTitle();
+                    displayStatus("File loaded");
+                    addViews();
                     break;
                 case FILE_CLOSING:
-                    tabViewPane.getTabs().clear();
-                    updateStatus("File closed");
+                    removeViews();
+                    updateTitle();
+                    displayStatus("File closed");
                     break;
                 case FILE_IO_ERROR:
                 case FILE_LOAD_FAILED:
                 case FILE_NOT_FOUND:
-                    updateStatus("File system error TBD");  // TODO: need a description
+                    displayStatus("File system error TBD");  // TODO: need a description
+                case ACCOUNT_REMOVE_FAILED:
+                    StaticUIMethods.displayError(rb.getString("Message.Error.AccountRemove"));
+                    break;
                 default:
                     break;
             }
+        });
+    }
+
+    private void updateTitle() {
+        backgroundExecutor.execute(() -> {
+            Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+            Platform.runLater(() -> {
+                if (engine != null) {
+                    getPrimaryStage().setTitle(MainFX.VERSION + "  [" + EngineFactory.getActiveDatabase() + ']');
+                } else {
+                    getPrimaryStage().setTitle(MainFX.VERSION);
+                }
+            });
         });
 
     }
