@@ -20,13 +20,12 @@ package jgnash.uifx;
 import java.io.IOException;
 
 import jgnash.MainFX;
-import jgnash.uifx.controllers.AccountTypeFilterFormController;
 import jgnash.uifx.controllers.AccountTypeFilter;
+import jgnash.uifx.controllers.AccountTypeFilterFormController;
 import jgnash.uifx.utils.StageUtils;
 import jgnash.util.ResourceUtils;
 
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -68,7 +67,7 @@ public class StaticUIMethods {
         }
     }
 
-    public static void handleOpenAction(final ActionEvent event) {
+    public static void showOpenDialog() {
         try {
             Stage dialog = new Stage(StageStyle.DECORATED);
             dialog.initModality(Modality.WINDOW_MODAL);

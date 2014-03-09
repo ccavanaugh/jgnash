@@ -73,7 +73,7 @@ public class MenuBarController implements Initializable, MessageListener {
 
     @FXML
     protected void handleOpenAction(final ActionEvent event) {
-        StaticUIMethods.handleOpenAction(event);
+        StaticUIMethods.showOpenDialog();
     }
 
     @Override
