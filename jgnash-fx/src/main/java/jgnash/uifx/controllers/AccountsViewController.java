@@ -90,9 +90,11 @@ public class AccountsViewController extends AccountTreeController implements Ini
 
         TreeTableColumn<Account, BigDecimal> balanceColumn = new TreeTableColumn<>(getResources().getString("Column.Balance"));
         balanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getBalance()));
+        balanceColumn.setCellFactory(cell -> new CommodityFormatTreeTableCell());
 
         TreeTableColumn<Account, BigDecimal> reconciledBalanceColumn = new TreeTableColumn<>(getResources().getString("Column.ReconciledBalance"));
         reconciledBalanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getReconciledBalance()));
+        reconciledBalanceColumn.setCellFactory(cell -> new CommodityFormatTreeTableCell());
 
         TreeTableColumn<Account, String> currencyColumn = new TreeTableColumn<>(getResources().getString("Column.Currency"));
         currencyColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getCurrencyNode().getSymbol()));
