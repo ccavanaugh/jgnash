@@ -9,12 +9,12 @@
     <top>
         <ToolBar>
             <items>
-                <Button fx:id="newButton" mnemonicParsing="false" text="New"/>
-                <Button fx:id="modifyButton" mnemonicParsing="false" text="Modify"/>
-                <Button fx:id="reconcileButton" mnemonicParsing="false" text="Reconcile"/>
-                <Button fx:id="deleteButton" mnemonicParsing="false" text="Delete"/>
-                <Button fx:id="filterButton" mnemonicParsing="false" onAction="#handleFilterAccountAction" text="Filter"/>
-                <Button fx:id="zoomButton" mnemonicParsing="false" text="Zoom"/>
+                <Button fx:id="newButton" mnemonicParsing="false" text="%Button.New"/>
+                <Button fx:id="modifyButton" mnemonicParsing="false" text="%Button.Modify"/>
+                <Button fx:id="reconcileButton" mnemonicParsing="false" text="%Button.Reconcile"/>
+                <Button fx:id="deleteButton" mnemonicParsing="false" text="%Button.Delete"/>
+                <Button fx:id="filterButton" mnemonicParsing="false" onAction="#handleFilterAccountAction" text="%Button.Filter"/>
+                <Button fx:id="zoomButton" mnemonicParsing="false" text="%Button.Zoom"/>
             </items>
         </ToolBar>
     </top>
