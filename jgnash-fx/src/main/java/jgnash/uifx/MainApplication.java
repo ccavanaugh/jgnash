@@ -17,28 +17,31 @@
  */
 package jgnash.uifx;
 
-import javafx.application.Platform;
-import javafx.scene.layout.HBox;
+import java.io.IOException;
+
 import jgnash.MainFX;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
+import jgnash.uifx.control.TabViewPane;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.utils.StageUtils;
 import jgnash.util.ResourceUtils;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Orientation;
-import javafx.scene.Group;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -53,9 +56,9 @@ public class MainApplication extends Application implements MessageListener {
 
     protected static Stage primaryStage;
 
-    private ToolBar viewToolBar;
-
     private Label statusLabel;
+
+    private TabViewPane tabViewPane;
 
     @Override
     public void start(final Stage stage) throws Exception {
@@ -63,16 +66,7 @@ public class MainApplication extends Application implements MessageListener {
 
         MenuBar menuBar = FXMLLoader.load(MainFX.class.getResource("fxml/MainMenuBar.fxml"), ResourceUtils.getBundle());
         ToolBar mainToolBar = FXMLLoader.load(MainFX.class.getResource("fxml/MainToolBar.fxml"), ResourceUtils.getBundle());
-
-        viewToolBar = new ToolBar();
-        viewToolBar.setOrientation(Orientation.VERTICAL);
-
-        Button button = new Button();
-        Label  label  = new Label("Accounts");
-        label.setRotate(-90);
-        button.setGraphic(new Group(label));
-
-        viewToolBar.getItems().addAll(button);
+        tabViewPane = new TabViewPane();
 
         VBox top = new VBox();
         top.getChildren().addAll(menuBar, mainToolBar);
@@ -84,8 +78,10 @@ public class MainApplication extends Application implements MessageListener {
 
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(top);
-        borderPane.setLeft(viewToolBar);
         borderPane.setBottom(bottom);
+        borderPane.setCenter(tabViewPane);
+        BorderPane.setAlignment(tabViewPane, Pos.CENTER);
+        BorderPane.setMargin(bottom, new Insets(8,8,8,8));
 
         Scene scene = new Scene(borderPane, 600, 400);
 
@@ -100,6 +96,21 @@ public class MainApplication extends Application implements MessageListener {
         StageUtils.addBoundsListener(stage, getClass());
 
         stage.show();
+    }
+
+
+    private void setPrimaryView() {
+        try {
+            Pane pane = FXMLLoader.load(MainFX.class.getResource("fxml/Accounts.fxml"), ResourceUtils.getBundle());
+
+            tabViewPane.addTab(pane, "Accounts");
+            tabViewPane.addTab(null, "Register");
+            tabViewPane.addTab(null, "Reminders");
+            tabViewPane.addTab(null, "Budget");
+
+        } catch (final IOException e) {
+            StaticUIMethods.displayException(e);
+        }
     }
 
     private void installHandlers() {
@@ -139,8 +150,10 @@ public class MainApplication extends Application implements MessageListener {
                 case FILE_LOAD_SUCCESS:
                 case FILE_NEW_SUCCESS:
                     updateStatus("File loaded");
+                    setPrimaryView();
                     break;
                 case FILE_CLOSING:
+                    tabViewPane.getTabs().clear();
                     updateStatus("File closed");
                     break;
                 case FILE_IO_ERROR:
