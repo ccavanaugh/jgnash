@@ -37,7 +37,11 @@ import javafx.scene.paint.Color;
 /**
  * Abstract controller for handling display of the account structure
  *
+ * TODO Reference @see for column resize code hints
+ *
  * @author Craig Cavanaugh
+ *
+ * @see com.sun.javafx.scene.control.skin.TreeTableViewSkin#resizeColumnToFitContent(javafx.scene.control.TreeTableColumn, int)
  */
 public abstract class AccountTreeController {
 
@@ -60,6 +64,9 @@ public abstract class AccountTreeController {
      */
     protected void initializeTreeTableView() {
         TreeTableView<Account> treeTableView = getTreeTableView();
+
+        // force resize policy for better default appearance
+        treeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
 
         TreeTableColumn<Account, String> column = new TreeTableColumn<>(getResources().getString("Column.Account"));
         column.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getName()));

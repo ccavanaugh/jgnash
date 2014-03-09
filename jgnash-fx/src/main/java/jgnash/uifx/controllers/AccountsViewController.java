@@ -85,6 +85,8 @@ public class AccountsViewController extends AccountTreeController implements Ini
     protected void initializeTreeTableView() {
         super.initializeTreeTableView();
 
+        treeTableView.setShowRoot(false);   // don't show the root
+
         TreeTableColumn<Account, Integer> entriesColumn = new TreeTableColumn<>(getResources().getString("Column.Entries"));
         entriesColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getTransactionCount()));
 
