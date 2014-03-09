@@ -20,15 +20,23 @@ package jgnash.uifx.view.accounts;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import jgnash.engine.Account;
+import jgnash.uifx.components.AccountTreeController;
+
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TreeTableView;
 import org.controlsfx.glyphfont.FontAwesome;
 
 /**
  * @author Craig Cavanaugh
  */
-public class AccountsController implements Initializable {
+public class AccountsController extends AccountTreeController implements Initializable {
+
+    @FXML
+    TreeTableView<Account> treeTableView;
 
     @FXML
     Button newButton;
@@ -48,8 +56,12 @@ public class AccountsController implements Initializable {
     @FXML
     Button zoomButton;
 
+    private ResourceBundle resources;
+
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
+
+        this.resources = resources;
 
         newButton.setGraphic(FontAwesome.Glyph.PLUS.create());
         modifyButton.setGraphic(FontAwesome.Glyph.EDIT.create());
@@ -57,5 +69,24 @@ public class AccountsController implements Initializable {
         deleteButton.setGraphic(FontAwesome.Glyph.REMOVE_SIGN.create());
         filterButton.setGraphic(FontAwesome.Glyph.FILTER.create());
         zoomButton.setGraphic(FontAwesome.Glyph.ZOOM_IN.create());
+
+        initializeTreeTableView();
+
+        Platform.runLater(this::loadAccountTree);
+    }
+
+    @Override
+    protected void initializeTreeTableView() {
+        super.initializeTreeTableView();
+    }
+
+    @Override
+    protected TreeTableView<Account> getTreeTableView() {
+        return treeTableView;
+    }
+
+    @Override
+    protected ResourceBundle getResources() {
+        return resources;
     }
 }

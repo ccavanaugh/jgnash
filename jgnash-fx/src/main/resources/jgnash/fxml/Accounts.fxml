@@ -2,13 +2,12 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.control.TreeTableColumn?>
 <?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.layout.BorderPane?>
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="jgnash.uifx.view.accounts.AccountsController">
     <top>
-        <ToolBar prefWidth="200.0">
+        <ToolBar>
             <items>
                 <Button fx:id="newButton" mnemonicParsing="false" text="New"/>
                 <Button fx:id="modifyButton" mnemonicParsing="false" text="Modify"/>
@@ -20,11 +19,8 @@
         </ToolBar>
     </top>
     <center>
-        <TreeTableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-            <columns>
-                <TreeTableColumn prefWidth="75.0" text="C1"/>
-                <TreeTableColumn prefWidth="75.0" text="C2"/>
-            </columns>
+        <TreeTableView fx:id="treeTableView" prefHeight="200.0" prefWidth="200.0" tableMenuButtonVisible="true"
+                       BorderPane.alignment="CENTER">
         </TreeTableView>
     </center>
 </BorderPane>
