@@ -20,14 +20,16 @@ package jgnash.uifx.controllers;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 import jgnash.engine.Account;
+import jgnash.uifx.StaticUIMethods;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
@@ -38,7 +40,9 @@ import org.controlsfx.glyphfont.FontAwesome;
  *
  * @author Craig Cavanaugh
  */
-public class AccountsViewController extends AccountTreeController implements Initializable {
+public class AccountsViewController extends AccountTreeController {
+
+    private final Preferences preferences = Preferences.userNodeForPackage(AccountsViewController.class);
 
     @FXML
     TreeTableView<Account> treeTableView;
@@ -61,12 +65,9 @@ public class AccountsViewController extends AccountTreeController implements Ini
     @FXML
     Button zoomButton;
 
-    private ResourceBundle resources;
-
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-
-        this.resources = resources;
+        super.initialize(location, resources);
 
         newButton.setGraphic(FontAwesome.Glyph.PLUS.create());
         modifyButton.setGraphic(FontAwesome.Glyph.EDIT.create());
@@ -80,28 +81,25 @@ public class AccountsViewController extends AccountTreeController implements Ini
         Platform.runLater(this::loadAccountTree);
     }
 
-    @Override
     @SuppressWarnings("unchecked")
     protected void initializeTreeTableView() {
-        super.initializeTreeTableView();
-
         treeTableView.setShowRoot(false);   // don't show the root
 
-        TreeTableColumn<Account, Integer> entriesColumn = new TreeTableColumn<>(getResources().getString("Column.Entries"));
+        TreeTableColumn<Account, Integer> entriesColumn = new TreeTableColumn<>(resources.getString("Column.Entries"));
         entriesColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getTransactionCount()));
 
-        TreeTableColumn<Account, BigDecimal> balanceColumn = new TreeTableColumn<>(getResources().getString("Column.Balance"));
-        balanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getBalance()));
+        TreeTableColumn<Account, BigDecimal> balanceColumn = new TreeTableColumn<>(resources.getString("Column.Balance"));
+        balanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getTreeBalance()));
         balanceColumn.setCellFactory(cell -> new CommodityFormatTreeTableCell());
 
-        TreeTableColumn<Account, BigDecimal> reconciledBalanceColumn = new TreeTableColumn<>(getResources().getString("Column.ReconciledBalance"));
-        reconciledBalanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getReconciledBalance()));
+        TreeTableColumn<Account, BigDecimal> reconciledBalanceColumn = new TreeTableColumn<>(resources.getString("Column.ReconciledBalance"));
+        reconciledBalanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getReconciledTreeBalance()));
         reconciledBalanceColumn.setCellFactory(cell -> new CommodityFormatTreeTableCell());
 
-        TreeTableColumn<Account, String> currencyColumn = new TreeTableColumn<>(getResources().getString("Column.Currency"));
+        TreeTableColumn<Account, String> currencyColumn = new TreeTableColumn<>(resources.getString("Column.Currency"));
         currencyColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getCurrencyNode().getSymbol()));
 
-        TreeTableColumn<Account, String> typeColumn = new TreeTableColumn<>(getResources().getString("Column.Type"));
+        TreeTableColumn<Account, String> typeColumn = new TreeTableColumn<>(resources.getString("Column.Type"));
         typeColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getAccountType().toString()));
 
         treeTableView.getColumns().addAll(entriesColumn, balanceColumn, reconciledBalanceColumn, currencyColumn, typeColumn);
@@ -113,7 +111,13 @@ public class AccountsViewController extends AccountTreeController implements Ini
     }
 
     @Override
-    protected ResourceBundle getResources() {
-        return resources;
+    public Preferences getPreferences() {
+        return preferences;
+    }
+
+    @SuppressWarnings("unused")
+    @FXML
+    public void handleFilterAccountAction(final ActionEvent actionEvent) {
+        StaticUIMethods.showAccountFilterDialog(this);
     }
 }

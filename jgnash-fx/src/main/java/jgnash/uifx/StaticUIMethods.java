@@ -20,6 +20,8 @@ package jgnash.uifx;
 import java.io.IOException;
 
 import jgnash.MainFX;
+import jgnash.uifx.controllers.AccountTypeFilterFormController;
+import jgnash.uifx.controllers.AccountTypeFilter;
 import jgnash.uifx.utils.StageUtils;
 import jgnash.util.ResourceUtils;
 
@@ -43,11 +45,35 @@ public class StaticUIMethods {
         // Utility class
     }
 
+    public static void showAccountFilterDialog(final AccountTypeFilter accountTypeFilter) {
+        try {
+            Stage dialog = new Stage(StageStyle.DECORATED);
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.initOwner(MainApplication.getPrimaryStage());
+            dialog.setTitle(ResourceUtils.getBundle().getString("Title.VisibleAccountTypes"));
+
+            FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("fxml/AccountTypeFilterForm.fxml"), ResourceUtils.getBundle());
+            dialog.setScene(new Scene(loader.load()));
+
+            AccountTypeFilterFormController controller = loader.getController();
+            controller.setAccountTypeFilter(accountTypeFilter);
+
+            dialog.setResizable(false);
+
+            StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
+
+            dialog.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void handleOpenAction(final ActionEvent event) {
         try {
             Stage dialog = new Stage(StageStyle.DECORATED);
             dialog.initModality(Modality.WINDOW_MODAL);
             dialog.initOwner(MainApplication.getPrimaryStage());
+            dialog.setTitle(ResourceUtils.getBundle().getString("Title.Open"));
             dialog.setScene(new Scene(FXMLLoader.load(MainFX.class.getResource("fxml/OpenDatabaseForm.fxml"), ResourceUtils.getBundle())));
 
             dialog.setResizable(false);

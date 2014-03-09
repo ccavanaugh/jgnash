@@ -18,8 +18,10 @@
 package jgnash.uifx.controllers;
 
 import java.math.BigDecimal;
+import java.net.URL;
 import java.text.NumberFormat;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
@@ -28,6 +30,7 @@ import jgnash.engine.RootAccount;
 import jgnash.text.CommodityFormat;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.fxml.Initializable;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
@@ -43,7 +46,12 @@ import javafx.scene.paint.Color;
  *
  * @see com.sun.javafx.scene.control.skin.TreeTableViewSkin#resizeColumnToFitContent(javafx.scene.control.TreeTableColumn, int)
  */
-public abstract class AccountTreeController {
+public abstract class AccountTreeController implements Initializable, AccountTypeFilter {
+
+    private static final String HIDDEN_VISIBLE = "HiddenVisible";
+    private static final String EXPENSE_VISIBLE = "ExpenseVisible";
+    private static final String INCOME_VISIBLE = "IncomeVisible";
+    private static final String ACCOUNT_VISIBLE = "AccountVisible";
 
     private boolean incomeVisible = true;
 
@@ -57,18 +65,32 @@ public abstract class AccountTreeController {
 
     protected abstract TreeTableView<Account> getTreeTableView();
 
-    protected abstract ResourceBundle getResources();
+    public abstract Preferences getPreferences();
+
+    protected ResourceBundle resources;
+
+    public void initialize(final URL location, final ResourceBundle resources) {
+        this.resources = resources;
+
+        setAccountVisible(getPreferences().getBoolean(ACCOUNT_VISIBLE, true));
+        setExpenseVisible(getPreferences().getBoolean(EXPENSE_VISIBLE, true));
+        setHiddenVisible(getPreferences().getBoolean(HIDDEN_VISIBLE, true));
+        setIncomeVisible(getPreferences().getBoolean(INCOME_VISIBLE, true));
+
+        addDefaultColumn();
+    }
 
     /**
      * Generates and adds the default tree column for the table
      */
-    protected void initializeTreeTableView() {
+    protected void addDefaultColumn() {
+
         TreeTableView<Account> treeTableView = getTreeTableView();
 
         // force resize policy for better default appearance
         treeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
 
-        TreeTableColumn<Account, String> column = new TreeTableColumn<>(getResources().getString("Column.Account"));
+        TreeTableColumn<Account, String> column = new TreeTableColumn<>(resources.getString("Column.Account"));
         column.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getName()));
 
         treeTableView.getColumns().add(column);
@@ -136,47 +158,59 @@ public abstract class AccountTreeController {
         return false;
     }
 
+    @Override
     public synchronized void setHiddenVisible(final boolean visible) {
         if (hiddenVisible != visible) {
             hiddenVisible = visible;
+            getPreferences().putBoolean(HIDDEN_VISIBLE, visible);
             reload();
         }
     }
 
+    @Override
     public synchronized void setIncomeVisible(final boolean visible) {
         if (incomeVisible != visible) {
             incomeVisible = visible;
+            getPreferences().putBoolean(INCOME_VISIBLE, visible);
             reload();
         }
     }
 
+    @Override
     public synchronized void setExpenseVisible(final boolean visible) {
         if (expenseVisible != visible) {
             expenseVisible = visible;
+            getPreferences().putBoolean(EXPENSE_VISIBLE, visible);
             reload();
         }
     }
 
+    @Override
     public synchronized void setAccountVisible(boolean visible) {
         if (accountVisible != visible) {
             accountVisible = visible;
+            getPreferences().putBoolean(ACCOUNT_VISIBLE, visible);
             reload();
         }
     }
 
-    public synchronized boolean getAccountVisible() {
+    @Override
+    public synchronized boolean isAccountVisible() {
         return accountVisible;
     }
 
-    public synchronized boolean getExpenseVisible() {
+    @Override
+    public synchronized boolean isExpenseVisible() {
         return expenseVisible;
     }
 
-    public synchronized boolean getHiddenVisible() {
+    @Override
+    public synchronized boolean isHiddenVisible() {
         return hiddenVisible;
     }
 
-    public synchronized boolean getIncomeVisible() {
+    @Override
+    public synchronized boolean isIncomeVisible() {
         return incomeVisible;
     }
 
