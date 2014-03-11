@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <TitledPane text="Account Information" VBox.vgrow="ALWAYS">
+            <content>
+                <GridPane hgap="10.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="NEVER"/>
+                        <ColumnConstraints hgrow="NEVER"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                    </rowConstraints>
+                    <children>
+                        <Label text="Name:"/>
+                        <Label text="Description:" GridPane.rowIndex="1"/>
+                        <Label text="Account ID:" GridPane.rowIndex="2"/>
+                        <Label text="Bank ID:" GridPane.rowIndex="3"/>
+                        <Label text="Currency:" GridPane.rowIndex="4"/>
+                        <Label text="Securities:" GridPane.rowIndex="5"/>
+                        <Label text="Account Type:" GridPane.rowIndex="6"/>
+                        <Label text="Account Options:" GridPane.rowIndex="7"/>
+                        <TextField fx:id="nameTextField" GridPane.columnIndex="1"/>
+                        <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <TextField fx:id="accountIdField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <TextField fx:id="bankIdField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                        <ComboBox fx:id="currencyComboBox" minWidth="300.0" GridPane.columnIndex="1"
+                                  GridPane.hgrow="ALWAYS" GridPane.rowIndex="4"/>
+                        <Button fx:id="securitiesButton" minWidth="300.0" mnemonicParsing="false" text="Button"
+                                GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                        <ComboBox fx:id="accountTypeComboBox" minWidth="300.0" prefWidth="150.0"
+                                  GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                        <GridPane hgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="100.0"/>
+                                <ColumnConstraints hgrow="SOMETIMES"/>
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                            </rowConstraints>
+                            <children>
+                                <CheckBox fx:id="lockedCheckBox" mnemonicParsing="false" text="Locked"/>
+                                <CheckBox fx:id="hideAccountCheckBox" mnemonicParsing="false" text="Hide Account"
+                                          GridPane.columnIndex="1"/>
+                                <CheckBox fx:id="placeholderCheckBox" mnemonicParsing="false" text="Placeholder"
+                                          GridPane.rowIndex="1"/>
+                                <CheckBox fx:id="excludeBudgetCheckBox" mnemonicParsing="false"
+                                          text="Exclude From Budgets" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                            </children>
+                        </GridPane>
+                        <Label text="Parent Account:" GridPane.rowIndex="8"/>
+                        <Button mnemonicParsing="false" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+                    </children>
+                </GridPane>
+            </content>
+        </TitledPane>
+        <TitledPane animated="false" text="Notes" VBox.vgrow="ALWAYS">
+            <content>
+                <BorderPane>
+                    <center>
+                        <TextArea fx:id="notesTextArea" minWidth="280.0" prefHeight="100.0" prefWidth="280.0"
+                                  BorderPane.alignment="CENTER"/>
+                    </center>
+                </BorderPane>
+            </content>
+        </TitledPane>
+        <TilePane hgap="10.0" prefRows="1" prefTileHeight="40.0" prefTileWidth="80.0" VBox.vgrow="NEVER">
+            <children>
+                <Button fx:id="okButton" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
+                        text="Ok"/>
+                <Button fx:id="cancelButton" maxHeight="-Infinity" maxWidth="1.7976931348623157E308"
+                        mnemonicParsing="false" text="Cancel"/>
+            </children>
+            <VBox.margin>
+                <Insets left="10.0"/>
+            </VBox.margin>
+        </TilePane>
+    </children>
+</VBox>
