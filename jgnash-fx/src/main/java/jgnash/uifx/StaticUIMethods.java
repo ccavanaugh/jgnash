@@ -77,6 +77,9 @@ public class StaticUIMethods {
 
             dialog.setResizable(false);
 
+            dialog.getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
+            dialog.getScene().getRoot().getStyleClass().addAll("form", "dialog");
+
             StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
 
             dialog.show();

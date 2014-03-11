@@ -6,3 +6,12 @@
     -fx-font-size: 1.1em;
     -fx-font-weight: bold;
 }
+
+.dialog {
+    -fx-padding: 15;
+}
+
+.form {
+    -fx-hgap: 10;
+    -fx-vgap: 10;
+}

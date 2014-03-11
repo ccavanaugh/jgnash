@@ -1,90 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import jgnash.uifx.control.IntegerTextField?>
-
 <?scenebuilder-preview-i18n-resource ../../../../../../jgnash-resources/src/main/resources/jgnash/resource/resource.properties?>
 
-<GridPane gridLinesVisible="false" hgap="14.0" maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-1.0" minWidth="-Infinity" prefHeight="-1.0" vgap="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="jgnash.uifx.controllers.OpenDatabaseController">
-  <children>
-    <Label text="%Label.DatabaseName" GridPane.columnIndex="0" GridPane.rowIndex="0">
-      <labelFor>
-        <TextField id="databaseLocation" fx:id="localDatabaseField" editable="false" prefWidth="200.0" text="" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-      </labelFor>
-    </Label>
-    <fx:reference source="localDatabaseField" />
-    <Button mnemonicParsing="false" onAction="#handleSelectFileAction" text="…" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-    <CheckBox fx:id="remoteServerCheckBox" mnemonicParsing="false" onAction="#handleRemoteAction" text="%Button.RemoteServer" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-    <Label text="%Label.DatabaseServer" GridPane.columnIndex="0" GridPane.rowIndex="2">
-      <labelFor>
-        <TextField fx:id="databaseServerField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-      </labelFor>
-    </Label>
-    <fx:reference source="databaseServerField" />
-    <Label text="%Label.Port" GridPane.columnIndex="0" GridPane.rowIndex="3">
-      <labelFor>
-        <IntegerTextField fx:id="portField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-      </labelFor>
-    </Label>
-    <fx:reference source="portField" />
-    <TitledPane animated="false" collapsible="false" text="%Title.FileLoginCredentials" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4">
-      <content>
-        <GridPane>
-          <children>
-            <Label text="%Label.Password" GridPane.columnIndex="0" GridPane.rowIndex="0">
-              <labelFor>
-                <PasswordField fx:id="passwordField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-              </labelFor>
-            </Label>
-            <fx:reference source="passwordField" />
-          </children>
-          <columnConstraints>
-            <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-          </columnConstraints>
-          <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-          </rowConstraints>
-        </GridPane>
-      </content>
-    </TitledPane>
-    <HBox maxHeight="-Infinity" maxWidth="+Infinity" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
-      <children>
-        <Pane maxWidth="+Infinity" HBox.hgrow="ALWAYS" />
-        <Button mnemonicParsing="false" onAction="#handleOkAction" text="%Button.Ok" HBox.hgrow="NEVER">
-          <HBox.margin>
-            <Insets />
-          </HBox.margin>
-        </Button>
-        <HBox id="HBox" alignment="CENTER">
-          <children>
-            <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" onAction="#handleCancelAction" text="%Button.Cancel" HBox.hgrow="NEVER">
-              <HBox.margin>
-                <Insets left="14.0" />
-              </HBox.margin>
-            </Button>
-          </children>
+<?import jgnash.uifx.control.IntegerTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<GridPane gridLinesVisible="false" maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-1.0"
+          minWidth="-Infinity" prefHeight="-1.0" xmlns:fx="http://javafx.com/fxml/1"
+          xmlns="http://javafx.com/javafx/2.2" fx:controller="jgnash.uifx.controllers.OpenDatabaseController">
+    <children>
+        <Label text="%Label.DatabaseName" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <labelFor>
+                <TextField id="databaseLocation" fx:id="localDatabaseField" editable="false" prefWidth="200.0" text=""
+                           GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            </labelFor>
+        </Label>
+        <fx:reference source="localDatabaseField"/>
+        <Button mnemonicParsing="false" onAction="#handleSelectFileAction" text="…" GridPane.columnIndex="2"
+                GridPane.rowIndex="0"/>
+        <CheckBox fx:id="remoteServerCheckBox" mnemonicParsing="false" onAction="#handleRemoteAction"
+                  text="%Button.RemoteServer" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="1"/>
+        <Label text="%Label.DatabaseServer" GridPane.columnIndex="0" GridPane.rowIndex="2">
+            <labelFor>
+                <TextField fx:id="databaseServerField" prefWidth="200.0" GridPane.columnIndex="1"
+                           GridPane.columnSpan="2" GridPane.rowIndex="2"/>
+            </labelFor>
+        </Label>
+        <fx:reference source="databaseServerField"/>
+        <Label text="%Label.Port" GridPane.columnIndex="0" GridPane.rowIndex="3">
+            <labelFor>
+                <IntegerTextField fx:id="portField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2"
+                                  GridPane.rowIndex="3"/>
+            </labelFor>
+        </Label>
+        <fx:reference source="portField"/>
+        <TitledPane animated="false" collapsible="false" text="%Title.FileLoginCredentials" GridPane.columnIndex="0"
+                    GridPane.columnSpan="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4">
+            <content>
+                <GridPane>
+                    <children>
+                        <Label text="%Label.Password" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <labelFor>
+                                <PasswordField fx:id="passwordField" prefWidth="200.0" GridPane.columnIndex="1"
+                                               GridPane.rowIndex="0"/>
+                            </labelFor>
+                        </Label>
+                        <fx:reference source="passwordField"/>
+                    </children>
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                    </rowConstraints>
+                </GridPane>
+            </content>
+        </TitledPane>
+        <HBox maxHeight="-Infinity" maxWidth="+Infinity" minHeight="-Infinity" minWidth="-Infinity"
+              GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
+            <children>
+                <Pane maxWidth="+Infinity" HBox.hgrow="ALWAYS"/>
+                <Button mnemonicParsing="false" onAction="#handleOkAction" text="%Button.Ok" HBox.hgrow="NEVER">
+                    <HBox.margin>
+                        <Insets/>
+                    </HBox.margin>
+                </Button>
+                <HBox id="HBox" alignment="CENTER">
+                    <children>
+                        <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false"
+                                onAction="#handleCancelAction" text="%Button.Cancel" HBox.hgrow="NEVER">
+                            <HBox.margin>
+                                <Insets left="14.0"/>
+                            </HBox.margin>
+                        </Button>
+                    </children>
+                </HBox>
+            </children>
         </HBox>
-      </children>
-    </HBox>
-  </children>
-  <columnConstraints>
-    <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" />
-    <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" />
-    <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity" />
-  </columnConstraints>
-  <padding>
-    <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
-  </padding>
-  <rowConstraints>
-    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="-1.0" valignment="CENTER" vgrow="NEVER" />
-    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="-1.0" valignment="CENTER" vgrow="NEVER" />
-    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="-1.0" valignment="CENTER" vgrow="NEVER" />
-    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="-1.0" valignment="CENTER" vgrow="NEVER" />
-    <RowConstraints maxHeight="+Infinity" minHeight="-Infinity" prefHeight="-1.0" valignment="CENTER" vgrow="NEVER" />
-    <RowConstraints maxHeight="+Infinity" minHeight="-Infinity" prefHeight="-1.0" vgrow="NEVER" />
-  </rowConstraints>
+    </children>
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity"/>
+        <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity"/>
+        <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="-1.0" valignment="CENTER"
+                        vgrow="NEVER"/>
+        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="-1.0" valignment="CENTER"
+                        vgrow="NEVER"/>
+        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="-1.0" valignment="CENTER"
+                        vgrow="NEVER"/>
+        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="-1.0" valignment="CENTER"
+                        vgrow="NEVER"/>
+        <RowConstraints maxHeight="+Infinity" minHeight="-Infinity" prefHeight="-1.0" valignment="CENTER"
+                        vgrow="NEVER"/>
+        <RowConstraints maxHeight="+Infinity" minHeight="-Infinity" prefHeight="-1.0" vgrow="NEVER"/>
+    </rowConstraints>
 </GridPane>
