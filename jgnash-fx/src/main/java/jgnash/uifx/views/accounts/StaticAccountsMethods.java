@@ -37,6 +37,7 @@ import javafx.stage.StageStyle;
  * @author Craig Cavanaugh
  */
 public class StaticAccountsMethods {
+
     public static void showAccountFilterDialog(final AccountTypeFilter accountTypeFilter) {
         try {
             Stage dialog = new Stage(StageStyle.DECORATED);
@@ -49,6 +50,32 @@ public class StaticAccountsMethods {
 
             AccountTypeFilterFormController controller = loader.getController();
             controller.setAccountTypeFilter(accountTypeFilter);
+
+            dialog.setResizable(false);
+
+            dialog.getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
+            dialog.getScene().getRoot().getStyleClass().addAll("form", "dialog");
+
+            StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
+
+            dialog.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void showAccountPropertyDialog() {
+        try {
+            Stage dialog = new Stage(StageStyle.DECORATED);
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.initOwner(MainApplication.getPrimaryStage());
+            dialog.setTitle(ResourceUtils.getBundle().getString("Title.ModifyAccount"));
+
+            FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("fxml/AccountProperties.fxml"), ResourceUtils.getBundle());
+            dialog.setScene(new Scene(loader.load()));
+
+            //AccountTypeFilterFormController controller = loader.getController();
+            //controller.setAccountTypeFilter(accountTypeFilter);
 
             dialog.setResizable(false);
 

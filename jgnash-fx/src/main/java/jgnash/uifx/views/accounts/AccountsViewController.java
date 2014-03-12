@@ -116,9 +116,13 @@ public class AccountsViewController extends AccountTreeController {
         return preferences;
     }
 
-    @SuppressWarnings("unused")
     @FXML
     public void handleFilterAccountAction(final ActionEvent actionEvent) {
         StaticAccountsMethods.showAccountFilterDialog(this);
+    }
+
+    @FXML
+    public void handleModifyAccountAction(final ActionEvent actionEvent) {
+        StaticAccountsMethods.showAccountPropertyDialog();
     }
 }

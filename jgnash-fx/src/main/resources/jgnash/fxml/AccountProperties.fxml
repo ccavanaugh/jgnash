@@ -14,9 +14,10 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
+
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <TitledPane text="Account Information" VBox.vgrow="ALWAYS">
+        <TitledPane text="Account Information" VBox.vgrow="ALWAYS" collapsible="false">
             <content>
                 <GridPane hgap="10.0">
                     <columnConstraints>
@@ -73,12 +74,12 @@
                             </children>
                         </GridPane>
                         <Label text="Parent Account:" GridPane.rowIndex="8"/>
-                        <Button mnemonicParsing="false" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+                        <Button mnemonicParsing="false" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="8" minWidth="100"/>
                     </children>
                 </GridPane>
             </content>
         </TitledPane>
-        <TitledPane animated="false" text="Notes" VBox.vgrow="ALWAYS">
+        <TitledPane animated="false" text="Notes" VBox.vgrow="ALWAYS" collapsible="false">
             <content>
                 <BorderPane>
                     <center>
