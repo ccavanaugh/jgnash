@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.uifx.controllers;
+package jgnash.uifx.views.accounts;
 
 import java.math.BigDecimal;
 import java.net.URL;
@@ -23,7 +23,8 @@ import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import jgnash.engine.Account;
-import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.control.CommodityFormatTreeTableCell;
+import jgnash.uifx.controllers.AccountTreeController;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -118,6 +119,6 @@ public class AccountsViewController extends AccountTreeController {
     @SuppressWarnings("unused")
     @FXML
     public void handleFilterAccountAction(final ActionEvent actionEvent) {
-        StaticUIMethods.showAccountFilterDialog(this);
+        StaticAccountsMethods.showAccountFilterDialog(this);
     }
 }

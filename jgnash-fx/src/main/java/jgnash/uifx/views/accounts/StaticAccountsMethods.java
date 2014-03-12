@@ -15,42 +15,40 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.uifx;
+package jgnash.uifx.views.accounts;
 
 import java.io.IOException;
 
 import jgnash.MainFX;
+import jgnash.uifx.MainApplication;
+import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.controllers.AccountTypeFilter;
 import jgnash.uifx.controllers.AccountTypeFilterFormController;
 import jgnash.uifx.utils.StageUtils;
 import jgnash.util.ResourceUtils;
 
-import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.controlsfx.dialog.Dialogs;
 
 /**
- * Various static UI support methods
- *
  * @author Craig Cavanaugh
  */
-public class StaticUIMethods {
-
-    private StaticUIMethods() {
-        // Utility class
-    }
-
-    public static void showOpenDialog() {
+public class StaticAccountsMethods {
+    public static void showAccountFilterDialog(final AccountTypeFilter accountTypeFilter) {
         try {
             Stage dialog = new Stage(StageStyle.DECORATED);
             dialog.initModality(Modality.WINDOW_MODAL);
             dialog.initOwner(MainApplication.getPrimaryStage());
-            dialog.setTitle(ResourceUtils.getBundle().getString("Title.Open"));
-            dialog.setScene(new Scene(FXMLLoader.load(MainFX.class.getResource("fxml/OpenDatabaseForm.fxml"), ResourceUtils.getBundle())));
+            dialog.setTitle(ResourceUtils.getBundle().getString("Title.VisibleAccountTypes"));
+
+            FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("fxml/AccountTypeFilterForm.fxml"), ResourceUtils.getBundle());
+            dialog.setScene(new Scene(loader.load()));
+
+            AccountTypeFilterFormController controller = loader.getController();
+            controller.setAccountTypeFilter(accountTypeFilter);
 
             dialog.setResizable(false);
 
@@ -63,30 +61,5 @@ public class StaticUIMethods {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void displayError(final String message) {
-        Dialogs.create()
-                .owner(MainApplication.getPrimaryStage())
-                .title(ResourceUtils.getBundle().getString("Title.Error"))
-                .message(message)
-                .showError();
-
-    }
-
-    public static void displayException(final Throwable exception) {
-        Dialogs.create()
-                .owner(MainApplication.getPrimaryStage())
-                .title(ResourceUtils.getBundle().getString("Title.Error"))
-                .message(exception.getLocalizedMessage())
-                .showException(exception);
-    }
-
-    public static void displayTaskProgress(final Task task) {
-        Dialogs.create()
-                .owner(MainApplication.getPrimaryStage())
-                .lightweight()
-                .title(ResourceUtils.getBundle().getString("Title.PleaseWait"))
-                .showWorkerProgress(task);
     }
 }

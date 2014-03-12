@@ -17,9 +17,7 @@
  */
 package jgnash.uifx.controllers;
 
-import java.math.BigDecimal;
 import java.net.URL;
-import java.text.NumberFormat;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -27,15 +25,12 @@ import jgnash.engine.Account;
 import jgnash.engine.AccountType;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.RootAccount;
-import jgnash.text.CommodityFormat;
 
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
-import javafx.scene.paint.Color;
 
 /**
  * Abstract controller for handling display of the account structure
@@ -212,31 +207,5 @@ public abstract class AccountTreeController implements Initializable, AccountTyp
     @Override
     public synchronized boolean isIncomeVisible() {
         return incomeVisible;
-    }
-
-    /**
-     * Full commodity renderer for account balances
-     */
-    protected static class CommodityFormatTreeTableCell extends TreeTableCell<Account, BigDecimal> {
-        @Override
-        protected void updateItem(final BigDecimal amount, final boolean empty) {
-            super.updateItem(amount, empty);  // required
-
-            if (!empty && amount != null) {
-                Account account = getTreeTableRow().getTreeItem().getValue();
-
-                NumberFormat format = CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
-
-                setText(format.format(amount));
-
-                if (amount.signum() < 0) {
-                    setTextFill(Color.RED);
-                } else {
-                    setTextFill(Color.BLACK);
-                }
-            } else {
-                setText(null);
-            }
-        }
     }
 }
