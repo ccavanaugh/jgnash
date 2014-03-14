@@ -17,20 +17,32 @@
  */
 package jgnash.uifx.views.accounts;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import jgnash.MainFX;
 import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
-import jgnash.uifx.controllers.CurrencyComboBoxController;
+import jgnash.uifx.MainApplication;
+import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.control.CurrencyComboBox;
+import jgnash.uifx.utils.StageUtils;
+import jgnash.util.ResourceUtils;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  * @author Craig Cavanaugh
@@ -62,7 +74,7 @@ public class AccountPropertiesController implements Initializable {
     private TextField bankIdField;
 
     @FXML
-    private ComboBox<CurrencyNode> currencyComboBox;
+    private CurrencyComboBox currencyComboBox;
 
     @FXML
     private CheckBox lockedCheckBox;
@@ -76,13 +88,41 @@ public class AccountPropertiesController implements Initializable {
     @FXML
     private CheckBox excludeBudgetCheckBox;
 
-    private CurrencyComboBoxController currencyComboBoxController;
-
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        currencyComboBoxController = new CurrencyComboBoxController(currencyComboBox);
-
+    public void initialize(final URL location, final ResourceBundle resources) {
         accountTypeComboBox.getItems().addAll(AccountType.values());
         accountTypeComboBox.setValue(AccountType.BANK); // set default
+    }
+
+    public CurrencyNode getSelectedCurrency() {
+        return currencyComboBox.getValue();
+    }
+
+    public void setSelectedCurrency(final CurrencyNode currency) {
+        currencyComboBox.setValue(currency);
+    }
+
+    @FXML
+    private void handleParentAccountAction(final ActionEvent actionEvent) {
+        try {
+            Stage dialog = new Stage(StageStyle.DECORATED);
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.initOwner(MainApplication.getPrimaryStage());
+            dialog.setTitle(ResourceUtils.getBundle().getString("Title.ParentAccount"));
+
+            FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("fxml/SelectAccountForm.fxml"), ResourceUtils.getBundle());
+            dialog.setScene(new Scene(loader.load()));
+
+            dialog.setResizable(false);
+
+            dialog.getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
+            dialog.getScene().getRoot().getStyleClass().addAll("form", "dialog");
+
+            StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
+
+            dialog.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

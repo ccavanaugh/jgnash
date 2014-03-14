@@ -74,9 +74,6 @@ public class StaticAccountsMethods {
             FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("fxml/AccountProperties.fxml"), ResourceUtils.getBundle());
             dialog.setScene(new Scene(loader.load()));
 
-            //AccountTypeFilterFormController controller = loader.getController();
-            //controller.setAccountTypeFilter(accountTypeFilter);
-
             dialog.setResizable(false);
 
             dialog.getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);

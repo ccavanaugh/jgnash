@@ -15,8 +15,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.uifx.controllers;
+package jgnash.uifx.control;
 
+import java.io.IOException;
 import java.util.List;
 
 import jgnash.engine.CurrencyNode;
@@ -30,33 +31,48 @@ import jgnash.engine.message.MessageProperty;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 
 /**
- * ComboBox controller for currency selection
+ * ComboBox that allows selection of a CurrencyNode and manages it's own model
  *
  * @author Craig Cavanaugh
  */
-public class CurrencyComboBoxController implements MessageListener {
+public class CurrencyComboBox extends ComboBox<CurrencyNode> implements MessageListener{
 
     /** Model for the ComboBox */
     private ObservableList<CurrencyNode> items;
 
-    public CurrencyComboBoxController(ComboBox<CurrencyNode> comboBox) {
+    public CurrencyComboBox() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("CurrencyComboBox.fxml"));
+        loader.setRoot(this);
+        loader.setController(this);
+
+        try {
+            loader.load();
+        } catch (final IOException exception) {
+            throw new RuntimeException(exception);
+        }
+
+        Platform.runLater(this::loadModel); // lazy load to let the ui build happen faster
+    }
+
+    private void loadModel() {
 
         final List<CurrencyNode> nodeList = EngineFactory.getEngine(EngineFactory.DEFAULT).getCurrencies();
         final CurrencyNode defaultCurrency = EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency();
 
         // extract and reuse the default model
-        items = comboBox.getItems();
+        items = getItems();
 
         // warp in a sorted list
-        comboBox.setItems(new SortedList<>(items, null));
+        setItems(new SortedList<>(items, null));
 
         items.addAll(nodeList);
-        comboBox.setValue(defaultCurrency);
+        setValue(defaultCurrency);
 
-        MessageBus.getInstance().registerListener(this, MessageChannel.COMMODITY);
+        MessageBus.getInstance().registerListener(this, MessageChannel.COMMODITY, MessageChannel.SYSTEM);
     }
 
     @Override
@@ -77,6 +93,8 @@ public class CurrencyComboBoxController implements MessageListener {
                         items.removeAll(node);
                         items.add(node);
                         break;
+                    case FILE_CLOSING:
+                        items.clear();
                     default:
                         break;
                 }
