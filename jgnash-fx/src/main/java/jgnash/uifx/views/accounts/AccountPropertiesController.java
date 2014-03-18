@@ -22,14 +22,17 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import jgnash.MainFX;
+import jgnash.engine.Account;
 import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
+import jgnash.engine.EngineFactory;
 import jgnash.uifx.MainApplication;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.CurrencyComboBox;
 import jgnash.uifx.utils.StageUtils;
 import jgnash.util.ResourceUtils;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -88,6 +91,9 @@ public class AccountPropertiesController implements Initializable {
     @FXML
     private CheckBox excludeBudgetCheckBox;
 
+    @FXML
+    private Button parentAccountButton;
+
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         accountTypeComboBox.getItems().addAll(AccountType.values());
@@ -106,12 +112,14 @@ public class AccountPropertiesController implements Initializable {
     private void handleParentAccountAction(final ActionEvent actionEvent) {
         try {
             Stage dialog = new Stage(StageStyle.DECORATED);
-            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.initOwner(MainApplication.getPrimaryStage());
             dialog.setTitle(ResourceUtils.getBundle().getString("Title.ParentAccount"));
 
             FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("fxml/SelectAccountForm.fxml"), ResourceUtils.getBundle());
             dialog.setScene(new Scene(loader.load()));
+
+            SelectAccountController controller = loader.getController();
 
             dialog.setResizable(false);
 
@@ -120,7 +128,17 @@ public class AccountPropertiesController implements Initializable {
 
             StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
 
-            dialog.show();
+            controller.setSelectedAccount(EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount());
+
+            dialog.showAndWait();
+
+            Account parentAccount = controller.getSelectedAccount();
+
+            if (parentAccount != null) {
+                Platform.runLater(() -> parentAccountButton.setText(parentAccount.getName()));
+            }
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }

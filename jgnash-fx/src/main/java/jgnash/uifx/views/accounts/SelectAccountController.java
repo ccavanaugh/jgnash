@@ -56,7 +56,9 @@ public class SelectAccountController implements Initializable {
         buttonBar.addButton(cancelButton, ButtonBar.ButtonType.CANCEL_CLOSE);
 
         okButton.setOnAction(event -> {
-            selectedAccount = treeView.getSelectionModel().getSelectedItem().getValue();
+            if (treeView.getSelectionModel().getSelectedItem() != null) {
+                selectedAccount = treeView.getSelectionModel().getSelectedItem().getValue();
+            }
             ((Stage) okButton.getScene().getWindow()).close();
         });
 
@@ -70,6 +72,20 @@ public class SelectAccountController implements Initializable {
 
     public Account getSelectedAccount() {
         return selectedAccount;
+    }
+
+    // FIXME: This does not work...
+    public void setSelectedAccount(final Account account) {
+
+        for (int i = 0; i < treeView.getExpandedItemCount(); i++) {
+            TreeItem<Account> treeItem = treeView.getTreeItem(i);
+
+            if (treeItem.getValue() == account) {
+                System.out.println("found it");
+                Platform.runLater(() -> treeView.getSelectionModel().select(treeItem));
+                break;
+            }
+        }
     }
 
     protected void loadAccountTree() {

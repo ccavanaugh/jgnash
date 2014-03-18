@@ -76,7 +76,7 @@
                             </children>
                         </GridPane>
                         <Label text="Parent Account:" GridPane.rowIndex="8"/>
-                        <Button mnemonicParsing="false" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="8" minWidth="100" onAction="#handleParentAccountAction"/>
+                        <Button fx:id="parentAccountButton" mnemonicParsing="false" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="8" minWidth="100" onAction="#handleParentAccountAction"/>
                     </children>
                 </GridPane>
             </content>
