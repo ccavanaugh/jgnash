@@ -20,6 +20,9 @@ package jgnash.uifx.views.accounts;
 import java.io.IOException;
 
 import jgnash.MainFX;
+import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.uifx.MainApplication;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.controllers.AccountTypeFilter;
@@ -34,6 +37,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 /**
+ * Static support methods for Account manipulation
+ *
  * @author Craig Cavanaugh
  */
 public class StaticAccountsMethods {
@@ -53,9 +58,7 @@ public class StaticAccountsMethods {
 
             dialog.setResizable(false);
 
-            dialog.getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
-            dialog.getScene().getRoot().getStyleClass().addAll("form", "dialog");
-
+            StageUtils.applyDialogFormCSS(dialog);
             StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
 
             dialog.show();
@@ -64,7 +67,7 @@ public class StaticAccountsMethods {
         }
     }
 
-    public static void showAccountPropertyDialog() {
+    public static void showNewAccountPropertiesDialog() {
         try {
             Stage dialog = new Stage(StageStyle.DECORATED);
             dialog.initModality(Modality.WINDOW_MODAL);
@@ -74,14 +77,59 @@ public class StaticAccountsMethods {
             FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("fxml/AccountProperties.fxml"), ResourceUtils.getBundle());
             dialog.setScene(new Scene(loader.load()));
 
+            AccountPropertiesController controller = loader.getController();
+
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            controller.setSelectedCurrency(engine.getDefaultCurrency());
+            controller.setParentAccount(engine.getRootAccount());
+
             dialog.setResizable(false);
 
-            dialog.getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
-            dialog.getScene().getRoot().getStyleClass().addAll("form", "dialog");
-
+            StageUtils.applyDialogFormCSS(dialog);
             StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
 
-            dialog.show();
+            dialog.showAndWait();
+
+
+            if (controller.getResult()) {
+                Account account = controller.getTemplate();
+
+                engine.addAccount(account.getParent(), account);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void showModifyAccountProperties(final Account account) {
+        try {
+            Stage dialog = new Stage(StageStyle.DECORATED);
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.initOwner(MainApplication.getPrimaryStage());
+            dialog.setTitle(ResourceUtils.getBundle().getString("Title.ModifyAccount"));
+
+            FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("fxml/AccountProperties.fxml"), ResourceUtils.getBundle());
+            dialog.setScene(new Scene(loader.load()));
+
+            AccountPropertiesController controller = loader.getController();
+
+            controller.loadProperties(account);
+
+            dialog.setResizable(false);
+
+            StageUtils.applyDialogFormCSS(dialog);
+            StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
+
+            dialog.showAndWait();
+
+            if (controller.getResult()) {
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+                Account template = controller.getTemplate();
+                engine.modifyAccount(template, account);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

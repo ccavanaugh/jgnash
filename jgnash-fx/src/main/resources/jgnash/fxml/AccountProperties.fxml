@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import jgnash.uifx.control.CurrencyComboBox?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
@@ -12,11 +12,8 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
-
-<?import jgnash.uifx.control.CurrencyComboBox?>
-
+<?import org.controlsfx.control.ButtonBar?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.accounts.AccountPropertiesController">
     <children>
         <TitledPane text="Account Information" VBox.vgrow="ALWAYS" collapsible="false">
@@ -91,16 +88,6 @@
                 </BorderPane>
             </content>
         </TitledPane>
-        <TilePane hgap="10.0" prefRows="1" prefTileHeight="40.0" prefTileWidth="80.0" VBox.vgrow="NEVER">
-            <children>
-                <Button fx:id="okButton" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false"
-                        text="Ok"/>
-                <Button fx:id="cancelButton" maxHeight="-Infinity" maxWidth="1.7976931348623157E308"
-                        mnemonicParsing="false" text="Cancel"/>
-            </children>
-            <VBox.margin>
-                <Insets left="10.0"/>
-            </VBox.margin>
-        </TilePane>
+        <ButtonBar fx:id="buttonBar" VBox.vgrow="NEVER" buttonUniformSize="true"/>
     </children>
 </VBox>

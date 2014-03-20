@@ -25,7 +25,6 @@ import jgnash.MainFX;
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
-import jgnash.engine.EngineFactory;
 import jgnash.uifx.MainApplication;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.CurrencyComboBox;
@@ -46,20 +45,22 @@ import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.controlsfx.control.ButtonBar;
 
 /**
+ *  Loads all account properties into a form and returns a template Account based on the form properties
+ *
  * @author Craig Cavanaugh
  */
 public class AccountPropertiesController implements Initializable {
+
+    private boolean result = false;
 
     @FXML
     private ComboBox<AccountType> accountTypeComboBox;
 
     @FXML
-    private Button okButton;
-
-    @FXML
-    private Button cancelButton;
+    private ButtonBar buttonBar;
 
     @FXML
     private TextArea notesTextArea;
@@ -94,14 +95,29 @@ public class AccountPropertiesController implements Initializable {
     @FXML
     private Button parentAccountButton;
 
+    private Account parentAccount;
+
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         accountTypeComboBox.getItems().addAll(AccountType.values());
         accountTypeComboBox.setValue(AccountType.BANK); // set default
-    }
 
-    public CurrencyNode getSelectedCurrency() {
-        return currencyComboBox.getValue();
+        // Create and add the ok and cancel buttons to the button bar
+        Button okButton = new Button(resources.getString("Button.Ok"));
+        Button cancelButton = new Button(resources.getString("Button.Cancel"));
+
+        buttonBar.addButton(okButton, ButtonBar.ButtonType.OK_DONE);
+        buttonBar.addButton(cancelButton, ButtonBar.ButtonType.CANCEL_CLOSE);
+
+        okButton.setOnAction(event -> {
+            result = true;
+            ((Stage) okButton.getScene().getWindow()).close();
+        });
+
+        cancelButton.setOnAction(event -> {
+            result = false;
+            ((Stage) cancelButton.getScene().getWindow()).close();
+        });
     }
 
     public void setSelectedCurrency(final CurrencyNode currency) {
@@ -128,19 +144,69 @@ public class AccountPropertiesController implements Initializable {
 
             StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
 
-            controller.setSelectedAccount(EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount());
+            if (parentAccount != null) {
+                controller.setSelectedAccount(parentAccount);
+            }
 
             dialog.showAndWait();
 
-            Account parentAccount = controller.getSelectedAccount();
-
-            if (parentAccount != null) {
-                Platform.runLater(() -> parentAccountButton.setText(parentAccount.getName()));
-            }
-
-
-        } catch (IOException e) {
+            setParentAccount(controller.getSelectedAccount());
+        } catch (final IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean getResult() {
+        return result;
+    }
+
+    public void setParentAccount(final Account parentAccount) {
+        this.parentAccount = parentAccount;
+
+        Platform.runLater(() -> {
+            if (parentAccount != null) {
+                parentAccountButton.setText(parentAccount.getName());
+            } else {
+                parentAccountButton.setText("FIXME");
+            }
+        });
+    }
+
+    public Account getTemplate() {
+        Account account = new Account(accountTypeComboBox.getValue(), currencyComboBox.getValue());
+        account.setParent(parentAccount);
+
+        account.setAccountNumber(accountIdField.getText());
+        account.setDescription(descriptionTextField.getText());
+        account.setBankId(bankIdField.getText());
+        account.setExcludedFromBudget(excludeBudgetCheckBox.isSelected());
+        account.setLocked(lockedCheckBox.isSelected());
+        account.setName(nameTextField.getText());
+        account.setNotes(notesTextArea.getText());
+        account.setPlaceHolder(placeholderCheckBox.isSelected());
+        account.setVisible(!hideAccountCheckBox.isSelected());
+
+        //account.addSecurity()
+
+        return account;
+    }
+
+    public void loadProperties(final Account account) {
+        Platform.runLater(() -> {
+            setParentAccount(account.getParent());
+            setSelectedCurrency(account.getCurrencyNode());
+
+            accountIdField.setText(account.getAccountNumber());
+            descriptionTextField.setText(account.getDescription());
+            bankIdField.setText(account.getBankId());
+            excludeBudgetCheckBox.setSelected(account.isExcludedFromBudget());
+            lockedCheckBox.setSelected(account.isLocked());
+            nameTextField.setText(account.getName());
+            notesTextArea.setText(account.getNotes());
+            placeholderCheckBox.setSelected(account.isPlaceHolder());
+            hideAccountCheckBox.setSelected(!account.isVisible());
+
+            // set securities
+        });
     }
 }

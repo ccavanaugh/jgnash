@@ -23,6 +23,7 @@ import java.util.ResourceBundle;
 import jgnash.engine.Account;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.RootAccount;
+import jgnash.uifx.utils.TreeSearch;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -34,6 +35,8 @@ import javafx.stage.Stage;
 import org.controlsfx.control.ButtonBar;
 
 /**
+ * Controller for selecting and account from a tree
+ *
  * @author Craig Cavanaugh
  */
 public class SelectAccountController implements Initializable {
@@ -49,6 +52,7 @@ public class SelectAccountController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
 
+        // Create and add the ok and cancel buttons to the button bar
         Button okButton = new Button(resources.getString("Button.Ok"));
         Button cancelButton = new Button(resources.getString("Button.Cancel"));
 
@@ -64,27 +68,21 @@ public class SelectAccountController implements Initializable {
 
         cancelButton.setOnAction(event -> {
             selectedAccount = null;  // clear selections
-            ((Stage) okButton.getScene().getWindow()).close();
+            ((Stage) cancelButton.getScene().getWindow()).close();
         });
 
-        Platform.runLater(this::loadAccountTree);
+        loadAccountTree();
     }
 
     public Account getSelectedAccount() {
         return selectedAccount;
     }
 
-    // FIXME: This does not work...
     public void setSelectedAccount(final Account account) {
+       final TreeItem<Account> treeItem = TreeSearch.findTreeItem(treeView.getRoot(), account);
 
-        for (int i = 0; i < treeView.getExpandedItemCount(); i++) {
-            TreeItem<Account> treeItem = treeView.getTreeItem(i);
-
-            if (treeItem.getValue() == account) {
-                System.out.println("found it");
-                Platform.runLater(() -> treeView.getSelectionModel().select(treeItem));
-                break;
-            }
+        if (treeItem != null) {
+            Platform.runLater(() -> treeView.getSelectionModel().select(treeItem));
         }
     }
 
