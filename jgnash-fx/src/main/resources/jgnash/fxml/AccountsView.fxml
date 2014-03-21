@@ -9,7 +9,7 @@
     <top>
         <ToolBar>
             <items>
-                <Button fx:id="newButton" mnemonicParsing="false" text="%Button.New"/>
+                <Button fx:id="newButton" mnemonicParsing="false" onAction="#handleNewAccountAction" text="%Button.New"/>
                 <Button fx:id="modifyButton" mnemonicParsing="false" onAction="#handleModifyAccountAction" text="%Button.Modify"/>
                 <Button fx:id="reconcileButton" mnemonicParsing="false" text="%Button.Reconcile"/>
                 <Button fx:id="deleteButton" mnemonicParsing="false" text="%Button.Delete"/>

@@ -123,6 +123,15 @@ public class AccountsViewController extends AccountTreeController {
 
     @FXML
     public void handleModifyAccountAction(final ActionEvent actionEvent) {
+        Account account = getSelectedAccount();
+
+        if (account != null) {
+            StaticAccountsMethods.showModifyAccountProperties(account);
+        }
+    }
+
+    @FXML
+    public void handleNewAccountAction(final ActionEvent actionEvent) {
         StaticAccountsMethods.showNewAccountPropertiesDialog();
     }
 }

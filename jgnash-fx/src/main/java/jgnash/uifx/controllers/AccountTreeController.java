@@ -25,7 +25,12 @@ import jgnash.engine.Account;
 import jgnash.engine.AccountType;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.RootAccount;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageListener;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TreeItem;
@@ -41,7 +46,7 @@ import javafx.scene.control.TreeTableView;
  *
  * @see com.sun.javafx.scene.control.skin.TreeTableViewSkin#resizeColumnToFitContent(javafx.scene.control.TreeTableColumn, int)
  */
-public abstract class AccountTreeController implements Initializable, AccountTypeFilter {
+public abstract class AccountTreeController implements Initializable, AccountTypeFilter, MessageListener {
 
     private static final String HIDDEN_VISIBLE = "HiddenVisible";
     private static final String EXPENSE_VISIBLE = "ExpenseVisible";
@@ -73,6 +78,8 @@ public abstract class AccountTreeController implements Initializable, AccountTyp
         setIncomeVisible(getPreferences().getBoolean(INCOME_VISIBLE, true));
 
         addDefaultColumn();
+
+        MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT);
     }
 
     /**
@@ -110,18 +117,16 @@ public abstract class AccountTreeController implements Initializable, AccountTyp
         synchronized (lock) {
             Account parent = parentItem.getValue();
 
-            for (Account child : parent.getChildren()) {
-                if (isAccountVisible(child)) {
-                    TreeItem<Account> childItem = new TreeItem<>(child);
-                    childItem.setExpanded(true);
+            parent.getChildren().stream().filter(this::isAccountVisible).forEach(child -> {
+                TreeItem<Account> childItem = new TreeItem<>(child);
+                childItem.setExpanded(true);
 
-                    parentItem.getChildren().add(childItem);
+                parentItem.getChildren().add(childItem);
 
-                    if (child.getChildCount() > 0) {
-                        loadChildren(childItem);
-                    }
+                if (child.getChildCount() > 0) {
+                    loadChildren(childItem);
                 }
-            }
+            });
         }
     }
 
@@ -151,6 +156,35 @@ public abstract class AccountTreeController implements Initializable, AccountTyp
             }
         }
         return false;
+    }
+
+    @Override
+    public void messagePosted(final Message event) {
+
+        Platform.runLater(() -> {
+            switch (event.getEvent()) {
+                case ACCOUNT_ADD:
+                case ACCOUNT_MODIFY:
+                case ACCOUNT_REMOVE:
+                    reload();
+                    break;
+                case FILE_CLOSING:
+                    MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT);
+                    break;
+                default:
+                    break;
+            }
+        });
+    }
+
+    protected Account getSelectedAccount() {
+        final TreeItem<Account> treeItem = getTreeTableView().getSelectionModel().getSelectedItem();
+
+        if (treeItem != null) {
+            return treeItem.getValue();
+        }
+
+        return null;
     }
 
     @Override
