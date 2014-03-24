@@ -16,7 +16,7 @@
 <?import org.controlsfx.control.ButtonBar?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.accounts.AccountPropertiesController">
     <children>
-        <TitledPane text="Account Information" VBox.vgrow="ALWAYS" collapsible="false">
+        <TitledPane text="%Title.AccountInfo" VBox.vgrow="ALWAYS" collapsible="false">
             <content>
                 <GridPane hgap="10.0">
                     <columnConstraints>
@@ -35,21 +35,21 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
                     </rowConstraints>
                     <children>
-                        <Label text="Name:"/>
-                        <Label text="Description:" GridPane.rowIndex="1"/>
-                        <Label text="Account ID:" GridPane.rowIndex="2"/>
-                        <Label text="Bank ID:" GridPane.rowIndex="3"/>
-                        <Label text="Currency:" GridPane.rowIndex="4"/>
-                        <Label text="Securities:" GridPane.rowIndex="5"/>
-                        <Label text="Account Type:" GridPane.rowIndex="6"/>
-                        <Label text="Account Options:" GridPane.rowIndex="7"/>
+                        <Label text="%Label.Name"/>
+                        <Label text="%Label.Description" GridPane.rowIndex="1"/>
+                        <Label text="%Label.AccountID" GridPane.rowIndex="2"/>
+                        <Label text="%Label.BankID" GridPane.rowIndex="3"/>
+                        <Label text="%Label.Currency" GridPane.rowIndex="4"/>
+                        <Label text="%Label.Securities" GridPane.rowIndex="5"/>
+                        <Label text="%Label.AccountType" GridPane.rowIndex="6"/>
+                        <Label text="%Label.AccountOptions" GridPane.rowIndex="7"/>
                         <TextField fx:id="nameTextField" GridPane.columnIndex="1"/>
                         <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                         <TextField fx:id="accountIdField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
                         <TextField fx:id="bankIdField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
                         <CurrencyComboBox fx:id="currencyComboBox" minWidth="300.0" GridPane.columnIndex="1"
                                   GridPane.hgrow="ALWAYS" GridPane.rowIndex="4"/>
-                        <Button fx:id="securitiesButton" minWidth="300.0" mnemonicParsing="false" text="Button"
+                        <Button fx:id="securitiesButton" onAction="#handleSecuritiesButtonAction" minWidth="300.0" mnemonicParsing="false" text="%Word.None"
                                 GridPane.columnIndex="1" GridPane.rowIndex="5"/>
                         <ComboBox fx:id="accountTypeComboBox" minWidth="300.0" prefWidth="150.0"
                                   GridPane.columnIndex="1" GridPane.rowIndex="6"/>
@@ -63,22 +63,22 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
                             </rowConstraints>
                             <children>
-                                <CheckBox fx:id="lockedCheckBox" mnemonicParsing="false" text="Locked"/>
-                                <CheckBox fx:id="hideAccountCheckBox" mnemonicParsing="false" text="Hide Account"
+                                <CheckBox fx:id="lockedCheckBox" mnemonicParsing="false" text="%Button.Locked"/>
+                                <CheckBox fx:id="hideAccountCheckBox" mnemonicParsing="false" text="%Button.HideAccount"
                                           GridPane.columnIndex="1"/>
-                                <CheckBox fx:id="placeholderCheckBox" mnemonicParsing="false" text="Placeholder"
+                                <CheckBox fx:id="placeholderCheckBox" mnemonicParsing="false" text="%Button.PlaceHolder"
                                           GridPane.rowIndex="1"/>
                                 <CheckBox fx:id="excludeBudgetCheckBox" mnemonicParsing="false"
-                                          text="Exclude From Budgets" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                          text="%Button.ExcludeFromBudget" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                             </children>
                         </GridPane>
-                        <Label text="Parent Account:" GridPane.rowIndex="8"/>
-                        <Button fx:id="parentAccountButton" mnemonicParsing="false" text="Button" GridPane.columnIndex="1" GridPane.rowIndex="8" minWidth="100" onAction="#handleParentAccountAction"/>
+                        <Label text="%Title.ParentAccount" GridPane.rowIndex="8"/>
+                        <Button fx:id="parentAccountButton" mnemonicParsing="false" text="Root" GridPane.columnIndex="1" GridPane.rowIndex="8" minWidth="100" onAction="#handleParentAccountAction"/>
                     </children>
                 </GridPane>
             </content>
         </TitledPane>
-        <TitledPane animated="false" text="Notes" VBox.vgrow="ALWAYS" collapsible="false">
+        <TitledPane animated="false" text="%Title.Notes" VBox.vgrow="ALWAYS" collapsible="false">
             <content>
                 <BorderPane>
                     <center>

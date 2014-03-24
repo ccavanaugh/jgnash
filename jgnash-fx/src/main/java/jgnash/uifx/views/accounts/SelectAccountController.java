@@ -35,7 +35,7 @@ import javafx.stage.Stage;
 import org.controlsfx.control.ButtonBar;
 
 /**
- * Controller for selecting and account from a tree
+ * Controller for selecting an account from a tree
  *
  * @author Craig Cavanaugh
  */
