@@ -101,6 +101,7 @@ public class SelectSecuritiesController implements Initializable {
 
         final ObservableList<LockedDecorator> items = checkListView.getItems();
 
+        // Add all known securities to the list
         for (SecurityNode node : engine.getSecurities()) {
             if (usedSecurities.contains(node)) {
                 items.add(new LockedDecorator(node, true));
@@ -109,6 +110,15 @@ public class SelectSecuritiesController implements Initializable {
             }
         }
 
+        // Select the used securities
+        if (account != null) {
+            for (SecurityNode node : account.getSecurities()) {
+                items.stream().filter(decorator -> decorator.securityNode.equals(node)).forEach(decorator ->
+                        Platform.runLater(() -> checkListView.getCheckModel().select(decorator)));
+            }
+        }
+
+        // Force selection of used account securities
         forceLockedSecurities();
     }
 

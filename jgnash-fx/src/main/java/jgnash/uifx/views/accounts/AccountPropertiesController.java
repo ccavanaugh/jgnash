@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Logger;
 
 import jgnash.MainFX;
 import jgnash.engine.Account;
@@ -181,6 +182,10 @@ public class AccountPropertiesController implements Initializable {
         return result;
     }
 
+    public Set<SecurityNode> getSecurityNodes() {
+        return securityNodeSet;
+    }
+
     public void setParentAccount(final Account parentAccount) {
         this.parentAccount = parentAccount;
 
@@ -193,17 +198,23 @@ public class AccountPropertiesController implements Initializable {
 
     public Account getTemplate() {
         Account account = new Account(accountTypeComboBox.getValue(), currencyComboBox.getValue());
-        account.setParent(parentAccount);
 
         account.setAccountNumber(accountIdField.getText());
-        account.setDescription(descriptionTextField.getText());
         account.setBankId(bankIdField.getText());
-        account.setExcludedFromBudget(excludeBudgetCheckBox.isSelected());
-        account.setLocked(lockedCheckBox.isSelected());
         account.setName(nameTextField.getText());
+        account.setDescription(descriptionTextField.getText());
         account.setNotes(notesTextArea.getText());
+        account.setLocked(lockedCheckBox.isSelected());
         account.setPlaceHolder(placeholderCheckBox.isSelected());
+
+        if (parentAccount != baseAccount) {
+            account.setParent(parentAccount);
+        } else {
+            Logger.getLogger(AccountPropertiesController.class.getName()).warning("Prevented an attempt to assign an account's parent to itself");
+        }
+
         account.setVisible(!hideAccountCheckBox.isSelected());
+        account.setExcludedFromBudget(excludeBudgetCheckBox.isSelected());
 
         if (account.getAccountType().getAccountGroup().equals(AccountGroup.INVEST)) {
             securityNodeSet.forEach(account::addSecurity);
@@ -214,28 +225,32 @@ public class AccountPropertiesController implements Initializable {
 
     public void loadProperties(final Account account) {
         baseAccount = account;
-
         securityNodeSet.clear();
-        securityNodeSet.addAll(account.getSecurities());
 
         Platform.runLater(() -> {
             setParentAccount(account.getParent());
+            nameTextField.setText(account.getName());
+            descriptionTextField.setText(account.getDescription());
+            accountIdField.setText(account.getAccountNumber());
+            bankIdField.setText(account.getBankId());
             setSelectedCurrency(account.getCurrencyNode());
+            notesTextArea.setText(account.getNotes());
+            lockedCheckBox.setSelected(account.isLocked());
+            hideAccountCheckBox.setSelected(!account.isVisible());
+            excludeBudgetCheckBox.setSelected(account.isExcludedFromBudget());
+
+            if (account.getAccountType().getAccountGroup() == AccountGroup.INVEST) {
+                securityNodeSet.addAll(account.getSecurities());
+                updateCommodityText();
+            }
 
             accountTypeComboBox.setValue(account.getAccountType());
 
-            accountIdField.setText(account.getAccountNumber());
-            descriptionTextField.setText(account.getDescription());
-            bankIdField.setText(account.getBankId());
-            excludeBudgetCheckBox.setSelected(account.isExcludedFromBudget());
-            lockedCheckBox.setSelected(account.isLocked());
-            nameTextField.setText(account.getName());
-            notesTextArea.setText(account.getNotes());
-            placeholderCheckBox.setSelected(account.isPlaceHolder());
-            hideAccountCheckBox.setSelected(!account.isVisible());
-
-            // set securities
-            updateCommodityText();
+            if (account.getTransactionCount() > 0) {
+                placeholderCheckBox.setDisable(true);
+            } else {
+                placeholderCheckBox.setSelected(account.isPlaceHolder());
+            }
         });
     }
 

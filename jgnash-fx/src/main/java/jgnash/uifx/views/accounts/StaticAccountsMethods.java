@@ -21,6 +21,7 @@ import java.io.IOException;
 
 import jgnash.MainFX;
 import jgnash.engine.Account;
+import jgnash.engine.AccountGroup;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.MainApplication;
@@ -90,7 +91,6 @@ public class StaticAccountsMethods {
 
             dialog.showAndWait();
 
-
             if (controller.getResult()) {
                 Account account = controller.getTemplate();
 
@@ -127,7 +127,16 @@ public class StaticAccountsMethods {
                 final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
                 Account template = controller.getTemplate();
-                engine.modifyAccount(template, account);
+
+                if (!engine.modifyAccount(template, account)) {
+                    StaticUIMethods.displayError(ResourceUtils.getBundle().getString("Message.Error.AccountUpdate"));
+                }
+
+                if (account.getAccountType().getAccountGroup() == AccountGroup.INVEST) {
+                    if (!engine.updateAccountSecurities(account, controller.getSecurityNodes())) {
+                        StaticUIMethods.displayError(ResourceUtils.getBundle().getString("Message.Error.SecurityAccountUpdate"));
+                    }
+                }
             }
 
         } catch (IOException e) {
