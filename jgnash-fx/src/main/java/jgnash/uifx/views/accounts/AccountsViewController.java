@@ -23,6 +23,8 @@ import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import jgnash.engine.Account;
+import jgnash.engine.EngineFactory;
+import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.CommodityFormatTreeTableCell;
 import jgnash.uifx.controllers.AccountTreeController;
 
@@ -77,6 +79,11 @@ public class AccountsViewController extends AccountTreeController {
         filterButton.setGraphic(FontAwesome.Glyph.FILTER.create());
         zoomButton.setGraphic(FontAwesome.Glyph.ZOOM_IN.create());
 
+        modifyButton.setDisable(true);
+        deleteButton.setDisable(true);
+        reconcileButton.setDisable(true);
+        zoomButton.setDisable(true);
+
         initializeTreeTableView();
 
         Platform.runLater(this::loadAccountTree);
@@ -104,6 +111,35 @@ public class AccountsViewController extends AccountTreeController {
         typeColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getAccountType().toString()));
 
         treeTableView.getColumns().addAll(entriesColumn, balanceColumn, reconciledBalanceColumn, currencyColumn, typeColumn);
+
+        installSelectionListener();
+    }
+
+    private void installSelectionListener() {
+        treeTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                updateButtonStates(newValue.getValue());
+            } else {
+                updateButtonStates(null);
+            }
+        });
+    }
+
+    private void updateButtonStates(final Account account) {
+        Platform.runLater(() -> {
+            if (account != null) {
+                final int count = account.getTransactionCount();
+
+                deleteButton.setDisable(count > 0 || account.getChildCount() > 0);
+                reconcileButton.setDisable(count <= 0);
+            } else {
+                deleteButton.setDisable(true);
+                reconcileButton.setDisable(true);
+            }
+
+            modifyButton.setDisable(account == null);
+            zoomButton.setDisable(account == null);
+        });
     }
 
     @Override
@@ -123,7 +159,7 @@ public class AccountsViewController extends AccountTreeController {
 
     @FXML
     public void handleModifyAccountAction(final ActionEvent actionEvent) {
-        Account account = getSelectedAccount();
+        final Account account = getSelectedAccount();
 
         if (account != null) {
             StaticAccountsMethods.showModifyAccountProperties(account);
@@ -133,5 +169,16 @@ public class AccountsViewController extends AccountTreeController {
     @FXML
     public void handleNewAccountAction(final ActionEvent actionEvent) {
         StaticAccountsMethods.showNewAccountPropertiesDialog();
+    }
+
+    @FXML
+    public void handleDeleteAccountAction(final ActionEvent actionEvent) {
+        final Account account = getSelectedAccount();
+
+        if (account != null) {
+            if (!EngineFactory.getEngine(EngineFactory.DEFAULT).removeAccount(account)) {
+                StaticUIMethods.displayError(resources.getString("Message.Error.AccountRemove"));
+            }
+        }
     }
 }
