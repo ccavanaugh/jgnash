@@ -30,6 +30,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
 
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -37,6 +38,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.controlsfx.control.ButtonBar;
 import org.controlsfx.control.CheckListView;
 
@@ -61,7 +63,7 @@ public class SelectSecuritiesController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
 
-        //checkListView.setCellFactory(cell -> new LockedCheckBoxListCell());
+        checkListView.setCellFactory(listView -> new LockedCheckBoxListCell(checkListView::getItemBooleanProperty));
 
         // Create and add the ok and cancel buttons to the button bar
         Button okButton = new Button(resources.getString("Button.Ok"));
@@ -155,7 +157,14 @@ public class SelectSecuritiesController implements Initializable {
         return securityNodeSet;
     }
 
+    /**
+     * Provides visual feedback that item is locked and may not be unchecked
+     */
     private class LockedCheckBoxListCell extends CheckBoxListCell<LockedDecorator> {
+
+        public LockedCheckBoxListCell(final Callback<LockedDecorator, ObservableValue<Boolean>> callback) {
+            super(callback);
+        }
 
         @Override
         public void updateItem(final LockedDecorator item, final boolean empty) {
@@ -163,7 +172,7 @@ public class SelectSecuritiesController implements Initializable {
 
             if (!empty) {
                 if (item.isLocked()) {
-                    setStyle("-fx-text-fill:red;");
+                    setStyle("-fx-font-style:italic;");
                 }
             }
         }
