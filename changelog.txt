@@ -30,6 +30,10 @@ Known Issues
 ---------------------
 Substance look and feels do not work well with Java 8, visual artifacts may occur.
 
+Release 2.13.6
+04/17/14 Updated to latest H2 database release
+04/17/14 Updated to latest Hibernate 4.2.x release
+
 Release 2.13.5
 ----------------------
 02/23/14 Fixed an NPE when cleaning out orphaned transactions from a prior jGnash bug
