@@ -31,6 +31,7 @@ Known Issues
 Substance look and feels do not work well with Java 8, visual artifacts may occur.
 
 Release 2.13.6
+04/28/14 Updated to the latest Netty
 04/17/14 Updated to latest H2 database release
 04/17/14 Updated to latest Hibernate 4.2.x release
 
