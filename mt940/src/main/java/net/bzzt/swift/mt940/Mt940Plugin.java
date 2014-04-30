@@ -44,7 +44,7 @@ public class Mt940Plugin implements Plugin {
 
         menuItem.putClientProperty(Plugin.PRECEDINGMENUIDREF, "ofximport-command");
 
-        System.out.println("loading plugin");
+        Logger.getLogger(Mt940Plugin.class.getName()).info("Loading mt940 plugin");
 
         try {
             menuItem.setAction(new ImportMt940Action());                       
