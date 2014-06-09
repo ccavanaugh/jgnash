@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?fileVersion 2.21?>
+<object-stream>
+  <list id="1">
+    <CurrencyNode id="2" uuid="6d654250-ce12-43ad-9ffb-3cabbd2fb4ce" symbol="USD" scale="2" prefix="$" suffix="">
+      <locale id="3">en_US</locale>
+    </CurrencyNode>
+    <CurrencyNode id="4" uuid="a08b3173-75cc-4293-a2a1-7aa8e7a8d37d" symbol="EUR" scale="2" prefix="€" suffix="">
+      <locale reference="3"/>
+    </CurrencyNode>
+    <Config id="5" uuid="9e1835b3-62df-44b5-862d-8b6c12eb92fb">
+      <defaultCurrency reference="4"/>
+      <name>DefaultConfig</name>
+      <accountSeparator>:</accountSeparator>
+      <fileVersion>2.21</fileVersion>
+      <transactionNumberItems id="6">
+        <string>EFT</string>
+        <string>Trans</string>
+      </transactionNumberItems>
+    </Config>
+    <RootAccount id="7" uuid="e0ed2d29-ed6e-4f2e-87b1-a6f2fe777d69" placeHolder="false" locked="false" visible="true" name="Root" description="Root">
+      <accountType>ROOT</accountType>
+      <excludedFromBudget>false</excludedFromBudget>
+      <notes></notes>
+      <currencyNode reference="4"/>
+      <children id="8">
+        <Account id="9" uuid="be4d6084-1475-4268-84f3-628538306866" placeHolder="true" locked="false" visible="true" name="Bank Accounts" description="Bank Accounts">
+          <accountType>BANK</accountType>
+          <parentAccount class="RootAccount" reference="7"/>
+          <excludedFromBudget>false</excludedFromBudget>
+          <notes></notes>
+          <currencyNode reference="4"/>
+          <children id="10">
+            <Account id="11" uuid="438aff68-e4ce-4c8c-9cde-53ab0759eb5f" placeHolder="false" locked="false" visible="true" name="Cash" description="Cash Account">
+              <accountType>BANK</accountType>
+              <parentAccount reference="9"/>
+              <excludedFromBudget>false</excludedFromBudget>
+              <notes></notes>
+              <currencyNode reference="4"/>
+              <children id="12"/>
+              <transactions id="13">
+                <Transaction id="14" uuid="6b114c5b-3e1a-4804-b596-2ad3f498277b">
+                  <date id="15">2014-06-08 22:00:00.0 UTC</date>
+                  <dateEntered id="16">2014-06-09 11:10:47.921 UTC</dateEntered>
+                  <number></number>
+                  <payee>Me</payee>
+                  <memo>inital ammount of money in my pocket</memo>
+                  <transactionEntries id="17">
+                    <TransactionEntry id="18">
+                      <hash>0</hash>
+                      <transactionTag>BANK</transactionTag>
+                      <debitAccount id="19" uuid="cc718e8e-32dd-499d-970e-f8a9b16cf3bd" placeHolder="false" locked="false" visible="false" name="Opening Balances" description="Opening Balances">
+                        <accountType>EQUITY</accountType>
+                        <parentAccount class="RootAccount" reference="7"/>
+                        <excludedFromBudget>false</excludedFromBudget>
+                        <notes></notes>
+                        <currencyNode reference="4"/>
+                        <children id="20"/>
+                        <transactions id="21">
+                          <Transaction reference="14"/>
+                        </transactions>
+                        <securities id="22"/>
+                        <accountBalance>-200.00</accountBalance>
+                        <reconciledBalance>0</reconciledBalance>
+                        <accountNumber></accountNumber>
+                        <propertyMap id="23"/>
+                      </debitAccount>
+                      <creditAccount reference="11"/>
+                      <creditAmount>200.00</creditAmount>
+                      <debitAmount>-200.00</debitAmount>
+                      <creditReconciled>NOT_RECONCILED</creditReconciled>
+                      <debitReconciled>NOT_RECONCILED</debitReconciled>
+                      <memo>inital ammount of money in my pocket</memo>
+                    </TransactionEntry>
+                  </transactionEntries>
+                </Transaction>
+                <Transaction id="24" uuid="08743f62-4bf5-4091-83a0-096e4711a29a">
+                  <date id="25">2014-06-08 22:00:00.0 UTC</date>
+                  <dateEntered id="26">2014-06-09 11:13:24.221 UTC</dateEntered>
+                  <number></number>
+                  <payee>backery</payee>
+                  <memo>buying 2 breads for the party tonight</memo>
+                  <transactionEntries id="27">
+                    <TransactionEntry id="28">
+                      <hash>-13060658</hash>
+                      <transactionTag>BANK</transactionTag>
+                      <debitAccount reference="11"/>
+                      <creditAccount id="29" uuid="799ceecc-5e1d-436d-8c86-5c0f79aacefb" placeHolder="false" locked="false" visible="true" name="Food" description="Food">
+                        <accountType>EXPENSE</accountType>
+                        <parentAccount id="30" uuid="385a9bae-f8ac-4566-8e36-323d5b930db2" placeHolder="true" locked="false" visible="true" name="Expense Accounts" description="Expense Accounts">
+                          <accountType>EXPENSE</accountType>
+                          <parentAccount class="RootAccount" reference="7"/>
+                          <excludedFromBudget>false</excludedFromBudget>
+                          <notes></notes>
+                          <currencyNode reference="4"/>
+                          <children id="31">
+                            <Account reference="29"/>
+                          </children>
+                          <transactions id="32"/>
+                          <securities id="33"/>
+                          <accountBalance>0</accountBalance>
+                          <reconciledBalance>0</reconciledBalance>
+                          <accountNumber></accountNumber>
+                          <propertyMap id="34"/>
+                        </parentAccount>
+                        <excludedFromBudget>false</excludedFromBudget>
+                        <notes></notes>
+                        <currencyNode reference="4"/>
+                        <children id="35"/>
+                        <transactions id="36">
+                          <Transaction reference="24"/>
+                        </transactions>
+                        <securities id="37"/>
+                        <accountNumber></accountNumber>
+                        <bankId></bankId>
+                        <propertyMap id="38"/>
+                      </creditAccount>
+                      <creditAmount>2.00</creditAmount>
+                      <debitAmount>-2.00</debitAmount>
+                      <creditReconciled>NOT_RECONCILED</creditReconciled>
+                      <debitReconciled>NOT_RECONCILED</debitReconciled>
+                      <memo>bread</memo>
+                    </TransactionEntry>
+                    <TransactionEntry id="39">
+                      <hash>-13060658</hash>
+                      <transactionTag>BANK</transactionTag>
+                      <debitAccount reference="11"/>
+                      <creditAccount reference="29"/>
+                      <creditAmount>2.00</creditAmount>
+                      <debitAmount>-2.00</debitAmount>
+                      <creditReconciled>NOT_RECONCILED</creditReconciled>
+                      <debitReconciled>NOT_RECONCILED</debitReconciled>
+                      <memo>bread</memo>
+                    </TransactionEntry>
+                  </transactionEntries>
+                </Transaction>
+              </transactions>
+              <securities id="40"/>
+              <accountBalance>196.00</accountBalance>
+              <reconciledBalance>0</reconciledBalance>
+              <accountNumber></accountNumber>
+              <propertyMap id="41"/>
+            </Account>
+          </children>
+          <transactions id="42"/>
+          <securities id="43"/>
+          <accountBalance>0</accountBalance>
+          <reconciledBalance>0</reconciledBalance>
+          <accountNumber></accountNumber>
+          <propertyMap id="44"/>
+        </Account>
+        <Account reference="30"/>
+        <Account reference="19"/>
+      </children>
+      <transactions id="45"/>
+      <securities id="46"/>
+      <accountNumber></accountNumber>
+      <propertyMap id="47"/>
+    </RootAccount>
+  </list>
+</object-stream>
