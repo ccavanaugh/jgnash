@@ -151,7 +151,7 @@ class BusyLayerUI extends LayerUI<JPanel> implements ActionListener {
     }
 
     public void stop() {
-    	fadeOutStart = System.currentTimeMillis();
+        fadeOutStart = System.currentTimeMillis() - 1;
     }
 
     @Override
