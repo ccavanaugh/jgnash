@@ -34,6 +34,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -64,7 +65,7 @@ public class SecurityNode extends CommodityNode {
 
     @JoinTable
     @OrderBy("date")    //applying a sort order prevents refresh issues
-    @OneToMany(cascade = {CascadeType.ALL})
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private Set<SecurityHistoryNode> historyNodes = new HashSet<>();
 
     private transient ReadWriteLock lock;
