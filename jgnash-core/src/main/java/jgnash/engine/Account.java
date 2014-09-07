@@ -43,6 +43,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -84,7 +85,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      */
     @JoinTable
     @OrderBy("date, number, dateEntered")
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     Set<Transaction> transactions = new HashSet<>();
 
     /**
@@ -92,7 +93,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      */
     @JoinColumn()
     @OrderBy("symbol")
-    @OneToMany(cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Set<SecurityNode> securities = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
@@ -123,7 +124,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * Sorted list of child accounts
      */
     @OrderBy("name")
-    @OneToMany(cascade = {CascadeType.ALL})
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private Set<Account> children = new HashSet<>();
 
     /**
@@ -1475,11 +1476,6 @@ public class Account extends StoredObject implements Comparable<Account> {
         transactionLock = new ReentrantReadWriteLock(true);
         childLock = new ReentrantReadWriteLock(true);
         securitiesLock = new ReentrantReadWriteLock(true);
-
-        // HACK: Force initialization of a lazily collection for hibernate
-        // transactions.iterator().hasNext();
-        children.iterator().hasNext();
-        securities.iterator().hasNext();
     }
 
     /**
