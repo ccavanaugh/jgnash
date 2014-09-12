@@ -20,8 +20,6 @@ package jgnash.uifx;
 import java.io.IOException;
 
 import jgnash.MainFX;
-import jgnash.uifx.controllers.AccountTypeFilter;
-import jgnash.uifx.controllers.AccountTypeFilterFormController;
 import jgnash.uifx.utils.StageUtils;
 import jgnash.util.ResourceUtils;
 
