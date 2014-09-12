@@ -304,7 +304,7 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
     private static final String CURRENT_DIR = "cwd";
 
     private void saveLayout() {
-        String fileName = null;
+        String fileName;
 
         JFileChooser chooser = createFileChooser(pref.get(CURRENT_DIR, null));
         chooser.setMultiSelectionEnabled(false);
@@ -319,10 +319,7 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
                     fileName += ".xml";
                 }
             }
-        }
 
-        // must have a valid filename
-        if (fileName != null) {
             if (!CheckLayoutSerializationFactory.saveLayout(fileName, layout.getCheckLayout())) {
                 StaticUIMethods.displayError("Failed to save the check layout");
             }
