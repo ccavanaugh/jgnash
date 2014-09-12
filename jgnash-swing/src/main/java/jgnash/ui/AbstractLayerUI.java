@@ -32,19 +32,12 @@
 package jgnash.ui;
 
 import java.awt.AWTEvent;
-import java.awt.Composite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.Shape;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.awt.geom.AffineTransform;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.JLayer;
@@ -67,9 +60,6 @@ import javax.swing.plaf.LayerUI;
  */
 @SuppressWarnings("UnusedParameters")
 public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
-
-    private static final Map<RenderingHints.Key, Object> emptyRenderingHintMap = Collections
-            .unmodifiableMap(new HashMap<RenderingHints.Key, Object>(0));
 
     private boolean isDirty;
 
@@ -107,12 +97,8 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
      * <b>Note:</b> It is rarely necessary to override this method, for custom
      * painting override {@link #paintLayer(Graphics2D, JLayer)} instead
      * <p/>
-     * This method configures the passed {@code Graphics} with help of the
-     * {@link #configureGraphics(Graphics2D, JLayer)} method, then calls
-     * {@code paintLayer(Graphics2D, JXLayer)} and resets the "dirty bit" at the
-     * end.
+     * This method calls {@code paintLayer(Graphics2D, JXLayer)} and resets the "dirty bit" at the end.
      *
-     * @see #configureGraphics(Graphics2D, JLayer)
      * @see #paintLayer(Graphics2D, JLayer)
      * @see #setDirty(boolean)
      */
@@ -122,7 +108,6 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
         if (g instanceof Graphics2D) {
             Graphics2D g2 = (Graphics2D) g.create();
             JLayer<V> l = (JLayer<V>) c;
-            configureGraphics(g2, l);
             paintLayer(g2, l);
             g2.dispose();
             setDirty(false);
@@ -140,94 +125,6 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
      */
     protected void paintLayer(Graphics2D g2, JLayer<? extends V> l) {
         l.paint(g2);
-    }
-
-    /**
-     * This method is called by the {@link #paint} method prior to any drawing
-     * operations to configure the {@code Graphics2D} object. The default
-     * implementation sets the {@link Composite}, the clip,
-     * {@link AffineTransform} and rendering hints obtained from the
-     * corresponding hook methods.
-     *
-     * @param g2 the {@code Graphics2D} object to configure
-     * @param l  the {@code JXLayer} being painted
-     * @see #getComposite(JLayer)
-     * @see #getClip(JLayer)
-     * @see #getTransform(JLayer)
-     * @see #getRenderingHints(JLayer)
-     */
-    void configureGraphics(Graphics2D g2, JLayer<? extends V> l) {
-        Composite composite = getComposite(l);
-        if (composite != null) {
-            g2.setComposite(composite);
-        }
-        Shape clip = getClip(l);
-        if (clip != null) {
-            g2.clip(clip);
-        }
-        AffineTransform transform = getTransform(l);
-        if (transform != null) {
-            g2.transform(transform);
-        }
-        Map<RenderingHints.Key, Object> hints = getRenderingHints(l);
-        if (hints != null) {
-            for (RenderingHints.Key key : hints.keySet()) {
-                Object value = hints.get(key);
-                if (value != null) {
-                    g2.setRenderingHint(key, hints.get(key));
-                }
-            }
-        }
-    }
-
-    /**
-     * Returns the {@link Composite} to be used during painting of this
-     * {@code JXLayer}, the default implementation returns {@code null}.
-     *
-     * @param l the {@code JXLayer} being painted
-     * @return the {@link Composite} to be used during painting for the
-     *         {@code JXLayer}
-     */
-    Composite getComposite(JLayer<? extends V> l) {
-        return null;
-    }
-
-    /**
-     * Returns the {@link AffineTransform} to be used during painting of this
-     * {@code JXLayer}, the default implementation returns {@code null}.
-     *
-     * @param l the {@code JXLayer} being painted
-     * @return the {@link AffineTransform} to be used during painting of the
-     *         {@code JXLayer}
-     */
-    AffineTransform getTransform(JLayer<? extends V> l) {
-        return null;
-    }
-
-    /**
-     * Returns the {@link Shape} to be used as the clip during painting of this
-     * {@code JXLayer}, the default implementation returns {@code null}.
-     *
-     * @param l the {@code JXLayer} being painted
-     * @return the {@link Shape} to be used as the clip during painting of the
-     *         {@code JXLayer}
-     */
-    Shape getClip(JLayer<? extends V> l) {
-        return null;
-    }
-
-    /**
-     * Returns the map of rendering hints to be used during painting of this
-     * {@code JXLayer}, the default implementation returns the empty
-     * unmodifiable map.
-     *
-     * @param l the {@code JXLayer} being painted
-     * @return the map of rendering hints to be used during painting of the
-     *         {@code JXLayer}
-     */
-    Map<RenderingHints.Key, Object> getRenderingHints(
-            JLayer<? extends V> l) {
-        return emptyRenderingHintMap;
     }
 
     /**
