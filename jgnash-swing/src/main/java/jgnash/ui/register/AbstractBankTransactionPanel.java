@@ -153,7 +153,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
         MessageBus.getInstance().registerListener(this, MessageChannel.TRANSACTION);
     }
 
-    protected Account getAccount() {
+    Account getAccount() {
         return account;
     }
 
