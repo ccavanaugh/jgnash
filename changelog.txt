@@ -32,6 +32,7 @@ Substance look and feels do not work well with Java 8, visual artifacts may occu
 
 Release 2.13.6
 ----------------------
+09/20/14 Fixed the build process for the mt940 plugin so it always stays current
 04/28/14 Force eager load of budget goals to prevent a random NPE at file load when using a relational database
 04/28/14 Updated to the latest Netty
 04/17/14 Updated to latest H2 database release
