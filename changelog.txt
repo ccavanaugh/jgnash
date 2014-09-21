@@ -35,6 +35,8 @@ Release 2.13.6
 09/21/14 Updated to latest Insubstantial release.  This fixes the Substance look and feel compatibility with Java 8
 09/20/14 Updated to the latest JGoodies dependencies.  This should improve font appearance on Windows systems in some instances
 09/20/14 Fixed the build process for the mt940 plugin so it always stays current
+09/07/14 Internal cleanup, improve relational database load behaviors
+07/29/14 Fixed a race condition that would cause a random NPE when loading security histories from a relational database
 04/28/14 Force eager load of budget goals to prevent a random NPE at file load when using a relational database
 04/28/14 Updated to the latest Netty
 04/17/14 Updated to latest H2 database release
