@@ -33,13 +33,13 @@
         <hibernate-jpa-2.0-api.version>1.0.1.Final</hibernate-jpa-2.0-api.version>
         <hsqldb.version>2.3.2</hsqldb.version>
         <c3p0.version>0.9.5-pre8</c3p0.version>
-        <sl4j.version>1.7.5</sl4j.version>
+        <sl4j.version>1.7.7</sl4j.version>
         <log4j.version>1.2.17</log4j.version>
         <kxml.version>2.3.0</kxml.version>
         <apachi-poi.version>3.9</apachi-poi.version>
         <itext.version>4.2.0</itext.version>
         <jfree.version>1.0.19</jfree.version>
-        <insubstantial.version>7.2.1</insubstantial.version>
+        <insubstantial.version>7.3</insubstantial.version>
         <swingx.version>1.6.5-1</swingx.version>
         <dynamic-jasper.version>4.0.3</dynamic-jasper.version>
         <docbook-xml.version>5.1b4-all</docbook-xml.version>
@@ -47,7 +47,7 @@
         <plexus-utils.version>3.0.10</plexus-utils.version>
         <opencsv.version>2.3</opencsv.version>
         <netty.version>4.0.23.Final</netty.version>
-        <controlsfx.version>8.0.5</controlsfx.version>
+        <controlsfx.version>8.0.6_20</controlsfx.version>
 
     </properties>
 

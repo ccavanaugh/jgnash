@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.jgoodies</groupId>
-  <artifactId>jgoodies-forms</artifactId>
-  <version>1.7.1</version>
+  <artifactId>jgoodies-common</artifactId>
+  <version>1.8.0</version>
   <description>POM was created from install:install-file</description>
 </project>
