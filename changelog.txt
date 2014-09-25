@@ -23,9 +23,11 @@ Better method of keeping preferences when updating computers
 Budgeting
 - an option for Total Year OR YTD Total – this is actually quite useful, since the user can be under / over budget in any given period, but on-budget YTD.
 - annotation, similar to transaction annotation, so the user can reference the reason for an exception in any given period.
+- flexible start / end period for different fiscal years
 
 Release 2.14.0
 ----------------------
+09/25/14 Handle non-standard OFX files that use commas as a decimal separator for amounts
 
 Release 2.13.6
 ----------------------

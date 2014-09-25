@@ -24,8 +24,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -546,10 +550,22 @@ public class OfxV2Parser implements OfxTags {
 
         try {
             return new BigDecimal(amount.trim());
-        } catch (NumberFormatException e) {
-            logger.log(Level.INFO, "Parse amount was: {0}", amount);
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-            return BigDecimal.ZERO;
+        } catch (final NumberFormatException e) {
+            if (amount.contains(",")) { // OFX file in not valid and uses commas for decimal separators
+
+                // Use the French locale as it uses commas for decimal separators
+                DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(Locale.FRENCH);
+                df.setParseBigDecimal(true);    // force return value of BigDecimal
+
+                try {
+                    return (BigDecimal) df.parseObject(amount.trim());
+                } catch (final ParseException pe) {
+                    logger.log(Level.INFO, "Parse amount was: {0}", amount);
+                    logger.log(Level.SEVERE, e.getLocalizedMessage(), pe);
+                }
+            }
+
+            return BigDecimal.ZERO; // give up at this point
         }
     }
 }

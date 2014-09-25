@@ -17,16 +17,20 @@
  */
 package jgnash.convert.imports.ofx;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jgnash.convert.imports.ImportTransaction;
 import jgnash.util.FileMagic;
 
 import org.junit.Before;
@@ -99,6 +103,45 @@ public class Ofx2Test {
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
+
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
+            } catch (IOException e) {
+                Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+                assertTrue(false);
+            }
+        } catch (URISyntaxException e) {
+            Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
+            assertTrue(false);
+        }
+
+        assertTrue(true);
+    }
+
+
+    /**
+     * Test for amounts that use a comma as a decimal separator
+     */
+    @Test
+    public void parseBankOneCommas() {
+        final String testFile = "/bank1-commas.ofx";
+
+        URL url = Object.class.getResource(testFile);
+        String encoding;
+
+        try {
+            encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
+
+            try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
+                parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
+
+                assertEquals(new BigDecimal("519.10"), parser.getBank().ledgerBalance);
+
+                List<ImportTransaction> transactions = parser.getBank().getTransactions();
+
+                assertEquals(new BigDecimal("-130.00"), transactions.get(0).amount);
+                assertEquals(new BigDecimal("-120.00"), transactions.get(1).amount);
+                assertEquals(new BigDecimal("300.01"), transactions.get(2).amount);
+                assertEquals(new BigDecimal("160.50"), transactions.get(3).amount);
 
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
