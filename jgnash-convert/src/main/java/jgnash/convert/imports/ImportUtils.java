@@ -37,19 +37,19 @@ public class ImportUtils {
         return searchForRootType(EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount(), AccountType.INCOME);
     }
 
-    private static Account searchForRootType(Account account, AccountType type) {
+    private static Account searchForRootType(final Account account, final AccountType accountType) {
         Account result = null;
 
         // search immediate top level accounts
         for (Account a : account.getChildren()) {
-            if (a.instanceOf(type)) {
+            if (a.getAccountType().equals(accountType)) {
                 return a;
             }
         }
 
         // recursive search
         for (Account a : account.getChildren()) {
-            result = searchForRootType(a, type);
+            result = searchForRootType(a, accountType);
             if (result != null) {
                 break;
             }
