@@ -62,19 +62,12 @@ public class QifImport {
 
     private final HashMap<String, Account> accountMap = new HashMap<>();
 
-    private boolean stripDuplicates = true;
-
     private boolean partialImport = false;
 
     /**
      * A holder for duplicate transactions
      */
     private final ArrayList<Transaction> duplicates = new ArrayList<>();
-
-    /**
-     * Holds the number of duplicate transactions that were stripped during the import
-     */
-    private int duplicatesFound;
 
     private static final Logger logger = Logger.getLogger("qifimport");
 
@@ -86,11 +79,7 @@ public class QifImport {
         return parser;
     }
 
-    public void setStripDuplicates(boolean strip) {
-        stripDuplicates = strip;
-    }
-
-    public void doFullParse(File file, String dateFormat) throws NoAccountException {
+    public void doFullParse(final File file, final String dateFormat) throws NoAccountException {
         if (file != null) {
             parser = new QifParser(dateFormat);
             parser.parseFullFile(file);
@@ -108,14 +97,14 @@ public class QifImport {
         }
     }
 
-    public void doPartialParse(File file) {
+    public void doPartialParse(final File file) {
         if (file != null) {
             parser = new QifParser(QifUtils.US_FORMAT);
             parser.parsePartialFile(file);
         }
     }
 
-    public void doPartialImport(Account account) {
+    public void doPartialImport(final Account account) {
         if (parser != null) {
             if (account != null) {
 
@@ -156,7 +145,7 @@ public class QifImport {
         addAccounts();
     }
 
-    private static void loadCategoryMap(List<Account> list, Map<String, Account> map) {
+    private static void loadCategoryMap(final List<Account> list, final Map<String, Account> map) {
         if (list != null) { // protect against a failed load on a new account
             for (Account aList : list) {
                 loadCategoryMap(aList, map);
@@ -164,7 +153,7 @@ public class QifImport {
         }
     }
 
-    private static void loadCategoryMap(Account acc, Map<String, Account> map) {
+    private static void loadCategoryMap(final Account acc, final Map<String, Account> map) {
         String pathName = acc.getPathName();
         int index = pathName.indexOf(':');
         if (index != -1) {
@@ -198,7 +187,7 @@ public class QifImport {
         }
     }
 
-    private void loadAccountMap(Account acc) {
+    private void loadAccountMap(final Account acc) {
         String pathName = acc.getPathName();
         int index = pathName.indexOf(':');
         if (index != -1) {
@@ -242,7 +231,7 @@ public class QifImport {
             if (acc != null && acc.getAccountType() != AccountType.INVEST) {
                 addTransactions(qAcc, acc);
             } else {
-                if (acc != null && acc.getAccountType() == AccountType.INVEST) {
+                if (acc != null) {
                     logger.severe("Investment transactions not fully supported");
                 } else {
                     logger.log(Level.SEVERE, "Lost the account: {0}", qAcc.name);
@@ -251,7 +240,7 @@ public class QifImport {
         }
     }
 
-    private void addTransactions(QifAccount qAcc, Account acc) {
+    private void addTransactions(final QifAccount qAcc, final Account acc) {
         if (qAcc.numItems() == 0) {
             return;
         }
@@ -268,9 +257,8 @@ public class QifImport {
 
             tran = generateTransaction(aList, acc);
 
-            if (stripDuplicates && tran != null && isDuplicate(tran, acc)) { // strip and prevent NPE
-                logger.fine("duplicate striped");
-                duplicatesFound++;
+            if (tran != null && isDuplicate(tran, acc)) { // strip and prevent NPE
+                logger.fine("duplicate found");
                 duplicates.add(tran);
                 continue;
             }
@@ -287,7 +275,7 @@ public class QifImport {
 
     private static boolean isDuplicate(final Transaction t, final Account a) {
 
-        for (Transaction tran : a.getReadOnlyTransactionCollection()) {
+        for (final Transaction tran : a.getReadOnlyTransactionCollection()) {
             if (tran.equalsIgnoreDate(t)) {
                 return true;
             }
@@ -302,7 +290,7 @@ public class QifImport {
      * @return number of duplicates found
      */
     public int getDuplicateCount() {
-        return duplicatesFound;
+        return duplicates.size();
     }
 
     /**
@@ -331,7 +319,7 @@ public class QifImport {
     /**
      * Returns the Account of the best possible parent account for the supplied QifCategory
      */
-    private Account findBestParent(QifCategory cat, Map<String, Account> map) {
+    private Account findBestParent(final QifCategory cat, final Map<String, Account> map) {
         int i = cat.name.lastIndexOf(':');
         if (i != -1) {
             String pathName = cat.name.substring(0, i);
@@ -400,7 +388,7 @@ public class QifImport {
     /**
      * Determines if the supplied String represents a QIF account
      */
-    private static boolean isAccount(String category) {
+    private static boolean isAccount(final String category) {
         return category.startsWith("[") && category.endsWith("]");
     }
 
@@ -426,7 +414,7 @@ public class QifImport {
     /*
      * Creates and returns an Account of the correct type given a QifCategory
      */
-    private Account generateAccount(QifCategory cat) {
+    private Account generateAccount(final QifCategory cat) {
         Account account;
         CurrencyNode defaultCurrency = engine.getDefaultCurrency();
         if (cat.type.equals("E")) {
@@ -452,7 +440,7 @@ public class QifImport {
         return account;
     }
 
-    private Account generateAccount(QifAccount acc) {
+    private Account generateAccount(final QifAccount acc) {
         Account account;
         CurrencyNode defaultCurrency = engine.getDefaultCurrency();
 
@@ -489,7 +477,7 @@ public class QifImport {
      * Generates a transaction Notes:<b> If a QifTransaction does not specify an account, then assume it is a single
      * entry transaction for the supplied Account. The transaction most likely came from a online banking source.
      */
-    private Transaction generateTransaction(QifTransaction qTran, Account acc) {
+    private Transaction generateTransaction(final QifTransaction qTran, final Account acc) {
         assert acc != null;
 
         boolean reconciled = "x".equalsIgnoreCase(qTran.status);
@@ -552,7 +540,7 @@ public class QifImport {
      * Generates a Transaction given a QifSplitTransaction
      * @return generated TransactionEntry
      */
-    private TransactionEntry generateSplitTransaction(QifSplitTransaction qTran, Account acc) {
+    private TransactionEntry generateSplitTransaction(final QifSplitTransaction qTran, final Account acc) {
         TransactionEntry tran = new TransactionEntry();
 
         Account account = findBestAccount(qTran.category);
@@ -615,7 +603,7 @@ public class QifImport {
      *
      * The date, amount, and account/category is checked to determine if the match is valid
      */
-    private void removeMirrorTransaction(QifTransaction qTran, Account acc) {
+    private void removeMirrorTransaction(final QifTransaction qTran, final Account acc) {
         String name = qTran.category.substring(1, qTran.category.length() - 1);
         List<QifAccount> list = parser.accountList;
 
@@ -637,7 +625,7 @@ public class QifImport {
         }
     }
 
-    private void removeMirrorSplitTransaction(QifSplitTransaction qTran) {
+    private void removeMirrorSplitTransaction(final QifSplitTransaction qTran) {
         String name = qTran.category.substring(1, qTran.category.length() - 1);
         logger.log(Level.FINE, "Category name is: {0}", name);
         List<QifAccount> list = parser.accountList;
