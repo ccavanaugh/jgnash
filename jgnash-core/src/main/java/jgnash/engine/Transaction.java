@@ -382,6 +382,11 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
             return result;
         }
 
+        result = getAmount(getCommonAccount()).compareTo(tran.getAmount(tran.getCommonAccount()));
+        if (result != 0) {
+            return result;
+        }
+
         return getUuid().compareTo(tran.getUuid());
     }
 
@@ -407,6 +412,10 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
         if (!getPayee().equalsIgnoreCase(tran.getPayee())) {
             return false;
+        }
+
+        if (!getAmount(getCommonAccount()).equals(tran.getAmount(tran.getCommonAccount()))) {
+             return false;
         }
 
         return getNumber().equalsIgnoreCase(tran.getNumber());
