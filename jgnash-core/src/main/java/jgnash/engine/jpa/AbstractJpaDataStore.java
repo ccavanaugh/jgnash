@@ -242,27 +242,28 @@ public abstract class AbstractJpaDataStore implements DataStore {
         final Properties properties = JpaConfiguration.getLocalProperties(getType(), fileName, new char[]{}, false);
         final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
-        try {
-            Connection connection = DriverManager.getConnection(url, "sa", "");
+        try (final Connection connection = DriverManager.getConnection(url, "sa", "")) {
             connection.prepareStatement("CREATE USER " + JpaConfiguration.DEFAULT_USER + " PASSWORD \"\" ADMIN").execute();
             connection.commit();
-            connection.close();
 
-            connection = DriverManager.getConnection(url, JpaConfiguration.DEFAULT_USER, "");
+            connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for a correct shutdown
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
+
+        try (final Connection connection = DriverManager.getConnection(url, JpaConfiguration.DEFAULT_USER, "")) {
             connection.prepareStatement("DROP USER SA").execute();
             connection.commit();
 
             connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for a correct shutdown
-            connection.close();
-
             result = true;
-
-            waitForLockFileRelease(fileName, new char[]{});
-
-            logger.info("Initialized an empty database for " + FileUtils.stripFileExtension(fileName));
         } catch (final SQLException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
+
+        waitForLockFileRelease(fileName, new char[]{});
+
+        logger.info("Initialized an empty database for " + FileUtils.stripFileExtension(fileName));
 
         return result;
     }

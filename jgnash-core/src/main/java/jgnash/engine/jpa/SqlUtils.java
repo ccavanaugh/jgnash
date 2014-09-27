@@ -67,13 +67,11 @@ public class SqlUtils {
                 String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
                 try (Connection connection = DriverManager.getConnection(url)) {
-                    Statement statement = connection.createStatement();
+                    try (Statement statement = connection.createStatement()) {
+                        statement.execute(String.format("SET PASSWORD '%s'", new String(newPassword)));
 
-                    statement.execute(String.format("SET PASSWORD '%s'", new String(newPassword)));
-
-                    result = true;
-
-                    statement.close();
+                        result = true;
+                    }
                 } catch (final SQLException e) {
                     logger.log(Level.SEVERE, e.getMessage(), e);
                 }
@@ -104,17 +102,13 @@ public class SqlUtils {
                 final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
                 try (Connection connection = DriverManager.getConnection(url)) {
-                    Statement statement = connection.createStatement();
-
-                    ResultSet resultSet = statement.executeQuery("SELECT FILEVERSION FROM CONFIG");
-                    resultSet.next();
-
-                    fileVersion = resultSet.getFloat("fileversion");
-
+                    try (Statement statement = connection.createStatement()) {
+                        try (ResultSet resultSet = statement.executeQuery("SELECT FILEVERSION FROM CONFIG")) {
+                            resultSet.next();
+                            fileVersion = resultSet.getFloat("fileversion");
+                        }
+                    }
                     connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for correct file closure
-
-                    resultSet.close();
-                    statement.close();
                 } catch (final SQLException e) {
                     Logger.getLogger(JpaConfiguration.class.getName()).log(Level.SEVERE, e.getMessage(), e);
                 }
@@ -148,11 +142,8 @@ public class SqlUtils {
             String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
             // Send shutdown to close the database
-            try {
-                final Connection connection = DriverManager.getConnection(url, JpaConfiguration.DEFAULT_USER, new String(password));
-
+            try (final Connection connection = DriverManager.getConnection(url, JpaConfiguration.DEFAULT_USER, new String(password))) {
                 connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for correct file closure
-                connection.close();
             } catch (final SQLException e) {
                 logger.log(Level.SEVERE, e.getMessage(), e);
             }
