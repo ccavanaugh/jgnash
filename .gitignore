@@ -3,10 +3,6 @@ target/
 *.class
 *.directory
 .settings/
-/jgnash-swing/repository/
-/jgnash-imports/repository/
-/jgnash-help/repository/
-/jgnash-core/repository/
 .project
 .classpath
 *.iml
