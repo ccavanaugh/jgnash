@@ -255,13 +255,14 @@ public class AccountRowFooterPanel extends JPanel {
                 case BUDGET_UPDATE:
                     groups = model.getAccountGroups();
                     EventQueue.invokeLater(new Runnable() {
-
                         @Override
                         public void run() {
                             fireTableDataChanged();
                         }
                     });
+                    break;
                 default:
+                    break;  // ignore any other events
             }
         }
     }

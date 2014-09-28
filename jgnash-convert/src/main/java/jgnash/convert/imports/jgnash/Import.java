@@ -433,6 +433,8 @@ public class Import {
                                     logger.finest("Parse exchange rate");
                                     parseExchangeRate(reader);
                                     break;
+                                default:
+                                    break;
                             }
                         }
                         break;

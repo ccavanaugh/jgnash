@@ -166,6 +166,8 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
                 case MouseEvent.MOUSE_WHEEL:
                     processMouseWheelEvent((MouseWheelEvent) e, l);
                     break;
+                default:
+                    break;
             }
         } else if (e instanceof KeyEvent) {
             processKeyEvent((KeyEvent) e, l);

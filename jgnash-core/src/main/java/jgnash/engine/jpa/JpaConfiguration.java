@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 class JpaConfiguration {
 
     public static final String JAVAX_PERSISTENCE_JDBC_URL = "javax.persistence.jdbc.url";
+
     private static final String JAVAX_PERSISTENCE_JDBC_DRIVER = "javax.persistence.jdbc.driver";
     private static final String JAVAX_PERSISTENCE_JDBC_USER = "javax.persistence.jdbc.user";
     private static final String JAVAX_PERSISTENCE_JDBC_PASSWORD = "javax.persistence.jdbc.password";
@@ -39,6 +40,8 @@ class JpaConfiguration {
     private static final String HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
 
     public static final String DEFAULT_USER = "JGNASH";
+
+    private static final String UNKNOWN_DATABASE_TYPE = "Unknown database type";
 
     private static Properties getBaseProperties(final DataStoreType database) {
         Properties properties = System.getProperties();
@@ -53,6 +56,9 @@ class JpaConfiguration {
             case HSQL_DATABASE:
                 properties.setProperty(JAVAX_PERSISTENCE_JDBC_DRIVER, "org.hsqldb.jdbcDriver");
                 properties.setProperty(HIBERNATE_DIALECT, "org.hibernate.dialect.HSQLDialect");
+                break;
+            default:
+                throw new RuntimeException(UNKNOWN_DATABASE_TYPE);
         }
 
         return properties;
@@ -96,6 +102,9 @@ class JpaConfiguration {
                 if (readOnly) {
                     urlBuilder.append(";readonly=true");
                 }
+                break;
+            default:
+                throw new RuntimeException(UNKNOWN_DATABASE_TYPE);
         }
 
         Properties properties = getBaseProperties(database);
@@ -155,8 +164,10 @@ class JpaConfiguration {
                 }
 
                 Logger.getLogger(JpaConfiguration.class.getName()).info(urlBuilder.toString());
+                break;
+            default:
+                throw new RuntimeException(UNKNOWN_DATABASE_TYPE);
         }
-
 
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_USER, DEFAULT_USER);
         properties.setProperty(JAVAX_PERSISTENCE_JDBC_PASSWORD, new String(password));

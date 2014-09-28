@@ -237,8 +237,10 @@ final class BudgetPeriodPanel extends JPanel {
                             fireTableDataChanged();
                             JTableUtils.packTables(table, footerTable); 
                         }
-                    });                   
+                    });
+                    break;
                 default:
+                    break;  // ignore any other events
             }
         }
     }
