@@ -62,7 +62,8 @@ class BusyLayerUI extends LayerUI<JPanel> implements ActionListener {
     private int angle;
     private long fadeInStart;
     private long fadeOutStart;
-    private final int fadeLimit = 1000;
+
+    private static final int FADE_LIMIT = 1000;
 
     @Override
     public void paint(final Graphics g, final JComponent c) {
@@ -79,14 +80,14 @@ class BusyLayerUI extends LayerUI<JPanel> implements ActionListener {
         float fade = 1.0f;
         if (fadeOutStart != 0) {
 	        long timeSinceFadeStart = System.currentTimeMillis() - fadeOutStart;
-	        if (timeSinceFadeStart > fadeLimit) { 
+	        if (timeSinceFadeStart > FADE_LIMIT) {
 	        	return;
 	        }
-	        fade = 1.0f - ((float) timeSinceFadeStart / (float) fadeLimit);
+	        fade = 1.0f - ((float) timeSinceFadeStart / (float) FADE_LIMIT);
         } else {
 	        long timeSinceFadeStart = System.currentTimeMillis() - fadeInStart;
-	        if (timeSinceFadeStart < fadeLimit) { 
-		        fade = ((float) timeSinceFadeStart / (float) fadeLimit);
+	        if (timeSinceFadeStart < FADE_LIMIT) {
+		        fade = ((float) timeSinceFadeStart / (float) FADE_LIMIT);
 	        }
         }
 
@@ -128,7 +129,7 @@ class BusyLayerUI extends LayerUI<JPanel> implements ActionListener {
             }
             if (fadeOutStart != 0) {
     	        long timeSinceFade = System.currentTimeMillis() - fadeOutStart;
-                if (timeSinceFade > fadeLimit) {
+                if (timeSinceFade > FADE_LIMIT) {
                     isRunning = false;
                     timer.stop();
                 }
