@@ -166,7 +166,7 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
                 while ((bytesRead = fileInputStream.read(bytes)) != -1) {
                     if (bytesRead > 0) {
                         channel.write(encrypt(FILE_CHUNK + path.getFileName() + ':' +
-                                new String(Base64.encodeBase64(Arrays.copyOfRange(bytes, 0, bytesRead)))) + EOL_DELIMITER);
+                                new String(Base64.encodeBase64(Arrays.copyOfRange(bytes, 0, bytesRead)), "UTF-8")) + EOL_DELIMITER);
                     }
                 }
                 channel.writeAndFlush(encrypt(FILE_ENDS + path.getFileName()) + EOL_DELIMITER).sync();
