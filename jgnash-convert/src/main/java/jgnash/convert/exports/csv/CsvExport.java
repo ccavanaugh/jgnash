@@ -39,6 +39,8 @@ import java.util.logging.Logger;
  */
 public class CsvExport {
 
+    public static final String CHARSET_NAME = "UTF-8";
+
     private CsvExport() {
     }
 
@@ -51,7 +53,7 @@ public class CsvExport {
         // force a correct file extension
         final String fileName = FileUtils.stripFileExtension(file.getAbsolutePath()) + ".csv";
 
-        try (AutoCloseableCSVWriter writer = new AutoCloseableCSVWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName))))) {
+        try (AutoCloseableCSVWriter writer = new AutoCloseableCSVWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), CHARSET_NAME)))) {
             writer.writeNextRow("Account","Number","Debit","Credit","Balance","Date","Memo","Payee","Reconciled");
 
             // write the transactions
