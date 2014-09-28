@@ -251,13 +251,7 @@ public final class ActionParser extends DefaultHandler {
             if (node.id == null && node.idref == null) {
                 toolBar.addSeparator();
             } else {
-                JButton button = createButton(node.getChildAt(i));
-
-                if (button != null) {
-                    toolBar.add(button);
-                } else {
-                    log.log(Level.WARNING, "Was not able to create button: {0}", id);
-                }
+                toolBar.add(createButton(node.getChildAt(i)));
             }
         }
         return toolBar;
