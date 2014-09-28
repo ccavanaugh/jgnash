@@ -128,7 +128,7 @@ public class SelectSecuritiesController implements Initializable {
         return result;
     }
 
-    private class LockedDecorator {
+    private static class LockedDecorator {
 
         private boolean locked;
 
@@ -160,7 +160,7 @@ public class SelectSecuritiesController implements Initializable {
     /**
      * Provides visual feedback that item is locked and may not be unchecked
      */
-    private class LockedCheckBoxListCell extends CheckBoxListCell<LockedDecorator> {
+    private static class LockedCheckBoxListCell extends CheckBoxListCell<LockedDecorator> {
 
         public LockedCheckBoxListCell(final Callback<LockedDecorator, ObservableValue<Boolean>> callback) {
             super(callback);
