@@ -99,6 +99,8 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
 
     private ImportRun run;
 
+    private static final String ENCODING = "UTF-8";
+
     /**
      * Creates the dialog for importing security history from Yahoo
      */
@@ -292,12 +294,12 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
                 
                 connection = new URL(r.toString()).openConnection();
 
-                try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {                    
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), ENCODING))) {
 
                     String l = in.readLine();
 
                     // make sure that we have valid data format.
-                    if (!l.equals("Date,Open,High,Low,Close,Volume,Adj Close")) {                        
+                    if (l == null || !l.equals("Date,Open,High,Low,Close,Volume,Adj Close")) {
                         closeDialog();
                         return;
                     }
