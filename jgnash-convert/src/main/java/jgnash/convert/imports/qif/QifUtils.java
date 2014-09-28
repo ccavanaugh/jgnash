@@ -18,10 +18,12 @@
 package jgnash.convert.imports.qif;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Calendar;
@@ -180,7 +182,7 @@ public class QifUtils {
 
         boolean result = false;
 
-        try (QifReader in = new QifReader(new FileReader(file))) {
+        try (QifReader in = new QifReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
             String line = in.readLine();
 
             while (line != null) {

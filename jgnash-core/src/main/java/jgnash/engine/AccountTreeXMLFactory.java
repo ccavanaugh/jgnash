@@ -27,6 +27,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -46,7 +48,7 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
  * @author Craig Cavanaugh
  */
 public class AccountTreeXMLFactory {
-    private static final String ENCODING = "UTF-8";
+    private static final Charset ENCODING = StandardCharsets.UTF_8;
 
     private static XStream getStream() {
         XStream xstream = new XStream(new PureJavaReflectionProvider(), new StaxDriver());

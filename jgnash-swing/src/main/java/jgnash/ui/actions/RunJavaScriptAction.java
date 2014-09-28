@@ -16,11 +16,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package jgnash.ui.actions;
-        
+
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -59,12 +62,11 @@ public class RunJavaScriptAction extends AbstractEnabledAction {
 
                 @Override
                 public void run() {
-                    
-                    try (FileReader reader = new FileReader(file)) {
+                    try (final Reader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
                         new ScriptEngineManager().getEngineByName("JavaScript").eval(reader);
                     } catch (IOException | ScriptException e) {
                         Logger.getLogger(RunJavaScriptAction.class.getName()).log(Level.SEVERE, e.toString(), e);
-                    }                                                                              
+                    }
                 }
             });
         }

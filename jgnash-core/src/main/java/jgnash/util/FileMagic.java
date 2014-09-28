@@ -21,10 +21,11 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,9 +52,9 @@ public class FileMagic {
 
     private static final byte[] H2_HEADER = new byte[]{0x2D, 0x2D, 0x20, 0x48, 0x32, 0x20, 0x30, 0x2E, 0x35, 0x2F, 0x42, 0x20, 0x2D, 0x2D};
 
-    private static final byte[] HSQL_HEADER = "SET DATABASE UNIQUE NAME HSQLDB".getBytes();
+    private static final byte[] HSQL_HEADER = "SET DATABASE UNIQUE NAME HSQLDB".getBytes(StandardCharsets.UTF_8);
 
-    private static final byte[] XML_HEADER = "<?xml version=\"1.0\"".getBytes();
+    private static final byte[] XML_HEADER = "<?xml version=\"1.0\"".getBytes(StandardCharsets.UTF_8);
 
     public static enum FileType {
         db4o, BinaryXStream, OfxV1, OfxV2, jGnash1XML, jGnash2XML, h2, hsql, unknown
@@ -100,7 +101,7 @@ public class FileMagic {
 
         if (file.exists()) {
 
-            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
                 String line = reader.readLine();
 
                 while (line != null) {
@@ -127,7 +128,7 @@ public class FileMagic {
                     }
                     line = reader.readLine();
                 }
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 Logger.getLogger(FileMagic.class.getName()).log(Level.SEVERE, e.toString(), e);
             }
         }
@@ -155,7 +156,7 @@ public class FileMagic {
         boolean result = false;
 
         if (file.exists()) {
-            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
                 String line = reader.readLine();
 
                 while (line != null) {
@@ -183,7 +184,7 @@ public class FileMagic {
 
         if (file.exists()) {
 
-            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
 
                 String line = reader.readLine();
 
@@ -257,7 +258,7 @@ public class FileMagic {
                 if (di.length() > 0) { // must not be a zero length file
                     di.readFully(header);
 
-                    if (new String(header).equals("db4o")) {
+                    if (new String(header, StandardCharsets.UTF_8).equals("db4o")) {
                         result = true;
                     }
                 }

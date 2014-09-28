@@ -17,16 +17,19 @@
  */
 package jgnash.convert.util;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import jgnash.convert.imports.ofx.OfxV1ToV2;
+
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Commandline class to convert OFX version 1 (SGML) to OFX version 2 (XML)
@@ -62,7 +65,8 @@ class Ofx1toOfx2 {
 
     private static void convertToXML(final File inFile, final File outFile) {
 
-        try (FileWriter writer = new FileWriter(outFile)) {
+
+        try (final OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(outFile), StandardCharsets.UTF_8)) {
             String xmlData = OfxV1ToV2.convertToXML(inFile);
 
             writer.write(xmlData);

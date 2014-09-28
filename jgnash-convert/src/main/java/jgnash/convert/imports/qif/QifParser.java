@@ -18,9 +18,11 @@
 package jgnash.convert.imports.qif;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -97,7 +99,7 @@ public final class QifParser {
         
         boolean accountFound = true;
 
-        try (QifReader in = new QifReader(new FileReader(fileName))) {
+        try (QifReader in = new QifReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.UTF_8))) {
 
             String line = in.readLine();
             
@@ -135,9 +137,9 @@ public final class QifParser {
                 }
                 line = in.readLine();
             }          
-        } catch (FileNotFoundException e) {
+        } catch (final FileNotFoundException e) {
             logger.log(Level.WARNING, "Could not find file: {0}", fileName);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             logger.log(Level.SEVERE, null, e);
         }
         
@@ -148,7 +150,7 @@ public final class QifParser {
 
     private boolean parsePartialFile(final String fileName) {
 
-        try (QifReader in = new QifReader(new FileReader(fileName))) {
+        try (QifReader in = new QifReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.UTF_8))) {
 
             String peek = in.peekLine();
             if (startsWith(peek, "!Type:")) {
@@ -163,9 +165,9 @@ public final class QifParser {
                 System.err.println("parseAccountTransactions: error");
             }
           
-        } catch (FileNotFoundException fne) {
+        } catch (final FileNotFoundException fne) {
             logger.log(Level.WARNING, "Could not find file: {0}", fileName);
-        } catch (IOException ioe) {
+        } catch (final IOException ioe) {
             logger.log(Level.SEVERE, null, ioe);
         }
         return false;

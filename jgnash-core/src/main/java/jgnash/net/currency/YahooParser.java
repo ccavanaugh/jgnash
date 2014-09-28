@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.net.SocketTimeoutException;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -58,7 +59,7 @@ public class YahooParser implements CurrencyParser {
         try {
             URLConnection connection = ConnectionFactory.getConnection(url.toString());
 
-            in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
 
             /* Result: "USDAUD=X",1.4455,"9/8/2004","5:39am",1.4455,1.4468 */
 

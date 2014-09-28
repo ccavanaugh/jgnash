@@ -26,6 +26,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -212,7 +213,7 @@ public class NewFileFour extends JPanel implements WizardPage {
 
         if (path != null) {           
             try (InputStream stream = Object.class.getResourceAsStream(path + "/set.txt");
-                    BufferedReader r = new BufferedReader(new InputStreamReader(stream))) {
+                    BufferedReader r = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
 
                 String line = r.readLine();
 

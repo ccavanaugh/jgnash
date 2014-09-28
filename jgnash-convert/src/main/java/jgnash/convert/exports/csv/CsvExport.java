@@ -24,6 +24,7 @@ import jgnash.util.FileUtils;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,8 +40,6 @@ import java.util.logging.Logger;
  */
 public class CsvExport {
 
-    public static final String CHARSET_NAME = "UTF-8";
-
     private CsvExport() {
     }
 
@@ -53,7 +52,7 @@ public class CsvExport {
         // force a correct file extension
         final String fileName = FileUtils.stripFileExtension(file.getAbsolutePath()) + ".csv";
 
-        try (AutoCloseableCSVWriter writer = new AutoCloseableCSVWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), CHARSET_NAME)))) {
+        try (AutoCloseableCSVWriter writer = new AutoCloseableCSVWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), StandardCharsets.UTF_8)))) {
             writer.writeNextRow("Account","Number","Debit","Credit","Balance","Date","Memo","Payee","Reconciled");
 
             // write the transactions

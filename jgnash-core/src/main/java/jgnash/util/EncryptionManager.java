@@ -20,6 +20,7 @@ package jgnash.util;
 
 import org.apache.commons.codec.binary.Base64;
 
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.MessageDigest;
@@ -51,15 +52,15 @@ public class EncryptionManager {
     private static final Logger logger = Logger.getLogger(EncryptionManager.class.getName());
 
     public EncryptionManager(final char[] password) {
-        byte[] encryptionKey = "fake".getBytes();
+        byte[] encryptionKey = "fake".getBytes(StandardCharsets.UTF_8);
 
         try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
+            final MessageDigest md = MessageDigest.getInstance("MD5");
 
-            StringBuilder builder = new StringBuilder(new String(password));
+            final StringBuilder builder = new StringBuilder(new String(password));
 
             // generate the encryption key
-            encryptionKey = md.digest(builder.toString().getBytes());
+            encryptionKey = md.digest(builder.toString().getBytes(StandardCharsets.UTF_8));
 
             builder.delete(0, builder.length() - 1);
         } catch (final NoSuchAlgorithmException e) {
@@ -78,10 +79,11 @@ public class EncryptionManager {
     public String encrypt(final String plain) {
 
         try {
-            Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
+            final Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
+
             cipher.init(Cipher.ENCRYPT_MODE, key);
 
-            return Base64.encodeBase64String(cipher.doFinal(plain.getBytes()));
+            return Base64.encodeBase64String(cipher.doFinal(plain.getBytes(StandardCharsets.UTF_8)));
 
         } catch (final InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
@@ -100,10 +102,11 @@ public class EncryptionManager {
     public String decrypt(final String encrypted) {
 
         try {
-            Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
+            final Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
+
             cipher.init(Cipher.DECRYPT_MODE, key);
 
-            return new String(cipher.doFinal(Base64.decodeBase64(encrypted)));
+            return new String(cipher.doFinal(Base64.decodeBase64(encrypted)), StandardCharsets.UTF_8);
         } catch (final InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
             logger.log(Level.SEVERE, "Invalid password");
             return DECRYPTION_ERROR_TAG;

@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -59,7 +60,7 @@ public class OfxV2Parser implements OfxTags {
 
     private static final String EXTRA_SPACE_REGEX = "\\s+";
 
-    private static final String ENCODING = "UTF-8";
+    private static final String ENCODING = StandardCharsets.UTF_8.name();
 
     private OfxBank bank;
 

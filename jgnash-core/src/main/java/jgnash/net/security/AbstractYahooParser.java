@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.net.SocketTimeoutException;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -137,7 +138,7 @@ public abstract class AbstractYahooParser implements SecurityParser {
 
         URLConnection connection = ConnectionFactory.getConnection(u);
 
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
             line = in.readLine();
 
             if (line != null) {
