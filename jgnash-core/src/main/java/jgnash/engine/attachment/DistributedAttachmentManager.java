@@ -23,6 +23,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
@@ -30,6 +31,7 @@ import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -91,23 +93,33 @@ public class DistributedAttachmentManager implements AttachmentManager {
     @Override
     public boolean addAttachment(final Path path, boolean copy) throws IOException {
 
+        boolean result = false;
+
         // Transfer the file to the remote location
-        fileClient.sendFile(path.toFile());
-
-
+        final Future<Void> future = fileClient.sendFile(path.toFile());
 
         // Determine the cache location the file needs to go to so it does not have to be requested
-        Path newPath = Paths.get(tempAttachmentPath + File.separator + path.getFileName());
+        final Path newPath = Paths.get(tempAttachmentPath + File.separator + path.getFileName());
 
-        // Copy or move the file
-        if (copy) {
-            Files.copy(path, newPath);
-        } else {
-            Files.copy(path, newPath);
-            //Files.delete(path);   // TODO: Need to wait for file send to complete first!
+        if (future != null) {   // if null, path was not valid
+            try {
+                future.get();  // wait for the transfer to complete
+            } catch (InterruptedException | ExecutionException e) {
+                Logger.getLogger(DistributedAttachmentManager.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            }
+
+            // Copy or move the file
+            if (copy) {
+                Files.copy(path, newPath, StandardCopyOption.REPLACE_EXISTING);
+            } else {
+                Files.copy(path, newPath, StandardCopyOption.REPLACE_EXISTING);
+                Files.delete(path);
+            }
+
+            result = true;
         }
 
-        return true;
+        return result;
     }
 
     @Override

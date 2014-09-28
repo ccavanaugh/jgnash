@@ -36,6 +36,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -127,6 +128,8 @@ public class FileTransferTest {
             assertTrue(Files.exists(remoteTemp));
             assertNotEquals(remoteTemp.toString(), tempAttachment.toString());
 
+
+
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
         } catch (Exception e) {
             e.printStackTrace();
@@ -142,6 +145,8 @@ public class FileTransferTest {
 
         System.setProperty(EncryptionManager.ENCRYPTION_FLAG, "false");
         System.setProperty("ssl", "false");
+
+        ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
 
         String testFile = null;
 
@@ -196,12 +201,21 @@ public class FileTransferTest {
             assertNotEquals(tempAttachment.toString(), newPath.toString()); // different files?
 
 
+            // Test that move is working
+            Path moveFile = Files.createTempFile("jgnash", "test");
+            BufferedWriter bw = Files.newBufferedWriter(moveFile, Charset.defaultCharset());
+            bw.write("This is the temporary file content 3.");
+            bw.close();
+
+            assertTrue(e.addAttachment(moveFile, false));
+            assertFalse(Files.exists(moveFile));
+
             // Create a new temp file in the directory
             tempAttachment = Files.createTempFile(AttachmentUtils.getAttachmentDirectory(Paths.get(testFile)), "tempfile2-", ".txt");
             tempAttachment.toFile().deleteOnExit();
 
             //write it
-            BufferedWriter bw = Files.newBufferedWriter(tempAttachment, Charset.defaultCharset());
+            bw = Files.newBufferedWriter(tempAttachment, Charset.defaultCharset());
             bw.write("This is the temporary file content 2.");
             bw.close();
 

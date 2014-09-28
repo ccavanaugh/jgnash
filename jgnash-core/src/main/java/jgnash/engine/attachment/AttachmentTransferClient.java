@@ -20,6 +20,7 @@ package jgnash.engine.attachment;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -133,10 +134,12 @@ class AttachmentTransferClient {
         }
     }
 
-    public void sendFile(final File file) {
+    public Future<Void> sendFile(final File file) {
         if (transferHandler != null) {
-            transferHandler.sendFile(channel, file.getAbsolutePath());
+            return transferHandler.sendFile(channel, file.getAbsolutePath());
         }
+
+        return null;
     }
 
     /**

@@ -27,6 +27,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -146,14 +147,22 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
         return message;
     }
 
-    public void sendFile(final Channel channel, final String fileName) {
+    /**
+     * Sends a file across the channel. The Fu
+     * @param channel  Channel to send file through
+     * @param fileName the file name
+     * @return the future of the potentially asynchronous send is returned. A null value is returned if fileName is a path.
+     */
+    public Future<Void> sendFile(final Channel channel, final String fileName) {
+        Future<Void> future = null;
+
         Path path = Paths.get(fileName);
 
         if (Files.exists(path)) {
 
             if (Files.isDirectory(path)) {
                 channel.writeAndFlush(encrypt(ERROR + "Not a file: " + path) + EOL_DELIMITER);
-                return;
+                return null;
             }
 
             try (InputStream fileInputStream = Files.newInputStream(path)) {
@@ -169,19 +178,21 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
                                 new String(Base64.encodeBase64(Arrays.copyOfRange(bytes, 0, bytesRead)), "UTF-8")) + EOL_DELIMITER);
                     }
                 }
-                channel.writeAndFlush(encrypt(FILE_ENDS + path.getFileName()) + EOL_DELIMITER).sync();
+                future = channel.writeAndFlush(encrypt(FILE_ENDS + path.getFileName()) + EOL_DELIMITER).sync();
 
             } catch (IOException | InterruptedException e) {
                 logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
         } else {
             try {
-                channel.writeAndFlush(encrypt(ERROR + "File not found: " + path) + EOL_DELIMITER).sync();
+                future = channel.writeAndFlush(encrypt(ERROR + "File not found: " + path) + EOL_DELIMITER).sync();
             } catch (final InterruptedException e) {
                 logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
             logger.warning("File not found: " + path);
         }
+
+        return future;
     }
 
     private void sendFile(final ChannelHandlerContext ctx, final String msg) {
