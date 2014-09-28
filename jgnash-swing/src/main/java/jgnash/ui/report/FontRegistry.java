@@ -69,8 +69,10 @@ class FontRegistry {
 
             try {
                 lock.lock();
-                isComplete.await();
 
+                while (!registrationComplete.get()) {
+                    isComplete.await();
+                }
             } catch (InterruptedException ex) {
                 Logger.getLogger(FontRegistry.class.getName()).log(Level.SEVERE, null, ex);
             } finally {
@@ -173,6 +175,8 @@ class FontRegistry {
                                     case "ttc":
                                         registerFont(name);
                                         break;
+                                    default:
+                                        break;  // unknown font type
                                 }
                             }
                         }
