@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -58,6 +59,8 @@ public class OfxV2Parser implements OfxTags {
 
     private static final String EXTRA_SPACE_REGEX = "\\s+";
 
+    private static final String ENCODING = "UTF-8";
+
     private OfxBank bank;
 
     public OfxV2Parser() {
@@ -79,7 +82,7 @@ public class OfxV2Parser implements OfxTags {
      * @param stream InputStream to parse
      */
     public void parse(final InputStream stream) {
-        parse(stream, "UTF-8");
+        parse(stream, ENCODING);
     }
 
     /**
@@ -114,11 +117,10 @@ public class OfxV2Parser implements OfxTags {
         }
     }
 
-    public void parse(final String string, final String encoding) {
-        parse(new ByteArrayInputStream(string.getBytes()), encoding);
+    public void parse(final String string, final String encoding) throws UnsupportedEncodingException {
+        parse(new ByteArrayInputStream(string.getBytes(encoding)), encoding);
     }
 
-    @SuppressWarnings("fallthrough")
     private void readOfx(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "readOfx");
 
@@ -138,6 +140,9 @@ public class OfxV2Parser implements OfxTags {
                         case CREDITCARDMSGSRSV1:
                             parseCreditCardMessageSet(reader);
                             break;
+                        default:
+                            logger.log(Level.WARNING, "Unknown message set {0}", reader.getLocalName());
+                            break;
                     }
                 default:
             }
@@ -152,7 +157,6 @@ public class OfxV2Parser implements OfxTags {
      * @param reader shared XMLStreamReader
      * @throws XMLStreamException XML parsing error has occurred
      */
-    @SuppressWarnings("fallthrough")
     private void parseBankMessageSet(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "parseBankMessageSet");
 
@@ -179,6 +183,9 @@ public class OfxV2Parser implements OfxTags {
                         case BANKTRANLIST:
                             parseBankTransactionList(reader);
                             break;
+                        default:
+                            logger.log(Level.WARNING, "Unknown BANKMSGSRSV1 element: {0}", reader.getLocalName());
+                            break;
                     }
 
                     break;
@@ -200,7 +207,6 @@ public class OfxV2Parser implements OfxTags {
      * @param reader shared XMLStreamReader
      * @throws XMLStreamException XML parsing error has occurred
      */
-    @SuppressWarnings("fallthrough")
     private void parseCreditCardMessageSet(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "parseCreditCardMessageSet");
 
@@ -227,6 +233,9 @@ public class OfxV2Parser implements OfxTags {
                         case BANKTRANLIST:
                             parseBankTransactionList(reader);
                             break;
+                        default:
+                            logger.log(Level.WARNING, "Unknown CREDITCARDMSGSRSV1 element: {0}", reader.getLocalName());
+                            break;
                     }
 
                     break;
@@ -248,7 +257,6 @@ public class OfxV2Parser implements OfxTags {
      * @param reader shared XMLStreamReader
      * @throws XMLStreamException XML parsing error has occurred
      */
-    @SuppressWarnings("fallthrough")
     private void parseBankTransactionList(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "parseBankTransactionList");
 
@@ -269,6 +277,9 @@ public class OfxV2Parser implements OfxTags {
                             break;
                         case STMTTRN:
                             parseBankTransaction(reader);
+                            break;
+                        default:
+                            logger.log(Level.WARNING, "Unknown BANKTRANLIST element: {0}", reader.getLocalName());
                             break;
                     }
 
@@ -291,7 +302,6 @@ public class OfxV2Parser implements OfxTags {
      * @param reader shared XMLStreamReader
      * @throws XMLStreamException XML parsing error has occurred
      */
-    @SuppressWarnings("fallthrough")
     private void parseBankTransaction(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "parseBankTransaction");
 
@@ -346,6 +356,9 @@ public class OfxV2Parser implements OfxTags {
                         case ORIGCURRENCY:
                             tran.currency = reader.getElementText();
                             break;
+                        default:
+                            logger.log(Level.WARNING, "Unknown STMTTRN element: {0}", reader.getLocalName());
+                            break;
                     }
 
                     break;
@@ -369,7 +382,6 @@ public class OfxV2Parser implements OfxTags {
      * @param reader shared XMLStreamReader
      * @throws XMLStreamException XML parsing error has occurred
      */
-    @SuppressWarnings("fallthrough")
     private void parseAccountInfo(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "parseAccountInfo");
 
@@ -394,6 +406,9 @@ public class OfxV2Parser implements OfxTags {
                         case BRANCHID:
                             bank.branchId = reader.getElementText();
                             break;
+                        default:
+                            logger.log(Level.WARNING, "Unknown BANKACCTFROM element: {0}", reader.getLocalName());
+                            break;
                     }
 
                     break;
@@ -415,7 +430,6 @@ public class OfxV2Parser implements OfxTags {
      * @param reader shared XMLStreamReader
      * @throws XMLStreamException XML parsing error has occurred
      */
-    @SuppressWarnings("fallthrough")
     private void parseLedgerBalance(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "parseLedgerBalance");
 
@@ -433,6 +447,9 @@ public class OfxV2Parser implements OfxTags {
                             break;
                         case DTASOF:
                             bank.ledgerBalanceDate = parseDate(reader.getElementText());
+                            break;
+                        default:
+                            logger.log(Level.WARNING, "Unknown ledger balance information {0}", reader.getLocalName());
                             break;
                     }
 
@@ -455,7 +472,6 @@ public class OfxV2Parser implements OfxTags {
      * @param reader shared XMLStreamReader
      * @throws XMLStreamException XML parsing error has occurred
      */
-    @SuppressWarnings("fallthrough")
     private void parseAvailableBalance(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "parseAvailableBalance");
 
@@ -473,6 +489,9 @@ public class OfxV2Parser implements OfxTags {
                             break;
                         case DTASOF:
                             bank.ledgerBalanceDate = parseDate(reader.getElementText());
+                            break;
+                        default:
+                            logger.log(Level.WARNING, "Unknown AVAILBAL element {0}", reader.getLocalName());
                             break;
                     }
 
@@ -495,7 +514,6 @@ public class OfxV2Parser implements OfxTags {
      * @param reader shared XMLStreamReader
      * @throws XMLStreamException XML parsing error has occurred
      */
-    @SuppressWarnings("fallthrough")
     private static void parseSignonMessageSet(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "parseSignonMessageSet");
 
