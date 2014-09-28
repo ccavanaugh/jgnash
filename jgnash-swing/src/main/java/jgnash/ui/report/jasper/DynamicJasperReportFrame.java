@@ -40,7 +40,6 @@ import org.jdesktop.swingx.JXStatusBar;
 
 /**
  * @author Craig Cavanaugh
- *
  */
 final class DynamicJasperReportFrame extends JFrame {
 
@@ -53,6 +52,8 @@ final class DynamicJasperReportFrame extends JFrame {
     private final LogHandler logHandler = new LogHandler();
 
     private JTextField statusField;
+
+    private static final Logger logger = Logger.getLogger(DynamicJasperReport.class.getName());
 
     /**
      * Frame for viewing Jasper reports
@@ -81,11 +82,11 @@ final class DynamicJasperReportFrame extends JFrame {
     }
 
     private void unregisterLogHandler() {
-        Logger.getLogger(DynamicJasperReport.class.getName()).removeHandler(logHandler);
+        logger.removeHandler(logHandler);
     }
 
     private void registerLogHandler() {
-        Logger.getLogger(DynamicJasperReport.class.getName()).addHandler(logHandler);
+        logger.addHandler(logHandler);
     }
 
     private void init() {
