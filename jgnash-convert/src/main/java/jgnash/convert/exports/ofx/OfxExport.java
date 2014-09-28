@@ -17,17 +17,27 @@
  */
 package jgnash.convert.exports.ofx;
 
-import jgnash.engine.*;
-import jgnash.convert.common.OfxTags;
-import jgnash.util.FileUtils;
-
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import jgnash.convert.common.OfxTags;
+import jgnash.engine.Account;
+import jgnash.engine.AccountType;
+import jgnash.engine.InvestmentTransaction;
+import jgnash.engine.SecurityNode;
+import jgnash.engine.Transaction;
+import jgnash.util.FileUtils;
 
 /**
  * Primary class for OFX export. The SGML format is used instead of the newer
@@ -41,7 +51,7 @@ public class OfxExport implements OfxTags {
             "SECURITY:NONE", "ENCODING:USASCII", "CHARSET:1252", "COMPRESSION:NONE", "OLDFILEUID:NONE",
             "NEWFILEUID:NONE"};
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
     private final Account account;
 
@@ -390,8 +400,10 @@ public class OfxExport implements OfxTags {
         indentedWriter.println(wrapClose(INCOME), --indentLevel);
     }
 
-    private static String encodeDate(final Date date) {
-        return dateFormat.format(date);
+    private String encodeDate(final Date date) {
+        synchronized (dateFormat) {
+            return dateFormat.format(date);
+        }
     }
 
     private static String wrapOpen(final String element) {
