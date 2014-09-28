@@ -135,6 +135,8 @@ public class DistributedLockServer {
                         case LOCK_TYPE_WRITE:
                             lock.lockForWrite(remoteThread);
                             break;
+                        default:
+                            break;
                     }
                     break;
                 case UNLOCK:
@@ -144,6 +146,8 @@ public class DistributedLockServer {
                             break;
                         case LOCK_TYPE_WRITE:
                             lock.unlockWrite(remoteThread);
+                            break;
+                        default:
                             break;
                     }
                     break;
@@ -235,19 +239,21 @@ public class DistributedLockServer {
         public void channelInactive(final ChannelHandlerContext ctx) throws Exception {
             logger.log(Level.INFO, "Remote connection {0} closed", ctx.channel().remoteAddress().toString());
 
-            String uuid = handlerContextMap.get(ctx);
+            final String uuid = handlerContextMap.get(ctx);
 
             // Search through the lock map and remove any stale locks
             if (uuid != null) {
                 for (ReadWriteLock readWriteLock : lockMap.values()) {  // look at every lock
-                    for (String remoteThread : readWriteLock.readingThreads.keySet()) { // if the remoteThread starts with the uuid, request a cleanup
+
+                    // if the remoteThread starts with the uuid, request a cleanup
+                    for (String remoteThread : readWriteLock.readingThreads.keySet()) {
                         if (remoteThread.startsWith(uuid)) {    // cleanup a stale lock
                             readWriteLock.cleanupStaleThread(remoteThread);
                         }
                     }
 
-                    if (readWriteLock.writingThread != null && readWriteLock.writingThread.startsWith(uuid)) {
-                        readWriteLock.cleanupStaleThread(readWriteLock.writingThread);
+                    if (readWriteLock.hasWriteThread(uuid)) {
+                        readWriteLock.cleanupStaleWriteThread();
                     }
                 }
             }
@@ -318,6 +324,16 @@ public class DistributedLockServer {
             this.id = id;
         }
 
+        synchronized boolean hasWriteThread(final String id) {
+            boolean result = false;
+
+            if (writingThread != null) {
+                result = writingThread.startsWith(id);
+            }
+
+            return result;
+        }
+
         synchronized void cleanupStaleThread(final String remoteThread) {
             if (readingThreads.containsKey(remoteThread)) {
                 unlockRead(remoteThread);
@@ -326,6 +342,18 @@ public class DistributedLockServer {
 
             if (writingThread != null && writingThread.equals(remoteThread)) {
                 unlockWrite(remoteThread);
+                logger.warning("Removed a stale write lock for: " + id);
+            }
+        }
+
+        synchronized void cleanupStaleWriteThread() {
+            if (readingThreads.containsKey(writingThread)) {
+                unlockRead( writingThread);
+                logger.warning("Removed a stale read lock for: " + id);
+            }
+
+            if (writingThread != null) {
+                unlockWrite( writingThread);
                 logger.warning("Removed a stale write lock for: " + id);
             }
         }
