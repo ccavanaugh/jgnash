@@ -29,6 +29,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,14 +41,12 @@ import jgnash.util.OS;
  * @author Craig Cavanaugh
  */
 public class CheckLayoutSerializationFactory {
-    
-    private static final String CHARSET = "UTF-8";
 
     public static CheckLayout loadLayout(final String file) {
         XStream xstream = getStream();
         CheckLayout layout = null;
 
-        try (Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), CHARSET))) {
+        try (Reader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
             layout = (CheckLayout) xstream.fromXML(reader);
         } catch (IOException e) {
             Logger.getLogger(CheckLayoutSerializationFactory.class.getName()).log(Level.SEVERE, null, e);
@@ -60,7 +59,7 @@ public class CheckLayoutSerializationFactory {
 
         XStream xstream = getStream();
 
-        try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), CHARSET))) {
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
             xstream.toXML(layout, writer);
             result = true;
         } catch (IOException e) {

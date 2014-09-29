@@ -26,6 +26,7 @@ import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -73,7 +74,7 @@ public final class PluginFactory {
 
             // decode to correctly handle spaces, etc. in the returned path
             try {
-                pluginDirectory = URLDecoder.decode(pluginDirectory, "UTF-8");
+                pluginDirectory = URLDecoder.decode(pluginDirectory, StandardCharsets.UTF_8.name());
             } catch (UnsupportedEncodingException ex) {
                 logger.log(Level.SEVERE, null, ex);
             }

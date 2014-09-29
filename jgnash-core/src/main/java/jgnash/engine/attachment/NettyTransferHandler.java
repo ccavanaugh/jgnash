@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -175,7 +176,8 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
                 while ((bytesRead = fileInputStream.read(bytes)) != -1) {
                     if (bytesRead > 0) {
                         channel.write(encrypt(FILE_CHUNK + path.getFileName() + ':' +
-                                new String(Base64.encodeBase64(Arrays.copyOfRange(bytes, 0, bytesRead)), "UTF-8")) + EOL_DELIMITER);
+                                new String(Base64.encodeBase64(Arrays.copyOfRange(bytes, 0, bytesRead)),
+                                        StandardCharsets.UTF_8)) + EOL_DELIMITER);
                     }
                 }
                 future = channel.writeAndFlush(encrypt(FILE_ENDS + path.getFileName()) + EOL_DELIMITER).sync();

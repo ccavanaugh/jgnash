@@ -45,8 +45,6 @@ public class FileMagic {
 
     private static final Pattern COLON_DELIMITER_PATTERN = Pattern.compile(":");
 
-    private static final String UTF_8 = "UTF-8";
-
     private static final byte[] BINARY_XSTREAM_HEADER = new byte[]{10, -127, 0, 13, 111, 98, 106, 101, 99, 116, 45,
             115, 116, 114, 101, 97, 109, 11, -127, 10};
 
@@ -55,6 +53,10 @@ public class FileMagic {
     private static final byte[] HSQL_HEADER = "SET DATABASE UNIQUE NAME HSQLDB".getBytes(StandardCharsets.UTF_8);
 
     private static final byte[] XML_HEADER = "<?xml version=\"1.0\"".getBytes(StandardCharsets.UTF_8);
+
+    public static final String USASCII = "USASCII";
+
+    public static final String WINDOWS_1252 = "windows-1252";
 
     public static enum FileType {
         db4o, BinaryXStream, OfxV1, OfxV2, jGnash1XML, jGnash2XML, h2, hsql, unknown
@@ -134,21 +136,20 @@ public class FileMagic {
         }
 
         if (encoding != null && charset != null) {
-            if (encoding.equals(UTF_8) && charset.equals("CSUNICODE")) {
-                //return "UTF-8";
+            if (encoding.equals(StandardCharsets.UTF_8.name()) && charset.equals("CSUNICODE")) {
+                return StandardCharsets.ISO_8859_1.name();
+            } else if (encoding.equals(StandardCharsets.UTF_8.name())) {
+                return StandardCharsets.UTF_8.name();
+            } else if (encoding.equals(USASCII) && charset.equals("1252")) {
+                return WINDOWS_1252;
+            } else if (encoding.equals(USASCII) && charset.contains("8859-1")) {
                 return "ISO-8859-1";
-            } else if (encoding.equals(UTF_8)) {
-                return UTF_8;
-            } else if (encoding.equals("USASCII") && charset.equals("1252")) {
-                return "windows-1252";
-            } else if (encoding.equals("USASCII") && charset.contains("8859-1")) {
-                return "ISO-8859-1";
-            } else if (encoding.equals("USASCII") && charset.equals("NONE")) {
-                return "windows-1252";
+            } else if (encoding.equals(USASCII) && charset.equals("NONE")) {
+                return WINDOWS_1252;
             }
         }
 
-        return "windows-1252";
+        return WINDOWS_1252;
     }
 
     public static boolean isOfxV1(final File file) {
@@ -299,7 +300,7 @@ public class FileMagic {
         try (InputStream input = new BufferedInputStream(new FileInputStream(file))) {
             XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
-            XMLStreamReader reader = inputFactory.createXMLStreamReader(input, UTF_8);
+            XMLStreamReader reader = inputFactory.createXMLStreamReader(input, StandardCharsets.UTF_8.name());
 
             parse:
             while (reader.hasNext()) {

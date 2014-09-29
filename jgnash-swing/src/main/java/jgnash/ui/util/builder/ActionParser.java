@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -181,11 +182,11 @@ public final class ActionParser extends DefaultHandler {
      * @param stream InputStream containing an actionSet document
      */
     void loadFile(final InputStream stream) {
-        SAXParserFactory parserfactory = SAXParserFactory.newInstance();
-        parserfactory.setValidating(false);
+        SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+        parserFactory.setValidating(false);
 
         try {
-            SAXParser parser = parserfactory.newSAXParser();
+            SAXParser parser = parserFactory.newSAXParser();
             parser.parse(stream, this);
 
             createActions(); // create reflective actions
@@ -529,7 +530,7 @@ public final class ActionParser extends DefaultHandler {
             URL resource = resources.nextElement();
 
             String fileName = resource.getFile();
-            String fileNameDecoded = URLDecoder.decode(fileName, "UTF-8");
+            String fileNameDecoded = URLDecoder.decode(fileName, StandardCharsets.UTF_8.name());
             dirs.add(new File(fileNameDecoded));
         }
         ArrayList<Class<?>> classes = new ArrayList<>();

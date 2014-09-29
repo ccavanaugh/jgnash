@@ -30,6 +30,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.channels.FileLock;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -131,7 +132,7 @@ class XMLContainer extends AbstractXStreamContainer {
 
         logger.info("Writing XML file");
 
-        try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))) {
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8))) {
             writer.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
             writer.write("<?fileVersion " + Engine.CURRENT_VERSION + "?>\n");
 
@@ -154,7 +155,7 @@ class XMLContainer extends AbstractXStreamContainer {
         String version = FileMagic.getjGnashXMLVersion(file); // version of the jGnash XML file
 
         if (Float.parseFloat(version) >= 2.01f) { // 2.01f is hard coded for prior encoding bug
-            encoding = "UTF-8"; // encoding is always UTF-8 for anything greater than 2.0
+            encoding = StandardCharsets.UTF_8.name(); // encoding is always UTF-8 for anything greater than 2.0
         }
 
         try (FileInputStream fis = new FileInputStream(file);

@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -98,8 +99,6 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
     private static final Pattern COMMA_DELIMITER_PATTERN = Pattern.compile(",");
 
     private ImportRun run;
-
-    private static final String ENCODING = "UTF-8";
 
     /**
      * Creates the dialog for importing security history from Yahoo
@@ -294,7 +293,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
                 
                 connection = new URL(r.toString()).openConnection();
 
-                try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), ENCODING))) {
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
 
                     String l = in.readLine();
 

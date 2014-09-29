@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -157,7 +158,7 @@ public class Import {
 
             /* read commodity data first */
             try (InputStream input = new BufferedInputStream(new FileInputStream(new File(filename)))) {
-                XMLStreamReader reader = inputFactory.createXMLStreamReader(input, "UTF-8");
+                XMLStreamReader reader = inputFactory.createXMLStreamReader(input, StandardCharsets.UTF_8.name());
                 imp.importCommodities(reader);
                 reader.close();
             }
@@ -185,7 +186,7 @@ public class Import {
 
             /* read account data first */
             try (InputStream input = new BufferedInputStream(new FileInputStream(new File(filename)))) {
-                XMLStreamReader reader = inputFactory.createXMLStreamReader(input, "UTF-8");
+                XMLStreamReader reader = inputFactory.createXMLStreamReader(input, StandardCharsets.UTF_8.name());
                 imp.importAccounts(reader);
                 reader.close();
             }
@@ -215,7 +216,7 @@ public class Import {
 
             /* import transactions */
             try (InputStream input = new BufferedInputStream(new FileInputStream(new File(filename)))) {
-                XMLStreamReader reader = inputFactory.createXMLStreamReader(input, "UTF-8");
+                XMLStreamReader reader = inputFactory.createXMLStreamReader(input, StandardCharsets.UTF_8.name());
                 imp.importTransactions(reader);
                 reader.close();
             }
