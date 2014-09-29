@@ -24,12 +24,13 @@ import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.SwingWorker;
+
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.OpenDatabaseDialog;
-import jgnash.ui.util.SimpleSwingWorker;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
 
@@ -53,7 +54,7 @@ public class OpenAction {
 
     public static void openAction() {
 
-        final class BootEngine extends SimpleSwingWorker {
+        final class BootEngine extends SwingWorker<Void, Void> {
 
             private OpenDatabaseDialog dialog;
 
@@ -140,7 +141,7 @@ public class OpenAction {
 
         String database = file.getAbsolutePath();
 
-        final class BootEngine extends SimpleSwingWorker {
+        final class BootEngine extends SwingWorker<Void, Void> {
 
             @Override
             protected Void doInBackground() throws Exception {
@@ -189,7 +190,7 @@ public class OpenAction {
     public static void openLastAction() {
         final Logger appLogger = UIApplication.getLogger();
 
-        final class BootEngine extends SimpleSwingWorker {
+        final class BootEngine extends SwingWorker<Void, Void> {
 
             @Override
             protected Void doInBackground() throws Exception {
@@ -262,7 +263,7 @@ public class OpenAction {
 
     public static void openRemote(final String host, final int port, final char[] password) {
 
-        final class BootEngine extends SimpleSwingWorker {
+        final class BootEngine extends  SwingWorker<Void, Void> {
 
             @Override
             protected Void doInBackground() throws Exception {

@@ -22,7 +22,6 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
 import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.ui.UIApplication;
-import jgnash.ui.util.SimpleSwingWorker;
 import jgnash.ui.util.builder.Action;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
@@ -93,7 +92,7 @@ public class SaveFileAsAction extends AbstractEnabledAction {
             // get the filename and strip the file extension if added
             final String destination = chooser.getSelectedFile().getAbsolutePath();
 
-            final class SaveAs extends SimpleSwingWorker {
+            final class SaveAs extends SwingWorker<Void, Void> {
 
                 @Override
                 protected Void doInBackground() throws Exception {
