@@ -239,7 +239,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
             try {
                 Thread.sleep(1800);
             } catch (final InterruptedException ex) {
-               logger.log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, null, ex);
             }
         }
 
@@ -538,13 +538,18 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     }
 
     public void stopWaitMessage() {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                waitPanel.setWaiting(false);
-                busyLayerUI.stop();
-            }
-        });
+        if (EventQueue.isDispatchThread()) {
+            waitPanel.setWaiting(false);
+            busyLayerUI.stop();
+        } else {
+            EventQueue.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    waitPanel.setWaiting(false);
+                    busyLayerUI.stop();
+                }
+            });
+        }
     }
 
     private void displayWarning(final String message) {
