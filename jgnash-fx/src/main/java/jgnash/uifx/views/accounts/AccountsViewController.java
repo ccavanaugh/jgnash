@@ -37,6 +37,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 /**
  * Accounts view controller
@@ -72,12 +74,14 @@ public class AccountsViewController extends AccountTreeController {
     public void initialize(final URL location, final ResourceBundle resources) {
         super.initialize(location, resources);
 
-        newButton.setGraphic(FontAwesome.Glyph.PLUS.create());
-        modifyButton.setGraphic(FontAwesome.Glyph.EDIT.create());
-        reconcileButton.setGraphic(FontAwesome.Glyph.ADJUST.create());
-        deleteButton.setGraphic(FontAwesome.Glyph.REMOVE_SIGN.create());
-        filterButton.setGraphic(FontAwesome.Glyph.FILTER.create());
-        zoomButton.setGraphic(FontAwesome.Glyph.ZOOM_IN.create());
+        final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+
+        newButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.PLUS));
+        modifyButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.EDIT));
+        reconcileButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.ADJUST));
+        deleteButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.TIMES));
+        filterButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.FILTER));
+        zoomButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.EXTERNAL_LINK_SQUARE));
 
         modifyButton.setDisable(true);
         deleteButton.setDisable(true);

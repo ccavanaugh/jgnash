@@ -29,6 +29,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 /**
  * @author Craig Cavanaugh
@@ -53,11 +55,14 @@ public class MainToolBarController implements Initializable, MessageListener {
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        cutButton.setGraphic(FontAwesome.Glyph.CUT.create());
-        copyButton.setGraphic(FontAwesome.Glyph.COPY.create());
-        openButton.setGraphic(FontAwesome.Glyph.FOLDER_OPEN.create());
-        pasteButton.setGraphic(FontAwesome.Glyph.PASTE.create());
+    public void initialize(final URL location, final ResourceBundle resources) {
+
+        final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+
+        cutButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.CUT));
+        copyButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.COPY));
+        openButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.FOLDER_OPEN));
+        pasteButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.PASTE));
     }
 
     @Override

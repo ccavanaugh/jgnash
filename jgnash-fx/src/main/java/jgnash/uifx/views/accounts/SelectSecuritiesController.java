@@ -82,13 +82,13 @@ public class SelectSecuritiesController implements Initializable {
             ((Stage) cancelButton.getScene().getWindow()).close();
         });
 
-        checkListView.getCheckModel().getSelectedItems().addListener((ListChangeListener<LockedDecorator>) change -> forceLockedSecurities());
+        checkListView.getCheckModel().getCheckedItems().addListener((ListChangeListener<LockedDecorator>) change -> forceLockedSecurities());
     }
 
     private void forceLockedSecurities() {
         // must be pushed later
         checkListView.getItems().stream().filter(LockedDecorator::isLocked).forEach(lockedDecorator ->
-                Platform.runLater(() -> checkListView.getCheckModel().select(lockedDecorator)));
+                Platform.runLater(() -> checkListView.getCheckModel().check(lockedDecorator)));
     }
 
     public void loadSecuritiesForAccount(final Account account) {
@@ -116,7 +116,7 @@ public class SelectSecuritiesController implements Initializable {
         if (account != null) {
             for (SecurityNode node : account.getSecurities()) {
                 items.stream().filter(decorator -> decorator.securityNode.equals(node)).forEach(decorator ->
-                        Platform.runLater(() -> checkListView.getCheckModel().select(decorator)));
+                        Platform.runLater(() -> checkListView.getCheckModel().check(decorator)));
             }
         }
 
@@ -152,7 +152,7 @@ public class SelectSecuritiesController implements Initializable {
     public Set<SecurityNode> getSelectedSecurities() {
         Set<SecurityNode> securityNodeSet = new TreeSet<>();
 
-        securityNodeSet.addAll(checkListView.getCheckModel().getSelectedItems().stream().map(lockedDecorator -> lockedDecorator.securityNode).collect(Collectors.toList()));
+        securityNodeSet.addAll(checkListView.getCheckModel().getCheckedItems().stream().map(lockedDecorator -> lockedDecorator.securityNode).collect(Collectors.toList()));
 
         return securityNodeSet;
     }
