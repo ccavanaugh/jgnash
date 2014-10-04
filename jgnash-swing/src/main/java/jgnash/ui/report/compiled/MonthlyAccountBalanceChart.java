@@ -31,6 +31,8 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -66,7 +68,6 @@ import org.jfree.data.time.TimeSeriesCollection;
  * @author Craig Cavanaugh
  * @author Dany Veilleux
  * @author Peter Vida
- *
  */
 public class MonthlyAccountBalanceChart {
 
@@ -170,8 +171,8 @@ public class MonthlyAccountBalanceChart {
 
                     chartPanel.setChart(createVerticalXYBarChart(account));
                     panel.validate();
-                } catch (Exception ex) {
-                    System.out.println(ex);
+                } catch (final Exception ex) {
+                    Logger.getLogger(MonthlyAccountBalanceChart.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
                 }
             }
         };
@@ -193,8 +194,8 @@ public class MonthlyAccountBalanceChart {
 
                     chartPanel.setChart(createVerticalXYBarChart(account));
                     panel.validate();
-                } catch (Exception ex) {
-                    System.out.println(ex);
+                } catch (final Exception ex) {
+                    Logger.getLogger(MonthlyAccountBalanceChart.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
                 }
             }
         });
@@ -214,8 +215,8 @@ public class MonthlyAccountBalanceChart {
 
                     chartPanel.setChart(createVerticalXYBarChart(account));
                     panel.validate();
-                } catch (Exception ex) {
-                    System.out.println(ex);
+                } catch (final Exception ex) {
+                    Logger.getLogger(MonthlyAccountBalanceChart.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
                 }
             }
         });

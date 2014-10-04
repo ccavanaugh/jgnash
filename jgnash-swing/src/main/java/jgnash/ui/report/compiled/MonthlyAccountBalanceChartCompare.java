@@ -17,10 +17,6 @@
  */
 package jgnash.ui.report.compiled;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,6 +26,8 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -45,6 +43,9 @@ import jgnash.ui.register.AccountBalanceDisplayManager;
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;
 
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
@@ -66,7 +67,6 @@ import org.jfree.data.time.TimeSeriesCollection;
  * @author Dany Veilleux
  * @author Peter Vida
  * @author Pranay Kumar
- *
  */
 
 /**
@@ -199,8 +199,8 @@ public class MonthlyAccountBalanceChartCompare {
 
                     chartPanel.setChart(createVerticalXYBarChart(account, account2));
                     panel.validate();
-                } catch (Exception ex) {
-                    System.out.println(ex);
+                } catch (final Exception ex) {
+                    Logger.getLogger(MonthlyAccountBalanceChartCompare.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
                 }
             }
         };
@@ -231,8 +231,8 @@ public class MonthlyAccountBalanceChartCompare {
 
                     chartPanel.setChart(createVerticalXYBarChart(account, account2));
                     panel.validate();
-                } catch (Exception ex) {
-                    System.out.println(ex);
+                } catch (final Exception ex) {
+                    Logger.getLogger(MonthlyAccountBalanceChartCompare.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
                 }
             }
         });
@@ -257,8 +257,8 @@ public class MonthlyAccountBalanceChartCompare {
 
                     chartPanel.setChart(createVerticalXYBarChart(account, account2));
                     panel.validate();
-                } catch (Exception ex) {
-                    System.out.println(ex);
+                } catch (final Exception ex) {
+                    Logger.getLogger(MonthlyAccountBalanceChartCompare.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
                 }
             }
         });

@@ -235,8 +235,8 @@ public class IncomeExpensePieChart {
                             }
                             setCurrentAccount(parent);
                         }
-                    } catch (Exception ex) {
-                        System.err.println(ex);
+                    } catch (final Exception e) {
+                        Logger.getLogger(IncomeExpensePieChart.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
                     }
                 }
             }
