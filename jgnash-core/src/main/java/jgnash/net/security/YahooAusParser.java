@@ -29,9 +29,4 @@ public class YahooAusParser extends AbstractYahooParser {
     public String getBaseURL() {
         return "http://au.finance.yahoo.com/d/quotes.csv?s=";
     }
-
-    @Override
-    public boolean useISIN() {
-        return false;
-    }
 }

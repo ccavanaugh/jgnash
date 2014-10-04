@@ -31,9 +31,4 @@ public class YahooUKParser extends AbstractYahooParser {
         
         return "http://uk.finance.yahoo.com/d/quotes.csv?s=";
     }
-
-    @Override
-    public boolean useISIN() {
-        return false;
-    }
 }

@@ -40,4 +40,6 @@ public interface SecurityParser {
     Date getDate();
       
     boolean parse(SecurityNode node);
+
+    boolean useISIN();
 }

@@ -28,7 +28,6 @@ import jgnash.util.DateUtils;
  * Null security history parser
  *
  * @author Craig Cavanaugh
- *
  */
 public class NullParser implements SecurityParser {
 
@@ -55,6 +54,11 @@ public class NullParser implements SecurityParser {
     @Override
     public boolean parse(SecurityNode node) {
         return false;
+    }
+
+    @Override
+    public boolean useISIN() {
+        return true;
     }
 
     @Override

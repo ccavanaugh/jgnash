@@ -30,9 +30,4 @@ public class YahooParser extends AbstractYahooParser {
         // http://download.finance.yahoo.com/d/quotes.csv?s=AMD&f=sl1d1t1c1ohgv&e=.csv
         return "http://download.finance.yahoo.com/d/quotes.csv?s=";
     }
-
-    @Override
-    public boolean useISIN() {
-        return false;
-    }
 }

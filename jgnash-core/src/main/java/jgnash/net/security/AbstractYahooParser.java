@@ -112,7 +112,10 @@ public abstract class AbstractYahooParser implements SecurityParser {
     // http://download.finance.yahoo.com/d/quotes.csv?s=AMD&f=sl1d1t1c1ohgv&e=.csv
     protected abstract String getBaseURL();
 
-    protected abstract boolean useISIN();
+    @Override
+    public boolean useISIN() {
+        return false;
+    }
 
     @Override
     public synchronized boolean parse(final SecurityNode node) {
