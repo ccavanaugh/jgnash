@@ -17,15 +17,15 @@
  */
 package jgnash.engine;
 
-import javax.persistence.Entity;
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Entity;
+
 /**
  * Class for investment transactions.
- *
+ * <p/>
  * All TransactionEntry(s) must be of the same security
  *
  * @author Craig Cavanaugh
@@ -102,12 +102,19 @@ public class InvestmentTransaction extends Transaction {
     public BigDecimal getPrice() {
         BigDecimal price = BigDecimal.ZERO;
 
-        for (TransactionEntry e : transactionEntries) {
-            if (e instanceof AbstractInvestmentTransactionEntry) {
-                price = ((AbstractInvestmentTransactionEntry) e).getPrice();
-                break;
+        getLock().readLock().lock();
+
+        try {
+            for (final TransactionEntry e : transactionEntries) {
+                if (e instanceof AbstractInvestmentTransactionEntry) {
+                    price = ((AbstractInvestmentTransactionEntry) e).getPrice();
+                    break;
+                }
             }
+        } finally {
+            getLock().readLock().unlock();
         }
+
         return price;
     }
 
@@ -120,11 +127,18 @@ public class InvestmentTransaction extends Transaction {
     public BigDecimal getQuantity() {
         BigDecimal quantity = BigDecimal.ZERO;
 
-        for (TransactionEntry e : transactionEntries) {
-            if (e instanceof AbstractInvestmentTransactionEntry) {
-                quantity = quantity.add(((AbstractInvestmentTransactionEntry) e).getQuantity());
+        getLock().readLock().lock();
+
+        try {
+            for (TransactionEntry e : transactionEntries) {
+                if (e instanceof AbstractInvestmentTransactionEntry) {
+                    quantity = quantity.add(((AbstractInvestmentTransactionEntry) e).getQuantity());
+                }
             }
+        } finally {
+            getLock().readLock().unlock();
         }
+
         return quantity;
     }
 
@@ -137,11 +151,18 @@ public class InvestmentTransaction extends Transaction {
     BigDecimal getSignedQuantity() {
         BigDecimal quantity = BigDecimal.ZERO;
 
-        for (TransactionEntry e : transactionEntries) {
-            if (e instanceof AbstractInvestmentTransactionEntry) {
-                quantity = quantity.add(((AbstractInvestmentTransactionEntry) e).getSignedQuantity());
+        getLock().readLock().lock();
+
+        try {
+            for (TransactionEntry e : transactionEntries) {
+                if (e instanceof AbstractInvestmentTransactionEntry) {
+                    quantity = quantity.add(((AbstractInvestmentTransactionEntry) e).getSignedQuantity());
+                }
             }
+        } finally {
+            getLock().readLock().unlock();
         }
+
         return quantity;
     }
 
@@ -255,13 +276,20 @@ public class InvestmentTransaction extends Transaction {
 
         BigDecimal total = BigDecimal.ZERO;
 
-        for (TransactionEntry e : transactionEntries) {
-            if (e instanceof AbstractInvestmentTransactionEntry) {
-                total = total.add(((AbstractInvestmentTransactionEntry) e).getTotal());
-            } else {
-                total = total.add(e.getAmount(account));
+        getLock().readLock().lock();
+
+        try {
+            for (TransactionEntry e : transactionEntries) {
+                if (e instanceof AbstractInvestmentTransactionEntry) {
+                    total = total.add(((AbstractInvestmentTransactionEntry) e).getTotal());
+                } else {
+                    total = total.add(e.getAmount(account));
+                }
             }
+        } finally {
+            getLock().readLock().unlock();
         }
+
         return total;
     }
 
