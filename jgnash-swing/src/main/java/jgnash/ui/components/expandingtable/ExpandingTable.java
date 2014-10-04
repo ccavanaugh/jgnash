@@ -325,9 +325,7 @@ public class ExpandingTable<E extends Comparable<? super E>> extends JTable {
             height = Math.max(height, collapsedIcon.getIconHeight() + VERTICAL_ICON_PADDING);
         }
 
-        if (expandedIcon != null) {
-            height = Math.max(height, expandedIcon.getIconHeight() + VERTICAL_ICON_PADDING);
-        }
+        height = Math.max(height, expandedIcon.getIconHeight() + VERTICAL_ICON_PADDING);
 
         setRowHeight(height);
     }
