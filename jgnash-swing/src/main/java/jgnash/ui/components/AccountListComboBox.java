@@ -212,7 +212,7 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
          * Returns the value at the specified index.
          *
          * @param index the requested index
-         * @return the value at <code>index</code>
+         * @return the value at {@code index}
          */
         @Override
         public Account getElementAt(final int index) {
@@ -224,7 +224,7 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
         /**
          * Returns the selected item
          *
-         * @return The selected item or <code>null</code> if there is no
+         * @return The selected item or {@code null} if there is no
          *         selection
          */
         @Override
@@ -246,10 +246,10 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
 
         /**
          * Set the selected item. The implementation of this method should
-         * notify all registered <code>ListDataListener</code>s that the
+         * notify all registered {@code ListDataListener}s that the
          * contents have changed.
          *
-         * @param anItem the list object to select or <code>null</code> to clear
+         * @param anItem the list object to select or {@code null} to clear
          *               the selection
          */
         @Override

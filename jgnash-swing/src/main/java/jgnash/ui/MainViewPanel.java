@@ -201,9 +201,9 @@ class MainViewPanel extends JPanel implements ActionListener {
     }
 
     /**
-     * Adds an <code>ActionListener</code> to the button.
+     * Adds an {@code ActionListener} to the button.
      * 
-     * @param l the <code>ActionListener</code> to be added
+     * @param l the {@code ActionListener} to be added
      */
     void addActionListener(final ActionListener l) {
         listenerList.add(ActionListener.class, l);

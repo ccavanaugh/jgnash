@@ -96,7 +96,7 @@ public class EncryptionManager {
      * Decrypts the supplied string
      *
      * @param encrypted String to decrypt
-     * @return The decrypted string of <code>DECRYPTION_ERROR_TAG</code> if decryption fails
+     * @return The decrypted string of {@code DECRYPTION_ERROR_TAG} if decryption fails
      * @see #DECRYPTION_ERROR_TAG
      */
     public String decrypt(final String encrypted) {

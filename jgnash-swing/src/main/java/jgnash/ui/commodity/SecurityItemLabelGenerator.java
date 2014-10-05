@@ -58,8 +58,8 @@ class SecurityItemLabelGenerator implements XYToolTipGenerator {
     /**
      * Creates a tool tip generator using the supplied date formatter.
      *
-     * @param dateFormatter  the date formatter (<code>null</code> not permitted).
-     * @param numberFormatter  the number formatter (<code>null</code> not permitted).
+     * @param dateFormatter  the date formatter ({@code null} not permitted).
+     * @param numberFormatter  the number formatter ({@code null} not permitted).
      */
     private SecurityItemLabelGenerator(final DateFormat dateFormatter, final NumberFormat numberFormatter) {
         if (dateFormatter == null) {

@@ -217,12 +217,11 @@ public class EngineFactory {
      * Boots a local Engine for a preexisting file. The API determines the
      * correct file type and uses the correct DataStoreType for engine
      * initialization. If successful, a new
-     * <code>Engine</code> instance will be returned.
+     * {@code Engine} instance will be returned.
      *
      * @param fileName   filename to load
      * @param engineName engine identifier
-     * @return new
-     *         <code>Engine</code> instance if successful, null otherwise
+     * @return new {@code Engine} instance if successful, null otherwise
      * @see Engine
      */
     public static synchronized Engine bootLocalEngine(final String fileName, final String engineName, final char[] password) {
@@ -240,13 +239,13 @@ public class EngineFactory {
     /**
      * Boots a local Engine for a file. If the file does not exist, it will be
      * created. Otherwise it will be loaded. If successful, a new
-     * <code>Engine</code> instance will be returned.
+     * {@code Engine} instance will be returned.
      *
      * @param fileName   filename to load or create
      * @param engineName engine identifier
      * @param password   password for the file
-     * @param type       <code>DataStoreType</code> type to use for storage
-     * @return new <code>Engine</code> instance if successful
+     * @param type       {@code DataStoreType} type to use for storage
+     * @return new {@code Engine} instance if successful
      * @see Engine
      * @see DataStoreType
      */

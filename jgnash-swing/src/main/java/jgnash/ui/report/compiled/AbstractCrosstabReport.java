@@ -60,7 +60,7 @@ import jgnash.util.Resource;
 import net.sf.jasperreports.engine.JasperPrint;
 
 /**
- * Abstract Report that groups and sums by <code>AccountGroup</code>, has a line for a global sum, and cross tabulates
+ * Abstract Report that groups and sums by {@code AccountGroup}, has a line for a global sum, and cross tabulates
  * all rows.
  *
  * @author Craig Cavanaugh

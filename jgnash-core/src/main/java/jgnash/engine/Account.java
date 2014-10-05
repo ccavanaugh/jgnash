@@ -288,7 +288,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * Adds account transaction in chronological order
      *
      * @param tran the
-     *             <code>Transaction</code> to be added
+     *             {@code Transaction} to be added
      * @return <tt>true</tt> the transaction was added successful <tt>false</tt>
      *         the transaction was already attached to this account
      */
@@ -331,7 +331,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * Removes the specified transaction from this account
      *
      * @param tran the
-     *             <code>Transaction</code> to be removed
+     *             {@code Transaction} to be removed
      * @return <tt>true</tt> the transaction removal was successful
      *         <tt>false</tt> the transaction could not be found within this account
      */
@@ -361,7 +361,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     /**
      * Determines if the specified transaction is attach to this account
      *
-     * @param tran the <code>Transaction</code> to look for
+     * @param tran the {@code Transaction} to look for
      * @return <tt>true</tt> the transaction is attached to this account
      *         <tt>false</tt> the transaction is not attached to this account
      */
@@ -410,7 +410,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     /**
      * Returns a readonly collection that is a wrapper around the internal collection.
      * <p/>
-     * Use of this method over <code>getReadOnlySortedTransactionList()</code> will reduce GC and perform better.
+     * Use of this method over {@code getReadOnlySortedTransactionList()} will reduce GC and perform better.
      * The collection should not be held because internal updates will cause indeterminate changes
      * <p/>
      * Sort order is not guaranteed.
@@ -964,9 +964,9 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     /**
      * Returns the full inclusive ancestry of this
-     * <code>Account</code>.
+     * {@code Account}.
      *
-     * @return <code>List</code> of accounts
+     * @return {@code List} of accounts
      */
     public List<Account> getAncestors() {
         List<Account> list = new ArrayList<>();
@@ -1197,13 +1197,13 @@ public class Account extends StoredObject implements Comparable<Account> {
      * compareTo would tag the Accounts as equal when they really are not
      *
      * @param acc the
-     *            <code>Account</code> to be compared.
+     *            {@code Account} to be compared.
      * @return the value
-     *         <code>0</code> if the argument Account is equal to this Account; account
+     *         {@code 0} if the argument Account is equal to this Account; account
      *         value less than
-     *         <code>0</code> if this Account is before the Account argument; and
+     *         {@code 0} if this Account is before the Account argument; and
      *         account value greater than
-     *         <code>0</code> if this Account is after the Account argument.
+     *         {@code 0} if this Account is after the Account argument.
      */
     @Override
     public int compareTo(final Account acc) {
@@ -1360,7 +1360,7 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     /**
      * Returns the depth of the account relative to the
-     * <code>RootAccount</code>
+     * {@code RootAccount}
      *
      * @return depth relative to the root
      */

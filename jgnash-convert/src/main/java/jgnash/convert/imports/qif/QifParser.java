@@ -541,7 +541,7 @@ public final class QifParser {
      * Just eats the data, it's not useful right now
      * 
      * @param in
-     *            <code>QifReader</code>
+     *            {@code QifReader}
      */
     private void parseMemorizedTransactions(final QifReader in) {
         logger.finest("*** Start: parseMemorizedTransactions ***");
@@ -647,7 +647,7 @@ public final class QifParser {
      * just in case there is another "variation" of the format
      * 
      * @param in
-     *            <code>QifReader</code>
+     *            {@code QifReader}
      * @return true if successful
      */
     private boolean parseSecurity(final QifReader in) {
@@ -688,7 +688,7 @@ public final class QifParser {
      * Price data in QIF file is not very informative.... ignore it for now
      * 
      * @param in
-     *            <code>QifReader</code>
+     *            {@code QifReader}
      * @return true if successful
      */
     private boolean parsePrice(final QifReader in) {

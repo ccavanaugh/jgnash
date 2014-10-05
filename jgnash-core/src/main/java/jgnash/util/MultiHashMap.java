@@ -141,7 +141,7 @@ public class MultiHashMap<K, V> extends HashMap<K, Object> {
      *
      * @param key   The key of the value to remove
      * @param value The specific value to remove
-     * @return <code>true</code> if the map changed
+     * @return {@code true} if the map changed
      */
     @SuppressWarnings("rawtypes")
     public boolean removeValue(final K key, final V value) {

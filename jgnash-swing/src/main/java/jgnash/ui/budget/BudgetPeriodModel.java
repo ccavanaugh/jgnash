@@ -215,7 +215,7 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
 
     /**
      * Notifies all listeners that rows in the range
-     * <code>[firstRow, lastRow]</code>, inclusive, have been updated.
+     * {@code [firstRow, lastRow]}, inclusive, have been updated.
      *
      * @param firstRow the first row
      * @param lastRow  the last row
@@ -228,7 +228,7 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
 
     /**
      * Forwards the given notification event to all
-     * <code>TableModelListeners</code> that registered
+     * {@code TableModelListeners} that registered
      * themselves as listeners for this table model.
      *
      * @param e the event to be forwarded

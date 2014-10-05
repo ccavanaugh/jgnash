@@ -201,7 +201,7 @@ public abstract class DynamicJasperReport {
     /**
      * Creates and add the default title to the report
      * 
-     * @param drb <code>DynamicReportBuilder</code> to add title to
+     * @param drb {@code DynamicReportBuilder} to add title to
      */
     private void buildTitle(final DynamicReportBuilder drb) {
         Font font = ReportFactory.getDefaultProportionalFont(getBaseFontSize());

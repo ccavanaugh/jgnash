@@ -255,10 +255,10 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     /**
-     * Returns the number of <code>TransactionEntry(s)</code> this transaction contains. A read lock is obtained before
+     * Returns the number of {@code TransactionEntry(s)} this transaction contains. A read lock is obtained before
      * determining the size.
      *
-     * @return the number of <code>TransactionEntry(s)</code>
+     * @return the number of {@code TransactionEntry(s)}
      * @see TransactionEntry
      */
     public int size() {
@@ -356,10 +356,10 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * Compares two Transactions for ordering. Equality is checked for at the reference level. If a comparison cannot be
      * determined, the hashCode is used
      *
-     * @param tran the <code>Transaction</code> to be compared.
-     * @return the value <code>0</code> if the argument Transaction is equal to this Transaction; a value less than
-     *         <code>0</code> if this Transaction is before the Transaction argument; and a value greater than
-     *         <code>0</code> if this Transaction is after the Transaction argument.
+     * @param tran the {@code Transaction} to be compared.
+     * @return the value {@code 0} if the argument Transaction is equal to this Transaction; a value less than
+     *         {@code 0} if this Transaction is before the Transaction argument; and a value greater than
+     *         {@code 0} if this Transaction is after the Transaction argument.
      */
     @Override
     public int compareTo(final Transaction tran) {
@@ -395,7 +395,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * voucher date is still tested.
      *
      * @param tran Transaction to compare against
-     * @return <code>true</code> if Transactions are equal
+     * @return {@code true} if Transactions are equal
      */
     public boolean equalsIgnoreDate(final Transaction tran) {
         if (tran == this) {

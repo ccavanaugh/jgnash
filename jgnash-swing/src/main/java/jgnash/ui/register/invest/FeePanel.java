@@ -141,9 +141,9 @@ class FeePanel extends JPanel implements ActionListener {
     }
 
     /**
-     * Clones a <code>List</code> of <code>TransactionEntry(s)</code>
+     * Clones a {@code List} of {@code TransactionEntry(s)}
      *
-     * @param fees <code>List</code> of fees to clone
+     * @param fees {@code List} of fees to clone
      */
     public void setTransactionEntries(final List<TransactionEntry> fees) {
         feeList = new ArrayList<>();

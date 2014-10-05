@@ -197,7 +197,7 @@ public interface OfxTags {
     static String MESSAGE = "MESSAGE";
 
     /**
-     * Name of payee or transaction description, may be used exclusive of <code>PAYEE</code>
+     * Name of payee or transaction description, may be used exclusive of {@code PAYEE}
      * @see #PAYEE
      */
     static String NAME = "NAME";
@@ -209,7 +209,7 @@ public interface OfxTags {
     static String ORIGCURRENCY = "ORIGCURRENCY";
 
     /**
-     * Name of payee, may be used exclusive of <code>NAME</code>
+     * Name of payee, may be used exclusive of {@code NAME}
      * @see #NAME
      */
     static String PAYEE = "PAYEE";

@@ -99,11 +99,11 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
     private JButton fillPatternEnterButton;
 
     /**
-     * Creates a dialog for modifying account specific budget goals. The supplied <code>BudgetGoal</code> is cloned
+     * Creates a dialog for modifying account specific budget goals. The supplied {@code BudgetGoal} is cloned
      * internally so side effects do not occur.
      *
-     * @param account     <code>Account</code> budget goals being modified
-     * @param budgetGoal  <code>BudgetGoal</code> to clone and modify
+     * @param account     {@code Account} budget goals being modified
+     * @param budgetGoal  {@code BudgetGoal} to clone and modify
      * @param workingYear the working year for the budget periods
      */
     public BudgetGoalDialog(final Account account, final BudgetGoal budgetGoal, int workingYear) {

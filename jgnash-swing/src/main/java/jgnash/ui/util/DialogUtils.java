@@ -42,7 +42,7 @@ public class DialogUtils {
     /**
      * Listens to a JDialog to save and restore windows bounds automatically.
      * <p/>
-     * <code>setVisible(false)</code> and <code>dispose()</code> must not be used
+     * {@code setVisible(false)} and {@code dispose()} must not be used
      * to close the window.  Instead, dispatch a window closing event.
      * <p/>
      * <PRE>
@@ -53,7 +53,7 @@ public class DialogUtils {
      * setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
      * </PRE>
      *
-     * @param w        <code>Window</code> to listen to
+     * @param w        {@code Window} to listen to
      * @param prefNode String identifier to preference node to save and restore from
      * @param key      the key to save and restore from
      */

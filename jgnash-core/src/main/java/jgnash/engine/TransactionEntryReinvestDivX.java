@@ -55,7 +55,7 @@ public class TransactionEntryReinvestDivX extends TransactionEntryAbstractIncrea
     }
 
     /**
-     * Returns <code>TransactionType.REINVESTDIV</code> for this type of transaction
+     * Returns {@code TransactionType.REINVESTDIV} for this type of transaction
      * 
      * @see TransactionType#REINVESTDIV
      */

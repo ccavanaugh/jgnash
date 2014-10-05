@@ -36,7 +36,7 @@ public interface CommodityDAO {
     public boolean addCommodity(CommodityNode node);
 
     /**
-     * Call after a <code>ExchangeRateHistoryNode</code> has been added.  This pushes the update
+     * Call after a {@code ExchangeRateHistoryNode} has been added.  This pushes the update
      * to the underlying database
      * @param rate ExchangeRate to update
      *
@@ -45,7 +45,7 @@ public interface CommodityDAO {
     public boolean addExchangeRateHistory(final ExchangeRate rate);
 
     /**
-     * Call after a <code>SecurityHistoryNode</code> has been added.  This pushes the update
+     * Call after a {@code SecurityHistoryNode} has been added.  This pushes the update
      * to the underlying database
      * @param node SecurityHistory to update
      *
@@ -73,7 +73,7 @@ public interface CommodityDAO {
     public List<SecurityNode> getSecurities();
 
     /**
-     * Call after a <code>ExchangeRateHistoryNode</code> has been removed.  This pushes the update
+     * Call after a {@code ExchangeRateHistoryNode} has been removed.  This pushes the update
      * to the underlying database
      * @param rate ExchangeRate to update
      *
@@ -82,7 +82,7 @@ public interface CommodityDAO {
     public boolean removeExchangeRateHistory(final ExchangeRate rate);
 
     /**
-     * Call after a <code>SecurityHistoryNode</code> has been removed.  This pushes the update
+     * Call after a {@code SecurityHistoryNode} has been removed.  This pushes the update
      * to the underlying database
      * @param node SecurityHistory to update
      *

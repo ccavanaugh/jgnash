@@ -56,7 +56,7 @@ import jgnash.util.DateUtils;
 import jgnash.util.Resource;
 
 /**
- * Abstract Report that groups and sums by <code>AccountGroup</code> and has a
+ * Abstract Report that groups and sums by {@code AccountGroup} and has a
  * line for a global sum
  * 
  * @author Craig Cavanaugh

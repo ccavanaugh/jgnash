@@ -88,7 +88,7 @@ public class SortedListModel<E extends Comparable<? super E>> extends AbstractLi
      * Tests if the specified object is a component in this list.
      * 
      * @param elem an object.
-     * @return <code>true</code> if the specified object is the same as a component in this list
+     * @return {@code true} if the specified object is the same as a component in this list
      * @see java.util.Vector#contains(Object)
      */
     public boolean contains(final E elem) {
@@ -99,7 +99,7 @@ public class SortedListModel<E extends Comparable<? super E>> extends AbstractLi
      * Searches for the first occurrence of the given argument.
      * 
      * @param elem an object.
-     * @return the index of the first occurrence of the argument in this list; returns <code>-1</code> if the object is
+     * @return the index of the first occurrence of the argument in this list; returns {@code -1} if the object is
      *         not found.
      * @see java.util.Vector#indexOf(Object)
      */
@@ -126,7 +126,7 @@ public class SortedListModel<E extends Comparable<? super E>> extends AbstractLi
      * Removes the first (lowest-indexed) occurrence of the argument from this list.
      * 
      * @param obj the component to be removed.
-     * @return <code>true</code> if the argument was a component of this list; <code>false</code> otherwise.
+     * @return {@code true} if the argument was a component of this list; {@code false} otherwise.
      * @see ArrayList#remove(Object)
      */
     public boolean removeElement(final E obj) {

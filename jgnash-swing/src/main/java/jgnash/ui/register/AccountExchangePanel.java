@@ -90,7 +90,7 @@ public class AccountExchangePanel extends JPanel implements ActionListener, Focu
     /**
      * Panel constructor
      * <p>
-     * <code>amountField</code> must be fully configured prior to calling the constructor
+     * {@code amountField} must be fully configured prior to calling the constructor
      * <p>
      * This component cannot be reused after a data set is closed.
      * 
@@ -196,7 +196,7 @@ public class AccountExchangePanel extends JPanel implements ActionListener, Focu
     /**
      * Panel constructor
      * <p>
-     * <code>amountField</code> must be fully configured prior to calling the constructor.
+     * {@code amountField} must be fully configured prior to calling the constructor.
      * 
      * @param baseCurrency Base currency
      * @param amountField The field associated with the amount

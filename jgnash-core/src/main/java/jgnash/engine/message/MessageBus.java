@@ -77,7 +77,7 @@ public class MessageBus {
      *
      * @param host message server name or IP address
      * @param port message server port
-     * @return <code>true</code> if connection to the remote server was successful
+     * @return {@code true} if connection to the remote server was successful
      */
     public synchronized boolean setRemote(final String host, final int port, final char[] password) {
         disconnectFromServer();

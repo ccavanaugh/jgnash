@@ -32,7 +32,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * Historical data for a <code>SecurityNode</code>.
+ * Historical data for a {@code SecurityNode}.
  *
  * @author Craig Cavanaugh
  */

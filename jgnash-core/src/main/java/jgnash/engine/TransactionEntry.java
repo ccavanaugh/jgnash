@@ -355,7 +355,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     /**
      * Check to determine is this is a single entry transaction
      * 
-     * @return <code>true</code> if this is a single entry TransactionEntry
+     * @return {@code true} if this is a single entry TransactionEntry
      */
     public boolean isSingleEntry() {
         return creditAccount.equals(debitAccount) && creditAmount.equals(debitAmount);
@@ -367,7 +367,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
      * If the credit and debit accounts have differing currencies, then unless
      * the currencies are equal in value, the credit and debit amounts should be different.
      *
-     * @return <code>true</code> if this is a multi-currency transaction entry
+     * @return {@code true} if this is a multi-currency transaction entry
      */
     public boolean isMultiCurrency() {
         return !creditAccount.getCurrencyNode().equals(debitAccount.getCurrencyNode());

@@ -24,20 +24,20 @@ import javax.swing.JPanel;
  * This is the interface for jGnash application plugins.
  * <p/>
  * <p/>
- * Plugins can install multiple menu items into the primary UI. Any returned <code>JMenuItem</code>s must have the
- * client property <code>PRECEDINGMENUIDREF</code> set for the menu item to installed correctly.
+ * Plugins can install multiple menu items into the primary UI. Any returned {@code JMenuItem}s must have the
+ * client property {@code PRECEDINGMENUIDREF} set for the menu item to installed correctly.
  * <p/>
  * <p/>
- * The available preceding id for installation may be found in <code>main-frame-actions.xml</code> in the
- * <code>jgnash.resource</code> package.
+ * The available preceding id for installation may be found in {@code main-frame-actions.xml} in the
+ * {@code jgnash.resource} package.
  * <p/>
  * Example:
  * <p/>
- * <code>
+ * {@code
  * JMenuItem item = new JMenuItem("Test Plugin");
  * <p/>
  * item.putClientProperty(Plugin.PRECEDINGMENUIDREF, "paste-command");
- * </code>
+ * }
  * <p/>
  * The above example will install a menu item after <tt>Paste</tt> in the <tt>Edit</tt> menu.
  *
@@ -74,19 +74,19 @@ public interface Plugin {
     void stop();
 
     /**
-     * This will add a <code>JMenuItem</code> to the primary application menu. The <code>PRECEDINGMENUIDREF</code>
-     * client property must be set on the returned <code>JMenuItem</code>.
+     * This will add a {@code JMenuItem} to the primary application menu. The {@code PRECEDINGMENUIDREF}
+     * client property must be set on the returned {@code JMenuItem}.
      *
-     * @return a <code>JMenuItem</code> to perform an action. May be <code>null</code> if no action is to be performed
+     * @return a {@code JMenuItem} to perform an action. May be {@code null} if no action is to be performed
      * @see javax.swing.JMenuItem
      */
     JMenuItem[] getMenuItems();
 
     /**
-     * This will add an additional option panel to the standard options dialog. The <code>OPTIONSNAME</code> client
-     * property must be set on the returned <code>JPanel</code>.
+     * This will add an additional option panel to the standard options dialog. The {@code OPTIONSNAME} client
+     * property must be set on the returned {@code JPanel}.
      *
-     * @return a <code>JPanel</code>. May be <code>null</code> if no panel is to be added
+     * @return a {@code JPanel}. May be {@code null} if no panel is to be added
      */
     JPanel getOptionsPanel();
 

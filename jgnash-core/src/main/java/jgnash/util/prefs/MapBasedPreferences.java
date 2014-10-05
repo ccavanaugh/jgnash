@@ -24,7 +24,7 @@ import java.util.prefs.BackingStoreException;
 
 /**
  * Map based Preferences implementation.  Preferences must be persisted using the
- * <code>exportSubtree(OutputStream os)</code> and <code>Preferences.importPreferences(InputStream)</code>
+ * {@code exportSubtree(OutputStream os)} and {@code Preferences.importPreferences(InputStream)}
  * methods.
  *
  * @author Craig Cavanaugh

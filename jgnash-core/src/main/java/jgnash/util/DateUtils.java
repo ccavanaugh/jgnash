@@ -149,8 +149,8 @@ public class DateUtils {
      * @param d2
      *            date 2
      * @param inclusive
-     *            <code>true</code> is comparison is inclusive
-     * @return <code>true</code> if d1 occurs after d2
+     *            {@code true} is comparison is inclusive
+     * @return {@code true} if d1 occurs after d2
      */
     public static boolean after(final Date d1, final Date d2, final boolean inclusive) {
         return before(d2, d1, inclusive);
@@ -178,8 +178,8 @@ public class DateUtils {
      * @param d2
      *            date 2
      * @param inclusive
-     *            <code>true</code> is comparison is inclusive
-     * @return <code>true</code> if d1 occurs before d2
+     *            {@code true} is comparison is inclusive
+     * @return {@code true} if d1 occurs before d2
      */
     public static boolean before(final Date d1, final Date d2, final boolean inclusive) {
         if (inclusive) {
@@ -854,7 +854,7 @@ public class DateUtils {
      * 
      * @param year
      *            integer based year (ex. 2000, 2011)
-     * @return <code>true</code> if the given year is a leap year
+     * @return {@code true} if the given year is a leap year
      */
     public static boolean isLeapYear(final int year) {
         boolean isLeapYear;

@@ -261,10 +261,10 @@ abstract class AbstractXStreamContainer {
     }
 
     /**
-     * Returns of list of all <code>StoredObjects</code> held within this container. The returned list is a defensive
+     * Returns of list of all {@code StoredObjects} held within this container. The returned list is a defensive
      * copy.
      *
-     * @return A list of all <code>StoredObjects</code>
+     * @return A list of all {@code StoredObjects}
      * @see jgnash.engine.StoredObject
      */
     List<StoredObject> asList() {

@@ -32,7 +32,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 /**
- * JUnit test class to export a <code>BudgetResultsModel</code>
+ * JUnit test class to export a {@code BudgetResultsModel}
  *
  * @author Craig Cavanaugh
  */

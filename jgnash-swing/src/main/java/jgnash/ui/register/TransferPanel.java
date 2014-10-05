@@ -99,7 +99,7 @@ public class TransferPanel extends AbstractExchangeTransactionPanel {
 
     /**
      * Modifies a transaction inside this form.<br>
-     * The t must be assigned to <code>modTrans</code> if transaction modification is allowed
+     * The t must be assigned to {@code modTrans} if transaction modification is allowed
      * 
      * @param t The transaction to modify
      */

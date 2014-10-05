@@ -20,7 +20,7 @@ import javax.swing.ViewportLayout;
 import javax.swing.border.Border;
 
 /**
- * The layout manager used by <code>JideScrollPane</code>. <code>JideScrollPaneLayout</code> is responsible for eleven
+ * The layout manager used by {@code JideScrollPane}. {@code JideScrollPaneLayout} is responsible for eleven
  * components: a viewport, two scrollbars, a row header, a column header, a row footer, a column footer, and four
  * "corner" components.
  */
@@ -1006,7 +1006,7 @@ class JideScrollPaneLayout extends ScrollPaneLayout implements JideScrollPaneCon
     }
 
     /**
-     * The UI resource version of <code>ScrollPaneLayout</code>.
+     * The UI resource version of {@code ScrollPaneLayout}.
      */
     static class UIResource extends JideScrollPaneLayout implements javax.swing.plaf.UIResource {
 

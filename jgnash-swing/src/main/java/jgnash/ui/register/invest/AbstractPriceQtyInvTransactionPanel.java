@@ -88,7 +88,7 @@ public abstract class AbstractPriceQtyInvTransactionPanel extends AbstractInvTra
     /**
      * Performs from validation
      *
-     * @return <code>true</code> if all form requirements are satisfied
+     * @return {@code true} if all form requirements are satisfied
      * @see jgnash.ui.register.AbstractEntryFormPanel#validateForm()
      */
     @Override

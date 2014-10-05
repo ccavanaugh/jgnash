@@ -92,7 +92,7 @@ public class BudgetFactory {
     }
 
     /**
-     * Creates a <code>BudgetGoal</code> with an alternating pattern
+     * Creates a {@code BudgetGoal} with an alternating pattern
      *
      * @param account  Account for BudgetGoal
      * @param descriptors descriptors to use
@@ -100,7 +100,7 @@ public class BudgetFactory {
      * @param startRow starting row, 0 based index is assumed
      * @param endRow ending row, 0 based index is assumed
      * @param amount amount to use
-     * @return new <code>BudgetGoal</code>
+     * @return new {@code BudgetGoal}
      */
     public static BudgetGoal buildBudgetGoal(final BudgetGoal baseBudgetGoal, final Account account, final List<BudgetPeriodDescriptor> descriptors, final Pattern pattern, final int startRow, final int endRow, final BigDecimal amount) {
         BudgetGoal goal;

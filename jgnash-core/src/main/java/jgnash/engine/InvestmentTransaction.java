@@ -268,7 +268,7 @@ public class InvestmentTransaction extends Transaction {
      * p/>
      * <b>Not intended for use to calculate account balances</b>
      *
-     * @param account The <code>Account</code> to calculate the total against
+     * @param account The {@code Account} to calculate the total against
      * @return total resulting total for this transaction
      * @see AbstractInvestmentTransactionEntry#getTotal()
      */
@@ -325,10 +325,10 @@ public class InvestmentTransaction extends Transaction {
      * reference level. If a comparison cannot be determined, the hashCode is
      * used
      *
-     * @param tran the <code>Transaction</code> to be compared.
-     * @return the value <code>0</code> if the argument Transaction is equal to
-     * this Transaction; a value less than <code>0</code> if this Transaction is
-     * before the Transaction argument; and a value greater than <code>0</code>
+     * @param tran the {@code Transaction} to be compared.
+     * @return the value {@code 0} if the argument Transaction is equal to
+     * this Transaction; a value less than {@code 0} if this Transaction is
+     * before the Transaction argument; and a value greater than {@code 0}
      * if this Transaction is after the Transaction argument.
      */
     @Override

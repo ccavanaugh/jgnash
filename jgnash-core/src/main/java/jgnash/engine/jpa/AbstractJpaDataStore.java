@@ -223,9 +223,9 @@ public abstract class AbstractJpaDataStore implements DataStore {
     }
 
     /**
-     * Returns the string representation of this <code>DataStore</code>.
+     * Returns the string representation of this {@code DataStore}.
      *
-     * @return string representation of this <code>DataStore</code>.
+     * @return string representation of this {@code DataStore}.
      */
     @Override
     public String toString() {

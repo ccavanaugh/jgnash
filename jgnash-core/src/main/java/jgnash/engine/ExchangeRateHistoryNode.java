@@ -32,8 +32,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * Exchange rate history node for a <code>ExchangeRate</code>.
- * <code>ExchangeRateHistoryNode</code> objects are immutable.
+ * Exchange rate history node for a {@code ExchangeRate}.
+ * {@code ExchangeRateHistoryNode} objects are immutable.
  *
  * @author Craig Cavanaugh
  */

@@ -35,7 +35,7 @@ import java.lang.ref.SoftReference;
 public class FontUtilities {
 
     /**
-     * Allow the <code>FontRenderContext</code> to be garbage collected as needed
+     * Allow the {@code FontRenderContext} to be garbage collected as needed
      */
     private static Reference<FontRenderContext> contextReference = new SoftReference<>(null);
 
@@ -43,7 +43,7 @@ public class FontUtilities {
     }
 
     /**
-     * Calculates the width of the specified <code>String</code>.
+     * Calculates the width of the specified {@code String}.
      * 
      * @param text the text to be weighted.
      * @param font the font to be weighted
@@ -59,7 +59,7 @@ public class FontUtilities {
     }
 
     /**
-     * Calculates the width of the specified <code>String</code>.
+     * Calculates the width of the specified {@code String}.
      * 
      * @param text the text to be weighted.
      * @param style the style to be weighted

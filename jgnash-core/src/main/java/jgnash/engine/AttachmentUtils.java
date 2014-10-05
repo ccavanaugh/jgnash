@@ -43,8 +43,8 @@ public class AttachmentUtils {
     /**
      * Creates the attachment directory for the active database
      *
-     * @return <code>true</code> if and only if the directory was created or if
-     *         it already exists; <code>false</code> otherwise
+     * @return {@code true} if and only if the directory was created or if
+     *         it already exists; {@code false} otherwise
      */
     public static boolean createAttachmentDirectory(final Path baseFile) {
         boolean result = false;

@@ -29,7 +29,7 @@ import javax.swing.ListCellRenderer;
 /**
  * Renderer to show a checkbox in ListCellRenderer
  * <p/>
- * Usage <code>jList.setCellRenderer(new CheckListCellRenderer(jList.getCellRenderer())); </code>
+ * Usage {@code jList.setCellRenderer(new CheckListCellRenderer(jList.getCellRenderer())); }
  *
  * @author Craig Cavanaugh
  *

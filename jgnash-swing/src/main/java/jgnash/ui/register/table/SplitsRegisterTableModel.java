@@ -187,7 +187,7 @@ public class SplitsRegisterTableModel extends AbstractTableModel implements Acco
         }
 
         /**
-         * Calculates the balance up to <code>index</code>.
+         * Calculates the balance up to {@code index}.
          * @param index transaction index
          * @return balance for the index
          */

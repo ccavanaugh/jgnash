@@ -150,8 +150,8 @@ public final class ActionParser extends DefaultHandler {
     }
 
     /**
-     * Looks for classes that implement <code>javax.swing.Action</code> and are
-     * annotated with <code>jgnash.ui.util.builder.Action</code> and pre-loads
+     * Looks for classes that implement {@code javax.swing.Action} and are
+     * annotated with {@code jgnash.ui.util.builder.Action} and pre-loads
      * them into the action map
      *
      * @param packageName base package name to search

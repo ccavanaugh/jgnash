@@ -103,9 +103,9 @@ class GainsPanel extends JPanel implements ActionListener {
     }
 
     /**
-     * Clones a <code>List</code> of <code>TransactionEntry(s)</code>
+     * Clones a {@code List} of {@code TransactionEntry(s)}
      *
-     * @param gains <code>List</code> of gains to clone
+     * @param gains {@code List} of gains to clone
      */
     public void setTransactionEntries(final List<TransactionEntry> gains) {
         gainsList = new ArrayList<>();

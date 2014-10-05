@@ -46,7 +46,7 @@ public class XMLDataStore implements DataStore {
 
     /**
      * Close the open
-     * <code>Engine</code>
+     * {@code Engine}
      *
      * @see DataStore#closeEngine()
      */
@@ -82,7 +82,7 @@ public class XMLDataStore implements DataStore {
     }
 
     /**
-     * <code>XMLDataStore</code> will always return false
+     * {@code XMLDataStore} will always return false
      *
      * @see DataStore#isRemote()
      */
@@ -93,7 +93,7 @@ public class XMLDataStore implements DataStore {
 
     /**
      * Returns the default file extension for this
-     * <code>DataStore</code>
+     * {@code DataStore}
      *
      * @see DataStore#getFileExt()
      * @see XMLDataStore#FILE_EXT
@@ -131,10 +131,10 @@ public class XMLDataStore implements DataStore {
 
     /**
      * Returns the string representation of this
-     * <code>DataStore</code>.
+     * {@code DataStore}.
      *
      * @return string representation of this
-     * <code>DataStore</code>.
+     * {@code DataStore}.
      */
     @Override
     public String toString() {
@@ -153,7 +153,7 @@ public class XMLDataStore implements DataStore {
      * Opens the file in readonly mode and reads the version of the file format.
      *
      * @param file
-     * <code>File</code> to open
+     * {@code File} to open
      * @return file version
      */
     public static float getFileVersion(final File file) {

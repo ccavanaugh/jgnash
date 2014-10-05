@@ -54,7 +54,7 @@ public class JTableUtils {
 
     /**
      * Returns the column order of a table in a formatted
-     * <code>String</code>.
+     * {@code String}.
      *
      * @param table The table to get the column order from
      * @return A string in the format "0 1 2 3"
@@ -74,7 +74,7 @@ public class JTableUtils {
 
     /**
      * Sets the column order of a table given a correctly formatted
-     * <code>String</code>.
+     * {@code String}.
      *
      * @param table the table to set the column positions
      * @param positions A string in the format "0 1 2 3"
@@ -96,7 +96,7 @@ public class JTableUtils {
 
     /**
      * Returns the column widths of a table in a formatted
-     * <code>String</code>.
+     * {@code String}.
      *
      * @param table The table to collect column widths from
      * @return A String in the format "34 56 56 56"
@@ -119,7 +119,7 @@ public class JTableUtils {
 
     /**
      * Sets the columns widths of a table given a correctly formatted
-     * <code>String</code>. If the provided String is null, the table columns
+     * {@code String}. If the provided String is null, the table columns
      * are sized to default values.
      *
      * @param table The table to set the columns widths

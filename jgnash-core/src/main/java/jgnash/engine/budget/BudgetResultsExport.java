@@ -49,7 +49,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * Utility class to export a
- * <code>BudgetResultsModel</code>
+ * {@code BudgetResultsModel}
  *
  * @author Craig Cavanaugh
  */
@@ -60,7 +60,7 @@ public class BudgetResultsExport {
     }
 
     /**
-     * Exports a <code>BudgetResultsModel</code> to a spreadsheet
+     * Exports a {@code BudgetResultsModel} to a spreadsheet
      * 
      * @param file File to save to
      * @param model Results model to export

@@ -221,10 +221,10 @@ public class ExchangeRate extends StoredObject {
     /**
      * Returns the exchange rate for a given date.
      * <p/>
-     * If a rate has not be set, <code>BigDecimal.ZERO</code> is returned
+     * If a rate has not be set, {@code BigDecimal.ZERO} is returned
      *
      * @param date Date for exchange
-     * @return the exchange rate if known, otherwise <code>BigDecimal.ZERO</code>
+     * @return the exchange rate if known, otherwise {@code BigDecimal.ZERO}
      */
     public BigDecimal getRate(final Date date) {
         getLock().readLock().lock();

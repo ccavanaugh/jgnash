@@ -87,10 +87,10 @@ public class ReportPrintFactory {
     }
 
     /**
-     * Save a <code>PageFormat</code> to preferences
+     * Save a {@code PageFormat} to preferences
      * 
      * @param report report
-     * @param format <code>PageFormat</code> to save
+     * @param format {@code PageFormat} to save
      */
     public static void savePageFormat(final DynamicJasperReport report, final PageFormat format) {
         Preferences p = report.getPreferences();

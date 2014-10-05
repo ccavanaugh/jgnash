@@ -105,8 +105,8 @@ public class InvestmentAccountProxy extends AccountProxy {
     }
 
     /**
-     * Returns a market price for the supplied <code>SecurityNode</code> that is closest to the supplied date without
-     * exceeding it. The history of the <code>SecurityNode</code> is searched as well as the account's transaction
+     * Returns a market price for the supplied {@code SecurityNode} that is closest to the supplied date without
+     * exceeding it. The history of the {@code SecurityNode} is searched as well as the account's transaction
      * history to find the closest market price without exceeding the supplied date.
      *
      * @param node security to search against

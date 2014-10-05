@@ -99,7 +99,7 @@ public class OfxV1ToV2 {
      * Munch through the header one character at a time. Do not assume clean
      * formatting or EOL characters.
      *
-     * @param reader <code>BufferedReader</code>
+     * @param reader {@code BufferedReader}
      * @throws IOException
      */
     private static void consumeHeader(final BufferedReader reader) throws IOException {

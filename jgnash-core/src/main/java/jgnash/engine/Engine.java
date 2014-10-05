@@ -753,10 +753,10 @@ public class Engine {
     }
 
     /**
-     * Returns a <code>Collection</code> of all <code>StoredObjects</code> in a consistent order.
-     * <code>StoredObjects</code> marked for removal and <code>TrashObjects</code> are filtered from the collection.
+     * Returns a {@code Collection} of all {@code StoredObjects} in a consistent order.
+     * {@code StoredObjects} marked for removal and {@code TrashObjects} are filtered from the collection.
      *
-     * @return <code>Collection</code> of <code>StoredObjects</code>
+     * @return {@code Collection} of {@code StoredObjects}
      * @see Collection
      * @see StoredObjectComparator
      */
@@ -829,7 +829,7 @@ public class Engine {
      * Checks and prevents the addition of a duplicate Currencies.
      *
      * @param node new CurrencyNode to add
-     * @return <code>true</code> if the add it successful
+     * @return {@code true} if the add it successful
      */
     public boolean addCurrency(final CurrencyNode node) {
 
@@ -874,7 +874,7 @@ public class Engine {
      * Checks and prevents the addition of a duplicate SecurityNode.
      *
      * @param node new SecurityNode to add
-     * @return <code>true</code> if the add it successful
+     * @return {@code true} if the add it successful
      */
     public boolean addSecurity(final SecurityNode node) {
         commodityLock.writeLock().lock();
@@ -987,9 +987,9 @@ public class Engine {
     }
 
     /**
-     * Clears an <code>Accounts</code> cached balance and recursively works up the tree to the root.
+     * Clears an {@code Accounts} cached balance and recursively works up the tree to the root.
      *
-     * @param account <code>Account</code> to clear
+     * @param account {@code Account} to clear
      */
     private void clearCachedAccountBalance(final Account account) {
 
@@ -1580,7 +1580,7 @@ public class Engine {
      * Search for an account with a matching account name
      *
      * @param accountName Account name to search for. <b>Must not be null</b>
-     * @return The matching account. <code>null</code> if not found.
+     * @return The matching account. {@code null} if not found.
      */
     public Account getAccountByName(final String accountName) {
 

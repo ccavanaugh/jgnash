@@ -21,7 +21,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * The default thread factory to be used for <code>ExecutorService</code> that
+ * The default thread factory to be used for {@code ExecutorService} that
  * forces threads to be daemons
  * <p/>
  * Example usage:

@@ -37,10 +37,10 @@ public final class IconUtils {
     }
 
     /**
-     * Creates an <code>ImageIcon</code> from any Icon. Useful for caching complex icon paints into a buffered Icon
+     * Creates an {@code ImageIcon} from any Icon. Useful for caching complex icon paints into a buffered Icon
      * 
      * @param icon Icon with complex painting operation
-     * @return <code>ImageIcon</code> based on a <code>BufferedImage</code>
+     * @return {@code ImageIcon} based on a {@code BufferedImage}
      */
     public static ImageIcon createImageIcon(final Icon icon) {
 

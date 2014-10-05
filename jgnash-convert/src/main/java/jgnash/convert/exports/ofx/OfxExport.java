@@ -238,7 +238,7 @@ public class OfxExport implements OfxTags {
     /**
      * Writes one bank transaction
      *
-     * @param transaction <code>Transaction</code> to write
+     * @param transaction {@code Transaction} to write
      */
     private void writeBankTransaction(final Transaction transaction) {
         indentedWriter.println(wrapOpen(STMTTRN), indentLevel++);

@@ -26,7 +26,7 @@ import jgnash.engine.StoredObject;
 /**
  * Expanded XStream reflection provider.
  *
- * This will load all objects that extend <code>StoredObject</code> into a supplied list as they are created
+ * This will load all objects that extend {@code StoredObject} into a supplied list as they are created
  *
  * @author Craig Cavanaugh
  */

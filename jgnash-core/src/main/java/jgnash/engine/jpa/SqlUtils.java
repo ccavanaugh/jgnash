@@ -86,7 +86,7 @@ public class SqlUtils {
     /**
      * Opens the database in readonly mode and reads the version of the file format.
      *
-     * @param fileName <code>File</code> to open
+     * @param fileName {@code File} to open
      * @return file version
      */
     public static float getFileVersion(final String fileName, final char[] password) {

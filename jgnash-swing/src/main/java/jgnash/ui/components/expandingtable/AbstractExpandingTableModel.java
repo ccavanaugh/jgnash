@@ -81,9 +81,9 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
     }
 
     /**
-     * Returns a <code>Collection</code> of objects loaded into the model at the time this method is called.
+     * Returns a {@code Collection} of objects loaded into the model at the time this method is called.
      *
-     * @return <code>Collection</code> of objects
+     * @return {@code Collection} of objects
      */
     public Set<E> getObjects() {
         ReadLock readLock = rwl.readLock();
@@ -438,7 +438,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
 
     /**
      * Returns a collection objects that are children of a supplied object. If the object does not have children, an
-     * empty <code>Collection</code> should be returned instead of null.
+     * empty {@code Collection} should be returned instead of null.
      *
      * @param object parent object
      * @return collection of objects.

@@ -18,7 +18,7 @@
 package jgnash.convert.imports.qif;
 
 /**
- * Thrown when <code>QifParse encounters</code> transactions without a
+ * Thrown when {@code QifParse encounters} transactions without a
  * destination account.
  *
  * @author Craig Cavanaugh
@@ -26,7 +26,7 @@ package jgnash.convert.imports.qif;
 public class NoAccountException extends Exception {
 
     /**
-     * Constructs a <code>NoAccountException</code> with the
+     * Constructs a {@code NoAccountException} with the
      * specified detail message.
      *
      * @param s the detail message.

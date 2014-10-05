@@ -153,8 +153,8 @@ public class NimbusUtils {
     /**
      * Returns a scaled icon based on the reduced font size
      * 
-     * @param icon <code>ImageIcon</code> to scale
-     * @return the scaled <code>Icon</code>
+     * @param icon {@code ImageIcon} to scale
+     * @return the scaled {@code Icon}
      */
     public static Icon scaleIcon(final ImageIcon icon) {
 

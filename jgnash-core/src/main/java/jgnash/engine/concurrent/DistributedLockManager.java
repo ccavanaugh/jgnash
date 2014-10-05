@@ -113,7 +113,7 @@ public class DistributedLockManager implements LockManager {
     /**
      * Starts the connection with the lock server
      *
-     * @return <code>true</code> if successful
+     * @return {@code true} if successful
      */
     public boolean connectToServer(final char[] password) {
         boolean result = false;

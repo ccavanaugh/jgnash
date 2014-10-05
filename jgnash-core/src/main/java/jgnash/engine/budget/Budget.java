@@ -100,7 +100,7 @@ public class Budget extends StoredObject implements Comparable<Budget> {
     }
 
     /**
-     * Sets the goals for an <code>Account</code>
+     * Sets the goals for an {@code Account}
      * 
      * @param account Account
      * @param budgetGoal budget goals
@@ -129,7 +129,7 @@ public class Budget extends StoredObject implements Comparable<Budget> {
      * Returns and accounts goals. If goals have not yet been specified, then an empty set is automatically assigned and
      * returned
      * 
-     * @param account <code>Account</code> to retrieve the goals for
+     * @param account {@code Account} to retrieve the goals for
      * @return the goals
      */
     public BudgetGoal getBudgetGoal(final Account account) {
@@ -199,7 +199,7 @@ public class Budget extends StoredObject implements Comparable<Budget> {
     }
 
     /**
-     * Returns a clone of this <code>Budget</code>
+     * Returns a clone of this {@code Budget}
      * 
      * @return clone
      */

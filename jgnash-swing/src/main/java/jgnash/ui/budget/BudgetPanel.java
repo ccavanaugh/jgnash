@@ -546,7 +546,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
     }
 
     /**
-     * Makes the current <code>BudgetPeriodPanel</code> visible
+     * Makes the current {@code BudgetPeriodPanel} visible
      */
     private void showCurrentPeriod() {
 

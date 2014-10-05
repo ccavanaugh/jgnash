@@ -41,7 +41,7 @@ import jgnash.ui.ThemeManager;
 import jgnash.ui.util.IconUtils;
 
 /**
- * A JTable that renders a tree structure in the first column using <code>prepareRenderer</code>.
+ * A JTable that renders a tree structure in the first column using {@code prepareRenderer}.
  *
  * @author Craig Cavanaugh
  */
