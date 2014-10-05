@@ -30,6 +30,7 @@ import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Historical data for a {@code SecurityNode}.
@@ -92,9 +93,8 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
     }
 
     public void setDate(final Date date) {
-        if (date == null) {
-            throw new IllegalArgumentException("Null assignment is not allowed");
-        }
+        Objects.requireNonNull(date);
+
         this.date = DateUtils.trimDate(date);
     }
 
