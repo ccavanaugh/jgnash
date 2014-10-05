@@ -35,6 +35,7 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -121,7 +122,8 @@ class PrintableCheckLayout implements Printable {
      * @param t transactions to print
      */
     void print(final Transaction[] t) {
-        assert t != null;
+        Objects.requireNonNull(t);
+
         assert t.length == checkLayout.getNumberOfChecks();
         this.transactions = t;
         print();

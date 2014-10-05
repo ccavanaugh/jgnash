@@ -19,6 +19,7 @@ package jgnash.convert.imports;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
@@ -36,13 +37,14 @@ import jgnash.util.DateUtils;
  */
 public class GenericImport {
 
-    public static void importTransactions(List<? extends ImportTransaction> transactions, Account baseAccount) {
-        assert transactions != null && baseAccount != null;
+    public static void importTransactions(final List<? extends ImportTransaction> transactions, final Account baseAccount) {
+        Objects.requireNonNull(transactions);
+        Objects.requireNonNull(baseAccount);
 
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-        for (ImportTransaction tran : transactions) {
-            assert tran.account != null;
+        for (final ImportTransaction tran : transactions) {
+            Objects.requireNonNull(tran.account);
 
             if (tran.getState() == ImportTransaction.ImportState.NEW
                     || tran.getState() == ImportTransaction.ImportState.NOT_EQUAL) { // do not import matched transactions

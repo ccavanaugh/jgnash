@@ -17,6 +17,7 @@
  */
 package jgnash.engine.xstream;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -44,7 +45,7 @@ abstract class AbstractXStreamDAO extends AbstractDAO {
     private static final int MAX_COMMIT_COUNT = 250;
 
     AbstractXStreamDAO(final AbstractXStreamContainer container) {
-        assert container != null;
+        Objects.requireNonNull(container);
 
         this.container = container;
     }

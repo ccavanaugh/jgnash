@@ -22,6 +22,8 @@ import jgnash.engine.dao.AbstractDAO;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+
+import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
@@ -47,7 +49,7 @@ abstract class AbstractJpaDAO extends AbstractDAO {
     static ExecutorService executorService;
 
     AbstractJpaDAO(final EntityManager entityManager, final boolean isRemote) {
-        assert entityManager != null;
+        Objects.requireNonNull(entityManager);
 
         this.isRemote = isRemote;
         em = entityManager;

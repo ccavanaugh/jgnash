@@ -22,6 +22,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.swing.AbstractListModel;
@@ -318,7 +319,8 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
 
         public ParentTypeModel(final Account base, final Set<AccountType> types) {
             super(base, types);
-            assert base != null;
+
+            Objects.requireNonNull(base);
             loadAccounts();
         }
 

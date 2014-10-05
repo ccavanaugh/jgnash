@@ -23,6 +23,7 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import jgnash.engine.CommodityNode;
@@ -134,7 +135,7 @@ public abstract class CommodityFormat {
     }
 
     public static NumberFormat getFullNumberFormat(final CommodityNode node) {
-        assert node != null;
+        Objects.requireNonNull(node);
 
         DecimalFormat o = fullInstanceMap.get(node);
 

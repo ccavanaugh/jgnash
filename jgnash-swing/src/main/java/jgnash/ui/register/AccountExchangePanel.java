@@ -41,6 +41,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import jgnash.engine.Account;
 import jgnash.engine.CurrencyNode;
@@ -99,7 +100,8 @@ public class AccountExchangePanel extends JPanel implements ActionListener, Focu
      * @param amountField The field associated with the amount
      */
     public AccountExchangePanel(final CurrencyNode baseCurrency, final Account account, final JFloatField amountField) {
-        assert baseCurrency != null && amountField != null;
+        Objects.requireNonNull(baseCurrency);
+        Objects.requireNonNull(amountField);
 
         Resource rb = Resource.get();
 

@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,10 +45,10 @@ public class CsvExport {
     }
 
     public static void exportAccount(final Account account, final Date startDate, final Date endDate, final File file) {
-
-        if (account == null || startDate == null || endDate == null || file == null) {
-            throw new RuntimeException();
-        }
+        Objects.requireNonNull(account);
+        Objects.requireNonNull(startDate);
+        Objects.requireNonNull(endDate);
+        Objects.requireNonNull(file);
 
         // force a correct file extension
         final String fileName = FileUtils.stripFileExtension(file.getAbsolutePath()) + ".csv";

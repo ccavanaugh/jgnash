@@ -27,6 +27,7 @@ import java.awt.Container;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 import java.util.prefs.Preferences;
 
 import javax.swing.Icon;
@@ -82,9 +83,8 @@ class MainViewPanel extends JPanel implements ActionListener {
     }
 
     void addView(final Container component, final String description, final String toolTip) {
-        if (description == null || component == null) {
-            throw new RuntimeException();
-        }
+        Objects.requireNonNull(description);
+        Objects.requireNonNull(component);
 
         JXTitledPanel p = new JXTitledPanel(toolTip, component);
 

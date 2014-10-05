@@ -20,6 +20,7 @@ package jgnash.ui.register.table;
 import java.awt.EventQueue;
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Objects;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -81,7 +82,8 @@ public abstract class AbstractRegisterTableModel extends AbstractTableModel impl
     private int[] columnWidths = null;
 
     AbstractRegisterTableModel(final Account account, final String[] names, final Class<?>[] clazz) {
-        assert account != null;
+        Objects.requireNonNull(account);
+
         init(account, names, clazz);
     }
 

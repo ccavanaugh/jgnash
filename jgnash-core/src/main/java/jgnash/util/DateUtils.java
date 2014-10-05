@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -573,7 +574,7 @@ public class DateUtils {
      * @return The last day of the month of the supplied date
      */
     public static Date getLastDayOfTheMonth(final Date date) {
-        assert date != null;
+        Objects.requireNonNull(date);
 
         GregorianCalendar c = calendarPool.take();
 
@@ -674,7 +675,7 @@ public class DateUtils {
      * @return The last day of the quarter specified
      */
     public static Date getLastDayOfTheQuarter(final Date date) {
-        assert date != null;
+        Objects.requireNonNull(date);
 
         Date result;
 
@@ -704,7 +705,7 @@ public class DateUtils {
      * @return The last day of the year specified
      */
     public static Date getLastDayOfTheYear(final Date date) {
-        assert date != null;
+        Objects.requireNonNull(date);
 
         GregorianCalendar c = calendarPool.take();
 
@@ -727,7 +728,7 @@ public class DateUtils {
      * @return The array of quarter bound dates
      */
     private static Date[] getQuarterBounds(final Date date) {
-        assert date != null;
+        Objects.requireNonNull(date);
 
         GregorianCalendar c = calendarPool.take();
 
@@ -777,7 +778,7 @@ public class DateUtils {
      * @return The number of the quarter specified
      */
     public static int getQuarterNumber(final Date date) {
-        assert date != null;
+        Objects.requireNonNull(date);
 
         int result;
 

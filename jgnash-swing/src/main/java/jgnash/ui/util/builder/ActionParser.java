@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -380,7 +381,8 @@ public final class ActionParser extends DefaultHandler {
             if (currentNode.getParent() != null) { // child node
                 currentNode = currentNode.getParent();
             } else {
-                assert currentNode.id != null;
+                Objects.requireNonNull(currentNode.id);
+
                 actionTrees.put(currentNode.id, currentNode);
                 currentNode = null;
             }
@@ -518,7 +520,7 @@ public final class ActionParser extends DefaultHandler {
     private static ArrayList<Class<?>> getClasses(final String packageName) throws ClassNotFoundException, IOException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
-        assert classLoader != null;
+        Objects.requireNonNull(classLoader);
 
         String path = packageName.replace('.', '/');
 

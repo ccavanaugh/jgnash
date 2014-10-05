@@ -18,6 +18,7 @@
 package jgnash.engine.budget;
 
 import java.util.Date;
+import java.util.Objects;
 
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;
@@ -55,10 +56,7 @@ public class BudgetPeriodDescriptor {
     private int budgetYear;
 
     BudgetPeriodDescriptor(final int budgetYear, final BudgetPeriod budgetPeriod, final int startPeriod) {
-
-        if (budgetPeriod == null) {
-            throw new IllegalArgumentException("BudgetPeriod may not be null");
-        }
+        Objects.requireNonNull(budgetPeriod);
 
         this.budgetYear = budgetYear;
         this.budgetPeriod = budgetPeriod;

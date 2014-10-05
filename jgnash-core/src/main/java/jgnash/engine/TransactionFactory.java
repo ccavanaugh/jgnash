@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import jgnash.text.CommodityFormat;
@@ -46,10 +47,13 @@ public class TransactionFactory {
      * @param reconciled Reconciled status
      * @return new Investment Transaction
      */
-    public static InvestmentTransaction generateAddXTransaction(Account investmentAccount, SecurityNode node, BigDecimal price, BigDecimal quantity, Date date, String memo, boolean reconciled) {
-
-        assert investmentAccount != null && node != null && price != null && quantity != null;
-        assert date != null && memo != null;
+    public static InvestmentTransaction generateAddXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo, final boolean reconciled) {
+        Objects.requireNonNull(investmentAccount);
+        Objects.requireNonNull(node);
+        Objects.requireNonNull(price);
+        Objects.requireNonNull(quantity);
+        Objects.requireNonNull(date);
+        Objects.requireNonNull(memo);
 
         InvestmentTransaction transaction = new InvestmentTransaction();
         transaction.setDate(date);
@@ -116,9 +120,15 @@ public class TransactionFactory {
      * @return new Transaction
      */
     public static InvestmentTransaction generateBuyXTransaction(final Account account, final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final BigDecimal exchangeRate, final Date date, final String memo, final boolean reconciled, final Collection<TransactionEntry> fees) {
-
-        assert account != null && investmentAccount != null && node != null && price != null && quantity != null;
-        assert exchangeRate != null && date != null && memo != null && fees != null;
+        Objects.requireNonNull(account);
+        Objects.requireNonNull(investmentAccount);
+        Objects.requireNonNull(node);
+        Objects.requireNonNull(price);
+        Objects.requireNonNull(quantity);
+        Objects.requireNonNull(date);
+        Objects.requireNonNull(memo);
+        Objects.requireNonNull(exchangeRate);
+        Objects.requireNonNull(fees);
 
         // verify fees are tagged correctly
         for (TransactionEntry fee : fees) {
@@ -188,11 +198,15 @@ public class TransactionFactory {
      * @param reconciled Reconciled status
      * @return new InvestmentTransaction
      */
-    public static InvestmentTransaction generateDividendXTransaction(Account incomeAccount, Account investmentAccount, Account cashAccount, SecurityNode node, BigDecimal dividend, BigDecimal incomeExchangedAmount, BigDecimal cashExchangedAmount, Date date, String memo, boolean reconciled) {
-
-        assert incomeAccount != null && investmentAccount != null && cashAccount != null;
-        assert node != null && dividend != null;
-        assert incomeExchangedAmount != null && date != null && memo != null;
+    public static InvestmentTransaction generateDividendXTransaction(final Account incomeAccount, final Account investmentAccount, final Account cashAccount, final SecurityNode node, final BigDecimal dividend, final BigDecimal incomeExchangedAmount, final BigDecimal cashExchangedAmount, final Date date, final String memo, final boolean reconciled) {
+        Objects.requireNonNull(incomeAccount);
+        Objects.requireNonNull(cashAccount);
+        Objects.requireNonNull(investmentAccount);
+        Objects.requireNonNull(node);
+        Objects.requireNonNull(dividend);
+        Objects.requireNonNull(incomeExchangedAmount);
+        Objects.requireNonNull(date);
+        Objects.requireNonNull(memo);
 
         assert incomeExchangedAmount.signum() <= 0;
 
@@ -241,11 +255,15 @@ public class TransactionFactory {
      * @param reconciled Reconciled status
      * @return new InvestmentTransaction
      */
-    public static InvestmentTransaction generateRocXTransaction(Account incomeAccount, Account investmentAccount, Account cashAccount, SecurityNode node, BigDecimal dividend, BigDecimal incomeExchangedAmount, BigDecimal cashExchangedAmount, Date date, String memo, boolean reconciled) {
-
-        assert incomeAccount != null && investmentAccount != null && cashAccount != null;
-        assert node != null && dividend != null;
-        assert incomeExchangedAmount != null && date != null && memo != null;
+    public static InvestmentTransaction generateRocXTransaction(final Account incomeAccount, final Account investmentAccount, final Account cashAccount, final SecurityNode node, final BigDecimal dividend, final BigDecimal incomeExchangedAmount, final BigDecimal cashExchangedAmount, final Date date, final String memo, final boolean reconciled) {
+        Objects.requireNonNull(incomeAccount);
+        Objects.requireNonNull(cashAccount);
+        Objects.requireNonNull(investmentAccount);
+        Objects.requireNonNull(node);
+        Objects.requireNonNull(dividend);
+        Objects.requireNonNull(incomeExchangedAmount);
+        Objects.requireNonNull(date);
+        Objects.requireNonNull(memo);
 
         assert incomeExchangedAmount.signum() <= 0;
 
@@ -291,7 +309,9 @@ public class TransactionFactory {
      * @param number Transaction number
      * @return new Transaction
      */
-    public static Transaction generateDoubleEntryTransaction(Account creditAccount, Account debitAccount, BigDecimal creditAmount, BigDecimal debitAmount, Date date, String memo, String payee, String number) {
+    public static Transaction generateDoubleEntryTransaction(final Account creditAccount, final Account debitAccount, final BigDecimal creditAmount, final BigDecimal debitAmount, final Date date, final String memo, final String payee, final String number) {
+        Objects.requireNonNull(creditAccount);
+        Objects.requireNonNull(debitAccount);
 
         assert creditAccount != debitAccount;
 
@@ -325,7 +345,9 @@ public class TransactionFactory {
      * @param number Transaction number
      * @return new Transaction
      */
-    public static Transaction generateDoubleEntryTransaction(Account creditAccount, Account debitAccount, BigDecimal amount, Date date, String memo, String payee, String number) {
+    public static Transaction generateDoubleEntryTransaction(final Account creditAccount, final Account debitAccount, final BigDecimal amount, final Date date, final String memo, final String payee, final String number) {
+        Objects.requireNonNull(creditAccount);
+        Objects.requireNonNull(debitAccount);
 
         assert creditAccount != debitAccount;
 
@@ -359,10 +381,13 @@ public class TransactionFactory {
      * @param reconciled Reconciled status
      * @return new Investment Transaction
      */
-    public static InvestmentTransaction generateMergeXTransaction(Account investmentAccount, SecurityNode node, BigDecimal price, BigDecimal quantity, Date date, String memo, boolean reconciled) {
-
-        assert investmentAccount != null && node != null && price != null && quantity != null;
-        assert date != null && memo != null;
+    public static InvestmentTransaction generateMergeXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo, final boolean reconciled) {
+        Objects.requireNonNull(investmentAccount);
+        Objects.requireNonNull(node);
+        Objects.requireNonNull(price);
+        Objects.requireNonNull(quantity);
+        Objects.requireNonNull(date);
+        Objects.requireNonNull(memo);
 
         InvestmentTransaction transaction = new InvestmentTransaction();
         transaction.setDate(date);
@@ -394,12 +419,15 @@ public class TransactionFactory {
      * @param gains Gain/Loss entry(s)
      * @return new InvestmentTransaction
      */
-    public static InvestmentTransaction generateReinvDividendXTransaction(Account investmentAccount, SecurityNode node, BigDecimal price, BigDecimal quantity, Date date, String memo, boolean reconciled, final Collection<TransactionEntry> fees, final Collection<TransactionEntry> gains) {
-
-        assert investmentAccount != null;
-        assert node != null;
-        assert date != null && memo != null;
-        assert fees != null && gains != null;
+    public static InvestmentTransaction generateReinvDividendXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo, final boolean reconciled, final Collection<TransactionEntry> fees, final Collection<TransactionEntry> gains) {
+        Objects.requireNonNull(investmentAccount);
+        Objects.requireNonNull(node);
+        Objects.requireNonNull(price);
+        Objects.requireNonNull(quantity);
+        Objects.requireNonNull(date);
+        Objects.requireNonNull(memo);
+        Objects.requireNonNull(fees);
+        Objects.requireNonNull(gains);
 
         for (TransactionEntry fee : fees) {
             if (fee.getTransactionTag() != TransactionTag.INVESTMENT_FEE) {
@@ -485,10 +513,13 @@ public class TransactionFactory {
      * @param reconciled Reconciled status
      * @return new Investment Transaction
      */
-    public static InvestmentTransaction generateRemoveXTransaction(Account investmentAccount, SecurityNode node, BigDecimal price, BigDecimal quantity, Date date, String memo, boolean reconciled) {
-
-        assert investmentAccount != null && node != null && price != null && quantity != null;
-        assert date != null && memo != null;
+    public static InvestmentTransaction generateRemoveXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo, final boolean reconciled) {
+        Objects.requireNonNull(investmentAccount);
+        Objects.requireNonNull(node);
+        Objects.requireNonNull(price);
+        Objects.requireNonNull(quantity);
+        Objects.requireNonNull(date);
+        Objects.requireNonNull(memo);
 
         InvestmentTransaction transaction = new InvestmentTransaction();
         transaction.setDate(date);
@@ -520,10 +551,16 @@ public class TransactionFactory {
      * @param memo Transaction memo
      * @return new Transaction
      */
-    public static InvestmentTransaction import1xSellXTransaction(Account account, Account investmentAccount, SecurityNode node, BigDecimal price, BigDecimal quantity, BigDecimal exchange, BigDecimal fee, Date date, String memo) {
-
-        assert account != null && investmentAccount != null && node != null && price != null && quantity != null;
-        assert exchange != null && fee != null && date != null && memo != null;
+    public static InvestmentTransaction import1xSellXTransaction(final Account account, final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final BigDecimal exchange, final BigDecimal fee, final Date date, final String memo) {
+        Objects.requireNonNull(account);
+        Objects.requireNonNull(investmentAccount);
+        Objects.requireNonNull(node);
+        Objects.requireNonNull(price);
+        Objects.requireNonNull(quantity);
+        Objects.requireNonNull(exchange);
+        Objects.requireNonNull(fee);
+        Objects.requireNonNull(date);
+        Objects.requireNonNull(memo);
 
         List<TransactionEntry> fees = new ArrayList<>();
 
@@ -556,10 +593,16 @@ public class TransactionFactory {
      * @return new Transaction
      */
     public static InvestmentTransaction generateSellXTransaction(final Account account, final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final BigDecimal exchangeRate, final Date date, final String memo, final boolean reconciled, final Collection<TransactionEntry> fees, final Collection<TransactionEntry> gains) {
-
-        assert account != null && investmentAccount != null;
-        assert node != null && price != null && quantity != null;
-        assert exchangeRate != null && fees != null && date != null && memo != null;
+        Objects.requireNonNull(account);
+        Objects.requireNonNull(investmentAccount);
+        Objects.requireNonNull(node);
+        Objects.requireNonNull(price);
+        Objects.requireNonNull(quantity);
+        Objects.requireNonNull(exchangeRate);
+        Objects.requireNonNull(gains);
+        Objects.requireNonNull(fees);
+        Objects.requireNonNull(date);
+        Objects.requireNonNull(memo);
 
         // verify fees are tagged correctly
         for (TransactionEntry fee : fees) {
@@ -650,7 +693,11 @@ public class TransactionFactory {
      * @param number Transaction number
      * @return new Transaction
      */
-    public static Transaction generateSingleEntryTransaction(Account account, BigDecimal amount, Date date, boolean reconciled, String memo, String payee, String number) {
+    public static Transaction generateSingleEntryTransaction(final Account account, final BigDecimal amount, final Date date, final boolean reconciled, final String memo, final String payee, final String number) {
+        Objects.requireNonNull(account);
+        Objects.requireNonNull(amount);
+        Objects.requireNonNull(date);
+
         Transaction transaction = new Transaction();
 
         transaction.setDate(date);

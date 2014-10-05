@@ -18,6 +18,7 @@
 package jgnash.convert.imports.ofx;
 
 import java.util.List;
+import java.util.Objects;
 
 import jgnash.engine.Account;
 import jgnash.engine.CurrencyNode;
@@ -34,7 +35,8 @@ import jgnash.engine.TransactionFactory;
 public class OfxImport {
 
     public static void importTransactions(final List<OfxTransaction> transactions, final Account baseAccount) {
-        assert transactions != null && baseAccount != null;
+        Objects.requireNonNull(transactions);
+        Objects.requireNonNull(baseAccount);
 
         Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 

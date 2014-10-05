@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -296,7 +297,7 @@ public final class QifParser {
         String type = acc.type;
         String description = acc.description; // assume non-null description
 
-        assert description != null;
+        Objects.requireNonNull(description);
 
         if (name == null || type == null) {
             logger.log(Level.SEVERE, "Invalid account: \n{0}", acc.toString());

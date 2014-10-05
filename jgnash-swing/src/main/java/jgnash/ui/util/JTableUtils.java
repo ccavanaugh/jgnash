@@ -18,6 +18,7 @@
 package jgnash.ui.util;
 
 import java.awt.Component;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import javax.swing.JTable;
@@ -102,7 +103,7 @@ public class JTableUtils {
      * @return A String in the format "34 56 56 56"
      */
     public static String getColumnWidths(final JTable table) {
-        assert table != null;
+        Objects.requireNonNull(table);
 
         TableColumnModel model = table.getColumnModel();
         int count = model.getColumnCount();
@@ -126,7 +127,7 @@ public class JTableUtils {
      * @param widths A String in the format "34 56 56 56"
      */
     public static void setColumnWidths(final JTable table, final String widths) {
-        assert table != null;
+        Objects.requireNonNull(table);
 
         if (widths == null) {
             packTable(table); // size the table columns correctly

@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -862,7 +863,8 @@ public class Import {
         String cNode;
 
         public SecurityThread(final SecurityNode sNode, final String cNode) {
-            assert sNode != null && cNode != null;
+            Objects.requireNonNull(sNode);
+            Objects.requireNonNull(cNode);
 
             this.sNode = sNode;
             this.cNode = cNode;
@@ -900,8 +902,8 @@ public class Import {
 
         @Override
         public void run() {
-
-            assert liabilityAccount != null && elementMap != null;
+            Objects.requireNonNull(liabilityAccount);
+            Objects.requireNonNull(elementMap);
 
             AmortizeObject ao = new AmortizeObject();
 

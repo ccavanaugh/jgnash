@@ -21,6 +21,7 @@ import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -99,12 +100,8 @@ public class DefaultLocaleAction extends AbstractAction {
         private final String display;
 
         LocaleObject(final Locale locale) {
+            this.locale = Objects.requireNonNull(locale);
 
-            if (locale == null) {
-                throw new IllegalArgumentException("Locale may not be null");
-            }
-
-            this.locale = locale;
             display = locale.getDisplayName() + " - " + locale.toString() + "  [" + locale.getDisplayName(locale) + "]";
         }
 

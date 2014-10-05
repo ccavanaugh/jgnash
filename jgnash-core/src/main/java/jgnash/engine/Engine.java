@@ -30,6 +30,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -138,14 +139,8 @@ public class Engine {
     private ScheduledExecutorService trashExecutor;
 
     public Engine(final EngineDAO eDAO, final LockManager lockManager, final AttachmentManager attachmentManager, final String name) {
-
-        if (name == null) {
-            throw new IllegalArgumentException("The engine name may not be null");
-        }
-
-        if (eDAO == null) {
-            throw new IllegalArgumentException("The engineDAO may not be null");
-        }
+        Objects.requireNonNull(name, "The engine name may not be null");
+        Objects.requireNonNull(eDAO, "The engineDAO may not be null");
 
         this.attachmentManager = attachmentManager;
         this.eDAO = eDAO;
@@ -668,8 +663,7 @@ public class Engine {
     }
 
     public boolean addReminder(final Reminder reminder) {
-
-        assert reminder.getUuid() != null;
+        Objects.requireNonNull(reminder.getUuid());
 
         boolean result = getReminderDAO().addReminder(reminder);
 
@@ -1374,8 +1368,9 @@ public class Engine {
     }
 
     public void setExchangeRate(final CurrencyNode baseCurrency, final CurrencyNode exchangeCurrency, final BigDecimal rate, final Date date) {
+        Objects.requireNonNull(rate);
 
-        assert rate != null && rate.compareTo(BigDecimal.ZERO) > 0;
+        assert rate.compareTo(BigDecimal.ZERO) > 0;
 
         if (baseCurrency.equals(exchangeCurrency)) {
             return;
@@ -1465,8 +1460,9 @@ public class Engine {
      * @return true if successful
      */
     public boolean updateCommodity(final CommodityNode oldNode, final CommodityNode templateNode) {
+        Objects.requireNonNull(oldNode);
+        Objects.requireNonNull(templateNode);
 
-        assert oldNode != null && templateNode != null;
         assert oldNode != templateNode;
 
         commodityLock.writeLock().lock();
@@ -1588,10 +1584,7 @@ public class Engine {
      * @return The matching account. {@code null} if not found.
      */
     public Account getAccountByName(final String accountName) {
-
-        if (accountName == null) {
-            throw new IllegalArgumentException("Specified name may not be null");
-        }
+        Objects.requireNonNull(accountName);
 
         final List<Account> list = getAccountList();
 
@@ -1667,9 +1660,8 @@ public class Engine {
      * @return true if successful
      */
     public boolean addAccount(final Account parent, final Account child) {
-
-        assert child != null;
-        assert child.getUuid() != null;
+        Objects.requireNonNull(child);
+        Objects.requireNonNull(child.getUuid());
 
         if (child.getAccountType() == AccountType.ROOT) {
             throw new RuntimeException("Invalid Account");
@@ -1733,8 +1725,8 @@ public class Engine {
      * @return true if successful
      */
     public boolean moveAccount(final Account account, final Account newParent) {
-
-        assert account != null && newParent != null;
+        Objects.requireNonNull(account);
+        Objects.requireNonNull(newParent);
 
         accountLock.writeLock().lock();
 
@@ -2091,8 +2083,7 @@ public class Engine {
      * @return true if successful
      */
     private boolean removeAccountSecurity(final Account account, final SecurityNode node) {
-
-        assert node != null;
+        Objects.requireNonNull(node);
 
         accountLock.writeLock().lock();
         commodityLock.writeLock().lock();

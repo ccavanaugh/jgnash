@@ -22,6 +22,7 @@ import jgnash.engine.MathConstants;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -67,9 +68,7 @@ public class BudgetGoal implements Cloneable, Serializable {
     }
 
     public final void setGoals(final BigDecimal[] goals) {
-        if (goals == null) {
-            throw new IllegalArgumentException("goals may not be null");
-        }
+        Objects.requireNonNull(goals);
 
         if (goals.length != PERIODS) {
             throw new IllegalArgumentException("goals must be " + PERIODS + " in length");
@@ -99,12 +98,7 @@ public class BudgetGoal implements Cloneable, Serializable {
      * @param budgetPeriod The budget period
      */
     public void setBudgetPeriod(final BudgetPeriod budgetPeriod) {
-
-        if (budgetPeriod == null) {
-            throw new IllegalArgumentException("BudgetPeriod may not be null");
-        }
-
-        this.budgetPeriod = budgetPeriod;
+        this.budgetPeriod = Objects.requireNonNull(budgetPeriod);
     }
 
     public void setGoal(final int startPeriod, final int endPeriod, final BigDecimal amount) {

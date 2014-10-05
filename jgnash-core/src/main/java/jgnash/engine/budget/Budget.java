@@ -19,6 +19,7 @@ package jgnash.engine.budget;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import jgnash.engine.Account;
 import jgnash.engine.StoredObject;
@@ -76,9 +77,7 @@ public class Budget extends StoredObject implements Comparable<Budget> {
     }
 
     public void setName(final String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("name may not be null");
-        }
+        Objects.requireNonNull(name);
 
         if (name.isEmpty()) {
             throw new IllegalArgumentException("name may not be zero length");
@@ -92,11 +91,7 @@ public class Budget extends StoredObject implements Comparable<Budget> {
     }
 
     public void setDescription(final String description) {
-        if (description == null) {
-            throw new IllegalArgumentException("description may not be null");
-        }
-
-        this.description = description;
+        this.description = Objects.requireNonNull(description);
     }
 
     /**
@@ -106,21 +101,14 @@ public class Budget extends StoredObject implements Comparable<Budget> {
      * @param budgetGoal budget goals
      */
     public void setBudgetGoal(final Account account, final BudgetGoal budgetGoal) {
-        if (account == null) {
-            throw new IllegalArgumentException("Account may not be null");
-        }
-
-        if (budgetGoal == null) {
-            throw new IllegalArgumentException("Account goals may not be null");
-        }
+        Objects.requireNonNull(account);
+        Objects.requireNonNull(budgetGoal);
 
         accountGoals.put(account.getUuid(), budgetGoal);
     }
 
     public void removeBudgetGoal(final Account account) {
-        if (account == null) {
-            throw new IllegalArgumentException("Account may not be null");
-        }
+        Objects.requireNonNull(account);
 
         accountGoals.remove(account.getUuid());
     }
@@ -133,9 +121,7 @@ public class Budget extends StoredObject implements Comparable<Budget> {
      * @return the goals
      */
     public BudgetGoal getBudgetGoal(final Account account) {
-        if (account == null) {
-            throw new IllegalArgumentException("Account may not be null");
-        }
+        Objects.requireNonNull(account);
 
         BudgetGoal goal = accountGoals.get(account.getUuid());
 
@@ -190,12 +176,7 @@ public class Budget extends StoredObject implements Comparable<Budget> {
      * @param budgetPeriod The budget period
      */
     public void setBudgetPeriod(final BudgetPeriod budgetPeriod) {
-
-        if (budgetPeriod == null) {
-            throw new IllegalArgumentException("BudgetPeriod may not be null");
-        }
-
-        this.budgetPeriod = budgetPeriod;
+        this.budgetPeriod = Objects.requireNonNull(budgetPeriod);
     }
 
     /**
@@ -213,7 +194,7 @@ public class Budget extends StoredObject implements Comparable<Budget> {
 
         budget.accountGoals = new HashMap<>();
 
-        for (String key : accountGoals.keySet()) {
+        for (final String key : accountGoals.keySet()) {
             budget.accountGoals.put(key, (BudgetGoal) accountGoals.get(key).clone());
         }
 

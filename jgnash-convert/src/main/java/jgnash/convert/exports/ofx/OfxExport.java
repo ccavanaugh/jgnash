@@ -28,6 +28,7 @@ import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -73,12 +74,12 @@ public class OfxExport implements OfxTags {
     }
 
     public void exportAccount() {
+        Objects.requireNonNull(account);
+        Objects.requireNonNull(startDate);
+        Objects.requireNonNull(endDate);
+        Objects.requireNonNull(file);
 
         final Date exportDate = new Date();
-
-        if (account == null || startDate == null || endDate == null || file == null) {
-            throw new RuntimeException();
-        }
 
         // force a correct file extension
         final String fileName = FileUtils.stripFileExtension(file.getAbsolutePath()) + ".ofx";

@@ -31,6 +31,7 @@ import javax.persistence.ManyToOne;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -114,7 +115,8 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
      * @param amount amount for the transaction
      */
     public TransactionEntry(final Account account, final BigDecimal amount) {
-        assert account != null && amount != null;
+        Objects.requireNonNull(account);
+        Objects.requireNonNull(amount);
 
         creditAccount = account;
         debitAccount = account;
@@ -131,7 +133,9 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
      * @param amount amount for the transaction
      */
     TransactionEntry(final Account creditAccount, final Account debitAccount, final BigDecimal amount) {
-        assert creditAccount != null && debitAccount != null && amount != null;
+        Objects.requireNonNull(creditAccount);
+        Objects.requireNonNull(debitAccount);
+        Objects.requireNonNull(amount);
 
         this.creditAccount = creditAccount;
         this.debitAccount = debitAccount;
@@ -148,7 +152,11 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
      * @param debitAmount amount for the transaction
      */
     TransactionEntry(final Account creditAccount, final Account debitAccount, final BigDecimal creditAmount, final BigDecimal debitAmount) {
-        assert creditAccount != null && debitAccount != null && creditAmount != null && debitAmount != null;
+        Objects.requireNonNull(creditAccount);
+        Objects.requireNonNull(debitAccount);
+        Objects.requireNonNull(creditAmount);
+        Objects.requireNonNull(debitAmount);
+
         assert creditAmount.signum() == 1 && debitAmount.signum() == -1;
 
         this.creditAccount = creditAccount;
@@ -163,7 +171,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     }
 
     public BigDecimal getAmount(final Account account) {
-        assert account != null;
+        Objects.requireNonNull(account);
 
         if (account.equals(creditAccount)) {
             return creditAmount;
@@ -180,7 +188,9 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
      * @param amount credit amount of the transaction
      */
     public final void setAmount(final BigDecimal amount) {
-        assert amount != null && amount.signum() >= 0;
+        Objects.requireNonNull(amount);
+
+        assert amount.signum() >= 0;
 
         creditAmount = amount;
         debitAmount = amount.negate();

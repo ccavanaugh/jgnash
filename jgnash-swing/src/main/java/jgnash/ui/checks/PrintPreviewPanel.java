@@ -24,6 +24,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,24 +32,25 @@ import javax.swing.JPanel;
 
 /**
  * @author Craig Cavanaugh
- *
  */
-
 final class PrintPreviewPanel extends JPanel {
 
     private Printable printable;
 
     private PageFormat pageFormat;
 
-    PrintPreviewPanel(Printable printable, PageFormat pageFormat) {
-        assert printable != null;
+    PrintPreviewPanel(final Printable printable, final PageFormat pageFormat) {
+        Objects.requireNonNull(printable);
+        Objects.requireNonNull(pageFormat);
+
         setPageFormat(pageFormat);
         this.printable = printable;
         setLayout(null);
     }
 
     public void setPageFormat(final PageFormat pageFormat) {
-        assert pageFormat != null;
+        Objects.requireNonNull(pageFormat);
+
         this.pageFormat = pageFormat;
         repaint();
     }

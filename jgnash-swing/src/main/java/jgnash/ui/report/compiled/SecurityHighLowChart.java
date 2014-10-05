@@ -37,6 +37,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import javax.swing.JPanel;
@@ -51,7 +52,6 @@ import jgnash.util.Resource;
  * Security High / Low Chart
  *
  * @author Craig Cavanaugh
- *
  */
 public class SecurityHighLowChart {
 
@@ -95,8 +95,8 @@ public class SecurityHighLowChart {
         return new JFreeChart(title, JFreeChart.DEFAULT_TITLE_FONT, plot, legend);
     }
 
-    private static AbstractXYDataset createHighLowDataset(SecurityNode node) {
-        assert node != null;
+    private static AbstractXYDataset createHighLowDataset(final SecurityNode node) {
+        Objects.requireNonNull(node);
 
         List<SecurityHistoryNode> hNodes = node.getHistoryNodes();
 

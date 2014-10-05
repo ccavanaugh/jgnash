@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.locks.Lock;
@@ -191,13 +192,8 @@ public class Account extends StoredObject implements Comparable<Account> {
     public Account(final AccountType type, final CurrencyNode node) {
         this();
 
-        if (type == null) {
-            throw new IllegalArgumentException("Null AccountType assigned");
-        }
-
-        if (node == null) {
-            throw new IllegalArgumentException("Null CurrencyNode assigned");
-        }
+        Objects.requireNonNull(type);
+        Objects.requireNonNull(node);
 
         setAccountType(type);
         setCurrencyNode(node);
@@ -905,7 +901,8 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @return The ending balance
      */
     public BigDecimal getBalance(final Date start, final Date end) {
-        assert start != null && end != null;
+        Objects.requireNonNull(start);
+        Objects.requireNonNull(end);
 
         transactionLock.readLock().lock();
 
@@ -944,7 +941,8 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @return recursive account balance
      */
     public BigDecimal getTreeBalance(final Date start, final Date end) {
-        assert start != null && end != null;
+        Objects.requireNonNull(start);
+        Objects.requireNonNull(end);
 
         transactionLock.readLock().lock();
         childLock.readLock().lock();
@@ -992,7 +990,8 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @return account balance
      */
     public BigDecimal getTreeBalance(final Date start, final Date end, final CurrencyNode node) {
-        assert start != null && end != null;
+        Objects.requireNonNull(start);
+        Objects.requireNonNull(end);
 
         transactionLock.readLock().lock();
         childLock.readLock().lock();
@@ -1086,9 +1085,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @param node The new commodity node for this account.
      */
     final void setCurrencyNode(final CurrencyNode node) {
-        if (node == null) {
-            throw new IllegalArgumentException();
-        }
+        Objects.requireNonNull(node);
 
         currencyNode = node;
     }
@@ -1142,9 +1139,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     final void setAccountType(final AccountType type) {
-        if (type == null) {
-            throw new RuntimeException("Null account type");
-        }
+        Objects.requireNonNull(type);
 
         if (accountType != null && !accountType.isMutable()) {
             throw new RuntimeException("Immutable account type");

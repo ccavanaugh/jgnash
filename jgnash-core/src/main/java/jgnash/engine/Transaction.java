@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.locks.Lock;
@@ -228,7 +229,8 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * @see TransactionEntry
      */
     public void addTransactionEntry(final TransactionEntry entry) {
-        assert entry != null;
+        Objects.requireNonNull(entry);
+
         assert !transactionEntries.contains(entry);
 
         Lock l = getLock().writeLock();
@@ -242,7 +244,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     public void removeTransactionEntry(final TransactionEntry entry) {
-        assert entry != null;
+        Objects.requireNonNull(entry);
 
         Lock l = getLock().writeLock();
         l.lock();
@@ -273,7 +275,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     public void setDate(final Date date) {
-        assert date != null;
+        Objects.requireNonNull(date);
 
         // ensure the date is always leveled
         this.date = DateUtils.trimDate(date);
@@ -488,7 +490,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     public void setDateEntered(final Date dateEntered) {
-        assert dateEntered != null;
+        Objects.requireNonNull(dateEntered);
 
         this.dateEntered = (Date) dateEntered.clone();
     }

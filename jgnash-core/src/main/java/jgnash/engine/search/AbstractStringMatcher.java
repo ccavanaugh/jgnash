@@ -17,6 +17,7 @@
  */
 package jgnash.engine.search;
 
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import jgnash.util.SearchUtils;
@@ -25,7 +26,6 @@ import jgnash.util.SearchUtils;
  * Transaction payee matcher
  *
  * @author Craig Cavanaugh
- *
  */
 abstract class AbstractStringMatcher implements Matcher {
 
@@ -38,10 +38,6 @@ abstract class AbstractStringMatcher implements Matcher {
      * @param caseSensitive should be true if match should be case sensitive
      */
     AbstractStringMatcher(final String pattern, final boolean caseSensitive) {
-        if (pattern == null) {
-            throw new RuntimeException();
-        }
-
-        p = SearchUtils.createSearchPattern(pattern, caseSensitive);
+        p = SearchUtils.createSearchPattern(Objects.requireNonNull(pattern), caseSensitive);
     }
 }

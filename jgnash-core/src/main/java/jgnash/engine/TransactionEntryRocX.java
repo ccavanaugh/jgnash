@@ -18,6 +18,7 @@
 package jgnash.engine;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import javax.persistence.Entity;
 
@@ -50,8 +51,9 @@ public class TransactionEntryRocX extends AbstractInvestmentTransactionEntry {
      * @param incomeExchangedAmount Exchanged amount for the debit account
      */
     TransactionEntryRocX(final Account incomeAccount, final Account investmentAccount, final SecurityNode securityNode, final BigDecimal dividend, final BigDecimal incomeExchangedAmount) {
+        Objects.requireNonNull(incomeAccount);
+        Objects.requireNonNull(investmentAccount);
 
-        assert incomeAccount != null && investmentAccount != null;
         assert investmentAccount.memberOf(AccountGroup.INVEST);
         assert dividend.signum() >= 0 && incomeExchangedAmount.signum() <= 0;
 

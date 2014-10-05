@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -52,10 +53,7 @@ public class InvestmentPerformanceSummary {
     }
 
     private InvestmentPerformanceSummary(final Account account, final Date startDate, final Date endDate, final boolean recursive) {
-
-        if (account == null) {
-            throw new IllegalArgumentException("Account may not be null");
-        }
+        Objects.requireNonNull(account, "Account may not be null");
 
         if (!account.memberOf(AccountGroup.INVEST)) {
             throw new IllegalArgumentException("Not a valid account type");

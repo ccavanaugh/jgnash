@@ -21,6 +21,7 @@ import jgnash.engine.DataStoreType;
 import jgnash.util.EncryptionManager;
 import jgnash.util.FileUtils;
 
+import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -65,9 +66,7 @@ class JpaConfiguration {
     }
 
     public static Properties getLocalProperties(final DataStoreType database, final String fileName, final char[] password, final boolean readOnly) {
-        if (password == null) {
-            throw new IllegalArgumentException();
-        }
+        Objects.requireNonNull(password);
 
         StringBuilder urlBuilder = new StringBuilder();
 
@@ -127,9 +126,7 @@ class JpaConfiguration {
      * @return   JPA properties
      */
     public static Properties getClientProperties(final DataStoreType database, final String fileName, final String host, final int port, final char[] password) {
-        if (password == null) {
-            throw new IllegalArgumentException();
-        }
+        Objects.requireNonNull(password);
 
         StringBuilder urlBuilder = new StringBuilder();
 

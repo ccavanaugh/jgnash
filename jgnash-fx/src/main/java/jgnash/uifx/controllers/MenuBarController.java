@@ -18,6 +18,7 @@
 package jgnash.uifx.controllers;
 
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import jgnash.engine.EngineFactory;
@@ -48,7 +49,7 @@ public class MenuBarController implements Initializable, MessageListener {
 
     @Override
     public void initialize(final URL url, final ResourceBundle resourceBundle) {
-        assert menuBar != null;
+        Objects.requireNonNull(menuBar);
 
         closeMenuItem.setDisable(true);
 

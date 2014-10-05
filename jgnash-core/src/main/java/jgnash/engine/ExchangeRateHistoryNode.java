@@ -30,6 +30,7 @@ import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Exchange rate history node for a {@code ExchangeRate}.
@@ -65,7 +66,8 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
      * @param rate exchange rate for the given date
      */
     ExchangeRateHistoryNode(final Date date, final BigDecimal rate) {
-        assert date != null && rate != null;
+        Objects.requireNonNull(date);
+        Objects.requireNonNull(rate);
 
         this.date = DateUtils.trimDate(date);
         this.rate = rate;

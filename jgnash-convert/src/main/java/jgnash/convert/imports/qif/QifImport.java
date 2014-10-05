@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -478,7 +479,7 @@ public class QifImport {
      * entry transaction for the supplied Account. The transaction most likely came from a online banking source.
      */
     private Transaction generateTransaction(final QifTransaction qTran, final Account acc) {
-        assert acc != null;
+        Objects.requireNonNull(acc);
 
         boolean reconciled = "x".equalsIgnoreCase(qTran.status);
 

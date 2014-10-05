@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -80,8 +81,9 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
     private final ReadWriteLock rwl = new ReentrantReadWriteLock(true);
 
     AbstractReconcileTableModel(final Account account, final Date openingDate) {
+        Objects.requireNonNull(account);
         assert cNames.length == cClass.length;
-        assert account != null;
+
         this.account = account;
         this.openingDate = (Date) openingDate.clone();
 

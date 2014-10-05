@@ -31,6 +31,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -355,7 +356,8 @@ class TransactionListDialog extends JDialog implements ActionListener, ListSelec
         boolean print;
 
         Wrapper(final Transaction t) {
-            assert t != null;
+            Objects.requireNonNull(t);
+
             this.transaction = t;
         }
     }

@@ -22,6 +22,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.EnumMap;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -64,13 +65,9 @@ public class Message implements Serializable, Cloneable {
     }
 
     private Message(final MessageChannel channel, final ChannelEvent event, final String source) {
-        if (source == null || event == null || channel == null) {
-            throw new IllegalArgumentException();
-        }
-
-        this.source = source;
-        this.event = event;
-        this.channel = channel;
+        this.source = Objects.requireNonNull(source);
+        this.event = Objects.requireNonNull(event);
+        this.channel = Objects.requireNonNull(channel);
     }
 
     public MessageChannel getChannel() {
@@ -86,14 +83,10 @@ public class Message implements Serializable, Cloneable {
      * 
      * @param key property key
      * @param value message value
-     * @throws IllegalArgumentException throws an exception if value is null     
+     * @throws NullPointerException throws an exception if value is null
      */
-    public void setObject(final MessageProperty key, final StoredObject value) throws IllegalArgumentException {
-        if (value == null) {
-            throw new IllegalArgumentException("value may not be null");
-        }
-            
-        properties.put(key, value);
+    public void setObject(final MessageProperty key, final StoredObject value) throws NullPointerException {
+        properties.put(Objects.requireNonNull(key), Objects.requireNonNull(value));
     }
 
     public Object getObject(final MessageProperty key) {

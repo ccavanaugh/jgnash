@@ -36,6 +36,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -301,8 +302,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
     }
 
     private static JFreeChart createChart(final SecurityNode node) {
-
-        assert node != null;
+        Objects.requireNonNull(node);
 
         // build the data set for the chart
         List<SecurityHistoryNode> hNodes = node.getHistoryNodes();
