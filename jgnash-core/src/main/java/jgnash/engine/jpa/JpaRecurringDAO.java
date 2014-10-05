@@ -56,7 +56,7 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
     @SuppressWarnings("unchecked")
     public List<Reminder> getReminderList() {
 
-        List<Reminder> reminderList = Collections.EMPTY_LIST;
+        List<Reminder> reminderList = Collections.emptyList();
 
         emLock.lock();
 

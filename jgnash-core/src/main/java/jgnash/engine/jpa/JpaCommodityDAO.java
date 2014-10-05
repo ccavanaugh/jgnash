@@ -113,7 +113,7 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
     @Override
     @SuppressWarnings("unchecked")
     public List<CurrencyNode> getCurrencies() {
-        List<CurrencyNode> currencyNodeList = Collections.EMPTY_LIST;
+        List<CurrencyNode> currencyNodeList = Collections.emptyList();
 
         emLock.lock();
 
@@ -206,7 +206,7 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
     @Override
     @SuppressWarnings("unchecked")
     public List<SecurityNode> getSecurities() {
-        List<SecurityNode> securityNodeList = Collections.EMPTY_LIST;
+        List<SecurityNode> securityNodeList = Collections.emptyList();
 
         emLock.lock();
 
@@ -238,7 +238,7 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
     @Override
     @SuppressWarnings("unchecked")
     public List<ExchangeRate> getExchangeRates() {
-        List<ExchangeRate> exchangeRateList = Collections.EMPTY_LIST;
+        List<ExchangeRate> exchangeRateList = Collections.emptyList();
 
         emLock.lock();
 
@@ -309,7 +309,7 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
     @Override
     @SuppressWarnings("unchecked")
     public Set<CurrencyNode> getActiveCurrencies() {
-        Set<CurrencyNode> currencyNodeSet = Collections.EMPTY_SET;
+        Set<CurrencyNode> currencyNodeSet = Collections.emptySet();
 
         emLock.lock();
 

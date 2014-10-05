@@ -84,7 +84,7 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
     @Override
     @SuppressWarnings("unchecked")
     public List<TrashObject> getTrashObjects() {
-        List<TrashObject> trashObjectList = Collections.EMPTY_LIST;
+        List<TrashObject> trashObjectList = Collections.emptyList();
 
         emLock.lock();
 

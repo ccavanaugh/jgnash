@@ -53,7 +53,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
     @Override
     @SuppressWarnings("unchecked")
     public List<Transaction> getTransactions() {
-        List<Transaction> transactionList = Collections.EMPTY_LIST;
+        List<Transaction> transactionList = Collections.emptyList();
 
         emLock.lock();
 
@@ -157,7 +157,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
     @Override
     @SuppressWarnings("unchecked")
     public List<Transaction> getTransactionsWithAttachments() {
-        List<Transaction> transactionList = Collections.EMPTY_LIST;
+        List<Transaction> transactionList = Collections.emptyList();
 
         emLock.lock();
 

@@ -144,7 +144,7 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
     @Override
     @SuppressWarnings("unchecked")
     public List<StoredObject> getStoredObjects() {
-        List<StoredObject> list = Collections.EMPTY_LIST;
+        List<StoredObject> list = Collections.emptyList();
 
         emLock.lock();
 
@@ -176,7 +176,7 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends StoredObject> List<T> getStoredObjects(final Class<T> tClass) {
-        List<T> list = Collections.EMPTY_LIST;
+        List<T> list = Collections.emptyList();
 
         emLock.lock();
 

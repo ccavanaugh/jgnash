@@ -94,7 +94,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
     @Override
     @SuppressWarnings("unchecked")
     public List<Account> getAccountList() {
-        List<Account> accountList = Collections.EMPTY_LIST;
+        List<Account> accountList = Collections.emptyList();
 
         emLock.lock();
 
@@ -191,7 +191,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
 
     @SuppressWarnings("unchecked")
     private List<Account> getAccountList(final AccountType type) {
-        List<Account> accountList = Collections.EMPTY_LIST;
+        List<Account> accountList = Collections.emptyList();
 
         emLock.lock();
 

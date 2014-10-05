@@ -81,7 +81,7 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
     @Override
     @SuppressWarnings("unchecked")
     public List<Budget> getBudgets() {
-        List<Budget> budgetList = Collections.EMPTY_LIST;
+        List<Budget> budgetList = Collections.emptyList();
 
         emLock.lock();
 
