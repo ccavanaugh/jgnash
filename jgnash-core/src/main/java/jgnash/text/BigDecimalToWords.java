@@ -19,11 +19,12 @@ package jgnash.text;
 
 import java.math.BigDecimal;
 
+import jgnash.engine.MathConstants;
+
 /**
  * Returns a "word" representation of a BigDecimal
  * 
  * @author Craig Cavanaugh
- *
  */
 public class BigDecimalToWords {
 
@@ -38,7 +39,7 @@ public class BigDecimalToWords {
     }
 
     public static String convert(final BigDecimal decimal) {
-        BigDecimal temp = decimal.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+        BigDecimal temp = decimal.setScale(2, MathConstants.roundingMode);
         StringBuilder val = new StringBuilder(convert(temp.longValue()));
 
         if (val.charAt(val.length() - 1) != ' ') {

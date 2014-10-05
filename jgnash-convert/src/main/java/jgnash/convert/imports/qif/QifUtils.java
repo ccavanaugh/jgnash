@@ -32,6 +32,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import jgnash.engine.MathConstants;
+
 /**
  * Various helper methods for importing QIF files
  * 
@@ -165,7 +167,7 @@ public class QifUtils {
                         l.warning("Large scale detected in QifUtils.parseMoney");
                         l.warning("Truncating scale to 2 places");
                         l.warning(bd.toString());
-                        bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
+                        bd = bd.setScale(2, MathConstants.roundingMode);
                         l.warning(bd.toString());
                     }
                     return bd;

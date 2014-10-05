@@ -37,6 +37,7 @@ import javax.swing.text.Document;
 import javax.swing.text.PlainDocument;
 
 import jgnash.engine.CommodityNode;
+import jgnash.engine.MathConstants;
 
 /**
  * This class extends JTextField and uses a JavaScript engine to evaluate
@@ -280,7 +281,7 @@ public class JFloatField extends JTextFieldEx {
                 o = jsEngine.eval(text);
 
                 if (o instanceof Number) { // scale the number
-                    return new BigDecimal(o.toString()).setScale(scale, BigDecimal.ROUND_HALF_UP).toString();
+                    return new BigDecimal(o.toString()).setScale(scale, MathConstants.roundingMode).toString();
                 }
             } catch (ScriptException ex) {
                 if (DEBUG) {               
@@ -347,7 +348,7 @@ public class JFloatField extends JTextFieldEx {
                         String t = eval();
                         if (!t.isEmpty()) {
                             // round the value to scale
-                            setDecimal(new BigDecimal(t).setScale(scale, BigDecimal.ROUND_HALF_UP));
+                            setDecimal(new BigDecimal(t).setScale(scale, MathConstants.roundingMode));
                         }
                     }
                 });

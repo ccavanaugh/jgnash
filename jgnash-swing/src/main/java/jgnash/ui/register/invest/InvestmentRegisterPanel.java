@@ -33,6 +33,7 @@ import javax.swing.JScrollPane;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
+import jgnash.engine.MathConstants;
 import jgnash.engine.Transaction;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
@@ -52,7 +53,6 @@ import jgnash.ui.register.table.RegisterTable;
  * modifying, and removing them.
  * 
  * @author Craig Cavanaugh
- *
  */
 public class InvestmentRegisterPanel extends AbstractRegisterPanel implements ActionListener {
 
@@ -182,7 +182,7 @@ public class InvestmentRegisterPanel extends AbstractRegisterPanel implements Ac
     @Override
     protected final void updateAccountInfo() {
         // massage the value a bit.. avoids a negative zero cash balance.
-        BigDecimal cash = account.getCashBalance().setScale(getAccountCurrencyNode().getScale(), BigDecimal.ROUND_HALF_EVEN);
+        BigDecimal cash = account.getCashBalance().setScale(getAccountCurrencyNode().getScale(), MathConstants.roundingMode);
         BigDecimal market = account.getMarketValue();
 
         accountPath.setText(account.getName());
