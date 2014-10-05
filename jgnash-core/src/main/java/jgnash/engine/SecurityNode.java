@@ -17,9 +17,6 @@
  */
 package jgnash.engine;
 
-import jgnash.util.DateUtils;
-
-import java.io.ObjectStreamException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,6 +37,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.PostLoad;
+
+import jgnash.util.DateUtils;
 
 /**
  * Security Node
@@ -173,7 +172,7 @@ public class SecurityNode extends CommodityNode {
         lock.writeLock().lock();
 
         try {
-            for (SecurityHistoryNode node : historyNodes) {
+            for (final SecurityHistoryNode node : historyNodes) {
                 if (node.getDate().compareTo(testDate) == 0) {
                     nodeToRemove = node;
                     break;
@@ -205,7 +204,7 @@ public class SecurityNode extends CommodityNode {
         lock.readLock().lock();
 
         try {
-            for (SecurityHistoryNode node : historyNodes) {
+            for (final SecurityHistoryNode node : historyNodes) {
                 if (node.getDate().compareTo(testDate) == 0) {
                     result = true;
                     break;
@@ -219,7 +218,6 @@ public class SecurityNode extends CommodityNode {
     }
 
     /**
-     *
      * @return A sorted list of the security history
      */
     private List<SecurityHistoryNode> getSortedList() {
@@ -234,56 +232,39 @@ public class SecurityNode extends CommodityNode {
         }
     }
 
-    private SecurityHistoryNode getLastHistoryNode() {
-        lock.readLock().lock();
-
-        try {
-            SecurityHistoryNode node = null;
-
-            if (!historyNodes.isEmpty()) {
-                List<SecurityHistoryNode> sorted = getSortedList();
-
-                node = sorted.get(sorted.size() - 1);
-            }
-
-            return node;
-        } finally {
-            lock.readLock().unlock();
-        }
-    }
-
     /**
      * Get a copy of SecurityHistoryNodes for this security
      *
-     * @return Returns a shallow copy of the history nodes to protect against
-     *         modification
+     * @return Returns a shallow copy of the history nodes to protect against modification
      */
     public List<SecurityHistoryNode> getHistoryNodes() {
         return getSortedList();
     }
 
+    /**
+     * Returns the {@code SecurityHistoryNode} with the matching date
+     *
+     * @param date Date to match
+     * @return {@code null} if an exact match is not found
+     */
     public SecurityHistoryNode getHistoryNode(final Date date) {
         final Date testDate = DateUtils.trimDate(date);
 
         lock.readLock().lock();
 
-        List<SecurityHistoryNode> sortedList = getSortedList();
+        final List<SecurityHistoryNode> sortedList = getSortedList();
 
         try {
-
             SecurityHistoryNode hNode = null;
 
+            // Work backwards through the list as the newest date is requested the most
             for (int i = sortedList.size() - 1; i >= 0; i--) {
-                SecurityHistoryNode node = sortedList.get(i);
+                final SecurityHistoryNode node = sortedList.get(i);
 
-                if (testDate.compareTo(node.getDate()) >= 0) {
+                if (testDate.compareTo(node.getDate()) == 0) {
                     hNode = node;
                     break;
                 }
-            }
-
-            if (hNode == null) {
-                hNode = getLastHistoryNode();
             }
 
             return hNode;
@@ -292,27 +273,49 @@ public class SecurityNode extends CommodityNode {
         }
     }
 
-    BigDecimal getMarketPrice(final Date date) {
-        BigDecimal marketPrice = BigDecimal.ZERO;
-
-        Date testDate = DateUtils.trimDate(date);
+    /**
+     * Returns the {@code SecurityHistoryNode} with the closet matching date without exceeding the request date
+     *
+     * @param date {@code Date} to match
+     * @return {@code null} if no history nodes exist or predate the requested date
+     */
+    public SecurityHistoryNode getClosestHistoryNode(final Date date) {
+        final Date testDate = DateUtils.trimDate(date);
 
         lock.readLock().lock();
 
-        try {
+        // must be sorted for correct results
+        final List<SecurityHistoryNode> sortedList = getSortedList();
 
-            for (SecurityHistoryNode node : historyNodes) {
+        try {
+            SecurityHistoryNode hNode = null;
+
+            // Work backwards through the list as the newest date is requested the most
+            for (int i = sortedList.size() - 1; i >= 0; i--) {
+                final SecurityHistoryNode node = sortedList.get(i);
+
                 if (node.getDate().getTime() <= testDate.getTime()) {
-                    marketPrice = node.getPrice();
-                } else {
+                    hNode = node;
                     break;
                 }
             }
 
-            return marketPrice;
+            return hNode;
         } finally {
             lock.readLock().unlock();
         }
+    }
+
+    private BigDecimal getMarketPrice(final Date date) {
+        BigDecimal marketPrice = BigDecimal.ZERO;
+
+        final SecurityHistoryNode historyNode = getClosestHistoryNode(date);
+
+        if (historyNode != null) {
+            marketPrice = historyNode.getPrice();
+        }
+
+        return marketPrice;
     }
 
     /**
@@ -333,15 +336,21 @@ public class SecurityNode extends CommodityNode {
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-        SecurityNode node = (SecurityNode) super.clone();
-        node.historyNodes = new HashSet<>();
-        node.lock = new ReentrantReadWriteLock(true);
 
-        return node;
+        lock.readLock().lock();
+
+        try {
+            SecurityNode node = (SecurityNode) super.clone();
+            node.historyNodes = new HashSet<>();
+            node.lock = new ReentrantReadWriteLock(true);
+
+            return node;
+        } finally {
+            lock.readLock().unlock();
+        }
     }
 
-    @SuppressWarnings("RedundantThrows")
-    private Object readResolve() throws ObjectStreamException {
+    private Object readResolve() {
         postLoad();
         return this;
     }

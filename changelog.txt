@@ -27,6 +27,8 @@ Budgeting
 
 Release 2.14.0
 ----------------------
+10/05/14 Bug fix for potential return of an incorrect closest by date market price for a security
+10/05/14 Bug fix for potential erroneous removal of the prior days security history during a market price update
 10/04/14 Bug fix for difficult to trigger Concurrent Modification error when updating stock prices
 09/26/14 Bug fix for false positives identifying duplicate transactions when importing QIF files.
 09/25/14 Handle non-standard OFX files that use commas as a decimal separator for amounts

@@ -177,63 +177,64 @@ public class Engine {
         }, 1, 5, TimeUnit.MINUTES);
     }
 
+    /**
+     * Returns the most current known market price for a requested date.  The {@code SecurityNode} history will be
+     * searched for an exact match first.  If an exact match is not found, investment transactions will be searched
+     * for the closest requested date.  {@code SecurityHistoryNode} history values will take precedent over
+     * a transaction with the same closest or matching date.
+     *
+     * @param transactions Collection of transactions utilizing the requested investment
+     * @param node {@code SecurityNode} we want a price for
+     * @param baseCurrency {@code CurrencyNode} reporting currency
+     * @param date {@code Date} we want a market price for
+     * @return The best market price or a value of 0 if no history or transactions exist
+     */
     public static BigDecimal getMarketPrice(final Collection<Transaction> transactions, final SecurityNode node, final CurrencyNode baseCurrency, final Date date) {
 
-        Date testDate = DateUtils.trimDate(date);
+        final Date marketDate = DateUtils.trimDate(date);
 
-        // the best history node record
-        SecurityHistoryNode hNode = node.getHistoryNode(testDate);
+        // Search for the exact history node record
+        SecurityHistoryNode hNode = node.getHistoryNode(marketDate);
 
-        // Get the current exchange rate for the security node
-        BigDecimal rate = node.getReportedCurrencyNode().getExchangeRate(baseCurrency);
-
-        // return if dates are exact match
-        if (hNode != null && testDate.equals(DateUtils.trimDate(hNode.getDate()))) {
-            // return the price and factor in the exchange rate
-            return hNode.getPrice().multiply(rate);
+        // not null, must be an exact match, return the value because it has precedence
+        if (hNode != null) {
+            return node.getMarketPrice(marketDate, baseCurrency);
         }
 
-        Date priceDate = null;
+        // Nothing found yet, continue searching for something better
+        Date priceDate = new Date(0);
         BigDecimal price = BigDecimal.ZERO;
 
-        // no exact match yet, search the transactions
+        hNode = node.getClosestHistoryNode(marketDate);
 
-        search:
-        for (Transaction t : transactions) {
-            if (t instanceof InvestmentTransaction) {
+        if (hNode != null) {    // Closest option so far
+            price = hNode.getPrice();
+            priceDate = hNode.getDate();
+        }
 
-                BigDecimal p = ((InvestmentTransaction) t).getPrice();
+        // Compare against transactions
+        for (final Transaction t : transactions) {
+            if (t instanceof InvestmentTransaction && ((InvestmentTransaction) t).getSecurityNode() == node) {
 
-                // Dividend transactions, etc return BigDecimal.Zero; Protect against setting a price equal to zero
-                if (((InvestmentTransaction) t).getSecurityNode() == node && p != null && p.compareTo(BigDecimal.ZERO) == 1) {
-                    switch (t.getDate().compareTo(testDate)) {
-                        case -1:
-                            price = p;
-                            priceDate = t.getDate();
-                            break;
-                        case 0: // found an exact match, return it
-                            return p;
-                        case 1:
-                        default:
-                            break search; // stop the loop
+                // The transaction date must be closer than the history node, but not newer than the request date
+                if ((t.getDate().after(priceDate) && t.getDate().before(marketDate)) || t.getDate().equals(marketDate)) {
+
+                    // Check for a dividend, etc that may have returned a price of zero
+                    final BigDecimal p = ((InvestmentTransaction) t).getPrice();
+
+                    if (p != null && p.compareTo(BigDecimal.ZERO) == 1) {
+                        price = p;
+                        priceDate = t.getDate();
                     }
                 }
             }
         }
 
-        // determine the closest date
-        if (hNode == null && priceDate == null) {
-            return BigDecimal.ZERO; // nothing found
-        } else if (priceDate != null && hNode != null) {
-            if (priceDate.compareTo(hNode.getDate()) >= 0) {
-                return price;
-            }
-        } else if (hNode == null) {
-            return price;
-        }
+        // Get the current exchange rate for the security node
+        final BigDecimal rate = node.getReportedCurrencyNode().getExchangeRate(baseCurrency);
 
         // return the price and factor in the exchange rate
-        return hNode.getPrice().multiply(rate);
+        return price.multiply(rate);
     }
 
     static String buildExchangeRateId(final CurrencyNode baseCurrency, final CurrencyNode exchangeCurrency) {
@@ -1263,14 +1264,18 @@ public class Engine {
 
         commodityLock.writeLock().lock();
 
+        boolean status = false;
+
         try {
             final SecurityHistoryNode hNode = node.getHistoryNode(date);
 
-            boolean status = node.removeHistoryNode(date);
+            if (hNode != null) {
+                status = node.removeHistoryNode(date);
 
-            if (status) {
-                moveObjectToTrash(hNode);
-                status = getCommodityDAO().removeSecurityHistory(node);
+                if (status) {   // removal was a success, make sure we cleanup properly
+                    moveObjectToTrash(hNode);
+                    status = getCommodityDAO().removeSecurityHistory(node);
+                }
             }
 
             Message message;

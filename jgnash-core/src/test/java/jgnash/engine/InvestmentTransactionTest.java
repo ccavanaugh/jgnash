@@ -7,6 +7,7 @@ import static jgnash.engine.TransactionFactory.generateReinvDividendXTransaction
 import static jgnash.engine.TransactionFactory.generateSellXTransaction;
 import static jgnash.engine.TransactionFactory.generateSplitXTransaction;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -160,9 +161,9 @@ public class InvestmentTransactionTest {
         // Buying shares
         InvestmentTransaction it;
         it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", false, fees);
-        assertTrue(e.addTransaction(it));
 
-        //assertTrue(true);
+        assertTrue(e.addTransaction(it));
+        assertFalse(e.addTransaction(it));
     }
 
     @Test
@@ -651,7 +652,7 @@ public class InvestmentTransactionTest {
         assertArrayEquals("Account balances are not as expected!", expected, actual);
     }
 
-    private static TransactionEntry createTransactionEntry(final Account debitAccount, final Account creditAccount, final BigDecimal amount, final String memo, final TransactionTag transactionTag) {
+    public static TransactionEntry createTransactionEntry(final Account debitAccount, final Account creditAccount, final BigDecimal amount, final String memo, final TransactionTag transactionTag) {
         TransactionEntry entry = new TransactionEntry();
 
         entry.setMemo(memo);
