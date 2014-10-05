@@ -27,14 +27,14 @@ import javax.swing.border.Border;
 class JideScrollPaneLayout extends ScrollPaneLayout implements JideScrollPaneConstants {
 
     /**
-     * The row footer child. Default is <code>null</code>.
+     * The row footer child. Default is {@code null}.
      * 
      * @see JideScrollPane#setRowFooter
      */
     private JViewport _rowFoot;
 
     /**
-     * The column footer child. Default is <code>null</code>.
+     * The column footer child. Default is {@code null}.
      * 
      * @see JideScrollPane#setColumnFooter
      */
@@ -61,12 +61,12 @@ class JideScrollPaneLayout extends ScrollPaneLayout implements JideScrollPaneCon
     private Component _vBottom;
 
     /**
-     * The component under upper left corner. Default is <code>null</code>.
+     * The component under upper left corner. Default is {@code null}.
      */
     private Component _subUpperLeft;
 
     /**
-     * The component under upper right corner. Default is <code>null</code>.
+     * The component under upper right corner. Default is {@code null}.
      */
     private Component _subUpperRight;
 
@@ -158,15 +158,15 @@ class JideScrollPaneLayout extends ScrollPaneLayout implements JideScrollPaneCon
     }
 
     /**
-     * The preferred size of a <code>ScrollPane</code> is the size of the insets, plus the preferred size of the
+     * The preferred size of a {@code ScrollPane} is the size of the insets, plus the preferred size of the
      * viewport, plus the preferred size of the visible headers, plus the preferred size of the scrollbars that will
      * appear given the current view and the current scrollbar displayPolicies.
      * <p>
      * Note that the rowHeader is calculated as part of the preferred width and the colHeader is calculated as part of
      * the preferred size.
      * 
-     * @param parent the <code>Container</code> that will be laid out
-     * @return a <code>Dimension</code> object specifying the preferred size of the viewport and any scrollbars
+     * @param parent the {@code Container} that will be laid out
+     * @return a {@code Dimension} object specifying the preferred size of the viewport and any scrollbars
      * 
      * @see ViewportLayout
      * @see LayoutManager
@@ -340,12 +340,12 @@ class JideScrollPaneLayout extends ScrollPaneLayout implements JideScrollPaneCon
     }
 
     /**
-     * The minimum size of a <code>ScrollPane</code> is the size of the insets plus minimum size of the viewport, plus
+     * The minimum size of a {@code ScrollPane} is the size of the insets plus minimum size of the viewport, plus
      * the scrollpane's viewportBorder insets, plus the minimum size of the visible headers, plus the minimum size of
      * the scrollbars whose displayPolicy isn't NEVER.
      * 
-     * @param parent the <code>Container</code> that will be laid out
-     * @return a <code>Dimension</code> object specifying the minimum size
+     * @param parent the {@code Container} that will be laid out
+     * @return a {@code Dimension} object specifying the minimum size
      */
     @Override
     public Dimension minimumLayoutSize(Container parent) {
@@ -479,13 +479,13 @@ class JideScrollPaneLayout extends ScrollPaneLayout implements JideScrollPaneCon
      * <li>The column header, if present and visible, gets its preferred height and the viewport's width.
      * <p/>
      * <li>If a vertical scrollbar is needed, i.e. if the viewport's extent height is smaller than its view height or if
-     * the <code>displayPolicy</code> is ALWAYS, it's treated like the row header with respect to its dimensions and is
+     * the {@code displayPolicy} is ALWAYS, it's treated like the row header with respect to its dimensions and is
      * made visible.
      * <p/>
      * <li>If a horizontal scrollbar is needed, it is treated like the column header (see the paragraph above regarding
      * the vertical scrollbar).
      * <p/>
-     * <li>If the scrollpane has a non-<code>null</code> <code>viewportBorder</code>, then space is allocated for that.
+     * <li>If the scrollpane has a non-{@code null} {@code viewportBorder}, then space is allocated for that.
      * <p/>
      * <li>The viewport gets the space available after accounting for the previous constraints.
      * <p/>
@@ -494,7 +494,7 @@ class JideScrollPaneLayout extends ScrollPaneLayout implements JideScrollPaneCon
      * header gets left corners, and a column header gets upper corners.
      * </ul>
      * 
-     * @param parent the <code>Container</code> to lay out
+     * @param parent the {@code Container} to lay out
      */
     @SuppressWarnings("ConstantConditions")
     @Override
