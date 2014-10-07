@@ -69,6 +69,8 @@ public class SecurityNode extends CommodityNode {
 
     private transient ReadWriteLock lock;
 
+    private transient List<SecurityHistoryNode> sortedHistoryNodeCache = new ArrayList<>();
+
     public SecurityNode() {
         lock = new ReentrantReadWriteLock(true);
     }
@@ -155,6 +157,9 @@ public class SecurityNode extends CommodityNode {
         lock.writeLock().lock();
 
         try {
+            sortedHistoryNodeCache.add(node);
+            Collections.sort(sortedHistoryNodeCache);
+
             return historyNodes.add(node);
         } finally {
             lock.writeLock().unlock();
@@ -181,6 +186,7 @@ public class SecurityNode extends CommodityNode {
 
             // Remove outside the iterator
             if (nodeToRemove != null) {
+                sortedHistoryNodeCache.remove(nodeToRemove);
                 result = historyNodes.remove(nodeToRemove);
             }
         } finally {
@@ -218,27 +224,12 @@ public class SecurityNode extends CommodityNode {
     }
 
     /**
-     * @return A sorted list of the security history
-     */
-    private List<SecurityHistoryNode> getSortedList() {
-        lock.readLock().lock();
-
-        try {
-            ArrayList<SecurityHistoryNode> sorted = new ArrayList<>(historyNodes);
-            Collections.sort(sorted);
-            return sorted;
-        } finally {
-            lock.readLock().unlock();
-        }
-    }
-
-    /**
      * Get a copy of SecurityHistoryNodes for this security
      *
      * @return Returns a shallow copy of the history nodes to protect against modification
      */
     public List<SecurityHistoryNode> getHistoryNodes() {
-        return getSortedList();
+        return Collections.unmodifiableList(sortedHistoryNodeCache);
     }
 
     /**
@@ -252,14 +243,12 @@ public class SecurityNode extends CommodityNode {
 
         lock.readLock().lock();
 
-        final List<SecurityHistoryNode> sortedList = getSortedList();
-
         try {
             SecurityHistoryNode hNode = null;
 
             // Work backwards through the list as the newest date is requested the most
-            for (int i = sortedList.size() - 1; i >= 0; i--) {
-                final SecurityHistoryNode node = sortedList.get(i);
+            for (int i = sortedHistoryNodeCache.size() - 1; i >= 0; i--) {
+                final SecurityHistoryNode node = sortedHistoryNodeCache.get(i);
 
                 if (testDate.compareTo(node.getDate()) == 0) {
                     hNode = node;
@@ -284,15 +273,12 @@ public class SecurityNode extends CommodityNode {
 
         lock.readLock().lock();
 
-        // must be sorted for correct results
-        final List<SecurityHistoryNode> sortedList = getSortedList();
-
         try {
             SecurityHistoryNode hNode = null;
 
             // Work backwards through the list as the newest date is requested the most
-            for (int i = sortedList.size() - 1; i >= 0; i--) {
-                final SecurityHistoryNode node = sortedList.get(i);
+            for (int i = sortedHistoryNodeCache.size() - 1; i >= 0; i--) {
+                final SecurityHistoryNode node = sortedHistoryNodeCache.get(i);
 
                 if (node.getDate().getTime() <= testDate.getTime()) {
                     hNode = node;
@@ -330,7 +316,7 @@ public class SecurityNode extends CommodityNode {
     }
 
     /**
-     * Return a clone of this security node Security history is not cloned
+     * Return a clone of this security node.  Security history is not cloned
      *
      * @return clone of this SecurityNode with history nodes
      */
@@ -342,7 +328,7 @@ public class SecurityNode extends CommodityNode {
         try {
             SecurityNode node = (SecurityNode) super.clone();
             node.historyNodes = new HashSet<>();
-            node.lock = new ReentrantReadWriteLock(true);
+            node.postLoad();
 
             return node;
         } finally {
@@ -358,5 +344,8 @@ public class SecurityNode extends CommodityNode {
     @PostLoad
     private void postLoad() {
         lock = new ReentrantReadWriteLock(true);
+
+        // load the cache list
+        sortedHistoryNodeCache = new ArrayList<>(historyNodes);
     }
 }
