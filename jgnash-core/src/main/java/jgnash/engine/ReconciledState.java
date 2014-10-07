@@ -24,9 +24,8 @@ import jgnash.util.Resource;
  *
  * @author Craig Cavanaugh
  */
-
 public enum ReconciledState {
-    @SuppressWarnings("unused")CLEARED(Resource.get().getString("State.Cleared")),
+    CLEARED(Resource.get().getString("State.Cleared")),
     NOT_RECONCILED(Resource.get().getString("State.NotReconciled")),
     RECONCILED(Resource.get().getString("State.Reconciled"));
     private final transient String symbol;
