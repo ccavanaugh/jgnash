@@ -766,8 +766,8 @@ public class Account extends StoredObject implements Comparable<Account> {
         try {
             Date date = null;
 
-            for (Transaction transaction : transactions) {
-                if (transaction.getReconciled(this) == ReconciledState.NOT_RECONCILED) {
+            for (final Transaction transaction : getSortedTransactionList()) {
+                if (transaction.getReconciled(this) != ReconciledState.RECONCILED) {
                     date = transaction.getDate();
                     break;
                 }
