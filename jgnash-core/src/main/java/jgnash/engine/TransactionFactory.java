@@ -85,7 +85,7 @@ public class TransactionFactory {
      * @param memo Transaction memo
      * @return new Transaction
      */
-    public static InvestmentTransaction import1xBuyXTransaction(Account account, Account investmentAccount, SecurityNode node, BigDecimal price, BigDecimal quantity, BigDecimal exchangeRate, BigDecimal fee, Date date, String memo) {
+    public static InvestmentTransaction import1xBuyXTransaction(final Account account, final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final BigDecimal exchangeRate, final BigDecimal fee, final Date date, final String memo) {
 
         assert account != null && investmentAccount != null && node != null && price != null && quantity != null;
         assert exchangeRate != null && fee != null && date != null && memo != null;
@@ -327,9 +327,6 @@ public class TransactionFactory {
 
         transaction.addTransactionEntry(entry);
 
-        //ReconcileManager.reconcileTransaction(creditAccount, transaction, reconciled);
-        //ReconcileManager.reconcileTransaction(debitAccount, transaction, reconciled);
-
         return transaction;
     }
 
@@ -362,9 +359,6 @@ public class TransactionFactory {
         entry.setMemo(memo);
 
         transaction.addTransactionEntry(entry);
-
-        //ReconcileManager.reconcileTransaction(creditAccount, transaction, reconciled);
-        //ReconcileManager.reconcileTransaction(debitAccount, transaction, reconciled);
 
         return transaction;
     }
@@ -467,13 +461,13 @@ public class TransactionFactory {
             }
 
             // create a single entry transaction that offsets any resulting fees
-            TransactionEntry feesOffestEntry = new TransactionEntry(investmentAccount, totalFees.negate());
-            feesOffestEntry.setMemo(memo);
-            feesOffestEntry.setTransactionTag(TransactionTag.FEES_OFFSET);
+            TransactionEntry feesOffsetEntry = new TransactionEntry(investmentAccount, totalFees.negate());
+            feesOffsetEntry.setMemo(memo);
+            feesOffsetEntry.setTransactionTag(TransactionTag.FEES_OFFSET);
 
-            assert feesOffestEntry.isSingleEntry(); // check
+            assert feesOffsetEntry.isSingleEntry(); // check
 
-            transaction.addTransactionEntry(feesOffestEntry);
+            transaction.addTransactionEntry(feesOffsetEntry);
         }
 
         if (!gains.isEmpty()) {
@@ -729,7 +723,7 @@ public class TransactionFactory {
      * @param reconciled Reconciled status
      * @return new Investment Transaction
      */
-    public static InvestmentTransaction generateSplitXTransaction(Account investmentAccount, SecurityNode node, BigDecimal price, BigDecimal quantity, Date date, String memo, boolean reconciled) {
+    public static InvestmentTransaction generateSplitXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo, final boolean reconciled) {
 
         assert investmentAccount != null && node != null && price != null && quantity != null;
         assert date != null && memo != null;
@@ -750,7 +744,7 @@ public class TransactionFactory {
         return transaction;
     }
 
-    private static String buildPayee(String wordProperty, SecurityNode node, BigDecimal price, BigDecimal quantity) {
+    private static String buildPayee(final String wordProperty, final SecurityNode node, final BigDecimal price, final BigDecimal quantity) {
         Resource rb = Resource.get();
         CommodityFormat format = CommodityFormat.getFullFormat();
 
