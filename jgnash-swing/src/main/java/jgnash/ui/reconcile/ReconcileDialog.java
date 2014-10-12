@@ -17,27 +17,6 @@
  */
 package jgnash.ui.reconcile;
 
-import jgnash.ui.StaticUIMethods;
-import org.jdesktop.swingx.JXTitledPanel;
-
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.WindowConstants;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -49,6 +28,20 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Date;
 
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingWorker;
+import javax.swing.WindowConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import jgnash.engine.Account;
 import jgnash.engine.MathConstants;
 import jgnash.engine.message.Message;
@@ -57,12 +50,19 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.text.CommodityFormat;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.ui.register.RegisterFactory;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.JTableUtils;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+import org.jdesktop.swingx.JXTitledPanel;
 
 /**
  * Account reconcile dialog.
@@ -234,7 +234,7 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
 
         setMinimumSize(getSize());
 
-         DialogUtils.addBoundsListener(this); // this will size and locate the dialog
+        DialogUtils.addBoundsListener(this); // this will size and locate the dialog
     }
 
     private JPanel buildStatPanel() {
@@ -292,7 +292,7 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
                         if (!event.getObject(MessageProperty.ACCOUNT).equals(account)) {
                             return;
                         }
-                    // drop through to close
+                        // drop through to close
                     case FILE_NEW_SUCCESS:
                     case FILE_CLOSING:
                     case FILE_LOAD_SUCCESS:
@@ -307,14 +307,39 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
     }
 
     /**
+     * Commits the changes.  This can take a long time if working remotely or using a relational database.  Push
+     * the model update to a background thread and make the user wait.
+     */
+    private void commitChanges() {
+        final class CommitChangesWorker extends SwingWorker<Void, Void> {
+
+            @Override
+            protected Void doInBackground() throws Exception {
+                UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
+
+                creditModel.commitChanges();
+                debitModel.commitChanges();
+
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                UIApplication.getFrame().stopWaitMessage();
+            }
+        }
+
+        new CommitChangesWorker().execute();
+    }
+
+    /**
      * Invoked when an action occurs.
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == finishLaterButton || e.getSource() == finishButton) {
             closeDialog();
-            creditModel.commitChanges();
-            debitModel.commitChanges();
+            commitChanges();
         } else if (e.getSource() == cancelButton) {
             closeDialog();
         } else if (e.getSource() == creditSelectAllButton) {
