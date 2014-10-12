@@ -23,7 +23,6 @@ import java.util.ArrayList;
 
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionType;
@@ -113,14 +112,13 @@ public class RegisterTableWithSplitEntriesModel extends RegisterTableModel {
                 } else if (wrapper.transaction instanceof InvestmentTransaction) {
                     return ((InvestmentTransaction) wrapper.transaction).getInvestmentAccount().getName();
                 } else {
-                    System.out.println("here");
                     return ERROR;
                 }
             case 5:
                 if (wrapper.entry == null) {
-                    return wrapper.transaction.getReconciled(account) == ReconciledState.NOT_RECONCILED ? null : reconcileSymbol;
+                    return wrapper.transaction.getReconciled(account).toString();
                 }
-                return wrapper.entry.getReconciled(account) == ReconciledState.NOT_RECONCILED ? null : reconcileSymbol;
+                return wrapper.entry.getReconciled(account).toString();
             case 6:
                 if (signum >= 0) {
                     return amount;

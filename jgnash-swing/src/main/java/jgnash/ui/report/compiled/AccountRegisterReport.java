@@ -159,7 +159,6 @@ public class AccountRegisterReport extends DynamicJasperReport {
 
         if (filterCheckBox.isSelected()) {
             FilterModel model = RegisterFactory.getFilterTableModel(accountCombo.getSelectedAccount(), detailSplitsCheckBox.isSelected());
-            model.setReconcileSymbol("C");
             model.setFilter(txtFilter.getText());
 
             // last column is the balance.  It does not make sense if filtered, so hide it from the report.
@@ -170,7 +169,6 @@ public class AccountRegisterReport extends DynamicJasperReport {
         }
 
         ClippingModel model = RegisterFactory.getClippingTableModel(accountCombo.getSelectedAccount(), detailSplitsCheckBox.isSelected());
-        model.setReconcileSymbol("C"); // report fonts do not support the check mark
 
         if (endIndex > 0) { // start and end index specified... reset after model is created
             model.setStartIndex(startIndex);

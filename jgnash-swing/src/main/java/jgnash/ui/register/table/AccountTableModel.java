@@ -26,14 +26,8 @@ import jgnash.engine.Account;
  * of an account
  *
  * @author Craig Cavanaugh
- *
  */
 public interface AccountTableModel extends TableModel {
-
-    /**
-     * Symbol for a reconciled transaction
-     */
-    public String RECONCILED_SYM = "\u2713";
 
     public Account getAccount();
 }

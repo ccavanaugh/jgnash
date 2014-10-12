@@ -156,7 +156,7 @@ public final class ReinvestDividendPanel extends AbstractPriceQtyInvTransactionP
 
         modTrans = tran;
 
-        reconciledButton.setSelected(tran.getReconciled(getAccount()) == ReconciledState.RECONCILED);
+        reconciledButton.setSelected(tran.getReconciled(getAccount()) != ReconciledState.NOT_RECONCILED);
     }
 
     @Override
@@ -166,7 +166,7 @@ public final class ReinvestDividendPanel extends AbstractPriceQtyInvTransactionP
 
         Collection<TransactionEntry> gains = gainsPanel.getTransactions();
 
-        return TransactionFactory.generateReinvDividendXTransaction(account, securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText(), reconciledButton.isSelected(), fees, gains);
+        return TransactionFactory.generateReinvDividendXTransaction(account, securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText(), fees, gains);
     }
 
     @Override

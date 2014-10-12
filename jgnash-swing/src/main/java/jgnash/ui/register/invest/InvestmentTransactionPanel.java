@@ -58,7 +58,6 @@ import jgnash.util.Resource;
  *
  * @author Craig Cavanaugh
  * @author Don Brown
- *
  */
 public class InvestmentTransactionPanel extends JPanel implements MessageListener, ActionListener {
 
@@ -119,7 +118,7 @@ public class InvestmentTransactionPanel extends JPanel implements MessageListene
         cardPanel = new JPanel();
         cardPanel.setLayout(new CardLayout());
         enterButton = new JButton(rb.getString("Button.Enter"));
-        cancelButton = new JButton(rb.getString("Button.Clear"));
+        cancelButton = new JButton(rb.getString("Button.Cancel"));
 
         cancelButton.addActionListener(this);
         enterButton.addActionListener(this);

@@ -471,6 +471,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
 
         private final JMenuItem duplicate;
         private final JMenuItem delete;
+        private final JRadioButtonMenuItem cleared;
         private final JRadioButtonMenuItem reconciled;
         private final JRadioButtonMenuItem unreconciled;
         private final JMenuItem jump;
@@ -479,6 +480,9 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
 
             JMenu markSub = new JMenu(rb.getString("Menu.MarkAs.Name"));
 
+            cleared = new JRadioButtonMenuItem(rb.getString("Menu.Cleared.Name"));
+            cleared.addActionListener(this);
+
             reconciled = new JRadioButtonMenuItem(rb.getString("Menu.Reconciled.Name"));
             reconciled.addActionListener(this);
 
@@ -486,9 +490,11 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
             unreconciled.addActionListener(this);
 
             ButtonGroup g = new ButtonGroup();
+            g.add(cleared);
             g.add(reconciled);
             g.add(unreconciled);
 
+            markSub.add(cleared);
             markSub.add(reconciled);
             markSub.add(unreconciled);
 
@@ -523,6 +529,8 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
                 reconcileAction(ReconciledState.RECONCILED);
             } else if (e.getSource() == unreconciled) {
                 reconcileAction(ReconciledState.NOT_RECONCILED);
+            } else if (e.getSource() == cleared) {
+                reconcileAction(ReconciledState.CLEARED);
             }
         }
 
@@ -533,6 +541,8 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
             if (t != null) {
                 if (t.getReconciled(getAccount()) == ReconciledState.RECONCILED) {
                     reconciled.setSelected(true);
+                } else if (t.getReconciled(getAccount()) == ReconciledState.CLEARED) {
+                    cleared.setSelected(true);
                 } else {
                     unreconciled.setSelected(true);
                 }

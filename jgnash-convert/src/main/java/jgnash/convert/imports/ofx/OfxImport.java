@@ -47,7 +47,7 @@ public class OfxImport {
                 Transaction t;
 
                 if (baseAccount.equals(tran.account)) { // single entry oTran
-                    t = TransactionFactory.generateSingleEntryTransaction(baseAccount, tran.amount, tran.datePosted, false, tran.memo, tran.getName(), tran.checkNumber);
+                    t = TransactionFactory.generateSingleEntryTransaction(baseAccount, tran.amount, tran.datePosted, tran.memo, tran.getName(), tran.checkNumber);
                 } else { // double entry
                     if (tran.amount.signum() >= 0) {
                         t = TransactionFactory.generateDoubleEntryTransaction(baseAccount, tran.account, tran.amount.abs(), tran.datePosted, tran.memo, tran.getName(), tran.checkNumber);

@@ -767,9 +767,9 @@ public abstract class EngineTest {
 
         e.addAccount(e.getRootAccount(), a);
 
-        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), true, "memo", "payee", "1"));
-        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), true, "memo", "payee", "2"));
-        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), true, "memo", "payee", "3"));
+        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), "memo", "payee", "1"));
+        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), "memo", "payee", "2"));
+        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), "memo", "payee", "3"));
 
         assertEquals(3, a.getTransactionCount());
 
@@ -794,9 +794,9 @@ public abstract class EngineTest {
 
         e.addAccount(e.getRootAccount(), a);
 
-        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), true, "memo", "payee", "1"));
+        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), "memo", "payee", "1"));
 
-        Transaction link = TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), true, "memo", "payee", "1");
+        Transaction link = TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), "memo", "payee", "1");
         link.setAttachment("external link");
 
         e.addTransaction(link);

@@ -124,7 +124,7 @@ public final class AddRemoveSharePanel extends AbstractPriceQtyInvTransactionPan
         quantityField.setDecimal(_tran.getQuantity());
         securityCombo.setSelectedNode(_tran.getSecurityNode());
 
-        reconciledButton.setSelected(tran.getReconciled(getAccount()) == ReconciledState.RECONCILED);
+        reconciledButton.setSelected(tran.getReconciled(getAccount()) != ReconciledState.NOT_RECONCILED);
 
         updateTotalField();
     }
@@ -132,9 +132,9 @@ public final class AddRemoveSharePanel extends AbstractPriceQtyInvTransactionPan
     @Override
     public Transaction buildTransaction() {
         if (tranType == TransactionType.ADDSHARE) {
-            return TransactionFactory.generateAddXTransaction(account, securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText(), reconciledButton.isSelected());
+            return TransactionFactory.generateAddXTransaction(account, securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText());
         }
-        return TransactionFactory.generateRemoveXTransaction(account, securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText(), reconciledButton.isSelected());
+        return TransactionFactory.generateRemoveXTransaction(account, securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText());
     }
 
     void updateTotalField() {

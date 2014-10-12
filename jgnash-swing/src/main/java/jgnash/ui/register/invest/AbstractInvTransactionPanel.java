@@ -35,7 +35,6 @@ import jgnash.ui.register.AbstractTransactionPanel;
  * Abstract panel for investment transaction form.
  * 
  * @author Craig Cavanaugh
- *
  */
 public abstract class AbstractInvTransactionPanel extends AbstractTransactionPanel {
 
@@ -53,7 +52,7 @@ public abstract class AbstractInvTransactionPanel extends AbstractTransactionPan
 
         this.account = account;
 
-        reconciledButton = new JCheckBox(rb.getString("Button.Reconciled"));
+        reconciledButton = new JCheckBox(rb.getString("Button.Cleared"));
         reconciledButton.setHorizontalTextPosition(SwingConstants.LEADING);
         reconciledButton.setMargin(new Insets(0, 0, 0, 0));
     }
@@ -72,16 +71,21 @@ public abstract class AbstractInvTransactionPanel extends AbstractTransactionPan
             Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
             if (modTrans == null) {
-                engine.addTransaction(buildTransaction());
+                final Transaction newTrans = buildTransaction();
+
+                // Need to set the reconciled state
+                ReconcileManager.reconcileTransaction(getAccount(), newTrans, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+
+                engine.addTransaction(newTrans);
             } else {
-                Transaction newTrans = buildTransaction();
+                final Transaction newTrans = buildTransaction();
 
                 newTrans.setDateEntered(modTrans.getDateEntered());
 
                 /* Need to preserve the reconciled state of the opposite side
                  * if both sides are not automatically reconciled
                  */
-                ReconcileManager.reconcileTransaction(getAccount(), newTrans, reconciledButton.isSelected() ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
+                ReconcileManager.reconcileTransaction(getAccount(), newTrans, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
 
                 if (engine.isTransactionValid(newTrans)) {
                     if (engine.removeTransaction(modTrans)) {

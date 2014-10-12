@@ -506,7 +506,9 @@ public class QifImport {
             ReconcileManager.reconcileTransaction(acc, tran, reconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
         } else if (acc == cAcc && !qTran.hasSplits() || cAcc == null) {
             // create single entry transaction without splits
-            tran = TransactionFactory.generateSingleEntryTransaction(acc, qTran.amount, qTran.date, reconciled, qTran.memo, qTran.payee, qTran.number);
+            tran = TransactionFactory.generateSingleEntryTransaction(acc, qTran.amount, qTran.date, qTran.memo, qTran.payee, qTran.number);
+
+            ReconcileManager.reconcileTransaction(acc, tran, reconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
         } else if (!qTran.hasSplits()) { // && cAcc != null
             // create a double entry transaction without splits
             if (qTran.amount.signum() == -1) {
@@ -515,8 +517,8 @@ public class QifImport {
                 tran = TransactionFactory.generateDoubleEntryTransaction(acc, cAcc, qTran.amount, qTran.date, qTran.memo, qTran.payee, qTran.number);
             }
 
-            ReconcileManager.reconcileTransaction(cAcc, tran, reconciled);
-            ReconcileManager.reconcileTransaction(acc, tran, reconciled);
+            ReconcileManager.reconcileTransaction(cAcc, tran, reconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
+            ReconcileManager.reconcileTransaction(acc, tran, reconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
 
             if (isAccount(qTran.category)) {
                 removeMirrorTransaction(qTran, acc); // remove the mirror transaction

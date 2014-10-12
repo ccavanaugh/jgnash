@@ -21,7 +21,7 @@
  * Created this new Java class, consisting of most of the code which used to
  * be in jgnash/report/scripts/MonthBalanceCSV.bsh.
  * Very minor changes were made to get it to compile without error or warning.
- * This makes the report run successfully on Mac OS X, where it didn't
+ * This makes the report run successfully on Mac OS MARKED, where it didn't
  * before; as a side effect, it should make it run faster on all platforms.
  */
 

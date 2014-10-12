@@ -49,7 +49,6 @@ import jgnash.text.CommodityFormat;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.FormattedJTable;
-import jgnash.ui.register.table.AccountTableModel;
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;
 
@@ -212,6 +211,8 @@ class TransactionListDialog extends JDialog implements ActionListener, ListSelec
 
     private class Model extends AbstractTableModel {
 
+        public static final String MARKED = "MARKED";
+
         private final ArrayList<Wrapper> wrapperList = new ArrayList<>(); // list of transactions
 
         private final String[] columnNames = { rb.getString("Column.Print"), rb.getString("Column.Date"),
@@ -288,7 +289,7 @@ class TransactionListDialog extends JDialog implements ActionListener, ListSelec
             switch (columnIndex) {
                 case 0:
                     if (w.print) {
-                        return AccountTableModel.RECONCILED_SYM;
+                        return MARKED;
                     }
                     return null;
                 case 1:

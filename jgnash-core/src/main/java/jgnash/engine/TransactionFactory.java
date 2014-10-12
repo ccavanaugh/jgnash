@@ -44,10 +44,9 @@ public class TransactionFactory {
      * @param quantity Number of shares
      * @param date Transaction date
      * @param memo Transaction memo
-     * @param reconciled Reconciled status
      * @return new Investment Transaction
      */
-    public static InvestmentTransaction generateAddXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo, final boolean reconciled) {
+    public static InvestmentTransaction generateAddXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo) {
         Objects.requireNonNull(investmentAccount);
         Objects.requireNonNull(node);
         Objects.requireNonNull(price);
@@ -65,8 +64,6 @@ public class TransactionFactory {
         transaction.setPayee(buildPayee("Word.Add", node, price, quantity));
 
         transaction.addTransactionEntry(entry);
-
-        ReconcileManager.reconcileTransaction(investmentAccount, transaction, reconciled);
 
         return transaction;
     }
@@ -101,7 +98,7 @@ public class TransactionFactory {
             fees.add(e);
         }
 
-        return generateBuyXTransaction(account, investmentAccount, node, price, quantity, exchangeRate, date, memo, false, fees);
+        return generateBuyXTransaction(account, investmentAccount, node, price, quantity, exchangeRate, date, memo, fees);
     }
 
     /**
@@ -115,11 +112,10 @@ public class TransactionFactory {
      * @param exchangeRate Exchange rate (Can be BigDecimal.ONE, cannot be null)
      * @param date Transaction date
      * @param memo Transaction memo
-     * @param reconciled Reconciled status
      * @param fees List of transaction fees
      * @return new Transaction
      */
-    public static InvestmentTransaction generateBuyXTransaction(final Account account, final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final BigDecimal exchangeRate, final Date date, final String memo, final boolean reconciled, final Collection<TransactionEntry> fees) {
+    public static InvestmentTransaction generateBuyXTransaction(final Account account, final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final BigDecimal exchangeRate, final Date date, final String memo, final Collection<TransactionEntry> fees) {
         Objects.requireNonNull(account);
         Objects.requireNonNull(investmentAccount);
         Objects.requireNonNull(node);
@@ -174,8 +170,8 @@ public class TransactionFactory {
             }
         }
 
-        ReconcileManager.reconcileTransaction(account, transaction, reconciled);
-        ReconcileManager.reconcileTransaction(investmentAccount, transaction, reconciled);
+        //ReconcileManager.reconcileTransaction(account, transaction, reconciled);
+        //ReconcileManager.reconcileTransaction(investmentAccount, transaction, reconciled);
 
         Logger.getLogger(TransactionFactory.class.getName()).info(transaction.toString());
 
@@ -191,14 +187,12 @@ public class TransactionFactory {
      * @param node Security for dividend
      * @param dividend Cash dividend
      * @param incomeExchangedAmount Income account exchanged amount (Can be the same as dividend, cannot be null)
-     * @param cashExchangedAmount The exchanged amount for the cash account (Can be the same as dividend, cannot be
-     *        null)
+     * @param cashExchangedAmount The exchanged amount for the cash account (Can be the same as dividend, cannot be null)
      * @param date Transaction date
      * @param memo Transaction memo
-     * @param reconciled Reconciled status
      * @return new InvestmentTransaction
      */
-    public static InvestmentTransaction generateDividendXTransaction(final Account incomeAccount, final Account investmentAccount, final Account cashAccount, final SecurityNode node, final BigDecimal dividend, final BigDecimal incomeExchangedAmount, final BigDecimal cashExchangedAmount, final Date date, final String memo, final boolean reconciled) {
+    public static InvestmentTransaction generateDividendXTransaction(final Account incomeAccount, final Account investmentAccount, final Account cashAccount, final SecurityNode node, final BigDecimal dividend, final BigDecimal incomeExchangedAmount, final BigDecimal cashExchangedAmount, final Date date, final String memo) {
         Objects.requireNonNull(incomeAccount);
         Objects.requireNonNull(cashAccount);
         Objects.requireNonNull(investmentAccount);
@@ -232,9 +226,9 @@ public class TransactionFactory {
             transaction.addTransactionEntry(tran);
         }
 
-        ReconcileManager.reconcileTransaction(incomeAccount, transaction, reconciled);
-        ReconcileManager.reconcileTransaction(investmentAccount, transaction, reconciled);
-        ReconcileManager.reconcileTransaction(cashAccount, transaction, reconciled);
+        //ReconcileManager.reconcileTransaction(incomeAccount, transaction, reconciled);
+        //ReconcileManager.reconcileTransaction(investmentAccount, transaction, reconciled);
+        //ReconcileManager.reconcileTransaction(cashAccount, transaction, reconciled);
 
         return transaction;
     }
@@ -252,10 +246,9 @@ public class TransactionFactory {
      *        null)
      * @param date Transaction date
      * @param memo Transaction memo
-     * @param reconciled Reconciled status
      * @return new InvestmentTransaction
      */
-    public static InvestmentTransaction generateRocXTransaction(final Account incomeAccount, final Account investmentAccount, final Account cashAccount, final SecurityNode node, final BigDecimal dividend, final BigDecimal incomeExchangedAmount, final BigDecimal cashExchangedAmount, final Date date, final String memo, final boolean reconciled) {
+    public static InvestmentTransaction generateRocXTransaction(final Account incomeAccount, final Account investmentAccount, final Account cashAccount, final SecurityNode node, final BigDecimal dividend, final BigDecimal incomeExchangedAmount, final BigDecimal cashExchangedAmount, final Date date, final String memo) {
         Objects.requireNonNull(incomeAccount);
         Objects.requireNonNull(cashAccount);
         Objects.requireNonNull(investmentAccount);
@@ -289,9 +282,9 @@ public class TransactionFactory {
             transaction.addTransactionEntry(tran);
         }
 
-        ReconcileManager.reconcileTransaction(incomeAccount, transaction, reconciled);
-        ReconcileManager.reconcileTransaction(investmentAccount, transaction, reconciled);
-        ReconcileManager.reconcileTransaction(cashAccount, transaction, reconciled);
+        // ReconcileManager.reconcileTransaction(incomeAccount, transaction, reconciled);
+        // ReconcileManager.reconcileTransaction(investmentAccount, transaction, reconciled);
+        // ReconcileManager.reconcileTransaction(cashAccount, transaction, reconciled);
 
         return transaction;
     }
@@ -372,10 +365,9 @@ public class TransactionFactory {
      * @param quantity Number of shares
      * @param date Transaction date
      * @param memo Transaction memo
-     * @param reconciled Reconciled status
      * @return new Investment Transaction
      */
-    public static InvestmentTransaction generateMergeXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo, final boolean reconciled) {
+    public static InvestmentTransaction generateMergeXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo) {
         Objects.requireNonNull(investmentAccount);
         Objects.requireNonNull(node);
         Objects.requireNonNull(price);
@@ -394,8 +386,6 @@ public class TransactionFactory {
 
         transaction.addTransactionEntry(entry);
 
-        ReconcileManager.reconcileTransaction(investmentAccount, transaction, reconciled);
-
         return transaction;
     }
 
@@ -408,12 +398,11 @@ public class TransactionFactory {
      * @param quantity Quantity of shares reinvested
      * @param date Date of transaction
      * @param memo Transaction memo
-     * @param reconciled Reconciled status
      * @param fees Fee entry(s)
      * @param gains Gain/Loss entry(s)
      * @return new InvestmentTransaction
      */
-    public static InvestmentTransaction generateReinvDividendXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo, final boolean reconciled, final Collection<TransactionEntry> fees, final Collection<TransactionEntry> gains) {
+    public static InvestmentTransaction generateReinvDividendXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo, final Collection<TransactionEntry> fees, final Collection<TransactionEntry> gains) {
         Objects.requireNonNull(investmentAccount);
         Objects.requireNonNull(node);
         Objects.requireNonNull(price);
@@ -490,8 +479,6 @@ public class TransactionFactory {
             transaction.addTransactionEntry(gainsOffestEntry);
         }
 
-        ReconcileManager.reconcileTransaction(investmentAccount, transaction, reconciled);
-
         return transaction;
     }
 
@@ -504,10 +491,9 @@ public class TransactionFactory {
      * @param quantity Number of shares
      * @param date Transaction date
      * @param memo Transaction memo
-     * @param reconciled Reconciled status
      * @return new Investment Transaction
      */
-    public static InvestmentTransaction generateRemoveXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo, final boolean reconciled) {
+    public static InvestmentTransaction generateRemoveXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo) {
         Objects.requireNonNull(investmentAccount);
         Objects.requireNonNull(node);
         Objects.requireNonNull(price);
@@ -525,8 +511,6 @@ public class TransactionFactory {
         transaction.setPayee(buildPayee("Word.Remove", node, price, quantity));
 
         transaction.addTransactionEntry(entry);
-
-        ReconcileManager.reconcileTransaction(investmentAccount, transaction, reconciled);
 
         return transaction;
     }
@@ -567,7 +551,7 @@ public class TransactionFactory {
             fees.add(e);
         }
 
-        return generateSellXTransaction(account, investmentAccount, node, price, quantity, exchange, date, memo, false, fees, new ArrayList<TransactionEntry>());
+        return generateSellXTransaction(account, investmentAccount, node, price, quantity, exchange, date, memo, fees, new ArrayList<TransactionEntry>());
     }
 
     /**
@@ -581,12 +565,11 @@ public class TransactionFactory {
      * @param exchangeRate Exchanged amount (cannot be null)
      * @param date Transaction date
      * @param memo Transaction memo
-     * @param reconciled Reconciled status
      * @param fees Purchase fee
      * @param gains Gains/Loss entries
      * @return new Transaction
      */
-    public static InvestmentTransaction generateSellXTransaction(final Account account, final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final BigDecimal exchangeRate, final Date date, final String memo, final boolean reconciled, final Collection<TransactionEntry> fees, final Collection<TransactionEntry> gains) {
+    public static InvestmentTransaction generateSellXTransaction(final Account account, final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final BigDecimal exchangeRate, final Date date, final String memo, final Collection<TransactionEntry> fees, final Collection<TransactionEntry> gains) {
         Objects.requireNonNull(account);
         Objects.requireNonNull(investmentAccount);
         Objects.requireNonNull(node);
@@ -667,8 +650,8 @@ public class TransactionFactory {
             transaction.addTransactionEntry(gainsOffestEntry);
         }
 
-        ReconcileManager.reconcileTransaction(account, transaction, reconciled);
-        ReconcileManager.reconcileTransaction(investmentAccount, transaction, reconciled);
+        //ReconcileManager.reconcileTransaction(account, transaction, reconciled);
+        //ReconcileManager.reconcileTransaction(investmentAccount, transaction, reconciled);
 
         Logger.getLogger(TransactionFactory.class.getName()).info(transaction.toString());
 
@@ -681,13 +664,12 @@ public class TransactionFactory {
      * @param account Destination account
      * @param amount Transaction amount
      * @param date Transaction date
-     * @param reconciled Reconciled state
      * @param memo Transaction memo
      * @param payee Transaction payee
      * @param number Transaction number
      * @return new Transaction
      */
-    public static Transaction generateSingleEntryTransaction(final Account account, final BigDecimal amount, final Date date, final boolean reconciled, final String memo, final String payee, final String number) {
+    public static Transaction generateSingleEntryTransaction(final Account account, final BigDecimal amount, final Date date, final String memo, final String payee, final String number) {
         Objects.requireNonNull(account);
         Objects.requireNonNull(amount);
         Objects.requireNonNull(date);
@@ -706,8 +688,6 @@ public class TransactionFactory {
 
         transaction.addTransactionEntry(entry);
 
-        ReconcileManager.reconcileTransaction(account, transaction, reconciled);
-
         return transaction;
     }
 
@@ -720,10 +700,9 @@ public class TransactionFactory {
      * @param quantity Number of shares
      * @param date Transaction date
      * @param memo Transaction memo
-     * @param reconciled Reconciled status
      * @return new Investment Transaction
      */
-    public static InvestmentTransaction generateSplitXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo, final boolean reconciled) {
+    public static InvestmentTransaction generateSplitXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo) {
 
         assert investmentAccount != null && node != null && price != null && quantity != null;
         assert date != null && memo != null;
@@ -738,8 +717,6 @@ public class TransactionFactory {
         transaction.setPayee(buildPayee("Word.Split", node, price, quantity));
 
         transaction.addTransactionEntry(entry);
-
-        ReconcileManager.reconcileTransaction(investmentAccount, transaction, reconciled);
 
         return transaction;
     }

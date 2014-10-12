@@ -121,7 +121,7 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
                     // add it to the clone
                     t.addTransactionEntry(e);
 
-                    ReconcileManager.reconcileTransaction(getAccount(), t, reconciledButton.isSelected() ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
+                    ReconcileManager.reconcileTransaction(getAccount(), t, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
 
                     EngineFactory.getEngine(EngineFactory.DEFAULT).removeTransaction(modTrans);
                     EngineFactory.getEngine(EngineFactory.DEFAULT).addTransaction(t);
@@ -189,11 +189,7 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
             }
         }
 
-        if (reconciledButton.isSelected()) {
-            entry.setReconciled(account, ReconciledState.RECONCILED);
-        } else {
-            entry.setReconciled(account, ReconciledState.NOT_RECONCILED);
-        }
+        entry.setReconciled(account, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
 
         return entry;
     }
@@ -237,7 +233,7 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
             }
         }
 
-        ReconcileManager.reconcileTransaction(getAccount(), transaction, reconciledButton.isSelected());
+        ReconcileManager.reconcileTransaction(getAccount(), transaction, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
 
         return transaction;
     }
@@ -288,7 +284,7 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
         payeeField.setText(t.getPayee());
         numberField.setText(t.getNumber());
         datePanel.setDate(t.getDate());
-        reconciledButton.setSelected(t.getReconciled(getAccount()) == ReconciledState.RECONCILED);
+        reconciledButton.setSelected(t.getReconciled(getAccount()) != ReconciledState.NOT_RECONCILED);
 
         if (t.getTransactionType() == TransactionType.SPLITENTRY) {
 

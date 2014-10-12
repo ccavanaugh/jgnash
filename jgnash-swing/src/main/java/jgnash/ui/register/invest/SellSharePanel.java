@@ -178,7 +178,7 @@ public final class SellSharePanel extends AbstractPriceQtyInvTransactionPanel im
 
         modTrans = tran;
 
-        reconciledButton.setSelected(tran.getReconciled(getAccount()) == ReconciledState.RECONCILED);
+        reconciledButton.setSelected(tran.getReconciled(getAccount()) != ReconciledState.NOT_RECONCILED);
     }
 
     @Override
@@ -189,7 +189,7 @@ public final class SellSharePanel extends AbstractPriceQtyInvTransactionPanel im
 
         Collection<TransactionEntry> gains = gainsPanel.getTransactions();
 
-        return TransactionFactory.generateSellXTransaction(accountExchangePanel.getSelectedAccount(), getAccount(), securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), exchangeRate, datePanel.getDate(), memoField.getText(), reconciledButton.isSelected(), fees, gains);
+        return TransactionFactory.generateSellXTransaction(accountExchangePanel.getSelectedAccount(), getAccount(), securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), exchangeRate, datePanel.getDate(), memoField.getText(), fees, gains);
     }
 
     @Override

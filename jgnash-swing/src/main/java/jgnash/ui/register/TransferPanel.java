@@ -23,6 +23,7 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import jgnash.engine.Account;
 import jgnash.engine.ReconcileManager;
+import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionFactory;
 import jgnash.ui.util.ValidationFactory;
@@ -92,7 +93,7 @@ public class TransferPanel extends AbstractExchangeTransactionPanel {
             }
         }
 
-        ReconcileManager.reconcileTransaction(getAccount(), transaction, reconciledButton.isSelected());
+        ReconcileManager.reconcileTransaction(getAccount(), transaction, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
 
         return transaction;
     }

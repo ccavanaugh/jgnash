@@ -27,7 +27,6 @@ import java.util.prefs.Preferences;
  * only one can be true
  *
  * @author Craig Cavanaugh
- *
  */
 public class ReconcileManager {
     private static final String RECONCILE_INCOMEEXPENSE = "reconcileIncomeExpense";
@@ -124,7 +123,9 @@ public class ReconcileManager {
      * @param reconciled Reconciled state
      */
     public static void reconcileTransaction(final Account account, final Transaction t, final ReconciledState reconciled) {
-        t.setReconciled(account, reconciled); // mark transaction reconciled
+
+        // mark transaction reconciled for the primary account
+        t.setReconciled(account, reconciled);
 
         if (getAutoReconcileBothSides()) {
             t.setReconciled(reconciled);
@@ -144,16 +145,5 @@ public class ReconcileManager {
                 }
             }
         }
-    }
-
-    /**
-     * Sets the reconciled state of the transaction using the rules set by the user
-     *
-     * @param account    Base account
-     * @param t          Transaction to reconcile
-     * @param reconciled ReconciledState.RECONCILED if true; ReconciledState.NOT_RECONCILED if false
-     */
-    public static void reconcileTransaction(final Account account, final Transaction t, final boolean reconciled) {
-        reconcileTransaction(account, t, reconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
     }
 }

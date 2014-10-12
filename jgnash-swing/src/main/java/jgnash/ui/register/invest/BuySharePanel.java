@@ -45,7 +45,6 @@ import jgnash.ui.util.ValidationFactory;
  * Form for buying shares.
  *
  * @author Craig Cavanaugh
- *
  */
 public final class BuySharePanel extends AbstractPriceQtyInvTransactionPanel {
 
@@ -179,7 +178,7 @@ public final class BuySharePanel extends AbstractPriceQtyInvTransactionPanel {
 
         modTrans = tran;
 
-        reconciledButton.setSelected(tran.getReconciled(getAccount()) == ReconciledState.RECONCILED);
+        reconciledButton.setSelected(tran.getReconciled(getAccount()) != ReconciledState.NOT_RECONCILED);
     }
 
     @Override
@@ -189,7 +188,7 @@ public final class BuySharePanel extends AbstractPriceQtyInvTransactionPanel {
 
         List<TransactionEntry> fees = feePanel.getTransactions();
 
-        return TransactionFactory.generateBuyXTransaction(accountExchangePanel.getSelectedAccount(), getAccount(), securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), exchangeRate, datePanel.getDate(), memoField.getText(), reconciledButton.isSelected(), fees);
+        return TransactionFactory.generateBuyXTransaction(accountExchangePanel.getSelectedAccount(), getAccount(), securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), exchangeRate, datePanel.getDate(), memoField.getText(), fees);
     }
 
     @Override

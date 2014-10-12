@@ -4,7 +4,7 @@
     <parent>
         <groupId>jgnash</groupId>
         <artifactId>jgnash2</artifactId>
-        <version>2.13.6</version>
+        <version>2.14.0</version>
     </parent>
     <artifactId>mt940</artifactId>
     <name>mt940</name>
@@ -14,17 +14,17 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jgnash-core</artifactId>
-            <version>${jgnash.version}</version>
+            <version>${version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jgnash-convert</artifactId>
-            <version>${jgnash.version}</version>
+            <version>${version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jgnash-swing</artifactId>
-            <version>${jgnash.version}</version>
+            <version>${version}</version>
         </dependency>
     </dependencies>
 
@@ -55,11 +55,11 @@
                         <phase>package</phase>
                         <configuration>
                             <target>
-                                <property name="zipfile" location="./../jgnash-swing/target/jgnash-${jgnash.version}-bin.zip"/>
+                                <property name="zipfile" location="./../jgnash-swing/target/jgnash-${version}-bin.zip"/>
                                 <echo message="zipfile: ${zipfile}"/>
 
                                 <zip destfile="${zipfile}" update = "true">
-                                    <zipfileset prefix="jgnash-${jgnash.version}/plugins" dir="${basedir}/target" includes="mt940*.jar"/>
+                                    <zipfileset prefix="jgnash-${version}/plugins" dir="${basedir}/target" includes="mt940*.jar"/>
                                 </zip>
 
                             </target>

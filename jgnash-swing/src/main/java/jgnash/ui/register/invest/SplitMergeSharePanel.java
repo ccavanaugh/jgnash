@@ -127,7 +127,7 @@ public final class SplitMergeSharePanel extends AbstractPriceQtyInvTransactionPa
         quantityField.setDecimal(_tran.getQuantity());
         securityCombo.setSelectedNode(_tran.getSecurityNode());
 
-        reconciledButton.setSelected(tran.getReconciled(getAccount()) == ReconciledState.RECONCILED);
+        reconciledButton.setSelected(tran.getReconciled(getAccount()) != ReconciledState.NOT_RECONCILED);
 
         updateTotalField();
     }
@@ -135,9 +135,9 @@ public final class SplitMergeSharePanel extends AbstractPriceQtyInvTransactionPa
     @Override
     public Transaction buildTransaction() {
         if (tranType == TransactionType.SPLITSHARE) {
-            return TransactionFactory.generateSplitXTransaction(account, securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText(), reconciledButton.isSelected());
+            return TransactionFactory.generateSplitXTransaction(account, securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText());
         }
-        return TransactionFactory.generateMergeXTransaction(account, securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText(), reconciledButton.isSelected());
+        return TransactionFactory.generateMergeXTransaction(account, securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText());
     }
 
     void updateTotalField() {

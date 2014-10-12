@@ -32,6 +32,8 @@ import javax.swing.WindowConstants;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.ReconcileManager;
+import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.DialogUtils;
@@ -56,7 +58,7 @@ public class TransactionDialog extends JDialog implements RegisterListener {
 
     private Transaction transaction = null;
 
-    public static Transaction showDialog(Account account, Transaction t) {
+    public static Transaction showDialog(final Account account, final Transaction t) {
         TransactionDialog d = new TransactionDialog(account);
 
         if (t != null) {
@@ -67,7 +69,7 @@ public class TransactionDialog extends JDialog implements RegisterListener {
         return d.getTransaction();
     }
 
-    private TransactionDialog(Account account) {
+    private TransactionDialog(final Account account) {
         super(UIApplication.getFrame(), true);
         setTitle(rb.getString("Title.NewTrans"));
 
@@ -94,7 +96,7 @@ public class TransactionDialog extends JDialog implements RegisterListener {
         return transaction;
     }
 
-    private void setTransaction(Transaction tran) {
+    private void setTransaction(final Transaction tran) {
         Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
         if (!engine.isStored(tran)) { // must not be a persisted transaction
@@ -130,10 +132,10 @@ public class TransactionDialog extends JDialog implements RegisterListener {
     }
 
     private void layoutMainPanel() {
-        FormLayout layout = new FormLayout("right:d, 4dlu, f:d:g", "f:d, 3dlu, f:d, 8dlu, f:d");
-        CellConstraints cc = new CellConstraints();
+        final FormLayout layout = new FormLayout("right:d, 4dlu, f:d:g", "f:d, 3dlu, f:d, 8dlu, f:d");
+        final CellConstraints cc = new CellConstraints();
 
-        JPanel p = new JPanel(layout);
+        final JPanel p = new JPanel(layout);
 
         p.add(new JLabel(rb.getString("Label.BaseAccount")), cc.xy(1, 1));
         p.add(new JLabel(account.getPathName()), cc.xy(3, 1));
@@ -149,7 +151,7 @@ public class TransactionDialog extends JDialog implements RegisterListener {
     }
 
     @Override
-    public void registerEvent(RegisterEvent e) {
+    public void registerEvent(final RegisterEvent e) {
         if (e.getAction() == RegisterEvent.Action.CANCEL) {
             transaction = null;
             closeDialog();
@@ -163,7 +165,7 @@ public class TransactionDialog extends JDialog implements RegisterListener {
 
         private Transaction t = null;
 
-        TransactionPanelEx(Account account, PanelType panelType) {
+        TransactionPanelEx(final Account account, final PanelType panelType) {
             super(account, panelType);
         }
 
@@ -180,6 +182,9 @@ public class TransactionDialog extends JDialog implements RegisterListener {
         public void enterAction() {
             if (validateForm()) {
                 t = buildTransaction();
+
+                ReconcileManager.reconcileTransaction(getAccount(), t, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+
                 fireOkAction();
             } else {
                 t = null;

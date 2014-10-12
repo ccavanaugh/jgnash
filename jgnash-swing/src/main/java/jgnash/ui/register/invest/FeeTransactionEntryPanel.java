@@ -53,11 +53,7 @@ public class FeeTransactionEntryPanel extends AbstractTransactionEntryPanel {
 
         entry.setTransactionTag(TransactionTag.INVESTMENT_FEE);
 
-        if (reconciledButton.isSelected()) {
-            entry.setReconciled(account, ReconciledState.RECONCILED);
-        } else {
-            entry.setReconciled(account, ReconciledState.NOT_RECONCILED);
-        }
+        entry.setReconciled(account, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
 
         return entry;
     }
@@ -72,6 +68,6 @@ public class FeeTransactionEntryPanel extends AbstractTransactionEntryPanel {
 
         accountPanel.setExchangedAmount(entry.getCreditAmount());
 
-        reconciledButton.setSelected(entry.getReconciled(getAccount()) == ReconciledState.RECONCILED);
+        reconciledButton.setSelected(entry.getReconciled(getAccount()) != ReconciledState.NOT_RECONCILED);
     }
 }

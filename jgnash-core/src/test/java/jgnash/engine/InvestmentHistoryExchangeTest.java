@@ -141,7 +141,7 @@ import static org.junit.Assert.fail;
          fees.add(createTransactionEntry(investAccount, expenseAccount, new BigDecimal("20.00"), "Fees", TransactionTag.INVESTMENT_FEE));
 
          // Buying shares
-         Transaction it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode, new BigDecimal("501.34"), new BigDecimal("125"), BigDecimal.ONE, getDate("2014-06-27"), "Buy shares", false, fees);
+         Transaction it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode, new BigDecimal("501.34"), new BigDecimal("125"), BigDecimal.ONE, getDate("2014-06-27"), "Buy shares", fees);
 
          assertTrue(e.addTransaction(it));
 
@@ -152,7 +152,7 @@ import static org.junit.Assert.fail;
 
          fees.clear();
          fees.add(createTransactionEntry(investAccount, expenseAccount, new BigDecimal("20.00"), "Fees", TransactionTag.INVESTMENT_FEE));
-         it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode, new BigDecimal("501.34"), new BigDecimal("125"), BigDecimal.ONE, getDate("2014-06-29"), "Buy shares", false, fees);
+         it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode, new BigDecimal("501.34"), new BigDecimal("125"), BigDecimal.ONE, getDate("2014-06-29"), "Buy shares", fees);
 
          assertTrue(e.addTransaction(it));
 
@@ -167,7 +167,7 @@ import static org.junit.Assert.fail;
 
          fees.clear();
          fees.add(createTransactionEntry(investAccount, expenseAccount, new BigDecimal("20.00"), "Fees", TransactionTag.INVESTMENT_FEE));
-         it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode, new BigDecimal("502.34"), new BigDecimal("125"), BigDecimal.ONE, getDate("2014-07-01"), "Buy shares", false, fees);
+         it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode, new BigDecimal("502.34"), new BigDecimal("125"), BigDecimal.ONE, getDate("2014-07-01"), "Buy shares", fees);
 
          assertTrue(e.addTransaction(it));
 

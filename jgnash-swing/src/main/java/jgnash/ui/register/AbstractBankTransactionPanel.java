@@ -97,7 +97,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
         this.account = account;
 
         enterButton = new JButton(rb.getString("Button.Enter"));
-        cancelButton = new JButton(rb.getString("Button.Clear"));
+        cancelButton = new JButton(rb.getString("Button.Cancel"));
 
         amountField = new JFloatField(account.getCurrencyNode());
         datePanel = new DatePanel();
@@ -105,7 +105,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
         numberField = new TransactionNumberComboBox(account);
         payeeField = AutoCompleteFactory.getPayeeField(account);
 
-        reconciledButton = new JCheckBox(rb.getString("Button.Reconciled"));
+        reconciledButton = new JCheckBox(rb.getString("Button.Cleared"));
         reconciledButton.setHorizontalTextPosition(SwingConstants.LEADING);
         reconciledButton.setMargin(new Insets(0, 0, 0, 0));
 
@@ -194,7 +194,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
      */
     @Override
     protected boolean validateForm() {
-        if (amountField.getText().isEmpty()) {
+        if (amountField.getText() != null && amountField.getText().isEmpty()) {
             ValidationFactory.showValidationError(rb.getString("Message.Error.Value"), amountField);
             return false;
         }
@@ -219,13 +219,15 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
         if (validateForm()) {
             if (modTrans == null) {
                 Transaction newTrans = buildTransaction();
-                ReconcileManager.reconcileTransaction(getAccount(), newTrans, reconciledButton.isSelected());
+
+                ReconcileManager.reconcileTransaction(getAccount(), newTrans, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
 
                 newTrans = attachmentPanel.buildTransaction(newTrans);  // chain the transaction build
 
                 EngineFactory.getEngine(EngineFactory.DEFAULT).addTransaction(newTrans);
             } else {
                 Transaction newTrans = buildTransaction();
+
                 newTrans.setDateEntered(modTrans.getDateEntered());
 
                 // restore the reconciled state of the previous old transaction
@@ -239,7 +241,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
                  * Reconcile the modified transaction for this account.
                  * This must be performed last to ensure consistent results per the ReconcileManager rules
                  */
-                ReconcileManager.reconcileTransaction(getAccount(), newTrans, reconciledButton.isSelected());
+                ReconcileManager.reconcileTransaction(getAccount(), newTrans, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
 
                 newTrans = attachmentPanel.buildTransaction(newTrans);  // chain the transaction build
 
@@ -314,14 +316,14 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
         }
 
         // preserve any transaction entries that may have been entered first
-        if (!amountField.getText().isEmpty()) {
+        if (!amountField.isEmpty() && !amountField.getText().isEmpty()) {
             Transaction newTrans = buildTransaction();
             t.clearTransactionEntries();
             t.addTransactionEntries(newTrans.getTransactionEntries());
         }
 
         // preserve any preexisting memo field info
-        if (!memoField.getText().isEmpty()) {
+        if (memoField.getText() != null && !memoField.getText().isEmpty()) {
             t.setMemo(memoField.getText());
         }
 

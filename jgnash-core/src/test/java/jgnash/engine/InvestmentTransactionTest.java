@@ -160,7 +160,7 @@ public class InvestmentTransactionTest {
 
         // Buying shares
         InvestmentTransaction it;
-        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", false, fees);
+        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", fees);
 
         assertTrue(e.addTransaction(it));
         assertFalse(e.addTransaction(it));
@@ -209,7 +209,7 @@ public class InvestmentTransactionTest {
 
         // Buying shares
         InvestmentTransaction it;
-        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", false, fees);
+        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", fees);
         assertTrue(e.addTransaction(it));
 
         // Evaluating the result
@@ -263,7 +263,7 @@ public class InvestmentTransactionTest {
 
         // Buying shares
         InvestmentTransaction it;
-        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", false, buyingFees);
+        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", buyingFees);
         e.addTransaction(it);
 
         Date transactionDate2;
@@ -290,7 +290,7 @@ public class InvestmentTransactionTest {
         TransactionEntry sGain2 = createTransactionEntry(incomeAccount, investAccount, new BigDecimal("10.00"), "Selling Gain2", TransactionTag.GAIN_LOSS);
         sellingGains.add(sGain2);
 
-        it = generateSellXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice2, new BigDecimal("30"), BigDecimal.ONE, transactionDate2, "Selling shares", false, sellingFees, sellingGains);
+        it = generateSellXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice2, new BigDecimal("30"), BigDecimal.ONE, transactionDate2, "Selling shares", sellingFees, sellingGains);
         e.addTransaction(it);
 
         // Checking the result
@@ -437,13 +437,13 @@ public class InvestmentTransactionTest {
 
         // Buying shares
         InvestmentTransaction it;
-        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", false, buyingFees);
+        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", buyingFees);
         e.addTransaction(it);
 
         Date transactionDate2;
         transactionDate2 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-27", new ParsePosition(0));
 
-        it = generateDividendXTransaction(incomeAccount, investAccount, usdBankAccount, securityNode1, new BigDecimal("50.00"), new BigDecimal("-50.00"), new BigDecimal("50.00"), transactionDate2, "Dividend", false);
+        it = generateDividendXTransaction(incomeAccount, investAccount, usdBankAccount, securityNode1, new BigDecimal("50.00"), new BigDecimal("-50.00"), new BigDecimal("50.00"), transactionDate2, "Dividend");
         e.addTransaction(it);
 
         // Checking the result
@@ -497,7 +497,7 @@ public class InvestmentTransactionTest {
 
         // Buying shares
         InvestmentTransaction it;
-        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", false, buyingFees);
+        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", buyingFees);
         e.addTransaction(it);
 
         Date transactionDate2;
@@ -517,7 +517,7 @@ public class InvestmentTransactionTest {
         TransactionEntry rdGain2 = createTransactionEntry(incomeAccount, investAccount, new BigDecimal("30.00"), "Reinvest Dividend Gain2", TransactionTag.GAIN_LOSS);
         reinvestDividendGains.add(rdGain2);
 
-        it = generateReinvDividendXTransaction(investAccount, securityNode1, securityPrice1, new BigDecimal("15"), transactionDate2, "Reinvest Dividend", false, reinvestDividendFees, reinvestDividendGains);
+        it = generateReinvDividendXTransaction(investAccount, securityNode1, securityPrice1, new BigDecimal("15"), transactionDate2, "Reinvest Dividend", reinvestDividendFees, reinvestDividendGains);
         e.addTransaction(it);
 
         // Checking the result
@@ -571,13 +571,13 @@ public class InvestmentTransactionTest {
 
         // Buying shares
         InvestmentTransaction it;
-        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", false, buyingFees);
+        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", buyingFees);
         e.addTransaction(it);
 
         Date transactionDate2;
         transactionDate2 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-27", new ParsePosition(0));
 
-        it = generateSplitXTransaction(investAccount, securityNode1, securityPrice1, new BigDecimal("125"), transactionDate2, "Selling shares", false);
+        it = generateSplitXTransaction(investAccount, securityNode1, securityPrice1, new BigDecimal("125"), transactionDate2, "Selling shares");
         e.addTransaction(it);
 
         // Checking the result
@@ -633,13 +633,13 @@ public class InvestmentTransactionTest {
 
         // Buying shares
         InvestmentTransaction it;
-        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", false, buyingFees);
+        it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", buyingFees);
         e.addTransaction(it);
 
         Date transactionDate2;
         transactionDate2 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-27", new ParsePosition(0));
 
-        it = generateMergeXTransaction(investAccount, securityNode1, securityPrice1, new BigDecimal("25"), transactionDate2, "Stock merge", false);
+        it = generateMergeXTransaction(investAccount, securityNode1, securityPrice1, new BigDecimal("25"), transactionDate2, "Stock merge");
         e.addTransaction(it);
 
         // Checking the result

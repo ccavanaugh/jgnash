@@ -45,7 +45,6 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.text.CommodityFormat;
 import jgnash.ui.register.AccountBalanceDisplayManager;
-import jgnash.ui.register.table.AccountTableModel;
 import jgnash.ui.register.table.PackableTableModel;
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;
@@ -61,7 +60,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
 
     final Account account;
 
-    private final Date openingDate;
+    private final Date closingDate;
 
     private final List<RecTransaction> list = new ArrayList<>();
 
@@ -80,12 +79,12 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
 
     private final ReadWriteLock rwl = new ReentrantReadWriteLock(true);
 
-    AbstractReconcileTableModel(final Account account, final Date openingDate) {
+    AbstractReconcileTableModel(final Account account, final Date closingDate) {
         Objects.requireNonNull(account);
         assert cNames.length == cClass.length;
 
         this.account = account;
-        this.openingDate = (Date) openingDate.clone();
+        this.closingDate = (Date) closingDate.clone();
 
         commodityFormatter = CommodityFormat.getShortNumberFormat(account.getCurrencyNode());
 
@@ -114,7 +113,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
     }
 
     private boolean reconcilable(final Transaction t) {
-        return DateUtils.after(t.getDate(), openingDate) && isShowable(t);
+        return DateUtils.before(t.getDate(), closingDate) && t.getReconciled(account) != ReconciledState.RECONCILED && isShowable(t);
     }
 
     abstract boolean isShowable(Transaction t);
@@ -175,10 +174,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
 
             switch (columnIndex) {
                 case 0:
-                    if (t.getReconciled() == ReconciledState.RECONCILED) {
-                        return AccountTableModel.RECONCILED_SYM;
-                    }
-                    return null;
+                    return t.getReconciled().toString();
                 case 1:
                     return dateFormatter.format(t.getDate());
                 case 2:

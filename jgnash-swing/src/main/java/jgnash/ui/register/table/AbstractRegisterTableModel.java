@@ -58,8 +58,6 @@ public abstract class AbstractRegisterTableModel extends AbstractTableModel impl
 
     private Class<?> cClass[];
 
-    String reconcileSymbol = RECONCILED_SYM;
-
     final static String ERROR = "error";
 
     /**
@@ -327,12 +325,5 @@ public abstract class AbstractRegisterTableModel extends AbstractTableModel impl
 
         balanceCache.set(index, balance);
         return AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(), balance);
-    }
-
-    /**
-     * @param reconcileSymbol The reconcileSymbol to set.
-     */
-    public void setReconcileSymbol(final String reconcileSymbol) {
-        this.reconcileSymbol = reconcileSymbol;
     }
 }

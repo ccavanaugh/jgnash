@@ -686,7 +686,7 @@ public class Import {
             SecurityNode sNode = EngineFactory.getEngine(EngineFactory.DEFAULT).getSecurity(elementMap.get("security"));
 
             transaction = TransactionFactory.generateDividendXTransaction(investmentAccount, investmentAccount,
-                    account, sNode, amount, amount.negate(), amount, date, memo, accountReconciled);
+                    account, sNode, amount, amount.negate(), amount, date, memo);
 
             ReconcileManager.reconcileTransaction(investmentAccount, transaction,
                     investmentAccountReconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
@@ -732,9 +732,13 @@ public class Import {
                 BigDecimal amount = new BigDecimal(elementMap.get("amount"));
                 Account account = accountMap.get(elementMap.get("account"));
                 boolean reconciled = Boolean.parseBoolean(elementMap.get("reconciled"));
-                transaction = TransactionFactory.generateSingleEntryTransaction(account, amount, date, reconciled, memo,
+                transaction = TransactionFactory.generateSingleEntryTransaction(account, amount, date, memo,
                         payee, number);
                 transaction.setDateEntered(actDate);
+
+                transaction.setReconciled(account, reconciled ? ReconciledState.RECONCILED
+                        : ReconciledState.NOT_RECONCILED);
+
                 break;
             }
             case "DoubleEntryTransaction": {
@@ -765,6 +769,7 @@ public class Import {
                     entry.setDebitAmount(amount.multiply(exchangeRate).negate());
                 }
                 transaction.addTransactionEntry(entry);
+
                 transaction.setReconciled(creditAccount, creditReconciled ? ReconciledState.RECONCILED
                         : ReconciledState.NOT_RECONCILED);
                 transaction.setReconciled(debitAccount, debitReconciled ? ReconciledState.RECONCILED

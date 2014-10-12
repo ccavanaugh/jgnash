@@ -43,7 +43,6 @@ import jgnash.util.Resource;
  * @author Craig Cavanaugh
  * @author Don Brown
  * @author axnotizes
- *
  */
 public final class AdjustmentPanel extends AbstractBankTransactionPanel {
 
@@ -88,7 +87,7 @@ public final class AdjustmentPanel extends AbstractBankTransactionPanel {
 
     @Override
     protected Transaction buildTransaction() {
-        return TransactionFactory.generateSingleEntryTransaction(account, amountField.getDecimal(), datePanel.getDate(), reconciledButton.isSelected(), memoField.getText(), payeeField.getText(), numberField.getText());
+        return TransactionFactory.generateSingleEntryTransaction(account, amountField.getDecimal(), datePanel.getDate(), memoField.getText(), payeeField.getText(), numberField.getText());
     }
 
     @Override
@@ -108,11 +107,7 @@ public final class AdjustmentPanel extends AbstractBankTransactionPanel {
         numberField.setText(t.getNumber());
         payeeField.setText(t.getPayee());
 
-        if (t.getReconciled(getAccount()) == ReconciledState.RECONCILED) {
-            reconciledButton.setSelected(true);
-        } else {
-            reconciledButton.setSelected(false);
-        }
+        reconciledButton.setSelected(t.getReconciled(getAccount()) != ReconciledState.NOT_RECONCILED);
     }
 
     @Override
@@ -166,7 +161,7 @@ public final class AdjustmentPanel extends AbstractBankTransactionPanel {
         entry.setCreditAmount(amountField.getDecimal().abs());
         entry.setDebitAmount(amountField.getDecimal().abs().negate());
 
-        ReconcileManager.reconcileTransaction(getAccount(), t, reconciledButton.isSelected() ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
+        ReconcileManager.reconcileTransaction(getAccount(), t, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
 
         t.addTransactionEntry(entry);
 

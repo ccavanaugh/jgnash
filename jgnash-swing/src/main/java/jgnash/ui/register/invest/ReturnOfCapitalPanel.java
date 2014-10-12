@@ -154,7 +154,7 @@ public final class ReturnOfCapitalPanel extends AbstractInvTransactionPanel {
 
         modTrans = tran;
 
-        reconciledButton.setSelected(tran.getReconciled(getAccount()) == ReconciledState.RECONCILED);
+        reconciledButton.setSelected(tran.getReconciled(getAccount()) != ReconciledState.NOT_RECONCILED);
     }
 
     @Override
@@ -171,7 +171,7 @@ public final class ReturnOfCapitalPanel extends AbstractInvTransactionPanel {
             accountExchangedAmount = accountExchangePanel.getExchangedAmount();
         }
 
-        return TransactionFactory.generateRocXTransaction(incomeExchangePanel.getSelectedAccount(), getAccount(), accountExchangePanel.getSelectedAccount(), securityCombo.getSelectedNode(), dividendField.getDecimal(), incomeExchangedAmount, accountExchangedAmount, datePanel.getDate(), memoField.getText(), reconciledButton.isSelected());
+        return TransactionFactory.generateRocXTransaction(incomeExchangePanel.getSelectedAccount(), getAccount(), accountExchangePanel.getSelectedAccount(), securityCombo.getSelectedNode(), dividendField.getDecimal(), incomeExchangedAmount, accountExchangedAmount, datePanel.getDate(), memoField.getText());
     }
 
     @Override

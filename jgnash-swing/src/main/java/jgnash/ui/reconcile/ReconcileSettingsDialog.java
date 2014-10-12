@@ -43,7 +43,6 @@ import jgnash.util.Resource;
  * Account reconcile settings dialog.
  * 
  * @author Craig Cavanaugh
- *
  */
 public class ReconcileSettingsDialog extends JDialog implements ActionListener {
 
@@ -67,7 +66,7 @@ public class ReconcileSettingsDialog extends JDialog implements ActionListener {
         okButton = new JButton(rb.getString("Button.Ok"));
         cancelButton = new JButton(rb.getString("Button.Cancel"));
 
-        datePanel.setDate(account.getFirstUnreconciledTransactionDate());
+        datePanel.setDate(new Date());
 
         layoutMainPanel();
 
@@ -90,7 +89,7 @@ public class ReconcileSettingsDialog extends JDialog implements ActionListener {
         builder.border(Borders.DIALOG);
         builder.rowGroupingEnabled(true);
 
-        builder.append(rb.getString("Label.OpenStateDate"), datePanel);
+        builder.append(rb.getString("Label.StatementDate"), datePanel);
         builder.append(rb.getString("Label.OpeningBalance"), openField);
         builder.append(rb.getString("Label.EndingBalance"), endField);
         builder.nextLine();

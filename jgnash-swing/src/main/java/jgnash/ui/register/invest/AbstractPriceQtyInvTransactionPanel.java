@@ -59,7 +59,7 @@ public abstract class AbstractPriceQtyInvTransactionPanel extends AbstractInvTra
         memoField = AutoCompleteFactory.getMemoField();
         priceField = new JFloatField(0, 6, account.getCurrencyNode().getScale());
         quantityField = new JFloatField(0, 6, 2);
-        reconciledButton = new javax.swing.JCheckBox(rb.getString("Button.Reconciled"));
+        reconciledButton = new javax.swing.JCheckBox(rb.getString("Button.Cleared"));
         securityCombo = new AccountSecurityComboBox(account);
 
         totalField = new JFloatField(account.getCurrencyNode());
@@ -99,13 +99,13 @@ public abstract class AbstractPriceQtyInvTransactionPanel extends AbstractInvTra
             return false;
         }
 
-        if (priceField.getText().equals("")) {
+        if (priceField.isEmpty()) {
             logger.warning(rb.getString("Message.Error.SecurityPrice"));
             showValidationError(rb.getString("Message.Error.SecurityPrice"), priceField);
             return false;
         }
 
-        if (quantityField.getText().equals("")) {
+        if (quantityField.isEmpty()) {
             logger.warning(rb.getString("Message.Error.SecurityQuantity"));
             showValidationError(rb.getString("Message.Error.SecurityQuantity"), quantityField);
             return false;

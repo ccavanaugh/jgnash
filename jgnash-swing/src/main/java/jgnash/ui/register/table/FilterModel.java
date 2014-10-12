@@ -21,7 +21,6 @@ package jgnash.ui.register.table;
  * Interface for a filter register table model.  The rows with Payee matching filter are used
  *
  * @author Pranay Kumar
- *
  */
 public interface FilterModel extends RegisterModel {
     /**

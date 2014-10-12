@@ -19,17 +19,10 @@ package jgnash.ui.register.table;
 
 /**
  * Interface for a register table model.
- * <p/>
  *
  * @author Craig Cavanaugh
- *
  */
 public interface RegisterModel extends AccountTableModel {
-
-    /**
-     * @param reconcileSymbol The reconcileSymbol to set.
-     */
-    public void setReconcileSymbol(String reconcileSymbol);
 
     public int[] getPreferredColumnWeights();
 

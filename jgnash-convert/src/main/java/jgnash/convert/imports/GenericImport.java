@@ -52,7 +52,7 @@ public class GenericImport {
 
                 if (baseAccount.equals(tran.account)) { // single entry oTran
                     t = TransactionFactory.generateSingleEntryTransaction(baseAccount, tran.amount, tran.datePosted,
-                            false, tran.memo, tran.payee, tran.checkNumber);
+                            tran.memo, tran.payee, tran.checkNumber);
                 } else { // double entry
                     if (tran.amount.signum() >= 0) {
                         t = TransactionFactory.generateDoubleEntryTransaction(baseAccount, tran.account,

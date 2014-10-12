@@ -107,15 +107,7 @@ public final class ClippingDecorator implements ClippingModel {
     }
 
     /**
-     * @see jgnash.ui.register.table.RegisterModel#setReconcileSymbol(java.lang.String)
-     */
-    @Override
-    public void setReconcileSymbol(final String reconcileSymbol) {
-        model.setReconcileSymbol(reconcileSymbol);
-    }
-
-    /**
-     * @return prefered column weight
+     * @return preferred column weight
      * @see jgnash.ui.register.table.RegisterModel#getPreferredColumnWeights()
      */
     @Override

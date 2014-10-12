@@ -31,7 +31,6 @@ import jgnash.engine.search.PayeeMatcher;
  * the transactions displayed using the string "filter".
  *
  * @author Pranay Kumar
- *
  */
 public class FilterDecorator implements FilterModel {
 
@@ -63,14 +62,6 @@ public class FilterDecorator implements FilterModel {
         pm = new PayeeMatcher(filter, false);
         matchedPayee = new ArrayList<>();
         updateMatches();
-    }
-
-    /**
-     * @see jgnash.ui.register.table.RegisterModel#setReconcileSymbol(java.lang.String)
-     */
-    @Override
-    public void setReconcileSymbol(final String reconcileSymbol) {
-        model.setReconcileSymbol(reconcileSymbol);
     }
 
     /**
