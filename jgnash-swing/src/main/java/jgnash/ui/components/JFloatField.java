@@ -124,6 +124,22 @@ public class JFloatField extends JTextFieldEx {
         format.setGroupingUsed(false);
     }
 
+
+    /**
+     * Determines if the field is empty
+     *
+     * @return {@code false} if empty
+     */
+    public boolean isEmpty() {
+        boolean result = true;
+
+        if (getText() != null) {
+            result = getText().isEmpty();
+        }
+
+        return result;
+    }
+
     public void setScale(final CommodityNode node) {
         setScale(node.getScale(), node.getScale());
     }
@@ -193,10 +209,10 @@ public class JFloatField extends JTextFieldEx {
     }
 
     public BigDecimal getDecimal() {
-        if (!getText().isEmpty()) {
+        if (!isEmpty()) {
             try {
                 return new BigDecimal(eval());
-            } catch (NumberFormatException e) {
+            } catch (final NumberFormatException e) {
                 if (DEBUG) {
                     System.out.println(e.getLocalizedMessage());
                 }
@@ -230,7 +246,7 @@ public class JFloatField extends JTextFieldEx {
     String eval() {
         String text = getText();
 
-        if (text.isEmpty()) {
+        if (text == null || text.isEmpty()) {
             return "";
         }
 
