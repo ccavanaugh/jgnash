@@ -28,6 +28,8 @@ Reinstate archive capability.
 
 Release 2.14.0
 ----------------------
+10/12/14 Changing the reconciled state of a transaction using the context menu was not following the rules of the
+         selected register option.
 10/05/14 Bug fix for potential return of an incorrect closest by date market price for a security
 10/05/14 Bug fix for potential erroneous removal of the prior days security history during a market price update
 10/04/14 Bug fix for difficult to trigger Concurrent Modification error when updating stock prices

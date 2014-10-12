@@ -2463,14 +2463,14 @@ public class Engine {
      */
     public void setTransactionReconciled(final Transaction transaction, final Account account, final ReconciledState state) {
         try {
-            final Transaction clone = (Transaction) transaction.clone();
+            final Transaction newTransaction = (Transaction) transaction.clone();
 
-            clone.setReconciled(account, state);
+            ReconcileManager.reconcileTransaction(account, newTransaction, state);
 
             if (removeTransaction(transaction)) {
-                addTransaction(clone);
+                addTransaction(newTransaction);
             }
-        } catch (CloneNotSupportedException e) {
+        } catch (final CloneNotSupportedException e) {
             logger.log(Level.SEVERE, "Failed to reconcile the Transaction", e);
         }
     }
