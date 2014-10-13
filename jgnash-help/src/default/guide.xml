@@ -20,7 +20,7 @@
       </imageobject>
     </mediaobject>
 
-    <title>jGnash 2.13.x User Guide</title>
+    <title>jGnash 2.14.x User Guide</title>
 
     <copyright>
       <year>2001-2014</year>
@@ -87,7 +87,7 @@
     If you require business specific features, you may be better served
     looking for a different solution. </para>
 
-    <section>
+    <section xml:id="Installation">
       <title>Installation</title>
 
       <para>jGnash is not currently distributed with an automatic installation
@@ -124,7 +124,7 @@
       files. Use a new location or delete the existing files first. </para>
     </section>
 
-    <section>
+    <section xml:id="Starting">
       <title>Starting jGnash</title>
 
       <para>After the <filename>jGnash</filename> directory has been extracted
@@ -201,7 +201,7 @@
     </section>
   </chapter>
 
-  <chapter>
+  <chapter xml:id="GettingStarted">
     <title>Getting Started</title>
 
     <para>Every account is assigned a currency and every transaction is
@@ -930,7 +930,7 @@
       in a table cell. </para>
 
       <para>The per account budget amounts as well as the <emphasis
-      role="bold">Change </emphasis> and <emphasis role="bold">Remaining
+      role="bold">Change</emphasis> and <emphasis role="bold">Remaining
       </emphasis> values are hierarchical in that the values of the child
       account are summed and are added to the parent account. If a parent
       account is not configured has a placeholder, it may also be assigned
@@ -979,6 +979,81 @@
       period is daily due to memory requirements and limitations of some
       spreadsheet applications. </para>
     </section>
+  </chapter>
+  
+  <chapter xml:id="Reconciliation">
+    <title>Reconciliation</title>
+    
+    <para>Reconciliation is a simple visual process of matching up the
+    transactions listed in an account's register and a paper or electronic
+    statement from a financial institution.  Statements may come from
+    you bank, investment broker, credit card issuer, etc. on a period basis.</para>
+    
+    <para>The process of periodically reconciling an account helps ensure
+    transaction entry errors do not creep in over time.  Reconciliation is
+    also a great tool for monitoring your accounts for fraudulent transactions.
+    </para>
+    
+    <section>
+      <title>Basics</title>
+      
+      <para>Every transaction has two independent reconciliation states that applies to both the 
+      crediting and debiting accounts.  A split transaction may have even more reconcilation
+      states depending on how many accounts it touches.</para>
+      
+      <para>jGnash makes it easier to manage reconciliation by providing some options.</para>
+      
+      <para>
+        <inlinemediaobject>
+          <imageobject>
+            <imagedata fileref="../images/reconcile-options.png" scale="70"/>
+          </imageobject>
+        </inlinemediaobject>
+      </para>
+
+      <para>Unless you have very specific needs, it is recommend that you choose to have the option
+      <emphasis role="bold">All transaction accounts have same reconciled state</emphasis> or 
+      <emphasis role="bold">Automatically reconcile Income and Expense Accounts</emphasis> selected as the default.</para>
+
+	  <para>Selecting <emphasis role="bold">All transaction accounts have same reconciled state</emphasis>
+	  will reduce the effort of reconciling transactions, but can create problems reconciling
+	  transfers between bank accounts later.  If you manually reconcile your accounts and do not
+	  use the reconcile tool, this saves a significant amount of work at the risk of making an
+	  assumption that a transaction occurred correctly between two entities.
+	  </para>
+
+      <para>Selecting <emphasis role="bold">Automatically reconcile Income and Expense Accounts</emphasis>
+	  requires a bit more work on your part in that you are forced to reconcile all institution 
+	  statements, but it will not create any issues.  This is the recommended option if you are 
+	  using the reconciliation tool.
+	  </para>
+
+      <para>Choosing to disable automatic reconciliation will require you to reconcile Income and Expense
+      accounts for which you may not have a provided statement.</para>      
+      
+      <para>jGnash has three reconciliation states that are presented in order below:            
+        <itemizedlist>
+          <listitem>
+            <para>Not Reconciled</para>
+          </listitem>
+
+          <listitem>
+            <para>Cleared</para>
+          </listitem>
+
+          <listitem>
+            <para>Reconciled</para>
+          </listitem>          
+       </itemizedlist>                  
+      </para>
+      
+      <para>If a transaction
+      
+      </para>
+      
+      
+    </section>
+    
   </chapter>
 
   <chapter xml:id="Reports">
@@ -1073,7 +1148,7 @@
     </section>
   </chapter>
 
-  <chapter>
+  <chapter xml:id="Administration">
     <title>Administration</title>
 
     <para>Several administration options and tools are provided to help with
@@ -1155,7 +1230,7 @@
     </section>
   </chapter>
 
-  <chapter>
+  <chapter xml:id="PluginsJavaScript">
     <title>Plugins and JavaScript</title>
 
     <para>jGnash support the addition of JavaScript and Plugins to add
@@ -1223,7 +1298,7 @@
                 var accountList = engine.getAccountList();
 
                 // loop and print the account names to the console
-                for (i = 0; i &lt; accountList.size(); i++)
+                for (i = 0; i; accountList.size(); i++)
                 {
                 var account = accountList.get(i);
                 debug(account.getName());
@@ -1441,7 +1516,7 @@
     </para>
   </chapter>
 
-  <chapter>
+  <chapter xml:id="FAQ">
     <title>Frequently Asked Questions</title>
 
     <qandaset defaultlabel="qanda">
