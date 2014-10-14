@@ -28,7 +28,9 @@ Reinstate archive capability.
 
 Release 2.14.0
 ----------------------
-10/12/14 Redesigned the reconcile behavior to use the statement end date.
+10/14/14 When using the reconcile Wizard, Finish Later will now mark the transaction as Cleared and not Reconciled.
+10/12/14 Redesigned the reconcile behavior to use the statement end date. Public and internal API's have changed for
+         reconciliation and may break plugins.
 10/12/14 Committing reconcile changes can take a long time when working remotely or using a relational database.
          Improve the UI behavior by showing a wait message instead of freezing the display.
 10/12/14 Changing the reconciled state of a transaction using the context menu was not following the rules of the

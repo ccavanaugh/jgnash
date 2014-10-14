@@ -44,6 +44,7 @@ import javax.swing.event.ListSelectionListener;
 
 import jgnash.engine.Account;
 import jgnash.engine.MathConstants;
+import jgnash.engine.ReconciledState;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
@@ -310,15 +311,15 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
      * Commits the changes.  This can take a long time if working remotely or using a relational database.  Push
      * the model update to a background thread and make the user wait.
      */
-    private void commitChanges() {
+    private void commitChanges(final ReconciledState reconciledState) {
         final class CommitChangesWorker extends SwingWorker<Void, Void> {
 
             @Override
             protected Void doInBackground() throws Exception {
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
 
-                creditModel.commitChanges();
-                debitModel.commitChanges();
+                creditModel.commitChanges(reconciledState);
+                debitModel.commitChanges(reconciledState);
 
                 return null;
             }
@@ -337,9 +338,12 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        if (e.getSource() == finishLaterButton || e.getSource() == finishButton) {
+        if (e.getSource() == finishLaterButton) {
             closeDialog();
-            commitChanges();
+            commitChanges(ReconciledState.CLEARED);
+        } else if (e.getSource() == finishButton) {
+            closeDialog();
+            commitChanges(ReconciledState.RECONCILED);
         } else if (e.getSource() == cancelButton) {
             closeDialog();
         } else if (e.getSource() == creditSelectAllButton) {

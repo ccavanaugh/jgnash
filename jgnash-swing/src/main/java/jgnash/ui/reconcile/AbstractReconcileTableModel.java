@@ -319,7 +319,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
         }
     }
 
-    void commitChanges() {
+    void commitChanges(final ReconciledState reconciledState) {
         List<RecTransaction> transactions = null;
 
         // create a copy of the list to prevent concurrent modification errors
@@ -332,9 +332,15 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-        for (RecTransaction transaction : transactions) {
+        for (final RecTransaction transaction : transactions) {
             if (transaction.getReconciled() != transaction.transaction.getReconciled(account)) {
-                engine.setTransactionReconciled(transaction.transaction, account, transaction.getReconciled());
+
+                // Set to the requested reconcile state
+                if (transaction.getReconciled() != ReconciledState.NOT_RECONCILED) {
+                    engine.setTransactionReconciled(transaction.transaction, account, reconciledState);
+                } else { // must not be reconciled or cleared
+                    engine.setTransactionReconciled(transaction.transaction, account, transaction.getReconciled());
+                }
             }
         }
     }
