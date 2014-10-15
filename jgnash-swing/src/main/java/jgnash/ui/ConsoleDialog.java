@@ -17,9 +17,6 @@
  */
 package jgnash.ui;
 
-import com.jgoodies.forms.factories.Borders;
-import com.sun.management.HotSpotDiagnosticMXBean;
-
 import java.awt.BorderLayout;
 import java.awt.Dialog;
 import java.awt.EventQueue;
@@ -55,21 +52,30 @@ import jgnash.ui.components.MemoryMonitor;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
 
+import com.jgoodies.forms.factories.Borders;
+import com.sun.management.HotSpotDiagnosticMXBean;
+
 /**
  * Simple dialog to display info dumped to the console. Makes it easy for end
  * users on Windows to capture errors.
  *
  * @author Craig Cavanaugh
- *
  */
 @SuppressWarnings("restriction")
 public class ConsoleDialog {
 
+    private static final int MAX_DUMP_FILES = 1000;
+
     private static JTextArea console;
+
     private static JDialog dialog;
+
     private static boolean init = false;
+
     private static final Object consoleLock = new Object();
+
     private static PrintStream outStream;
+
     private static PrintStream errStream;
 
     private ConsoleDialog() {
@@ -164,7 +170,7 @@ public class ConsoleDialog {
         File dumpFile = null;
 
         // no more than 1000 dumps
-        for (int i = 1; i < 1000; i++) {
+        for (int i = 1; i < MAX_DUMP_FILES; i++) {
             dumpFile = new File(base + filesep + "jGnashHeapDump" + i + ".bin");
 
             if (!dumpFile.exists()) {
@@ -172,15 +178,13 @@ public class ConsoleDialog {
             }
         }
 
-        if (dumpFile != null) {
-            MBeanServer server = ManagementFactory.getPlatformMBeanServer();
-            try {
-                HotSpotDiagnosticMXBean bean = ManagementFactory.newPlatformMXBeanProxy(server, "com.sun.management:type=HotSpotDiagnostic", HotSpotDiagnosticMXBean.class);
+        MBeanServer server = ManagementFactory.getPlatformMBeanServer();
+        try {
+            HotSpotDiagnosticMXBean bean = ManagementFactory.newPlatformMXBeanProxy(server, "com.sun.management:type=HotSpotDiagnostic", HotSpotDiagnosticMXBean.class);
 
-                bean.dumpHeap(dumpFile.getAbsolutePath(), true);
-            } catch (IOException e) {
-                Logger.getLogger(ConsoleDialog.class.getCanonicalName()).log(Level.SEVERE, null, e);
-            }
+            bean.dumpHeap(dumpFile.getAbsolutePath(), true);
+        } catch (IOException e) {
+            Logger.getLogger(ConsoleDialog.class.getCanonicalName()).log(Level.SEVERE, null, e);
         }
     }
 
