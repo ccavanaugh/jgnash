@@ -73,7 +73,7 @@ public interface AccountDAO {
 
     public boolean updateAccount(Account account);
 
-    @SuppressWarnings("UnusedReturnValue")
+    @SuppressWarnings({"UnusedReturnValue", "UnusedParameters"})
     @Deprecated
     public boolean removeAccountProperty(Account account, Object object);
 
