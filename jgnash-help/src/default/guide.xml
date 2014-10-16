@@ -1125,7 +1125,28 @@
         transactions, correct erroneous amounts, or delete transactions if entered into the wrong account.
         The Wizard's credit and debit lists are fully dynamic.  This avoids the need to exit the
         Wizard without completing the process if you discover missing transactions or errors.</para>               
-      </sidebar>      
+      </sidebar>
+      
+      <para>
+        <inlinemediaobject>
+          <imageobject>
+            <imagedata fileref="../images/reconcile-settings.png" scale="80"/>
+          </imageobject>
+        </inlinemediaobject>
+      </para>      
+      
+      <para>The starting balance should be the closing balance of the last reconciliation period.
+      In the account register, this will also be the account balance of the last reconciled 
+      transaction. 
+      </para>
+      
+      <para>
+        <inlinemediaobject>
+          <imageobject>
+            <imagedata fileref="../images/reconcile-dialog.png" scale="60"/>
+          </imageobject>
+        </inlinemediaobject>
+      </para>
       
     </section>
     
