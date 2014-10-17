@@ -1083,8 +1083,7 @@
       </para>
 
       <para>The per account budget amounts as well as the
-        <emphasis
-                role="bold">Change
+        <emphasis role="bold">Change
         </emphasis>
         and
         <emphasis role="bold">Remaining
@@ -1327,6 +1326,49 @@
         </para>
       </sidebar>
 
+      <para>The reconcile wizard is started by using the context menu in the account list, or by clicking the
+        <guibutton>Reconcile</guibutton> button in the transaction register.  A small dialog will be shown requesting
+        some information.
+      </para>
+      <para><emphasis>These values should be provided to you by your banking institution in paper or
+        electronic format and it's important these values entered are correct, otherwise balances will not zero out.</emphasis>
+      </para>
+
+
+      <para>
+        <variablelist>
+          <varlistentry>
+            <term>Statement Date</term>
+
+            <listitem>
+              <para>This is the closing date for the reconciliation period. This should be reported on your account
+                statement.  The date will typically be the end of the month, but may be different due institution or
+                locale rules.  Any transactions entered after this date will not appear within the Reconciliation
+                Wizard</para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Opening Balance</term>
+
+            <listitem>
+              <para>The opening balance should also be provided by your institution and should be equal to the closing
+                balance of the last reconciliation period.  In your account register, this will also be the account
+                balance of the last reconciled transaction.
+              </para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Ending Balance</term>
+
+            <listitem>
+              <para>This amount should also be provided by you institution.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </para>
+
       <para>
         <inlinemediaobject>
           <imageobject>
@@ -1334,12 +1376,7 @@
           </imageobject>
         </inlinemediaobject>
       </para>
-
-      <para>The starting balance should be the closing balance of the last reconciliation period.
-        In the account register, this will also be the account balance of the last reconciled
-        transaction.
-      </para>
-
+     
       <para>
         <inlinemediaobject>
           <imageobject>
