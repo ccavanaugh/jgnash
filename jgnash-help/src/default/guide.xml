@@ -1285,10 +1285,8 @@
 
       <para>Transactions may be marked as
         <emphasis role="bold">Cleared</emphasis>
-        through the
-        transaction form. Some users may prefer to clear transactions manually during a given
-        period.
-        <emphasis role="bold">Cleared</emphasis>
+        through the transaction form. Some users may prefer to clear transactions manually during a
+          given period.  <emphasis role="bold">Cleared</emphasis>
         transactions will still be visible within
         the Reconciliation Wizard if used later while manually
         <emphasis role="bold">Reconciled</emphasis>
@@ -1320,9 +1318,10 @@
       <sidebar>
         <para>The Reconcile Wizard has a nice feature that is not immediately obvious. While the
           wizard is displayed, you can still go back to the account register and enter missing
-          transactions, correct erroneous amounts, or delete transactions if entered into the wrong account.
-          The Wizard's credit and debit lists are fully dynamic. This avoids the need to exit the
-          Wizard without completing the process if you discover missing transactions or errors.
+          transactions, correct erroneous amounts, or modify and delete transactions if entered
+          into the wrong account.  The Wizard's credit and debit lists are fully dynamic. You are not
+          required to exit the Wizard without completing the process if you discover missing transactions
+          or errors.
         </para>
       </sidebar>
 
@@ -1331,9 +1330,9 @@
         some information.
       </para>
       <para><emphasis>These values should be provided to you by your banking institution in paper or
-        electronic format and it's important these values entered are correct, otherwise balances will not zero out.</emphasis>
+        electronic format and it's important these values are entered correctly, otherwise balances will not zero
+        out.</emphasis>
       </para>
-
 
       <para>
         <variablelist>
@@ -1376,7 +1375,24 @@
           </imageobject>
         </inlinemediaobject>
       </para>
-     
+
+        <para>After clicking the <guibutton>OK</guibutton> button, the settings dialog will be replaced
+            by a dialog showing all of the transactions prior and inclusive of the statement date that
+            have not been marked as Reconciled. <emphasis>Transactions marked as cleared will be shown.</emphasis>
+        </para>
+
+        <para>The next step is to go through the institution provided statement and make every matching transaction
+            as reconcilable by clicking on the transactions.  As you click each transaction, totals will update and
+            you should see the <guilabel>Difference</guilabel> value approach zero.  When the <guilabel>Difference</guilabel>
+            is zero, the <guibutton>Finish</guibutton>  button will become active.
+        </para>
+
+        <para>It is not unusual to find transactions that go unmarked near the end of the statement period.
+            These are transactions you have entered that were not processed through the system fast enough to
+            show up on your statement and impact your account balance.  Simply ignore these transactions and
+            they will be captured at the start of the next statement and reconciliation cycle.
+        </para>
+
       <para>
         <inlinemediaobject>
           <imageobject>
@@ -1384,6 +1400,17 @@
           </imageobject>
         </inlinemediaobject>
       </para>
+
+        <para>Clicking on the <guibutton>Finish</guibutton> will close the dialog and will mark the selected
+            transactions as Reconciled.  Depending on the number of transactions and type of file being used,
+            it could take awhile for the changes to be saved.  A wait message will be displayed during the
+            change process.
+        </para>
+
+        <para>What do you do if you have marked all transactions as reconciled and the difference is not zero?
+
+        </para>
+
 
     </section>
 
