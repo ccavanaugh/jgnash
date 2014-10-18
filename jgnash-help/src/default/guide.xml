@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE book [
-<!ENTITY gpl SYSTEM "gpl.xml">
-<!ENTITY fdl SYSTEM "fdl-1.3.xml">
-]>
+    <!ENTITY gpl SYSTEM "gpl.xml">
+    <!ENTITY fdl SYSTEM "fdl-1.3.xml">
+    ]>
 <book version="5.0"
       xsi:schemaLocation="http://www.w3.org/1999/xlink http://docbook.org/ns/docbook"
       xml:id="top" xmlns="http://docbook.org/ns/docbook"
@@ -43,7 +43,7 @@
         but WITHOUT ANY WARRANTY; without even the implied warranty of
         MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
         <link
-                linkend="gpl">GNU General Public License
+            linkend="gpl">GNU General Public License
         </link>
         for more details.
       </para>
@@ -60,8 +60,8 @@
         no Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.
       </para>
 
-      <para>A copy of the license is included in the section entitled<link
-              linkend="fdl">"GNU Free Documentation License"</link>.
+      <para>A copy of the license is included in the section entitled
+        <link linkend="fdl">"GNU Free Documentation License"</link>.
       </para>
     </legalnotice>
 
@@ -116,7 +116,7 @@
       </para>
 
       <para>Java can be downloaded and installed from<link
-              xlink:href="http://java.com">http://java.com</link>. Java installation
+          xlink:href="http://java.com">http://java.com</link>. Java installation
         is a simple matter of downloading the correct version for your operating
         system and using the automated installer.
       </para>
@@ -127,7 +127,7 @@
           </trademark>
           based operating system,
           <trademark
-                  class="trade">OpenJDK
+              class="trade">OpenJDK
           </trademark>
           or IcedTea may have been
           preinstalled. jGnash will run on the latest version of OpenJDK or
@@ -190,7 +190,7 @@
         multi-user home networked application. These advanced features are
         accessible via the command line. Please see
         <link
-                linkend="commandline">Command Line Options
+            linkend="commandline">Command Line Options
         </link>
         for more details.
       </para>
@@ -232,7 +232,7 @@
       </para>
 
       <para>The best place to start is the jGnash user group hosted at<link
-              xlink:href="http://groups.google.com/group/jgnash-user">
+          xlink:href="http://groups.google.com/group/jgnash-user">
         http://groups.google.com/group/jgnash-user</link>. The user group
         contains a well rounded group of individuals who can help answer just
         about any question. As a courtesy to others, I encourage you to search
@@ -301,7 +301,7 @@
             </menuchoice>
             command and follow the prompts in the new file
             wizard. When given the choice to select the<link
-                    linkend="FileTypes">storage type</link>, leave it as the default
+                linkend="FileTypes">storage type</link>, leave it as the default
             value for now. A default file name and location will be provided
             that you can change if desired. If the file already exists, you will
             be warned you are about to overwrite it.
@@ -1156,9 +1156,9 @@
 
     <para>Reconciliation is a simple and visual process of matching up the
       transactions listed in an account's register against a paper or electronic
-      statement from a financial institution. If differences do exist, then any missing or erroneous
-      transactions most be addressed until the differences are resolved. Statements may come from
-      you bank, investment broker, credit card issuer, etc. on a period basis.
+      statement provided by a financial institution. If differences do exist, then any missing or erroneous
+      transactions most be addressed until the differences are resolved. Statements should come from
+      you bank, investment broker, credit card issuer, etc. on a periodic basis.
     </para>
 
     <para>Periodically reconciling an account helps ensure transaction entry errors do not creep in 
@@ -1177,7 +1177,12 @@
       </para>
 
       <para>jGnash makes it easier to manage reconciliation by providing some options described
-        below.
+        below.  These can be access in the <emphasis role="Bold">Register</emphasis> options tabs
+        using the <menuchoice>
+              <guimenu>Tools</guimenu>
+
+              <guimenuitem>Options</guimenuitem>
+            </menuchoice> menu.
       </para>
 
       <para>
@@ -1213,7 +1218,7 @@
       </para>
 
       <para>Choosing to disable automatic reconciliation will require you to reconcile Income and Expense
-        accounts for which you may not have a provided statement as well as all other institutions.
+        accounts for which you may not have been provided a reconciliation statement.
       </para>
 
       <para>jGnash transactions have three reconciliation states that are presented in order below:</para>
@@ -1248,6 +1253,12 @@
           </varlistentry>
         </variablelist>
       </para>
+
+      <sidebar>
+        <para>Manually marking transactions is not recommended if you are going
+          to use the Reconcile Wizard.
+        </para>
+      </sidebar>
     </section>
 
     <section>
@@ -1271,7 +1282,8 @@
       <para>
         <inlinemediaobject>
           <imageobject>
-            <imagedata fileref="../images/manual-reconcile-context.png" scale="70"/>
+            <imagedata fileref="../images/manual-reconcile-context.png"
+                       scale="70"/>
           </imageobject>
         </inlinemediaobject>
       </para>
@@ -1283,10 +1295,10 @@
         </para>
       </sidebar>
 
-      <para>Transactions may be marked as
+      <para>Transactions may also be marked as
         <emphasis role="bold">Cleared</emphasis>
-        through the transaction form. Some users may prefer to clear transactions manually during a
-          given period.  <emphasis role="bold">Cleared</emphasis>
+        through the transaction form. Some users may prefer to clear certain transactions manually
+        during a given period to draw attention to them.  <emphasis role="bold">Cleared</emphasis>
         transactions will still be visible within
         the Reconciliation Wizard if used later while manually
         <emphasis role="bold">Reconciled</emphasis>
@@ -1307,12 +1319,8 @@
 
       <para>Use of the Reconciliation Wizard helps to simplify the reconciliation process by comparing
         opening and closing balances reported by the institution against the sum of the transactions
-        as you mark them as reconciled. You receive instantaneous feedback as you mark transactions
+        as you mark them as reconciled. You receive instantaneous visual feedback as you mark transactions
         and at the end of the process you should have a net difference of zero.
-      </para>
-
-      <para>It's not unusual to receive institutional statements that are missing transactions
-        near the close the statement date. Those transactions will be captured in next statement period.
       </para>
 
       <sidebar>
@@ -1325,13 +1333,28 @@
         </para>
       </sidebar>
 
-      <para>The reconcile wizard is started by using the context menu in the account list, or by clicking the
+      <para>The image of the account register shown next is representative of a small but typical
+        reconciliation period.  The amounts and balances shown correspond with the other images
+        as the  Reconcile Wizard is explained in this chapter.  Refer back to this image as necessary for clarification.
+      </para>
+
+      <para>Take note of the <emphasis>Reconciled Balance: $2,614.43</emphasis> and that it is the last transaction
+        marked as reconciled.  Also, take note of the transaction dated <emphasis>03/25/14</emphasis> and the
+        corresponding balance of <emphasis>$1,369.70.</emphasis>  You will see these same values later in the
+        Reconcile Settings dialog.
+      </para>
+
+      <para>
+        <inlinemediaobject>
+          <imageobject>
+            <imagedata fileref="../images/reconcile-register.png" scale="60"/>
+          </imageobject>
+        </inlinemediaobject>
+      </para>
+
+      <para>The Reconcile Wizard is started by using the context menu in the account list, or by clicking the
         <guibutton>Reconcile</guibutton> button in the transaction register.  A small dialog will be shown requesting
         some information.
-      </para>
-      <para><emphasis>These values should be provided to you by your banking institution in paper or
-        electronic format and it's important these values are entered correctly, otherwise balances will not zero
-        out.</emphasis>
       </para>
 
       <para>
@@ -1341,7 +1364,7 @@
 
             <listitem>
               <para>This is the closing date for the reconciliation period. This should be reported on your account
-                statement.  The date will typically be the end of the month, but may be different due institution or
+                statement.  The date will typically be the end of the month, but may be different due to institution or
                 locale rules.  Any transactions entered after this date will not appear within the Reconciliation
                 Wizard</para>
             </listitem>
@@ -1368,6 +1391,11 @@
         </variablelist>
       </para>
 
+      <para><emphasis>These values should be provided to you by your banking institution in paper or
+        electronic format and it's important these values are entered correctly, otherwise balances will not zero
+        out.</emphasis>
+      </para>
+
       <para>
         <inlinemediaobject>
           <imageobject>
@@ -1378,16 +1406,18 @@
 
         <para>After clicking the <guibutton>OK</guibutton> button, the settings dialog will be replaced
             by a dialog showing all of the transactions prior and inclusive of the statement date that
-            have not been marked as Reconciled. <emphasis>Transactions marked as cleared will be shown.</emphasis>
+            have not been marked as Reconciled. <emphasis>Transactions marked as cleared will also be shown.</emphasis>
         </para>
 
-        <para>The next step is to go through the institution provided statement and make every matching transaction
-            as reconcilable by clicking on the transactions.  As you click each transaction, totals will update and
-            you should see the <guilabel>Difference</guilabel> value approach zero.  When the <guilabel>Difference</guilabel>
-            is zero, the <guibutton>Finish</guibutton>  button will become active.
+        <para>The next step is to go through the institution provided statement and mark every matching transaction
+          as reconcilable by clicking on the transactions.  As you click each transaction, totals will update and
+          you should see the <guilabel>Difference</guilabel> value approach zero.  The symbol in the <emphasis>Clr</emphasis>
+          column will also change when marked as <emphasis role="bold">Reconciled</emphasis>.
+          When the <guilabel>Difference</guilabel> is zero, the <guibutton>Finish</guibutton>
+          button will become active. Transactions marked as cleared will also need to be selected if they are to be reconciled.
         </para>
 
-        <para>It is not unusual to find transactions that go unmarked near the end of the statement period.
+        <para>It is not unusual to find transactions that go unmarked for reconciliation near the end of the statement period.
             These are transactions you have entered that were not processed through the system fast enough to
             show up on your statement and impact your account balance.  Simply ignore these transactions and
             they will be captured at the start of the next statement and reconciliation cycle.
@@ -1401,19 +1431,57 @@
         </inlinemediaobject>
       </para>
 
-        <para>Clicking on the <guibutton>Finish</guibutton> will close the dialog and will mark the selected
-            transactions as Reconciled.  Depending on the number of transactions and type of file being used,
+        <para>
+          Clicking on the <guibutton>Finish</guibutton> button will close the dialog and will mark the selected
+            transactions as Reconciled.  Depending on the number of transactions and type of file format being used,
             it could take awhile for the changes to be saved.  A wait message will be displayed during the
             change process.
         </para>
 
-        <para>What do you do if you have marked all transactions as reconciled and the difference is not zero?
-
+        <para>
+          What do you do if you have marked all transactions as reconciled and the difference is not zero?
         </para>
 
+      <itemizedlist>
+      <listitem>
+        <para>Not all paper and electronic statements clearly identify fees, earned interest, etc.
+          Make sure you have captured these transactions.
+        </para>
+      </listitem>
 
+      <listitem>
+        <para>Were any transactions amounts entered incorrectly?
+        </para>
+      </listitem>
+
+      <listitem>
+        <para>Transactions manually marked as Reconciled during the statement period will not
+          show in the transaction columns and are guaranteed to throw off balances.  Mark the
+          transactions as <emphasis role="bold">Cleared</emphasis> instead.
+        </para>
+      </listitem>
+
+        <listitem>
+        <para>Incorrect opening and ending balances will cause errors in calculated balances.
+        </para>
+      </listitem>
+    </itemizedlist>
+
+      <para>
+        If you need to to exit the Reconciliation Wizard before finishing,
+        the <guibutton>Finish Later</guibutton> button may be used.  This will close the dialog
+        and mark selected transactions as <emphasis
+          role="bold">Cleared</emphasis>.
+        This makes it easy to restart the process with transaction you have already marked
+        as reconcilable identified.  You will still need to reselect those transactions
+        when you restart the process.
+        </para>
     </section>
 
+    <para>
+        Regardless of the Reconciliation process used, it is good practice to
+      reconcile periodically.
+      </para>
   </chapter>
 
   <chapter xml:id="Reports">
@@ -1782,12 +1850,12 @@
         <listitem>
           <para>If portable is specified on the command line, jGnash
             preferences will be stored to a file name<emphasis
-                    role="bold">pref.xml</emphasis>instead of using the system registry.
+                role="bold">pref.xml</emphasis>instead of using the system registry.
             Use of this option is intended for users who want to run jGnash from
             a thumb drive on multiple computers and maintain their preferences
             without using the system registry. The
             <emphasis
-                    role="bold">pref.xml
+                role="bold">pref.xml
             </emphasis>
             file will usually be stored at the
             location jGnash was started from.
@@ -1803,7 +1871,7 @@
         <listitem>
           <para>If you don't like the location the
             <emphasis
-                    role="bold">pref.xml
+                role="bold">pref.xml
             </emphasis>
             file is stored, or wish to use a
             different name, use this option to change location and name to suit.
