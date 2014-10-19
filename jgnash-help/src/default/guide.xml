@@ -95,13 +95,75 @@
       information using proven double entry accounting principles.
     </para>
 
-    <para>You do not have to be an accountant to understand or use jGnash.
+    <para>You do not have to be an accountant to understand or use jGnash, but
+      jGnash provides options to make new and experienced users feel
+      comfortable using it.
     </para>
 
-    <para>jGnash is not intended for use as a business accounting application.
-      If you require business specific features, you may be better served
-      looking for a different solution.
+    <para>jGnash's mission is personal fiance and it is not tailored for use as a
+      business accounting application.  jGnash is being used by small businesses and
+      clubs, but if you require business specific features,
+      you may be better served looking for a different solution.
     </para>
+
+    <section>
+      <title>Features</title>
+
+      <para>A brief list of features is below:</para>
+
+      <itemizedlist>
+      <listitem>
+        <para>Double Entry Accounting with reconciliation tools.
+        </para>
+      </listitem>
+
+      <listitem>
+        <para>Budgeting with multiple scenario options and export to spreadsheet capability.
+        </para>
+      </listitem>
+
+      <listitem>
+        <para>Investment Accounts and automatic import of Stocks, Bond, and Funds price history.
+        </para>
+      </listitem>
+
+        <listitem>
+        <para>Nestable accounts with automatic rollup of totals and intelligent handling of mixed currencies.
+        </para>
+      </listitem>
+
+        <listitem>
+        <para>OFX, QFX, mt940, and QIF import capabilities.
+        </para>
+      </listitem>
+
+        <listitem>
+        <para>Reminders and automatic transaction entry and notifications.
+        </para>
+      </listitem>
+
+         <listitem>
+        <para>Intelligent handling of multiple currencies and exchange rates with automatic online exchange rate updates.
+        </para>
+      </listitem>
+
+        <listitem>
+        <para>Printable reports with PDF and spreadsheet export capability.
+        </para>
+      </listitem>
+
+        <listitem>
+        <para>XML and relational database file formats
+        </para>
+      </listitem>
+
+        <listitem>
+        <para>Operates on any main-stream PC operating system.
+        </para>
+      </listitem>
+    </itemizedlist>
+    </section>
+
 
     <section xml:id="Installation">
       <title>Installation</title>
@@ -1157,7 +1219,7 @@
     <para>Reconciliation is a simple and visual process of matching up the
       transactions listed in an account's register against a paper or electronic
       statement provided by a financial institution. If differences do exist, then any missing or erroneous
-      transactions most be addressed until the differences are resolved. Statements should come from
+      transactions must be addressed until the differences are resolved. Statements should come from
       you bank, investment broker, credit card issuer, etc. on a periodic basis.
     </para>
 
@@ -1168,16 +1230,53 @@
       </emphasis>
     </para>
 
+    <para>
+      Accounts may be reconciled using a manual process or using the
+      Reconciliation Wizard.  For any given reconciliation period, using a
+      combination of both methods will be difficult.
+    </para>
+
+    <para>
+      Regardless of the Reconciliation process used, it is good practice to
+      reconcile all accounts periodically.
+    </para>
+
     <section>
       <title>Basics</title>
 
-      <para>Every transaction has two independent reconciliation states that applies to both the
-        crediting and debiting accounts. A split transaction may have even more reconciliation
-        states depending on how many accounts it touches.
+      <para>Every transaction entry will have two independent reconciliation
+        states that applies to both of the related crediting and debiting accounts.
+        Split transactions may have even more reconciliation states depending on
+        how many accounts it touches. Reconciliation states are explained a bit
+        later in this chapter.
       </para>
 
+      <para>
+        The default assumed reconciliation states can be configured depending on
+        your preferred method of reconciliation.  Taking time to understand these
+        options is important for a successful reconciliation process.
+      </para>
+
+      <sidebar>
+      <para>
+        By default, jGnash comes configured to favor use of the Reconciliation Wizard.
+      </para>
+      </sidebar>
+
+      <tip>
+      <para>
+        If this is your first time reconciling an account and you have prior transaction history
+        with a mix of Reconciled and Cleared transactions, you may need to manually
+        reconcile prior transaction history.
+      </para>
+      </tip>
+
+      <section>
+        <title>Reconcile Settings</title>
+
       <para>jGnash makes it easier to manage reconciliation by providing some options described
-        below.  These can be access in the <emphasis role="Bold">Register</emphasis> options tabs
+        below.  These can be access in the <emphasis
+            role="Bold">Register</emphasis> options tabs
         using the <menuchoice>
               <guimenu>Tools</guimenu>
 
@@ -1200,26 +1299,33 @@
         selected as the default.
       </para>
 
-      <para>Selecting
-        <emphasis role="bold">All transaction accounts have same reconciled state</emphasis>
-        will reduce the effort of reconciling transactions, but can create problems reconciling
-        transfers between bank accounts later. If you manually reconcile your accounts and do not
-        use the reconcile tool, this saves a significant amount of work at the risk of making an
-        assumption that a transaction occurred correctly between two entities.
-      </para>
-
-      <para>Selecting
+        <para>Selecting
         <emphasis role="bold">Automatically reconcile Income and Expense Accounts</emphasis>
         requires a bit more work on your part in that you are required to reconcile all institution
         statements, but it will not create any issues when transferring between accounts.
         <emphasis>This is the
-          recommended option if you are using the reconciliation tool.
+          recommended option if you are using the Reconciliation Wizard.
         </emphasis>
+      </para>
+
+      <para>Selecting
+        <emphasis role="bold">All transaction accounts have same reconciled state</emphasis>
+        will reduce the effort of reconciling transactions, but can create problems reconciling
+        transfers between bank accounts later.
+        If you manually reconcile your accounts and do not
+        use the Reconciliation Wizard, this option saves a significant amount of work at the risk of making an
+        assuming a transaction occurred correctly between two institutions.
+        <emphasis>Use of this option in conjunction with use of the Reconciliation Wizard
+        can create problems with bank transfers when you reconcile both accounts.</emphasis>
       </para>
 
       <para>Choosing to disable automatic reconciliation will require you to reconcile Income and Expense
         accounts for which you may not have been provided a reconciliation statement.
       </para>
+         </section>
+
+      <section>
+        <title>Reconcile States</title>
 
       <para>jGnash transactions have three reconciliation states that are presented in order below:</para>
 
@@ -1253,6 +1359,7 @@
           </varlistentry>
         </variablelist>
       </para>
+      </section>
 
       <sidebar>
         <para>Manually marking transactions is not recommended if you are going
@@ -1270,8 +1377,8 @@
       </para>
 
       <para>The downside to manual reconciliation is not all checks and balances are performed
-        against the reported opening and closing balance for a given period increasing the 
-        likely-hood of missing a recorded transaction or incorrectly entered amount.
+        against the reported opening and closing balance for a given period.
+        This increases the likely-hood of missing a recorded transaction or incorrectly entered amount.
       </para>
 
       <para>To manually mark a transaction as reconciled, use the context menu in the register to
@@ -1319,7 +1426,7 @@
 
       <para>Use of the Reconciliation Wizard helps to simplify the reconciliation process by comparing
         opening and closing balances reported by the institution against the sum of the transactions
-        as you mark them as reconciled. You receive instantaneous visual feedback as you mark transactions
+        as you mark them as reconciled. You receive instantaneous visual feedback as you mark transactions,
         and at the end of the process you should have a net difference of zero.
       </para>
 
@@ -1352,7 +1459,7 @@
         </inlinemediaobject>
       </para>
 
-      <para>The Reconcile Wizard is started by using the context menu in the account list, or by clicking the
+      <para>The Reconcile Wizard is started by using the context menu in the Account List, or by clicking the
         <guibutton>Reconcile</guibutton> button in the transaction register.  A small dialog will be shown requesting
         some information.
       </para>
@@ -1365,7 +1472,7 @@
             <listitem>
               <para>This is the closing date for the reconciliation period. This should be reported on your account
                 statement.  The date will typically be the end of the month, but may be different due to institution or
-                locale rules.  Any transactions entered after this date will not appear within the Reconciliation
+                locale rules.  Transactions entered after this date will not appear within the Reconciliation
                 Wizard</para>
             </listitem>
           </varlistentry>
@@ -1406,7 +1513,7 @@
 
         <para>After clicking the <guibutton>OK</guibutton> button, the settings dialog will be replaced
             by a dialog showing all of the transactions prior and inclusive of the statement date that
-            have not been marked as Reconciled. <emphasis>Transactions marked as cleared will also be shown.</emphasis>
+            have not been marked as Reconciled. <emphasis>Transactions marked as cleared will be shown.</emphasis>
         </para>
 
         <para>The next step is to go through the institution provided statement and mark every matching transaction
@@ -1462,7 +1569,14 @@
       </listitem>
 
         <listitem>
-        <para>Incorrect opening and ending balances will cause errors in calculated balances.
+        <para>Do you have your Reconcile Settings configured appropriately for the process
+          you are using?
+          If in doubt, use <emphasis role="bold">Automatically reconcile Income and Expense Accounts</emphasis>.
+        </para>
+      </listitem>
+
+        <listitem>
+        <para>Incorrectly entered  opening and ending balances will cause errors in calculated balances.
         </para>
       </listitem>
     </itemizedlist>
@@ -1477,11 +1591,6 @@
         when you restart the process.
         </para>
     </section>
-
-    <para>
-        Regardless of the Reconciliation process used, it is good practice to
-      reconcile periodically.
-      </para>
   </chapter>
 
   <chapter xml:id="Reports">
