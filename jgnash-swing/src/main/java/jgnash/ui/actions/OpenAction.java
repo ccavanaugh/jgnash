@@ -21,6 +21,9 @@ import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -190,10 +193,13 @@ public class OpenAction {
     public static void openLastAction() {
         final Logger appLogger = UIApplication.getLogger();
 
-        final class BootEngine extends SwingWorker<Void, Void> {
+        final class BootEngine extends SwingWorker<Long, Void> {
 
             @Override
-            protected Void doInBackground() throws Exception {
+            protected Long doInBackground() throws Exception {
+
+                final long startTime = System.currentTimeMillis();
+
                 final Resource rb = Resource.get();
 
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
@@ -223,17 +229,24 @@ public class OpenAction {
                 }
 
                 if (engine != null) {
-                    engine.getRootAccount(); // prime the engine
                     logger.fine("Engine boot complete");
                 }
 
-                return null;
+                return System.currentTimeMillis() - startTime;
             }
 
             @Override
             protected void done() {
                 logger.info("openLastAction() done");
-                UIApplication.getFrame().stopWaitMessage();
+
+                try {
+                    long time = get(5, TimeUnit.SECONDS);
+                    logger.info("Boot time was: " + ((float)time) / 1000f + " seconds");
+                } catch (final InterruptedException | ExecutionException | TimeoutException e) {
+                    logger.log(Level.SEVERE, e.toString(), e);
+                } finally {
+                    UIApplication.getFrame().stopWaitMessage();
+                }
             }
         }
 
