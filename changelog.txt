@@ -26,6 +26,11 @@ Budgeting
 - flexible start / end period for different fiscal years
 Reinstate archive capability.
 
+Release 2.14.1
+----------------------
+10/21/14 Fix for incorrect totals for register reports with split details shown.  The sum of the split was being
+         calculated twice.  Correct behavior is to not show the sum of the splits.
+
 Release 2.14.0
 ----------------------
 10/19/14 PDF version of the integrated help is now packaged with the zip distribution.

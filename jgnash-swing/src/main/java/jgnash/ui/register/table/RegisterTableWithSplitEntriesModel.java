@@ -52,7 +52,7 @@ public class RegisterTableWithSplitEntriesModel extends RegisterTableModel {
 
     @Override
     protected Object getInternalValueAt(final int row, final int col) {
-        TransactionWrapper wrapper = data.get(row);
+        final TransactionWrapper wrapper = data.get(row);
 
         BigDecimal amount;
 
@@ -120,11 +120,21 @@ public class RegisterTableWithSplitEntriesModel extends RegisterTableModel {
                 }
                 return wrapper.entry.getReconciled(account).toString();
             case 6:
+                // Don't show amount if the split details are going to be shown, otherwise totals will be wrong
+                if (showSplitDetails && wrapper.transaction.getTransactionType() == TransactionType.SPLITENTRY && wrapper.entry == null) {
+                    return null;
+                }
+
                 if (signum >= 0) {
                     return amount;
                 }
                 return null;
             case 7:
+                // Don't show amount if the split details are going to be shown, otherwise totals will be wrong
+                if (showSplitDetails && wrapper.transaction.getTransactionType() == TransactionType.SPLITENTRY && wrapper.entry == null) {
+                    return null;
+                }
+
                 if (signum < 0) {
                     return amount.abs();
                 }
