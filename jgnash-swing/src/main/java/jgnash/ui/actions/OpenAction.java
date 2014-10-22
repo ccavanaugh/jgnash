@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
@@ -34,6 +36,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.OpenDatabaseDialog;
+import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
 
@@ -47,6 +50,11 @@ public class OpenAction {
     private static final Logger logger = Logger.getLogger(OpenAction.class.getName());
 
     private static boolean remoteConnectionFailed = false;
+
+    /* The internal SwingWorker thread pool may be full at startup because of all the threads being launched
+       which can lead to random deadlocks at startup.  Use an internal thread pool to prevent issues.
+       This also reduces startup time if multiple cores are available. */
+    private static final ExecutorService pool = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
     static {
         logger.setLevel(Level.ALL);
@@ -121,7 +129,7 @@ public class OpenAction {
             @Override
             public void run() {
 
-                OpenDatabaseDialog d = new OpenDatabaseDialog(UIApplication.getFrame());
+                final OpenDatabaseDialog d = new OpenDatabaseDialog(UIApplication.getFrame());
 
                 d.setDatabasePath(EngineFactory.getLastDatabase());
                 d.setPort(EngineFactory.getLastPort());
@@ -130,10 +138,8 @@ public class OpenAction {
 
                 d.setVisible(true);
 
-                boolean result = d.getResult();
-
-                if (result) {
-                    new BootEngine(d).execute();
+                if (d.getResult()) {
+                    pool.execute(new BootEngine(d));
                 }
 
             }
@@ -177,7 +183,7 @@ public class OpenAction {
         if (EngineFactory.doesDatabaseExist(database)) {
             try {
                 if (!FileUtils.isFileLocked(database)) {
-                    new BootEngine().execute();
+                    pool.execute(new BootEngine());
                 } else {
                     StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
                 }
@@ -263,7 +269,7 @@ public class OpenAction {
             if (EngineFactory.doesDatabaseExist(database)) {
                 try {
                     if (!FileUtils.isFileLocked(database)) {
-                        new BootEngine().execute();
+                        pool.execute(new BootEngine());
                     } else {
                         StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
                     }
@@ -299,7 +305,7 @@ public class OpenAction {
             }
         }
 
-        new BootEngine().execute();
+        pool.execute(new BootEngine());
     }
 
     private static boolean checkAndBackupOldVersion(final String fileName, final char[] password) {
