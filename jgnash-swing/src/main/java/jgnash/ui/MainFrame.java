@@ -67,6 +67,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.net.currency.CurrencyUpdateFactory;
 import jgnash.net.security.AbstractYahooParser;
 import jgnash.net.security.SecurityUpdateFactory;
+import jgnash.net.security.UpdateFactory;
 import jgnash.plugin.Plugin;
 import jgnash.plugin.PluginFactory;
 import jgnash.ui.account.ExpandingAccountTablePanel;
@@ -196,8 +197,8 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         registerLogHandler(AbstractYahooParser.class);
         registerLogHandler(UIApplication.class);
 
-        SecurityUpdateFactory.getUpdateOnStartup(); // forces the logger to be initialized first
-        registerLogHandler(SecurityUpdateFactory.class);
+        UpdateFactory.getUpdateOnStartup(); // Hack, forces the logger to be initialized first
+        registerLogHandler(UpdateFactory.class);
 
         loadPlugins();
 
@@ -218,13 +219,14 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
      * before the UI disappears
      */
     private void performControlledShutdown() {
-        cancelBackgroundUpdates();  // cancel any pending background updates
 
         closeAllWindows(); // close any open windows first
 
         if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
 
             displayWaitMessage(Resource.get().getString("Message.StoreWait"));
+
+            cancelBackgroundUpdates();  // cancel any pending background updates
 
             try {
                 Thread.sleep(1800); // lets the UI start and get the users attention
@@ -705,7 +707,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
             @Override
             public void run() {
 
-                if (SecurityUpdateFactory.getUpdateOnStartup()) {
+                if (UpdateFactory.getUpdateOnStartup()) {
                     backgroundUpdateExecutor.schedule(SecurityUpdateFactory.getUpdateWorker(), SCHEDULED_DELAY, TimeUnit.SECONDS);
                 }
 
@@ -721,8 +723,13 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     public void cancelBackgroundUpdates() {
         if (backgroundUpdateExecutor != null && !backgroundUpdateExecutor.isShutdown()) {
             try {
-                backgroundUpdateExecutor.shutdownNow();
+                backgroundUpdateExecutor.shutdown();
+                logger.log(Level.INFO, "Requesting cancellation of background updates");
+
+
+                backgroundUpdateExecutor.awaitTermination(1, TimeUnit.MINUTES);
                 logger.log(Level.INFO, "Background updates canceled");
+
 
                 backgroundUpdateExecutor = new ScheduledThreadPoolExecutor(1);  // recreate for manual requests
             } catch (Exception e) {

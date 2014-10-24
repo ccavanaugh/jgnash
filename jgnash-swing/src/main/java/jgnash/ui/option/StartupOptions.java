@@ -34,7 +34,7 @@ import javax.swing.event.ChangeListener;
 
 import jgnash.engine.EngineFactory;
 import jgnash.net.currency.CurrencyUpdateFactory;
-import jgnash.net.security.SecurityUpdateFactory;
+import jgnash.net.security.UpdateFactory;
 import jgnash.util.Resource;
 
 /**
@@ -73,7 +73,7 @@ class StartupOptions extends JPanel implements ActionListener {
         removeBackupCountSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
 
         updateCurrenciesButton.setSelected(CurrencyUpdateFactory.getUpdateOnStartup());
-        updateSecuritiesButton.setSelected(SecurityUpdateFactory.getUpdateOnStartup());
+        updateSecuritiesButton.setSelected(UpdateFactory.getUpdateOnStartup());
         saveBackupButton.setSelected(EngineFactory.exportXMLOnClose());
         removeBackupButton.setSelected(EngineFactory.removeOldBackups());
         openLastOnStartup.setSelected(EngineFactory.openLastOnStartup());
@@ -130,7 +130,7 @@ class StartupOptions extends JPanel implements ActionListener {
         if (e.getSource() == updateCurrenciesButton) {
             CurrencyUpdateFactory.setUpdateOnStartup(updateCurrenciesButton.isSelected());
         } else if (e.getSource() == updateSecuritiesButton) {
-            SecurityUpdateFactory.setUpdateOnStartup(updateSecuritiesButton.isSelected());
+            UpdateFactory.setUpdateOnStartup(updateSecuritiesButton.isSelected());
         } else if (e.getSource() == saveBackupButton) {
             EngineFactory.setExportXMLOnClose(saveBackupButton.isSelected());
         } else if (e.getSource() == removeBackupButton) {

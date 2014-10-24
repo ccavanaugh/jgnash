@@ -60,7 +60,7 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
-import jgnash.net.security.SecurityUpdateFactory;
+import jgnash.net.security.UpdateFactory;
 import jgnash.text.CommodityFormat;
 import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.FormattedJTable;
@@ -255,7 +255,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
         SecurityNode node = securityCombo.getSelectedSecurityNode();
 
         if (node != null) {
-            SecurityUpdateFactory.updateOne(node);
+            UpdateFactory.updateOne(node);
         }
     }
 
