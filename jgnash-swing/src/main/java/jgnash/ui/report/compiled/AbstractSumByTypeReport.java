@@ -240,7 +240,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
     /**
      * Wraps a row of table data into one object
      */
-    abstract class Row {
+    static abstract class Row {
         /**
          * Returns the value given a column index
          * 

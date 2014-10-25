@@ -496,7 +496,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
         }
     }
 
-    private abstract class ColumnInfo {
+    private static abstract class ColumnInfo {
 
         public abstract Object getValue(int rowIndex);
 
