@@ -321,6 +321,7 @@ public class OpenAction {
                 UIApplication.getLogger().warning(errorMessage);
 
                 new Thread() {  // pop an error dialog with the warning for immediate feedback
+                    @Override
                     public void run() {
                         StaticUIMethods.displayError(errorMessage);
                     }
