@@ -103,7 +103,7 @@ public class DefaultLocaleAction extends AbstractAction {
         LocaleObject(final Locale locale) {
             this.locale = Objects.requireNonNull(locale);
 
-            display = locale.getDisplayName() + " - " + locale.toString() + "  [" + locale.getDisplayName(locale) + "]";
+            display = locale.getDisplayName() + " - " + locale + "  [" + locale.getDisplayName(locale) + "]";
         }
 
         @Override

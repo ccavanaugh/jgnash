@@ -294,7 +294,7 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
                             clearForm();
                             break;
                         case SECURITY_REMOVE_FAILED:
-                            String message = "Commodity " + node.toString() + " cannot be removed";
+                            String message = "Commodity " + node + " cannot be removed";
                             JOptionPane.showMessageDialog(SecurityModifyPanel.this, message, rb.getString("Message.Warn.CommodityInUse"), JOptionPane.WARNING_MESSAGE);
                             break;
                         case SECURITY_ADD:

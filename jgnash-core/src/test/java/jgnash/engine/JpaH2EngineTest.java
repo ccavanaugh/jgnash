@@ -45,7 +45,7 @@ public class JpaH2EngineTest extends EngineTest {
             testFile = Files.createTempFile("jpa-test", "." + JpaH2DataStore.FILE_EXT).toString();
 
         } catch (IOException e1) {
-            System.err.println(e1.toString());
+            System.err.println(e1);
         }
 
         EngineFactory.deleteDatabase(testFile);

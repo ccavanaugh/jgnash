@@ -501,7 +501,7 @@ public final class ActionParser extends DefaultHandler {
                 int size = size();
                 for (int i = 0; i < size; i++) {
                     b.append('\n');
-                    b.append(getChildAt(i).toString());
+                    b.append(getChildAt(i));
                 }
             }
             return b.toString();
@@ -632,9 +632,9 @@ public final class ActionParser extends DefaultHandler {
             if (methodName != null) {
                 this.clazz = clazz;
                 try {
-                    method = clazz.getClass().getMethod(methodName, (Class[]) null);
-                } catch (NoSuchMethodException nsme) {
-                    log.log(Level.WARNING, "No such method: {0}", nsme.getLocalizedMessage());
+                    method = clazz.getClass().getMethod(methodName, (Class<?>[]) null);
+                } catch (final NoSuchMethodException ex) {
+                    log.log(Level.WARNING, "No such method: {0}", ex.getLocalizedMessage());
                     setEnabled(false);
                 }
             }
@@ -648,8 +648,8 @@ public final class ActionParser extends DefaultHandler {
             if (method != null) {
                 try {
                     method.invoke(clazz, (Object[]) null);
-                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                    log.log(Level.SEVERE, e.getMessage(), e);
+                } catch (final IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                    log.log(Level.SEVERE, ex.getMessage(), ex);
                 }
             }
         }

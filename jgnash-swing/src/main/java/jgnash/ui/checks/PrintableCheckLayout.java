@@ -308,7 +308,7 @@ class PrintableCheckLayout implements Printable {
         float x = object.getX();
         float y = object.getY() + offset;
 
-        TextLayout text = new TextLayout("**" + amount.toString() + "**", font, frc);
+        TextLayout text = new TextLayout("**" + amount + "**", font, frc);
 
         text.draw(g2, x, y);
 

@@ -67,7 +67,7 @@ public class FileTransferTest {
             temp.deleteOnExit();
             testFile = temp.getAbsolutePath();
         } catch (IOException e1) {
-            System.err.println(e1.toString());
+            System.err.println(e1);
             fail();
         }
 
@@ -156,7 +156,7 @@ public class FileTransferTest {
             temp.deleteOnExit();
             testFile = temp.getAbsolutePath();
         } catch (IOException e1) {
-            System.err.println(e1.toString());
+            System.err.println(e1);
             fail();
         }
 

@@ -64,8 +64,8 @@ public class OfxTransaction extends ImportTransaction {
     @Override
     public String toString() {
         return transactionType + ", " +
-                datePosted.toString() + ", " +
-                amount.toString() + ", " +
+                datePosted + ", " +
+                amount + ", " +
                 transactionID + ", " +
                 sic + ", " +
                 getName() + ", " +

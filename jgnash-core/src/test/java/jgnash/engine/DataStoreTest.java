@@ -33,9 +33,9 @@ public class DataStoreTest {
     @Test
     public void instanceTest() {
         assertTrue(DataStoreType.H2_DATABASE.getDataStore().toString() != null);
-        System.out.println(DataStoreType.H2_DATABASE.getDataStore().toString());
+        System.out.println(DataStoreType.H2_DATABASE.getDataStore());
 
         assertTrue(DataStoreType.XML.getDataStore().toString() != null);
-        System.out.println(DataStoreType.XML.getDataStore().toString());
+        System.out.println(DataStoreType.XML.getDataStore());
     }
 }

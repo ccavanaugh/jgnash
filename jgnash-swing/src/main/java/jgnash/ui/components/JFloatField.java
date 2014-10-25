@@ -282,13 +282,13 @@ public class JFloatField extends JTextFieldEx {
         try {
             BigDecimal d = new BigDecimal(text);
             if (DEBUG) {
-                System.out.println("eval result: " + d.toString());
+                System.out.println("eval result: " + d);
             }
             return d.toString();
         } catch (NumberFormatException nfe) {
 
             if (DEBUG) {
-                System.out.println(nfe.toString());
+                System.out.println(nfe);
             }
 
             try {

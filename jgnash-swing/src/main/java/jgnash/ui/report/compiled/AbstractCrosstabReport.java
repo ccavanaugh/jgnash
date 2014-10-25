@@ -551,7 +551,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
         }
     }
 
-    private class GroupColumnInfo extends ColumnInfo {
+    private static class GroupColumnInfo extends ColumnInfo {
 
         private final List<Account> accountList;
 
@@ -566,7 +566,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
         }
     }
 
-    private class DateRangeBalanceColumnInfo extends ColumnInfo {
+    private static class DateRangeBalanceColumnInfo extends ColumnInfo {
 
         private final List<Account> accountList;
 

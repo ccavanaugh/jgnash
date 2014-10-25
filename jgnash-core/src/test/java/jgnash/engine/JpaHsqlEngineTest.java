@@ -43,7 +43,7 @@ public class JpaHsqlEngineTest extends EngineTest {
         try {
             testFile = Files.createTempFile("jpa-test", "." + JpaHsqlDataStore.FILE_EXT).toString();
         } catch (IOException e1) {
-            System.err.println(e1.toString());
+            System.err.println(e1);
         }
 
         Files.delete(Paths.get(testFile));

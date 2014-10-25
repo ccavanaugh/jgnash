@@ -64,21 +64,21 @@ public class OfxBank extends ImportBank {
         b.append("bankId: ").append(bankId).append('\n');
         b.append("accountId: ").append(accountId).append('\n');
         b.append("accountType: ").append(accountType).append('\n');
-        b.append("dateStart: ").append(dateStart.toString()).append('\n');
-        b.append("dateEnd: ").append(dateEnd.toString()).append('\n');
-        b.append("ledgerBalance: ").append(ledgerBalance.toString()).append('\n');
-        b.append("ledgerBalanceDate: ").append(ledgerBalanceDate.toString()).append('\n');
+        b.append("dateStart: ").append(dateStart).append('\n');
+        b.append("dateEnd: ").append(dateEnd).append('\n');
+        b.append("ledgerBalance: ").append(ledgerBalance).append('\n');
+        b.append("ledgerBalanceDate: ").append(ledgerBalanceDate).append('\n');
 
         if (availBalance != null) {
-            b.append("availBalance: ").append(availBalance.toString()).append('\n');
+            b.append("availBalance: ").append(availBalance).append('\n');
         }
 
         if (availBalanceDate != null) {
-            b.append("availBalanceDate: ").append(availBalanceDate.toString()).append('\n');
+            b.append("availBalanceDate: ").append(availBalanceDate).append('\n');
         }
 
         for (ImportTransaction t : getTransactions()) {
-            b.append(t.toString()).append('\n');
+            b.append(t).append('\n');
         }
 
         return b.toString();

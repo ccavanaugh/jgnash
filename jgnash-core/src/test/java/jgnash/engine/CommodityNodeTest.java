@@ -139,7 +139,7 @@ public class CommodityNodeTest {
 
             Object cNode = e.getCurrency("USD");
 
-            System.out.println(cNode.toString());
+            System.out.println(cNode);
 
             //noinspection ConstantConditions
             assertTrue("Returned object extends CurrencyNode", cNode instanceof CurrencyNode);

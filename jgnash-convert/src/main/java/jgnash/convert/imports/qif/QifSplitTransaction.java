@@ -44,7 +44,7 @@ class QifSplitTransaction {
         buf.append("Memo: ").append(memo).append('\n');
         buf.append("Category: ").append(category).append('\n');
         if (amount != null) {
-            buf.append("Amount:").append(amount.toString()).append('\n');
+            buf.append("Amount:").append(amount).append('\n');
         }
         return buf.toString();
     }

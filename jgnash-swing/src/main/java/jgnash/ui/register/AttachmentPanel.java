@@ -204,7 +204,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
                     if (result) {
                         moveAttachment = true;
 
-                        Path newPath = new File(AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)).toString() +
+                        Path newPath = new File(AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)) +
                                 File.separator + selectedFile.getName()).toPath();
 
                         if (newPath.toFile().exists()) {

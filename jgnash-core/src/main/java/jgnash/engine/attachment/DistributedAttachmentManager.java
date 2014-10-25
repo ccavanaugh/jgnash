@@ -134,7 +134,7 @@ public class DistributedAttachmentManager implements AttachmentManager {
         return executorService.submit(new Callable<Path>() {
             @Override
             public Path call() throws Exception {
-                Path path = Paths.get(tempAttachmentPath + File.separator + Paths.get(attachment).getFileName().toString());
+                Path path = Paths.get(tempAttachmentPath + File.separator + Paths.get(attachment).getFileName());
 
                 if (Files.notExists(path)) {
                     fileClient.requestFile(Paths.get(attachment));  // Request the file and place in a a temp location

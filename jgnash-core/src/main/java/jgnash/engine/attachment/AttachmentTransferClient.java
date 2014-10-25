@@ -120,7 +120,7 @@ class AttachmentTransferClient {
 
     public void requestFile(final Path file) {
         try {
-            channel.writeAndFlush(encrypt(FILE_REQUEST + file.toString()) + EOL_DELIMITER).sync();
+            channel.writeAndFlush(encrypt(FILE_REQUEST + file) + EOL_DELIMITER).sync();
         } catch (final InterruptedException e) {
             logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         }

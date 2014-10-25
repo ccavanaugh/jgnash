@@ -113,6 +113,6 @@ public class PendingReminder implements Comparable<PendingReminder> {
 
     @Override
     public String toString() {
-        return reminder.getDescription() + " " + eventDate.toString();
+        return reminder.getDescription() + " " + eventDate;
     }
 }
