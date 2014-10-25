@@ -112,7 +112,7 @@ public class GenericImport {
                     { // check for matching check number
                         String checkNumber = oTran.checkNumber;
                         if (checkNumber != null && !checkNumber.isEmpty()) {
-                            if (tran.getNumber() != null && tran.getNumber().equals(checkNumber)) {
+                            if (tran.getNumber().equals(checkNumber)) {
                                 oTran.setState(OfxTransaction.ImportState.EQUAL);
                                 break;
                             }

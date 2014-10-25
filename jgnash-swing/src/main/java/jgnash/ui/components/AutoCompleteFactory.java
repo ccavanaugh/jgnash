@@ -373,15 +373,13 @@ public class AutoCompleteFactory {
         @Override
         void load(final Transaction tran) {
             if (tran != null && tran.getTransactionType() != TransactionType.SPLITENTRY) {
-                String payee = tran.getPayee();
-                if (payee != null) {
-                    addString(tran.getPayee());
 
-                    if (ignoreCase) {
-                        transactions.put(tran.getPayee().toLowerCase(Locale.getDefault()), tran);
-                    } else {
-                        transactions.put(tran.getPayee(), tran);
-                    }
+                addString(tran.getPayee());
+
+                if (ignoreCase) {
+                    transactions.put(tran.getPayee().toLowerCase(Locale.getDefault()), tran);
+                } else {
+                    transactions.put(tran.getPayee(), tran);
                 }
             }
         }

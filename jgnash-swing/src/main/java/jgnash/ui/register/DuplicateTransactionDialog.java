@@ -79,7 +79,7 @@ class DuplicateTransactionDialog extends DateChkNumberDialog {
         this.transaction = t;
 
         // make the best guess about what the check number should be
-        if (t.getNumber() != null && !t.getNumber().isEmpty()) {
+        if (!t.getNumber().isEmpty()) {
             String n = a.getNextTransactionNumber();    // may return an empty string
             if (n.length() > 0) {
                 numberCombo.setText(n);
