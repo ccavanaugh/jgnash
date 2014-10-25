@@ -23,6 +23,8 @@ import java.util.List;
 
 import javax.persistence.Entity;
 
+import jgnash.util.NotNull;
+
 /**
  * Class for investment transactions.
  * <p/>
@@ -38,8 +40,9 @@ public class InvestmentTransaction extends Transaction {
     }
 
     @Override
+    @NotNull
     public TransactionType getTransactionType() {
-        TransactionType type = null;
+        TransactionType type = TransactionType.INVALID;
 
         getLock().readLock().lock();
 
@@ -78,14 +81,12 @@ public class InvestmentTransaction extends Transaction {
     }
 
     @Override
-    public void addTransactionEntry(final TransactionEntry entry) {
+    public void addTransactionEntry(@NotNull final TransactionEntry entry) {
         if (entry instanceof AbstractInvestmentTransactionEntry) {
             TransactionType type = getTransactionType();
             SecurityNode node = getSecurityNode();
 
-            if (type != null) {
-                assert ((AbstractInvestmentTransactionEntry) entry).getTransactionType() == type;
-            }
+            assert ((AbstractInvestmentTransactionEntry) entry).getTransactionType() == type;
 
             if (node != null) {
                 assert ((AbstractInvestmentTransactionEntry) entry).getSecurityNode().equals(node);
@@ -332,7 +333,7 @@ public class InvestmentTransaction extends Transaction {
      * if this Transaction is after the Transaction argument.
      */
     @Override
-    public int compareTo(final Transaction tran) {
+    public int compareTo(@NotNull final Transaction tran) {
         if (tran == this) {
             return 0;
         }
@@ -340,10 +341,6 @@ public class InvestmentTransaction extends Transaction {
         int result = getDate().compareTo(tran.getDate());
         if (result != 0) {
             return result;
-        }
-
-        if (getTransactionType() == null) {
-            System.out.println("null transaction type!");
         }
 
         result = getTransactionType().name().compareTo(tran.getTransactionType().name());

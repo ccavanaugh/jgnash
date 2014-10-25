@@ -25,6 +25,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import jgnash.util.NotNull;
+
 /**
  * Wraps objects that have been removed from active use in the engine.
  *
@@ -67,7 +69,7 @@ public class TrashObject extends StoredObject implements Comparable<TrashObject>
     }
 
     @Override
-    public int compareTo(final TrashObject o) {
+    public int compareTo(@NotNull final TrashObject o) {
         return date.compareTo(o.date);
     }
 }

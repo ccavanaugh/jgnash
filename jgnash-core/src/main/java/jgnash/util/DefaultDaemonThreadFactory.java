@@ -46,7 +46,7 @@ public class DefaultDaemonThreadFactory implements ThreadFactory {
     }
 
     @Override
-    public Thread newThread(final Runnable r) {
+    public Thread newThread(final @NotNull Runnable r) {
         Thread t = new Thread(r, namePrefix + threadNumber.getAndIncrement());
 
         t.setDaemon(true);

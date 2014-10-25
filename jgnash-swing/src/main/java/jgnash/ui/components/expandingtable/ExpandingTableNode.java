@@ -17,6 +17,8 @@
  */
 package jgnash.ui.components.expandingtable;
 
+import jgnash.util.NotNull;
+
 /**
  * An object used to manage and persist objects with a hierarchical structure
  * 
@@ -64,7 +66,7 @@ public class ExpandingTableNode<E extends Comparable<? super E>> implements Comp
      * @see Comparable#compareTo(java.lang.Object) 
      */
     @Override
-    public int compareTo(final ExpandingTableNode<E> o) {
+    public int compareTo(@NotNull final ExpandingTableNode<E> o) {
         return object.compareTo(o.getObject());
     }
 

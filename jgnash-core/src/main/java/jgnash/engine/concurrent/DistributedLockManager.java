@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 
 import jgnash.net.ConnectionFactory;
 import jgnash.util.EncryptionManager;
+import jgnash.util.NotNull;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -340,11 +341,13 @@ public class DistributedLockManager implements LockManager {
         }
 
         @Override
+        @NotNull
         public ReentrantReadWriteLock.ReadLock readLock() {
             return readLock;
         }
 
         @Override
+        @NotNull
         public ReentrantReadWriteLock.WriteLock writeLock() {
             return writeLock;
         }

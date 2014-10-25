@@ -40,6 +40,7 @@ import jgnash.engine.Transaction;
 import jgnash.text.CommodityFormat;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.ui.register.AccountBalanceDisplayManager;
+import jgnash.util.NotNull;
 
 /**
  * Extended JTable for displaying a transaction register
@@ -143,7 +144,7 @@ public class RegisterTable extends FormattedJTable {
     }
 
     @Override
-    public String getToolTipText(final MouseEvent event) {
+    public String getToolTipText(@NotNull final MouseEvent event) {
         int[] rows = getSelectedRows();
 
         if (rows.length > 1) {

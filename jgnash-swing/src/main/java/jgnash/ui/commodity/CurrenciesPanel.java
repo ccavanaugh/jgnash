@@ -45,6 +45,7 @@ import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.ValidationFactory;
+import jgnash.util.NotNull;
 import jgnash.util.Resource;
 
 /**
@@ -265,8 +266,8 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
         }
 
         @Override
-        public int compareTo(CurrencyElement cnode) {
-            return node.compareTo(cnode.node);
+        public int compareTo(final @NotNull CurrencyElement currencyElement) {
+            return node.compareTo(currencyElement.node);
         }
 
         @Override

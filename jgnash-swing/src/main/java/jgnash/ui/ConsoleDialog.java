@@ -50,6 +50,7 @@ import javax.swing.filechooser.FileSystemView;
 import jgnash.engine.Engine;
 import jgnash.ui.components.MemoryMonitor;
 import jgnash.ui.util.DialogUtils;
+import jgnash.util.NotNull;
 import jgnash.util.Resource;
 
 import com.jgoodies.forms.factories.Borders;
@@ -98,7 +99,7 @@ public class ConsoleDialog {
                     }
 
                     @Override
-                    public void write(byte[] b, int off, int len) {
+                    public void write(final @NotNull byte[] b, final int off, final int len) {
                         oldOut.write(b, off, len);
                         synchronized (consoleLock) {
                             if (console != null) {
@@ -117,7 +118,7 @@ public class ConsoleDialog {
                     }
 
                     @Override
-                    public void write(byte[] b, int off, int len) {
+                    public void write(final @NotNull byte[] b, final int off, final int len) {
                         oldErr.write(b, off, len);
                         synchronized (consoleLock) {
                             if (console != null) {

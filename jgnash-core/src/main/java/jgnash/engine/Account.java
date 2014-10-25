@@ -55,6 +55,7 @@ import javax.persistence.PostLoad;
 import javax.persistence.Transient;
 
 import jgnash.util.DateUtils;
+import jgnash.util.NotNull;
 
 /**
  * Abstract Account class
@@ -391,6 +392,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      *
      * @return List of transactions
      */
+    @NotNull
     public List<Transaction> getSortedTransactionList() {
         transactionLock.readLock().lock();
 
@@ -408,6 +410,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @return the transaction at the specified index.
      * @throws IndexOutOfBoundsException if the index is out of bounds
      */
+    @NotNull
     public Transaction getTransactionAt(final int index) throws IndexOutOfBoundsException {
         transactionLock.readLock().lock();
 
@@ -439,6 +442,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      *
      * @return The next check number; and empty String if numbers are not found
      */
+    @NotNull
     public String getNextTransactionNumber() {
         transactionLock.readLock().lock();
 
@@ -1179,7 +1183,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      *         {@code 0} if this Account is after the Account argument.
      */
     @Override
-    public int compareTo(final Account acc) {
+    public int compareTo(@NotNull final Account acc) {
         // sort on the full path name, improves order for some cases.
         final int result = getPathName().compareToIgnoreCase(acc.getPathName());
 

@@ -25,6 +25,7 @@ import javax.swing.event.TableModelListener;
 import jgnash.engine.Account;
 import jgnash.engine.Transaction;
 import jgnash.engine.search.PayeeMatcher;
+import jgnash.util.NotNull;
 
 /**
  * A decorator that wraps an AbstractRegisterTableModel to filter
@@ -136,7 +137,7 @@ public class FilterDecorator implements FilterModel {
      * @see javax.swing.table.TableModel#setValueAt(java.lang.Object, int, int)
      */
     @Override
-    public void setValueAt(final Object arg0, final int arg1, final int arg2) {
+    public void setValueAt(@NotNull final Object arg0, final int arg1, final int arg2) {
         model.setValueAt(arg0, arg1, arg2);
     }
 

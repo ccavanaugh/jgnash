@@ -24,6 +24,7 @@ import javax.swing.event.TableModelListener;
 import jgnash.engine.Account;
 import jgnash.engine.Transaction;
 import jgnash.util.DateUtils;
+import jgnash.util.NotNull;
 
 /**
  * A decorator that wraps an AbstractRegisterTableModel to clip the transactions displayed using a start and end date.
@@ -196,7 +197,7 @@ public final class ClippingDecorator implements ClippingModel {
      * @see javax.swing.table.TableModel#setValueAt(java.lang.Object, int, int)
      */
     @Override
-    public void setValueAt(final Object arg0, final int arg1, final int arg2) {
+    public void setValueAt(@NotNull final Object arg0, final int arg1, final int arg2) {
         model.setValueAt(arg0, arg1, arg2);
     }
 

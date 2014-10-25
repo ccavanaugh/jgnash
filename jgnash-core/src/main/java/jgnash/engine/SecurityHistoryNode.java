@@ -18,6 +18,7 @@
 package jgnash.engine;
 
 import jgnash.util.DateUtils;
+import jgnash.util.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -119,7 +120,7 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
      * @param node node to compare
      */
     @Override
-    public int compareTo(final SecurityHistoryNode node) {
+    public int compareTo(@NotNull final SecurityHistoryNode node) {
         return getDate().compareTo(node.getDate());
     }
 }

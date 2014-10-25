@@ -47,6 +47,7 @@ import jgnash.text.CommodityFormat;
 import jgnash.ui.register.AccountBalanceDisplayManager;
 import jgnash.ui.register.table.PackableTableModel;
 import jgnash.util.DateUtils;
+import jgnash.util.NotNull;
 import jgnash.util.Resource;
 
 /**
@@ -410,7 +411,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
         }
 
         @Override
-        public int compareTo(final RecTransaction t) {
+        public int compareTo(@NotNull final RecTransaction t) {
             return transaction.compareTo(t.transaction);
         }
     }

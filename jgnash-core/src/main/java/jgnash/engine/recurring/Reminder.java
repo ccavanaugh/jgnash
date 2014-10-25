@@ -25,6 +25,7 @@ import jgnash.engine.Account;
 import jgnash.engine.StoredObject;
 import jgnash.engine.Transaction;
 import jgnash.util.DateUtils;
+import jgnash.util.NotNull;
 
 import javax.persistence.*;
 
@@ -110,7 +111,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     private Transaction transaction;
 
     @Override
-    public int compareTo(final Reminder reminder) {
+    public int compareTo(@NotNull final Reminder reminder) {
 
         int result = description.compareTo(reminder.description);
 

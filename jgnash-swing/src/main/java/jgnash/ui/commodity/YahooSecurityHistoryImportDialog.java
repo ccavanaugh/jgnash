@@ -248,6 +248,8 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
      */
     private class ImportRun implements Runnable {
 
+        public static final String RESPONSE_HEADER = "Date,Open,High,Low,Close,Volume,Adj Close";
+
         private volatile Object lock = new Object();
 
         private Date start;
@@ -274,6 +276,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
             this.sNodes = sNodes;
         }
 
+        // TODO Migrate this method into the core for reuse
         private void parse(final SecurityNode sNode) {
             String s = sNode.getSymbol().toLowerCase();
 
@@ -298,7 +301,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
                     String l = in.readLine();
 
                     // make sure that we have valid data format.
-                    if (l == null || !l.equals("Date,Open,High,Low,Close,Volume,Adj Close")) {
+                    if (!RESPONSE_HEADER.equals(l)) {
                         closeDialog();
                         return;
                     }

@@ -36,6 +36,8 @@ import jgnash.convert.imports.ImportTransaction;
 import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.util.DateUtils;
+import jgnash.util.NotNull;
+import jgnash.util.Nullable;
 import jgnash.util.Resource;
 
 /**
@@ -124,7 +126,7 @@ class ImportTable extends FormattedJTable {
             ((JLabel) c).setToolTipText(null);
         } else if (modelCol == 3 || modelCol == 4) {    // Display tool tip text for memo and payee because of potential length
             if (c instanceof JComponent) {
-                if (getValueAt(row, column).toString() != null && !getValueAt(row, column).toString().isEmpty()) {
+                if (getValueAt(row, column) != null && !getValueAt(row, column).toString().isEmpty()) {
                     ((JComponent) c).setToolTipText(getValueAt(row, column).toString());
                 } else {
                     ((JComponent) c).setToolTipText(null);
@@ -247,6 +249,7 @@ class ImportTable extends FormattedJTable {
          * @return the value Object at the specified cell
          */
         @Override
+        @Nullable
         public Object getValueAt(final int rowIndex, final int columnIndex) {
             ImportTransaction transaction = transactions.get(rowIndex);
             switch (columnIndex) {
@@ -281,8 +284,8 @@ class ImportTable extends FormattedJTable {
         }
 
         @Override
-        public void setValueAt(final Object value, final int rowIndex, final int columnIndex) {
-            if (columnIndex == 5 && value != null) {
+        public void setValueAt(@NotNull final Object value, final int rowIndex, final int columnIndex) {
+            if (columnIndex == 5) {
                 ImportTransaction transaction = transactions.get(rowIndex);
 
                 transaction.account = (Account) value;

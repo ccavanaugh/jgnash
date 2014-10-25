@@ -19,6 +19,8 @@ package jgnash.engine.recurring;
 
 import java.util.Date;
 
+import jgnash.util.NotNull;
+
 /**
  * Used to wrap a reminder and it's event date to aid sorting and display
  * 
@@ -53,7 +55,7 @@ public class PendingReminder implements Comparable<PendingReminder> {
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
-    public int compareTo(PendingReminder o) {
+    public int compareTo(final @NotNull PendingReminder o) {
         if (o.reminder == reminder && o.eventDate.equals(eventDate)) {
             return 0;
         }

@@ -33,6 +33,7 @@ import javax.swing.SwingWorker;
 
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.builder.Action;
+import jgnash.util.NotNull;
 import jgnash.util.Resource;
 
 /**
@@ -79,7 +80,7 @@ public class DefaultLocaleAction extends AbstractAction {
                         LocaleObject o = (LocaleObject) combo.getSelectedItem();
                         Resource.setLocale(o.locale);
 
-                        JOptionPane.showMessageDialog(UIApplication.getFrame(), o.toString() + "\n" + rb.getString("Message.RestartLocale"));
+                        JOptionPane.showMessageDialog(UIApplication.getFrame(), o + "\n" + rb.getString("Message.RestartLocale"));
                     }
                 } catch (InterruptedException | ExecutionException | HeadlessException e) {
                     Logger.getLogger(DefaultLocaleAction.class.getName()).log(Level.SEVERE, null, e);                  
@@ -111,7 +112,7 @@ public class DefaultLocaleAction extends AbstractAction {
         }
 
         @Override
-        public int compareTo(final LocaleObject o) {
+        public int compareTo(final @NotNull LocaleObject o) {
             return toString().compareTo(o.toString());
         }
 

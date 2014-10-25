@@ -41,6 +41,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
 import jgnash.ui.components.SortedListModel;
+import jgnash.util.NotNull;
 import jgnash.util.Resource;
 
 /**
@@ -215,8 +216,8 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
         }
 
         @Override
-        public int compareTo(final SecurityElement cnode) {
-            return node.compareTo(cnode.node);
+        public int compareTo(@NotNull final SecurityElement securityElement) {
+            return node.compareTo(securityElement.node);
         }
 
         @Override

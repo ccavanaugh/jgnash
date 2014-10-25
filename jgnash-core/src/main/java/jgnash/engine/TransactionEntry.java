@@ -18,6 +18,7 @@
 package jgnash.engine;
 
 import jgnash.util.EncodeDecode;
+import jgnash.util.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -274,7 +275,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     }
 
     @Override
-    public int compareTo(final TransactionEntry entry) {
+    public int compareTo(@NotNull final TransactionEntry entry) {
 
         if (this == entry) {
             return 0;

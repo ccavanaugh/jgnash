@@ -52,6 +52,7 @@ import jgnash.ui.UIApplication;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.components.YesNoDialog;
 import jgnash.ui.util.DialogUtils;
+import jgnash.util.NotNull;
 import jgnash.util.Resource;
 
 /**
@@ -290,7 +291,7 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
         }
 
         @Override
-        public int compareTo(final BudgetObject o) {
+        public int compareTo(@NotNull final BudgetObject o) {
             return getBudget().compareTo(o.getBudget());
         }
 

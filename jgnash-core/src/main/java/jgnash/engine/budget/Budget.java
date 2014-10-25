@@ -24,6 +24,7 @@ import java.util.Objects;
 import jgnash.engine.Account;
 import jgnash.engine.StoredObject;
 import jgnash.util.DateUtils;
+import jgnash.util.NotNull;
 import jgnash.util.Resource;
 
 import javax.persistence.*;
@@ -136,7 +137,7 @@ public class Budget extends StoredObject implements Comparable<Budget> {
     }
 
     @Override
-    public int compareTo(final Budget budget) {
+    public int compareTo(@NotNull final Budget budget) {
 
         int result = getName().compareTo(budget.getName());
 

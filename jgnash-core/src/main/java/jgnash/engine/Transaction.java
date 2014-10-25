@@ -18,6 +18,8 @@
 package jgnash.engine;
 
 import jgnash.util.DateUtils;
+import jgnash.util.NotNull;
+import jgnash.util.Nullable;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -127,6 +129,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * @return set of accounts
      * @see Account
      */
+    @NotNull
     public Set<Account> getAccounts() {
         Set<Account> accounts = new TreeSet<>();
 
@@ -228,7 +231,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * @param entry new TransactionEntry to add
      * @see TransactionEntry
      */
-    public void addTransactionEntry(final TransactionEntry entry) {
+    public void addTransactionEntry(@NotNull final TransactionEntry entry) {
         Objects.requireNonNull(entry);
 
         assert !transactionEntries.contains(entry);
@@ -243,7 +246,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         }
     }
 
-    public void removeTransactionEntry(final TransactionEntry entry) {
+    public void removeTransactionEntry(@NotNull final TransactionEntry entry) {
         Objects.requireNonNull(entry);
 
         Lock l = getLock().writeLock();
@@ -274,7 +277,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         }
     }
 
-    public void setDate(final Date date) {
+    public void setDate(@NotNull final Date date) {
         Objects.requireNonNull(date);
 
         // ensure the date is always leveled
@@ -290,7 +293,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      *
      * @param payee the transaction payee
      */
-    public void setPayee(final String payee) {
+    public void setPayee(@Nullable final String payee) {
         this.payee = payee;
     }
 
@@ -299,6 +302,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      *
      * @return the transaction payee. Guaranteed to not return null
      */
+    @NotNull
     public String getPayee() {
         String result = EMPTY;
 
@@ -313,7 +317,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      *
      * @param number the transaction number
      */
-    public void setNumber(final String number) {
+    public void setNumber(@Nullable final String number) {
         this.number = number;
     }
 
@@ -322,6 +326,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      *
      * @return the transaction number. Guaranteed to not return null
      */
+    @NotNull
     public String getNumber() {
         String result = EMPTY;
 
@@ -364,7 +369,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      *         {@code 0} if this Transaction is after the Transaction argument.
      */
     @Override
-    public int compareTo(final Transaction tran) {
+    public int compareTo(final @NotNull Transaction tran) {
         if (tran == this) {
             return 0;
         }
@@ -495,6 +500,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         this.dateEntered = (Date) dateEntered.clone();
     }
 
+    @NotNull
     public TransactionType getTransactionType() {
         if (size() == 1) {
             TransactionEntry entry = transactionEntries.iterator().next();
@@ -652,7 +658,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         b.append(lineSep);
 
         for (TransactionEntry entry : getTransactionEntries()) {
-            b.append(entry.toString()).append(lineSep);
+            b.append(entry).append(lineSep);
         }
 
         return b.toString();

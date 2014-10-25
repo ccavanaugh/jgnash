@@ -18,6 +18,7 @@
 package jgnash.engine;
 
 import jgnash.util.DateUtils;
+import jgnash.util.NotNull;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -74,7 +75,7 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
     }
 
     @Override
-    public int compareTo(final ExchangeRateHistoryNode node) {
+    public int compareTo(@NotNull final ExchangeRateHistoryNode node) {
         return getDate().compareTo(node.getDate());
     }
 

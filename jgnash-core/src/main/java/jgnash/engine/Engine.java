@@ -801,18 +801,18 @@ public class Engine {
 
         if (node.getScale() < 0) {
             result = false;
-            logSevere("Commodity " + node.toString() + " had a scale less than zero");
+            logSevere("Commodity " + node + " had a scale less than zero");
         }
 
         if (node instanceof SecurityNode && ((SecurityNode) node).getReportedCurrencyNode() == null) {
             result = false;
-            logSevere("Commodity " + node.toString() + " was not assigned a currency");
+            logSevere("Commodity " + node + " was not assigned a currency");
         }
 
         // ensure the UUID being used is unique
         if (eDAO.getObjectByUuid(CommodityNode.class, node.getUuid()) != null) {
             result = false;
-            logSevere("Commodity " + node.toString() + " was not unique");
+            logSevere("Commodity " + node + " was not unique");
         }
 
         return result;
@@ -1340,7 +1340,7 @@ public class Engine {
             config.setDefaultCurrency(defaultCurrency);
             getConfigDAO().update(config);
 
-            logInfo("Setting default currency: " + defaultCurrency.toString());
+            logInfo("Setting default currency: " + defaultCurrency);
 
             Message message = new Message(MessageChannel.CONFIG, ChannelEvent.CONFIG_MODIFY, this);
             message.setObject(MessageProperty.CONFIG, config);
@@ -2363,7 +2363,7 @@ public class Engine {
             return false;
         }
 
-        return !(transaction instanceof InvestmentTransaction) || transaction.getTransactionType() != null;
+        return !(transaction instanceof InvestmentTransaction);
     }
 
     /**

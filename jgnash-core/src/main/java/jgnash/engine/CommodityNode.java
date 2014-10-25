@@ -20,6 +20,8 @@ package jgnash.engine;
 import javax.persistence.Entity;
 import java.math.BigDecimal;
 
+import jgnash.util.NotNull;
+
 /**
  * Abstract class for representing a commodity
  * 
@@ -87,7 +89,7 @@ public abstract class CommodityNode extends StoredObject implements Comparable<C
     }
 
     @Override
-    public int compareTo(final CommodityNode node) {
+    public int compareTo(@NotNull final CommodityNode node) {
         return symbol.compareTo(node.symbol);
     }
 
