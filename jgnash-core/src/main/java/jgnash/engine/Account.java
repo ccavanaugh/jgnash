@@ -20,7 +20,6 @@ package jgnash.engine;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
@@ -388,36 +387,15 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns a sorted list of transactions for this account
+     * Returns a sorted list of transactions for this account that is unmodifiable
      *
      * @return List of transactions
-     * @see #getReadOnlyTransactionCollection()
      */
     public List<Transaction> getSortedTransactionList() {
         transactionLock.readLock().lock();
 
         try {
             return Collections.unmodifiableList(getCachedSortedTransactionList());
-        } finally {
-            transactionLock.readLock().unlock();
-        }
-    }
-
-    /**
-     * Returns a readonly collection that is a wrapper around the internal collection.
-     * <p/>
-     * Use of this method over {@code getReadOnlySortedTransactionList()} will reduce GC and perform better.
-     * The collection should not be held because internal updates will cause indeterminate changes
-     * <p/>
-     * Sort order is not guaranteed.
-     *
-     * @return Collection of transactions
-     */
-    public Collection<Transaction> getReadOnlyTransactionCollection() {
-        transactionLock.readLock().lock();
-
-        try {
-            return Collections.unmodifiableCollection(transactions);
         } finally {
             transactionLock.readLock().unlock();
         }
@@ -1441,7 +1419,10 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Provides access to a cached and sorted list of transactions
+     * Provides access to a cached and sorted list of transactions. Direct access to the list
+     * is for internal use only.
+     *
+     * @see #getSortedTransactionList
      *
      * @return List of sorted transactions
      */
