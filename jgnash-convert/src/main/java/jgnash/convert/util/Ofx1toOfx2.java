@@ -22,10 +22,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.convert.imports.ofx.OfxV1ToV2;
+import jgnash.util.NotNull;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -55,16 +57,16 @@ class Ofx1toOfx2 {
         try {
             parser.parseArgument(args);
 
-            if (inFile != null && outFile != null) {
-                convertToXML(inFile, outFile);
-            }
-        } catch (CmdLineException e) {
+            Objects.requireNonNull(inFile, "Input file must be specified");
+            Objects.requireNonNull(outFile, "Output file must be specified");
+
+            convertToXML(inFile, outFile);
+        } catch (NullPointerException | CmdLineException e) {
             Logger.getLogger(Ofx1toOfx2.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
     }
 
-    private static void convertToXML(final File inFile, final File outFile) {
-
+    private static void convertToXML(@NotNull final File inFile, @NotNull final File outFile) {
 
         try (final OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(outFile), StandardCharsets.UTF_8)) {
             String xmlData = OfxV1ToV2.convertToXML(inFile);
