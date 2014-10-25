@@ -24,6 +24,7 @@ import org.junit.Test;
  * @author Craig Cavanaugh
  *
  */
+@SuppressWarnings("ConstantConditions")
 public class DataStoreTest {
 
     public DataStoreTest() {
