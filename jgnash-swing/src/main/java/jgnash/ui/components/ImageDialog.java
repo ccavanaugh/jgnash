@@ -92,7 +92,7 @@ public class ImageDialog extends JDialog {
         }
     }
 
-    private class ImagePanel extends JPanel {
+    private static class ImagePanel extends JPanel {
         public static final int MARGIN = 5;
 
         private BufferedImage image;
