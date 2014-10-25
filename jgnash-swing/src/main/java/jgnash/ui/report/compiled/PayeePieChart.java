@@ -32,6 +32,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import java.util.regex.Pattern;
 
@@ -351,8 +353,8 @@ public class PayeePieChart {
             chartPanelCredit.validate();
             chartPanelDebit.setChart(createPieChart(a, data, 1));
             chartPanelDebit.validate();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (final Exception ex) {           
+            Logger.getLogger(PayeePieChart.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
         }
     }
 

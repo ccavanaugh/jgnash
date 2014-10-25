@@ -17,6 +17,8 @@
  */
 package jgnash.ui.debug;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
@@ -25,7 +27,6 @@ import javax.swing.SwingUtilities;
  * Check for invalid UI updates on the EDT
  *
  * @author Craig Cavanaugh
- *
  */
 public final class EDTCheckingRepaintManager extends RepaintManager {
 
@@ -44,7 +45,7 @@ public final class EDTCheckingRepaintManager extends RepaintManager {
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     private static void checkThread() {
         if (!SwingUtilities.isEventDispatchThread()) {
-            Exception exception = new Exception();
+            final Exception exception = new Exception();
 
             boolean repaint = false;
             boolean fromSwing = false;
@@ -87,8 +88,9 @@ public final class EDTCheckingRepaintManager extends RepaintManager {
             if (repaint && !fromSwing) {
                 //no problems here, since repaint() is thread safe
                 return;
-            }
-            exception.printStackTrace();
+            }            
+            
+            Logger.getLogger(EDTCheckingRepaintManager.class.getName()).log(Level.SEVERE, exception.getLocalizedMessage(), exception);
         }
     }
 }
