@@ -86,7 +86,7 @@ public class GenericImport {
         for (ImportTransaction oTran : list) {
 
             // amount must always match
-            for (Transaction tran : baseAccount.getReadOnlyTransactionCollection()) {
+            for (final Transaction tran : baseAccount.getSortedTransactionList()) {
 
                 if (tran.getAmount(baseAccount).equals(oTran.amount)) { // amounts must always match
 

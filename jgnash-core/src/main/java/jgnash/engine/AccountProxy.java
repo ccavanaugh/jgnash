@@ -50,7 +50,7 @@ class AccountProxy {
         try {
             BigDecimal balance = BigDecimal.ZERO;
 
-            for (Transaction transaction : account.transactions) {
+            for (Transaction transaction : account.getSortedTransactionList()) {
                 balance = balance.add(transaction.getAmount(account));
             }
 
@@ -98,7 +98,7 @@ class AccountProxy {
         try {
             BigDecimal balance = BigDecimal.ZERO;
 
-            for (final Transaction t : account.transactions) {
+            for (final Transaction t : account.getSortedTransactionList()) {
                 final Date d = t.getDate();
 
                 if (DateUtils.after(d, start) && DateUtils.before(d, end)) {
@@ -165,7 +165,8 @@ class AccountProxy {
         try {
             BigDecimal balance = BigDecimal.ZERO;
 
-            for (Transaction t : account.transactions) {
+            // Use the cached list to avoid ConcurrentModificationException with JPA
+            for (final Transaction t : account.getSortedTransactionList()) {
                 if (t.getReconciled(account) == ReconciledState.RECONCILED) {
                     balance = balance.add(t.getAmount(account));
                 }

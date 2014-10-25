@@ -276,7 +276,7 @@ public class QifImport {
 
     private static boolean isDuplicate(final Transaction t, final Account a) {
 
-        for (final Transaction tran : a.getReadOnlyTransactionCollection()) {
+        for (final Transaction tran : a.getSortedTransactionList()) {
             if (tran.equalsIgnoreDate(t)) {
                 return true;
             }
