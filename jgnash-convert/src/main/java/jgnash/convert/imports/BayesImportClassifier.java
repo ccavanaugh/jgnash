@@ -38,10 +38,10 @@ public class BayesImportClassifier {
     }
 
     public static void classifyTransactions(final List<? extends ImportTransaction> list, final Account baseAccount) {
-        BayesClassifier<Account> classifier = generateClassifier(baseAccount);
+        final BayesClassifier<Account> classifier = generateClassifier(baseAccount);
 
-        for (ImportTransaction transaction : list) {
-            StringBuilder builder = new StringBuilder();
+        for (final ImportTransaction transaction : list) {
+            final StringBuilder builder = new StringBuilder();
 
             if (transaction.payee != null) {
                 builder.append(transaction.payee).append(" ");
@@ -58,13 +58,12 @@ public class BayesImportClassifier {
     private static BayesClassifier<Account> generateClassifier(final Account baseAccount) {
         BayesClassifier<Account> classifier = new BayesClassifier<>(baseAccount);
 
-        for (Transaction t : baseAccount.getReadOnlyTransactionCollection()) {
-            Set<Account> accountSet = t.getAccounts();
+        for (final Transaction t : baseAccount.getSortedTransactionList()) {
+            final Set<Account> accountSet = t.getAccounts();
+
             accountSet.remove(baseAccount);
 
-            for (Account account : accountSet) {
-
-
+            for (final Account account : accountSet) {
                 if (!t.getPayee().isEmpty()) {
                     classifier.train(t.getPayee(), account);
                 }
