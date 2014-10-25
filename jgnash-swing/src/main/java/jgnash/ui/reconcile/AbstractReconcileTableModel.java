@@ -75,7 +75,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
 
     private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
 
-    private NumberFormat commodityFormatter;
+    private final NumberFormat commodityFormatter;
 
     private final ReadWriteLock rwl = new ReentrantReadWriteLock(true);
 

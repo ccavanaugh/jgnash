@@ -39,11 +39,10 @@ import jgnash.ui.util.ValidationFactory;
  * Form for creating Add/Remove share transactions.
  * 
  * @author Craig Cavanaugh
- *
  */
 public final class SplitMergeSharePanel extends AbstractPriceQtyInvTransactionPanel {
 
-    private TransactionType tranType;
+    private final TransactionType tranType;
 
     SplitMergeSharePanel(Account account, TransactionType tranType) {
         super(account);

@@ -235,7 +235,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
         }
     }
 
-    void updateControlStates() {
+    final void updateControlStates() {
         attachmentButton.setEnabled(attachment == null);
         deleteButton.setEnabled(attachment != null);
         viewAttachmentButton.setEnabled(attachment != null);
