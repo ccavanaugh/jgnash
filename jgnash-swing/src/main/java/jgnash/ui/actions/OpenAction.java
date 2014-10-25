@@ -67,7 +67,7 @@ public class OpenAction {
 
         final class BootEngine extends SwingWorker<Void, Void> {
 
-            private OpenDatabaseDialog dialog;
+            final private OpenDatabaseDialog dialog;
 
             BootEngine(final OpenDatabaseDialog dialog) {
                 this.dialog = dialog;
@@ -247,7 +247,7 @@ public class OpenAction {
 
                 try {
                     long time = get(5, TimeUnit.SECONDS);
-                    logger.info("Boot time was: " + ((float)time) / 1000f + " seconds");
+                    logger.log(Level.INFO, "Boot time was: {0} seconds", ((float)time) / 1000f);
                 } catch (final InterruptedException | ExecutionException | TimeoutException e) {
                     logger.log(Level.SEVERE, e.toString(), e);
                 } finally {

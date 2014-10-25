@@ -92,7 +92,7 @@ public final class PluginFactory {
         if (!pluginsStarted) {
 
             for (Plugin plugin : plugins) {
-                logger.info("Starting plugin: " + plugin.getName());
+                logger.log(Level.INFO, "Starting plugin: {0}", plugin.getName());
                 plugin.start();
             }
 
@@ -103,7 +103,7 @@ public final class PluginFactory {
     public static void stopPlugins() {
         if (pluginsStarted) {
             for (Plugin plugin : plugins) {
-                logger.info("Stopping plugin: " + plugin.getName());
+                logger.log(Level.INFO, "Stopping plugin: {0}", plugin.getName());
                 plugin.stop();
             }
 
