@@ -35,7 +35,7 @@
         <sl4j.version>1.7.7</sl4j.version>
         <log4j.version>1.2.17</log4j.version>
         <kxml.version>2.3.0</kxml.version>
-        <apachi-poi.version>3.10.1</apachi-poi.version>
+        <apachi-poi.version>3.11-beta2</apachi-poi.version>
         <itext.version>2.1.7</itext.version>
         <jfree.version>1.0.19</jfree.version>
         <insubstantial.version>7.3</insubstantial.version>
