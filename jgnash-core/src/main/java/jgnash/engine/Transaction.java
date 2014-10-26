@@ -518,6 +518,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         return TransactionType.INVALID;
     }
 
+    @NotNull
     public String getMemo() {
         if (memo != null) {
             return memo;
@@ -529,6 +530,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         this.memo = memo;
     }
 
+    @Nullable
     public String getFitid() {
         return fitid;
     }
@@ -596,6 +598,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      *
      * @return external path, null if not set
      */
+    @Nullable
     public String getAttachment() {
         return attachment;
     }

@@ -213,6 +213,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
         return debitReconciled;
     }
 
+    @NotNull
     public String getMemo() {
         return memo;
     }
