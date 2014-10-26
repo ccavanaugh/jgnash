@@ -190,7 +190,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         securitiesLock = new ReentrantReadWriteLock(true);
     }
 
-    public Account(final AccountType type, final CurrencyNode node) {
+    public Account(@NotNull final AccountType type, @NotNull final CurrencyNode node) {
         this();
 
         Objects.requireNonNull(type);
@@ -1065,10 +1065,14 @@ public class Account extends StoredObject implements Comparable<Account> {
      *
      * @param node The new commodity node for this account.
      */
-    final void setCurrencyNode(final CurrencyNode node) {
+    final void setCurrencyNode(@NotNull final CurrencyNode node) {
         Objects.requireNonNull(node);
 
-        currencyNode = node;
+        if (!currencyNode.equals(node)) {
+            currencyNode = node;
+
+            clearCachedBalances();  // cached balances will need to be recalculated
+        }
     }
 
     public boolean isLocked() {
