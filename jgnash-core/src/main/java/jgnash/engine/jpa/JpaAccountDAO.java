@@ -104,7 +104,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
                 public List<Account> call() throws Exception {
                     Query q = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = false");
 
-                    return new ArrayList<Account>(q.getResultList());
+                    return new ArrayList<>(q.getResultList());
                 }
             });
 
@@ -203,7 +203,7 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
                     Query query = em.createQuery(queryString);
                     query.setParameter("type", type);
 
-                    return new ArrayList<Account>(query.getResultList());
+                    return new ArrayList<>(query.getResultList());
                 }
             });
 

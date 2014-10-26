@@ -91,7 +91,7 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
                 public List<Budget> call() throws Exception {
                     Query q = em.createQuery("SELECT b FROM Budget b WHERE b.markedForRemoval = false");
 
-                    return new ArrayList<Budget>(q.getResultList());
+                    return new ArrayList<>(q.getResultList());
                 }
             });
 

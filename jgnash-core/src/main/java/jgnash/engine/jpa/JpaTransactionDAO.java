@@ -63,7 +63,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
                 public List<Transaction> call() throws Exception {
                     Query q = em.createQuery("SELECT t FROM Transaction t WHERE t.markedForRemoval = false");
 
-                    return new ArrayList<Transaction>(q.getResultList());
+                    return new ArrayList<>(q.getResultList());
                 }
             });
 
@@ -167,7 +167,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
                 public List<Transaction> call() throws Exception {
                     Query q = em.createQuery("SELECT t FROM Transaction t WHERE t.markedForRemoval = false AND t.attachment is not null");
 
-                    return new ArrayList<Transaction>(q.getResultList());
+                    return new ArrayList<>(q.getResultList());
                 }
             });
 
