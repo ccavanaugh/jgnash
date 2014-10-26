@@ -57,8 +57,10 @@
                         <configuration>
                             <target>
                                 <property name="zipfile" location="./../jgnash-swing/target/jgnash-${project.version}-bin.zip"/>
+                                <!--suppress MavenModelInspection -->
                                 <echo message="zipfile: ${zipfile}"/>
 
+                                <!--suppress MavenModelInspection -->
                                 <zip destfile="${zipfile}" update = "true">
                                     <zipfileset prefix="jgnash-${project.version}/plugins" dir="${basedir}/target" includes="mt940*.jar"/>
                                 </zip>
