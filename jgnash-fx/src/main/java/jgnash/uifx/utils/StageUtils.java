@@ -40,7 +40,7 @@ public class StageUtils {
      * @param stage The stage to save and restore size and position
      * @param prefNode This should typically be the calling controller
      */
-    public static void addBoundsListener(final Stage stage, final Class prefNode) {
+    public static void addBoundsListener(final Stage stage, final Class<?> prefNode) {
         addBoundsListener(stage, prefNode.getName().replace('.', '/'), DEFAULT_KEY);
     }
 

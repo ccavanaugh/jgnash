@@ -82,7 +82,7 @@ public class StaticUIMethods {
                 .showException(exception);
     }
 
-    public static void displayTaskProgress(final Task task) {
+    public static void displayTaskProgress(final Task<?> task) {
         Dialogs.create()
                 .owner(MainApplication.getPrimaryStage())
                 .lightweight()
