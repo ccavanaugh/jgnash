@@ -144,13 +144,13 @@ public class Message implements Serializable, Cloneable {
 
         properties = new EnumMap<>(MessageProperty.class);
 
-        int size = s.readInt();
+        final int size = s.readInt();
 
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
         for (int i = 0; i < size; i++) {
             MessageProperty key = (MessageProperty) s.readObject();
-            Class clazz = Class.forName(s.readUTF());
+            Class<? extends StoredObject> clazz = (Class<? extends StoredObject>) Class.forName(s.readUTF());
             StoredObject value = engine.getStoredObjectByUuid(clazz, s.readUTF());
             properties.put(key, value);
         }
