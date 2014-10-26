@@ -56,6 +56,7 @@ import javax.persistence.Transient;
 
 import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
+import jgnash.util.Nullable;
 
 /**
  * Abstract Account class
@@ -1390,8 +1391,9 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     /**
      * Amortization object for loan payments
+     * @return {@code AmoritizeObject} if not null
      */
-    public AmortizeObject getAmortizeObject() {
+    @Nullable public AmortizeObject getAmortizeObject() {
         return amortizeObject;
     }
 
@@ -1462,6 +1464,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * The clone does not include transactions or child accounts
      *
      * @return clone of this account
+     * @throws java.lang.CloneNotSupportedException
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
