@@ -18,6 +18,8 @@
 package jgnash.uifx.views.accounts;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jgnash.MainFX;
 import jgnash.engine.Account;
@@ -63,8 +65,8 @@ public class StaticAccountsMethods {
             StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
 
             dialog.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (final IOException e) {
+            Logger.getLogger(StaticAccountsMethods.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
     }
 
@@ -96,9 +98,8 @@ public class StaticAccountsMethods {
 
                 engine.addAccount(account.getParent(), account);
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (final IOException e) {
+            Logger.getLogger(StaticAccountsMethods.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
     }
 
@@ -139,8 +140,8 @@ public class StaticAccountsMethods {
                 }
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (final IOException e) {
+            Logger.getLogger(StaticAccountsMethods.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
     }
 }

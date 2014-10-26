@@ -288,7 +288,7 @@ public class JFloatField extends JTextFieldEx {
         } catch (NumberFormatException nfe) {
 
             if (DEBUG) {
-                System.out.println(nfe);
+                Logger.getLogger(JFloatField.class.getName()).log(Level.SEVERE, nfe.getLocalizedMessage(), nfe);
             }
 
             try {
@@ -301,7 +301,7 @@ public class JFloatField extends JTextFieldEx {
                 }
             } catch (ScriptException ex) {
                 if (DEBUG) {               
-                    Logger.getLogger(JFloatField.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(JFloatField.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
                 }
                 return "";
             }

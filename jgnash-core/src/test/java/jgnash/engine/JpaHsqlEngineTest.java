@@ -25,6 +25,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -42,8 +44,9 @@ public class JpaHsqlEngineTest extends EngineTest {
 
         try {
             testFile = Files.createTempFile("jpa-test", "." + JpaHsqlDataStore.FILE_EXT).toString();
-        } catch (IOException e1) {
-            System.err.println(e1);
+        } catch (IOException ex) {
+            Logger.getLogger(JpaHsqlEngineTest.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            fail();
         }
 
         Files.delete(Paths.get(testFile));

@@ -25,6 +25,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jgnash.engine.jpa.JpaH2DataStore;
 import jgnash.engine.jpa.JpaHsqlDataStore;
@@ -66,8 +68,8 @@ public class FileTransferTest {
             Assert.assertTrue(temp.delete());
             temp.deleteOnExit();
             testFile = temp.getAbsolutePath();
-        } catch (IOException e1) {
-            System.err.println(e1);
+        } catch (final IOException e) {
+            Logger.getLogger(FileTransferTest.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
             fail();
         }
 
@@ -128,11 +130,9 @@ public class FileTransferTest {
             assertTrue(Files.exists(remoteTemp));
             assertNotEquals(remoteTemp.toString(), tempAttachment.toString());
 
-
-
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (final Exception e) {
+            Logger.getLogger(FileTransferTest.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
             fail();
         }
 
@@ -155,8 +155,8 @@ public class FileTransferTest {
             Assert.assertTrue(temp.delete());
             temp.deleteOnExit();
             testFile = temp.getAbsolutePath();
-        } catch (IOException e1) {
-            System.err.println(e1);
+        } catch (final IOException e) {
+            Logger.getLogger(FileTransferTest.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
             fail();
         }
 
@@ -172,7 +172,7 @@ public class FileTransferTest {
 
             @Override
             public void run() {
-                System.out.println("starting server");
+                Logger.getLogger(FileTransferTest.class.getName()).info("Starting Server");
                 networkServer.startServer(serverFile, port, password);
             }
         }.start();
@@ -228,7 +228,7 @@ public class FileTransferTest {
 
             EngineFactory.closeEngine(EngineFactory.DEFAULT);
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.getLogger(FileTransferTest.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
             fail();
         }
 

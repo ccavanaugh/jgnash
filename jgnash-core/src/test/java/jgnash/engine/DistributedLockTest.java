@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Test to validate the Distributed lock manager
@@ -68,13 +69,8 @@ public class DistributedLockTest {
     }
 
     @Test
-    public void testStartUp() {
-
-        try {
-            Thread.sleep(1000); // helps with sort order of logging because it's so fast
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void testStartUp() throws Exception{
+        Thread.sleep(1000); // helps with sort order of logging because it's so fast
 
         assertTrue(true);
     }
@@ -89,8 +85,9 @@ public class DistributedLockTest {
             accountLock.readLock().lock();
             transactionLock.writeLock().lock();
             Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (final InterruptedException e) {
+            Logger.getLogger(DistributedLockTest.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            fail();
         } finally {
             accountLock.readLock().unlock();
             transactionLock.writeLock().unlock();
@@ -117,8 +114,9 @@ public class DistributedLockTest {
 
                     try {
                         Thread.sleep(num);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    } catch (final InterruptedException e) {
+                        Logger.getLogger(DistributedLockTest.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                        fail();
                     }
 
                 } finally {
@@ -143,8 +141,9 @@ public class DistributedLockTest {
             thread2.join();
             thread3.join();
             thread4.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (final InterruptedException e) {
+            Logger.getLogger(DistributedLockTest.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            fail();
         }
 
         assertTrue(true);

@@ -20,6 +20,8 @@ package jgnash.engine;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jgnash.engine.jpa.JpaH2DataStore;
 
@@ -44,8 +46,9 @@ public class JpaH2EngineTest extends EngineTest {
             //temp.deleteOnExit();
             testFile = Files.createTempFile("jpa-test", "." + JpaH2DataStore.FILE_EXT).toString();
 
-        } catch (IOException e1) {
-            System.err.println(e1);
+        } catch (final IOException ex) {
+            Logger.getLogger(JpaH2EngineTest.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            fail();
         }
 
         EngineFactory.deleteDatabase(testFile);

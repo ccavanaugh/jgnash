@@ -18,6 +18,8 @@
 package jgnash.uifx;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jgnash.MainFX;
 import jgnash.uifx.utils.StageUtils;
@@ -58,8 +60,8 @@ public class StaticUIMethods {
             StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
 
             dialog.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (final IOException e) {
+            Logger.getLogger(StaticUIMethods.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
     }
 

@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.MainFX;
@@ -173,8 +174,8 @@ public class AccountPropertiesController implements Initializable {
             dialog.showAndWait();
 
             setParentAccount(controller.getSelectedAccount());
-        } catch (final IOException e) {
-            e.printStackTrace();
+        } catch (final IOException ex) {
+            Logger.getLogger(AccountPropertiesController.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
         }
     }
 
@@ -284,8 +285,8 @@ public class AccountPropertiesController implements Initializable {
 
                 updateCommodityText();
             }
-        } catch (final IOException e) {
-            e.printStackTrace();
+        } catch (final IOException ex) {
+            Logger.getLogger(AccountPropertiesController.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
         }
     }
 
