@@ -62,6 +62,7 @@ import jgnash.engine.recurring.RecurringIterator;
 import jgnash.engine.recurring.Reminder;
 import jgnash.util.DateUtils;
 import jgnash.util.DefaultDaemonThreadFactory;
+import jgnash.util.NotNull;
 import jgnash.util.Resource;
 
 /**
@@ -77,7 +78,7 @@ public class Engine {
     /**
      * Current version for the file format
      */
-    public static final float CURRENT_VERSION = 2.3f;
+    public static final float CURRENT_VERSION = 2.14f;
 
     // Lock names
     private static final String ACCOUNT_LOCK = "account";
@@ -454,6 +455,15 @@ public class Engine {
             if (getDefaultCurrency() == null) {
                 setDefaultCurrency(this.getRootAccount().getCurrencyNode());
                 logger.warning("Forcing default currency");
+            }
+
+            // purge stale budget goals for place holder accounts
+            if (getConfig().getFileVersion() < 2.14f) {
+                for (final Account account: getAccountList()) {
+                    if (account.isPlaceHolder()) {
+                        purgeBudgetGoal(account);
+                    }
+                }
             }
 
             // if the file version is not current, then update it
@@ -1832,9 +1842,29 @@ public class Engine {
                 }
             }
 
+            // Force clearing of any budget goals if an empty account has been changed to become a place holder
+            if (account.isPlaceHolder()) {
+                purgeBudgetGoal(account);
+            }
+
             return result;
         } finally {
             accountLock.writeLock().unlock();
+        }
+    }
+
+    /**
+     * Purges any {@code BudgetGoal} associated with an account
+     *
+     * @param account {@code Account} to remove all associated budget goal history
+     */
+    private void purgeBudgetGoal(@NotNull final Account account) {
+        // clear budget history
+        for (final Budget budget : getBudgetList()) {
+            budget.removeBudgetGoal(account);
+            if (!updateBudget(budget)) {
+                logWarning("Unable to remove account goals from the budget");
+            }
         }
     }
 
@@ -1905,12 +1935,7 @@ public class Engine {
                         getAccountDAO().updateAccount(parent);
 
                         // clear budget history
-                        for (Budget budget : getBudgetList()) {
-                            budget.removeBudgetGoal(account);
-                            if (!updateBudget(budget)) {
-                                logWarning("Unable to remove account goals from the budget");
-                            }
-                        }
+                        purgeBudgetGoal(account);
                     }
                 }
 

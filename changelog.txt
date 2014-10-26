@@ -28,6 +28,8 @@ Reinstate archive capability.
 
 Release 2.14.1
 ----------------------
+10/26/14 Fixed a bug with an empty account being changed into a placeholder account and retaining invalid budget goal
+         information.  Placeholder accounts should only roll-up child account goals.
 10/26/14 Bug fix for placeholder accounts not recalculating balances correctly if their currency is changed.
 10/24/14 Improve shutdown behavior when interrupting background updates.
 10/22/14 Fixed another race condition that could freeze the UI at startup
