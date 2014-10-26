@@ -273,7 +273,7 @@ public class JpaNetworkServer {
 
         Properties properties = JpaConfiguration.getClientProperties(database, fileName, "localhost", port, password);
 
-        Logger.getLogger(JpaNetworkServer.class.getName()).info("Local connection url is: " + properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL));
+        Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.INFO, "Local connection url is: {0}", properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL));
 
         Engine engine = null;
 

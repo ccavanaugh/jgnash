@@ -265,7 +265,7 @@ class MessageBusClient {
                 logger.info("Channel was null");
             }
 
-            logger.info("Tried to send message: " + message + " through a null channel");
+            logger.log(Level.INFO, "Tried to send message: {0} through a null channel", message);
         }
     }
 

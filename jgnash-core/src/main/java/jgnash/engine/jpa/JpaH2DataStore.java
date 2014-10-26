@@ -75,7 +75,7 @@ public class JpaH2DataStore extends AbstractJpaDataStore {
 
         for (String extension : extensions) {
             try {
-                logger.info(base + extension);
+                logger.log(Level.INFO, "Deleting {0}{1}", new Object[]{base, extension});
                 Files.deleteIfExists(Paths.get(base + extension));
             } catch (IOException e) {
                 logger.log(Level.SEVERE, e.getMessage(), e);

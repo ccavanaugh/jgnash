@@ -337,24 +337,24 @@ public class DistributedLockServer {
         synchronized void cleanupStaleThread(final String remoteThread) {
             if (readingThreads.containsKey(remoteThread)) {
                 unlockRead(remoteThread);
-                logger.warning("Removed a stale read lock for: " + id);
+                logger.log(Level.WARNING, "Removed a stale read lock for: {0}", id);
             }
 
             if (writingThread != null && writingThread.equals(remoteThread)) {
                 unlockWrite(remoteThread);
-                logger.warning("Removed a stale write lock for: " + id);
+                logger.log(Level.WARNING, "Removed a stale write lock for: {0}", id);
             }
         }
 
         synchronized void cleanupStaleWriteThread() {
             if (readingThreads.containsKey(writingThread)) {
                 unlockRead( writingThread);
-                logger.warning("Removed a stale read lock for: " + id);
+                logger.log(Level.WARNING, "Removed a stale read lock for: {0}", id);
             }
 
             if (writingThread != null) {
                 unlockWrite( writingThread);
-                logger.warning("Removed a stale write lock for: " + id);
+                logger.log(Level.WARNING, "Removed a stale write lock for: {0}", id);
             }
         }
 

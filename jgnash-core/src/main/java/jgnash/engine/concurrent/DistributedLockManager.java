@@ -114,6 +114,7 @@ public class DistributedLockManager implements LockManager {
     /**
      * Starts the connection with the lock server
      *
+     * @param password connection password
      * @return {@code true} if successful
      */
     public boolean connectToServer(final char[] password) {
@@ -229,14 +230,14 @@ public class DistributedLockManager implements LockManager {
                     result = responseLatch.await(45L, TimeUnit.SECONDS);
 
                     if (!result) {
-                        logger.warning("Excessive wait for release of the lock latch for: " + lockId);
+                        logger.log(Level.WARNING, "Excessive wait for release of the lock latch for: {0}", lockId);
                     } else {
                         break;
                     }
                 }
 
                 if (!result) {  // check for a failed release or deadlock
-                    logger.severe("Failed to release the lock latch for: " + lockId);
+                    logger.log(Level.SEVERE, "Failed to release the lock latch for: {0}", lockId);
 
                     latchLock.lock();
 

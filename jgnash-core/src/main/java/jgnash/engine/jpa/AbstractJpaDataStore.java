@@ -263,7 +263,7 @@ public abstract class AbstractJpaDataStore implements DataStore {
 
         waitForLockFileRelease(fileName, new char[]{});
 
-        logger.info("Initialized an empty database for " + FileUtils.stripFileExtension(fileName));
+        logger.log(Level.INFO, "Initialized an empty database for {0}", FileUtils.stripFileExtension(fileName));
 
         return result;
     }

@@ -87,6 +87,7 @@ public class SqlUtils {
      * Opens the database in readonly mode and reads the version of the file format.
      *
      * @param fileName {@code File} to open
+     * @param password connection password
      * @return file version
      */
     public static float getFileVersion(final String fileName, final char[] password) {
@@ -133,7 +134,7 @@ public class SqlUtils {
     public static void waitForLockFileRelease(final DataStoreType dataStoreType, final String fileName, final String lockFileExtension, final char[] password) {
 
         final String lockFile = FileUtils.stripFileExtension(fileName) + lockFileExtension;
-        logger.info("Searching for lock file: " + lockFile);
+        logger.log(Level.INFO, "Searching for lock file: {0}", lockFile);
 
         // Don't try if the lock file does not exist
         if (Files.exists(Paths.get(lockFile))) {

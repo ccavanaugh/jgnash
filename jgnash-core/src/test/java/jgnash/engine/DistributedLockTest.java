@@ -104,7 +104,7 @@ public class DistributedLockTest {
             public void run() {
                 ReadWriteLock lock = manager.getLock("lock");
 
-                logger.info("locking: " + getId());
+                logger.log(Level.INFO, "locking: {0}", getId());
                 lock.readLock().lock();
 
                 try {
@@ -120,7 +120,7 @@ public class DistributedLockTest {
                     }
 
                 } finally {
-                    logger.info("unlocking: " + getId());
+                    logger.log(Level.INFO, "unlocking: {0}", getId());
                     lock.readLock().unlock();
                 }
             }
@@ -153,7 +153,7 @@ public class DistributedLockTest {
     public void writeLockTest() throws InterruptedException {
 
         class ReadLockThread implements Runnable {
-            private ReadWriteLock readWriteLock;
+            final private ReadWriteLock readWriteLock;
 
             public ReadLockThread(final ReadWriteLock readWriteLock) {
                 this.readWriteLock = readWriteLock;
@@ -173,7 +173,7 @@ public class DistributedLockTest {
         }
 
         class WriteLockThread implements Runnable {
-            private ReadWriteLock readWriteLock;
+            final private ReadWriteLock readWriteLock;
 
             public WriteLockThread(final ReadWriteLock readWriteLock) {
                 this.readWriteLock = readWriteLock;

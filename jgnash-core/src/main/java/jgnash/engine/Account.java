@@ -313,8 +313,7 @@ public class Account extends StoredObject implements Comparable<Account> {
 
                 result = true;
             } else {
-                logger.severe("Account: " + getName() + '(' + hashCode() + ")" + System.lineSeparator()
-                        + "Already have transaction ID: " + tran.hashCode());
+                logger.log(Level.SEVERE, "Account: {0}({1}){2}Already have transaction ID: {3}", new Object[]{getName(), hashCode(), System.lineSeparator(), tran.hashCode()});
             }
 
             return result;
@@ -344,8 +343,7 @@ public class Account extends StoredObject implements Comparable<Account> {
 
                 result = true;
             } else {
-                Logger.getLogger(Account.class.toString()).severe("Account: " + getName() + '(' + getUuid() + ")"
-                        + System.lineSeparator() + "Did not contain transaction ID: " + tran.getUuid());
+                Logger.getLogger(Account.class.toString()).log(Level.SEVERE, "Account: {0}({1}){2}Did not contain transaction ID: {3}", new Object[]{getName(), getUuid(), System.lineSeparator(), tran.getUuid()});
             }
 
             return result;

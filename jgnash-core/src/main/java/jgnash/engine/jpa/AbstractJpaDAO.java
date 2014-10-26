@@ -114,7 +114,7 @@ abstract class AbstractJpaDAO extends AbstractDAO {
 
             object = future.get();
         } catch (NoResultException e) {
-            Logger.getLogger(AbstractJpaDAO.class.getName()).info("Did not find " + tClass.getName() + " for uuid: " + uuid);
+            Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.INFO, "Did not find {0} for uuid: {1}", new Object[]{tClass.getName(), uuid});
         } catch (ExecutionException | InterruptedException e) {
             Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
