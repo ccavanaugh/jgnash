@@ -207,6 +207,7 @@ public class InvestmentAccountProxy extends AccountProxy {
 
             BigDecimal balance = BigDecimal.ZERO;
 
+            // Get a defensive copy, JPA lazy updates can have side effects
             List<Transaction> transactions = account.getSortedTransactionList();
 
             for (Transaction t : transactions) {
@@ -273,6 +274,7 @@ public class InvestmentAccountProxy extends AccountProxy {
 
             BigDecimal balance = BigDecimal.ZERO;
 
+            // Get a defensive copy, JPA lazy updates can have side effects
             List<Transaction> transactions = account.getSortedTransactionList();
 
             for (Transaction t : transactions) {
