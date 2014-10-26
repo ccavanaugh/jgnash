@@ -101,8 +101,6 @@ public class BudgetResultsExport {
         headerFont.setColor(IndexedColors.BLACK.getIndex());
         headerFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
 
-        DataFormat df = wb.createDataFormat();
-
         // Set the other cell style and formatting
         headerStyle.setBorderBottom(CellStyle.BORDER_THIN);
         headerStyle.setBorderTop(CellStyle.BORDER_THIN);
@@ -111,7 +109,9 @@ public class BudgetResultsExport {
         headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
         headerStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 
-        headerStyle.setDataFormat(df.getFormat("text"));
+        DataFormat df_header = wb.createDataFormat();
+
+        headerStyle.setDataFormat(df_header.getFormat("text"));
         headerStyle.setFont(headerFont);
         headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
 
@@ -163,14 +163,19 @@ public class BudgetResultsExport {
         Collections.sort(accounts);
 
         // create account rows
-        for (Account account : accounts) {
+        for (final Account account : accounts) {
 
-            CellStyle amountStyle = wb.createCellStyle();
+            final DataFormat df = wb.createDataFormat();
+
+            final DecimalFormat format = (DecimalFormat) CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
+            final String pattern = format.toLocalizedPattern().replace("¤", account.getCurrencyNode().getPrefix());
+            final CellStyle amountStyle = wb.createCellStyle();
+
             amountStyle.setFont(amountFont);
-
-            DecimalFormat format = (DecimalFormat) CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
-            String pattern = format.toLocalizedPattern().replace("¤", account.getCurrencyNode().getPrefix());
             amountStyle.setDataFormat(df.getFormat(pattern));
+
+            // Sets cell indentation, only impacts display if users changes the cell formatting to be left aligned.
+            amountStyle.setIndention((short) (model.getDepth(account) * 2));
 
             row++;
 
@@ -229,7 +234,9 @@ public class BudgetResultsExport {
         // add group summary rows
         for (AccountGroup group : model.getAccountGroupList()) {
 
-            CellStyle amountStyle = wb.createCellStyle();
+            final DataFormat df = wb.createDataFormat();
+
+            final CellStyle amountStyle = wb.createCellStyle();
             amountStyle.setFont(amountFont);
             amountStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
             amountStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
@@ -238,8 +245,8 @@ public class BudgetResultsExport {
             amountStyle.setBorderLeft(CellStyle.BORDER_THIN);
             amountStyle.setBorderRight(CellStyle.BORDER_THIN);
 
-            DecimalFormat format = (DecimalFormat) CommodityFormat.getFullNumberFormat(model.getBaseCurrency());
-            String pattern = format.toLocalizedPattern().replace("¤", model.getBaseCurrency().getPrefix());
+            final DecimalFormat format = (DecimalFormat) CommodityFormat.getFullNumberFormat(model.getBaseCurrency());
+            final String pattern = format.toLocalizedPattern().replace("¤", model.getBaseCurrency().getPrefix());
             amountStyle.setDataFormat(df.getFormat(pattern));
 
             row++;
@@ -307,6 +314,8 @@ public class BudgetResultsExport {
             s.setColumnWidth(i, s.getColumnWidth(i) + 10);
         }
 
+        Logger.getLogger(BudgetResultsExport.class.getName()).info(wb.getNumCellStyles() + " cell styles were used");
+
         // Save
         String filename = file.getAbsolutePath();
 
@@ -316,25 +325,27 @@ public class BudgetResultsExport {
             filename = FileUtils.stripFileExtension(filename) + ".xls";
         }
         
-        try (FileOutputStream out = new FileOutputStream(filename)) {
-           wb.write(out); 
-        } catch (Exception e) {
+        try (final FileOutputStream out = new FileOutputStream(filename)) {
+            wb.write(out);
+        } catch (final Exception e) {
             Logger.getLogger(BudgetResultsExport.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
             message = e.getLocalizedMessage();
         }
+
+
         
         return message;
     }
 
     private static void addSummaryCell(final Row row, final int col, final List<CellReference> cellReferenceList, final CellStyle style) {
-        Cell c = row.createCell(col);
+        final Cell c = row.createCell(col);
         c.setCellType(Cell.CELL_TYPE_FORMULA);
         c.setCellStyle(style);
         c.setCellFormula(buildAddFormula(cellReferenceList));
     }
 
-    private static String buildAddFormula(List<CellReference> cellReferenceList) {
-        StringBuilder formula = new StringBuilder(cellReferenceList.get(0).formatAsString());
+    private static String buildAddFormula(final List<CellReference> cellReferenceList) {
+        final StringBuilder formula = new StringBuilder(cellReferenceList.get(0).formatAsString());
 
         for (int i = 1; i < cellReferenceList.size(); i++) {
             formula.append('+');
