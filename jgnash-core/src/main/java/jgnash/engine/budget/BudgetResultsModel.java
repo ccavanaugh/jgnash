@@ -309,10 +309,48 @@ public class BudgetResultsModel implements MessageListener {
         cacheLock.lock();
 
         try {
-            Map<Account, BudgetPeriodResults> resultsMap = descriptorAccountResultsCache.get(descriptor);
+            final Map<Account, BudgetPeriodResults> resultsMap = descriptorAccountResultsCache.get(descriptor);
 
             if (resultsMap != null) {
                 resultsMap.remove(account);
+            }
+        } finally {
+            cacheLock.unlock();
+        }
+    }
+
+    private void clear(final BudgetPeriodDescriptor descriptor, final AccountGroup group) {
+        cacheLock.lock();
+
+        try {
+            final Map<AccountGroup, BudgetPeriodResults> resultsMap = descriptorAccountGroupResultsCache.get(descriptor);
+
+            if (resultsMap != null) {
+                resultsMap.remove(group);
+            }
+        } finally {
+            cacheLock.unlock();
+        }
+    }
+
+    private void clear(final Account account) {
+        cacheLock.lock();
+
+        try {
+            accountResultsCache.remove(account);
+        } finally {
+            cacheLock.unlock();
+        }
+    }
+
+    private void clear(final AccountGroup accountGroup) {
+        cacheLock.lock();
+
+        try {
+            final BudgetPeriodResults results = accountGroupResultsCache.get(accountGroup);
+
+            if (results != null) {
+                accountGroupResultsCache.remove(accountGroup);
             }
         } finally {
             cacheLock.unlock();
@@ -364,20 +402,6 @@ public class BudgetResultsModel implements MessageListener {
         }
     }
 
-    private void clear(final BudgetPeriodDescriptor descriptor, final AccountGroup group) {
-        cacheLock.lock();
-
-        try {
-            Map<AccountGroup, BudgetPeriodResults> resultsMap = descriptorAccountGroupResultsCache.get(descriptor);
-
-            if (resultsMap != null) {
-                resultsMap.remove(group);
-            }
-        } finally {
-            cacheLock.unlock();
-        }
-    }
-
     /**
      * Gets summary result by account (row summary)
      *
@@ -396,20 +420,6 @@ public class BudgetResultsModel implements MessageListener {
             }
 
             return results;
-        } finally {
-            cacheLock.unlock();
-        }
-    }
-
-    private void clear(final Account account) {
-        cacheLock.lock();
-
-        try {
-            BudgetPeriodResults results = accountResultsCache.get(account);
-
-            if (results != null) {
-                accountResultsCache.remove(account);
-            }
         } finally {
             cacheLock.unlock();
         }
@@ -438,19 +448,7 @@ public class BudgetResultsModel implements MessageListener {
         }
     }
 
-    private void clear(final AccountGroup accountGroup) {
-        cacheLock.lock();
 
-        try {
-            BudgetPeriodResults results = accountGroupResultsCache.get(accountGroup);
-
-            if (results != null) {
-                accountGroupResultsCache.remove(accountGroup);
-            }
-        } finally {
-            cacheLock.unlock();
-        }
-    }
 
     private BudgetPeriodResults buildAccountResults(final BudgetPeriodDescriptor descriptor, final Account account) {
         final BudgetPeriodResults results = new BudgetPeriodResults();
@@ -461,7 +459,7 @@ public class BudgetResultsModel implements MessageListener {
 
             // calculate the this account's results
             if (accounts.contains(account)) {
-                BudgetGoal goal = budget.getBudgetGoal(account);
+                final BudgetGoal goal = budget.getBudgetGoal(account);
 
                 results.setBudgeted(goal.getGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod()));
                 results.setChange(account.getBalance(descriptor.getStartDate(), descriptor.getEndDate()).abs());
@@ -479,9 +477,9 @@ public class BudgetResultsModel implements MessageListener {
 
             // recursive decent to add child account results and handle exchange rates
             for (Account child : account.getChildren()) {
-                BudgetPeriodResults childResults = buildAccountResults(descriptor, child);
+                final BudgetPeriodResults childResults = buildAccountResults(descriptor, child);
 
-                BigDecimal exchangeRate = child.getCurrencyNode().getExchangeRate(account.getCurrencyNode());
+                final BigDecimal exchangeRate = child.getCurrencyNode().getExchangeRate(account.getCurrencyNode());
 
                 results.setChange(results.getChange().add(childResults.getChange().multiply(exchangeRate)));
                 results.setBudgeted(results.getBudgeted().add(childResults.getBudgeted().multiply(exchangeRate)));
@@ -574,7 +572,7 @@ public class BudgetResultsModel implements MessageListener {
 
         try {
             for (BudgetPeriodDescriptor descriptor : descriptorList) {
-                BudgetPeriodResults periodResults = getResults(descriptor, group);
+                final BudgetPeriodResults periodResults = getResults(descriptor, group);
 
                 totalChange = totalChange.add(periodResults.getChange());
                 totalBudgeted = totalBudgeted.add(periodResults.getBudgeted());
@@ -584,7 +582,7 @@ public class BudgetResultsModel implements MessageListener {
             accountLock.readLock().unlock();
         }
 
-        BudgetPeriodResults results = new BudgetPeriodResults();
+        final BudgetPeriodResults results = new BudgetPeriodResults();
 
         results.setChange(totalChange);
         results.setBudgeted(totalBudgeted);
