@@ -222,7 +222,7 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
 
                             if (entity != null) {
                                 em.remove(entity);
-                                logger.info("Removed entity trash: " + trashEntity.getClassName() + "@" + trashEntity.getEntityId());
+                                logger.log(Level.INFO, "Removed entity trash: {0}@{1}", new Object[]{trashEntity.getClassName(), trashEntity.getEntityId()});
                             }
                             em.remove(trashEntity);
 
