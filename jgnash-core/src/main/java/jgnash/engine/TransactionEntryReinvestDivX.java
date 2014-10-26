@@ -17,6 +17,7 @@
  */
 package jgnash.engine;
 
+import jgnash.util.NotNull;
 import jgnash.util.Resource;
 
 import java.math.BigDecimal;
@@ -60,6 +61,7 @@ public class TransactionEntryReinvestDivX extends TransactionEntryAbstractIncrea
      * @see TransactionType#REINVESTDIV
      */
     @Override
+    @NotNull
     public TransactionType getTransactionType() {
         return TransactionType.REINVESTDIV;
     }

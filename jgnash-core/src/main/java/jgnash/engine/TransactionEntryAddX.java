@@ -21,6 +21,8 @@ import java.math.BigDecimal;
 
 import javax.persistence.Entity;
 
+import jgnash.util.NotNull;
+
 /**
  * Add shares without impacting the cash balance.  This is a single
  * entry transaction
@@ -48,6 +50,7 @@ public class TransactionEntryAddX extends TransactionEntryAbstractIncrease {
     }
 
     @Override
+    @NotNull
     public TransactionType getTransactionType() {
         return TransactionType.ADDSHARE;
     }

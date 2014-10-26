@@ -23,6 +23,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
+import jgnash.util.NotNull;
+
 /**
  * Investment Transaction Entry
  *
@@ -120,7 +122,7 @@ public abstract class AbstractInvestmentTransactionEntry extends TransactionEntr
      *
      * @return the transaction type
      */
-    public abstract TransactionType getTransactionType();
+    @NotNull public abstract TransactionType getTransactionType();
 
     @Override
     public String toString() {

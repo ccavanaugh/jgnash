@@ -21,6 +21,8 @@ import java.math.BigDecimal;
 
 import javax.persistence.Entity;
 
+import jgnash.util.NotNull;
+
 /**
  * Sell shares and increase the (cash) balance of an account
  * <p/>
@@ -98,6 +100,7 @@ public class TransactionEntrySellX extends AbstractInvestmentTransactionEntry {
     }
 
     @Override
+    @NotNull
     public TransactionType getTransactionType() {
         return TransactionType.SELLSHARE;
     }

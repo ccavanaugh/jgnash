@@ -22,6 +22,8 @@ import java.util.Objects;
 
 import javax.persistence.Entity;
 
+import jgnash.util.NotNull;
+
 /**
  * Investment dividend.
  * <p/>
@@ -97,6 +99,7 @@ public class TransactionEntryDividendX extends AbstractInvestmentTransactionEntr
     }
 
     @Override
+    @NotNull
     public TransactionType getTransactionType() {
         return TransactionType.DIVIDEND;
     }

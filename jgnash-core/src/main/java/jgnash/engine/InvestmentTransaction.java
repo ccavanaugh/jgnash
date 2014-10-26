@@ -39,8 +39,14 @@ public class InvestmentTransaction extends Transaction {
         super();
     }
 
-    @Override
+    /**
+     * Returns the transaction type.  If a valid investment entry has not been added then
+     * {@code TransactionType.INVALID} will be returned.
+     *
+     * @return transaction type
+     */
     @NotNull
+    @Override
     public TransactionType getTransactionType() {
         TransactionType type = TransactionType.INVALID;
 
@@ -50,6 +56,7 @@ public class InvestmentTransaction extends Transaction {
             for (TransactionEntry e : transactionEntries) {
                 if (e instanceof AbstractInvestmentTransactionEntry) {
                     type = ((AbstractInvestmentTransactionEntry) e).getTransactionType();
+                    break;
                 }
             }
         } finally {
@@ -83,10 +90,12 @@ public class InvestmentTransaction extends Transaction {
     @Override
     public void addTransactionEntry(@NotNull final TransactionEntry entry) {
         if (entry instanceof AbstractInvestmentTransactionEntry) {
-            TransactionType type = getTransactionType();
-            SecurityNode node = getSecurityNode();
+            final TransactionType type = getTransactionType();
+            final SecurityNode node = getSecurityNode();
 
-            assert ((AbstractInvestmentTransactionEntry) entry).getTransactionType() == type;
+            if (type != TransactionType.INVALID) { // assert that the types are a match if established
+                assert ((AbstractInvestmentTransactionEntry) entry).getTransactionType() == type;
+            }
 
             if (node != null) {
                 assert ((AbstractInvestmentTransactionEntry) entry).getSecurityNode().equals(node);

@@ -2363,7 +2363,7 @@ public class Engine {
             return false;
         }
 
-        return !(transaction instanceof InvestmentTransaction);
+        return transaction.getTransactionType() != TransactionType.INVALID;
     }
 
     /**

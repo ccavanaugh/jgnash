@@ -17,6 +17,7 @@
  */
 package jgnash.engine;
 
+import jgnash.util.NotNull;
 import jgnash.util.Resource;
 
 import java.math.BigDecimal;
@@ -66,6 +67,7 @@ public final class TransactionEntryMergeX extends AbstractInvestmentTransactionE
     }
 
     @Override
+    @NotNull
     public TransactionType getTransactionType() {
         return TransactionType.MERGESHARE;
     }

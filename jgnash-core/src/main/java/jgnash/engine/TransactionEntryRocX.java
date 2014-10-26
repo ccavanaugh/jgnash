@@ -22,6 +22,8 @@ import java.util.Objects;
 
 import javax.persistence.Entity;
 
+import jgnash.util.NotNull;
+
 /**
  * Return of capital investment transaction
  * <p/>
@@ -95,6 +97,7 @@ public class TransactionEntryRocX extends AbstractInvestmentTransactionEntry {
     }
 
     @Override
+    @NotNull
     public TransactionType getTransactionType() {
         return TransactionType.RETURNOFCAPITAL;
     }

@@ -17,6 +17,7 @@
  */
 package jgnash.engine;
 
+import jgnash.util.NotNull;
 import jgnash.util.Resource;
 
 import java.math.BigDecimal;
@@ -55,6 +56,7 @@ public class TransactionEntrySplitX extends TransactionEntryAbstractIncrease {
     }
 
     @Override
+    @NotNull
     public TransactionType getTransactionType() {
         return TransactionType.SPLITSHARE;
     }

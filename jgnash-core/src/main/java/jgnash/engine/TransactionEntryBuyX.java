@@ -21,6 +21,8 @@ import java.math.BigDecimal;
 
 import javax.persistence.Entity;
 
+import jgnash.util.NotNull;
+
 /**
  * Buy shares and reduce the (cash) balance of an account
  * <p/>
@@ -98,6 +100,7 @@ public class TransactionEntryBuyX extends AbstractInvestmentTransactionEntry {
     }
 
     @Override
+    @NotNull
     public TransactionType getTransactionType() {
         return TransactionType.BUYSHARE;
     }

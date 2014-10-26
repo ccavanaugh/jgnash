@@ -21,6 +21,8 @@ import java.math.BigDecimal;
 
 import javax.persistence.Entity;
 
+import jgnash.util.NotNull;
+
 /**
  * Remove shares without impacting the cash balance.  This is a single
  * entry transaction
@@ -60,6 +62,7 @@ public final class TransactionEntryRemoveX extends AbstractInvestmentTransaction
     }
 
     @Override
+    @NotNull
     public TransactionType getTransactionType() {
         return TransactionType.REMOVESHARE;
     }
