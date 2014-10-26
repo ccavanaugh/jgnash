@@ -45,7 +45,11 @@ public class MenuBarController implements Initializable, MessageListener {
 
     @FXML private MenuBar menuBar;
 
+    @FXML private MenuItem openMenuItem;
+
     @FXML private MenuItem closeMenuItem;
+
+    @FXML private MenuItem exitMenuItem;
 
     @Override
     public void initialize(final URL url, final ResourceBundle resourceBundle) {
