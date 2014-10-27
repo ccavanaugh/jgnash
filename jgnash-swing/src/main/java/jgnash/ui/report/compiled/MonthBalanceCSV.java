@@ -91,9 +91,9 @@ public final class MonthBalanceCSV {
             try {
                 System.out.println("writing file");
                 if (vertical) {
-                    writeCSVFileVert(getFileName(), dates);
+                    writeVerticalCSVFileFormat(getFileName(), dates);
                 } else {
-                    writeCSVFileHoriz(getFileName(), dates);
+                    writeHorizontalFormatCSVFile(getFileName(), dates);
                 }
             } catch (IOException e) {               
                 Logger.getLogger(MonthBalanceCSV.class.getName()).log(Level.SEVERE, null, e);
@@ -110,12 +110,12 @@ public final class MonthBalanceCSV {
         DatePanel endField = new DatePanel();
 
         ButtonGroup group = new ButtonGroup();
-        JRadioButton vert = new JRadioButton(rb.getString("Button.Vertical"));
-        JRadioButton horiz = new JRadioButton(rb.getString("Button.Horizontal"));
+        JRadioButton vButton = new JRadioButton(rb.getString("Button.Vertical"));
+        JRadioButton hButton = new JRadioButton(rb.getString("Button.Horizontal"));
 
-        group.add(vert);
-        group.add(horiz);
-        vert.setSelected(true);
+        group.add(vButton);
+        group.add(hButton);
+        vButton.setSelected(true);
 
         FormLayout layout = new FormLayout("right:p, 4dlu, p:g", "");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
@@ -123,8 +123,8 @@ public final class MonthBalanceCSV {
 
         builder.append(rb.getString("Label.StartDate"), startField);
         builder.append(rb.getString("Label.EndDate"), endField);
-        builder.append(rb.getString("Label.Layout"), vert);
-        builder.append("", horiz);
+        builder.append(rb.getString("Label.Layout"), vButton);
+        builder.append("", hButton);
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
@@ -140,7 +140,7 @@ public final class MonthBalanceCSV {
             dates = null;
         }
 
-        vertical = vert.isSelected();
+        vertical = vButton.isSelected();
 
         return dates;
 
@@ -172,11 +172,10 @@ public final class MonthBalanceCSV {
 
     } // end method getLastDays
 
-    @SuppressWarnings("ConstantConditions")
     private void buildLists(final Account a, final Date[] dates) {
-        for (Account child : a.getChildren()) {
-            int len = child.getTransactionCount();
-            if (len > 0) {
+        for (final Account child : a.getChildren()) {
+
+            if (child.getTransactionCount() > 0) {
                 accounts.add(child); // add the account
                 BigDecimal[] b = new BigDecimal[dates.length];
                 for (int j = 0; j < dates.length; j++) {
@@ -195,7 +194,7 @@ public final class MonthBalanceCSV {
      * ,A1,A2,A3 Jan,455,30,80 Feb,566,70,90 March,678,200,300
      */
 
-    private void writeCSVFileHoriz(final String fileName, final Date[] dates) throws IOException {
+    private void writeHorizontalFormatCSVFile(final String fileName, final Date[] dates) throws IOException {
 
         if (fileName == null || dates == null) {
             return;
@@ -225,13 +224,13 @@ public final class MonthBalanceCSV {
             }
         }
 
-    } // end method writeCSVFileHoriz
+    }
 
     /*
      * ,Jan,Feb,Mar A1,30,80,100 A2,70,90,120 A3,200,300,400
      */
 
-    private void writeCSVFileVert(final String fileName, final Date[] dates) throws IOException {
+    private void writeVerticalCSVFileFormat(final String fileName, final Date[] dates) throws IOException {
 
         if (fileName == null || dates == null) {
             return;
@@ -259,7 +258,7 @@ public final class MonthBalanceCSV {
             } // end outer for loop
         }
 
-    } // end method writeCSVFileVert
+    }
 
     String getFileName() {
         JFileChooser chooser = new JFileChooser();
