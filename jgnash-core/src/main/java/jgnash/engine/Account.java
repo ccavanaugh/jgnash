@@ -130,10 +130,17 @@ public class Account extends StoredObject implements Comparable<Account> {
     private Set<Account> children = new HashSet<>();
 
     /**
-     * Cached list of sorted transactions that is not persisted
+     * Cached list of sorted transactions that is not persisted. This prevents concurrency issues when using a JPA backend
      */
     @Transient
     private transient List<Transaction> cachedSortedTransactionList;
+
+
+    /**
+     * Cached list of sorted accounts this is not persisted.  This prevents concurrency issues when using a JPA backend
+     */
+    @Transient
+    private transient List<Account> cachedSortedChildren;
 
     /**
      * Balance of the account
@@ -188,6 +195,8 @@ public class Account extends StoredObject implements Comparable<Account> {
         transactionLock = new ReentrantReadWriteLock(true);
         childLock = new ReentrantReadWriteLock(true);
         securitiesLock = new ReentrantReadWriteLock(true);
+
+        cachedSortedChildren = new ArrayList<>();
     }
 
     public Account(@NotNull final AccountType type, @NotNull final CurrencyNode node) {
@@ -380,7 +389,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         childLock.readLock().lock();
 
         try {
-            return children.contains(account);
+            return cachedSortedChildren.contains(account);
         } finally {
             childLock.readLock().unlock();
         }
@@ -484,6 +493,9 @@ public class Account extends StoredObject implements Comparable<Account> {
                 if (child.setParent(this)) {
                     children.add(child);
                     result = true;
+
+                    cachedSortedChildren.add(child);
+                    Collections.sort(cachedSortedChildren);
                 }
             }
 
@@ -509,6 +521,8 @@ public class Account extends StoredObject implements Comparable<Account> {
 
             if (children.remove(child)) {
                 result = true;
+
+                cachedSortedChildren.remove(child);
             }
             return result;
         } finally {
@@ -525,11 +539,8 @@ public class Account extends StoredObject implements Comparable<Account> {
         childLock.readLock().lock();
 
         try {
-            // return account defensive copy as a list
-            List<Account> list = new ArrayList<>(children);
-            Collections.sort(list);
-
-            return list;
+            // return with a protective decorator
+            return Collections.unmodifiableList(cachedSortedChildren);
         } finally {
             childLock.readLock().unlock();
         }
@@ -562,7 +573,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         childLock.readLock().lock();
 
         try {
-            return children.size();
+            return cachedSortedChildren.size();
         } finally {
             childLock.readLock().unlock();
         }
@@ -616,7 +627,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         childLock.readLock().lock();
 
         try {
-            return !children.isEmpty();
+            return !cachedSortedChildren.isEmpty();
         } finally {
             childLock.readLock().unlock();
         }
@@ -787,7 +798,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         try {
             BigDecimal balance = getBalance();
 
-            for (Account child : children) {
+            for (final Account child : cachedSortedChildren) {
                 balance = balance.add(child.getTreeBalance(getCurrencyNode()));
             }
 
@@ -814,7 +825,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         try {
             BigDecimal balance = getBalance(node);
 
-            for (Account child : children) {
+            for (final Account child : cachedSortedChildren) {
                 balance = balance.add(child.getTreeBalance(node));
             }
             return balance;
@@ -840,7 +851,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         try {
             BigDecimal balance = getReconciledBalance(node);
 
-            for (Account child : children) {
+            for (final Account child : cachedSortedChildren) {
                 balance = balance.add(child.getReconciledTreeBalance(node));
             }
             return balance;
@@ -863,7 +874,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         try {
             BigDecimal balance = getReconciledBalance();
 
-            for (Account child : children) {
+            for (final Account child : cachedSortedChildren) {
                 balance = balance.add(child.getReconciledTreeBalance(getCurrencyNode()));
             }
             return balance;
@@ -931,7 +942,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         try {
             BigDecimal balance = getBalance(start, end);
 
-            for (Account child : children) {
+            for (final Account child : cachedSortedChildren) {
                 balance = balance.add(child.getTreeBalance(start, end, getCurrencyNode()));
             }
             return balance;
@@ -980,7 +991,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         try {
             BigDecimal returnValue = getBalance(start, end, node);
 
-            for (Account child : children) {
+            for (final Account child : cachedSortedChildren) {
                 returnValue = returnValue.add(child.getTreeBalance(start, end, node));
             }
             return returnValue;
@@ -1068,7 +1079,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     final void setCurrencyNode(@NotNull final CurrencyNode node) {
         Objects.requireNonNull(node);
 
-        if (!currencyNode.equals(node)) {
+        if (!node.equals(currencyNode)) {
             currencyNode = node;
 
             clearCachedBalances();  // cached balances will need to be recalculated
@@ -1460,6 +1471,8 @@ public class Account extends StoredObject implements Comparable<Account> {
         transactionLock = new ReentrantReadWriteLock(true);
         childLock = new ReentrantReadWriteLock(true);
         securitiesLock = new ReentrantReadWriteLock(true);
+
+        cachedSortedChildren = new ArrayList<>(children);
     }
 
     /**
@@ -1477,6 +1490,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         a.children.clear();
         a.transactions.clear();
         a.cachedSortedTransactionList.clear();
+        a.cachedSortedChildren.clear();
 
         return a;
     }
