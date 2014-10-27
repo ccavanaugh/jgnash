@@ -210,7 +210,7 @@ public class ProfitLossTXT {
      * format output decimal amount
      * 
      * @param amt the BigDecimal value to format
-     * @return formated string
+     * @return formatted string
      */
     private String formatDecimalOut(final BigDecimal amt) {
 
@@ -257,9 +257,8 @@ public class ProfitLossTXT {
 
     void getBalances(final Account a, final Date[] dates1, final AccountType type) {
 
-        for (Account child : a.getChildren()) {
-            int len = child.getTransactionCount();
-            if ((len > 0) && type == child.getAccountType()) {
+        for (final Account child : a.getChildren()) {
+            if ((child.getTransactionCount() > 0) && type == child.getAccountType()) {
                 String acctName = child.getName();
 
                 BigDecimal acctBal = AccountBalanceDisplayManager.convertToSelectedBalanceMode(child.getAccountType(), child.getBalance(dates1[0], dates1[1], baseCommodity));
