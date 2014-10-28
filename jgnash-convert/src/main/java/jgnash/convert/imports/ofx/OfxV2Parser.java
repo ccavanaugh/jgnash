@@ -486,10 +486,10 @@ public class OfxV2Parser implements OfxTags {
                 case XMLStreamConstants.START_ELEMENT:
                     switch (reader.getLocalName()) {
                         case BALAMT:
-                            bank.ledgerBalance = parseAmount(reader.getElementText());
+                            bank.availBalance = parseAmount(reader.getElementText());
                             break;
                         case DTASOF:
-                            bank.ledgerBalanceDate = parseDate(reader.getElementText());
+                            bank.availBalanceDate = parseDate(reader.getElementText());
                             break;
                         default:
                             logger.log(Level.WARNING, "Unknown AVAILBAL element {0}", reader.getLocalName());
@@ -499,7 +499,7 @@ public class OfxV2Parser implements OfxTags {
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     if (reader.getName().equals(parsingElement)) {
-                        logger.info("Found the end of the ledger balance aggregate");
+                        logger.info("Found the end of the available balance aggregate");
                         break parse;
                     }
                 default:

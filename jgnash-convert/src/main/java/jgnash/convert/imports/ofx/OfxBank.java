@@ -52,9 +52,9 @@ public class OfxBank extends ImportBank {
 
     public Date ledgerBalanceDate;
 
-    private BigDecimal availBalance;
+    public BigDecimal availBalance;
 
-    private Date availBalanceDate;
+    public Date availBalanceDate;
 
     @Override
     public String toString() {
@@ -62,6 +62,7 @@ public class OfxBank extends ImportBank {
 
         b.append("currency: ").append(currency).append('\n');
         b.append("bankId: ").append(bankId).append('\n');
+        b.append("branchId: ").append(branchId).append('\n');
         b.append("accountId: ").append(accountId).append('\n');
         b.append("accountType: ").append(accountType).append('\n');
         b.append("dateStart: ").append(dateStart).append('\n');
