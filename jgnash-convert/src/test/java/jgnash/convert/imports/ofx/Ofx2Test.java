@@ -134,7 +134,8 @@ public class Ofx2Test {
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
 
-                assertEquals(new BigDecimal("519.10"), parser.getBank().ledgerBalance);
+                assertEquals(new BigDecimal("524.10"), parser.getBank().ledgerBalance);
+                assertEquals(new BigDecimal("519.10"), parser.getBank().availBalance);
 
                 List<ImportTransaction> transactions = parser.getBank().getTransactions();
 
