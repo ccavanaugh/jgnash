@@ -22,6 +22,7 @@ import java.util.Date;
 
 import jgnash.convert.imports.ImportBank;
 import jgnash.convert.imports.ImportTransaction;
+import jgnash.util.Nullable;
 
 /**
  * OFX Bank Object
@@ -56,10 +57,19 @@ public class OfxBank extends ImportBank {
 
     public Date availBalanceDate;
 
+    public int statusCode;
+
+    public String statusSeverity;
+
+    @Nullable public String statusMessage;
+
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
 
+        b.append("statusCode: ").append(statusCode).append('\n');
+        b.append("statusSeverity: ").append(statusSeverity).append('\n');
+        b.append("statusMessage: ").append(statusMessage).append('\n');
         b.append("currency: ").append(currency).append('\n');
         b.append("bankId: ").append(bankId).append('\n');
         b.append("branchId: ").append(branchId).append('\n');

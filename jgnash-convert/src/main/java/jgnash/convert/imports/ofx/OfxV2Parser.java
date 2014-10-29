@@ -139,7 +139,7 @@ public class OfxV2Parser implements OfxTags {
                 case XMLStreamConstants.START_ELEMENT:
                     switch (reader.getLocalName()) {
                         case SIGNONMSGSRSV1:
-                            parseSignonMessageSet(reader);
+                            parseSignOnMessageSet(reader);
                             break;
                         case BANKMSGSRSV1:
                             parseBankMessageSet(reader);
@@ -175,6 +175,9 @@ public class OfxV2Parser implements OfxTags {
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
                     switch (reader.getLocalName()) {
+                        case STATUS:
+                            parseStatementStatus(reader);
+                            break;
                         case CURDEF:
                             bank.currency = reader.getElementText();
                             break;
@@ -225,6 +228,9 @@ public class OfxV2Parser implements OfxTags {
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
                     switch (reader.getLocalName()) {
+                        case STATUS:
+                            parseStatementStatus(reader);
+                            break;
                         case CURDEF:
                             bank.currency = reader.getElementText();
                             break;
@@ -521,8 +527,8 @@ public class OfxV2Parser implements OfxTags {
      * @param reader shared XMLStreamReader
      * @throws XMLStreamException XML parsing error has occurred
      */
-    private void parseSignonMessageSet(final XMLStreamReader reader) throws XMLStreamException {
-        logger.entering(OfxV2Parser.class.getName(), "parseSignonMessageSet");
+    private void parseSignOnMessageSet(final XMLStreamReader reader) throws XMLStreamException {
+        logger.entering(OfxV2Parser.class.getName(), "parseSignOnMessageSet");
 
         QName parsingElement = reader.getName();
 
@@ -537,7 +543,7 @@ public class OfxV2Parser implements OfxTags {
                             language = reader.getElementText();
                             break;
                         case STATUS:
-                            parseStatus(reader);
+                            parseSignOnStatus(reader);
                             break;
                         default:
                             break;
@@ -552,17 +558,17 @@ public class OfxV2Parser implements OfxTags {
             }
         }
 
-        logger.exiting(OfxV2Parser.class.getName(), "parseSignonMessageSet");
+        logger.exiting(OfxV2Parser.class.getName(), "parseSignOnMessageSet");
     }
 
     /**
-     * Parses a AVAILBAL element
+     * Parses a STATUS element from the SignOn element
      *
      * @param reader shared XMLStreamReader
      * @throws XMLStreamException XML parsing error has occurred
      */
-    private void parseStatus(final XMLStreamReader reader) throws XMLStreamException {
-        logger.entering(OfxV2Parser.class.getName(), "parseStatus");
+    private void parseSignOnStatus(final XMLStreamReader reader) throws XMLStreamException {
+        logger.entering(OfxV2Parser.class.getName(), "parseSignOnStatus");
 
         final QName parsingElement = reader.getName();
 
@@ -598,7 +604,56 @@ public class OfxV2Parser implements OfxTags {
             }
         }
 
-        logger.exiting(OfxV2Parser.class.getName(), "parseAvailableBalance");
+        logger.exiting(OfxV2Parser.class.getName(), "parseSignOnStatus");
+    }
+
+    /**
+     * Parses a STATUS element from the statement element
+     *
+     * @param reader shared XMLStreamReader
+     * @throws XMLStreamException XML parsing error has occurred
+     */
+    private void parseStatementStatus(final XMLStreamReader reader) throws XMLStreamException {
+        logger.entering(OfxV2Parser.class.getName(), "parseSignOnStatus");
+
+        final QName parsingElement = reader.getName();
+
+        parse:
+        while (reader.hasNext()) {
+            int event = reader.next();
+
+            switch (event) {
+                case XMLStreamConstants.START_ELEMENT:
+                    switch (reader.getLocalName()) {
+                        case CODE:
+                            try {
+                                bank.statusCode = Integer.parseInt(reader.getElementText());
+                            } catch (final NumberFormatException ex){
+                                logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+                            }
+                            break;
+                        case SEVERITY:
+                            bank.statusSeverity = reader.getElementText();
+                            break;
+                        case MESSAGE:
+                            bank.statusMessage = reader.getElementText();
+                            break;
+                        default:
+                            logger.log(Level.WARNING, "Unknown STATUS element {0}", reader.getLocalName());
+                            break;
+                    }
+
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (reader.getName().equals(parsingElement)) {
+                        logger.info("Found the end of the statusCode response");
+                        break parse;
+                    }
+                default:
+            }
+        }
+
+        logger.exiting(OfxV2Parser.class.getName(), "parseStatementStatus");
     }
 
 
