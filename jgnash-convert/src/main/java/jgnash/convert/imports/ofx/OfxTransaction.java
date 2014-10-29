@@ -70,7 +70,10 @@ public class OfxTransaction extends ImportTransaction {
                 sic + ", " +
                 getName() + ", " +
                 memo + ", " +
-                checkNumber;
+                checkNumber + ", " +
+                refNum + ", " +
+                payeeId + ", " +
+                currency;
     }
 
     public String getName() {
