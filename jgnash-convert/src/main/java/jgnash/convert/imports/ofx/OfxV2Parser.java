@@ -73,7 +73,7 @@ public class OfxV2Parser implements OfxTags {
     public OfxV2Parser() {
         if (debug) {
             try {
-                Handler fh = new FileHandler("%h/jgnash-ofx%g.log");
+                final Handler fh = new FileHandler("%h/jgnash-ofx%g.log");
                 fh.setFormatter(new SimpleFormatter());
                 logger.addHandler(fh);
                 logger.setLevel(Level.FINEST);
@@ -103,7 +103,7 @@ public class OfxV2Parser implements OfxTags {
 
         bank = new OfxBank();
 
-        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        final XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
         try (InputStream input = new BufferedInputStream(stream)) {
             XMLStreamReader reader = inputFactory.createXMLStreamReader(input, encoding);
@@ -133,7 +133,7 @@ public class OfxV2Parser implements OfxTags {
 
         while (reader.hasNext()) {
 
-            int event = reader.next();
+            final int event = reader.next();
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
@@ -167,10 +167,10 @@ public class OfxV2Parser implements OfxTags {
     private void parseBankMessageSet(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "parseBankMessageSet");
 
-        QName parsingElement = reader.getName();
+        final QName parsingElement = reader.getName();
 
         while (reader.hasNext()) {
-            int event = reader.next();
+            final int event = reader.next();
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
@@ -220,10 +220,10 @@ public class OfxV2Parser implements OfxTags {
     private void parseCreditCardMessageSet(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "parseCreditCardMessageSet");
 
-        QName parsingElement = reader.getName();
+        final QName parsingElement = reader.getName();
 
         while (reader.hasNext()) {
-            int event = reader.next();
+            final int event = reader.next();
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
@@ -273,11 +273,11 @@ public class OfxV2Parser implements OfxTags {
     private void parseBankTransactionList(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "parseBankTransactionList");
 
-        QName parsingElement = reader.getName();
+        final QName parsingElement = reader.getName();
 
         parse:
         while (reader.hasNext()) {
-            int event = reader.next();
+            final int event = reader.next();
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
@@ -318,13 +318,13 @@ public class OfxV2Parser implements OfxTags {
     private void parseBankTransaction(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "parseBankTransaction");
 
-        QName parsingElement = reader.getName();
+        final QName parsingElement = reader.getName();
 
-        OfxTransaction tran = new OfxTransaction();
+        final OfxTransaction tran = new OfxTransaction();
 
         parse:
         while (reader.hasNext()) {
-            int event = reader.next();
+            final int event = reader.next();
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
@@ -377,7 +377,7 @@ public class OfxV2Parser implements OfxTags {
                     break;
                 case XMLStreamConstants.END_ELEMENT:
                     if (reader.getName().equals(parsingElement)) {
-                        logger.info("Found the end of the banktransaction");
+                        logger.info("Found the end of the bank transaction");
                         break parse;
                     }
                 default:
@@ -398,11 +398,11 @@ public class OfxV2Parser implements OfxTags {
     private void parseAccountInfo(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "parseAccountInfo");
 
-        QName parsingElement = reader.getName();
+        final QName parsingElement = reader.getName();
 
         parse:
         while (reader.hasNext()) {
-            int event = reader.next();
+            final int event = reader.next();
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
@@ -446,11 +446,11 @@ public class OfxV2Parser implements OfxTags {
     private void parseLedgerBalance(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "parseLedgerBalance");
 
-        QName parsingElement = reader.getName();
+        final QName parsingElement = reader.getName();
 
         parse:
         while (reader.hasNext()) {
-            int event = reader.next();
+            final int event = reader.next();
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
@@ -488,11 +488,11 @@ public class OfxV2Parser implements OfxTags {
     private void parseAvailableBalance(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "parseAvailableBalance");
 
-        QName parsingElement = reader.getName();
+        final QName parsingElement = reader.getName();
 
         parse:
         while (reader.hasNext()) {
-            int event = reader.next();
+            final int event = reader.next();
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
@@ -530,11 +530,11 @@ public class OfxV2Parser implements OfxTags {
     private void parseSignOnMessageSet(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "parseSignOnMessageSet");
 
-        QName parsingElement = reader.getName();
+        final QName parsingElement = reader.getName();
 
         parse:
         while (reader.hasNext()) {
-            int event = reader.next();
+            final int event = reader.next();
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
@@ -574,7 +574,7 @@ public class OfxV2Parser implements OfxTags {
 
         parse:
         while (reader.hasNext()) {
-            int event = reader.next();
+            final int event = reader.next();
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
@@ -620,7 +620,7 @@ public class OfxV2Parser implements OfxTags {
 
         parse:
         while (reader.hasNext()) {
-            int event = reader.next();
+            final int event = reader.next();
 
             switch (event) {
                 case XMLStreamConstants.START_ELEMENT:
