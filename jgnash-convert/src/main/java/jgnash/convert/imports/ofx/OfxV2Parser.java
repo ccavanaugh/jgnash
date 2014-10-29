@@ -62,6 +62,12 @@ public class OfxV2Parser implements OfxTags {
 
     private static final String ENCODING = StandardCharsets.UTF_8.name();
 
+    private String language;
+
+    private int statusCode;
+
+    private String statusSeverity;
+
     private OfxBank bank;
 
     public OfxV2Parser() {
@@ -515,7 +521,7 @@ public class OfxV2Parser implements OfxTags {
      * @param reader shared XMLStreamReader
      * @throws XMLStreamException XML parsing error has occurred
      */
-    private static void parseSignonMessageSet(final XMLStreamReader reader) throws XMLStreamException {
+    private void parseSignonMessageSet(final XMLStreamReader reader) throws XMLStreamException {
         logger.entering(OfxV2Parser.class.getName(), "parseSignonMessageSet");
 
         QName parsingElement = reader.getName();
@@ -525,6 +531,18 @@ public class OfxV2Parser implements OfxTags {
             int event = reader.next();
 
             switch (event) {
+                case XMLStreamConstants.START_ELEMENT:
+                    switch (reader.getLocalName()) {
+                        case LANGUAGE:
+                            language = reader.getElementText();
+                            break;
+                        case STATUS:
+                            parseStatus(reader);
+                            break;
+                        default:
+                            break;
+                    }
+
                 case XMLStreamConstants.END_ELEMENT:
                     if (reader.getName().equals(parsingElement)) {
                         logger.info("Found the end of the sign-on message set aggregate");
@@ -537,7 +555,59 @@ public class OfxV2Parser implements OfxTags {
         logger.exiting(OfxV2Parser.class.getName(), "parseSignonMessageSet");
     }
 
+    /**
+     * Parses a AVAILBAL element
+     *
+     * @param reader shared XMLStreamReader
+     * @throws XMLStreamException XML parsing error has occurred
+     */
+    private void parseStatus(final XMLStreamReader reader) throws XMLStreamException {
+        logger.entering(OfxV2Parser.class.getName(), "parseStatus");
+
+        final QName parsingElement = reader.getName();
+
+        parse:
+        while (reader.hasNext()) {
+            int event = reader.next();
+
+            switch (event) {
+                case XMLStreamConstants.START_ELEMENT:
+                    switch (reader.getLocalName()) {
+                        case CODE:
+                            try {
+                                statusCode = Integer.parseInt(reader.getElementText());
+                            } catch (final NumberFormatException ex){
+                                logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+                            }
+                            break;
+                        case SEVERITY:
+                            statusSeverity = reader.getElementText();
+                            break;
+                        default:
+                            logger.log(Level.WARNING, "Unknown STATUS element {0}", reader.getLocalName());
+                            break;
+                    }
+
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    if (reader.getName().equals(parsingElement)) {
+                        logger.info("Found the end of the statusCode response");
+                        break parse;
+                    }
+                default:
+            }
+        }
+
+        logger.exiting(OfxV2Parser.class.getName(), "parseAvailableBalance");
+    }
+
+
+
     public OfxBank getBank() {
+        logger.info("OFX Status was: " + statusCode);
+        logger.info("Status Level was: " + statusSeverity);
+        logger.info("File language was: " + language);
+
         return bank;
     }
 
@@ -586,5 +656,17 @@ public class OfxV2Parser implements OfxTags {
 
             return BigDecimal.ZERO; // give up at this point
         }
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public String getStatusSeverity() {
+        return statusSeverity;
+    }
+
+    public String getLanguage() {
+        return language;
     }
 }

@@ -56,6 +56,10 @@ public class Ofx2Test {
         try (InputStream stream =  Object.class.getResourceAsStream("/ofx_spec201_stmtrs_example.xml")) {
             parser.parse(stream);
 
+            assertEquals("ENG", parser.getLanguage());
+            assertEquals("INFO", parser.getStatusSeverity());
+            assertEquals(0, parser.getStatusCode());
+
             Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());            
         } catch (IOException e) {
             Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
@@ -77,6 +81,10 @@ public class Ofx2Test {
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
+
+                assertEquals("ENG", parser.getLanguage());
+                assertEquals("INFO", parser.getStatusSeverity());
+                assertEquals(0, parser.getStatusCode());
 
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
@@ -103,6 +111,10 @@ public class Ofx2Test {
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
+
+                assertEquals("ENG", parser.getLanguage());
+                assertEquals("INFO", parser.getStatusSeverity());
+                assertEquals(0, parser.getStatusCode());
 
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
@@ -133,6 +145,10 @@ public class Ofx2Test {
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
+
+                assertEquals("ENG", parser.getLanguage());
+                assertEquals("INFO", parser.getStatusSeverity());
+                assertEquals(0, parser.getStatusCode());
 
                 assertEquals(new BigDecimal("524.10"), parser.getBank().ledgerBalance);
                 assertEquals(new BigDecimal("519.10"), parser.getBank().availBalance);
@@ -170,6 +186,10 @@ public class Ofx2Test {
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
 
+                assertEquals("ENG", parser.getLanguage());
+                assertEquals("INFO", parser.getStatusSeverity());
+                assertEquals(0, parser.getStatusCode());
+
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
@@ -196,6 +216,10 @@ public class Ofx2Test {
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
+
+                assertEquals("ENG", parser.getLanguage());
+                assertEquals("INFO", parser.getStatusSeverity());
+                assertEquals(0, parser.getStatusCode());
 
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
@@ -224,6 +248,10 @@ public class Ofx2Test {
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
 
+                assertEquals("FRA", parser.getLanguage());
+                assertEquals("INFO", parser.getStatusSeverity());
+                assertEquals(0, parser.getStatusCode());
+
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.SEVERE, null, e);
@@ -244,6 +272,10 @@ public class Ofx2Test {
 
         try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
             parser.parse(OfxV1ToV2.convertToXML(stream), "ISO-8859-1");
+
+            assertEquals("JPN", parser.getLanguage());
+            assertEquals("INFO", parser.getStatusSeverity());
+            assertEquals(0, parser.getStatusCode());
 
             Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
         } catch (IOException e) {
@@ -266,6 +298,10 @@ public class Ofx2Test {
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
+
+                assertEquals("JPN", parser.getLanguage());
+                assertEquals("INFO", parser.getStatusSeverity());
+                assertEquals(0, parser.getStatusCode());
 
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
@@ -292,6 +328,10 @@ public class Ofx2Test {
 
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
+
+                assertEquals("FRA", parser.getLanguage());
+                assertEquals("INFO", parser.getStatusSeverity());
+                assertEquals(0, parser.getStatusCode());
 
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {
