@@ -23,8 +23,8 @@ import jgnash.util.Resource;
  * Tagging enumeration for special transaction types
  * 
  * @author Craig Cavanaugh
- *
  */
+@SuppressWarnings("UnusedDeclaration")
 public enum TransactionTag {
 
     BANK(Resource.get().getString("Tag.Bank")),
