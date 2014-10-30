@@ -2,7 +2,7 @@
 
 # jGnash README
 
-[jGnash](https://sourceforge.net/apps/mediawiki/jgnash/index.php?title=Main_Page) is a free (no strings attached!) personal finance manager with many of the same features as commercially-available software. It was created in order to make tracking your personal finances easy, but also provides the functionality required by advanced users. jGnash is cross-platform: jGnash 2 will run on any operating system that has a working Java 7 Runtime Environment (e.g., Linux, Mac OS X, and Microsoft Windows)
+[jGnash](https://sourceforge.net/projects/jgnash/) is a free (no strings attached!) personal finance manager with many of the same features as commercially-available software. It was created in order to make tracking your personal finances easy, but also provides the functionality required by advanced users. jGnash is cross-platform: jGnash 2 will run on any operating system that has a working Java 7 Runtime Environment (e.g., Linux, Mac OS X, and Microsoft Windows)
 
 jGnash 2.x requires that the Java Platform version 7 or newer be installed.
 jGnash has been tested with the Oracle JVM as well as the open source OpenJDK Platform.
@@ -16,7 +16,7 @@ Developers will want the Java Development Kit (see build instructions below.)
 
 ## Learn about jGnash
 
-To learn about the features of jGnash, visit the [jGnash Website](https://sourceforge.net/apps/mediawiki/jgnash/index.php?title=Main_Page).
+To learn about the features of jGnash, visit the [jGnash Website](https://sourceforge.net/projects/jgnash/).
 
 ## Download jGnash
 
@@ -40,7 +40,7 @@ graphics performance.  See the integrated help for use of the ```-opengl``` opti
 
 ### Linux Tips:
 
-jGnash is not compatible with the GCJ Java installation preinstalled on older Linux distributions.
+jGnash is not compatible with the GCJ Java installation pre-installed on older Linux distributions.
 You will need to install the OpenJDK or Oracle Java Platform and correctly set the default for jGnash
 to operate correctly.
 
