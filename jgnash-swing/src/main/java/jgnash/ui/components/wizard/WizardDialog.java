@@ -54,7 +54,6 @@ import jgnash.util.Resource;
  * Wizard dialog
  * 
  * @author Craig Cavanaugh
- *
  */
 public class WizardDialog extends JDialog implements ActionListener {
 
@@ -351,9 +350,9 @@ public class WizardDialog extends JDialog implements ActionListener {
      */
     private static final class WizardPageRenderer implements ListCellRenderer<WizardPage> {
 
-        private final Color inValidColor = Color.RED;
+        private static final Color inValidColor = Color.RED;
 
-        private Color validColor = Color.RED;
+        private Color validColor = Color.BLACK;
 
         private final ListCellRenderer<? super WizardPage> delegate;
 
