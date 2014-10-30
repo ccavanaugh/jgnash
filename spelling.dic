@@ -40,7 +40,6 @@ useproxy
 useauth
 proxyhost
 proxyport
-proxyport
 NODEHTTP
 HTTPUSER
 HTTPPASS
@@ -207,3 +206,7 @@ SELLSTOCK
 SELLTYPE
 relativize
 API's
+xmlns
+sodipodi
+opengl
+javase
