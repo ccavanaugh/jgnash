@@ -8,7 +8,7 @@
     <persistence-unit name="jgnash" transaction-type="RESOURCE_LOCAL">
 
         <provider>
-            org.hibernate.ejb.HibernatePersistence
+            org.hibernate.jpa.HibernatePersistenceProvider
         </provider>
 
         <!-- We must enumerate each entity in the persistence unit -->
