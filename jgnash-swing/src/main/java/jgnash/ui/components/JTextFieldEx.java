@@ -24,12 +24,10 @@ import java.awt.event.FocusListener;
 import java.util.prefs.Preferences;
 
 import javax.swing.JTextField;
-import javax.swing.text.Document;
 
 /** Extended JTextField that selects existing text when it receives the focus
  * 
- * @author Craig Cavanaugh 
- *
+ * @author Craig Cavanaugh
  */
 public class JTextFieldEx extends JTextField {
 
@@ -46,17 +44,17 @@ public class JTextFieldEx extends JTextField {
         installFocusListener();
     }
 
-    public JTextFieldEx(final String text) {
+    /*public JTextFieldEx(final String text) {
         super(text);
         installFocusListener();
-    }
+    }*/
 
     public JTextFieldEx(final int columns) {
         super(columns);
         installFocusListener();
     }
 
-    public JTextFieldEx(final String text, final int columns) {
+    /*public JTextFieldEx(final String text, final int columns) {
         super(text, columns);
         installFocusListener();
     }
@@ -64,7 +62,7 @@ public class JTextFieldEx extends JTextField {
     public JTextFieldEx(final Document doc, final String text, final int columns) {
         super(doc, text, columns);
         installFocusListener();
-    }
+    }*/
 
     private void installFocusListener() {
         FocusListener focusListener = new FocusAdapter() {
