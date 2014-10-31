@@ -21,6 +21,7 @@ import jgnash.engine.Account;
 import jgnash.engine.CommodityNode;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.ExchangeRate;
+import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.engine.dao.CommodityDAO;
 
@@ -87,14 +88,67 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
     }
 
     @Override
-    public boolean addSecurityHistory(final SecurityNode node) {
-        return updateCommodityNode(node);
+    public boolean addSecurityHistory(final SecurityNode node, final SecurityHistoryNode historyNode) {
+        boolean result = false;
+
+        emLock.lock();
+
+        try {
+            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+
+                    em.getTransaction().begin();
+                    em.persist(historyNode);
+                    em.persist(node);
+                    em.getTransaction().commit();
+
+                    return true;
+                }
+            });
+
+            result = future.get();
+
+        } catch (final InterruptedException | ExecutionException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+        } finally {
+            emLock.unlock();
+        }
+
+        return result;
     }
 
 
     @Override
-    public boolean removeSecurityHistory(final SecurityNode node) {
-        return merge(node) != null;
+    public boolean removeSecurityHistory(final SecurityNode node, final SecurityHistoryNode historyNode) {
+
+        boolean result = false;
+
+        emLock.lock();
+
+        try {
+            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
+                @Override
+                public Boolean call() throws Exception {
+
+                    em.getTransaction().begin();
+                    em.persist(node);
+                    em.persist(historyNode);
+                    em.getTransaction().commit();
+
+                    return true;
+                }
+            });
+
+            result = future.get();
+
+        } catch (final InterruptedException | ExecutionException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+        } finally {
+            emLock.unlock();
+        }
+
+        return result;
     }
 
     @Override

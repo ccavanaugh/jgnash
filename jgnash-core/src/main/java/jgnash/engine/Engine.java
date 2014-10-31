@@ -923,7 +923,7 @@ public class Engine {
      * @param hNode SecurityHistoryNode to add
      * @return <tt>true</tt> if successful
      */
-    public boolean addSecurityHistory(final SecurityNode node, final SecurityHistoryNode hNode) {
+    public boolean addSecurityHistory(@NotNull final SecurityNode node, @NotNull final SecurityHistoryNode hNode) {
 
         // Remove old history of the same date if it exists
         if (node.contains(hNode.getDate())) {
@@ -939,7 +939,7 @@ public class Engine {
             boolean status = node.addHistoryNode(hNode);
 
             if (status) {
-                status = getCommodityDAO().addSecurityHistory(node);
+                status = getCommodityDAO().addSecurityHistory(node, hNode);
             }
 
             Message message;
@@ -1264,21 +1264,28 @@ public class Engine {
         }
     }
 
-    public boolean removeSecurityHistory(final SecurityNode node, final Date date) {
+    /**
+     * Remove a {@code SecurityHistoryNode} given a {@code Date}
+     * @param node {@code SecurityNode} to remove history from
+     * @param date the search {@code Date}
+     * @return {@code true} if a {@code SecurityHistoryNode} was found and removed
+     *
+     */
+    public boolean removeSecurityHistory(@NotNull final SecurityNode node, @NotNull final Date date) {
 
         commodityLock.writeLock().lock();
 
         boolean status = false;
 
         try {
-            final SecurityHistoryNode hNode = node.getHistoryNode(date);
+            final SecurityHistoryNode historyNode = node.getHistoryNode(date);
 
-            if (hNode != null) {
+            if (historyNode != null) {
                 status = node.removeHistoryNode(date);
 
                 if (status) {   // removal was a success, make sure we cleanup properly
-                    moveObjectToTrash(hNode);
-                    status = getCommodityDAO().removeSecurityHistory(node);
+                    moveObjectToTrash(historyNode);
+                    status = getCommodityDAO().removeSecurityHistory(node, historyNode);
                 }
             }
 

@@ -28,6 +28,8 @@ Reinstate archive capability.
 
 Release 2.14.1
 ----------------------
+10/31/14 Fixed a bug that was preventing Securities history from being deleted if added within the same jGnash session
+         for relational databases.
 10/31/14 Updated to latest Hibernate 4.3.7 release
 10/28/14 Minor translation improvements
 10/26/14 After exporting a budget to XLS, you can left align a numeric column to see indents.

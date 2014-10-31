@@ -20,6 +20,7 @@ package jgnash.engine.dao;
 import jgnash.engine.CommodityNode;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.ExchangeRate;
+import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 
 import java.util.List;
@@ -48,10 +49,11 @@ public interface CommodityDAO {
      * Call after a {@code SecurityHistoryNode} has been added.  This pushes the update
      * to the underlying database
      * @param node SecurityHistory to update
+     * @param historyNode {@code SecurityHistoryNode to add}
      *
      * @return true if successful
      */
-    public boolean addSecurityHistory(final SecurityNode node);
+    public boolean addSecurityHistory(final SecurityNode node, final SecurityHistoryNode historyNode);
 
     /**
      * Returns the active currencies
@@ -85,10 +87,11 @@ public interface CommodityDAO {
      * Call after a {@code SecurityHistoryNode} has been removed.  This pushes the update
      * to the underlying database
      * @param node SecurityHistory to update
+     * @param historyNode {@code SecurityHistoryNode} to remove
      *
      * @return true if successful
      */
-    public boolean removeSecurityHistory(final SecurityNode node);
+    public boolean removeSecurityHistory(final SecurityNode node, final SecurityHistoryNode historyNode);
 
     public void addExchangeRate(ExchangeRate eRate);
 
