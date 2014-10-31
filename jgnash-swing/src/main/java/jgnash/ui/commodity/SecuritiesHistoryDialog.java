@@ -29,6 +29,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -141,6 +142,13 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
         setMinimumSize(getSize());
 
         DialogUtils.addBoundsListener(SecuritiesHistoryDialog.this);
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(final WindowEvent e) {
+                model.unregisterListeners();
+            }
+        });
     }
 
     private void initComponents() {
@@ -357,15 +365,15 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
 
     private void updateChart() {
         try {
-            SecurityNode sNode = securityCombo.getSelectedSecurityNode();
+            final SecurityNode sNode = securityCombo.getSelectedSecurityNode();
 
-            JFreeChart chart = createChart(sNode);
+            final JFreeChart chart = createChart(sNode);
 
             chartPanel.setChart(chart);
             chartPanel.validate();
 
-        } catch (Exception ex) {
-            Logger.getAnonymousLogger().severe(ex.toString());
+        } catch (final Exception ex) {
+            Logger.getLogger(SecuritiesHistoryDialog.class.getName()).severe(ex.toString());
         }
     }
 
@@ -404,6 +412,11 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
 
         public HistoryModel() {
             MessageBus.getInstance().registerListener(this, MessageChannel.COMMODITY);
+        }
+
+        private void unregisterListeners() {
+            MessageBus.getInstance().unregisterListener(this, MessageChannel.COMMODITY);
+            Logger.getLogger(SecuritiesHistoryDialog.class.getName()).info("unregistered listeners");
         }
 
         public void setSecurity(final SecurityNode node) {
