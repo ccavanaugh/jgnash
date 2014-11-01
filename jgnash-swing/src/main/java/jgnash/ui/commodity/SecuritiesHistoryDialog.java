@@ -52,6 +52,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
 import jgnash.engine.CommodityNode;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.QuoteSource;
 import jgnash.engine.SecurityHistoryNode;
@@ -281,7 +282,11 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
             history.setLow(lowField.getDecimal());
         }
 
-        EngineFactory.getEngine(EngineFactory.DEFAULT).addSecurityHistory(securityCombo.getSelectedSecurityNode(), history);
+        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+        if (engine != null) {
+            engine.addSecurityHistory(securityCombo.getSelectedSecurityNode(), history);
+        }
     }
 
     /**
@@ -304,8 +309,12 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
             temp[i] = history.get(selection[i]).getDate();
         }
 
-        for (int i = selection.length - 1; i >= 0; i--) {
-            EngineFactory.getEngine(EngineFactory.DEFAULT).removeSecurityHistory(node, temp[i]);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+        if (engine != null) {
+            for (int i = selection.length - 1; i >= 0; i--) {
+                engine.removeSecurityHistory(node, temp[i]);
+            }
         }
     }
 
@@ -421,7 +430,12 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
 
         public void setSecurity(final SecurityNode node) {
             this.node = node;
-            history = EngineFactory.getEngine(EngineFactory.DEFAULT).getSecurityHistory(node);
+
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+            if (engine != null) {
+                history = engine.getSecurityHistory(node);
+            }
 
             commodityFormatter = CommodityFormat.getShortNumberFormat(node.getReportedCurrencyNode());
 
@@ -490,7 +504,11 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
                             switch (event.getEvent()) {
                                 case SECURITY_HISTORY_ADD:
                                 case SECURITY_HISTORY_REMOVE:
-                                    history = EngineFactory.getEngine(EngineFactory.DEFAULT).getSecurityHistory(node);
+                                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+                                    if (engine != null) {
+                                        history = engine.getSecurityHistory(node);
+                                    }
                                     fireTableDataChanged();
                                     updateChart();
                                     return;

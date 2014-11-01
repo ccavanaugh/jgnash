@@ -66,7 +66,6 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.net.currency.CurrencyUpdateFactory;
 import jgnash.net.security.AbstractYahooParser;
-import jgnash.net.security.SecurityUpdateFactory;
 import jgnash.net.security.UpdateFactory;
 import jgnash.plugin.Plugin;
 import jgnash.plugin.PluginFactory;
@@ -415,7 +414,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         actionParser.preLoadAction("security-background-update-command", new AbstractEnabledAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                backgroundUpdateExecutor.schedule(SecurityUpdateFactory.getUpdateWorker(), 1, TimeUnit.SECONDS);
+                EngineFactory.getEngine(EngineFactory.DEFAULT).startSecuritiesUpdate();
             }
         });
 
@@ -706,11 +705,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-
-                if (UpdateFactory.getUpdateOnStartup()) {
-                    backgroundUpdateExecutor.schedule(SecurityUpdateFactory.getUpdateWorker(), SCHEDULED_DELAY, TimeUnit.SECONDS);
-                }
-
                 if (CurrencyUpdateFactory.getUpdateOnStartup()) {
                     backgroundUpdateExecutor.schedule(CurrencyUpdateFactory.getUpdateWorker(), SCHEDULED_DELAY, TimeUnit.SECONDS);
                 }

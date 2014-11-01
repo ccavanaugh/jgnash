@@ -32,10 +32,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,6 +63,7 @@ import jgnash.engine.message.MessageProperty;
 import jgnash.engine.recurring.PendingReminder;
 import jgnash.engine.recurring.RecurringIterator;
 import jgnash.engine.recurring.Reminder;
+import jgnash.net.security.UpdateFactory;
 import jgnash.util.DateUtils;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
@@ -130,14 +134,25 @@ public class Engine {
     private RootAccount rootAccount;
 
     private ExchangeRateDAO exchangeRateDAO;
-    private EngineDAO eDAO;
-    private AttachmentManager attachmentManager;
+    private final EngineDAO eDAO;
+    private final AttachmentManager attachmentManager;
 
     /**
      * Cached for performance
      */
     private String accountSeparator = null;
-    private ScheduledExecutorService trashExecutor;
+
+    /**
+     * The maximum number of network errors before scheduled tasks are stopped
+     */
+    private static final short MAX_ERRORS = 2;
+
+    /**
+     * Time in seconds to delay start of background updates
+     */
+    private static final int SCHEDULED_DELAY = 30;
+    private final ScheduledExecutorService trashExecutor;
+    private final ScheduledExecutorService executorService;
 
     public Engine(final EngineDAO eDAO, final LockManager lockManager, final AttachmentManager attachmentManager, final String name) {
         Objects.requireNonNull(name, "The engine name may not be null");
@@ -167,10 +182,55 @@ public class Engine {
 
             @Override
             public void run() {
-
                 emptyTrash();
             }
         }, 1, 5, TimeUnit.MINUTES);
+
+        executorService = Executors.newSingleThreadScheduledExecutor();
+
+        if (UpdateFactory.getUpdateOnStartup()) {
+            startSecuritiesUpdate();
+        }
+    }
+
+    public void startSecuritiesUpdate() {
+        final List<ScheduledFuture<Boolean>> futures = new ArrayList<>();
+
+        // Load of the scheduler with the tasks and save the futures
+        for (SecurityNode securityNode : getSecurities()) {
+            if (securityNode.getQuoteSource() != QuoteSource.NONE) { // failure will occur if source is not defined
+                futures.add(executorService.schedule(new UpdateFactory.UpdateSecurityNodeCallable(securityNode), SCHEDULED_DELAY, TimeUnit.SECONDS));
+            }
+        }
+
+        new Thread() {
+            public void run() {
+                short errorCount = 0;
+
+                // Wait for completion of each task and if too many errors occur, cancel all of them
+                for (final ScheduledFuture<Boolean> future : futures) {
+                    try {
+                        if (!future.get(1, TimeUnit.MINUTES)) {
+                            errorCount++;
+                        }
+                    } catch (final InterruptedException | ExecutionException | TimeoutException e) {
+                        logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+                        errorCount++;
+                    }
+
+                    if (errorCount > MAX_ERRORS) {
+                        break;
+                    }
+                }
+
+                if (errorCount > MAX_ERRORS) {
+                    logger.severe("Exceeded maximum number of network errors, canceling remainder of updates");
+                    for (final ScheduledFuture<Boolean> future : futures) {
+                        future.cancel(false);
+                    }
+                }
+            }
+        }.start();
     }
 
     /**

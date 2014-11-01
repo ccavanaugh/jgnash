@@ -83,7 +83,7 @@ public class UpdateFactory {
         boolean result = false;
 
         final ExecutorService service = Executors.newSingleThreadExecutor();
-        final Future<Boolean> future = service.submit(new UpdateOneCallable(node));
+        final Future<Boolean> future = service.submit(new UpdateSecurityNodeCallable(node));
 
         try {
             result = future.get(TIMEOUT, TimeUnit.MINUTES);
@@ -173,14 +173,14 @@ public class UpdateFactory {
 
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
 
-                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-
                     String l = in.readLine();
 
                     // make sure that we have valid data format.
                     if (!RESPONSE_HEADER.equals(l)) {
                         result = false;
                     }
+
+                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
                     //Date,Open,High,Low,Close,Volume,Adj Close
                     //2007-02-13,14.75,14.86,14.47,14.60,17824500,14.60
@@ -197,14 +197,17 @@ public class UpdateFactory {
                             final BigDecimal close = new BigDecimal(fields[4]);
                             final long volume = Long.parseLong(fields[5]);
 
-                            SecurityHistoryNode node = new SecurityHistoryNode();
+                            final SecurityHistoryNode node = new SecurityHistoryNode();
+
                             node.setDate(date);
                             node.setPrice(close);
                             node.setVolume(volume);
                             node.setHigh(high);
                             node.setLow(low);
 
-                            engine.addSecurityHistory(securityNode, node);
+                            if (engine != null && !Thread.currentThread().isInterrupted()) {
+                                engine.addSecurityHistory(securityNode, node);
+                            }
                         }
 
                         l = in.readLine();
@@ -228,11 +231,11 @@ public class UpdateFactory {
         }
     }
 
-    public static class UpdateOneCallable implements Callable<Boolean> {
+    public static class UpdateSecurityNodeCallable implements Callable<Boolean> {
 
         private final SecurityNode securityNode;
 
-        public UpdateOneCallable(final SecurityNode securityNode) {
+        public UpdateSecurityNodeCallable(@NotNull final SecurityNode securityNode) {
             this.securityNode = securityNode;
         }
 
@@ -243,12 +246,13 @@ public class UpdateFactory {
             final Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
             if (e != null && securityNode.getQuoteSource() != QuoteSource.NONE) {
-                SecurityParser parser = securityNode.getQuoteSource().getParser();
+                final SecurityParser parser = securityNode.getQuoteSource().getParser();
 
                 if (!Thread.currentThread().isInterrupted()) {  // check for thread interruption
                     if (parser.parse(securityNode)) {
 
-                        SecurityHistoryNode history = new SecurityHistoryNode();
+                        final SecurityHistoryNode history = new SecurityHistoryNode();
+
                         history.setPrice(parser.getPrice());
                         history.setVolume(parser.getVolume());
                         history.setHigh(parser.getHigh());
@@ -256,9 +260,10 @@ public class UpdateFactory {
                         history.setDate(parser.getDate());  // returned date from the parser
 
                         if (!Thread.currentThread().isInterrupted()) { // check for thread interruption
-                            if (e.addSecurityHistory(securityNode, history)) {
+                            result = e.addSecurityHistory(securityNode, history);
+
+                            if (result) {
                                 logger.info(Resource.get().getString("Message.UpdatedPrice", securityNode.getSymbol()));
-                                result = true;
                             }
                         }
                     }

@@ -27,6 +27,7 @@ import jgnash.engine.xstream.XMLDataStore;
 import jgnash.util.FileMagic;
 import jgnash.util.FileMagic.FileType;
 import jgnash.util.FileUtils;
+import jgnash.util.Nullable;
 import jgnash.util.Resource;
 
 import java.io.File;
@@ -120,8 +121,9 @@ public class EngineFactory {
      * Returns the engine with the given name
      * @param name engine name to look for
      *
-     * @return null if it does not exist
+     * @return returns {@code null} if it does not exist
      */
+    @Nullable
     public static synchronized Engine getEngine(final String name) {
         return engineMap.get(name);
     }
