@@ -18,8 +18,6 @@
 
 package jgnash.util;
 
-import org.apache.commons.codec.binary.Base64;
-
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -33,6 +31,9 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
+
+import static javax.xml.bind.DatatypeConverter.parseBase64Binary;
+import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 
 /**
  * A Simple encryption class based on a supplied user and password
@@ -83,7 +84,7 @@ public class EncryptionManager {
 
             cipher.init(Cipher.ENCRYPT_MODE, key);
 
-            return Base64.encodeBase64String(cipher.doFinal(plain.getBytes(StandardCharsets.UTF_8)));
+            return printBase64Binary(cipher.doFinal(plain.getBytes(StandardCharsets.UTF_8)));
 
         } catch (final InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
@@ -106,7 +107,7 @@ public class EncryptionManager {
 
             cipher.init(Cipher.DECRYPT_MODE, key);
 
-            return new String(cipher.doFinal(Base64.decodeBase64(encrypted)), StandardCharsets.UTF_8);
+            return new String(cipher.doFinal(parseBase64Binary(encrypted)), StandardCharsets.UTF_8);
         } catch (final InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | BadPaddingException | IllegalBlockSizeException e) {
             logger.log(Level.SEVERE, "Invalid password");
             return DECRYPTION_ERROR_TAG;
