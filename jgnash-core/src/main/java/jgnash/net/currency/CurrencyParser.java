@@ -23,9 +23,8 @@ import java.math.BigDecimal;
  * Currency parser interface
  *
  * @author Craig Cavanaugh
- *
  */
-public interface CurrencyParser {
+interface CurrencyParser {
 
     BigDecimal getConversion();
 

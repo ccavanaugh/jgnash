@@ -21,9 +21,8 @@ package jgnash.ui.account;
  * Account Filter interface
  * 
  * @author Craig Cavanaugh
- *
  */
-public interface AccountFilterModel {
+interface AccountFilterModel {
 
     public boolean isAccountVisible();
 

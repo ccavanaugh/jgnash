@@ -67,7 +67,7 @@ public class UpdateFactory {
     // static reference is kept so LogManager cannot garbage collect the logger
     private static final Logger logger = Logger.getLogger(UpdateFactory.class.getName());
 
-    public static final int TIMEOUT = 1;
+    private static final int TIMEOUT = 1;   // default timeout in minutes
 
     public static void setUpdateOnStartup(final boolean update) {
         Preferences pref = Preferences.userNodeForPackage(UpdateFactory.class);

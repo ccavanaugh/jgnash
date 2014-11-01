@@ -83,7 +83,7 @@ public class JIntegerField extends JTextFieldEx {
         return new IntegerDocument();
     }
 
-    static class IntegerDocument extends PlainDocument {
+    private static class IntegerDocument extends PlainDocument {
 
         @Override
         public void insertString(final int offs, final String str, final AttributeSet a)

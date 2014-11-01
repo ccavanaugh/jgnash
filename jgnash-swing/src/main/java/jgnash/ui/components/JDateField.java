@@ -102,7 +102,7 @@ public final class JDateField extends JTextFieldEx {
         return new DateDocument();
     }
 
-    class DateDocument extends PlainDocument {
+    private class DateDocument extends PlainDocument {
 
         @Override
         public void insertString(final int offs, final String str, final AttributeSet a)

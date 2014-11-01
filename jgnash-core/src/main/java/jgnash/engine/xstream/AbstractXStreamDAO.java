@@ -50,7 +50,7 @@ abstract class AbstractXStreamDAO extends AbstractDAO {
         this.container = container;
     }
 
-    public StoredObject getObjectByUuid(final String uuid) {
+    StoredObject getObjectByUuid(final String uuid) {
         return container.get(uuid);
     }
 

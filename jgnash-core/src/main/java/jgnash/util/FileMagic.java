@@ -54,9 +54,9 @@ public class FileMagic {
 
     private static final byte[] XML_HEADER = "<?xml version=\"1.0\"".getBytes(StandardCharsets.UTF_8);
 
-    public static final String USASCII = "USASCII";
+    private static final String USASCII = "USASCII";
 
-    public static final String WINDOWS_1252 = "windows-1252";
+    private static final String WINDOWS_1252 = "windows-1252";
 
     public static enum FileType {
         db4o, BinaryXStream, OfxV1, OfxV2, jGnash1XML, jGnash2XML, h2, hsql, unknown

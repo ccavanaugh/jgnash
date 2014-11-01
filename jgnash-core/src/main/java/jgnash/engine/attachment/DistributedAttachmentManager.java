@@ -47,7 +47,7 @@ public class DistributedAttachmentManager implements AttachmentManager {
 
     private static final String TEMP_ATTACHMENT_PATH = "jgnashTemp-";
 
-    public static final int TRANSFER_TIMEOUT = 5000;
+    private static final int TRANSFER_TIMEOUT = 5000;
 
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 

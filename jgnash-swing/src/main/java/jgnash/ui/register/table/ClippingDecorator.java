@@ -97,7 +97,7 @@ public final class ClippingDecorator implements ClippingModel {
     }
 
 
-    public Date getEndDate() {
+    Date getEndDate() {
         Date date = new Date();
 
         /* Do not assume the model/account has any transactions */

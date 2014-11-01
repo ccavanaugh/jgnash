@@ -100,11 +100,11 @@ public class RemoteConnectionDialog extends JDialog implements ActionListener {
         return hostField.getText();
     }
 
-    public void setHost(String host) {
+    void setHost(String host) {
         hostField.setText(host);
     }
 
-    public void setPort(int port) {
+    void setPort(int port) {
         portField.setIntValue(port);
     }
 

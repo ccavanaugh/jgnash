@@ -27,7 +27,7 @@ import jgnash.engine.Account;
  *
  * @author Craig Cavanaugh
  */
-public interface AccountTableModel extends TableModel {
+interface AccountTableModel extends TableModel {
 
     public Account getAccount();
 }
