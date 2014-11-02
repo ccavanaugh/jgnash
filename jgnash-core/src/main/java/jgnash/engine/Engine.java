@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -222,7 +223,7 @@ public class Engine {
      * @return {@code Future} for background task
      */
     public Future<Void> startExchangeRateUpdate(final int delay) {
-        return backgroundExecutorService.schedule(new CurrencyUpdateFactory.UpdateExchangeRatesCallable(), delay,
+        return backgroundExecutorService.schedule(new BackgroundCallable<>(new CurrencyUpdateFactory.UpdateExchangeRatesCallable()), delay,
                 TimeUnit.SECONDS);
     }
 
@@ -237,7 +238,7 @@ public class Engine {
         // Load of the scheduler with the tasks and save the futures
         for (final SecurityNode securityNode : getSecurities()) {
             if (securityNode.getQuoteSource() != QuoteSource.NONE) { // failure will occur if source is not defined
-                futures.add(backgroundExecutorService.schedule(new UpdateFactory.UpdateSecurityNodeCallable(securityNode),
+                futures.add(backgroundExecutorService.schedule(new BackgroundCallable<>(new UpdateFactory.UpdateSecurityNodeCallable(securityNode)),
                         delay, TimeUnit.SECONDS));
             }
         }
@@ -770,10 +771,11 @@ public class Engine {
      */
     private void emptyTrash() {
 
+        messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STARTED, this));
+
         engineLock.writeLock().lock();
 
         try {
-
             logger.info("Checking for trash");
 
             final List<TrashObject> trash = getTrashDAO().getTrashObjects();
@@ -796,6 +798,8 @@ public class Engine {
             }
         } finally {
             engineLock.writeLock().unlock();
+
+            messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STOPPED, this));
         }
     }
 
@@ -2725,5 +2729,31 @@ public class Engine {
      */
     public String getUuid() {
         return uuid;
+    }
+
+
+    /**
+     * Decorates a Callable to indicate background engine activity is occurring
+     *
+     * @param <E> return type for the decorated callable
+     */
+    private class BackgroundCallable<E> implements Callable<E> {
+
+        final private Callable<E> callable;
+
+        BackgroundCallable(@NotNull final Callable<E> callable) {
+            this.callable = callable;
+        }
+
+        @Override
+        public E call() throws Exception {
+            messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STARTED, Engine.this));
+
+            try {
+                return callable.call();
+            } finally {
+                messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STOPPED, Engine.this));
+            }
+        }
     }
 }

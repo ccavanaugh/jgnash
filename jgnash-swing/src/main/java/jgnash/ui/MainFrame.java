@@ -625,6 +625,12 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
                         addViews();
                         updateTitle();
                         break;
+                    case BACKGROUND_PROCESS_STARTED:
+                        setNetworkBusy(true);
+                        break;
+                    case BACKGROUND_PROCESS_STOPPED:
+                        setNetworkBusy(false);
+                        break;
                     default:
                         // ignore any other messages that don't belong to us
                         break;
