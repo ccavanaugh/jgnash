@@ -34,6 +34,10 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,7 +49,6 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.Timer;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -63,7 +66,6 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
-import jgnash.net.currency.CurrencyUpdateFactory.ExchangeRateUpdateWorker;
 import jgnash.ui.components.CurrencyComboBox;
 import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.FormattedJTable;
@@ -76,12 +78,10 @@ import jgnash.util.Resource;
  * <p/>
  * <b>Note:</b> By default the exchange rate history list is always returned with the exchange occurring in a set
  * direction. The rate must be inverted accordingly.
- * 
+ *
  * @author Craig Cavanaugh
  */
 public class CurrencyExchangeDialog extends JDialog implements MessageListener, ActionListener, ListSelectionListener {
-
-    private static final int DELAY_MILLIS = 1500;
 
     private final Resource rb = Resource.get();
 
@@ -89,11 +89,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
 
     private CurrencyComboBox exchangeCurrencyCombo;
 
-    private Timer timer;
-
-    private final static int DELAY = 250;
-
-    private ExchangeRateUpdateWorker updateWorker;
+    private Future<Void> updateFuture;
 
     private final JFloatField rateField = new JFloatField(0, 6, 2);
 
@@ -274,8 +270,8 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
     }
 
     private void stopOnlineUpdate() {
-        if (updateWorker != null && !updateWorker.isDone()) {
-            updateWorker.cancel(false);
+        if (updateFuture != null) {
+            updateFuture.cancel(true);
         }
     }
 
@@ -325,8 +321,12 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
                 temp[i] = history.get(rows[i]);
             }
 
-            for (int i = rows.length - 1; i >= 0; i--) {
-                EngineFactory.getEngine(EngineFactory.DEFAULT).removeExchangeRateHistory(rate, temp[i]);
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+            if (engine != null) {
+                for (int i = rows.length - 1; i >= 0; i--) {
+                    engine.removeExchangeRateHistory(rate, temp[i]);
+                }
             }
         }
 
@@ -352,41 +352,25 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
     }
 
     private void updateExchangeRates() {
-        updateButton.setEnabled(false);
-        stopButton.setEnabled(true);
-        progressBar.setMinimum(0);
-        progressBar.setMaximum(100);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-        updateWorker = new ExchangeRateUpdateWorker();
+        if (engine != null) {
+            updateButton.setEnabled(false);
+            stopButton.setEnabled(true);
+            progressBar.setIndeterminate(true);
 
-        createTimer();
-        timer.start();
-        updateWorker.execute();
-    }
+            updateFuture = engine.startExchangeRateUpdate(0);
 
-    private void createTimer() {
-        timer = new javax.swing.Timer(DELAY, new ActionListener() {
+            try {
+                updateFuture.get(5, TimeUnit.MINUTES);
+                progressBar.setIndeterminate(false);
+                stopButton.setEnabled(false);
 
-            @Override
-            public void actionPerformed(final ActionEvent evt) {
-
-                progressBar.setValue(updateWorker.getProgress());
-
-                if (updateWorker.isDone()) {
-                    progressBar.setValue(100);
-                    timer.stop();
-                    try {
-                        Thread.sleep(DELAY_MILLIS);
-                    } catch (Exception e) {
-                        Logger.getLogger(CurrencyExchangeDialog.class.getName()).log(Level.INFO, e.getLocalizedMessage(), e);
-                    }
-                    timer = null;
-                    stopButton.setEnabled(false);
-                    updateButton.setEnabled(true);
-                    progressBar.setValue(0);
-                }
+                updateFuture = null;
+            } catch (final InterruptedException | ExecutionException | TimeoutException e) { // intentionally interrupted
+                Logger.getLogger(CurrencyExchangeDialog.class.getName()).log(Level.FINEST, e.getLocalizedMessage(), e);
             }
-        });
+        }
     }
 
     @Override
@@ -436,9 +420,9 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
 
         private ExchangeRate exchangeRate;
 
-        private final String[] cNames = { rb.getString("Column.Date"), rb.getString("Column.ExchangeRate") };
+        private final String[] cNames = {rb.getString("Column.Date"), rb.getString("Column.ExchangeRate")};
 
-        private final Class<?>[] cClass = { Date.class, BigDecimal.class };
+        private final Class<?>[] cClass = {Date.class, BigDecimal.class};
 
         private final NumberFormat decimalFormat;
 

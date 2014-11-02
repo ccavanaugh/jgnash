@@ -33,8 +33,6 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -64,7 +62,6 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
-import jgnash.net.currency.CurrencyUpdateFactory;
 import jgnash.net.security.AbstractYahooParser;
 import jgnash.net.security.UpdateFactory;
 import jgnash.plugin.Plugin;
@@ -126,13 +123,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     private JTextField statusField;
 
     private static final Logger logger = Logger.getLogger(MainFrame.class.getName());
-
-    /**
-     * Used to run background updates with a delayed start
-     */
-    private transient ScheduledThreadPoolExecutor backgroundUpdateExecutor;
-
-    private static final int SCHEDULED_DELAY = 30;
 
     private JXBusyLabel backgroundOperationLabel;
 
@@ -225,10 +215,8 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
             displayWaitMessage(Resource.get().getString("Message.StoreWait"));
 
-            cancelBackgroundUpdates();  // cancel any pending background updates
-
             try {
-                Thread.sleep(1800); // lets the UI start and get the users attention
+                Thread.sleep(1000); // lets the UI start and get the users attention
             } catch (InterruptedException ex) {
                 logger.log(Level.SEVERE, null, ex);
             }
@@ -238,7 +226,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
             stopWaitMessage();
 
             try {
-                Thread.sleep(1800);
+                Thread.sleep(1000);
             } catch (final InterruptedException ex) {
                 logger.log(Level.SEVERE, null, ex);
             }
@@ -407,14 +395,22 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         actionParser.preLoadAction("currency-background-update-command", new AbstractEnabledAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                backgroundUpdateExecutor.schedule(CurrencyUpdateFactory.getUpdateWorker(), 1, TimeUnit.SECONDS);
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+                if (engine != null) {
+                    engine.startExchangeRateUpdate(0);
+                }
             }
         });
 
         actionParser.preLoadAction("security-background-update-command", new AbstractEnabledAction() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                EngineFactory.getEngine(EngineFactory.DEFAULT).startSecuritiesUpdate();
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+                if (engine != null) {
+                    engine.startSecuritiesUpdate(0);
+                }
             }
         });
 
@@ -609,7 +605,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
             public void run() {
                 switch (event.getEvent()) {
                     case FILE_CLOSING:
-                        cancelBackgroundUpdates();  // cancel any pending background updates
                         setOpenState(false);
                         updateTitle();
                         removeViews();
@@ -629,7 +624,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
                         setOpenState(true);
                         addViews();
                         updateTitle();
-                        startBackgroundUpdates();
                         break;
                     default:
                         // ignore any other messages that don't belong to us
@@ -696,40 +690,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
                 dispatchEvent(new WindowEvent(MainFrame.this, WindowEvent.WINDOW_CLOSING));
             }
         });
-    }
-
-    private void startBackgroundUpdates() {
-        backgroundUpdateExecutor = new ScheduledThreadPoolExecutor(1);
-
-        // Don't start until the UI has caught up
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (CurrencyUpdateFactory.getUpdateOnStartup()) {
-                    backgroundUpdateExecutor.schedule(CurrencyUpdateFactory.getUpdateWorker(), SCHEDULED_DELAY, TimeUnit.SECONDS);
-                }
-
-                logger.log(Level.INFO, "Checking for needed background updates");
-            }
-        });
-    }
-
-    public void cancelBackgroundUpdates() {
-        if (backgroundUpdateExecutor != null && !backgroundUpdateExecutor.isShutdown()) {
-            try {
-                backgroundUpdateExecutor.shutdown();
-                logger.log(Level.INFO, "Requesting cancellation of background updates");
-
-
-                backgroundUpdateExecutor.awaitTermination(1, TimeUnit.MINUTES);
-                logger.log(Level.INFO, "Background updates canceled");
-
-
-                backgroundUpdateExecutor = new ScheduledThreadPoolExecutor(1);  // recreate for manual requests
-            } catch (Exception e) {
-                logger.log(Level.INFO, e.getMessage(), e);
-            }
-        }
     }
 
     private void updateTitle() {

@@ -193,17 +193,25 @@ public class EngineFactory {
         DataStore oldDataStore = dataStoreMap.get(engineName);
 
         if (oldEngine != null) {
+
+            // stop and wait for all working background services to complete
+            oldEngine.stopBackgroundServices();
+
+            // Post a message so the GUI knows what is going on
             Message message = new Message(MessageChannel.SYSTEM, ChannelEvent.FILE_CLOSING, oldEngine);
             MessageBus.getInstance(engineName).fireEvent(message);
 
+            // Dump an XML backup
             if (exportXMLOnClose() && !oldDataStore.isRemote()) {
                 exportCompressedXML(engineName);
             }
 
+            // Purge old backups
             if (removeOldBackups() && !oldDataStore.isRemote()) {
                 removeOldCompressedXML(oldDataStore.getFileName());
             }
 
+            // Initiate a complete shutdown
             oldEngine.shutdown();
 
             MessageBus.getInstance(engineName).setLocal();

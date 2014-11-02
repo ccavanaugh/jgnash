@@ -32,11 +32,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -63,6 +64,7 @@ import jgnash.engine.message.MessageProperty;
 import jgnash.engine.recurring.PendingReminder;
 import jgnash.engine.recurring.RecurringIterator;
 import jgnash.engine.recurring.Reminder;
+import jgnash.net.currency.CurrencyUpdateFactory;
 import jgnash.net.security.UpdateFactory;
 import jgnash.util.DateUtils;
 import jgnash.util.DefaultDaemonThreadFactory;
@@ -86,9 +88,13 @@ public class Engine {
 
     // Lock names
     private static final String ACCOUNT_LOCK = "account";
+
     private static final String BUDGET_LOCK = "budget";
+
     private static final String COMMODITY_LOCK = "commodity";
+
     private static final String CONFIG_LOCK = "config";
+
     private static final String ENGINE_LOCK = "engine";
 
     private static final Logger logger = Logger.getLogger(Engine.class.getName());
@@ -98,9 +104,13 @@ public class Engine {
     private final Resource rb = Resource.get();
 
     private final ReentrantReadWriteLock accountLock;
+
     private final ReentrantReadWriteLock budgetLock;
+
     private final ReentrantReadWriteLock commodityLock;
+
     private final ReentrantReadWriteLock configLock;
+
     private final ReentrantReadWriteLock engineLock;
 
     /**
@@ -134,7 +144,9 @@ public class Engine {
     private RootAccount rootAccount;
 
     private ExchangeRateDAO exchangeRateDAO;
+
     private final EngineDAO eDAO;
+
     private final AttachmentManager attachmentManager;
 
     /**
@@ -151,8 +163,10 @@ public class Engine {
      * Time in seconds to delay start of background updates
      */
     private static final int SCHEDULED_DELAY = 30;
-    private final ScheduledExecutorService trashExecutor;
-    private final ScheduledExecutorService executorService;
+
+    private final ScheduledThreadPoolExecutor trashExecutor;
+
+    private final ScheduledThreadPoolExecutor backgroundExecutorService;
 
     public Engine(final EngineDAO eDAO, final LockManager lockManager, final AttachmentManager attachmentManager, final String name) {
         Objects.requireNonNull(name, "The engine name may not be null");
@@ -175,34 +189,60 @@ public class Engine {
 
         checkAndCorrect();
 
-        trashExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
+        trashExecutor = new ScheduledThreadPoolExecutor(1, new DefaultDaemonThreadFactory());
 
         // run trash cleanup every 5 minutes 1 minute after startup
         trashExecutor.scheduleWithFixedDelay(new Runnable() {
 
             @Override
             public void run() {
-                emptyTrash();
+                if (!Thread.currentThread().isInterrupted()) {
+                    emptyTrash();
+                }
             }
         }, 1, 5, TimeUnit.MINUTES);
 
-        executorService = Executors.newSingleThreadScheduledExecutor();
+        backgroundExecutorService = new ScheduledThreadPoolExecutor(1);
+        backgroundExecutorService.setRemoveOnCancelPolicy(true);
+        backgroundExecutorService.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
 
         if (UpdateFactory.getUpdateOnStartup()) {
-            startSecuritiesUpdate();
+            startSecuritiesUpdate(SCHEDULED_DELAY);
+        }
+
+        if (CurrencyUpdateFactory.getUpdateOnStartup()) {
+            startExchangeRateUpdate(SCHEDULED_DELAY);
         }
     }
 
-    public void startSecuritiesUpdate() {
+    /**
+     * Initiates a background exchange rate update with a given start delay
+     *
+     * @param delay delay in seconds
+     * @return {@code Future} for background task
+     */
+    public Future<Void> startExchangeRateUpdate(final int delay) {
+        return backgroundExecutorService.schedule(new CurrencyUpdateFactory.UpdateExchangeRatesCallable(), delay,
+                TimeUnit.SECONDS);
+    }
+
+    /**
+     * Initiates a background securities history update with a given start delay
+     *
+     * @param delay delay in seconds
+     */
+    public void startSecuritiesUpdate(final int delay) {
         final List<ScheduledFuture<Boolean>> futures = new ArrayList<>();
 
         // Load of the scheduler with the tasks and save the futures
-        for (SecurityNode securityNode : getSecurities()) {
+        for (final SecurityNode securityNode : getSecurities()) {
             if (securityNode.getQuoteSource() != QuoteSource.NONE) { // failure will occur if source is not defined
-                futures.add(executorService.schedule(new UpdateFactory.UpdateSecurityNodeCallable(securityNode), SCHEDULED_DELAY, TimeUnit.SECONDS));
+                futures.add(backgroundExecutorService.schedule(new UpdateFactory.UpdateSecurityNodeCallable(securityNode),
+                        delay, TimeUnit.SECONDS));
             }
         }
 
+        // Cleanup thread that monitor for excess network connection failures
         new Thread() {
             public void run() {
                 short errorCount = 0;
@@ -216,6 +256,9 @@ public class Engine {
                     } catch (final InterruptedException | ExecutionException | TimeoutException e) {
                         logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
                         errorCount++;
+                    } catch (final CancellationException e) {
+                        errorCount = Short.MAX_VALUE;   // force a failure
+                        break; // futures are being canceled externally, exit the thread
                     }
 
                     if (errorCount > MAX_ERRORS) {
@@ -224,7 +267,6 @@ public class Engine {
                 }
 
                 if (errorCount > MAX_ERRORS) {
-                    logger.severe("Exceeded maximum number of network errors, canceling remainder of updates");
                     for (final ScheduledFuture<Boolean> future : futures) {
                         future.cancel(false);
                     }
@@ -240,9 +282,9 @@ public class Engine {
      * a transaction with the same closest or matching date.
      *
      * @param transactions Collection of transactions utilizing the requested investment
-     * @param node {@code SecurityNode} we want a price for
+     * @param node         {@code SecurityNode} we want a price for
      * @param baseCurrency {@code CurrencyNode} reporting currency
-     * @param date {@code Date} we want a market price for
+     * @param date         {@code Date} we want a market price for
      * @return The best market price or a value of 0 if no history or transactions exist
      */
     public static BigDecimal getMarketPrice(final Collection<Transaction> transactions, final SecurityNode node, final CurrencyNode baseCurrency, final Date date) {
@@ -519,7 +561,7 @@ public class Engine {
 
             // purge stale budget goals for place holder accounts
             if (getConfig().getFileVersion() < 2.14f) {
-                for (final Account account: getAccountList()) {
+                for (final Account account : getAccountList()) {
                     if (account.isPlaceHolder()) {
                         purgeBudgetGoal(account);
                     }
@@ -630,10 +672,35 @@ public class Engine {
         }
     }
 
-    void shutdown() {
+    void stopBackgroundServices() {
+        logInfo("Controlled engine shutdown initiated");
 
-        trashExecutor.shutdownNow();
+        shutDownAndWait(backgroundExecutorService);
+        shutDownAndWait(trashExecutor);
+    }
+
+    void shutdown() {
         eDAO.shutdown();
+    }
+
+    private void shutDownAndWait(final ExecutorService executorService) {
+        executorService.shutdown();
+
+        try {
+            if (!executorService.awaitTermination(1, TimeUnit.MINUTES)) {
+                executorService.shutdownNow();
+
+                if (!executorService.awaitTermination(1, TimeUnit.MINUTES)) {
+                    logSevere("Unable to shutdown background service");
+                }
+            }
+
+        } catch (final InterruptedException e) {
+            executorService.shutdownNow();
+            Thread.currentThread().interrupt();
+
+            logger.log(Level.FINEST, e.getLocalizedMessage(), e);
+        }
     }
 
     public String getName() {
@@ -709,7 +776,7 @@ public class Engine {
 
             logger.info("Checking for trash");
 
-            List<TrashObject> trash = getTrashDAO().getTrashObjects();
+            final List<TrashObject> trash = getTrashDAO().getTrashObjects();
 
             /* always sort by the timestamp of the trash object to prevent
              * foreign key removal exceptions when multiple related accounts
@@ -720,7 +787,7 @@ public class Engine {
                 logger.info("No trash was found");
             }
 
-            long now = new Date().getTime();
+            final long now = new Date().getTime();
 
             for (TrashObject o : trash) {
                 if (now - o.getDate().getTime() >= MAXIMUM_TRASH_AGE) {
@@ -1326,10 +1393,10 @@ public class Engine {
 
     /**
      * Remove a {@code SecurityHistoryNode} given a {@code Date}
+     *
      * @param node {@code SecurityNode} to remove history from
      * @param date the search {@code Date}
      * @return {@code true} if a {@code SecurityHistoryNode} was found and removed
-     *
      */
     public boolean removeSecurityHistory(@NotNull final SecurityNode node, @NotNull final Date date) {
 

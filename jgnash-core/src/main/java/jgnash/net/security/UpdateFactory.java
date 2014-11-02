@@ -169,7 +169,6 @@ public class UpdateFactory {
                 /* Yahoo uses English locale for date format... force the locale */
                 final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
-                //connection = new URL(r.toString()).openConnection();
                 connection = ConnectionFactory.getConnection(r.toString());
 
                 if (connection != null) {
@@ -190,7 +189,12 @@ public class UpdateFactory {
 
                         l = in.readLine(); // prime the first read
 
-                        while (l != null && !Thread.currentThread().isInterrupted()) {
+                        while (l != null) {
+
+                            if (Thread.currentThread().isInterrupted()) {
+                                Thread.currentThread().interrupt();
+                                return false;
+                            }
 
                             if (l.charAt(0) != '<') { // may have comments in file
                                 String[] fields = COMMA_DELIMITER_PATTERN.split(l);

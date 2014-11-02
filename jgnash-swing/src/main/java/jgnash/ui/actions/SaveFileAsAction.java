@@ -18,6 +18,7 @@
 package jgnash.ui.actions;
 
 import jgnash.engine.DataStoreType;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.StoredObject;
 import jgnash.engine.xstream.BinaryXStreamDataStore;
@@ -97,8 +98,6 @@ public class SaveFileAsAction extends AbstractEnabledAction {
                 @Override
                 protected Void doInBackground() throws Exception {
 
-                    UIApplication.getFrame().cancelBackgroundUpdates();
-
                     UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
 
                     String fileExtension = FileUtils.getFileExtension(destination);
@@ -124,29 +123,48 @@ public class SaveFileAsAction extends AbstractEnabledAction {
                         if (currentType.supportsRemote && newFileType.supportsRemote) {
                             File tempFile = Files.createTempFile("jgnash", "." + BinaryXStreamDataStore.FILE_EXT).toFile();
 
-                            Collection<StoredObject> objects = EngineFactory.getEngine(EngineFactory.DEFAULT).getStoredObjects();
+                            Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-                            DataStoreType.BINARY_XSTREAM.getDataStore().saveAs(tempFile, objects);
-                            EngineFactory.closeEngine(EngineFactory.DEFAULT);
+                            if (engine != null) {
+                                // Get collection of object to persist
+                                Collection<StoredObject> objects = engine.getStoredObjects();
 
-                            EngineFactory.bootLocalEngine(tempFile.getAbsolutePath(), EngineFactory.DEFAULT, new char[]{});
-                            objects = EngineFactory.getEngine(EngineFactory.DEFAULT).getStoredObjects();
-                            newFileType.getDataStore().saveAs(newFile, objects);
-                            EngineFactory.closeEngine(EngineFactory.DEFAULT);
+                                // Write everything to a temporary file
+                                DataStoreType.BINARY_XSTREAM.getDataStore().saveAs(tempFile, objects);
+                                EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-                            EngineFactory.bootLocalEngine(newFile.getAbsolutePath(), EngineFactory.DEFAULT, new char[]{});
-                            EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount();
+                                // Boot the engine with the temporary file
+                                EngineFactory.bootLocalEngine(tempFile.getAbsolutePath(), EngineFactory.DEFAULT, new char[]{});
 
-                            if (!tempFile.delete()) {
-                                Logger.getLogger(SaveFileAsAction.class.getName()).info("Unable to remove temporary file");
+                                engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+                                if (engine != null) {
+
+                                    // Get collection of object to persist
+                                    objects = engine.getStoredObjects();
+
+                                    // Write everything to the new file
+                                    newFileType.getDataStore().saveAs(newFile, objects);
+                                    EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+                                    // Boot the engine with the new file
+                                    EngineFactory.bootLocalEngine(newFile.getAbsolutePath(), EngineFactory.DEFAULT, new char[]{});
+                                }
+
+                                if (!tempFile.delete()) {
+                                    Logger.getLogger(SaveFileAsAction.class.getName()).info("Unable to remove temporary file");
+                                }
                             }
                         } else {
-                            Collection<StoredObject> objects = EngineFactory.getEngine(EngineFactory.DEFAULT).getStoredObjects();
-                            newFileType.getDataStore().saveAs(newFile, objects);
-                            EngineFactory.closeEngine(EngineFactory.DEFAULT);
+                            Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-                            EngineFactory.bootLocalEngine(newFile.getAbsolutePath(), EngineFactory.DEFAULT, new char[]{});
-                            EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount();
+                            if (engine != null) {
+                                Collection<StoredObject> objects = engine.getStoredObjects();
+                                newFileType.getDataStore().saveAs(newFile, objects);
+                                EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+                                EngineFactory.bootLocalEngine(newFile.getAbsolutePath(), EngineFactory.DEFAULT, new char[]{});
+                            }
                         }
                     }
 
@@ -160,7 +178,6 @@ public class SaveFileAsAction extends AbstractEnabledAction {
             }
 
             new SaveAs().execute();
-
         }
     }
 
