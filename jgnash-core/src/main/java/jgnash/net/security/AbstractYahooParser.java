@@ -139,67 +139,69 @@ public abstract class AbstractYahooParser implements SecurityParser {
 
         String line = null;
 
-        URLConnection connection = ConnectionFactory.getConnection(u);
+        final URLConnection connection = ConnectionFactory.getConnection(u);
 
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
-            line = in.readLine();
+        if (connection != null) {
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+                line = in.readLine();
 
-            if (line != null) {
+                if (line != null) {
 
-                // trim the line.  Yahoo may occasionally include some extra white space
-                line = line.trim();
+                    // trim the line.  Yahoo may occasionally include some extra white space
+                    line = line.trim();
 
-                String[] fields = COMMA_DELIMITER_PATTERN.split(line);
-                in.close();
+                    String[] fields = COMMA_DELIMITER_PATTERN.split(line);
+                    in.close();
 
-                if (fields.length >= 7) {
+                    if (fields.length >= 7) {
 
-                    // may be returned as a yield percentage... ignore for now
-                    if (!fields[1].contains("%")) {
-                        setPrice(new BigDecimal(fields[1]));
+                        // may be returned as a yield percentage... ignore for now
+                        if (!fields[1].contains("%")) {
+                            setPrice(new BigDecimal(fields[1]));
+                        }
+
+                        // try to parse the date "10/12/2012"
+                        // the date from Yahoo is the last close date.  It may not reflect the date the parse is performed
+                        if (!fields[2].isEmpty()) {
+                            try {
+                                DateFormat df = new SimpleDateFormat("\"MM/dd/yyyy\"");
+                                Date date = df.parse(fields[2]);
+                                setDate(date);
+                            } catch (ParseException e) {
+                                logger.log(Level.SEVERE, null, e);
+                            }
+                        }
+
+                        if (fields[6].equals("N/A")) {
+                            setHigh(BigDecimal.ZERO);
+                        } else {
+                            setHigh(new BigDecimal(fields[6]));
+                        }
+
+                        if (fields[7].equals("N/A")) {
+                            setLow(BigDecimal.ZERO);
+                        } else {
+                            setLow(new BigDecimal(fields[7]));
+                        }
+
+                        if (fields[8].equals("N/A")) {
+                            setVolume(0);
+                        } else {
+                            setVolume(Long.parseLong(fields[8]));
+                        }
+
+                        result = true;
                     }
-
-                    // try to parse the date "10/12/2012"
-                    // the date from Yahoo is the last close date.  It may not reflect the date the parse is performed
-                    if (!fields[2].isEmpty()) {
-                        try {
-                            DateFormat df = new SimpleDateFormat("\"MM/dd/yyyy\"");
-                            Date date = df.parse(fields[2]);
-                            setDate(date);
-                        } catch (ParseException e) {
-                            logger.log(Level.SEVERE, null, e);                            
-                        }                        
-                    }
-
-                    if (fields[6].equals("N/A")) {
-                        setHigh(BigDecimal.ZERO);
-                    } else {
-                        setHigh(new BigDecimal(fields[6]));
-                    }
-
-                    if (fields[7].equals("N/A")) {
-                        setLow(BigDecimal.ZERO);
-                    } else {
-                        setLow(new BigDecimal(fields[7]));
-                    }
-
-                    if (fields[8].equals("N/A")) {
-                        setVolume(0);
-                    } else {
-                        setVolume(Long.parseLong(fields[8]));
-                    }
-
-                    result = true;
                 }
-            }
 
-        } catch (SocketTimeoutException | UnknownHostException e) {
-            price = null;
-            logger.log(Level.WARNING, e.getLocalizedMessage(), e);                  
-        } catch (NumberFormatException e) {
-            logger.log(Level.SEVERE, line, e);
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, null, e);
+            } catch (SocketTimeoutException | UnknownHostException e) {
+                price = null;
+                logger.log(Level.WARNING, e.getLocalizedMessage(), e);
+            } catch (NumberFormatException e) {
+                logger.log(Level.SEVERE, line, e);
+            } catch (Exception e) {
+                logger.log(Level.SEVERE, null, e);
+            }
         }
 
         return result;

@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
@@ -47,6 +46,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.QuoteSource;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
+import jgnash.net.ConnectionFactory;
 import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Resource;
@@ -169,54 +169,57 @@ public class UpdateFactory {
                 /* Yahoo uses English locale for date format... force the locale */
                 final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
-                connection = new URL(r.toString()).openConnection();
+                //connection = new URL(r.toString()).openConnection();
+                connection = ConnectionFactory.getConnection(r.toString());
 
-                try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+                if (connection != null) {
 
-                    String l = in.readLine();
+                    try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
 
-                    // make sure that we have valid data format.
-                    if (!RESPONSE_HEADER.equals(l)) {
-                        result = false;
-                    }
+                        String l = in.readLine();
 
-                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-
-                    //Date,Open,High,Low,Close,Volume,Adj Close
-                    //2007-02-13,14.75,14.86,14.47,14.60,17824500,14.60
-
-                    l = in.readLine(); // prime the first read
-
-                    while (l != null && !Thread.currentThread().isInterrupted()) {
-
-                        if (l.charAt(0) != '<') { // may have comments in file
-                            String[] fields = COMMA_DELIMITER_PATTERN.split(l);
-                            Date date = df.parse(fields[0]);
-                            final BigDecimal high = new BigDecimal(fields[2]);
-                            final BigDecimal low = new BigDecimal(fields[3]);
-                            final BigDecimal close = new BigDecimal(fields[4]);
-                            final long volume = Long.parseLong(fields[5]);
-
-                            final SecurityHistoryNode node = new SecurityHistoryNode();
-
-                            node.setDate(date);
-                            node.setPrice(close);
-                            node.setVolume(volume);
-                            node.setHigh(high);
-                            node.setLow(low);
-
-                            if (engine != null && !Thread.currentThread().isInterrupted()) {
-                                engine.addSecurityHistory(securityNode, node);
-                            }
+                        // make sure that we have valid data format.
+                        if (!RESPONSE_HEADER.equals(l)) {
+                            result = false;
                         }
 
-                        l = in.readLine();
+                        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+                        //Date,Open,High,Low,Close,Volume,Adj Close
+                        //2007-02-13,14.75,14.86,14.47,14.60,17824500,14.60
+
+                        l = in.readLine(); // prime the first read
+
+                        while (l != null && !Thread.currentThread().isInterrupted()) {
+
+                            if (l.charAt(0) != '<') { // may have comments in file
+                                String[] fields = COMMA_DELIMITER_PATTERN.split(l);
+                                Date date = df.parse(fields[0]);
+                                final BigDecimal high = new BigDecimal(fields[2]);
+                                final BigDecimal low = new BigDecimal(fields[3]);
+                                final BigDecimal close = new BigDecimal(fields[4]);
+                                final long volume = Long.parseLong(fields[5]);
+
+                                final SecurityHistoryNode node = new SecurityHistoryNode();
+
+                                node.setDate(date);
+                                node.setPrice(close);
+                                node.setVolume(volume);
+                                node.setHigh(high);
+                                node.setLow(low);
+
+                                if (engine != null && !Thread.currentThread().isInterrupted()) {
+                                    engine.addSecurityHistory(securityNode, node);
+                                }
+                            }
+
+                            l = in.readLine();
+                        }
                     }
+
+                    String message = rb.getString("Message.UpdatedPrice", securityNode.getSymbol());
+                    logger.info(message);
                 }
-
-                String message = rb.getString("Message.UpdatedPrice", securityNode.getSymbol());
-                logger.info(message);
-
             } catch (IOException | ParseException | NumberFormatException ex) {
                 logger.log(Level.SEVERE, null, ex);
             } finally {
