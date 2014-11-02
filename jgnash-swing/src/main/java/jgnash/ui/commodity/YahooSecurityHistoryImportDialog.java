@@ -34,6 +34,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.QuoteSource;
 import jgnash.engine.SecurityNode;
@@ -96,19 +97,24 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
         cal.add(Calendar.MONDAY, -1);
         startField.setDate(cal.getTime());
 
-        List<SecurityNode> list = EngineFactory.getEngine(EngineFactory.DEFAULT).getSecurities();
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-        Iterator<SecurityNode> i = list.iterator();
+        if (engine != null) {
+            List<SecurityNode> list = engine.getSecurities();
 
-        while (i.hasNext()) {
-            if (i.next().getQuoteSource() == QuoteSource.NONE) {
-                i.remove();
+            final Iterator<SecurityNode> i = list.iterator();
+
+            while (i.hasNext()) {
+                if (i.next().getQuoteSource() == QuoteSource.NONE) {
+                    i.remove();
+                }
             }
+
+            securityList.setModel(new SortedListModel<>(list));
+            securityList.setSelectionModel(new ToggleSelectionModel());
+            securityList.setCellRenderer(new CheckListCellRenderer<>(securityList.getCellRenderer()));
         }
 
-        securityList.setModel(new SortedListModel<>(list));
-        securityList.setSelectionModel(new ToggleSelectionModel());
-        securityList.setCellRenderer(new CheckListCellRenderer<>(securityList.getCellRenderer()));
 
         layoutMainPanel();
 
