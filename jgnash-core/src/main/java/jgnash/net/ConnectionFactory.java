@@ -25,15 +25,22 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import jgnash.util.Nullable;
+
 /**
  * Factory methods for setting network connection timeout and creating a URLConnection with timeout set correctly.
  * 
  * @author Craig Cavanaugh
- *
  */
 public class ConnectionFactory {
 
     private static final String TIMEOUT = "timeout";
+
+    private static final int DEFAULT_TIMEOUT = 30;
+
+    private static final int MAX_TIMEOUT = 30;
+
+    private static final int MIN_TIMEOUT = 1;
 
     private ConnectionFactory() {
     }
@@ -43,9 +50,9 @@ public class ConnectionFactory {
      * 
      * @param seconds time in seconds before a timeout occurs
      */
-    public synchronized static void setConnectionTimeout(int seconds) {
+    public synchronized static void setConnectionTimeout(final int seconds) {
 
-        if (seconds < 1 || seconds > 120) {
+        if (seconds < MIN_TIMEOUT || seconds > MAX_TIMEOUT) {
             throw new IllegalArgumentException("Invalid timeout connection");
         }
 
@@ -60,27 +67,35 @@ public class ConnectionFactory {
      */
     public synchronized static int getConnectionTimeout() {
         Preferences pref = Preferences.userNodeForPackage(ConnectionFactory.class);
-        return pref.getInt(TIMEOUT, 30);
+        return pref.getInt(TIMEOUT, DEFAULT_TIMEOUT);
     }
 
+    @Nullable
     public synchronized static URLConnection getConnection(String url) {
         URLConnection connection = null;
        
         try {
             connection = getConnection(new URL(url));
-        } catch (MalformedURLException ex) {
+        } catch (final MalformedURLException ex) {
             Logger.getLogger(ConnectionFactory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        /* Set the connection timeout */
+        if (connection != null) {
+            connection.setConnectTimeout(getConnectionTimeout() * 1000);
+            connection.setReadTimeout(getConnectionTimeout() * 1000);
         }
 
         return connection;
     }
 
+    @Nullable
     private synchronized static URLConnection getConnection(final URL url) {
         URLConnection connection = null;
 
         try {
             connection = url.openConnection();
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             Logger.getLogger(ConnectionFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
 
