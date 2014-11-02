@@ -35,7 +35,6 @@ import jgnash.net.ConnectionFactory;
  * A CurrencyParser for the Yahoo finance site.
  *
  * @author Craig Cavanaugh
- *
  */
 public class YahooParser implements CurrencyParser {
 
@@ -59,21 +58,24 @@ public class YahooParser implements CurrencyParser {
         try {
             URLConnection connection = ConnectionFactory.getConnection(url.toString());
 
-            in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+            if (connection != null) {
 
-            /* Result: "USDAUD=X",1.4455,"9/8/2004","5:39am",1.4455,1.4468 */
+                in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
 
-            String l = in.readLine(); // read the first line
-            String[] fields = COMMA_DELIMITER_PATTERN.split(l); // split the line
+                /* Result: "USDAUD=X",1.4455,"9/8/2004","5:39am",1.4455,1.4468 */
 
-            if (!"\"N/A\"".equals(fields[2])) { // "N/A"
-                result = new BigDecimal(fields[1]);
+                String l = in.readLine(); // read the first line
+                String[] fields = COMMA_DELIMITER_PATTERN.split(l); // split the line
+
+                if (!"\"N/A\"".equals(fields[2])) { // "N/A"
+                    result = new BigDecimal(fields[1]);
+                }
             }
-        } catch (SocketTimeoutException | UnknownHostException e) {
+        } catch (final SocketTimeoutException | UnknownHostException e) {
             result = null;
             Logger.getLogger(YahooParser.class.getName()).warning(e.getLocalizedMessage());
-            return false;       
-        } catch (Exception e) {
+            return false;
+        } catch (final Exception e) {
             Logger.getLogger(YahooParser.class.getName()).severe(e.getLocalizedMessage());
             return false;
         } finally {
