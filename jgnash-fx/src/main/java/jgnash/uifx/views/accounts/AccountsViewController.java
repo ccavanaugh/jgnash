@@ -19,10 +19,12 @@ package jgnash.uifx.views.accounts;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.CommodityFormatTreeTableCell;
@@ -180,7 +182,10 @@ public class AccountsViewController extends AccountTreeController {
         final Account account = getSelectedAccount();
 
         if (account != null) {
-            if (!EngineFactory.getEngine(EngineFactory.DEFAULT).removeAccount(account)) {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
+            if (!engine.removeAccount(account)) {
                 StaticUIMethods.displayError(resources.getString("Message.Error.AccountRemove"));
             }
         }

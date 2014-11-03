@@ -27,6 +27,7 @@ import jgnash.util.Resource;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Objects;
 
 /**
  * UI Action to open the new file dialog
@@ -52,7 +53,8 @@ public class DefaultCurrencyAction extends AbstractEnabledAction {
 
                 if (result == JOptionPane.YES_OPTION) {
 
-                    Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                    Objects.requireNonNull(engine);
 
                     engine.setDefaultCurrency(combo.getSelectedNode());
                     JOptionPane.showMessageDialog(UIApplication.getFrame(), rb.getString("Message.CurrChange") + " " + engine.getDefaultCurrency().getSymbol());

@@ -18,6 +18,7 @@
 package jgnash.uifx.views.accounts;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -83,6 +84,8 @@ public class StaticAccountsMethods {
             AccountPropertiesController controller = loader.getController();
 
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
             controller.setSelectedCurrency(engine.getDefaultCurrency());
             controller.setParentAccount(engine.getRootAccount());
 
@@ -126,6 +129,7 @@ public class StaticAccountsMethods {
 
             if (controller.getResult()) {
                 final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                Objects.requireNonNull(engine);
 
                 Account template = controller.getTemplate();
 

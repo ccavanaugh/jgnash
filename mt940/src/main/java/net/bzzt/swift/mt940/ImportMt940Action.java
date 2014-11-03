@@ -30,6 +30,7 @@ import javax.swing.JFileChooser;
 import javax.swing.SwingWorker;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.convert.imports.GenericImport;
 import jgnash.convert.imports.ImportBank;
@@ -63,7 +64,9 @@ public class ImportMt940Action extends AbstractEnabledAction {
     private static void importMt940() {
         final Resource rb = Resource.get();
 
-        if (EngineFactory.getEngine(EngineFactory.DEFAULT) == null || EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount().getChildCount() == 0) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+        if (engine == null || engine.getRootAccount().getChildCount() == 0) {
             StaticUIMethods.displayError(rb.getString("Message.Error.CreateBasicAccounts"));
             return;
         }

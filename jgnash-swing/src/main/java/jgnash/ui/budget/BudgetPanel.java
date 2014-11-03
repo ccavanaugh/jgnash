@@ -33,6 +33,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -354,7 +355,10 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
 
         if (activeBudget != null) {
 
-            CurrencyNode baseCurrency = EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency();
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
+            final CurrencyNode baseCurrency = engine.getDefaultCurrency();
 
             resultsModel = new BudgetResultsModel(activeBudget, budgetYear, baseCurrency);
 

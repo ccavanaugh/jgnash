@@ -224,7 +224,11 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
 
                 newTrans = attachmentPanel.buildTransaction(newTrans);  // chain the transaction build
 
-                EngineFactory.getEngine(EngineFactory.DEFAULT).addTransaction(newTrans);
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+                if (engine != null) {
+                    engine.addTransaction(newTrans);
+                }
             } else {
                 Transaction newTrans = buildTransaction();
 
@@ -245,9 +249,9 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
 
                 newTrans = attachmentPanel.buildTransaction(newTrans);  // chain the transaction build
 
-                Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-                if (engine.removeTransaction(modTrans)) {
+                if (engine != null && engine.removeTransaction(modTrans)) {
                     engine.addTransaction(newTrans);
                 }
             }

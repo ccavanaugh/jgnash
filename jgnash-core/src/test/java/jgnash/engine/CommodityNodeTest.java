@@ -24,6 +24,7 @@ import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Objects;
 import java.util.Set;
 
 import org.junit.Test;
@@ -119,6 +120,7 @@ public class CommodityNodeTest {
 
             // get an engine, create a commodity and then try to retrieve
             Engine e = EngineFactory.bootLocalEngine(EngineFactory.getDefaultDatabase() + "-commodity-test.xml", EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
+            Objects.requireNonNull(e);
 
             CurrencyNode node = new CurrencyNode();
 
@@ -137,6 +139,7 @@ public class CommodityNodeTest {
 
             e = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
+            Objects.requireNonNull(e);
             Object cNode = e.getCurrency("USD");
 
             System.out.println(cNode);

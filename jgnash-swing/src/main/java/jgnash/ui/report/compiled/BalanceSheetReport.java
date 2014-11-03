@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
@@ -129,15 +130,16 @@ public class BalanceSheetReport extends AbstractSumByTypeReport {
         private BigDecimal getRetainedProfitLoss(final Date startDate, final Date endDate) {
             BigDecimal profitLoss = BigDecimal.ZERO;
 
-            CurrencyNode baseCurrency = EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency();
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
 
-            Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            final CurrencyNode baseCurrency = engine.getDefaultCurrency();
 
-            for (Account account : engine.getExpenseAccountList()) {
+            for (final Account account : engine.getExpenseAccountList()) {
                 profitLoss = profitLoss.add(account.getBalance(startDate, endDate, baseCurrency));
             }
 
-            for (Account account : engine.getIncomeAccountList()) {
+            for (final Account account : engine.getIncomeAccountList()) {
                 profitLoss = profitLoss.add(account.getBalance(startDate, endDate, baseCurrency));
             }
 

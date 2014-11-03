@@ -19,6 +19,7 @@ package jgnash.ui.checks;
 
 import java.awt.EventQueue;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -115,7 +116,8 @@ public class PrintCheckFactory {
      * @return the resultant transaction
      */
     private static Transaction changeTransNum(final Transaction transaction) {
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
         try {
             Transaction clone = (Transaction) transaction.clone();

@@ -20,6 +20,7 @@ package jgnash.ui.actions;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,6 +31,7 @@ import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.convert.imports.ofx.OfxBank;
 import jgnash.convert.imports.ofx.OfxImport;
@@ -58,7 +60,9 @@ public class ImportOfxAction extends AbstractEnabledAction {
 
         final Preferences pref = Preferences.userNodeForPackage(ImportOfxAction.class);
 
-        if (EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount().getChildCount() == 0) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+        if (engine == null || engine.getRootAccount().getChildCount() == 0) {
             StaticUIMethods.displayError(rb.getString("Message.Error.CreateBasicAccounts"));
             return;
         }
@@ -151,7 +155,10 @@ public class ImportOfxAction extends AbstractEnabledAction {
 
                             /* set the account number if not a match */
                             if (accountNumber != null && !accountNumber.equals(account.getAccountNumber())) {
-                                EngineFactory.getEngine(EngineFactory.DEFAULT).setAccountNumber(account, accountNumber);
+                                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                                Objects.requireNonNull(engine);
+
+                                engine.setAccountNumber(account, accountNumber);
                             }
 
                             /* Import the transactions */

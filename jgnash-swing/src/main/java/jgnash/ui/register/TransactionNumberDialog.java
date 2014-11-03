@@ -27,6 +27,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,6 +42,7 @@ import javax.swing.JTextField;
 import javax.swing.ListModel;
 import javax.swing.WindowConstants;
 
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.JTextFieldEx;
@@ -98,6 +100,9 @@ public class TransactionNumberDialog extends JDialog implements ActionListener {
 
         final Resource rb = Resource.get();
 
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
         setTitle(rb.getString("Title.DefTranNum"));
 
         okButton = new JButton(rb.getString("Button.Ok"));
@@ -116,7 +121,7 @@ public class TransactionNumberDialog extends JDialog implements ActionListener {
         downButton.addActionListener(this);
 
         model = new DefaultListModel<>();
-        final List<String> items = EngineFactory.getEngine(EngineFactory.DEFAULT).getTransactionNumberList();
+        final List<String> items = engine.getTransactionNumberList();
 
         for (String s : items) {
             model.addElement(s);
@@ -184,6 +189,9 @@ public class TransactionNumberDialog extends JDialog implements ActionListener {
     }
 
     private void okAction() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
         final ListModel<String> listModel = list.getModel();
         final int size = listModel.getSize();
         final List<String> items = new ArrayList<>();
@@ -192,7 +200,7 @@ public class TransactionNumberDialog extends JDialog implements ActionListener {
             items.add(listModel.getElementAt(i));
         }
 
-        EngineFactory.getEngine(EngineFactory.DEFAULT).setTransactionNumberList(items);
+        engine.setTransactionNumberList(items);
         close();
     }
 

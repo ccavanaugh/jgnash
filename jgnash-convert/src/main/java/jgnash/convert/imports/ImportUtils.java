@@ -17,8 +17,11 @@
  */
 package jgnash.convert.imports;
 
+import java.util.Objects;
+
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 
 /**
@@ -30,11 +33,17 @@ public class ImportUtils {
     }
 
     public static Account getRootExpenseAccount() {
-        return searchForRootType(EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount(), AccountType.EXPENSE);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        return searchForRootType(engine.getRootAccount(), AccountType.EXPENSE);
     }
 
     public static Account getRootIncomeAccount() {
-        return searchForRootType(EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount(), AccountType.INCOME);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        return searchForRootType(engine.getRootAccount(), AccountType.INCOME);
     }
 
     private static Account searchForRootType(final Account account, final AccountType accountType) {

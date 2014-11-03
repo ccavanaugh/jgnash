@@ -27,6 +27,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -76,8 +77,10 @@ public class ProfitLossTXT {
     }
 
     private void createReport() {
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-        Account root = engine.getRootAccount();
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        final Account root = engine.getRootAccount();
 
         baseCommodity = engine.getDefaultCurrency();
 

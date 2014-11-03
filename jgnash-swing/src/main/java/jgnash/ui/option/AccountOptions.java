@@ -25,6 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.Objects;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
@@ -32,6 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.ui.register.AccountBalanceDisplayManager;
 import jgnash.ui.register.AccountBalanceDisplayMode;
@@ -83,7 +85,10 @@ class AccountOptions extends JPanel implements ActionListener, FocusListener {
     }
 
     private void initComponents() {
-        accountSeparatorField = new JTextField(EngineFactory.getEngine(EngineFactory.DEFAULT).getAccountSeparator());
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        accountSeparatorField = new JTextField(engine.getAccountSeparator());
         useAccountTermsCheckBox = new JCheckBox(rb.getString("Button.AccTerms"));
 
         noneButton = new JRadioButton(rb.getString("Button.None"));
@@ -146,10 +151,13 @@ class AccountOptions extends JPanel implements ActionListener, FocusListener {
     @Override
     public void focusLost(final FocusEvent e) {
         if (e.getSource() == accountSeparatorField) {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
             if (!accountSeparatorField.getText().isEmpty()) {
-                EngineFactory.getEngine(EngineFactory.DEFAULT).setAccountSeparator(accountSeparatorField.getText());
+                engine.setAccountSeparator(accountSeparatorField.getText());
             } else {
-                accountSeparatorField.setText(EngineFactory.getEngine(EngineFactory.DEFAULT).getAccountSeparator());
+                accountSeparatorField.setText(engine.getAccountSeparator());
             }
         }
     }

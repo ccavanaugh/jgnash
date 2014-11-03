@@ -27,6 +27,7 @@ import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.swing.JButton;
@@ -35,6 +36,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
 import jgnash.ui.StaticUIMethods;
@@ -78,12 +80,15 @@ public class AccountSecuritiesDialog extends JDialog implements ActionListener {
     }
 
     public static void showDialog(final Account account, final Component parent) {
-        AccountSecuritiesDialog dlg = new AccountSecuritiesDialog(account, account.getSecurities(), parent);
+        final AccountSecuritiesDialog dlg = new AccountSecuritiesDialog(account, account.getSecurities(), parent);
 
         dlg.setVisible(true);
 
         if (dlg.getReturnValue()) {
-            EngineFactory.getEngine(EngineFactory.DEFAULT).updateAccountSecurities(account, dlg.getSecuritiesList());
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
+            engine.updateAccountSecurities(account, dlg.getSecuritiesList());
         }
     }
 

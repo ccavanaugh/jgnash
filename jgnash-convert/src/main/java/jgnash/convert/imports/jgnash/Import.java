@@ -148,7 +148,8 @@ public class Import {
         XMLInputFactory inputFactory = XMLInputFactory.newInstance();
 
         try {
-            Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
 
             CurrencyNode defaultCurrency = DefaultCurrencies.getDefault();
 
@@ -330,7 +331,8 @@ public class Import {
 
             assert transaction.size() > 0;
 
-            Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
 
             if (!engine.addTransaction(transaction)) {
                 logger.log(Level.SEVERE, "Failed to import transaction: {0}", id);
@@ -376,7 +378,8 @@ public class Import {
 
         logger.info("Linking accounts");
 
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
         for (Account account : parentMap.keySet()) {
             if (account.getAccountType() != AccountType.ROOT) {
@@ -475,16 +478,17 @@ public class Import {
 
                                 if (key != null && key.length() == 6) {
 
-                                    Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                                    Objects.requireNonNull(engine);
 
-                                    CurrencyNode cOne = e.getCurrency(key.substring(0, 3));
-                                    CurrencyNode cTwo = e.getCurrency(key.substring(3, 6));
+                                    CurrencyNode cOne = engine.getCurrency(key.substring(0, 3));
+                                    CurrencyNode cTwo = engine.getCurrency(key.substring(3, 6));
 
                                     // jGnash 1.x would hold onto old exchange rates for deleted commodities
                                     if (cOne != null && cTwo != null) {
                                         BigDecimal rate = new BigDecimal(elementMap.get("rate"));
 
-                                        EngineFactory.getEngine(EngineFactory.DEFAULT).setExchangeRate(cOne, cTwo, rate);
+                                        engine.setExchangeRate(cOne, cTwo, rate);
 
                                         logger.log(Level.FINE, "Set ExchangeRate {0}:{1}",
                                                 new Object[]{key, rate.toString()});
@@ -540,7 +544,9 @@ public class Import {
                                 Transaction transaction = generateTransaction(transactionClass, elementMap);
 
                                 if (transaction != null) {
-                                    Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                                    Objects.requireNonNull(engine);
+
                                     engine.addTransaction(transaction);
                                     logger.finest("Transaction add complete");
                                 }
@@ -563,6 +569,9 @@ public class Import {
     }
 
     private Transaction generateTransaction(final String transactionClass, final Map<String, String> elementMap) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
         //logger.finest("Being generateTransaction");
         switch (transactionClass) {
             case "SplitTransaction":
@@ -575,7 +584,7 @@ public class Import {
                 return null;
         }
 
-        //logger.finest("Building base transation");
+        //logger.finest("Building base transaction");
 
         Transaction transaction = null;
 
@@ -593,7 +602,7 @@ public class Import {
             BigDecimal quantity = new BigDecimal(elementMap.get("quantity"));
             Account investmentAccount = accountMap.get(elementMap.get("investmentAccount"));
             boolean reconciled = Boolean.parseBoolean(elementMap.get("reconciled"));
-            SecurityNode sNode = EngineFactory.getEngine(EngineFactory.DEFAULT).getSecurity(elementMap.get("security"));
+            SecurityNode sNode = engine.getSecurity(elementMap.get("security"));
 
             transaction = new InvestmentTransaction();
 
@@ -621,7 +630,7 @@ public class Import {
             BigDecimal quantity = new BigDecimal(elementMap.get("quantity"));
             Account investmentAccount = accountMap.get(elementMap.get("investmentAccount"));
             boolean reconciled = Boolean.parseBoolean(elementMap.get("reconciled"));
-            SecurityNode sNode = EngineFactory.getEngine(EngineFactory.DEFAULT).getSecurity(elementMap.get("security"));
+            SecurityNode sNode = engine.getSecurity(elementMap.get("security"));
 
             transaction = new InvestmentTransaction();
 
@@ -652,7 +661,7 @@ public class Import {
             Account account = accountMap.get(elementMap.get("account"));
             boolean accountReconciled = Boolean.parseBoolean(elementMap.get("accountReconciled"));
             boolean investmentAccountReconciled = Boolean.parseBoolean(elementMap.get("investmentAccountReconciled"));
-            SecurityNode sNode = EngineFactory.getEngine(EngineFactory.DEFAULT).getSecurity(elementMap.get("security"));
+            SecurityNode sNode = engine.getSecurity(elementMap.get("security"));
 
             BigDecimal exchangeRate = BigDecimal.ONE;
 
@@ -683,7 +692,7 @@ public class Import {
             Account account = accountMap.get(elementMap.get("account"));
             boolean accountReconciled = Boolean.parseBoolean(elementMap.get("accountReconciled"));
             boolean investmentAccountReconciled = Boolean.parseBoolean(elementMap.get("investmentAccountReconciled"));
-            SecurityNode sNode = EngineFactory.getEngine(EngineFactory.DEFAULT).getSecurity(elementMap.get("security"));
+            SecurityNode sNode = engine.getSecurity(elementMap.get("security"));
 
             transaction = TransactionFactory.generateDividendXTransaction(investmentAccount, investmentAccount,
                     account, sNode, amount, amount.negate(), amount, date, memo);
@@ -699,7 +708,7 @@ public class Import {
             BigDecimal fees = new BigDecimal(elementMap.get("fees"));
             BigDecimal price = new BigDecimal(elementMap.get("price"));
             BigDecimal quantity = new BigDecimal(elementMap.get("quantity"));
-            SecurityNode sNode = EngineFactory.getEngine(EngineFactory.DEFAULT).getSecurity(elementMap.get("security"));
+            SecurityNode sNode = engine.getSecurity(elementMap.get("security"));
             Account investmentAccount = accountMap.get(elementMap.get("investmentAccount"));
             boolean reconciled = Boolean.parseBoolean(elementMap.get("reconciled"));
 
@@ -780,7 +789,7 @@ public class Import {
         return transaction;
     }
 
-    @SuppressWarnings({"unchecked", "ConstantConditions"})
+    @SuppressWarnings({"unchecked"})
     private void parseAccount(final XMLStreamReader reader) {
 
         assert reader.getAttributeCount() == 2;
@@ -833,7 +842,8 @@ public class Import {
                                 }
 
                                 if (account.getAccountType() != AccountType.ROOT) {
-                                    Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                                    Objects.requireNonNull(engine);
 
                                     engine.addAccount(engine.getRootAccount(), account);
 
@@ -863,9 +873,9 @@ public class Import {
 
     private static class SecurityThread extends Thread {
 
-        SecurityNode sNode;
+        final SecurityNode sNode;
 
-        String cNode;
+        final String cNode;
 
         public SecurityThread(final SecurityNode sNode, final String cNode) {
             Objects.requireNonNull(sNode);
@@ -880,9 +890,10 @@ public class Import {
             try {
                 SecurityNode clone = (SecurityNode) sNode.clone();
 
-                Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                Objects.requireNonNull(engine);
 
-                CurrencyNode currencyNode = engine.getCurrency(cNode);
+                final CurrencyNode currencyNode = engine.getCurrency(cNode);
 
                 if (currencyNode != null) {
                     clone.setReportedCurrencyNode(currencyNode);
@@ -907,6 +918,9 @@ public class Import {
 
         @Override
         public void run() {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+            Objects.requireNonNull(engine);
             Objects.requireNonNull(liabilityAccount);
             Objects.requireNonNull(elementMap);
 
@@ -931,7 +945,6 @@ public class Import {
             ao.setRate(new BigDecimal(elementMap.get("rate")));
             ao.setUseDailyRate(Boolean.parseBoolean(elementMap.get("useDailyRate")));
 
-            Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             if (!engine.setAmortizeObject(liabilityAccount, ao)) {
                 logger.warning("Failed to import amortization object");
             }
@@ -1009,7 +1022,8 @@ public class Import {
 
     private Account generateAccount(final String accountClass, final Map<String, Object> elementMap) {
 
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
         CurrencyNode node = decodeCurrency((String) elementMap.get("commodity"));
 
@@ -1105,7 +1119,8 @@ public class Import {
                         if (reader.getName().equals(parsingElement)) {
                             logger.finest("Found the end of a CurrencyNode");
 
-                            Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                            Objects.requireNonNull(engine);
 
                             if (engine.getCurrency(elementMap.get("symbol")) == null) {
 
@@ -1204,7 +1219,8 @@ public class Import {
                         if (reader.getName().equals(parsingElement)) {
                             logger.finest("Found the end of a SecurityNode");
 
-                            Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                            Objects.requireNonNull(engine);
 
                             if (engine.getSecurity(elementMap.get("symbol")) == null) {
 
@@ -1306,7 +1322,8 @@ public class Import {
     }
 
     private SecurityNode decodeSecurity(final String symbol) {
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
         SecurityNode sNode = engine.getSecurity(symbol);
 
@@ -1361,6 +1378,9 @@ public class Import {
 
     private CurrencyNode decodeCurrency(final String currency) {
 
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
         // Check if the currency is already in the cache.
         if (currencyCache.containsKey(currency)) {
             return currencyCache.get(currency);
@@ -1369,7 +1389,7 @@ public class Import {
         String split[] = CURRENCY_DELIMITER_PATTERN.split(currency);
         String symbol = split[0];
 
-        CurrencyNode node = EngineFactory.getEngine(EngineFactory.DEFAULT).getCurrency(symbol);
+        CurrencyNode node = engine.getCurrency(symbol);
 
         if (node == null) {
             logger.log(Level.INFO, "Converting a commodity into a currency: {0}", symbol);
@@ -1385,10 +1405,10 @@ public class Import {
                 node.setScale(cNode.scale);
                 node.setSymbol(cNode.symbol);
 
-                EngineFactory.getEngine(EngineFactory.DEFAULT).addCurrency(node);
+                engine.addCurrency(node);
             } else {
                 // Convert security to currency.  For users who figured out how to push the limits of the jGnash 1.x commodity interface
-                SecurityNode sNode = EngineFactory.getEngine(EngineFactory.DEFAULT).getSecurity(symbol);
+                SecurityNode sNode = engine.getSecurity(symbol);
                 if (sNode != null) {
                     node = new CurrencyNode();
 
@@ -1398,7 +1418,7 @@ public class Import {
                     node.setScale(sNode.getScale());
                     node.setSymbol(sNode.getSymbol());
 
-                    EngineFactory.getEngine(EngineFactory.DEFAULT).addCurrency(node);
+                    engine.addCurrency(node);
                 } else {
                     logger.log(Level.SEVERE, "Bad file, currency " + symbol + " not mapped", new Exception());
                 }

@@ -21,6 +21,7 @@ package jgnash.ui.account;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 import java.util.prefs.Preferences;
 
 import javax.swing.JComponent;
@@ -155,8 +156,10 @@ public class AccountListTreePane extends JScrollPane implements TreeSelectionLis
     }
 
     void scrollToTop() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
-        RootAccount rootAccount = EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount();
+        RootAccount rootAccount = engine.getRootAccount();
 
         if (rootAccount != null) {
             tree.scrollPathToVisible(new TreePath(rootAccount)); // scroll to the top

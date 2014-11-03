@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,6 +45,9 @@ public class BudgetFactory {
     }
 
     public static Budget buildAverageBudget(final BudgetPeriod budgetPeriod, final String name, final boolean round) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
         Budget budget = new Budget();
         budget.setName(name);
         budget.setBudgetPeriod(budgetPeriod);
@@ -51,8 +55,6 @@ public class BudgetFactory {
         int year = DateUtils.getCurrentYear() - 1;
 
         List<BudgetPeriodDescriptor> descriptors = BudgetPeriodDescriptorFactory.getDescriptors(year, budgetPeriod);
-
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
         List<Account> accounts = new ArrayList<>();
         accounts.addAll(engine.getIncomeAccountList());

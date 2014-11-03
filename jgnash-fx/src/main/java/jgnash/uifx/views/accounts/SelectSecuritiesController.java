@@ -19,6 +19,7 @@ package jgnash.uifx.views.accounts;
 
 import java.net.URL;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
@@ -92,8 +93,8 @@ public class SelectSecuritiesController implements Initializable {
     }
 
     public void loadSecuritiesForAccount(final Account account) {
-
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
         Set<SecurityNode> usedSecurities = Collections.<SecurityNode>emptySet();
 
@@ -130,9 +131,9 @@ public class SelectSecuritiesController implements Initializable {
 
     private static class LockedDecorator {
 
-        private boolean locked;
+        private final boolean locked;
 
-        private SecurityNode securityNode;
+        private final SecurityNode securityNode;
 
         protected LockedDecorator(final SecurityNode securityNode, final boolean locked) {
             this.securityNode = securityNode;

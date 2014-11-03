@@ -24,6 +24,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
+import java.util.Objects;
 import java.util.prefs.Preferences;
 
 import javax.swing.JComboBox;
@@ -32,6 +33,7 @@ import javax.swing.JTextPane;
 import javax.swing.text.StyledEditorKit;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.convert.imports.qif.QifAccount;
 import jgnash.convert.imports.qif.QifTransaction;
@@ -89,10 +91,13 @@ public class PartialOne extends JPanel implements WizardPage, ActionListener {
 
         accountCombo.addActionListener(this);
 
-        /* Try a set the combobox to the last selected account */
+        /* Try a set the comboBox to the last selected account */
         String lastAccount = pref.get(LAST_ACCOUNT, "");
 
-        Account last = EngineFactory.getEngine(EngineFactory.DEFAULT).getAccountByUuid(lastAccount);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        final Account last = engine.getAccountByUuid(lastAccount);
 
         if (last != null) {
             setAccount(last);

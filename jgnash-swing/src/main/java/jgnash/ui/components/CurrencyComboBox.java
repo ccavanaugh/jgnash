@@ -19,9 +19,11 @@ package jgnash.ui.components;
 
 import java.awt.EventQueue;
 import java.util.List;
+import java.util.Objects;
 
 import jgnash.engine.CommodityNode;
 import jgnash.engine.CurrencyNode;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
@@ -38,10 +40,13 @@ public class CurrencyComboBox extends AbstractCommodityComboBox<CurrencyNode> {
     public CurrencyComboBox() {
         super();
 
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
         // Model loading and setting of default was being done in the background.  If an immediate set was performed,
         // the background operation would override.
-        final List<CurrencyNode> nodeList = EngineFactory.getEngine(EngineFactory.DEFAULT).getCurrencies();
-        final CurrencyNode defaultCurrency = EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency();
+        final List<CurrencyNode> nodeList = engine.getCurrencies();
+        final CurrencyNode defaultCurrency = engine.getDefaultCurrency();
 
         model.addAll(nodeList);
         setSelectedNode(defaultCurrency);

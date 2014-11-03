@@ -24,6 +24,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -33,6 +34,7 @@ import java.util.prefs.Preferences;
 import javax.swing.JTextField;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionType;
@@ -262,7 +264,10 @@ public class AutoCompleteFactory {
                 @Override
                 public void run() {
                     try {
-                        List<Transaction> transactions = EngineFactory.getEngine(EngineFactory.DEFAULT).getTransactions();
+                        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                        Objects.requireNonNull(engine);
+
+                        List<Transaction> transactions = engine.getTransactions();
 
                         // sort the transactions for consistent order
                         Collections.sort(transactions);

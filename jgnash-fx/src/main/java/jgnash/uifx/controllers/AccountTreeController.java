@@ -23,6 +23,7 @@ import java.util.prefs.Preferences;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.RootAccount;
 import jgnash.engine.message.Message;
@@ -99,8 +100,10 @@ public abstract class AccountTreeController implements Initializable, AccountTyp
     }
 
     protected void loadAccountTree() {
-        if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
-            RootAccount r = EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount();
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+        if (engine != null) {
+            RootAccount r = engine.getRootAccount();
 
             final TreeItem<Account> root = new TreeItem<>(r);
             root.setExpanded(true);

@@ -36,6 +36,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -152,7 +153,8 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
     private void buildBudgetModel() {
         final SortedListModel<BudgetObject> model = new SortedListModel<>();
 
-        Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(e);
 
         for (Budget budget : e.getBudgetList()) {
             model.addElement(new BudgetObject(budget));
@@ -201,8 +203,8 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
     }
 
     private void createNewBudget() {
-
-        Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(e);
 
         Budget newBudget = new Budget();
 
@@ -236,6 +238,7 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
 
     private void deleteBudget() {
         Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(e);
 
         List<BudgetObject> values = budgetList.getSelectedValuesList();
 
@@ -254,7 +257,8 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
     }
 
     private void cloneBudget() {
-        Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(e);
 
         for (Object value : budgetList.getSelectedValuesList()) {
 

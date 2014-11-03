@@ -19,6 +19,7 @@ package jgnash.ui.budget;
 
 import java.awt.Component;
 import java.awt.EventQueue;
+import java.util.Objects;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -96,7 +97,8 @@ public final class BudgetComboBox extends JComboBox<Budget> {
         public BudgetModel() {
             super();
 
-            Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            final Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(e);
 
             addAll(e.getBudgetList());
 

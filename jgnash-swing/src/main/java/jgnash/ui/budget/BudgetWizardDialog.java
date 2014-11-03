@@ -22,12 +22,14 @@ import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.util.DefaultUnitConverter;
+
 import java.awt.Dimension;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.util.Objects;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -40,6 +42,7 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.text.StyledEditorKit;
 
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetFactory;
@@ -59,6 +62,7 @@ import jgnash.util.Resource;
 final class BudgetWizardDialog extends JDialog implements ActionListener {
 
     private static final int DLU_X = 150;
+
     private static final int DLU_Y = 60;
 
     private final Resource rb = Resource.get();
@@ -68,8 +72,8 @@ final class BudgetWizardDialog extends JDialog implements ActionListener {
     private JButton cancelButton;
 
     private JTextField budgetNameField;
-   
-	private JComboBox<BudgetPeriod> budgetPeriodCombo;
+
+    private JComboBox<BudgetPeriod> budgetPeriodCombo;
 
     private JEditorPane helpPane;
 
@@ -129,8 +133,8 @@ final class BudgetWizardDialog extends JDialog implements ActionListener {
 
         setMinimumSize(getSize());
     }
-   
-	private void initComponents() {
+
+    private void initComponents() {
         okButton = new JButton(rb.getString("Button.Ok"));
         cancelButton = new JButton(rb.getString("Button.Cancel"));
 
@@ -163,12 +167,14 @@ final class BudgetWizardDialog extends JDialog implements ActionListener {
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         } else if (e.getSource() == okButton) {
             if (!budgetNameField.getText().isEmpty()) {
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                Objects.requireNonNull(engine);
 
-                BudgetPeriod period =  (BudgetPeriod)budgetPeriodCombo.getSelectedItem();
+                final BudgetPeriod period = (BudgetPeriod) budgetPeriodCombo.getSelectedItem();
 
-                Budget budget = BudgetFactory.buildAverageBudget(period, budgetNameField.getText(), roundButton.isSelected());
+                final Budget budget = BudgetFactory.buildAverageBudget(period, budgetNameField.getText(), roundButton.isSelected());
 
-                if (!EngineFactory.getEngine(EngineFactory.DEFAULT).addBudget(budget)) {
+                if (!engine.addBudget(budget)) {
                     StaticUIMethods.displayError(rb.getString("Message.Error.NewBudget"));
                 }
 

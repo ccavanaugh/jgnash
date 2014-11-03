@@ -19,6 +19,7 @@ package jgnash.ui.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -80,7 +81,8 @@ public class ImportQifAction extends AbstractEnabledAction {
             }
         }
 
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
         if (engine.getRootAccount() == null) {
             StaticUIMethods.displayError(rb.getString("Message.Error.CreateBasicAccounts"));

@@ -22,6 +22,7 @@ import java.awt.EventQueue;
 import java.util.Collection;
 
 import java.util.List;
+import java.util.Objects;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
@@ -190,7 +191,9 @@ public class ExpandingBudgetTableModel extends AbstractExpandingTableModel<Accou
 
     @Override
     protected Account getRootObject() {
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
         return engine.getRootAccount();
     }
 

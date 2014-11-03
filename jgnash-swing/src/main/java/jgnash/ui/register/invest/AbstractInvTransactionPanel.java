@@ -18,6 +18,7 @@
 package jgnash.ui.register.invest;
 
 import java.awt.Insets;
+import java.util.Objects;
 
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
@@ -67,8 +68,9 @@ public abstract class AbstractInvTransactionPanel extends AbstractTransactionPan
     @Override
     public void enterAction() {
         if (validateForm()) {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-            Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
 
             if (modTrans == null) {
                 final Transaction newTrans = buildTransaction();

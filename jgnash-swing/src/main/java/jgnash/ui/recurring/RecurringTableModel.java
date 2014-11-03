@@ -20,9 +20,11 @@ package jgnash.ui.recurring;
 import java.awt.EventQueue;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import javax.swing.table.AbstractTableModel;
 
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.recurring.Reminder;
 import jgnash.engine.message.Message;
@@ -57,8 +59,10 @@ public class RecurringTableModel extends AbstractTableModel implements MessageLi
     public RecurringTableModel() {
         registerListeners();
 
-        if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
-            reminders = EngineFactory.getEngine(EngineFactory.DEFAULT).getReminders();
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+        if (engine != null) {
+            reminders = engine.getReminders();
         } else {
             reminders = Collections.emptyList();
         }
@@ -138,7 +142,10 @@ public class RecurringTableModel extends AbstractTableModel implements MessageLi
 
     private void loadReminders() {
         synchronized (lock) {
-            reminders = EngineFactory.getEngine(EngineFactory.DEFAULT).getReminders();
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
+            reminders = engine.getReminders();
         }
     }
 

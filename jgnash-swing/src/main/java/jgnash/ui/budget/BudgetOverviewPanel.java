@@ -26,6 +26,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -137,7 +138,8 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
 
             @Override
             public void run() {
-                Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                Objects.requireNonNull(engine);
 
                 int minYear = DateUtils.getCurrentYear();
                 int maxYear = DateUtils.getCurrentYear() + 1;

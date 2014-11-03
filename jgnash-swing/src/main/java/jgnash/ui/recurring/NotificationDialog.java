@@ -27,6 +27,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.List;
+import java.util.Objects;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -39,6 +40,7 @@ import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.engine.recurring.PendingReminder;
@@ -159,6 +161,9 @@ class NotificationDialog extends JDialog implements ActionListener, ListSelectio
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
         if (e.getSource() == cancelButton) {
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         } else if (e.getSource() == okButton) {
@@ -171,11 +176,11 @@ class NotificationDialog extends JDialog implements ActionListener, ListSelectio
 
                         // Update to the commit date (commit date can be modified)
                         t.setDate(pending.getCommitDate());
-                        EngineFactory.getEngine(EngineFactory.DEFAULT).addTransaction(t);
+                        engine.addTransaction(t);
                     }
                     // update the last fired date... date returned from the iterator
                     reminder.setLastDate(); // mark as complete
-                    if (!EngineFactory.getEngine(EngineFactory.DEFAULT).updateReminder(reminder)) {
+                    if (!engine.updateReminder(reminder)) {
                         EventQueue.invokeLater(new Runnable() {
                             @Override
                             public void run() {

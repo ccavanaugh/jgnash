@@ -20,6 +20,7 @@ package jgnash.ui.commodity;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -63,7 +64,7 @@ import com.jgoodies.forms.layout.RowSpec;
  */
 public class SecurityModifyPanel extends JPanel implements MessageListener, ActionListener {
 
-    private final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+    private final Engine engine;
     private final Resource rb = Resource.get();
     private JButton newButton;
     private JList<SecurityNode> securityList;
@@ -95,6 +96,9 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
     }
 
     private SecurityModifyPanel() {
+        engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
         layoutMainPanel();
         MessageBus.getInstance().registerListener(this, MessageChannel.COMMODITY);
     }
@@ -114,7 +118,7 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
         sourceComboBox = new QuoteSourceComboBox();
 
         currencyCombo = new CurrencyComboBox();
-        currencyCombo.setSelectedNode(EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency());
+        currencyCombo.setSelectedNode(engine.getDefaultCurrency());
 
         newButton = new JButton(rb.getString("Button.New"));
         deleteButton = new JButton(rb.getString("Button.Delete"));
@@ -198,7 +202,7 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
         isinField.setText(null);
         descriptionField.setText(null);
         scaleField.setText(null);
-        currencyCombo.setSelectedNode(EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency());
+        currencyCombo.setSelectedNode(engine.getDefaultCurrency());
         isModifying = false;
     }
 

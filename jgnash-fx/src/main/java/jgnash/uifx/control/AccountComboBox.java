@@ -18,6 +18,7 @@
 package jgnash.uifx.control;
 
 import java.util.List;
+import java.util.Objects;
 
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
@@ -54,7 +55,10 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
     private void loadAccounts() {
         getItems().clear();
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
         loadAccounts(engine.getRootAccount().getChildren());
     }
 

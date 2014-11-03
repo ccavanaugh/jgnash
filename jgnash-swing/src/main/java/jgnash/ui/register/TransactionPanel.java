@@ -20,6 +20,7 @@ package jgnash.ui.register;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,6 +28,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.ReconcileManager;
@@ -108,6 +110,8 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
         if (validateForm()) {
             if (modEntry != null && modTrans != null) {
                 try {
+                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                    Objects.requireNonNull(engine);
 
                     // clone the transaction
                     Transaction t = (Transaction) modTrans.clone();
@@ -123,8 +127,8 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
 
                     ReconcileManager.reconcileTransaction(getAccount(), t, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
 
-                    EngineFactory.getEngine(EngineFactory.DEFAULT).removeTransaction(modTrans);
-                    EngineFactory.getEngine(EngineFactory.DEFAULT).addTransaction(t);
+                    engine.removeTransaction(modTrans);
+                    engine.addTransaction(t);
 
                     clearForm();
                     fireOkAction();
@@ -132,8 +136,6 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
                 } catch (CloneNotSupportedException e) {                   
                     Logger.getLogger(TransactionPanel.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
                 }
-
-
             } else {
                 super.enterAction();
             }

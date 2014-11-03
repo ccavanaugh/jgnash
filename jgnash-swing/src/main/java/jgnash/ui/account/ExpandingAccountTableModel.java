@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -197,13 +198,17 @@ public final class ExpandingAccountTableModel extends AbstractExpandingTableMode
 
     @Override
     protected Collection<Account> getModelObjects() {
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
         return engine.getAccountList();
     }
 
     @Override
     protected Account getRootObject() {
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
         return engine.getRootAccount();
     }
 

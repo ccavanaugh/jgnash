@@ -26,6 +26,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.util.Objects;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -36,6 +37,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetPeriod;
@@ -190,7 +192,10 @@ final class BudgetPropertiesDialog extends JDialog implements ActionListener {
 
                     @Override
                     public void run() {
-                        EngineFactory.getEngine(EngineFactory.DEFAULT).updateBudget(budget);
+                        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                        Objects.requireNonNull(engine);
+
+                        engine.updateBudget(budget);
                     }
                 };
 

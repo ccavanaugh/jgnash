@@ -26,6 +26,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Objects;
 import java.util.Set;
 import java.util.prefs.Preferences;
 
@@ -208,7 +209,8 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
             }
         }
 
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
         // walk through the array and delete each transaction
         for (Transaction tran : trans) {
@@ -286,9 +288,12 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
     }
 
     void reconcileAction(final ReconciledState reconciled) {
-        Transaction t = getSelectedTransaction();
+        final Transaction t = getSelectedTransaction();
         if (t != null) {
-            EngineFactory.getEngine(EngineFactory.DEFAULT).setTransactionReconciled(t, getAccount(), reconciled);
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
+            engine.setTransactionReconciled(t, getAccount(), reconciled);
         }
     }
 

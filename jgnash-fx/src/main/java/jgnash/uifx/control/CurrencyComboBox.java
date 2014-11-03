@@ -19,8 +19,10 @@ package jgnash.uifx.control;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import jgnash.engine.CurrencyNode;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
@@ -59,9 +61,11 @@ public class CurrencyComboBox extends ComboBox<CurrencyNode> implements MessageL
     }
 
     private void loadModel() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
-        final List<CurrencyNode> nodeList = EngineFactory.getEngine(EngineFactory.DEFAULT).getCurrencies();
-        final CurrencyNode defaultCurrency = EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency();
+        final List<CurrencyNode> nodeList = engine.getCurrencies();
+        final CurrencyNode defaultCurrency = engine.getDefaultCurrency();
 
         // extract and reuse the default model
         items = getItems();

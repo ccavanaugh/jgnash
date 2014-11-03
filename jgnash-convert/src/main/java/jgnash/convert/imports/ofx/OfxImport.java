@@ -38,7 +38,8 @@ public class OfxImport {
         Objects.requireNonNull(transactions);
         Objects.requireNonNull(baseAccount);
 
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
         for (OfxTransaction tran : transactions) {
             assert tran.account != null;
@@ -67,7 +68,8 @@ public class OfxImport {
 
     public static Account matchAccount(final OfxBank bank) {
 
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
         Account account = null;
 

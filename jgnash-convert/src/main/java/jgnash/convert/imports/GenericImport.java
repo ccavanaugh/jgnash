@@ -42,6 +42,7 @@ public class GenericImport {
         Objects.requireNonNull(baseAccount);
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
         for (final ImportTransaction tran : transactions) {
             Objects.requireNonNull(tran.account);

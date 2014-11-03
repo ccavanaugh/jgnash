@@ -31,6 +31,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -42,6 +43,7 @@ import javax.swing.JPanel;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.RootAccount;
 import jgnash.text.CommodityFormat;
@@ -141,7 +143,10 @@ public class IncomeExpensePieChart {
 
         showPercentCheck = new JCheckBox(rb.getString("Label.ShowPercentValues"));
 
-        combo = AccountListComboBox.getParentTypeInstance(EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount(), set);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        combo = AccountListComboBox.getParentTypeInstance(engine.getRootAccount(), set);
 
         Date dStart = DateUtils.subtractYear(DateUtils.getFirstDayOfTheMonth(new Date()));
 
@@ -304,12 +309,16 @@ public class IncomeExpensePieChart {
         });
     }
 
-    private JFreeChart createPieChart(Account a) {
-        PieDataset data = createPieDataset(a);
+    private JFreeChart createPieChart(final Account a) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+        Objects.requireNonNull(a);
+
+        PieDataset data = createPieDataSet(a);
         PiePlot plot = new PiePlot(data);
 
         // rebuilt each time because they're based on the account's commodity
-        CurrencyNode defaultCurrency = EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency();
+        CurrencyNode defaultCurrency = engine.getDefaultCurrency();
         NumberFormat valueFormat = CommodityFormat.getFullNumberFormat(a.getCurrencyNode());
         NumberFormat percentFormat = new DecimalFormat("0.0#%");
         defaultLabels = new StandardPieSectionLabelGenerator("{0} = {1}", valueFormat, percentFormat);
@@ -356,7 +365,7 @@ public class IncomeExpensePieChart {
         return chart;
     }
 
-    private PieDataset createPieDataset(Account a) {
+    private PieDataset createPieDataSet(Account a) {
         DefaultPieDataset returnValue = new DefaultPieDataset();
         if (a != null) {
 

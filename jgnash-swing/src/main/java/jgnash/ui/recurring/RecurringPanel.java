@@ -28,6 +28,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -253,7 +254,10 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
                     return;
                 }
             }
-            EngineFactory.getEngine(EngineFactory.DEFAULT).removeReminder(getReminderByRow(index));
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
+            engine.removeReminder(getReminderByRow(index));
         }
     }
 
@@ -273,7 +277,10 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
         Reminder r = RecurringEntryDialog.showDialog();
         if (r != null) {
 
-            if (!EngineFactory.getEngine(EngineFactory.DEFAULT).addReminder(r)) {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
+            if (!engine.addReminder(r)) {
                 final Resource rb = Resource.get();
 
                 StaticUIMethods.displayError(rb.getString("Message.Error.ReminderAdd"));
@@ -290,8 +297,8 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
                 Reminder modified = RecurringEntryDialog.showDialog((Reminder) old.clone()); // create a new reminder
 
                 if (modified != null) {
-
-                    Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                    Objects.requireNonNull(engine);
 
                     if (engine.removeReminder(old)) { // remove the old
                         if (!engine.addReminder(modified)) { // add the new
@@ -333,7 +340,10 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
 
             @Override
             protected List<PendingReminder> doInBackground() throws Exception {
-                return EngineFactory.getEngine(EngineFactory.DEFAULT).getPendingReminders();
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                Objects.requireNonNull(engine);
+
+                return engine.getPendingReminders();
             }
 
             @Override

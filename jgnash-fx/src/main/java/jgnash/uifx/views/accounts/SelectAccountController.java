@@ -21,8 +21,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.engine.RootAccount;
 import jgnash.uifx.utils.TreeSearch;
 
 import javafx.application.Platform;
@@ -87,10 +87,10 @@ public class SelectAccountController implements Initializable {
     }
 
     protected void loadAccountTree() {
-        if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
-            RootAccount r = EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount();
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-            final TreeItem<Account> root = new TreeItem<>(r);
+        if (engine != null) {
+            final TreeItem<Account> root = new TreeItem<>(engine.getRootAccount());
             root.setExpanded(true);
 
             treeView.setRoot(root);

@@ -19,12 +19,14 @@ package jgnash.ui.components;
 
 import java.awt.EventQueue;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 import javax.swing.SwingWorker;
 
 import jgnash.engine.CommodityNode;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
 import jgnash.engine.message.Message;
@@ -47,7 +49,10 @@ public class SecurityComboBox extends AbstractCommodityComboBox<SecurityNode> {
 
             @Override
             public List<SecurityNode> doInBackground() {
-                return EngineFactory.getEngine(EngineFactory.DEFAULT).getSecurities();
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                Objects.requireNonNull(engine);
+
+                return engine.getSecurities();
             }
 
             @Override

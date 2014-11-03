@@ -294,7 +294,6 @@ public class OpenAction {
 
                 EngineFactory.bootClientEngine(host, port, password, EngineFactory.DEFAULT);
 
-                EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount(); // prime the engine
                 logger.fine("Engine boot complete");
                 return null;
             }

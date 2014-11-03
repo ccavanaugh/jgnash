@@ -34,6 +34,7 @@ import javax.swing.ListCellRenderer;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.ChannelEvent;
 import jgnash.engine.message.Message;
@@ -197,8 +198,13 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
 
         void loadAccounts() {
             synchronized (lock) {
-                ArrayList<Account> list = new ArrayList<>();
-                loadChildren(EngineFactory.getEngine(EngineFactory.DEFAULT).getRootAccount(), list);
+
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                Objects.requireNonNull(engine);
+
+
+                final ArrayList<Account> list = new ArrayList<>();
+                loadChildren(engine.getRootAccount(), list);
                 accounts.clear();
                 accounts = list;
                 if (!list.isEmpty()) {

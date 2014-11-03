@@ -22,6 +22,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.event.WindowEvent;
+import java.util.Objects;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -97,7 +98,8 @@ public class TransactionDialog extends JDialog implements RegisterListener {
     }
 
     private void setTransaction(final Transaction tran) {
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
         if (!engine.isStored(tran)) { // must not be a persisted transaction
             if (tran.getAmount(account).signum() >= 0) {

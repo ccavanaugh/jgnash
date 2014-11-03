@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.prefs.Preferences;
 
@@ -362,8 +363,10 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
         return new ReportModel(accounts, baseCurrency);
     }
 
-    private static List<Account> getAccountList(Set<AccountType> types) {
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+    private static List<Account> getAccountList(final Set<AccountType> types) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+        Objects.requireNonNull(engine);
 
         List<Account> accounts = engine.getAccountList();
         Iterator<Account> i = accounts.iterator();

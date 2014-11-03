@@ -18,6 +18,7 @@
 package jgnash.ui.account;
 
 import java.util.Collection;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 import jgnash.engine.Account;
@@ -41,11 +42,12 @@ class AccountTools {
     }
 
     static void createAccount(final Account account) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
         Account parentAccount = account;
 
-        Resource rb = Resource.get();
-
-        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Resource rb = Resource.get();
 
         if (parentAccount == null) {            
             parentAccount = engine.getRootAccount();
@@ -101,8 +103,9 @@ class AccountTools {
         }
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
-        Resource rb = Resource.get();
+        final Resource rb = Resource.get();
 
         Account parentAccount = account.getParent();
 

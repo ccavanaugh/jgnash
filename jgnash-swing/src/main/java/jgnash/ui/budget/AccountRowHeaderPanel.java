@@ -26,6 +26,7 @@ import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import java.util.Objects;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -39,6 +40,7 @@ import javax.swing.table.TableCellRenderer;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetGoal;
@@ -144,7 +146,10 @@ final class AccountRowHeaderPanel extends JPanel {
             BudgetGoal newGoal = d.getBudgetGoal();
 
             if (!newGoal.equals(oldGoal)) {
-                EngineFactory.getEngine(EngineFactory.DEFAULT).updateBudgetGoals(budget, account, newGoal);
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                Objects.requireNonNull(engine);
+
+                engine.updateBudgetGoals(budget, account, newGoal);
             }
         }
     }

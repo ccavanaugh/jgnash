@@ -20,6 +20,7 @@ package jgnash.ui.register;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 import jgnash.engine.AttachmentUtils;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.ui.StaticUIMethods;
@@ -38,6 +39,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -91,7 +93,10 @@ class AttachmentPanel extends JPanel implements ActionListener {
             @Override
             protected Path doInBackground() throws Exception {
                 if (transaction.getAttachment() != null && !transaction.getAttachment().isEmpty()) {
-                    final Future<Path> pathFuture = EngineFactory.getEngine(EngineFactory.DEFAULT).getAttachment(transaction.getAttachment());
+                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                    Objects.requireNonNull(engine);
+
+                    final Future<Path> pathFuture = engine.getAttachment(transaction.getAttachment());
                     return pathFuture.get();
                 }
                 return null;
@@ -148,7 +153,10 @@ class AttachmentPanel extends JPanel implements ActionListener {
     }
 
     private boolean moveAttachment() {
-        return EngineFactory.getEngine(EngineFactory.DEFAULT).addAttachment(attachment, false);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        return engine.addAttachment(attachment, false);
     }
 
     void attachmentAction() {

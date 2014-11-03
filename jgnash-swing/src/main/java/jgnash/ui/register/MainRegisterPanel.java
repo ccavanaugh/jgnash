@@ -24,6 +24,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
+import java.util.Objects;
 import java.util.prefs.Preferences;
 
 import javax.help.CSH;
@@ -38,6 +39,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
@@ -59,7 +61,6 @@ import jgnash.util.Resource;
  * reused across data set loads and must be recreated
  *
  * @author Craig Cavanaugh
- *
  */
 public class MainRegisterPanel extends JPanel implements ActionListener, MessageListener {
 
@@ -205,7 +206,10 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
             public void run() {
                 String uuid = prefs.get(ACTIVE_ACCOUNT, null);
                 if (uuid != null) {
-                    setAccount(EngineFactory.getEngine(EngineFactory.DEFAULT).getAccountByUuid(uuid));
+                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                    Objects.requireNonNull(engine);
+
+                    setAccount(engine.getAccountByUuid(uuid));
                 }
             }
         });

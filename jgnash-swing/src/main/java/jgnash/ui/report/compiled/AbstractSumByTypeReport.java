@@ -32,6 +32,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.prefs.Preferences;
@@ -127,6 +128,9 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
         logger.info(rb.getString("Message.CollectingReportData"));
 
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
         // generate the date information
         if (runningTotal) {
             dates = DateUtils.getLastDayOfTheMonths(startDate, endDate);
@@ -139,7 +143,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
             }
         }
 
-        CurrencyNode baseCurrency = EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency();
+        final CurrencyNode baseCurrency = engine.getDefaultCurrency();
 
         List<Account> accounts = new ArrayList<>();
 
@@ -186,7 +190,8 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
     }
 
     private static List<Account> getAccountList(final Set<AccountType> types) {
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
         Set<Account> accountSet = new TreeSet<>();
 

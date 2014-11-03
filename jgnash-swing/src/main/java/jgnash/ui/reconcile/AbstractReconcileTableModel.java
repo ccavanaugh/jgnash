@@ -333,6 +333,8 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
+        Objects.requireNonNull(engine);
+
         for (final RecTransaction transaction : transactions) {
             if (transaction.getReconciled() != transaction.transaction.getReconciled(account)) {
 

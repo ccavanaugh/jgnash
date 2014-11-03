@@ -43,6 +43,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.text.CommodityFormat;
@@ -145,9 +146,12 @@ class TransactionListDialog extends JDialog implements ActionListener, ListSelec
     }
 
     private List<Transaction> _getPrintableTransactions() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
         List<Transaction> l = new ArrayList<>();
 
-        for (Transaction t : EngineFactory.getEngine(EngineFactory.DEFAULT).getTransactions()) {
+        for (final Transaction t : engine.getTransactions()) {
             if (PRINT.equalsIgnoreCase(t.getNumber())) {
                 l.add(t);
             }
@@ -352,7 +356,7 @@ class TransactionListDialog extends JDialog implements ActionListener, ListSelec
      */
     private static final class Wrapper {
 
-        Transaction transaction;
+        final Transaction transaction;
 
         boolean print;
 

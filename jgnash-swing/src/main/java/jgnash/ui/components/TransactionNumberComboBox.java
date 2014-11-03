@@ -19,6 +19,7 @@ package jgnash.ui.components;
 
 import java.awt.EventQueue;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.ComboBoxModel;
@@ -31,6 +32,7 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.PlainDocument;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.util.Resource;
 
@@ -39,7 +41,6 @@ import jgnash.util.Resource;
  * numbers in a consistent manner.
  *
  * @author Craig Cavanaugh
- *
  */
 public class TransactionNumberComboBox extends JComboBox<String> {
 
@@ -61,7 +62,10 @@ public class TransactionNumberComboBox extends JComboBox<String> {
     public TransactionNumberComboBox(final Account a) {
         super(defaultItems);
 
-        final List<String> items = EngineFactory.getEngine(EngineFactory.DEFAULT).getTransactionNumberList();
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        final List<String> items = engine.getTransactionNumberList();
         final ComboBoxModel<String> model = getModel();
 
         for (String s : items) {

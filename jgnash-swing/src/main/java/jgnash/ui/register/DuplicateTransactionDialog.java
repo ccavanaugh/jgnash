@@ -18,6 +18,7 @@
 package jgnash.ui.register;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -115,7 +116,8 @@ class DuplicateTransactionDialog extends DateChkNumberDialog {
         }
 
         if (clone != null) {
-            Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            final Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(e);
 
             e.addTransaction(clone); // add the transaction
             newTransaction = e.getTransactionByUuid(clone.getUuid());

@@ -37,6 +37,7 @@ import javax.swing.JDialog;
 import javax.swing.SwingConstants;
 
 import jgnash.Main;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.ChannelEvent;
 import jgnash.engine.message.Message;
@@ -278,11 +279,11 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
 
             @Override
             public void run() {
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-                if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
-
-                    MessageBus messageBus = MessageBus.getInstance(EngineFactory.getEngine(EngineFactory.DEFAULT).getName());
-                    Message message = new Message(MessageChannel.SYSTEM, ChannelEvent.UI_RESTARTING, EngineFactory.getEngine(EngineFactory.DEFAULT));
+                if (engine != null) {
+                    MessageBus messageBus = MessageBus.getInstance(engine.getName());
+                    Message message = new Message(MessageChannel.SYSTEM, ChannelEvent.UI_RESTARTING, engine);
 
                     messageBus.fireEvent(message);
                 }
@@ -299,10 +300,10 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
                 mainFrame = new MainFrame();
                 mainFrame.setVisible(true);
 
-                if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
+                if (engine != null) {
 
-                    MessageBus messageBus = MessageBus.getInstance(EngineFactory.getEngine(EngineFactory.DEFAULT).getName());
-                    Message message = new Message(MessageChannel.SYSTEM, ChannelEvent.UI_RESTARTED, EngineFactory.getEngine(EngineFactory.DEFAULT));
+                    MessageBus messageBus = MessageBus.getInstance(engine.getName());
+                    Message message = new Message(MessageChannel.SYSTEM, ChannelEvent.UI_RESTARTED, engine);
 
                     messageBus.fireEvent(message);
                 }

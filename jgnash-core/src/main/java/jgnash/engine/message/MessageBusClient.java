@@ -18,6 +18,7 @@
 package jgnash.engine.message;
 
 import java.io.CharArrayWriter;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -191,8 +192,11 @@ class MessageBusClient {
                         public void run() {
                             final Message message = (Message) xstream.fromXML(plainMessage);
 
+                            final Engine engine = EngineFactory.getEngine(name);
+                            Objects.requireNonNull(engine);
+
                             // ignore our own messages
-                            if (!EngineFactory.getEngine(name).getUuid().equals(message.getSource())) {
+                            if (!engine.getUuid().equals(message.getSource())) {
                                 processRemoteMessage(message);
                             }
                         }
@@ -278,7 +282,8 @@ class MessageBusClient {
     private void processRemoteMessage(final Message message) {
         logger.fine("processing a remote message");
 
-        Engine engine = EngineFactory.getEngine(name);
+        final Engine engine = EngineFactory.getEngine(name);
+        Objects.requireNonNull(engine);
 
         if (message.getChannel() == MessageChannel.ACCOUNT) {
             final Account account = (Account) message.getObject(MessageProperty.ACCOUNT);

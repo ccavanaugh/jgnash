@@ -26,6 +26,7 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -37,6 +38,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 
 import jgnash.engine.AccountGroup;
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.BudgetPeriodDescriptor;
 import jgnash.engine.message.Message;
@@ -134,12 +136,14 @@ final class BudgetPeriodPanel extends JPanel {
     }
 
     private void buildFooter() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
-        FormLayout layout = new FormLayout("d:g", "d");
+        final FormLayout layout = new FormLayout("d:g", "d");
 
-        DefaultFormBuilder builder = new DefaultFormBuilder(layout, new JPanel());
+        final DefaultFormBuilder builder = new DefaultFormBuilder(layout, new JPanel());
 
-        NumberFormat format = CommodityFormat.getFullNumberFormat(EngineFactory.getEngine(EngineFactory.DEFAULT).getDefaultCurrency());
+        final NumberFormat format = CommodityFormat.getFullNumberFormat(engine.getDefaultCurrency());
 
         footerTable = new BudgetResultsTable(new FooterModel(), format);
         footerTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);

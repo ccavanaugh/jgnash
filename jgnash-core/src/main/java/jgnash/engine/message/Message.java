@@ -147,6 +147,7 @@ public class Message implements Serializable, Cloneable {
         final int size = s.readInt();
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
         for (int i = 0; i < size; i++) {
             MessageProperty key = (MessageProperty) s.readObject();
