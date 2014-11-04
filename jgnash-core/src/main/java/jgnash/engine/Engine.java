@@ -461,6 +461,18 @@ public class Engine {
                 }
             }
 
+            /* Check for null account number strings */
+            if (getConfig().getFileVersion() < 2.01f) {
+                logInfo("Checking for null account numbers");
+                for (Account account : getAccountDAO().getAccountList()) {
+                    if (account.getAccountNumber() == null) {
+                        account.setAccountNumber("");
+                        getAccountDAO().updateAccount(account);
+                        logInfo("Fixed null account number");
+                    }
+                }
+            }
+
             /* Check for detached accounts */
             if (getConfig().getFileVersion() < 2.02f) {
                 for (Account account : getAccountDAO().getAccountList()) {
@@ -470,18 +482,6 @@ public class Engine {
                         getAccountDAO().updateAccount(account);
                         getAccountDAO().updateAccount(getRootAccount());
                         logInfo("Fixing a detached account: " + account.getName());
-                    }
-                }
-            }
-
-            /* Check for null account number strings */
-            if (getConfig().getFileVersion() < 2.01f) {
-                logInfo("Checking for null account numbers");
-                for (Account account : getAccountDAO().getAccountList()) {
-                    if (account.getAccountNumber() == null) {
-                        account.setAccountNumber("");
-                        getAccountDAO().updateAccount(account);
-                        logInfo("Fixed null account number");
                     }
                 }
             }
@@ -556,7 +556,7 @@ public class Engine {
 
             // check for improperly set default currency
             if (getDefaultCurrency() == null) {
-                setDefaultCurrency(this.getRootAccount().getCurrencyNode());
+                setDefaultCurrency(getRootAccount().getCurrencyNode());
                 logger.warning("Forcing default currency");
             }
 
