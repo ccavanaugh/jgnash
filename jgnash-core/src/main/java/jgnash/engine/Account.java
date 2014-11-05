@@ -67,6 +67,8 @@ import jgnash.util.Nullable;
 @Entity
 public class Account extends StoredObject implements Comparable<Account> {
 
+    public static final int MAX_ATTRIBUTE_LENGTH = 8192;
+
     private static final Pattern numberPattern = Pattern.compile("\\d+");
 
     private static final Logger logger = Logger.getLogger(Account.class.getName());
@@ -184,6 +186,8 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     private transient ReadWriteLock securitiesLock;
 
+    private transient ReadWriteLock attributesLock;
+
     private transient AccountProxy proxy;
 
     /**
@@ -195,6 +199,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         transactionLock = new ReentrantReadWriteLock(true);
         childLock = new ReentrantReadWriteLock(true);
         securitiesLock = new ReentrantReadWriteLock(true);
+        attributesLock = new ReentrantReadWriteLock(true);
 
         cachedSortedChildren = new ArrayList<>();
     }
@@ -1416,25 +1421,38 @@ public class Account extends StoredObject implements Comparable<Account> {
         this.amortizeObject = amortizeObject;
     }
 
-    synchronized void setAttribute(final String key, final String value) {
-        if (key == null || key.isEmpty()) {
-            throw new RuntimeException("Attribute key may not be empty or null");
-        }
+    void setAttribute(@NotNull final String key, @Nullable final String value) {
 
-        if (value == null) {
-            attributes.remove(key);
-        } else {
-            attributes.put(key, value);
+        attributesLock.writeLock().lock();
+
+        try {
+            if (key.isEmpty()) {
+                throw new RuntimeException("Attribute key may not be empty or null");
+            }
+
+            if (value == null) {
+                attributes.remove(key);
+            } else {
+                attributes.put(key, value);
+            }
+        } finally {
+            attributesLock.writeLock().unlock();
         }
     }
 
-    @SuppressWarnings("SameParameterValue")
-    public synchronized String getAttribute(final String key) {
-        if (key == null || key.isEmpty()) {
-            throw new RuntimeException("Attribute key may not be empty or null");
-        }
+    public String getAttribute(@NotNull final String key) {
 
-        return attributes.get(key);
+        attributesLock.readLock().lock();
+
+        try {
+            if (key.isEmpty()) {
+                throw new RuntimeException("Attribute key may not be empty or null");
+            }
+
+            return attributes.get(key);
+        } finally {
+            attributesLock.readLock().unlock();
+        }
     }
 
     /**
@@ -1471,6 +1489,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         transactionLock = new ReentrantReadWriteLock(true);
         childLock = new ReentrantReadWriteLock(true);
         securitiesLock = new ReentrantReadWriteLock(true);
+        attributesLock = new ReentrantReadWriteLock(true);
 
         cachedSortedChildren = new ArrayList<>(children);
     }
