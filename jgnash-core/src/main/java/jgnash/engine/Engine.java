@@ -2033,9 +2033,10 @@ public class Engine {
 
     /**
      * Sets a an attribute for an account.  The key and values are string based
+     *
      * @param account {@code Account} to add an attribute to
-     * @param key the key for the attribute
-     * @param value the value of the attribute
+     * @param key     the key for the attribute
+     * @param value   the value of the attribute
      */
     public void setAccountAttribute(final Account account, @NotNull final String key, @Nullable final String value) {
 
@@ -2765,14 +2766,31 @@ public class Engine {
         }
     }
 
-    public @Nullable String getPreference(@NotNull final String key) {
+    @Nullable
+    public String getPreference(@NotNull final String key) {
         configLock.readLock().lock();
 
         try {
             return getConfig().getPreference(key);
-        }finally {
+        } finally {
             configLock.readLock().unlock();
         }
+    }
+
+    public boolean getBoolean(@NotNull final String key, final boolean defaultValue) {
+        boolean value = defaultValue;
+
+        final String stringResult = getPreference(key);
+
+        if (stringResult != null && !stringResult.isEmpty()) {
+            value = Boolean.valueOf(stringResult);
+        }
+
+        return value;
+    }
+
+    public void putBoolean(@NotNull final String key, final boolean value) {
+        setPreference(key, Boolean.toString(value));
     }
 
     /**
