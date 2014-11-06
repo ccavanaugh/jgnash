@@ -1204,7 +1204,10 @@ public class Account extends StoredObject implements Comparable<Account> {
     @Override
     public int compareTo(@NotNull final Account acc) {
         // sort on the full path name, improves order for some cases.
-        final int result = getPathName().compareToIgnoreCase(acc.getPathName());
+        //final int result = getPathName().compareToIgnoreCase(acc.getPathName());
+
+        // This way is consistent with the JPA sort that was being used
+        final int result = getName().compareToIgnoreCase(acc.getName());
 
         if (result == 0) {
             return getUuid().compareTo(acc.getUuid());
