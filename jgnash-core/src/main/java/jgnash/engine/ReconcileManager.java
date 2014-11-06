@@ -18,7 +18,6 @@
 package jgnash.engine;
 
 import java.util.List;
-import java.util.prefs.Preferences;
 
 /**
  * Manages the reconciliation options.
@@ -29,9 +28,9 @@ import java.util.prefs.Preferences;
  * @author Craig Cavanaugh
  */
 public class ReconcileManager {
-    private static final String RECONCILE_INCOMEEXPENSE = "reconcileIncomeExpense";
+    private static final String RECONCILE_INCOME_EXPENSE = "reconcileIncomeExpense";
 
-    private static final String RECONCILE_BOTHSIDES = "reconcileBothSides";
+    private static final String RECONCILE_BOTH_SIDES = "reconcileBothSides";
 
     private static boolean reconcileIncomeExpense;
 
@@ -41,10 +40,12 @@ public class ReconcileManager {
     }
 
     static {
-        Preferences p = Preferences.userNodeForPackage(ReconcileManager.class);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-        reconcileIncomeExpense = p.getBoolean(RECONCILE_INCOMEEXPENSE, false);
-        reconcileBothSides = p.getBoolean(RECONCILE_BOTHSIDES, true);
+        if (engine != null) {
+            reconcileIncomeExpense = engine.getBoolean(RECONCILE_INCOME_EXPENSE, false);
+            reconcileBothSides = engine.getBoolean(RECONCILE_BOTH_SIDES, true);
+        }
     }
 
     /**
@@ -56,8 +57,11 @@ public class ReconcileManager {
      */
     public static void setAutoReconcileIncomeExpense(final boolean reconcile) {
         reconcileIncomeExpense = reconcile;
-        Preferences p = Preferences.userNodeForPackage(ReconcileManager.class);
-        p.putBoolean(RECONCILE_INCOMEEXPENSE, reconcileIncomeExpense);
+
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        if (engine != null) {
+            engine.putBoolean(RECONCILE_INCOME_EXPENSE, reconcileIncomeExpense);
+        }
 
         if (reconcile) {
             setAutoReconcileBothSides(false);
@@ -84,8 +88,11 @@ public class ReconcileManager {
      */
     public static void setAutoReconcileBothSides(final boolean reconcile) {
         reconcileBothSides = reconcile;
-        Preferences p = Preferences.userNodeForPackage(ReconcileManager.class);
-        p.putBoolean(RECONCILE_BOTHSIDES, reconcileBothSides);
+
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        if (engine != null) {
+            engine.putBoolean(RECONCILE_BOTH_SIDES, reconcileBothSides);
+        }
 
         if (reconcile) {
             setAutoReconcileIncomeExpense(false);
