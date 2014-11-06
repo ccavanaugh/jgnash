@@ -38,7 +38,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 import java.util.regex.Pattern;
 
 import jgnash.engine.Engine;
@@ -58,7 +57,7 @@ import jgnash.util.Resource;
  */
 public class UpdateFactory {
 
-    private static final String UPDATE_ON_STARTUP = "updateOnStartup";
+    private static final String UPDATE_ON_STARTUP = "updateSecuritiesOnStartup";
 
     private static final String RESPONSE_HEADER = "Date,Open,High,Low,Close,Volume,Adj Close";
 
@@ -70,13 +69,23 @@ public class UpdateFactory {
     private static final int TIMEOUT = 1;   // default timeout in minutes
 
     public static void setUpdateOnStartup(final boolean update) {
-        Preferences pref = Preferences.userNodeForPackage(UpdateFactory.class);
-        pref.putBoolean(UPDATE_ON_STARTUP, update);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+        if (engine != null) {
+            engine.putBoolean(UPDATE_ON_STARTUP, update);
+        }
     }
 
     public static boolean getUpdateOnStartup() {
-        Preferences pref = Preferences.userNodeForPackage(UpdateFactory.class);
-        return pref.getBoolean(UPDATE_ON_STARTUP, false);
+        boolean result = false;
+
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+        if (engine != null) {
+            result = engine.getBoolean(UPDATE_ON_STARTUP, false);
+        }
+
+        return result;
     }
 
     public static boolean updateOne(final SecurityNode node) {

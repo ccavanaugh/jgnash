@@ -20,7 +20,6 @@ package jgnash.net.currency;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.prefs.Preferences;
 
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
@@ -33,19 +32,29 @@ import jgnash.engine.EngineFactory;
  */
 public class CurrencyUpdateFactory {
 
-    private static final String UPDATE_ON_STARTUP = "updateOnStartup";
+    private static final String UPDATE_ON_STARTUP = "updateCurrenciesOnStartup";
 
     private CurrencyUpdateFactory() {
     }
 
-    public static void setUpdateOnStartup(boolean update) {
-        Preferences pref = Preferences.userNodeForPackage(CurrencyUpdateFactory.class);
-        pref.putBoolean(UPDATE_ON_STARTUP, update);
+    public static void setUpdateOnStartup(final boolean update) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+        if (engine != null) {
+            engine.putBoolean(UPDATE_ON_STARTUP, update);
+        }
     }
 
     public static boolean getUpdateOnStartup() {
-        Preferences pref = Preferences.userNodeForPackage(CurrencyUpdateFactory.class);
-        return pref.getBoolean(UPDATE_ON_STARTUP, false);
+        boolean result = false;
+
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+        if (engine != null) {
+            result = engine.getBoolean(UPDATE_ON_STARTUP, false);
+        }
+
+        return result;
     }
 
     public static class UpdateExchangeRatesCallable implements Callable<Void> {

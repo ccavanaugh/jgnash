@@ -28,6 +28,8 @@ Reinstate archive capability.
 
 Release 2.15.0
 ----------------------
+11/06/14 Options for background update of exchange rates and securities were moved into the data file
+11/06/14 Reconcile options were moved into the data file
 
 Release 2.14.1
 ----------------------
