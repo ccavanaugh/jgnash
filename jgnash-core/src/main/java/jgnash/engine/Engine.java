@@ -70,6 +70,7 @@ import jgnash.net.security.UpdateFactory;
 import jgnash.util.DateUtils;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
+import jgnash.util.Nullable;
 import jgnash.util.Resource;
 
 /**
@@ -2030,7 +2031,25 @@ public class Engine {
         }
     }
 
-    public void setAccountAttribute(final Account account, final String key, final String value) {
+    /**
+     * Sets a an attribute for an account.  The key and values are string based
+     * @param account {@code Account} to add an attribute to
+     * @param key the key for the attribute
+     * @param value the value of the attribute
+     */
+    public void setAccountAttribute(final Account account, @NotNull final String key, @Nullable final String value) {
+
+
+        // Throw an error if the value exceeds the maximum length
+        if (value != null && value.length() > Account.MAX_ATTRIBUTE_LENGTH) {
+            Message message = new Message(MessageChannel.ACCOUNT, ChannelEvent.ACCOUNT_MODIFY_FAILED, this);
+            message.setObject(MessageProperty.ACCOUNT, account);
+            messageBus.fireEvent(message);
+
+            logInfo("The maximum length of the attribute was exceeded");
+
+            return;
+        }
 
         accountLock.writeLock().lock();
 
@@ -2731,6 +2750,30 @@ public class Engine {
         return uuid;
     }
 
+    public void setPreference(@NotNull final String key, @Nullable final String value) {
+        configLock.writeLock().lock();
+
+        try {
+            getConfig().setPreference(key, value);
+            getConfigDAO().update(getConfig());
+
+            Message message = new Message(MessageChannel.CONFIG, ChannelEvent.CONFIG_MODIFY, this);
+            message.setObject(MessageProperty.CONFIG, config);
+            messageBus.fireEvent(message);
+        } finally {
+            configLock.writeLock().unlock();
+        }
+    }
+
+    public @Nullable String getPreference(@NotNull final String key) {
+        configLock.readLock().lock();
+
+        try {
+            return getConfig().getPreference(key);
+        }finally {
+            configLock.readLock().unlock();
+        }
+    }
 
     /**
      * Decorates a Callable to indicate background engine activity is occurring

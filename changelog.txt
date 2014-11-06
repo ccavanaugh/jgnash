@@ -26,6 +26,9 @@ Budgeting
 - flexible start / end period for different fiscal years
 Reinstate archive capability.
 
+Release 2.15.0
+----------------------
+
 Release 2.14.1
 ----------------------
 10/31/14 Fixed a bug that was preventing Securities history from being deleted if added within the same jGnash session

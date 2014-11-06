@@ -174,6 +174,21 @@ public abstract class EngineTest {
         assertNotNull(e.getCurrency("CAD"));
     }
 
+    @SuppressWarnings("ConstantConditions")
+    @Test
+    public void testPreferences() throws Exception {
+        e.setPreference("myKey", "myValue");
+        e.setPreference("myNumber", BigDecimal.TEN.toString());
+
+        // close and reopen to force check for persistence
+        closeEngine();
+
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD);
+
+        assertEquals("myValue", e.getPreference("myKey"));
+        assertEquals(BigDecimal.TEN, new BigDecimal(e.getPreference("myNumber")));
+    }
+
     @Ignore
     @Test
     public void testAddSecurityHistory() {
@@ -608,13 +623,23 @@ public abstract class EngineTest {
         a.setName("AccountAttributes");
 
         e.addAccount(e.getRootAccount(), a);
-
-        e.setAccountAttribute(a, "mystuff", "gobbledegook");
+        e.setAccountAttribute(a, "myStuff", "gobbleDeGook");
+        e.setAccountAttribute(a, "myKey", "myValue");
+        e.setAccountAttribute(a, "myNumber", BigDecimal.TEN.toString());
 
         Account b = e.getAccountByUuid(a.getUuid());
 
-        assertEquals("gobbledegook", b.getAttribute("mystuff"));
-        assertEquals("gobbledegook", b.getAttribute("mystuff"));
+        assertEquals("gobbleDeGook", b.getAttribute("myStuff"));
+
+        // close and reopen to force check for persistence
+        closeEngine();
+
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD);
+
+        b = e.getAccountByUuid(a.getUuid());
+        assertEquals("gobbleDeGook", b.getAttribute("myStuff"));
+        assertEquals("myValue", b.getAttribute("myKey"));
+        assertEquals(BigDecimal.TEN, new BigDecimal(b.getAttribute("myNumber")));
     }
 
     @Test
