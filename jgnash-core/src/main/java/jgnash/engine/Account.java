@@ -1411,7 +1411,7 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     /**
      * Amortization object for loan payments
-     * @return {@code AmoritizeObject} if not null
+     * @return {@code AmortizeObject} if not null
      */
     @Nullable public AmortizeObject getAmortizeObject() {
         return amortizeObject;
