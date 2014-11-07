@@ -20,10 +20,12 @@ package jgnash.engine;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.engine.jpa.JpaH2DataStore;
+import jgnash.engine.jpa.SqlUtils;
 
 import org.junit.Test;
 
@@ -58,6 +60,17 @@ public class JpaH2EngineTest extends EngineTest {
         } catch (final Exception e) {
             fail(e.getMessage());
             return null;
+        }
+    }
+
+    @Test
+    public void dumpTableAndColumnNames() {
+        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+        Set<String> tableNames = SqlUtils.getTableAndColumnNames(testFile, PASSWORD);
+
+        for (final String tableName : tableNames) {
+            System.out.println(tableName);
         }
     }
 

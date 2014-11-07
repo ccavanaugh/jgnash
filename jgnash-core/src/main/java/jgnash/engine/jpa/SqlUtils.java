@@ -21,12 +21,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
 import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -59,15 +62,12 @@ public class SqlUtils {
 
         try {
             if (!FileUtils.isFileLocked(fileName)) {
-
                 DataStoreType dataStoreType = EngineFactory.getDataStoreByType(fileName);
-
                 Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password, false);
-
                 String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
-                try (Connection connection = DriverManager.getConnection(url)) {
-                    try (Statement statement = connection.createStatement()) {
+                try (final Connection connection = DriverManager.getConnection(url)) {
+                    try (final Statement statement = connection.createStatement()) {
                         statement.execute(String.format("SET PASSWORD '%s'", new String(newPassword)));
 
                         result = true;
@@ -86,7 +86,7 @@ public class SqlUtils {
     /**
      * Opens the database in readonly mode and reads the version of the file format.
      *
-     * @param fileName {@code File} to open
+     * @param fileName name of file to open
      * @param password connection password
      * @return file version
      */
@@ -95,16 +95,13 @@ public class SqlUtils {
 
         try {
             if (!FileUtils.isFileLocked(fileName)) {
-
                 final DataStoreType dataStoreType = EngineFactory.getDataStoreByType(fileName);
-
                 final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password, false);
-
                 final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
-                try (Connection connection = DriverManager.getConnection(url)) {
-                    try (Statement statement = connection.createStatement()) {
-                        try (ResultSet resultSet = statement.executeQuery("SELECT FILEVERSION FROM CONFIG")) {
+                try (final Connection connection = DriverManager.getConnection(url)) {
+                    try (final Statement statement = connection.createStatement()) {
+                        try (final ResultSet resultSet = statement.executeQuery("SELECT FILEVERSION FROM CONFIG")) {
                             resultSet.next();
                             fileVersion = resultSet.getFloat("fileversion");
                         }
@@ -124,6 +121,45 @@ public class SqlUtils {
     }
 
     /**
+     * Utility function to dump a list of table names and columns to the console
+     * @param fileName name of file to open
+     * @param password connection password
+     * @return a {@code Set} of strings with the table names and columns, comma separated
+     */
+    public static Set<String> getTableAndColumnNames(final String fileName, final char[] password) {
+
+        final Set<String> tableNames = new TreeSet<>();
+
+        try {
+            if (!FileUtils.isFileLocked(fileName)) {
+                final DataStoreType dataStoreType = EngineFactory.getDataStoreByType(fileName);
+                final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password, false);
+                final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
+
+                try (final Connection connection = DriverManager.getConnection(url)) {
+                    final DatabaseMetaData metaData = connection.getMetaData();
+                    final ResultSet resultSet = metaData.getColumns(null, null, "%", "%");
+
+                    while (resultSet.next()) {
+                        tableNames.add(resultSet.getString(3) + "," + resultSet.getString(4));
+                    }
+
+                    connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for correct file closure
+                } catch (final SQLException e) {
+                    Logger.getLogger(JpaConfiguration.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+                }
+            } else {
+                logger.severe("File was locked");
+            }
+        } catch (final IOException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        }
+
+        return tableNames;
+
+    }
+
+    /**
      * Forces a database closed and waits for the lock file to disappear indicating the database server is closed
      *
      * @param dataStoreType     DataStoreType to connect to
@@ -138,9 +174,8 @@ public class SqlUtils {
 
         // Don't try if the lock file does not exist
         if (Files.exists(Paths.get(lockFile))) {
-
-            Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password, false);
-            String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
+            final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password, false);
+            final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
             // Send shutdown to close the database
             try (final Connection connection = DriverManager.getConnection(url, JpaConfiguration.DEFAULT_USER, new String(password))) {

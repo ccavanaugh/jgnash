@@ -19,12 +19,15 @@ package jgnash.engine;
 
 import jgnash.engine.jpa.JpaH2DataStore;
 import jgnash.engine.jpa.JpaHsqlDataStore;
+import jgnash.engine.jpa.SqlUtils;
+
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -63,6 +66,17 @@ public class JpaHsqlEngineTest extends EngineTest {
     public void cleanup() throws IOException {
         JpaHsqlDataStore.deleteDatabase(testFile);
     }*/
+
+    @Test
+    public void dumpTableAndColumnNames() {
+        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+        Set<String> tableNames = SqlUtils.getTableAndColumnNames(testFile, PASSWORD);
+
+        for (final String tableName : tableNames) {
+            System.out.println(tableName);
+        }
+    }
 
     @Test
     public void testVersion() {
