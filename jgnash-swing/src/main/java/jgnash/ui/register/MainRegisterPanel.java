@@ -114,7 +114,7 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
         toolBar.setRollover(true);
 
         reconcileButton = new RollOverButton(rb.getString("Button.Reconcile"), Resource.getIcon("/jgnash/resource/view-refresh.png"));
-        reconcileButton.setToolTipText(rb.getString("ToolTip.Reconcile"));
+        reconcileButton.setToolTipText(rb.getString("ToolTip.ReconcileAccount"));
         reconcileButton.addActionListener(this);
         toolBar.add(reconcileButton);
 
