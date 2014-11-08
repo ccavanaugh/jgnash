@@ -86,7 +86,7 @@ public class Engine {
     /**
      * Current version for the file format
      */
-    public static final float CURRENT_VERSION = 2.14f;
+    public static final float CURRENT_VERSION = 2.15f;
 
     // Lock names
     private static final String ACCOUNT_LOCK = "account";
