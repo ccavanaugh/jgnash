@@ -29,6 +29,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 
 import jgnash.engine.Engine;
@@ -75,7 +76,7 @@ public class OpenAction {
 
             @Override
             protected Void doInBackground() throws Exception {
-                Resource rb = Resource.get();
+                final Resource rb = Resource.get();
 
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
 
@@ -86,8 +87,8 @@ public class OpenAction {
                 final char[] password = dialog.getPassword();
 
                 if (dialog.isRemote()) {
-                    String host = dialog.getHost();
-                    int port = dialog.getPort();
+                    final String host = dialog.getHost();
+                    final int port = dialog.getPort();
 
                     engine = EngineFactory.bootClientEngine(host, port, password, EngineFactory.DEFAULT);
 
@@ -148,13 +149,13 @@ public class OpenAction {
 
     public static void openAction(final File file, final char[] password) {
 
-        String database = file.getAbsolutePath();
+        final String database = file.getAbsolutePath();
 
         final class BootEngine extends SwingWorker<Void, Void> {
 
             @Override
             protected Void doInBackground() throws Exception {
-                Resource rb = Resource.get();
+                final Resource rb = Resource.get();
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
                 logger.fine("Booting the engine");
 
@@ -162,7 +163,7 @@ public class OpenAction {
                 Thread.sleep(750);
 
                 if (checkAndBackupOldVersion(file.getAbsolutePath(), password)) {
-                    Engine e = EngineFactory.bootLocalEngine(file.getAbsolutePath(), EngineFactory.DEFAULT, password);
+                    final Engine e = EngineFactory.bootLocalEngine(file.getAbsolutePath(), EngineFactory.DEFAULT, password);
                     if (e != null) {
                         e.getRootAccount(); // prime the engine
                     }
@@ -213,11 +214,10 @@ public class OpenAction {
 
                 Engine engine = null;
 
-
                 if (EngineFactory.getLastRemote() && !EngineFactory.usedPassword()) {  // must be a remote connection without use of a password
 
-                    String host = EngineFactory.getLastHost();
-                    int port = EngineFactory.getLastPort();
+                    final String host = EngineFactory.getLastHost();
+                    final int port = EngineFactory.getLastPort();
 
                     engine = EngineFactory.bootClientEngine(host, port, new char[]{}, EngineFactory.DEFAULT);
 
@@ -258,7 +258,7 @@ public class OpenAction {
 
 
         if (!EngineFactory.getLastRemote()) {
-            String database = EngineFactory.getLastDatabase();
+            final String database = EngineFactory.getLastDatabase();
 
             // if local and a password was used last time, don't even try
             if (EngineFactory.usedPassword()) {
@@ -286,7 +286,7 @@ public class OpenAction {
 
             @Override
             protected Void doInBackground() throws Exception {
-                Resource rb = Resource.get();
+                final Resource rb = Resource.get();
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
                 logger.fine("Booting the engine");
 
@@ -312,7 +312,7 @@ public class OpenAction {
         boolean result = false;
 
         if (Files.exists(new File(fileName).toPath())) {
-            float version = EngineFactory.getFileVersion(new File(fileName), password);
+            final float version = EngineFactory.getFileVersion(new File(fileName), password);
 
             if (version <= 0) {
                 final String errorMessage = Resource.get().getString("Message.Error.InvalidUserPass");
@@ -332,6 +332,18 @@ public class OpenAction {
                 // make a versioned backup first
                 if (version < Engine.CURRENT_VERSION) {
                     FileUtils.copyFile(new File(fileName), new File(fileName + "." + version));
+
+                    new Thread() {  // pop an information dialog about the backup file
+                        @Override
+                        public void run() {
+                            final Resource rb = Resource.get();
+                            final String message = rb.getString("Message.Info.Upgrade", fileName + "." + version);
+
+                            StaticUIMethods.displayMessage(message, rb.getString("Title.Information"),
+                                    JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    }.start();
+
                 }
             }
         }
