@@ -28,6 +28,8 @@ Reinstate archive capability.
 
 Release 2.15.0
 ----------------------
+11/08/14 A dialog will now be displayed when the file has been automatically upgraded and a backup of the old version made.
+11/08/14 Relational database files will be altered automatically to address Hibernate HHH_9389
 11/06/14 Options for background update of exchange rates and securities were moved into the data file
 11/06/14 Reconcile options were moved into the data file
 

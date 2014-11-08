@@ -44,7 +44,7 @@ import jgnash.util.FileUtils;
  */
 public class SqlUtils {
 
-    private static final Logger logger = Logger.getLogger(JpaConfiguration.class.getName());
+    private static final Logger logger = Logger.getLogger(SqlUtils.class.getName());
 
     /**
      * Maximum amount of time to wait for the lock file to release after closure.  Typical time should be about 2 seconds,
@@ -120,8 +120,48 @@ public class SqlUtils {
         return fileVersion;
     }
 
+    public static boolean checkAndFixHibernate_HHH_9389(final String fileName, final char[] password) {
+        boolean result = true;  // return false only if an error occurs
+
+        try {
+            if (!FileUtils.isFileLocked(fileName)) {
+                final DataStoreType dataStoreType = EngineFactory.getDataStoreByType(fileName);
+                final Properties properties = JpaConfiguration.getLocalProperties(dataStoreType, fileName, password, false);
+                final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
+
+                try (final Connection connection = DriverManager.getConnection(url)) {
+                    final DatabaseMetaData metaData = connection.getMetaData();
+                    final ResultSet resultSet = metaData.getColumns(null, null, "%", "%");
+
+                    while (resultSet.next()) {
+                        // table name is TRANSACT_TRANSACTIONENTRY
+                        // need to rename the column TRANSACT_UUID to TRANSACTION_UUID
+                        if (resultSet.getString(4).equals("TRANSACT_UUID") && resultSet.getString(3).equals("TRANSACT_TRANSACTIONENTRY")) {
+                            connection.prepareStatement("ALTER TABLE TRANSACT_TRANSACTIONENTRY ALTER COLUMN TRANSACT_UUID RENAME TO TRANSACTION_UUID").execute();
+                            logger.info("Correcting column name for Hibernate HHH-9389");
+                        }
+                    }
+
+                    connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for correct file closure
+                } catch (final SQLException e) {
+                    Logger.getLogger(JpaConfiguration.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+                    result = false;
+                }
+            } else {
+                logger.severe("File was locked");
+                result = false;
+            }
+        } catch (final IOException e) {
+            logger.log(Level.SEVERE, e.getMessage(), e);
+            result = false;
+        }
+
+        return result;
+    }
+
     /**
      * Utility function to dump a list of table names and columns to the console
+     *
      * @param fileName name of file to open
      * @param password connection password
      * @return a {@code Set} of strings with the table names and columns, comma separated

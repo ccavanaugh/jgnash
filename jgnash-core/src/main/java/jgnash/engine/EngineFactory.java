@@ -267,9 +267,16 @@ public class EngineFactory {
 
         MessageBus.getInstance(engineName).setLocal();
 
-        DataStore dataStore = type.getDataStore();
+        final DataStore dataStore = type.getDataStore();
 
-        Engine engine = dataStore.getLocalEngine(fileName, engineName, password);
+        // If a relational database is being used for a file prior to 2.15, correct the column name
+        if (type == DataStoreType.H2_DATABASE || type == DataStoreType.HSQL_DATABASE) {
+            if (SqlUtils.getFileVersion(fileName, password) < 2.15) {
+                 SqlUtils.checkAndFixHibernate_HHH_9389(fileName, password);
+            }
+        }
+
+        final Engine engine = dataStore.getLocalEngine(fileName, engineName, password);
 
         if (engine != null) {
             logger.info(Resource.get().getString("Message.EngineStart"));

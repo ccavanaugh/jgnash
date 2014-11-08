@@ -63,8 +63,9 @@
             <property name="hibernate.c3p0.max_statements" value="0" />
             <property name="hibernate.c3p0.timeout" value="100" />
 
-            <!-- Hibernate is generating table names not compliant with the JPA spec.  This enables the fix and breaks existing files -->
-            <!--<property name="hibernate.ejb.naming_strategy_delegator" value="org.hibernate.cfg.naming.ImprovedNamingStrategyDelegator" />-->
+            <!-- Hibernate was generating table names not compliant with the JPA spec.  This enables the fix and breaks existing files -->
+            <!-- Change was implemented for jGnash file version 2.15, Hibernate HHH-9389 -->
+            <property name="hibernate.ejb.naming_strategy_delegator" value="org.hibernate.cfg.naming.ImprovedNamingStrategyDelegator" />
 
         </properties>
     </persistence-unit>
