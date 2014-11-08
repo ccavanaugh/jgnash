@@ -32,7 +32,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.stage.Stage;
-import org.controlsfx.control.ButtonBar;
+import javafx.scene.control.ButtonBar;
 
 /**
  * Controller for selecting an account from a tree
@@ -53,11 +53,13 @@ public class SelectAccountController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
 
         // Create and add the ok and cancel buttons to the button bar
-        Button okButton = new Button(resources.getString("Button.Ok"));
-        Button cancelButton = new Button(resources.getString("Button.Cancel"));
+        final Button okButton = new Button(resources.getString("Button.Ok"));
+        final Button cancelButton = new Button(resources.getString("Button.Cancel"));
 
-        buttonBar.addButton(okButton, ButtonBar.ButtonType.OK_DONE);
-        buttonBar.addButton(cancelButton, ButtonBar.ButtonType.CANCEL_CLOSE);
+        ButtonBar.setButtonData(okButton, ButtonBar.ButtonData.OK_DONE);
+        ButtonBar.setButtonData(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        buttonBar.getButtons().addAll(okButton, cancelButton);
 
         okButton.setOnAction(event -> {
             if (treeView.getSelectionModel().getSelectedItem() != null) {

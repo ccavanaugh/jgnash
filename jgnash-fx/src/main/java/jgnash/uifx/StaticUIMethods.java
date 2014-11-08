@@ -18,6 +18,8 @@
 package jgnash.uifx;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,10 +30,15 @@ import jgnash.util.ResourceUtils;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.controlsfx.dialog.Dialogs;
 
 /**
  * Various static UI support methods
@@ -66,27 +73,73 @@ public class StaticUIMethods {
     }
 
     public static void displayError(final String message) {
-        Dialogs.create()
-                .owner(MainApplication.getPrimaryStage())
-                .title(ResourceUtils.getBundle().getString("Title.Error"))
-                .message(message)
-                .showError();
+        final Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(ResourceUtils.getBundle().getString("Title.Error"));
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.initOwner(MainApplication.getPrimaryStage());
+        alert.initStyle(StageStyle.UTILITY);
 
+        alert.showAndWait();
     }
 
     public static void displayException(final Throwable exception) {
-        Dialogs.create()
-                .owner(MainApplication.getPrimaryStage())
-                .title(ResourceUtils.getBundle().getString("Title.Error"))
-                .message(exception.getLocalizedMessage())
-                .showException(exception);
+
+        final Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(ResourceUtils.getBundle().getString("Title.Error"));
+        alert.setHeaderText(exception.getLocalizedMessage());
+        alert.initOwner(MainApplication.getPrimaryStage());
+        alert.initStyle(StageStyle.UTILITY);
+
+        final StringWriter sw = new StringWriter();
+        final PrintWriter pw = new PrintWriter(sw);
+        exception.printStackTrace(pw);
+
+        final String stackTrace = sw.toString();
+
+        final TextArea textArea = new TextArea(stackTrace);
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+
+        textArea.setMaxWidth(Double.MAX_VALUE);
+        textArea.setMaxHeight(Double.MAX_VALUE);
+
+        GridPane.setVgrow(textArea, Priority.ALWAYS);
+        GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+        final GridPane expandableContent = new GridPane();
+        expandableContent.setMaxWidth(Double.MAX_VALUE);
+        expandableContent.add(textArea, 0, 0);
+
+        alert.getDialogPane().setExpandableContent(expandableContent);
+
+        alert.showAndWait();
     }
 
     public static void displayTaskProgress(final Task<?> task) {
-        Dialogs.create()
-                .owner(MainApplication.getPrimaryStage())
-                .lightweight()
-                .title(ResourceUtils.getBundle().getString("Title.PleaseWait"))
-                .showWorkerProgress(task);
+
+        final Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(ResourceUtils.getBundle().getString("Title.PleaseWait"));
+        alert.setHeaderText(null);
+        alert.initOwner(MainApplication.getPrimaryStage());
+
+        final Label progressMessage = new Label();
+        progressMessage.textProperty().bind(task.messageProperty());
+        progressMessage.setMaxWidth(Double.MAX_VALUE);
+
+        final ProgressBar progressBar = new ProgressBar();
+        progressBar.setMaxWidth(Double.MAX_VALUE);
+
+        GridPane.setHgrow(progressMessage, Priority.ALWAYS);
+        GridPane.setHgrow(progressBar, Priority.ALWAYS);
+
+        final GridPane expandableContent = new GridPane();
+        expandableContent.setMaxWidth(Double.MAX_VALUE);
+        expandableContent.add(progressMessage, 0, 0);
+        expandableContent.add(progressBar, 0, 1);
+
+        alert.getDialogPane().setContent(expandableContent);
+
+        alert.show();
     }
 }

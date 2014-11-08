@@ -37,7 +37,7 @@ public class BootEngineTask extends Task<String> {
     }
 
     public static void initiateBoot(final String localFile, final char[] password, final boolean remote, final String serverName, final int port) {
-        BootEngineTask bootTask = new BootEngineTask(localFile, password, remote, serverName, port);
+        final BootEngineTask bootTask = new BootEngineTask(localFile, password, remote, serverName, port);
 
         Thread thread = new Thread(bootTask);
         thread.setDaemon(true);

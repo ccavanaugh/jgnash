@@ -45,6 +45,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
@@ -53,7 +54,6 @@ import javafx.scene.control.Tooltip;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.controlsfx.control.ButtonBar;
 
 /**
  * Loads all account properties into a form and returns a template Account based on the form properties
@@ -123,11 +123,13 @@ public class AccountPropertiesController implements Initializable {
         accountTypeComboBox.setValue(AccountType.BANK); // set default
 
         // Create and add the ok and cancel buttons to the button bar
-        Button okButton = new Button(resources.getString("Button.Ok"));
-        Button cancelButton = new Button(resources.getString("Button.Cancel"));
+        final Button okButton = new Button(resources.getString("Button.Ok"));
+        final Button cancelButton = new Button(resources.getString("Button.Cancel"));
 
-        buttonBar.addButton(okButton, ButtonBar.ButtonType.OK_DONE);
-        buttonBar.addButton(cancelButton, ButtonBar.ButtonType.CANCEL_CLOSE);
+        ButtonBar.setButtonData(okButton, ButtonBar.ButtonData.OK_DONE);
+        ButtonBar.setButtonData(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE);
+
+        buttonBar.getButtons().addAll(okButton, cancelButton);
 
         descriptionTextField.setText(resources.getString("Word.Description"));
         nameTextField.setText(resources.getString("Word.Name"));

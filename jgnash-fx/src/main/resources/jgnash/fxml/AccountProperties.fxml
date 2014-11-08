@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import org.controlsfx.control.ButtonBar?>
+<?import javafx.scene.control.ButtonBar?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.accounts.AccountPropertiesController">
     <children>
         <TitledPane text="%Title.AccountInfo" VBox.vgrow="ALWAYS" collapsible="false">
@@ -88,6 +88,6 @@
                 </BorderPane>
             </content>
         </TitledPane>
-        <ButtonBar fx:id="buttonBar" VBox.vgrow="NEVER" buttonUniformSize="true"/>
+        <ButtonBar fx:id="buttonBar" VBox.vgrow="NEVER"/>
     </children>
 </VBox>
