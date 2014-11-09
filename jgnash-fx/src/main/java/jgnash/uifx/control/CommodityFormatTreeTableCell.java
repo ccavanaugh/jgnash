@@ -34,7 +34,7 @@ public class CommodityFormatTreeTableCell extends TreeTableCell<Account, BigDeci
     protected void updateItem(final BigDecimal amount, final boolean empty) {
         super.updateItem(amount, empty);  // required
 
-        if (!empty && amount != null) {
+        if (!empty && amount != null && getTreeTableRow().getTreeItem() != null) {
             Account account = getTreeTableRow().getTreeItem().getValue();
 
             NumberFormat format = CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
