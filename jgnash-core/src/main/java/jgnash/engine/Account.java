@@ -59,7 +59,8 @@ import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 
 /**
- * Abstract Account class
+ * Account object.  The {@code Account} object is mutable.  Changes should be made using the {@code Engine} to
+ * ensure correct state and persistence.
  *
  * @author Craig Cavanaugh
  * @author Jeff Prickett prickett@users.sourceforge.net
@@ -68,6 +69,31 @@ import jgnash.util.Nullable;
 public class Account extends StoredObject implements Comparable<Account> {
 
     public static final int MAX_ATTRIBUTE_LENGTH = 8192;
+
+    /**
+     * Attribute key for the last attempted reconciliation date
+     */
+    public static final String RECONCILE_LAST_ATTEMPT_DATE = "Reconcile.LastAttemptDate";
+
+    /**
+     * Attribute key for the last successful reconciliation date
+     */
+    public static final String RECONCILE_LAST_SUCCESS_DATE = "Reconcile.LastSuccessDate";
+
+    /**
+     * Attribute key for the last reconciliation statement date
+     */
+    public static final String RECONCILE_LAST_STATEMENT_DATE = "Reconcile.LastStatementDate";
+
+    /**
+     * Attribute key for the last reconciliation opening balance
+     */
+    public static final String RECONCILE_LAST_OPENING_BALANCE = "Reconcile.LastOpeningBalance";
+
+    /**
+     * Attribute key for the last reconciliation closing balance
+     */
+    public static final String RECONCILE_LAST_CLOSING_BALANCE = "Reconcile.LastClosingBalance";
 
     private static final Pattern numberPattern = Pattern.compile("\\d+");
 
@@ -1513,6 +1539,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         a.transactions.clear();
         a.cachedSortedTransactionList.clear();
         a.cachedSortedChildren.clear();
+        a.attributes.clear();
 
         return a;
     }
