@@ -31,8 +31,6 @@ import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
@@ -79,6 +77,7 @@ public class StaticUIMethods {
         alert.setContentText(message);
         alert.initOwner(MainApplication.getPrimaryStage());
         alert.initStyle(StageStyle.UTILITY);
+        alert.getDialogPane().getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
 
         alert.showAndWait();
     }
@@ -112,34 +111,12 @@ public class StaticUIMethods {
         expandableContent.add(textArea, 0, 0);
 
         alert.getDialogPane().setExpandableContent(expandableContent);
+        alert.getDialogPane().getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
 
         alert.showAndWait();
     }
 
     public static void displayTaskProgress(final Task<?> task) {
-
-        final Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(ResourceUtils.getBundle().getString("Title.PleaseWait"));
-        alert.setHeaderText(null);
-        alert.initOwner(MainApplication.getPrimaryStage());
-
-        final Label progressMessage = new Label();
-        progressMessage.textProperty().bind(task.messageProperty());
-        progressMessage.setMaxWidth(Double.MAX_VALUE);
-
-        final ProgressBar progressBar = new ProgressBar();
-        progressBar.setMaxWidth(Double.MAX_VALUE);
-
-        GridPane.setHgrow(progressMessage, Priority.ALWAYS);
-        GridPane.setHgrow(progressBar, Priority.ALWAYS);
-
-        final GridPane expandableContent = new GridPane();
-        expandableContent.setMaxWidth(Double.MAX_VALUE);
-        expandableContent.add(progressMessage, 0, 0);
-        expandableContent.add(progressBar, 0, 1);
-
-        alert.getDialogPane().setContent(expandableContent);
-
-        alert.show();
+        MainApplication.setBusy(task);
     }
 }
