@@ -35,7 +35,8 @@ import jgnash.ui.register.RegisterFactory;
 import jgnash.util.DateUtils;
 
 /**
- * 
+ * Table with improved default formatting capability
+ *
  * @author Craig Cavanaugh
  */
 public class FormattedJTable extends JTable {
@@ -69,7 +70,7 @@ public class FormattedJTable extends JTable {
     @Override
     public Component prepareRenderer(final TableCellRenderer renderer, final int row, final int column) {
 
-        Component c = super.prepareRenderer(renderer, row, column);
+        final Component c = super.prepareRenderer(renderer, row, column);
 
         if (c instanceof JLabel) {
 
