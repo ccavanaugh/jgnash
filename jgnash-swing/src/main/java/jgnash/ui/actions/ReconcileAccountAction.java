@@ -27,7 +27,6 @@ import jgnash.ui.reconcile.ReconcileSettingsDialog;
  * Reconcile action class
  *
  * @author Craig Cavanaugh
- *
  */
 public class ReconcileAccountAction {
 
@@ -40,7 +39,7 @@ public class ReconcileAccountAction {
                     ReconcileSettingsDialog dlg = new ReconcileSettingsDialog(account);
 
                     if (dlg.showDialog()) {
-                        new ReconcileDialog(account, dlg.getOpeningDate(), dlg.getOpeningBalance(), dlg.getEndingBalance()).setVisible(true);
+                        new ReconcileDialog(account, dlg.getStatementDate(), dlg.getOpeningBalance(), dlg.getClosingBalance()).setVisible(true);
                     }
                 }
             });

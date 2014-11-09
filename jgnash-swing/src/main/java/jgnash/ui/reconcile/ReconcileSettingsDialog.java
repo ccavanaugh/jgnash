@@ -31,20 +31,26 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.register.AccountBalanceDisplayManager;
 import jgnash.ui.util.DialogUtils;
+import jgnash.util.DateUtils;
+import jgnash.util.NotNull;
 import jgnash.util.Resource;
 
 /**
  * Account reconcile settings dialog.
- * 
+ *
  * @author Craig Cavanaugh
  */
 public class ReconcileSettingsDialog extends JDialog implements ActionListener {
+
+    private static final int FUZZY_DATE_RANGE = 2;
 
     private final Resource rb = Resource.get();
 
@@ -54,19 +60,21 @@ public class ReconcileSettingsDialog extends JDialog implements ActionListener {
 
     private final JFloatField openField = new JFloatField();
 
-    private final JFloatField endField = new JFloatField();
+    private final JFloatField closeField = new JFloatField();
 
     private final DatePanel datePanel = new DatePanel();
 
     private boolean returnValue = false;
 
-    public ReconcileSettingsDialog(final Account account) {
+    private final Account account;
+
+    public ReconcileSettingsDialog(@NotNull final Account account) {
         super(UIApplication.getFrame(), true);
+
+        this.account = account;
 
         okButton = new JButton(rb.getString("Button.Ok"));
         cancelButton = new JButton(rb.getString("Button.Cancel"));
-
-        datePanel.setDate(new Date());
 
         layoutMainPanel();
 
@@ -77,8 +85,83 @@ public class ReconcileSettingsDialog extends JDialog implements ActionListener {
         okButton.addActionListener(this);
         cancelButton.addActionListener(this);
 
-        openField.setDecimal(AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(), account.getOpeningBalanceForReconcile()));
-        endField.setDecimal(AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(), account.getBalance()));
+        /* Load default values first */
+
+        // Last date of the month for the 1st unreconciled transaction
+        Date statementDate =  DateUtils.getLastDayOfTheMonth(account.getFirstUnreconciledTransactionDate());
+
+        // Balance at the 1st unreconciled transaction
+        BigDecimal openingBalance = AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(), account.getOpeningBalanceForReconcile());
+
+        // Balance at the statement date
+        BigDecimal closingBalance = AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(), account.getBalance(statementDate));
+
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+        // Determine the best reconcile values to use
+        if (engine != null) {
+            Date lastSuccessDate = null;
+            Date lastAttemptDate = null;
+            Date lastStatementDate = null;
+
+            BigDecimal lastOpeningBalance = null;
+            BigDecimal lastClosingBalance = null;
+
+            String value = account.getAttribute(Account.RECONCILE_LAST_SUCCESS_DATE);
+            if (value != null) {
+                lastSuccessDate = new Date(Long.parseLong(value));
+            }
+
+            value = account.getAttribute(Account.RECONCILE_LAST_ATTEMPT_DATE);
+            if (value != null) {
+                lastAttemptDate = new Date(Long.parseLong(value));
+            }
+
+            value = account.getAttribute(Account.RECONCILE_LAST_STATEMENT_DATE);
+            if (value != null) {
+                lastStatementDate = new Date(Long.parseLong(value));
+            }
+
+            value = account.getAttribute(Account.RECONCILE_LAST_CLOSING_BALANCE);
+            if (value != null) {
+                lastClosingBalance = new BigDecimal(value);
+            }
+
+            value = account.getAttribute(Account.RECONCILE_LAST_OPENING_BALANCE);
+            if (value != null) {
+                lastOpeningBalance = new BigDecimal(value);
+            }
+
+            if (lastSuccessDate != null) { // we had prior success, use a new date one month out if the date is earlier than today
+                if (DateUtils.before(lastStatementDate, new Date())) {
+
+                    // set the new statement date
+                    statementDate = DateUtils.addMonth(lastStatementDate);
+
+                    // use the account balance of the estimated statement date
+                    closingBalance = AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(), account.getBalance(statementDate));
+                }
+            }
+
+            // an recent attempt has been made before, override defaults
+            if (lastAttemptDate != null && Math.abs(DateUtils.getDifferenceInDays(lastAttemptDate, new Date())) <= FUZZY_DATE_RANGE) {
+                if (lastStatementDate != null) {
+                    statementDate = lastStatementDate; // set the new statement date + 1 month
+                }
+
+                if (lastOpeningBalance != null) {
+                    openingBalance = lastOpeningBalance;
+                }
+
+                if (lastClosingBalance != null) {
+                    closingBalance = lastClosingBalance;
+                }
+            }
+        }
+
+        datePanel.setDate(statementDate);
+        openField.setDecimal(openingBalance);
+        closeField.setDecimal(closingBalance);
 
         DialogUtils.addBoundsListener(this);
     }
@@ -91,7 +174,7 @@ public class ReconcileSettingsDialog extends JDialog implements ActionListener {
 
         builder.append(rb.getString("Label.StatementDate"), datePanel);
         builder.append(rb.getString("Label.OpeningBalance"), openField);
-        builder.append(rb.getString("Label.EndingBalance"), endField);
+        builder.append(rb.getString("Label.EndingBalance"), closeField);
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
@@ -101,15 +184,15 @@ public class ReconcileSettingsDialog extends JDialog implements ActionListener {
         pack();
     }
 
-    public BigDecimal getEndingBalance() {
-        return endField.getDecimal();
+    public BigDecimal getClosingBalance() {
+        return closeField.getDecimal();
     }
 
     public BigDecimal getOpeningBalance() {
         return openField.getDecimal();
     }
 
-    public Date getOpeningDate() {
+    public Date getStatementDate() {
         return datePanel.getDate();
     }
 
@@ -119,6 +202,23 @@ public class ReconcileSettingsDialog extends JDialog implements ActionListener {
     @Override
     public void actionPerformed(final ActionEvent e) {
         returnValue = e.getSource() == okButton;
+
+        if (returnValue) {
+            new Thread() {  // save the value in a background thread as this could take a little bit
+                @Override
+                public void run() {
+                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+                    if (engine != null) {
+                        engine.setAccountAttribute(account, Account.RECONCILE_LAST_ATTEMPT_DATE, Long.toString(DateUtils.trimDate(new Date()).getTime()));
+                        engine.setAccountAttribute(account, Account.RECONCILE_LAST_STATEMENT_DATE, Long.toString(DateUtils.trimDate(getStatementDate()).getTime()));
+                        engine.setAccountAttribute(account, Account.RECONCILE_LAST_OPENING_BALANCE, getOpeningBalance().toString());
+                        engine.setAccountAttribute(account, Account.RECONCILE_LAST_CLOSING_BALANCE, getClosingBalance().toString());
+                    }
+                }
+            }.start();
+        }
+
         dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 

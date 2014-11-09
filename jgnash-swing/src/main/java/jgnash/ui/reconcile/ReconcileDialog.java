@@ -43,6 +43,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.engine.MathConstants;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.message.Message;
@@ -57,6 +59,7 @@ import jgnash.ui.components.FormattedJTable;
 import jgnash.ui.register.RegisterFactory;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.JTableUtils;
+import jgnash.util.DateUtils;
 import jgnash.util.Resource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -74,7 +77,7 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
 
     private final Account account;
 
-    private final Date openingDate;
+    private final Date closingDate;
 
     private final BigDecimal openingBalance;
 
@@ -118,13 +121,13 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
 
     private final Resource rb = Resource.get();
 
-    public ReconcileDialog(final Account reconcileAccount, final Date openingDate, final BigDecimal openingBalance, final BigDecimal endingBalance) {
+    public ReconcileDialog(final Account reconcileAccount, final Date closingDate, final BigDecimal openingBalance, final BigDecimal endingBalance) {
         super(UIApplication.getFrame(), false);
 
         account = reconcileAccount;
         this.endingBalance = endingBalance;
         this.openingBalance = openingBalance;
-        this.openingDate = openingDate;
+        this.closingDate = closingDate;
 
         numberFormat = CommodityFormat.getShortNumberFormat(account.getCurrencyNode());
 
@@ -168,10 +171,10 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
         debitSelectAllButton = new JButton(rb.getString("Button.SelectAll"));
         debitClearAllButton = new JButton(rb.getString("Button.ClearAll"));
 
-        creditModel = new CreditModel(account, openingDate);
+        creditModel = new CreditModel(account, closingDate);
         creditTable = createTable(creditModel);
 
-        debitModel = new DebitModel(account, openingDate);
+        debitModel = new DebitModel(account, closingDate);
         debitTable = createTable(debitModel);
 
         openingBalanceLabel.setText(numberFormat.format(openingBalance));
@@ -194,11 +197,13 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
     private JTable createTable(final AbstractReconcileTableModel model) {
 
         JTable table = new FormattedJTable(model);
+        table.setAutoCreateRowSorter(true);
 
         table.setFillsViewportHeight(true);
 
         table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.getSelectionModel().addListSelectionListener(this);
+
 
         return table;
     }
@@ -343,6 +348,13 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
             commitChanges(ReconciledState.CLEARED);
         } else if (e.getSource() == finishButton) {
             closeDialog();
+
+            // save the closing date of the last successful reconciliation
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            if (engine != null) {
+                engine.setAccountAttribute(account, Account.RECONCILE_LAST_SUCCESS_DATE, Long.toString(DateUtils.trimDate(closingDate).getTime()));
+            }
+
             commitChanges(ReconciledState.RECONCILED);
         } else if (e.getSource() == cancelButton) {
             closeDialog();

@@ -19,7 +19,6 @@ Class/Tag option to Transaction entries. ( to categorize the Expense & Income fu
 Hiding option of Transaction form which can help to see more transactions in Register view.
 Direct Transaction entry option in the Ledger to avoid Transaction form.
 Formal Trial Balance report
-Better method of keeping preferences when updating computers
 Budgeting
 - an option for Total Year OR YTD Total – this is actually quite useful, since the user can be under / over budget in any given period, but on-budget YTD.
 - annotation, similar to transaction annotation, so the user can reference the reason for an exception in any given period.
@@ -28,10 +27,12 @@ Reinstate archive capability.
 
 Release 2.15.0
 ----------------------
+11/09/14 Improved reconciliation behavior.  Reconcile Settings are remembered from prior sessions and are intelligently updated.
 11/08/14 A dialog will now be displayed when the file has been automatically upgraded and a backup of the old version made.
-11/08/14 Relational database files will be altered automatically to address Hibernate HHH_9389
-11/06/14 Options for background update of exchange rates and securities were moved into the data file
-11/06/14 Reconcile options were moved into the data file
+11/08/14 Relational database files will be altered automatically to address Hibernate Bug #HHH_9389
+11/06/14 Settings for background updates of exchange rates and securities were moved into the data file
+11/06/14 Reconcile settings were moved into the data file for consistent behavior when the file is shared on multiple
+         systems
 
 Release 2.14.1
 ----------------------
