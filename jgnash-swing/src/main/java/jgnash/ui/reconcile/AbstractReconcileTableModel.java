@@ -20,7 +20,6 @@ package jgnash.ui.reconcile;
 import java.awt.EventQueue;
 import java.math.BigDecimal;
 import java.text.DateFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -43,7 +42,6 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
-import jgnash.text.CommodityFormat;
 import jgnash.ui.register.AccountBalanceDisplayManager;
 import jgnash.ui.register.table.PackableTableModel;
 import jgnash.util.DateUtils;
@@ -76,8 +74,6 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
 
     private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
 
-    private final NumberFormat commodityFormatter;
-
     private final ReadWriteLock rwl = new ReentrantReadWriteLock(true);
 
     AbstractReconcileTableModel(final Account account, final Date closingDate) {
@@ -86,8 +82,6 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
 
         this.account = account;
         this.closingDate = (Date) closingDate.clone();
-
-        commodityFormatter = CommodityFormat.getShortNumberFormat(account.getCurrencyNode());
 
         loadModel();
 
@@ -183,8 +177,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
                 case 3:
                     return t.getPayee();
                 case 4:
-                    BigDecimal amount = AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(), t.getAmount(account));
-                    return this.commodityFormatter.format(amount);
+                    return AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(), t.getAmount(account));
                 default:
                     return null;
             }
@@ -307,7 +300,6 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
     }
 
     void clearAll() {
-
         rwl.readLock().lock();
 
         try {

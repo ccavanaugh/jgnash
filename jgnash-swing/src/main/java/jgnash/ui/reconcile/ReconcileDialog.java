@@ -18,6 +18,7 @@
 package jgnash.ui.reconcile;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.SystemColor;
@@ -41,6 +42,7 @@ import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableCellRenderer;
 
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
@@ -196,7 +198,7 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
 
     private JTable createTable(final AbstractReconcileTableModel model) {
 
-        JTable table = new FormattedJTable(model);
+        JTable table = new ReconcileTable(model);
         table.setAutoCreateRowSorter(true);
 
         table.setFillsViewportHeight(true);
@@ -204,8 +206,31 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
         table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.getSelectionModel().addListSelectionListener(this);
 
-
         return table;
+    }
+
+    private class ReconcileTable extends FormattedJTable {
+
+        private final NumberFormat commodityFormatter;
+
+        public ReconcileTable(final AbstractReconcileTableModel model) {
+            super(model);
+
+            commodityFormatter = CommodityFormat.getShortNumberFormat(account.getCurrencyNode());
+        }
+
+        @Override
+        public Component prepareRenderer(final TableCellRenderer renderer, final int row, final int column) {
+            final Component c = super.prepareRenderer(renderer, row, column);
+
+            if (c instanceof JLabel) {
+                if (Number.class.isAssignableFrom(getColumnClass(column))) {
+                    ((JLabel) c).setText(commodityFormatter.format(getValueAt(row, column)));
+                }
+            }
+
+            return c;
+        }
     }
 
     private void layoutMainPanel() {
@@ -390,14 +415,14 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
 
         if (e.getSource() == creditTable.getSelectionModel()) {
             if (creditTable.getSelectedRow() >= 0) {
-                creditModel.toggleReconciledState(creditTable.getSelectedRow());
+                creditModel.toggleReconciledState(creditTable.convertRowIndexToModel(creditTable.getSelectedRow()));
                 creditTable.clearSelection();
                 updateCreditStatus();
                 updateStatus();
             }
         } else if (e.getSource() == debitTable.getSelectionModel()) {
             if (debitTable.getSelectedRow() >= 0) {
-                debitModel.toggleReconciledState(debitTable.getSelectedRow());
+                debitModel.toggleReconciledState(debitTable.convertRowIndexToModel(debitTable.getSelectedRow()));
                 debitTable.clearSelection();
                 updateDebitStatus();
                 updateStatus();

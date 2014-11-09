@@ -28,6 +28,7 @@ Reinstate archive capability.
 Release 2.15.0
 ----------------------
 11/09/14 Improved reconciliation behavior.  Reconcile Settings are remembered from prior sessions and are intelligently updated.
+11/09/14 Add sorting capability to the reconcile dialog tables.
 11/08/14 A dialog will now be displayed when the file has been automatically upgraded and a backup of the old version made.
 11/08/14 Relational database files will be altered automatically to address Hibernate Bug #HHH_9389
 11/06/14 Settings for background updates of exchange rates and securities were moved into the data file
