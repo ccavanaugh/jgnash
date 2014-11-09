@@ -20,6 +20,8 @@ import javafx.concurrent.Task;
  */
 public class BootEngineTask extends Task<String> {
 
+    private static final int FORCED_DELAY = 1500;
+
     private static final int INDETERMINATE = -1;
 
     private boolean remote;
@@ -71,6 +73,7 @@ public class BootEngineTask extends Task<String> {
             } else if (checkAndBackupOldVersion(localFile, password)) {
                 EngineFactory.bootLocalEngine(localFile, EngineFactory.DEFAULT, password);
                 updateMessage(resources.getString("Message.FileLoadComplete"));
+                Thread.sleep(FORCED_DELAY); // force delay for better visual feedback
             }
         }
 
