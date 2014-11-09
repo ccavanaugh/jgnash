@@ -25,6 +25,7 @@ package jgnash.engine.message;
 public enum ChannelEvent {
     ACCOUNT_ADD,
     ACCOUNT_ADD_FAILED,
+    ACCOUNT_ATTRIBUTE_MODIFY,
     ACCOUNT_MODIFY,
     ACCOUNT_MODIFY_FAILED,
     ACCOUNT_REMOVE,

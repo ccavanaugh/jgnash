@@ -2032,15 +2032,13 @@ public class Engine {
     }
 
     /**
-     * Sets a an attribute for an account.  The key and values are string based
+     * Sets an attribute for an {@code Account}.  The key and values are string based
      *
-     * @param account {@code Account} to add an attribute to
+     * @param account {@code Account} to add or update an attribute
      * @param key     the key for the attribute
      * @param value   the value of the attribute
      */
     public void setAccountAttribute(final Account account, @NotNull final String key, @Nullable final String value) {
-
-
         // Throw an error if the value exceeds the maximum length
         if (value != null && value.length() > Account.MAX_ATTRIBUTE_LENGTH) {
             Message message = new Message(MessageChannel.ACCOUNT, ChannelEvent.ACCOUNT_MODIFY_FAILED, this);
@@ -2058,7 +2056,7 @@ public class Engine {
             account.setAttribute(key, value);
             getAccountDAO().updateAccount(account);
 
-            Message message = new Message(MessageChannel.ACCOUNT, ChannelEvent.ACCOUNT_MODIFY, this);
+            Message message = new Message(MessageChannel.ACCOUNT, ChannelEvent.ACCOUNT_ATTRIBUTE_MODIFY, this);
             message.setObject(MessageProperty.ACCOUNT, account);
             messageBus.fireEvent(message);
 
