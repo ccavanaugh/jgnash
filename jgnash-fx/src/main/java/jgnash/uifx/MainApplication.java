@@ -29,14 +29,17 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
+import jgnash.uifx.control.BusyPane;
 import jgnash.uifx.control.TabViewPane;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.utils.StageUtils;
 import jgnash.util.DefaultDaemonThreadFactory;
+import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -47,6 +50,7 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -74,30 +78,37 @@ public class MainApplication extends Application implements MessageListener {
 
     private ResourceBundle rb = ResourceUtils.getBundle();
 
+    private static BusyPane busyPane;
+
     @Override
     public void start(final Stage stage) throws Exception {
         primaryStage = stage;
 
-        MenuBar menuBar = FXMLLoader.load(MainFX.class.getResource("fxml/MainMenuBar.fxml"), rb);
-        ToolBar mainToolBar = FXMLLoader.load(MainFX.class.getResource("fxml/MainToolBar.fxml"), rb);
+        busyPane = new BusyPane();
+
+        final MenuBar menuBar = FXMLLoader.load(MainFX.class.getResource("fxml/MainMenuBar.fxml"), rb);
+        final ToolBar mainToolBar = FXMLLoader.load(MainFX.class.getResource("fxml/MainToolBar.fxml"), rb);
         tabViewPane = new TabViewPane();
 
-        VBox top = new VBox();
+        final VBox top = new VBox();
         top.getChildren().addAll(menuBar, mainToolBar);
         top.setFillWidth(true);
 
-        HBox bottom = new HBox();
+        final HBox bottom = new HBox();
         statusLabel = new Label("Ready");
         bottom.getChildren().addAll(statusLabel);
 
-        BorderPane borderPane = new BorderPane();
+        final BorderPane borderPane = new BorderPane();
         borderPane.setTop(top);
         borderPane.setBottom(bottom);
         borderPane.setCenter(tabViewPane);
         BorderPane.setAlignment(tabViewPane, Pos.CENTER);
         BorderPane.setMargin(bottom, new Insets(8, 8, 8, 8));
 
-        Scene scene = new Scene(borderPane, 600, 400);
+        final StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(borderPane, busyPane);
+
+        final Scene scene = new Scene(stackPane, 600, 400);
         scene.getStylesheets().add(DEFAULT_CSS);
 
         stage.setTitle(MainFX.VERSION);
@@ -154,6 +165,16 @@ public class MainApplication extends Application implements MessageListener {
 
     private void displayStatus(final String status) {
         Platform.runLater(() -> statusLabel.setText(status));
+    }
+
+    /**
+     * Sets the application in a busy state and waits for the provided {@code Task} to complete.
+     * The caller is responsible for starting the task.
+     *
+     * @param task long running {@code Task} to monitor
+     */
+    public static void setBusy(@Nullable final Task<?> task) {
+        busyPane.setTask(task);
     }
 
     @Override
