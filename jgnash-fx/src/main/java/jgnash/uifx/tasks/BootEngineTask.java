@@ -8,6 +8,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.util.FileUtils;
+import jgnash.util.Resource;
 import jgnash.util.ResourceUtils;
 
 import javafx.application.Platform;
@@ -105,6 +106,13 @@ public class BootEngineTask extends Task<String> {
                 // make a versioned backup first
                 if (version < Engine.CURRENT_VERSION) {
                     FileUtils.copyFile(new File(fileName), new File(fileName + "." + version));
+
+                    Platform.runLater(() -> {
+                        final Resource rb = Resource.get();
+                        final String message = rb.getString("Message.Info.Upgrade", fileName + "." + version);
+
+                        StaticUIMethods.displayMessage(message);
+                    });
                 }
             }
         }
