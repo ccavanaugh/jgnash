@@ -1469,7 +1469,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         }
     }
 
-    public String getAttribute(@NotNull final String key) {
+    public @Nullable String getAttribute(@NotNull final String key) {
 
         attributesLock.readLock().lock();
 
