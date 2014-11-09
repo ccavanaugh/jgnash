@@ -82,6 +82,18 @@ public class StaticUIMethods {
         alert.showAndWait();
     }
 
+    public static void displayMessage(final String message) {
+        final Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(ResourceUtils.getBundle().getString("Title.Information"));
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.initOwner(MainApplication.getPrimaryStage());
+        alert.initStyle(StageStyle.UTILITY);
+        alert.getDialogPane().getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
+
+        alert.showAndWait();
+    }
+
     public static void displayException(final Throwable exception) {
 
         final Alert alert = new Alert(Alert.AlertType.ERROR);
