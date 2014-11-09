@@ -33,7 +33,8 @@ import javafx.concurrent.Task;
  */
 public class CloseFileTask extends Task<String> {
 
-    private static final int FORCED_DELAY = 1000;
+    private static final int FORCED_DELAY = 1500;
+
     private static final int INDETERMINATE = -1;
 
     public static void initiateClose() {
