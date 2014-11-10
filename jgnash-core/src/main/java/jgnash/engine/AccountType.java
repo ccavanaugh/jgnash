@@ -28,28 +28,26 @@ import java.util.logging.Logger;
 import jgnash.util.Resource;
 
 /**
- * Account type enumeration.  Accounts are sorted based on the established order.
+ * Account type enumeration
  * 
  * @author Craig Cavanaugh
  */
 public enum AccountType {
 
-    // Sort order is root, assets, liabilities, capital, income and expense
-
-    ROOT(Resource.get().getString("AccountType.Root"), AccountGroup.ROOT, AccountProxy.class, true),
     ASSET(Resource.get().getString("AccountType.Asset"), AccountGroup.ASSET, AccountProxy.class, true),
-    CASH(Resource.get().getString("AccountType.Cash"), AccountGroup.ASSET, AccountProxy.class, true),
     BANK(Resource.get().getString("AccountType.Bank"), AccountGroup.ASSET, AccountProxy.class, true),
+    CASH(Resource.get().getString("AccountType.Cash"), AccountGroup.ASSET, AccountProxy.class, true),
     CHECKING(Resource.get().getString("AccountType.Checking"), AccountGroup.ASSET, AccountProxy.class, true),
-    MONEYMKRT(Resource.get().getString("AccountType.MoneyMkrt"), AccountGroup.ASSET, AccountProxy.class, true),
-    INVEST(Resource.get().getString("AccountType.Investment"), AccountGroup.INVEST, InvestmentAccountProxy.class, false),
-    MUTUAL(Resource.get().getString("AccountType.Mutual"), AccountGroup.INVEST, InvestmentAccountProxy.class, false),
-    SIMPLEINVEST(Resource.get().getString("AccountType.SimpleInvestment"), AccountGroup.INVEST, AccountProxy.class, true),
-    EQUITY(Resource.get().getString("AccountType.Equity"), AccountGroup.EQUITY, AccountProxy.class, true),
     CREDIT(Resource.get().getString("AccountType.Credit"), AccountGroup.LIABILITY, AccountProxy.class, true),
-    LIABILITY(Resource.get().getString("AccountType.Liability"), AccountGroup.LIABILITY, AccountProxy.class, true),
+    EQUITY(Resource.get().getString("AccountType.Equity"), AccountGroup.EQUITY, AccountProxy.class, true),
+    EXPENSE(Resource.get().getString("AccountType.Expense"), AccountGroup.EXPENSE, AccountProxy.class, true),
     INCOME(Resource.get().getString("AccountType.Income"), AccountGroup.INCOME, AccountProxy.class, true),
-    EXPENSE(Resource.get().getString("AccountType.Expense"), AccountGroup.EXPENSE, AccountProxy.class, true);
+    INVEST(Resource.get().getString("AccountType.Investment"), AccountGroup.INVEST, InvestmentAccountProxy.class, false),
+    SIMPLEINVEST(Resource.get().getString("AccountType.SimpleInvestment"), AccountGroup.INVEST, AccountProxy.class, true),
+    LIABILITY(Resource.get().getString("AccountType.Liability"), AccountGroup.LIABILITY, AccountProxy.class, true),
+    MONEYMKRT(Resource.get().getString("AccountType.MoneyMkrt"), AccountGroup.ASSET, AccountProxy.class, true),
+    MUTUAL(Resource.get().getString("AccountType.Mutual"), AccountGroup.INVEST, InvestmentAccountProxy.class, false),
+    ROOT(Resource.get().getString("AccountType.Root"), AccountGroup.ROOT, AccountProxy.class, true);
 
     private final transient String description;
 
