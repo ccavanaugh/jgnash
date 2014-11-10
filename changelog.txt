@@ -27,6 +27,7 @@ Reinstate archive capability.
 
 Release 2.15.0
 ----------------------
+11/09/14 Accounts will be sorted by type, and then name.  This follows established accounting practices.
 11/09/14 Improved reconciliation behavior.  Reconcile Settings are remembered from prior sessions and are intelligently updated.
 11/09/14 Add sorting capability to the reconcile dialog tables.
 11/08/14 A dialog will now be displayed when the file has been automatically upgraded and a backup of the old version made.
