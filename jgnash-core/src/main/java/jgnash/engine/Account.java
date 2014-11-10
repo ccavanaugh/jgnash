@@ -30,7 +30,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -172,12 +171,6 @@ public class Account extends StoredObject implements Comparable<Account> {
     private transient List<Account> cachedSortedChildren;
 
     /**
-     * Initial sort indicator.  Workaround Hibernate Limitations
-     */
-    @Transient
-    private transient boolean initialChildSort = false;
-
-    /**
      * Balance of the account
      * <p/>
      * Cached balances cannot be persisted to do nature of JPA
@@ -235,7 +228,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         attributesLock = new ReentrantReadWriteLock(true);
 
         // CopyOnWrite is used as an alternative to defensive copies
-        cachedSortedChildren = new CopyOnWriteArrayList<>();
+        cachedSortedChildren = new ArrayList<>();
     }
 
     public Account(@NotNull final AccountType type, @NotNull final CurrencyNode node) {
@@ -574,12 +567,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         childLock.readLock().lock();
 
         try {
-            // return with a protective decorator
-            if (!initialChildSort) {
-                Collections.sort(cachedSortedChildren);
-                initialChildSort = true;
-            }
-            return Collections.unmodifiableList(cachedSortedChildren);
+            return new ArrayList<>(cachedSortedChildren);
         } finally {
             childLock.readLock().unlock();
         }
@@ -1230,13 +1218,12 @@ public class Account extends StoredObject implements Comparable<Account> {
     @Override
     public int compareTo(@NotNull final Account acc) {
 
-        // Account type is the primary sort method
-        int result = getAccountType().compareTo(acc.getAccountType());
+        // Sort by name
+        int result = getPathName().compareToIgnoreCase(acc.getPathName());
         if (result != 0) {
             return result;
         }
 
-        // Sort by name
         result = getName().compareToIgnoreCase(acc.getName());
         if (result != 0) {
             return result;
@@ -1538,7 +1525,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         securitiesLock = new ReentrantReadWriteLock(true);
         attributesLock = new ReentrantReadWriteLock(true);
 
-        cachedSortedChildren = new CopyOnWriteArrayList<>(children);
+        cachedSortedChildren = new ArrayList<>(children);
     }
 
     /**
