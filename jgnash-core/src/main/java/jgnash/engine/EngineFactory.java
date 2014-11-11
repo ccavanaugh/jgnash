@@ -270,7 +270,7 @@ public class EngineFactory {
         final DataStore dataStore = type.getDataStore();
 
         // If a relational database is being used for a file prior to 2.15, correct the column name
-        if (type == DataStoreType.H2_DATABASE || type == DataStoreType.HSQL_DATABASE && doesDatabaseExist(fileName)) {
+        if ((type == DataStoreType.H2_DATABASE || type == DataStoreType.HSQL_DATABASE) && doesDatabaseExist(fileName)) {
             if (SqlUtils.getFileVersion(fileName, password) < 2.15) {
                 SqlUtils.checkAndFixHibernate_HHH_9389(fileName, password);
             }
@@ -278,7 +278,10 @@ public class EngineFactory {
 
         final Engine engine = dataStore.getLocalEngine(fileName, engineName, password);
 
+
         if (engine != null) {
+
+
             logger.info(Resource.get().getString("Message.EngineStart"));
             engineMap.put(engineName, engine);
             dataStoreMap.put(engineName, dataStore);
