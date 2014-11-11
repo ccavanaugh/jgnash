@@ -208,14 +208,21 @@ public class Engine {
         backgroundExecutorService.setRemoveOnCancelPolicy(true);
         backgroundExecutorService.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
 
-        if (UpdateFactory.getUpdateOnStartup()) {
-            startSecuritiesUpdate(SCHEDULED_DELAY);
-        }
+        // Engine needs to be registered before the update factories can find it.  Push the check to the background executor
+        backgroundExecutorService.schedule(new Runnable() {
+            @Override
+            public void run() {
+                if (UpdateFactory.getUpdateOnStartup()) {
+                    startSecuritiesUpdate(SCHEDULED_DELAY);
+                }
 
-        if (CurrencyUpdateFactory.getUpdateOnStartup()) {
-            startExchangeRateUpdate(SCHEDULED_DELAY);
-        }
+                if (CurrencyUpdateFactory.getUpdateOnStartup()) {
+                    startExchangeRateUpdate(SCHEDULED_DELAY);
+                }
+            }
+        }, 30, TimeUnit.SECONDS);
     }
+
 
     /**
      * Initiates a background exchange rate update with a given start delay
