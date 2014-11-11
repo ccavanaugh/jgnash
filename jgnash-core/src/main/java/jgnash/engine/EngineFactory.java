@@ -119,8 +119,8 @@ public class EngineFactory {
 
     /**
      * Returns the engine with the given name
-     * @param name engine name to look for
      *
+     * @param name engine name to look for
      * @return returns {@code null} if it does not exist
      */
     @Nullable
@@ -130,8 +130,8 @@ public class EngineFactory {
 
     /**
      * Returns the DataStoreType for a given engine name
-     * @param name engine name to look for
      *
+     * @param name engine name to look for
      * @return the DataStoreType
      * @throws NullPointerException
      */
@@ -270,9 +270,9 @@ public class EngineFactory {
         final DataStore dataStore = type.getDataStore();
 
         // If a relational database is being used for a file prior to 2.15, correct the column name
-        if (type == DataStoreType.H2_DATABASE || type == DataStoreType.HSQL_DATABASE) {
+        if (type == DataStoreType.H2_DATABASE || type == DataStoreType.HSQL_DATABASE && doesDatabaseExist(fileName)) {
             if (SqlUtils.getFileVersion(fileName, password) < 2.15) {
-                 SqlUtils.checkAndFixHibernate_HHH_9389(fileName, password);
+                SqlUtils.checkAndFixHibernate_HHH_9389(fileName, password);
             }
         }
 
