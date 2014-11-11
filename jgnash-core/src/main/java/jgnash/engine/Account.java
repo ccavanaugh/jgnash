@@ -199,6 +199,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     /**
      * User definable account code.  This will control sort order
      */
+    @Column(nullable = false, columnDefinition = "int default 0")
     private int accountCode;
 
     @OneToOne(optional = true, orphanRemoval = true, cascade = {CascadeType.ALL})
