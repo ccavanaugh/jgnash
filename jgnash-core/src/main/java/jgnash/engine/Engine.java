@@ -1949,6 +1949,7 @@ public class Engine {
             account.setExcludedFromBudget(template.isExcludedFromBudget());
             account.setAccountNumber(template.getAccountNumber());
             account.setBankId(template.getBankId());
+            account.setAccountCode(template.getAccountCode());
 
             if (account.getAccountType().isMutable()) {
                 account.setAccountType(template.getAccountType());

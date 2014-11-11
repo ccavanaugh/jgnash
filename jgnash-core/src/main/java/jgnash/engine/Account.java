@@ -196,6 +196,11 @@ public class Account extends StoredObject implements Comparable<Account> {
      */
     private String bankId;
 
+    /**
+     * User definable account code.  This will control sort order
+     */
+    private int accountCode;
+
     @OneToOne(optional = true, orphanRemoval = true, cascade = {CascadeType.ALL})
     private AmortizeObject amortizeObject;
 
@@ -1246,6 +1251,17 @@ public class Account extends StoredObject implements Comparable<Account> {
     @Override
     public int hashCode() {
         return getUuid().hashCode();
+    }
+
+    /**
+     * User definable account code.  This can be used to manage sort order
+     */
+    public int getAccountCode() {
+        return accountCode;
+    }
+
+    public void setAccountCode(final int accountCode) {
+        this.accountCode = accountCode;
     }
 
     /**

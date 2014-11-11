@@ -138,7 +138,7 @@ final class AccountPanel extends JPanel implements ActionListener {
         builder.nextLine();
         builder.append(rb.getString("Label.Description"), descriptionField, 3);
         builder.nextLine();
-        builder.append(rb.getString("Label.AccountID"), codeField, 3);
+        builder.append(rb.getString("Label.AccountNumber"), codeField, 3);
         builder.nextLine();
         builder.append(rb.getString("Label.BankID"), bankIdField, 3);
         builder.nextLine();
