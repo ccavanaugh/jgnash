@@ -22,6 +22,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.logging.Level;
@@ -30,6 +32,7 @@ import java.util.prefs.Preferences;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
+import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.ChannelEvent;
@@ -117,7 +120,11 @@ public final class ExpandingAccountTableModel extends AbstractExpandingTableMode
 
     @Override
     public Collection<Account> getChildren(final Account object) {
-        return object.getChildren();
+
+        final List<Account> accountList = object.getChildren();
+        Collections.sort(accountList, Comparators.getAccountByCode());
+
+        return accountList;
     }
 
     @Override
