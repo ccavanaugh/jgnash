@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -577,6 +578,19 @@ public class Account extends StoredObject implements Comparable<Account> {
         } finally {
             childLock.readLock().unlock();
         }
+    }
+
+    /**
+     * Returns a sorted list of the children.  A protective copy is returned to protect against concurrency issues.
+     *
+     * @param comparator {@code Comparator} to use
+     * @return List of children
+     */
+    public List<Account> getChildren(final Comparator<? super Account> comparator) {
+        List<Account> children = getChildren();
+        Collections.sort(children, comparator);
+
+        return children;
     }
 
     /**
