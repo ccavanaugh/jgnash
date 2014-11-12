@@ -177,12 +177,20 @@ class AccountDialog extends JDialog implements ActionListener {
         accountPanel.setAccountType(type);
     }
 
-    public void setAccountCode(final String id) {
-        accountPanel.setAccountCode(id);
+    public void setAccountCode(final int accountCode) {
+        accountPanel.setAccountCode(accountCode);
     }
 
-    public String getAccountCode() {
+    public int getAccountCode() {
         return accountPanel.getAccountCode();
+    }
+
+    public void setAccountNumber(final String accountNumber) {
+        accountPanel.setAccountNumber(accountNumber);
+    }
+
+    public String getAccountNumber() {
+        return accountPanel.getAccountNumber();
     }
 
     public void setBankId(final String id) {

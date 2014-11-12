@@ -35,6 +35,7 @@ import jgnash.engine.SecurityNode;
 import jgnash.uifx.MainApplication;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.CurrencyComboBox;
+import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.utils.StageUtils;
 import jgnash.util.ResourceUtils;
 
@@ -80,7 +81,10 @@ public class AccountPropertiesController implements Initializable {
     private TextField descriptionTextField;
 
     @FXML
-    private TextField accountIdField;
+    private IntegerTextField accountCodeField;
+
+    @FXML
+    private TextField accountNumberField;
 
     @FXML
     private TextField bankIdField;
@@ -202,7 +206,8 @@ public class AccountPropertiesController implements Initializable {
     public Account getTemplate() {
         Account account = new Account(accountTypeComboBox.getValue(), currencyComboBox.getValue());
 
-        account.setAccountNumber(accountIdField.getText());
+        account.setAccountCode(accountCodeField.getInteger());
+        account.setAccountNumber(accountNumberField.getText());
         account.setBankId(bankIdField.getText());
         account.setName(nameTextField.getText());
         account.setDescription(descriptionTextField.getText());
@@ -234,7 +239,8 @@ public class AccountPropertiesController implements Initializable {
             setParentAccount(account.getParent());
             nameTextField.setText(account.getName());
             descriptionTextField.setText(account.getDescription());
-            accountIdField.setText(account.getAccountNumber());
+            accountCodeField.setInteger(account.getAccountCode());
+            accountNumberField.setText(account.getAccountNumber());
             bankIdField.setText(account.getBankId());
             setSelectedCurrency(account.getCurrencyNode());
             notesTextArea.setText(account.getNotes());

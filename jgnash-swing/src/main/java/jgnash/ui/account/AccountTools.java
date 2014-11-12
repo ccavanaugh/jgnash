@@ -83,7 +83,8 @@ class AccountTools {
             }
 
             newAccount.setName(dlg.getAccountName());
-            newAccount.setAccountNumber(dlg.getAccountCode());
+            newAccount.setAccountCode(dlg.getAccountCode());
+            newAccount.setAccountNumber(dlg.getAccountNumber());
             newAccount.setBankId(dlg.getBankId());
             newAccount.setDescription(dlg.getAccountDescription());
             newAccount.setNotes(dlg.getAccountNotes());
@@ -107,7 +108,7 @@ class AccountTools {
 
         final Resource rb = Resource.get();
 
-        Account parentAccount = account.getParent();
+        final Account parentAccount = account.getParent();
 
         if (parentAccount == null) {
             if (engine.getRootAccount() == null) {
@@ -122,7 +123,8 @@ class AccountTools {
         dlg.setParentAccount(account.getParent());
         dlg.setAccountName(account.getName());
         dlg.setAccountDescription(account.getDescription());
-        dlg.setAccountCode(account.getAccountNumber());
+        dlg.setAccountCode(account.getAccountCode());
+        dlg.setAccountNumber(account.getAccountNumber());
         dlg.setBankId(account.getBankId());
         dlg.setCurrency(account.getCurrencyNode());
         dlg.setAccountNotes(account.getNotes());
@@ -152,7 +154,8 @@ class AccountTools {
 
             Account tAccount = new Account(dlg.getAccountType(), dlg.getCurrency());
             // set the data
-            tAccount.setAccountNumber(dlg.getAccountCode());
+            tAccount.setAccountCode(dlg.getAccountCode());
+            tAccount.setAccountNumber(dlg.getAccountNumber());
             tAccount.setBankId(dlg.getBankId());
             tAccount.setName(dlg.getAccountName());
             tAccount.setDescription(dlg.getAccountDescription());

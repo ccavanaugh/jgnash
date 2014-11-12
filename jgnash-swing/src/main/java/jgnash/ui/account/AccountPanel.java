@@ -41,6 +41,7 @@ import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.SecurityNode;
 import jgnash.ui.components.CurrencyComboBox;
+import jgnash.ui.components.JIntegerField;
 import jgnash.ui.components.JTextFieldEx;
 import jgnash.util.Resource;
 
@@ -59,7 +60,7 @@ final class AccountPanel extends JPanel implements ActionListener {
 
     private CurrencyComboBox currencyCombo;
 
-    private JTextFieldEx codeField;
+    private JTextFieldEx accountNumberField;
 
     JCheckBox placeholderCheckBox;
 
@@ -77,6 +78,8 @@ final class AccountPanel extends JPanel implements ActionListener {
 
     private JTextField bankIdField;
 
+    private JIntegerField accountCodeField;
+
     private JCheckBox hideCheckBox;
 
     private JCheckBox excludeBudgetCheckBox;
@@ -92,7 +95,8 @@ final class AccountPanel extends JPanel implements ActionListener {
     }
 
     private void initComponents() {
-        codeField = new JTextFieldEx();
+        accountNumberField = new JTextFieldEx();
+        accountCodeField = new JIntegerField();
         nameField = new JTextFieldEx();
         bankIdField = new JTextFieldEx();
         nameField.setText(rb.getString("Word.Name"));
@@ -138,7 +142,9 @@ final class AccountPanel extends JPanel implements ActionListener {
         builder.nextLine();
         builder.append(rb.getString("Label.Description"), descriptionField, 3);
         builder.nextLine();
-        builder.append(rb.getString("Label.AccountNumber"), codeField, 3);
+        builder.append(rb.getString("Label.AccountNumber"), accountNumberField, 3);
+        builder.nextLine();
+        builder.append(rb.getString("Label.AccountCode"), accountCodeField, 3);
         builder.nextLine();
         builder.append(rb.getString("Label.BankID"), bankIdField, 3);
         builder.nextLine();
@@ -185,16 +191,12 @@ final class AccountPanel extends JPanel implements ActionListener {
         return parentAccount;
     }
 
-    public void setAccountName(final String name) {
-        nameField.setText(name);
-    }
-
     public String getAccountName() {
         return nameField.getText();
     }
 
-    public void setAccountCode(final String code) {
-        codeField.setText(code);
+    public void setAccountName(final String name) {
+        nameField.setText(name);
     }
 
     public void setBankId(final String id) {
@@ -205,8 +207,20 @@ final class AccountPanel extends JPanel implements ActionListener {
         hideCheckBox.setSelected(hide);
     }
 
-    public String getAccountCode() {
-        return codeField.getText();
+    public String getAccountNumber() {
+        return accountNumberField.getText();
+    }
+
+    public void setAccountNumber(final String accountNumber) {
+        accountNumberField.setText(accountNumber);
+    }
+
+    public int getAccountCode() {
+        return accountCodeField.intValue();
+    }
+
+    public void setAccountCode(final int accountCode) {
+        accountCodeField.setIntValue(accountCode);
     }
 
     public String getBankId() {
