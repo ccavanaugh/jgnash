@@ -18,8 +18,6 @@
 package jgnash.uifx.controllers;
 
 import java.net.URL;
-import java.util.Collections;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -123,11 +121,7 @@ public abstract class AccountTreeController implements Initializable, AccountTyp
         synchronized (lock) {
             Account parent = parentItem.getValue();
 
-            // Sort by the account code
-            final List<Account> accountList = parent.getChildren();
-            Collections.sort(accountList, Comparators.getAccountByCode());
-
-            accountList.stream().filter(this::isAccountVisible).forEach(child -> {
+            parent.getChildren(Comparators.getAccountByCode()).stream().filter(this::isAccountVisible).forEach(child -> {
                 TreeItem<Account> childItem = new TreeItem<>(child);
                 childItem.setExpanded(true);
 

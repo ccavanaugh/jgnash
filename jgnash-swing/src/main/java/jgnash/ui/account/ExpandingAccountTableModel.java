@@ -22,8 +22,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.logging.Level;
@@ -120,11 +118,7 @@ public final class ExpandingAccountTableModel extends AbstractExpandingTableMode
 
     @Override
     public Collection<Account> getChildren(final Account object) {
-
-        final List<Account> accountList = object.getChildren();
-        Collections.sort(accountList, Comparators.getAccountByCode());
-
-        return accountList;
+        return object.getChildren(Comparators.getAccountByCode());
     }
 
     @Override
