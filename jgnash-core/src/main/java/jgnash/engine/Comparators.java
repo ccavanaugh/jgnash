@@ -22,8 +22,8 @@ import java.util.Comparator;
 import java.util.Date;
 
 /**
- * This class is useful for sorting and array of jgnashObjects with mixed
- * type.
+ * Utility class consisting of {@code Comparators} useful for sorting lists of {@code StoredObject}
+ * with the same and mixed inheritance.
  *
  * @author Craig Cavanaugh
  */
@@ -36,6 +36,10 @@ public class Comparators {
     private static volatile Comparator<Transaction> transactionByPayee = null;
     private static volatile Comparator<Transaction> transactionBySecurity = null;
     private static volatile Comparator<Transaction> transactionByType = null;
+
+    public static Comparator<Account> getAccountByCode() {
+        return new AccountByCode();
+    }
 
     public static Comparator<Account> getAccountByName() {
         return new AccountByName();
@@ -69,6 +73,21 @@ public class Comparators {
             return transactionByAmount;
         }
         return transactionByAmount = new TransactionByAmount();
+    }
+
+    private static class AccountByCode implements Comparator<Account>, Serializable {
+
+        @Override
+        public int compare(final Account a1, final Account a2) {
+
+            // Sort by account code first
+            int result = Integer.compare(a1.getAccountCode(), a2.getAccountCode());
+            if (result != 0) {
+                return result;
+            }
+
+            return a1.getName().compareTo(a2.getName());
+        }
     }
 
     private static class AccountByName implements Comparator<Account>, Serializable {
