@@ -38,6 +38,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
+import jgnash.engine.Comparators;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -260,7 +261,7 @@ public class ProfitLossTXT {
 
     void getBalances(final Account a, final Date[] dates1, final AccountType type) {
 
-        for (final Account child : a.getChildren()) {
+        for (final Account child : a.getChildren(Comparators.getAccountByCode())) {
             if ((child.getTransactionCount() > 0) && type == child.getAccountType()) {
                 String acctName = child.getName();
 

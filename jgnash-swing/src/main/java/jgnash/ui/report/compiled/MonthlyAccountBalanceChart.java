@@ -40,6 +40,7 @@ import javax.swing.JPanel;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
+import jgnash.engine.Comparators;
 import jgnash.engine.CurrencyNode;
 import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.FilteredAccountListComboBox;
@@ -325,7 +326,7 @@ public class MonthlyAccountBalanceChart {
         amount = AccountBalanceDisplayManager.convertToSelectedBalanceMode(type, account.getBalance(start, end, baseCurrency));
 
         // add the amount of every sub accounts
-        for (Account child : account.getChildren()) {
+        for (final Account child : account.getChildren(Comparators.getAccountByCode())) {
             amount = amount.add(calculateTotal(start, end, child, baseCurrency));
         }
         return amount;

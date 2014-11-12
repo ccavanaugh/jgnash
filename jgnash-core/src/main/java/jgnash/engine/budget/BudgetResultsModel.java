@@ -20,6 +20,7 @@ package jgnash.engine.budget;
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.AccountType;
+import jgnash.engine.Comparators;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -478,7 +479,7 @@ public class BudgetResultsModel implements MessageListener {
             }
 
             // recursive decent to add child account results and handle exchange rates
-            for (Account child : account.getChildren()) {
+            for (final Account child : account.getChildren(Comparators.getAccountByCode())) {
                 final BudgetPeriodResults childResults = buildAccountResults(descriptor, child);
 
                 final BigDecimal exchangeRate = child.getCurrencyNode().getExchangeRate(account.getCurrencyNode());

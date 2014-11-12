@@ -38,6 +38,7 @@ import javax.swing.JPanel;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
+import jgnash.engine.Comparators;
 import jgnash.engine.CurrencyNode;
 import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.FilteredAccountListComboBox;
@@ -299,16 +300,13 @@ public class RunningAccountBalanceChart {
     }
 
     private BigDecimal calculateTotal(final Date d, final Account account, final CurrencyNode baseCurrency) {
-
-        BigDecimal total;
-        AccountType type = account.getAccountType();
-
         // get the amount for the account               
-        total = AccountBalanceDisplayManager.convertToSelectedBalanceMode(type, account.getBalance(d, baseCurrency));
+        BigDecimal total = AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(),
+                account.getBalance(d, baseCurrency));
 
         // add the amount of every child account
         for (int y = 0; y < account.getChildCount(); y++) {
-            total = total.add(calculateTotal(d, account.getChildren().get(y), baseCurrency));
+            total = total.add(calculateTotal(d, account.getChildren(Comparators.getAccountByCode()).get(y), baseCurrency));
         }
         return total;
     }

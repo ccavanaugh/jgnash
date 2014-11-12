@@ -24,6 +24,7 @@ import javax.swing.tree.DefaultTreeModel;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
+import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.RootAccount;
@@ -64,9 +65,9 @@ class AccountTreeModel extends DefaultTreeModel {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
         if (engine != null) {
-            RootAccount r = engine.getRootAccount();
+            final RootAccount r = engine.getRootAccount();
 
-            DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(r);
+            final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode(r);
 
             setRoot(rootNode);
             loadChildren(rootNode);
@@ -76,14 +77,13 @@ class AccountTreeModel extends DefaultTreeModel {
         }
     }
 
-    private synchronized void loadChildren(DefaultMutableTreeNode parentNode) {
-
+    private synchronized void loadChildren(final DefaultMutableTreeNode parentNode) {
         synchronized (lock) {
-            Account parent = (Account) parentNode.getUserObject();
+            final Account parent = (Account) parentNode.getUserObject();
 
-            for (Account child : parent.getChildren()) {
+            for (final Account child : parent.getChildren(Comparators.getAccountByCode())) {
                 if (isAccountVisible(child)) {
-                    DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(child);
+                    final DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(child);
                     insertNodeInto(childNode, parentNode, parentNode.getChildCount());
                     if (child.getChildCount() > 0) {
                         loadChildren(childNode);
@@ -99,15 +99,13 @@ class AccountTreeModel extends DefaultTreeModel {
      * @param account Account to find
      * @return DefaultMutableTreeNode if found, null otherwise
      */
-    synchronized DefaultMutableTreeNode findAccountNode(Account account) {
-        DefaultMutableTreeNode tAccount;
-
-        DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) getRoot();
+    synchronized DefaultMutableTreeNode findAccountNode(final Account account) {
+        final DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode) getRoot();
 
         synchronized (lock) {
             // walk through the enumeration tree and find the account
-            for (Enumeration<?> e = rootNode.depthFirstEnumeration(); e.hasMoreElements();) {
-                tAccount = (DefaultMutableTreeNode) e.nextElement();
+            for (final Enumeration<?> e = rootNode.depthFirstEnumeration(); e.hasMoreElements();) {
+                final DefaultMutableTreeNode tAccount = (DefaultMutableTreeNode) e.nextElement();
                 if (tAccount.getUserObject().equals(account)) {
                     return tAccount;
                 }
@@ -116,9 +114,9 @@ class AccountTreeModel extends DefaultTreeModel {
         return null;
     }
 
-    synchronized void removeAccount(Account account) {
+    synchronized void removeAccount(final Account account) {
         synchronized (lock) {
-            DefaultMutableTreeNode child = findAccountNode(account);
+            final DefaultMutableTreeNode child = findAccountNode(account);
             if (child != null) {
                 removeNodeFromParent(child);
             }
@@ -131,8 +129,8 @@ class AccountTreeModel extends DefaultTreeModel {
      * @param a account to check for visibility
      * @return true is account should be displayed
      */
-    private synchronized boolean isAccountVisible(Account a) {
-        AccountType type = a.getAccountType();
+    private synchronized boolean isAccountVisible(final Account a) {
+        final AccountType type = a.getAccountType();
         if (type == AccountType.INCOME && incomeVisible) {
             if (!a.isVisible() && hiddenVisible || a.isVisible()) {
                 return true;
@@ -149,28 +147,28 @@ class AccountTreeModel extends DefaultTreeModel {
         return false;
     }
 
-    public synchronized void setHiddenVisible(boolean visible) {
+    public synchronized void setHiddenVisible(final boolean visible) {
         if (hiddenVisible != visible) {
             hiddenVisible = visible;
             reload();
         }
     }
 
-    public synchronized void setIncomeVisible(boolean visible) {
+    public synchronized void setIncomeVisible(final boolean visible) {
         if (incomeVisible != visible) {
             incomeVisible = visible;
             reload();
         }
     }
 
-    public synchronized void setExpenseVisible(boolean visible) {
+    public synchronized void setExpenseVisible(final boolean visible) {
         if (expenseVisible != visible) {
             expenseVisible = visible;
             reload();
         }
     }
 
-    public synchronized void setAccountVisible(boolean visible) {
+    public synchronized void setAccountVisible(final boolean visible) {
         if (accountVisible != visible) {
             accountVisible = visible;
             reload();

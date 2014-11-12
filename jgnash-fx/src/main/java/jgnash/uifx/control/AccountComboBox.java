@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 import jgnash.engine.Account;
+import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
@@ -48,7 +49,7 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
             getItems().add(account);
 
             if (account.getChildCount() > 0) {
-                loadAccounts(account.getChildren());
+                loadAccounts(account.getChildren(Comparators.getAccountByCode()));
             }
         }
     }
@@ -59,7 +60,7 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        loadAccounts(engine.getRootAccount().getChildren());
+        loadAccounts(engine.getRootAccount().getChildren(Comparators.getAccountByCode()));
     }
 
     private void registerListeners() {

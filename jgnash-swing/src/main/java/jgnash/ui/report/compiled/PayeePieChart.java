@@ -44,6 +44,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import jgnash.engine.Account;
+import jgnash.engine.Comparators;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Transaction;
 import jgnash.engine.search.PayeeMatcher;
@@ -418,7 +419,7 @@ public class PayeePieChart {
             transactions.add(touple);
         }
 
-        for (Account child : account.getChildren()) {
+        for (final Account child : account.getChildren(Comparators.getAccountByCode())) {
             getTransactions(child, transactions, startDate, endDate);
         }
 

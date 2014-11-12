@@ -82,7 +82,7 @@ public class InvestmentPerformanceSummary {
     }
 
     private void collectSubAccountTransactions(final Account account, final List<Transaction> transactions) {
-        for (Account child : account.getChildren()) {
+        for (final Account child : account.getChildren(Comparators.getAccountByCode())) {
             transactions.addAll(child.getTransactions(getStartDate(), getEndDate()));
 
             if (child.getChildCount() > 0) {
@@ -92,7 +92,7 @@ public class InvestmentPerformanceSummary {
     }
 
     private void collectSubAccountSecurities(final Account account, final Set<SecurityNode> securities) {
-        for (Account child : account.getChildren()) {
+        for (final Account child : account.getChildren(Comparators.getAccountByCode())) {
             securities.addAll(child.getSecurities());
 
             if (child.getChildCount() > 0) {

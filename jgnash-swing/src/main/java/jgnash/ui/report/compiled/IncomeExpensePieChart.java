@@ -40,6 +40,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
+import jgnash.engine.Comparators;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
@@ -382,7 +383,7 @@ public class IncomeExpensePieChart {
                 returnValue.setValue(a, negate ? value.negate() : value);
             }
 
-            for (Account child : a.getChildren()) {
+            for (final Account child : a.getChildren(Comparators.getAccountByCode())) {
                 value = child.getTreeBalance(startField.getDate(), endField.getDate(), a.getCurrencyNode());
 
                 if (showEmptyCheck.isSelected() || value.compareTo(BigDecimal.ZERO) != 0) {

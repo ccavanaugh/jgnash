@@ -52,6 +52,7 @@ import javax.swing.JRadioButton;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import jgnash.engine.Account;
+import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.ui.components.DatePanel;
@@ -173,7 +174,7 @@ public final class MonthBalanceCSV {
     } // end method getLastDays
 
     private void buildLists(final Account a, final Date[] dates) {
-        for (final Account child : a.getChildren()) {
+        for (final Account child : a.getChildren(Comparators.getAccountByCode())) {
 
             if (child.getTransactionCount() > 0) {
                 accounts.add(child); // add the account

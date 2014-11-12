@@ -20,6 +20,7 @@ package jgnash.ui.components;
 import java.util.List;
 
 import jgnash.engine.Account;
+import jgnash.engine.Comparators;
 
 /**
  * ComboBox for displaying a list of accounts. It can be filtered by locked and placeholder accounts. Automatically
@@ -66,7 +67,7 @@ public class FilteredAccountListComboBox extends AccountListComboBox {
         @Override
         protected void loadChildren(final Account acc, final List<Account> array) {
 
-            for (Account tAcc : acc.getChildren()) {
+            for (final Account tAcc : acc.getChildren(Comparators.getAccountByCode())) {
                 if (!(hideLocked && tAcc.isLocked() || hidePlaceholder && tAcc.isPlaceHolder())) { // honor the account lock and placeHolder attribute
                     if (baseAccount != tAcc) {
                         array.add(tAcc);

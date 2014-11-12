@@ -34,6 +34,7 @@ import javax.swing.ListCellRenderer;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
+import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.ChannelEvent;
@@ -311,7 +312,7 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
 
         @Override
         protected void loadChildren(final Account acc, final List<Account> array) {
-            for (Account child : acc.getChildren()) {
+            for (final Account child : acc.getChildren(Comparators.getAccountByCode())) {
                 array.add(child);
                 if (child.getChildCount() > 0) { // recursively load the account
                     // list
@@ -332,7 +333,7 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
 
         @Override
         protected void loadChildren(final Account acc, List<Account> array) {
-            for (Account account : acc.getChildren()) {
+            for (final Account account : acc.getChildren(Comparators.getAccountByCode())) {
                 if (types.contains(account.getAccountType())
                         && account.getChildCount() > 0) {
                     array.add(account);
@@ -355,7 +356,7 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
         @Override
         protected void loadChildren(final Account acc, final List<Account> array) {
 
-            for (Account tAcc : acc.getChildren()) {
+            for (final Account tAcc : acc.getChildren(Comparators.getAccountByCode())) {
                 if (!tAcc.isLocked() && !tAcc.isPlaceHolder()) { // honor the account lock and placeHolder attribute
                     if (types.contains(tAcc.getAccountType())) {
                         array.add(tAcc);
@@ -378,7 +379,7 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
         @Override
         protected void loadChildren(final Account acc, final List<Account> array) {
 
-            for (Account account : acc.getChildren()) {
+            for (final Account account : acc.getChildren(Comparators.getAccountByCode())) {
 
                 // honor the account locked, placeHolder, and visible attributes
                 if (!account.isLocked() && !account.isPlaceHolder() && account.isVisible()) {

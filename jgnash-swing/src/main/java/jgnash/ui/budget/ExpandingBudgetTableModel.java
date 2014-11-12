@@ -26,6 +26,7 @@ import java.util.Objects;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
+import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
@@ -173,7 +174,7 @@ public class ExpandingBudgetTableModel extends AbstractExpandingTableModel<Accou
 
     @Override
     public Collection<Account> getChildren(final Account account) {
-        return account.getChildren();
+        return account.getChildren(Comparators.getAccountByCode());
     }
 
     /**
