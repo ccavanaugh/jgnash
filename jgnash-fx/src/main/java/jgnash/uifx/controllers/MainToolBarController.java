@@ -20,9 +20,14 @@ package jgnash.uifx.controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.tasks.CloseFileTask;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -38,35 +43,73 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
 public class MainToolBarController implements Initializable, MessageListener {
 
     @FXML
+    public Button closeButton;
+
+    @FXML
+    public Button updateCurrencies;
+
+    @FXML
+    Button updateSecurities;
+
+    @FXML
     Button openButton;
-
-    @FXML
-    Button cutButton;
-
-    @FXML
-    Button copyButton;
-
-    @FXML
-    Button pasteButton;
-
-    @FXML
-    protected void handleOpenAction(final ActionEvent event) {
-        StaticUIMethods.showOpenDialog();
-    }
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
 
         final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
 
-        cutButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.CUT));
-        copyButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.COPY));
+        closeButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.TIMES));
         openButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.FOLDER_OPEN));
-        pasteButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.PASTE));
+        updateSecurities.setGraphic(fontAwesome.create(FontAwesome.Glyph.CLOUD_DOWNLOAD));
+        updateCurrencies.setGraphic(fontAwesome.create(FontAwesome.Glyph.CLOUD_DOWNLOAD));
+
+        MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
+    }
+
+    @FXML
+    protected void handleOpenAction(final ActionEvent event) {
+        StaticUIMethods.showOpenDialog();
+    }
+
+    @FXML
+    public void handleCloseAction(ActionEvent actionEvent) {
+        if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
+            CloseFileTask.initiateShutdown();
+        }
     }
 
     @Override
-    public void messagePosted(Message event) {
+    public void messagePosted(final Message event) {
+        switch (event.getEvent()) {
+            case FILE_NEW_SUCCESS:
+            case FILE_LOAD_SUCCESS:
+                updateSecurities.setDisable(false);
+                updateCurrencies.setDisable(false);
+                break;
+            case FILE_CLOSING:
+            case FILE_LOAD_FAILED:
+                updateSecurities.setDisable(true);
+                updateCurrencies.setDisable(true);
+                break;
+            default:
+                break;
+        }
+    }
 
+    @FXML
+    void handleSecuritiesUpdateAction(final ActionEvent actionEvent) {
+        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        if (engine != null) {
+            engine.startSecuritiesUpdate(0);
+        }
+    }
+
+    @FXML
+    public void handleCurrenciesUpdateAction(ActionEvent actionEvent) {
+        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        if (engine != null) {
+            engine.startExchangeRateUpdate(0);
+        }
     }
 }
