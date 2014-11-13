@@ -3,7 +3,6 @@
 <?scenebuilder-preview-i18n-resource ../../../../../../jgnash-resources/src/main/resources/jgnash/resource/resource.properties?>
 
 <?import jgnash.uifx.control.IntegerTextField?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
@@ -12,9 +11,9 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.ButtonBar?>
+
 <GridPane gridLinesVisible="false" maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-1.0"
           minWidth="-Infinity" prefHeight="-1.0" xmlns:fx="http://javafx.com/fxml/1"
           xmlns="http://javafx.com/javafx/2.2" fx:controller="jgnash.uifx.controllers.OpenDatabaseController">
@@ -67,27 +66,7 @@
                 </GridPane>
             </content>
         </TitledPane>
-        <HBox maxHeight="-Infinity" maxWidth="+Infinity" minHeight="-Infinity" minWidth="-Infinity"
-              GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="5">
-            <children>
-                <Pane maxWidth="+Infinity" HBox.hgrow="ALWAYS"/>
-                <Button mnemonicParsing="false" onAction="#handleOkAction" text="%Button.Ok" HBox.hgrow="NEVER">
-                    <HBox.margin>
-                        <Insets/>
-                    </HBox.margin>
-                </Button>
-                <HBox id="HBox" alignment="CENTER">
-                    <children>
-                        <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false"
-                                onAction="#handleCancelAction" text="%Button.Cancel" HBox.hgrow="NEVER">
-                            <HBox.margin>
-                                <Insets left="14.0"/>
-                            </HBox.margin>
-                        </Button>
-                    </children>
-                </HBox>
-            </children>
-        </HBox>
+        <ButtonBar fx:id="buttonBar" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="5"/>
     </children>
     <columnConstraints>
         <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity"/>
