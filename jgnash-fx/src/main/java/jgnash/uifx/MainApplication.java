@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 import jgnash.MainFX;
 import jgnash.engine.Engine;
@@ -41,19 +42,17 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.controlsfx.control.StatusBar;
 
 /**
  * JavaFX version of jGnash.
@@ -66,11 +65,11 @@ public class MainApplication extends Application implements MessageListener {
      */
     public static final String DEFAULT_CSS = "jgnash/skin/default.css";
 
-    // private static final Logger logger = Logger.getLogger(MainApplication.class.getName());
+    private static final Logger logger = Logger.getLogger(MainApplication.class.getName());
 
     protected static Stage primaryStage;
 
-    private Label statusLabel;
+    private StatusBar statusBar;
 
     private TabViewPane tabViewPane;
 
@@ -94,16 +93,13 @@ public class MainApplication extends Application implements MessageListener {
         top.getChildren().addAll(menuBar, mainToolBar);
         top.setFillWidth(true);
 
-        final HBox bottom = new HBox();
-        statusLabel = new Label("Ready");
-        bottom.getChildren().addAll(statusLabel);
+        statusBar = new StatusBar();
 
         final BorderPane borderPane = new BorderPane();
         borderPane.setTop(top);
-        borderPane.setBottom(bottom);
+        borderPane.setBottom(statusBar);
         borderPane.setCenter(tabViewPane);
         BorderPane.setAlignment(tabViewPane, Pos.CENTER);
-        BorderPane.setMargin(bottom, new Insets(8, 8, 8, 8));
 
         final StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(borderPane, busyPane);
@@ -164,7 +160,7 @@ public class MainApplication extends Application implements MessageListener {
     }
 
     private void displayStatus(final String status) {
-        Platform.runLater(() -> statusLabel.setText(status));
+        Platform.runLater(() -> statusBar.setText(status));
     }
 
     /**
@@ -179,7 +175,7 @@ public class MainApplication extends Application implements MessageListener {
 
     @Override
     public void stop() {
-        System.out.println("Shutting down");
+        logger.info("Shutting down");
     }
 
     @Override
@@ -189,13 +185,13 @@ public class MainApplication extends Application implements MessageListener {
                 case FILE_LOAD_SUCCESS:
                 case FILE_NEW_SUCCESS:
                     updateTitle();
-                    displayStatus("File loaded");
+                    displayStatus(rb.getString("Message.FileLoadComplete"));
                     addViews();
                     break;
                 case FILE_CLOSING:
                     removeViews();
                     updateTitle();
-                    displayStatus("File closed");
+                    displayStatus(rb.getString("Message.FileClosed"));
                     break;
                 case FILE_IO_ERROR:
                 case FILE_LOAD_FAILED:
@@ -204,10 +200,24 @@ public class MainApplication extends Application implements MessageListener {
                 case ACCOUNT_REMOVE_FAILED:
                     StaticUIMethods.displayError(rb.getString("Message.Error.AccountRemove"));
                     break;
+                case BACKGROUND_PROCESS_STARTED:
+                    setBusyBackground(true);
+                    break;
+                case BACKGROUND_PROCESS_STOPPED:
+                    setBusyBackground(false);
+                    break;
                 default:
                     break;
             }
         });
+    }
+
+    private void setBusyBackground(final boolean busy) {
+        if (busy) {
+            statusBar.setProgress(-1);
+        } else {
+            statusBar.setProgress(0);
+        }
     }
 
     private void updateTitle() {
