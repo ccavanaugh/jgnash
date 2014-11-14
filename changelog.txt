@@ -24,6 +24,7 @@ Budgeting
 - annotation, similar to transaction annotation, so the user can reference the reason for an exception in any given period.
 - flexible start / end period for different fiscal years
 Reinstate archive capability.
+Add ability to make an existing transaction a recurring transaction.
 
 Release 2.15.0
 ----------------------
