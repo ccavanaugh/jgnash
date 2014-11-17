@@ -29,6 +29,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.tasks.CloseFileTask;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -81,20 +82,23 @@ public class MainToolBarController implements Initializable, MessageListener {
 
     @Override
     public void messagePosted(final Message event) {
-        switch (event.getEvent()) {
-            case FILE_NEW_SUCCESS:
-            case FILE_LOAD_SUCCESS:
-                updateSecurities.setDisable(false);
-                updateCurrencies.setDisable(false);
-                break;
-            case FILE_CLOSING:
-            case FILE_LOAD_FAILED:
-                updateSecurities.setDisable(true);
-                updateCurrencies.setDisable(true);
-                break;
-            default:
-                break;
-        }
+
+        Platform.runLater(() -> {
+            switch (event.getEvent()) {
+                case FILE_NEW_SUCCESS:
+                case FILE_LOAD_SUCCESS:
+                    updateSecurities.setDisable(false);
+                    updateCurrencies.setDisable(false);
+                    break;
+                case FILE_CLOSING:
+                case FILE_LOAD_FAILED:
+                    updateSecurities.setDisable(true);
+                    updateCurrencies.setDisable(true);
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
     @FXML
