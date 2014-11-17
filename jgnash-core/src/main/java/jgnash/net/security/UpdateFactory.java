@@ -36,6 +36,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -67,6 +68,14 @@ public class UpdateFactory {
     private static final Logger logger = Logger.getLogger(UpdateFactory.class.getName());
 
     private static final int TIMEOUT = 1;   // default timeout in minutes
+
+    /**
+     * Registers a {@code Handler} with the class logger
+     * @param handler {@code Handler} to register
+     */
+    public static void addLogHandler(final Handler handler) {
+        logger.addHandler(handler);
+    }
 
     public static void setUpdateOnStartup(final boolean update) {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
