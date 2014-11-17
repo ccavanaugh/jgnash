@@ -185,9 +185,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         registerLogHandler(EngineFactory.class);
         registerLogHandler(AbstractYahooParser.class);
         registerLogHandler(UIApplication.class);
-
-        UpdateFactory.getUpdateOnStartup(); // Hack, forces the logger to be initialized first
-        registerLogHandler(UpdateFactory.class);
+        UpdateFactory.addLogHandler(logHandler);
 
         loadPlugins();
 
