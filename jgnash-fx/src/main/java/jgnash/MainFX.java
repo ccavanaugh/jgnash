@@ -18,6 +18,7 @@
 package jgnash;
 
 import jgnash.uifx.MainApplication;
+import jgnash.uifx.StaticUIMethods;
 import jgnash.util.Version;
 
 import javafx.application.Application;
@@ -36,6 +37,10 @@ public class MainFX {
     }
 
     public static void main(final String[] args) {
+        // Register the default exception handler
+        Thread.setDefaultUncaughtExceptionHandler(new StaticUIMethods.ExceptionHandler());
+
+        // Boot the application
         Application.launch(MainApplication.class, args);
     }
 }

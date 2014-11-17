@@ -131,4 +131,22 @@ public class StaticUIMethods {
     public static void displayTaskProgress(final Task<?> task) {
         MainApplication.setBusy(task);
     }
+
+    /**
+     * Handler for displaying uncaught exceptions
+     */
+    public static class ExceptionHandler implements Thread.UncaughtExceptionHandler {
+
+        @Override
+        public void uncaughtException(final Thread t, final Throwable throwable) {
+            // ignore any exceptions thrown by the help plaf
+            if (throwable.getStackTrace()[0].getClassName().contains("help.plaf")) {
+                return;
+            }
+
+            Logger.getLogger(StaticUIMethods.class.getName()).log(Level.SEVERE, throwable.getLocalizedMessage(), throwable);
+
+            displayException(throwable);
+        }
+    }
 }
