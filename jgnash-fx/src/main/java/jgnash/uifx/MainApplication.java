@@ -21,6 +21,9 @@ import java.io.IOException;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import jgnash.MainFX;
@@ -30,6 +33,8 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
+import jgnash.net.security.AbstractYahooParser;
+import jgnash.net.security.UpdateFactory;
 import jgnash.uifx.control.BusyPane;
 import jgnash.uifx.control.TabViewPane;
 import jgnash.uifx.tasks.CloseFileTask;
@@ -67,15 +72,17 @@ public class MainApplication extends Application implements MessageListener {
 
     private static final Logger logger = Logger.getLogger(MainApplication.class.getName());
 
+    private ResourceBundle rb = ResourceUtils.getBundle();
+
+    private Executor backgroundExecutor = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
+
+    private LogHandler logHandler = new LogHandler();
+
     protected static Stage primaryStage;
 
     private StatusBar statusBar;
 
     private TabViewPane tabViewPane;
-
-    private Executor backgroundExecutor = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
-
-    private ResourceBundle rb = ResourceUtils.getBundle();
 
     private static BusyPane busyPane;
 
@@ -118,6 +125,12 @@ public class MainApplication extends Application implements MessageListener {
         StageUtils.addBoundsListener(stage, getClass());
 
         stage.show();
+
+        registerLogHandler(Engine.class);
+        registerLogHandler(EngineFactory.class);
+        registerLogHandler(AbstractYahooParser.class);
+
+        UpdateFactory.addLogHandler(logHandler);
     }
 
     private void addViews() {
@@ -185,13 +198,11 @@ public class MainApplication extends Application implements MessageListener {
                 case FILE_LOAD_SUCCESS:
                 case FILE_NEW_SUCCESS:
                     updateTitle();
-                    displayStatus(rb.getString("Message.FileLoadComplete"));
                     addViews();
                     break;
                 case FILE_CLOSING:
                     removeViews();
                     updateTitle();
-                    displayStatus(rb.getString("Message.FileClosed"));
                     break;
                 case FILE_IO_ERROR:
                 case FILE_LOAD_FAILED:
@@ -232,6 +243,34 @@ public class MainApplication extends Application implements MessageListener {
                 }
             });
         });
+    }
 
+    private void registerLogHandler(final Class<?> clazz) {
+        Logger.getLogger(clazz.getName()).addHandler(logHandler);
+    }
+
+    private class LogHandler extends Handler {
+
+        @Override
+        public void close() throws SecurityException {
+        }
+
+        @Override
+        public void flush() {
+        }
+
+        @Override
+        public synchronized void publish(final LogRecord record) {
+
+            if (record.getLevel() == Level.WARNING || record.getLevel() == Level.SEVERE) {
+                // TODO add / remove warning and info icon
+                displayStatus(record.getMessage());
+
+
+            } else if (record.getLevel() == Level.INFO) {
+                displayStatus(record.getMessage());
+            }
+
+        }
     }
 }
