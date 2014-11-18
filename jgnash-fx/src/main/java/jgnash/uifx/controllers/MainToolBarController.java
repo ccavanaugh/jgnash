@@ -103,7 +103,7 @@ public class MainToolBarController implements Initializable, MessageListener {
 
     @FXML
     void handleSecuritiesUpdateAction(final ActionEvent actionEvent) {
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         if (engine != null) {
             engine.startSecuritiesUpdate(0);
         }
@@ -111,7 +111,7 @@ public class MainToolBarController implements Initializable, MessageListener {
 
     @FXML
     public void handleCurrenciesUpdateAction(ActionEvent actionEvent) {
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         if (engine != null) {
             engine.startExchangeRateUpdate(0);
         }
