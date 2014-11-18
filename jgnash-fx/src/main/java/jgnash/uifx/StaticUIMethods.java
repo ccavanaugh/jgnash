@@ -23,8 +23,10 @@ import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.scene.image.Image;
 import jgnash.MainFX;
 import jgnash.uifx.utils.StageUtils;
+import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
 import javafx.concurrent.Task;
@@ -130,6 +132,25 @@ public class StaticUIMethods {
 
     public static void displayTaskProgress(final Task<?> task) {
         MainApplication.setBusy(task);
+    }
+
+    /**
+     * Returns a JavaFx Image from the class path
+     * @param image resource path
+     * @return {@code} Image or {@code null} if not found
+     */
+    @Nullable
+    public static Image getImage(final String image) {
+        Image resourceImage;
+
+        try {
+            resourceImage = new Image(StaticUIMethods.class.getResourceAsStream(image));
+        } catch (final Exception ex) {
+            Logger.getLogger(StaticUIMethods.class.getName()).log(Level.WARNING, ex.getLocalizedMessage(), ex);
+            resourceImage = null;
+        }
+
+        return resourceImage;
     }
 
     /**

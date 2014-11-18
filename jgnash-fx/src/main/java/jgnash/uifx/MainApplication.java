@@ -115,6 +115,7 @@ public class MainApplication extends Application implements MessageListener {
         scene.getStylesheets().add(DEFAULT_CSS);
 
         stage.setTitle(MainFX.VERSION);
+        stage.getIcons().add(StaticUIMethods.getImage("/jgnash/resource/gnome-money.png"));
         stage.setScene(scene);
         stage.setResizable(true);
 
@@ -129,7 +130,6 @@ public class MainApplication extends Application implements MessageListener {
         registerLogHandler(Engine.class);
         registerLogHandler(EngineFactory.class);
         registerLogHandler(AbstractYahooParser.class);
-
         UpdateFactory.addLogHandler(logHandler);
     }
 
