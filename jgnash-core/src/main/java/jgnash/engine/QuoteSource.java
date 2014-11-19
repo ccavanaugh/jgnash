@@ -25,8 +25,8 @@ import java.util.logging.Logger;
 
 import jgnash.net.security.NullParser;
 import jgnash.net.security.SecurityParser;
-import jgnash.net.security.YahooAusParser;
-import jgnash.net.security.YahooParser;
+import jgnash.net.security.YahooAUParser;
+import jgnash.net.security.YahooUSParser;
 import jgnash.net.security.YahooUKParser;
 import jgnash.util.Resource;
 
@@ -39,9 +39,9 @@ import jgnash.util.Resource;
 public enum QuoteSource {
 
     NONE(Resource.get().getString("QuoteSource.None"), NullParser.class),
-    YAHOO(Resource.get().getString("QuoteSource.Yahoo"), YahooParser.class),
+    YAHOO(Resource.get().getString("QuoteSource.Yahoo"), YahooUSParser.class),
     YAHOO_UK(Resource.get().getString("QuoteSource.YahooUK"), YahooUKParser.class),
-    YAHOO_AUS(Resource.get().getString("QuoteSource.YahooAus"), YahooAusParser.class);
+    YAHOO_AUS(Resource.get().getString("QuoteSource.YahooAus"), YahooAUParser.class);
 
     private final transient String description;
 

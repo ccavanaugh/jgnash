@@ -18,15 +18,16 @@
 package jgnash.net.security;
 
 /**
- * A CommodityParser for the Yahoo! AUS financial site.
+ * A SecurityParser for the Yahoo! US financial web site.
  *
- * @author Rob Hills
+ * @author Craig Cavanaugh
  */
 @SuppressWarnings("unused")
-public class YahooAusParser extends AbstractYahooParser {
+public class YahooUSParser extends YahooParser {
 
     @Override
     public String getBaseURL() {
-        return "http://au.finance.yahoo.com/d/quotes.csv?s=";
+        // http://download.finance.yahoo.com/d/quotes.csv?s=AMD&f=sl1d1t1c1ohgv&e=.csv
+        return "http://download.finance.yahoo.com/d/quotes.csv?s=";
     }
 }

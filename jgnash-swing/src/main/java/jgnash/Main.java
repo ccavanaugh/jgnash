@@ -35,7 +35,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.engine.message.MessageBus;
 import jgnash.net.NetworkAuthenticator;
-import jgnash.net.security.AbstractYahooParser;
+import jgnash.net.security.YahooParser;
 import jgnash.ui.MainFrame;
 import jgnash.ui.UIApplication;
 import jgnash.ui.actions.OpenAction;
@@ -152,7 +152,7 @@ public final class Main {
         Engine.getLogger().setLevel(Level.ALL);
         Logger.getLogger(MainFrame.class.getName()).setLevel(Level.ALL);
         Logger.getLogger(OpenAction.class.getName()).setLevel(Level.ALL);
-        Logger.getLogger(AbstractYahooParser.class.getName()).setLevel(Level.ALL);
+        Logger.getLogger(YahooParser.class.getName()).setLevel(Level.ALL);
     }
 
     private static void enableAntialiasing() {

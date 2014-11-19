@@ -34,7 +34,7 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
-import jgnash.net.security.AbstractYahooParser;
+import jgnash.net.security.YahooParser;
 import jgnash.net.security.UpdateFactory;
 import jgnash.uifx.control.BusyPane;
 import jgnash.uifx.control.TabViewPane;
@@ -135,7 +135,7 @@ public class MainApplication extends Application implements MessageListener {
         Engine.addLogHandler(statusBarLogHandler);
         EngineFactory.addLogHandler(statusBarLogHandler);
         EngineFactory.addLogHandler(statusBarLogHandler);
-        AbstractYahooParser.addLogHandler(statusBarLogHandler);
+        YahooParser.addLogHandler(statusBarLogHandler);
         UpdateFactory.addLogHandler(statusBarLogHandler);
         logger.addHandler(statusBarLogHandler); // listen to my own logger
     }

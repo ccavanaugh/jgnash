@@ -62,7 +62,7 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
-import jgnash.net.security.AbstractYahooParser;
+import jgnash.net.security.YahooParser;
 import jgnash.net.security.UpdateFactory;
 import jgnash.plugin.Plugin;
 import jgnash.plugin.PluginFactory;
@@ -184,7 +184,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         Engine.addLogHandler(logHandler);
         EngineFactory.addLogHandler(logHandler);
         EngineFactory.addLogHandler(logHandler);
-        AbstractYahooParser.addLogHandler(logHandler);
+        YahooParser.addLogHandler(logHandler);
         UpdateFactory.addLogHandler(logHandler);
 
         loadPlugins();
