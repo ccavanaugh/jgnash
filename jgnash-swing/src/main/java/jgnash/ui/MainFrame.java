@@ -183,7 +183,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
         Engine.addLogHandler(logHandler);
         EngineFactory.addLogHandler(logHandler);
-        EngineFactory.addLogHandler(logHandler);
         YahooParser.addLogHandler(logHandler);
         UpdateFactory.addLogHandler(logHandler);
 

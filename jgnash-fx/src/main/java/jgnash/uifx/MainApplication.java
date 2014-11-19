@@ -134,7 +134,6 @@ public class MainApplication extends Application implements MessageListener {
 
         Engine.addLogHandler(statusBarLogHandler);
         EngineFactory.addLogHandler(statusBarLogHandler);
-        EngineFactory.addLogHandler(statusBarLogHandler);
         YahooParser.addLogHandler(statusBarLogHandler);
         UpdateFactory.addLogHandler(statusBarLogHandler);
         logger.addHandler(statusBarLogHandler); // listen to my own logger
