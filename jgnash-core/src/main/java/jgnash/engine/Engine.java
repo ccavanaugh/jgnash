@@ -42,6 +42,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -223,6 +224,14 @@ public class Engine {
         }, 30, TimeUnit.SECONDS);
     }
 
+    /**
+     * Registers a {@code Handler} with the class logger.
+     * This also ensures the static logger is initialized.
+     * @param handler {@code Handler} to register
+     */
+    public static void addLogHandler(final Handler handler) {
+        logger.addHandler(handler);
+    }
 
     /**
      * Initiates a background exchange rate update with a given start delay
@@ -2497,7 +2506,7 @@ public class Engine {
         }
 
         if (transaction.isMarkedForRemoval()) {
-            logger.log(Level.WARNING, "Transaction already marked for removal");
+            logger.log(Level.SEVERE, "Transaction already marked for removal", new Throwable());
             return false;
         }
 
