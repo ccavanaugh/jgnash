@@ -132,11 +132,12 @@ public class MainApplication extends Application implements MessageListener {
 
         stage.show();
 
-        statusBarLogHandler.addHandler(Engine.class);
-        statusBarLogHandler.addHandler(EngineFactory.class);
-        statusBarLogHandler.addHandler(AbstractYahooParser.class);
-        statusBarLogHandler.addHandler(getClass()); // listen to my own logger
+        Engine.addLogHandler(statusBarLogHandler);
+        EngineFactory.addLogHandler(statusBarLogHandler);
+        EngineFactory.addLogHandler(statusBarLogHandler);
+        AbstractYahooParser.addLogHandler(statusBarLogHandler);
         UpdateFactory.addLogHandler(statusBarLogHandler);
+        logger.addHandler(statusBarLogHandler); // listen to my own logger
     }
 
     private void addViews() {
@@ -295,10 +296,6 @@ public class MainApplication extends Application implements MessageListener {
                 statusBar.setText(status);
                 statusBar.setGraphic(glyph);
             });
-        }
-
-        public void addHandler(final Class<?> clazz) {
-            Logger.getLogger(clazz.getName()).addHandler(this);
         }
     }
 }

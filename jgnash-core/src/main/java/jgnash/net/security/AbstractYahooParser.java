@@ -32,6 +32,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -56,6 +57,15 @@ public abstract class AbstractYahooParser implements SecurityParser {
     private BigDecimal low;
 
     private Date date = DateUtils.today();
+
+    /**
+     * Registers a {@code Handler} with the class logger.
+     * This also ensures the static logger is initialized.
+     * @param handler {@code Handler} to register
+     */
+    public static void addLogHandler(final Handler handler) {
+        logger.addHandler(handler);
+    }
 
     @Override
     public synchronized long getVolume() {

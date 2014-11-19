@@ -40,6 +40,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -91,6 +92,15 @@ public class EngineFactory {
     public static final String REMOTE_PREFIX = "@";
 
     private EngineFactory() {
+    }
+
+    /**
+     * Registers a {@code Handler} with the class logger.
+     * This also ensures the static logger is initialized.
+     * @param handler {@code Handler} to register
+     */
+    public static void addLogHandler(final Handler handler) {
+        logger.addHandler(handler);
     }
 
     public static boolean doesDatabaseExist(final String database, final DataStoreType type) {

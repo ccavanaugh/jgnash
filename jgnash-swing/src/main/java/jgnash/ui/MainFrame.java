@@ -126,8 +126,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     private JXBusyLabel backgroundOperationLabel;
 
-    private final transient LogHandler logHandler = new LogHandler();
-
     private Color infoColor = null;
 
     private BusyLayerUI busyLayerUI;
@@ -181,10 +179,12 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         registerListeners();
 
         /* add logger handlers to listen and display warning and errors */
-        registerLogHandler(Engine.class);
-        registerLogHandler(EngineFactory.class);
-        registerLogHandler(AbstractYahooParser.class);
-        registerLogHandler(UIApplication.class);
+        LogHandler logHandler = new LogHandler();
+
+        Engine.addLogHandler(logHandler);
+        EngineFactory.addLogHandler(logHandler);
+        EngineFactory.addLogHandler(logHandler);
+        AbstractYahooParser.addLogHandler(logHandler);
         UpdateFactory.addLogHandler(logHandler);
 
         loadPlugins();
@@ -640,10 +640,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     void openRemote(final String host, final int port, final char[] password) {
         OpenAction.openRemote(host, port, password);
-    }
-
-    private void registerLogHandler(final Class<?> clazz) {
-        Logger.getLogger(clazz.getName()).addHandler(logHandler);
     }
 
     private void removeViews() {
