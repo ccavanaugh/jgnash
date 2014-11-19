@@ -107,6 +107,7 @@ public abstract class StoredObject implements Cloneable, Serializable {
         try {
             o = (StoredObject) super.clone();
             o.setUuid(UUIDUtil.getUID());   // force a unique id
+            o.markedForRemoval = false;
         } catch (CloneNotSupportedException e) {
             Logger.getLogger(StoredObject.class.getName()).log(Level.SEVERE, e.toString(), e);
         }
