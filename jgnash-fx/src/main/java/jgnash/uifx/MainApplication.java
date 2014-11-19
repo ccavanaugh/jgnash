@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import javafx.scene.paint.Color;
 import jgnash.MainFX;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -58,6 +59,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.controlsfx.control.StatusBar;
+import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.Glyph;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 /**
  * JavaFX version of jGnash.
@@ -76,7 +81,7 @@ public class MainApplication extends Application implements MessageListener {
 
     private Executor backgroundExecutor = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
-    private LogHandler logHandler = new LogHandler();
+    private final StatusBarLogHandler statusBarLogHandler = new StatusBarLogHandler();
 
     protected static Stage primaryStage;
 
@@ -127,10 +132,11 @@ public class MainApplication extends Application implements MessageListener {
 
         stage.show();
 
-        registerLogHandler(Engine.class);
-        registerLogHandler(EngineFactory.class);
-        registerLogHandler(AbstractYahooParser.class);
-        UpdateFactory.addLogHandler(logHandler);
+        statusBarLogHandler.addHandler(Engine.class);
+        statusBarLogHandler.addHandler(EngineFactory.class);
+        statusBarLogHandler.addHandler(AbstractYahooParser.class);
+        statusBarLogHandler.addHandler(getClass()); // listen to my own logger
+        UpdateFactory.addLogHandler(statusBarLogHandler);
     }
 
     private void addViews() {
@@ -172,10 +178,6 @@ public class MainApplication extends Application implements MessageListener {
         return primaryStage;
     }
 
-    private void displayStatus(final String status) {
-        Platform.runLater(() -> statusBar.setText(status));
-    }
-
     /**
      * Sets the application in a busy state and waits for the provided {@code Task} to complete.
      * The caller is responsible for starting the task.
@@ -205,9 +207,14 @@ public class MainApplication extends Application implements MessageListener {
                     updateTitle();
                     break;
                 case FILE_IO_ERROR:
+                    logger.severe("IO error");
+                    break;
                 case FILE_LOAD_FAILED:
+                    logger.warning("Error occurred loading the file");
+                    break;
                 case FILE_NOT_FOUND:
-                    displayStatus("File system error TBD");  // TODO: need a description
+                    logger.warning("File was not found");
+                    break;
                 case ACCOUNT_REMOVE_FAILED:
                     StaticUIMethods.displayError(rb.getString("Message.Error.AccountRemove"));
                     break;
@@ -245,11 +252,24 @@ public class MainApplication extends Application implements MessageListener {
         });
     }
 
-    private void registerLogHandler(final Class<?> clazz) {
-        Logger.getLogger(clazz.getName()).addHandler(logHandler);
-    }
+    /*private void registerLogHandler(final Class<?> clazz) {
+        Logger.getLogger(clazz.getName()).addHandler(statusBarLogHandler);
+    }*/
 
-    private class LogHandler extends Handler {
+    private class StatusBarLogHandler extends Handler {
+
+        final Glyph INFO;
+        final Glyph WARNING;
+        final Glyph SEVERE;
+
+        public StatusBarLogHandler() {
+            final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+            final double defaultSize = fontAwesome.getDefaultSize();
+
+            INFO = fontAwesome.create(FontAwesome.Glyph.INFO).size(defaultSize - 2f);
+            WARNING = fontAwesome.create(FontAwesome.Glyph.FLAG).size(defaultSize - 2f);
+            SEVERE = fontAwesome.create(FontAwesome.Glyph.BUG).color(Color.DARKRED).size(defaultSize - 2f);
+        }
 
         @Override
         public void close() throws SecurityException {
@@ -261,16 +281,24 @@ public class MainApplication extends Application implements MessageListener {
 
         @Override
         public synchronized void publish(final LogRecord record) {
-
-            if (record.getLevel() == Level.WARNING || record.getLevel() == Level.SEVERE) {
-                // TODO add / remove warning and info icon
-                displayStatus(record.getMessage());
-
-
-            } else if (record.getLevel() == Level.INFO) {
-                displayStatus(record.getMessage());
+            if (record.getLevel() == Level.INFO) {
+                updateStatus(record.getMessage(), INFO);
+            } else if (record.getLevel() == Level.WARNING) {
+                updateStatus(record.getMessage(), WARNING);
+            } else if (record.getLevel() == Level.SEVERE) {
+                updateStatus(record.getMessage(), SEVERE);
             }
+        }
 
+        private void updateStatus(final String status, final Glyph glyph) {
+            Platform.runLater(() -> {
+                statusBar.setText(status);
+                statusBar.setGraphic(glyph);
+            });
+        }
+
+        public void addHandler(final Class<?> clazz) {
+            Logger.getLogger(clazz.getName()).addHandler(this);
         }
     }
 }
