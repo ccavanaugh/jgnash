@@ -184,7 +184,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
      * @return Returns the transaction.
      */
     public Transaction getTransaction() {
-        if (transaction != null) {           
+        if (transaction != null) {
             try {
                 return (Transaction) transaction.clone();
             } catch (CloneNotSupportedException ex) {
@@ -192,6 +192,22 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
             }
         }
         return null;
+    }
+
+    /**
+     * Determines if the supplied transaction matches this {@code Reminders} transaction.
+     *
+     * @param transaction {@code Transaction} to check
+     * @return {@code true} if they match
+     */
+    public boolean contains(final Transaction transaction) {
+        boolean result = false;
+
+        if (transaction != null) {
+            result = this.transaction.equals(transaction);
+        }
+
+        return result;
     }
 
     public abstract ReminderType getReminderType();
@@ -208,11 +224,9 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
 
     @Override
     public boolean equals(final Object other) {
-        if (this == other) {
-            return true;
-        }      
-        
-        return other != null && getClass() == other.getClass() && this.getUuid().equals(((Reminder) other).getUuid());
+        return this == other ||
+                other != null && getClass() == other.getClass() && this.getUuid().equals(((Reminder) other).getUuid());
+
     }
 
     /**
@@ -230,7 +244,6 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     public boolean isEnabled() {
         return enabled;
     }
-
 
 
     /**
@@ -362,7 +375,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
         }
 
         if (getTransaction() != null) {
-            r.setTransaction(getTransaction());
+            r.setTransaction((Transaction) getTransaction().clone());
         }
 
         return r;
