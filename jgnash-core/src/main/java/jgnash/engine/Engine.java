@@ -652,20 +652,22 @@ public class Engine {
      * Search and remove orphaned transactions left behind when reminders were removed
      */
     private void removeOrphanedTransactions() {
-        for (Transaction transaction : getTransactions()) {
+        for (final Transaction transaction : getTransactions()) {
             boolean orphaned = true;
 
-            for (Account account : getAccountList()) {
+            for (final Account account : transaction.getAccounts()) {
                 if (account.contains(transaction)) {
                     orphaned = false;
                     break;
                 }
             }
 
-            for (Reminder reminder : getReminders()) {
-                if (transaction.equals(reminder.getTransaction())) {    // reminder transaction may be null
-                    orphaned = false;
-                    break;
+            if (orphaned) { // still an orphan, check for reminder ownership
+                for (final Reminder reminder : getReminders()) {
+                    if (reminder.contains(transaction)) {    // reminder transaction may be null
+                        orphaned = false;
+                        break;
+                    }
                 }
             }
 
@@ -1731,14 +1733,13 @@ public class Engine {
      * @return List of accounts
      */
     public List<Account> getAccountList() {
-        List<Account> accounts = getAccountDAO().getAccountList();
+        final List<Account> accounts = getAccountDAO().getAccountList();
         accounts.remove(getRootAccount());
 
         return accounts;
     }
 
     public Account getAccountByUuid(final String id) {
-
         return getAccountDAO().getAccountByUuid(id);
     }
 
@@ -1756,7 +1757,7 @@ public class Engine {
         // sort for consistent search order
         Collections.sort(list);
 
-        for (Account account : list) {
+        for (final Account account : list) {
             if (accountName.equals(account.getName())) {
                 return account;
             }
@@ -1794,7 +1795,7 @@ public class Engine {
         final List<Account> accountList = new ArrayList<>();
         final List<Account> list = getAccountList();
 
-        for (Account account : list) {
+        for (final Account account : list) {
             if (account.memberOf(group)) {
                 accountList.add(account);
             }
