@@ -21,10 +21,12 @@ import jgnash.util.Nullable;
 
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -51,11 +53,15 @@ public class BusyPane extends StackPane {
         imageView.setEffect(new BoxBlur(4, 4, 2));
 
         progressIndicator = new ProgressIndicator();
-
         messageLabel = new Label();
-        messageLabel.setGraphic(progressIndicator);
 
-        getChildren().addAll(messageLabel);
+        final GridPane gridPane = new GridPane();
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setHgap(15);
+        gridPane.add(progressIndicator, 0, 0);
+        gridPane.add(messageLabel, 1, 0);
+
+        getChildren().addAll(gridPane);
 
         setVisible(false);
     }
