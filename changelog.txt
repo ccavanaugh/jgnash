@@ -56,10 +56,6 @@ Release 2.14.1
          calculated twice.  Correct behavior is to not show the sum of the splits.
 10/21/14 Updated to the latest dependencies for report generation and XLS file exports.
 
-Release 2.14.1
-----------------------
-11/06/14 Reconcile options were moved into the data file
-
 Release 2.14.0
 ----------------------
 10/19/14 PDF version of the integrated help is now packaged with the zip distribution.
