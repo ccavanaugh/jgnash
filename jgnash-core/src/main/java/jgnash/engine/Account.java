@@ -1227,8 +1227,8 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Compares two Account for ordering. The {@code AccountType} is used for sorting.
-     * The account name, and then account UUID are used if the {@code AccountType} are the same.
+     * Compares two Account for ordering.  Returned sort order is consistent with JPA order.
+     * The account name, and then account UUID is used1
      *
      * @param acc the {@code Account} to be compared.
      * @return the value {@code 0} if the argument Account is equal to this Account; account
@@ -1239,12 +1239,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     public int compareTo(@NotNull final Account acc) {
 
         // Sort by name
-        int result = getPathName().compareToIgnoreCase(acc.getPathName());
-        if (result != 0) {
-            return result;
-        }
-
-        result = getName().compareToIgnoreCase(acc.getName());
+        int result = getName().compareToIgnoreCase(acc.getName());
         if (result != 0) {
             return result;
         }
