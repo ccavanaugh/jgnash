@@ -522,12 +522,34 @@
           </varlistentry>
 
           <varlistentry>
-            <term>Account ID</term>
+            <term>Account Number</term>
 
             <listitem>
-              <para>The Account ID can be a bank account number, another
-                helpful description, or it could be an accounting code of some
-                sort. This field may be left blank if desired.
+              <para>The Account Number field is generally used for storing the account number provided by your
+                financial institution.  This field may be left blank if desired.
+              </para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Account Code (General Ledger Code)</term>
+
+            <listitem>
+              <para>The Account Code field will default to a value of 0 and must be a numerical value.  This value
+                will also control the displayed order of accounts within the same branch.  If the account code is left
+                as a value of zero, sort order will be deferred to an alphanumeric sort against the account names.
+                Best practice is to either use an assigned Account Code for all accounts within the same branch or
+                leave the code as a value of 0 for all accounts.  Otherwise, sort order may appear to be random.
+              </para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Bank ID</term>
+
+            <listitem>
+              <para>This is the identification number of the financial institution and is generally used as an
+                identifier when importing OFX files.  This field may be left blank if desired.
               </para>
             </listitem>
           </varlistentry>
@@ -538,6 +560,16 @@
             <listitem>
               <para>The currency for the account. Account currencies cannot be
                 changed if the account contains transactions.
+              </para>
+            </listitem>
+          </varlistentry>
+
+          <varlistentry>
+            <term>Securities</term>
+
+            <listitem>
+              <para>This button will display a dialog that allows you to add and remove the available Securities
+                for the account.  This applies only to Investment accounts.
               </para>
             </listitem>
           </varlistentry>
@@ -594,6 +626,15 @@
                         the hide account filter is enabled.<!--Need to describe view filter workings--></para>
                     </listitem>
                   </varlistentry>
+
+                  <varlistentry>
+                    <term>Exclude From Budgets</term>
+
+                    <listitem>
+                      <para>If selected, the account is hidden from view of the budgeting tool.</para>
+                    </listitem>
+                  </varlistentry>
+
                 </variablelist>
               </para>
             </listitem>
