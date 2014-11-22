@@ -28,6 +28,7 @@ Add ability to make an existing transaction a recurring transaction.
 
 Release 2.15.0
 ----------------------
+11/22/14 Updated Spanish translation (Marcelo Abeldaño)
 11/21/14 Reminder transactions were being incorrectly identified as orphaned.
 11/12/14 Improved sort capability.  Accounts are now sorted by an account code and then by name.
 11/11/14 Added a Code property to Accounts. Codes can be change to suit users needs.
