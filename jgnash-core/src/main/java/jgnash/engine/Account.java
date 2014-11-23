@@ -1307,21 +1307,24 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Remove a security
+     * Removes a {@code SecurityNode} from the account.  If the {@code SecurityNode} is in use by transactions,
+     * removal will be prohibited.
      *
-     * @param node SecurityNode to remove
-     * @return true if successful, false if used by a transaction
+     * @param node {@code SecurityNode} to remove
+     * @return {@code true} if successful, {@code false} if used by a transaction or not an active {@code SecurityNode}
      */
     boolean removeSecurity(final SecurityNode node) {
         securitiesLock.writeLock().lock();
 
         try {
-            if (getUsedSecurities().contains(node)) {
-                return false;
+            boolean result = false;
+
+            if (!getUsedSecurities().contains(node) && containsSecurity(node)) {
+                securities.remove(node);
+                result = true;
             }
 
-            securities.remove(node);
-            return true;
+            return result;
         } finally {
             securitiesLock.writeLock().unlock();
         }
@@ -1367,22 +1370,23 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @return a set of used SecurityNodes
      */
     public Set<SecurityNode> getUsedSecurities() {
-        Set<SecurityNode> set = new TreeSet<>();
-
         transactionLock.readLock().lock();
         securitiesLock.readLock().lock();
 
         try {
-            for (Transaction t : transactions) {
+            final Set<SecurityNode> set = new TreeSet<>();
+
+            for (final Transaction t : transactions) {
                 if (t instanceof InvestmentTransaction) {
                     set.add(((InvestmentTransaction) t).getSecurityNode());
                 }
             }
+
+            return set;
         } finally {
             securitiesLock.readLock().unlock();
             transactionLock.readLock().unlock();
         }
-        return set;
     }
 
     /**
