@@ -7,6 +7,10 @@
     -fx-font-weight: bold;
 }
 
+.list-title {
+    -fx-font-weight: bold;
+}
+
 .busy-pane {
     -fx-font-size: 1.2em;
     -fx-font-weight: bold;
