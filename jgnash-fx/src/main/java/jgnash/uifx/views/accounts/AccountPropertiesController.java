@@ -116,7 +116,7 @@ public class AccountPropertiesController implements Initializable {
 
     private Account baseAccount = null;
 
-    private Set<SecurityNode> securityNodeSet = new TreeSet<>();
+    private final Set<SecurityNode> securityNodeSet = new TreeSet<>();
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -265,36 +265,14 @@ public class AccountPropertiesController implements Initializable {
 
     @FXML
     public void handleSecuritiesButtonAction(final ActionEvent actionEvent) {
-        try {
-            Stage dialog = new Stage(StageStyle.DECORATED);
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.initOwner(MainApplication.getPrimaryStage());
-            dialog.setTitle(ResourceUtils.getBundle().getString("Title.AccountSecurities"));
 
-            FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("fxml/SelectSecuritiesForm.fxml"), ResourceUtils.getBundle());
-            dialog.setScene(new Scene(loader.load()));
+        final SelectAccountSecuritiesDialog control = new SelectAccountSecuritiesDialog(baseAccount, securityNodeSet);
 
-            SelectSecuritiesController controller = loader.getController();
+        if (control.showAndWait()) {
+            securityNodeSet.clear();
+            securityNodeSet.addAll(control.getSelectedSecurities());
 
-            dialog.setResizable(false);
-
-            dialog.getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
-            dialog.getScene().getRoot().getStyleClass().addAll("form", "dialog");
-
-            StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
-
-            controller.loadSecuritiesForAccount(baseAccount);
-
-            dialog.showAndWait();
-
-            if (controller.getResult()) {
-                securityNodeSet.clear();
-                securityNodeSet.addAll(controller.getSelectedSecurities());
-
-                updateCommodityText();
-            }
-        } catch (final IOException ex) {
-            Logger.getLogger(AccountPropertiesController.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            updateCommodityText();
         }
     }
 
