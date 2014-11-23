@@ -120,6 +120,7 @@ class AccountTools {
         AccountDialog dlg = new AccountDialog();
         dlg.setTitle(rb.getString("Title.ModifyAccount"));
 
+        dlg.setModifyingAccount(account);
         dlg.setParentAccount(account.getParent());
         dlg.setAccountName(account.getName());
         dlg.setAccountDescription(account.getDescription());

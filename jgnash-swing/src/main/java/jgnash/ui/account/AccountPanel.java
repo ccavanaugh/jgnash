@@ -88,6 +88,8 @@ final class AccountPanel extends JPanel implements ActionListener {
 
     private DefaultComboBoxModel<AccountType> accountTypeModel;
 
+    private Account modifyingAccount;
+
     public AccountPanel() {
         layoutMainPanel();
 
@@ -276,6 +278,10 @@ final class AccountPanel extends JPanel implements ActionListener {
         updateCommodityButton();
     }
 
+    public void setModifyingAccount(final Account account) {
+        modifyingAccount = account;
+    }
+
     public AccountType getAccountType() {
         return (AccountType) accountTypeCombo.getSelectedItem();
     }
@@ -302,7 +308,7 @@ final class AccountPanel extends JPanel implements ActionListener {
     }
 
     private void showSecuritiesDialog() {
-        AccountSecuritiesDialog dlg = new AccountSecuritiesDialog(null, commodityList, this);
+        AccountSecuritiesDialog dlg = new AccountSecuritiesDialog(modifyingAccount, commodityList, this);
         dlg.setVisible(true);
 
         if (dlg.getReturnValue()) {

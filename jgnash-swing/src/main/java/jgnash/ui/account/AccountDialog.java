@@ -209,6 +209,10 @@ class AccountDialog extends JDialog implements ActionListener {
         accountPanel.setAccountHidden(!visible);
     }
 
+    public void setModifyingAccount(final Account account) {
+        accountPanel.setModifyingAccount(account);
+    }
+
     public boolean isExcludedFromBudget() {
         return accountPanel.isExcludedFromBudget();
     }
