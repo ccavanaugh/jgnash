@@ -173,8 +173,9 @@ class SelectAccountSecuritiesDialog {
     private VBox createButtonBox() {
         final FontAwesome fontAwesome = new FontAwesome();
 
-        final VBox vBox = new VBox(10);
+        final VBox vBox = new VBox();
         vBox.setFillWidth(true);
+        vBox.getStyleClass().add("form");
 
         moveToTarget = new Button("", fontAwesome.create(FontAwesome.Glyph.ANGLE_RIGHT));
         moveToTarget.getStyleClass().add(LIST_BUTTON_CLASS);
@@ -203,6 +204,7 @@ class SelectAccountSecuritiesDialog {
 
     private GridPane createGridPane() {
         final GridPane gridPane = new GridPane();
+        gridPane.getStyleClass().add("form");
 
         final ColumnConstraints col0 = new ColumnConstraints();
         col0.setFillWidth(true);

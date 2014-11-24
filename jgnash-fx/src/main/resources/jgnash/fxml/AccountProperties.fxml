@@ -16,26 +16,26 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import jgnash.uifx.control.IntegerTextField?>
 
-<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.accounts.AccountPropertiesController">
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.accounts.AccountPropertiesController" styleClass="form">
     <children>
         <TitledPane text="%Title.AccountInfo" VBox.vgrow="ALWAYS" collapsible="false">
             <content>
-                <GridPane hgap="10.0">
+                <GridPane styleClass="form">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="NEVER"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
                         <ColumnConstraints hgrow="NEVER"/>
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
                         <RowConstraints vgrow="NEVER"/>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
                     </rowConstraints>
                     <children>
                         <Label text="%Label.Name"/>
@@ -54,18 +54,18 @@
                         <TextField fx:id="bankIdField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
                         <CurrencyComboBox fx:id="currencyComboBox" minWidth="300.0" GridPane.columnIndex="1"
                                   GridPane.hgrow="ALWAYS" GridPane.rowIndex="5"/>
-                        <Button fx:id="securitiesButton" onAction="#handleSecuritiesButtonAction" minWidth="300.0" mnemonicParsing="false" text="%Word.None"
-                                GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                        <Button fx:id="securitiesButton" onAction="#handleSecuritiesButtonAction" minWidth="200.0" maxWidth="300"
+                                mnemonicParsing="false" text="%Word.None" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
                         <ComboBox fx:id="accountTypeComboBox" minWidth="300.0" prefWidth="150.0"
                                   GridPane.columnIndex="1" GridPane.rowIndex="7"/>
-                        <GridPane hgap="10.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                        <GridPane GridPane.columnIndex="1" GridPane.rowIndex="8" styleClass="form">
                             <columnConstraints>
                                 <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="100.0"/>
                                 <ColumnConstraints hgrow="SOMETIMES"/>
                             </columnConstraints>
                             <rowConstraints>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                                <RowConstraints vgrow="NEVER"/>
+                                <RowConstraints vgrow="NEVER"/>
                             </rowConstraints>
                             <children>
                                 <CheckBox fx:id="lockedCheckBox" mnemonicParsing="false" text="%Button.Locked"/>
@@ -78,7 +78,8 @@
                             </children>
                         </GridPane>
                         <Label text="%Title.ParentAccount" GridPane.rowIndex="9"/>
-                        <Button fx:id="parentAccountButton" mnemonicParsing="false" text="Root" GridPane.columnIndex="1" GridPane.rowIndex="9" minWidth="100" onAction="#handleParentAccountAction"/>
+                        <Button fx:id="parentAccountButton" mnemonicParsing="false" text="Root" GridPane.columnIndex="1"
+                                GridPane.rowIndex="9"  minWidth="200" onAction="#handleParentAccountAction"/>
                     </children>
                 </GridPane>
             </content>

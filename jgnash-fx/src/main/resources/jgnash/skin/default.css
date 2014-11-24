@@ -21,11 +21,11 @@
 }
 
 .dialog {
-    -fx-padding: 15;
+    -fx-padding: 1.2em;
 }
 
 .form {
-    -fx-hgap: 10;
-    -fx-vgap: 10;
-    -fx-spacing: 10;
+    -fx-hgap: 0.5em;
+    -fx-vgap: 0.666666em;
+    -fx-spacing: 0.5em;
 }
