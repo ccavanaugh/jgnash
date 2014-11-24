@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import com.sun.javafx.css.StyleManager;
 import javafx.scene.paint.Color;
 import jgnash.MainFX;
 import jgnash.engine.Engine;
@@ -93,6 +94,11 @@ public class MainApplication extends Application implements MessageListener {
 
     @Override
     public void start(final Stage stage) throws Exception {
+
+        // Force application wide style sheet. Use is StyleManager is a private API and may break later
+        Application.setUserAgentStylesheet(null);
+        StyleManager.getInstance().addUserAgentStylesheet(MainApplication.DEFAULT_CSS);
+
         primaryStage = stage;
 
         busyPane = new BusyPane();
