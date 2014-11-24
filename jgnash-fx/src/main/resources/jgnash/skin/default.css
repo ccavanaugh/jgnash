@@ -11,6 +11,10 @@
     -fx-font-weight: bold;
 }
 
+.list-button {
+    -fx-padding: 0.333333em 2.0em 0.333333em 2.0em;
+}
+
 .busy-pane {
     -fx-font-size: 1.2em;
     -fx-font-weight: bold;

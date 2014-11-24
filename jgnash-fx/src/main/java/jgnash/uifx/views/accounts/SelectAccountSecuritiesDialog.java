@@ -64,6 +64,7 @@ import org.controlsfx.glyphfont.FontAwesome;
 class SelectAccountSecuritiesDialog {
 
     private static final String LIST_TITLE_CLASS = "list-title";
+    private static final String LIST_BUTTON_CLASS = "list-button";
 
     private final Resource resources = Resource.get();
 
@@ -172,11 +173,14 @@ class SelectAccountSecuritiesDialog {
     private VBox createButtonBox() {
         final FontAwesome fontAwesome = new FontAwesome();
 
-        final VBox vBox = new VBox(5);
+        final VBox vBox = new VBox(10);
         vBox.setFillWidth(true);
 
         moveToTarget = new Button("", fontAwesome.create(FontAwesome.Glyph.ANGLE_RIGHT));
+        moveToTarget.getStyleClass().add(LIST_BUTTON_CLASS);
+
         moveToSource = new Button("", fontAwesome.create(FontAwesome.Glyph.ANGLE_LEFT));
+        moveToSource.getStyleClass().add(LIST_BUTTON_CLASS);
 
         moveToTarget.setMaxWidth(Double.MAX_VALUE);
         moveToSource.setMaxWidth(Double.MAX_VALUE);
@@ -205,7 +209,6 @@ class SelectAccountSecuritiesDialog {
         col0.setHgrow(Priority.ALWAYS);
         col0.setMaxWidth(Double.MAX_VALUE);
         col0.setPrefWidth(220);
-        col0.setMinWidth(100);
 
         final ColumnConstraints col1 = new ColumnConstraints();
         col1.setFillWidth(true);
@@ -216,7 +219,6 @@ class SelectAccountSecuritiesDialog {
         col2.setHgrow(Priority.ALWAYS);
         col2.setMaxWidth(Double.MAX_VALUE);
         col2.setPrefWidth(220);
-        col2.setMinWidth(100);
 
         gridPane.getColumnConstraints().addAll(col0, col1, col2);
 
@@ -227,7 +229,6 @@ class SelectAccountSecuritiesDialog {
         final RowConstraints row1 = new RowConstraints();
         row1.setMaxHeight(Double.MAX_VALUE);
         row1.setPrefHeight(220);
-        row1.setMinHeight(100);
         row1.setVgrow(Priority.ALWAYS);
 
         final RowConstraints row2 = new RowConstraints();
@@ -281,11 +282,6 @@ class SelectAccountSecuritiesDialog {
 
     public Set<SecurityNode> getSelectedSecurities() {
         return targetListView.getItems().stream().map(lockedSecurity -> lockedSecurity.securityNode).collect(Collectors.toCollection(TreeSet::new));
-
-
-        //securityNodeSet.addAll(checkListView.getCheckModel().getCheckedItems().stream().map(lockedDecorator -> lockedDecorator.securityNode).collect(Collectors.toList()));
-
-        //return securityNodeSet;
     }
 
     private static class LockedSecurity implements Comparable<LockedSecurity> {
