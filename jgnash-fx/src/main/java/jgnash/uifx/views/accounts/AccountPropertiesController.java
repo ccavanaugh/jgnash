@@ -26,6 +26,7 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.beans.binding.BooleanBinding;
 import jgnash.MainFX;
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
@@ -37,6 +38,8 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.CurrencyComboBox;
 import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.utils.StageUtils;
+import jgnash.util.NotNull;
+import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
 import javafx.application.Platform;
@@ -114,7 +117,9 @@ public class AccountPropertiesController implements Initializable {
 
     private Account parentAccount;
 
-    private Account baseAccount = null;
+    private DisableSecuritiesBinding disableSecuritiesBinding;
+
+    @Nullable private Account baseAccount = null;
 
     private final Set<SecurityNode> securityNodeSet = new TreeSet<>();
 
@@ -147,6 +152,11 @@ public class AccountPropertiesController implements Initializable {
             result = false;
             ((Stage) cancelButton.getScene().getWindow()).close();
         });
+
+        disableSecuritiesBinding = new DisableSecuritiesBinding();
+
+        securitiesButton.disableProperty().bind(disableSecuritiesBinding);
+        accountTypeComboBox.setOnAction(event -> disableSecuritiesBinding.invalidate());
     }
 
     public void setSelectedCurrency(final CurrencyNode currency) {
@@ -231,7 +241,7 @@ public class AccountPropertiesController implements Initializable {
         return account;
     }
 
-    public void loadProperties(final Account account) {
+    public void loadProperties(@NotNull final Account account) {
         baseAccount = account;
         securityNodeSet.clear();
 
@@ -248,18 +258,20 @@ public class AccountPropertiesController implements Initializable {
             hideAccountCheckBox.setSelected(!account.isVisible());
             excludeBudgetCheckBox.setSelected(account.isExcludedFromBudget());
 
-            if (account.getAccountType().getAccountGroup() == AccountGroup.INVEST) {
-                securityNodeSet.addAll(account.getSecurities());
+            if (baseAccount.getAccountType().getAccountGroup() == AccountGroup.INVEST) {
+                securityNodeSet.addAll(baseAccount.getSecurities());
                 updateCommodityText();
             }
 
-            accountTypeComboBox.setValue(account.getAccountType());
+            accountTypeComboBox.setValue(baseAccount.getAccountType());
 
-            if (account.getTransactionCount() > 0) {
+            if (baseAccount.getTransactionCount() > 0) {
                 placeholderCheckBox.setDisable(true);
             } else {
                 placeholderCheckBox.setSelected(account.isPlaceHolder());
             }
+
+            disableSecuritiesBinding.invalidate();
         });
     }
 
@@ -295,6 +307,16 @@ public class AccountPropertiesController implements Initializable {
             });
         } else {
             Platform.runLater(() -> securitiesButton.setText(resources.getString("Word.None")));
+        }
+    }
+
+    private class DisableSecuritiesBinding extends BooleanBinding {
+
+        @Override
+        protected boolean computeValue() {
+            return !(baseAccount != null && baseAccount.memberOf(AccountGroup.INVEST))
+                    && accountTypeComboBox.getValue().getAccountGroup() != AccountGroup.INVEST;
+
         }
     }
 }
