@@ -20,7 +20,6 @@ package jgnash.uifx.controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -32,8 +31,6 @@ import javafx.stage.Stage;
  * @author Craig Cavanaugh
  */
 public class AccountTypeFilterFormController implements Initializable {
-
-    private AccountTypeFilter accountTypeFilter;
 
     @FXML
     ButtonBar buttonBar;
@@ -61,32 +58,12 @@ public class AccountTypeFilterFormController implements Initializable {
         buttonBar.getButtons().add(closeButton);
     }
 
-    public void setAccountTypeFilter(AccountTypeFilter filter) {
-        this.accountTypeFilter = filter;
+    public void setAccountTypeFilter(final AccountTypeFilter filter) {
 
-        bankAccountCheckBox.setSelected(accountTypeFilter.isAccountVisible());
-        expenseAccountCheckBox.setSelected(accountTypeFilter.isExpenseVisible());
-        incomeAccountCheckBox.setSelected(accountTypeFilter.isIncomeVisible());
-        hiddenAccountCheckBox.setSelected(accountTypeFilter.isHiddenVisible());
-    }
-
-    @FXML
-    public void handleBankAccountsAction(final ActionEvent actionEvent) {
-        accountTypeFilter.setAccountVisible(bankAccountCheckBox.isSelected());
-    }
-
-    @FXML
-    public void handleExpenseAccountsAction(final ActionEvent actionEvent) {
-        accountTypeFilter.setExpenseVisible(expenseAccountCheckBox.isSelected());
-    }
-
-    @FXML
-    public void handleIncomeAccountsAction(final ActionEvent actionEvent) {
-        accountTypeFilter.setIncomeVisible(incomeAccountCheckBox.isSelected());
-    }
-
-    @FXML
-    public void handleHiddenAccountsAction(final ActionEvent actionEvent) {
-        accountTypeFilter.setHiddenVisible(hiddenAccountCheckBox.isSelected());
+        // Bind the buttons to the filter
+        bankAccountCheckBox.selectedProperty().bindBidirectional(filter.getAccountTypesVisibleProperty());
+        incomeAccountCheckBox.selectedProperty().bindBidirectional(filter.getIncomeTypesVisibleProperty());
+        expenseAccountCheckBox.selectedProperty().bindBidirectional(filter.getExpenseTypesVisibleProperty());
+        hiddenAccountCheckBox.selectedProperty().bindBidirectional(filter.getHiddenTypesVisibleProperty());
     }
 }

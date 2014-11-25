@@ -17,26 +17,76 @@
  */
 package jgnash.uifx.controllers;
 
+import java.util.prefs.Preferences;
+
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+
 /**
  * Account Type Filter interface
- * 
+ *
  * @author Craig Cavanaugh
  */
 public interface AccountTypeFilter {
 
-    public boolean isAccountVisible();
+    static final String HIDDEN_VISIBLE = "HiddenVisible";
+    static final String EXPENSE_VISIBLE = "ExpenseVisible";
+    static final String INCOME_VISIBLE = "IncomeVisible";
+    static final String ACCOUNT_VISIBLE = "AccountVisible";
 
-    public boolean isExpenseVisible();
+    BooleanProperty accountTypesVisible = new SimpleBooleanProperty();
+    BooleanProperty expenseTypesVisible = new SimpleBooleanProperty();
+    BooleanProperty incomeTypesVisible = new SimpleBooleanProperty();
+    BooleanProperty hiddenTypesVisible = new SimpleBooleanProperty();
 
-    public boolean isHiddenVisible();
+    Preferences getPreferences();
 
-    public boolean isIncomeVisible();
+    default void initializeFilterPreferences() {
+        accountTypesVisible.set(getPreferences().getBoolean(ACCOUNT_VISIBLE, true));
+        expenseTypesVisible.set(getPreferences().getBoolean(EXPENSE_VISIBLE, true));
+        incomeTypesVisible.set(getPreferences().getBoolean(INCOME_VISIBLE, true));
+        hiddenTypesVisible.set(getPreferences().getBoolean(HIDDEN_VISIBLE, true));
 
-    public void setAccountVisible(boolean visible);
+        // Add change listeners to write preferences
+        accountTypesVisible.addListener((observable, oldValue, newValue) -> setFilter(observable.getValue(), ACCOUNT_VISIBLE));
+        incomeTypesVisible.addListener((observable, oldValue, newValue) -> setFilter(observable.getValue(), INCOME_VISIBLE));
+        expenseTypesVisible.addListener((observable, oldValue, newValue) -> setFilter(observable.getValue(), EXPENSE_VISIBLE));
+        hiddenTypesVisible.addListener((observable, oldValue, newValue) -> setFilter(observable.getValue(), HIDDEN_VISIBLE));
+    }
 
-    public void setExpenseVisible(boolean visible);
+    default BooleanProperty getAccountTypesVisibleProperty() {
+        return accountTypesVisible;
+    }
 
-    public void setHiddenVisible(boolean visible);
+    default BooleanProperty getIncomeTypesVisibleProperty() {
+        return incomeTypesVisible;
+    }
 
-    public void setIncomeVisible(boolean visible);
+    default BooleanProperty getExpenseTypesVisibleProperty() {
+        return expenseTypesVisible;
+    }
+
+    default BooleanProperty getHiddenTypesVisibleProperty() {
+        return hiddenTypesVisible;
+    }
+
+    default boolean getAccountTypesVisible() {
+        return accountTypesVisible.get();
+    }
+
+    default boolean getExpenseTypesVisible() {
+        return expenseTypesVisible.get();
+    }
+
+    default boolean getHiddenTypesVisible() {
+        return hiddenTypesVisible.get();
+    }
+
+    default boolean getIncomeTypesVisible() {
+        return incomeTypesVisible.get();
+    }
+
+    default void setFilter(final boolean visible, final String propertyKey) {
+        getPreferences().putBoolean(propertyKey, visible);
+    }
 }

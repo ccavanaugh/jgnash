@@ -19,7 +19,6 @@ package jgnash.uifx.controllers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
@@ -50,38 +49,26 @@ import javafx.scene.control.TreeTableView;
  */
 public abstract class AccountTreeController implements Initializable, AccountTypeFilter, MessageListener {
 
-    private static final String HIDDEN_VISIBLE = "HiddenVisible";
-    private static final String EXPENSE_VISIBLE = "ExpenseVisible";
-    private static final String INCOME_VISIBLE = "IncomeVisible";
-    private static final String ACCOUNT_VISIBLE = "AccountVisible";
-
-    private boolean incomeVisible = true;
-
-    private boolean expenseVisible = true;
-
-    private boolean accountVisible = true;
-
-    private boolean hiddenVisible = true;
-
     final private Object lock = new Object();
 
     protected abstract TreeTableView<Account> getTreeTableView();
-
-    public abstract Preferences getPreferences();
 
     protected ResourceBundle resources;
 
     public void initialize(final URL location, final ResourceBundle resources) {
         this.resources = resources;
 
-        setAccountVisible(getPreferences().getBoolean(ACCOUNT_VISIBLE, true));
-        setExpenseVisible(getPreferences().getBoolean(EXPENSE_VISIBLE, true));
-        setHiddenVisible(getPreferences().getBoolean(HIDDEN_VISIBLE, true));
-        setIncomeVisible(getPreferences().getBoolean(INCOME_VISIBLE, true));
+        initializeFilterPreferences();
 
         addDefaultColumn();
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT);
+
+        // Register invalidation listeners to force a reload
+        accountTypesVisible.addListener(observable -> reload());
+        expenseTypesVisible.addListener(observable -> reload());
+        hiddenTypesVisible.addListener(observable -> reload());
+        incomeTypesVisible.addListener(observable -> reload());
     }
 
     /**
@@ -146,16 +133,16 @@ public abstract class AccountTreeController implements Initializable, AccountTyp
      */
     private synchronized boolean isAccountVisible(final Account a) {
         AccountType type = a.getAccountType();
-        if (type == AccountType.INCOME && incomeVisible) {
-            if (!a.isVisible() && hiddenVisible || a.isVisible()) {
+        if (type == AccountType.INCOME && getIncomeTypesVisible()) {
+            if (!a.isVisible() && getHiddenTypesVisible() || a.isVisible()) {
                 return true;
             }
-        } else if (type == AccountType.EXPENSE && expenseVisible) {
-            if (!a.isVisible() && hiddenVisible || a.isVisible()) {
+        } else if (type == AccountType.EXPENSE && getExpenseTypesVisible()) {
+            if (!a.isVisible() && getHiddenTypesVisible() || a.isVisible()) {
                 return true;
             }
-        } else if (type != AccountType.INCOME && type != AccountType.EXPENSE && accountVisible) {
-            if (!a.isVisible() && hiddenVisible || a.isVisible()) {
+        } else if (type != AccountType.INCOME && type != AccountType.EXPENSE && getAccountTypesVisible()) {
+            if (!a.isVisible() && getHiddenTypesVisible() || a.isVisible()) {
                 return true;
             }
         }
@@ -189,61 +176,5 @@ public abstract class AccountTreeController implements Initializable, AccountTyp
         }
 
         return null;
-    }
-
-    @Override
-    public synchronized void setHiddenVisible(final boolean visible) {
-        if (hiddenVisible != visible) {
-            hiddenVisible = visible;
-            getPreferences().putBoolean(HIDDEN_VISIBLE, visible);
-            reload();
-        }
-    }
-
-    @Override
-    public synchronized void setIncomeVisible(final boolean visible) {
-        if (incomeVisible != visible) {
-            incomeVisible = visible;
-            getPreferences().putBoolean(INCOME_VISIBLE, visible);
-            reload();
-        }
-    }
-
-    @Override
-    public synchronized void setExpenseVisible(final boolean visible) {
-        if (expenseVisible != visible) {
-            expenseVisible = visible;
-            getPreferences().putBoolean(EXPENSE_VISIBLE, visible);
-            reload();
-        }
-    }
-
-    @Override
-    public synchronized void setAccountVisible(boolean visible) {
-        if (accountVisible != visible) {
-            accountVisible = visible;
-            getPreferences().putBoolean(ACCOUNT_VISIBLE, visible);
-            reload();
-        }
-    }
-
-    @Override
-    public synchronized boolean isAccountVisible() {
-        return accountVisible;
-    }
-
-    @Override
-    public synchronized boolean isExpenseVisible() {
-        return expenseVisible;
-    }
-
-    @Override
-    public synchronized boolean isHiddenVisible() {
-        return hiddenVisible;
-    }
-
-    @Override
-    public synchronized boolean isIncomeVisible() {
-        return incomeVisible;
     }
 }

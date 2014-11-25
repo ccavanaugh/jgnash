@@ -25,16 +25,16 @@
     <children>
         <Label text="%Title.VisibleAccountTypes"/>
         <Separator GridPane.columnIndex="1"/>
-        <CheckBox fx:id="bankAccountCheckBox" mnemonicParsing="false" onAction="#handleBankAccountsAction" text="%Button.BankAccounts"
+        <CheckBox fx:id="bankAccountCheckBox" mnemonicParsing="false" text="%Button.BankAccounts"
                   GridPane.columnSpan="2" GridPane.rowIndex="1">
         </CheckBox>
-        <CheckBox fx:id="expenseAccountCheckBox" mnemonicParsing="false" onAction="#handleExpenseAccountsAction" text="%Button.ExpenseAccounts"
+        <CheckBox fx:id="expenseAccountCheckBox" mnemonicParsing="false" text="%Button.ExpenseAccounts"
                   GridPane.columnSpan="2" GridPane.rowIndex="2">
         </CheckBox>
-        <CheckBox fx:id="incomeAccountCheckBox" mnemonicParsing="false" onAction="#handleIncomeAccountsAction" text="%Button.IncomeAccounts"
+        <CheckBox fx:id="incomeAccountCheckBox" mnemonicParsing="false" text="%Button.IncomeAccounts"
                   GridPane.columnSpan="2" GridPane.rowIndex="3">
         </CheckBox>
-        <CheckBox fx:id="hiddenAccountCheckBox" mnemonicParsing="false" onAction="#handleHiddenAccountsAction" text="%Button.Hidden"
+        <CheckBox fx:id="hiddenAccountCheckBox" mnemonicParsing="false" text="%Button.Hidden"
                   GridPane.columnSpan="2" GridPane.rowIndex="4">
         </CheckBox>
         <ButtonBar fx:id="buttonBar" GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5"/>
