@@ -24,6 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
 
@@ -35,7 +36,7 @@ public class AccountTypeFilterFormController implements Initializable {
     private AccountTypeFilter accountTypeFilter;
 
     @FXML
-    Button closeButton;
+    ButtonBar buttonBar;
 
     @FXML
     CheckBox bankAccountCheckBox;
@@ -52,7 +53,12 @@ public class AccountTypeFilterFormController implements Initializable {
     @FXML
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
+        final Button closeButton = new Button(resources.getString("Button.Close"));
+        ButtonBar.setButtonData(closeButton, ButtonBar.ButtonData.CANCEL_CLOSE);
 
+        closeButton.setOnAction(event -> ((Stage) closeButton.getScene().getWindow()).close());
+
+        buttonBar.getButtons().add(closeButton);
     }
 
     public void setAccountTypeFilter(AccountTypeFilter filter) {
@@ -82,10 +88,5 @@ public class AccountTypeFilterFormController implements Initializable {
     @FXML
     public void handleHiddenAccountsAction(final ActionEvent actionEvent) {
         accountTypeFilter.setHiddenVisible(hiddenAccountCheckBox.isSelected());
-    }
-
-    @FXML
-    public void handleCloseAction(final ActionEvent actionEvent) {
-        ((Stage) closeButton.getScene().getWindow()).close();
     }
 }
