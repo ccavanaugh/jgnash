@@ -116,7 +116,10 @@ public class AccountsViewController extends AccountTreeController {
         TreeTableColumn<Account, String> typeColumn = new TreeTableColumn<>(resources.getString("Column.Type"));
         typeColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getAccountType().toString()));
 
-        treeTableView.getColumns().addAll(entriesColumn, balanceColumn, reconciledBalanceColumn, currencyColumn, typeColumn);
+        TreeTableColumn<Account, Integer> codeColumn = new TreeTableColumn<>(resources.getString("Column.Code"));
+        codeColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getAccountCode()));
+
+        treeTableView.getColumns().addAll(codeColumn, entriesColumn, balanceColumn, reconciledBalanceColumn, currencyColumn, typeColumn);
 
         installSelectionListener();
     }
