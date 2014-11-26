@@ -23,7 +23,6 @@ import jgnash.util.Resource;
  * Account Group class. Helps to categorize account types to make reporting easier and consistent.
  * 
  * @author Craig Cavanaugh
- *
  */
 public enum AccountGroup {
 
@@ -33,7 +32,8 @@ public enum AccountGroup {
     INCOME(Resource.get().getString("AccountType.Income")),
     INVEST(Resource.get().getString("AccountType.Investment")),
     LIABILITY(Resource.get().getString("AccountType.Liability")),
-    ROOT(Resource.get().getString("AccountType.Root"));
+    ROOT(Resource.get().getString("AccountType.Root")),
+    SIMPLEINVEST(Resource.get().getString("AccountType.SimpleInvestment")); // CD's, Treasuries, Etc.
 
     private final transient String description;
 

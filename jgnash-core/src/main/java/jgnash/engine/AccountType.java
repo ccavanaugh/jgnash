@@ -43,7 +43,7 @@ public enum AccountType {
     EXPENSE(Resource.get().getString("AccountType.Expense"), AccountGroup.EXPENSE, AccountProxy.class, true),
     INCOME(Resource.get().getString("AccountType.Income"), AccountGroup.INCOME, AccountProxy.class, true),
     INVEST(Resource.get().getString("AccountType.Investment"), AccountGroup.INVEST, InvestmentAccountProxy.class, false),
-    SIMPLEINVEST(Resource.get().getString("AccountType.SimpleInvestment"), AccountGroup.INVEST, AccountProxy.class, true),
+    SIMPLEINVEST(Resource.get().getString("AccountType.SimpleInvestment"), AccountGroup.SIMPLEINVEST, AccountProxy.class, true),
     LIABILITY(Resource.get().getString("AccountType.Liability"), AccountGroup.LIABILITY, AccountProxy.class, true),
     MONEYMKRT(Resource.get().getString("AccountType.MoneyMkrt"), AccountGroup.ASSET, AccountProxy.class, true),
     MUTUAL(Resource.get().getString("AccountType.Mutual"), AccountGroup.INVEST, InvestmentAccountProxy.class, false),

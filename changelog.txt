@@ -28,18 +28,19 @@ Add ability to make an existing transaction a recurring transaction.
 
 Release 2.15.0
 ----------------------
+11/26/14 The simple investment account type was moved to it's own group to improve program logic
 11/23/14 Active Account Securities were not marked to prevent removal in the Account Properties dialog.
 11/22/14 Updated Spanish translation (Marcelo Abeldaño)
 11/21/14 Reminder transactions were being incorrectly identified as orphaned.
 11/12/14 Improved sort capability.  Accounts are now sorted by an account code and then by name.
-11/11/14 Added a Code property to Accounts. Codes can be change to suit users needs.
+11/11/14 Added a Code property to Accounts. Codes can be change to suit users needs. (Changes file format)
 11/09/14 Improved reconciliation behavior.  Reconcile Settings are remembered from prior sessions and are intelligently updated.
 11/09/14 Add sorting capability to the reconcile dialog tables.
 11/08/14 A dialog will now be displayed when the file has been automatically upgraded and a backup of the old version made.
 11/08/14 Relational database files will be altered automatically to address Hibernate Bug #HHH_9389
-11/06/14 Settings for background updates of exchange rates and securities were moved into the data file
+11/06/14 Settings for background updates of exchange rates and securities were moved into the data file (Changes file format)
 11/06/14 Reconcile settings were moved into the data file for consistent behavior when the file is shared on multiple
-         systems
+         systems (Changes file format)
 
 Release 2.14.1
 ----------------------
