@@ -37,6 +37,7 @@ import jgnash.uifx.MainApplication;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.CurrencyComboBox;
 import jgnash.uifx.control.IntegerTextField;
+import jgnash.uifx.skin.Styles;
 import jgnash.uifx.utils.StageUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
@@ -52,6 +53,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -128,8 +130,9 @@ public class AccountPropertiesController implements Initializable {
 
         this.resources = resources;
 
+        accountTypeComboBox.setCellFactory(param -> new DisabledListCell());    // set cell factory
         accountTypeComboBox.getItems().addAll(AccountType.values());
-        accountTypeComboBox.setValue(AccountType.BANK); // set default
+        accountTypeComboBox.setValue(AccountType.BANK); // set default value
 
         // Create and add the ok and cancel buttons to the button bar
         final Button okButton = new Button(resources.getString("Button.Ok"));
@@ -317,6 +320,29 @@ public class AccountPropertiesController implements Initializable {
             return !(baseAccount != null && baseAccount.memberOf(AccountGroup.INVEST))
                     && accountTypeComboBox.getValue().getAccountGroup() != AccountGroup.INVEST;
 
+        }
+    }
+
+    /**
+     * Disables selection of the account type if it is not within the same account group as the account being modified
+     */
+    private class DisabledListCell extends ListCell<AccountType> {
+
+        @Override
+        protected void updateItem(final AccountType item, final boolean empty) {
+            super.updateItem(item, empty);
+
+            if (!empty) {
+                setText(item.toString());
+
+                if (baseAccount != null && baseAccount.getAccountType().getAccountGroup() != item.getAccountGroup()) {
+                    getStyleClass().add(Styles.DISABLED_CELL_STYLE);
+                    setDisable(true);
+                } else {
+                    getStyleClass().add(Styles.ENABLED_CELL_STYLE);
+                    setDisable(false);
+                }
+            }
         }
     }
 }
