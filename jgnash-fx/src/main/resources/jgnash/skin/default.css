@@ -29,3 +29,11 @@
     -fx-vgap: 0.666666em;
     -fx-spacing: 0.5em;
 }
+
+.disabled-cell {
+    -fx-opacity: 0.4;
+}
+
+.enabled-cell {
+    -fx-opacity: 1.0;
+}
