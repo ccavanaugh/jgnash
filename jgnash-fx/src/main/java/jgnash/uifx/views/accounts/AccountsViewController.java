@@ -21,6 +21,8 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import jgnash.engine.Account;
@@ -28,6 +30,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.CommodityFormatTreeTableCell;
+import jgnash.uifx.control.IntegerEditingTreeTableCell;
 import jgnash.uifx.controllers.AccountTreeController;
 
 import javafx.application.Platform;
@@ -98,6 +101,7 @@ public class AccountsViewController extends AccountTreeController {
     @SuppressWarnings("unchecked")
     protected void initializeTreeTableView() {
         treeTableView.setShowRoot(false);   // don't show the root
+        treeTableView.setEditable(true);
 
         TreeTableColumn<Account, Integer> entriesColumn = new TreeTableColumn<>(resources.getString("Column.Entries"));
         entriesColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getTransactionCount()));
@@ -117,7 +121,10 @@ public class AccountsViewController extends AccountTreeController {
         typeColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getAccountType().toString()));
 
         TreeTableColumn<Account, Integer> codeColumn = new TreeTableColumn<>(resources.getString("Column.Code"));
+        codeColumn.setEditable(true);
         codeColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getAccountCode()));
+        codeColumn.setCellFactory(param -> new IntegerEditingTreeTableCell());
+        codeColumn.setOnEditCommit(event -> updateAccountCode(event.getRowValue().getValue(), event.getNewValue()));
 
         treeTableView.getColumns().addAll(codeColumn, entriesColumn, balanceColumn, reconciledBalanceColumn, currencyColumn, typeColumn);
 
@@ -193,4 +200,20 @@ public class AccountsViewController extends AccountTreeController {
             }
         }
     }
+
+    private void updateAccountCode(final Account account, final Integer code) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+        if (engine != null) {
+            try {
+                final Account template = (Account) account.clone();
+                template.setAccountCode(code);
+
+                engine.modifyAccount(template, account);
+            } catch (final CloneNotSupportedException e) {
+                Logger.getLogger(AccountsViewController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            }
+        }
+    }
+
 }
