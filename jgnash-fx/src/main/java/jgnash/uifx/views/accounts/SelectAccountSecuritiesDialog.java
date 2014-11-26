@@ -31,6 +31,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
 import jgnash.uifx.MainApplication;
+import jgnash.uifx.skin.Styles;
 import jgnash.uifx.utils.StageUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
@@ -62,9 +63,6 @@ import org.controlsfx.glyphfont.FontAwesome;
  * @author Craig Cavanaugh
  */
 class SelectAccountSecuritiesDialog {
-
-    private static final String LIST_TITLE_CLASS = "list-title";
-    private static final String LIST_BUTTON_CLASS = "list-button";
 
     private final Resource resources = Resource.get();
 
@@ -121,10 +119,10 @@ class SelectAccountSecuritiesDialog {
         dialog.setTitle(resources.getString("Title.AccountSecurities"));
 
         final Label availableLabel = new Label(resources.getString("Title.Available"));
-        availableLabel.getStyleClass().add(LIST_TITLE_CLASS);
+        availableLabel.getStyleClass().add(Styles.LIST_TITLE_STYLE);
 
         final Label currentLabel = new Label(resources.getString("Title.Current"));
-        currentLabel.getStyleClass().add(LIST_TITLE_CLASS);
+        currentLabel.getStyleClass().add(Styles.LIST_TITLE_STYLE);
 
         final GridPane gridPane = createGridPane();
         gridPane.add(availableLabel, 0, 0);
@@ -178,10 +176,10 @@ class SelectAccountSecuritiesDialog {
         vBox.getStyleClass().add("form");
 
         moveToTarget = new Button("", fontAwesome.create(FontAwesome.Glyph.ANGLE_RIGHT));
-        moveToTarget.getStyleClass().add(LIST_BUTTON_CLASS);
+        moveToTarget.getStyleClass().add(Styles.LIST_BUTTON_STYLE);
 
         moveToSource = new Button("", fontAwesome.create(FontAwesome.Glyph.ANGLE_LEFT));
-        moveToSource.getStyleClass().add(LIST_BUTTON_CLASS);
+        moveToSource.getStyleClass().add(Styles.LIST_BUTTON_STYLE);
 
         moveToTarget.setMaxWidth(Double.MAX_VALUE);
         moveToSource.setMaxWidth(Double.MAX_VALUE);
@@ -321,9 +319,11 @@ class SelectAccountSecuritiesDialog {
 
             if (!empty) {
                 if (item.isLocked()) {
-                    setStyle("-fx-font-style:italic;");
+                    setStyle("-fx-opacity: 0.4;");  // does not work correctly with getStyleClass().add(Styles.DISABLED_CELL_STYLE); ???
+                    setDisable(true);
                 } else {
-                    setStyle("-fx-font-style:normal;");
+                    setStyle("-fx-opacity: 1.0;");
+                    setDisable(false);
                 }
 
                 setText(item.toString());
