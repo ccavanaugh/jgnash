@@ -41,11 +41,10 @@ import javafx.scene.control.TreeTableView;
 
 /**
  * Abstract controller for handling display of the account structure
- *
+ * <p/>
  * TODO Reference @see for column resize code hints
  *
  * @author Craig Cavanaugh
- *
  * @see com.sun.javafx.scene.control.skin.TreeTableViewSkin#resizeColumnToFitContent(javafx.scene.control.TreeTableColumn, int)
  */
 public abstract class AccountTreeTableController implements Initializable, AccountTypeFilter, MessageListener {
@@ -123,7 +122,7 @@ public abstract class AccountTreeTableController implements Initializable, Accou
     }
 
     public synchronized void reload() {
-        loadAccountTree();
+        Platform.runLater(this::loadAccountTree);
     }
 
     /**
@@ -153,20 +152,19 @@ public abstract class AccountTreeTableController implements Initializable, Accou
     @Override
     public void messagePosted(final Message event) {
 
-        Platform.runLater(() -> {
-            switch (event.getEvent()) {
-                case ACCOUNT_ADD:
-                case ACCOUNT_MODIFY:
-                case ACCOUNT_REMOVE:
-                    reload();
-                    break;
-                case FILE_CLOSING:
-                    MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT);
-                    break;
-                default:
-                    break;
-            }
-        });
+        switch (event.getEvent()) {
+            case ACCOUNT_ADD:
+            case ACCOUNT_MODIFY:
+            case ACCOUNT_REMOVE:
+                reload();
+                break;
+            case FILE_CLOSING:
+                Platform.runLater(() -> getTreeTableView().setRoot(null));
+                MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT);
+                break;
+            default:
+                break;
+        }
     }
 
     protected Account getSelectedAccount() {
