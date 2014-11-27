@@ -21,25 +21,20 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import jgnash.engine.Account;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.uifx.utils.TreeSearch;
+import jgnash.uifx.controllers.AbstractAccountTreeController;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.TreeItem;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.TreeView;
 import javafx.stage.Stage;
-import javafx.scene.control.ButtonBar;
 
 /**
  * Controller for selecting an account from a tree
  *
  * @author Craig Cavanaugh
  */
-public class SelectAccountController implements Initializable {
+public class SelectAccountController extends AbstractAccountTreeController {
 
     @FXML
     private TreeView<Account> treeView;
@@ -47,10 +42,16 @@ public class SelectAccountController implements Initializable {
     @FXML
     private ButtonBar buttonBar;
 
-    private Account selectedAccount = null;
+    private Account chosenAccount = null;
+
+    @Override
+    protected TreeView<Account> getTreeView() {
+        return treeView;
+    }
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
+        super.initialize(location, resources);
 
         // Create and add the ok and cancel buttons to the button bar
         final Button okButton = new Button(resources.getString("Button.Ok"));
@@ -62,57 +63,18 @@ public class SelectAccountController implements Initializable {
         buttonBar.getButtons().addAll(okButton, cancelButton);
 
         okButton.setOnAction(event -> {
-            if (treeView.getSelectionModel().getSelectedItem() != null) {
-                selectedAccount = treeView.getSelectionModel().getSelectedItem().getValue();
-            }
+            chosenAccount = super.getSelectedAccount();
             ((Stage) okButton.getScene().getWindow()).close();
         });
 
         cancelButton.setOnAction(event -> {
-            selectedAccount = null;  // clear selections
+            chosenAccount = null;  // clear selections
             ((Stage) cancelButton.getScene().getWindow()).close();
         });
-
-        loadAccountTree();
     }
 
+    @Override
     public Account getSelectedAccount() {
-        return selectedAccount;
-    }
-
-    public void setSelectedAccount(final Account account) {
-       final TreeItem<Account> treeItem = TreeSearch.findTreeItem(treeView.getRoot(), account);
-
-        if (treeItem != null) {
-            Platform.runLater(() -> treeView.getSelectionModel().select(treeItem));
-        }
-    }
-
-    protected void loadAccountTree() {
-        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-
-        if (engine != null) {
-            final TreeItem<Account> root = new TreeItem<>(engine.getRootAccount());
-            root.setExpanded(true);
-
-            treeView.setRoot(root);
-            loadChildren(root);
-        } else {
-            treeView.setRoot(null);
-        }
-    }
-
-    private synchronized void loadChildren(final TreeItem<Account> parentItem) {
-        Account parent = parentItem.getValue();
-
-        for (Account child : parent.getChildren()) {
-            TreeItem<Account> childItem = new TreeItem<>(child);
-            childItem.setExpanded(true);
-            parentItem.getChildren().add(childItem);
-
-            if (child.getChildCount() > 0) {
-                loadChildren(childItem);
-            }
-        }
+        return chosenAccount;
     }
 }
