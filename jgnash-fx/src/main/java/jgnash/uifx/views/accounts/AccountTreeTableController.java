@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.uifx.controllers;
+package jgnash.uifx.views.accounts;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -30,6 +30,7 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
+import jgnash.uifx.controllers.AccountTypeFilter;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyStringWrapper;
