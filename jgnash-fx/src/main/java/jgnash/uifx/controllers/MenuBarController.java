@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
@@ -79,6 +80,22 @@ public class MenuBarController implements Initializable, MessageListener {
     @FXML
     protected void handleOpenAction(final ActionEvent event) {
         StaticUIMethods.showOpenDialog();
+    }
+
+    @FXML
+    public void updateSecurities(ActionEvent actionEvent) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        if (engine != null) {
+            engine.startSecuritiesUpdate(0);
+        }
+    }
+
+    @FXML
+    public void updateCurrencies(ActionEvent actionEvent) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        if (engine != null) {
+            engine.startExchangeRateUpdate(0);
+        }
     }
 
     @Override

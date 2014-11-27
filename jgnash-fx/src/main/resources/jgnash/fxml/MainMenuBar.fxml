@@ -2,14 +2,14 @@
 
 <?import javafx.scene.control.*?>
 
-<MenuBar fx:id="menuBar" useSystemMenuBar="true" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="jgnash.uifx.controllers.MenuBarController">
+<MenuBar fx:id="menuBar" useSystemMenuBar="true" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.controllers.MenuBarController">
   <menus>
     <Menu mnemonicParsing="false" text="%Menu.File.Name">
       <items>
-        <MenuItem mnemonicParsing="false" onAction="#handleOpenAction" text="%Menu.Open.Name" fx:id="openMenuItem" />
+        <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#handleOpenAction" text="%Menu.Open.Name" />
         <SeparatorMenuItem mnemonicParsing="false" />
-        <MenuItem mnemonicParsing="false" onAction="#handleCloseAction" text="%Menu.Close.Name" fx:id="closeMenuItem" />
-        <MenuItem mnemonicParsing="false" onAction="#handleExitAction" text="%Menu.Exit.Name" fx:id="exitMenuItem" />
+        <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#handleCloseAction" text="%Menu.Close.Name" />
+        <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#handleExitAction" text="%Menu.Exit.Name" />
       </items>
     </Menu>
     <Menu mnemonicParsing="false" text="%Menu.Edit.Name">
@@ -21,6 +21,20 @@
       <items>
         <MenuItem mnemonicParsing="false" text="%Menu.About.Name" />
       </items>
+    </Menu>
+    <Menu mnemonicParsing="false" text="%Menu.Tools.Name">
+       <items>
+         <Menu mnemonicParsing="false" text="%Menu.Securities.Name">
+           <items>
+             <MenuItem mnemonicParsing="false" text="%Menu.BackgroundSecurityUpdate.Name" onAction="#updateSecurities"/>
+           </items>
+         </Menu>
+            <Menu mnemonicParsing="false" text="%Menu.Currency.Name">
+              <items>
+                <MenuItem  mnemonicParsing="false" text="%Menu.BackgroundCurrencyUpdate.Name" onAction="#updateCurrencies"/>
+              </items>
+            </Menu>
+       </items>
     </Menu>
   </menus>
 </MenuBar>
