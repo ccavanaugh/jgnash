@@ -47,7 +47,7 @@ import javafx.scene.control.TreeTableView;
  *
  * @see com.sun.javafx.scene.control.skin.TreeTableViewSkin#resizeColumnToFitContent(javafx.scene.control.TreeTableColumn, int)
  */
-public abstract class AccountTreeController implements Initializable, AccountTypeFilter, MessageListener {
+public abstract class AccountTreeTableController implements Initializable, AccountTypeFilter, MessageListener {
 
     final private Object lock = new Object();
 

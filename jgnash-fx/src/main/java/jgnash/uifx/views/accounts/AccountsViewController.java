@@ -31,7 +31,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.CommodityFormatTreeTableCell;
 import jgnash.uifx.control.IntegerEditingTreeTableCell;
-import jgnash.uifx.controllers.AccountTreeController;
+import jgnash.uifx.controllers.AccountTreeTableController;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -50,7 +50,7 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
  *
  * @author Craig Cavanaugh
  */
-public class AccountsViewController extends AccountTreeController {
+public class AccountsViewController extends AccountTreeTableController {
 
     private final Preferences preferences = Preferences.userNodeForPackage(AccountsViewController.class);
 
