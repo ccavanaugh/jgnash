@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.StackPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.register.RegisterView">
+    <top>
+        <ToolBar>
+            <items>
+                <Button fx:id="reconcileButton" mnemonicParsing="false" text="%Button.Reconcile"/>
+                <Button fx:id="filterButton" mnemonicParsing="false" onAction="#handleFilterAccountAction" text="%Button.Filter"/>
+                <Button fx:id="zoomButton" mnemonicParsing="false" text="%Button.Zoom"/>
+            </items>
+        </ToolBar>
+    </top>
+    <left>
+        <TreeView fx:id="treeView" prefHeight="200" prefWidth="200" BorderPane.alignment="CENTER">
+        </TreeView>
+
+    </left>
+    <center>
+        <StackPane></StackPane>
+    </center>
+</BorderPane>
