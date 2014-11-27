@@ -115,7 +115,7 @@
             name="Menu.Export.Name"/>
 
     <action id="report-commodities-menu-command"
-            name="Menu.Commodity.Name"/>
+            name="Menu.Securities.Name"/>
 
     <action id="report-account-menu-command"
             name="Menu.Account.Name"/>
@@ -202,8 +202,8 @@
     <!-- Tools menu commands -->
 
     <action id="commodity-menu-command"
-            name="Menu.Commodity.Name"
-            mnemonic="Menu.Commodity.Mnemonic"/>
+            name="Menu.Securities.Name"
+            mnemonic="Menu.Securities.Mnemonic"/>
 
     <action id="currency-menu-command"
             name="Menu.Currency.Name"
