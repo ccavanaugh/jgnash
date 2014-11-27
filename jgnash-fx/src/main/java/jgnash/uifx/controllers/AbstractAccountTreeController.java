@@ -23,6 +23,10 @@ import java.util.ResourceBundle;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageListener;
 import jgnash.uifx.utils.TreeSearch;
 
 import javafx.application.Platform;
@@ -37,7 +41,7 @@ import javafx.scene.control.TreeView;
  *
  * @author Craig Cavanaugh
  */
-public abstract class AbstractAccountTreeController implements Initializable {
+public abstract class AbstractAccountTreeController implements Initializable, MessageListener {
 
     private Account selectedAccount = null;
 
@@ -48,10 +52,14 @@ public abstract class AbstractAccountTreeController implements Initializable {
         getTreeView().setShowRoot(false);
         loadAccountTree();
 
+        MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT);
+
         getTreeView().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<Account>>() {
             @Override
             public void changed(final ObservableValue<? extends TreeItem<Account>> observable, final TreeItem<Account> oldValue, final TreeItem<Account> newValue) {
-                selectedAccount = newValue.getValue();
+                if (newValue != null) {
+                    selectedAccount = newValue.getValue();
+                }
             }
         });
     }
@@ -61,11 +69,15 @@ public abstract class AbstractAccountTreeController implements Initializable {
     }
 
     public void setSelectedAccount(final Account account) {
-       final TreeItem<Account> treeItem = TreeSearch.findTreeItem(getTreeView().getRoot(), account);
+        final TreeItem<Account> treeItem = TreeSearch.findTreeItem(getTreeView().getRoot(), account);
 
         if (treeItem != null) {
             Platform.runLater(() -> getTreeView().getSelectionModel().select(treeItem));
         }
+    }
+
+    public void reload() {
+        Platform.runLater(this::loadAccountTree);
     }
 
     protected void loadAccountTree() {
@@ -93,6 +105,23 @@ public abstract class AbstractAccountTreeController implements Initializable {
             if (child.getChildCount() > 0) {
                 loadChildren(childItem);
             }
+        }
+    }
+
+    @Override
+    public void messagePosted(final Message event) {
+        switch (event.getEvent()) {
+            case ACCOUNT_ADD:
+            case ACCOUNT_MODIFY:
+            case ACCOUNT_REMOVE:
+                reload();
+                break;
+            case FILE_CLOSING:
+                Platform.runLater(() -> getTreeView().setRoot(null));   // dump account references immediately
+                MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT);
+                break;
+            default:
+                break;
         }
     }
 }
