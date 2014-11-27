@@ -26,18 +26,27 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import jgnash.engine.Account;
+import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.RootAccount;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.CommodityFormatTreeTableCell;
 import jgnash.uifx.control.IntegerEditingTreeTableCell;
+import jgnash.uifx.controllers.AccountTypeFilter;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import org.controlsfx.glyphfont.FontAwesome;
@@ -49,9 +58,11 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
  *
  * @author Craig Cavanaugh
  */
-public class AccountsViewController extends AccountTreeTableController {
+public class AccountsViewController implements Initializable, MessageListener {
 
-    private final Preferences preferences = Preferences.userNodeForPackage(AccountsViewController.class);
+    protected ResourceBundle resources;
+
+    private final AccountTypeFilter typeFilter = new AccountTypeFilter(Preferences.userNodeForPackage(AccountsViewController.class));
 
     @FXML
     TreeTableView<Account> treeTableView;
@@ -74,9 +85,10 @@ public class AccountsViewController extends AccountTreeTableController {
     @FXML
     Button zoomButton;
 
+    @FXML
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        super.initialize(location, resources);
+        this.resources = resources;
 
         final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
 
@@ -95,6 +107,14 @@ public class AccountsViewController extends AccountTreeTableController {
         initializeTreeTableView();
 
         Platform.runLater(this::loadAccountTree);
+
+        MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT);
+
+        // Register invalidation listeners to force a reload
+        typeFilter.getAccountTypesVisibleProperty().addListener(observable -> reload());
+        typeFilter.getExpenseTypesVisibleProperty().addListener(observable -> reload());
+        typeFilter.getHiddenTypesVisibleProperty().addListener(observable -> reload());
+        typeFilter.getIncomeTypesVisibleProperty().addListener(observable -> reload());
     }
 
     @SuppressWarnings("unchecked")
@@ -102,30 +122,36 @@ public class AccountsViewController extends AccountTreeTableController {
         treeTableView.setShowRoot(false);   // don't show the root
         treeTableView.setEditable(true);
 
-        TreeTableColumn<Account, Integer> entriesColumn = new TreeTableColumn<>(resources.getString("Column.Entries"));
+        // force resize policy for better default appearance
+        treeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
+
+        final TreeTableColumn<Account, String> nameColumn = new TreeTableColumn<>(resources.getString("Column.Account"));
+        nameColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getName()));
+
+        final TreeTableColumn<Account, Integer> entriesColumn = new TreeTableColumn<>(resources.getString("Column.Entries"));
         entriesColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getTransactionCount()));
 
-        TreeTableColumn<Account, BigDecimal> balanceColumn = new TreeTableColumn<>(resources.getString("Column.Balance"));
+        final TreeTableColumn<Account, BigDecimal> balanceColumn = new TreeTableColumn<>(resources.getString("Column.Balance"));
         balanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getTreeBalance()));
         balanceColumn.setCellFactory(cell -> new CommodityFormatTreeTableCell());
 
-        TreeTableColumn<Account, BigDecimal> reconciledBalanceColumn = new TreeTableColumn<>(resources.getString("Column.ReconciledBalance"));
+        final TreeTableColumn<Account, BigDecimal> reconciledBalanceColumn = new TreeTableColumn<>(resources.getString("Column.ReconciledBalance"));
         reconciledBalanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getReconciledTreeBalance()));
         reconciledBalanceColumn.setCellFactory(cell -> new CommodityFormatTreeTableCell());
 
-        TreeTableColumn<Account, String> currencyColumn = new TreeTableColumn<>(resources.getString("Column.Currency"));
+        final TreeTableColumn<Account, String> currencyColumn = new TreeTableColumn<>(resources.getString("Column.Currency"));
         currencyColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getCurrencyNode().getSymbol()));
 
-        TreeTableColumn<Account, String> typeColumn = new TreeTableColumn<>(resources.getString("Column.Type"));
+        final TreeTableColumn<Account, String> typeColumn = new TreeTableColumn<>(resources.getString("Column.Type"));
         typeColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getAccountType().toString()));
 
-        TreeTableColumn<Account, Integer> codeColumn = new TreeTableColumn<>(resources.getString("Column.Code"));
+        final TreeTableColumn<Account, Integer> codeColumn = new TreeTableColumn<>(resources.getString("Column.Code"));
         codeColumn.setEditable(true);
         codeColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getAccountCode()));
         codeColumn.setCellFactory(param -> new IntegerEditingTreeTableCell());
         codeColumn.setOnEditCommit(event -> updateAccountCode(event.getRowValue().getValue(), event.getNewValue()));
 
-        treeTableView.getColumns().addAll(codeColumn, entriesColumn, balanceColumn, reconciledBalanceColumn, currencyColumn, typeColumn);
+        treeTableView.getColumns().addAll(nameColumn, codeColumn, entriesColumn, balanceColumn, reconciledBalanceColumn, currencyColumn, typeColumn);
 
         installSelectionListener();
     }
@@ -157,19 +183,19 @@ public class AccountsViewController extends AccountTreeTableController {
         });
     }
 
-    @Override
-    protected TreeTableView<Account> getTreeTableView() {
-        return treeTableView;
-    }
+    protected Account getSelectedAccount() {
+        final TreeItem<Account> treeItem = treeTableView.getSelectionModel().getSelectedItem();
 
-    @Override
-    public Preferences getPreferences() {
-        return preferences;
+        if (treeItem != null) {
+            return treeItem.getValue();
+        }
+
+        return null;
     }
 
     @FXML
     public void handleFilterAccountAction(final ActionEvent actionEvent) {
-        StaticAccountsMethods.showAccountFilterDialog(this);
+        StaticAccountsMethods.showAccountFilterDialog(typeFilter);
     }
 
     @FXML
@@ -212,6 +238,57 @@ public class AccountsViewController extends AccountTreeTableController {
             } catch (final CloneNotSupportedException e) {
                 Logger.getLogger(AccountsViewController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
+        }
+    }
+
+    protected void loadAccountTree() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+        if (engine != null) {
+            RootAccount r = engine.getRootAccount();
+
+            final TreeItem<Account> root = new TreeItem<>(r);
+            root.setExpanded(true);
+
+            treeTableView.setRoot(root);
+            loadChildren(root);
+        } else {
+            treeTableView.setRoot(null);
+        }
+    }
+
+    private synchronized void loadChildren(final TreeItem<Account> parentItem) {
+        parentItem.getValue().getChildren(Comparators.getAccountByCode()).stream().filter(typeFilter::isAccountVisible).forEach(child -> {
+            TreeItem<Account> childItem = new TreeItem<>(child);
+            childItem.setExpanded(true);
+
+            parentItem.getChildren().add(childItem);
+
+            if (child.getChildCount() > 0) {
+                loadChildren(childItem);
+            }
+        });
+    }
+
+    public synchronized void reload() {
+        Platform.runLater(this::loadAccountTree);
+    }
+
+    @Override
+    public void messagePosted(final Message event) {
+
+        switch (event.getEvent()) {
+            case ACCOUNT_ADD:
+            case ACCOUNT_MODIFY:
+            case ACCOUNT_REMOVE:
+                reload();
+                break;
+            case FILE_CLOSING:
+                Platform.runLater(() -> treeTableView.setRoot(null));
+                MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT);
+                break;
+            default:
+                break;
         }
     }
 

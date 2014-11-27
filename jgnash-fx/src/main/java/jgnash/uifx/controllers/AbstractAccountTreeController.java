@@ -17,10 +17,8 @@
  */
 package jgnash.uifx.controllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import jgnash.engine.Account;
+import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
@@ -32,24 +30,23 @@ import jgnash.uifx.utils.TreeSearch;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.fxml.Initializable;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 
 /**
- * Abstract Controller handling a {@code TreeView} of {@code Accounts}s
+ * Abstract Controller handling a {@code TreeView} of {@code Account}s
  *
  * @author Craig Cavanaugh
  */
-public abstract class AbstractAccountTreeController implements Initializable, MessageListener {
+public abstract class AbstractAccountTreeController implements MessageListener {
 
     private Account selectedAccount = null;
 
     protected abstract TreeView<Account> getTreeView();
 
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
+    public void initialize() {
         getTreeView().setShowRoot(false);
+
         loadAccountTree();
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT);
@@ -63,6 +60,14 @@ public abstract class AbstractAccountTreeController implements Initializable, Me
             }
         });
     }
+
+    /**
+     * Determines account visibility
+     *
+     * @param account {@code Account} to determine visibility based on filter state
+     * @return {@code true} if the {@code Account} should be visible
+     */
+    abstract protected boolean isAccountVisible(Account account);
 
     public Account getSelectedAccount() {
         return selectedAccount;
@@ -95,9 +100,9 @@ public abstract class AbstractAccountTreeController implements Initializable, Me
     }
 
     private synchronized void loadChildren(final TreeItem<Account> parentItem) {
-        Account parent = parentItem.getValue();
+        final Account parent = parentItem.getValue();
 
-        for (final Account child : parent.getChildren()) {
+        parent.getChildren(Comparators.getAccountByCode()).stream().filter(this::isAccountVisible).forEach(child -> {
             final TreeItem<Account> childItem = new TreeItem<>(child);
             childItem.setExpanded(true);
             parentItem.getChildren().add(childItem);
@@ -105,7 +110,7 @@ public abstract class AbstractAccountTreeController implements Initializable, Me
             if (child.getChildCount() > 0) {
                 loadChildren(childItem);
             }
-        }
+        });
     }
 
     @Override

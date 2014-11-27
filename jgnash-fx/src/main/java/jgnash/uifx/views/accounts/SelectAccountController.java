@@ -24,6 +24,7 @@ import jgnash.engine.Account;
 import jgnash.uifx.controllers.AbstractAccountTreeController;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.TreeView;
@@ -34,7 +35,7 @@ import javafx.stage.Stage;
  *
  * @author Craig Cavanaugh
  */
-public class SelectAccountController extends AbstractAccountTreeController {
+public class SelectAccountController extends AbstractAccountTreeController implements Initializable {
 
     @FXML
     private TreeView<Account> treeView;
@@ -42,7 +43,10 @@ public class SelectAccountController extends AbstractAccountTreeController {
     @FXML
     private ButtonBar buttonBar;
 
-    private Account chosenAccount = null;
+    /**
+     * Overrides the default implementation
+     */
+    private Account selectedAccount = null;
 
     @Override
     protected TreeView<Account> getTreeView() {
@@ -50,8 +54,15 @@ public class SelectAccountController extends AbstractAccountTreeController {
     }
 
     @Override
+    protected boolean isAccountVisible(final Account account) {
+        return true;
+    }
+
+    @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        super.initialize(location, resources);
+        initialize();
+
+        getTreeView().setShowRoot(true);
 
         // Create and add the ok and cancel buttons to the button bar
         final Button okButton = new Button(resources.getString("Button.Ok"));
@@ -63,18 +74,18 @@ public class SelectAccountController extends AbstractAccountTreeController {
         buttonBar.getButtons().addAll(okButton, cancelButton);
 
         okButton.setOnAction(event -> {
-            chosenAccount = super.getSelectedAccount();
+            selectedAccount = super.getSelectedAccount();
             ((Stage) okButton.getScene().getWindow()).close();
         });
 
         cancelButton.setOnAction(event -> {
-            chosenAccount = null;  // clear selections
+            selectedAccount = null;  // clear selections
             ((Stage) cancelButton.getScene().getWindow()).close();
         });
     }
 
     @Override
     public Account getSelectedAccount() {
-        return chosenAccount;
+        return selectedAccount;
     }
 }

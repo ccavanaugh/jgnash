@@ -42,11 +42,7 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
  *
  * @author Craig Cavanaugh
  */
-public class RegisterView implements Initializable, AccountTypeFilter, MessageListener {
-
-    final private Preferences preferences = Preferences.userNodeForPackage(RegisterView.class);
-
-    private AbstractAccountTreeController accountTreeController;
+public class RegisterView extends AbstractAccountTreeController implements Initializable, MessageListener {
 
     @FXML
     public Button reconcileButton;
@@ -60,33 +56,33 @@ public class RegisterView implements Initializable, AccountTypeFilter, MessageLi
     @FXML
     public TreeView<Account> treeView;
 
-
-    @Override
-    public Preferences getPreferences() {
-        return preferences;
-    }
+    private final AccountTypeFilter typeFilter = new AccountTypeFilter(Preferences.userNodeForPackage(RegisterView.class));
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
+        initialize();
+
         final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
-
-        accountTreeController = new AbstractAccountTreeController() {
-            @Override
-            protected TreeView<Account> getTreeView() {
-                return treeView;
-            }
-        };
-
-        accountTreeController.initialize(location, resources);
-
-        accountTypesVisible.addListener(observable -> accountTreeController.reload());
-        expenseTypesVisible.addListener(observable -> accountTreeController.reload());
-        hiddenTypesVisible.addListener(observable -> accountTreeController.reload());
-        incomeTypesVisible.addListener(observable -> accountTreeController.reload());
 
         reconcileButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.ADJUST));
         filterButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.FILTER));
         zoomButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.EXTERNAL_LINK_SQUARE));
+
+        // Register invalidation listeners to force a reload
+        typeFilter.getAccountTypesVisibleProperty().addListener(observable -> reload());
+        typeFilter.getExpenseTypesVisibleProperty().addListener(observable -> reload());
+        typeFilter.getHiddenTypesVisibleProperty().addListener(observable -> reload());
+        typeFilter.getIncomeTypesVisibleProperty().addListener(observable -> reload());
+    }
+
+    @Override
+    protected TreeView<Account> getTreeView() {
+        return treeView;
+    }
+
+    @Override
+    protected boolean isAccountVisible(final Account account) {
+        return typeFilter.isAccountVisible(account);
     }
 
     @Override
@@ -96,6 +92,6 @@ public class RegisterView implements Initializable, AccountTypeFilter, MessageLi
 
     @FXML
     public void handleFilterAccountAction(final ActionEvent actionEvent) {
-        StaticAccountsMethods.showAccountFilterDialog(this);
+        StaticAccountsMethods.showAccountFilterDialog(typeFilter);
     }
 }
