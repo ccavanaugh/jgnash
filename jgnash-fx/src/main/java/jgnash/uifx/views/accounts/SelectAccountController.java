@@ -23,6 +23,8 @@ import java.util.ResourceBundle;
 import jgnash.engine.Account;
 import jgnash.uifx.controllers.AbstractAccountTreeController;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -73,18 +75,21 @@ public class SelectAccountController extends AbstractAccountTreeController imple
 
         buttonBar.getButtons().addAll(okButton, cancelButton);
 
-        okButton.setOnAction(event -> {
-            selectedAccount = super.getSelectedAccount();
-            ((Stage) okButton.getScene().getWindow()).close();
-        });
+        okButton.setOnAction(event -> ((Stage) okButton.getScene().getWindow()).close());
 
         cancelButton.setOnAction(event -> {
             selectedAccount = null;  // clear selections
             ((Stage) cancelButton.getScene().getWindow()).close();
         });
+
+        getSelectedAccountProperty().addListener(new ChangeListener<Account>() {
+            @Override
+            public void changed(final ObservableValue<? extends Account> observable, final Account oldValue, final Account newValue) {
+                selectedAccount = newValue;
+            }
+        });
     }
 
-    @Override
     public Account getSelectedAccount() {
         return selectedAccount;
     }

@@ -28,6 +28,8 @@ import jgnash.engine.message.MessageListener;
 import jgnash.uifx.utils.TreeSearch;
 
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TreeItem;
@@ -40,9 +42,17 @@ import javafx.scene.control.TreeView;
  */
 public abstract class AbstractAccountTreeController implements MessageListener {
 
-    private Account selectedAccount = null;
+    private ReadOnlyObjectWrapper<Account> selectedAccountProperty = new ReadOnlyObjectWrapper<>();
 
     protected abstract TreeView<Account> getTreeView();
+
+    /**
+     * Determines account visibility
+     *
+     * @param account {@code Account} to determine visibility based on filter state
+     * @return {@code true} if the {@code Account} should be visible
+     */
+    abstract protected boolean isAccountVisible(Account account);
 
     public void initialize() {
         getTreeView().setShowRoot(false);
@@ -55,22 +65,14 @@ public abstract class AbstractAccountTreeController implements MessageListener {
             @Override
             public void changed(final ObservableValue<? extends TreeItem<Account>> observable, final TreeItem<Account> oldValue, final TreeItem<Account> newValue) {
                 if (newValue != null) {
-                    selectedAccount = newValue.getValue();
+                    selectedAccountProperty.setValue(newValue.getValue());
                 }
             }
         });
     }
 
-    /**
-     * Determines account visibility
-     *
-     * @param account {@code Account} to determine visibility based on filter state
-     * @return {@code true} if the {@code Account} should be visible
-     */
-    abstract protected boolean isAccountVisible(Account account);
-
-    public Account getSelectedAccount() {
-        return selectedAccount;
+    public ReadOnlyObjectProperty<Account> getSelectedAccountProperty() {
+        return selectedAccountProperty.getReadOnlyProperty();
     }
 
     public void setSelectedAccount(final Account account) {

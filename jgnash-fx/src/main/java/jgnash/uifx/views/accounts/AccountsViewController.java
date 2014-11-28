@@ -218,6 +218,7 @@ public class AccountsViewController implements Initializable, MessageListener {
         }
     }
 
+    // TODO replace with an ObjectProperty
     protected Account getSelectedAccount() {
         final TreeItem<Account> treeItem = treeTableView.getSelectionModel().getSelectedItem();
 

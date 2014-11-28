@@ -22,45 +22,61 @@ import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import jgnash.engine.Account;
-import jgnash.engine.message.Message;
-import jgnash.engine.message.MessageListener;
 import jgnash.uifx.controllers.AbstractAccountTreeController;
 import jgnash.uifx.controllers.AccountTypeFilter;
 import jgnash.uifx.views.accounts.StaticAccountsMethods;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.StackPane;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 /**
- * Register view
+ * Register accountTreeController
  *
  * @author Craig Cavanaugh
  */
-public class RegisterView extends AbstractAccountTreeController implements Initializable, MessageListener {
+public class RegisterView implements Initializable {
 
     @FXML
-    public Button reconcileButton;
+    private Button reconcileButton;
 
     @FXML
-    public Button filterButton;
+    private Button filterButton;
 
     @FXML
-    public Button zoomButton;
+    private Button zoomButton;
 
     @FXML
-    public TreeView<Account> treeView;
+    private TreeView<Account> treeView;
+
+    @FXML
+    private StackPane registerPane;
 
     private final AccountTypeFilter typeFilter = new AccountTypeFilter(Preferences.userNodeForPackage(RegisterView.class));
 
+    private final AbstractAccountTreeController accountTreeController = new AbstractAccountTreeController() {
+        @Override
+        protected TreeView<Account> getTreeView() {
+            return treeView;
+        }
+
+        @Override
+        protected boolean isAccountVisible(Account account) {
+            return typeFilter.isAccountVisible(account);
+        }
+    };
+
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        initialize();
+        accountTreeController.initialize(); // must initialize the account controller
 
         final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
 
@@ -68,26 +84,20 @@ public class RegisterView extends AbstractAccountTreeController implements Initi
         filterButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.FILTER));
         zoomButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.EXTERNAL_LINK_SQUARE));
 
-        // Register invalidation listeners to force a reload
-        typeFilter.getAccountTypesVisibleProperty().addListener(observable -> reload());
-        typeFilter.getExpenseTypesVisibleProperty().addListener(observable -> reload());
-        typeFilter.getHiddenTypesVisibleProperty().addListener(observable -> reload());
-        typeFilter.getIncomeTypesVisibleProperty().addListener(observable -> reload());
-    }
+        // Filter changes should force a reload of the tree
+        typeFilter.getAccountTypesVisibleProperty().addListener(observable -> accountTreeController.reload());
+        typeFilter.getExpenseTypesVisibleProperty().addListener(observable -> accountTreeController.reload());
+        typeFilter.getHiddenTypesVisibleProperty().addListener(observable -> accountTreeController.reload());
+        typeFilter.getIncomeTypesVisibleProperty().addListener(observable -> accountTreeController.reload());
 
-    @Override
-    protected TreeView<Account> getTreeView() {
-        return treeView;
-    }
-
-    @Override
-    protected boolean isAccountVisible(final Account account) {
-        return typeFilter.isAccountVisible(account);
-    }
-
-    @Override
-    public void messagePosted(final Message event) {
-
+        accountTreeController.getSelectedAccountProperty().addListener(new ChangeListener<Account>() {
+            @Override
+            public void changed(ObservableValue<? extends Account> observable, Account oldValue, Account newValue) {
+                if (newValue != null) {
+                    System.out.println(newValue.getName());   // Display the account
+                }
+            }
+        });
     }
 
     @FXML

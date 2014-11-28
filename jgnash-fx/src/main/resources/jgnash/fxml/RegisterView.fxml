@@ -23,8 +23,7 @@
                 <StackPane>
                     <TreeView fx:id="treeView" prefWidth="150" BorderPane.alignment="CENTER"/>
                 </StackPane>
-                <StackPane>
-                </StackPane>
+                <StackPane fx:id="registerPane"/>
             </items>
         </SplitPane>
     </center>
