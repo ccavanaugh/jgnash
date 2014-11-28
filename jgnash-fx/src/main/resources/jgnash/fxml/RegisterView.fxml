@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.SplitPane?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.register.RegisterView">
     <top>
@@ -16,12 +17,15 @@
             </items>
         </ToolBar>
     </top>
-    <left>
-        <TreeView fx:id="treeView" prefHeight="200" prefWidth="200" BorderPane.alignment="CENTER">
-        </TreeView>
-
-    </left>
     <center>
-        <StackPane></StackPane>
+        <SplitPane orientation="HORIZONTAL">
+            <items>
+                <StackPane>
+                    <TreeView fx:id="treeView" prefWidth="150" BorderPane.alignment="CENTER"/>
+                </StackPane>
+                <StackPane>
+                </StackPane>
+            </items>
+        </SplitPane>
     </center>
 </BorderPane>
