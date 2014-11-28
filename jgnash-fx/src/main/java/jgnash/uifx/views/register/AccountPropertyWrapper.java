@@ -28,12 +28,15 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.text.CommodityFormat;
-import jgnash.util.NotNull;
-import jgnash.util.Nullable;
+import jgnash.util.DefaultDaemonThreadFactory;
 
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 
 /**
@@ -43,34 +46,42 @@ import javafx.concurrent.Task;
  */
 class AccountPropertyWrapper implements MessageListener {
 
-    final static ExecutorService executorService = Executors.newSingleThreadExecutor();
+    final static ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
-    private final Object lock = new Object();
-
-    @Nullable private Account account = null;
+    private final Object numberFormatLock = new Object();
 
     private ReadOnlyStringWrapper reconciledAmountProperty = new ReadOnlyStringWrapper();
     private ReadOnlyStringWrapper accountBalanceProperty = new ReadOnlyStringWrapper();
     private ReadOnlyStringWrapper accountNameProperty = new ReadOnlyStringWrapper();
+    private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
     private NumberFormat numberFormat;  // not thread safe
 
     public AccountPropertyWrapper() {
         MessageBus.getInstance().registerListener(this, MessageChannel.ACCOUNT);
-    }
 
-    void setAccount(@NotNull final Account account) {
-        this.account = account;
-        numberFormat = CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
+        accountProperty.addListener(new ChangeListener<Account>() {
+            @Override
+            public void changed(final ObservableValue<? extends Account> observable, final Account oldValue, final Account newValue) {
+                if (newValue != null) {
 
-        updateProperties();
+                    // Account changed, update the number format
+                    synchronized (numberFormatLock) {
+                        numberFormat = CommodityFormat.getFullNumberFormat(newValue.getCurrencyNode());
+                    }
+
+                    // Update account properties
+                    updateProperties();
+                }
+            }
+        });
     }
 
     @Override
     public void messagePosted(final Message event) {
         switch (event.getEvent()) {
             case ACCOUNT_MODIFY:
-                if (event.getObject(MessageProperty.ACCOUNT).equals(account)) {
+                if (event.getObject(MessageProperty.ACCOUNT).equals(accountProperty.get())) {
                     updateProperties();
                 }
             default:
@@ -78,17 +89,16 @@ class AccountPropertyWrapper implements MessageListener {
     }
 
     private void updateProperties() {
-
-        if (account != null) {
-            Platform.runLater(() -> accountNameProperty.setValue(account.getName()));
+        if (accountProperty.get() != null) {
+            Platform.runLater(() -> accountNameProperty.setValue(accountProperty.get().getName()));
         }
 
         final Task<Void> balanceTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                if (account != null) {
-                    synchronized (lock) {
-                        Platform.runLater(() -> accountBalanceProperty.setValue(numberFormat.format(account.getBalance())));
+                if (accountProperty.get() != null) {
+                    synchronized (numberFormatLock) {
+                        Platform.runLater(() -> accountBalanceProperty.setValue(numberFormat.format(accountProperty.get().getBalance())));
                     }
                 }
                 return null;
@@ -98,9 +108,9 @@ class AccountPropertyWrapper implements MessageListener {
         final Task<Void> reconciledBalanceTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                if (account != null) {
-                    synchronized (lock) {
-                        Platform.runLater(() -> reconciledAmountProperty.setValue(numberFormat.format(account.getReconciledBalance())));
+                if (accountProperty.get() != null) {
+                    synchronized (numberFormatLock) {
+                        Platform.runLater(() -> reconciledAmountProperty.setValue(numberFormat.format(accountProperty.get().getReconciledBalance())));
 
                     }
                 }
@@ -122,5 +132,9 @@ class AccountPropertyWrapper implements MessageListener {
 
     public ReadOnlyStringProperty getAccountNameProperty() {
         return accountNameProperty.getReadOnlyProperty();
+    }
+
+    public ObjectProperty<Account> getAccountProperty() {
+        return accountProperty;
     }
 }

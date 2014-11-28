@@ -36,9 +36,9 @@ import javafx.scene.layout.GridPane;
  */
 public class RegisterTablePane extends BorderPane {
 
-    private TableView<Transaction> tableView = new TableView<>();
+    private final TableView<Transaction> tableView = new TableView<>();
 
-    private AccountPropertyWrapper accountPropertyWrapper = new AccountPropertyWrapper();
+    private final AccountPropertyWrapper accountPropertyWrapper = new AccountPropertyWrapper();
 
     /**
      * Active account for the pane
@@ -68,22 +68,20 @@ public class RegisterTablePane extends BorderPane {
 
         infoPane.add(reconciledAmountLabel, 4, 0);
 
-        // Update the account
-        accountProperty.addListener((observable, oldValue, newValue) -> updateAccount());
+        // Bind the account property
+        getAccountPropertyWrapper().getAccountProperty().bind(accountProperty);
 
         // Bind label test to the account property wrapper
-        accountNameLabel.textProperty().bind(accountPropertyWrapper.getAccountNameProperty());
-        balanceAmountLabel.textProperty().bind(accountPropertyWrapper.getAccountBalanceProperty());
-        reconciledAmountLabel.textProperty().bind(accountPropertyWrapper.getReconciledAmountProperty());
+        accountNameLabel.textProperty().bind(getAccountPropertyWrapper().getAccountNameProperty());
+        balanceAmountLabel.textProperty().bind(getAccountPropertyWrapper().getAccountBalanceProperty());
+        reconciledAmountLabel.textProperty().bind(getAccountPropertyWrapper().getReconciledAmountProperty());
     }
 
     ObjectProperty<Account> getAccountProperty() {
         return accountProperty;
     }
 
-    private void updateAccount() {
-        final Account account = accountProperty.getValue();
-
-        accountPropertyWrapper.setAccount(account);
+    AccountPropertyWrapper getAccountPropertyWrapper() {
+        return accountPropertyWrapper;
     }
 }
