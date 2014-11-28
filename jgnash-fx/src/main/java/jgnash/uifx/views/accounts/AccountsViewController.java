@@ -38,6 +38,7 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.CommodityFormatTreeTableCell;
 import jgnash.uifx.control.IntegerEditingTreeTableCell;
 import jgnash.uifx.controllers.AccountTypeFilter;
+import jgnash.util.EncodeDecode;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -60,9 +61,13 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
  */
 public class AccountsViewController implements Initializable, MessageListener {
 
-    protected ResourceBundle resources;
+    private final static String COLUMN_VISIBILITY = "ColumnVisibility";
 
-    private final AccountTypeFilter typeFilter = new AccountTypeFilter(Preferences.userNodeForPackage(AccountsViewController.class));
+    private final Preferences preferences = Preferences.userNodeForPackage(AccountsViewController.class);
+
+    private final AccountTypeFilter typeFilter = new AccountTypeFilter(preferences);
+
+    protected ResourceBundle resources;
 
     @FXML
     TreeTableView<Account> treeTableView;
@@ -85,7 +90,6 @@ public class AccountsViewController implements Initializable, MessageListener {
     @FXML
     Button zoomButton;
 
-    @FXML
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         this.resources = resources;
@@ -120,7 +124,8 @@ public class AccountsViewController implements Initializable, MessageListener {
     @SuppressWarnings("unchecked")
     protected void initializeTreeTableView() {
         treeTableView.setShowRoot(false);   // don't show the root
-        treeTableView.setEditable(true);
+        treeTableView.setEditable(true);    // required for editable columns
+        treeTableView.setTableMenuButtonVisible(true);
 
         // force resize policy for better default appearance
         treeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
@@ -153,10 +158,12 @@ public class AccountsViewController implements Initializable, MessageListener {
 
         treeTableView.getColumns().addAll(nameColumn, codeColumn, entriesColumn, balanceColumn, reconciledBalanceColumn, currencyColumn, typeColumn);
 
-        installSelectionListener();
+        restoreColumnVisibility();
+
+        installListeners();
     }
 
-    private void installSelectionListener() {
+    private void installListeners() {
         treeTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 updateButtonStates(newValue.getValue());
@@ -164,6 +171,10 @@ public class AccountsViewController implements Initializable, MessageListener {
                 updateButtonStates(null);
             }
         });
+
+        for (final TreeTableColumn<?,?> treeTableColumn : treeTableView.getColumns()) {
+            treeTableColumn.visibleProperty().addListener((observable, oldValue, newValue) -> saveColumnVisibility());
+        }
     }
 
     private void updateButtonStates(final Account account) {
@@ -181,6 +192,30 @@ public class AccountsViewController implements Initializable, MessageListener {
             modifyButton.setDisable(account == null);
             zoomButton.setDisable(account == null);
         });
+    }
+
+    private void saveColumnVisibility() {
+        final boolean[] columnVisibility = new boolean[treeTableView.getColumns().size()];
+
+        for (int i = 0; i < columnVisibility.length; i++) {
+            columnVisibility[i] = treeTableView.getColumns().get(i).isVisible();
+        }
+
+        preferences.put(COLUMN_VISIBILITY, EncodeDecode.encodeBooleanArray(columnVisibility));
+    }
+
+    private void restoreColumnVisibility() {
+        final String result = preferences.get(COLUMN_VISIBILITY, null);
+
+        if (result != null) {
+            boolean[] columnVisibility = EncodeDecode.decodeBooleanArray(result);
+
+            if (columnVisibility.length == treeTableView.getColumns().size()) {
+                for (int i = 0; i < columnVisibility.length; i++) {
+                    treeTableView.getColumns().get(i).setVisible(columnVisibility[i]);
+                }
+            }
+        }
     }
 
     protected Account getSelectedAccount() {
