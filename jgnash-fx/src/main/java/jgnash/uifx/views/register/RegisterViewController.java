@@ -17,8 +17,11 @@
  */
 package jgnash.uifx.views.register;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import jgnash.engine.Account;
@@ -26,10 +29,9 @@ import jgnash.uifx.controllers.AbstractAccountTreeController;
 import jgnash.uifx.controllers.AccountTypeFilter;
 import jgnash.uifx.views.accounts.StaticAccountsMethods;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeView;
@@ -39,11 +41,11 @@ import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 /**
- * Register accountTreeController
+ * Top level view for account registers
  *
  * @author Craig Cavanaugh
  */
-public class RegisterView implements Initializable {
+public class RegisterViewController implements Initializable {
 
     @FXML
     private Button reconcileButton;
@@ -60,7 +62,9 @@ public class RegisterView implements Initializable {
     @FXML
     private StackPane registerPane;
 
-    private final AccountTypeFilter typeFilter = new AccountTypeFilter(Preferences.userNodeForPackage(RegisterView.class));
+    private final AccountTypeFilter typeFilter = new AccountTypeFilter(Preferences.userNodeForPackage(getClass()));
+
+    private RegisterPaneController registerPaneController;
 
     private final AbstractAccountTreeController accountTreeController = new AbstractAccountTreeController() {
         @Override
@@ -84,20 +88,23 @@ public class RegisterView implements Initializable {
         filterButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.FILTER));
         zoomButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.EXTERNAL_LINK_SQUARE));
 
+        // Load and add the register pane
+        try {
+            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RegisterPane.fxml"), resources);
+            registerPane.getChildren().add(fxmlLoader.load());
+            registerPaneController = fxmlLoader.getController();
+        } catch (final IOException e) {
+            Logger.getLogger(RegisterViewController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
+
         // Filter changes should force a reload of the tree
         typeFilter.getAccountTypesVisibleProperty().addListener(observable -> accountTreeController.reload());
         typeFilter.getExpenseTypesVisibleProperty().addListener(observable -> accountTreeController.reload());
         typeFilter.getHiddenTypesVisibleProperty().addListener(observable -> accountTreeController.reload());
         typeFilter.getIncomeTypesVisibleProperty().addListener(observable -> accountTreeController.reload());
 
-        accountTreeController.getSelectedAccountProperty().addListener(new ChangeListener<Account>() {
-            @Override
-            public void changed(ObservableValue<? extends Account> observable, Account oldValue, Account newValue) {
-                if (newValue != null) {
-                    System.out.println(newValue.getName());   // Display the account
-                }
-            }
-        });
+        // Bind the account selection property to the registerPane controller
+        registerPaneController.getAccountProperty().bind(accountTreeController.getSelectedAccountProperty());
     }
 
     @FXML
