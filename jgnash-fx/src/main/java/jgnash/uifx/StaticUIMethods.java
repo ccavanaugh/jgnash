@@ -23,6 +23,7 @@ import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import jgnash.MainFX;
 import jgnash.uifx.utils.StageUtils;
@@ -81,7 +82,7 @@ public class StaticUIMethods {
         alert.initStyle(StageStyle.UTILITY);
         alert.getDialogPane().getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
 
-        alert.showAndWait();
+        Platform.runLater(alert::showAndWait);
     }
 
     public static void displayMessage(final String message) {
@@ -93,7 +94,7 @@ public class StaticUIMethods {
         alert.initStyle(StageStyle.UTILITY);
         alert.getDialogPane().getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
 
-        alert.showAndWait();
+        Platform.runLater(alert::showAndWait);
     }
 
     public static void displayException(final Throwable exception) {
@@ -127,7 +128,7 @@ public class StaticUIMethods {
         alert.getDialogPane().setExpandableContent(expandableContent);
         alert.getDialogPane().getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
 
-        alert.showAndWait();
+        Platform.runLater(alert::showAndWait);
     }
 
     public static void displayTaskProgress(final Task<?> task) {
