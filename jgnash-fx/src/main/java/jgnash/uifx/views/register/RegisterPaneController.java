@@ -17,14 +17,18 @@
  */
 package jgnash.uifx.views.register;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import jgnash.engine.Account;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
@@ -69,11 +73,16 @@ public class RegisterPaneController implements Initializable {
 
         buttonBar.getButtons().addAll(newButton, duplicateButton, jumpButton, deleteButton);
 
-        final RegisterTablePane registerTablePane = new RegisterTablePane();
-        register.getChildren().addAll(registerTablePane);
+        try {
+            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RegisterTable.fxml"), resources);
+            register.getChildren().add(fxmlLoader.load());
+            RegisterTableController registerTablePane = fxmlLoader.getController();
 
-        // Bind  the register pane to this account property
-        registerTablePane.getAccountProperty().bind(accountProperty);
+            // Bind  the register pane to this account property
+            registerTablePane.getAccountProperty().bind(accountProperty);
+        } catch (final IOException e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
     }
 
     ObjectProperty<Account> getAccountProperty() {

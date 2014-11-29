@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.register.RegisterTableController" styleClass="form">
+   <top>
+      <GridPane hgap="10.0" BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" />
+            <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+            <ColumnConstraints halignment="LEFT" hgrow="NEVER" />
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+            <ColumnConstraints halignment="LEFT" hgrow="NEVER" />
+        </columnConstraints>
+         <children>
+           <Label fx:id="accountNameLabel" GridPane.hgrow="ALWAYS" />
+            <Label text="%Label.Balance" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" />
+            <Label fx:id="balanceLabel" GridPane.columnIndex="3" GridPane.hgrow="NEVER" />
+            <Label text="%Label.ReconciledBalance" GridPane.columnIndex="4" />
+            <Label fx:id="reconciledBalanceLabel" GridPane.columnIndex="5" />
+         </children>
+      </GridPane>
+   </top>
+   <center>
+      <TableView fx:id="tableView"  BorderPane.alignment="CENTER" />
+   </center>
+</BorderPane>
