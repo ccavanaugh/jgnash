@@ -20,16 +20,22 @@ package jgnash.uifx.views.register;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.uifx.controllers.AbstractAccountTreeController;
 import jgnash.uifx.controllers.AccountTypeFilter;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.views.accounts.StaticAccountsMethods;
+import jgnash.util.DefaultDaemonThreadFactory;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -52,7 +58,10 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
  */
 public class RegisterViewController implements Initializable {
 
+    final static ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
+
     private static final String DIVIDER_POSITION = "DividerPosition";
+    private static final String LAST_ACCOUNT = "LastAccount";
 
     private static final double DEFAULT_DIVIDER_POSITION = 0.2;
 
@@ -135,11 +144,36 @@ public class RegisterViewController implements Initializable {
         // Restore divider location
         splitPane.setDividerPosition(0, preferences.getDouble(DIVIDER_POSITION, DEFAULT_DIVIDER_POSITION));
 
-        // Remember divider location
+        restoreLastSelectedAccount();
+
+        // Remember the last divider location
         splitPane.getDividers().get(0).positionProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue) {
-                preferences.putDouble(DIVIDER_POSITION, (Double)newValue);
+                executorService.submit(() -> preferences.putDouble(DIVIDER_POSITION, (Double) newValue));
+            }
+        });
+
+        // Remember the last account selection
+        registerPaneController.getAccountProperty().addListener(new ChangeListener<Account>() {
+            @Override
+            public void changed(final ObservableValue<? extends Account> observable, final Account oldValue, final Account newValue) {
+                executorService.submit(() -> preferences.put(LAST_ACCOUNT, newValue.getUuid()));
+            }
+        });
+    }
+
+    private void restoreLastSelectedAccount() {
+        executorService.submit(() -> {
+            final String lastAccountUuid = preferences.get(LAST_ACCOUNT, null);
+            if (lastAccountUuid != null) {
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                if (engine != null) {
+                    final Account account = engine.getAccountByUuid(lastAccountUuid);
+                    if (account != null) {
+                        Platform.runLater(() -> accountTreeController.setSelectedAccount(account));
+                    }
+                }
             }
         });
     }
