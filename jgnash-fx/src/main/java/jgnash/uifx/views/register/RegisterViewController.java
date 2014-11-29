@@ -35,7 +35,6 @@ import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.views.accounts.StaticAccountsMethods;
 import jgnash.util.DefaultDaemonThreadFactory;
 
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -171,7 +170,7 @@ public class RegisterViewController implements Initializable {
                 if (engine != null) {
                     final Account account = engine.getAccountByUuid(lastAccountUuid);
                     if (account != null) {
-                        Platform.runLater(() -> accountTreeController.setSelectedAccount(account));
+                        accountTreeController.setSelectedAccount(account);
                     }
                 }
             }
