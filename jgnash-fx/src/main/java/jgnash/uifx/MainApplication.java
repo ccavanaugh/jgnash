@@ -41,6 +41,7 @@ import jgnash.uifx.control.BusyPane;
 import jgnash.uifx.control.TabViewPane;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.utils.StageUtils;
+import jgnash.uifx.views.register.RegisterTableController;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
@@ -148,7 +149,7 @@ public class MainApplication extends Application implements MessageListener {
     private void addViews() {
         try {
             Pane accountsPane = FXMLLoader.load(MainFX.class.getResource("fxml/AccountsView.fxml"), ResourceUtils.getBundle());
-            Pane registerPane = FXMLLoader.load(MainFX.class.getResource("fxml/RegisterView.fxml"), ResourceUtils.getBundle());
+            Pane registerPane = FXMLLoader.load(RegisterTableController.class.getResource("RegisterView.fxml"), ResourceUtils.getBundle());
 
             tabViewPane.addTab(accountsPane, rb.getString("Tab.Accounts"));
             tabViewPane.addTab(registerPane, rb.getString("Tab.Register"));

@@ -30,11 +30,14 @@ import jgnash.uifx.controllers.AccountTypeFilter;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.views.accounts.StaticAccountsMethods;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.StackPane;
@@ -48,6 +51,15 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
  * @author Craig Cavanaugh
  */
 public class RegisterViewController implements Initializable {
+
+    private static final String DIVIDER_POSITION = "DividerPosition";
+
+    private static final double DEFAULT_DIVIDER_POSITION = 0.2;
+
+    private final Preferences preferences = Preferences.userNodeForPackage(RegisterViewController.class);
+
+    @FXML
+    public SplitPane splitPane;
 
     @FXML
     private Button reconcileButton;
@@ -119,6 +131,17 @@ public class RegisterViewController implements Initializable {
 
         // Bind the account selection property to the registerPane controller
         registerPaneController.getAccountProperty().bind(accountTreeController.getSelectedAccountProperty());
+
+        // Restore divider location
+        splitPane.setDividerPosition(0, preferences.getDouble(DIVIDER_POSITION, DEFAULT_DIVIDER_POSITION));
+
+        // Remember divider location
+        splitPane.getDividers().get(0).positionProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue) {
+                preferences.putDouble(DIVIDER_POSITION, (Double)newValue);
+            }
+        });
     }
 
     @FXML
