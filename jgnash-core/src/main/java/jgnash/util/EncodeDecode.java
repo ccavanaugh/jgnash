@@ -19,9 +19,8 @@ package jgnash.util;
 
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Locale;
+import java.text.DecimalFormat;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -100,7 +99,7 @@ public class EncodeDecode {
         return rectangle;
     }
 
-    public static  Rectangle2D.Double decodeRectangle2D(final String bounds) {
+    public static Rectangle2D.Double decodeRectangle2D(final String bounds) {
         if (bounds == null) {
             return null;
         }
@@ -151,6 +150,43 @@ public class EncodeDecode {
                 return Locale.getDefault();
             }
         }
+    }
+
+    /**
+     * Encodes a double array as a comma separated {@code String}. Values will be rounded to 2 decimal places
+     *
+     * @param doubleArray array of doubles to encode
+     * @return resultant {@code String}
+     */
+    public static String encodeDoubleArray(final double[] doubleArray) {
+        final DecimalFormat df = new DecimalFormat("#.##");
+
+        final StringBuilder result = new StringBuilder();
+
+        for (final double value : doubleArray) {
+            result.append(df.format(value));
+            result.append(COMMA_DELIMITER);
+        }
+
+        return result.length() > 0 ? result.substring(0, result.length() - 1) : null;
+    }
+
+    /**
+     * Decodes a comma separated list of {@code double} into a primitive {@code double} array
+     *
+     * @param string Comma separated string
+     * @return primitive {@code double} array
+     */
+    public static double[] decodeDoubleArray(@NotNull final String string) {
+        String[] array = COMMA_DELIMITER_PATTERN.split(string);
+
+        double[] doubles = new double[array.length];
+
+        for (int i = 0; i < doubles.length; i++) {
+            doubles[i] = Double.parseDouble(array[i]);
+        }
+
+        return doubles;
     }
 
     /**
