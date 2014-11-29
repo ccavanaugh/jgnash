@@ -27,6 +27,7 @@ import java.util.prefs.Preferences;
 import jgnash.engine.Account;
 import jgnash.uifx.controllers.AbstractAccountTreeController;
 import jgnash.uifx.controllers.AccountTypeFilter;
+import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.views.accounts.StaticAccountsMethods;
 
 import javafx.event.ActionEvent;
@@ -34,6 +35,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.StackPane;
 import org.controlsfx.glyphfont.FontAwesome;
@@ -76,6 +78,18 @@ public class RegisterViewController implements Initializable {
         protected boolean isAccountVisible(Account account) {
             return typeFilter.isAccountVisible(account);
         }
+
+        @Override
+        protected boolean isAccountSelectable(final Account account) {
+            return !account.isPlaceHolder();
+        }
+
+        public void initialize() {
+            super.initialize();
+
+            // Install a cell that disables selection if the account is a placeholder
+            getTreeView().setCellFactory(param -> new DisabledTreeCell());
+        }
     };
 
     @Override
@@ -110,5 +124,22 @@ public class RegisterViewController implements Initializable {
     @FXML
     public void handleFilterAccountAction(final ActionEvent actionEvent) {
         StaticAccountsMethods.showAccountFilterDialog(typeFilter);
+    }
+
+    private static final class DisabledTreeCell extends TreeCell<Account> {
+        @Override
+        public void updateItem(final Account account, final boolean empty) {
+            super.updateItem(account, empty);   // required
+
+            if (!empty && account != null) {
+                setText(account.getName());
+
+                if (account.isPlaceHolder()) {
+                    setId(StyleClass.DISABLED_CELL_ID);
+                } else {
+                    setId(StyleClass.ENABLED_CELL_ID);
+                }
+            }
+        }
     }
 }

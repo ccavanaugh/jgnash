@@ -336,10 +336,10 @@ public class AccountPropertiesController implements Initializable {
                 setText(item.toString());
 
                 if (baseAccount != null && baseAccount.getAccountType().getAccountGroup() != item.getAccountGroup()) {
-                    getStyleClass().add(StyleClass.DISABLED_CELL_STYLE);
+                    setId(StyleClass.DISABLED_CELL_ID);
                     setDisable(true);
                 } else {
-                    getStyleClass().add(StyleClass.ENABLED_CELL_STYLE);
+                    setId(StyleClass.ENABLED_CELL_ID);
                     setDisable(false);
                 }
             }

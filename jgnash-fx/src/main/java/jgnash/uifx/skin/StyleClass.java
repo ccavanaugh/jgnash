@@ -27,7 +27,7 @@ public class StyleClass {
 
     public static final String LIST_BUTTON_STYLE = "list-button";
 
-    public static final String DISABLED_CELL_STYLE = "disabled-cell";
+    public static final String DISABLED_CELL_ID = "disabled-cell";
 
-    public static final String ENABLED_CELL_STYLE = "enabled-cell";
+    public static final String ENABLED_CELL_ID = "enabled-cell";
 }

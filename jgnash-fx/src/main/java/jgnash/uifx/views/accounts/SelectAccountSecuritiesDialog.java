@@ -319,10 +319,10 @@ class SelectAccountSecuritiesDialog {
 
             if (!empty) {
                 if (item.isLocked()) {
-                    setStyle("-fx-opacity: 0.4;");  // does not work correctly with getStyleClass().add(Styles.DISABLED_CELL_STYLE); ???
+                    setId(StyleClass.DISABLED_CELL_ID);
                     setDisable(true);
                 } else {
-                    setStyle("-fx-opacity: 1.0;");
+                    setId(StyleClass.ENABLED_CELL_ID);
                     setDisable(false);
                 }
 

@@ -1,5 +1,5 @@
 .root{
-    -fx-font-size: 0.88em;
+    -fx-font-size: 0.833333em;
 }
 
 .view-title {
@@ -30,12 +30,14 @@
     -fx-spacing: 0.5em;
 }
 
-.disabled-cell {
+#disabled-cell {
     -fx-opacity: 0.4;
+    -fx-font-weight: bold;
 }
 
-.enabled-cell {
+#enabled-cell {
     -fx-opacity: 1.0;
+    -fx-font-weight: normal;
 }
 
 #italic-label {

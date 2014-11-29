@@ -61,6 +61,11 @@ public class SelectAccountController extends AbstractAccountTreeController imple
     }
 
     @Override
+    protected boolean isAccountSelectable(final Account account) {
+        return true;
+    }
+
+    @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         initialize();
 

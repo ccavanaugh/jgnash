@@ -42,7 +42,7 @@ import javafx.scene.control.TreeView;
  */
 public abstract class AbstractAccountTreeController implements MessageListener {
 
-    private ReadOnlyObjectWrapper<Account> selectedAccountProperty = new ReadOnlyObjectWrapper<>();
+    protected ReadOnlyObjectWrapper<Account> selectedAccountProperty = new ReadOnlyObjectWrapper<>();
 
     protected abstract TreeView<Account> getTreeView();
 
@@ -53,6 +53,8 @@ public abstract class AbstractAccountTreeController implements MessageListener {
      * @return {@code true} if the {@code Account} should be visible
      */
     abstract protected boolean isAccountVisible(Account account);
+
+    abstract protected boolean isAccountSelectable(Account account);
 
     public void initialize() {
         getTreeView().setShowRoot(false);
@@ -65,7 +67,9 @@ public abstract class AbstractAccountTreeController implements MessageListener {
             @Override
             public void changed(final ObservableValue<? extends TreeItem<Account>> observable, final TreeItem<Account> oldValue, final TreeItem<Account> newValue) {
                 if (newValue != null) {
-                    selectedAccountProperty.setValue(newValue.getValue());
+                    if (isAccountSelectable(newValue.getValue())) {
+                        selectedAccountProperty.setValue(newValue.getValue());
+                    }
                 }
             }
         });
