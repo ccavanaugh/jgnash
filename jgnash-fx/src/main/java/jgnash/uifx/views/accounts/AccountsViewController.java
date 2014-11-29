@@ -35,7 +35,7 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.control.CommodityFormatTreeTableCell;
+import jgnash.uifx.control.AccountCommodityFormatTreeTableCell;
 import jgnash.uifx.control.IntegerEditingTreeTableCell;
 import jgnash.uifx.controllers.AccountTypeFilter;
 import jgnash.util.EncodeDecode;
@@ -138,11 +138,11 @@ public class AccountsViewController implements Initializable, MessageListener {
 
         final TreeTableColumn<Account, BigDecimal> balanceColumn = new TreeTableColumn<>(resources.getString("Column.Balance"));
         balanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getTreeBalance()));
-        balanceColumn.setCellFactory(cell -> new CommodityFormatTreeTableCell());
+        balanceColumn.setCellFactory(cell -> new AccountCommodityFormatTreeTableCell());
 
         final TreeTableColumn<Account, BigDecimal> reconciledBalanceColumn = new TreeTableColumn<>(resources.getString("Column.ReconciledBalance"));
         reconciledBalanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getReconciledTreeBalance()));
-        reconciledBalanceColumn.setCellFactory(cell -> new CommodityFormatTreeTableCell());
+        reconciledBalanceColumn.setCellFactory(cell -> new AccountCommodityFormatTreeTableCell());
 
         final TreeTableColumn<Account, String> currencyColumn = new TreeTableColumn<>(resources.getString("Column.Currency"));
         currencyColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getCurrencyNode().getSymbol()));

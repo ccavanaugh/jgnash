@@ -29,7 +29,7 @@ import javafx.scene.paint.Color;
 /**
  * @author Craig Cavanaugh
  */
-public class CommodityFormatTreeTableCell extends TreeTableCell<Account, BigDecimal> {
+public class AccountCommodityFormatTreeTableCell extends TreeTableCell<Account, BigDecimal> {
     @Override
     protected void updateItem(final BigDecimal amount, final boolean empty) {
         super.updateItem(amount, empty);  // required

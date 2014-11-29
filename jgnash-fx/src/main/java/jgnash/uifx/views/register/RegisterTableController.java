@@ -17,18 +17,21 @@
  */
 package jgnash.uifx.views.register;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
 
 import jgnash.engine.Account;
+import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
+import jgnash.text.CommodityFormat;
+import jgnash.uifx.control.TransactionCommodityFormatTableCell;
 import jgnash.uifx.control.TransactionDateTableCell;
 
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -36,7 +39,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 /**
- * Register Pane
+ * Register Table with stats controller
  *
  * @author Craig Cavanaugh
  */
@@ -95,19 +98,37 @@ public class RegisterTableController implements Initializable {
     @SuppressWarnings("unchecked")
     private void buildTable() {
         final TableColumn<Transaction, Date> dateColumn = new TableColumn<>(resources.getString("Column.Date"));
-        dateColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getDate()));
+        dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getDate()));
         dateColumn.setCellFactory(cell -> new TransactionDateTableCell());
 
         final TableColumn<Transaction, String> numberColumn = new TableColumn<>(resources.getString("Column.Num"));
-        numberColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getNumber()));
+        numberColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getNumber()));
 
         final TableColumn<Transaction, String> payeeColumn = new TableColumn<>(resources.getString("Column.Payee"));
-        payeeColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getPayee()));
+        payeeColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getPayee()));
 
         final TableColumn<Transaction, String> memoColumn = new TableColumn<>(resources.getString("Column.Memo"));
-        memoColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getMemo()));
+        memoColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getMemo()));
 
-        tableView.getColumns().addAll(dateColumn, numberColumn, payeeColumn, memoColumn);
+        final TableColumn<Transaction, String> accountColumn = new TableColumn<>(resources.getString("Column.Account"));
+        accountColumn.setCellValueFactory(param -> new AccountNameWrapper(param.getValue()));
+
+        final TableColumn<Transaction, String> reconciledColumn = new TableColumn<>(resources.getString("Column.Clr"));
+        reconciledColumn.setCellValueFactory(param ->new SimpleStringProperty(param.getValue().getReconciled(accountProperty.getValue()).toString()));
+
+        final TableColumn<Transaction, BigDecimal> increaseColumn = new TableColumn<>(resources.getString("Column.Increase"));
+        increaseColumn.setCellValueFactory(param -> new IncreaseAmountProperty(param.getValue().getAmount(getAccountProperty().getValue())));
+        increaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
+
+        final TableColumn<Transaction, BigDecimal> decreaseColumn = new TableColumn<>(resources.getString("Column.Decrease"));
+        decreaseColumn.setCellValueFactory(param -> new DecreaseAmountProperty(param.getValue().getAmount(getAccountProperty().getValue())));
+        decreaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
+
+        final TableColumn<Transaction, BigDecimal> balanceColumn = new TableColumn<>(resources.getString("Column.Balance"));
+        balanceColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(accountProperty.get().getBalanceAt(param.getValue())));
+        balanceColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getFullNumberFormat(accountProperty.get().getCurrencyNode())));
+
+        tableView.getColumns().addAll(dateColumn, numberColumn, payeeColumn, memoColumn, accountColumn, reconciledColumn, increaseColumn, decreaseColumn, balanceColumn);
     }
 
     private void loadTable() {
@@ -115,6 +136,51 @@ public class RegisterTableController implements Initializable {
 
         if (accountProperty.get() != null) {
             tableView.getItems().addAll(accountProperty.get().getSortedTransactionList());
+        }
+    }
+
+    private static class IncreaseAmountProperty extends SimpleObjectProperty<BigDecimal> {
+        IncreaseAmountProperty(final BigDecimal value) {
+            if (value.signum() >= 0) {
+                setValue(value);
+            } else {
+                setValue(null);
+            }
+        }
+    }
+
+    private static class DecreaseAmountProperty extends SimpleObjectProperty<BigDecimal> {
+        DecreaseAmountProperty(final BigDecimal value) {
+            if (value.signum() < 0) {
+                setValue(value.abs());
+            } else {
+                setValue(null);
+            }
+        }
+    }
+
+    private class AccountNameWrapper extends SimpleStringProperty {
+
+        final String split = resources.getString("Button.Splits");
+
+        AccountNameWrapper(final Transaction t) {
+            super();
+
+            if (t instanceof InvestmentTransaction) {
+                setValue(((InvestmentTransaction) t).getInvestmentAccount().getName());
+            } else {
+                int count = t.size();
+                if (count > 1) {
+                    setValue("[ " + count + " " + split + " ]");
+                } else {
+                    Account creditAccount = t.getTransactionEntries().get(0).getCreditAccount();
+                    if (creditAccount != accountProperty.get()) {
+                        setValue(creditAccount.getName());
+                    } else {
+                        setValue(t.getTransactionEntries().get(0).getDebitAccount().getName());
+                    }
+                }
+            }
         }
     }
 }
