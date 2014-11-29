@@ -21,7 +21,7 @@
         <SplitPane fx:id="splitPane" orientation="HORIZONTAL">
             <items>
                 <StackPane>
-                    <TreeView fx:id="treeView" BorderPane.alignment="CENTER" minWidth="100"/>
+                    <TreeView fx:id="treeView" BorderPane.alignment="CENTER" minWidth="120"/>
                 </StackPane>
                 <StackPane fx:id="registerPane"/>
             </items>

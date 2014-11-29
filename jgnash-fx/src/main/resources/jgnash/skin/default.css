@@ -30,6 +30,16 @@
     -fx-spacing: 0.5em;
 }
 
+.info-bar {
+    -fx-hgap: 0.333333em;
+	-fx-padding: 10px;
+	-fx-pref-height: 2.0em;
+	-fx-background-color: lightgray, -fx-body-color;
+	-fx-background-insets: 0, 1;
+	-fx-font-size: 1.0em;
+    -fx-font-weight: bold;
+}
+
 #disabled-cell {
     -fx-opacity: 0.4;
     -fx-font-weight: bold;

@@ -3,14 +3,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.register.RegisterTableController" styleClass="form">
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.register.RegisterTableController">
    <top>
-      <GridPane hgap="10.0" BorderPane.alignment="CENTER">
+      <GridPane BorderPane.alignment="CENTER" styleClass="info-bar">
         <columnConstraints>
           <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" />
             <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
             <ColumnConstraints halignment="LEFT" hgrow="NEVER" />
+            <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" minWidth="15.0" prefWidth="15.0" />
             <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
             <ColumnConstraints halignment="LEFT" hgrow="NEVER" />
         </columnConstraints>
@@ -18,8 +19,8 @@
            <Label fx:id="accountNameLabel" GridPane.hgrow="ALWAYS" />
             <Label text="%Label.Balance" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" />
             <Label fx:id="balanceLabel" GridPane.columnIndex="3" GridPane.hgrow="NEVER" />
-            <Label text="%Label.ReconciledBalance" GridPane.columnIndex="4" />
-            <Label fx:id="reconciledBalanceLabel" GridPane.columnIndex="5" />
+            <Label text="%Label.ReconciledBalance" GridPane.columnIndex="5"/>
+            <Label fx:id="reconciledBalanceLabel" GridPane.columnIndex="6" />
          </children>
       </GridPane>
    </top>
