@@ -26,8 +26,6 @@ import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
 import jgnash.text.CommodityFormat;
-import jgnash.uifx.control.TransactionCommodityFormatTableCell;
-import jgnash.uifx.control.TransactionDateTableCell;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

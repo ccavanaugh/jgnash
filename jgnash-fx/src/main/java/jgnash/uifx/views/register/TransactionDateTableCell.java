@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.uifx.control;
+package jgnash.uifx.views.register;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -28,7 +28,7 @@ import javafx.scene.control.TableCell;
 /**
  * @author Craig Cavanaugh
  */
-public class TransactionDateTableCell extends TableCell<Transaction, Date> {
+class TransactionDateTableCell extends TableCell<Transaction, Date> {
 
     private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
 

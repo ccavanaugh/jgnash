@@ -15,9 +15,10 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.uifx.control;
+package jgnash.uifx.views.accounts;
 
 import jgnash.engine.Account;
+import jgnash.uifx.control.IntegerTextField;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -29,7 +30,7 @@ import javafx.scene.control.TreeTableCell;
  *
  * @author Craig Cavanaugh
 */
-public class IntegerEditingTreeTableCell extends TreeTableCell<Account, Integer> {
+class IntegerEditingTreeTableCell extends TreeTableCell<Account, Integer> {
 
     private IntegerTextField integerTextField;
 

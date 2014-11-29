@@ -15,37 +15,32 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.uifx.control;
+package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 
-import jgnash.engine.Account;
-import jgnash.text.CommodityFormat;
+import jgnash.engine.Transaction;
 
-import javafx.scene.control.TreeTableCell;
-import javafx.scene.paint.Color;
+import javafx.scene.control.TableCell;
 
 /**
  * @author Craig Cavanaugh
  */
-public class AccountCommodityFormatTreeTableCell extends TreeTableCell<Account, BigDecimal> {
+class TransactionCommodityFormatTableCell extends TableCell<Transaction, BigDecimal> {
+
+    private final NumberFormat format;
+
+    public TransactionCommodityFormatTableCell(final NumberFormat format) {
+        this.format = format;
+    }
+
     @Override
     protected void updateItem(final BigDecimal amount, final boolean empty) {
         super.updateItem(amount, empty);  // required
 
-        if (!empty && amount != null && getTreeTableRow().getTreeItem() != null) {
-            Account account = getTreeTableRow().getTreeItem().getValue();
-
-            NumberFormat format = CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
-
+        if (!empty && amount != null) {
             setText(format.format(amount));
-
-            if (amount.signum() < 0) {
-                setTextFill(Color.RED);
-            } else {
-                setTextFill(Color.BLACK);
-            }
         } else {
             setText(null);
         }

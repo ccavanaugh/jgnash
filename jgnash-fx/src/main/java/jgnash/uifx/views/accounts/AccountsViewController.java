@@ -35,8 +35,6 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.control.AccountCommodityFormatTreeTableCell;
-import jgnash.uifx.control.IntegerEditingTreeTableCell;
 import jgnash.uifx.controllers.AccountTypeFilter;
 import jgnash.util.EncodeDecode;
 
