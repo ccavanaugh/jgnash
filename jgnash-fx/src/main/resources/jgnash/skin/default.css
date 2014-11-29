@@ -37,3 +37,21 @@
 .enabled-cell {
     -fx-opacity: 1.0;
 }
+
+#italic-label {
+    -fx-font-style: italic;
+}
+
+#italic-negative-label {
+    -fx-font-style: italic;
+    -fx-text-fill: darkred;
+}
+
+#normal-label {
+    -fx-font-style: normal;
+}
+
+#normal-negative-label {
+    -fx-font-style: normal;
+    -fx-text-fill: darkred;
+}
