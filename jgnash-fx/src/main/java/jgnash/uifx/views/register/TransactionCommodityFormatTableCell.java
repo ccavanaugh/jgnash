@@ -43,18 +43,20 @@ class TransactionCommodityFormatTableCell extends TableCell<Transaction, BigDeci
         if (!empty && amount != null) {
             setText(format.format(amount));
 
-            final boolean future = ((Transaction) getTableRow().getItem()).getDate().after(new Date());
-            final boolean negative = amount.signum() < 0;
+            if (getTableRow().getItem() != null) {
+                final boolean future = ((Transaction) getTableRow().getItem()).getDate().after(new Date());
+                final boolean negative = amount.signum() < 0;
 
-            // Set font style
-            if (future && negative) {
-                setId("italic-negative-label");
-            } else if (future) {
-                setId("italic-label");
-            } else if (negative) {
-                setId("normal-negative-label");
-            } else {
-                setId("normal-label");
+                // Set font style
+                if (future && negative) {
+                    setId("italic-negative-label");
+                } else if (future) {
+                    setId("italic-label");
+                } else if (negative) {
+                    setId("normal-negative-label");
+                } else {
+                    setId("normal-label");
+                }
             }
 
         } else {
