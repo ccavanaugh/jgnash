@@ -17,6 +17,7 @@
  */
 package jgnash.uifx.views.register;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -51,8 +52,11 @@ class AccountPropertyWrapper implements MessageListener {
     private final Object numberFormatLock = new Object();
 
     private ReadOnlyStringWrapper reconciledAmountProperty = new ReadOnlyStringWrapper();
+
     private ReadOnlyStringWrapper accountBalanceProperty = new ReadOnlyStringWrapper();
+
     private ReadOnlyStringWrapper accountNameProperty = new ReadOnlyStringWrapper();
+
     private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
     private NumberFormat numberFormat;  // not thread safe
@@ -91,14 +95,18 @@ class AccountPropertyWrapper implements MessageListener {
     private void updateProperties() {
         if (accountProperty.get() != null) {
             Platform.runLater(() -> accountNameProperty.setValue(accountProperty.get().getName()));
+        } else {
+            Platform.runLater(() -> accountNameProperty.setValue(""));
         }
 
         final Task<Void> balanceTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                if (accountProperty.get() != null) {
-                    synchronized (numberFormatLock) {
+                synchronized (numberFormatLock) {
+                    if (accountProperty.get() != null) {
                         Platform.runLater(() -> accountBalanceProperty.setValue(numberFormat.format(accountProperty.get().getBalance())));
+                    } else {
+                        Platform.runLater(() -> accountBalanceProperty.setValue(numberFormat.format(BigDecimal.ZERO)));
                     }
                 }
                 return null;
@@ -108,10 +116,11 @@ class AccountPropertyWrapper implements MessageListener {
         final Task<Void> reconciledBalanceTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                if (accountProperty.get() != null) {
-                    synchronized (numberFormatLock) {
+                synchronized (numberFormatLock) {
+                    if (accountProperty.get() != null) {
                         Platform.runLater(() -> reconciledAmountProperty.setValue(numberFormat.format(accountProperty.get().getReconciledBalance())));
-
+                    } else {
+                        Platform.runLater(() -> reconciledAmountProperty.setValue(numberFormat.format(BigDecimal.ZERO)));
                     }
                 }
                 return null;
