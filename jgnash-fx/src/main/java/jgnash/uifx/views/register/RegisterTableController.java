@@ -101,18 +101,23 @@ public class RegisterTableController implements Initializable {
 
         final TableColumn<Transaction, String> numberColumn = new TableColumn<>(resources.getString("Column.Num"));
         numberColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getNumber()));
+        numberColumn.setCellFactory(cell -> new TransactionStringTableCell());
 
         final TableColumn<Transaction, String> payeeColumn = new TableColumn<>(resources.getString("Column.Payee"));
         payeeColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getPayee()));
+        payeeColumn.setCellFactory(cell -> new TransactionStringTableCell());
 
         final TableColumn<Transaction, String> memoColumn = new TableColumn<>(resources.getString("Column.Memo"));
         memoColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getMemo()));
+        memoColumn.setCellFactory(cell -> new TransactionStringTableCell());
 
         final TableColumn<Transaction, String> accountColumn = new TableColumn<>(resources.getString("Column.Account"));
         accountColumn.setCellValueFactory(param -> new AccountNameWrapper(param.getValue()));
+        accountColumn.setCellFactory(cell -> new TransactionStringTableCell());
 
         final TableColumn<Transaction, String> reconciledColumn = new TableColumn<>(resources.getString("Column.Clr"));
         reconciledColumn.setCellValueFactory(param ->new SimpleStringProperty(param.getValue().getReconciled(accountProperty.getValue()).toString()));
+        reconciledColumn.setCellFactory(cell -> new TransactionStringTableCell());
 
         final TableColumn<Transaction, BigDecimal> increaseColumn = new TableColumn<>(resources.getString("Column.Increase"));
         increaseColumn.setCellValueFactory(param -> new IncreaseAmountProperty(param.getValue().getAmount(getAccountProperty().getValue())));
@@ -132,6 +137,7 @@ public class RegisterTableController implements Initializable {
     private void loadTable() {
         tableView.getItems().clear();
 
+        // TODO, will need to wrap the account transactions for correct running balance calculation when sorted
         if (accountProperty.get() != null) {
             tableView.getItems().addAll(accountProperty.get().getSortedTransactionList());
         }

@@ -31,7 +31,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
 import jgnash.uifx.MainApplication;
-import jgnash.uifx.skin.Styles;
+import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.utils.StageUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
@@ -119,10 +119,10 @@ class SelectAccountSecuritiesDialog {
         dialog.setTitle(resources.getString("Title.AccountSecurities"));
 
         final Label availableLabel = new Label(resources.getString("Title.Available"));
-        availableLabel.getStyleClass().add(Styles.LIST_TITLE_STYLE);
+        availableLabel.getStyleClass().add(StyleClass.LIST_TITLE_STYLE);
 
         final Label currentLabel = new Label(resources.getString("Title.Current"));
-        currentLabel.getStyleClass().add(Styles.LIST_TITLE_STYLE);
+        currentLabel.getStyleClass().add(StyleClass.LIST_TITLE_STYLE);
 
         final GridPane gridPane = createGridPane();
         gridPane.add(availableLabel, 0, 0);
@@ -176,10 +176,10 @@ class SelectAccountSecuritiesDialog {
         vBox.getStyleClass().add("form");
 
         moveToTarget = new Button("", fontAwesome.create(FontAwesome.Glyph.ANGLE_RIGHT));
-        moveToTarget.getStyleClass().add(Styles.LIST_BUTTON_STYLE);
+        moveToTarget.getStyleClass().add(StyleClass.LIST_BUTTON_STYLE);
 
         moveToSource = new Button("", fontAwesome.create(FontAwesome.Glyph.ANGLE_LEFT));
-        moveToSource.getStyleClass().add(Styles.LIST_BUTTON_STYLE);
+        moveToSource.getStyleClass().add(StyleClass.LIST_BUTTON_STYLE);
 
         moveToTarget.setMaxWidth(Double.MAX_VALUE);
         moveToSource.setMaxWidth(Double.MAX_VALUE);

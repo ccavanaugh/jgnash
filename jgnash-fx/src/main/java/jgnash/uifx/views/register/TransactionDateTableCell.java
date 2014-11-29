@@ -38,6 +38,12 @@ class TransactionDateTableCell extends TableCell<Transaction, Date> {
 
         if (!empty && date != null) {
             setText(dateFormatter.format(date));
+
+            if (date.after(new Date())) {
+                setId("italic-label");
+            } else {
+                setId("normal-label");
+            }
         } else {
             setText(null);
         }

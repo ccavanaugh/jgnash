@@ -15,36 +15,34 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.uifx.views.accounts;
+package jgnash.uifx.views.register;
 
-import java.math.BigDecimal;
-import java.text.NumberFormat;
+import java.util.Date;
 
-import jgnash.engine.Account;
-import jgnash.text.CommodityFormat;
+import jgnash.engine.Transaction;
 
-import javafx.scene.control.TreeTableCell;
+import javafx.scene.control.TableCell;
 
 /**
  * @author Craig Cavanaugh
  */
-class AccountCommodityFormatTreeTableCell extends TreeTableCell<Account, BigDecimal> {
+class TransactionStringTableCell extends TableCell<Transaction, String> {
+
     @Override
-    protected void updateItem(final BigDecimal amount, final boolean empty) {
-        super.updateItem(amount, empty);  // required
+    protected void updateItem(final String string, final boolean empty) {
+        super.updateItem(string, empty);  // required
 
-        if (!empty && amount != null && getTreeTableRow().getTreeItem() != null) {
-            Account account = getTreeTableRow().getTreeItem().getValue();
+        if (!empty && string != null) {
+            setText(string);
 
-            NumberFormat format = CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
+            final boolean future = ((Transaction) getTableRow().getItem()).getDate().after(new Date());
 
-            setText(format.format(amount));
-
-            if (amount.signum() < 0) {
-                setId("normal-negative-label");
+           if (future) {
+                setId("italic-label");
             } else {
                 setId("normal-label");
             }
+
         } else {
             setText(null);
         }

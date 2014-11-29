@@ -22,7 +22,7 @@ package jgnash.uifx.skin;
  *
  * @author Craig Cavanaugh
  */
-public class Styles {
+public class StyleClass {
     public static final String LIST_TITLE_STYLE = "list-title";
 
     public static final String LIST_BUTTON_STYLE = "list-button";

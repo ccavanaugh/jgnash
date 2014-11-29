@@ -37,7 +37,7 @@ import jgnash.uifx.MainApplication;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.CurrencyComboBox;
 import jgnash.uifx.control.IntegerTextField;
-import jgnash.uifx.skin.Styles;
+import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.utils.StageUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
@@ -336,10 +336,10 @@ public class AccountPropertiesController implements Initializable {
                 setText(item.toString());
 
                 if (baseAccount != null && baseAccount.getAccountType().getAccountGroup() != item.getAccountGroup()) {
-                    getStyleClass().add(Styles.DISABLED_CELL_STYLE);
+                    getStyleClass().add(StyleClass.DISABLED_CELL_STYLE);
                     setDisable(true);
                 } else {
-                    getStyleClass().add(Styles.ENABLED_CELL_STYLE);
+                    getStyleClass().add(StyleClass.ENABLED_CELL_STYLE);
                     setDisable(false);
                 }
             }
