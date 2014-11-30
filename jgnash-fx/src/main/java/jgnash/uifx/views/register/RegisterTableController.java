@@ -19,21 +19,24 @@ package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
 import jgnash.text.CommodityFormat;
+import jgnash.util.DateUtils;
 import jgnash.util.EncodeDecode;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -41,9 +44,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumnBase;
 import javafx.scene.control.TableView;
+import javafx.scene.text.Text;
 
 /**
  * Register Table with stats controller
@@ -56,8 +63,6 @@ public class RegisterTableController implements Initializable {
     private static final String PREF_NODE_REG_WIDTH = "/jgnash/uifx/views/register/widths";
 
     private static final String PREF_NODE_REG_VIS = "/jgnash/uifx/views/register/visibility";
-
-   private static final int THROTTLE_RATE_MILLIS = 2000;
 
     private final AccountPropertyWrapper accountPropertyWrapper = new AccountPropertyWrapper();
 
@@ -139,38 +144,47 @@ public class RegisterTableController implements Initializable {
         final TableColumn<Transaction, Date> dateColumn = new TableColumn<>(resources.getString("Column.Date"));
         dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getDate()));
         dateColumn.setCellFactory(cell -> new TransactionDateTableCell());
+        dateColumn.setMinWidth(50);
 
         final TableColumn<Transaction, String> numberColumn = new TableColumn<>(resources.getString("Column.Num"));
         numberColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getNumber()));
         numberColumn.setCellFactory(cell -> new TransactionStringTableCell());
+        numberColumn.setMinWidth(50);
 
         final TableColumn<Transaction, String> payeeColumn = new TableColumn<>(resources.getString("Column.Payee"));
         payeeColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getPayee()));
         payeeColumn.setCellFactory(cell -> new TransactionStringTableCell());
+        payeeColumn.setMinWidth(75);
 
         final TableColumn<Transaction, String> memoColumn = new TableColumn<>(resources.getString("Column.Memo"));
         memoColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getMemo()));
         memoColumn.setCellFactory(cell -> new TransactionStringTableCell());
+        memoColumn.setMinWidth(75);
 
         final TableColumn<Transaction, String> accountColumn = new TableColumn<>(resources.getString("Column.Account"));
         accountColumn.setCellValueFactory(param -> new AccountNameWrapper(param.getValue()));
         accountColumn.setCellFactory(cell -> new TransactionStringTableCell());
+        accountColumn.setMinWidth(75);
 
         final TableColumn<Transaction, String> reconciledColumn = new TableColumn<>(resources.getString("Column.Clr"));
         reconciledColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getReconciled(accountProperty.getValue()).toString()));
         reconciledColumn.setCellFactory(cell -> new TransactionStringTableCell());
+        reconciledColumn.setMinWidth(35);
 
         final TableColumn<Transaction, BigDecimal> increaseColumn = new TableColumn<>(resources.getString("Column.Increase"));
         increaseColumn.setCellValueFactory(param -> new IncreaseAmountProperty(param.getValue().getAmount(getAccountProperty().getValue())));
         increaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
+        increaseColumn.setMinWidth(60);
 
         final TableColumn<Transaction, BigDecimal> decreaseColumn = new TableColumn<>(resources.getString("Column.Decrease"));
         decreaseColumn.setCellValueFactory(param -> new DecreaseAmountProperty(param.getValue().getAmount(getAccountProperty().getValue())));
         decreaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
+        decreaseColumn.setMinWidth(60);
 
         final TableColumn<Transaction, BigDecimal> balanceColumn = new TableColumn<>(resources.getString("Column.Balance"));
         balanceColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(accountProperty.get().getBalanceAt(param.getValue())));
         balanceColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getFullNumberFormat(accountProperty.get().getCurrencyNode())));
+        balanceColumn.setMinWidth(60);
 
         tableView.getColumns().addAll(dateColumn, numberColumn, payeeColumn, memoColumn, accountColumn, reconciledColumn, increaseColumn, decreaseColumn, balanceColumn);
     }
@@ -194,14 +208,6 @@ public class RegisterTableController implements Initializable {
     }
 
     private void saveColumnWidths() {
-
-        // Throttle the write rate
-        try {
-            Thread.sleep(THROTTLE_RATE_MILLIS);
-        } catch (InterruptedException e) {
-            Logger.getLogger(RegisterTableController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-        }
-
         final Account account = accountProperty.getValue();
 
         if (account != null) {
@@ -219,14 +225,6 @@ public class RegisterTableController implements Initializable {
     }
 
     private void restoreColumnWidths() {
-
-        // Throttle the write rate
-        try {
-            Thread.sleep(THROTTLE_RATE_MILLIS);
-        } catch (InterruptedException e) {
-            Logger.getLogger(RegisterTableController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-        }
-
         final Account account = accountProperty.getValue();
 
         if (account != null) {
@@ -304,6 +302,138 @@ public class RegisterTableController implements Initializable {
             tableColumn.widthProperty().removeListener(widthListener);
         }
     }
+
+    public void packTable() {
+
+        final double[] PREF_COLUMN_WEIGHTS = {0, 0, 20, 20, 20, 0, 0, 0, 0};
+
+        // Check for mismatch of column count and bail if needed
+        if (tableView.getColumns().size() != PREF_COLUMN_WEIGHTS.length) {
+            return;
+        }
+
+        // Create a list of visible columns and column weights
+        final List<TableColumn<Transaction, ?>> visibleColumns = new ArrayList<>();
+        final List<Double> visibleColumnWeights = new ArrayList<>();
+
+        for (int i = 0; i < tableView.getColumns().size(); i++) {
+            if(tableView.getColumns().get(i).isVisible()) {
+                visibleColumns.add(tableView.getColumns().get(i));
+                visibleColumnWeights.add(PREF_COLUMN_WEIGHTS[i]);
+            }
+        }
+
+        /*
+         * The calculated width of all visible columns, tableView.getWidth() does not allocate for the scroll bar if
+         * visible within the TableView
+         */
+        double tableWidth = 0;
+
+        for (final TableColumn<Transaction, ?> column : visibleColumns) {
+            tableWidth += Math.rint(column.getWidth());
+        }
+
+        double calculatedWidths[] = new double[visibleColumns.size()];
+        double calculatedWidth = 0;
+
+        for (int i = 0; i < calculatedWidths.length; i++) {
+            calculatedWidths[i] = getCalculatedColumnWidth(visibleColumns.get(i));
+            calculatedWidth += calculatedWidths[i];
+        }
+
+        double[] optimizedWidths = calculatedWidths.clone();
+
+        if (calculatedWidth > tableWidth) { // calculated width is wider than the page... need to compress columns
+            Double[] columnWeights = visibleColumnWeights.toArray(new Double[visibleColumnWeights.size()]);
+
+            double fixedWidth = 0; // total fixed width of columns
+
+            for (int i = 0; i < optimizedWidths.length; i++) {
+                if (columnWeights[i] == 0) {
+                    fixedWidth += optimizedWidths[i];
+                }
+            }
+
+            double diff = tableWidth - fixedWidth; // remaining non fixed width that must be compressed
+            double totalWeight = 0; // used to calculate percentages
+
+            for (double columnWeight : columnWeights) {
+                totalWeight += columnWeight;
+            }
+
+            int i = 0;
+            while (i < columnWeights.length) {
+                if (columnWeights[i] > 0) {
+                    double adj = (columnWeights[i] / totalWeight * diff);
+
+                    if (optimizedWidths[i] > adj) { // only change if necessary
+                        optimizedWidths[i] = adj;
+                    } else {
+                        diff -= optimizedWidths[i]; // available difference is reduced
+                        totalWeight -= columnWeights[i]; // adjust the weighting
+                        optimizedWidths = calculatedWidths.clone(); // reset widths
+                        columnWeights[i] = 0d; // do not try to adjust width again
+                        i = -1; // restart the loop from the beginning
+                    }
+                }
+                i++;
+            }
+        }
+
+        final double[] finalWidths = optimizedWidths.clone();
+
+        Platform.runLater(() -> {
+            removeColumnListeners();
+            tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+
+            for (int i = 0; i < finalWidths.length; i++) {
+                visibleColumns.get(i).prefWidthProperty().setValue(finalWidths[i]);
+            }
+
+            tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+            installColumnListeners();
+
+            System.out.println(EncodeDecode.encodeDoubleArray(finalWidths));
+        });
+    }
+
+    /**
+     * Determines the preferred width of the column including contents
+     *
+     * @param column {@code TableColumn} to measure content
+     * @return preferred width
+     */
+    private double getCalculatedColumnWidth(final TableColumnBase<?, ?> column) {
+        DateFormat dateFormatter = DateUtils.getShortDateFormat();
+
+        double maxWidth = column.getMinWidth(); // init with the minimum column width
+
+        for (int i = 0; i < tableView.getItems().size(); i++) {
+
+            final Object object = column.getCellData(i);
+
+            if (object != null) {
+                String displayString;
+
+                if (object instanceof Date) {
+                    displayString = dateFormatter.format(object);
+                } else {
+                    displayString = object.toString();
+                }
+
+                if (!displayString.isEmpty()) {    // ignore empty strings
+                    final Text text = new Text(displayString);
+                    new Scene(new Group(text));
+
+                    text.applyCss();
+                    maxWidth = Math.max(maxWidth, text.getLayoutBounds().getWidth());
+                }
+            }
+        }
+
+        return Math.ceil(maxWidth + 4);
+    }
+
 
     private static class IncreaseAmountProperty extends SimpleObjectProperty<BigDecimal> {
         IncreaseAmountProperty(final BigDecimal value) {

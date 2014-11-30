@@ -70,6 +70,9 @@ public class RegisterViewController implements Initializable {
     public SplitPane splitPane;
 
     @FXML
+    private Button resizeButton;
+
+    @FXML
     private Button reconcileButton;
 
     @FXML
@@ -121,6 +124,7 @@ public class RegisterViewController implements Initializable {
         reconcileButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.ADJUST));
         filterButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.FILTER));
         zoomButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.EXTERNAL_LINK_SQUARE));
+        resizeButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.COMPRESS));
 
         // Load and add the register pane
         try {
@@ -180,6 +184,11 @@ public class RegisterViewController implements Initializable {
     @FXML
     public void handleFilterAccountAction(final ActionEvent actionEvent) {
         StaticAccountsMethods.showAccountFilterDialog(typeFilter);
+    }
+
+    @FXML
+    public void packTableAction(ActionEvent actionEvent) {
+        registerPaneController.packRegisterTable();
     }
 
     private static final class DisabledTreeCell extends TreeCell<Account> {

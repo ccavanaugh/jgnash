@@ -57,6 +57,8 @@ public class RegisterPaneController implements Initializable {
      */
     private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
+    private RegisterTableController registerTableController;
+
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         //this.resources = resources;
@@ -76,10 +78,10 @@ public class RegisterPaneController implements Initializable {
         try {
             final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RegisterTable.fxml"), resources);
             register.getChildren().add(fxmlLoader.load());
-            RegisterTableController registerTablePane = fxmlLoader.getController();
+            registerTableController = fxmlLoader.getController();
 
             // Bind  the register pane to this account property
-            registerTablePane.getAccountProperty().bind(accountProperty);
+            registerTableController.getAccountProperty().bind(accountProperty);
         } catch (final IOException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
@@ -87,5 +89,9 @@ public class RegisterPaneController implements Initializable {
 
     ObjectProperty<Account> getAccountProperty() {
         return accountProperty;
+    }
+
+    void packRegisterTable() {
+        registerTableController.packTable();
     }
 }
