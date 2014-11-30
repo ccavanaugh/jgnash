@@ -21,6 +21,11 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import jgnash.engine.Account;
@@ -47,12 +52,24 @@ import javafx.scene.control.TableView;
  */
 public class RegisterTableController implements Initializable {
 
-    //private static final String NODE_REG_POS = "/jgnash/uifx/views/register/positions";
-    private static final String NODE_REG_WIDTH = "/jgnash/uifx/views/register/widths";
+    //private static final String PREF_NODE_REG_POS = "/jgnash/uifx/views/register/positions";
+    private static final String PREF_NODE_REG_WIDTH = "/jgnash/uifx/views/register/widths";
 
-    private static final String NODE_REG_VIS = "/jgnash/uifx/views/register/visibility";
+    private static final String PREF_NODE_REG_VIS = "/jgnash/uifx/views/register/visibility";
+
+   private static final int THROTTLE_RATE_MILLIS = 2000;
 
     private final AccountPropertyWrapper accountPropertyWrapper = new AccountPropertyWrapper();
+
+    /**
+     * Limits number of processed resize events ensuring the most recent is executed
+     */
+    private ThreadPoolExecutor updateColumnSizeExecutor;
+
+    /**
+     * Limits number of processed visibility change events ensuring the most recent is executed
+     */
+    private ThreadPoolExecutor updateColumnVisibilityExecutor;
 
     private ResourceBundle resources;
 
@@ -89,6 +106,17 @@ public class RegisterTableController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         this.resources = resources;
 
+        /* At least 2 updates need to be allowed.  The update in process and any potential updates requested
+         * that occur when an update is already in process.  Limited to 1 thread
+         *
+         * Excess execution requests will be silently discarded
+         */
+        updateColumnSizeExecutor = new ThreadPoolExecutor(0, 1, 0, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
+        updateColumnSizeExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
+
+        updateColumnVisibilityExecutor = new ThreadPoolExecutor(0, 1, 0, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
+        updateColumnVisibilityExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
+
         tableView.setTableMenuButtonVisible(true);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -104,20 +132,6 @@ public class RegisterTableController implements Initializable {
 
         // Load the table on change
         getAccountProperty().addListener((observable, oldValue, newValue) -> loadTable());
-    }
-
-    private void installColumnListeners() {
-        for (final TableColumn<?, ?> tableColumn : tableView.getColumns()) {
-            tableColumn.visibleProperty().addListener(visibilityListener);
-            tableColumn.widthProperty().addListener(widthListener);
-        }
-    }
-
-    private void removeColumnListeners() {
-        for (final TableColumn<?, ?> tableColumn : tableView.getColumns()) {
-            tableColumn.visibleProperty().removeListener(visibilityListener);
-            tableColumn.widthProperty().removeListener(widthListener);
-        }
     }
 
     @SuppressWarnings("unchecked")
@@ -168,21 +182,31 @@ public class RegisterTableController implements Initializable {
         if (accountProperty.get() != null) {
             tableView.getItems().addAll(accountProperty.get().getSortedTransactionList());
 
-            removeColumnListeners();    // Remove listeners while state is being restored
+            // Remove listeners while state is being restored so states are not saved during state changes
+            removeColumnListeners();
 
             restoreColumnVisibility();
             restoreColumnWidths();
 
-            installColumnListeners();   // Reinstall listeners
+            // Install listeners and save column states
+            installColumnListeners();
         }
     }
 
     private void saveColumnWidths() {
+
+        // Throttle the write rate
+        try {
+            Thread.sleep(THROTTLE_RATE_MILLIS);
+        } catch (InterruptedException e) {
+            Logger.getLogger(RegisterTableController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
+
         final Account account = accountProperty.getValue();
 
         if (account != null) {
             final String uuid = account.getUuid();
-            final Preferences preferences = Preferences.userRoot().node(NODE_REG_WIDTH);
+            final Preferences preferences = Preferences.userRoot().node(PREF_NODE_REG_WIDTH);
 
             final double[] columnWidths = new double[tableView.getColumns().size()];
 
@@ -195,11 +219,19 @@ public class RegisterTableController implements Initializable {
     }
 
     private void restoreColumnWidths() {
+
+        // Throttle the write rate
+        try {
+            Thread.sleep(THROTTLE_RATE_MILLIS);
+        } catch (InterruptedException e) {
+            Logger.getLogger(RegisterTableController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
+
         final Account account = accountProperty.getValue();
 
         if (account != null) {
             final String uuid = account.getUuid();
-            final Preferences preferences = Preferences.userRoot().node(NODE_REG_WIDTH);
+            final Preferences preferences = Preferences.userRoot().node(PREF_NODE_REG_WIDTH);
 
             final String widths = preferences.get(uuid, null);
             if (widths != null) {
@@ -223,7 +255,7 @@ public class RegisterTableController implements Initializable {
 
         if (account != null) {
             final String uuid = account.getUuid();
-            final Preferences preferences = Preferences.userRoot().node(NODE_REG_VIS);
+            final Preferences preferences = Preferences.userRoot().node(PREF_NODE_REG_VIS);
 
             final boolean[] columnVisibility = new boolean[tableView.getColumns().size()];
 
@@ -240,7 +272,7 @@ public class RegisterTableController implements Initializable {
 
         if (account != null) {
             final String uuid = account.getUuid();
-            final Preferences preferences = Preferences.userRoot().node(NODE_REG_VIS);
+            final Preferences preferences = Preferences.userRoot().node(PREF_NODE_REG_VIS);
 
             final String result = preferences.get(uuid, null);
             if (result != null) {
@@ -256,6 +288,20 @@ public class RegisterTableController implements Initializable {
 
                 tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
             }
+        }
+    }
+
+    private void installColumnListeners() {
+        for (final TableColumn<Transaction, ?> tableColumn : tableView.getColumns()) {
+            tableColumn.visibleProperty().addListener(visibilityListener);
+            tableColumn.widthProperty().addListener(widthListener);
+        }
+    }
+
+    private void removeColumnListeners() {
+        for (final TableColumn<Transaction, ?> tableColumn : tableView.getColumns()) {
+            tableColumn.visibleProperty().removeListener(visibilityListener);
+            tableColumn.widthProperty().removeListener(widthListener);
         }
     }
 
@@ -305,18 +351,16 @@ public class RegisterTableController implements Initializable {
     }
 
     private final class ColumnVisibilityListener implements ChangeListener<Boolean> {
-
         @Override
-        public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-            saveColumnVisibility();
+        public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
+            updateColumnVisibilityExecutor.execute(RegisterTableController.this::saveColumnVisibility);
         }
     }
 
     private final class ColumnWidthListener implements ChangeListener<Number> {
-
         @Override
-        public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-            saveColumnWidths();
+        public void changed(final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue) {
+            updateColumnSizeExecutor.execute(RegisterTableController.this::saveColumnWidths);
         }
     }
 }
