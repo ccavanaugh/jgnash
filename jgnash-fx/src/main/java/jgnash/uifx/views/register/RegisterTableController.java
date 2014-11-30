@@ -21,15 +21,19 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
 import jgnash.text.CommodityFormat;
+import jgnash.util.EncodeDecode;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -42,6 +46,11 @@ import javafx.scene.control.TableView;
  * @author Craig Cavanaugh
  */
 public class RegisterTableController implements Initializable {
+
+    //private static final String NODE_REG_POS = "/jgnash/uifx/views/register/positions";
+    private static final String NODE_REG_WIDTH = "/jgnash/uifx/views/register/widths";
+
+    private static final String NODE_REG_VIS = "/jgnash/uifx/views/register/visibility";
 
     private final AccountPropertyWrapper accountPropertyWrapper = new AccountPropertyWrapper();
 
@@ -63,6 +72,10 @@ public class RegisterTableController implements Initializable {
      * Active account for the pane
      */
     private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+
+    private ColumnVisibilityListener visibilityListener = new ColumnVisibilityListener();
+
+    private ColumnWidthListener widthListener = new ColumnWidthListener();
 
     ObjectProperty<Account> getAccountProperty() {
         return accountProperty;
@@ -93,6 +106,20 @@ public class RegisterTableController implements Initializable {
         getAccountProperty().addListener((observable, oldValue, newValue) -> loadTable());
     }
 
+    private void installColumnListeners() {
+        for (final TableColumn<?, ?> tableColumn : tableView.getColumns()) {
+            tableColumn.visibleProperty().addListener(visibilityListener);
+            tableColumn.widthProperty().addListener(widthListener);
+        }
+    }
+
+    private void removeColumnListeners() {
+        for (final TableColumn<?, ?> tableColumn : tableView.getColumns()) {
+            tableColumn.visibleProperty().removeListener(visibilityListener);
+            tableColumn.widthProperty().removeListener(widthListener);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     private void buildTable() {
         final TableColumn<Transaction, Date> dateColumn = new TableColumn<>(resources.getString("Column.Date"));
@@ -116,7 +143,7 @@ public class RegisterTableController implements Initializable {
         accountColumn.setCellFactory(cell -> new TransactionStringTableCell());
 
         final TableColumn<Transaction, String> reconciledColumn = new TableColumn<>(resources.getString("Column.Clr"));
-        reconciledColumn.setCellValueFactory(param ->new SimpleStringProperty(param.getValue().getReconciled(accountProperty.getValue()).toString()));
+        reconciledColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getReconciled(accountProperty.getValue()).toString()));
         reconciledColumn.setCellFactory(cell -> new TransactionStringTableCell());
 
         final TableColumn<Transaction, BigDecimal> increaseColumn = new TableColumn<>(resources.getString("Column.Increase"));
@@ -140,6 +167,95 @@ public class RegisterTableController implements Initializable {
         // TODO, will need to wrap the account transactions for correct running balance calculation when sorted
         if (accountProperty.get() != null) {
             tableView.getItems().addAll(accountProperty.get().getSortedTransactionList());
+
+            removeColumnListeners();    // Remove listeners while state is being restored
+
+            restoreColumnVisibility();
+            restoreColumnWidths();
+
+            installColumnListeners();   // Reinstall listeners
+        }
+    }
+
+    private void saveColumnWidths() {
+        final Account account = accountProperty.getValue();
+
+        if (account != null) {
+            final String uuid = account.getUuid();
+            final Preferences preferences = Preferences.userRoot().node(NODE_REG_WIDTH);
+
+            final double[] columnWidths = new double[tableView.getColumns().size()];
+
+            for (int i = 0; i < columnWidths.length; i++) {
+                columnWidths[i] = tableView.getColumns().get(i).getWidth();
+            }
+
+            preferences.put(uuid, EncodeDecode.encodeDoubleArray(columnWidths));
+        }
+    }
+
+    private void restoreColumnWidths() {
+        final Account account = accountProperty.getValue();
+
+        if (account != null) {
+            final String uuid = account.getUuid();
+            final Preferences preferences = Preferences.userRoot().node(NODE_REG_WIDTH);
+
+            final String widths = preferences.get(uuid, null);
+            if (widths != null) {
+                final double[] columnWidths = EncodeDecode.decodeDoubleArray(widths);
+
+                tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+
+                if (columnWidths.length == tableView.getColumns().size()) {
+                    for (int i = 0; i < columnWidths.length; i++) {
+                        tableView.getColumns().get(i).prefWidthProperty().setValue(columnWidths[i]);
+                    }
+                }
+
+                tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+            }
+        }
+    }
+
+    private void saveColumnVisibility() {
+        final Account account = accountProperty.getValue();
+
+        if (account != null) {
+            final String uuid = account.getUuid();
+            final Preferences preferences = Preferences.userRoot().node(NODE_REG_VIS);
+
+            final boolean[] columnVisibility = new boolean[tableView.getColumns().size()];
+
+            for (int i = 0; i < columnVisibility.length; i++) {
+                columnVisibility[i] = tableView.getColumns().get(i).isVisible();
+            }
+
+            preferences.put(uuid, EncodeDecode.encodeBooleanArray(columnVisibility));
+        }
+    }
+
+    private void restoreColumnVisibility() {
+        final Account account = accountProperty.getValue();
+
+        if (account != null) {
+            final String uuid = account.getUuid();
+            final Preferences preferences = Preferences.userRoot().node(NODE_REG_VIS);
+
+            final String result = preferences.get(uuid, null);
+            if (result != null) {
+                final boolean[] columnVisibility = EncodeDecode.decodeBooleanArray(result);
+
+                tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+
+                if (columnVisibility.length == tableView.getColumns().size()) {
+                    for (int i = 0; i < columnVisibility.length; i++) {
+                        tableView.getColumns().get(i).visibleProperty().setValue(columnVisibility[i]);
+                    }
+                }
+
+                tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+            }
         }
     }
 
@@ -185,6 +301,22 @@ public class RegisterTableController implements Initializable {
                     }
                 }
             }
+        }
+    }
+
+    private final class ColumnVisibilityListener implements ChangeListener<Boolean> {
+
+        @Override
+        public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+            saveColumnVisibility();
+        }
+    }
+
+    private final class ColumnWidthListener implements ChangeListener<Number> {
+
+        @Override
+        public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+            saveColumnWidths();
         }
     }
 }
