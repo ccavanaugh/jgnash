@@ -19,38 +19,24 @@ package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
 import java.net.URL;
-import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.prefs.Preferences;
 
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
 import jgnash.text.CommodityFormat;
+import jgnash.uifx.utils.TableViewManager;
 import jgnash.util.DateUtils;
-import jgnash.util.EncodeDecode;
 
-import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumnBase;
 import javafx.scene.control.TableView;
-import javafx.scene.text.Text;
 
 /**
  * Register Table with stats controller
@@ -59,22 +45,11 @@ import javafx.scene.text.Text;
  */
 public class RegisterTableController implements Initializable {
 
-    //private static final String PREF_NODE_REG_POS = "/jgnash/uifx/views/register/positions";
-    private static final String PREF_NODE_REG_WIDTH = "/jgnash/uifx/views/register/widths";
+    private final double[] PREF_COLUMN_WEIGHTS = {0, 0, 20, 20, 20, 0, 0, 0, 0};
 
-    private static final String PREF_NODE_REG_VIS = "/jgnash/uifx/views/register/visibility";
+    private static final String PREF_NODE_USER_ROOT = "/jgnash/uifx/views/register";
 
     private final AccountPropertyWrapper accountPropertyWrapper = new AccountPropertyWrapper();
-
-    /**
-     * Limits number of processed resize events ensuring the most recent is executed
-     */
-    private ThreadPoolExecutor updateColumnSizeExecutor;
-
-    /**
-     * Limits number of processed visibility change events ensuring the most recent is executed
-     */
-    private ThreadPoolExecutor updateColumnVisibilityExecutor;
 
     private ResourceBundle resources;
 
@@ -93,11 +68,9 @@ public class RegisterTableController implements Initializable {
     /**
      * Active account for the pane
      */
-    private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
-    private ColumnVisibilityListener visibilityListener = new ColumnVisibilityListener();
-
-    private ColumnWidthListener widthListener = new ColumnWidthListener();
+    private TableViewManager<Transaction> tableViewManager;
 
     ObjectProperty<Account> getAccountProperty() {
         return accountProperty;
@@ -111,17 +84,6 @@ public class RegisterTableController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         this.resources = resources;
 
-        /* At least 2 updates need to be allowed.  The update in process and any potential updates requested
-         * that occur when an update is already in process.  Limited to 1 thread
-         *
-         * Excess execution requests will be silently discarded
-         */
-        updateColumnSizeExecutor = new ThreadPoolExecutor(0, 1, 0, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
-        updateColumnSizeExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
-
-        updateColumnVisibilityExecutor = new ThreadPoolExecutor(0, 1, 0, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
-        updateColumnVisibilityExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
-
         tableView.setTableMenuButtonVisible(true);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -132,6 +94,10 @@ public class RegisterTableController implements Initializable {
         accountNameLabel.textProperty().bind(getAccountPropertyWrapper().getAccountNameProperty());
         balanceLabel.textProperty().bind(getAccountPropertyWrapper().getAccountBalanceProperty());
         reconciledBalanceLabel.textProperty().bind(getAccountPropertyWrapper().getReconciledAmountProperty());
+
+        tableViewManager = new TableViewManager<>(tableView, PREF_NODE_USER_ROOT);
+        tableViewManager.setColumnWeightFactory(param -> PREF_COLUMN_WEIGHTS[param]);
+        tableViewManager.setPreferenceKeyFactory(() -> getAccountProperty().get().getUuid());
 
         buildTable();
 
@@ -187,6 +153,18 @@ public class RegisterTableController implements Initializable {
         balanceColumn.setMinWidth(60);
 
         tableView.getColumns().addAll(dateColumn, numberColumn, payeeColumn, memoColumn, accountColumn, reconciledColumn, increaseColumn, decreaseColumn, balanceColumn);
+
+        tableViewManager.setColumnFormatFactory(param -> {
+            if (param == balanceColumn) {
+                return CommodityFormat.getFullNumberFormat(getAccountProperty().getValue().getCurrencyNode());
+            } else if (param == increaseColumn || param == decreaseColumn) {
+                return CommodityFormat.getShortNumberFormat(getAccountProperty().getValue().getCurrencyNode());
+            } else if (param == dateColumn) {
+                return DateUtils.getShortDateFormat();
+            }
+
+            return null;
+        });
     }
 
     private void loadTable() {
@@ -196,244 +174,13 @@ public class RegisterTableController implements Initializable {
         if (accountProperty.get() != null) {
             tableView.getItems().addAll(accountProperty.get().getSortedTransactionList());
 
-            // Remove listeners while state is being restored so states are not saved during state changes
-            removeColumnListeners();
-
-            restoreColumnVisibility();
-            restoreColumnWidths();
-
-            // Install listeners and save column states
-            installColumnListeners();
-        }
-    }
-
-    private void saveColumnWidths() {
-        final Account account = accountProperty.getValue();
-
-        if (account != null) {
-            final String uuid = account.getUuid();
-            final Preferences preferences = Preferences.userRoot().node(PREF_NODE_REG_WIDTH);
-
-            final double[] columnWidths = new double[tableView.getColumns().size()];
-
-            for (int i = 0; i < columnWidths.length; i++) {
-                columnWidths[i] = tableView.getColumns().get(i).getWidth();
-            }
-
-            preferences.put(uuid, EncodeDecode.encodeDoubleArray(columnWidths));
-        }
-    }
-
-    private void restoreColumnWidths() {
-        final Account account = accountProperty.getValue();
-
-        if (account != null) {
-            final String uuid = account.getUuid();
-            final Preferences preferences = Preferences.userRoot().node(PREF_NODE_REG_WIDTH);
-
-            final String widths = preferences.get(uuid, null);
-            if (widths != null) {
-                final double[] columnWidths = EncodeDecode.decodeDoubleArray(widths);
-
-                tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
-
-                if (columnWidths.length == tableView.getColumns().size()) {
-                    for (int i = 0; i < columnWidths.length; i++) {
-                        tableView.getColumns().get(i).prefWidthProperty().setValue(columnWidths[i]);
-                    }
-                }
-
-                tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-            }
-        }
-    }
-
-    private void saveColumnVisibility() {
-        final Account account = accountProperty.getValue();
-
-        if (account != null) {
-            final String uuid = account.getUuid();
-            final Preferences preferences = Preferences.userRoot().node(PREF_NODE_REG_VIS);
-
-            final boolean[] columnVisibility = new boolean[tableView.getColumns().size()];
-
-            for (int i = 0; i < columnVisibility.length; i++) {
-                columnVisibility[i] = tableView.getColumns().get(i).isVisible();
-            }
-
-            preferences.put(uuid, EncodeDecode.encodeBooleanArray(columnVisibility));
-        }
-    }
-
-    private void restoreColumnVisibility() {
-        final Account account = accountProperty.getValue();
-
-        if (account != null) {
-            final String uuid = account.getUuid();
-            final Preferences preferences = Preferences.userRoot().node(PREF_NODE_REG_VIS);
-
-            final String result = preferences.get(uuid, null);
-            if (result != null) {
-                final boolean[] columnVisibility = EncodeDecode.decodeBooleanArray(result);
-
-                tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
-
-                if (columnVisibility.length == tableView.getColumns().size()) {
-                    for (int i = 0; i < columnVisibility.length; i++) {
-                        tableView.getColumns().get(i).visibleProperty().setValue(columnVisibility[i]);
-                    }
-                }
-
-                tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-            }
-        }
-    }
-
-    private void installColumnListeners() {
-        for (final TableColumn<Transaction, ?> tableColumn : tableView.getColumns()) {
-            tableColumn.visibleProperty().addListener(visibilityListener);
-            tableColumn.widthProperty().addListener(widthListener);
-        }
-    }
-
-    private void removeColumnListeners() {
-        for (final TableColumn<Transaction, ?> tableColumn : tableView.getColumns()) {
-            tableColumn.visibleProperty().removeListener(visibilityListener);
-            tableColumn.widthProperty().removeListener(widthListener);
+            tableViewManager.restoreLayout();   // required to table view manager is to work
         }
     }
 
     public void packTable() {
-
-        final double[] PREF_COLUMN_WEIGHTS = {0, 0, 20, 20, 20, 0, 0, 0, 0};
-
-        // Check for mismatch of column count and bail if needed
-        if (tableView.getColumns().size() != PREF_COLUMN_WEIGHTS.length) {
-            return;
-        }
-
-        // Create a list of visible columns and column weights
-        final List<TableColumn<Transaction, ?>> visibleColumns = new ArrayList<>();
-        final List<Double> visibleColumnWeights = new ArrayList<>();
-
-        for (int i = 0; i < tableView.getColumns().size(); i++) {
-            if(tableView.getColumns().get(i).isVisible()) {
-                visibleColumns.add(tableView.getColumns().get(i));
-                visibleColumnWeights.add(PREF_COLUMN_WEIGHTS[i]);
-            }
-        }
-
-        /*
-         * The calculated width of all visible columns, tableView.getWidth() does not allocate for the scroll bar if
-         * visible within the TableView
-         */
-        double tableWidth = 0;
-
-        for (final TableColumn<Transaction, ?> column : visibleColumns) {
-            tableWidth += Math.rint(column.getWidth());
-        }
-
-        double calculatedWidths[] = new double[visibleColumns.size()];
-        double calculatedWidth = 0;
-
-        for (int i = 0; i < calculatedWidths.length; i++) {
-            calculatedWidths[i] = getCalculatedColumnWidth(visibleColumns.get(i));
-            calculatedWidth += calculatedWidths[i];
-        }
-
-        double[] optimizedWidths = calculatedWidths.clone();
-
-        if (calculatedWidth > tableWidth) { // calculated width is wider than the page... need to compress columns
-            Double[] columnWeights = visibleColumnWeights.toArray(new Double[visibleColumnWeights.size()]);
-
-            double fixedWidth = 0; // total fixed width of columns
-
-            for (int i = 0; i < optimizedWidths.length; i++) {
-                if (columnWeights[i] == 0) {
-                    fixedWidth += optimizedWidths[i];
-                }
-            }
-
-            double diff = tableWidth - fixedWidth; // remaining non fixed width that must be compressed
-            double totalWeight = 0; // used to calculate percentages
-
-            for (double columnWeight : columnWeights) {
-                totalWeight += columnWeight;
-            }
-
-            int i = 0;
-            while (i < columnWeights.length) {
-                if (columnWeights[i] > 0) {
-                    double adj = (columnWeights[i] / totalWeight * diff);
-
-                    if (optimizedWidths[i] > adj) { // only change if necessary
-                        optimizedWidths[i] = adj;
-                    } else {
-                        diff -= optimizedWidths[i]; // available difference is reduced
-                        totalWeight -= columnWeights[i]; // adjust the weighting
-                        optimizedWidths = calculatedWidths.clone(); // reset widths
-                        columnWeights[i] = 0d; // do not try to adjust width again
-                        i = -1; // restart the loop from the beginning
-                    }
-                }
-                i++;
-            }
-        }
-
-        final double[] finalWidths = optimizedWidths.clone();
-
-        Platform.runLater(() -> {
-            removeColumnListeners();
-            tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
-
-            for (int i = 0; i < finalWidths.length; i++) {
-                visibleColumns.get(i).prefWidthProperty().setValue(finalWidths[i]);
-            }
-
-            tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-            installColumnListeners();
-
-            System.out.println(EncodeDecode.encodeDoubleArray(finalWidths));
-        });
+        tableViewManager.packTable();
     }
-
-    /**
-     * Determines the preferred width of the column including contents
-     *
-     * @param column {@code TableColumn} to measure content
-     * @return preferred width
-     */
-    private double getCalculatedColumnWidth(final TableColumnBase<?, ?> column) {
-        DateFormat dateFormatter = DateUtils.getShortDateFormat();
-
-        double maxWidth = column.getMinWidth(); // init with the minimum column width
-
-        for (int i = 0; i < tableView.getItems().size(); i++) {
-
-            final Object object = column.getCellData(i);
-
-            if (object != null) {
-                String displayString;
-
-                if (object instanceof Date) {
-                    displayString = dateFormatter.format(object);
-                } else {
-                    displayString = object.toString();
-                }
-
-                if (!displayString.isEmpty()) {    // ignore empty strings
-                    final Text text = new Text(displayString);
-                    new Scene(new Group(text));
-
-                    text.applyCss();
-                    maxWidth = Math.max(maxWidth, text.getLayoutBounds().getWidth());
-                }
-            }
-        }
-
-        return Math.ceil(maxWidth + 4);
-    }
-
 
     private static class IncreaseAmountProperty extends SimpleObjectProperty<BigDecimal> {
         IncreaseAmountProperty(final BigDecimal value) {
@@ -477,20 +224,6 @@ public class RegisterTableController implements Initializable {
                     }
                 }
             }
-        }
-    }
-
-    private final class ColumnVisibilityListener implements ChangeListener<Boolean> {
-        @Override
-        public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
-            updateColumnVisibilityExecutor.execute(RegisterTableController.this::saveColumnVisibility);
-        }
-    }
-
-    private final class ColumnWidthListener implements ChangeListener<Number> {
-        @Override
-        public void changed(final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue) {
-            updateColumnSizeExecutor.execute(RegisterTableController.this::saveColumnWidths);
         }
     }
 }
