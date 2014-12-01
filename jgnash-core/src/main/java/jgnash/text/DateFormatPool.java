@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.regex.Pattern;
 
 import jgnash.util.Callable;
+import jgnash.util.DateUtils;
 import jgnash.util.ObjectPool;
 
 /**
@@ -33,24 +34,12 @@ public class DateFormatPool {
 
     private static final ObjectPool<DateFormat> simpleDatePool;
 
-    private static final Pattern MONTH_PATTERN = Pattern.compile("M{1,2}");
-
-    private static final Pattern DAY_PATTERN = Pattern.compile("d{1,2}");
-
     static {
         simpleDatePool = new ObjectPool<>();
         simpleDatePool.setInstanceCallable(new Callable<DateFormat>() {
             @Override
             public synchronized DateFormat call() {
-                DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
-
-                if (df instanceof SimpleDateFormat) {
-                    String pattern = ((SimpleDateFormat) df).toPattern();
-
-                    pattern = DAY_PATTERN.matcher(MONTH_PATTERN.matcher(pattern).replaceAll("MM")).replaceAll("dd");
-                    ((SimpleDateFormat) df).applyPattern(pattern);
-                }
-                return df;
+                return DateUtils.getShortDateFormat();
             }
         });
     }

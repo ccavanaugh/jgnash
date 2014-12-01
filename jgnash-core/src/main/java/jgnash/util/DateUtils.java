@@ -813,7 +813,8 @@ public class DateUtils {
     //   }
 
     /**
-     * Generates a customized DateFormat with constant width for all dates.
+     * Generates a customized DateFormat with constant width for all dates. A new
+     * instance is created each time
      * 
      * @return a short DateFormat
      */
