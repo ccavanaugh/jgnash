@@ -45,7 +45,7 @@ import javafx.scene.control.TableView;
  */
 public class RegisterTableController implements Initializable {
 
-    private final double[] PREF_COLUMN_WEIGHTS = {0, 0, 20, 20, 20, 0, 0, 0, 0};
+    private final double[] PREF_COLUMN_WEIGHTS = {0, 0, 50, 50, 0, 0, 0, 0, 0};
 
     private static final String PREF_NODE_USER_ROOT = "/jgnash/uifx/views/register";
 
