@@ -25,23 +25,29 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * is thread-safe
  *
  * @author Craig Cavanaugh
- *
  */
-abstract class ObjectPool<T> {
+public class ObjectPool<T> {
 
     private final Queue<T> objects;
+
+    @Nullable private Callable<T> instanceCallable;
 
     public ObjectPool() {
         objects = new ConcurrentLinkedQueue<>();
     }
 
-    public abstract T createInstance();
+    public void setInstanceCallable(@Nullable final Callable<T> instanceCallable) {
+        this.instanceCallable = instanceCallable;
+    }
 
     public T take() {
         T t;
 
         if ((t = objects.poll()) == null) {
-            t = createInstance();
+            //t = createInstance();
+            if (instanceCallable != null) {
+                t = instanceCallable.call();
+            }
         }
         return t;
     }

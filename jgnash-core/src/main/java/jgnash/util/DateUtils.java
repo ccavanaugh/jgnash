@@ -53,17 +53,21 @@ public class DateUtils {
      * Local object pool for calendar objects because they are expensive to
      * create
      */
-    private static final ObjectPool<GregorianCalendar> calendarPool = new ObjectPool<GregorianCalendar>() {
-
-        @Override
-        public GregorianCalendar createInstance() {
-            return new GregorianCalendar();
-        }
-    };
+    private static final ObjectPool<GregorianCalendar> calendarPool;
 
     private static final Pattern MONTH_PATTERN = Pattern.compile("M{1,2}");
 
     private static final Pattern DAY_PATTERN = Pattern.compile("d{1,2}");
+
+    static {
+        calendarPool = new ObjectPool<>();
+        calendarPool.setInstanceCallable(new Callable<GregorianCalendar>() {
+            @Override
+            public GregorianCalendar call() {
+                return new GregorianCalendar();
+            }
+        });
+    }
 
     private DateUtils() {
     }
