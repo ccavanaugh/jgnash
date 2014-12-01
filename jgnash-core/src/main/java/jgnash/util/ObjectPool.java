@@ -44,7 +44,6 @@ public class ObjectPool<T> {
         T t;
 
         if ((t = objects.poll()) == null) {
-            //t = createInstance();
             if (instanceCallable != null) {
                 t = instanceCallable.call();
             }
