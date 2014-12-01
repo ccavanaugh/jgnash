@@ -37,11 +37,9 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-public abstract class CommodityFormat {
+public class CommodityFormat {
 
     private static final CommodityListener listener;
-
-    private static CommodityFormat fullFormat;
 
     private static final Map<CommodityNode, ThreadLocal<DecimalFormat>> fullInstanceMap = new HashMap<>();
 
@@ -220,12 +218,6 @@ public abstract class CommodityFormat {
         return threadLocal.get();
     }
 
-    public static synchronized CommodityFormat getFullFormat() {
-        if (fullFormat != null) {
-            return fullFormat;
-        }
-        return fullFormat = new FullFormat();
-    }
 
     private static String getConversion(final String cur1, final String cur2) {
         return cur1 + " > " + cur2;
@@ -233,18 +225,6 @@ public abstract class CommodityFormat {
 
     public static String getConversion(final CommodityNode cur1, final CommodityNode cur2) {
         return getConversion(cur1.getSymbol(), cur2.getSymbol());
-    }
-
-    public abstract String format(final BigDecimal value, final CommodityNode node);
-
-    private static class FullFormat extends CommodityFormat {
-        @Override
-        public String format(final BigDecimal value, final CommodityNode node) {
-            if (value != null && node != null) {
-                return getFullNumberFormat(node).format(value.doubleValue());
-            }
-            return null;
-        }
     }
 
     private static class CommodityListener implements MessageListener {

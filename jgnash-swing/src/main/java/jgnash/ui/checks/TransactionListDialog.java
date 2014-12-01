@@ -28,6 +28,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -224,8 +225,6 @@ class TransactionListDialog extends JDialog implements ActionListener, ListSelec
 
         private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
 
-        private final CommodityFormat commodityformat = CommodityFormat.getFullFormat();
-
         Model(final List<Transaction> list) {
 
             for (Transaction t : list) {
@@ -303,7 +302,8 @@ class TransactionListDialog extends JDialog implements ActionListener, ListSelec
                 case 3:
                     return baseAccount.getName();
                 case 4:
-                    return commodityformat.format(w.transaction.getAmount(baseAccount).abs(), baseAccount.getCurrencyNode());
+                    final NumberFormat format = CommodityFormat.getFullNumberFormat(baseAccount.getCurrencyNode());
+                    return format.format(w.transaction.getAmount(baseAccount).abs());
                 default:
                     return null;
             }

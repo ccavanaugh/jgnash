@@ -18,6 +18,7 @@
 package jgnash.engine;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -204,18 +205,17 @@ public class TransactionFactory {
 
         assert incomeExchangedAmount.signum() <= 0;
 
-        InvestmentTransaction transaction = new InvestmentTransaction();
+        final InvestmentTransaction transaction = new InvestmentTransaction();
         transaction.setDate(date);
         transaction.setMemo(memo);
 
-        TransactionEntryDividendX entry = new TransactionEntryDividendX(incomeAccount, investmentAccount, node, dividend, incomeExchangedAmount);
+        final TransactionEntryDividendX entry = new TransactionEntryDividendX(incomeAccount, investmentAccount, node, dividend, incomeExchangedAmount);
         entry.setMemo(memo);
 
-        Resource rb = Resource.get();
-        CommodityFormat format = CommodityFormat.getFullFormat();
+        final Resource rb = Resource.get();
+        final NumberFormat format = CommodityFormat.getFullNumberFormat(incomeAccount.getCurrencyNode());
 
-        transaction.setPayee(rb.getString("Word.Dividend") + " : " + node.getSymbol() + " @ "
-                + format.format(dividend, incomeAccount.getCurrencyNode()));
+        transaction.setPayee(rb.getString("Word.Dividend") + " : " + node.getSymbol() + " @ " + format.format(dividend));
 
         transaction.addTransactionEntry(entry);
 
@@ -260,18 +260,17 @@ public class TransactionFactory {
 
         assert incomeExchangedAmount.signum() <= 0;
 
-        InvestmentTransaction transaction = new InvestmentTransaction();
+        final InvestmentTransaction transaction = new InvestmentTransaction();
         transaction.setDate(date);
         transaction.setMemo(memo);
 
-        TransactionEntryRocX entry = new TransactionEntryRocX(incomeAccount, investmentAccount, node, dividend, incomeExchangedAmount);
+        final TransactionEntryRocX entry = new TransactionEntryRocX(incomeAccount, investmentAccount, node, dividend, incomeExchangedAmount);
         entry.setMemo(memo);
 
-        Resource rb = Resource.get();
-        CommodityFormat format = CommodityFormat.getFullFormat();
+        final Resource rb = Resource.get();
+        final NumberFormat format = CommodityFormat.getFullNumberFormat(incomeAccount.getCurrencyNode());
 
-        transaction.setPayee(rb.getString("Word.ReturnOfCapital") + " : " + node.getSymbol() + " @ "
-                + format.format(dividend, incomeAccount.getCurrencyNode()));
+        transaction.setPayee(rb.getString("Word.ReturnOfCapital") + " : " + node.getSymbol() + " @ " + format.format(dividend));
 
         transaction.addTransactionEntry(entry);
 
@@ -432,11 +431,12 @@ public class TransactionFactory {
 
         entry.setMemo(memo);
 
-        Resource rb = Resource.get();
-        CommodityFormat format = CommodityFormat.getFullFormat();
+        final Resource rb = Resource.get();
+
+        final NumberFormat format = CommodityFormat.getFullNumberFormat(node);
 
         transaction.setPayee(rb.getString("Word.ReInvDiv") + " : " + node.getSymbol() + ' ' + quantity.toString()
-                + " @ " + format.format(quantity, node));
+                + " @ " + format.format(quantity));
 
         transaction.addTransactionEntry(entry);
 
@@ -722,11 +722,12 @@ public class TransactionFactory {
     }
 
     private static String buildPayee(final String wordProperty, final SecurityNode node, final BigDecimal price, final BigDecimal quantity) {
-        Resource rb = Resource.get();
-        CommodityFormat format = CommodityFormat.getFullFormat();
+        final Resource rb = Resource.get();
+
+        final NumberFormat format = CommodityFormat.getFullNumberFormat(node);
 
         return rb.getString(wordProperty) + " : " + node.getSymbol() + ' ' + quantity.toString() + " @ "
-                + format.format(price, node);
+                + format.format(price);
     }
 
     private TransactionFactory() {

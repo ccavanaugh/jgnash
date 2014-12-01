@@ -21,6 +21,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
@@ -50,7 +51,6 @@ import jgnash.util.Resource;
  * 
  * @author Craig Cavanaugh
  * @author Peter Vida
- *
  */
 public final class ExpandingAccountTableModel extends AbstractExpandingTableModel<Account> implements AccountFilterModel {
 
@@ -67,8 +67,6 @@ public final class ExpandingAccountTableModel extends AbstractExpandingTableMode
     private final transient Class<?>[] columnTypes;
 
     private static final Logger logger = Logger.getLogger(ExpandingAccountTableModel.class.getName());
-
-    private final transient CommodityFormat formatter = CommodityFormat.getFullFormat();
 
     private final transient Preferences p = Preferences.userNodeForPackage(ExpandingAccountTableModel.class);
 
@@ -165,14 +163,14 @@ public final class ExpandingAccountTableModel extends AbstractExpandingTableMode
         try {
             readLock.lock();
 
-            ExpandingTableNode<Account> node = getExpandingTableNodeAt(rowIndex);
+            final ExpandingTableNode<Account> node = getExpandingTableNodeAt(rowIndex);
 
             if (node == null || node.getObject() == null) {
                 logger.log(Level.WARNING, "Null data", new Exception());
                 return "";
             }
 
-            Account account = node.getObject();
+            final Account account = node.getObject();
 
             switch (columnIndex) {
                 case 0:
@@ -181,10 +179,12 @@ public final class ExpandingAccountTableModel extends AbstractExpandingTableMode
                     return account.getTransactionCount();
                 case 2:
                     BigDecimal balance = AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(), account.getTreeBalance());
-                    return formatter.format(balance, account.getCurrencyNode());
+                    NumberFormat format = CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
+                    return format.format(balance);
                 case 3:
                     BigDecimal reconciledBalance = AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(), account.getReconciledTreeBalance());
-                    return formatter.format(reconciledBalance, account.getCurrencyNode());
+                    NumberFormat numberFormat = CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
+                    return numberFormat.format(reconciledBalance);
                 case 4:
                     return account.getCurrencyNode().getSymbol();
                 case 5:

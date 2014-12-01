@@ -25,6 +25,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -76,8 +77,6 @@ public class InvestmentRegisterPanel extends AbstractRegisterPanel implements Ac
 
     private JScrollPane jScrollPane;
 
-    private final CommodityFormat fullFormat;
-
     private Account account;
 
     private AbstractRegisterTableModel model;
@@ -86,9 +85,7 @@ public class InvestmentRegisterPanel extends AbstractRegisterPanel implements Ac
 
     private InvestmentTransactionPanel transactionPanel;
 
-    public InvestmentRegisterPanel(Account acc) {
-        fullFormat = CommodityFormat.getFullFormat();
-
+    public InvestmentRegisterPanel(final Account acc) {
         if (!acc.memberOf(AccountGroup.INVEST)) {
             throw new IllegalArgumentException("Not an InvestmentAccount");
         }
@@ -187,10 +184,13 @@ public class InvestmentRegisterPanel extends AbstractRegisterPanel implements Ac
 
         accountPath.setText(account.getName());
         accountPath.setToolTipText(getAccountPath()); // show full path in the
+
+        final NumberFormat fullFormat = CommodityFormat.getFullNumberFormat(getAccountCurrencyNode());
+
         // tool tip
-        marketValue.setText(fullFormat.format(market, getAccountCurrencyNode()));
-        cashBalance.setText(fullFormat.format(cash, getAccountCurrencyNode()));
-        accountBalance.setText(fullFormat.format(cash.add(market), getAccountCurrencyNode()));
+        marketValue.setText(fullFormat.format(market));
+        cashBalance.setText(fullFormat.format(cash));
+        accountBalance.setText(fullFormat.format(cash.add(market)));
     }
 
     @Override
@@ -226,7 +226,7 @@ public class InvestmentRegisterPanel extends AbstractRegisterPanel implements Ac
      * @param e action event
      */
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == deleteButton) {
             deleteAction();
         } else if (e.getSource() == newButton) {
