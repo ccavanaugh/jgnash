@@ -345,6 +345,14 @@ public class TableViewManager<S> {
         }).start();
     }
 
+    /**
+     * Sets a {@code Format} factory.  A Format will be returned for each column.  A null value may
+     * be returned as well.
+     *
+     * The returned Format must be thread safe.
+     *
+     * @param cellFormat Callback to generate a {@code Format} given a {@code TableColumnBase}
+     */
     public void setColumnFormatFactory(final Callback<TableColumnBase<S, ?>, Format> cellFormat) {
         this.columnFormatFactory.set(cellFormat);
     }
