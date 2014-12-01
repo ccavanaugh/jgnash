@@ -54,12 +54,30 @@ public class DateUtils {
     private static final Pattern DAY_PATTERN = Pattern.compile("d{1,2}");
 
     /**
-     * ThreadLocal for a {@code GregorianCalendar}*
+     * ThreadLocal for a {@code GregorianCalendar}
      */
     private static ThreadLocal<GregorianCalendar> gregorianCalendarThreadLocal = new ThreadLocal<GregorianCalendar>() {
         @Override
         protected GregorianCalendar initialValue() {
             return new GregorianCalendar();
+        }
+    };
+
+    /**
+     * ThreadLocal for a short {@code DateFormat}
+     */
+    private static ThreadLocal<DateFormat> shortDateFormatHolder = new ThreadLocal<DateFormat>() {
+        @Override
+        protected DateFormat initialValue() {
+            final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+
+            if (df instanceof SimpleDateFormat) {
+                String pattern = ((SimpleDateFormat) df).toPattern();
+
+                pattern = DAY_PATTERN.matcher(MONTH_PATTERN.matcher(pattern).replaceAll("MM")).replaceAll("dd");
+                ((SimpleDateFormat) df).applyPattern(pattern);
+            }
+            return df;
         }
     };
 
@@ -691,15 +709,7 @@ public class DateUtils {
      * @return a short DateFormat
      */
     public static DateFormat getShortDateFormat() {
-        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
-
-        if (df instanceof SimpleDateFormat) {
-            String pattern = ((SimpleDateFormat) df).toPattern();
-
-            pattern = DAY_PATTERN.matcher(MONTH_PATTERN.matcher(pattern).replaceAll("MM")).replaceAll("dd");
-            ((SimpleDateFormat) df).applyPattern(pattern);
-        }
-        return df;
+        return shortDateFormatHolder.get();
     }
 
     /**
