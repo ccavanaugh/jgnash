@@ -23,7 +23,6 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 import jgnash.engine.CommodityNode;
@@ -31,6 +30,7 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
+import jgnash.util.NotNull;
 
 /**
  * Formats commodities for display
@@ -43,11 +43,11 @@ public abstract class CommodityFormat {
 
     private static CommodityFormat fullFormat;
 
-    private static final Map<CommodityNode, DecimalFormat> fullInstanceMap = new HashMap<>();
+    private static final Map<CommodityNode, ThreadLocal<DecimalFormat>> fullInstanceMap = new HashMap<>();
 
-    private static final Map<CommodityNode, DecimalFormat> simpleInstanceMap = new HashMap<>();
+    private static final Map<CommodityNode, ThreadLocal<DecimalFormat>> simpleInstanceMap = new HashMap<>();
 
-    private static final String[] ESCAPE_CHARS = new String[] { ",", ".", "0", "#", "-", ";", "%" };
+    private static final String[] ESCAPE_CHARS = new String[]{",", ".", "0", "#", "-", ";", "%"};
 
     private static final boolean DEBUG = false;
 
@@ -77,7 +77,7 @@ public abstract class CommodityFormat {
 
         DecimalFormat format = (DecimalFormat) getFullNumberFormat(node);
         String pattern = format.toPattern();
-               
+
         if (pattern.charAt(0) == '\u00A4') {
             String prefix = node.getPrefix();
 
@@ -103,98 +103,121 @@ public abstract class CommodityFormat {
         return pattern.replace("\u00A4", suffix);
     }
 
-    public static NumberFormat getShortNumberFormat(final CommodityNode node) {
-        DecimalFormat o = simpleInstanceMap.get(node);
+    /**
+     * Returns a thread safe simplified {@code NumberFormat} for a given {@code CommodityNode}
+     *
+     * @param node CommodityNode to format to
+     * @return thread safe {@code NumberFormat}
+     */
+    public static NumberFormat getShortNumberFormat(@NotNull final CommodityNode node) {
+        final ThreadLocal<DecimalFormat> o = simpleInstanceMap.get(node);
 
         if (o != null) {
-            return o;
+            return o.get();
         }
 
-        DecimalFormat df = (DecimalFormat) NumberFormat.getCurrencyInstance();
-        DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
-        dfs.setCurrencySymbol("");
-        df.setDecimalFormatSymbols(dfs);
-        df.setMaximumFractionDigits(node.getScale());
+        final ThreadLocal<DecimalFormat> threadLocal = new ThreadLocal<DecimalFormat>() {
+            @Override
+            protected DecimalFormat initialValue() {
+                final DecimalFormat df = (DecimalFormat) NumberFormat.getCurrencyInstance();
+                final DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
+                dfs.setCurrencySymbol("");
+                df.setDecimalFormatSymbols(dfs);
+                df.setMaximumFractionDigits(node.getScale());
 
-        // required for some locale
-        df.setMinimumFractionDigits(df.getMaximumFractionDigits());
+                // required for some locale
+                df.setMinimumFractionDigits(df.getMaximumFractionDigits());
 
-        // for positive suffix padding for fraction alignment
-        int negSufLen = df.getNegativeSuffix().length();
-        if (negSufLen > 0) {
-            char[] pad = new char[negSufLen];
-            for (int i = 0; i < negSufLen; i++) {
-                pad[i] = ' ';
+                // for positive suffix padding for fraction alignment
+                int negSufLen = df.getNegativeSuffix().length();
+                if (negSufLen > 0) {
+                    char[] pad = new char[negSufLen];
+                    for (int i = 0; i < negSufLen; i++) {
+                        pad[i] = ' ';
+                    }
+                    df.setPositiveSuffix(new String(pad));
+                }
+
+                return df;
             }
-            df.setPositiveSuffix(new String(pad));
-        }
+        };
 
-        simpleInstanceMap.put(node, df);
+        simpleInstanceMap.put(node, threadLocal);
 
-        return df;
+        return threadLocal.get();
     }
 
-    public static NumberFormat getFullNumberFormat(final CommodityNode node) {
-        Objects.requireNonNull(node);
-
-        DecimalFormat o = fullInstanceMap.get(node);
+    /**
+     * Returns a thread safe {@code NumberFormat} for a given {@code CommodityNode}
+     *
+     * @param node CommodityNode to format to
+     * @return thread safe {@code NumberFormat}
+     */
+    public static NumberFormat getFullNumberFormat(@NotNull final CommodityNode node) {
+        final ThreadLocal<DecimalFormat> o = fullInstanceMap.get(node);
 
         if (o != null) {
-            return o;
+            return o.get();
         }
 
-        DecimalFormat df = (DecimalFormat) NumberFormat.getCurrencyInstance();
+        final ThreadLocal<DecimalFormat> threadLocal = new ThreadLocal<DecimalFormat>() {
+            @Override
+            protected DecimalFormat initialValue() {
+                final DecimalFormat df = (DecimalFormat) NumberFormat.getCurrencyInstance();
 
-        if (DEBUG) {
-            BigDecimal bd = new BigDecimal("12.34");
-            System.out.println("Before");
-            System.out.println(df.format(bd));
-            System.out.println(df.format(bd.negate()) + '.');
-            System.out.println(df.getNegativeSuffix() + '.');
-            System.out.println(df.getPositiveSuffix());
-        }
+                if (DEBUG) {
+                    BigDecimal bd = new BigDecimal("12.34");
+                    System.out.println("Before");
+                    System.out.println(df.format(bd));
+                    System.out.println(df.format(bd.negate()) + '.');
+                    System.out.println(df.getNegativeSuffix() + '.');
+                    System.out.println(df.getPositiveSuffix());
+                }
 
-        DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
-        dfs.setCurrencySymbol(node.getPrefix());
-        df.setDecimalFormatSymbols(dfs);
-        df.setMaximumFractionDigits(node.getScale());
+                final DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
+                dfs.setCurrencySymbol(node.getPrefix());
+                df.setDecimalFormatSymbols(dfs);
+                df.setMaximumFractionDigits(node.getScale());
 
-        // required for some locale
-        df.setMinimumFractionDigits(df.getMaximumFractionDigits());
+                // required for some locale
+                df.setMinimumFractionDigits(df.getMaximumFractionDigits());
 
-        if (node.getSuffix() != null && !node.getSuffix().isEmpty()) {
-            df.setPositiveSuffix(node.getSuffix() + df.getPositiveSuffix());
-            df.setNegativeSuffix(node.getSuffix() + df.getNegativeSuffix());
-        }
+                if (node.getSuffix() != null && !node.getSuffix().isEmpty()) {
+                    df.setPositiveSuffix(node.getSuffix() + df.getPositiveSuffix());
+                    df.setNegativeSuffix(node.getSuffix() + df.getNegativeSuffix());
+                }
 
-        // for positive suffix padding for fraction alignment
-        int negSufLen = df.getNegativeSuffix().length();
-        int posSufLen = df.getPositiveSuffix().length();
+                // for positive suffix padding for fraction alignment
+                final int negSufLen = df.getNegativeSuffix().length();
+                final int posSufLen = df.getPositiveSuffix().length();
 
-        if (negSufLen > posSufLen) {
-            StringBuilder buf = new StringBuilder(df.getPositiveSuffix());
-            for (int i = negSufLen - posSufLen; i <= negSufLen; i++) {
-                buf.append(' ');
+                if (negSufLen > posSufLen) {
+                    StringBuilder buf = new StringBuilder(df.getPositiveSuffix());
+                    for (int i = negSufLen - posSufLen; i <= negSufLen; i++) {
+                        buf.append(' ');
+                    }
+                    df.setPositiveSuffix(buf.toString());
+                } else if (posSufLen > negSufLen) {
+                    StringBuilder buf = new StringBuilder(df.getNegativeSuffix());
+                    for (int i = posSufLen - negSufLen; i <= posSufLen; i++) {
+                        buf.append(' ');
+                    }
+                    df.setNegativeSuffix(buf.toString());
+                }
+
+                if (DEBUG) {
+                    BigDecimal bd = new BigDecimal("12.34");
+                    System.out.println("After");
+                    System.out.println(df.format(bd) + '~');
+                    System.out.println(df.format(bd.negate()) + '~');
+                }
+                return df;
             }
-            df.setPositiveSuffix(buf.toString());
-        } else if (posSufLen > negSufLen) {
-            StringBuilder buf = new StringBuilder(df.getNegativeSuffix());
-            for (int i = posSufLen - negSufLen; i <= posSufLen; i++) {
-                buf.append(' ');
-            }
-            df.setNegativeSuffix(buf.toString());
-        }
+        };
 
-        fullInstanceMap.put(node, df);
+        fullInstanceMap.put(node, threadLocal);
 
-        if (DEBUG) {
-            BigDecimal bd = new BigDecimal("12.34");
-            System.out.println("After");
-            System.out.println(df.format(bd) + '~');
-            System.out.println(df.format(bd.negate()) + '~');
-        }
-
-        return df;
+        return threadLocal.get();
     }
 
     public static synchronized CommodityFormat getFullFormat() {
