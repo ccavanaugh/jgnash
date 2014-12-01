@@ -277,50 +277,47 @@ public class TableViewManager<S> {
             }
 
             double calculatedWidths[] = new double[visibleColumns.size()];
-            double calculatedWidth = 0;
 
             for (int i = 0; i < calculatedWidths.length; i++) {
                 calculatedWidths[i] = getCalculatedColumnWidth(visibleColumns.get(i));
-                calculatedWidth += calculatedWidths[i];
             }
 
             double[] optimizedWidths = calculatedWidths.clone();
 
-            if (calculatedWidth > calculatedTableWidth) { // calculated width is wider than the page... need to compress columns
-                Double[] columnWeights = visibleColumnWeights.toArray(new Double[visibleColumnWeights.size()]);
+            // optimize column widths
+            Double[] columnWeights = visibleColumnWeights.toArray(new Double[visibleColumnWeights.size()]);
 
-                double fixedWidthColumnTotals = 0; // total fixed width of columns
+            double fixedWidthColumnTotals = 0; // total fixed width of columns
 
-                for (int i = 0; i < optimizedWidths.length; i++) {
-                    if (columnWeights[i] == 0) {
-                        fixedWidthColumnTotals += optimizedWidths[i];
+            for (int i = 0; i < optimizedWidths.length; i++) {
+                if (columnWeights[i] == 0) {
+                    fixedWidthColumnTotals += optimizedWidths[i];
+                }
+            }
+
+            double diff = calculatedTableWidth - fixedWidthColumnTotals; // remaining non fixed width that must be compressed
+            double totalWeight = 0; // used to calculate percentages
+
+            for (double columnWeight : columnWeights) {
+                totalWeight += columnWeight;
+            }
+
+            int i = 0;
+            while (i < columnWeights.length) {
+                if (columnWeights[i] > 0) {
+                    double adj = (columnWeights[i] / totalWeight * diff);
+
+                    if (optimizedWidths[i] > adj) { // only change if necessary
+                        optimizedWidths[i] = adj;
+                    } else {
+                        diff -= optimizedWidths[i]; // available difference is reduced
+                        totalWeight -= columnWeights[i]; // adjust the weighting
+                        optimizedWidths = calculatedWidths.clone(); // reset widths
+                        columnWeights[i] = 0d; // do not try to adjust width again
+                        i = -1; // restart the loop from the beginning
                     }
                 }
-
-                double diff = calculatedTableWidth - fixedWidthColumnTotals; // remaining non fixed width that must be compressed
-                double totalWeight = 0; // used to calculate percentages
-
-                for (double columnWeight : columnWeights) {
-                    totalWeight += columnWeight;
-                }
-
-                int i = 0;
-                while (i < columnWeights.length) {
-                    if (columnWeights[i] > 0) {
-                        double adj = (columnWeights[i] / totalWeight * diff);
-
-                        if (optimizedWidths[i] > adj) { // only change if necessary
-                            optimizedWidths[i] = adj;
-                        } else {
-                            diff -= optimizedWidths[i]; // available difference is reduced
-                            totalWeight -= columnWeights[i]; // adjust the weighting
-                            optimizedWidths = calculatedWidths.clone(); // reset widths
-                            columnWeights[i] = 0d; // do not try to adjust width again
-                            i = -1; // restart the loop from the beginning
-                        }
-                    }
-                    i++;
-                }
+                i++;
             }
 
             final double[] finalWidths = optimizedWidths.clone();
@@ -334,8 +331,8 @@ public class TableViewManager<S> {
                 // unconstrained is required for resize columns correctly
                 tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
-                for (int i = 0; i < finalWidths.length; i++) {
-                    visibleColumns.get(i).prefWidthProperty().setValue(finalWidths[i]);
+                for (int j = 0; j < finalWidths.length; j++) {
+                    visibleColumns.get(j).prefWidthProperty().setValue(finalWidths[j]);
                 }
 
                 // restore the old policy
