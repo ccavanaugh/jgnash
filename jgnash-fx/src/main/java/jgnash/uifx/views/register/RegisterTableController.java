@@ -19,6 +19,7 @@ package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.text.Format;
 import java.util.Date;
 import java.util.ResourceBundle;
 
@@ -79,6 +80,15 @@ public class RegisterTableController implements Initializable {
     AccountPropertyWrapper getAccountPropertyWrapper() {
         return accountPropertyWrapper;
     }
+
+    // ThreadLocal for a short date format
+    private static ThreadLocal<Format> shortDateFormatHolder = new ThreadLocal<Format>() {
+        @Override
+        protected Format initialValue() {
+            return DateUtils.getShortDateFormat();
+        }
+    };
+
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -160,7 +170,7 @@ public class RegisterTableController implements Initializable {
             } else if (param == increaseColumn || param == decreaseColumn) {
                 return CommodityFormat.getShortNumberFormat(getAccountProperty().getValue().getCurrencyNode());
             } else if (param == dateColumn) {
-                return DateUtils.getShortDateFormat();
+                return shortDateFormatHolder.get();
             }
 
             return null;
