@@ -21,8 +21,12 @@ import java.text.Format;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import jgnash.util.Callable;
@@ -54,7 +58,8 @@ public class TableViewManager<S> {
 
     private static final String PREF_NODE_REG_VIS = "/visibility";
 
-    @NotNull private final TableView<S> tableView;
+    @NotNull
+    private final TableView<S> tableView;
 
     private final String preferencesUserRoot;
 
@@ -146,21 +151,35 @@ public class TableViewManager<S> {
                 }
 
                 if (!displayString.isEmpty()) {    // ignore empty strings
-                    final Text text = new Text(displayString);
-                    new Scene(new Group(text));
 
-                    text.applyCss();
-                    maxWidth = Math.max(maxWidth, text.getLayoutBounds().getWidth());
+
+                    // Text and Scene construction must be done on the Platform thread
+                    // Invoke the task on the platform thread and wait until complete
+                    FutureTask<Double> futureTask = new FutureTask<>(() -> {
+                        final Text text = new Text(displayString);
+                        new Scene(new Group(text));
+
+                        text.applyCss();
+                        return text.getLayoutBounds().getWidth();
+                    });
+
+                    Platform.runLater(futureTask);
+
+                    try {
+                        maxWidth = Math.max(maxWidth, futureTask.get());
+                    } catch (final InterruptedException | ExecutionException e) {
+                        Logger.getLogger(TableViewManager.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                    }
                 }
             }
         }
 
-        return Math.ceil(maxWidth + 14); // TODO, extract "10" margin from css
+        return Math.ceil(maxWidth + 14); // TODO, extract "14" margin from css
     }
 
     private void saveColumnWidths() {
         if (preferenceKeyFactory.get() != null) {
-            final String uuid =  preferenceKeyFactory.get().call();
+            final String uuid = preferenceKeyFactory.get().call();
             final Preferences preferences = Preferences.userRoot().node(preferencesUserRoot + PREF_NODE_REG_WIDTH);
 
             final double[] columnWidths = new double[tableView.getColumns().size()];
@@ -234,95 +253,99 @@ public class TableViewManager<S> {
 
     public void packTable() {
 
-        // Create a list of visible columns and column weights
-        final List<TableColumnBase<S, ?>> visibleColumns = new ArrayList<>();
-        final List<Double> visibleColumnWeights = new ArrayList<>();
+        new Thread(() -> {
 
-        for (int i = 0; i < tableView.getColumns().size(); i++) {
-            if (tableView.getColumns().get(i).isVisible()) {
-                visibleColumns.add(tableView.getColumns().get(i));
-                visibleColumnWeights.add(columnWeightFactory.get().call(i));
-            }
-        }
+            // Create a list of visible columns and column weights
+            final List<TableColumnBase<S, ?>> visibleColumns = new ArrayList<>();
+            final List<Double> visibleColumnWeights = new ArrayList<>();
 
-        /*
-         * The calculated width of all visible columns, tableView.getWidth() does not allocate for the scroll bar if
-         * visible within the TableView
-         */
-        double calculatedTableWidth = 0;
-
-        for (final TableColumnBase<S, ?> column : visibleColumns) {
-            calculatedTableWidth += Math.rint(column.getWidth());
-        }
-
-        double calculatedWidths[] = new double[visibleColumns.size()];
-        double calculatedWidth = 0;
-
-        for (int i = 0; i < calculatedWidths.length; i++) {
-            calculatedWidths[i] = getCalculatedColumnWidth(visibleColumns.get(i));
-            calculatedWidth += calculatedWidths[i];
-        }
-
-        double[] optimizedWidths = calculatedWidths.clone();
-
-        if (calculatedWidth > calculatedTableWidth) { // calculated width is wider than the page... need to compress columns
-            Double[] columnWeights = visibleColumnWeights.toArray(new Double[visibleColumnWeights.size()]);
-
-            double fixedWidthColumnTotals = 0; // total fixed width of columns
-
-            for (int i = 0; i < optimizedWidths.length; i++) {
-                if (columnWeights[i] == 0) {
-                    fixedWidthColumnTotals += optimizedWidths[i];
+            for (int i = 0; i < tableView.getColumns().size(); i++) {
+                if (tableView.getColumns().get(i).isVisible()) {
+                    visibleColumns.add(tableView.getColumns().get(i));
+                    visibleColumnWeights.add(columnWeightFactory.get().call(i));
                 }
             }
 
-            double diff = calculatedTableWidth - fixedWidthColumnTotals; // remaining non fixed width that must be compressed
-            double totalWeight = 0; // used to calculate percentages
+            /*
+            * The calculated width of all visible columns, tableView.getWidth() does not allocate for the scroll bar if
+            * visible within the TableView
+            */
+            double calculatedTableWidth = 0;
 
-            for (double columnWeight : columnWeights) {
-                totalWeight += columnWeight;
+            for (final TableColumnBase<S, ?> column : visibleColumns) {
+                calculatedTableWidth += Math.rint(column.getWidth());
             }
 
-            int i = 0;
-            while (i < columnWeights.length) {
-                if (columnWeights[i] > 0) {
-                    double adj = (columnWeights[i] / totalWeight * diff);
+            double calculatedWidths[] = new double[visibleColumns.size()];
+            double calculatedWidth = 0;
 
-                    if (optimizedWidths[i] > adj) { // only change if necessary
-                        optimizedWidths[i] = adj;
-                    } else {
-                        diff -= optimizedWidths[i]; // available difference is reduced
-                        totalWeight -= columnWeights[i]; // adjust the weighting
-                        optimizedWidths = calculatedWidths.clone(); // reset widths
-                        columnWeights[i] = 0d; // do not try to adjust width again
-                        i = -1; // restart the loop from the beginning
+            for (int i = 0; i < calculatedWidths.length; i++) {
+                calculatedWidths[i] = getCalculatedColumnWidth(visibleColumns.get(i));
+                calculatedWidth += calculatedWidths[i];
+            }
+
+            double[] optimizedWidths = calculatedWidths.clone();
+
+            if (calculatedWidth > calculatedTableWidth) { // calculated width is wider than the page... need to compress columns
+                Double[] columnWeights = visibleColumnWeights.toArray(new Double[visibleColumnWeights.size()]);
+
+                double fixedWidthColumnTotals = 0; // total fixed width of columns
+
+                for (int i = 0; i < optimizedWidths.length; i++) {
+                    if (columnWeights[i] == 0) {
+                        fixedWidthColumnTotals += optimizedWidths[i];
                     }
                 }
-                i++;
+
+                double diff = calculatedTableWidth - fixedWidthColumnTotals; // remaining non fixed width that must be compressed
+                double totalWeight = 0; // used to calculate percentages
+
+                for (double columnWeight : columnWeights) {
+                    totalWeight += columnWeight;
+                }
+
+                int i = 0;
+                while (i < columnWeights.length) {
+                    if (columnWeights[i] > 0) {
+                        double adj = (columnWeights[i] / totalWeight * diff);
+
+                        if (optimizedWidths[i] > adj) { // only change if necessary
+                            optimizedWidths[i] = adj;
+                        } else {
+                            diff -= optimizedWidths[i]; // available difference is reduced
+                            totalWeight -= columnWeights[i]; // adjust the weighting
+                            optimizedWidths = calculatedWidths.clone(); // reset widths
+                            columnWeights[i] = 0d; // do not try to adjust width again
+                            i = -1; // restart the loop from the beginning
+                        }
+                    }
+                    i++;
+                }
             }
-        }
 
-        final double[] finalWidths = optimizedWidths.clone();
+            final double[] finalWidths = optimizedWidths.clone();
 
-        Platform.runLater(() -> {
-            removeColumnListeners();
+            Platform.runLater(() -> {
+                removeColumnListeners();
 
-            @SuppressWarnings("rawtypes")
-            Callback<TableView.ResizeFeatures, Boolean> oldResizePolicy = tableView.getColumnResizePolicy();
+                @SuppressWarnings("rawtypes")
+                Callback<TableView.ResizeFeatures, Boolean> oldResizePolicy = tableView.getColumnResizePolicy();
 
-            // unconstrained is required for resize columns correctly
-            tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+                // unconstrained is required for resize columns correctly
+                tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
-            for (int i = 0; i < finalWidths.length; i++) {
-                visibleColumns.get(i).prefWidthProperty().setValue(finalWidths[i]);
-            }
+                for (int i = 0; i < finalWidths.length; i++) {
+                    visibleColumns.get(i).prefWidthProperty().setValue(finalWidths[i]);
+                }
 
-            // restore the old policy
-            tableView.setColumnResizePolicy(oldResizePolicy);
-            installColumnListeners();
+                // restore the old policy
+                tableView.setColumnResizePolicy(oldResizePolicy);
+                installColumnListeners();
 
-            updateColumnSizeExecutor.execute(TableViewManager.this::saveColumnWidths);
-        });
+                // Save the new state
+                updateColumnSizeExecutor.execute(TableViewManager.this::saveColumnWidths);
+            });
+        }).start();
     }
 
     public void setColumnFormatFactory(final Callback<TableColumnBase<S, ?>, Format> cellFormat) {
