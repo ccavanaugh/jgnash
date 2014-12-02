@@ -29,6 +29,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.function.ToDoubleFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -138,7 +139,7 @@ public class TableViewManager<S> {
      * @return preferred width
      */
     private double getCalculatedColumnWidth(final TableColumnBase<S, ?> column) {
-        double maxWidth = column.getMinWidth(); // init with the minimum column width
+        double maxWidth;
 
         /* Collect all the unique cell items and remove null*/
         final Set<Object> cellItems = new HashSet<>();
@@ -146,16 +147,18 @@ public class TableViewManager<S> {
         for (int i = 0; i < tableView.getItems().size(); i++) {
             cellItems.add(column.getCellData(i));
         }
-        cellItems.remove(null); // remove any null item
 
         /* Format will be the same for the whole column */
         final Format format = columnFormatFactory.get().call(column);
 
-        // TODO, use parallel streams
-        for (Object object : cellItems) {
-            final String displayString = format != null ? format.format(object) : object.toString();
-            maxWidth = Math.max(maxWidth, calculateDisplayedWidth(displayString));
-        }
+        maxWidth = cellItems.parallelStream().filter(s -> s != null).mapToDouble(new ToDoubleFunction<Object>() {
+            @Override
+            public double applyAsDouble(final Object o) {
+                return calculateDisplayedWidth(format != null ? format.format(o) : o.toString());
+            }
+        }).max().getAsDouble();
+
+        maxWidth = Math.max(maxWidth, column.getMinWidth());
 
         return Math.ceil(maxWidth + 14); // TODO, extract "14" margin from css
     }
