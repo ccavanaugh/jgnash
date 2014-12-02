@@ -18,8 +18,12 @@
 package jgnash.uifx.utils;
 
 import java.text.Format;
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
@@ -136,45 +140,51 @@ public class TableViewManager<S> {
     private double getCalculatedColumnWidth(final TableColumnBase<S, ?> column) {
         double maxWidth = column.getMinWidth(); // init with the minimum column width
 
+        /* Collect all the unique cell items and remove null*/
+        final Set<Object> cellItems = new HashSet<>();
+
         for (int i = 0; i < tableView.getItems().size(); i++) {
+            cellItems.add(column.getCellData(i));
+        }
+        cellItems.remove(null); // remove any null item
 
-            final Object object = column.getCellData(i);
+        /* Format will be the same for the whole column */
+        final Format format = columnFormatFactory.get().call(column);
 
-            if (object != null) {
-                final Format format = columnFormatFactory.get().call(column);
-                final String displayString;
-
-                if (format != null) {
-                    displayString = format.format(object);
-                } else {    // if null, just use toString
-                    displayString = object.toString();
-                }
-
-                if (!displayString.isEmpty()) {    // ignore empty strings
-
-
-                    // Text and Scene construction must be done on the Platform thread
-                    // Invoke the task on the platform thread and wait until complete
-                    FutureTask<Double> futureTask = new FutureTask<>(() -> {
-                        final Text text = new Text(displayString);
-                        new Scene(new Group(text));
-
-                        text.applyCss();
-                        return text.getLayoutBounds().getWidth();
-                    });
-
-                    Platform.runLater(futureTask);
-
-                    try {
-                        maxWidth = Math.max(maxWidth, futureTask.get());
-                    } catch (final InterruptedException | ExecutionException e) {
-                        Logger.getLogger(TableViewManager.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-                    }
-                }
-            }
+        // TODO, use parallel streams
+        for (Object object : cellItems) {
+            final String displayString = format != null ? format.format(object) : object.toString();
+            maxWidth = Math.max(maxWidth, calculateDisplayedWidth(displayString));
         }
 
         return Math.ceil(maxWidth + 14); // TODO, extract "14" margin from css
+    }
+
+    private double calculateDisplayedWidth(final String displayString) {
+        double width = 0;
+
+        if (!displayString.isEmpty()) {    // ignore empty strings
+
+            // Text and Scene construction must be done on the Platform thread
+            // Invoke the task on the platform thread and wait until complete
+            FutureTask<Double> futureTask = new FutureTask<>(() -> {
+                final Text text = new Text(displayString);
+                new Scene(new Group(text));
+
+                text.applyCss();
+                return text.getLayoutBounds().getWidth();
+            });
+
+            Platform.runLater(futureTask);
+
+            try {
+                width = futureTask.get();
+            } catch (final InterruptedException | ExecutionException e) {
+                Logger.getLogger(TableViewManager.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            }
+        }
+
+        return width;
     }
 
     private void saveColumnWidths() {
@@ -255,6 +265,8 @@ public class TableViewManager<S> {
 
         new Thread(() -> {
 
+            LocalTime start = LocalTime.now();
+
             // Create a list of visible columns and column weights
             final List<TableColumnBase<S, ?>> visibleColumns = new ArrayList<>();
             final List<Double> visibleColumnWeights = new ArrayList<>();
@@ -321,6 +333,8 @@ public class TableViewManager<S> {
             }
 
             final double[] finalWidths = optimizedWidths.clone();
+
+            System.out.println("Pack time was :" + Duration.between(start, LocalTime.now()).toMillis() + " millis");
 
             Platform.runLater(() -> {
                 removeColumnListeners();
