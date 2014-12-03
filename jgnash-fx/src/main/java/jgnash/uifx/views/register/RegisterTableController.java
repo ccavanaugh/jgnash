@@ -45,7 +45,7 @@ import javafx.scene.control.TableView;
  */
 public class RegisterTableController implements Initializable {
 
-    private final double[] PREF_COLUMN_WEIGHTS = {0, 0, 50, 50, 0, 0, 0, 0, 0};
+    private final double[] PREF_COLUMN_WEIGHTS = {0, 0, 33, 33, 33, 0, 0, 0, 0};
 
     private static final String PREF_NODE_USER_ROOT = "/jgnash/uifx/views/register";
 
@@ -110,12 +110,12 @@ public class RegisterTableController implements Initializable {
         final TableColumn<Transaction, Date> dateColumn = new TableColumn<>(resources.getString("Column.Date"));
         dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getDate()));
         dateColumn.setCellFactory(cell -> new TransactionDateTableCell());
-        dateColumn.setMinWidth(50);
+        dateColumn.setMinWidth(45);
 
         final TableColumn<Transaction, String> numberColumn = new TableColumn<>(resources.getString("Column.Num"));
         numberColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getNumber()));
         numberColumn.setCellFactory(cell -> new TransactionStringTableCell());
-        numberColumn.setMinWidth(50);
+        numberColumn.setMinWidth(45);
 
         final TableColumn<Transaction, String> payeeColumn = new TableColumn<>(resources.getString("Column.Payee"));
         payeeColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getPayee()));
