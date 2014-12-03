@@ -59,7 +59,7 @@ class TransactionCommodityFormatTableCell extends TableCell<Transaction, BigDeci
                 }
 
                 // Right align
-                setStyle("-fx-alignment: center_right;");
+                setStyle("-fx-alignment: center-right;");
             }
 
         } else {
