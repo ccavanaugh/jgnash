@@ -154,16 +154,17 @@ public class TableViewManager<S> {
         maxWidth = cellItems.parallelStream().filter(s -> s != null).mapToDouble(new ToDoubleFunction<Object>() {
             @Override
             public double applyAsDouble(final Object o) {
-                return calculateDisplayedWidth(format != null ? format.format(o) : o.toString());
+                return calculateDisplayedWidth(format != null ? format.format(o) : o.toString(), column.getStyle());
             }
         }).max().getAsDouble();
 
         maxWidth = Math.max(maxWidth, column.getMinWidth());
+        maxWidth = Math.max(maxWidth, calculateHeaderWidth(column));
 
         return Math.ceil(maxWidth + 14); // TODO, extract "14" margin from css
     }
 
-    private double calculateDisplayedWidth(final String displayString) {
+    private double calculateDisplayedWidth(final String displayString, final String style) {
         double width = 0;
 
         if (!displayString.isEmpty()) {    // ignore empty strings
@@ -172,6 +173,37 @@ public class TableViewManager<S> {
             // Invoke the task on the platform thread and wait until complete
             FutureTask<Double> futureTask = new FutureTask<>(() -> {
                 final Text text = new Text(displayString);
+                new Scene(new Group(text));
+                text.setStyle(style);
+
+                text.applyCss();
+                return text.getLayoutBounds().getWidth();
+            });
+
+            Platform.runLater(futureTask);
+
+            try {
+                width = futureTask.get();
+            } catch (final InterruptedException | ExecutionException e) {
+                Logger.getLogger(TableViewManager.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            }
+        }
+
+        return width;
+    }
+
+    private double calculateHeaderWidth(final TableColumnBase<S, ?> column) {
+        double width = 0;
+
+        final String displayString = column.getText();
+
+        if (!displayString.isEmpty()) {    // ignore empty strings
+
+            // Text and Scene construction must be done on the Platform thread
+            // Invoke the task on the platform thread and wait until complete
+            FutureTask<Double> futureTask = new FutureTask<>(() -> {
+                final Text text = new Text(displayString);
+                text.setStyle(column.getStyle());
                 new Scene(new Group(text));
 
                 text.applyCss();
@@ -279,6 +311,7 @@ public class TableViewManager<S> {
                     visibleColumns.add(tableView.getColumns().get(i));
                     visibleColumnWeights.add(columnWeightFactory.get().call(i));
                 }
+                tableView.getColumns().get(i).setMinWidth(0);   // clear minWidth for pack
             }
 
             /*
@@ -342,18 +375,21 @@ public class TableViewManager<S> {
             Platform.runLater(() -> {
                 removeColumnListeners();
 
-                @SuppressWarnings("rawtypes")
-                Callback<TableView.ResizeFeatures, Boolean> oldResizePolicy = tableView.getColumnResizePolicy();
-
                 // unconstrained is required for resize columns correctly
                 tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
+                // Force the column widths and let the layout policy do the heavy lifting
                 for (int j = 0; j < finalWidths.length; j++) {
-                    visibleColumns.get(j).prefWidthProperty().setValue(finalWidths[j]);
+                    if (visibleColumnWeights.get(j) == 0) {
+                        visibleColumns.get(j).minWidthProperty().setValue(finalWidths[j]);
+                        visibleColumns.get(j).maxWidthProperty().setValue(finalWidths[j]);
+                    } else {
+                        visibleColumns.get(j).prefWidthProperty().setValue(finalWidths[j]);
+                    }
                 }
 
                 // restore the old policy
-                tableView.setColumnResizePolicy(oldResizePolicy);
+                tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
                 installColumnListeners();
 
                 // Save the new state
