@@ -57,6 +57,9 @@ class TransactionCommodityFormatTableCell extends TableCell<Transaction, BigDeci
                 } else {
                     setId("normal-label");
                 }
+
+                // Right align
+                setStyle("-fx-alignment: center_right;");
             }
 
         } else {
