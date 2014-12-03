@@ -62,6 +62,11 @@ public class XStreamTransactionDAO extends AbstractXStreamDAO implements Transac
     }
 
     @Override
+    public void updateTransaction(final Transaction transaction) {
+        commit();
+    }
+
+    @Override
     public List<Transaction> getTransactionsWithAttachments() {
         List<Transaction> transactionList = new ArrayList<>();
 

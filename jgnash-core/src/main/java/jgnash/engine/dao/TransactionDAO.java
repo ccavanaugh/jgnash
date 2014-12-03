@@ -42,6 +42,14 @@ public interface TransactionDAO {
     public boolean removeTransaction(Transaction transaction);
 
     /**
+     * Transactions are generally immutable and should not be updated
+     * This is intended for fix in place data errors
+     *
+     * @param transaction
+       */
+    public void updateTransaction(Transaction transaction);
+
+    /**
      * Returns a list of transactions with external links.
      *
      * @return List of transactions

@@ -586,6 +586,9 @@ public class Engine {
                 }
             }
 
+            // fix transaction incorrectly marked for removal
+            fixMarkedRemovalTransactions();
+
             // if the file version is not current, then update it
             if (getConfig().getFileVersion() != CURRENT_VERSION) {
                 Config config = getConfig();
@@ -644,6 +647,29 @@ public class Engine {
         for (ExchangeRate rate : getCommodityDAO().getExchangeRates()) {
             if (getBaseCurrencies(rate.getRateId()) == null) {
                 removeExchangeRate(rate);
+            }
+        }
+    }
+
+    private void fixMarkedRemovalTransactions() {
+        for (final Account account : getAccountList()) {
+            for (final Transaction transaction : account.getSortedTransactionList()) {
+                if (transaction.isMarkedForRemoval()) {
+                    transaction.setMarkedForRemoval(false);
+                    getTransactionDAO().updateTransaction(transaction);
+                    logger.warning("Fixed transaction incorrectly marked for removal");
+                }
+            }
+
+            for (final Reminder reminder : getReminders()) {
+                if (reminder.getTransaction() != null) {    // reminder transaction may be null
+                    final Transaction transaction = reminder.getTransaction();
+                    if (transaction.isMarkedForRemoval()) {
+                        transaction.setMarkedForRemoval(false);
+                        getTransactionDAO().updateTransaction(transaction);
+                        logger.warning("Fixed transaction incorrectly marked for removal");
+                    }
+                }
             }
         }
     }
