@@ -34,6 +34,9 @@ class TransactionCommodityFormatTableCell extends TableCell<Transaction, BigDeci
 
     public TransactionCommodityFormatTableCell(final NumberFormat format) {
         this.format = format;
+
+        // Right align
+        setStyle("-fx-alignment: center-right;");
     }
 
     @Override
@@ -57,9 +60,6 @@ class TransactionCommodityFormatTableCell extends TableCell<Transaction, BigDeci
                 } else {
                     setId("normal-label");
                 }
-
-                // Right align
-                setStyle("-fx-alignment: center-right;");
             }
 
         } else {
