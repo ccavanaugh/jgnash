@@ -43,6 +43,9 @@ import java.util.ResourceBundle;
 /**
  * Register Table with stats controller
  *
+ * TODO Transaction lists need to update when account changes
+ * TODO Add context menu for reconcile state
+ *
  * @author Craig Cavanaugh
  */
 public class RegisterTableController implements Initializable {
