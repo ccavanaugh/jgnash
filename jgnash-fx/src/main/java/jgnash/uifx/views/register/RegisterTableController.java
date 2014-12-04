@@ -110,47 +110,38 @@ public class RegisterTableController implements Initializable {
         final TableColumn<Transaction, Date> dateColumn = new TableColumn<>(resources.getString("Column.Date"));
         dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getDate()));
         dateColumn.setCellFactory(cell -> new TransactionDateTableCell());
-        dateColumn.setMinWidth(45);
 
         final TableColumn<Transaction, String> numberColumn = new TableColumn<>(resources.getString("Column.Num"));
         numberColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getNumber()));
         numberColumn.setCellFactory(cell -> new TransactionStringTableCell());
-        numberColumn.setMinWidth(45);
 
         final TableColumn<Transaction, String> payeeColumn = new TableColumn<>(resources.getString("Column.Payee"));
         payeeColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getPayee()));
         payeeColumn.setCellFactory(cell -> new TransactionStringTableCell());
-        payeeColumn.setMinWidth(75);
 
         final TableColumn<Transaction, String> memoColumn = new TableColumn<>(resources.getString("Column.Memo"));
         memoColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getMemo()));
         memoColumn.setCellFactory(cell -> new TransactionStringTableCell());
-        memoColumn.setMinWidth(75);
 
         final TableColumn<Transaction, String> accountColumn = new TableColumn<>(resources.getString("Column.Account"));
         accountColumn.setCellValueFactory(param -> new AccountNameWrapper(param.getValue()));
         accountColumn.setCellFactory(cell -> new TransactionStringTableCell());
-        accountColumn.setMinWidth(75);
 
         final TableColumn<Transaction, String> reconciledColumn = new TableColumn<>(resources.getString("Column.Clr"));
         reconciledColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getReconciled(accountProperty.getValue()).toString()));
         reconciledColumn.setCellFactory(cell -> new TransactionStringTableCell());
-        reconciledColumn.setMinWidth(35);
 
         final TableColumn<Transaction, BigDecimal> increaseColumn = new TableColumn<>(resources.getString("Column.Increase"));
         increaseColumn.setCellValueFactory(param -> new IncreaseAmountProperty(param.getValue().getAmount(getAccountProperty().getValue())));
         increaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
-        increaseColumn.setMinWidth(60);
 
         final TableColumn<Transaction, BigDecimal> decreaseColumn = new TableColumn<>(resources.getString("Column.Decrease"));
         decreaseColumn.setCellValueFactory(param -> new DecreaseAmountProperty(param.getValue().getAmount(getAccountProperty().getValue())));
         decreaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
-        decreaseColumn.setMinWidth(60);
 
         final TableColumn<Transaction, BigDecimal> balanceColumn = new TableColumn<>(resources.getString("Column.Balance"));
         balanceColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(accountProperty.get().getBalanceAt(param.getValue())));
         balanceColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getFullNumberFormat(accountProperty.get().getCurrencyNode())));
-        balanceColumn.setMinWidth(60);
 
         tableView.getColumns().addAll(dateColumn, numberColumn, payeeColumn, memoColumn, accountColumn, reconciledColumn, increaseColumn, decreaseColumn, balanceColumn);
 
