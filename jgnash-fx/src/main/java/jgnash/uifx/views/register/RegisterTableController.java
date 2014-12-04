@@ -17,18 +17,6 @@
  */
 package jgnash.uifx.views.register;
 
-import java.math.BigDecimal;
-import java.net.URL;
-import java.util.Date;
-import java.util.ResourceBundle;
-
-import jgnash.engine.Account;
-import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.Transaction;
-import jgnash.text.CommodityFormat;
-import jgnash.uifx.utils.TableViewManager;
-import jgnash.util.DateUtils;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -40,6 +28,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import jgnash.engine.Account;
+import jgnash.engine.InvestmentTransaction;
+import jgnash.engine.Transaction;
+import jgnash.text.CommodityFormat;
+import jgnash.uifx.utils.TableViewManager;
+import jgnash.util.DateUtils;
+
+import java.math.BigDecimal;
+import java.net.URL;
+import java.util.Date;
+import java.util.ResourceBundle;
 
 /**
  * Register Table with stats controller
@@ -77,6 +76,8 @@ public class RegisterTableController implements Initializable {
 
     final private ObservableList<Transaction> observableTransactions = FXCollections.observableArrayList();
 
+    final private SortedList<Transaction> sortedList = new SortedList<>(observableTransactions);
+
     ObjectProperty<Account> getAccountProperty() {
         return accountProperty;
     }
@@ -103,6 +104,8 @@ public class RegisterTableController implements Initializable {
         tableViewManager = new TableViewManager<>(tableView, PREF_NODE_USER_ROOT);
         tableViewManager.setColumnWeightFactory(param -> PREF_COLUMN_WEIGHTS[param]);
         tableViewManager.setPreferenceKeyFactory(() -> getAccountProperty().get().getUuid());
+
+        sortedList.comparatorProperty().bind(tableView.comparatorProperty());
 
         buildTable();
 
@@ -145,7 +148,7 @@ public class RegisterTableController implements Initializable {
         decreaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
 
         final TableColumn<Transaction, BigDecimal> balanceColumn = new TableColumn<>(resources.getString("Column.Balance"));
-        balanceColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(accountProperty.get().getBalanceAt(param.getValue())));
+        balanceColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(getBalanceAt(param.getValue())));
         balanceColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getFullNumberFormat(accountProperty.get().getCurrencyNode())));
         balanceColumn.setSortable(false);   // do not allow a sort on the balance
 
@@ -164,15 +167,26 @@ public class RegisterTableController implements Initializable {
         });
     }
 
+    private BigDecimal getBalanceAt(final Transaction transaction) {
+        BigDecimal balance = BigDecimal.ZERO;
+
+        final Account account = accountProperty.get();
+
+        if (account != null) {
+            final int index = sortedList.indexOf(transaction);
+
+            for (int i = 0; i <= index; i++) {
+                balance = balance.add(sortedList.get(i).getAmount(account));
+            }
+        }
+        return balance;
+    }
+
     private void loadTable() {
         observableTransactions.clear();
 
-        // TODO balance column needs to be dynamic based on sort order
         if (accountProperty.get() != null) {
             observableTransactions.addAll(accountProperty.get().getSortedTransactionList());
-
-            final SortedList<Transaction> sortedList = new SortedList<>(observableTransactions);
-            sortedList.comparatorProperty().bind(tableView.comparatorProperty());
 
             tableView.setItems(sortedList);
             tableViewManager.restoreLayout();   // required to table view manager is to work
