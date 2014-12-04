@@ -59,8 +59,6 @@ public class TableViewManager<S> {
 
     //private static final String PREF_NODE_REG_POS = "/positions";
 
-    private static final String PREF_NODE_REG_WIDTH = "/widths";
-
     private static final String PREF_NODE_REG_VIS = "/visibility";
 
     @NotNull
@@ -76,13 +74,6 @@ public class TableViewManager<S> {
 
     private final ColumnVisibilityListener visibilityListener = new ColumnVisibilityListener();
 
-    private final ColumnWidthListener widthListener = new ColumnWidthListener();
-
-    /**
-     * Limits number of processed resize events ensuring the most recent is executed
-     */
-    private final ThreadPoolExecutor updateColumnSizeExecutor;
-
     /**
      * Limits number of processed visibility change events ensuring the most recent is executed
      */
@@ -97,9 +88,6 @@ public class TableViewManager<S> {
          *
          * Excess execution requests will be silently discarded
          */
-        updateColumnSizeExecutor = new ThreadPoolExecutor(0, 1, 0, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
-        updateColumnSizeExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
-
         updateColumnVisibilityExecutor = new ThreadPoolExecutor(0, 1, 0, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
         updateColumnVisibilityExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
     }
@@ -111,24 +99,21 @@ public class TableViewManager<S> {
         // Restore visibility first
         restoreColumnVisibility();
 
-        // Restore column widths
-        restoreColumnWidths();
-
         // Install listeners and save column states
         installColumnListeners();
+
+        packTable();    // repack the table
     }
 
     private void installColumnListeners() {
         for (final TableColumnBase<S, ?> tableColumn : tableView.getColumns()) {
             tableColumn.visibleProperty().addListener(visibilityListener);
-            tableColumn.widthProperty().addListener(widthListener);
         }
     }
 
     private void removeColumnListeners() {
         for (final TableColumnBase<S, ?> tableColumn : tableView.getColumns()) {
             tableColumn.visibleProperty().removeListener(visibilityListener);
-            tableColumn.widthProperty().removeListener(widthListener);
         }
     }
 
@@ -139,7 +124,7 @@ public class TableViewManager<S> {
      * @return preferred width
      */
     private double getCalculatedColumnWidth(final TableColumnBase<S, ?> column) {
-        double maxWidth;
+        double maxWidth = 0;
 
         /* Collect all the unique cell items and remove null*/
         final Set<Object> cellItems = new HashSet<>();
@@ -147,21 +132,25 @@ public class TableViewManager<S> {
         for (int i = 0; i < tableView.getItems().size(); i++) {
             cellItems.add(column.getCellData(i));
         }
+        cellItems.remove(null);
+
+        if (cellItems.size() > 0) { // don't try if there is no data or the stream function will throw an error
 
         /* Format will be the same for the whole column */
-        final Format format = columnFormatFactory.get().call(column);
+            final Format format = columnFormatFactory.get().call(column);
 
-        maxWidth = cellItems.parallelStream().filter(s -> s != null).mapToDouble(new ToDoubleFunction<Object>() {
-            @Override
-            public double applyAsDouble(final Object o) {
-                return calculateDisplayedWidth(format != null ? format.format(o) : o.toString(), column.getStyle());
-            }
-        }).max().getAsDouble();
+            maxWidth = cellItems.parallelStream().filter(s -> s != null).mapToDouble(new ToDoubleFunction<Object>() {
+                @Override
+                public double applyAsDouble(final Object o) {
+                    return calculateDisplayedWidth(format != null ? format.format(o) : o.toString(), column.getStyle());
+                }
+            }).max().getAsDouble();
+        }
 
         maxWidth = Math.max(maxWidth, column.getMinWidth());
         maxWidth = Math.max(maxWidth, calculateHeaderWidth(column));
 
-        return Math.ceil(maxWidth + 14); // TODO, extract "14" margin from css
+        return Math.ceil(maxWidth + 12); // TODO, extract "12" margin from css or force to calculated value
     }
 
     private double calculateDisplayedWidth(final String displayString, final String style) {
@@ -222,43 +211,6 @@ public class TableViewManager<S> {
         return width;
     }
 
-    private void saveColumnWidths() {
-        if (preferenceKeyFactory.get() != null) {
-            final String uuid = preferenceKeyFactory.get().call();
-            final Preferences preferences = Preferences.userRoot().node(preferencesUserRoot + PREF_NODE_REG_WIDTH);
-
-            final double[] columnWidths = new double[tableView.getColumns().size()];
-
-            for (int i = 0; i < columnWidths.length; i++) {
-                columnWidths[i] = tableView.getColumns().get(i).getWidth();
-            }
-
-            preferences.put(uuid, EncodeDecode.encodeDoubleArray(columnWidths));
-        }
-    }
-
-    private void restoreColumnWidths() {
-        if (preferenceKeyFactory.get() != null) {
-            final String uuid = preferenceKeyFactory.get().call();
-            final Preferences preferences = Preferences.userRoot().node(preferencesUserRoot + PREF_NODE_REG_WIDTH);
-
-            final String widths = preferences.get(uuid, null);
-            if (widths != null) {
-                final double[] columnWidths = EncodeDecode.decodeDoubleArray(widths);
-
-                tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
-
-                if (columnWidths.length == tableView.getColumns().size()) {
-                    for (int i = 0; i < columnWidths.length; i++) {
-                        tableView.getColumns().get(i).prefWidthProperty().setValue(columnWidths[i]);
-                    }
-                }
-
-                tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-            }
-        }
-    }
-
     private void saveColumnVisibility() {
         if (preferenceKeyFactory.get() != null) {
             final String uuid = preferenceKeyFactory.get().call();
@@ -292,12 +244,15 @@ public class TableViewManager<S> {
                 }
 
                 tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+            } else {  // no preference has been set, so force all columns to be visible
+                for (final TableColumnBase<S, ?> column : tableView.getColumns()) {
+                    column.visibleProperty().setValue(true);
+                }
             }
         }
     }
 
     public void packTable() {
-
         new Thread(() -> {
 
             LocalTime start = LocalTime.now();
@@ -314,63 +269,17 @@ public class TableViewManager<S> {
                 tableView.getColumns().get(i).setMinWidth(0);   // clear minWidth for pack
             }
 
-            /*
-            * The calculated width of all visible columns, tableView.getWidth() does not allocate for the scroll bar if
-            * visible within the TableView
-            */
-            double calculatedTableWidth = 0;
-
-            for (final TableColumnBase<S, ?> column : visibleColumns) {
-                calculatedTableWidth += Math.rint(column.getWidth());
-            }
-
             double calculatedWidths[] = new double[visibleColumns.size()];
 
             for (int i = 0; i < calculatedWidths.length; i++) {
-                calculatedWidths[i] = getCalculatedColumnWidth(visibleColumns.get(i));
-            }
-
-            double[] optimizedWidths = calculatedWidths.clone();
-
-            // optimize column widths
-            Double[] columnWeights = visibleColumnWeights.toArray(new Double[visibleColumnWeights.size()]);
-
-            double fixedWidthColumnTotals = 0; // total fixed width of columns
-
-            for (int i = 0; i < optimizedWidths.length; i++) {
-                if (columnWeights[i] == 0) {
-                    fixedWidthColumnTotals += optimizedWidths[i];
+                if (visibleColumnWeights.get(i) == 0) {
+                    calculatedWidths[i] = getCalculatedColumnWidth(visibleColumns.get(i));
+                } else {
+                    calculatedWidths[i] = Double.MAX_VALUE;
                 }
             }
 
-            double diff = calculatedTableWidth - fixedWidthColumnTotals; // remaining non fixed width that must be compressed
-            double totalWeight = 0; // used to calculate percentages
-
-            for (double columnWeight : columnWeights) {
-                totalWeight += columnWeight;
-            }
-
-            int i = 0;
-            while (i < columnWeights.length) {
-                if (columnWeights[i] > 0) {
-                    double adj = (columnWeights[i] / totalWeight * diff);
-
-                    if (optimizedWidths[i] > adj) { // only change if necessary
-                        optimizedWidths[i] = adj;
-                    } else {
-                        diff -= optimizedWidths[i]; // available difference is reduced
-                        totalWeight -= columnWeights[i]; // adjust the weighting
-                        optimizedWidths = calculatedWidths.clone(); // reset widths
-                        columnWeights[i] = 0d; // do not try to adjust width again
-                        i = -1; // restart the loop from the beginning
-                    }
-                }
-                i++;
-            }
-
-            final double[] finalWidths = optimizedWidths.clone();
-
-            System.out.println("Pack time was :" + Duration.between(start, LocalTime.now()).toMillis() + " millis");
+            System.out.println("Pack Calculation time was " + Duration.between(start, LocalTime.now()).toMillis() + " millis");
 
             Platform.runLater(() -> {
                 removeColumnListeners();
@@ -379,21 +288,20 @@ public class TableViewManager<S> {
                 tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 
                 // Force the column widths and let the layout policy do the heavy lifting
-                for (int j = 0; j < finalWidths.length; j++) {
-                    if (visibleColumnWeights.get(j) == 0) {
-                        visibleColumns.get(j).minWidthProperty().setValue(finalWidths[j]);
-                        visibleColumns.get(j).maxWidthProperty().setValue(finalWidths[j]);
+                for (int j = 0; j < calculatedWidths.length; j++) {
+                    if (visibleColumnWeights.get(j) == 0) { // fixed width column
+                        visibleColumns.get(j).minWidthProperty().setValue(calculatedWidths[j]);
+                        visibleColumns.get(j).maxWidthProperty().setValue(calculatedWidths[j]);
+                        visibleColumns.get(j).setResizable(false);
                     } else {
-                        visibleColumns.get(j).prefWidthProperty().setValue(finalWidths[j]);
+                        visibleColumns.get(j).prefWidthProperty().setValue(calculatedWidths[j]);
                     }
                 }
 
                 // restore the old policy
                 tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-                installColumnListeners();
 
-                // Save the new state
-                updateColumnSizeExecutor.execute(TableViewManager.this::saveColumnWidths);
+                installColumnListeners();
             });
         }).start();
     }
@@ -422,13 +330,6 @@ public class TableViewManager<S> {
         @Override
         public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
             updateColumnVisibilityExecutor.execute(TableViewManager.this::saveColumnVisibility);
-        }
-    }
-
-    private final class ColumnWidthListener implements ChangeListener<Number> {
-        @Override
-        public void changed(final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue) {
-            updateColumnSizeExecutor.execute(TableViewManager.this::saveColumnWidths);
         }
     }
 }
