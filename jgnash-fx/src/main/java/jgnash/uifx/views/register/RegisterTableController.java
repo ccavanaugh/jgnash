@@ -216,10 +216,6 @@ public class RegisterTableController implements Initializable {
         }
     }
 
-    public void packTable() {
-        tableViewManager.packTable();
-    }
-
     private static class IncreaseAmountProperty extends SimpleObjectProperty<BigDecimal> {
         IncreaseAmountProperty(final BigDecimal value) {
             if (value.signum() >= 0) {

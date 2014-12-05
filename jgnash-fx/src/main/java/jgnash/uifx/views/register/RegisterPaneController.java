@@ -90,8 +90,4 @@ public class RegisterPaneController implements Initializable {
     ObjectProperty<Account> getAccountProperty() {
         return accountProperty;
     }
-
-    void packRegisterTable() {
-        registerTableController.packTable();
-    }
 }

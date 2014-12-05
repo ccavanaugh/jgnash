@@ -14,7 +14,6 @@
                 <Button fx:id="reconcileButton" mnemonicParsing="false" text="%Button.Reconcile"/>
                 <Button fx:id="filterButton" mnemonicParsing="false" onAction="#handleFilterAccountAction" text="%Button.Filter"/>
                 <Button fx:id="zoomButton" mnemonicParsing="false" text="%Button.Zoom"/>
-                <Button fx:id="resizeButton" mnemonicParsing="false" text="%Button.Resize" onAction="#packTableAction"/>
             </items>
         </ToolBar>
     </top>
