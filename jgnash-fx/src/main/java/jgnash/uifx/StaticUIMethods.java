@@ -23,18 +23,19 @@ import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.application.Platform;
-import javafx.scene.image.Image;
 import jgnash.MainFX;
 import jgnash.uifx.utils.StageUtils;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Modality;
@@ -95,6 +96,30 @@ public class StaticUIMethods {
         alert.getDialogPane().getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
 
         Platform.runLater(alert::showAndWait);
+    }
+
+    /**
+     * Displays a Yes and No dialog requesting confirmation
+     *
+     * @param title Dialog title
+     * @param message Dialog message
+     * @return {@code ButtonBar.ButtonData.YES} or {@code ButtonBar.ButtonData.NO}
+     */
+    public static ButtonType showConfirmationDialog(final String title, final String message) {
+
+        // Yes and no is preferred, but there appears to be a bug
+        //final ResourceBundle rb = ResourceUtils.getBundle();
+        //ButtonType buttonTypeYes = new ButtonType(rb.getString("Button.Yes"), ButtonBar.ButtonData.YES);
+        //ButtonType buttonTypeNo = new ButtonType(rb.getString("Button.No"), ButtonBar.ButtonData.NO);
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+
+        alert.initOwner(MainApplication.getPrimaryStage());
+        alert.getDialogPane().getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
+
+        return alert.showAndWait().get();
     }
 
     public static void displayException(final Throwable exception) {

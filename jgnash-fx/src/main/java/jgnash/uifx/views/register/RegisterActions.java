@@ -24,14 +24,11 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
-import jgnash.uifx.MainApplication;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.util.Resource;
 import jgnash.util.ResourceUtils;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 
 /**
@@ -66,7 +63,7 @@ public class RegisterActions {
             for (Transaction transaction : transactions) {
                 if (engine.removeTransaction(transaction)) {
                     if (transaction.getAttachment() != null) {
-                        if (confirmAttachmentDeletion() == ButtonType.YES) {
+                        if (confirmAttachmentDeletion() == ButtonType.CANCEL) {
                             if (!engine.removeAttachment(transaction.getAttachment())) {
                                 StaticUIMethods.displayError(rb.getString("Message.Error.DeleteAttachment", transaction.getAttachment()));
                             }
@@ -80,33 +77,14 @@ public class RegisterActions {
     private static ButtonType confirmTransactionRemoval(final int count) {
         final ResourceBundle rb = ResourceUtils.getBundle();
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(rb.getString("Title.Confirm"));
-        alert.setHeaderText(null);
-        alert.setContentText(count == 1 ? rb.getString("Message.ConfirmTransDelete") : rb.getString("Message.ConfirmMultipleTransDelete"));
-
-        alert.initOwner(MainApplication.getPrimaryStage());
-        alert.getDialogPane().getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
-
-        return alert.showAndWait().get();
+        return StaticUIMethods.showConfirmationDialog(rb.getString("Title.Confirm"),
+                count == 1 ? rb.getString("Message.ConfirmTransDelete") : rb.getString("Message.ConfirmMultipleTransDelete"));
     }
 
     private static ButtonType confirmAttachmentDeletion() {
         final ResourceBundle rb = ResourceUtils.getBundle();
 
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(rb.getString("Title.DeleteAttachment"));
-        alert.setHeaderText(null);
-        alert.setContentText(rb.getString("Question.DeleteAttachment"));
-        alert.initOwner(MainApplication.getPrimaryStage());
-
-        ButtonType buttonTypeYes = new ButtonType(rb.getString("Button.Yes"), ButtonBar.ButtonData.YES);
-        ButtonType buttonTypeNo = new ButtonType(rb.getString("Button.No"), ButtonBar.ButtonData.NO);
-
-        alert.getButtonTypes().setAll(buttonTypeNo, buttonTypeYes);
-
-        alert.getDialogPane().getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
-
-        return alert.showAndWait().get();
+        return StaticUIMethods.showConfirmationDialog(rb.getString("Title.DeleteAttachment"),
+                rb.getString("Question.DeleteAttachment"));
     }
 }
