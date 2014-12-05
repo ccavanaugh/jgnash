@@ -288,7 +288,9 @@ public class RegisterTableController implements Initializable {
             // TODO Connect to dialogs, checks, and configuration
             final MenuItem duplicateItem = new MenuItem(resources.getString("Menu.Duplicate.Name"));
             final MenuItem jumpItem = new MenuItem(resources.getString("Menu.Jump.Name"));
+
             final MenuItem deleteItem = new MenuItem(resources.getString("Menu.Delete.Name"));
+            deleteItem.setOnAction(event -> RegisterActions.deleteTransactionAction(row.getItem()));
 
             rowMenu.getItems().addAll(markedAs, new SeparatorMenuItem(), duplicateItem, jumpItem, new SeparatorMenuItem(), deleteItem);
 
