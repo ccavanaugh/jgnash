@@ -17,6 +17,26 @@
  */
 package jgnash.uifx.views.register;
 
+import java.math.BigDecimal;
+import java.net.URL;
+import java.util.Date;
+import java.util.ResourceBundle;
+
+import jgnash.engine.Account;
+import jgnash.engine.InvestmentTransaction;
+import jgnash.engine.ReconciledState;
+import jgnash.engine.Transaction;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageListener;
+import jgnash.engine.message.MessageProperty;
+import jgnash.text.CommodityFormat;
+import jgnash.uifx.utils.TableViewManager;
+import jgnash.util.DateUtils;
+
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -25,26 +45,19 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import jgnash.engine.Account;
-import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.Transaction;
-import jgnash.text.CommodityFormat;
-import jgnash.uifx.utils.TableViewManager;
-import jgnash.util.DateUtils;
-
-import java.math.BigDecimal;
-import java.net.URL;
-import java.util.Date;
-import java.util.ResourceBundle;
+import javafx.util.Callback;
 
 /**
  * Register Table with stats controller
- *
- * TODO Transaction lists need to update when account changes
- * TODO Add context menu for reconcile state
+ * <p/>
  *
  * @author Craig Cavanaugh
  */
@@ -89,11 +102,15 @@ public class RegisterTableController implements Initializable {
         return accountPropertyWrapper;
     }
 
+    final private MessageBusHandler messageBusHandler = new MessageBusHandler();
+
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         this.resources = resources;
 
         tableView.setTableMenuButtonVisible(true);
+        tableView.setRowFactory(new TransactionRowFactory());
+
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         // Bind the account property
@@ -114,6 +131,9 @@ public class RegisterTableController implements Initializable {
 
         // Load the table on change
         getAccountProperty().addListener((observable, oldValue, newValue) -> loadTable());
+
+        // Listen for engine events
+        MessageBus.getInstance().registerListener(messageBusHandler, MessageChannel.TRANSACTION);
     }
 
     @SuppressWarnings("unchecked")
@@ -239,6 +259,69 @@ public class RegisterTableController implements Initializable {
                         setValue(creditAccount.getName());
                     } else {
                         setValue(t.getTransactionEntries().get(0).getDebitAccount().getName());
+                    }
+                }
+            }
+        }
+    }
+
+    private class TransactionRowFactory implements Callback<TableView<Transaction>, TableRow<Transaction>> {
+
+        @Override
+        public TableRow<Transaction> call(final TableView<Transaction> param) {
+
+            final TableRow<Transaction> row = new TableRow<>();
+            final ContextMenu rowMenu = new ContextMenu();
+
+            final Menu markedAs = new Menu(resources.getString("Menu.MarkAs.Name"));
+            final MenuItem markAsClearedItem = new MenuItem(resources.getString("Menu.Cleared.Name"));
+            markAsClearedItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(accountProperty.get(), row.getItem(), ReconciledState.CLEARED));
+
+            final MenuItem markAsReconciledItem = new MenuItem(resources.getString("Menu.Reconciled.Name"));
+            markAsReconciledItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(accountProperty.get(), row.getItem(), ReconciledState.RECONCILED));
+
+            final MenuItem markAsUnreconciledItem = new MenuItem(resources.getString("Menu.Unreconciled.Name"));
+            markAsUnreconciledItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(accountProperty.get(), row.getItem(), ReconciledState.NOT_RECONCILED));
+
+            markedAs.getItems().addAll(markAsClearedItem, markAsReconciledItem, markAsUnreconciledItem);
+
+            // TODO Connect to dialogs, checks, and configuration
+            final MenuItem duplicateItem = new MenuItem(resources.getString("Menu.Duplicate.Name"));
+            final MenuItem jumpItem = new MenuItem(resources.getString("Menu.Jump.Name"));
+            final MenuItem deleteItem = new MenuItem(resources.getString("Menu.Delete.Name"));
+
+            rowMenu.getItems().addAll(markedAs, new SeparatorMenuItem(), duplicateItem, jumpItem, new SeparatorMenuItem(), deleteItem);
+
+            // only display context menu for non-null items:
+            row.contextMenuProperty().bind(
+                    Bindings.when(Bindings.isNotNull(row.itemProperty()))
+                            .then(rowMenu)
+                            .otherwise((ContextMenu) null));
+
+            return row;
+        }
+    }
+
+    private class MessageBusHandler implements MessageListener {
+
+        @SuppressWarnings("SuspiciousMethodCalls")
+        @Override
+        public void messagePosted(final Message event) {
+            final Account account = accountProperty.getValue();
+
+            if (account != null) {
+                if (event.getObject(MessageProperty.ACCOUNT).equals(account)) {
+                    switch (event.getEvent()) {
+                        case TRANSACTION_REMOVE:
+                            Platform.runLater(() -> observableTransactions.remove(event.getObject(MessageProperty.TRANSACTION)));
+                            break;
+                        case TRANSACTION_ADD:
+                            Platform.runLater(() -> {
+                                observableTransactions.addAll((Transaction)event.getObject(MessageProperty.TRANSACTION));
+                                FXCollections.sort(observableTransactions);
+                            });
+                            break;
+                        default:
                     }
                 }
             }
