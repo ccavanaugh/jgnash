@@ -79,7 +79,7 @@ public class StaticUIMethods {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.initOwner(MainApplication.getPrimaryStage());
-        alert.initStyle(StageStyle.UTILITY);
+
         alert.getDialogPane().getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
 
         Platform.runLater(alert::showAndWait);
@@ -91,7 +91,7 @@ public class StaticUIMethods {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.initOwner(MainApplication.getPrimaryStage());
-        alert.initStyle(StageStyle.UTILITY);
+
         alert.getDialogPane().getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
 
         Platform.runLater(alert::showAndWait);
@@ -103,7 +103,6 @@ public class StaticUIMethods {
         alert.setTitle(ResourceUtils.getBundle().getString("Title.Error"));
         alert.setHeaderText(exception.getLocalizedMessage());
         alert.initOwner(MainApplication.getPrimaryStage());
-        alert.initStyle(StageStyle.UTILITY);
 
         final StringWriter sw = new StringWriter();
         final PrintWriter pw = new PrintWriter(sw);
