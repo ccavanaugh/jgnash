@@ -219,7 +219,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
                     if (YesNoDialog.showYesNoDialog(UIApplication.getFrame(),
                             new JLabel(rb.getString("Question.DeleteAttachment")),
                             rb.getString("Title.DeleteAttachment"))) {
-                        if (engine.removeAttachment(tran.getAttachment())) {
+                        if (!engine.removeAttachment(tran.getAttachment())) {
                             StaticUIMethods.displayError(rb.getString("Message.Error.DeleteAttachment", tran.getAttachment()));
                         }
                     }
