@@ -56,7 +56,7 @@ public class DateUtils {
     /**
      * ThreadLocal for a {@code GregorianCalendar}
      */
-    private static ThreadLocal<GregorianCalendar> gregorianCalendarThreadLocal = new ThreadLocal<GregorianCalendar>() {
+    private static final ThreadLocal<GregorianCalendar> gregorianCalendarThreadLocal = new ThreadLocal<GregorianCalendar>() {
         @Override
         protected GregorianCalendar initialValue() {
             return new GregorianCalendar();
@@ -66,7 +66,7 @@ public class DateUtils {
     /**
      * ThreadLocal for a short {@code DateFormat}
      */
-    private static ThreadLocal<DateFormat> shortDateFormatHolder = new ThreadLocal<DateFormat>() {
+    private static final ThreadLocal<DateFormat> shortDateFormatHolder = new ThreadLocal<DateFormat>() {
         @Override
         protected DateFormat initialValue() {
             final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
@@ -123,10 +123,21 @@ public class DateUtils {
     }
 
     public static Date addMonth(final Date date) {
+        return addMonths(date, 1);
+    }
+
+    /**
+     * Adds months to the supplied date
+     *
+     * @param date   beginning date
+     * @param months number of months to add, may be negative to subtract months
+     * @return prior month
+     */
+    private static Date addMonths(final Date date, final int months) {
         final GregorianCalendar c = gregorianCalendarThreadLocal.get();
 
         c.setTime(date);
-        c.add(Calendar.MONTH, 1);
+        c.add(Calendar.MONTH, months);
         return c.getTime();
     }
 
@@ -768,22 +779,7 @@ public class DateUtils {
      * @return prior month
      */
     public static Date subtractMonth(final Date date) {
-        return subtractMonths(date, 1);
-    }
-
-    /**
-     * Subtracts months from the supplied date
-     *
-     * @param date   beginning date
-     * @param months number of months to subtract
-     * @return prior month
-     */
-    private static Date subtractMonths(final Date date, final int months) {
-        final GregorianCalendar c = gregorianCalendarThreadLocal.get();
-
-        c.setTime(date);
-        c.add(Calendar.MONTH, months * -1);
-        return c.getTime();
+        return addMonths(date, -1);
     }
 
     /**
