@@ -53,7 +53,7 @@ final class DynamicJasperReportFrame extends JFrame {
 
     private JTextField statusField;
 
-    private static final Logger logger = Logger.getLogger(DynamicJasperReport.class.getName());
+    private static final Logger logger = Logger.getLogger(DynamicJasperReportFrame.class.getName());
 
     /**
      * Frame for viewing Jasper reports

@@ -190,7 +190,7 @@ public class StaticUIMethods {
                 return;
             }
 
-            Logger.getLogger(StaticUIMethods.class.getName()).log(Level.SEVERE, throwable.getLocalizedMessage(), throwable);
+            Logger.getLogger(ExceptionHandler.class.getName()).log(Level.SEVERE, throwable.getLocalizedMessage(), throwable);
 
             displayException(throwable);
         }

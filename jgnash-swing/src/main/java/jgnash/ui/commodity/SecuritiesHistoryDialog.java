@@ -425,7 +425,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
 
         private void unregisterListeners() {
             MessageBus.getInstance().unregisterListener(this, MessageChannel.COMMODITY);
-            Logger.getLogger(SecuritiesHistoryDialog.class.getName()).info("unregistered listeners");
+            Logger.getLogger(HistoryModel.class.getName()).info("unregistered listeners");
         }
 
         public void setSecurity(final SecurityNode node) {

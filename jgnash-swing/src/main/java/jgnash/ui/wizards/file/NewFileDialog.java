@@ -192,7 +192,7 @@ public class NewFileDialog extends WizardDialog {
                         new Setup(d).execute();
                     }
                 } catch (InterruptedException | ExecutionException e) {                  
-                    Logger.getLogger(NewFileDialog.class.getName()).log(Level.SEVERE, null, e);
+                    Logger.getLogger(DisplayDialog.class.getName()).log(Level.SEVERE, null, e);
                 }
                
             }

@@ -62,14 +62,14 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
 
     private final BudgetPanel budgetPanel;
 
-    private JPanel sparklinePanel;
+    private JPanel sparkLinePanel;
 
     /**
-     * Used to limit the number of sparkline updates that occur
+     * Used to limit the number of spark line updates that occur
      */
     private final ThreadPoolExecutor updateIconExecutor;
 
-    private static final Logger logger = Logger.getLogger(BudgetPanel.class.getName());
+    private static final Logger logger = Logger.getLogger(BudgetOverviewPanel.class.getName());
 
     public BudgetOverviewPanel(final BudgetPanel budgetPanel) {
         if (Main.enableVerboseLogging()) {
@@ -95,10 +95,10 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
 
     private void initComponents() {
 
-        sparklinePanel = new JPanel();
+        sparkLinePanel = new JPanel();
 
         FormLayout layout = new FormLayout("d", "d");
-        sparklinePanel.setLayout(layout);
+        sparkLinePanel.setLayout(layout);
 
         model = new SpinnerNumberModel();
 
@@ -126,7 +126,7 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
 
         builder.add(new JLabel(rb.getString("Label.Year")), CC.xy(2, 1));
         builder.add(yearSpinner, CC.xy(4, 1));
-        builder.add(sparklinePanel, CC.xy(6, 1));
+        builder.add(sparkLinePanel, CC.xy(6, 1));
     }
 
     /**
@@ -209,10 +209,10 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
 
                     @Override
                     public void run() {
-                        FormLayout layout = (FormLayout) sparklinePanel.getLayout();
+                        FormLayout layout = (FormLayout) sparkLinePanel.getLayout();
 
                         // remove all components and columns
-                        sparklinePanel.removeAll();
+                        sparkLinePanel.removeAll();
 
                         int columnCount = layout.getColumnCount();
 
@@ -223,13 +223,13 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
                         // create components and columns and add
                         if (!icons.isEmpty()) {
                             layout.appendColumn(ColumnSpec.decode("d"));
-                            sparklinePanel.add(getLabel(groups.get(0), icons.get(0)), CC.xy(1, 1));
+                            sparkLinePanel.add(getLabel(groups.get(0), icons.get(0)), CC.xy(1, 1));
 
                             for (int i = 1; i < icons.size(); i++) {
                                 layout.appendColumn(ColumnSpec.decode("2dlu"));
                                 layout.appendColumn(ColumnSpec.decode("d"));
 
-                                sparklinePanel.add(getLabel(groups.get(i), icons.get(i)), CC.xy(i * 2 + 1, 1));
+                                sparkLinePanel.add(getLabel(groups.get(i), icons.get(i)), CC.xy(i * 2 + 1, 1));
                             }
                         }
 
@@ -245,7 +245,7 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
     }
 
     private static JLabel getLabel(final AccountGroup group, final Icon icon) {
-        JLabel label = new JLabel(group.toString(), icon, JLabel.LEFT);
+        final JLabel label = new JLabel(group.toString(), icon, JLabel.LEFT);
         label.setHorizontalTextPosition(JLabel.LEFT);
 
         label.setFont(label.getFont().deriveFont(label.getFont().getSize2D() - 2f));

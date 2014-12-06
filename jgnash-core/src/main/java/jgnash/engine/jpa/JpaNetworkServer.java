@@ -288,7 +288,7 @@ public class JpaNetworkServer {
             distributedAttachmentManager = new DistributedAttachmentManager("localhost", port + 3);
             distributedAttachmentManager.connectToServer(password);
 
-            Logger.getLogger(JpaH2DataStore.class.getName()).info("Created local JPA container and engine");
+            Logger.getLogger(JpaNetworkServer.class.getName()).info("Created local JPA container and engine");
             engine = new Engine(new JpaEngineDAO(em, true), distributedLockManager, distributedAttachmentManager, SERVER_ENGINE); // treat as a remote engine
         } catch (final Exception e) {
             Logger.getLogger(JpaNetworkServer.class.getName()).log(Level.SEVERE, e.toString(), e);

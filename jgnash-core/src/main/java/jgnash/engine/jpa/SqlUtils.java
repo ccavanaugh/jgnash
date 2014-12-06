@@ -108,7 +108,7 @@ public class SqlUtils {
                     }
                     connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for correct file closure
                 } catch (final SQLException e) {
-                    Logger.getLogger(JpaConfiguration.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+                    logger.log(Level.SEVERE, e.getMessage(), e);
                 }
             } else {
                 logger.severe("File was locked");
@@ -144,7 +144,7 @@ public class SqlUtils {
 
                     connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for correct file closure
                 } catch (final SQLException e) {
-                    Logger.getLogger(JpaConfiguration.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+                    logger.log(Level.SEVERE, e.getMessage(), e);
                     result = false;
                 }
             } else {
@@ -186,7 +186,7 @@ public class SqlUtils {
 
                     connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for correct file closure
                 } catch (final SQLException e) {
-                    Logger.getLogger(JpaConfiguration.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+                    logger.log(Level.SEVERE, e.getMessage(), e);
                 }
             } else {
                 logger.severe("File was locked");

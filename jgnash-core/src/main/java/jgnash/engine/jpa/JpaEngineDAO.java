@@ -226,7 +226,7 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
 
             future.get();
         } catch (ExecutionException | InterruptedException e) {
-            Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
         } finally {
             emLock.unlock();
         }

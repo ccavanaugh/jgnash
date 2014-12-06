@@ -172,7 +172,7 @@ public class BinaryXStreamDataStore implements DataStore {
                     fileVersion = list.get(0).getFileVersion();
                 } else {
                     fileVersion = list.get(0).getFileVersion();
-                    Logger.getLogger(XMLDataStore.class.getName()).severe("A duplicate config object was found");
+                    logger.severe("A duplicate config object was found");
                 }
             } finally {
                 container.close();

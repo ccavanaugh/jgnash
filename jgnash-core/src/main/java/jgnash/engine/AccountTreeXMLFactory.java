@@ -232,10 +232,10 @@ public class AccountTreeXMLFactory {
                             }
                             if (!engine.addSecurity(sNode)) {
                                 final Resource rb = Resource.get();
-                                Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, rb.getString("Message.Error.SecurityAdd"), sNode.getSymbol());
+                                Logger.getLogger(AccountImport.class.getName()).log(Level.SEVERE, rb.getString("Message.Error.SecurityAdd"), sNode.getSymbol());
                             }
                         } catch (CloneNotSupportedException e) {
-                            Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE,
+                            Logger.getLogger(AccountImport.class.getName()).log(Level.SEVERE,
                                     e.getLocalizedMessage(), e);
                         }
                     }
@@ -276,10 +276,10 @@ public class AccountTreeXMLFactory {
 
                             if (!engine.addSecurity(sNode)) {
                                 final Resource rb = Resource.get();
-                                Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, rb.getString("Message.Error.SecurityAdd"), sNode.getSymbol());
+                                Logger.getLogger(AccountImport.class.getName()).log(Level.SEVERE, rb.getString("Message.Error.SecurityAdd"), sNode.getSymbol());
                             }
                         } catch (CloneNotSupportedException e) {
-                            Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, e.toString(), e);
+                            Logger.getLogger(AccountImport.class.getName()).log(Level.SEVERE, e.toString(), e);
                         }
                     }
 

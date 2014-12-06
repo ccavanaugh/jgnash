@@ -280,7 +280,7 @@ public class AutoCompleteFactory {
                             }
                         }
                     } catch (Exception e) {
-                        Logger.getLogger(AutoCompleteFactory.class.getName()).log(Level.INFO, e.getLocalizedMessage(), e);
+                        Logger.getLogger(TransactionModel.class.getName()).log(Level.INFO, e.getLocalizedMessage(), e);
                     }
                 }
             });

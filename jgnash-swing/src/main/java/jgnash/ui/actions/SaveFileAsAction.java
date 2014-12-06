@@ -152,7 +152,7 @@ public class SaveFileAsAction extends AbstractEnabledAction {
                                 }
 
                                 if (!tempFile.delete()) {
-                                    Logger.getLogger(SaveFileAsAction.class.getName()).info("Unable to remove temporary file");
+                                    Logger.getLogger(SaveAs.class.getName()).info("Unable to remove temporary file");
                                 }
                             }
                         } else {

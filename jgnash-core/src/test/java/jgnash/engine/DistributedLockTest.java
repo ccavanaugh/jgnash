@@ -86,7 +86,7 @@ public class DistributedLockTest {
             transactionLock.writeLock().lock();
             Thread.sleep(1000);
         } catch (final InterruptedException e) {
-            Logger.getLogger(DistributedLockTest.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
             fail();
         } finally {
             accountLock.readLock().unlock();
@@ -115,7 +115,7 @@ public class DistributedLockTest {
                     try {
                         Thread.sleep(num);
                     } catch (final InterruptedException e) {
-                        Logger.getLogger(DistributedLockTest.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                        logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
                         fail();
                     }
 

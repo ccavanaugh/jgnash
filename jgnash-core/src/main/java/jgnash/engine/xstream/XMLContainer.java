@@ -80,7 +80,7 @@ class XMLContainer extends AbstractXStreamContainer {
             writeXML(objects, file);
         } finally {
             if (!acquireFileLock()) { // lock the file on open
-                Logger.getLogger(BinaryContainer.class.getName()).severe("Could not acquire the file lock");
+                Logger.getLogger(XMLContainer.class.getName()).severe("Could not acquire the file lock");
             }
             readWriteLock.readLock().unlock();
         }
@@ -173,11 +173,11 @@ class XMLContainer extends AbstractXStreamContainer {
                 }
             }
 
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (final IOException | ClassNotFoundException e) {
             Logger.getLogger(XMLContainer.class.getName()).log(Level.SEVERE, null, e);
         } finally {
             if (!acquireFileLock()) { // lock the file on open
-                Logger.getLogger(BinaryContainer.class.getName()).severe("Could not acquire the file lock");
+                Logger.getLogger(XMLContainer.class.getName()).severe("Could not acquire the file lock");
             }
             readWriteLock.writeLock().unlock();
         }

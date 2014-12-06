@@ -363,7 +363,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
                             try {
                                 modifyTransaction(modifyTransactionForAutoComplete((Transaction) t.clone()));
                             } catch (CloneNotSupportedException ex) {
-                                Logger.getLogger(AbstractBankTransactionPanel.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+                                Logger.getLogger(PayeeFocusListener.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
                             }
                             modTrans = null;
                         }

@@ -94,7 +94,7 @@ public class ImportOfxAction extends AbstractEnabledAction {
 
         @Override
         protected OfxV2Parser doInBackground() throws Exception {
-            Logger logger = Logger.getLogger(ImportOfxAction.class.getName());
+            Logger logger = Logger.getLogger(Import.class.getName());
 
             OfxV2Parser parser = new OfxV2Parser();
 
@@ -167,7 +167,7 @@ public class ImportOfxAction extends AbstractEnabledAction {
                     }.start();
                 }
             } catch (InterruptedException | ExecutionException ex) {
-                Logger.getLogger(ImportOfxAction.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
