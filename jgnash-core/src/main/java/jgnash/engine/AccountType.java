@@ -25,7 +25,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Account type enumeration
@@ -34,20 +34,20 @@ import jgnash.util.Resource;
  */
 public enum AccountType {
 
-    ASSET(Resource.get().getString("AccountType.Asset"), AccountGroup.ASSET, AccountProxy.class, true),
-    BANK(Resource.get().getString("AccountType.Bank"), AccountGroup.ASSET, AccountProxy.class, true),
-    CASH(Resource.get().getString("AccountType.Cash"), AccountGroup.ASSET, AccountProxy.class, true),
-    CHECKING(Resource.get().getString("AccountType.Checking"), AccountGroup.ASSET, AccountProxy.class, true),
-    CREDIT(Resource.get().getString("AccountType.Credit"), AccountGroup.LIABILITY, AccountProxy.class, true),
-    EQUITY(Resource.get().getString("AccountType.Equity"), AccountGroup.EQUITY, AccountProxy.class, true),
-    EXPENSE(Resource.get().getString("AccountType.Expense"), AccountGroup.EXPENSE, AccountProxy.class, true),
-    INCOME(Resource.get().getString("AccountType.Income"), AccountGroup.INCOME, AccountProxy.class, true),
-    INVEST(Resource.get().getString("AccountType.Investment"), AccountGroup.INVEST, InvestmentAccountProxy.class, false),
-    SIMPLEINVEST(Resource.get().getString("AccountType.SimpleInvestment"), AccountGroup.SIMPLEINVEST, AccountProxy.class, true),
-    LIABILITY(Resource.get().getString("AccountType.Liability"), AccountGroup.LIABILITY, AccountProxy.class, true),
-    MONEYMKRT(Resource.get().getString("AccountType.MoneyMkrt"), AccountGroup.ASSET, AccountProxy.class, true),
-    MUTUAL(Resource.get().getString("AccountType.Mutual"), AccountGroup.INVEST, InvestmentAccountProxy.class, false),
-    ROOT(Resource.get().getString("AccountType.Root"), AccountGroup.ROOT, AccountProxy.class, true);
+    ASSET(ResourceUtils.getBundle().getString("AccountType.Asset"), AccountGroup.ASSET, AccountProxy.class, true),
+    BANK(ResourceUtils.getBundle().getString("AccountType.Bank"), AccountGroup.ASSET, AccountProxy.class, true),
+    CASH(ResourceUtils.getBundle().getString("AccountType.Cash"), AccountGroup.ASSET, AccountProxy.class, true),
+    CHECKING(ResourceUtils.getBundle().getString("AccountType.Checking"), AccountGroup.ASSET, AccountProxy.class, true),
+    CREDIT(ResourceUtils.getBundle().getString("AccountType.Credit"), AccountGroup.LIABILITY, AccountProxy.class, true),
+    EQUITY(ResourceUtils.getBundle().getString("AccountType.Equity"), AccountGroup.EQUITY, AccountProxy.class, true),
+    EXPENSE(ResourceUtils.getBundle().getString("AccountType.Expense"), AccountGroup.EXPENSE, AccountProxy.class, true),
+    INCOME(ResourceUtils.getBundle().getString("AccountType.Income"), AccountGroup.INCOME, AccountProxy.class, true),
+    INVEST(ResourceUtils.getBundle().getString("AccountType.Investment"), AccountGroup.INVEST, InvestmentAccountProxy.class, false),
+    SIMPLEINVEST(ResourceUtils.getBundle().getString("AccountType.SimpleInvestment"), AccountGroup.SIMPLEINVEST, AccountProxy.class, true),
+    LIABILITY(ResourceUtils.getBundle().getString("AccountType.Liability"), AccountGroup.LIABILITY, AccountProxy.class, true),
+    MONEYMKRT(ResourceUtils.getBundle().getString("AccountType.MoneyMarket"), AccountGroup.ASSET, AccountProxy.class, true),
+    MUTUAL(ResourceUtils.getBundle().getString("AccountType.Mutual"), AccountGroup.INVEST, InvestmentAccountProxy.class, false),
+    ROOT(ResourceUtils.getBundle().getString("AccountType.Root"), AccountGroup.ROOT, AccountProxy.class, true);
 
     private final transient String description;
 
@@ -107,7 +107,7 @@ public enum AccountType {
             Constructor<?> accConst = accountProxy.getDeclaredConstructor(constParams);
             Object[] params = new Object[] { account };
             return (AccountProxy) accConst.newInstance(params);
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
+        } catch (final InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(AccountType.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null; // unable to create object
