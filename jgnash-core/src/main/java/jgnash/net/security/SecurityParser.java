@@ -41,5 +41,6 @@ public interface SecurityParser {
       
     boolean parse(SecurityNode node);
 
+    @SuppressWarnings("UnusedDeclaration")
     boolean useISIN();
 }
