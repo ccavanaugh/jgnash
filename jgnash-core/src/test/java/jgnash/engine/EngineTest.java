@@ -639,7 +639,12 @@ public abstract class EngineTest {
         b = e.getAccountByUuid(a.getUuid());
         assertEquals("gobbleDeGook", b.getAttribute("myStuff"));
         assertEquals("myValue", b.getAttribute("myKey"));
-        assertEquals(BigDecimal.TEN, new BigDecimal(b.getAttribute("myNumber")));
+
+        String attribute = b.getAttribute("myNumber");
+
+        assertNotNull(attribute);
+
+        assertEquals(BigDecimal.TEN, new BigDecimal(attribute));
     }
 
     @Test
