@@ -45,7 +45,7 @@ public interface TransactionDAO {
      * Transactions are generally immutable and should not be updated
      * This is intended for fix in place data errors
      *
-     * @param transaction
+     * @param transaction {@code Transaction} to update
        */
     public void updateTransaction(Transaction transaction);
 
