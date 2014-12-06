@@ -77,7 +77,7 @@ public class FileMagicTest {
         URL url = Object.class.getResource("/test1.jgnash.xml");
 
         try {
-            assertTrue(FileMagic.isValidjGnash1File(new File(url.toURI())));
+            assertTrue(FileMagic.isValidVersion1File(new File(url.toURI())));
         } catch (URISyntaxException ex) {
             Logger.getLogger(FileMagicTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -85,7 +85,7 @@ public class FileMagicTest {
         url = Object.class.getResource("/test.yap");
 
         try {
-            assertFalse(FileMagic.isValidjGnash1File(new File(url.toURI())));
+            assertFalse(FileMagic.isValidVersion1File(new File(url.toURI())));
         } catch (URISyntaxException ex) {
             Logger.getLogger(FileMagicTest.class.getName()).log(Level.SEVERE, null, ex);
         }

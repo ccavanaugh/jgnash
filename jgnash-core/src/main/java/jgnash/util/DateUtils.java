@@ -812,7 +812,7 @@ public class DateUtils {
     }
 
     /**
-     * Returns a trimmed version of todays date
+     * Returns a trimmed version of today's date
      *
      * @return trimmed date
      */

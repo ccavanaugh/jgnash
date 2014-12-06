@@ -70,7 +70,7 @@ public class FileMagic {
      */
     public static FileType magic(final File file) {
 
-        if (isValidjGnash2File(file)) {
+        if (isValidVersion2File(file)) {
             return FileType.jGnash2XML;
         } else if (isBinaryXStreamFile(file)) {
             return FileType.BinaryXStream;
@@ -78,7 +78,7 @@ public class FileMagic {
             return FileType.h2;
         } else if (isHsqlFile(file)) {
             return FileType.hsql;
-        } else if (isValidjGnash1File(file)) {
+        } else if (isValidVersion1File(file)) {
             return FileType.jGnash1XML;
         } else if (isOfxV1(file)) {
             return FileType.OfxV1;
@@ -271,15 +271,15 @@ public class FileMagic {
         return result;
     }
 
-    public static boolean isValidjGnash1File(final File file) {
-        return isValidjGnashX(file, "1");
+    public static boolean isValidVersion1File(final File file) {
+        return isValidVersionXFile(file, "1");
     }
 
-    private static boolean isValidjGnash2File(final File file) {
-        return isValidjGnashX(file, "2");
+    private static boolean isValidVersion2File(final File file) {
+        return isValidVersionXFile(file, "2");
     }
 
-    private static boolean isValidjGnashX(final File file, final String majorVersion) {
+    private static boolean isValidVersionXFile(final File file, final String majorVersion) {
 
         if (!file.exists() || !file.isFile() || !file.canRead()) {
             return false;

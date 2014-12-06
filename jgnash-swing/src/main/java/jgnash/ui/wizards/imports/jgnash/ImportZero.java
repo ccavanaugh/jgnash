@@ -153,7 +153,7 @@ public class ImportZero extends JPanel implements WizardPage, ActionListener {
         File file = new File(fileImportField.getText());
 
         if (file.exists()) {
-            valid = FileMagic.isValidjGnash1File(file);
+            valid = FileMagic.isValidVersion1File(file);
             validFileLabel.setVisible(!valid);
 
         } else {

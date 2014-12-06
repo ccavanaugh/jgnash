@@ -444,7 +444,7 @@ public class TransactionFactory {
             BigDecimal totalFees = BigDecimal.ZERO;
 
             // loop through and add investment fees
-            for (TransactionEntry fee : fees) {
+            for (final TransactionEntry fee : fees) {
                 transaction.addTransactionEntry(fee);
                 totalFees = totalFees.add(fee.getAmount(investmentAccount));
             }
@@ -464,19 +464,19 @@ public class TransactionFactory {
             BigDecimal totalGains = BigDecimal.ZERO;
 
             // loop through and add gain/loss entries
-            for (TransactionEntry gain : gains) {
+            for (final TransactionEntry gain : gains) {
                 transaction.addTransactionEntry(gain);
                 totalGains = totalGains.add(gain.getAmount(investmentAccount));
             }
 
             // create a single entry transaction that offsets investment gains or loss
-            TransactionEntry gainsOffestEntry = new TransactionEntry(investmentAccount, totalGains.negate());
-            gainsOffestEntry.setMemo(memo);
-            gainsOffestEntry.setTransactionTag(TransactionTag.GAINS_OFFSET);
+            final TransactionEntry gainsOffsetEntry = new TransactionEntry(investmentAccount, totalGains.negate());
+            gainsOffsetEntry.setMemo(memo);
+            gainsOffsetEntry.setTransactionTag(TransactionTag.GAINS_OFFSET);
 
-            assert gainsOffestEntry.isSingleEntry(); // check
+            assert gainsOffsetEntry.isSingleEntry(); // check
 
-            transaction.addTransactionEntry(gainsOffestEntry);
+            transaction.addTransactionEntry(gainsOffsetEntry);
         }
 
         return transaction;

@@ -79,7 +79,7 @@ public class XStreamEngineDAO extends AbstractXStreamDAO implements EngineDAO {
                     @Override
                     public void run() {
                         if (commitCount.get() > 0) {
-                            Logger.getLogger(XStreamEngineDAO.class.getName()).info("Commiting file");
+                            Logger.getLogger(XStreamEngineDAO.class.getName()).info("Committing file");
                             commitAndReset();
                         }
                     }

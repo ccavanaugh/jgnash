@@ -55,7 +55,7 @@ public class InvestmentTransactionTest {
     @Before
     public void setUp() {
         // Creating database
-        database = EngineFactory.getDefaultDatabase() + "-investtransaction-test.xml";
+        database = EngineFactory.getDefaultDatabase() + "-investTransaction-test.xml";
         EngineFactory.deleteDatabase(database);
 
         try {

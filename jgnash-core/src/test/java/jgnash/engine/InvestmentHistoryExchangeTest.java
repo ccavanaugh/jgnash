@@ -198,7 +198,7 @@ import static org.junit.Assert.fail;
      @Before
      public void setUp() {
          // Creating database
-         database = EngineFactory.getDefaultDatabase() + "-investhist-test.bxds";
+         database = EngineFactory.getDefaultDatabase() + "-investHist-test.bxds";
          EngineFactory.deleteDatabase(database);
 
          try {
