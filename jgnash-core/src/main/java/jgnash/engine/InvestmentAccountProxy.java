@@ -56,6 +56,8 @@ public class InvestmentAccountProxy extends AccountProxy {
 
     /**
      * Returns the cash balance of this account
+     * 
+     * @return cash balance of the account
      */
     @Override
     public BigDecimal getCashBalance() {

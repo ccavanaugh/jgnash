@@ -42,6 +42,8 @@ public class AttachmentUtils {
 
     /**
      * Creates the attachment directory for the active database
+     * 
+     * @param baseFile base directory for file attachments
      *
      * @return {@code true} if and only if the directory was created or if
      *         it already exists; {@code false} otherwise

@@ -119,9 +119,9 @@ public class FileTransferTest {
             tempAttachment.toFile().deleteOnExit();
 
             //write it
-            BufferedWriter bw = Files.newBufferedWriter(tempAttachment, Charset.defaultCharset());
-            bw.write("This is the temporary file content 2.");
-            bw.close();
+            try (BufferedWriter bw = Files.newBufferedWriter(tempAttachment, Charset.defaultCharset())) {
+                bw.write("This is the temporary file content 2.");
+            }
 
             Future<Path> pathFuture = e.getAttachment(tempAttachment.getFileName().toString());
 

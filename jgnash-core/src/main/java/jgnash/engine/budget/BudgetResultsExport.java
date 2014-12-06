@@ -314,7 +314,7 @@ public class BudgetResultsExport {
             s.setColumnWidth(i, s.getColumnWidth(i) + 10);
         }
 
-        Logger.getLogger(BudgetResultsExport.class.getName()).info(wb.getNumCellStyles() + " cell styles were used");
+        Logger.getLogger(BudgetResultsExport.class.getName()).log(Level.INFO, "{0} cell styles were used", wb.getNumCellStyles());
 
         // Save
         String filename = file.getAbsolutePath();

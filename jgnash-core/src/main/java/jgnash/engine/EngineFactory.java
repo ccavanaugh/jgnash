@@ -241,6 +241,7 @@ public class EngineFactory {
      *
      * @param fileName   filename to load
      * @param engineName engine identifier
+     * @param password connection password
      * @return new {@code Engine} instance if successful, null otherwise
      * @see Engine
      */

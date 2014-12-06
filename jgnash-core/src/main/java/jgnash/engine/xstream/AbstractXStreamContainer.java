@@ -287,6 +287,7 @@ abstract class AbstractXStreamContainer {
             super(reflectionProvider, hierarchicalStreamDriver);
         }
 
+        @Override
         protected MapperWrapper wrapMapper(final MapperWrapper next) {
             return new HibernateMapper(next);
         }

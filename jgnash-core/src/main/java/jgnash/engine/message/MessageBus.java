@@ -77,6 +77,7 @@ public class MessageBus {
      *
      * @param host message server name or IP address
      * @param port message server port
+     * @param password connection password
      * @return {@code true} if connection to the remote server was successful
      */
     public synchronized boolean setRemote(final String host, final int port, final char[] password) {
@@ -133,6 +134,9 @@ public class MessageBus {
 
     /**
      * Issues a shutdown request to a remote server
+     * @param remoteHost message server name or IP address
+     * @param remotePort message server port
+     * @param password connection password   
      */
     public void shutDownRemoteServer(final String remoteHost, final int remotePort, final char[] password) {
         if (remoteHost == null || remotePort <= 0) {

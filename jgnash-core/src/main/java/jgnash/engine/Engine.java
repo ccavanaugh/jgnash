@@ -262,6 +262,8 @@ public class Engine {
 
         // Cleanup thread that monitor for excess network connection failures
         new Thread() {
+            
+            @Override
             public void run() {
                 short errorCount = 0;
 
@@ -591,9 +593,9 @@ public class Engine {
 
             // if the file version is not current, then update it
             if (getConfig().getFileVersion() != CURRENT_VERSION) {
-                Config config = getConfig();
-                config.setFileVersion(CURRENT_VERSION);
-                getConfigDAO().update(config);
+                final Config localConfig = getConfig();
+                localConfig.setFileVersion(CURRENT_VERSION);
+                getConfigDAO().update(localConfig);
             }
         } finally {
             configLock.writeLock().unlock();
@@ -1529,14 +1531,14 @@ public class Engine {
         commodityLock.writeLock().lock();
 
         try {
-            Config config = getConfig();
-            config.setDefaultCurrency(defaultCurrency);
-            getConfigDAO().update(config);
+            final Config currencyConfig = getConfig();
+            currencyConfig.setDefaultCurrency(defaultCurrency);
+            getConfigDAO().update(currencyConfig);
 
             logInfo("Setting default currency: " + defaultCurrency);
 
             Message message = new Message(MessageChannel.CONFIG, ChannelEvent.CONFIG_MODIFY, this);
-            message.setObject(MessageProperty.CONFIG, config);
+            message.setObject(MessageProperty.CONFIG, currencyConfig);
             messageBus.fireEvent(message);
 
             Account root = getRootAccount();
@@ -1738,14 +1740,14 @@ public class Engine {
 
         try {
             accountSeparator = separator;
-            Config config = getConfig();
+            Config localConfig = getConfig();
 
-            config.setAccountSeparator(separator);
+            localConfig.setAccountSeparator(separator);
 
-            getConfigDAO().update(config);
+            getConfigDAO().update(localConfig);
 
             Message message = new Message(MessageChannel.CONFIG, ChannelEvent.CONFIG_MODIFY, this);
-            message.setObject(MessageProperty.CONFIG, config);
+            message.setObject(MessageProperty.CONFIG, localConfig);
 
             messageBus.fireEvent(message);
         } finally {
@@ -1796,7 +1798,7 @@ public class Engine {
      *
      * @return List of income accounts
      */
-    public List<Account> getIncomeAccountList() {
+    @NotNull public List<Account> getIncomeAccountList() {
 
         return getAccountDAO().getIncomeAccountList();
     }
@@ -1806,7 +1808,7 @@ public class Engine {
      *
      * @return List if expense accounts
      */
-    public List<Account> getExpenseAccountList() {
+    @NotNull public List<Account> getExpenseAccountList() {
 
         return getAccountDAO().getExpenseAccountList();
     }
@@ -2714,13 +2716,13 @@ public class Engine {
         configLock.writeLock().lock();
 
         try {
-            Config config = getConfig();
+            final Config transactionConfig = getConfig();
 
-            config.setTransactionNumberList(list);
-            getConfigDAO().update(config);
+            transactionConfig.setTransactionNumberList(list);
+            getConfigDAO().update(transactionConfig);
 
             Message message = new Message(MessageChannel.CONFIG, ChannelEvent.CONFIG_MODIFY, this);
-            message.setObject(MessageProperty.CONFIG, config);
+            message.setObject(MessageProperty.CONFIG, transactionConfig);
 
             messageBus.fireEvent(message);
         } finally {

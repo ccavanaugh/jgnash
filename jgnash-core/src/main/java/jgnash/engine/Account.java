@@ -587,10 +587,10 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @return List of children
      */
     public List<Account> getChildren(final Comparator<? super Account> comparator) {
-        List<Account> children = getChildren();
-        Collections.sort(children, comparator);
+        List<Account> accountChildren = getChildren();
+        Collections.sort(accountChildren, comparator);
 
-        return children;
+        return accountChildren;
     }
 
     /**
@@ -1265,6 +1265,8 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     /**
      * User definable account code.  This can be used to manage sort order
+     * 
+     * @return the user defined account code
      */
     public int getAccountCode() {
         return accountCode;

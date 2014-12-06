@@ -96,6 +96,7 @@ public class BudgetFactory {
     /**
      * Creates a {@code BudgetGoal} with an alternating pattern
      *
+     * @param baseBudgetGoal {@code BudgetGoal} to clone
      * @param account  Account for BudgetGoal
      * @param descriptors descriptors to use
      * @param pattern Pattern to use
