@@ -152,6 +152,7 @@ public class OfxExport implements OfxTags {
                     writer.println(wrapOpen(ACCTTYPE) + CREDITLINE, indentLevel);
                     break;
                 case SIMPLEINVEST:
+                case MONEYMKRT:
                     writer.println(wrapOpen(ACCTTYPE) + MONEYMRKT, indentLevel);
                     break;
                 default:
