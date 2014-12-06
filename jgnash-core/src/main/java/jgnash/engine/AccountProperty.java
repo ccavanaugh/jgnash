@@ -22,6 +22,7 @@ package jgnash.engine;
  *
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("UnusedDeclaration")
 @Deprecated
 public enum AccountProperty {
     AMORTIZEOBJECT,
