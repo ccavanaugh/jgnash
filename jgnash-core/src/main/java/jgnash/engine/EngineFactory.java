@@ -282,7 +282,9 @@ public class EngineFactory {
         // If a relational database is being used for a file prior to 2.15, correct the column name
         if ((type == DataStoreType.H2_DATABASE || type == DataStoreType.HSQL_DATABASE) && doesDatabaseExist(fileName)) {
             if (SqlUtils.getFileVersion(fileName, password) < 2.15) {
-                SqlUtils.checkAndFixHibernate_HHH_9389(fileName, password);
+                if (!SqlUtils.checkAndFixHibernate_HHH_9389(fileName, password)) {
+                    logger.severe("Database scheme upgrade failed");
+                }
             }
         }
 
