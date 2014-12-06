@@ -1661,7 +1661,7 @@ public class Engine {
         commodityLock.writeLock().lock();
 
         try {
-            boolean status = true;
+            boolean status;
 
             if (oldNode.getClass().equals(templateNode.getClass())) {
 
@@ -1680,7 +1680,7 @@ public class Engine {
                     ((SecurityNode) oldNode).setISIN(((SecurityNode) templateNode).getISIN());
                 }
 
-                getCommodityDAO().updateCommodityNode(oldNode);
+                status = getCommodityDAO().updateCommodityNode(oldNode);
             } else {
                 status = false;
                 logger.warning("Template object class did not match old object class");
