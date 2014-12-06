@@ -401,7 +401,7 @@ public class TransactionFactory {
      * @param gains Gain/Loss entry(s)
      * @return new InvestmentTransaction
      */
-    public static InvestmentTransaction generateReinvDividendXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo, final Collection<TransactionEntry> fees, final Collection<TransactionEntry> gains) {
+    public static InvestmentTransaction generateReinvestDividendXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo, final Collection<TransactionEntry> fees, final Collection<TransactionEntry> gains) {
         Objects.requireNonNull(investmentAccount);
         Objects.requireNonNull(node);
         Objects.requireNonNull(price);
@@ -582,24 +582,24 @@ public class TransactionFactory {
         Objects.requireNonNull(memo);
 
         // verify fees are tagged correctly
-        for (TransactionEntry fee : fees) {
+        for (final TransactionEntry fee : fees) {
             if (fee.getTransactionTag() != TransactionTag.INVESTMENT_FEE) {
                 throw new RuntimeException(Resource.get().getString("Message.Error.InvalidTransactionTag"));
             }
         }
 
         // verify gains are tagged correctly
-        for (TransactionEntry gain : gains) {
+        for (final TransactionEntry gain : gains) {
             if (gain.getTransactionTag() != TransactionTag.GAIN_LOSS) {
                 throw new RuntimeException(Resource.get().getString("Message.Error.InvalidTransactionTag"));
             }
         }
 
-        InvestmentTransaction transaction = new InvestmentTransaction();
+        final InvestmentTransaction transaction = new InvestmentTransaction();
         transaction.setDate(date);
         transaction.setMemo(memo);
 
-        TransactionEntrySellX entry = new TransactionEntrySellX(account, investmentAccount, node, price, quantity, exchangeRate);
+        final TransactionEntrySellX entry = new TransactionEntrySellX(account, investmentAccount, node, price, quantity, exchangeRate);
         entry.setMemo(memo);
 
         transaction.setPayee(buildPayee("Word.Sell", node, price, quantity));
@@ -612,7 +612,7 @@ public class TransactionFactory {
             BigDecimal nonCashBalanceFees = BigDecimal.ZERO;
 
             // loop through and add investment fees to the transaction
-            for (TransactionEntry fee : fees) {
+            for (final TransactionEntry fee : fees) {
                 transaction.addTransactionEntry(fee);
 
                 nonCashBalanceFees = nonCashBalanceFees.add(fee.getAmount(investmentAccount).abs());
@@ -635,19 +635,19 @@ public class TransactionFactory {
             BigDecimal totalGains = BigDecimal.ZERO;
 
             // loop through and add gains/loss entries
-            for (TransactionEntry gain : gains) {
+            for (final TransactionEntry gain : gains) {
                 transaction.addTransactionEntry(gain);
                 totalGains = totalGains.add(gain.getAmount(investmentAccount));
             }
 
             // create a single entry transaction that offsets investment gains or loss
-            TransactionEntry gainsOffestEntry = new TransactionEntry(investmentAccount, totalGains.negate());
-            gainsOffestEntry.setMemo(memo);
-            gainsOffestEntry.setTransactionTag(TransactionTag.GAINS_OFFSET);
+            final TransactionEntry gainsOffsetEntry = new TransactionEntry(investmentAccount, totalGains.negate());
+            gainsOffsetEntry.setMemo(memo);
+            gainsOffsetEntry.setTransactionTag(TransactionTag.GAINS_OFFSET);
 
-            assert gainsOffestEntry.isSingleEntry(); // check
+            assert gainsOffsetEntry.isSingleEntry(); // check
 
-            transaction.addTransactionEntry(gainsOffestEntry);
+            transaction.addTransactionEntry(gainsOffsetEntry);
         }
 
         //ReconcileManager.reconcileTransaction(account, transaction, reconciled);

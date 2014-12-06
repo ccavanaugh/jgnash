@@ -288,13 +288,18 @@ public class FileMagic {
         boolean result = false;
 
         if (isFile(file, XML_HEADER)) {
-            result = getjGnashXMLVersion(file).startsWith(majorVersion);
+            result = getXMLVersion(file).startsWith(majorVersion);
         }
 
         return result;
     }
 
-    public static String getjGnashXMLVersion(final File file) {
+    /**
+     * Determines the version of the jGnash file
+     * @param file {@code file to check}
+     * @return file version as a String
+     */
+    public static String getXMLVersion(final File file) {
         String version = "";
 
         try (InputStream input = new BufferedInputStream(new FileInputStream(file))) {

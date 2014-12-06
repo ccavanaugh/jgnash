@@ -31,7 +31,7 @@ import javax.print.attribute.PrintRequestAttributeSet;
 public class CheckLayout {
     private final List<CheckObject> checkObjects = new ArrayList<>();
 
-    private PrintRequestAttributeSet printAttributes = new HashPrintRequestAttributeSet();
+    final private PrintRequestAttributeSet printAttributes = new HashPrintRequestAttributeSet();
 
     private int numberOfChecks = 1;
 

@@ -23,6 +23,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import jgnash.engine.StoredObject;
 import jgnash.engine.dao.AbstractDAO;
+import jgnash.util.NotNull;
 
 /**
  * Simple object container for StoredObjects that reads and writes and xml file
@@ -38,13 +39,13 @@ abstract class AbstractXStreamDAO extends AbstractDAO {
 
     static final AtomicInteger commitCount = new AtomicInteger(0);
 
-    AbstractXStreamContainer container;
+    final AbstractXStreamContainer container;
 
     private static final ReentrantLock commitLock = new ReentrantLock();
 
     private static final int MAX_COMMIT_COUNT = 250;
 
-    AbstractXStreamDAO(final AbstractXStreamContainer container) {
+    AbstractXStreamDAO(@NotNull final AbstractXStreamContainer container) {
         Objects.requireNonNull(container);
 
         this.container = container;

@@ -3,7 +3,7 @@ package jgnash.engine;
 import static jgnash.engine.TransactionFactory.generateBuyXTransaction;
 import static jgnash.engine.TransactionFactory.generateDividendXTransaction;
 import static jgnash.engine.TransactionFactory.generateMergeXTransaction;
-import static jgnash.engine.TransactionFactory.generateReinvDividendXTransaction;
+import static jgnash.engine.TransactionFactory.generateReinvestDividendXTransaction;
 import static jgnash.engine.TransactionFactory.generateSellXTransaction;
 import static jgnash.engine.TransactionFactory.generateSplitXTransaction;
 import static org.junit.Assert.assertArrayEquals;
@@ -517,7 +517,7 @@ public class InvestmentTransactionTest {
         TransactionEntry rdGain2 = createTransactionEntry(incomeAccount, investAccount, new BigDecimal("30.00"), "Reinvest Dividend Gain2", TransactionTag.GAIN_LOSS);
         reinvestDividendGains.add(rdGain2);
 
-        it = generateReinvDividendXTransaction(investAccount, securityNode1, securityPrice1, new BigDecimal("15"), transactionDate2, "Reinvest Dividend", reinvestDividendFees, reinvestDividendGains);
+        it = generateReinvestDividendXTransaction(investAccount, securityNode1, securityPrice1, new BigDecimal("15"), transactionDate2, "Reinvest Dividend", reinvestDividendFees, reinvestDividendGains);
         e.addTransaction(it);
 
         // Checking the result

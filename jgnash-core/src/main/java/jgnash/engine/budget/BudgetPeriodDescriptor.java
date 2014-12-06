@@ -41,19 +41,19 @@ public class BudgetPeriodDescriptor {
     /**
      * The starting period (Day of the year)
      */
-    private int startPeriod;
+    final private int startPeriod;
 
     private int endPeriod;
 
-    private Date startDate;
+    final private Date startDate;
 
     private Date endDate;
 
-    private String periodDescription;
+    final private String periodDescription;
 
-    private BudgetPeriod budgetPeriod;
+    final private BudgetPeriod budgetPeriod;
 
-    private int budgetYear;
+    final private int budgetYear;
 
     BudgetPeriodDescriptor(final int budgetYear, final BudgetPeriod budgetPeriod, final int startPeriod) {
         Objects.requireNonNull(budgetPeriod);
@@ -113,7 +113,7 @@ public class BudgetPeriodDescriptor {
                 periodDescription = "";
         }
 
-        // Periods especially bi-weekly can get weird, for a correct ending period if needed.
+        // Periods especially bi-weekly can get weird, correct ending period if needed.
         if (endPeriod > BudgetGoal.PERIODS) {
             endPeriod = BudgetGoal.PERIODS - 1;
             endDate = DateUtils.getLastDayOfTheYear(startDate);

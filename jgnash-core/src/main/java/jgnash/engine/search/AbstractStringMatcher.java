@@ -29,7 +29,7 @@ import jgnash.util.SearchUtils;
  */
 abstract class AbstractStringMatcher implements Matcher {
 
-    Pattern p;
+    final Pattern p;
 
     /**
      * Creates a Matcher for Strings

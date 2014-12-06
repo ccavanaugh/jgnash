@@ -38,7 +38,7 @@ abstract class AbstractJpaDAO extends AbstractDAO {
 
     static final ReentrantLock emLock = new ReentrantLock();
 
-    EntityManager em;
+    final EntityManager em;
 
     boolean isRemote = false;
 
@@ -76,7 +76,7 @@ abstract class AbstractJpaDAO extends AbstractDAO {
         emLock.lock();
 
         try {
-            Future<T> future = executorService.submit(new Callable<T>() {
+            final Future<T> future = executorService.submit(new Callable<T>() {
                 @Override
                 public T call() throws Exception {
 

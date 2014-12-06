@@ -152,7 +152,7 @@ class XMLContainer extends AbstractXStreamContainer {
     void readXML() {
         String encoding = System.getProperty("file.encoding"); // system default encoding
 
-        String version = FileMagic.getjGnashXMLVersion(file); // version of the jGnash XML file
+        String version = FileMagic.getXMLVersion(file); // version of the jGnash XML file
 
         if (Float.parseFloat(version) >= 2.01f) { // 2.01f is hard coded for prior encoding bug
             encoding = StandardCharsets.UTF_8.name(); // encoding is always UTF-8 for anything greater than 2.0

@@ -166,7 +166,7 @@ public final class ReinvestDividendPanel extends AbstractPriceQtyInvTransactionP
 
         Collection<TransactionEntry> gains = gainsPanel.getTransactions();
 
-        return TransactionFactory.generateReinvDividendXTransaction(account, securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText(), fees, gains);
+        return TransactionFactory.generateReinvestDividendXTransaction(account, securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText(), fees, gains);
     }
 
     @Override
