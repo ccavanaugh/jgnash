@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
  */
 public abstract class YahooParser implements SecurityParser {
 
-    private static final Logger logger = Logger.getLogger(YahooParser.class.getName());
+    public static final Logger logger = Logger.getLogger(YahooParser.class.getName());
 
     private static final Pattern COMMA_DELIMITER_PATTERN = Pattern.compile(",");
 

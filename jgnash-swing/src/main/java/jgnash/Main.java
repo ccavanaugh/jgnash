@@ -150,9 +150,9 @@ public final class Main {
         }
 
         Engine.getLogger().setLevel(Level.ALL);
-        Logger.getLogger(MainFrame.class.getName()).setLevel(Level.ALL);
-        Logger.getLogger(OpenAction.class.getName()).setLevel(Level.ALL);
-        Logger.getLogger(YahooParser.class.getName()).setLevel(Level.ALL);
+        MainFrame.logger.setLevel(Level.ALL);
+        OpenAction.logger.setLevel(Level.ALL);
+        YahooParser.logger.setLevel(Level.ALL);
     }
 
     private static void enableAntialiasing() {
@@ -347,7 +347,7 @@ public final class Main {
     private class ExportPreferencesThread extends Thread {
         @Override
         public void run() {
-            Logger.getLogger(Main.class.getName()).info("Exporting preferences");
+            Logger.getLogger(ExportPreferencesThread.class.getName()).info("Exporting preferences");
 
             File exportFile = getPreferenceFile();
 
@@ -361,10 +361,10 @@ public final class Main {
                     }
                     deleteUserPreferences();
                 } catch (BackingStoreException e) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
+                    Logger.getLogger(ExportPreferencesThread.class.getName()).log(Level.SEVERE, e.toString(), e);
                 }
             } catch (IOException e) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);
+                Logger.getLogger(ExportPreferencesThread.class.getName()).log(Level.SEVERE, e.toString(), e);
             }
         }
     }

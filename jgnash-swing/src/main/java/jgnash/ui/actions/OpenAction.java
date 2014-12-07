@@ -48,7 +48,7 @@ import jgnash.util.Resource;
  */
 public class OpenAction {
 
-    private static final Logger logger = Logger.getLogger(OpenAction.class.getName());
+    public static final Logger logger = Logger.getLogger(OpenAction.class.getName());
 
     private static boolean remoteConnectionFailed = false;
 

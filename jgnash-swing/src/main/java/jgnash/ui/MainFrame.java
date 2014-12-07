@@ -122,7 +122,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     private JTextField statusField;
 
-    private static final Logger logger = Logger.getLogger(MainFrame.class.getName());
+    public static final Logger logger = Logger.getLogger(MainFrame.class.getName());
 
     private JXBusyLabel backgroundOperationLabel;
 
