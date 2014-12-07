@@ -23,7 +23,6 @@ import com.jgoodies.forms.layout.FormLayout;
 import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -196,10 +195,10 @@ public class LiabilityRegisterPanel extends RegisterPanel {
                 dlg.newTransaction(tran);
                 dlg.setVisible(true);
             } else {
-                Logger.getLogger(Engine.class.getName()).warning("Not enough information");
+                StaticUIMethods.displayWarning(rb.getString("Message.Warn.ConfigAmortization"));
             }
         } else { // could not generate the transaction
-            Logger.getLogger(Engine.class.getName()).warning("Please configure amortization");
+            StaticUIMethods.displayWarning(rb.getString("Message.Warn.ConfigAmortization"));
         }
     }
 
