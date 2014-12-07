@@ -145,8 +145,6 @@ public class DistributedAttachmentManager implements AttachmentManager {
                         if (Files.exists(path)) {
                             break;
                         }
-
-                        Thread.yield();
                     }
                 }
 

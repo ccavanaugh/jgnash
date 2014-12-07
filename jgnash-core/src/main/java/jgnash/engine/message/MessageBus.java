@@ -171,8 +171,6 @@ public class MessageBus {
                     result = false;
                     break;
                 }
-
-                Thread.yield(); // spin for awhile
             }
         } else {
             messageBusClient = null; //make sure bad client connections are dumped
