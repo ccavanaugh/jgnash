@@ -28,6 +28,7 @@ Add ability to make an existing transaction a recurring transaction.
 
 Release 2.15.0
 ----------------------
+12/07/14 Display a warning dialog if loan amortization is not configured instead of logging to the status bar.
 12/03/14 Correct database at load if a transaction was incorrectly marked as orphaned and removable.
 11/26/14 The simple investment account type was moved to it's own group to improve program logic
 11/23/14 Active Account Securities were not marked to prevent removal in the Account Properties dialog.
