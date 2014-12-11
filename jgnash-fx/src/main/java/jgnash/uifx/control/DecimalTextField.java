@@ -1,0 +1,294 @@
+/*
+ * jGnash, a personal finance application
+ * Copyright (C) 2001-2014 Craig Cavanaugh
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package jgnash.uifx.control;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Objects;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
+import jgnash.engine.CommodityNode;
+import jgnash.engine.MathConstants;
+import jgnash.util.NotNull;
+
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+
+/**
+ * Text field for entering decimal values
+ *
+ * @author Craig Cavanaugh
+ */
+public class DecimalTextField extends TextField {
+
+    /**
+     * Allowable character in input
+     */
+    private static final String FLOAT;
+
+    /**
+     * Allowable math operators in input
+     */
+    private static final String MATH_OPERATORS = "()+*/";
+
+    private int scale = 2;
+
+    private static char group = ',';
+
+    private static char fraction = '.';
+
+    /**
+     * Used for output of parsed input
+     */
+    private final NumberFormat format;
+
+    /**
+     * Used to track state of fractional separator input on numeric pad
+     */
+    private volatile boolean keypad = false;
+
+    private static final ScriptEngine jsEngine;
+
+    static {
+        FLOAT = getAllowedChars();
+        jsEngine = new ScriptEngineManager().getEngineByName("JavaScript");
+    }
+
+    public DecimalTextField() {
+        final FXMLLoader loader = new FXMLLoader(getClass().getResource("DecimalTextField.fxml"));
+        loader.setRoot(this);
+        loader.setController(this);
+
+        try {
+            loader.load();
+        } catch (final IOException exception) {
+            throw new RuntimeException(exception);
+        }
+
+        format = NumberFormat.getInstance();
+
+        if (format instanceof DecimalFormat) {
+            format.setMaximumFractionDigits(scale);
+            format.setMinimumFractionDigits(scale);
+        }
+
+        /* Disable grouping for output formatting on all locales.
+         * This solves issues with parsing out group separators.
+         * This does not prevent parsing grouping input.
+         */
+        format.setGroupingUsed(false);
+
+        // Force evaluation on loss of focus
+        focusedProperty().addListener((observable, oldValue, newValue) -> {
+            String t = eval();
+            if (!t.isEmpty()) {
+                // round the value to scale
+                setDecimal(new BigDecimal(t).setScale(scale, MathConstants.roundingMode));
+            }
+        });
+
+
+        addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<javafx.scene.input.KeyEvent>() {
+            @Override
+            public void handle(final KeyEvent event) {
+                if (event.getCode() == KeyCode.DECIMAL) {
+                    keypad = true;
+                    //System.out.println("keypad");
+                }
+            }
+        });
+    }
+
+    public void setDecimal(final BigDecimal decimal) {
+        if (decimal != null) {
+            super.setText(format.format(decimal.doubleValue()));
+        } else {
+            super.setText("");
+        }
+    }
+
+    public BigDecimal getDecimal() {
+        if (!isEmpty()) {
+            try {
+                return new BigDecimal(eval());
+            } catch (final NumberFormatException ignored) {
+                // ignore and drop out
+            }
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
+     * Determines if the field is empty
+     *
+     * @return {@code false} if empty
+     */
+    public boolean isEmpty() {
+        boolean result = true;
+
+        if (getText() != null) {
+            result = getText().isEmpty();
+        }
+
+        return result;
+    }
+
+    @Override
+    public void deleteText(int start, int end) {
+        super.replaceText(start, end, "");
+    }
+
+    @Override
+    public void replaceText(final int start, final int end, final String text) {
+        Objects.requireNonNull(text);
+
+        String newText = getText().substring(0, start) + text + getText().substring(end);
+
+        /* fraction input is handled as a special case */
+        if (keypad) {
+            super.replaceText(start, end, Character.toString(fraction));
+            keypad = false;
+            return;
+        }
+
+        for (int j = 0; j < newText.length(); j++) {
+            if (!FLOAT.contains(String.valueOf(newText.charAt(j)))) {
+                return;
+            }
+        }
+        super.replaceText(start, end, text);
+    }
+
+    @Override
+    public void replaceSelection(final String text) {
+        int start = getSelection().getStart();
+        int end = getSelection().getEnd();
+        String newText = getText().substring(0, start) + text + getText().substring(end);
+
+        for (int j = 0; j < newText.length(); j++) {
+            if (!FLOAT.contains(String.valueOf(newText.charAt(j)))) {
+                return;
+            }
+        }
+        super.replaceSelection(text);
+    }
+
+    /**
+     * By default, and numeric values, basic math operators, and '.' and ',' are
+     * allowed.
+     *
+     * @return A string with the characters that are allowed in math expressions
+     */
+    private static String getAllowedChars() {
+        // get grouping and fractional separators
+        NumberFormat format = NumberFormat.getInstance();
+
+        if (format instanceof DecimalFormat) {
+            group = ((DecimalFormat) format).getDecimalFormatSymbols().getGroupingSeparator();
+            fraction = ((DecimalFormat) format).getDecimalFormatSymbols().getDecimalSeparator();
+        }
+
+        // doctor up some locales so numeric pad works
+        if (group != '.' && fraction == ',') { // grouping symbol is odd
+            group = '.';
+        }
+
+        return "-0123456789" + group + fraction + MATH_OPERATORS;
+    }
+
+    public void setScale(final CommodityNode node) {
+        setScale(node.getScale(), node.getScale());
+    }
+
+    /**
+     * Change the max and minimum scale allowed for entry
+     *
+     * @param maxScale max scale
+     * @param minScale min scale
+     */
+    void setScale(final int maxScale, final int minScale) {
+        scale = maxScale;
+
+        if (format instanceof DecimalFormat) {
+            format.setMaximumFractionDigits(maxScale);
+            format.setMinimumFractionDigits(minScale);
+        }
+    }
+
+    /**
+     * BigDecimal and the interpreter cannot parse ',' in string
+     * representations of decimals. This method will replace any ',' with '.'
+     * and then try parsing with BigDecimal. If this fails, then it is assumed
+     * that the user has used mathematical operators and then evaluates the
+     * string as a mathematical expression.
+     *
+     * @return A string representation of the resulting decimal
+     */
+    @NotNull String eval() {
+        String text = getText();
+
+        if (text == null || text.isEmpty()) {
+            return "";
+        }
+
+        // strip out any group separators (This could be '.' for certain
+        // locales)
+        final StringBuilder temp = new StringBuilder();
+        for (int j = 0; j < text.length(); j++) {
+            char c = text.charAt(j);
+            if (c != group) {
+                temp.append(c);
+            }
+        }
+
+        text = temp.toString();
+
+        // replace any ',' with periods so that it parses correctly only if
+        // needed
+        if (fraction == ',') {
+            text = text.replace(',', '.');
+        }
+
+        try {
+            BigDecimal d = new BigDecimal(text);
+
+            return d.toString();
+        } catch (final NumberFormatException nfe) {
+            try {
+                Object o;
+
+                o = jsEngine.eval(text);
+
+                if (o instanceof Number) { // scale the number
+                    return new BigDecimal(o.toString()).setScale(scale, MathConstants.roundingMode).toString();
+                }
+            } catch (final ScriptException ex) {
+                return "";
+            }
+        }
+        return "";
+    }
+}
