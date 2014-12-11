@@ -103,7 +103,7 @@ public class DecimalTextField extends TextField {
 
         // Force evaluation on loss of focus
         focusedProperty().addListener((observable, oldValue, newValue) -> {
-            String t = eval();
+            final String t = eval();
             if (!t.isEmpty()) {
                 // round the value to scale
                 setDecimal(new BigDecimal(t).setScale(scale, MathConstants.roundingMode));
@@ -165,7 +165,7 @@ public class DecimalTextField extends TextField {
     public void replaceText(final int start, final int end, final String text) {
         Objects.requireNonNull(text);
 
-        String newText = getText().substring(0, start) + text + getText().substring(end);
+        final String newText = getText().substring(0, start) + text + getText().substring(end);
 
         /* fraction input is handled as a special case */
         if (keypad) {
@@ -247,18 +247,19 @@ public class DecimalTextField extends TextField {
      *
      * @return A string representation of the resulting decimal
      */
-    @NotNull String eval() {
+    @NotNull
+    String eval() {
         String text = getText();
 
         if (text == null || text.isEmpty()) {
             return "";
         }
 
-        // strip out any group separators (This could be '.' for certain
-        // locales)
+        // strip out any group separators (This could be '.' for certain locales)
         final StringBuilder temp = new StringBuilder();
-        for (int j = 0; j < text.length(); j++) {
-            char c = text.charAt(j);
+
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
             if (c != group) {
                 temp.append(c);
             }
@@ -266,21 +267,16 @@ public class DecimalTextField extends TextField {
 
         text = temp.toString();
 
-        // replace any ',' with periods so that it parses correctly only if
-        // needed
+        // replace any ',' with periods so that it javascript parses it correctly
         if (fraction == ',') {
             text = text.replace(',', '.');
         }
 
         try {
-            BigDecimal d = new BigDecimal(text);
-
-            return d.toString();
+            return new BigDecimal(text).toString();
         } catch (final NumberFormatException nfe) {
             try {
-                Object o;
-
-                o = jsEngine.eval(text);
+                final Object o = jsEngine.eval(text);
 
                 if (o instanceof Number) { // scale the number
                     return new BigDecimal(o.toString()).setScale(scale, MathConstants.roundingMode).toString();
