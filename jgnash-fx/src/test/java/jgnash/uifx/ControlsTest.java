@@ -31,6 +31,8 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.util.Locale;
+
 /**
  * @author Craig Cavanaugh
  */
@@ -43,6 +45,9 @@ public class ControlsTest extends Application {
     @Override
     public void start(final Stage primaryStage) throws Exception {
         // Force application wide style sheet. Use is StyleManager is a private API and may break later
+
+        //Locale.setDefault(Locale.FRANCE);
+
         Application.setUserAgentStylesheet(null);
         StyleManager.getInstance().addUserAgentStylesheet(MainApplication.DEFAULT_CSS);
 

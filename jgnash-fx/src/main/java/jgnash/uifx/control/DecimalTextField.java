@@ -30,6 +30,7 @@ import javax.script.ScriptException;
 import jgnash.engine.CommodityNode;
 import jgnash.engine.MathConstants;
 import jgnash.util.NotNull;
+import jgnash.util.Nullable;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -68,7 +69,7 @@ public class DecimalTextField extends TextField {
     /**
      * Used to track state of fractional separator input on numeric pad
      */
-    private volatile boolean keypad = false;
+    private volatile boolean forceFraction = false;
 
     private static final ScriptEngine jsEngine;
 
@@ -110,19 +111,19 @@ public class DecimalTextField extends TextField {
             }
         });
 
-
-        addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<javafx.scene.input.KeyEvent>() {
+        // Raise a flag the Decimal key has been pressed so it can be
+        // forced to a comma or period based on locale
+        addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<javafx.scene.input.KeyEvent>() {
             @Override
             public void handle(final KeyEvent event) {
                 if (event.getCode() == KeyCode.DECIMAL) {
-                    keypad = true;
-                    //System.out.println("keypad");
+                    forceFraction = true;
                 }
             }
         });
     }
 
-    public void setDecimal(final BigDecimal decimal) {
+    public void setDecimal(@Nullable final BigDecimal decimal) {
         if (decimal != null) {
             super.setText(format.format(decimal.doubleValue()));
         } else {
@@ -168,14 +169,14 @@ public class DecimalTextField extends TextField {
         final String newText = getText().substring(0, start) + text + getText().substring(end);
 
         /* fraction input is handled as a special case */
-        if (keypad) {
+        if (forceFraction) {
             super.replaceText(start, end, Character.toString(fraction));
-            keypad = false;
+            forceFraction = false;
             return;
         }
 
-        for (int j = 0; j < newText.length(); j++) {
-            if (!FLOAT.contains(String.valueOf(newText.charAt(j)))) {
+        for (int i = 0; i < newText.length(); i++) {
+            if (!FLOAT.contains(String.valueOf(newText.charAt(i)))) {
                 return;
             }
         }
@@ -184,9 +185,9 @@ public class DecimalTextField extends TextField {
 
     @Override
     public void replaceSelection(final String text) {
-        int start = getSelection().getStart();
-        int end = getSelection().getEnd();
-        String newText = getText().substring(0, start) + text + getText().substring(end);
+        final int start = getSelection().getStart();
+        final int end = getSelection().getEnd();
+        final String newText = getText().substring(0, start) + text + getText().substring(end);
 
         for (int j = 0; j < newText.length(); j++) {
             if (!FLOAT.contains(String.valueOf(newText.charAt(j)))) {
@@ -204,7 +205,7 @@ public class DecimalTextField extends TextField {
      */
     private static String getAllowedChars() {
         // get grouping and fractional separators
-        NumberFormat format = NumberFormat.getInstance();
+        final NumberFormat format = NumberFormat.getInstance();
 
         if (format instanceof DecimalFormat) {
             group = ((DecimalFormat) format).getDecimalFormatSymbols().getGroupingSeparator();
@@ -229,7 +230,7 @@ public class DecimalTextField extends TextField {
      * @param maxScale max scale
      * @param minScale min scale
      */
-    void setScale(final int maxScale, final int minScale) {
+    private void setScale(final int maxScale, final int minScale) {
         scale = maxScale;
 
         if (format instanceof DecimalFormat) {
@@ -248,7 +249,7 @@ public class DecimalTextField extends TextField {
      * @return A string representation of the resulting decimal
      */
     @NotNull
-    String eval() {
+    private String eval() {
         String text = getText();
 
         if (text == null || text.isEmpty()) {
