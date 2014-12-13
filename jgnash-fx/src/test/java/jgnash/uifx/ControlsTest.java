@@ -17,6 +17,9 @@
  */
 package jgnash.uifx;
 
+import java.time.LocalDate;
+
+import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.utils.StageUtils;
 
@@ -24,14 +27,14 @@ import com.sun.javafx.css.StyleManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.DatePicker;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
  * @author Craig Cavanaugh
  */
-public class DecimalFieldTest extends Application {
+public class ControlsTest extends Application {
 
     public static void main(final String[] args) {
         launch(args);
@@ -45,16 +48,22 @@ public class DecimalFieldTest extends Application {
 
         DecimalTextField decimalTextField = new DecimalTextField();
 
-        TextField dummyField = new TextField(); // help to change focus to test eval function
-
-        primaryStage.setTitle("Decimal Field Test");
+        primaryStage.setTitle("Controls Test");
         Button btn = new Button();
 
         btn.setText("getDecimal()");
         btn.setOnAction(event -> System.out.println(decimalTextField.getDecimal()));
 
+        // Create the DatePicker.
+        DatePicker datePicker = new DatePickerEx();
+
+        datePicker.setOnAction(event -> {
+            LocalDate date = datePicker.getValue();
+            System.out.println("Selected date: " + date);
+        });
+
         VBox vBox = new VBox();
-        vBox.getChildren().addAll(decimalTextField, dummyField, btn);
+        vBox.getChildren().addAll(decimalTextField, datePicker, btn);
 
         primaryStage.setScene(new Scene(vBox, 300, 250));
 
