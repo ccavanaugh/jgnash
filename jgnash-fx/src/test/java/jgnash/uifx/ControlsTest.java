@@ -18,6 +18,7 @@
 package jgnash.uifx;
 
 import java.time.LocalDate;
+import java.util.Locale;
 
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
@@ -30,8 +31,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.util.Locale;
 
 /**
  * @author Craig Cavanaugh
@@ -52,6 +51,8 @@ public class ControlsTest extends Application {
         StyleManager.getInstance().addUserAgentStylesheet(MainApplication.DEFAULT_CSS);
 
         DecimalTextField decimalTextField = new DecimalTextField();
+        DecimalTextField decimalTextField2 = new DecimalTextField();
+        decimalTextField2.setScale(4);
 
         primaryStage.setTitle("Controls Test");
         Button btn = new Button();
@@ -68,7 +69,7 @@ public class ControlsTest extends Application {
         });
 
         VBox vBox = new VBox();
-        vBox.getChildren().addAll(decimalTextField, datePicker, btn);
+        vBox.getChildren().addAll(decimalTextField, decimalTextField2, datePicker, btn);
 
         primaryStage.setScene(new Scene(vBox, 300, 250));
 

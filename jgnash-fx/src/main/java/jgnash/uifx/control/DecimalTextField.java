@@ -27,11 +27,11 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import jgnash.engine.CommodityNode;
 import jgnash.engine.MathConstants;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
@@ -91,24 +91,17 @@ public class DecimalTextField extends TextField {
 
         format = NumberFormat.getInstance();
 
-        if (format instanceof DecimalFormat) {
-            format.setMaximumFractionDigits(scale);
-            format.setMinimumFractionDigits(scale);
-        }
-
         /* Disable grouping for output formatting on all locales.
          * This solves issues with parsing out group separators.
          * This does not prevent parsing grouping input.
          */
         format.setGroupingUsed(false);
 
+        setScale(scale);
+
         // Force evaluation on loss of focus
         focusedProperty().addListener((observable, oldValue, newValue) -> {
-            final String t = eval();
-            if (!t.isEmpty()) {
-                // round the value to scale
-                setDecimal(new BigDecimal(t).setScale(scale, MathConstants.roundingMode));
-            }
+            evaluateAndSet();
         });
 
         // Raise a flag the Decimal key has been pressed so it can be
@@ -119,8 +112,23 @@ public class DecimalTextField extends TextField {
                 if (event.getCode() == KeyCode.DECIMAL) {
                     forceFraction = true;
                 }
+
+                if (event.getCode() == KeyCode.ENTER) {
+                    Platform.runLater(() -> {
+                        evaluateAndSet();
+                        positionCaret(getText().length());
+                    });
+                }
             }
         });
+    }
+
+    private void evaluateAndSet() {
+        final String t = evaluateInput();
+        if (!t.isEmpty()) {
+            // round the value to scale
+            setDecimal(new BigDecimal(t).setScale(scale, MathConstants.roundingMode));
+        }
     }
 
     public void setDecimal(@Nullable final BigDecimal decimal) {
@@ -134,7 +142,7 @@ public class DecimalTextField extends TextField {
     public BigDecimal getDecimal() {
         if (!isEmpty()) {
             try {
-                return new BigDecimal(eval());
+                return new BigDecimal(evaluateInput());
             } catch (final NumberFormatException ignored) {
                 // ignore and drop out
             }
@@ -220,22 +228,17 @@ public class DecimalTextField extends TextField {
         return "-0123456789" + group + fraction + MATH_OPERATORS;
     }
 
-    public void setScale(final CommodityNode node) {
-        setScale(node.getScale(), node.getScale());
-    }
-
     /**
      * Change the max and minimum scale allowed for entry
      *
-     * @param maxScale max scale
-     * @param minScale min scale
+     * @param scale number of fractional digits
      */
-    private void setScale(final int maxScale, final int minScale) {
-        scale = maxScale;
+    public void setScale(final int scale) {
+        this.scale = scale;
 
         if (format instanceof DecimalFormat) {
-            format.setMaximumFractionDigits(maxScale);
-            format.setMinimumFractionDigits(minScale);
+            format.setMaximumFractionDigits(scale);
+            format.setMinimumFractionDigits(scale);
         }
     }
 
@@ -249,7 +252,7 @@ public class DecimalTextField extends TextField {
      * @return A string representation of the resulting decimal
      */
     @NotNull
-    private String eval() {
+    private String evaluateInput() {
         String text = getText();
 
         if (text == null || text.isEmpty()) {
