@@ -17,14 +17,15 @@
  */
 package jgnash.uifx;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import jgnash.uifx.control.DatePickerEx;
-import jgnash.uifx.control.DecimalTextField;
-import jgnash.uifx.utils.StageUtils;
-
-import com.sun.javafx.css.StyleManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -32,21 +33,53 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import jgnash.engine.Account;
+import jgnash.engine.AccountType;
+import jgnash.engine.CurrencyNode;
+import jgnash.engine.DataStoreType;
+import jgnash.engine.DefaultCurrencies;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.uifx.control.AccountComboBox;
+import jgnash.uifx.control.DatePickerEx;
+import jgnash.uifx.control.DecimalTextField;
+import jgnash.uifx.control.TransactionNumberComboBox;
+import jgnash.uifx.utils.StageUtils;
+
+import com.sun.javafx.css.StyleManager;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 /**
  * @author Craig Cavanaugh
  */
 public class ControlsTest extends Application {
 
+    private String testFile;
+
+    private String tempFile;
+
+    //private Engine engine;
+
+    private final boolean oldExportState = EngineFactory.exportXMLOnClose();
+
+    static final char[] PASSWORD = new char[]{};
+
     public static void main(final String[] args) {
+        //Locale.setDefault(Locale.FRANCE);
+
+
         launch(args);
     }
 
     @Override
     public void start(final Stage primaryStage) throws Exception {
+
+        Engine engine = createEngine();
+        //Objects.requireNonNull(engine);
+
         // Force application wide style sheet. Use is StyleManager is a private API and may break later
-
-        Locale.setDefault(Locale.FRANCE);
-
         Application.setUserAgentStylesheet(null);
         StyleManager.getInstance().addUserAgentStylesheet(MainApplication.DEFAULT_CSS);
 
@@ -68,13 +101,71 @@ public class ControlsTest extends Application {
             System.out.println("Selected date: " + date);
         });
 
+        TransactionNumberComboBox numberComboBox = new TransactionNumberComboBox();
+        numberComboBox.setAccount(engine.getAccountList().get(0));
+
         VBox vBox = new VBox();
-        vBox.getChildren().addAll(decimalTextField, decimalTextField2, datePicker, btn);
+        vBox.getChildren().addAll(decimalTextField, decimalTextField2, datePicker, new AccountComboBox(), numberComboBox, btn);
 
         primaryStage.setScene(new Scene(vBox, 300, 250));
 
         StageUtils.applyDialogFormCSS(primaryStage);
 
         primaryStage.show();
+    }
+
+    @Override
+    public void stop() throws IOException {
+        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+        EngineFactory.setExportXMLOnClose(oldExportState);
+
+        Files.deleteIfExists(Paths.get(testFile));
+
+        cleanup();
+    }
+
+    private Engine createEngine() throws Exception {
+        try {
+            testFile = Files.createTempFile("test", "." + DataStoreType.BINARY_XSTREAM.getDataStore().getFileExt()).toFile().getAbsolutePath();
+            tempFile = testFile;
+        } catch (IOException e1) {
+            Logger.getLogger(ControlsTest.class.getName()).log(Level.SEVERE, e1.getLocalizedMessage(), e1);
+        }
+
+        EngineFactory.deleteDatabase(testFile);
+
+        Engine engine = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD, DataStoreType.BINARY_XSTREAM);
+
+        Objects.requireNonNull(engine);
+
+        CurrencyNode node = engine.getDefaultCurrency();
+
+        if (!node.getSymbol().equals("USD")) {
+            CurrencyNode defaultCurrency = DefaultCurrencies.buildNode(Locale.US);
+
+            assertNotNull(defaultCurrency);
+            assertTrue(engine.addCurrency(defaultCurrency));
+            engine.setDefaultCurrency(defaultCurrency);
+        }
+
+        node = engine.getCurrency("CAD");
+
+        if (node == null) {
+            node = DefaultCurrencies.buildNode(Locale.CANADA);
+            assertNotNull(node);
+            assertTrue(engine.addCurrency(node));
+        }
+
+        Account account = new Account(AccountType.BANK, engine.getDefaultCurrency());
+        account.setName("Bank Accounts");
+
+        engine.addAccount(engine.getRootAccount(), account);
+
+        return engine;
+    }
+
+    private void cleanup() throws IOException {
+        Files.deleteIfExists(Paths.get(tempFile));
+        Files.deleteIfExists(Paths.get(tempFile + ".backup"));
     }
 }
