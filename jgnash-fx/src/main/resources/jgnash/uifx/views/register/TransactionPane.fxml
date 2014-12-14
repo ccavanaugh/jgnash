@@ -1,30 +1,65 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?><?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import jgnash.uifx.control.DatePickerEx?>
+<?import jgnash.uifx.control.AccountComboBox?>
+<?import jgnash.uifx.control.TransactionNumberComboBox?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="143.0" prefWidth="583.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<?import jgnash.uifx.control.DecimalTextField?><GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="jgnash.uifx.views.register.TransactionPanelController">
   <columnConstraints>
-    <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="100.0" />
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="NEVER" />
+      <ColumnConstraints hgrow="SOMETIMES" />
+      <ColumnConstraints hgrow="NEVER" />
+      <ColumnConstraints hgrow="NEVER" />
+      <ColumnConstraints hgrow="NEVER" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="100"/>
   </columnConstraints>
   <rowConstraints>
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+    <RowConstraints vgrow="NEVER" />
+    <RowConstraints vgrow="NEVER" />
+    <RowConstraints vgrow="NEVER" />
+    <RowConstraints vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <Label text="Payee:" />
-      <Label text="Account:" GridPane.rowIndex="1" />
-      <Label text="Memo:" GridPane.rowIndex="2" />
-      <TextField GridPane.columnIndex="1" GridPane.columnSpan="3" />
-      <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <Button mnemonicParsing="false" text="Splits" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-      <Label text="Number" GridPane.columnIndex="4" />
-      <ComboBox editable="true" prefWidth="150.0" GridPane.columnIndex="5" />
+      <Label text="%Label.Payee" />
+      <Label text="%Label.Account" GridPane.rowIndex="1" />
+      <Label text="%Label.Memo" GridPane.rowIndex="2" />
+      <TextField fx:id="payeeTextField" GridPane.columnIndex="1" GridPane.columnSpan="3" />
+      <AccountComboBox fx:id="accountComboBox" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" />
+      <Button fx:id="splitsButton" mnemonicParsing="false" text="%Button.Splits" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+      <Label text="%Label.Number" GridPane.columnIndex="4" />
+      <TransactionNumberComboBox  fx:id="numberComboBox" editable="true" GridPane.columnIndex="5" />
+      <Label text="%Label.Date" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+      <Label text="%Label.Amount" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+      <DatePickerEx fx:id="datePicker" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+      <DecimalTextField fx:id="amountTextField" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+      <TextField fx:id="memoTextField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+      <HBox fx:id="exchangePanel" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+      <ButtonBar fx:id="buttonBar" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.rowIndex="3" />
+      <GridPane fx:id="commandPane" GridPane.columnSpan="3" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="3"
+                GridPane.vgrow="NEVER">
+        <columnConstraints>
+            <ColumnConstraints hgrow="NEVER" />
+            <ColumnConstraints hgrow="NEVER" />
+            <ColumnConstraints hgrow="NEVER" />
+            <ColumnConstraints hgrow="NEVER" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared" />
+            <Button fx:id="attachmentButton" mnemonicParsing="false" GridPane.columnIndex="1" />
+            <Button fx:id="viewAttachmentButton" mnemonicParsing="false" GridPane.columnIndex="2" />
+            <Button fx:id="deleteAttachmentButton" mnemonicParsing="false" GridPane.columnIndex="3" />
+         </children>
+      </GridPane>
    </children>
 </GridPane>

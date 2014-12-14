@@ -3,12 +3,17 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.TabPane?>
 
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="jgnash.uifx.views.register.RegisterPaneController" styleClass="form">
     <children>
         <StackPane fx:id="register" VBox.vgrow="ALWAYS"/>
         <ButtonBar fx:id="buttonBar" VBox.vgrow="NEVER"/>
-        <StackPane fx:id="forms" VBox.vgrow="NEVER"/>
+        <StackPane VBox.vgrow="NEVER">
+            <children>
+                <TabPane fx:id="transactionForms"/>
+            </children>
+        </StackPane>
     </children>
 </VBox>
