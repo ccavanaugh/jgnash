@@ -35,16 +35,17 @@ class TransactionStringTableCell extends TableCell<Transaction, String> {
         if (!empty && string != null) {
             setText(string);
 
-            if (getTableRow().getItem() != null) {
-                final boolean future = ((Transaction) getTableRow().getItem()).getDate().after(new Date());
+            if (getTableRow() != null) { // null can occur if UI is very busy... JavaFX bug?
+                if (getTableRow().getItem() != null) {
+                    final boolean future = ((Transaction) getTableRow().getItem()).getDate().after(new Date());
 
-                if (future) {
-                    setId("italic-label");
-                } else {
-                    setId("normal-label");
+                    if (future) {
+                        setId("italic-label");
+                    } else {
+                        setId("normal-label");
+                    }
                 }
             }
-
         } else {
             setText(null);
         }
