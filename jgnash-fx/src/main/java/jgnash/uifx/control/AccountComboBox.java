@@ -34,6 +34,8 @@ import javafx.application.Platform;
 import javafx.scene.control.ComboBox;
 
 /**
+ * ComboBox of available accounts
+ *
  * @author Craig Cavanaugh
  */
 public class AccountComboBox extends ComboBox<Account> implements MessageListener {
@@ -61,6 +63,11 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
         Objects.requireNonNull(engine);
 
         loadAccounts(engine.getRootAccount().getChildren(Comparators.getAccountByCode()));
+
+        // Set a default account
+        if (getItems().size() > 0) {
+            setValue(getItems().get(0));
+        }
     }
 
     private void registerListeners() {
