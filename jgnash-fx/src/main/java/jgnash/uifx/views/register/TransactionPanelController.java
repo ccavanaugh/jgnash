@@ -30,11 +30,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 
 import jgnash.engine.Account;
-import jgnash.uifx.MainApplication;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
@@ -50,9 +48,6 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
  * @author Craig Cavanaugh
  */
 public class TransactionPanelController implements Initializable {
-
-    @FXML
-    private GridPane commandPane;
 
     @FXML
     protected TextField payeeTextField;
@@ -98,8 +93,6 @@ public class TransactionPanelController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
 
-        buttonBar.getStylesheets().add(MainApplication.DEFAULT_CSS);
-
         // Create and add the ok and cancel buttons to the button bar
         final Button okButton = new Button(resources.getString("Button.Ok"));
         final Button cancelButton = new Button(resources.getString("Button.Cancel"));
@@ -113,9 +106,6 @@ public class TransactionPanelController implements Initializable {
         attachmentButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.ANCHOR));
         viewAttachmentButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.EYE));
         deleteAttachmentButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.TRASH_ALT));
-
-        commandPane.getStylesheets().add(MainApplication.DEFAULT_CSS);
-        commandPane.getStyleClass().addAll("form");
 
         getAccountProperty().addListener(new ChangeListener<Account>() {
             @Override

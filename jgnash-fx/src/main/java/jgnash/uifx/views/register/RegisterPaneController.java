@@ -109,9 +109,6 @@ public class RegisterPaneController implements Initializable {
                 }
             });
 
-            pane.getStylesheets().add(MainApplication.DEFAULT_CSS);
-            pane.getStyleClass().addAll("form", "dialog");
-
             final Tab tab = new Tab("Increase");
             tab.setContent(pane);
 
@@ -133,9 +130,6 @@ public class RegisterPaneController implements Initializable {
                     transactionPanelController.getAccountProperty().setValue(newValue);
                 }
             });
-
-            pane.getStylesheets().add(MainApplication.DEFAULT_CSS);
-            pane.getStyleClass().addAll("form", "dialog");
 
             final Tab tab = new Tab("Decrease");
             tab.setContent(pane);

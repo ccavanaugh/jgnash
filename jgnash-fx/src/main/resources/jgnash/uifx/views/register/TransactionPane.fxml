@@ -12,7 +12,7 @@
 <?import jgnash.uifx.control.TransactionNumberComboBox?>
 
 <?import jgnash.uifx.control.DecimalTextField?><GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="jgnash.uifx.views.register.TransactionPanelController">
+          fx:controller="jgnash.uifx.views.register.TransactionPanelController" styleClass="form, dialog">
   <columnConstraints>
       <ColumnConstraints hgrow="NEVER" />
       <ColumnConstraints hgrow="SOMETIMES" />
@@ -43,8 +43,8 @@
       <TextField fx:id="memoTextField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
       <HBox fx:id="exchangePanel" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
       <ButtonBar fx:id="buttonBar" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.rowIndex="3" />
-      <GridPane fx:id="commandPane" GridPane.columnSpan="3" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="3"
-                GridPane.vgrow="NEVER">
+      <GridPane GridPane.columnSpan="3" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="3"
+                GridPane.vgrow="NEVER" styleClass="form">
         <columnConstraints>
             <ColumnConstraints hgrow="NEVER" />
             <ColumnConstraints hgrow="NEVER" />
