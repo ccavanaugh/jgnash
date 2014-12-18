@@ -10,8 +10,9 @@
 <?import jgnash.uifx.control.DatePickerEx?>
 <?import jgnash.uifx.control.AccountComboBox?>
 <?import jgnash.uifx.control.TransactionNumberComboBox?>
+<?import jgnash.uifx.control.DecimalTextField?>
 
-<?import jgnash.uifx.control.DecimalTextField?><GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="jgnash.uifx.views.register.TransactionPanelController" styleClass="form, dialog">
   <columnConstraints>
       <ColumnConstraints hgrow="NEVER" />
@@ -29,20 +30,19 @@
   </rowConstraints>
    <children>
       <Label text="%Label.Payee" />
-      <Label text="%Label.Account" GridPane.rowIndex="1" />
-      <Label text="%Label.Memo" GridPane.rowIndex="2" />
       <TextField fx:id="payeeTextField" GridPane.columnIndex="1" GridPane.columnSpan="3" />
-      <AccountComboBox fx:id="accountComboBox" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" />
-      <Button fx:id="splitsButton" mnemonicParsing="false" text="%Button.Splits" GridPane.columnIndex="3" GridPane.rowIndex="1" />
       <Label text="%Label.Number" GridPane.columnIndex="4" />
       <TransactionNumberComboBox  fx:id="numberComboBox" editable="true" GridPane.columnIndex="5" />
+      <Label text="%Label.Account" GridPane.rowIndex="1" />
+      <AccountComboBox fx:id="accountComboBox" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" />
+      <HBox fx:id="exchangePanel" prefWidth="60.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+      <Button fx:id="splitsButton" mnemonicParsing="false" text="%Button.Splits" GridPane.columnIndex="3" GridPane.rowIndex="1" />
       <Label text="%Label.Date" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-      <Label text="%Label.Amount" GridPane.columnIndex="4" GridPane.rowIndex="2" />
       <DatePickerEx fx:id="datePicker" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-      <DecimalTextField fx:id="amountTextField" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+      <Label text="%Label.Memo" GridPane.rowIndex="2" />
       <TextField fx:id="memoTextField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
-      <HBox fx:id="exchangePanel" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-      <ButtonBar fx:id="buttonBar" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.rowIndex="3" />
+      <Label text="%Label.Amount" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+      <DecimalTextField fx:id="amountTextField" GridPane.columnIndex="5" GridPane.rowIndex="2" />
       <GridPane GridPane.columnSpan="3" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="3"
                 GridPane.vgrow="NEVER" styleClass="form">
         <columnConstraints>
@@ -61,5 +61,6 @@
             <Button fx:id="deleteAttachmentButton" mnemonicParsing="false" GridPane.columnIndex="3" />
          </children>
       </GridPane>
+     <ButtonBar fx:id="buttonBar" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.rowIndex="3" />
    </children>
 </GridPane>
