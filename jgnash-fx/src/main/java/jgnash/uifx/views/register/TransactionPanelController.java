@@ -103,9 +103,9 @@ public class TransactionPanelController implements Initializable {
 
         final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
 
-        attachmentButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.ANCHOR));
+        attachmentButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.LINK));
         viewAttachmentButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.EYE));
-        deleteAttachmentButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.TRASH_ALT));
+        deleteAttachmentButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.UNLINK));
 
         getAccountProperty().addListener(new ChangeListener<Account>() {
             @Override

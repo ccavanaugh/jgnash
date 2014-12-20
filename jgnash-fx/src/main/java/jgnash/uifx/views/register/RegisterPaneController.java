@@ -23,22 +23,25 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jgnash.engine.Account;
-import jgnash.uifx.MainApplication;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+
+import jgnash.engine.Account;
+
+import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 /**
  * Register pane
@@ -46,14 +49,22 @@ import javafx.scene.layout.StackPane;
  * @author Craig Cavanaugh
  */
 public class RegisterPaneController implements Initializable {
-
     //private ResourceBundle resources;
 
     @FXML
-    protected StackPane register;
+    protected Button newButton;
 
     @FXML
-    protected ButtonBar buttonBar;
+    protected Button duplicateButton;
+
+    @FXML
+    protected Button jumpButton;
+
+    @FXML
+    protected Button deleteButton;
+
+    @FXML
+    protected StackPane register;
 
     @FXML
     protected TabPane transactionForms;
@@ -69,19 +80,15 @@ public class RegisterPaneController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         //this.resources = resources;
 
-        final Button newButton = new Button(resources.getString("Button.New"));
-        final Button duplicateButton = new Button(resources.getString("Button.Duplicate"));
-        final Button jumpButton = new Button(resources.getString("Button.Jump"));
-        final Button deleteButton = new Button(resources.getString("Button.Delete"));
+        final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
 
-        ButtonBar.setButtonData(newButton, ButtonBar.ButtonData.OTHER);
-        ButtonBar.setButtonData(duplicateButton, ButtonBar.ButtonData.OTHER);
-        ButtonBar.setButtonData(jumpButton, ButtonBar.ButtonData.OTHER);
-        ButtonBar.setButtonData(deleteButton, ButtonBar.ButtonData.OTHER);
-
-        buttonBar.getButtons().addAll(newButton, duplicateButton, jumpButton, deleteButton);
+        deleteButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.TRASH_ALT));
+        duplicateButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.COPY));
+        jumpButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.EXTERNAL_LINK));
+        newButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.MONEY));
 
         transactionForms.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+
 
         // Load the register table
         try {
@@ -142,5 +149,10 @@ public class RegisterPaneController implements Initializable {
 
     ObjectProperty<Account> getAccountProperty() {
         return accountProperty;
+    }
+
+    @FXML
+    public void handleDeleteAction(final ActionEvent actionEvent) {
+
     }
 }

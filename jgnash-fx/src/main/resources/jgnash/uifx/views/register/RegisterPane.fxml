@@ -1,19 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.Button?>
 
-<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="jgnash.uifx.views.register.RegisterPaneController" styleClass="form">
-    <children>
-        <StackPane fx:id="register" VBox.vgrow="ALWAYS"/>
-        <ButtonBar fx:id="buttonBar" VBox.vgrow="NEVER"/>
-        <StackPane VBox.vgrow="NEVER">
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="jgnash.uifx.views.register.RegisterPaneController">
+    <center>
+        <VBox styleClass="form">
             <children>
-                <TabPane fx:id="transactionForms"/>
+                <StackPane fx:id="register" VBox.vgrow="ALWAYS"/>
+                <ToolBar VBox.vgrow="NEVER">
+                    <items>
+                        <Button fx:id="newButton" mnemonicParsing="false" text="%Button.New"/>
+                        <Button fx:id="duplicateButton" mnemonicParsing="false" text="%Button.Duplicate"/>
+                        <Button fx:id="jumpButton" mnemonicParsing="false" text="%Button.Jump"/>
+                        <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction" text="%Button.Delete"/>
+                    </items>
+                </ToolBar>
             </children>
-        </StackPane>
-    </children>
-</VBox>
+        </VBox>
+    </center>
+
+    <bottom>
+        <TabPane fx:id="transactionForms"/>
+    </bottom>
+</BorderPane>
