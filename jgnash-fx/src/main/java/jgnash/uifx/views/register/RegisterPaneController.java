@@ -44,7 +44,7 @@ import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 /**
- * Register pane
+ * Register pane controller
  *
  * @author Craig Cavanaugh
  */
@@ -52,13 +52,13 @@ public class RegisterPaneController implements Initializable {
     //private ResourceBundle resources;
 
     @FXML
-    protected Button newButton;
+    protected Button newButton; // TODO Implement handler
 
     @FXML
-    protected Button duplicateButton;
+    protected Button duplicateButton; // TODO Implement handler
 
     @FXML
-    protected Button jumpButton;
+    protected Button jumpButton; // TODO Implement handler
 
     @FXML
     protected Button deleteButton;
@@ -153,6 +153,6 @@ public class RegisterPaneController implements Initializable {
 
     @FXML
     public void handleDeleteAction(final ActionEvent actionEvent) {
-
+        registerTableController.deleteTransactions();
     }
 }

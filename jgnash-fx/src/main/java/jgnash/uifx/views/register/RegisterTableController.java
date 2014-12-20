@@ -20,20 +20,8 @@ package jgnash.uifx.views.register;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
-
-import jgnash.engine.Account;
-import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.ReconciledState;
-import jgnash.engine.Transaction;
-import jgnash.engine.message.Message;
-import jgnash.engine.message.MessageBus;
-import jgnash.engine.message.MessageChannel;
-import jgnash.engine.message.MessageListener;
-import jgnash.engine.message.MessageProperty;
-import jgnash.text.CommodityFormat;
-import jgnash.uifx.utils.TableViewManager;
-import jgnash.util.DateUtils;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -49,11 +37,25 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.util.Callback;
+
+import jgnash.engine.Account;
+import jgnash.engine.InvestmentTransaction;
+import jgnash.engine.ReconciledState;
+import jgnash.engine.Transaction;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageListener;
+import jgnash.engine.message.MessageProperty;
+import jgnash.text.CommodityFormat;
+import jgnash.uifx.utils.TableViewManager;
+import jgnash.util.DateUtils;
 
 /**
  * Register Table with stats controller
@@ -177,6 +179,8 @@ public class RegisterTableController implements Initializable {
 
         tableView.getColumns().addAll(dateColumn, numberColumn, payeeColumn, memoColumn, accountColumn, reconciledColumn, increaseColumn, decreaseColumn, balanceColumn);
 
+        tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
         tableViewManager.setColumnFormatFactory(param -> {
             if (param == balanceColumn) {
                 return CommodityFormat.getFullNumberFormat(getAccountProperty().getValue().getCurrencyNode());
@@ -214,6 +218,12 @@ public class RegisterTableController implements Initializable {
             tableView.setItems(sortedList);
             tableViewManager.restoreLayout();   // required to table view manager is to work
         }
+    }
+
+    protected void deleteTransactions() {
+        final List<Transaction> transactionList = tableView.getSelectionModel().getSelectedItems();
+
+        RegisterActions.deleteTransactionAction(transactionList.toArray(new Transaction[transactionList.size()]));
     }
 
     private static class IncreaseAmountProperty extends SimpleObjectProperty<BigDecimal> {
@@ -286,7 +296,7 @@ public class RegisterTableController implements Initializable {
             final MenuItem jumpItem = new MenuItem(resources.getString("Menu.Jump.Name"));
 
             final MenuItem deleteItem = new MenuItem(resources.getString("Menu.Delete.Name"));
-            deleteItem.setOnAction(event -> RegisterActions.deleteTransactionAction(row.getItem()));
+            deleteItem.setOnAction(event -> deleteTransactions());
 
             rowMenu.getItems().addAll(markedAs, new SeparatorMenuItem(), duplicateItem, jumpItem, new SeparatorMenuItem(), deleteItem);
 
