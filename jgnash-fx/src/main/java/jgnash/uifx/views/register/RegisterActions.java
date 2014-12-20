@@ -60,7 +60,7 @@ public class RegisterActions {
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         if (engine != null) {
-            for (Transaction transaction : transactions) {
+            for (final Transaction transaction : transactions) {
                 if (engine.removeTransaction(transaction)) {
                     if (transaction.getAttachment() != null) {
                         if (confirmAttachmentDeletion() == ButtonType.CANCEL) {
