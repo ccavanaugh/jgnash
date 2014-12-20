@@ -6,14 +6,27 @@
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tooltip?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.register.RegisterViewController">
     <top>
         <ToolBar>
             <items>
-                <Button fx:id="reconcileButton" mnemonicParsing="false" text="%Button.Reconcile"/>
-                <Button fx:id="filterButton" mnemonicParsing="false" onAction="#handleFilterAccountAction" text="%Button.Filter"/>
-                <Button fx:id="zoomButton" mnemonicParsing="false" text="%Button.Zoom"/>
+                <Button fx:id="reconcileButton" mnemonicParsing="false" text="%Button.Reconcile">
+                    <tooltip>
+                        <Tooltip text="%ToolTip.ReconcileAccount"/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="filterButton" mnemonicParsing="false" onAction="#handleFilterAccountAction" text="%Button.Filter">
+                    <tooltip>
+                        <Tooltip text="%ToolTip.FilterAccounts"/>
+                    </tooltip>
+                </Button>
+                <Button fx:id="zoomButton" mnemonicParsing="false" text="%Button.Zoom">
+                    <tooltip>
+                        <Tooltip text="%ToolTip.ZoomRegister"/>
+                    </tooltip>
+                </Button>
             </items>
         </ToolBar>
     </top>
