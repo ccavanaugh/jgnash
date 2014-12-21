@@ -107,12 +107,12 @@ public class RegisterPaneController implements Initializable {
 
             final Pane pane = fxmlLoader.load();
 
-            TransactionPanelController transactionPanelController = fxmlLoader.getController();
+            TransactionPaneController transactionPaneController = fxmlLoader.getController();
 
             accountProperty.addListener(new ChangeListener<Account>() {
                 @Override
                 public void changed(ObservableValue<? extends Account> observable, Account oldValue, Account newValue) {
-                    transactionPanelController.getAccountProperty().setValue(newValue);
+                    transactionPaneController.getAccountProperty().setValue(newValue);
                 }
             });
 
@@ -129,12 +129,12 @@ public class RegisterPaneController implements Initializable {
 
             final Pane pane = fxmlLoader.load();
 
-            TransactionPanelController transactionPanelController = fxmlLoader.getController();
+            TransactionPaneController transactionPaneController = fxmlLoader.getController();
 
             accountProperty.addListener(new ChangeListener<Account>() {
                 @Override
                 public void changed(ObservableValue<? extends Account> observable, Account oldValue, Account newValue) {
-                    transactionPanelController.getAccountProperty().setValue(newValue);
+                    transactionPaneController.getAccountProperty().setValue(newValue);
                 }
             });
 

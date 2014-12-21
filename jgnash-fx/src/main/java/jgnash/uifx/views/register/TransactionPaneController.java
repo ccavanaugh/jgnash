@@ -30,10 +30,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
 
 import jgnash.engine.Account;
-import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.TransactionNumberComboBox;
@@ -47,13 +45,10 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
  *
  * @author Craig Cavanaugh
  */
-public class TransactionPanelController implements Initializable {
+public class TransactionPaneController implements Initializable {
 
     @FXML
     protected TextField payeeTextField;
-
-    @FXML
-    protected AccountComboBox accountComboBox;
 
     @FXML
     protected Button splitsButton;
@@ -71,7 +66,7 @@ public class TransactionPanelController implements Initializable {
     protected TextField memoTextField;
 
     @FXML
-    protected HBox exchangePanel;
+    protected AccountExchangePane accountExchangePane;
 
     @FXML
     protected ButtonBar buttonBar;
@@ -111,12 +106,13 @@ public class TransactionPanelController implements Initializable {
             @Override
             public void changed(final ObservableValue<? extends Account> observable, final Account oldValue, final Account newValue) {
                 numberComboBox.setAccount(newValue);
+                accountExchangePane.getAccountProperty().setValue(newValue);
             }
         });
-
     }
 
     ObjectProperty<Account> getAccountProperty() {
         return accountProperty;
     }
+
 }
