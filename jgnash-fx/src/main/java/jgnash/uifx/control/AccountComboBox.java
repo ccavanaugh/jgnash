@@ -20,6 +20,12 @@ package jgnash.uifx.control;
 import java.util.List;
 import java.util.Objects;
 
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.scene.control.ComboBox;
+
 import jgnash.engine.Account;
 import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
@@ -29,9 +35,7 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
-
-import javafx.application.Platform;
-import javafx.scene.control.ComboBox;
+import jgnash.util.NotNull;
 
 /**
  * ComboBox of available accounts
@@ -40,20 +44,26 @@ import javafx.scene.control.ComboBox;
  */
 public class AccountComboBox extends ComboBox<Account> implements MessageListener {
 
+    final private ObservableList<Account> filteredAccountList = FXCollections.observableArrayList();
+
     public AccountComboBox() {
         loadAccounts();
 
         registerListeners();
     }
 
-    private void loadAccounts(final List<Account> accounts) {
-        for (Account account : accounts) {
+    public void filterAccount(@NotNull final Account... account) {
+        filteredAccountList.addAll(account);
+    }
+
+    private void loadAccounts(@NotNull final List<Account> accounts) {
+        accounts.stream().filter(account -> !filteredAccountList.contains(account)).forEach(account -> {
             getItems().add(account);
 
             if (account.getChildCount() > 0) {
                 loadAccounts(account.getChildren(Comparators.getAccountByCode()));
             }
-        }
+        });
     }
 
     private void loadAccounts() {
@@ -72,6 +82,14 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
     private void registerListeners() {
         MessageBus.getInstance().registerListener(this, MessageChannel.ACCOUNT, MessageChannel.SYSTEM);
+
+        filteredAccountList.addListener((ListChangeListener<Account>) c -> {
+            while (c.next()) {
+                if (c.wasAdded()) {
+                    loadAccounts();
+                }
+            }
+        });
     }
 
     @Override
@@ -83,6 +101,7 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
                     break;
                 case ACCOUNT_REMOVE:
                     getItems().removeAll((Account) event.getObject(MessageProperty.ACCOUNT));
+                    filteredAccountList.removeAll((Account) event.getObject(MessageProperty.ACCOUNT));
                     break;
                 case ACCOUNT_ADD:
                 case ACCOUNT_MODIFY:
