@@ -13,7 +13,7 @@
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" fillWidth="true"/>
     <ColumnConstraints hgrow="NEVER" />
-    <ColumnConstraints hgrow="NEVER" minWidth="80" maxWidth="80"/>
+    <ColumnConstraints hgrow="NEVER" />
     <ColumnConstraints hgrow="NEVER" />
   </columnConstraints>
   <rowConstraints>
@@ -21,8 +21,8 @@
   </rowConstraints>
   <children>
     <AccountComboBox fx:id="accountCombo" maxWidth="Infinity" minWidth="50" prefWidth="100"/>
-    <Label text="%Label.ExchangeAmount" GridPane.columnIndex="1"/>
-    <DecimalTextField fx:id="exchangeRateField" GridPane.columnIndex="2"/>
+    <Label fx:id="label" text="%Label.ExchangeAmount" GridPane.columnIndex="1"/>
+    <DecimalTextField fx:id="exchangeRateField" GridPane.columnIndex="2" minWidth="80" maxWidth="80"/>
     <Button fx:id="expandButton" GridPane.columnIndex="3"/>
   </children>
 </fx:root>

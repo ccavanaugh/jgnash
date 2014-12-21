@@ -29,6 +29,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
 import jgnash.engine.Account;
@@ -57,6 +58,9 @@ public class AccountExchangePane extends GridPane implements Initializable {
     @FXML
     private Button expandButton;
 
+    @FXML
+    private Label label;
+
     final private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
     final private ObjectProperty<CurrencyNode> currencyProperty = new SimpleObjectProperty<>();
@@ -77,15 +81,30 @@ public class AccountExchangePane extends GridPane implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
 
-        expandButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.EXCHANGE));
+        expandButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.EXCHANGE).size(expandButton.getFont().getSize() - 1d));
 
         accountProperty.addListener(new ChangeListener<Account>() {
             @Override
             public void changed(final ObservableValue<? extends Account> observable, final Account oldValue, final Account newValue) {
                 accountCombo.filterAccount(newValue);
+                getCurrencyProperty().setValue(newValue.getCurrencyNode());
+                updateControlVisibility();
             }
         });
 
+        accountCombo.setOnAction(event -> updateControlVisibility());
+    }
+
+    private void updateControlVisibility() {
+        if (getSelectedAccount() != null && getCurrencyProperty() != null) {
+            if (getSelectedAccount().getCurrencyNode() == getCurrencyProperty().get()) {
+                getChildren().removeAll(label, exchangeRateField, expandButton);
+            } else {
+                if (!getChildren().contains(label)) {
+                    getChildren().addAll(label, exchangeRateField, expandButton);
+                }
+            }
+        }
     }
 
     public ObjectProperty<Account> getAccountProperty() {
