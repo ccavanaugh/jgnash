@@ -2,6 +2,10 @@
     -fx-font-size: 0.833333em;
 }
 
+.dialog > .dialog-pane > .button-bar {
+    -fx-font-size: 0.833333em;
+}
+
 .view-title {
     -fx-font-size: 1.1em;
     -fx-font-weight: bold;
