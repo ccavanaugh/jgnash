@@ -31,13 +31,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 
 import jgnash.engine.Account;
 import jgnash.engine.CurrencyNode;
+import jgnash.text.CommodityFormat;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.util.ResourceUtils;
 
+import org.controlsfx.control.PopOver;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
@@ -61,6 +64,12 @@ public class AccountExchangePane extends GridPane implements Initializable {
     @FXML
     private Label label;
 
+    private PopOver popOver;
+
+    private ResourceBundle resources;
+
+    private ExchangeRatePopOverController exchangeRatePopOverController;
+
     final private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
     final private ObjectProperty<CurrencyNode> currencyProperty = new SimpleObjectProperty<>();
@@ -79,6 +88,8 @@ public class AccountExchangePane extends GridPane implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.resources = resources;
+
         final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
 
         expandButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.EXCHANGE).size(expandButton.getFont().getSize() - 1d));
@@ -93,6 +104,8 @@ public class AccountExchangePane extends GridPane implements Initializable {
         });
 
         accountCombo.setOnAction(event -> updateControlVisibility());
+
+        expandButton.setOnAction(event -> handleExpandButton());
     }
 
     private void updateControlVisibility() {
@@ -104,6 +117,18 @@ public class AccountExchangePane extends GridPane implements Initializable {
                     getChildren().addAll(label, exchangeRateField, expandButton);
                 }
             }
+        }
+    }
+
+    private void handleExpandButton() {
+        if (getPopOver().isShowing()) {
+            getPopOver().hide();
+        } else {
+            // Update the conversion label
+            exchangeRatePopOverController.setExchangeText(CommodityFormat.getConversion(currencyProperty.get(),
+                    accountCombo.getValue().getCurrencyNode()));
+
+            getPopOver().show(expandButton);
         }
     }
 
@@ -121,5 +146,26 @@ public class AccountExchangePane extends GridPane implements Initializable {
 
     public void setSelectedAccount(final Account account) {
         accountCombo.setValue(account);
+    }
+
+    private PopOver getPopOver() {
+        if (popOver == null) {
+
+            popOver = new PopOver();
+            popOver.setDetachable(false);
+
+            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ExchangeRatePopOver.fxml"), resources);
+            try {
+                final Pane pane = fxmlLoader.load();
+                exchangeRatePopOverController = fxmlLoader.getController();
+                popOver.setContentNode(pane);
+            } catch (final IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            //exchangeRatePopOverController.exchangeRateField.setOnAction(event -> popOver.hide());
+        }
+
+        return popOver;
     }
 }
