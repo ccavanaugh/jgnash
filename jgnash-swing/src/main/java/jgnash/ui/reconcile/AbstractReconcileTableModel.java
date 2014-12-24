@@ -238,7 +238,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
         rwl.readLock().lock();
 
         try {
-            for (RecTransaction t : list) {
+            for (final RecTransaction t : list) {
                 if (t.getReconciled() == ReconciledState.RECONCILED) {
                     sum = sum.add(t.getAmount(account));
                 }
@@ -251,12 +251,11 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
     }
 
     private synchronized RecTransaction findTransaction(final Transaction t) {
-
         rwl.readLock().lock();
 
         try {
             if (t != null) {
-                for (RecTransaction tran : list) {
+                for (final RecTransaction tran : list) {
                     if (tran.transaction == t) {
                         return tran;
                     }
@@ -286,14 +285,13 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
     }
 
     void selectAll() {
-
         rwl.readLock().lock();
 
         try {
-            for (RecTransaction tran : list) {
+            for (final RecTransaction tran : list) {
                 tran.setReconciled(ReconciledState.RECONCILED);
             }
-            fireTableRowsUpdated(0, list.size() - 1);
+            fireTableDataChanged();
         } finally {
             rwl.readLock().unlock();
         }
@@ -303,10 +301,10 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
         rwl.readLock().lock();
 
         try {
-            for (RecTransaction tran : list) {
+            for (final RecTransaction tran : list) {
                 tran.setReconciled(ReconciledState.NOT_RECONCILED);
             }
-            fireTableRowsUpdated(0, list.size() - 1);
+            fireTableDataChanged();
         } finally {
             rwl.readLock().unlock();
         }
