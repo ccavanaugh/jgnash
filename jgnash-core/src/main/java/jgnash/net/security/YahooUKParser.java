@@ -29,6 +29,7 @@ public class YahooUKParser extends YahooParser {
     public String getBaseURL() {
         // http://uk.finance.yahoo.com/d/quotes.csv?s=GB00B0HZR397GBP&f=sl1t1c1ohgv&e=.csv          
         
-        return "http://uk.finance.yahoo.com/d/quotes.csv?s=";
+        //return "http://uk.finance.yahoo.com/d/quotes.csv?s=";
+        return "http://download.finance.yahoo.com/d/quotes.csv?s=";
     }
 }

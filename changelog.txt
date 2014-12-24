@@ -29,6 +29,7 @@ Add ability to make an existing transaction a recurring transaction.
 Release 2.15.1
 ----------------------
 12/24/14 Fixed import of an exported account tree
+12/24/14 Fixed security price import from Yahoo UK
 
 Release 2.15.0
 ----------------------
