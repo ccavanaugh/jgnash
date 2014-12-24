@@ -73,6 +73,10 @@ public class ImportAccountsAction extends AbstractEnabledAction {
                 @Override
                 protected void done() {
                     UIApplication.getFrame().stopWaitMessage();
+
+                    // Close and reopen, otherwise UI may link to some stale currency information
+                    EngineFactory.closeEngine(EngineFactory.DEFAULT);
+                    OpenAction.openLastAction();
                 }
             }
 

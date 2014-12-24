@@ -1052,6 +1052,16 @@ public class Engine {
     }
 
     /**
+     * Links the {@code CurrencyNode} to the exchange DAO.
+     * Support method to be used during import operations
+     *
+     * @param currencyNode {@code CurrencyNode} to link
+     */
+    void attachCurrencyNode(final CurrencyNode currencyNode) {
+        currencyNode.setExchangeRateDAO(exchangeRateDAO);
+    }
+
+    /**
      * Adds a new SecurityNode to the data set.
      * <p/>
      * Checks and prevents the addition of a duplicate SecurityNode.

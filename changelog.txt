@@ -26,6 +26,10 @@ Budgeting
 Reinstate archive capability.
 Add ability to make an existing transaction a recurring transaction.
 
+Release 2.15.1
+----------------------
+12/24/14 Fixed import of an exported account tree
+
 Release 2.15.0
 ----------------------
 12/07/14 Display a warning dialog if loan amortization is not configured instead of logging to the status bar.

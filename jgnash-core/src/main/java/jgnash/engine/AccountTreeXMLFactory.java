@@ -194,7 +194,7 @@ public class AccountTreeXMLFactory {
         private void mergeAccountTree(final Engine engine, final RootAccount root) {
             fixCurrencies(engine, root);
 
-            for (Account child : root.getChildren()) {
+            for (final Account child : root.getChildren()) {
                 importChildren(engine, child);
             }
         }
@@ -208,7 +208,7 @@ public class AccountTreeXMLFactory {
          */
         private void fixCurrencies(final Engine engine, final Account account) {
 
-            for (CurrencyNode currencyNode : engine.getCurrencies()) {
+            for (final CurrencyNode currencyNode : engine.getCurrencies()) {
                 if (account.getCurrencyNode().matches(currencyNode)) {
                     account.setCurrencyNode(currencyNode);
                 }
@@ -295,6 +295,9 @@ public class AccountTreeXMLFactory {
 
         private void importChildren(final Engine engine, final Account account) {
 
+            // fix the exchange rate DAO if needed
+            engine.attachCurrencyNode(account.getCurrencyNode());
+
             // match RootAccount special case
             if (account.getParent() instanceof RootAccount) {
                 mergeMap.put(account.getParent(), engine.getRootAccount());
@@ -315,7 +318,7 @@ public class AccountTreeXMLFactory {
                 engine.addAccount(parent, account);
             }
 
-            for (Account child : account.getChildren()) {
+            for (final Account child : account.getChildren()) {
                 importChildren(engine, child);
             }
         }
