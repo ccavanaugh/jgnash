@@ -32,6 +32,10 @@ import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
@@ -73,6 +77,8 @@ public class DecimalTextField extends TextField {
 
     private static final ScriptEngine jsEngine;
 
+    final private ObjectProperty<BigDecimal> decimalProperty = new SimpleObjectProperty<>();
+
     static {
         FLOAT = getAllowedChars();
         jsEngine = new ScriptEngineManager().getEngineByName("JavaScript");
@@ -101,18 +107,22 @@ public class DecimalTextField extends TextField {
 
         // Force evaluation on loss of focus
         focusedProperty().addListener((observable, oldValue, newValue) -> {
-            evaluateAndSet();
+            if (!newValue) {
+                evaluateAndSet();
+            }
         });
 
-        // Raise a flag the Decimal key has been pressed so it can be
-        // forced to a comma or period based on locale
         addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<javafx.scene.input.KeyEvent>() {
             @Override
             public void handle(final KeyEvent event) {
+
+                //Raise a flag the Decimal key has been pressed so it can be
+                // forced to a comma or period based on locale
                 if (event.getCode() == KeyCode.DECIMAL) {
                     forceFraction = true;
                 }
 
+                // For evaluation if the enter key is pressed
                 if (event.getCode() == KeyCode.ENTER) {
                     Platform.runLater(() -> {
                         evaluateAndSet();
@@ -121,6 +131,21 @@ public class DecimalTextField extends TextField {
                 }
             }
         });
+
+        setDecimal(BigDecimal.ZERO);
+
+        decimalProperty().addListener(new ChangeListener<BigDecimal>() {
+            @Override
+            public void changed(ObservableValue<? extends BigDecimal> observable, BigDecimal oldValue, BigDecimal newValue) {
+                if (newValue != null && !newValue.equals(oldValue)) {
+                    setDecimal(newValue);
+                }
+            }
+        });
+    }
+
+    public ObjectProperty<BigDecimal> decimalProperty() {
+        return decimalProperty;
     }
 
     private void evaluateAndSet() {
@@ -134,6 +159,7 @@ public class DecimalTextField extends TextField {
     public void setDecimal(@Nullable final BigDecimal decimal) {
         if (decimal != null) {
             super.setText(format.format(decimal.doubleValue()));
+            decimalProperty.setValue(decimal);
         } else {
             super.setText("");
         }
@@ -240,6 +266,8 @@ public class DecimalTextField extends TextField {
             format.setMaximumFractionDigits(scale);
             format.setMinimumFractionDigits(scale);
         }
+
+        evaluateAndSet();
     }
 
     /**
@@ -283,7 +311,10 @@ public class DecimalTextField extends TextField {
                 final Object o = jsEngine.eval(text);
 
                 if (o instanceof Number) { // scale the number
-                    return new BigDecimal(o.toString()).setScale(scale, MathConstants.roundingMode).toString();
+                    final BigDecimal value = new BigDecimal(o.toString()).setScale(scale, MathConstants.roundingMode);
+
+                    decimalProperty.setValue(value);
+                    return value.toString();
                 }
             } catch (final ScriptException ex) {
                 return "";
