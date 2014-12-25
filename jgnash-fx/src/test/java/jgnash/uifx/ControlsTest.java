@@ -18,6 +18,7 @@
 package jgnash.uifx;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -27,6 +28,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -100,6 +105,24 @@ public class ControlsTest extends Application {
             LocalDate date = datePicker.getValue();
             System.out.println("Selected date: " + date);
         });
+
+        decimalTextField.decimalProperty().addListener(new ChangeListener<BigDecimal>() {
+            @Override
+            public void changed(ObservableValue<? extends BigDecimal> observable, BigDecimal oldValue, BigDecimal newValue) {
+                System.out.println("decimalTextField: " + newValue);
+            }
+        });
+
+        decimalTextField2.decimalProperty().addListener(new ChangeListener<BigDecimal>() {
+            @Override
+            public void changed(ObservableValue<? extends BigDecimal> observable, BigDecimal oldValue, BigDecimal newValue) {
+                System.out.println("decimalTextField2: " + newValue);
+            }
+        });
+
+        ObjectProperty<BigDecimal> decimalProperty = new SimpleObjectProperty<>();
+        decimalTextField2.decimalProperty().bindBidirectional(decimalProperty);
+        decimalProperty.setValue(BigDecimal.TEN);
 
         TransactionNumberComboBox numberComboBox = new TransactionNumberComboBox();
         numberComboBox.setAccount(engine.getAccountList().get(0));
