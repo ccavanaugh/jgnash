@@ -24,7 +24,6 @@ import java.math.RoundingMode;
  * Math constants interface
  *
  * @author Craig Cavanaugh
- *
  */
 public final class MathConstants {
 
@@ -37,6 +36,11 @@ public final class MathConstants {
      * Default match context
      */
     public static final MathContext mathContext = new MathContext(16, roundingMode);
+
+    /**
+     * Number of significant digits to the right of the decimal separator
+     */
+    public static final int EXCHANGE_RATE_ACCURACY = 6;
 
     private MathConstants() {
         // restrict instantiation
