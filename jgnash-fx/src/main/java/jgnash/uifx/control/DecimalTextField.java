@@ -229,6 +229,8 @@ public class DecimalTextField extends TextField {
             }
         }
         super.replaceSelection(text);
+
+        positionCaret(end);
     }
 
     /**
