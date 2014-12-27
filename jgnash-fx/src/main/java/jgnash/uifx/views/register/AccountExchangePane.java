@@ -18,23 +18,27 @@
 package jgnash.uifx.views.register;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 
 import jgnash.engine.Account;
 import jgnash.engine.CurrencyNode;
+import jgnash.engine.MathConstants;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DecimalTextField;
@@ -56,6 +60,9 @@ public class AccountExchangePane extends GridPane implements Initializable {
     private AccountComboBox accountCombo;
 
     @FXML
+    private DecimalTextField exchangeAmountField;
+
+    @FXML
     private DecimalTextField exchangeRateField;
 
     @FXML
@@ -64,15 +71,24 @@ public class AccountExchangePane extends GridPane implements Initializable {
     @FXML
     private Label label;
 
+    @FXML
     private PopOver popOver;
 
-    private ResourceBundle resources;
+    @FXML
+    private Label exchangeLabel;
 
-    private ExchangeRatePopOverController exchangeRatePopOverController;
-
-    final private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+    /**
+     * Account property may be null
+     */
+    final private ObjectProperty<Account> baseAccountProperty = new SimpleObjectProperty<>();
 
     final private ObjectProperty<CurrencyNode> currencyProperty = new SimpleObjectProperty<>();
+
+    final private ObjectProperty<BigDecimal> exchangeAmountProperty = new SimpleObjectProperty<>(BigDecimal.ZERO);
+
+    final private ObjectProperty<BigDecimal> amountProperty = new SimpleObjectProperty<>(BigDecimal.ZERO);
+
+    final private SimpleBooleanProperty amountEditable = new SimpleBooleanProperty();
 
     public AccountExchangePane() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AccountExchangePane.fxml"), ResourceUtils.getBundle());
@@ -88,56 +104,140 @@ public class AccountExchangePane extends GridPane implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.resources = resources;
-
         final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
 
         expandButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.EXCHANGE).size(expandButton.getFont().getSize() - 1d));
 
-        accountProperty.addListener(new ChangeListener<Account>() {
+        exchangeRateField.setScale(MathConstants.EXCHANGE_RATE_ACCURACY);
+
+        baseAccountProperty.addListener(new ChangeListener<Account>() {
             @Override
             public void changed(final ObservableValue<? extends Account> observable, final Account oldValue, final Account newValue) {
                 accountCombo.filterAccount(newValue);
                 getCurrencyProperty().setValue(newValue.getCurrencyNode());
-                updateControlVisibility();
             }
         });
 
-        accountCombo.setOnAction(event -> updateControlVisibility());
+        currencyProperty.addListener((observable, oldValue, newValue) -> {
+            exchangeAmountField.setScale(newValue.getScale());
+            updateExchangeRateField();
+            updateControlVisibility();
+        });
+
+        accountCombo.setOnAction(event -> {
+            updateExchangeRateField();
+            updateControlVisibility();
+        });
 
         expandButton.setOnAction(event -> handleExpandButton());
+
+        exchangeAmountField.decimalProperty().bindBidirectional(exchangeAmountProperty);
+        exchangeAmountField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) { // lost focus
+                if (exchangeAmountField.getDecimal().compareTo(BigDecimal.ZERO) > 0) {
+                    exchangeAmountFieldAction();
+                }
+            }
+        });
+
+        // Call exchangeRateFieldAction() on entry or loss of focus
+        exchangeRateField.setOnAction(event -> exchangeRateFieldAction());
+        exchangeRateField.focusedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
+                if (!newValue) {
+                    exchangeRateFieldAction();
+                }
+            }
+        });
+
+        amountProperty.addListener((observable, oldValue, newValue) -> {
+            amountFieldAction();
+        });
+    }
+
+    private void updateExchangeRateField() {
+        final Account selectedAccount = accountCombo.getValue();
+
+        if (selectedAccount != null && currencyProperty.get() != null) {
+            exchangeRateField.setDecimal(currencyProperty.get().getExchangeRate(selectedAccount.getCurrencyNode()));
+        }
+    }
+
+    void amountFieldAction() {
+        if (exchangeRateField.getDecimal().compareTo(BigDecimal.ZERO) == 0) {
+            if (amountProperty.get().compareTo(BigDecimal.ZERO) != 0) {
+                exchangeRateField.setDecimal(exchangeAmountProperty.get().divide(amountProperty.get(), MathConstants.mathContext));
+            }
+        } else {
+            exchangeAmountProperty.set(amountProperty.get().multiply(exchangeRateField.getDecimal(), MathConstants.mathContext));
+        }
+    }
+
+    private void exchangeRateFieldAction() {
+        if (amountProperty.get().compareTo(BigDecimal.ZERO) == 0 && amountEditable.get()) {
+            if (exchangeRateField.getDecimal().compareTo(BigDecimal.ZERO) != 0) {
+                amountProperty.set(exchangeAmountProperty.get().divide(exchangeRateField.getDecimal(), MathConstants.mathContext));
+            }
+        } else {
+            exchangeAmountProperty.set(amountProperty.get().multiply(exchangeRateField.getDecimal(), MathConstants.mathContext));
+        }
+
+        Platform.runLater(popOver::hide);
+    }
+
+    private void exchangeAmountFieldAction() {
+        if (amountProperty.get().compareTo(BigDecimal.ZERO) == 0 && amountEditable.get()) {
+            if (exchangeRateField.getDecimal().compareTo(BigDecimal.ZERO) != 0) {
+                amountProperty.set(exchangeAmountProperty.get().divide(exchangeRateField.getDecimal(), MathConstants.mathContext));
+            }
+        } else {
+            if (amountProperty.get().compareTo(BigDecimal.ZERO) != 0) {
+                exchangeRateField.setDecimal(exchangeAmountProperty.get().divide(amountProperty.get(), MathConstants.mathContext));
+            }
+        }
     }
 
     private void updateControlVisibility() {
         if (getSelectedAccount() != null && getCurrencyProperty() != null) {
             if (getSelectedAccount().getCurrencyNode() == getCurrencyProperty().get()) {
-                getChildren().removeAll(label, exchangeRateField, expandButton);
+                getChildren().removeAll(label, exchangeAmountField, expandButton);
             } else {
                 if (!getChildren().contains(label)) {
-                    getChildren().addAll(label, exchangeRateField, expandButton);
+                    getChildren().addAll(label, exchangeAmountField, expandButton);
                 }
             }
         }
     }
 
     private void handleExpandButton() {
-        if (getPopOver().isShowing()) {
-            getPopOver().hide();
+        if (popOver.isShowing()) {
+            popOver.hide();
         } else {
-            // Update the conversion label
-            exchangeRatePopOverController.setExchangeText(CommodityFormat.getConversion(currencyProperty.get(),
-                    accountCombo.getValue().getCurrencyNode()));
-
-            getPopOver().show(expandButton);
+            // update the label before the popover is shown
+            exchangeLabel.setText(CommodityFormat.getConversion(currencyProperty.get(), accountCombo.getValue().getCurrencyNode()));
+            popOver.show(expandButton);
         }
     }
 
-    public ObjectProperty<Account> getAccountProperty() {
-        return accountProperty;
+    public ObjectProperty<Account> getBaseAccountProperty() {
+        return baseAccountProperty;
     }
 
     public ObjectProperty<CurrencyNode> getCurrencyProperty() {
         return currencyProperty;
+    }
+
+    public ObjectProperty<BigDecimal> getExchangeAmountProperty() {
+        return exchangeAmountProperty;
+    }
+
+    public ObjectProperty<BigDecimal> getAmountProperty() {
+        return amountProperty;
+    }
+
+    public SimpleBooleanProperty getAmountEditable() {
+        return amountEditable;
     }
 
     public Account getSelectedAccount() {
@@ -146,26 +246,5 @@ public class AccountExchangePane extends GridPane implements Initializable {
 
     public void setSelectedAccount(final Account account) {
         accountCombo.setValue(account);
-    }
-
-    private PopOver getPopOver() {
-        if (popOver == null) {
-
-            popOver = new PopOver();
-            popOver.setDetachable(false);
-
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ExchangeRatePopOver.fxml"), resources);
-            try {
-                final Pane pane = fxmlLoader.load();
-                exchangeRatePopOverController = fxmlLoader.getController();
-                popOver.setContentNode(pane);
-            } catch (final IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            //exchangeRatePopOverController.exchangeRateField.setOnAction(event -> popOver.hide());
-        }
-
-        return popOver;
     }
 }

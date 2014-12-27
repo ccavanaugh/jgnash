@@ -41,7 +41,7 @@
       <Label text="%Label.Memo" GridPane.rowIndex="2" />
       <TextField fx:id="memoTextField" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
       <Label text="%Label.Amount" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-      <DecimalTextField fx:id="amountTextField" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+      <DecimalTextField fx:id="amountField" GridPane.columnIndex="4" GridPane.rowIndex="2" />
       <GridPane GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="3"
                 GridPane.vgrow="NEVER" styleClass="form">
         <columnConstraints>

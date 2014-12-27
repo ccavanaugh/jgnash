@@ -60,7 +60,7 @@ public class TransactionPaneController implements Initializable {
     protected DatePickerEx datePicker;
 
     @FXML
-    protected DecimalTextField amountTextField;
+    protected DecimalTextField amountField;
 
     @FXML
     protected TextField memoTextField;
@@ -106,9 +106,13 @@ public class TransactionPaneController implements Initializable {
             @Override
             public void changed(final ObservableValue<? extends Account> observable, final Account oldValue, final Account newValue) {
                 numberComboBox.setAccount(newValue);
-                accountExchangePane.getAccountProperty().setValue(newValue);
+                accountExchangePane.getBaseAccountProperty().setValue(newValue);
             }
         });
+
+        // Bind necessary properties to the exchange panel
+        accountExchangePane.getAmountProperty().bindBidirectional(amountField.decimalProperty());
+        accountExchangePane.getAmountEditable().bind(amountField.editableProperty());
     }
 
     ObjectProperty<Account> getAccountProperty() {
