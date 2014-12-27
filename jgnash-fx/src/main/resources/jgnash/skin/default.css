@@ -44,6 +44,10 @@
     -fx-font-weight: bold;
 }
 
+.icon-button {
+    -fx-font-size: 0.833333em;
+}
+
 #disabled-cell {
     -fx-opacity: 0.4;
     -fx-font-weight: bold;

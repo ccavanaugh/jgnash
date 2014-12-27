@@ -28,7 +28,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -45,9 +44,6 @@ import jgnash.uifx.control.DecimalTextField;
 import jgnash.util.ResourceUtils;
 
 import org.controlsfx.control.PopOver;
-import org.controlsfx.glyphfont.FontAwesome;
-import org.controlsfx.glyphfont.GlyphFont;
-import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 /**
  * Controller for handling the exchange of currencies
@@ -104,9 +100,6 @@ public class AccountExchangePane extends GridPane implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
-
-        expandButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.EXCHANGE).size(expandButton.getFont().getSize() - 1d));
 
         exchangeRateField.setScale(MathConstants.EXCHANGE_RATE_ACCURACY);
 

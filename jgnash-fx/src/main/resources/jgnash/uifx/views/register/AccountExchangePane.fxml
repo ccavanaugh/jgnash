@@ -8,7 +8,10 @@
 <?import jgnash.uifx.control.AccountComboBox?>
 <?import jgnash.uifx.control.DecimalTextField?>
 
-<?import org.controlsfx.control.PopOver?><fx:root type="javafx.scene.layout.GridPane" maxHeight="-Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity"
+<?import org.controlsfx.control.PopOver?>
+<?import org.controlsfx.glyphfont.Glyph?>
+
+<fx:root type="javafx.scene.layout.GridPane" maxHeight="-Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity"
       xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="form">
   <fx:define>
     <PopOver fx:id="popOver" autoHide="true" arrowLocation="BOTTOM_CENTER">
@@ -45,6 +48,10 @@
     <AccountComboBox fx:id="accountCombo" maxWidth="Infinity" minWidth="50" prefWidth="100"/>
     <Label fx:id="label" text="%Label.ExchangeAmount" GridPane.columnIndex="1"/>
     <DecimalTextField fx:id="exchangeAmountField" GridPane.columnIndex="2" minWidth="80" maxWidth="80"/>
-    <Button fx:id="expandButton" GridPane.columnIndex="3"/>
+    <Button fx:id="expandButton" GridPane.columnIndex="3">
+      <graphic>
+        <Glyph fontFamily="FontAwesome" icon="EXCHANGE" styleClass="icon-button"/>
+      </graphic>
+    </Button>
   </children>
 </fx:root>

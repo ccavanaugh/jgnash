@@ -24,10 +24,10 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
@@ -35,10 +35,6 @@ import jgnash.engine.Account;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.TransactionNumberComboBox;
-
-import org.controlsfx.glyphfont.FontAwesome;
-import org.controlsfx.glyphfont.GlyphFont;
-import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 /**
  * Transaction Entry Controller
@@ -69,9 +65,6 @@ public class TransactionPaneController implements Initializable {
     protected AccountExchangePane accountExchangePane;
 
     @FXML
-    protected ButtonBar buttonBar;
-
-    @FXML
     protected CheckBox reconciledButton;
 
     @FXML
@@ -87,20 +80,6 @@ public class TransactionPaneController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-
-        // Create and add the ok and cancel buttons to the button bar
-        final Button okButton = new Button(resources.getString("Button.Ok"));
-        final Button cancelButton = new Button(resources.getString("Button.Cancel"));
-
-        ButtonBar.setButtonData(okButton, ButtonBar.ButtonData.OK_DONE);
-        ButtonBar.setButtonData(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE);
-        buttonBar.getButtons().addAll(okButton, cancelButton);
-
-        final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
-
-        attachmentButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.LINK));
-        viewAttachmentButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.EYE));
-        deleteAttachmentButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.UNLINK));
 
         getAccountProperty().addListener(new ChangeListener<Account>() {
             @Override
@@ -119,4 +98,11 @@ public class TransactionPaneController implements Initializable {
         return accountProperty;
     }
 
+    @FXML
+    private void okAction(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    private void cancelAction(ActionEvent actionEvent) {
+    }
 }

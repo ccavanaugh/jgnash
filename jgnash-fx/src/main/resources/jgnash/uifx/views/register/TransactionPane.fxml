@@ -10,6 +10,7 @@
 <?import jgnash.uifx.control.TransactionNumberComboBox?>
 <?import jgnash.uifx.control.DecimalTextField?>
 <?import javafx.scene.control.Tooltip?>
+<?import org.controlsfx.glyphfont.Glyph?>
 
 <?import jgnash.uifx.views.register.AccountExchangePane?>
 
@@ -56,22 +57,36 @@
          <children>
             <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared" />
             <Button fx:id="attachmentButton" mnemonicParsing="false" GridPane.columnIndex="1">
+              <graphic>
+                <Glyph fontFamily="FontAwesome" icon="LINK" styleClass="icon-button"/>
+              </graphic>
               <tooltip>
                 <Tooltip text="%ToolTip.AddAttachment"/>
               </tooltip>
             </Button>
-            <Button fx:id="viewAttachmentButton" mnemonicParsing="false" GridPane.columnIndex="2">
+            <Button fx:id="viewAttachmentButton" mnemonicParsing="false" GridPane.columnIndex="2" disable="true">
+              <graphic>
+                <Glyph fontFamily="FontAwesome" icon="EYE" styleClass="icon-button"/>
+              </graphic>
               <tooltip>
                 <Tooltip text="%ToolTip.ViewAttachment"/>
               </tooltip>
             </Button>
-            <Button fx:id="deleteAttachmentButton" mnemonicParsing="false" GridPane.columnIndex="3">
+            <Button fx:id="deleteAttachmentButton" mnemonicParsing="false" GridPane.columnIndex="3" disable="true">
+              <graphic>
+                <Glyph fontFamily="FontAwesome" icon="UNLINK" styleClass="icon-button"/>
+              </graphic>
               <tooltip>
                 <Tooltip text="%ToolTip.DeleteAttachment"/>
               </tooltip>
             </Button>
          </children>
       </GridPane>
-     <ButtonBar fx:id="buttonBar" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="3" />
+     <ButtonBar GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="3">
+       <buttons>
+         <Button text="%Button.Ok" ButtonBar.buttonData="OK_DONE" onAction="#okAction"/>
+         <Button text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#cancelAction"/>
+       </buttons>
+     </ButtonBar>
    </children>
 </GridPane>
