@@ -96,7 +96,6 @@ public class ControlsTest extends Application {
         Button btn = new Button();
 
         btn.setText("getDecimal()");
-        btn.setOnAction(event -> System.out.println(decimalTextField.getDecimal()));
 
         // Create the DatePicker.
         DatePicker datePicker = new DatePickerEx();
@@ -124,6 +123,14 @@ public class ControlsTest extends Application {
         decimalTextField2.decimalProperty().bindBidirectional(decimalProperty);
         decimalProperty.setValue(BigDecimal.TEN);
 
+        btn.setOnAction(event -> {
+            decimalProperty.setValue(BigDecimal.ONE);
+            System.out.println(decimalTextField2.getDecimal());
+        });
+
+        System.out.println(decimalProperty.isBound());
+        System.out.println(decimalTextField2.decimalProperty().isBound());
+
         TransactionNumberComboBox numberComboBox = new TransactionNumberComboBox();
         numberComboBox.setAccount(engine.getAccountList().get(0));
 
@@ -131,6 +138,7 @@ public class ControlsTest extends Application {
         vBox.getChildren().addAll(decimalTextField, decimalTextField2, datePicker, new AccountComboBox(), numberComboBox, btn);
 
         primaryStage.setScene(new Scene(vBox, 300, 250));
+
 
         StageUtils.applyDialogFormCSS(primaryStage);
 
