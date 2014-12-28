@@ -53,9 +53,6 @@ public class OpenDatabaseController implements Initializable {
     private ResourceBundle resources;
 
     @FXML
-    public ButtonBar buttonBar;
-
-    @FXML
     protected TextField localDatabaseField;
 
     @FXML
@@ -75,31 +72,22 @@ public class OpenDatabaseController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         this.resources = resources;
 
-        final Button okButton = new Button(resources.getString("Button.Ok"));
-        final Button cancelButton = new Button(resources.getString("Button.Cancel"));
-
-        ButtonBar.setButtonData(okButton, ButtonBar.ButtonData.OK_DONE);
-        ButtonBar.setButtonData(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE);
-
-        buttonBar.getButtons().addAll(okButton, cancelButton);
-
         updateControlsState();
 
         localDatabaseField.setText(EngineFactory.getLastDatabase());
         databaseServerField.setText(EngineFactory.getLastHost());
         portField.setInteger(EngineFactory.getLastPort());
         remoteServerCheckBox.setSelected(EngineFactory.getLastRemote());
-
-        okButton.setOnAction(event -> handleOkAction());
-        cancelButton.setOnAction(event -> handleCancelAction());
     }
 
-    private void handleCancelAction() {
-        ((Stage) buttonBar.getScene().getWindow()).close();
+    @FXML
+    private void cancelAction() {
+        ((Stage) localDatabaseField.getScene().getWindow()).close();
     }
 
-    private void handleOkAction() {
-        ((Stage) buttonBar.getScene().getWindow()).close();
+    @FXML
+    private void okAction() {
+        ((Stage) localDatabaseField.getScene().getWindow()).close();
 
         if (remoteServerCheckBox.isSelected() || localDatabaseField.getText().length() > 0) {
             BootEngineTask.initiateBoot(localDatabaseField.getText(), passwordField.getText().toCharArray(),

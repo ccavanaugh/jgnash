@@ -26,7 +26,24 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
 import jgnash.MainFX;
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
@@ -43,24 +60,6 @@ import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-
 /**
  * Loads all account properties into a form and returns a template Account based on the form properties
  *
@@ -72,9 +71,6 @@ public class AccountPropertiesController implements Initializable {
 
     @FXML
     private ComboBox<AccountType> accountTypeComboBox;
-
-    @FXML
-    private ButtonBar buttonBar;
 
     @FXML
     private TextArea notesTextArea;
@@ -134,27 +130,8 @@ public class AccountPropertiesController implements Initializable {
         accountTypeComboBox.getItems().addAll(AccountType.values());
         accountTypeComboBox.setValue(AccountType.BANK); // set default value
 
-        // Create and add the ok and cancel buttons to the button bar
-        final Button okButton = new Button(resources.getString("Button.Ok"));
-        final Button cancelButton = new Button(resources.getString("Button.Cancel"));
-
-        ButtonBar.setButtonData(okButton, ButtonBar.ButtonData.OK_DONE);
-        ButtonBar.setButtonData(cancelButton, ButtonBar.ButtonData.CANCEL_CLOSE);
-
-        buttonBar.getButtons().addAll(okButton, cancelButton);
-
         descriptionTextField.setText(resources.getString("Word.Description"));
         nameTextField.setText(resources.getString("Word.Name"));
-
-        okButton.setOnAction(event -> {
-            result = true;
-            ((Stage) okButton.getScene().getWindow()).close();
-        });
-
-        cancelButton.setOnAction(event -> {
-            result = false;
-            ((Stage) cancelButton.getScene().getWindow()).close();
-        });
 
         disableSecuritiesBinding = new DisableSecuritiesBinding();
 
@@ -180,9 +157,6 @@ public class AccountPropertiesController implements Initializable {
             SelectAccountController controller = loader.getController();
 
             dialog.setResizable(false);
-
-            dialog.getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
-            dialog.getScene().getRoot().getStyleClass().addAll("form", "dialog");
 
             StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
 
@@ -311,6 +285,17 @@ public class AccountPropertiesController implements Initializable {
         } else {
             Platform.runLater(() -> securitiesButton.setText(resources.getString("Word.None")));
         }
+    }
+    @FXML
+    private void okAction(final ActionEvent actionEvent) {
+        result = true;
+        ((Stage) nameTextField.getScene().getWindow()).close();
+    }
+
+    @FXML
+    private void cancelAction(final ActionEvent actionEvent) {
+        result = false;
+        ((Stage) nameTextField.getScene().getWindow()).close();
     }
 
     private class DisableSecuritiesBinding extends BooleanBinding {

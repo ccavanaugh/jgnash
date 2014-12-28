@@ -16,7 +16,8 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import jgnash.uifx.control.IntegerTextField?>
 
-<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.accounts.AccountPropertiesController" styleClass="form">
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="jgnash.uifx.views.accounts.AccountPropertiesController" styleClass="form">
     <children>
         <TitledPane text="%Title.AccountInfo" VBox.vgrow="ALWAYS" collapsible="false">
             <content>
@@ -94,6 +95,11 @@
                 </BorderPane>
             </content>
         </TitledPane>
-        <ButtonBar fx:id="buttonBar" VBox.vgrow="NEVER"/>
+        <ButtonBar VBox.vgrow="NEVER">
+            <buttons>
+                <Button text="%Button.Ok" ButtonBar.buttonData="OK_DONE" onAction="#okAction"/>
+                <Button text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#cancelAction"/>
+            </buttons>
+        </ButtonBar>
     </children>
 </VBox>

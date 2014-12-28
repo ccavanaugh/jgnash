@@ -14,9 +14,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.control.ButtonBar?>
 
-<GridPane gridLinesVisible="false" maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-1.0"
+<GridPane maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-1.0"
           minWidth="-Infinity" prefHeight="-1.0" xmlns:fx="http://javafx.com/fxml/1"
-          xmlns="http://javafx.com/javafx/2.2" fx:controller="jgnash.uifx.controllers.OpenDatabaseController">
+          xmlns="http://javafx.com/javafx/8" fx:controller="jgnash.uifx.controllers.OpenDatabaseController" styleClass="form, dialog">
     <children>
         <Label text="%Label.DatabaseName" GridPane.columnIndex="0" GridPane.rowIndex="0">
             <labelFor>
@@ -66,7 +66,12 @@
                 </GridPane>
             </content>
         </TitledPane>
-        <ButtonBar fx:id="buttonBar" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="5"/>
+        <ButtonBar GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="5">
+            <buttons>
+                <Button text="%Button.Ok" ButtonBar.buttonData="OK_DONE" onAction="#okAction"/>
+                <Button text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#cancelAction"/>
+            </buttons>
+        </ButtonBar>
     </children>
     <columnConstraints>
         <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity"/>
