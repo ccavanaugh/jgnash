@@ -5,17 +5,25 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tooltip?>
 
+<?import org.controlsfx.glyphfont.Glyph?>
+
 <ToolBar
     xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
     fx:controller="jgnash.uifx.controllers.MainToolBarController">
     <items>
-        <Button fx:id="openButton" mnemonicParsing="false" onAction="#handleOpenAction" text="%Menu.Open.Name">
+        <Button mnemonicParsing="false" onAction="#handleOpenAction" text="%Menu.Open.Name">
+            <graphic>
+              <Glyph fontFamily="FontAwesome" icon="FOLDER_OPEN"/>
+            </graphic>
             <tooltip>
               <Tooltip text="%Menu.Open.Tooltip"/>
             </tooltip>
         </Button>
 
-        <Button fx:id="closeButton" mnemonicParsing="false" onAction="#handleCloseAction" text="%Menu.Close.Name">
+        <Button fx:id="closeButton" mnemonicParsing="false" onAction="#handleCloseAction" text="%Menu.Close.Name" disable="true">
+            <graphic>
+              <Glyph fontFamily="FontAwesome" icon="TIMES"/>
+            </graphic>
             <tooltip>
               <Tooltip text="%Menu.Close.Tooltip"/>
             </tooltip>
@@ -25,6 +33,9 @@
 
         <Button fx:id="updateSecurities" mnemonicParsing="false" onAction="#handleSecuritiesUpdateAction"
                 text="%Menu.BackgroundSecurityUpdate.Name" disable="true">
+            <graphic>
+              <Glyph fontFamily="FontAwesome" icon="CLOUD_DOWNLOAD"/>
+            </graphic>
             <tooltip>
               <Tooltip text="%Menu.BackgroundSecurityUpdate.Tooltip"/>
             </tooltip>
@@ -32,6 +43,9 @@
 
         <Button fx:id="updateCurrencies" mnemonicParsing="false" onAction="#handleCurrenciesUpdateAction"
                 text="%Menu.BackgroundCurrencyUpdate.Name" disable="true">
+            <graphic>
+              <Glyph fontFamily="FontAwesome" icon="CLOUD_DOWNLOAD"/>
+            </graphic>
             <tooltip>
               <Tooltip text="%Menu.BackgroundCurrencyUpdate.Tooltip"/>
             </tooltip>

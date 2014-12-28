@@ -20,6 +20,12 @@ package jgnash.uifx.controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
@@ -28,15 +34,6 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.tasks.CloseFileTask;
-
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import org.controlsfx.glyphfont.FontAwesome;
-import org.controlsfx.glyphfont.GlyphFont;
-import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 /**
  * @author Craig Cavanaugh
@@ -52,29 +49,18 @@ public class MainToolBarController implements Initializable, MessageListener {
     @FXML
     Button updateSecurities;
 
-    @FXML
-    Button openButton;
-
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-
-        final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
-
-        closeButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.TIMES));
-        openButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.FOLDER_OPEN));
-        updateSecurities.setGraphic(fontAwesome.create(FontAwesome.Glyph.CLOUD_DOWNLOAD));
-        updateCurrencies.setGraphic(fontAwesome.create(FontAwesome.Glyph.CLOUD_DOWNLOAD));
-
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
     }
 
     @FXML
-    protected void handleOpenAction(final ActionEvent event) {
+    private void handleOpenAction(final ActionEvent event) {
         StaticUIMethods.showOpenDialog();
     }
 
     @FXML
-    public void handleCloseAction(ActionEvent actionEvent) {
+    private void handleCloseAction(ActionEvent actionEvent) {
         if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
             CloseFileTask.initiateShutdown();
         }
@@ -89,11 +75,13 @@ public class MainToolBarController implements Initializable, MessageListener {
                 case FILE_LOAD_SUCCESS:
                     updateSecurities.setDisable(false);
                     updateCurrencies.setDisable(false);
+                    closeButton.setDisable(false);
                     break;
                 case FILE_CLOSING:
                 case FILE_LOAD_FAILED:
                     updateSecurities.setDisable(true);
                     updateCurrencies.setDisable(true);
+                    closeButton.setDisable(true);
                     break;
                 default:
                     break;
@@ -102,7 +90,7 @@ public class MainToolBarController implements Initializable, MessageListener {
     }
 
     @FXML
-    void handleSecuritiesUpdateAction(final ActionEvent actionEvent) {
+    private void handleSecuritiesUpdateAction(final ActionEvent actionEvent) {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         if (engine != null) {
             engine.startSecuritiesUpdate(0);
@@ -110,7 +98,7 @@ public class MainToolBarController implements Initializable, MessageListener {
     }
 
     @FXML
-    public void handleCurrenciesUpdateAction(ActionEvent actionEvent) {
+    private void handleCurrenciesUpdateAction(ActionEvent actionEvent) {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         if (engine != null) {
             engine.startExchangeRateUpdate(0);
