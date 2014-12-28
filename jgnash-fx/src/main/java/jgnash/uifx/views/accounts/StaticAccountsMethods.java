@@ -79,7 +79,7 @@ public final class StaticAccountsMethods {
             Stage dialog = new Stage(StageStyle.DECORATED);
             dialog.initModality(Modality.WINDOW_MODAL);
             dialog.initOwner(MainApplication.getPrimaryStage());
-            dialog.setTitle(ResourceUtils.getBundle().getString("Title.ModifyAccount"));
+            dialog.setTitle(ResourceUtils.getBundle().getString("Title.NewAccount"));
 
             FXMLLoader loader = new FXMLLoader(StaticAccountsMethods.class.getResource("AccountProperties.fxml"), ResourceUtils.getBundle());
             dialog.setScene(new Scene(loader.load()));
@@ -94,7 +94,6 @@ public final class StaticAccountsMethods {
 
             dialog.setResizable(false);
 
-            StageUtils.applyDialogFormCSS(dialog);
             StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
 
             dialog.showAndWait();
@@ -125,7 +124,6 @@ public final class StaticAccountsMethods {
 
             dialog.setResizable(false);
 
-            StageUtils.applyDialogFormCSS(dialog);
             StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
 
             dialog.showAndWait();

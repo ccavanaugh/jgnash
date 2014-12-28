@@ -17,7 +17,7 @@
 <?import jgnash.uifx.control.IntegerTextField?>
 
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="jgnash.uifx.views.accounts.AccountPropertiesController" styleClass="form">
+      fx:controller="jgnash.uifx.views.accounts.AccountPropertiesController" styleClass="dialog, form">
     <children>
         <TitledPane text="%Title.AccountInfo" VBox.vgrow="ALWAYS" collapsible="false">
             <content>
