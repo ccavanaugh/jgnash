@@ -139,8 +139,8 @@ public class ControlsTest extends Application {
 
         primaryStage.setScene(new Scene(vBox, 300, 250));
 
-
-        StageUtils.applyDialogFormCSS(primaryStage);
+        primaryStage.getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
+        primaryStage.getScene().getRoot().getStyleClass().addAll("form", "dialog");
 
         primaryStage.show();
     }

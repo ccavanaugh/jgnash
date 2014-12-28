@@ -65,7 +65,6 @@ public final class StaticAccountsMethods {
 
             dialog.setResizable(false);
 
-            StageUtils.applyDialogFormCSS(dialog);
             StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
 
             dialog.show();

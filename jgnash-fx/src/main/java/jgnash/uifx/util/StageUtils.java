@@ -66,9 +66,4 @@ public class StageUtils {
             //stage.onCloseRequestProperty().removeListener(this);  // make gc easier
         });
     }
-
-    public static void applyDialogFormCSS(final Stage stage) {
-        stage.getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
-        stage.getScene().getRoot().getStyleClass().addAll("form", "dialog");
-    }
 }
