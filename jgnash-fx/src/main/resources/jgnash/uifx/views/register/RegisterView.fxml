@@ -8,21 +8,32 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tooltip?>
 
+<?import org.controlsfx.glyphfont.Glyph?>
+
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.register.RegisterViewController">
     <top>
         <ToolBar>
             <items>
                 <Button fx:id="reconcileButton" mnemonicParsing="false" text="%Button.Reconcile">
+                    <graphic>
+                        <Glyph fontFamily="FontAwesome" icon="ADJUST"/>
+                    </graphic>
                     <tooltip>
                         <Tooltip text="%ToolTip.ReconcileAccount"/>
                     </tooltip>
                 </Button>
                 <Button fx:id="filterButton" mnemonicParsing="false" onAction="#handleFilterAccountAction" text="%Button.Filter">
+                    <graphic>
+                        <Glyph fontFamily="FontAwesome" icon="FILTER"/>
+                    </graphic>
                     <tooltip>
                         <Tooltip text="%ToolTip.FilterAccounts"/>
                     </tooltip>
                 </Button>
                 <Button fx:id="zoomButton" mnemonicParsing="false" text="%Button.Zoom">
+                    <graphic>
+                        <Glyph fontFamily="FontAwesome" icon="EXTERNAL_LINK_SQUARE"/>
+                    </graphic>
                     <tooltip>
                         <Tooltip text="%ToolTip.ZoomRegister"/>
                     </tooltip>

@@ -7,7 +7,7 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.Button?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<?import org.controlsfx.glyphfont.Glyph?><BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="jgnash.uifx.views.register.RegisterPaneController">
     <center>
         <VBox styleClass="form">
@@ -15,10 +15,26 @@
                 <StackPane fx:id="register" VBox.vgrow="ALWAYS"/>
                 <ToolBar VBox.vgrow="NEVER">
                     <items>
-                        <Button fx:id="newButton" mnemonicParsing="false" text="%Button.New"/>
-                        <Button fx:id="duplicateButton" mnemonicParsing="false" text="%Button.Duplicate"/>
-                        <Button fx:id="jumpButton" mnemonicParsing="false" text="%Button.Jump"/>
-                        <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction" text="%Button.Delete"/>
+                        <Button fx:id="newButton" mnemonicParsing="false" text="%Button.New">
+                            <graphic>
+                                <Glyph fontFamily="FontAwesome" icon="MONEY"/>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="duplicateButton" mnemonicParsing="false" text="%Button.Duplicate">
+                            <graphic>
+                                <Glyph fontFamily="FontAwesome" icon="COPY"/>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="jumpButton" mnemonicParsing="false" text="%Button.Jump">
+                            <graphic>
+                                <Glyph fontFamily="FontAwesome" icon="EXTERNAL_LINK"/>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction" text="%Button.Delete">
+                            <graphic>
+                                <Glyph fontFamily="FontAwesome" icon="TRASH_ALT"/>
+                            </graphic>
+                        </Button>
                     </items>
                 </ToolBar>
             </children>

@@ -26,15 +26,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import jgnash.engine.Account;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.uifx.controllers.AbstractAccountTreeController;
-import jgnash.uifx.controllers.AccountTypeFilter;
-import jgnash.uifx.skin.StyleClass;
-import jgnash.uifx.views.accounts.StaticAccountsMethods;
-import jgnash.util.DefaultDaemonThreadFactory;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -46,9 +37,15 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.StackPane;
-import org.controlsfx.glyphfont.FontAwesome;
-import org.controlsfx.glyphfont.GlyphFont;
-import org.controlsfx.glyphfont.GlyphFontRegistry;
+
+import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.uifx.controllers.AbstractAccountTreeController;
+import jgnash.uifx.controllers.AccountTypeFilter;
+import jgnash.uifx.skin.StyleClass;
+import jgnash.uifx.views.accounts.StaticAccountsMethods;
+import jgnash.util.DefaultDaemonThreadFactory;
 
 /**
  * Top level view for account registers
@@ -115,12 +112,6 @@ public class RegisterViewController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         accountTreeController.initialize(); // must initialize the account controller
-
-        final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
-
-        reconcileButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.ADJUST));
-        filterButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.FILTER));
-        zoomButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.EXTERNAL_LINK_SQUARE));
 
         // Load and add the register pane
         try {

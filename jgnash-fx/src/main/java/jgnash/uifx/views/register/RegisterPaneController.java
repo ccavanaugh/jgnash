@@ -39,10 +39,6 @@ import javafx.scene.layout.StackPane;
 
 import jgnash.engine.Account;
 
-import org.controlsfx.glyphfont.FontAwesome;
-import org.controlsfx.glyphfont.GlyphFont;
-import org.controlsfx.glyphfont.GlyphFontRegistry;
-
 /**
  * Register pane controller
  *
@@ -79,13 +75,6 @@ public class RegisterPaneController implements Initializable {
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         //this.resources = resources;
-
-        final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
-
-        deleteButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.TRASH_ALT));
-        duplicateButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.COPY));
-        jumpButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.EXTERNAL_LINK));
-        newButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.MONEY));
 
         transactionForms.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
