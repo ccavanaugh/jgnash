@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import jgnash.uifx.control.CurrencyComboBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ButtonBar?>
+<?import jgnash.uifx.control.IntegerTextField?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="jgnash.uifx.views.accounts.AccountPropertiesController" styleClass="form">
+    <children>
+        <TitledPane text="%Title.AccountInfo" VBox.vgrow="ALWAYS" collapsible="false">
+            <content>
+                <GridPane styleClass="form">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                        <ColumnConstraints hgrow="NEVER"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                    </rowConstraints>
+                    <children>
+                        <Label text="%Label.Name"/>
+                        <Label text="%Label.Description" GridPane.rowIndex="1"/>
+                        <Label text="%Label.AccountCode" GridPane.rowIndex="2"/>
+                        <Label text="%Label.AccountNumber" GridPane.rowIndex="3"/>
+                        <Label text="%Label.BankID" GridPane.rowIndex="4"/>
+                        <Label text="%Label.Currency" GridPane.rowIndex="5"/>
+                        <Label text="%Label.Securities" GridPane.rowIndex="6"/>
+                        <Label text="%Label.AccountType" GridPane.rowIndex="7"/>
+                        <Label text="%Label.AccountOptions" GridPane.rowIndex="8"/>
+                        <TextField fx:id="nameTextField" GridPane.columnIndex="1"/>
+                        <TextField fx:id="descriptionTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <IntegerTextField fx:id="accountCodeField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <TextField fx:id="accountNumberField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                        <TextField fx:id="bankIdField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                        <CurrencyComboBox fx:id="currencyComboBox" minWidth="300.0" GridPane.columnIndex="1"
+                                  GridPane.hgrow="ALWAYS" GridPane.rowIndex="5"/>
+                        <Button fx:id="securitiesButton" onAction="#handleSecuritiesButtonAction" minWidth="200.0" maxWidth="300"
+                                mnemonicParsing="false" text="%Word.None" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                        <ComboBox fx:id="accountTypeComboBox" minWidth="300.0" prefWidth="150.0"
+                                  GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+                        <GridPane GridPane.columnIndex="1" GridPane.rowIndex="8" styleClass="form">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="100.0"/>
+                                <ColumnConstraints hgrow="SOMETIMES"/>
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints vgrow="NEVER"/>
+                                <RowConstraints vgrow="NEVER"/>
+                            </rowConstraints>
+                            <children>
+                                <CheckBox fx:id="lockedCheckBox" mnemonicParsing="false" text="%Button.Locked"/>
+                                <CheckBox fx:id="hideAccountCheckBox" mnemonicParsing="false" text="%Button.HideAccount"
+                                          GridPane.columnIndex="1"/>
+                                <CheckBox fx:id="placeholderCheckBox" mnemonicParsing="false" text="%Button.PlaceHolder"
+                                          GridPane.rowIndex="1"/>
+                                <CheckBox fx:id="excludeBudgetCheckBox" mnemonicParsing="false"
+                                          text="%Button.ExcludeFromBudget" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                            </children>
+                        </GridPane>
+                        <Label text="%Title.ParentAccount" GridPane.rowIndex="9"/>
+                        <Button fx:id="parentAccountButton" mnemonicParsing="false" text="Root" GridPane.columnIndex="1"
+                                GridPane.rowIndex="9"  minWidth="200" onAction="#handleParentAccountAction"/>
+                    </children>
+                </GridPane>
+            </content>
+        </TitledPane>
+        <TitledPane animated="false" text="%Title.Notes" VBox.vgrow="ALWAYS" collapsible="false">
+            <content>
+                <BorderPane>
+                    <center>
+                        <TextArea fx:id="notesTextArea" minWidth="280.0" prefHeight="100.0" prefWidth="280.0"
+                                  BorderPane.alignment="CENTER"/>
+                    </center>
+                </BorderPane>
+            </content>
+        </TitledPane>
+        <ButtonBar VBox.vgrow="NEVER">
+            <buttons>
+                <Button text="%Button.Ok" ButtonBar.buttonData="OK_DONE" onAction="#okAction"/>
+                <Button text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#cancelAction"/>
+            </buttons>
+        </ButtonBar>
+    </children>
+</VBox>

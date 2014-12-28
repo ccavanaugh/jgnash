@@ -78,7 +78,7 @@ public class StaticAccountsMethods {
             dialog.initOwner(MainApplication.getPrimaryStage());
             dialog.setTitle(ResourceUtils.getBundle().getString("Title.ModifyAccount"));
 
-            FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("fxml/AccountProperties.fxml"), ResourceUtils.getBundle());
+            FXMLLoader loader = new FXMLLoader(StaticAccountsMethods.class.getResource("AccountProperties.fxml"), ResourceUtils.getBundle());
             dialog.setScene(new Scene(loader.load()));
 
             AccountPropertiesController controller = loader.getController();
@@ -113,7 +113,7 @@ public class StaticAccountsMethods {
             dialog.initOwner(MainApplication.getPrimaryStage());
             dialog.setTitle(ResourceUtils.getBundle().getString("Title.ModifyAccount"));
 
-            FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("fxml/AccountProperties.fxml"), ResourceUtils.getBundle());
+            FXMLLoader loader = new FXMLLoader(StaticAccountsMethods.class.getResource("AccountProperties.fxml"), ResourceUtils.getBundle());
             dialog.setScene(new Scene(loader.load()));
 
             AccountPropertiesController controller = loader.getController();
