@@ -20,9 +20,9 @@ package jgnash.uifx.controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
@@ -33,9 +33,6 @@ import jgnash.uifx.util.AccountTypeFilter;
  * @author Craig Cavanaugh
  */
 public class AccountTypeFilterFormController implements Initializable {
-
-    @FXML
-    ButtonBar buttonBar;
 
     @FXML
     CheckBox bankAccountCheckBox;
@@ -52,12 +49,7 @@ public class AccountTypeFilterFormController implements Initializable {
     @FXML
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        final Button closeButton = new Button(resources.getString("Button.Close"));
-        ButtonBar.setButtonData(closeButton, ButtonBar.ButtonData.CANCEL_CLOSE);
 
-        closeButton.setOnAction(event -> ((Stage) closeButton.getScene().getWindow()).close());
-
-        buttonBar.getButtons().add(closeButton);
     }
 
     public void setAccountTypeFilter(final AccountTypeFilter filter) {
@@ -67,5 +59,10 @@ public class AccountTypeFilterFormController implements Initializable {
         incomeAccountCheckBox.selectedProperty().bindBidirectional(filter.getIncomeTypesVisibleProperty());
         expenseAccountCheckBox.selectedProperty().bindBidirectional(filter.getExpenseTypesVisibleProperty());
         hiddenAccountCheckBox.selectedProperty().bindBidirectional(filter.getHiddenTypesVisibleProperty());
+    }
+
+    @FXML
+    private void closeAction() {
+        ((Stage) bankAccountCheckBox.getScene().getWindow()).close();
     }
 }
