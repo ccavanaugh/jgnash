@@ -22,7 +22,6 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jgnash.MainFX;
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.Engine;
@@ -45,7 +44,11 @@ import javafx.stage.StageStyle;
  *
  * @author Craig Cavanaugh
  */
-public class StaticAccountsMethods {
+public final class StaticAccountsMethods {
+
+    private StaticAccountsMethods() {
+        // Utility class
+    }
 
     public static void showAccountFilterDialog(final AccountTypeFilter accountTypeFilter) {
         try {
@@ -54,7 +57,7 @@ public class StaticAccountsMethods {
             dialog.initOwner(MainApplication.getPrimaryStage());
             dialog.setTitle(ResourceUtils.getBundle().getString("Title.VisibleAccountTypes"));
 
-            FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("fxml/AccountTypeFilterForm.fxml"), ResourceUtils.getBundle());
+            FXMLLoader loader = new FXMLLoader(StaticAccountsMethods.class.getResource("AccountTypeFilterForm.fxml"), ResourceUtils.getBundle());
             dialog.setScene(new Scene(loader.load()));
 
             AccountTypeFilterFormController controller = loader.getController();

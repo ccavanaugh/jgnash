@@ -44,7 +44,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import jgnash.MainFX;
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.AccountType;
@@ -151,7 +150,7 @@ public class AccountPropertiesController implements Initializable {
             dialog.initOwner(MainApplication.getPrimaryStage());
             dialog.setTitle(ResourceUtils.getBundle().getString("Title.ParentAccount"));
 
-            FXMLLoader loader = new FXMLLoader(MainFX.class.getResource("fxml/SelectAccountForm.fxml"), ResourceUtils.getBundle());
+            FXMLLoader loader = new FXMLLoader(SelectAccountController.class.getResource("SelectAccountForm.fxml"), ResourceUtils.getBundle());
             dialog.setScene(new Scene(loader.load()));
 
             SelectAccountController controller = loader.getController();
