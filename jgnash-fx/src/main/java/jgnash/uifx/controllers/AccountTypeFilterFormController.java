@@ -23,13 +23,9 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
-import jgnash.uifx.MainApplication;
 import jgnash.uifx.util.AccountTypeFilter;
-import jgnash.uifx.util.StageUtils;
 
 /**
  * @author Craig Cavanaugh
@@ -54,11 +50,7 @@ public class AccountTypeFilterFormController implements Initializable {
     @FXML
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        stage.initStyle(StageStyle.DECORATED);
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(MainApplication.getPrimaryStage());
 
-        StageUtils.addBoundsListener(stage, AccountTypeFilterFormController.class);
     }
 
     public void setAccountTypeFilter(final AccountTypeFilter filter) {
