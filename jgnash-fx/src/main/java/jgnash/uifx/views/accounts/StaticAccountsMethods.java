@@ -52,20 +52,16 @@ public final class StaticAccountsMethods {
 
     public static void showAccountFilterDialog(final AccountTypeFilter accountTypeFilter) {
         try {
-            Stage dialog = new Stage(StageStyle.DECORATED);
-            dialog.initModality(Modality.WINDOW_MODAL);
-            dialog.initOwner(MainApplication.getPrimaryStage());
-            dialog.setTitle(ResourceUtils.getBundle().getString("Title.VisibleAccountTypes"));
-
             FXMLLoader loader = new FXMLLoader(StaticAccountsMethods.class.getResource("AccountTypeFilterForm.fxml"), ResourceUtils.getBundle());
-            dialog.setScene(new Scene(loader.load()));
+            final Stage dialog = loader.load();
 
             AccountTypeFilterFormController controller = loader.getController();
             controller.setAccountTypeFilter(accountTypeFilter);
 
-            dialog.setResizable(false);
+            dialog.initStyle(StageStyle.DECORATED);
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.initOwner(MainApplication.getPrimaryStage());
 
-            StageUtils.applyDialogFormCSS(dialog);
             StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
 
             dialog.show();
