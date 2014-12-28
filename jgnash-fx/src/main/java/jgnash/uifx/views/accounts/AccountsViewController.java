@@ -35,7 +35,7 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.controllers.AccountTypeFilter;
+import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.util.EncodeDecode;
 
 import javafx.application.Platform;

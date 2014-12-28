@@ -54,7 +54,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.text.CommodityFormat;
-import jgnash.uifx.utils.TableViewManager;
+import jgnash.uifx.util.TableViewManager;
 import jgnash.util.DateUtils;
 
 /**

@@ -27,6 +27,8 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
 
+import jgnash.uifx.util.AccountTypeFilter;
+
 /**
  * @author Craig Cavanaugh
  */

@@ -40,7 +40,7 @@ import jgnash.net.security.UpdateFactory;
 import jgnash.uifx.control.BusyPane;
 import jgnash.uifx.control.TabViewPane;
 import jgnash.uifx.tasks.CloseFileTask;
-import jgnash.uifx.utils.StageUtils;
+import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.accounts.AccountsViewController;
 import jgnash.uifx.views.register.RegisterTableController;
 import jgnash.util.DefaultDaemonThreadFactory;

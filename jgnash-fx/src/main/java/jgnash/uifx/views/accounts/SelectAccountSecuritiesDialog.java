@@ -32,7 +32,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
 import jgnash.uifx.MainApplication;
 import jgnash.uifx.skin.StyleClass;
-import jgnash.uifx.utils.StageUtils;
+import jgnash.uifx.util.StageUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 import jgnash.util.Resource;

@@ -24,7 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.MainFX;
-import jgnash.uifx.utils.StageUtils;
+import jgnash.uifx.util.StageUtils;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 

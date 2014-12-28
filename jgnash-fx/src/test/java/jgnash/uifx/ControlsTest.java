@@ -49,7 +49,7 @@ import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.TransactionNumberComboBox;
-import jgnash.uifx.utils.StageUtils;
+import jgnash.uifx.util.StageUtils;
 
 import com.sun.javafx.css.StyleManager;
 

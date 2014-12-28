@@ -28,9 +28,9 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.MainApplication;
 import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.controllers.AccountTypeFilter;
+import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.uifx.controllers.AccountTypeFilterFormController;
-import jgnash.uifx.utils.StageUtils;
+import jgnash.uifx.util.StageUtils;
 import jgnash.util.ResourceUtils;
 
 import javafx.fxml.FXMLLoader;

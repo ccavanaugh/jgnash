@@ -25,7 +25,7 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
-import jgnash.uifx.utils.TreeSearch;
+import jgnash.uifx.util.TreeSearch;
 
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectProperty;

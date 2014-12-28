@@ -42,7 +42,7 @@ import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.controllers.AbstractAccountTreeController;
-import jgnash.uifx.controllers.AccountTypeFilter;
+import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.views.accounts.StaticAccountsMethods;
 import jgnash.util.DefaultDaemonThreadFactory;
