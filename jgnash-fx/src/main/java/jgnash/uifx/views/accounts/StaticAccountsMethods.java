@@ -55,14 +55,8 @@ public final class StaticAccountsMethods {
             FXMLLoader loader = new FXMLLoader(StaticAccountsMethods.class.getResource("AccountTypeFilterForm.fxml"), ResourceUtils.getBundle());
             final Stage dialog = loader.load();
 
-            AccountTypeFilterFormController controller = loader.getController();
+            final AccountTypeFilterFormController controller = loader.getController();
             controller.setAccountTypeFilter(accountTypeFilter);
-
-            dialog.initStyle(StageStyle.DECORATED);
-            dialog.initModality(Modality.WINDOW_MODAL);
-            dialog.initOwner(MainApplication.getPrimaryStage());
-
-            StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
 
             dialog.show();
         } catch (final IOException e) {
