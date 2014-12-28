@@ -1,56 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.Scene?>
-<?import javafx.stage.Stage?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Button?>
 
-<Stage xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
-       fx:controller="jgnash.uifx.controllers.AccountTypeFilterFormController"
-       title="%Title.VisibleAccountTypes" resizable="false" fx:id="stage">
-    <scene>
-        <Scene>
-            <GridPane styleClass="dialog, form">
-                <columnConstraints>
-                    <ColumnConstraints hgrow="NEVER"/>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0"/>
-                </columnConstraints>
-                <rowConstraints>
-                    <RowConstraints vgrow="NEVER"/>
-                    <RowConstraints vgrow="NEVER"/>
-                    <RowConstraints vgrow="NEVER"/>
-                    <RowConstraints vgrow="NEVER"/>
-                    <RowConstraints vgrow="NEVER"/>
-                    <RowConstraints vgrow="NEVER"/>
-                </rowConstraints>
-                <children>
-                    <Label text="%Title.VisibleAccountTypes"/>
-                    <Separator GridPane.columnIndex="1"/>
-                    <CheckBox fx:id="bankAccountCheckBox" mnemonicParsing="false" text="%Button.BankAccounts"
-                              GridPane.columnSpan="2" GridPane.rowIndex="1">
-                    </CheckBox>
-                    <CheckBox fx:id="expenseAccountCheckBox" mnemonicParsing="false" text="%Button.ExpenseAccounts"
-                              GridPane.columnSpan="2" GridPane.rowIndex="2">
-                    </CheckBox>
-                    <CheckBox fx:id="incomeAccountCheckBox" mnemonicParsing="false" text="%Button.IncomeAccounts"
-                              GridPane.columnSpan="2" GridPane.rowIndex="3">
-                    </CheckBox>
-                    <CheckBox fx:id="hiddenAccountCheckBox" mnemonicParsing="false" text="%Button.Hidden"
-                              GridPane.columnSpan="2" GridPane.rowIndex="4">
-                    </CheckBox>
-                    <ButtonBar GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
-                        <buttons>
-                            <Button text="%Button.Close" onAction="#closeAction" ButtonBar.buttonData="CANCEL_CLOSE"/>
-                        </buttons>
-                    </ButtonBar>
-                </children>
-            </GridPane>
-        </Scene>
-    </scene>
-</Stage>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+          fx:controller="jgnash.uifx.controllers.AccountTypeFilterFormController" styleClass="dialog, form">
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+    <children>
+        <Label text="%Title.VisibleAccountTypes"/>
+        <Separator GridPane.columnIndex="1"/>
+        <CheckBox fx:id="bankAccountCheckBox" mnemonicParsing="false" text="%Button.BankAccounts"
+                  GridPane.columnSpan="2" GridPane.rowIndex="1">
+        </CheckBox>
+        <CheckBox fx:id="expenseAccountCheckBox" mnemonicParsing="false" text="%Button.ExpenseAccounts"
+                  GridPane.columnSpan="2" GridPane.rowIndex="2">
+        </CheckBox>
+        <CheckBox fx:id="incomeAccountCheckBox" mnemonicParsing="false" text="%Button.IncomeAccounts"
+                  GridPane.columnSpan="2" GridPane.rowIndex="3">
+        </CheckBox>
+        <CheckBox fx:id="hiddenAccountCheckBox" mnemonicParsing="false" text="%Button.Hidden"
+                  GridPane.columnSpan="2" GridPane.rowIndex="4">
+        </CheckBox>
+        <ButtonBar GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+            <buttons>
+                <Button text="%Button.Close" onAction="#closeAction" ButtonBar.buttonData="CANCEL_CLOSE"/>
+            </buttons>
+        </ButtonBar>
+    </children>
+</GridPane>

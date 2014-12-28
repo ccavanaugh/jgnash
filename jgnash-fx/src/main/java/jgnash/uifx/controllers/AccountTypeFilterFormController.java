@@ -20,8 +20,10 @@ package jgnash.uifx.controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
 
@@ -31,9 +33,6 @@ import jgnash.uifx.util.AccountTypeFilter;
  * @author Craig Cavanaugh
  */
 public class AccountTypeFilterFormController implements Initializable {
-
-    @FXML
-    private Stage stage;
 
     @FXML
     CheckBox bankAccountCheckBox;
@@ -64,6 +63,6 @@ public class AccountTypeFilterFormController implements Initializable {
 
     @FXML
     private void closeAction() {
-        stage.close();
+        ((Stage) bankAccountCheckBox.getScene().getWindow()).close();
     }
 }
