@@ -46,7 +46,8 @@ class TransactionCommodityFormatTableCell extends TableCell<Transaction, BigDeci
         if (!empty && amount != null) {
             setText(format.format(amount));
 
-            if (getTableRow().getItem() != null) {
+            // Not empty and amount is not null, but tableRow can be null... JavaFx Bug?
+            if (getTableRow() != null && getTableRow().getItem() != null) {
                 final boolean future = ((Transaction) getTableRow().getItem()).getDate().after(new Date());
                 final boolean negative = amount.signum() < 0;
 
