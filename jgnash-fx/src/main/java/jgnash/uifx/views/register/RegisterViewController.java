@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -53,15 +54,11 @@ import jgnash.util.DefaultDaemonThreadFactory;
  */
 public class RegisterViewController implements Initializable {
 
-    final static ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
-
     private static final String DIVIDER_POSITION = "DividerPosition";
 
     private static final String LAST_ACCOUNT = "LastAccount";
 
     private static final double DEFAULT_DIVIDER_POSITION = 0.2;
-
-    private final Preferences preferences = Preferences.userNodeForPackage(RegisterViewController.class);
 
     @FXML
     public SplitPane splitPane;
@@ -81,9 +78,15 @@ public class RegisterViewController implements Initializable {
     @FXML
     private StackPane registerPane;
 
+    final static ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
+
+    private final Preferences preferences = Preferences.userNodeForPackage(RegisterViewController.class);
+
     private final AccountTypeFilter typeFilter = new AccountTypeFilter(Preferences.userNodeForPackage(getClass()));
 
     private RegisterPaneController registerPaneController;
+
+    private ResourceBundle resources;
 
     private final AbstractAccountTreeController accountTreeController = new AbstractAccountTreeController() {
         @Override
@@ -101,6 +104,7 @@ public class RegisterViewController implements Initializable {
             return !account.isPlaceHolder();
         }
 
+        @Override
         public void initialize() {
             super.initialize();
 
@@ -111,27 +115,12 @@ public class RegisterViewController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        accountTreeController.initialize(); // must initialize the account controller
+        this.resources = resources;
 
-        // Load and add the register pane
-        try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RegisterPane.fxml"), resources);
-            registerPane.getChildren().add(fxmlLoader.load());
-            registerPaneController = fxmlLoader.getController();
-        } catch (final IOException e) {
-            Logger.getLogger(RegisterViewController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-        }
+        accountTreeController.initialize(); // must initialize the account controller
 
         // Filter changes should force a reload of the tree
         typeFilter.addListener(observable -> accountTreeController.reload());
-
-        // Bind the account selection property to the registerPane controller
-        registerPaneController.getAccountProperty().bind(accountTreeController.getSelectedAccountProperty());
-
-        // Restore divider location
-        splitPane.setDividerPosition(0, preferences.getDouble(DIVIDER_POSITION, DEFAULT_DIVIDER_POSITION));
-
-        restoreLastSelectedAccount();
 
         // Remember the last divider location
         splitPane.getDividers().get(0).positionProperty().addListener(new ChangeListener<Number>() {
@@ -146,8 +135,34 @@ public class RegisterViewController implements Initializable {
             @Override
             public void changed(final ObservableValue<? extends Account> observable, final Account oldValue, final Account newValue) {
                 executorService.submit(() -> preferences.put(LAST_ACCOUNT, newValue.getUuid()));
+                showAccount();
             }
         });
+
+        // Restore divider location
+        splitPane.setDividerPosition(0, preferences.getDouble(DIVIDER_POSITION, DEFAULT_DIVIDER_POSITION));
+
+        restoreLastSelectedAccount();
+    }
+
+    private void showAccount() {
+        // TODO, form and controller will vary by account type
+
+        try {
+            if (registerPaneController != null) {
+                registerPaneController.getAccountProperty().unbind();
+                registerPane.getChildren().clear();
+            }
+
+            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RegisterPane.fxml"), resources);
+            registerPane.getChildren().add(fxmlLoader.load());
+            registerPaneController = fxmlLoader.getController();
+
+            // Push the account to the controller at the end of the application thread
+            Platform.runLater(() -> registerPaneController.getAccountProperty().setValue(accountTreeController.getSelectedAccountProperty().get()));
+        } catch (final IOException e) {
+            Logger.getLogger(RegisterViewController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
     }
 
     private void restoreLastSelectedAccount() {

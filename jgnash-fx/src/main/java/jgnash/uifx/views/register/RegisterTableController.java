@@ -65,13 +65,7 @@ import jgnash.util.DateUtils;
  */
 public class RegisterTableController implements Initializable {
 
-    final private double[] PREF_COLUMN_WEIGHTS = {0, 0, 33, 33, 33, 0, 0, 0, 0};
-
     final private static String PREF_NODE_USER_ROOT = "/jgnash/uifx/views/register";
-
-    final private AccountPropertyWrapper accountPropertyWrapper = new AccountPropertyWrapper();
-
-    private ResourceBundle resources;
 
     @FXML
     private TableView<Transaction> tableView;
@@ -84,6 +78,12 @@ public class RegisterTableController implements Initializable {
 
     @FXML
     private Label accountNameLabel;
+
+    final private double[] PREF_COLUMN_WEIGHTS = {0, 0, 33, 33, 33, 0, 0, 0, 0};
+
+    final private AccountPropertyWrapper accountPropertyWrapper = new AccountPropertyWrapper();
+
+    private ResourceBundle resources;
 
     /**
      * Active account for the pane
@@ -118,7 +118,15 @@ public class RegisterTableController implements Initializable {
         // Bind the account property
         getAccountPropertyWrapper().getAccountProperty().bind(accountProperty);
 
-        // Bind label test to the account property wrapper
+        // Load the table on change
+        getAccountProperty().addListener((observable, oldValue, newValue) -> loadAccount());
+
+        // Listen for engine events
+        MessageBus.getInstance().registerListener(messageBusHandler, MessageChannel.TRANSACTION);
+    }
+
+    private void loadAccount() {
+        // Bind label text to the account property wrapper
         accountNameLabel.textProperty().bind(getAccountPropertyWrapper().getAccountNameProperty());
         balanceLabel.textProperty().bind(getAccountPropertyWrapper().getAccountBalanceProperty());
         reconciledBalanceLabel.textProperty().bind(getAccountPropertyWrapper().getReconciledAmountProperty());
@@ -131,11 +139,7 @@ public class RegisterTableController implements Initializable {
 
         buildTable();
 
-        // Load the table on change
-        getAccountProperty().addListener((observable, oldValue, newValue) -> loadTable());
-
-        // Listen for engine events
-        MessageBus.getInstance().registerListener(messageBusHandler, MessageChannel.TRANSACTION);
+        loadTable();
     }
 
     @SuppressWarnings("unchecked")
