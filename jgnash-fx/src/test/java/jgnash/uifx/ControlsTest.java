@@ -49,7 +49,6 @@ import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.TransactionNumberComboBox;
-import jgnash.uifx.util.StageUtils;
 
 import com.sun.javafx.css.StyleManager;
 
@@ -132,7 +131,7 @@ public class ControlsTest extends Application {
         System.out.println(decimalTextField2.decimalProperty().isBound());
 
         TransactionNumberComboBox numberComboBox = new TransactionNumberComboBox();
-        numberComboBox.setAccount(engine.getAccountList().get(0));
+        numberComboBox.getAccountProperty().setValue(engine.getAccountList().get(0));
 
         VBox vBox = new VBox();
         vBox.getChildren().addAll(decimalTextField, decimalTextField2, datePicker, new AccountComboBox(), numberComboBox, btn);

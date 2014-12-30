@@ -21,6 +21,8 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.ComboBox;
 
 import jgnash.engine.Account;
@@ -39,6 +41,8 @@ public class TransactionNumberComboBox extends ComboBox<String> {
 
     private final String nextNumberItem;
 
+    final private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+
     public TransactionNumberComboBox() {
         super();
 
@@ -55,16 +59,20 @@ public class TransactionNumberComboBox extends ComboBox<String> {
         getItems().addAll(engine.getTransactionNumberList());
 
         setEditable(true);
-    }
-
-    public void setAccount(@NotNull final Account account) {
-        Objects.requireNonNull(account);
 
         setOnAction(event -> new Thread(() -> {
             if (nextNumberItem.equals(getValue())) {
-                final String next = account.getNextTransactionNumber();
-                Platform.runLater(() -> getEditor().setText(next));
+                final Account account = getAccountProperty().getValue();
+
+                if (account != null) {
+                    final String next = account.getNextTransactionNumber();
+                    Platform.runLater(() -> getEditor().setText(next));
+                }
             }
         }).start());
+    }
+
+    public ObjectProperty<Account> getAccountProperty() {
+        return accountProperty;
     }
 }

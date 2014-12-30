@@ -22,9 +22,6 @@ import java.util.ResourceBundle;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -82,17 +79,11 @@ public class TransactionPaneController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-
-        getAccountProperty().addListener(new ChangeListener<Account>() {
-            @Override
-            public void changed(final ObservableValue<? extends Account> observable, final Account oldValue, final Account newValue) {
-                numberComboBox.setAccount(newValue);
-                accountExchangePane.getBaseAccountProperty().setValue(newValue);
-                System.out.println("here");
-            }
-        });
+        // Number combo needs to know the account in order to determine the next transaction number
+        numberComboBox.getAccountProperty().bind(getAccountProperty());
 
         // Bind necessary properties to the exchange panel
+        accountExchangePane.getBaseAccountProperty().bind(getAccountProperty());
         accountExchangePane.getAmountProperty().bindBidirectional(amountField.decimalProperty());
         accountExchangePane.getAmountEditable().bind(amountField.editableProperty());
     }
