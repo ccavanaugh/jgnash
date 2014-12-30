@@ -25,9 +25,6 @@ import java.util.logging.Logger;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -38,6 +35,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 import jgnash.engine.Account;
+import jgnash.engine.AccountGroup;
+import jgnash.engine.AccountType;
 
 /**
  * Register pane controller
@@ -97,27 +96,32 @@ public class RegisterPaneController implements Initializable {
     }
 
     private void buildTabs() {
-        final String[] tabNames = RegisterFactory.getCreditDebitTabNames(accountProperty.get().getAccountType());
+        final AccountType accountType = accountProperty.get().getAccountType();
 
-        transactionForms.getTabs().add(buildTab(tabNames[0]));
-        transactionForms.getTabs().add(buildTab(tabNames[1]));
+        final String[] tabNames = RegisterFactory.getCreditDebitTabNames(accountType);
+
+        final Tab creditTab = buildTab(tabNames[0], PanelType.INCREASE);
+        final Tab debitTab = buildTab(tabNames[1], PanelType.DECREASE);
+
+        transactionForms.getTabs().addAll(creditTab, debitTab);
+
+        if (accountType == AccountType.CHECKING || accountType == AccountType.CREDIT) {
+            transactionForms.getSelectionModel().select(debitTab);
+        } else if (accountType.getAccountGroup() == AccountGroup.INCOME) {
+            transactionForms.getSelectionModel().select(debitTab);
+        }
     }
 
-    private Tab buildTab(final String tabName) {
+    private Tab buildTab(final String tabName, final PanelType panelType) {
 
         try {
             final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TransactionPane.fxml"), resources);
-
             final Pane pane = fxmlLoader.load();
 
-            TransactionPaneController transactionPaneController = fxmlLoader.getController();
+            final TransactionPaneController transactionPaneController = fxmlLoader.getController();
 
-            accountProperty.addListener(new ChangeListener<Account>() {
-                @Override
-                public void changed(ObservableValue<? extends Account> observable, Account oldValue, Account newValue) {
-                    transactionPaneController.getAccountProperty().setValue(newValue);
-                }
-            });
+            transactionPaneController.setPanelType(panelType);
+            transactionPaneController.getAccountProperty().bind(accountProperty);
 
             final Tab tab = new Tab(tabName);
             tab.setContent(pane);

@@ -37,7 +37,7 @@ import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.TransactionNumberComboBox;
 
 /**
- * Transaction Entry Controller
+ * Transaction Entry Controller for Credits and Debits
  *
  * @author Craig Cavanaugh
  */
@@ -78,6 +78,8 @@ public class TransactionPaneController implements Initializable {
 
     final private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
+    private PanelType panelType;
+
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
 
@@ -86,6 +88,7 @@ public class TransactionPaneController implements Initializable {
             public void changed(final ObservableValue<? extends Account> observable, final Account oldValue, final Account newValue) {
                 numberComboBox.setAccount(newValue);
                 accountExchangePane.getBaseAccountProperty().setValue(newValue);
+                System.out.println("here");
             }
         });
 
@@ -98,11 +101,15 @@ public class TransactionPaneController implements Initializable {
         return accountProperty;
     }
 
-    @FXML
-    private void okAction(ActionEvent actionEvent) {
+    void setPanelType(final PanelType panelType) {
+        this.panelType = panelType;
     }
 
     @FXML
-    private void cancelAction(ActionEvent actionEvent) {
+    private void okAction() {
+    }
+
+    @FXML
+    private void cancelAction() {
     }
 }
