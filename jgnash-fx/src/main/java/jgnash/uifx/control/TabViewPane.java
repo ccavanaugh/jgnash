@@ -17,6 +17,9 @@
  */
 package jgnash.uifx.control;
 
+import java.io.IOException;
+
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
@@ -31,9 +34,19 @@ import javafx.scene.layout.BorderPane;
  */
 public class TabViewPane extends TabPane {
 
-    public static final String VIEW_TITLE = "view-title";
+    private static final String VIEW_TITLE = "view-title";
 
     public TabViewPane() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("TabViewPane.fxml"));
+        loader.setRoot(this);
+        loader.setController(this);
+
+        try {
+            loader.load();
+        } catch (final IOException exception) {
+            throw new RuntimeException(exception);
+        }
+
         setSide(Side.LEFT);
         setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
     }
