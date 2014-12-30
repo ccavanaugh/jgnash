@@ -117,6 +117,7 @@ public class AccountExchangePane extends GridPane implements Initializable {
             updateControlVisibility();
         });
 
+        accountCombo.getFilterPlaceHoldersProperty().set(true);
         accountCombo.setOnAction(event -> {
             updateExchangeRateField();
             updateControlVisibility();

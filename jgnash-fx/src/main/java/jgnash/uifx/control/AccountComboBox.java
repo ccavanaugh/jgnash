@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -46,6 +47,8 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
     final private ObservableList<Account> filteredAccountList = FXCollections.observableArrayList();
 
+    final private SimpleBooleanProperty filterPlaceHoldersProperty = new SimpleBooleanProperty(false);
+
     public AccountComboBox() {
         loadAccounts();
 
@@ -56,9 +59,16 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
         filteredAccountList.addAll(account);
     }
 
+    public SimpleBooleanProperty getFilterPlaceHoldersProperty() {
+        return filterPlaceHoldersProperty;
+    }
+
     private void loadAccounts(@NotNull final List<Account> accounts) {
         accounts.stream().filter(account -> !filteredAccountList.contains(account)).forEach(account -> {
-            getItems().add(account);
+
+            if (getFilterPlaceHoldersProperty().get() && !account.isPlaceHolder()) {
+                getItems().add(account);
+            }
 
             if (account.getChildCount() > 0) {
                 loadAccounts(account.getChildren(Comparators.getAccountByCode()));
@@ -89,6 +99,10 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
                     loadAccounts();
                 }
             }
+        });
+
+        filterPlaceHoldersProperty.addListener((observable, oldValue, newValue) -> {
+            loadAccounts();
         });
     }
 
