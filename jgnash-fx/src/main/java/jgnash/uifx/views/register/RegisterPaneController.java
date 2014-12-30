@@ -45,7 +45,6 @@ import jgnash.engine.Account;
  * @author Craig Cavanaugh
  */
 public class RegisterPaneController implements Initializable {
-    //private ResourceBundle resources;
 
     @FXML
     protected Button newButton; // TODO Implement handler
@@ -65,6 +64,8 @@ public class RegisterPaneController implements Initializable {
     @FXML
     protected TabPane transactionForms;
 
+    private ResourceBundle resources;
+
     /**
      * Active account for the pane
      */
@@ -74,10 +75,9 @@ public class RegisterPaneController implements Initializable {
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        //this.resources = resources;
+        this.resources = resources;
 
         transactionForms.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-
 
         // Load the register table
         try {
@@ -91,27 +91,19 @@ public class RegisterPaneController implements Initializable {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
 
-        try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TransactionPane.fxml"), resources);
+        getAccountProperty().addListener((observable, oldValue, newValue) -> {
+            buildTabs();
+        });
+    }
 
-            final Pane pane = fxmlLoader.load();
+    private void buildTabs() {
+        final String[] tabNames = RegisterFactory.getCreditDebitTabNames(accountProperty.get().getAccountType());
 
-            TransactionPaneController transactionPaneController = fxmlLoader.getController();
+        transactionForms.getTabs().add(buildTab(tabNames[0]));
+        transactionForms.getTabs().add(buildTab(tabNames[1]));
+    }
 
-            accountProperty.addListener(new ChangeListener<Account>() {
-                @Override
-                public void changed(ObservableValue<? extends Account> observable, Account oldValue, Account newValue) {
-                    transactionPaneController.getAccountProperty().setValue(newValue);
-                }
-            });
-
-            final Tab tab = new Tab("Increase");
-            tab.setContent(pane);
-
-            transactionForms.getTabs().addAll(tab);
-        } catch (final IOException e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-        }
+    private Tab buildTab(final String tabName) {
 
         try {
             final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TransactionPane.fxml"), resources);
@@ -127,13 +119,14 @@ public class RegisterPaneController implements Initializable {
                 }
             });
 
-            final Tab tab = new Tab("Decrease");
+            final Tab tab = new Tab(tabName);
             tab.setContent(pane);
 
-            transactionForms.getTabs().addAll(tab);
+            return tab;
         } catch (final IOException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
+        return new Tab();
     }
 
     ObjectProperty<Account> getAccountProperty() {
@@ -141,7 +134,7 @@ public class RegisterPaneController implements Initializable {
     }
 
     @FXML
-    public void handleDeleteAction(final ActionEvent actionEvent) {
+    public void handleDeleteAction() {
         registerTableController.deleteTransactions();
     }
 }
