@@ -25,6 +25,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableView;
+
 import jgnash.engine.Account;
 import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
@@ -38,16 +49,6 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.util.EncodeDecode;
 
-import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableColumn;
-import javafx.scene.control.TreeTableView;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
@@ -113,10 +114,7 @@ public class AccountsViewController implements Initializable, MessageListener {
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT);
 
         // Register invalidation listeners to force a reload
-        typeFilter.getAccountTypesVisibleProperty().addListener(observable -> reload());
-        typeFilter.getExpenseTypesVisibleProperty().addListener(observable -> reload());
-        typeFilter.getHiddenTypesVisibleProperty().addListener(observable -> reload());
-        typeFilter.getIncomeTypesVisibleProperty().addListener(observable -> reload());
+        typeFilter.addListener(observable -> reload());
     }
 
     @SuppressWarnings("unchecked")

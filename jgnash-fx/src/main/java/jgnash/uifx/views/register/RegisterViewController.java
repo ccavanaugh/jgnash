@@ -28,7 +28,6 @@ import java.util.prefs.Preferences;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -42,8 +41,8 @@ import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.controllers.AbstractAccountTreeController;
-import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.uifx.skin.StyleClass;
+import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.uifx.views.accounts.StaticAccountsMethods;
 import jgnash.util.DefaultDaemonThreadFactory;
 
@@ -57,6 +56,7 @@ public class RegisterViewController implements Initializable {
     final static ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
     private static final String DIVIDER_POSITION = "DividerPosition";
+
     private static final String LAST_ACCOUNT = "LastAccount";
 
     private static final double DEFAULT_DIVIDER_POSITION = 0.2;
@@ -123,10 +123,7 @@ public class RegisterViewController implements Initializable {
         }
 
         // Filter changes should force a reload of the tree
-        typeFilter.getAccountTypesVisibleProperty().addListener(observable -> accountTreeController.reload());
-        typeFilter.getExpenseTypesVisibleProperty().addListener(observable -> accountTreeController.reload());
-        typeFilter.getHiddenTypesVisibleProperty().addListener(observable -> accountTreeController.reload());
-        typeFilter.getIncomeTypesVisibleProperty().addListener(observable -> accountTreeController.reload());
+        typeFilter.addListener(observable -> accountTreeController.reload());
 
         // Bind the account selection property to the registerPane controller
         registerPaneController.getAccountProperty().bind(accountTreeController.getSelectedAccountProperty());
@@ -169,7 +166,7 @@ public class RegisterViewController implements Initializable {
     }
 
     @FXML
-    public void handleFilterAccountAction(final ActionEvent actionEvent) {
+    public void handleFilterAccountAction() {
         StaticAccountsMethods.showAccountFilterDialog(typeFilter);
     }
 

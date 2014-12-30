@@ -19,11 +19,12 @@ package jgnash.uifx.util;
 
 import java.util.prefs.Preferences;
 
-import jgnash.engine.Account;
-import jgnash.engine.AccountType;
-
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+
+import jgnash.engine.Account;
+import jgnash.engine.AccountType;
 
 /**
  * Account Type Filter class
@@ -118,5 +119,17 @@ public class AccountTypeFilter {
             }
         }
         return false;
+    }
+
+    /**
+     * Adds a single {@code InvalidationListener} to all visibility properties
+     *
+     * @param listener {@code InvalidationListener} to add
+     */
+    public void addListener(final InvalidationListener listener) {
+        getAccountTypesVisibleProperty().addListener(listener);
+        getExpenseTypesVisibleProperty().addListener(listener);
+        getIncomeTypesVisibleProperty().addListener(listener);
+        getHiddenTypesVisibleProperty().addListener(listener);
     }
 }
