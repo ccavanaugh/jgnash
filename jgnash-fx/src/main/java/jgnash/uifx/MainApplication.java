@@ -26,8 +26,21 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import com.sun.javafx.css.StyleManager;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.ToolBar;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+
 import jgnash.MainFX;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -35,8 +48,8 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
-import jgnash.net.security.YahooParser;
 import jgnash.net.security.UpdateFactory;
+import jgnash.net.security.YahooParser;
 import jgnash.uifx.control.BusyPane;
 import jgnash.uifx.control.TabViewPane;
 import jgnash.uifx.tasks.CloseFileTask;
@@ -47,20 +60,7 @@ import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.concurrent.Task;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.ToolBar;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+import com.sun.javafx.css.StyleManager;
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
@@ -117,9 +117,8 @@ public class MainApplication extends Application implements MessageListener {
 
         final BorderPane borderPane = new BorderPane();
         borderPane.setTop(top);
-        borderPane.setBottom(statusBar);
         borderPane.setCenter(tabViewPane);
-        BorderPane.setAlignment(tabViewPane, Pos.CENTER);
+        borderPane.setBottom(statusBar);
 
         final StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(borderPane, busyPane);
@@ -156,10 +155,12 @@ public class MainApplication extends Application implements MessageListener {
             tabViewPane.addTab(registerPane, rb.getString("Tab.Register"));
             tabViewPane.addTab(null, rb.getString("Tab.Reminders"));
             tabViewPane.addTab(null, rb.getString("Tab.Budgeting"));
-
         } catch (final IOException e) {
             StaticUIMethods.displayException(e);
         }
+
+        // Force layout to occur... JavaFx Bug?
+        Platform.runLater(tabViewPane::requestFocus);
     }
 
     private void removeViews() {
@@ -204,47 +205,52 @@ public class MainApplication extends Application implements MessageListener {
 
     @Override
     public void messagePosted(final Message event) {
-        Platform.runLater(() -> {
-            switch (event.getEvent()) {
-                case FILE_LOAD_SUCCESS:
-                case FILE_NEW_SUCCESS:
+        switch (event.getEvent()) {
+            case FILE_LOAD_SUCCESS:
+            case FILE_NEW_SUCCESS:
+                Platform.runLater(() -> {
                     updateTitle();
                     addViews();
-                    break;
-                case FILE_CLOSING:
+                });
+                break;
+            case FILE_CLOSING:
+                Platform.runLater(() -> {
                     removeViews();
                     updateTitle();
-                    break;
-                case FILE_IO_ERROR:
-                    logger.severe("IO error");
-                    break;
-                case FILE_LOAD_FAILED:
-                    logger.warning("Error occurred loading the file");
-                    break;
-                case FILE_NOT_FOUND:
-                    logger.warning("File was not found");
-                    break;
-                case ACCOUNT_REMOVE_FAILED:
-                    StaticUIMethods.displayError(rb.getString("Message.Error.AccountRemove"));
-                    break;
-                case BACKGROUND_PROCESS_STARTED:
-                    setBusyBackground(true);
-                    break;
-                case BACKGROUND_PROCESS_STOPPED:
-                    setBusyBackground(false);
-                    break;
-                default:
-                    break;
-            }
-        });
+                });
+                break;
+            case FILE_IO_ERROR:
+                logger.severe("IO error");
+                break;
+            case FILE_LOAD_FAILED:
+                logger.warning("Error occurred loading the file");
+                break;
+            case FILE_NOT_FOUND:
+                logger.warning("File was not found");
+                break;
+            case ACCOUNT_REMOVE_FAILED:
+                StaticUIMethods.displayError(rb.getString("Message.Error.AccountRemove"));
+                break;
+            case BACKGROUND_PROCESS_STARTED:
+                setBusyBackground(true);
+                break;
+            case BACKGROUND_PROCESS_STOPPED:
+                setBusyBackground(false);
+                break;
+            default:
+                break;
+        }
+
     }
 
     private void setBusyBackground(final boolean busy) {
-        if (busy) {
-            statusBar.setProgress(-1);
-        } else {
-            statusBar.setProgress(0);
-        }
+        Platform.runLater(() -> {
+            if (busy) {
+                statusBar.setProgress(-1);
+            } else {
+                statusBar.setProgress(0);
+            }
+        });
     }
 
     private void updateTitle() {
@@ -268,7 +274,9 @@ public class MainApplication extends Application implements MessageListener {
     private class StatusBarLogHandler extends Handler {
 
         final Glyph INFO;
+
         final Glyph WARNING;
+
         final Glyph SEVERE;
 
         public StatusBarLogHandler() {

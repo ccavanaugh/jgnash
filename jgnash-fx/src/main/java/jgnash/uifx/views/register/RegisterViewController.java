@@ -142,7 +142,7 @@ public class RegisterViewController implements Initializable {
         });
 
         // Remember the last account selection
-        registerPaneController.getAccountProperty().addListener(new ChangeListener<Account>() {
+        accountTreeController.getSelectedAccountProperty().addListener(new ChangeListener<Account>() {
             @Override
             public void changed(final ObservableValue<? extends Account> observable, final Account oldValue, final Account newValue) {
                 executorService.submit(() -> preferences.put(LAST_ACCOUNT, newValue.getUuid()));
