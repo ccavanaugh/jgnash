@@ -3,7 +3,7 @@
 }
 
 .dialog > .dialog-pane > .button-bar {
-    -fx-font-size: 0.833333em;
+    -fx-font-size: 1.0em;
 }
 
 .view-title {
