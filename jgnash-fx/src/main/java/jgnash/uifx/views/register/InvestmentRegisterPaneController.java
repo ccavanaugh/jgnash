@@ -39,7 +39,7 @@ import jgnash.engine.AccountType;
  *
  * @author Craig Cavanaugh
  */
-public class InvestmentRegisterPaneController extends AbstractRegisterPaneController {
+public class InvestmentRegisterPaneController extends RegisterPaneController {
 
     @FXML
     protected Button availableSecuritiesButton; // TODO Implement handler

@@ -31,7 +31,7 @@ import jgnash.engine.Account;
  *
  * @author Craig Cavanaugh
  */
-public abstract class AbstractRegisterPaneController implements Initializable {
+public abstract class RegisterPaneController implements Initializable {
 
     @FXML
     protected Button newButton; // TODO Implement handler
@@ -50,7 +50,7 @@ public abstract class AbstractRegisterPaneController implements Initializable {
      */
     private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
-    protected AbstractRegisterTableController registerTableController;
+    protected RegisterTableController registerTableController;
 
     ObjectProperty<Account> getAccountProperty() {
         return accountProperty;

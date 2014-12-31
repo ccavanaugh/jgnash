@@ -85,7 +85,7 @@ public class RegisterViewController implements Initializable {
 
     private final AccountTypeFilter typeFilter = new AccountTypeFilter(Preferences.userNodeForPackage(getClass()));
 
-    private AbstractRegisterPaneController registerPaneController;
+    private RegisterPaneController registerPaneController;
 
     private ResourceBundle resources;
 

@@ -39,7 +39,7 @@ import jgnash.engine.AccountType;
  *
  * @author Craig Cavanaugh
  */
-public class BasicRegisterPaneController extends AbstractRegisterPaneController {
+public class BasicRegisterPaneController extends RegisterPaneController {
 
     @FXML
     protected Button jumpButton; // TODO Implement handler

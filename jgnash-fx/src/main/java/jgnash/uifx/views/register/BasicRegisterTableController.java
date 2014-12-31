@@ -42,7 +42,7 @@ import jgnash.util.DateUtils;
  *
  * @author Craig Cavanaugh
  */
-public class BasicRegisterTableController extends AbstractRegisterTableController {
+public class BasicRegisterTableController extends RegisterTableController {
 
     @FXML
     private Label reconciledBalanceLabel;

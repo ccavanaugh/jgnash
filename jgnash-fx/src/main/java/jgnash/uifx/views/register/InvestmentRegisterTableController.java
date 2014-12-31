@@ -41,7 +41,7 @@ import jgnash.util.DateUtils;
  *
  * @author Craig Cavanaugh
  */
-public class InvestmentRegisterTableController extends AbstractRegisterTableController {
+public class InvestmentRegisterTableController extends RegisterTableController {
 
     @FXML
     private Label cashBalanceLabel;

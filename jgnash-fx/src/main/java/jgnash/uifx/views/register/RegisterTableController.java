@@ -54,7 +54,7 @@ import jgnash.uifx.util.TableViewManager;
  *
  * @author Craig Cavanaugh
  */
-public abstract class AbstractRegisterTableController implements Initializable {
+public abstract class RegisterTableController implements Initializable {
 
     final protected static String PREF_NODE_USER_ROOT = "/jgnash/uifx/views/register";
 
