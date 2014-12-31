@@ -34,10 +34,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import jgnash.util.Callable;
-import jgnash.util.EncodeDecode;
-import jgnash.util.NotNull;
-
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -50,6 +46,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 
+import jgnash.util.Callable;
+import jgnash.util.EncodeDecode;
+import jgnash.util.NotNull;
+
 /**
  * TableView manager.  Handles persistence of column sizes, visibility and will optimize column widths
  *
@@ -60,6 +60,8 @@ public class TableViewManager<S> {
     //private static final String PREF_NODE_REG_POS = "/positions";
 
     private static final String PREF_NODE_REG_VIS = "/visibility";
+
+    private static final int COLUMN_PADDING = 16; // margins need padding to prevent truncated display
 
     @NotNull
     private final TableView<S> tableView;
@@ -136,7 +138,7 @@ public class TableViewManager<S> {
 
         if (cellItems.size() > 0) { // don't try if there is no data or the stream function will throw an error
 
-        /* Format will be the same for the whole column */
+            /* Format will be the same for the whole column */
             final Format format = columnFormatFactory.get().call(column);
 
             maxWidth = cellItems.parallelStream().filter(s -> s != null).mapToDouble(new ToDoubleFunction<Object>() {
@@ -150,7 +152,7 @@ public class TableViewManager<S> {
         maxWidth = Math.max(maxWidth, column.getMinWidth());
         maxWidth = Math.max(maxWidth, calculateHeaderWidth(column));
 
-        return Math.ceil(maxWidth + 14); // TODO, extract "14" margin from css or force to calculated value
+        return Math.ceil(maxWidth + COLUMN_PADDING);
     }
 
     private double calculateDisplayedWidth(final String displayString, final String style) {
@@ -309,7 +311,7 @@ public class TableViewManager<S> {
     /**
      * Sets a {@code Format} factory.  A Format will be returned for each column.  A null value may
      * be returned as well.
-     *
+     * <p/>
      * The returned Format must be thread safe.
      *
      * @param cellFormat Callback to generate a {@code Format} given a {@code TableColumnBase}
