@@ -144,6 +144,9 @@ public class MainApplication extends Application implements MessageListener {
         YahooParser.addLogHandler(statusBarLogHandler);
         UpdateFactory.addLogHandler(statusBarLogHandler);
         logger.addHandler(statusBarLogHandler); // listen to my own logger
+
+        stage.toFront();
+        stage.requestFocus();
     }
 
     private void addViews() {
