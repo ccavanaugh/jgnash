@@ -137,13 +137,10 @@ public class TableViewManager<S> {
         cellItems.remove(null);
 
         if (cellItems.size() > 0) { // don't try if there is no data or the stream function will throw an error
-
-            /* Format will be the same for the whole column */
-            final Format format = columnFormatFactory.get().call(column);
-
             maxWidth = cellItems.parallelStream().filter(s -> s != null).mapToDouble(new ToDoubleFunction<Object>() {
                 @Override
                 public double applyAsDouble(final Object o) {
+                    final Format format = columnFormatFactory.get().call(column);   // thread local format per thread
                     return calculateDisplayedWidth(format != null ? format.format(o) : o.toString(), column.getStyle());
                 }
             }).max().getAsDouble();
