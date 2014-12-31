@@ -25,6 +25,8 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -95,11 +97,19 @@ public abstract class RegisterTableController implements Initializable {
         balanceLabel.textProperty().bind(getAccountPropertyWrapper().getAccountBalanceProperty());
 
         tableView.setTableMenuButtonVisible(true);
-        tableView.setRowFactory(new TransactionRowFactory());
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        // Load the table on change
-        getAccountProperty().addListener((observable, oldValue, newValue) -> loadAccount());
+        // Load the table on change and set the row factory if the account in not locked
+        getAccountProperty().addListener(new ChangeListener<Account>() {
+            @Override
+            public void changed(ObservableValue<? extends Account> observable, Account oldValue, Account newValue) {
+                loadAccount();
+
+                if (!newValue.isLocked()) {
+                    tableView.setRowFactory(new TransactionRowFactory());
+                }
+            }
+        });
 
         // Listen for engine events
         MessageBus.getInstance().registerListener(messageBusHandler, MessageChannel.TRANSACTION);
