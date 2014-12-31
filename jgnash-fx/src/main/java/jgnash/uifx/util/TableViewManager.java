@@ -150,7 +150,7 @@ public class TableViewManager<S> {
         maxWidth = Math.max(maxWidth, column.getMinWidth());
         maxWidth = Math.max(maxWidth, calculateHeaderWidth(column));
 
-        return Math.ceil(maxWidth + 12); // TODO, extract "12" margin from css or force to calculated value
+        return Math.ceil(maxWidth + 14); // TODO, extract "14" margin from css or force to calculated value
     }
 
     private double calculateDisplayedWidth(final String displayString, final String style) {
