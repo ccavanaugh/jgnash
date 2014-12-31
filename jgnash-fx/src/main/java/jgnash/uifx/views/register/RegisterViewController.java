@@ -152,12 +152,21 @@ public class RegisterViewController implements Initializable {
             registerPane.getChildren().clear();
         }
 
+        final Account account = accountTreeController.getSelectedAccountProperty().get();
         final String formResource;
 
-        if (accountTreeController.getSelectedAccountProperty().get().memberOf(AccountGroup.INVEST)) {
-            formResource = "InvestmentRegisterPane.fxml";
+        if (account.isLocked()) {
+            if (account.memberOf(AccountGroup.INVEST)) {
+                formResource = "LockedInvestmentRegisterPane.fxml";
+            } else {
+                formResource = "LockedBasicRegisterPane.fxml";
+            }
         } else {
-            formResource = "BasicRegisterPane.fxml";
+            if (account.memberOf(AccountGroup.INVEST)) {
+                formResource = "InvestmentRegisterPane.fxml";
+            } else {
+                formResource = "BasicRegisterPane.fxml";
+            }
         }
 
         try {
