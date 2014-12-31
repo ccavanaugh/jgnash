@@ -157,7 +157,7 @@ public class RegisterViewController implements Initializable {
         if (accountTreeController.getSelectedAccountProperty().get().memberOf(AccountGroup.INVEST)) {
             formResource = "InvestmentRegisterPane.fxml";
         } else {
-            formResource = "RegisterPane.fxml";
+            formResource = "BasicRegisterPane.fxml";
         }
 
         try {

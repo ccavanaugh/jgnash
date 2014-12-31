@@ -39,7 +39,7 @@ import jgnash.engine.AccountType;
  *
  * @author Craig Cavanaugh
  */
-public class RegisterPaneController extends AbstractRegisterPaneController {
+public class BasicRegisterPaneController extends AbstractRegisterPaneController {
 
     @FXML
     protected Button jumpButton; // TODO Implement handler
@@ -60,7 +60,7 @@ public class RegisterPaneController extends AbstractRegisterPaneController {
 
         // Load the register table
         try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RegisterTable.fxml"), resources);
+            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BasicRegisterTable.fxml"), resources);
             register.getChildren().add(fxmlLoader.load());
             registerTableController = fxmlLoader.getController();
 
