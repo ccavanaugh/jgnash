@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.Button?>
+
+<?import org.controlsfx.glyphfont.Glyph?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="jgnash.uifx.views.register.InvestmentRegisterPaneController">
+    <center>
+        <VBox>
+            <children>
+                <StackPane fx:id="register" VBox.vgrow="ALWAYS"/>
+                <ToolBar VBox.vgrow="NEVER">
+                    <items>
+                        <Button fx:id="newButton" mnemonicParsing="false" text="%Button.New">
+                            <graphic>
+                                <Glyph fontFamily="FontAwesome" icon="MONEY"/>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="duplicateButton" mnemonicParsing="false" text="%Button.Duplicate">
+                            <graphic>
+                                <Glyph fontFamily="FontAwesome" icon="COPY"/>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction" text="%Button.Delete">
+                            <graphic>
+                                <Glyph fontFamily="FontAwesome" icon="TRASH_ALT"/>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="availableSecuritiesButton" mnemonicParsing="false" text="%Button.AvailSecurities">
+                            <graphic>
+                                <Glyph fontFamily="FontAwesome" icon="BOOKMARK"/>
+                            </graphic>
+                        </Button>
+                    </items>
+                </ToolBar>
+            </children>
+        </VBox>
+    </center>
+
+    <bottom>
+        <TabPane fx:id="transactionForms"/>
+    </bottom>
+</BorderPane>

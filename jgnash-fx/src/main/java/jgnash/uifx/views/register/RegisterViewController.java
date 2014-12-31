@@ -39,6 +39,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.StackPane;
 
 import jgnash.engine.Account;
+import jgnash.engine.AccountGroup;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.controllers.AbstractAccountTreeController;
@@ -84,7 +85,7 @@ public class RegisterViewController implements Initializable {
 
     private final AccountTypeFilter typeFilter = new AccountTypeFilter(Preferences.userNodeForPackage(getClass()));
 
-    private RegisterPaneController registerPaneController;
+    private AbstractRegisterPaneController registerPaneController;
 
     private ResourceBundle resources;
 
@@ -146,15 +147,21 @@ public class RegisterViewController implements Initializable {
     }
 
     private void showAccount() {
-        // TODO, form and controller will vary by account type
+        if (registerPaneController != null) {
+            registerPaneController.getAccountProperty().unbind();
+            registerPane.getChildren().clear();
+        }
+
+        final String formResource;
+
+        if (accountTreeController.getSelectedAccountProperty().get().memberOf(AccountGroup.INVEST)) {
+            formResource = "InvestmentRegisterPane.fxml";
+        } else {
+            formResource = "RegisterPane.fxml";
+        }
 
         try {
-            if (registerPaneController != null) {
-                registerPaneController.getAccountProperty().unbind();
-                registerPane.getChildren().clear();
-            }
-
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RegisterPane.fxml"), resources);
+            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(formResource), resources);
             registerPane.getChildren().add(fxmlLoader.load());
             registerPaneController = fxmlLoader.getController();
 

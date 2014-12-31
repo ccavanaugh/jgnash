@@ -22,15 +22,6 @@ import java.text.NumberFormat;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import jgnash.engine.Account;
-import jgnash.engine.message.Message;
-import jgnash.engine.message.MessageBus;
-import jgnash.engine.message.MessageChannel;
-import jgnash.engine.message.MessageListener;
-import jgnash.engine.message.MessageProperty;
-import jgnash.text.CommodityFormat;
-import jgnash.util.DefaultDaemonThreadFactory;
-
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyStringProperty;
@@ -40,12 +31,22 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 
+import jgnash.engine.Account;
+import jgnash.engine.AccountGroup;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageListener;
+import jgnash.engine.message.MessageProperty;
+import jgnash.text.CommodityFormat;
+import jgnash.util.DefaultDaemonThreadFactory;
+
 /**
  * Account properties wrapper to making binding of long running processes easier
  *
  * @author Craig Cavanaugh
  */
-class AccountPropertyWrapper implements MessageListener {
+public class AccountPropertyWrapper implements MessageListener {
 
     final static ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
@@ -55,6 +56,10 @@ class AccountPropertyWrapper implements MessageListener {
 
     private ReadOnlyStringWrapper accountBalanceProperty = new ReadOnlyStringWrapper();
 
+    private ReadOnlyStringWrapper cashBalanceProperty = new ReadOnlyStringWrapper();
+
+    private ReadOnlyStringWrapper marketValueProperty = new ReadOnlyStringWrapper();
+
     private ReadOnlyStringWrapper accountNameProperty = new ReadOnlyStringWrapper();
 
     private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
@@ -62,7 +67,7 @@ class AccountPropertyWrapper implements MessageListener {
     private NumberFormat numberFormat;  // not thread safe
 
     public AccountPropertyWrapper() {
-        MessageBus.getInstance().registerListener(this, MessageChannel.ACCOUNT);
+        MessageBus.getInstance().registerListener(this, MessageChannel.ACCOUNT, MessageChannel.TRANSACTION);
 
         accountProperty.addListener(new ChangeListener<Account>() {
             @Override
@@ -85,6 +90,8 @@ class AccountPropertyWrapper implements MessageListener {
     public void messagePosted(final Message event) {
         switch (event.getEvent()) {
             case ACCOUNT_MODIFY:
+            case TRANSACTION_ADD:
+            case TRANSACTION_REMOVE:
                 if (event.getObject(MessageProperty.ACCOUNT).equals(accountProperty.get())) {
                     updateProperties();
                 }
@@ -99,7 +106,7 @@ class AccountPropertyWrapper implements MessageListener {
             Platform.runLater(() -> accountNameProperty.setValue(""));
         }
 
-        final Task<Void> balanceTask = new Task<Void>() {
+        executorService.submit(new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 synchronized (numberFormatLock) {
@@ -111,9 +118,9 @@ class AccountPropertyWrapper implements MessageListener {
                 }
                 return null;
             }
-        };
+        });
 
-        final Task<Void> reconciledBalanceTask = new Task<Void>() {
+        executorService.submit(new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 synchronized (numberFormatLock) {
@@ -125,10 +132,37 @@ class AccountPropertyWrapper implements MessageListener {
                 }
                 return null;
             }
-        };
+        });
 
-        executorService.submit(balanceTask);
-        executorService.submit(reconciledBalanceTask);
+        if (accountProperty.get() != null && accountProperty.get().memberOf(AccountGroup.INVEST)) {
+            executorService.submit(new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    synchronized (numberFormatLock) {
+                        if (accountProperty.get() != null) {
+                            Platform.runLater(() -> cashBalanceProperty.setValue(numberFormat.format(accountProperty.get().getCashBalance())));
+                        } else {
+                            Platform.runLater(() -> cashBalanceProperty.setValue(numberFormat.format(BigDecimal.ZERO)));
+                        }
+                    }
+                    return null;
+                }
+            });
+
+            executorService.submit(new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    synchronized (numberFormatLock) {
+                        if (accountProperty.get() != null) {
+                            Platform.runLater(() -> marketValueProperty.setValue(numberFormat.format(accountProperty.get().getMarketValue())));
+                        } else {
+                            Platform.runLater(() -> marketValueProperty.setValue(numberFormat.format(BigDecimal.ZERO)));
+                        }
+                    }
+                    return null;
+                }
+            });
+        }
     }
 
     public ReadOnlyStringProperty getReconciledAmountProperty() {
@@ -137,6 +171,14 @@ class AccountPropertyWrapper implements MessageListener {
 
     public ReadOnlyStringProperty getAccountBalanceProperty() {
         return accountBalanceProperty.getReadOnlyProperty();
+    }
+
+    public ReadOnlyStringProperty getCashBalanceProperty() {
+        return cashBalanceProperty.getReadOnlyProperty();
+    }
+
+    public ReadOnlyStringProperty getMarketValueProperty() {
+        return marketValueProperty.getReadOnlyProperty();
     }
 
     public ReadOnlyStringProperty getAccountNameProperty() {

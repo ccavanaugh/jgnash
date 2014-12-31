@@ -18,10 +18,10 @@
 package jgnash.uifx.views.register;
 
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 
 import jgnash.engine.AccountGroup;
 import jgnash.engine.AccountType;
+import jgnash.uifx.Options;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
@@ -31,18 +31,6 @@ import jgnash.util.ResourceUtils;
  * @author Craig Cavanaugh
  */
 public class RegisterFactory {
-
-    private static final String ACCOUNTING_TERMS = "accountingTerms";
-
-    private static final String CONFIRM_ON_DELETE = "confirmDelete";
-
-    private static final String RESTORE_LAST_TRANSACTION_TAB = "restoreTab";
-
-    private static boolean useAccountingTerms;
-
-    private static boolean confirmTransactionDelete;
-
-    private static boolean restoreLastTransactionTab;
 
     private static ResourceBundle rb = ResourceUtils.getBundle();
 
@@ -88,6 +76,10 @@ public class RegisterFactory {
             rb.getString("Column.Clr"), rb.getString("Column.Debit"), rb.getString("Column.Credit"),
             rb.getString("Column.Balance") };
 
+    private static final String[] INVESTMENT_NAMES = { rb.getString("Column.Date"), rb.getString("Column.Action"),
+            rb.getString("Column.Investment"), rb.getString("Column.Clr"), rb.getString("Column.Quantity"),
+            rb.getString("Column.Price"), rb.getString("Column.Total") };
+
     /*private static final String[] SPLIT_ACCOUNTING_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
             rb.getString("Column.Memo"), rb.getString("Column.Debit"), rb.getString("Column.Credit"),
             rb.getString("Column.Balance") };
@@ -127,62 +119,14 @@ public class RegisterFactory {
             rb.getString("Column.Memo"), rb.getString("Column.Deposit"), rb.getString("Column.Withdrawal"),
             rb.getString("Column.Balance") };*/
 
-    static {
-        Preferences p = Preferences.userNodeForPackage(RegisterFactory.class);
-
-        useAccountingTerms = p.getBoolean(ACCOUNTING_TERMS, false);
-        confirmTransactionDelete = p.getBoolean(CONFIRM_ON_DELETE, true);
-        restoreLastTransactionTab = p.getBoolean(RESTORE_LAST_TRANSACTION_TAB, true);
-    }
-
     private RegisterFactory() {
         // Utility class
-    }
-
-    /**
-     * Sets if confirm on transaction delete is enabled
-     *
-     * @param enabled true if deletion confirmation is required
-     */
-    public static void setConfirmTransactionDeleteEnabled(final boolean enabled) {
-        confirmTransactionDelete = enabled;
-        Preferences p = Preferences.userNodeForPackage(RegisterFactory.class);
-        p.putBoolean(CONFIRM_ON_DELETE, confirmTransactionDelete);
-    }
-
-    /**
-     * Returns the availability of sortable registers
-     *
-     * @return true if confirm on transaction delete is enabled, false otherwise
-     */
-    public static boolean isConfirmTransactionDeleteEnabled() {
-        return confirmTransactionDelete;
-    }
-
-    public static void setAccountingTermsEnabled(final boolean enabled) {
-        useAccountingTerms = enabled;
-        Preferences p = Preferences.userNodeForPackage(RegisterFactory.class);
-        p.putBoolean(ACCOUNTING_TERMS, useAccountingTerms);
-    }
-
-    public static boolean isAccountingTermsEnabled() {
-        return useAccountingTerms;
-    }
-
-    public static void setRestoreLastTransactionTab(final boolean enabled) {
-        restoreLastTransactionTab = enabled;
-        Preferences p = Preferences.userNodeForPackage(RegisterFactory.class);
-        p.putBoolean(RESTORE_LAST_TRANSACTION_TAB, restoreLastTransactionTab);
-    }
-
-    public static boolean isRestoreLastTransactionTabEnabled() {
-        return restoreLastTransactionTab;
     }
 
     public static String[] getColumnNames(@NotNull final AccountType accountType) {
         String[] names; // reference to the correct column names
 
-        if (useAccountingTerms) {
+        if (Options.isAccountingTermsEnabled()) {
             names = ACCOUNTING_NAMES;
         } else {
             if (accountType == AccountType.CREDIT) {
@@ -199,6 +143,8 @@ public class RegisterFactory {
                 names = LIABILITY_NAMES;
             } else if (accountType.getAccountGroup() == AccountGroup.ASSET) {
                 names = BANK_NAMES;
+            } else if (accountType.getAccountGroup() == AccountGroup.INVEST) {
+                names = INVESTMENT_NAMES;
             } else {
                 names = GENERIC_NAMES;
             }
@@ -215,7 +161,7 @@ public class RegisterFactory {
      */
     public static String[] getCreditDebitTabNames(final AccountType accountType) {
 
-        if (useAccountingTerms) {
+        if (Options.isAccountingTermsEnabled()) {
             if (accountType.getAccountGroup() == AccountGroup.INCOME
                     || accountType.getAccountGroup() == AccountGroup.EXPENSE
                     || accountType.getAccountGroup() == AccountGroup.ASSET

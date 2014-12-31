@@ -39,10 +39,10 @@ import jgnash.engine.AccountType;
  *
  * @author Craig Cavanaugh
  */
-public class RegisterPaneController extends AbstractRegisterPaneController {
+public class InvestmentRegisterPaneController extends AbstractRegisterPaneController {
 
     @FXML
-    protected Button jumpButton; // TODO Implement handler
+    protected Button availableSecuritiesButton; // TODO Implement handler
 
     @FXML
     protected StackPane register;
@@ -60,7 +60,7 @@ public class RegisterPaneController extends AbstractRegisterPaneController {
 
         // Load the register table
         try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RegisterTable.fxml"), resources);
+            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("InvestmentRegisterTable.fxml"), resources);
             register.getChildren().add(fxmlLoader.load());
             registerTableController = fxmlLoader.getController();
 

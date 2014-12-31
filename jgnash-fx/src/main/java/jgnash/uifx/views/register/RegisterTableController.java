@@ -20,41 +20,20 @@ package jgnash.uifx.views.register;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Date;
-import java.util.List;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
 import javafx.util.Callback;
 
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
-import jgnash.engine.message.Message;
-import jgnash.engine.message.MessageBus;
-import jgnash.engine.message.MessageChannel;
-import jgnash.engine.message.MessageListener;
-import jgnash.engine.message.MessageProperty;
 import jgnash.text.CommodityFormat;
-import jgnash.uifx.util.TableViewManager;
 import jgnash.util.DateUtils;
 
 /**
@@ -63,87 +42,29 @@ import jgnash.util.DateUtils;
  *
  * @author Craig Cavanaugh
  */
-public class RegisterTableController implements Initializable {
-
-    final private static String PREF_NODE_USER_ROOT = "/jgnash/uifx/views/register";
-
-    @FXML
-    private TableView<Transaction> tableView;
+public class RegisterTableController extends AbstractRegisterTableController {
 
     @FXML
     private Label reconciledBalanceLabel;
 
-    @FXML
-    private Label balanceLabel;
-
-    @FXML
-    private Label accountNameLabel;
-
     final private double[] PREF_COLUMN_WEIGHTS = {0, 0, 33, 33, 33, 0, 0, 0, 0};
-
-    final private AccountPropertyWrapper accountPropertyWrapper = new AccountPropertyWrapper();
-
-    private ResourceBundle resources;
-
-    /**
-     * Active account for the pane
-     */
-    final private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
-
-    private TableViewManager<Transaction> tableViewManager;
-
-    final private ObservableList<Transaction> observableTransactions = FXCollections.observableArrayList();
-
-    final private SortedList<Transaction> sortedList = new SortedList<>(observableTransactions);
-
-    ObjectProperty<Account> getAccountProperty() {
-        return accountProperty;
-    }
-
-    AccountPropertyWrapper getAccountPropertyWrapper() {
-        return accountPropertyWrapper;
-    }
-
-    final private MessageBusHandler messageBusHandler = new MessageBusHandler();
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        this.resources = resources;
+        super.initialize(location, resources);
 
-        tableView.setTableMenuButtonVisible(true);
-        tableView.setRowFactory(new TransactionRowFactory());
-
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-        // Bind the account property
-        getAccountPropertyWrapper().getAccountProperty().bind(accountProperty);
-
-        // Load the table on change
-        getAccountProperty().addListener((observable, oldValue, newValue) -> loadAccount());
-
-        // Listen for engine events
-        MessageBus.getInstance().registerListener(messageBusHandler, MessageChannel.TRANSACTION);
+        // Bind the reconciledBalance Label to the account property wrapper
+        reconciledBalanceLabel.textProperty().bind(getAccountPropertyWrapper().getReconciledAmountProperty());
     }
 
-    private void loadAccount() {
-        // Bind label text to the account property wrapper
-        accountNameLabel.textProperty().bind(getAccountPropertyWrapper().getAccountNameProperty());
-        balanceLabel.textProperty().bind(getAccountPropertyWrapper().getAccountBalanceProperty());
-        reconciledBalanceLabel.textProperty().bind(getAccountPropertyWrapper().getReconciledAmountProperty());
-
-        tableViewManager = new TableViewManager<>(tableView, PREF_NODE_USER_ROOT);
-        tableViewManager.setColumnWeightFactory(param -> PREF_COLUMN_WEIGHTS[param]);
-        tableViewManager.setPreferenceKeyFactory(() -> getAccountProperty().get().getUuid());
-
-        sortedList.comparatorProperty().bind(tableView.comparatorProperty());
-
-        buildTable();
-
-        loadTable();
+    @Override
+    Callback<Integer, Double> getColumnWeightFactory() {
+        return param -> PREF_COLUMN_WEIGHTS[param];
     }
 
     @SuppressWarnings("unchecked")
-    private void buildTable() {
+    @Override
+    protected void buildTable() {
         final String[] columnNames = RegisterFactory.getColumnNames(getAccountProperty().get().getAccountType());
 
         final TableColumn<Transaction, Date> dateColumn = new TableColumn<>(columnNames[0]);
@@ -214,45 +135,7 @@ public class RegisterTableController implements Initializable {
         return balance;
     }
 
-    private void loadTable() {
-        observableTransactions.clear();
-
-        if (accountProperty.get() != null) {
-            observableTransactions.addAll(accountProperty.get().getSortedTransactionList());
-
-            tableView.setItems(sortedList);
-            tableViewManager.restoreLayout();   // required to table view manager is to work
-        }
-    }
-
-    protected void deleteTransactions() {
-        final List<Transaction> transactionList = tableView.getSelectionModel().getSelectedItems();
-
-        RegisterActions.deleteTransactionAction(transactionList.toArray(new Transaction[transactionList.size()]));
-    }
-
-    private static class IncreaseAmountProperty extends SimpleObjectProperty<BigDecimal> {
-        IncreaseAmountProperty(final BigDecimal value) {
-            if (value.signum() >= 0) {
-                setValue(value);
-            } else {
-                setValue(null);
-            }
-        }
-    }
-
-    private static class DecreaseAmountProperty extends SimpleObjectProperty<BigDecimal> {
-        DecreaseAmountProperty(final BigDecimal value) {
-            if (value.signum() < 0) {
-                setValue(value.abs());
-            } else {
-                setValue(null);
-            }
-        }
-    }
-
     private class AccountNameWrapper extends SimpleStringProperty {
-
         final String split = resources.getString("Button.Splits");
 
         AccountNameWrapper(final Transaction t) {
@@ -276,67 +159,22 @@ public class RegisterTableController implements Initializable {
         }
     }
 
-    private class TransactionRowFactory implements Callback<TableView<Transaction>, TableRow<Transaction>> {
-
-        @Override
-        public TableRow<Transaction> call(final TableView<Transaction> param) {
-
-            final TableRow<Transaction> row = new TableRow<>();
-            final ContextMenu rowMenu = new ContextMenu();
-
-            final Menu markedAs = new Menu(resources.getString("Menu.MarkAs.Name"));
-            final MenuItem markAsClearedItem = new MenuItem(resources.getString("Menu.Cleared.Name"));
-            markAsClearedItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(accountProperty.get(), row.getItem(), ReconciledState.CLEARED));
-
-            final MenuItem markAsReconciledItem = new MenuItem(resources.getString("Menu.Reconciled.Name"));
-            markAsReconciledItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(accountProperty.get(), row.getItem(), ReconciledState.RECONCILED));
-
-            final MenuItem markAsUnreconciledItem = new MenuItem(resources.getString("Menu.Unreconciled.Name"));
-            markAsUnreconciledItem.setOnAction(event -> RegisterActions.reconcileTransactionAction(accountProperty.get(), row.getItem(), ReconciledState.NOT_RECONCILED));
-
-            markedAs.getItems().addAll(markAsClearedItem, markAsReconciledItem, markAsUnreconciledItem);
-
-            // TODO Connect to dialogs, checks, and configuration
-            final MenuItem duplicateItem = new MenuItem(resources.getString("Menu.Duplicate.Name"));
-            final MenuItem jumpItem = new MenuItem(resources.getString("Menu.Jump.Name"));
-
-            final MenuItem deleteItem = new MenuItem(resources.getString("Menu.Delete.Name"));
-            deleteItem.setOnAction(event -> deleteTransactions());
-
-            rowMenu.getItems().addAll(markedAs, new SeparatorMenuItem(), duplicateItem, jumpItem, new SeparatorMenuItem(), deleteItem);
-
-            // only display context menu for non-null items:
-            row.contextMenuProperty().bind(
-                    Bindings.when(Bindings.isNotNull(row.itemProperty()))
-                            .then(rowMenu)
-                            .otherwise((ContextMenu) null));
-
-            return row;
+    private static class IncreaseAmountProperty extends SimpleObjectProperty<BigDecimal> {
+        IncreaseAmountProperty(final BigDecimal value) {
+            if (value.signum() >= 0) {
+                setValue(value);
+            } else {
+                setValue(null);
+            }
         }
     }
 
-    private class MessageBusHandler implements MessageListener {
-
-        @SuppressWarnings("SuspiciousMethodCalls")
-        @Override
-        public void messagePosted(final Message event) {
-            final Account account = accountProperty.getValue();
-
-            if (account != null) {
-                if (event.getObject(MessageProperty.ACCOUNT).equals(account)) {
-                    switch (event.getEvent()) {
-                        case TRANSACTION_REMOVE:
-                            Platform.runLater(() -> observableTransactions.remove(event.getObject(MessageProperty.TRANSACTION)));
-                            break;
-                        case TRANSACTION_ADD:
-                            Platform.runLater(() -> {
-                                observableTransactions.addAll((Transaction)event.getObject(MessageProperty.TRANSACTION));
-                                FXCollections.sort(observableTransactions);
-                            });
-                            break;
-                        default:
-                    }
-                }
+    private static class DecreaseAmountProperty extends SimpleObjectProperty<BigDecimal> {
+        DecreaseAmountProperty(final BigDecimal value) {
+            if (value.signum() < 0) {
+                setValue(value.abs());
+            } else {
+                setValue(null);
             }
         }
     }
