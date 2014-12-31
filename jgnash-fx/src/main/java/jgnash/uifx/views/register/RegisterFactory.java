@@ -20,7 +20,6 @@ package jgnash.uifx.views.register;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
-import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.AccountType;
 import jgnash.util.NotNull;
@@ -89,11 +88,12 @@ public class RegisterFactory {
             rb.getString("Column.Clr"), rb.getString("Column.Debit"), rb.getString("Column.Credit"),
             rb.getString("Column.Balance") };
 
-    private static final String[] SPLIT_ACCOUNTING_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
+    /*private static final String[] SPLIT_ACCOUNTING_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
             rb.getString("Column.Memo"), rb.getString("Column.Debit"), rb.getString("Column.Credit"),
             rb.getString("Column.Balance") };
 
     private static final String[] SPLIT_CREDIT_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
+
             rb.getString("Column.Memo"), rb.getString("Column.Payment"), rb.getString("Column.Charge"),
             rb.getString("Column.Balance") };
 
@@ -125,7 +125,7 @@ public class RegisterFactory {
 
     private static final String[] SPLIT_GENERIC_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
             rb.getString("Column.Memo"), rb.getString("Column.Deposit"), rb.getString("Column.Withdrawal"),
-            rb.getString("Column.Balance") };
+            rb.getString("Column.Balance") };*/
 
     static {
         Preferences p = Preferences.userNodeForPackage(RegisterFactory.class);
