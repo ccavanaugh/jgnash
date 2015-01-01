@@ -32,8 +32,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -133,9 +131,7 @@ public class ControlsTest extends Application {
         numberComboBox.getAccountProperty().setValue(engine.getAccountList().get(0));
 
         Button exceptionButton = new Button("Show Exception");
-        exceptionButton.setOnAction(event -> {
-            StaticUIMethods.displayException(new Exception("Test exception"));
-        });
+        exceptionButton.setOnAction(event -> StaticUIMethods.displayException(new Exception("Test exception")));
 
         VBox vBox = new VBox();
         vBox.getChildren().addAll(decimalTextField, decimalTextField2, datePicker, new AccountComboBox(), numberComboBox, btn, exceptionButton);
