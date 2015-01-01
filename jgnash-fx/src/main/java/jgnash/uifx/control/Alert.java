@@ -54,7 +54,7 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
  */
 public class Alert implements Initializable {
 
-    private static final int ICON_SIZE = 48;
+    static final int ICON_SIZE = 48;
 
     @FXML
     private Label message;
