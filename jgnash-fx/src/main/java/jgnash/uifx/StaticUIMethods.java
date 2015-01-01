@@ -98,6 +98,18 @@ public class StaticUIMethods {
         Platform.runLater(alert::showAndWait);
     }
 
+    public static void displayWarning(final String message) {
+        final Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(ResourceUtils.getBundle().getString("Title.Warning"));
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.initOwner(MainApplication.getPrimaryStage());
+
+        alert.getDialogPane().getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
+
+        Platform.runLater(alert::showAndWait);
+    }
+
     /**
      * Displays a Yes and No dialog requesting confirmation
      *
