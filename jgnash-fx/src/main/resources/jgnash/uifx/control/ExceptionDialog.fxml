@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" styleClass="form, dialog">
+
+  <columnConstraints>
+    <ColumnConstraints hgrow="ALWAYS" fillWidth="true"/>
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints vgrow="NEVER" />
+    <RowConstraints vgrow="NEVER" />
+    <RowConstraints vgrow="NEVER" />
+  </rowConstraints>
+   <children>
+      <Label fx:id="message" text="Message" graphicTextGap="15"/>
+      <TextArea fx:id="textArea" minHeight="250.0" minWidth="480.0" maxHeight="250" maxWidth="480" editable="false"
+                wrapText="true" GridPane.fillHeight="true" GridPane.fillWidth="true" GridPane.rowIndex="1"/>
+      <ButtonBar GridPane.rowIndex="2" >
+        <buttons>
+          <Button fx:id="clipboardButton" text="%Button.CopyToClip" ButtonBar.buttonData="LEFT"/>
+          <Button ButtonBar.buttonData="BIG_GAP" visible="false"/>
+          <Button fx:id="closeButton" text="%Button.Close" ButtonBar.buttonData="CANCEL_CLOSE"/>
+        </buttons>
+      </ButtonBar>
+   </children>
+</GridPane>
