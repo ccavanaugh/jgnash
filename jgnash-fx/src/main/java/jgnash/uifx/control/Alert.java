@@ -18,15 +18,21 @@
 package jgnash.uifx.control;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -46,9 +52,17 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
  *
  * @author Craig Cavanaugh
  */
-public class Alert {
+public class Alert implements Initializable {
 
     private static final int ICON_SIZE = 48;
+
+    @FXML
+    private Label message;
+
+    @FXML
+    private ButtonBar buttonBar;
+
+    private ButtonType buttonType = ButtonType.CANCEL;  // default is cancelled
 
     public static enum AlertType {
         ERROR,
@@ -58,8 +72,6 @@ public class Alert {
     }
 
     AlertType alertType;
-
-    AlertDialogController alertDialogController;
 
     Stage dialog;
 
@@ -74,8 +86,8 @@ public class Alert {
 
         try {
             final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AlertDialog.fxml"), ResourceUtils.getBundle());
+            fxmlLoader.setController(this);
             dialog.setScene(new Scene(fxmlLoader.load()));
-            alertDialogController = fxmlLoader.getController();
         } catch (final IOException e) {
             Logger.getLogger(Alert.class.getName()).log(Level.SEVERE, e.getMessage(), e);
         }
@@ -84,19 +96,19 @@ public class Alert {
 
         switch (alertType) {
             case ERROR:
-                alertDialogController.setGraphic(fontAwesome.create(FontAwesome.Glyph.EXCLAMATION_TRIANGLE).color(Color.DARKRED).size(ICON_SIZE));
+                setGraphic(fontAwesome.create(FontAwesome.Glyph.EXCLAMATION_TRIANGLE).color(Color.DARKRED).size(ICON_SIZE));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case WARNING:
-                alertDialogController.setGraphic(fontAwesome.create(FontAwesome.Glyph.EXCLAMATION_CIRCLE).color(Color.DARKGOLDENROD).size(ICON_SIZE));
+                setGraphic(fontAwesome.create(FontAwesome.Glyph.EXCLAMATION_CIRCLE).color(Color.DARKGOLDENROD).size(ICON_SIZE));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case INFORMATION:
-                alertDialogController.setGraphic(fontAwesome.create(FontAwesome.Glyph.INFO_CIRCLE).color(Color.DARKGOLDENROD).size(ICON_SIZE));
+                setGraphic(fontAwesome.create(FontAwesome.Glyph.INFO_CIRCLE).color(Color.DARKGOLDENROD).size(ICON_SIZE));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case YES_NO:
-                alertDialogController.setGraphic(fontAwesome.create(FontAwesome.Glyph.QUESTION_CIRCLE).size(ICON_SIZE));
+                setGraphic(fontAwesome.create(FontAwesome.Glyph.QUESTION_CIRCLE).size(ICON_SIZE));
                 ButtonType buttonTypeYes = new ButtonType(resources.getString("Button.Yes"), ButtonBar.ButtonData.YES);
                 ButtonType buttonTypeNo = new ButtonType(resources.getString("Button.No"), ButtonBar.ButtonData.NO);
                 setButtons(buttonTypeYes, buttonTypeNo);
@@ -107,25 +119,48 @@ public class Alert {
         setContentText(contentText);
     }
 
-    public void setTitle(final String title) {
-        dialog.setTitle(title);
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
     }
 
-    public void setContentText(final String message) {
-        alertDialogController.setContentText(message);
+    public void setTitle(final String title) {
+        dialog.setTitle(title);
     }
 
     public void initOwner(final Window window) {
         dialog.initOwner(window);
     }
 
+    public void setContentText(final String contentText) {
+        message.setText(contentText);
+    }
+
+    private void setGraphic(final Node node) {
+        message.setGraphic(node);
+    }
+
     public void setButtons(final ButtonType... buttons) {
-        alertDialogController.setButtons(buttons);
+        for (final ButtonType buttonType : buttons) {
+            final Button button = new Button(buttonType.getText());
+            ButtonBar.setButtonData(button, buttonType.getButtonData());
+
+            button.setOnAction(event -> {
+                Alert.this.buttonType = buttonType;
+                ((Stage)((Node)event.getSource()).getScene().getWindow()).close();
+            });
+
+            buttonBar.getButtons().add(button);
+        }
+    }
+
+    private Optional<ButtonType> getButtonType() {
+        return Optional.ofNullable(buttonType);
     }
 
     public Optional<ButtonType> showAndWait() {
         dialog.setResizable(false);
         dialog.showAndWait();
-        return alertDialogController.getButtonType();
+        return getButtonType();
     }
 }
