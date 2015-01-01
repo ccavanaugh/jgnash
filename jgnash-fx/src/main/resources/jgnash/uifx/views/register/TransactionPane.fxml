@@ -6,13 +6,12 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import jgnash.uifx.control.DatePickerEx?>
-<?import jgnash.uifx.control.TransactionNumberComboBox?>
-<?import jgnash.uifx.control.DecimalTextField?>
-<?import javafx.scene.control.Tooltip?>
-<?import org.controlsfx.glyphfont.Glyph?>
 
+<?import jgnash.uifx.control.DatePickerEx?>
+<?import jgnash.uifx.control.DecimalTextField?>
+<?import jgnash.uifx.control.TransactionNumberComboBox?>
 <?import jgnash.uifx.views.register.AccountExchangePane?>
+<?import jgnash.uifx.views.register.AttachmentPane?>
 
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="jgnash.uifx.views.register.TransactionPaneController" styleClass="form, dialog">
@@ -47,8 +46,7 @@
                 GridPane.vgrow="NEVER" styleClass="form">
         <columnConstraints>
             <ColumnConstraints hgrow="NEVER" />
-            <ColumnConstraints hgrow="NEVER" />
-            <ColumnConstraints hgrow="NEVER" />
+            <ColumnConstraints minWidth="8" maxWidth="8"/>
             <ColumnConstraints hgrow="NEVER" />
         </columnConstraints>
         <rowConstraints>
@@ -56,30 +54,7 @@
         </rowConstraints>
          <children>
             <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared" />
-            <Button fx:id="attachmentButton" mnemonicParsing="false" GridPane.columnIndex="1">
-              <graphic>
-                <Glyph fontFamily="FontAwesome" icon="LINK" styleClass="icon-button"/>
-              </graphic>
-              <tooltip>
-                <Tooltip text="%ToolTip.AddAttachment"/>
-              </tooltip>
-            </Button>
-            <Button fx:id="viewAttachmentButton" mnemonicParsing="false" GridPane.columnIndex="2" disable="true">
-              <graphic>
-                <Glyph fontFamily="FontAwesome" icon="EYE" styleClass="icon-button"/>
-              </graphic>
-              <tooltip>
-                <Tooltip text="%ToolTip.ViewAttachment"/>
-              </tooltip>
-            </Button>
-            <Button fx:id="deleteAttachmentButton" mnemonicParsing="false" GridPane.columnIndex="3" disable="true">
-              <graphic>
-                <Glyph fontFamily="FontAwesome" icon="UNLINK" styleClass="icon-button"/>
-              </graphic>
-              <tooltip>
-                <Tooltip text="%ToolTip.DeleteAttachment"/>
-              </tooltip>
-            </Button>
+            <AttachmentPane fx:id="attachmentPane" GridPane.columnIndex="2" />
          </children>
       </GridPane>
      <ButtonBar GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="3">

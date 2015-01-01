@@ -73,6 +73,9 @@ public class TransactionPaneController implements Initializable {
     @FXML
     protected Button deleteAttachmentButton;
 
+    @FXML
+    private AttachmentPane attachmentPane;
+
     final private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
     private PanelType panelType;
