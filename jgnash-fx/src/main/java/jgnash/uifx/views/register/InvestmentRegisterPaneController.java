@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
@@ -42,7 +42,7 @@ import jgnash.engine.AccountType;
 public class InvestmentRegisterPaneController extends RegisterPaneController {
 
     @FXML
-    protected Button availableSecuritiesButton; // TODO Implement handler
+    public ComboBox<InvestmentTransactionFormController> actionComboBox;
 
     @FXML
     protected StackPane register;
@@ -111,5 +111,17 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
         return new Tab();
+    }
+
+    @FXML
+    private void okAction() {
+    }
+
+    @FXML
+    private void cancelAction() {
+    }
+
+    @FXML
+    private void handleSecuritiesAction() {
     }
 }

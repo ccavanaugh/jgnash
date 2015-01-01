@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.Button?>
-
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import org.controlsfx.glyphfont.Glyph?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
@@ -32,7 +37,7 @@
                                 <Glyph fontFamily="FontAwesome" icon="TRASH_ALT"/>
                             </graphic>
                         </Button>
-                        <Button fx:id="availableSecuritiesButton" mnemonicParsing="false" text="%Button.AvailSecurities">
+                        <Button mnemonicParsing="false" onAction="#handleSecuritiesAction" text="%Button.AvailSecurities">
                             <graphic>
                                 <Glyph fontFamily="FontAwesome" icon="BOOKMARK"/>
                             </graphic>
@@ -42,8 +47,33 @@
             </children>
         </VBox>
     </center>
-
     <bottom>
-        <TabPane fx:id="transactionForms"/>
+        <BorderPane>
+            <center>
+                <TabPane fx:id="transactionForms"/>
+            </center>
+            <bottom>
+                <GridPane styleClass="dialog, form">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="NEVER"/>
+                        <ColumnConstraints hgrow="ALWAYS"/>
+                        <ColumnConstraints hgrow="NEVER"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                         <RowConstraints vgrow="NEVER"/>
+                    </rowConstraints>
+                    <children>
+                        <Label text="%Label.Action"/>
+                        <ComboBox fx:id="actionComboBox" GridPane.columnIndex="1" maxWidth="Infinity" minWidth="50" prefWidth="100"/>
+                        <ButtonBar GridPane.columnIndex="2">
+                            <buttons>
+                                <Button text="%Button.Ok" ButtonBar.buttonData="OK_DONE" onAction="#okAction"/>
+                                <Button text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#cancelAction"/>
+                            </buttons>
+                        </ButtonBar>
+                    </children>
+                </GridPane>
+            </bottom>
+        </BorderPane>
     </bottom>
 </BorderPane>
