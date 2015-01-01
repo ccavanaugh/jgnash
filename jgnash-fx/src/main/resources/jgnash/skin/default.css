@@ -1,9 +1,20 @@
+/*
+ * Reduce the overall font size of the application
+ */
 .root{
     -fx-font-size: 0.833333em;
 }
 
 .dialog > .dialog-pane > .button-bar {
     -fx-font-size: 1.0em;
+}
+
+/*
+ * Adjust margins of the status bar for improved appearance
+ */
+.status-label {
+    -fx-graphic-text-gap: 0.833333em;
+    -fx-label-padding: 0em 0em 0em 0.75em;
 }
 
 .view-title {
