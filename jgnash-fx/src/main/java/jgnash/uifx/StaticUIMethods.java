@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2014 Craig Cavanaugh
+ * Copyright (C) 2001-2015 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,29 +18,25 @@
 package jgnash.uifx;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import jgnash.MainFX;
-import jgnash.uifx.util.StageUtils;
-import jgnash.util.Nullable;
-import jgnash.util.ResourceUtils;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import jgnash.MainFX;
+import jgnash.uifx.control.Alert;
+import jgnash.uifx.control.ExceptionDialog;
+import jgnash.uifx.util.StageUtils;
+import jgnash.util.Nullable;
+import jgnash.util.ResourceUtils;
 
 /**
  * Various static UI support methods
@@ -75,7 +71,7 @@ public class StaticUIMethods {
     }
 
     public static void displayError(final String message) {
-        final jgnash.uifx.control.Alert alert = new jgnash.uifx.control.Alert(jgnash.uifx.control.Alert.AlertType.ERROR, message);
+        final Alert alert = new Alert(Alert.AlertType.ERROR, message);
 
         alert.setTitle(ResourceUtils.getBundle().getString("Title.Error"));
         alert.initOwner(MainApplication.getPrimaryStage());
@@ -84,7 +80,7 @@ public class StaticUIMethods {
     }
 
     public static void displayMessage(final String message) {
-        final jgnash.uifx.control.Alert alert = new jgnash.uifx.control.Alert(jgnash.uifx.control.Alert.AlertType.INFORMATION, message);
+        final Alert alert = new Alert(Alert.AlertType.INFORMATION, message);
 
         alert.setTitle(ResourceUtils.getBundle().getString("Title.Information"));
         alert.initOwner(MainApplication.getPrimaryStage());
@@ -93,7 +89,7 @@ public class StaticUIMethods {
     }
 
     public static void displayWarning(final String message) {
-        final jgnash.uifx.control.Alert alert = new jgnash.uifx.control.Alert(jgnash.uifx.control.Alert.AlertType.WARNING, message);
+        final Alert alert = new Alert(Alert.AlertType.WARNING, message);
 
         alert.setTitle(ResourceUtils.getBundle().getString("Title.Warning"));
         alert.initOwner(MainApplication.getPrimaryStage());
@@ -109,7 +105,7 @@ public class StaticUIMethods {
      * @return {@code ButtonBar.ButtonData.YES} or {@code ButtonBar.ButtonData.NO}
      */
     public static ButtonType showConfirmationDialog(final String title, final String message) {
-        final jgnash.uifx.control.Alert alert = new jgnash.uifx.control.Alert(jgnash.uifx.control.Alert.AlertType.YES_NO, message);
+        final Alert alert = new Alert(Alert.AlertType.YES_NO, message);
 
         alert.setTitle(title);
         alert.initOwner(MainApplication.getPrimaryStage());
@@ -118,36 +114,10 @@ public class StaticUIMethods {
     }
 
     public static void displayException(final Throwable exception) {
-
-        final Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(ResourceUtils.getBundle().getString("Title.Error"));
-        alert.setHeaderText(exception.getLocalizedMessage());
-        alert.initOwner(MainApplication.getPrimaryStage());
-
-        final StringWriter sw = new StringWriter();
-        final PrintWriter pw = new PrintWriter(sw);
-        exception.printStackTrace(pw);
-
-        final String stackTrace = sw.toString();
-
-        final TextArea textArea = new TextArea(stackTrace);
-        textArea.setEditable(false);
-        textArea.setWrapText(true);
-
-        textArea.setMaxWidth(Double.MAX_VALUE);
-        textArea.setMaxHeight(Double.MAX_VALUE);
-
-        GridPane.setVgrow(textArea, Priority.ALWAYS);
-        GridPane.setHgrow(textArea, Priority.ALWAYS);
-
-        final GridPane expandableContent = new GridPane();
-        expandableContent.setMaxWidth(Double.MAX_VALUE);
-        expandableContent.add(textArea, 0, 0);
-
-        alert.getDialogPane().setExpandableContent(expandableContent);
-        alert.getDialogPane().getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
-
-        Platform.runLater(alert::showAndWait);
+        Platform.runLater(() -> {
+            ExceptionDialog exceptionDialog = new ExceptionDialog(exception);
+            exceptionDialog.showAndWait();
+        });
     }
 
     public static void displayTaskProgress(final Task<?> task) {
@@ -180,11 +150,6 @@ public class StaticUIMethods {
 
         @Override
         public void uncaughtException(final Thread t, final Throwable throwable) {
-            // ignore any exceptions thrown by the help plaf
-            if (throwable.getStackTrace()[0].getClassName().contains("help.plaf")) {
-                return;
-            }
-
             Logger.getLogger(ExceptionHandler.class.getName()).log(Level.SEVERE, throwable.getLocalizedMessage(), throwable);
 
             displayException(throwable);

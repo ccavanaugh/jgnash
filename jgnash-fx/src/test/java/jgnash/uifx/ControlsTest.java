@@ -32,6 +32,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -64,15 +66,12 @@ public class ControlsTest extends Application {
 
     private String tempFile;
 
-    //private Engine engine;
-
     private final boolean oldExportState = EngineFactory.exportXMLOnClose();
 
     static final char[] PASSWORD = new char[]{};
 
     public static void main(final String[] args) {
         //Locale.setDefault(Locale.FRANCE);
-
 
         launch(args);
     }
@@ -133,8 +132,13 @@ public class ControlsTest extends Application {
         TransactionNumberComboBox numberComboBox = new TransactionNumberComboBox();
         numberComboBox.getAccountProperty().setValue(engine.getAccountList().get(0));
 
+        Button exceptionButton = new Button("Show Exception");
+        exceptionButton.setOnAction(event -> {
+            StaticUIMethods.displayException(new Exception("Test exception"));
+        });
+
         VBox vBox = new VBox();
-        vBox.getChildren().addAll(decimalTextField, decimalTextField2, datePicker, new AccountComboBox(), numberComboBox, btn);
+        vBox.getChildren().addAll(decimalTextField, decimalTextField2, datePicker, new AccountComboBox(), numberComboBox, btn, exceptionButton);
 
         primaryStage.setScene(new Scene(vBox, 300, 250));
 
@@ -142,6 +146,7 @@ public class ControlsTest extends Application {
         primaryStage.getScene().getRoot().getStyleClass().addAll("form", "dialog");
 
         primaryStage.show();
+        primaryStage.requestFocus();
     }
 
     @Override
