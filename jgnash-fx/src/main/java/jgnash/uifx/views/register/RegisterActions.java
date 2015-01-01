@@ -1,6 +1,6 @@
 /*
  * jGnash, a personal finance application
- * Copyright (C) 2001-2014 Craig Cavanaugh
+ * Copyright (C) 2001-2015 Craig Cavanaugh
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,8 @@ package jgnash.uifx.views.register;
 
 import java.util.ResourceBundle;
 
+import javafx.scene.control.ButtonType;
+
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -26,10 +28,7 @@ import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
-import jgnash.util.Resource;
 import jgnash.util.ResourceUtils;
-
-import javafx.scene.control.ButtonType;
 
 /**
  * @author Craig Cavanaugh
@@ -50,10 +49,8 @@ public class RegisterActions {
     }
 
     static void deleteTransactionAction(final Transaction... transactions) {
-        final Resource rb = Resource.get();
-
         if (Options.isConfirmTransactionDeleteEnabled()) {
-            if (confirmTransactionRemoval(transactions.length) == ButtonType.CANCEL) {
+            if (confirmTransactionRemoval(transactions.length).getButtonData().isCancelButton()) {
                 return;
             }
         }
@@ -63,9 +60,9 @@ public class RegisterActions {
             for (final Transaction transaction : transactions) {
                 if (engine.removeTransaction(transaction)) {
                     if (transaction.getAttachment() != null) {
-                        if (confirmAttachmentDeletion() == ButtonType.CANCEL) {
+                        if (confirmAttachmentDeletion().getButtonData().isCancelButton()) {
                             if (!engine.removeAttachment(transaction.getAttachment())) {
-                                StaticUIMethods.displayError(rb.getString("Message.Error.DeleteAttachment", transaction.getAttachment()));
+                                StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.DeleteAttachment", transaction.getAttachment()));
                             }
                         }
                     }

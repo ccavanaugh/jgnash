@@ -75,37 +75,28 @@ public class StaticUIMethods {
     }
 
     public static void displayError(final String message) {
-        final Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(ResourceUtils.getBundle().getString("Title.Error"));
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.initOwner(MainApplication.getPrimaryStage());
+        final jgnash.uifx.control.Alert alert = new jgnash.uifx.control.Alert(jgnash.uifx.control.Alert.AlertType.ERROR, message);
 
-        alert.getDialogPane().getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
+        alert.setTitle(ResourceUtils.getBundle().getString("Title.Error"));
+        alert.initOwner(MainApplication.getPrimaryStage());
 
         Platform.runLater(alert::showAndWait);
     }
 
     public static void displayMessage(final String message) {
-        final Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(ResourceUtils.getBundle().getString("Title.Information"));
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.initOwner(MainApplication.getPrimaryStage());
+        final jgnash.uifx.control.Alert alert = new jgnash.uifx.control.Alert(jgnash.uifx.control.Alert.AlertType.INFORMATION, message);
 
-        alert.getDialogPane().getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
+        alert.setTitle(ResourceUtils.getBundle().getString("Title.Information"));
+        alert.initOwner(MainApplication.getPrimaryStage());
 
         Platform.runLater(alert::showAndWait);
     }
 
     public static void displayWarning(final String message) {
-        final Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(ResourceUtils.getBundle().getString("Title.Warning"));
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.initOwner(MainApplication.getPrimaryStage());
+        final jgnash.uifx.control.Alert alert = new jgnash.uifx.control.Alert(jgnash.uifx.control.Alert.AlertType.WARNING, message);
 
-        alert.getDialogPane().getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
+        alert.setTitle(ResourceUtils.getBundle().getString("Title.Warning"));
+        alert.initOwner(MainApplication.getPrimaryStage());
 
         Platform.runLater(alert::showAndWait);
     }
@@ -118,18 +109,10 @@ public class StaticUIMethods {
      * @return {@code ButtonBar.ButtonData.YES} or {@code ButtonBar.ButtonData.NO}
      */
     public static ButtonType showConfirmationDialog(final String title, final String message) {
+        final jgnash.uifx.control.Alert alert = new jgnash.uifx.control.Alert(jgnash.uifx.control.Alert.AlertType.YES_NO, message);
 
-        // Yes and no is preferred, but there appears to be a bug
-        //final ResourceBundle rb = ResourceUtils.getBundle();
-        //ButtonType buttonTypeYes = new ButtonType(rb.getString("Button.Yes"), ButtonBar.ButtonData.YES);
-        //ButtonType buttonTypeNo = new ButtonType(rb.getString("Button.No"), ButtonBar.ButtonData.NO);
-
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message);
         alert.setTitle(title);
-        alert.setHeaderText(null);
-
         alert.initOwner(MainApplication.getPrimaryStage());
-        alert.getDialogPane().getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
 
         return alert.showAndWait().get();
     }

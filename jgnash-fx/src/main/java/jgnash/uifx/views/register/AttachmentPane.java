@@ -40,7 +40,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 
@@ -206,7 +205,7 @@ public class AttachmentPane extends GridPane implements Initializable {
                 String message = ResourceUtils.getString("Message.Warn.MoveFile", selectedFile.toString(),
                         AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)).toString());
 
-                if (StaticUIMethods.showConfirmationDialog(resources.getString("Title.MoveFile"), message) != ButtonType.CANCEL) {
+                if (!StaticUIMethods.showConfirmationDialog(resources.getString("Title.MoveFile"), message).getButtonData().isCancelButton()) {
                     moveAttachment = true;
 
                     final Path newPath = new File(AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)) +
@@ -220,6 +219,8 @@ public class AttachmentPane extends GridPane implements Initializable {
                         moveAttachment = false;
                         result = false;
                     }
+                } else {
+                    result = false;
                 }
             }
 
