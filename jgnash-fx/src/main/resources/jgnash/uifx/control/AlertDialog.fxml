@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+          fx:controller="jgnash.uifx.control.AlertDialogController" styleClass="form, dialog">
+  <columnConstraints>
+    <ColumnConstraints hgrow="ALWAYS" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints vgrow="NEVER"/>
+    <RowConstraints vgrow="NEVER"/>
+  </rowConstraints>
+  <children>
+    <Label fx:id="message" text="No Content" wrapText="true" minWidth="150" graphicTextGap="15"/>
+    <ButtonBar fx:id="buttonBar" GridPane.rowIndex="1"/>
+  </children>
+</GridPane>
