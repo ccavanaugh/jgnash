@@ -83,4 +83,29 @@ public class FXMLUtils {
 
         return stage;
     }
+
+    /**
+     * Creates a new Stage with application defaults {@code StageStyle.DECORATED}, {@code Modality.APPLICATION_MODAL}
+     * with the specified fxml {@code URL} as the {@code Scene}.
+     *
+     * @param fxmlUrl the fxml {@code URL}
+     * @param resourceBundle {@code ResourceBundle} to pass to the {@code FXMLLoader}
+     * @return new {@code Stage}
+     */
+    public static Stage loadFXML(final URL fxmlUrl, final ResourceBundle resourceBundle) {
+        final FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl, resourceBundle);
+
+        final Stage stage = new Stage(StageStyle.DECORATED);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initOwner(MainApplication.getPrimaryStage());
+
+        try {
+            stage.setScene(new Scene(fxmlLoader.load()));
+        } catch (final IOException ioe) { // log and throw an unchecked exception
+            Logger.getLogger(FXMLUtils.class.getName()).log(Level.SEVERE, ioe.getMessage(), ioe);
+            throw new UncheckedIOException(ioe);
+        }
+
+        return stage;
+    }
 }
