@@ -17,29 +17,22 @@
  */
 package jgnash.uifx.control;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.Window;
 
-import jgnash.uifx.MainApplication;
+import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
@@ -78,19 +71,9 @@ public class Alert implements Initializable {
     public Alert(@NotNull final AlertType alertType, final String contentText) {
         final ResourceBundle resources = ResourceUtils.getBundle();
 
-        dialog = new Stage(StageStyle.DECORATED);
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(MainApplication.getPrimaryStage());
+        dialog = FXMLUtils.loadFXML(this, "AlertDialog.fxml", resources);
 
         this.alertType = alertType;
-
-        try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AlertDialog.fxml"), ResourceUtils.getBundle());
-            fxmlLoader.setController(this);
-            dialog.setScene(new Scene(fxmlLoader.load()));
-        } catch (final IOException e) {
-            Logger.getLogger(Alert.class.getName()).log(Level.SEVERE, e.getMessage(), e);
-        }
 
         final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
 

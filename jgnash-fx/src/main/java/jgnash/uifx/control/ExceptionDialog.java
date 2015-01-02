@@ -17,32 +17,25 @@
  */
 package jgnash.uifx.control;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.DataFormat;
 import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
-import jgnash.uifx.MainApplication;
+import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.ResourceUtils;
 
 import org.controlsfx.glyphfont.FontAwesome;
@@ -73,18 +66,8 @@ public class ExceptionDialog implements Initializable {
     public ExceptionDialog(final Throwable throwable) {
         final ResourceBundle resources = ResourceUtils.getBundle();
 
-        dialog = new Stage(StageStyle.DECORATED);
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(MainApplication.getPrimaryStage());
+        dialog = FXMLUtils.loadFXML(this, "ExceptionDialog.fxml", resources);
         dialog.setTitle(resources.getString("Title.UncaughtException"));
-
-        try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ExceptionDialog.fxml"), resources);
-            fxmlLoader.setController(this);
-            dialog.setScene(new Scene(fxmlLoader.load()));
-        } catch (final IOException e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-        }
 
         message.setText(throwable.getLocalizedMessage());
 

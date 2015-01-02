@@ -17,23 +17,19 @@
  */
 package jgnash.uifx;
 
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import jgnash.MainFX;
 import jgnash.uifx.control.Alert;
 import jgnash.uifx.control.ExceptionDialog;
+import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
@@ -50,24 +46,13 @@ public class StaticUIMethods {
     }
 
     public static void showOpenDialog() {
-        try {
-            Stage dialog = new Stage(StageStyle.DECORATED);
-            dialog.initModality(Modality.WINDOW_MODAL);
-            dialog.initOwner(MainApplication.getPrimaryStage());
-            dialog.setTitle(ResourceUtils.getBundle().getString("Title.Open"));
-            dialog.setScene(new Scene(FXMLLoader.load(MainFX.class.getResource("fxml/OpenDatabaseForm.fxml"), ResourceUtils.getBundle())));
+        final Stage dialog = FXMLUtils.loadFXML(MainFX.class.getResource("fxml/OpenDatabaseForm.fxml"), ResourceUtils.getBundle());
+        dialog.setTitle(ResourceUtils.getBundle().getString("Title.Open"));
+        dialog.setResizable(false);
 
-            dialog.setResizable(false);
+        StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
 
-            dialog.getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
-            dialog.getScene().getRoot().getStyleClass().addAll("form", "dialog");
-
-            StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
-
-            dialog.show();
-        } catch (final IOException e) {
-            Logger.getLogger(StaticUIMethods.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-        }
+        dialog.showAndWait();
     }
 
     public static void displayError(final String message) {
@@ -100,7 +85,7 @@ public class StaticUIMethods {
     /**
      * Displays a Yes and No dialog requesting confirmation
      *
-     * @param title Dialog title
+     * @param title   Dialog title
      * @param message Dialog message
      * @return {@code ButtonBar.ButtonData.YES} or {@code ButtonBar.ButtonData.NO}
      */
@@ -126,6 +111,7 @@ public class StaticUIMethods {
 
     /**
      * Returns a JavaFx Image from the class path
+     *
      * @param image resource path
      * @return {@code} Image or {@code null} if not found
      */

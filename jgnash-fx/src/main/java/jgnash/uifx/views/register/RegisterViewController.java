@@ -17,7 +17,6 @@
  */
 package jgnash.uifx.views.register;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
@@ -30,7 +29,6 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
@@ -45,6 +43,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.uifx.controllers.AbstractAccountTreeController;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.util.AccountTypeFilter;
+import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.views.accounts.StaticAccountsMethods;
 import jgnash.util.DefaultDaemonThreadFactory;
 
@@ -170,13 +169,15 @@ public class RegisterViewController implements Initializable {
         }
 
         try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(formResource), resources);
-            registerPane.getChildren().add(fxmlLoader.load());
-            registerPaneController = fxmlLoader.getController();
+            //final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(formResource), resources);
+            //registerPane.getChildren().add(fxmlLoader.load());
+            //registerPaneController = fxmlLoader.getController();
+
+            registerPaneController = FXMLUtils.loadFXML(scene -> registerPane.getChildren().add(scene), formResource, resources);
 
             // Push the account to the controller at the end of the application thread
             Platform.runLater(() -> registerPaneController.getAccountProperty().setValue(accountTreeController.getSelectedAccountProperty().get()));
-        } catch (final IOException e) {
+        } catch (final Exception e) {
             Logger.getLogger(RegisterViewController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
     }
