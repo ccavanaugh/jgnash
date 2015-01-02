@@ -62,7 +62,7 @@ public final class StaticAccountsMethods {
 
         dialog.setResizable(false);
 
-        StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
+        StageUtils.addBoundsListener(dialog, AccountTypeFilterFormController.class);
 
         dialog.showAndWait();
     }
@@ -84,7 +84,7 @@ public final class StaticAccountsMethods {
 
         dialog.setResizable(false);
 
-        StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
+        StageUtils.addBoundsListener(dialog, AccountPropertiesController.class);
 
         dialog.showAndWait();
 
@@ -108,7 +108,7 @@ public final class StaticAccountsMethods {
 
         dialog.setResizable(false);
 
-        StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
+        StageUtils.addBoundsListener(dialog, AccountPropertiesController.class);
 
         dialog.showAndWait();
 
