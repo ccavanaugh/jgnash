@@ -65,15 +65,6 @@ public class TransactionPaneController implements Initializable {
     protected CheckBox reconciledButton;
 
     @FXML
-    protected Button attachmentButton;
-
-    @FXML
-    protected Button viewAttachmentButton;
-
-    @FXML
-    protected Button deleteAttachmentButton;
-
-    @FXML
     private AttachmentPane attachmentPane;
 
     final private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
