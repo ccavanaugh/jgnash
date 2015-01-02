@@ -18,25 +18,25 @@
     <RowConstraints vgrow="NEVER" />
   </rowConstraints>
   <children>
-    <Button fx:id="attachmentButton" mnemonicParsing="false">
+    <Button fx:id="attachmentButton" mnemonicParsing="false" styleClass="icon-button">
       <graphic>
-        <Glyph fontFamily="FontAwesome" icon="LINK" styleClass="icon-button"/>
+        <Glyph fontFamily="FontAwesome" icon="LINK"/>
       </graphic>
       <tooltip>
         <Tooltip text="%ToolTip.AddAttachment"/>
       </tooltip>
     </Button>
-    <Button fx:id="viewAttachmentButton" mnemonicParsing="false" GridPane.columnIndex="1">
+    <Button fx:id="viewAttachmentButton" mnemonicParsing="false" GridPane.columnIndex="1" styleClass="icon-button">
       <graphic>
-        <Glyph fontFamily="FontAwesome" icon="EYE" styleClass="icon-button"/>
+        <Glyph fontFamily="FontAwesome" icon="EYE" />
       </graphic>
       <tooltip>
         <Tooltip text="%ToolTip.ViewAttachment"/>
       </tooltip>
     </Button>
-    <Button fx:id="deleteAttachmentButton" mnemonicParsing="false" GridPane.columnIndex="2">
+    <Button fx:id="deleteAttachmentButton" mnemonicParsing="false" GridPane.columnIndex="2" styleClass="icon-button">
       <graphic>
-        <Glyph fontFamily="FontAwesome" icon="UNLINK" styleClass="icon-button"/>
+        <Glyph fontFamily="FontAwesome" icon="UNLINK"/>
       </graphic>
       <tooltip>
         <Tooltip text="%ToolTip.DeleteAttachment"/>
