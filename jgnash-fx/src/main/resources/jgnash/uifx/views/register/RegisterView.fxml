@@ -44,9 +44,7 @@
     <center>
         <SplitPane fx:id="splitPane" orientation="HORIZONTAL">
             <items>
-                <StackPane>
-                    <TreeView fx:id="treeView" BorderPane.alignment="CENTER" minWidth="120"/>
-                </StackPane>
+                <TreeView fx:id="treeView" BorderPane.alignment="CENTER" minWidth="120"/>
                 <StackPane fx:id="registerPane"/>
             </items>
         </SplitPane>
