@@ -25,18 +25,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import jgnash.uifx.MainApplication;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.util.StageUtils;
 import jgnash.util.ResourceUtils;
 
 /**
+ * Very simple dialog for displaying an image
+ *
  * @author Craig Cavanaugh
  */
 public class ImageDialog {
@@ -59,18 +62,25 @@ public class ImageDialog {
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(MainApplication.getPrimaryStage());
         dialog.setTitle(resources.getString("Title.ViewImage"));
-        dialog.setMinWidth(250);
-        dialog.setMinWidth(250);
 
-        final ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(imageView);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        // Set a sane default size
+        dialog.setWidth(450);
+        dialog.setHeight(350);
 
-        dialog.setScene(new Scene(scrollPane));
+        final StackPane stackPane = new StackPane();
+
+        imageView.fitWidthProperty().bind(dialog.widthProperty().subtract(20));
+        imageView.fitHeightProperty().bind(dialog.heightProperty().subtract(20));
+
+        stackPane.getChildren().addAll(imageView);
+
+        dialog.setScene(new Scene(stackPane));
 
         dialog.getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
         dialog.getScene().getRoot().getStyleClass().addAll("form", "dialog");
+
+        // Remember dialog size and location
+        StageUtils.addBoundsListener(dialog, getClass());
     }
 
     void setImage(final Path path) {
