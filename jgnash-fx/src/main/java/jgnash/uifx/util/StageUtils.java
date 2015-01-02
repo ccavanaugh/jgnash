@@ -20,7 +20,6 @@ package jgnash.uifx.util;
 import java.awt.geom.Rectangle2D;
 import java.util.prefs.Preferences;
 
-import jgnash.uifx.MainApplication;
 import jgnash.util.EncodeDecode;
 
 import javafx.stage.Stage;
