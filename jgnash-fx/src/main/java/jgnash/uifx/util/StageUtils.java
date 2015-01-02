@@ -49,12 +49,20 @@ public class StageUtils {
         if (bounds != null) { // restore to previous size and position
             final Rectangle2D.Double rectangle = EncodeDecode.decodeRectangle2D(bounds);
 
+            boolean resizable = stage.isResizable();
+
+            // Stage will not reposition if resizable is false... JavaFx bug?
+            stage.setResizable(false);
+
             stage.setX(rectangle.getX());
             stage.setY(rectangle.getY());
 
-            // Set even if resizable, otherwise stage will not change location... JavaFx bug?
-            stage.setWidth(rectangle.getWidth());
-            stage.setHeight(rectangle.getHeight());
+            if (resizable) { // don't resize if originally false
+                stage.setWidth(rectangle.getWidth());
+                stage.setHeight(rectangle.getHeight());
+            }
+
+            stage.setResizable(resizable); // restore the resize property
         }
 
         stage.setOnCloseRequest(windowEvent -> {
