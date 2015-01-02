@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -32,22 +31,22 @@ public class FXMLUtils {
     /**
      * Reduces boilerplate code to load an fxml file
      *
-     * @param parentNode {@code Consumer to pass to the parent node},
-     * @param fileName name of the fxml file.  It's assumed to be in the same package as the parentNode
+     * @param consumer {@code Consumer to pass to the parent node},
+     * @param fileName name of the fxml file.  It's assumed to be in the same package as the consumer
      * @param resourceBundle {@code ResourceBundle} to pass to the {@code FXMLLoader}
-     * @param <N> must extend {code Node}
+     * @param <R> must extend {code Node}
      * @param <C> must implement {@code Initializable}
      *
      * @return the controller for the fxml file
      */
-    public static <N extends Node, C extends Initializable> C loadFXML(final Consumer<N> parentNode, final String fileName, final ResourceBundle resourceBundle) {
-        final URL fxmlUrl = parentNode.getClass().getResource(fileName);
+    public static <R, C extends Initializable> C loadFXML(final Consumer<R> consumer, final String fileName, final ResourceBundle resourceBundle) {
+        final URL fxmlUrl = consumer.getClass().getResource(fileName);
         final FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl, resourceBundle);
 
         try {
-            N node = fxmlLoader.load();
+            R root = fxmlLoader.load();
             C controller = fxmlLoader.getController();
-            parentNode.accept(node);
+            consumer.accept(root);
 
             return controller;
         } catch (final IOException ioe) { // log and throw an unchecked exception
