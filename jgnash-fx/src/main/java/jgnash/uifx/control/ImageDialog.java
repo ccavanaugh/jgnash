@@ -80,7 +80,7 @@ public class ImageDialog {
         dialog.getScene().getRoot().getStyleClass().addAll("form", "dialog");
 
         // Remember dialog size and location
-        StageUtils.addBoundsListener(dialog, getClass());
+        StageUtils.addBoundsListener(dialog, ImageDialog.class);
     }
 
     void setImage(final Path path) {

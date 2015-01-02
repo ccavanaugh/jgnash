@@ -35,7 +35,7 @@
       <TransactionNumberComboBox  fx:id="numberComboBox" editable="true" GridPane.columnIndex="4" />
       <Label text="%Label.Account" GridPane.rowIndex="1" />
       <AccountExchangePane fx:id="accountExchangePane" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true"/>
-      <Button fx:id="splitsButton" mnemonicParsing="false" text="%Button.Splits" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+      <Button fx:id="splitsButton" onAction="#splitsAction" mnemonicParsing="false" text="%Button.Splits" GridPane.columnIndex="2" GridPane.rowIndex="1" />
       <Label text="%Label.Date" GridPane.columnIndex="3" GridPane.rowIndex="1" />
       <DatePickerEx fx:id="datePicker" GridPane.columnIndex="4" GridPane.rowIndex="1" />
       <Label text="%Label.Memo" GridPane.rowIndex="2" />

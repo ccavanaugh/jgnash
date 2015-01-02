@@ -24,33 +24,18 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
 import jgnash.engine.Account;
-import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
-import jgnash.uifx.control.TransactionNumberComboBox;
 
 /**
- * Transaction Entry Controller for Credits and Debits
+ * Split Transaction Entry Controller for Credits and Debits
  *
  * @author Craig Cavanaugh
  */
-public class TransactionPaneController implements Initializable {
-
-    @FXML
-    protected TextField payeeTextField;
-
-    @FXML
-    protected Button splitsButton;
-
-    @FXML
-    protected TransactionNumberComboBox numberComboBox;
-
-    @FXML
-    protected DatePickerEx datePicker;
+public class SplitTransactionPaneController implements Initializable {
 
     @FXML
     protected DecimalTextField amountField;
@@ -71,13 +56,8 @@ public class TransactionPaneController implements Initializable {
 
     private PanelType panelType;
 
-    private SplitTransactionDialog splitsDialog;
-
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        // Number combo needs to know the account in order to determine the next transaction number
-        numberComboBox.getAccountProperty().bind(getAccountProperty());
-
         // Bind necessary properties to the exchange panel
         accountExchangePane.getBaseAccountProperty().bind(getAccountProperty());
         accountExchangePane.getAmountProperty().bindBidirectional(amountField.decimalProperty());
@@ -98,15 +78,5 @@ public class TransactionPaneController implements Initializable {
 
     @FXML
     private void cancelAction() {
-    }
-
-    @FXML
-    private void splitsAction() {
-        if (splitsDialog == null) { // Lazy init
-            splitsDialog = new SplitTransactionDialog();
-            splitsDialog.getAccountProperty().setValue(getAccountProperty().getValue());
-        }
-
-        splitsDialog.showAndWait();
     }
 }
