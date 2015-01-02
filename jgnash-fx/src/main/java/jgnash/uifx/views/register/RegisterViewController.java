@@ -21,8 +21,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import javafx.application.Platform;
@@ -30,6 +28,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TreeCell;
@@ -168,18 +167,10 @@ public class RegisterViewController implements Initializable {
             }
         }
 
-        try {
-            //final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(formResource), resources);
-            //registerPane.getChildren().add(fxmlLoader.load());
-            //registerPaneController = fxmlLoader.getController();
+        registerPaneController = FXMLUtils.loadFXML(scene -> registerPane.getChildren().add((Node) scene), formResource, resources);
 
-            registerPaneController = FXMLUtils.loadFXML(scene -> registerPane.getChildren().add(scene), formResource, resources);
-
-            // Push the account to the controller at the end of the application thread
-            Platform.runLater(() -> registerPaneController.getAccountProperty().setValue(accountTreeController.getSelectedAccountProperty().get()));
-        } catch (final Exception e) {
-            Logger.getLogger(RegisterViewController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-        }
+        // Push the account to the controller at the end of the application thread
+        Platform.runLater(() -> registerPaneController.getAccountProperty().setValue(accountTreeController.getSelectedAccountProperty().get()));
     }
 
     private void restoreLastSelectedAccount() {
