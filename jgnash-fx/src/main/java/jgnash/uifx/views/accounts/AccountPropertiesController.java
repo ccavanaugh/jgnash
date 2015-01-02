@@ -50,7 +50,6 @@ import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.SecurityNode;
 import jgnash.uifx.MainApplication;
-import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.CurrencyComboBox;
 import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.skin.StyleClass;
@@ -157,7 +156,7 @@ public class AccountPropertiesController implements Initializable {
 
             dialog.setResizable(false);
 
-            StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
+            StageUtils.addBoundsListener(dialog, AccountPropertiesController.class);
 
             if (parentAccount != null) {
                 controller.setSelectedAccount(parentAccount);
