@@ -49,6 +49,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.uifx.MainApplication;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.control.ImageDialog;
 import jgnash.util.ResourceUtils;
 
 import javax.imageio.ImageIO;
@@ -158,8 +159,7 @@ public class AttachmentPane extends GridPane implements Initializable {
     void showImageAction() {
         if (attachmentProperty.get() != null) {
             if (Files.exists(attachmentProperty.get())) {
-                //ImageDialog.showImage(attachmentProperty.get().toFile()); // TODO Implement viewer
-                StaticUIMethods.displayWarning("Not implemented");
+                ImageDialog.showImage(attachmentProperty.get());
             } else {
                 StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.MissingAttachment", attachmentProperty.get().toString()));
             }
