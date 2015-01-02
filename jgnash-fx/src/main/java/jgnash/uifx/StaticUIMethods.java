@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 import jgnash.MainFX;
 import jgnash.uifx.control.Alert;
 import jgnash.uifx.control.ExceptionDialog;
+import jgnash.uifx.controllers.OpenDatabaseController;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.util.Nullable;
@@ -50,7 +51,7 @@ public class StaticUIMethods {
         dialog.setTitle(ResourceUtils.getBundle().getString("Title.Open"));
         dialog.setResizable(false);
 
-        StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
+        StageUtils.addBoundsListener(dialog, OpenDatabaseController.class);
 
         dialog.showAndWait();
     }
