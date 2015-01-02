@@ -17,10 +17,13 @@
  */
 package jgnash.uifx.views.accounts;
 
-import java.io.IOException;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
@@ -28,16 +31,11 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.MainApplication;
 import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.uifx.controllers.AccountTypeFilterFormController;
+import jgnash.uifx.util.AccountTypeFilter;
+import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.util.ResourceUtils;
-
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 /**
  * Static support methods for Account manipulation
@@ -51,101 +49,84 @@ public final class StaticAccountsMethods {
     }
 
     public static void showAccountFilterDialog(final AccountTypeFilter accountTypeFilter) {
-        try {
-            Stage dialog = new Stage(StageStyle.DECORATED);
-            dialog.initModality(Modality.WINDOW_MODAL);
-            dialog.initOwner(MainApplication.getPrimaryStage());
-            dialog.setTitle(ResourceUtils.getBundle().getString("Title.VisibleAccountTypes"));
+        final Stage dialog = new Stage(StageStyle.DECORATED);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(MainApplication.getPrimaryStage());
+        dialog.setTitle(ResourceUtils.getBundle().getString("Title.VisibleAccountTypes"));
 
-            FXMLLoader loader = new FXMLLoader(StaticAccountsMethods.class.getResource("AccountTypeFilterForm.fxml"), ResourceUtils.getBundle());
-            dialog.setScene(new Scene(loader.load()));
+        AccountTypeFilterFormController controller = FXMLUtils.loadFXML(o -> {
+            dialog.setScene(new Scene((Parent) o));
+        }, "AccountTypeFilterForm.fxml", ResourceUtils.getBundle());
 
-            AccountTypeFilterFormController controller = loader.getController();
-            controller.setAccountTypeFilter(accountTypeFilter);
+        controller.setAccountTypeFilter(accountTypeFilter);
 
-            dialog.setResizable(false);
+        dialog.setResizable(false);
 
-            StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
+        StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
 
-            dialog.show();
-        } catch (final IOException e) {
-            Logger.getLogger(StaticAccountsMethods.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-        }
+        dialog.showAndWait();
     }
 
     public static void showNewAccountPropertiesDialog() {
-        try {
-            Stage dialog = new Stage(StageStyle.DECORATED);
-            dialog.initModality(Modality.WINDOW_MODAL);
-            dialog.initOwner(MainApplication.getPrimaryStage());
-            dialog.setTitle(ResourceUtils.getBundle().getString("Title.NewAccount"));
+        final Stage dialog = new Stage(StageStyle.DECORATED);
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(MainApplication.getPrimaryStage());
+        dialog.setTitle(ResourceUtils.getBundle().getString("Title.NewAccount"));
 
-            FXMLLoader loader = new FXMLLoader(StaticAccountsMethods.class.getResource("AccountProperties.fxml"), ResourceUtils.getBundle());
-            dialog.setScene(new Scene(loader.load()));
+        final AccountPropertiesController controller = FXMLUtils.loadFXML(o -> {dialog.setScene(new Scene((Parent) o));},
+                "AccountProperties.fxml", ResourceUtils.getBundle());
 
-            AccountPropertiesController controller = loader.getController();
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
-            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-            Objects.requireNonNull(engine);
+        controller.setSelectedCurrency(engine.getDefaultCurrency());
+        controller.setParentAccount(engine.getRootAccount());
 
-            controller.setSelectedCurrency(engine.getDefaultCurrency());
-            controller.setParentAccount(engine.getRootAccount());
+        dialog.setResizable(false);
 
-            dialog.setResizable(false);
+        StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
 
-            StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
+        dialog.showAndWait();
 
-            dialog.showAndWait();
+        if (controller.getResult()) {
+            Account account = controller.getTemplate();
 
-            if (controller.getResult()) {
-                Account account = controller.getTemplate();
-
-                engine.addAccount(account.getParent(), account);
-            }
-        } catch (final IOException e) {
-            Logger.getLogger(StaticAccountsMethods.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            engine.addAccount(account.getParent(), account);
         }
     }
 
     public static void showModifyAccountProperties(final Account account) {
-        try {
-            Stage dialog = new Stage(StageStyle.DECORATED);
-            dialog.initModality(Modality.WINDOW_MODAL);
-            dialog.initOwner(MainApplication.getPrimaryStage());
-            dialog.setTitle(ResourceUtils.getBundle().getString("Title.ModifyAccount"));
+        final Stage dialog = new Stage(StageStyle.DECORATED);
+        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.initOwner(MainApplication.getPrimaryStage());
+        dialog.setTitle(ResourceUtils.getBundle().getString("Title.ModifyAccount"));
 
-            FXMLLoader loader = new FXMLLoader(StaticAccountsMethods.class.getResource("AccountProperties.fxml"), ResourceUtils.getBundle());
-            dialog.setScene(new Scene(loader.load()));
+        final AccountPropertiesController controller = FXMLUtils.loadFXML(o -> {dialog.setScene(new Scene((Parent) o));},
+                "AccountProperties.fxml", ResourceUtils.getBundle());
 
-            AccountPropertiesController controller = loader.getController();
+        controller.loadProperties(account);
 
-            controller.loadProperties(account);
+        dialog.setResizable(false);
 
-            dialog.setResizable(false);
+        StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
 
-            StageUtils.addBoundsListener(dialog, StaticUIMethods.class);
+        dialog.showAndWait();
 
-            dialog.showAndWait();
+        if (controller.getResult()) {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
 
-            if (controller.getResult()) {
-                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-                Objects.requireNonNull(engine);
+            Account template = controller.getTemplate();
 
-                Account template = controller.getTemplate();
-
-                if (!engine.modifyAccount(template, account)) {
-                    StaticUIMethods.displayError(ResourceUtils.getBundle().getString("Message.Error.AccountUpdate"));
-                }
-
-                if (account.getAccountType().getAccountGroup() == AccountGroup.INVEST) {
-                    if (!engine.updateAccountSecurities(account, controller.getSecurityNodes())) {
-                        StaticUIMethods.displayError(ResourceUtils.getBundle().getString("Message.Error.SecurityAccountUpdate"));
-                    }
-                }
+            if (!engine.modifyAccount(template, account)) {
+                StaticUIMethods.displayError(ResourceUtils.getBundle().getString("Message.Error.AccountUpdate"));
             }
 
-        } catch (final IOException e) {
-            Logger.getLogger(StaticAccountsMethods.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            if (account.getAccountType().getAccountGroup() == AccountGroup.INVEST) {
+                if (!engine.updateAccountSecurities(account, controller.getSecurityNodes())) {
+                    StaticUIMethods.displayError(ResourceUtils.getBundle().getString("Message.Error.SecurityAccountUpdate"));
+                }
+            }
         }
     }
 }
