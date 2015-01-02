@@ -52,10 +52,9 @@ public class StageUtils {
             stage.setX(rectangle.getX());
             stage.setY(rectangle.getY());
 
-            if (stage.isResizable()) {
-                stage.setWidth(rectangle.getWidth());
-                stage.setHeight(rectangle.getHeight());
-            }
+            // Set even if resizable, otherwise stage will not change location... JavaFx bug?
+            stage.setWidth(rectangle.getWidth());
+            stage.setHeight(rectangle.getHeight());
         }
 
         stage.setOnCloseRequest(windowEvent -> {
