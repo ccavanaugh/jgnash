@@ -28,6 +28,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
@@ -62,7 +63,7 @@ public class SplitTransactionDialog extends Stage implements Initializable {
 
     private static final String PREF_NODE_USER_ROOT = "/jgnash/uifx/views/register/splits";
 
-    private static final double[] PREF_COLUMN_WEIGHTS = {50, 0, 50, 0, 0, 0};
+    private static final double[] PREF_COLUMN_WEIGHTS = {50, 50, 0, 0, 0, 0};
 
     @FXML
     private Button newButton;
@@ -135,6 +136,9 @@ public class SplitTransactionDialog extends Stage implements Initializable {
             loadTable();
         });
 
+        // repack when the list contents change
+        observableTransactionEntries.addListener((ListChangeListener<TransactionEntry>) c -> tableViewManager.packTable());
+
         tableView.setTableMenuButtonVisible(true);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -184,7 +188,18 @@ public class SplitTransactionDialog extends Stage implements Initializable {
         balanceColumn.setCellFactory(cell -> new TransactionEntryCommodityFormatTableCell(CommodityFormat.getFullNumberFormat(accountProperty.get().getCurrencyNode())));
         balanceColumn.setSortable(false);   // do not allow a sort on the balance
 
-        tableView.getColumns().addAll(accountColumn, reconciledColumn, memoColumn, increaseColumn, decreaseColumn, balanceColumn);
+        tableView.getColumns().addAll(memoColumn, accountColumn, reconciledColumn, increaseColumn, decreaseColumn, balanceColumn);
+
+        tableViewManager.setColumnFormatFactory(param -> {
+            if (param == balanceColumn) {
+                return CommodityFormat.getFullNumberFormat(getAccountProperty().getValue().getCurrencyNode());
+            } else if (param == increaseColumn || param == decreaseColumn) {
+                return CommodityFormat.getShortNumberFormat(getAccountProperty().getValue().getCurrencyNode());
+            }
+
+            return null;
+        });
+
     }
 
     private void initTabs() {
