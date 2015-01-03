@@ -29,14 +29,19 @@ public class Options {
 
     private static final String ACCOUNTING_TERMS = "accountingTerms";
 
+    private static final String REMEMBER_DATE = "rememberDate";
+
     private static boolean useAccountingTerms;
 
     private static boolean confirmTransactionDelete;
+
+    private static boolean rememberDate;
 
     static {
         Preferences p = Preferences.userNodeForPackage(Options.class);
         useAccountingTerms = p.getBoolean(ACCOUNTING_TERMS, false);
         confirmTransactionDelete = p.getBoolean(CONFIRM_ON_DELETE, true);
+        rememberDate = p.getBoolean(REMEMBER_DATE, true);
     }
 
     /**
@@ -67,6 +72,22 @@ public class Options {
 
     public static boolean isAccountingTermsEnabled() {
         return useAccountingTerms;
+    }
+
+    public static void setRememberLastDate(final boolean reset) {
+        rememberDate = reset;
+        Preferences p = Preferences.userNodeForPackage(Options.class);
+        p.putBoolean(REMEMBER_DATE, rememberDate);
+    }
+
+    /**
+     * Determines if the last date used for a transaction is reset
+     * to the current date or remembered.
+     *
+     * @return true if the last date should be reused
+     */
+    public static boolean getRememberLastDate() {
+        return rememberDate;
     }
 
 }

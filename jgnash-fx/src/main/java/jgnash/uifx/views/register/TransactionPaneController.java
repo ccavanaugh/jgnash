@@ -18,7 +18,14 @@
 package jgnash.uifx.views.register;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -29,7 +36,13 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
 import jgnash.engine.Account;
+import jgnash.engine.InvestmentTransaction;
+import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
+import jgnash.engine.TransactionEntry;
+import jgnash.engine.TransactionType;
+import jgnash.uifx.Options;
+import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.TransactionNumberComboBox;
@@ -68,14 +81,24 @@ public class TransactionPaneController implements Initializable {
     @FXML
     private AttachmentPane attachmentPane;
 
+    private ResourceBundle resources;
+
     final private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
     private PanelType panelType;
 
     private SplitTransactionDialog splitsDialog;
 
+    private Transaction modTrans = null;
+
+    private TransactionEntry modEntry = null;
+
+    private List<TransactionEntry> splits = null;
+
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
+        this.resources = resources;
+
         // Number combo needs to know the account in order to determine the next transaction number
         numberComboBox.getAccountProperty().bind(getAccountProperty());
 
@@ -94,11 +117,153 @@ public class TransactionPaneController implements Initializable {
     }
 
     public void modifyTransaction(final Transaction transaction) {
-        System.out.println("TransactionPaneController: " + transaction.getUuid());
+
+        if (transaction.areAccountsLocked()) {
+            clearForm();
+            StaticUIMethods.displayError(resources.getString("Message.TransactionModifyLocked"));
+            return;
+        }
+
+        newTransaction(transaction); // load the form
+
+        modTrans = transaction; // save reference to old transaction
+        modTrans = attachmentPane.modifyTransaction(modTrans);
+
+        if (!canModifyTransaction(transaction) && transaction.getTransactionType() == TransactionType.SPLITENTRY) {
+            for (final TransactionEntry entry : transaction.getTransactionEntries()) {
+                if (entry.getCreditAccount().equals(getAccountProperty().get()) || entry.getDebitAccount().equals(getAccountProperty().get())) {
+                    modEntry = entry;
+                    break;
+                }
+            }
+
+            if (modEntry == null) {
+                Logger logger = Logger.getLogger(TransactionPaneController.class.getName());
+                logger.warning("Was not able to modify the transaction");
+            }
+        }
+    }
+
+    void newTransaction(final Transaction t) {
+        clearForm();
+
+        amountField.setDecimal(t.getAmount(getAccountProperty().get()).abs());
+
+        memoTextField.setText(t.getMemo());
+        payeeTextField.setText(t.getPayee());
+        numberComboBox.setValue(t.getNumber());
+
+        // JPA may slip in a java.sql.Date which throws an exception when .toInstance is called. Wrap in a new java.util.Date instance
+        datePicker.setValue(new Date(t.getDate().getTime()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        reconciledButton.setSelected(t.getReconciled(getAccountProperty().get()) != ReconciledState.NOT_RECONCILED);
+
+        if (t.getTransactionType() == TransactionType.SPLITENTRY) {
+
+            accountExchangePane.setSelectedAccount(t.getCommonAccount()); // display common account
+            accountExchangePane.setEnabled(false);
+
+            if (canModifyTransaction(t)) { // split as the same base account
+                //  clone the splits for modification
+
+                splits = new ArrayList<>();
+                for (TransactionEntry entry : t.getTransactionEntries()) {
+                    try {
+                        splits.add((TransactionEntry) entry.clone());
+                    } catch (CloneNotSupportedException e) {
+                        Logger.getLogger(TransactionPaneController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                    }
+                }
+                amountField.setEditable(false);
+                amountField.setDecimal(t.getAmount(getAccountProperty().get()).abs());
+            } else { // not the same common account, can only modify the entry
+                splitsButton.setDisable(true);
+                payeeTextField.setEditable(false);
+                numberComboBox.setDisable(true);
+                datePicker.setEditable(false);
+
+                amountField.setEditable(true);
+                amountField.setDecimal(t.getAmount(getAccountProperty().get()).abs());
+
+                for (TransactionEntry entry : t.getTransactionEntries()) {
+                    if (entry.getCreditAccount() == getAccountProperty().get()) {
+                        accountExchangePane.setExchangedAmount(entry.getDebitAmount().abs());
+                        break;
+                    } else if (entry.getDebitAccount() == getAccountProperty().get()) {
+                        accountExchangePane.setExchangedAmount(entry.getCreditAmount());
+                        break;
+                    }
+                }
+            }
+        } else if (t instanceof InvestmentTransaction) {
+            Logger logger = Logger.getLogger(TransactionPaneController.class.getName());
+            logger.warning("unsupported transaction type");
+        } else { // DoubleEntryTransaction
+            accountExchangePane.setEnabled(!t.areAccountsHidden());
+
+            amountField.setDisable(false);
+            datePicker.setEditable(true);
+        }
+
+        // setup the accountCombo correctly
+        if (t.getTransactionType() == TransactionType.DOUBLEENTRY) {
+            TransactionEntry entry = t.getTransactionEntries().get(0);
+
+            if (panelType == PanelType.DECREASE) {
+                accountExchangePane.setSelectedAccount(entry.getCreditAccount());
+                accountExchangePane.setExchangedAmount(entry.getCreditAmount());
+            } else {
+                accountExchangePane.setSelectedAccount(entry.getDebitAccount());
+                accountExchangePane.setExchangedAmount(entry.getDebitAmount().abs());
+            }
+        }
     }
 
     void clearForm() {
+        splits = null;
+        modEntry = null;
+        modTrans = null;
 
+        amountField.setEditable(true);
+        accountExchangePane.setEnabled(true);
+        splitsButton.setDisable(false);
+        datePicker.setEditable(true);
+
+        numberComboBox.setDisable(false);
+        reconciledButton.setDisable(false);
+        payeeTextField.setEditable(true);
+
+        accountExchangePane.setExchangedAmount(null);
+        amountField.setDecimal(null);
+
+        if (!Options.getRememberLastDate()) {
+            datePicker.setValue(LocalDate.now());
+        }
+
+        memoTextField.setText(null);
+        numberComboBox.setValue(null);
+        payeeTextField.setText(null);
+        reconciledButton.setSelected(false);
+
+        attachmentPane.clear();
+    }
+
+    protected boolean canModifyTransaction(final Transaction t) {
+        boolean result = false;
+
+        switch (t.getTransactionType()) {
+            case DOUBLEENTRY:
+                result = true;
+                break;
+            case SPLITENTRY:
+                if (t.getCommonAccount().equals(accountProperty.get())) {
+                    result = true;
+                }
+                break;
+            default:
+                break;
+        }
+
+        return result;
     }
 
     @FXML
@@ -114,7 +279,7 @@ public class TransactionPaneController implements Initializable {
     private void splitsAction() {
         if (splitsDialog == null) { // Lazy init
             splitsDialog = new SplitTransactionDialog();
-            splitsDialog.getAccountProperty().setValue(getAccountProperty().getValue());
+            splitsDialog.getAccountProperty().setValue(getAccountProperty().get());
         }
 
         splitsDialog.showAndWait();

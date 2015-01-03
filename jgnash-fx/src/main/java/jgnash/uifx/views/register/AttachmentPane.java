@@ -166,6 +166,10 @@ public class AttachmentPane extends GridPane implements Initializable {
         }
     }
 
+    void clear() {
+        attachmentProperty.set(null);
+    }
+
     private void attachmentAction() {
         final Preferences pref = Preferences.userNodeForPackage(this.getClass());
         final String baseFile = EngineFactory.getActiveDatabase();

@@ -86,6 +86,8 @@ public class AccountExchangePane extends GridPane implements Initializable {
 
     final private SimpleBooleanProperty amountEditable = new SimpleBooleanProperty();
 
+    final private SimpleBooleanProperty disableProperty = new SimpleBooleanProperty(false);
+
     public AccountExchangePane() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AccountExchangePane.fxml"), ResourceUtils.getBundle());
         fxmlLoader.setRoot(this);
@@ -100,6 +102,10 @@ public class AccountExchangePane extends GridPane implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        accountCombo.disableProperty().bind(disableProperty);
+        expandButton.disableProperty().bind(disableProperty);
+        exchangeRateField.disableProperty().bind(disableProperty);
 
         exchangeRateField.setScale(MathConstants.EXCHANGE_RATE_ACCURACY);
 
@@ -238,7 +244,15 @@ public class AccountExchangePane extends GridPane implements Initializable {
         return accountCombo.getValue();
     }
 
-    public void setSelectedAccount(final Account account) {
+    void setSelectedAccount(final Account account) {
         accountCombo.setValue(account);
+    }
+
+    void setExchangedAmount(final BigDecimal value) {
+        getExchangeAmountProperty().setValue(value);
+    }
+
+    void setEnabled(final boolean enabled) {
+        disableProperty().setValue(!enabled);
     }
 }
