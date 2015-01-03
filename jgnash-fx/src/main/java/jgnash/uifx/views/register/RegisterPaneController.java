@@ -20,6 +20,7 @@ package jgnash.uifx.views.register;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -77,12 +78,23 @@ public abstract class RegisterPaneController implements Initializable {
     public void initialize(final URL location, final ResourceBundle resources) {
         this.resources = resources;
 
+        /**
+         * The Buttons may be null depending on the form tha was loaded with this controller
+         */
+
         // Buttons should not be enabled if a transaction is not selected
-        deleteButton.disableProperty().bind(selectedTransactionProperty.isNull());
-        duplicateButton.disableProperty().bind(selectedTransactionProperty.isNull());
+        if (deleteButton != null) {
+            deleteButton.disableProperty().bind(selectedTransactionProperty.isNull());
+        }
+
+        if (duplicateButton != null) {
+            duplicateButton.disableProperty().bind(selectedTransactionProperty.isNull());
+        }
 
         // Clear the table selection
-        newButton.setOnAction(event -> registerTableControllerProperty.get().clearTableSelection());
+        if (newButton != null) {
+            newButton.setOnAction(event -> registerTableControllerProperty.get().clearTableSelection());
+        }
 
         // When changed, bind the selected transaction and account properties
         registerTableControllerProperty.addListener(new ChangeListener<RegisterTableController>() {
@@ -103,11 +115,17 @@ public abstract class RegisterPaneController implements Initializable {
             @Override
             public void changed(final ObservableValue<? extends Transaction> observable, final Transaction oldValue,
                                 final Transaction newValue) {
-                if (newValue != null) {
-                    modifyTransaction(newValue);
-                } else {
-                    clearForms(); // selection was forcibly cleared, better clear the forms
-                }
+
+                /* Push to the end of the application thread to allow other UI controls to update before
+                * updating many transaction form controls */
+
+                Platform.runLater(() -> {
+                    if (newValue != null) {
+                        modifyTransaction(newValue);
+                    } else {
+                        clearForms(); // selection was forcibly cleared, better clear the forms
+                    }
+                });
             }
         });
     }
