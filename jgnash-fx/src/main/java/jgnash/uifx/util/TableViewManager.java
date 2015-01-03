@@ -329,6 +329,7 @@ public class TableViewManager<S> {
         @Override
         public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
             updateColumnVisibilityExecutor.execute(TableViewManager.this::saveColumnVisibility);
+            packTable();
         }
     }
 }
