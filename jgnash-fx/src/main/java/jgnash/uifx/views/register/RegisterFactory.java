@@ -80,7 +80,7 @@ public class RegisterFactory {
             rb.getString("Column.Investment"), rb.getString("Column.Clr"), rb.getString("Column.Quantity"),
             rb.getString("Column.Price"), rb.getString("Column.Total") };
 
-    /*private static final String[] SPLIT_ACCOUNTING_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
+    private static final String[] SPLIT_ACCOUNTING_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
             rb.getString("Column.Memo"), rb.getString("Column.Debit"), rb.getString("Column.Credit"),
             rb.getString("Column.Balance") };
 
@@ -111,16 +111,44 @@ public class RegisterFactory {
             rb.getString("Column.Memo"), rb.getString("Column.Deposit"), rb.getString("Column.Withdrawal"),
             rb.getString("Column.Balance") };
 
-    private static final String[] SPLIT_GAINLOSS_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
+    /*private static final String[] SPLIT_GAINLOSS_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
             rb.getString("Column.Memo"), rb.getString("Column.Gain"), rb.getString("Column.Loss"),
-            rb.getString("Column.Balance") };
+            rb.getString("Column.Balance") };*/
 
     private static final String[] SPLIT_GENERIC_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
             rb.getString("Column.Memo"), rb.getString("Column.Deposit"), rb.getString("Column.Withdrawal"),
-            rb.getString("Column.Balance") };*/
+            rb.getString("Column.Balance") };
 
     private RegisterFactory() {
         // Utility class
+    }
+
+    public static String[] getSplitColumnNames(@NotNull final AccountType accountType) {
+        String[] names; // reference to the correct column names
+
+        if (Options.isAccountingTermsEnabled()) {
+            names = SPLIT_ACCOUNTING_NAMES;
+        } else {
+            if (accountType == AccountType.CREDIT) {
+                names = SPLIT_CREDIT_NAMES;
+            } else if (accountType == AccountType.EXPENSE) {
+                names = SPLIT_EXPENSE_NAMES;
+            } else if (accountType == AccountType.INCOME) {
+                names = SPLIT_INCOME_NAMES;
+            } else if (accountType == AccountType.CASH) {
+                names = SPLIT_CASH_NAMES;
+            } else if (accountType == AccountType.EQUITY) {
+                names = SPLIT_EQUITY_NAMES;
+            } else if (accountType == AccountType.LIABILITY) {
+                names = SPLIT_LIABILITY_NAMES;
+            } else if (accountType.getAccountGroup() == AccountGroup.ASSET) {
+                names = SPLIT_BANK_NAMES;
+            } else {
+                names = SPLIT_GENERIC_NAMES;
+            }
+        }
+
+        return names;
     }
 
     public static String[] getColumnNames(@NotNull final AccountType accountType) {

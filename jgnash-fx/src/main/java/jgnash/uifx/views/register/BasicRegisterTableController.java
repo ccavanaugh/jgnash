@@ -88,7 +88,7 @@ public class BasicRegisterTableController extends RegisterTableController {
         accountColumn.setCellFactory(cell -> new TransactionStringTableCell());
 
         final TableColumn<Transaction, String> reconciledColumn = new TableColumn<>(columnNames[5]);
-        reconciledColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getReconciled(accountProperty.getValue()).toString()));
+        reconciledColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getReconciled(accountProperty.get()).toString()));
         reconciledColumn.setCellFactory(cell -> new TransactionStringTableCell());
 
         final TableColumn<Transaction, BigDecimal> increaseColumn = new TableColumn<>(columnNames[6]);
@@ -155,26 +155,6 @@ public class BasicRegisterTableController extends RegisterTableController {
                         setValue(t.getTransactionEntries().get(0).getDebitAccount().getName());
                     }
                 }
-            }
-        }
-    }
-
-    private static class IncreaseAmountProperty extends SimpleObjectProperty<BigDecimal> {
-        IncreaseAmountProperty(final BigDecimal value) {
-            if (value.signum() >= 0) {
-                setValue(value);
-            } else {
-                setValue(null);
-            }
-        }
-    }
-
-    private static class DecreaseAmountProperty extends SimpleObjectProperty<BigDecimal> {
-        DecreaseAmountProperty(final BigDecimal value) {
-            if (value.signum() < 0) {
-                setValue(value.abs());
-            } else {
-                setValue(null);
             }
         }
     }

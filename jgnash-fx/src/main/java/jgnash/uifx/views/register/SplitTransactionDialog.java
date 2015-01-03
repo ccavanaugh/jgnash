@@ -18,6 +18,7 @@
 package jgnash.uifx.views.register;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -25,6 +26,10 @@ import java.util.logging.Logger;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -32,16 +37,20 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 
 import jgnash.engine.Account;
 import jgnash.engine.TransactionEntry;
+import jgnash.text.CommodityFormat;
 import jgnash.uifx.MainApplication;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
+import jgnash.uifx.util.TableViewManager;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -50,6 +59,10 @@ import jgnash.util.ResourceUtils;
  * @author Craig Cavanaugh
  */
 public class SplitTransactionDialog extends Stage implements Initializable {
+
+    private static final String PREF_NODE_USER_ROOT = "/jgnash/uifx/views/register/splits";
+
+    private static final double[] PREF_COLUMN_WEIGHTS = {50, 0, 50, 0, 0, 0};
 
     @FXML
     private Button newButton;
@@ -76,9 +89,15 @@ public class SplitTransactionDialog extends Stage implements Initializable {
 
     Tab debitTab;
 
+    private ResourceBundle resources;
+
     final private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
-    private ResourceBundle resources;
+    protected TableViewManager<TransactionEntry> tableViewManager;
+
+    final protected ObservableList<TransactionEntry> observableTransactionEntries = FXCollections.observableArrayList();
+
+    final protected SortedList<TransactionEntry> sortedList = new SortedList<>(observableTransactionEntries);
 
     public SplitTransactionDialog() {
         final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("SplitTransactionDialog.fxml"), ResourceUtils.getBundle());
@@ -103,16 +122,69 @@ public class SplitTransactionDialog extends Stage implements Initializable {
         return accountProperty;
     }
 
+    public ObservableList<TransactionEntry> getTransactionEntries() {
+        return observableTransactionEntries;
+    }
+
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         this.resources = resources;
 
         getAccountProperty().addListener((observable, oldValue, newValue) -> {
             initTabs();
+            loadTable();
         });
+
+        tableView.setTableMenuButtonVisible(true);
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         okButton.setOnAction(event -> okAction());
         cancelButton.setOnAction(event -> cancelAction());
+    }
+
+    private void loadTable() {
+        tableViewManager = new TableViewManager<>(tableView, PREF_NODE_USER_ROOT);
+        tableViewManager.setColumnWeightFactory(getColumnWeightFactory());
+        tableViewManager.setPreferenceKeyFactory(() -> getAccountProperty().get().getUuid());
+
+        sortedList.comparatorProperty().bind(tableView.comparatorProperty());
+
+        buildTable();
+
+        tableView.setItems(sortedList);
+        tableViewManager.restoreLayout();   // required to table view manager is to work
+    }
+
+    Callback<Integer, Double> getColumnWeightFactory() {
+        return param -> PREF_COLUMN_WEIGHTS[param];
+    }
+
+    private void buildTable() {
+        final String[] columnNames = RegisterFactory.getSplitColumnNames(getAccountProperty().get().getAccountType());
+
+        final TableColumn<TransactionEntry, String> accountColumn = new TableColumn<>(columnNames[0]);
+        accountColumn.setCellValueFactory(param -> new AccountNameWrapper(param.getValue()));
+
+        final TableColumn<TransactionEntry, String> reconciledColumn = new TableColumn<>(columnNames[1]);
+        reconciledColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getReconciled(accountProperty.get()).toString()));
+
+        final TableColumn<TransactionEntry, String> memoColumn = new TableColumn<>(columnNames[2]);
+        memoColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getMemo()));
+
+        final TableColumn<TransactionEntry, BigDecimal> increaseColumn = new TableColumn<>(columnNames[3]);
+        increaseColumn.setCellValueFactory(param -> new IncreaseAmountProperty(param.getValue().getAmount(getAccountProperty().getValue())));
+        increaseColumn.setCellFactory(cell -> new TransactionEntryCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
+
+        final TableColumn<TransactionEntry, BigDecimal> decreaseColumn = new TableColumn<>(columnNames[4]);
+        decreaseColumn.setCellValueFactory(param -> new DecreaseAmountProperty(param.getValue().getAmount(getAccountProperty().getValue())));
+        decreaseColumn.setCellFactory(cell -> new TransactionEntryCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
+
+        final TableColumn<TransactionEntry, BigDecimal> balanceColumn = new TableColumn<>(columnNames[5]);
+        balanceColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(getBalanceAt(param.getValue())));
+        balanceColumn.setCellFactory(cell -> new TransactionEntryCommodityFormatTableCell(CommodityFormat.getFullNumberFormat(accountProperty.get().getCurrencyNode())));
+        balanceColumn.setSortable(false);   // do not allow a sort on the balance
+
+        tableView.getColumns().addAll(accountColumn, reconciledColumn, memoColumn, increaseColumn, decreaseColumn, balanceColumn);
     }
 
     private void initTabs() {
@@ -139,11 +211,40 @@ public class SplitTransactionDialog extends Stage implements Initializable {
         tabPane.getTabs().addAll(creditTab, debitTab);
     }
 
+    private BigDecimal getBalanceAt(final TransactionEntry transactionEntry) {
+        BigDecimal balance = BigDecimal.ZERO;
+
+        final Account account = accountProperty.get();
+
+        if (account != null) {
+            final int index = sortedList.indexOf(transactionEntry);
+
+            for (int i = 0; i <= index; i++) {
+                balance = balance.add(sortedList.get(i).getAmount(account));
+            }
+        }
+        return balance;
+    }
+
     private void okAction() {
         ((Stage) okButton.getScene().getWindow()).close();
     }
 
     private void cancelAction() {
         ((Stage) cancelButton.getScene().getWindow()).close();
+    }
+
+    private class AccountNameWrapper extends SimpleStringProperty {
+        AccountNameWrapper(final TransactionEntry t) {
+            super();
+
+            final Account creditAccount = t.getCreditAccount();
+
+            if (creditAccount != getAccountProperty().get()) {
+                setValue(creditAccount.getName());
+            } else {
+                setValue(t.getDebitAccount().getName());
+            }
+        }
     }
 }
