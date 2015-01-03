@@ -35,18 +35,17 @@ import javafx.scene.layout.StackPane;
 public class LockedBasicRegisterPaneController extends RegisterPaneController {
 
     @FXML
-    protected StackPane register;
+    protected StackPane register; // not used
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
+        super.initialize(location, resources);
+
         // Load the register table
         try {
             final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BasicRegisterTable.fxml"), resources);
             register.getChildren().add(fxmlLoader.load());
-            registerTableController = fxmlLoader.getController();
-
-            // Bind  the register pane to this account property
-            registerTableController.getAccountProperty().bind(getAccountProperty());
+            registerTableControllerProperty.setValue(fxmlLoader.getController());
         } catch (final IOException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }

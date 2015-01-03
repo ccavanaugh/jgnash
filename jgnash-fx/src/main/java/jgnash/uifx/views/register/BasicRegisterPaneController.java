@@ -33,6 +33,10 @@ import javafx.scene.layout.StackPane;
 
 import jgnash.engine.AccountGroup;
 import jgnash.engine.AccountType;
+import jgnash.engine.InvestmentTransaction;
+import jgnash.engine.Transaction;
+import jgnash.engine.TransactionType;
+import jgnash.util.NotNull;
 
 /**
  * Register pane controller
@@ -50,11 +54,16 @@ public class BasicRegisterPaneController extends RegisterPaneController {
     @FXML
     protected TabPane transactionForms;
 
-    private ResourceBundle resources;
+    private Tab creditTab;
+
+    private Tab debitTab;
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        this.resources = resources;
+
+        super.initialize(location, resources);
+
+        jumpButton.disableProperty().bind(selectedTransactionProperty.isNull());
 
         transactionForms.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
@@ -62,10 +71,7 @@ public class BasicRegisterPaneController extends RegisterPaneController {
         try {
             final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BasicRegisterTable.fxml"), resources);
             register.getChildren().add(fxmlLoader.load());
-            registerTableController = fxmlLoader.getController();
-
-            // Bind  the register pane to this account property
-            registerTableController.getAccountProperty().bind(getAccountProperty());
+            registerTableControllerProperty.setValue(fxmlLoader.getController());
         } catch (final IOException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
@@ -75,13 +81,30 @@ public class BasicRegisterPaneController extends RegisterPaneController {
         });
     }
 
+    @Override
+    protected void modifyTransaction(@NotNull final Transaction transaction) {
+        if (!(transaction instanceof InvestmentTransaction)) {
+            if (transaction.getTransactionType() == TransactionType.SINGLENTRY) {
+                // TODO: Implement adjustment panel
+            } else if (transaction.getAmount(getAccountProperty().get()).signum() >= 0) {
+                transactionForms.getSelectionModel().select(creditTab);
+                ((TransactionPaneController)creditTab.getUserData()).modifyTransaction(transaction);
+            } else {
+                transactionForms.getSelectionModel().select(debitTab);
+                ((TransactionPaneController)debitTab.getUserData()).modifyTransaction(transaction);
+            }
+        } /*else {
+            // TODO: Show investment transaction dialog
+        }*/
+    }
+
     private void buildTabs() {
         final AccountType accountType = getAccountProperty().get().getAccountType();
 
         final String[] tabNames = RegisterFactory.getCreditDebitTabNames(accountType);
 
-        final Tab creditTab = buildTab(tabNames[0], PanelType.INCREASE);
-        final Tab debitTab = buildTab(tabNames[1], PanelType.DECREASE);
+        creditTab = buildTab(tabNames[0], PanelType.INCREASE);
+        debitTab = buildTab(tabNames[1], PanelType.DECREASE);
 
         transactionForms.getTabs().addAll(creditTab, debitTab);
 
@@ -105,6 +128,7 @@ public class BasicRegisterPaneController extends RegisterPaneController {
 
             final Tab tab = new Tab(tabName);
             tab.setContent(pane);
+            tab.setUserData(transactionPaneController); // place a reference to the controller here
 
             return tab;
         } catch (final IOException e) {

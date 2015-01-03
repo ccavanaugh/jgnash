@@ -50,11 +50,9 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
     @FXML
     protected TabPane transactionForms;
 
-    private ResourceBundle resources;
-
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
-        this.resources = resources;
+        super.initialize(location, resources);
 
         transactionForms.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
@@ -62,10 +60,7 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
         try {
             final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("InvestmentRegisterTable.fxml"), resources);
             register.getChildren().add(fxmlLoader.load());
-            registerTableController = fxmlLoader.getController();
-
-            // Bind  the register pane to this account property
-            registerTableController.getAccountProperty().bind(getAccountProperty());
+            registerTableControllerProperty.setValue(fxmlLoader.getController());
         } catch (final IOException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
@@ -76,6 +71,7 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
     }
 
     private void buildTabs() {
+        // TODO, fix for investment transactions
         final AccountType accountType = getAccountProperty().get().getAccountType();
 
         final String[] tabNames = RegisterFactory.getCreditDebitTabNames(accountType);

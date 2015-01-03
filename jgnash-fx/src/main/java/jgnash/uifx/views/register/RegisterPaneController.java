@@ -17,14 +17,21 @@
  */
 package jgnash.uifx.views.register;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 
 import jgnash.engine.Account;
+import jgnash.engine.Transaction;
+import jgnash.util.NotNull;
 
 /**
  * Register pane controller
@@ -34,7 +41,7 @@ import jgnash.engine.Account;
 public abstract class RegisterPaneController implements Initializable {
 
     @FXML
-    protected Button newButton; // TODO Implement handler
+    protected Button newButton;
 
     @FXML
     protected Button duplicateButton; // TODO Implement handler
@@ -42,22 +49,87 @@ public abstract class RegisterPaneController implements Initializable {
     @FXML
     protected Button deleteButton;
 
+    /**
+     * The register table and controls should be loaded into this pane
+     */
     @FXML
     protected StackPane register;
+
+    protected ResourceBundle resources;
 
     /**
      * Active account for the pane
      */
-    private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
-    protected RegisterTableController registerTableController;
+    /**
+     * This will be bound to the register table selection
+     */
+    final ObjectProperty<Transaction> selectedTransactionProperty = new SimpleObjectProperty<>();
+
+    protected final ObjectProperty<RegisterTableController> registerTableControllerProperty = new SimpleObjectProperty<>();
 
     ObjectProperty<Account> getAccountProperty() {
         return accountProperty;
     }
 
+    @Override
+    public void initialize(final URL location, final ResourceBundle resources) {
+        this.resources = resources;
+
+        // Buttons should not be enabled if a transaction is not selected
+        deleteButton.disableProperty().bind(selectedTransactionProperty.isNull());
+        duplicateButton.disableProperty().bind(selectedTransactionProperty.isNull());
+
+        // Clear the table selection
+        newButton.setOnAction(event -> registerTableControllerProperty.get().clearTableSelection());
+
+        // When changed, bind the selected transaction and account properties
+        registerTableControllerProperty.addListener(new ChangeListener<RegisterTableController>() {
+            @Override
+            public void changed(final ObservableValue<? extends RegisterTableController> observable,
+                                final RegisterTableController oldValue, final RegisterTableController newValue) {
+
+                // Bind transaction selection to the register table controller
+                selectedTransactionProperty.bind(newValue.getSelectedTransactionProperty());
+
+                // Bind the register pane to this account property
+                newValue.getAccountProperty().bind(getAccountProperty());
+            }
+        });
+
+        // When changed, call for transaction modification if not null
+        selectedTransactionProperty.addListener(new ChangeListener<Transaction>() {
+            @Override
+            public void changed(final ObservableValue<? extends Transaction> observable, final Transaction oldValue,
+                                final Transaction newValue) {
+                if (newValue != null) {
+                    modifyTransaction(newValue);
+                } else {
+                    clearForms(); // selection was forcibly cleared, better clear the forms
+                }
+            }
+        });
+    }
+
     @FXML
     private void handleDeleteAction() {
-        registerTableController.deleteTransactions();
+        registerTableControllerProperty.get().deleteTransactions();
+    }
+
+    /**
+     * Default empty implementation to modify a transaction when selected
+     *
+     * @param transaction {@code Transaction} to be modified
+     */
+    protected void modifyTransaction(@NotNull final Transaction transaction) {
+
+    }
+
+    /**
+     * Default empty implementation.
+     */
+    protected void clearForms() {
+
     }
 }

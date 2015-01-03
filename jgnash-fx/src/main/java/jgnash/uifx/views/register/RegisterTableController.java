@@ -24,6 +24,8 @@ import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -69,10 +71,14 @@ public abstract class RegisterTableController implements Initializable {
     @FXML
     protected Label accountNameLabel;
 
+    protected ResourceBundle resources;
+
     /**
      * Active account for the pane
      */
     final protected ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+
+    final private ReadOnlyObjectWrapper<Transaction> selectedTransactionProperty = new ReadOnlyObjectWrapper<>();
 
     final protected ObservableList<Transaction> observableTransactions = FXCollections.observableArrayList();
 
@@ -81,8 +87,6 @@ public abstract class RegisterTableController implements Initializable {
     final private MessageBusHandler messageBusHandler = new MessageBusHandler();
 
     protected TableViewManager<Transaction> tableViewManager;
-
-    protected ResourceBundle resources;
 
     final private AccountPropertyWrapper accountPropertyWrapper = new AccountPropertyWrapper();
 
@@ -111,6 +115,8 @@ public abstract class RegisterTableController implements Initializable {
             }
         });
 
+        selectedTransactionProperty.bind(tableView.getSelectionModel().selectedItemProperty());
+
         // Listen for engine events
         MessageBus.getInstance().registerListener(messageBusHandler, MessageChannel.TRANSACTION);
     }
@@ -130,6 +136,14 @@ public abstract class RegisterTableController implements Initializable {
 
     protected ObjectProperty<Account> getAccountProperty() {
         return accountProperty;
+    }
+
+    protected ReadOnlyObjectProperty<Transaction> getSelectedTransactionProperty() {
+        return selectedTransactionProperty.getReadOnlyProperty();
+    }
+
+    protected void clearTableSelection() {
+        tableView.getSelectionModel().clearSelection();
     }
 
     protected AccountPropertyWrapper getAccountPropertyWrapper() {
@@ -205,6 +219,11 @@ public abstract class RegisterTableController implements Initializable {
                 if (event.getObject(MessageProperty.ACCOUNT).equals(account)) {
                     switch (event.getEvent()) {
                         case TRANSACTION_REMOVE:
+                            // clear the selection of the transaction is currently selected
+                            if (tableView.getSelectionModel().getSelectedItems().contains(event.getObject(MessageProperty.TRANSACTION))) {
+                                Platform.runLater(RegisterTableController.this::clearTableSelection);
+                            }
+
                             Platform.runLater(() -> observableTransactions.remove(event.getObject(MessageProperty.TRANSACTION)));
                             break;
                         case TRANSACTION_ADD:

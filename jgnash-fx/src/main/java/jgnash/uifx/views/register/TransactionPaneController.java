@@ -29,6 +29,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
 import jgnash.engine.Account;
+import jgnash.engine.Transaction;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.TransactionNumberComboBox;
@@ -92,12 +93,21 @@ public class TransactionPaneController implements Initializable {
         this.panelType = panelType;
     }
 
+    public void modifyTransaction(final Transaction transaction) {
+        System.out.println("TransactionPaneController: " + transaction.getUuid());
+    }
+
+    void clearForm() {
+
+    }
+
     @FXML
     private void okAction() {
     }
 
     @FXML
     private void cancelAction() {
+        clearForm();
     }
 
     @FXML
