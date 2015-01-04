@@ -142,8 +142,8 @@ public class DecimalTextField extends TextField {
         decimalProperty().addListener(new ChangeListener<BigDecimal>() {
             @Override
             public void changed(final ObservableValue<? extends BigDecimal> observable, final BigDecimal oldValue, final BigDecimal newValue) {
-                if (newValue != null && !newValue.equals(oldValue)) {
-                    setDecimal(newValue);
+                if (newValue != null) {
+                    setText(format.format(newValue.doubleValue()));
                 }
             }
         });
@@ -181,8 +181,7 @@ public class DecimalTextField extends TextField {
 
     public void setDecimal(@Nullable final BigDecimal decimal) {
         if (decimal != null) {
-            super.setText(format.format(decimal.doubleValue()));
-            decimalProperty.setValue(decimal);
+            decimalProperty.setValue(decimal.setScale(scaleProperty.get(), MathConstants.roundingMode));
         } else {
             super.setText("");
         }
