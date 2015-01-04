@@ -5,6 +5,18 @@
     -fx-font-size: 0.833333em;
 }
 
+/*
+ * Hide the focus around tables
+ */
+.table-view {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+.tree-table-view {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
 .dialog > .dialog-pane > .button-bar {
     -fx-font-size: 1.0em;
 }
