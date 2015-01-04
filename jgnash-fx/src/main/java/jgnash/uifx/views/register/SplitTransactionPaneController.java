@@ -18,6 +18,7 @@
 package jgnash.uifx.views.register;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.beans.property.ObjectProperty;
@@ -28,6 +29,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
 import jgnash.engine.Account;
+import jgnash.engine.ReconciledState;
+import jgnash.engine.TransactionEntry;
 import jgnash.uifx.control.DecimalTextField;
 
 /**
@@ -38,23 +41,27 @@ import jgnash.uifx.control.DecimalTextField;
 public class SplitTransactionPaneController implements Initializable {
 
     @FXML
-    protected DecimalTextField amountField;
+    private DecimalTextField amountField;
 
     @FXML
-    protected TextField memoTextField;
+    private TextField memoField;
 
     @FXML
-    protected AccountExchangePane accountExchangePane;
+    private AccountExchangePane accountExchangePane;
 
     @FXML
-    protected CheckBox reconciledButton;
+    private CheckBox reconciledButton;
 
     @FXML
     private AttachmentPane attachmentPane;
 
-    final private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
     private PanelType panelType;
+
+    private TransactionEntry oldEntry;
+
+    private final SimpleObjectProperty<List<TransactionEntry>> transactionEntryListProperty = new SimpleObjectProperty<>();
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -68,15 +75,102 @@ public class SplitTransactionPaneController implements Initializable {
         return accountProperty;
     }
 
+    ObjectProperty<List<TransactionEntry>> getTransactionEntryListProperty() {
+        return transactionEntryListProperty;
+    }
+
     void setPanelType(final PanelType panelType) {
         this.panelType = panelType;
     }
 
+    TransactionEntry buildTransactionEntry() {
+        TransactionEntry entry = new TransactionEntry();
+        entry.setMemo(memoField.getText());
+
+        int signum = amountField.getDecimal().signum();
+
+        if ((panelType == PanelType.DECREASE && signum >= 0) || (panelType == PanelType.INCREASE && signum < 0)) {
+            entry.setCreditAccount(accountExchangePane.getSelectedAccount());
+            entry.setDebitAccount(accountProperty.get());
+
+            if (hasEqualCurrencies()) {
+                entry.setAmount(amountField.getDecimal().abs());
+            } else {
+                entry.setDebitAmount(amountField.getDecimal().abs().negate());
+                entry.setCreditAmount(accountExchangePane.getExchangeAmountProperty().get().abs());
+            }
+        } else {
+            entry.setCreditAccount(accountProperty.get());
+            entry.setDebitAccount(accountExchangePane.getSelectedAccount());
+
+            if (hasEqualCurrencies()) {
+                entry.setAmount(amountField.getDecimal().abs());
+            } else {
+                entry.setCreditAmount(amountField.getDecimal().abs());
+                entry.setDebitAmount(accountExchangePane.getExchangeAmountProperty().get().abs().negate());
+            }
+        }
+
+        entry.setReconciled(accountProperty.get(), reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+
+        return entry;
+    }
+
+   private boolean hasEqualCurrencies() {
+        return accountProperty.get().getCurrencyNode().equals(accountExchangePane.getSelectedAccount().getCurrencyNode());
+    }
+
+    void modifyTransactionEntry(final TransactionEntry entry) {
+        oldEntry = entry;
+
+        memoField.setText(entry.getMemo());
+
+        if (panelType == PanelType.DECREASE) {
+            accountExchangePane.setSelectedAccount(entry.getCreditAccount());
+            amountField.setDecimal(entry.getDebitAmount().abs());
+
+            accountExchangePane.setExchangedAmount(entry.getCreditAmount());
+        } else {
+            accountExchangePane.setSelectedAccount(entry.getDebitAccount());
+            amountField.setDecimal(entry.getCreditAmount());
+
+            accountExchangePane.setExchangedAmount(entry.getDebitAmount().abs());
+        }
+
+        reconciledButton.setSelected(entry.getReconciled(accountProperty.get()) != ReconciledState.NOT_RECONCILED);
+    }
+
+    void clearForm() {
+        oldEntry = null;
+
+        memoField.setText(null);
+        amountField.setDecimal(null);
+        reconciledButton.setSelected(false);
+        accountExchangePane.setExchangedAmount(null);
+    }
+
+    // TODO: Form validation visual
+    private boolean validateForm() {
+        return !amountField.getText().equals("");
+    }
+
     @FXML
     private void okAction() {
+        if (validateForm()) {
+            final TransactionEntry entry = buildTransactionEntry();
+
+            if (oldEntry != null) {
+                transactionEntryListProperty.get().remove(oldEntry);
+            }
+
+            transactionEntryListProperty.get().add(entry);
+
+            clearForm();
+        }
     }
 
     @FXML
     private void cancelAction() {
+        clearForm();
     }
 }
