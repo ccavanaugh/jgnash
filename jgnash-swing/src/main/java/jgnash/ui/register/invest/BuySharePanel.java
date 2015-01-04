@@ -57,7 +57,7 @@ public final class BuySharePanel extends AbstractPriceQtyInvTransactionPanel {
 
         feePanel = new FeePanel(account);
 
-        accountExchangePanel = new AccountExchangePanel(getAccount().getCurrencyNode(), totalField);
+        accountExchangePanel = new AccountExchangePanel(getAccount().getCurrencyNode(), null, totalField);
         accountExchangePanel.setSelectedAccount(getAccount());
 
         layoutMainPanel();

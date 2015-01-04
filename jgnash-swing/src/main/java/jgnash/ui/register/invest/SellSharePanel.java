@@ -63,7 +63,7 @@ public final class SellSharePanel extends AbstractPriceQtyInvTransactionPanel im
 
         gainsPanel = new GainsPanel(account);
 
-        accountExchangePanel = new AccountExchangePanel(getAccount().getCurrencyNode(), totalField);
+        accountExchangePanel = new AccountExchangePanel(getAccount().getCurrencyNode(), null, totalField);
         accountExchangePanel.setSelectedAccount(getAccount());
 
         layoutMainPanel();

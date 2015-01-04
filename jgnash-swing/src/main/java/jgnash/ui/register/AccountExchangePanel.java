@@ -59,7 +59,6 @@ import jgnash.util.Resource;
  * UI Form for handling the exchange of currencies
  * 
  * @author Craig Cavanaugh
- *
  */
 public class AccountExchangePanel extends JPanel implements ActionListener, FocusListener, PopupMenuListener, ItemListener, MessageListener {
 
@@ -182,18 +181,6 @@ public class AccountExchangePanel extends JPanel implements ActionListener, Focu
 
         layoutPanel();
         updateLayout();
-    }
-
-    /**
-     * Panel constructor
-     * <p>
-     * {@code amountField} must be fully configured prior to calling the constructor.
-     * 
-     * @param baseCurrency Base currency
-     * @param amountField The field associated with the amount
-     */
-    public AccountExchangePanel(final CurrencyNode baseCurrency, final JFloatField amountField) {
-        this(baseCurrency, null, amountField);
     }
 
     private void destroy() {
