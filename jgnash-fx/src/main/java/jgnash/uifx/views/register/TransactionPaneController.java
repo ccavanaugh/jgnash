@@ -20,9 +20,7 @@ package jgnash.uifx.views.register;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -93,8 +91,6 @@ public class TransactionPaneController implements Initializable {
 
     private TransactionEntry modEntry = null;
 
-    private List<TransactionEntry> splits = null;
-
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         this.resources = resources;
@@ -117,7 +113,6 @@ public class TransactionPaneController implements Initializable {
     }
 
     public void modifyTransaction(final Transaction transaction) {
-
         if (transaction.areAccountsLocked()) {
             clearForm();
             StaticUIMethods.displayError(resources.getString("Message.TransactionModifyLocked"));
@@ -158,17 +153,17 @@ public class TransactionPaneController implements Initializable {
         reconciledButton.setSelected(t.getReconciled(getAccountProperty().get()) != ReconciledState.NOT_RECONCILED);
 
         if (t.getTransactionType() == TransactionType.SPLITENTRY) {
-
             accountExchangePane.setSelectedAccount(t.getCommonAccount()); // display common account
             accountExchangePane.setEnabled(false);
 
             if (canModifyTransaction(t)) { // split as the same base account
-                //  clone the splits for modification
 
-                splits = new ArrayList<>();
+                //  clone the splits for modification
+                getSplitsDialog().getTransactionEntries().clear();
+
                 for (TransactionEntry entry : t.getTransactionEntries()) {
                     try {
-                        splits.add((TransactionEntry) entry.clone());
+                        getSplitsDialog().getTransactionEntries().add((TransactionEntry) entry.clone());
                     } catch (CloneNotSupportedException e) {
                         Logger.getLogger(TransactionPaneController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
                     }
@@ -219,30 +214,34 @@ public class TransactionPaneController implements Initializable {
     }
 
     void clearForm() {
-        splits = null;
+        getSplitsDialog().getTransactionEntries().clear();
+
         modEntry = null;
         modTrans = null;
 
         amountField.setEditable(true);
-        accountExchangePane.setEnabled(true);
-        splitsButton.setDisable(false);
-        datePicker.setEditable(true);
-
-        numberComboBox.setDisable(false);
-        reconciledButton.setDisable(false);
-        payeeTextField.setEditable(true);
-
-        accountExchangePane.setExchangedAmount(null);
         amountField.setDecimal(null);
 
+        accountExchangePane.setEnabled(true);
+        accountExchangePane.setExchangedAmount(null);
+
+        splitsButton.setDisable(false);
+
+        reconciledButton.setDisable(false);
+        reconciledButton.setSelected(false);
+
+        payeeTextField.setEditable(true);
+        payeeTextField.setText(null);
+
+        datePicker.setEditable(true);
         if (!Options.getRememberLastDate()) {
             datePicker.setValue(LocalDate.now());
         }
 
         memoTextField.setText(null);
+
         numberComboBox.setValue(null);
-        payeeTextField.setText(null);
-        reconciledButton.setSelected(false);
+        numberComboBox.setDisable(false);
 
         attachmentPane.clear();
     }
@@ -275,13 +274,16 @@ public class TransactionPaneController implements Initializable {
         clearForm();
     }
 
-    @FXML
-    private void splitsAction() {
+    private SplitTransactionDialog getSplitsDialog() {
         if (splitsDialog == null) { // Lazy init
             splitsDialog = new SplitTransactionDialog();
             splitsDialog.getAccountProperty().setValue(getAccountProperty().get());
         }
+        return splitsDialog;
+    }
 
-        splitsDialog.showAndWait();
+    @FXML
+    private void splitsAction() {
+        getSplitsDialog().showAndWait();
     }
 }
