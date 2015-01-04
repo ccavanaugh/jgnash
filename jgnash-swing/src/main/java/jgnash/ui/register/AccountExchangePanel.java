@@ -184,17 +184,6 @@ public class AccountExchangePanel extends JPanel implements ActionListener, Focu
         updateLayout();
     }
 
-    private void destroy() {
-        MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM);
-        accountCombo.removeActionListener(this);
-
-        detailWindow.removePopupMenuListener(this);
-        exchangeRateField.removeFocusListener(this);
-        expandButton.removeItemListener(this);
-        exchangeAmountField.removeFocusListener(this);
-        amountField.removeFocusListener(this);
-    }
-
     /**
      * Panel constructor
      * <p>
@@ -205,6 +194,17 @@ public class AccountExchangePanel extends JPanel implements ActionListener, Focu
      */
     public AccountExchangePanel(final CurrencyNode baseCurrency, final JFloatField amountField) {
         this(baseCurrency, null, amountField);
+    }
+
+    private void destroy() {
+        MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM);
+        accountCombo.removeActionListener(this);
+
+        detailWindow.removePopupMenuListener(this);
+        exchangeRateField.removeFocusListener(this);
+        expandButton.removeItemListener(this);
+        exchangeAmountField.removeFocusListener(this);
+        amountField.removeFocusListener(this);
     }
 
     private void updateExchangeRateField() {
