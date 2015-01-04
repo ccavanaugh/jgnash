@@ -78,7 +78,7 @@ public class AccountExchangePane extends GridPane implements Initializable {
      */
     final private ObjectProperty<Account> baseAccountProperty = new SimpleObjectProperty<>();
 
-    final private ObjectProperty<CurrencyNode> currencyProperty = new SimpleObjectProperty<>();
+    final private ObjectProperty<CurrencyNode> baseCurrencyProperty = new SimpleObjectProperty<>();
 
     final private ObjectProperty<BigDecimal> exchangeAmountProperty = new SimpleObjectProperty<>(BigDecimal.ZERO);
 
@@ -109,29 +109,38 @@ public class AccountExchangePane extends GridPane implements Initializable {
 
         exchangeRateField.scaleProperty().set(MathConstants.EXCHANGE_RATE_ACCURACY);
 
-        baseAccountProperty.addListener(new ChangeListener<Account>() {
-            @Override
-            public void changed(final ObservableValue<? extends Account> observable, final Account oldValue, final Account newValue) {
-                accountCombo.filterAccount(newValue);
-                getCurrencyProperty().setValue(newValue.getCurrencyNode());
+        // base currency should always match the account if the account is set
+        baseAccountProperty.addListener((observable, oldValue, newValue) -> {
+            if (baseCurrencyProperty.get() != null && newValue.getCurrencyNode() != baseCurrencyProperty.get()) {
+                throw new RuntimeException("baseCurrency does not match baseAccount currency");
             }
+
+            accountCombo.filterAccount(newValue);
+            getBaseCurrencyProperty().setValue(newValue.getCurrencyNode());
         });
 
-        currencyProperty.addListener((observable, oldValue, newValue) -> {
-            exchangeAmountField.scaleProperty().set(newValue.getScale());
+        baseCurrencyProperty.addListener((observable, oldValue, newValue) -> {
+            if (baseAccountProperty.get() != null && baseAccountProperty.get().getCurrencyNode() != newValue) {
+                throw new RuntimeException("baseCurrency does not match baseAccount currency");
+            }
+
             updateExchangeRateField();
             updateControlVisibility();
         });
 
         accountCombo.getFilterPlaceHoldersProperty().set(true);
-        accountCombo.setOnAction(event -> {
-            updateExchangeRateField();
-            updateControlVisibility();
+        accountCombo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                exchangeAmountField.scaleProperty().setValue(newValue.getCurrencyNode().getScale());
+                updateExchangeRateField();
+                updateControlVisibility();
+            }
         });
 
         expandButton.setOnAction(event -> handleExpandButton());
 
-        exchangeAmountField.decimalProperty().bindBidirectional(exchangeAmountProperty);
+        exchangeAmountProperty.bindBidirectional(exchangeAmountField.decimalProperty());
+
         exchangeAmountField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) { // lost focus
                 if (exchangeAmountField.getDecimal().compareTo(BigDecimal.ZERO) > 0) {
@@ -159,48 +168,60 @@ public class AccountExchangePane extends GridPane implements Initializable {
     private void updateExchangeRateField() {
         final Account selectedAccount = accountCombo.getValue();
 
-        if (selectedAccount != null && currencyProperty.get() != null) {
-            exchangeRateField.setDecimal(currencyProperty.get().getExchangeRate(selectedAccount.getCurrencyNode()));
+        if (selectedAccount != null && baseCurrencyProperty.get() != null) {
+            exchangeRateField.setDecimal(baseCurrencyProperty.get().getExchangeRate(selectedAccount.getCurrencyNode()));
+        }
+    }
+
+    private BigDecimal getAmount() {
+        if (amountProperty.get() != null) {
+            return amountProperty.get();
+        } else {
+            return BigDecimal.ZERO;
         }
     }
 
     void amountFieldAction() {
         if (exchangeRateField.getDecimal().compareTo(BigDecimal.ZERO) == 0) {
-            if (amountProperty.get().compareTo(BigDecimal.ZERO) != 0) {
-                exchangeRateField.setDecimal(exchangeAmountProperty.get().divide(amountProperty.get(), MathConstants.mathContext));
+            if (getAmount().compareTo(BigDecimal.ZERO) != 0) {
+                exchangeRateField.setDecimal(exchangeAmountProperty.get().divide(getAmount(), MathConstants.mathContext));
             }
         } else {
-            exchangeAmountProperty.set(amountProperty.get().multiply(exchangeRateField.getDecimal(), MathConstants.mathContext));
+            exchangeAmountProperty.set(getAmount().multiply(exchangeRateField.getDecimal(),
+                    MathConstants.mathContext).setScale(baseCurrencyProperty.get().getScale(), MathConstants.roundingMode));
         }
     }
 
     private void exchangeRateFieldAction() {
-        if (amountProperty.get().compareTo(BigDecimal.ZERO) == 0 && amountEditable.get()) {
+        if (getAmount().compareTo(BigDecimal.ZERO) == 0 && amountEditable.get()) {
             if (exchangeRateField.getDecimal().compareTo(BigDecimal.ZERO) != 0) {
-                amountProperty.set(exchangeAmountProperty.get().divide(exchangeRateField.getDecimal(), MathConstants.mathContext));
+                amountProperty.set(exchangeAmountProperty.get().divide(exchangeRateField.getDecimal(),
+                        MathConstants.mathContext).setScale(baseCurrencyProperty.get().getScale(), MathConstants.roundingMode));
             }
         } else {
-            exchangeAmountProperty.set(amountProperty.get().multiply(exchangeRateField.getDecimal(), MathConstants.mathContext));
+            exchangeAmountProperty.set(getAmount().multiply(exchangeRateField.getDecimal(),
+                    MathConstants.mathContext).setScale(baseCurrencyProperty.get().getScale(), MathConstants.roundingMode));
         }
 
         Platform.runLater(popOver::hide);
     }
 
     private void exchangeAmountFieldAction() {
-        if (amountProperty.get().compareTo(BigDecimal.ZERO) == 0 && amountEditable.get()) {
+        if (getAmount().compareTo(BigDecimal.ZERO) == 0 && amountEditable.get()) {
             if (exchangeRateField.getDecimal().compareTo(BigDecimal.ZERO) != 0) {
-                amountProperty.set(exchangeAmountProperty.get().divide(exchangeRateField.getDecimal(), MathConstants.mathContext));
+                amountProperty.set(exchangeAmountProperty.get().divide(exchangeRateField.getDecimal(),
+                        MathConstants.mathContext).setScale(baseCurrencyProperty.get().getScale(), MathConstants.roundingMode));
             }
         } else {
-            if (amountProperty.get().compareTo(BigDecimal.ZERO) != 0) {
-                exchangeRateField.setDecimal(exchangeAmountProperty.get().divide(amountProperty.get(), MathConstants.mathContext));
+            if (getAmount().compareTo(BigDecimal.ZERO) != 0) {
+                exchangeRateField.setDecimal(exchangeAmountProperty.get().divide(getAmount(), MathConstants.mathContext));
             }
         }
     }
 
     private void updateControlVisibility() {
-        if (getSelectedAccount() != null && getCurrencyProperty() != null) {
-            if (getSelectedAccount().getCurrencyNode() == getCurrencyProperty().get()) {
+        if (getSelectedAccount() != null && getBaseCurrencyProperty() != null) {
+            if (getSelectedAccount().getCurrencyNode() == getBaseCurrencyProperty().get()) {
                 getChildren().removeAll(label, exchangeAmountField, expandButton);
             } else {
                 if (!getChildren().contains(label)) {
@@ -215,7 +236,7 @@ public class AccountExchangePane extends GridPane implements Initializable {
             popOver.hide();
         } else {
             // update the label before the popover is shown
-            exchangeLabel.setText(CommodityFormat.getConversion(currencyProperty.get(), accountCombo.getValue().getCurrencyNode()));
+            exchangeLabel.setText(CommodityFormat.getConversion(baseCurrencyProperty.get(), accountCombo.getValue().getCurrencyNode()));
             popOver.show(expandButton);
         }
     }
@@ -224,8 +245,8 @@ public class AccountExchangePane extends GridPane implements Initializable {
         return baseAccountProperty;
     }
 
-    public ObjectProperty<CurrencyNode> getCurrencyProperty() {
-        return currencyProperty;
+    public ObjectProperty<CurrencyNode> getBaseCurrencyProperty() {
+        return baseCurrencyProperty;
     }
 
     public ObjectProperty<BigDecimal> getExchangeAmountProperty() {
@@ -249,7 +270,7 @@ public class AccountExchangePane extends GridPane implements Initializable {
     }
 
     void setExchangedAmount(final BigDecimal value) {
-        getExchangeAmountProperty().setValue(value);
+        exchangeAmountProperty.setValue(value);
     }
 
     void setEnabled(final boolean enabled) {
