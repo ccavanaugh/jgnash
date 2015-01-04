@@ -86,7 +86,7 @@ public class ControlsTest extends Application {
 
         DecimalTextField decimalTextField = new DecimalTextField();
         DecimalTextField decimalTextField2 = new DecimalTextField();
-        decimalTextField2.setScale(4);
+        decimalTextField2.scaleProperty().set(4);
 
         primaryStage.setTitle("Controls Test");
         Button btn = new Button();

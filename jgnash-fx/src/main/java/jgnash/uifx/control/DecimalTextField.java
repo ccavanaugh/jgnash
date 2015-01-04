@@ -23,16 +23,10 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Objects;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-
-import jgnash.engine.MathConstants;
-import jgnash.util.NotNull;
-import jgnash.util.Nullable;
-
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -42,12 +36,22 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+import jgnash.engine.MathConstants;
+import jgnash.util.NotNull;
+import jgnash.util.Nullable;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
 /**
  * Text field for entering decimal values
  *
  * @author Craig Cavanaugh
  */
 public class DecimalTextField extends TextField {
+
+    private static final int DEFAULT_SCALE = 2;
 
     /**
      * Allowable character in input
@@ -58,8 +62,6 @@ public class DecimalTextField extends TextField {
      * Allowable math operators in input
      */
     private static final String MATH_OPERATORS = "()+*/";
-
-    private int scale = 2;
 
     private static char group = ',';
 
@@ -77,7 +79,12 @@ public class DecimalTextField extends TextField {
 
     private static final ScriptEngine jsEngine;
 
-    final private ObjectProperty<BigDecimal> decimalProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<BigDecimal> decimalProperty = new SimpleObjectProperty<>();
+
+    /**
+     * Controls the number of fixed decimal places
+     */
+    private final SimpleIntegerProperty scaleProperty = new SimpleIntegerProperty();
 
     static {
         FLOAT = getAllowedChars();
@@ -102,8 +109,6 @@ public class DecimalTextField extends TextField {
          * This does not prevent parsing grouping input.
          */
         format.setGroupingUsed(false);
-
-        setScale(scale);
 
         // Force evaluation on loss of focus
         focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -136,23 +141,41 @@ public class DecimalTextField extends TextField {
 
         decimalProperty().addListener(new ChangeListener<BigDecimal>() {
             @Override
-            public void changed(ObservableValue<? extends BigDecimal> observable, BigDecimal oldValue, BigDecimal newValue) {
+            public void changed(final ObservableValue<? extends BigDecimal> observable, final BigDecimal oldValue, final BigDecimal newValue) {
                 if (newValue != null && !newValue.equals(oldValue)) {
                     setDecimal(newValue);
                 }
             }
         });
+
+        // Change the max and minimum scale allowed for entry
+        scaleProperty.addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue) {
+                if (format instanceof DecimalFormat) {
+                    format.setMaximumFractionDigits(scaleProperty.get());
+                    format.setMinimumFractionDigits(scaleProperty.get());
+                }
+                evaluateAndSet();
+            }
+        });
+
+        scaleProperty.set(DEFAULT_SCALE); // trigger update to the format
     }
 
     public ObjectProperty<BigDecimal> decimalProperty() {
         return decimalProperty;
     }
 
+    public IntegerProperty scaleProperty() {
+        return scaleProperty;
+    }
+
     private void evaluateAndSet() {
         final String t = evaluateInput();
         if (!t.isEmpty()) {
             // round the value to scale
-            setDecimal(new BigDecimal(t).setScale(scale, MathConstants.roundingMode));
+            setDecimal(new BigDecimal(t).setScale(scaleProperty.get(), MathConstants.roundingMode));
         }
     }
 
@@ -257,22 +280,6 @@ public class DecimalTextField extends TextField {
     }
 
     /**
-     * Change the max and minimum scale allowed for entry
-     *
-     * @param scale number of fractional digits
-     */
-    public void setScale(final int scale) {
-        this.scale = scale;
-
-        if (format instanceof DecimalFormat) {
-            format.setMaximumFractionDigits(scale);
-            format.setMinimumFractionDigits(scale);
-        }
-
-        evaluateAndSet();
-    }
-
-    /**
      * BigDecimal and the interpreter cannot parse ',' in string
      * representations of decimals. This method will replace any ',' with '.'
      * and then try parsing with BigDecimal. If this fails, then it is assumed
@@ -313,7 +320,7 @@ public class DecimalTextField extends TextField {
                 final Object o = jsEngine.eval(text);
 
                 if (o instanceof Number) { // scale the number
-                    final BigDecimal value = new BigDecimal(o.toString()).setScale(scale, MathConstants.roundingMode);
+                    final BigDecimal value = new BigDecimal(o.toString()).setScale(scaleProperty.get(), MathConstants.roundingMode);
 
                     decimalProperty.setValue(value);
                     return value.toString();

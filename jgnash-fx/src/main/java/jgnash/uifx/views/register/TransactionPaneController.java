@@ -27,6 +27,8 @@ import java.util.logging.Logger;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -102,6 +104,14 @@ public class TransactionPaneController implements Initializable {
         accountExchangePane.getBaseAccountProperty().bind(getAccountProperty());
         accountExchangePane.getAmountProperty().bindBidirectional(amountField.decimalProperty());
         accountExchangePane.getAmountEditable().bind(amountField.editableProperty());
+
+        // Set the number of fixed decimal places for entry
+        accountProperty.addListener(new ChangeListener<Account>() {
+            @Override
+            public void changed(final ObservableValue<? extends Account> observable, final Account oldValue, final Account newValue) {
+                amountField.scaleProperty().set(newValue.getCurrencyNode().getScale());
+            }
+        });
     }
 
     ObjectProperty<Account> getAccountProperty() {

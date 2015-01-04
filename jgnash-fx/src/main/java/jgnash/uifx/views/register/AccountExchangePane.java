@@ -107,7 +107,7 @@ public class AccountExchangePane extends GridPane implements Initializable {
         expandButton.disableProperty().bind(disableProperty);
         exchangeRateField.disableProperty().bind(disableProperty);
 
-        exchangeRateField.setScale(MathConstants.EXCHANGE_RATE_ACCURACY);
+        exchangeRateField.scaleProperty().set(MathConstants.EXCHANGE_RATE_ACCURACY);
 
         baseAccountProperty.addListener(new ChangeListener<Account>() {
             @Override
@@ -118,7 +118,7 @@ public class AccountExchangePane extends GridPane implements Initializable {
         });
 
         currencyProperty.addListener((observable, oldValue, newValue) -> {
-            exchangeAmountField.setScale(newValue.getScale());
+            exchangeAmountField.scaleProperty().set(newValue.getScale());
             updateExchangeRateField();
             updateControlVisibility();
         });
