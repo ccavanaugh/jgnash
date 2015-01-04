@@ -123,7 +123,7 @@ public abstract class RegisterPaneController implements Initializable {
                     if (newValue != null) {
                         modifyTransaction(newValue);
                     } else {
-                        clearForms(); // selection was forcibly cleared, better clear the forms
+                        clearForm(); // selection was forcibly cleared, better clear the form
                     }
                 });
             }
@@ -147,7 +147,7 @@ public abstract class RegisterPaneController implements Initializable {
     /**
      * Default empty implementation.
      */
-    protected void clearForms() {
+    protected void clearForm() {
 
     }
 }

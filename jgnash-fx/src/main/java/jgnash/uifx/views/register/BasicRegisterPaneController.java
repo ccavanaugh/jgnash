@@ -136,4 +136,9 @@ public class BasicRegisterPaneController extends RegisterPaneController {
         }
         return new Tab();
     }
+
+    @Override
+    protected void clearForm() {
+        ((TransactionPaneController)transactionForms.getSelectionModel().getSelectedItem().getUserData()).clearForm();
+    }
 }
