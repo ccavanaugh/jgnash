@@ -295,7 +295,7 @@ public class SplitTransactionDialog extends Stage implements Initializable {
     }
 
     private void closeAction() {
-        ((Stage) closeButton.getScene().getWindow()).close();
+        closeButton.getScene().getWindow().hide();
     }
 
     private class AccountNameWrapper extends SimpleStringProperty {
