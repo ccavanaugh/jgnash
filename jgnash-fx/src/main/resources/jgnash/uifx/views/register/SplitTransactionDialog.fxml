@@ -35,8 +35,7 @@
                             <TabPane tabClosingPolicy="UNAVAILABLE" fx:id="tabPane" VBox.vgrow="NEVER"/>
                             <ButtonBar VBox.vgrow="NEVER">
                                 <buttons>
-                                    <Button fx:id="okButton" text="%Button.Ok" ButtonBar.buttonData="OK_DONE"/>
-                                    <Button fx:id="cancelButton" text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE"/>
+                                    <Button fx:id="closeButton" text="%Button.Close" ButtonBar.buttonData="CANCEL_CLOSE"/>
                                 </buttons>
                             </ButtonBar>
                         </children>

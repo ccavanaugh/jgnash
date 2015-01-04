@@ -78,10 +78,7 @@ public class SplitTransactionDialog extends Stage implements Initializable {
     private Button deleteAllButton;
 
     @FXML
-    private Button okButton;
-
-    @FXML
-    private Button cancelButton;
+    private Button closeButton;
 
     @FXML
     private TableView<TransactionEntry> tableView;
@@ -158,8 +155,7 @@ public class SplitTransactionDialog extends Stage implements Initializable {
         // If the list changes, clear the selection
         transactionEntries.addListener((ListChangeListener<TransactionEntry>) c -> tableView.getSelectionModel().clearSelection());
 
-        okButton.setOnAction(event -> okAction());
-        cancelButton.setOnAction(event -> cancelAction());
+        closeButton.setOnAction(event -> closeAction());
         deleteButton.setOnAction(event -> deleteAction());
         deleteAllButton.setOnAction(event -> deleteAllAction());
         newButton.setOnAction(event -> newAction());
@@ -298,12 +294,8 @@ public class SplitTransactionDialog extends Stage implements Initializable {
         return balance;
     }
 
-    private void okAction() {
-        ((Stage) okButton.getScene().getWindow()).close();
-    }
-
-    private void cancelAction() {
-        ((Stage) cancelButton.getScene().getWindow()).close();
+    private void closeAction() {
+        ((Stage) closeButton.getScene().getWindow()).close();
     }
 
     private class AccountNameWrapper extends SimpleStringProperty {
