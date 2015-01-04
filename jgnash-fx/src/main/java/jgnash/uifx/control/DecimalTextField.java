@@ -79,6 +79,7 @@ public class DecimalTextField extends TextField {
 
     private static final ScriptEngine jsEngine;
 
+    // the property value may be null
     private final ObjectProperty<BigDecimal> decimalProperty = new SimpleObjectProperty<>();
 
     /**
@@ -137,13 +138,13 @@ public class DecimalTextField extends TextField {
             }
         });
 
-        setDecimal(BigDecimal.ZERO);
-
         decimalProperty().addListener(new ChangeListener<BigDecimal>() {
             @Override
             public void changed(final ObservableValue<? extends BigDecimal> observable, final BigDecimal oldValue, final BigDecimal newValue) {
                 if (newValue != null) {
                     setText(format.format(newValue.doubleValue()));
+                } else {
+                    setText("");
                 }
             }
         });
@@ -183,7 +184,7 @@ public class DecimalTextField extends TextField {
         if (decimal != null) {
             decimalProperty.setValue(decimal.setScale(scaleProperty.get(), MathConstants.roundingMode));
         } else {
-            super.setText("");
+            decimalProperty().setValue(null);
         }
     }
 
