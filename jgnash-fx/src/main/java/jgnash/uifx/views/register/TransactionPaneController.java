@@ -110,8 +110,14 @@ public class TransactionPaneController implements Initializable {
             @Override
             public void changed(final ObservableValue<? extends Account> observable, final Account oldValue, final Account newValue) {
                 amountField.scaleProperty().set(newValue.getCurrencyNode().getScale());
+                initializeSplitsDialog();
             }
         });
+    }
+
+    private void initializeSplitsDialog() {
+        splitsDialog = new SplitTransactionDialog();
+        splitsDialog.getAccountProperty().setValue(getAccountProperty().get());
     }
 
     ObjectProperty<Account> getAccountProperty() {
@@ -164,16 +170,16 @@ public class TransactionPaneController implements Initializable {
 
         if (t.getTransactionType() == TransactionType.SPLITENTRY) {
             accountExchangePane.setSelectedAccount(t.getCommonAccount()); // display common account
-            accountExchangePane.setEnabled(false);
+            accountExchangePane.setEnabled(false); // disable it
 
-            if (canModifyTransaction(t)) { // split as the same base account
+            if (canModifyTransaction(t)) { // split common account as the base account
 
                 //  clone the splits for modification
-                getSplitsDialog().getTransactionEntries().clear();
+                splitsDialog.getTransactionEntries().clear();
 
-                for (TransactionEntry entry : t.getTransactionEntries()) {
+                for (final TransactionEntry entry : t.getTransactionEntries()) {
                     try {
-                        getSplitsDialog().getTransactionEntries().add((TransactionEntry) entry.clone());
+                        splitsDialog.getTransactionEntries().add((TransactionEntry) entry.clone());
                     } catch (CloneNotSupportedException e) {
                         Logger.getLogger(TransactionPaneController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
                     }
@@ -189,7 +195,7 @@ public class TransactionPaneController implements Initializable {
                 amountField.setEditable(true);
                 amountField.setDecimal(t.getAmount(getAccountProperty().get()).abs());
 
-                for (TransactionEntry entry : t.getTransactionEntries()) {
+                for (final TransactionEntry entry : t.getTransactionEntries()) {
                     if (entry.getCreditAccount() == getAccountProperty().get()) {
                         accountExchangePane.setExchangedAmount(entry.getDebitAmount().abs());
                         break;
@@ -224,7 +230,7 @@ public class TransactionPaneController implements Initializable {
     }
 
     void clearForm() {
-        getSplitsDialog().getTransactionEntries().clear();
+        splitsDialog.getTransactionEntries().clear();   // clear an old transaction entries
 
         modEntry = null;
         modTrans = null;
@@ -284,16 +290,8 @@ public class TransactionPaneController implements Initializable {
         clearForm();
     }
 
-    private SplitTransactionDialog getSplitsDialog() {
-        if (splitsDialog == null) { // Lazy init
-            splitsDialog = new SplitTransactionDialog();
-            splitsDialog.getAccountProperty().setValue(getAccountProperty().get());
-        }
-        return splitsDialog;
-    }
-
     @FXML
     private void splitsAction() {
-        getSplitsDialog().showAndWait();
+        splitsDialog.showAndWait();
     }
 }
