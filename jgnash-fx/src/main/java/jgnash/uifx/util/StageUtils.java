@@ -18,11 +18,19 @@
 package jgnash.uifx.util;
 
 import java.awt.geom.Rectangle2D;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import jgnash.util.EncodeDecode;
-
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+
+import jgnash.util.EncodeDecode;
 
 /**
  * Saves and restores Stage sizes
@@ -40,11 +48,11 @@ public class StageUtils {
      * @param prefNode This should typically be the calling controller
      */
     public static void addBoundsListener(final Stage stage, final Class<?> prefNode) {
-        addBoundsListener(stage, prefNode.getName().replace('.', '/'), DEFAULT_KEY);
+        addBoundsListener(stage, prefNode.getName().replace('.', '/'));
     }
 
-    private static void addBoundsListener(final Stage stage, final String prefNode, final String key) {
-        final String bounds = Preferences.userRoot().node(prefNode).get(key, null);
+    private static void addBoundsListener(final Stage stage, final String prefNode) {
+        final String bounds = Preferences.userRoot().node(prefNode).get(DEFAULT_KEY, null);
 
         if (bounds != null) { // restore to previous size and position
             final Rectangle2D.Double rectangle = EncodeDecode.decodeRectangle2D(bounds);
@@ -61,15 +69,45 @@ public class StageUtils {
                 stage.setWidth(rectangle.getWidth());
                 stage.setHeight(rectangle.getHeight());
             }
-
             stage.setResizable(resizable); // restore the resize property
         }
 
-        stage.setOnCloseRequest(windowEvent -> {
-            final Preferences p = Preferences.userRoot().node(prefNode);
-            p.put(key, EncodeDecode.encodeRectangle2D(stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight()));
+        final ChangeListener<Number> boundsListener = new BoundsListener(stage, prefNode);
 
-            //stage.onCloseRequestProperty().removeListener(this);  // make gc easier
-        });
+        stage.widthProperty().addListener(boundsListener);
+        stage.heightProperty().addListener(boundsListener);
+        stage.xProperty().addListener(boundsListener);
+        stage.yProperty().addListener(boundsListener);
+    }
+
+    /**
+     * Save Window bounds.  Limits rate of saves to the preferences system
+     */
+    private static class BoundsListener implements ChangeListener<Number> {
+        private static final int FORCED_DELAY = 1000;
+
+        private final ThreadPoolExecutor executor;
+        private final Preferences p;
+        private final Window window;
+
+        public BoundsListener(final Window window, final String prefNode) {
+            executor = new ThreadPoolExecutor(0, 1, 0, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
+            executor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
+            p = Preferences.userRoot().node(prefNode);
+            this.window = window;
+        }
+
+        @Override
+        public void changed(final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue) {
+            executor.execute(() -> {
+                p.put(DEFAULT_KEY, EncodeDecode.encodeRectangle2D(window.getX(), window.getY(),
+                        window.getWidth(), window.getHeight()));
+                try {
+                    Thread.sleep(FORCED_DELAY); // forcibly limits amount of saves
+                } catch (final InterruptedException e) {
+                    Logger.getLogger(BoundsListener.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+                }
+            });
+        }
     }
 }
