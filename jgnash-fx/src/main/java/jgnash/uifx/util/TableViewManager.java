@@ -288,6 +288,8 @@ public class TableViewManager<S> {
 
                 // Force the column widths and let the layout policy do the heavy lifting
                 for (int j = 0; j < calculatedWidths.length; j++) {
+                    visibleColumns.get(j).setResizable(true);   // allow resizing
+
                     if (visibleColumnWeights.get(j) == 0) { // fixed width column
                         visibleColumns.get(j).minWidthProperty().setValue(calculatedWidths[j]);
                         visibleColumns.get(j).maxWidthProperty().setValue(calculatedWidths[j]);
