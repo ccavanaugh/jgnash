@@ -76,6 +76,8 @@ public class TableViewManager<S> {
 
     private final ColumnVisibilityListener visibilityListener = new ColumnVisibilityListener();
 
+    private static final Logger logger = Logger.getLogger(TableViewManager.class.getName());
+
     /**
      * Limits number of processed visibility change events ensuring the most recent is executed
      */
@@ -252,6 +254,13 @@ public class TableViewManager<S> {
     }
 
     public void packTable() {
+
+        // Prevent packing if the containing window is not showing
+        if (!tableView.getScene().getWindow().isShowing()) {
+            logger.log(Level.WARNING, "tried to pack a table that is not visible", new Throwable());
+            return;
+        }
+
         new Thread(() -> {
 
             LocalTime start = LocalTime.now();
@@ -278,7 +287,7 @@ public class TableViewManager<S> {
                 }
             }
 
-            System.out.println("Pack Calculation time was " + Duration.between(start, LocalTime.now()).toMillis() + " millis");
+            logger.info("Pack Calculation time was " + Duration.between(start, LocalTime.now()).toMillis() + " millis");
 
             Platform.runLater(() -> {
                 removeColumnListeners();
