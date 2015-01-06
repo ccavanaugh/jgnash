@@ -117,6 +117,10 @@ public class SplitTransactionDialog extends Stage implements Initializable {
         setTitle(ResourceUtils.getBundle().getString("Title.SpitTran"));
 
         StageUtils.addBoundsListener(this, SplitTransactionDialog.class);
+
+        setOnShowing(event -> {
+            tableViewManager.restoreLayout();   // restore layout and pack after the table is visible
+        });
     }
 
     public ObjectProperty<Account> getAccountProperty() {
@@ -136,9 +140,6 @@ public class SplitTransactionDialog extends Stage implements Initializable {
             loadTable();
         });
 
-        // repack when the list contents change
-        transactionEntries.addListener((ListChangeListener<TransactionEntry>) c -> tableViewManager.packTable());
-
         tableView.setTableMenuButtonVisible(true);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -154,6 +155,13 @@ public class SplitTransactionDialog extends Stage implements Initializable {
 
         // If the list changes, clear the selection
         transactionEntries.addListener((ListChangeListener<TransactionEntry>) c -> tableView.getSelectionModel().clearSelection());
+
+        // repack when the list contents change and this dialog is showing
+        transactionEntries.addListener((ListChangeListener<TransactionEntry>) c -> {
+            if (SplitTransactionDialog.this.isShowing()) {
+                tableViewManager.packTable();
+            }
+        });
 
         closeButton.setOnAction(event -> closeAction());
         deleteButton.setOnAction(event -> deleteAction());
@@ -204,7 +212,6 @@ public class SplitTransactionDialog extends Stage implements Initializable {
         buildTable();
 
         tableView.setItems(sortedList);
-        tableViewManager.restoreLayout();   // required to table view manager is to work
     }
 
     Callback<Integer, Double> getColumnWeightFactory() {
