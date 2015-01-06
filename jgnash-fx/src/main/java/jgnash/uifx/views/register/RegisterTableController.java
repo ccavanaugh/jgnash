@@ -160,6 +160,8 @@ public abstract class RegisterTableController implements Initializable {
 
             tableView.setItems(sortedList);
             tableViewManager.restoreLayout();   // required to table view manager is to work
+
+            tableView.scrollTo(observableTransactions.size());  // scroll to the end of the table
         }
     }
 
