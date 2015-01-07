@@ -52,7 +52,7 @@ import jgnash.uifx.control.TransactionNumberComboBox;
  *
  * @author Craig Cavanaugh
  */
-public class TransactionPaneController implements Initializable {
+public class TransactionPaneController implements TransactionEntryController, Initializable {
 
     @FXML
     protected TextField payeeTextField;
@@ -128,6 +128,7 @@ public class TransactionPaneController implements Initializable {
         this.panelType = panelType;
     }
 
+    @Override
     public void modifyTransaction(final Transaction transaction) {
         if (transaction.areAccountsLocked()) {
             clearForm();

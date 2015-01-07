@@ -54,6 +54,8 @@ public class BasicRegisterPaneController extends RegisterPaneController {
     @FXML
     protected TabPane transactionForms;
 
+    private Tab adjustTab;
+
     private Tab creditTab;
 
     private Tab debitTab;
@@ -85,13 +87,14 @@ public class BasicRegisterPaneController extends RegisterPaneController {
     protected void modifyTransaction(@NotNull final Transaction transaction) {
         if (!(transaction instanceof InvestmentTransaction)) {
             if (transaction.getTransactionType() == TransactionType.SINGLENTRY) {
-                // TODO: Implement adjustment panel
+                transactionForms.getSelectionModel().select(adjustTab);
+                ((TransactionEntryController)adjustTab.getUserData()).modifyTransaction(transaction);
             } else if (transaction.getAmount(getAccountProperty().get()).signum() >= 0) {
                 transactionForms.getSelectionModel().select(creditTab);
-                ((TransactionPaneController)creditTab.getUserData()).modifyTransaction(transaction);
+                ((TransactionEntryController)creditTab.getUserData()).modifyTransaction(transaction);
             } else {
                 transactionForms.getSelectionModel().select(debitTab);
-                ((TransactionPaneController)debitTab.getUserData()).modifyTransaction(transaction);
+                ((TransactionEntryController)debitTab.getUserData()).modifyTransaction(transaction);
             }
         } /*else {
             // TODO: Show investment transaction dialog
@@ -105,8 +108,9 @@ public class BasicRegisterPaneController extends RegisterPaneController {
 
         creditTab = buildTab(tabNames[0], PanelType.INCREASE);
         debitTab = buildTab(tabNames[1], PanelType.DECREASE);
+        adjustTab = buildAdjustTab();
 
-        transactionForms.getTabs().addAll(creditTab, debitTab);
+        transactionForms.getTabs().addAll(creditTab, debitTab, adjustTab);
 
         if (accountType == AccountType.CHECKING || accountType == AccountType.CREDIT) {
             transactionForms.getSelectionModel().select(debitTab);
@@ -127,6 +131,26 @@ public class BasicRegisterPaneController extends RegisterPaneController {
             transactionPaneController.getAccountProperty().bind(getAccountProperty());
 
             final Tab tab = new Tab(tabName);
+            tab.setContent(pane);
+            tab.setUserData(transactionPaneController); // place a reference to the controller here
+
+            return tab;
+        } catch (final IOException e) {
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
+        return new Tab();
+    }
+
+    private Tab buildAdjustTab() {
+        try {
+            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AdjustTransactionPane.fxml"), resources);
+            final Pane pane = fxmlLoader.load();
+
+            final AdjustTransactionPaneController transactionPaneController = fxmlLoader.getController();
+
+            transactionPaneController.getAccountProperty().bind(getAccountProperty());
+
+            final Tab tab = new Tab(resources.getString("Tab.Adjust"));
             tab.setContent(pane);
             tab.setUserData(transactionPaneController); // place a reference to the controller here
 

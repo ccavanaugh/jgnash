@@ -21,7 +21,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -48,7 +47,7 @@ import java.util.logging.Logger;
  *
  * @author Craig Cavanaugh
  */
-public class AdjustTransactionPaneController implements Initializable {
+public class AdjustTransactionPaneController implements TransactionEntryController, Initializable {
 
     @FXML
     protected TextField payeeTextField;
@@ -97,6 +96,7 @@ public class AdjustTransactionPaneController implements Initializable {
         return accountProperty;
     }
 
+    @Override
     public void modifyTransaction(final Transaction transaction) {
         if (transaction.areAccountsLocked()) {
             clearForm();
