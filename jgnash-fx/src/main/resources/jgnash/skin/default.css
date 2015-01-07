@@ -68,7 +68,7 @@
 }
 
 .icon-button {
-    -fx-padding: 0.25em 0.666667em 0.25em 0.666667em; /* 3 8 3 8 */
+    -fx-padding: 0.233333em 0.666667em 0.233333em 0.666667em;
 }
 
 #disabled-cell {

@@ -12,6 +12,9 @@
 <?import jgnash.uifx.control.TransactionNumberComboBox?>
 <?import jgnash.uifx.views.register.AttachmentPane?>
 
+<?import javafx.scene.control.Tooltip?>
+<?import org.controlsfx.glyphfont.Glyph?>
+
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="jgnash.uifx.views.register.AdjustTransactionPaneController" styleClass="form, dialog">
   <columnConstraints>
@@ -56,7 +59,14 @@
        <DecimalTextField fx:id="amountField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
      <ButtonBar GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="3">
        <buttons>
-           <Button text="C" ButtonBar.buttonData="LEFT" onAction="#convertAction"/>
+           <Button ButtonBar.buttonData="LEFT" onAction="#convertAction" styleClass="icon-button">
+               <graphic>
+                   <Glyph fontFamily="FontAwesome" icon="ADJUST"/>
+               </graphic>
+               <tooltip>
+                   <Tooltip text="%ToolTip.ConvertSEntry"/>
+               </tooltip>
+           </Button>
          <Button text="%Button.Ok" ButtonBar.buttonData="OK_DONE" onAction="#okAction"/>
          <Button text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#cancelAction"/>
        </buttons>
