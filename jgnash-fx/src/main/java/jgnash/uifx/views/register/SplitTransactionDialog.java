@@ -318,4 +318,12 @@ public class SplitTransactionDialog extends Stage implements Initializable {
             }
         }
     }
+
+    BigDecimal getBalance() {
+        if (sortedList.isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+
+        return getBalanceAt(sortedList.get(sortedList.size() - 1));
+    }
 }

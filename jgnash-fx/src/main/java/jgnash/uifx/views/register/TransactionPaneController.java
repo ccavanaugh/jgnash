@@ -293,5 +293,8 @@ public class TransactionPaneController implements Initializable {
     @FXML
     private void splitsAction() {
         splitsDialog.showAndWait();
+
+        amountField.setEditable(splitsDialog.getTransactionEntries().size() == 0);
+        amountField.setDecimal(splitsDialog.getBalance());
     }
 }
