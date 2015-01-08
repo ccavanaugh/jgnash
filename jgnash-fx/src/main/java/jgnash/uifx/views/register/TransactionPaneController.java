@@ -17,6 +17,7 @@
  */
 package jgnash.uifx.views.register;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -37,9 +38,11 @@ import javafx.scene.control.TextField;
 
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
+import jgnash.engine.ReconcileManager;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
+import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
@@ -154,6 +157,77 @@ public class TransactionPaneController implements TransactionEntryController, In
                 logger.warning("Was not able to modify the transaction");
             }
         }
+    }
+
+    @Override
+    public boolean validateForm() {
+        boolean result =  accountExchangePane.getSelectedAccount() != null;
+
+        if (result) {
+            result = amountField.getDecimal().compareTo(BigDecimal.ZERO) != 0;
+        }
+
+        return result;
+    }
+
+    Transaction buildTransaction() {
+
+        Transaction transaction;
+
+        // TODO, Move to date picker
+        final Date date = Date.from(datePicker.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+
+        if (splitsDialog.getTransactionEntries().size() > 0) { // build a split transaction
+            transaction = new Transaction();
+
+            transaction.setDate(date);
+            transaction.setNumber(numberComboBox.getValue());
+            transaction.setMemo(memoTextField.getText());
+            transaction.setPayee(payeeTextField.getText());
+
+            transaction.addTransactionEntries(splitsDialog.getTransactionEntries());
+        } else {
+            final int signum = amountField.getDecimal().signum();
+
+            final Account selectedAccount;
+
+            if (modTrans != null && modTrans.areAccountsHidden()) {
+                selectedAccount = getOppositeSideAccount(modTrans);
+            } else {
+                selectedAccount = accountExchangePane.getSelectedAccount();
+            }
+
+            if (panelType == PanelType.DECREASE && signum >= 0 || panelType == PanelType.INCREASE && signum == -1) {
+                if (hasEqualCurrencies()) {
+                    transaction = TransactionFactory.generateDoubleEntryTransaction(selectedAccount, accountProperty.get(), amountField.getDecimal().abs(), date, memoTextField.getText(), payeeTextField.getText(), numberComboBox.getValue());
+                } else {
+                    transaction = TransactionFactory.generateDoubleEntryTransaction(selectedAccount, accountProperty.get(), accountExchangePane.getExchangeAmountProperty().get().abs(), amountField.getDecimal().abs().negate(), date, memoTextField.getText(), payeeTextField.getText(), numberComboBox.getValue());
+                }
+            } else {
+                if (hasEqualCurrencies()) {
+                    transaction = TransactionFactory.generateDoubleEntryTransaction(accountProperty.get(), selectedAccount, amountField.getDecimal().abs(), date, memoTextField.getText(), payeeTextField.getText(), numberComboBox.getValue());
+                } else {
+                    transaction = TransactionFactory.generateDoubleEntryTransaction(accountProperty.get(), selectedAccount, amountField.getDecimal().abs(), accountExchangePane.getExchangeAmountProperty().get().abs().negate(), date, memoTextField.getText(), payeeTextField.getText(), numberComboBox.getValue());
+                }
+            }
+        }
+
+        ReconcileManager.reconcileTransaction(accountProperty.get(), transaction, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+
+        return transaction;
+    }
+
+    boolean hasEqualCurrencies() {
+        return accountProperty.get().getCurrencyNode().equals(accountExchangePane.getSelectedAccount().getCurrencyNode());
+    }
+
+    Account getOppositeSideAccount(final Transaction t) {
+        TransactionEntry entry = t.getTransactionEntries().get(0);
+
+        if (entry.getCreditAccount().equals(accountProperty.get())) {
+            return entry.getDebitAccount();
+        }
+        return entry.getCreditAccount();
     }
 
     void newTransaction(final Transaction t) {
@@ -284,6 +358,9 @@ public class TransactionPaneController implements TransactionEntryController, In
 
     @FXML
     private void okAction() {
+        if (validateForm()) {
+
+        }
     }
 
     @FXML

@@ -25,4 +25,6 @@ import jgnash.engine.Transaction;
 public interface TransactionEntryController {
 
     public void modifyTransaction(final Transaction transaction);
+
+    public boolean validateForm();
 }
