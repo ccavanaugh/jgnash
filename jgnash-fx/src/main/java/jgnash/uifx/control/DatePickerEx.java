@@ -19,12 +19,14 @@ package jgnash.uifx.control;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.chrono.ChronoLocalDate;
 import java.time.chrono.Chronology;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DecimalStyle;
 import java.time.format.FormatStyle;
+import java.util.Date;
 import java.util.Locale;
 
 import javafx.application.Platform;
@@ -144,6 +146,13 @@ public class DatePickerEx extends DatePicker {
         return DateTimeFormatter.ofPattern(getPattern()).withDecimalStyle(DecimalStyle.of(locale));
     }
 
+    /**
+     * Helper method to return a legacy Date value
+     * @return {@code LocalDate} converted to {@code Date}
+     */
+    public Date getDate() {
+        return Date.from(getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
 
     private class DateConverter extends StringConverter<LocalDate> {
 
