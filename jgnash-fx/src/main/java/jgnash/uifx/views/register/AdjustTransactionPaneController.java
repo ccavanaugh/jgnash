@@ -35,6 +35,7 @@ import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.TransactionNumberComboBox;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -108,6 +109,11 @@ public class AdjustTransactionPaneController implements TransactionEntryControll
 
         modTrans = transaction; // save reference to old transaction
         modTrans = attachmentPane.modifyTransaction(modTrans);
+    }
+
+    @Override
+    public boolean validateForm() {
+        return amountField.getDecimal().compareTo(BigDecimal.ZERO) != 0;
     }
 
     void newTransaction(final Transaction t) {

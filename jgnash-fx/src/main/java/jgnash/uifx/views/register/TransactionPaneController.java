@@ -37,6 +37,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.ReconcileManager;
 import jgnash.engine.ReconciledState;
@@ -175,7 +177,7 @@ public class TransactionPaneController implements TransactionEntryController, In
         Transaction transaction;
 
         // TODO, Move to date picker
-        final Date date = Date.from(datePicker.getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+        final Date date = datePicker.getDate();
 
         if (splitsDialog.getTransactionEntries().size() > 0) { // build a split transaction
             transaction = new Transaction();
@@ -247,7 +249,7 @@ public class TransactionPaneController implements TransactionEntryController, In
             accountExchangePane.setSelectedAccount(t.getCommonAccount()); // display common account
             accountExchangePane.setEnabled(false); // disable it
 
-            if (canModifyTransaction(t)) { // split common account as the base account
+            if (canModifyTransaction(t)) { // split common account is the same as the base account
 
                 //  clone the splits for modification
                 splitsDialog.getTransactionEntries().clear();
@@ -359,7 +361,45 @@ public class TransactionPaneController implements TransactionEntryController, In
     @FXML
     private void okAction() {
         if (validateForm()) {
+            if (modTrans == null) { // new transaction
+                Transaction newTrans = buildTransaction();
 
+                ReconcileManager.reconcileTransaction(accountProperty.get(), newTrans, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+
+                newTrans = attachmentPane.buildTransaction(newTrans);  // chain the transaction build
+
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+                if (engine != null) {
+                    engine.addTransaction(newTrans);
+                }
+            } else {
+                Transaction newTrans = buildTransaction();
+
+                newTrans.setDateEntered(modTrans.getDateEntered());
+
+                // restore the reconciled state of the previous old transaction
+                for (final Account a : modTrans.getAccounts()) {
+                    if (!a.equals(accountProperty.get())) {
+                        ReconcileManager.reconcileTransaction(a, newTrans, modTrans.getReconciled(a));
+                    }
+                }
+
+                /*
+                 * Reconcile the modified transaction for this account.
+                 * This must be performed last to ensure consistent results per the ReconcileManager rules
+                 */
+                ReconcileManager.reconcileTransaction(accountProperty.get(), newTrans, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+
+                newTrans = attachmentPane.buildTransaction(newTrans);  // chain the transaction build
+
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+                if (engine != null && engine.removeTransaction(modTrans)) {
+                    engine.addTransaction(newTrans);
+                }
+            }
+            clearForm();
         }
     }
 
