@@ -59,7 +59,7 @@
       </GridPane>
      <ButtonBar GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="3">
        <buttons>
-         <Button text="%Button.Ok" ButtonBar.buttonData="OK_DONE" onAction="#okAction"/>
+         <Button text="%Button.Enter" ButtonBar.buttonData="OK_DONE" onAction="#okAction"/>
          <Button text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#cancelAction"/>
        </buttons>
      </ButtonBar>
