@@ -17,31 +17,35 @@
  */
 package jgnash.uifx.views.register;
 
+import java.math.BigDecimal;
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ResourceBundle;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+
 import jgnash.engine.Account;
-import jgnash.engine.InvestmentTransaction;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.ReconcileManager;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
+import jgnash.engine.TransactionFactory;
+import jgnash.engine.TransactionType;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.TransactionNumberComboBox;
-
-import java.math.BigDecimal;
-import java.net.URL;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.ResourceBundle;
-import java.util.logging.Logger;
+import jgnash.util.NotNull;
 
 /**
  * Transaction Entry Controller for Credits and Debits
@@ -51,22 +55,25 @@ import java.util.logging.Logger;
 public class AdjustTransactionPaneController implements TransactionEntryController, Initializable {
 
     @FXML
-    protected TextField payeeTextField;
+    private Button convertButton;
 
     @FXML
-    protected TransactionNumberComboBox numberComboBox;
+    private TextField payeeTextField;
 
     @FXML
-    protected DatePickerEx datePicker;
+    private TransactionNumberComboBox numberComboBox;
 
     @FXML
-    protected DecimalTextField amountField;
+    private DatePickerEx datePicker;
 
     @FXML
-    protected TextField memoTextField;
+    private DecimalTextField amountField;
 
     @FXML
-    protected CheckBox reconciledButton;
+    private TextField memoTextField;
+
+    @FXML
+    private CheckBox reconciledButton;
 
     @FXML
     private AttachmentPane attachmentPane;
@@ -97,18 +104,30 @@ public class AdjustTransactionPaneController implements TransactionEntryControll
         return accountProperty;
     }
 
+    protected Transaction buildTransaction() {
+        return TransactionFactory.generateSingleEntryTransaction(accountProperty.get(), amountField.getDecimal(), datePicker.getDate(), memoTextField.getText(), payeeTextField.getText(), numberComboBox.getValue());
+    }
+
     @Override
-    public void modifyTransaction(final Transaction transaction) {
-        if (transaction.areAccountsLocked()) {
-            clearForm();
-            StaticUIMethods.displayError(resources.getString("Message.TransactionModifyLocked"));
-            return;
+    public void modifyTransaction(@NotNull final Transaction transaction) {
+        if (canModifyTransaction(transaction)) {
+            if (transaction.areAccountsLocked()) {
+                clearForm();
+                StaticUIMethods.displayError(resources.getString("Message.TransactionModifyLocked"));
+                return;
+            }
+
+            newTransaction(transaction); // load the form
+
+            modTrans = transaction; // save reference to old transaction
+            modTrans = attachmentPane.modifyTransaction(modTrans);
+
+            convertButton.setDisable(false);
         }
+    }
 
-        newTransaction(transaction); // load the form
-
-        modTrans = transaction; // save reference to old transaction
-        modTrans = attachmentPane.modifyTransaction(modTrans);
+    protected boolean canModifyTransaction(final Transaction t) {
+        return t.getTransactionType() == TransactionType.SINGLENTRY;
     }
 
     @Override
@@ -119,23 +138,18 @@ public class AdjustTransactionPaneController implements TransactionEntryControll
     void newTransaction(final Transaction t) {
         clearForm();
 
-        amountField.setDecimal(t.getAmount(getAccountProperty().get()).abs());
+        amountField.setDecimal(t.getAmount(getAccountProperty().get()));
 
         memoTextField.setText(t.getMemo());
         payeeTextField.setText(t.getPayee());
         numberComboBox.setValue(t.getNumber());
 
-        // JPA may slip in a java.sql.Date which throws an exception when .toInstance is called. Wrap in a new java.util.Date instance
-        datePicker.setValue(new Date(t.getDate().getTime()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        datePicker.setDate(t.getDate());
         reconciledButton.setSelected(t.getReconciled(getAccountProperty().get()) != ReconciledState.NOT_RECONCILED);
-
-        if (t instanceof InvestmentTransaction) {
-            Logger logger = Logger.getLogger(AdjustTransactionPaneController.class.getName());
-            logger.warning("unsupported transaction type");
-        }
     }
 
-    void clearForm() {
+    @Override
+    public void clearForm() {
 
         modTrans = null;
 
@@ -159,10 +173,53 @@ public class AdjustTransactionPaneController implements TransactionEntryControll
         numberComboBox.setDisable(false);
 
         attachmentPane.clear();
+
+        convertButton.setDisable(true);
     }
 
     @FXML
     private void okAction() {
+        if (validateForm()) {
+            if (modTrans == null) { // new transaction
+                Transaction newTrans = buildTransaction();
+
+                ReconcileManager.reconcileTransaction(accountProperty.get(), newTrans, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+
+                newTrans = attachmentPane.buildTransaction(newTrans);  // chain the transaction build
+
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+                if (engine != null) {
+                    engine.addTransaction(newTrans);
+                }
+            } else {
+                Transaction newTrans = buildTransaction();
+
+                newTrans.setDateEntered(modTrans.getDateEntered());
+
+                // restore the reconciled state of the previous old transaction
+                for (final Account a : modTrans.getAccounts()) {
+                    if (!a.equals(accountProperty.get())) {
+                        ReconcileManager.reconcileTransaction(a, newTrans, modTrans.getReconciled(a));
+                    }
+                }
+
+                /*
+                 * Reconcile the modified transaction for this account.
+                 * This must be performed last to ensure consistent results per the ReconcileManager rules
+                 */
+                ReconcileManager.reconcileTransaction(accountProperty.get(), newTrans, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+
+                newTrans = attachmentPane.buildTransaction(newTrans);  // chain the transaction build
+
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+                if (engine != null && engine.removeTransaction(modTrans)) {
+                    engine.addTransaction(newTrans);
+                }
+            }
+            clearForm();
+        }
     }
 
     @FXML
@@ -172,5 +229,6 @@ public class AdjustTransactionPaneController implements TransactionEntryControll
 
     @FXML
     private void convertAction() {
+        // TODO: Implement convert dialog
     }
 }

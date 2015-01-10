@@ -18,13 +18,16 @@
 package jgnash.uifx.views.register;
 
 import jgnash.engine.Transaction;
+import jgnash.util.NotNull;
 
 /**
  * @author Craig Cavanaugh
  */
 public interface TransactionEntryController {
 
-    public void modifyTransaction(final Transaction transaction);
+    void modifyTransaction(@NotNull final Transaction transaction);
 
-    public boolean validateForm();
+    boolean validateForm();
+
+    void clearForm();
 }

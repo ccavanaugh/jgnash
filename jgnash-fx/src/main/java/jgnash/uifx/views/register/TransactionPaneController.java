@@ -50,6 +50,7 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.TransactionNumberComboBox;
+import jgnash.util.NotNull;
 
 /**
  * Transaction Entry Controller for Credits and Debits
@@ -133,7 +134,7 @@ public class TransactionPaneController implements TransactionEntryController, In
     }
 
     @Override
-    public void modifyTransaction(final Transaction transaction) {
+    public void modifyTransaction(@NotNull final Transaction transaction) {
         if (transaction.areAccountsLocked()) {
             clearForm();
             StaticUIMethods.displayError(resources.getString("Message.TransactionModifyLocked"));
@@ -304,7 +305,8 @@ public class TransactionPaneController implements TransactionEntryController, In
         }
     }
 
-    void clearForm() {
+    @Override
+    public void clearForm() {
         splitsDialog.getTransactionEntries().clear();   // clear an old transaction entries
 
         modEntry = null;

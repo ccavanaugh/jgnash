@@ -163,6 +163,6 @@ public class BasicRegisterPaneController extends RegisterPaneController {
 
     @Override
     protected void clearForm() {
-        ((TransactionPaneController)transactionForms.getSelectionModel().getSelectedItem().getUserData()).clearForm();
+        ((TransactionEntryController)transactionForms.getSelectionModel().getSelectedItem().getUserData()).clearForm();
     }
 }

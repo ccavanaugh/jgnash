@@ -59,7 +59,7 @@
        <DecimalTextField fx:id="amountField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
      <ButtonBar GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="3">
        <buttons>
-           <Button ButtonBar.buttonData="LEFT" onAction="#convertAction" styleClass="icon-button">
+           <Button fx:id="convertButton" ButtonBar.buttonData="LEFT" onAction="#convertAction" styleClass="icon-button">
                <graphic>
                    <Glyph fontFamily="FontAwesome" icon="ADJUST"/>
                </graphic>
