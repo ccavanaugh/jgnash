@@ -20,7 +20,6 @@ package jgnash.uifx.views.register;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -241,8 +240,7 @@ public class TransactionPaneController implements TransactionEntryController, In
         payeeTextField.setText(t.getPayee());
         numberComboBox.setValue(t.getNumber());
 
-        // JPA may slip in a java.sql.Date which throws an exception when .toInstance is called. Wrap in a new java.util.Date instance
-        datePicker.setValue(new Date(t.getDate().getTime()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        datePicker.setDate(t.getDate());
         reconciledButton.setSelected(t.getReconciled(getAccountProperty().get()) != ReconciledState.NOT_RECONCILED);
 
         if (t.getTransactionType() == TransactionType.SPLITENTRY) {
