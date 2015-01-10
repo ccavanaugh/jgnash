@@ -154,6 +154,16 @@ public class DatePickerEx extends DatePicker {
         return Date.from(getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
     }
 
+    /**
+     * Helper method to set a legacy {@code Date} value
+     * @param date {@code Date} to assign to the picker
+     */
+    public void setDate(final Date date) {
+        // JPA may slip in a java.sql.Date which throws an exception when .toInstance is called.
+        // Wrap in a new java.util.Date instance first
+        setValue(new Date(date.getTime()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+    }
+
     private class DateConverter extends StringConverter<LocalDate> {
 
         @Override
