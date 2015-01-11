@@ -19,6 +19,9 @@ package jgnash.uifx;
 
 import java.util.prefs.Preferences;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+
 /**
  * Manages application preferences
  *
@@ -31,17 +34,42 @@ public class Options {
 
     private static final String REMEMBER_DATE = "rememberDate";
 
+    private static final String AUTO_COMPLETE = "autoCompleteEnabled";
+
+    private static final String IGNORE_CASE = "autoCompleteIgnoreCaseEnabled";
+
+    private static final String FUZZY_MATCH = "autoCompleteFuzzyMatchEnabled";
+
     private static boolean useAccountingTerms;
 
     private static boolean confirmTransactionDelete;
 
     private static boolean rememberDate;
 
+    private static SimpleBooleanProperty autoCompleteEnabled = new SimpleBooleanProperty(null, AUTO_COMPLETE, true);
+
+    private static SimpleBooleanProperty autoCompleteIgnoreCaseEnabled = new SimpleBooleanProperty(null, IGNORE_CASE, false);
+
+    private static SimpleBooleanProperty autoCompleteFuzzyMatchEnabled = new SimpleBooleanProperty(null, FUZZY_MATCH, false);
+
     static {
-        Preferences p = Preferences.userNodeForPackage(Options.class);
+        final Preferences p = Preferences.userNodeForPackage(Options.class);
+
+        final ChangeListener<Boolean> booleanChangeListener = (observable, oldValue, newValue) ->
+                p.putBoolean(((SimpleBooleanProperty)observable).getName(), newValue);
+
         useAccountingTerms = p.getBoolean(ACCOUNTING_TERMS, false);
         confirmTransactionDelete = p.getBoolean(CONFIRM_ON_DELETE, true);
         rememberDate = p.getBoolean(REMEMBER_DATE, true);
+
+        autoCompleteEnabled.set(p.getBoolean(AUTO_COMPLETE, true));
+        autoCompleteEnabled.addListener(booleanChangeListener);
+
+        autoCompleteFuzzyMatchEnabled.set(p.getBoolean(FUZZY_MATCH, false));
+        autoCompleteFuzzyMatchEnabled.addListener(booleanChangeListener);
+
+        autoCompleteIgnoreCaseEnabled.set(p.getBoolean(IGNORE_CASE, true));
+        autoCompleteIgnoreCaseEnabled.addListener(booleanChangeListener);
     }
 
     /**
@@ -90,4 +118,29 @@ public class Options {
         return rememberDate;
     }
 
+    /**
+     * Provides access to the enabled state of auto completion
+     *
+     * @return {@code SimpleBooleanProperty} controlling enabled state
+     */
+    public static SimpleBooleanProperty getAutoCompleteEnabled() {
+        return autoCompleteEnabled;
+    }
+
+    /**
+     * Provides access to the case sensitivity of auto completion
+     *
+     * @return {@code SimpleBooleanProperty} controlling case sensitivity
+     */
+    public static SimpleBooleanProperty getAutoCompleteIgnoreCaseEnabled() {
+        return autoCompleteIgnoreCaseEnabled;
+    }
+
+    /** Provides access to the property controlling if fuzzy match is used for auto completion
+     *
+     * @return {@code SimpleBooleanProperty} controlling fuzzy match
+     */
+    public static SimpleBooleanProperty getAutoCompleteFuzzyMatchEnabled() {
+        return autoCompleteFuzzyMatchEnabled;
+    }
 }
