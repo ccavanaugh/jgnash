@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
+<?import jgnash.uifx.control.AutoCompleteTextField?>
 <?import jgnash.uifx.control.DatePickerEx?>
 <?import jgnash.uifx.control.DecimalTextField?>
 <?import jgnash.uifx.control.TransactionNumberComboBox?>
@@ -36,7 +37,7 @@
        <TransactionNumberComboBox  fx:id="numberComboBox" editable="true" GridPane.columnIndex="3" />
 
        <Label text="%Label.Memo" GridPane.rowIndex="1" />
-       <TextField fx:id="memoTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+       <AutoCompleteTextField fx:id="memoTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <Label text="%Label.Date" GridPane.columnIndex="2" GridPane.rowIndex="1" />
       <DatePickerEx fx:id="datePicker" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 

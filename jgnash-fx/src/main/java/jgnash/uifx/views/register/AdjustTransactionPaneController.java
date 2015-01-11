@@ -42,9 +42,11 @@ import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.control.AutoCompleteTextField;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.TransactionNumberComboBox;
+import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
 import jgnash.util.NotNull;
 
 /**
@@ -70,7 +72,7 @@ public class AdjustTransactionPaneController implements TransactionEntryControll
     private DecimalTextField amountField;
 
     @FXML
-    private TextField memoTextField;
+    private AutoCompleteTextField<Transaction> memoTextField;
 
     @FXML
     private CheckBox reconciledButton;
@@ -90,6 +92,8 @@ public class AdjustTransactionPaneController implements TransactionEntryControll
 
         // Number combo needs to know the account in order to determine the next transaction number
         numberComboBox.getAccountProperty().bind(getAccountProperty());
+
+        AutoCompleteFactory.setMemoModel(memoTextField);
 
         // Set the number of fixed decimal places for entry
         accountProperty.addListener(new ChangeListener<Account>() {
