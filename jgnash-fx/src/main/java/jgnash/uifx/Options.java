@@ -19,6 +19,7 @@ package jgnash.uifx;
 
 import java.util.prefs.Preferences;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 
@@ -40,11 +41,11 @@ public class Options {
 
     private static final String FUZZY_MATCH = "autoCompleteFuzzyMatchEnabled";
 
-    private static boolean useAccountingTerms;
+    private static SimpleBooleanProperty useAccountingTerms = new SimpleBooleanProperty(null, ACCOUNTING_TERMS, false);
 
-    private static boolean confirmTransactionDelete;
+    private static SimpleBooleanProperty confirmTransactionDelete = new SimpleBooleanProperty(null, CONFIRM_ON_DELETE, true);
 
-    private static boolean rememberDate;
+    private static SimpleBooleanProperty rememberDate = new SimpleBooleanProperty(null, REMEMBER_DATE, true);
 
     private static SimpleBooleanProperty autoCompleteEnabled = new SimpleBooleanProperty(null, AUTO_COMPLETE, true);
 
@@ -58,9 +59,14 @@ public class Options {
         final ChangeListener<Boolean> booleanChangeListener = (observable, oldValue, newValue) ->
                 p.putBoolean(((SimpleBooleanProperty)observable).getName(), newValue);
 
-        useAccountingTerms = p.getBoolean(ACCOUNTING_TERMS, false);
-        confirmTransactionDelete = p.getBoolean(CONFIRM_ON_DELETE, true);
-        rememberDate = p.getBoolean(REMEMBER_DATE, true);
+        useAccountingTerms.set(p.getBoolean(ACCOUNTING_TERMS, false));
+        useAccountingTerms.addListener(booleanChangeListener);
+
+        confirmTransactionDelete.set(p.getBoolean(CONFIRM_ON_DELETE, true));
+        confirmTransactionDelete.addListener(booleanChangeListener);
+
+        rememberDate.set(p.getBoolean(REMEMBER_DATE, true));
+        rememberDate.addListener(booleanChangeListener);
 
         autoCompleteEnabled.set(p.getBoolean(AUTO_COMPLETE, true));
         autoCompleteEnabled.addListener(booleanChangeListener);
@@ -73,39 +79,16 @@ public class Options {
     }
 
     /**
-     * Sets if confirm on transaction delete is enabled
-     *
-     * @param enabled true if deletion confirmation is required
-     */
-    public static void setConfirmTransactionDeleteEnabled(final boolean enabled) {
-        confirmTransactionDelete = enabled;
-        Preferences p = Preferences.userNodeForPackage(Options.class);
-        p.putBoolean(CONFIRM_ON_DELETE, confirmTransactionDelete);
-    }
-
-    /**
      * Returns the availability of sortable registers
      *
      * @return true if confirm on transaction delete is enabled, false otherwise
      */
-    public static boolean isConfirmTransactionDeleteEnabled() {
+    public static BooleanProperty getConfirmTransactionDeleteEnabled() {
         return confirmTransactionDelete;
     }
 
-    public static void setAccountingTermsEnabled(final boolean enabled) {
-        useAccountingTerms = enabled;
-        Preferences p = Preferences.userNodeForPackage(Options.class);
-        p.putBoolean(ACCOUNTING_TERMS, useAccountingTerms);
-    }
-
-    public static boolean isAccountingTermsEnabled() {
+    public static BooleanProperty getAccountingTermsEnabled() {
         return useAccountingTerms;
-    }
-
-    public static void setRememberLastDate(final boolean reset) {
-        rememberDate = reset;
-        Preferences p = Preferences.userNodeForPackage(Options.class);
-        p.putBoolean(REMEMBER_DATE, rememberDate);
     }
 
     /**
@@ -114,33 +97,33 @@ public class Options {
      *
      * @return true if the last date should be reused
      */
-    public static boolean getRememberLastDate() {
+    public static BooleanProperty getRememberLastDate() {
         return rememberDate;
     }
 
     /**
      * Provides access to the enabled state of auto completion
      *
-     * @return {@code SimpleBooleanProperty} controlling enabled state
+     * @return {@code BooleanProperty} controlling enabled state
      */
-    public static SimpleBooleanProperty getAutoCompleteEnabled() {
+    public static BooleanProperty getAutoCompleteEnabled() {
         return autoCompleteEnabled;
     }
 
     /**
      * Provides access to the case sensitivity of auto completion
      *
-     * @return {@code SimpleBooleanProperty} controlling case sensitivity
+     * @return {@code BooleanProperty} controlling case sensitivity
      */
-    public static SimpleBooleanProperty getAutoCompleteIgnoreCaseEnabled() {
+    public static BooleanProperty getAutoCompleteIgnoreCaseEnabled() {
         return autoCompleteIgnoreCaseEnabled;
     }
 
     /** Provides access to the property controlling if fuzzy match is used for auto completion
      *
-     * @return {@code SimpleBooleanProperty} controlling fuzzy match
+     * @return {@code BooleanProperty} controlling fuzzy match
      */
-    public static SimpleBooleanProperty getAutoCompleteFuzzyMatchEnabled() {
+    public static BooleanProperty getAutoCompleteFuzzyMatchEnabled() {
         return autoCompleteFuzzyMatchEnabled;
     }
 }

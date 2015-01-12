@@ -49,7 +49,7 @@ public class RegisterActions {
     }
 
     static void deleteTransactionAction(final Transaction... transactions) {
-        if (Options.isConfirmTransactionDeleteEnabled()) {
+        if (Options.getConfirmTransactionDeleteEnabled().get()) {
             if (confirmTransactionRemoval(transactions.length).getButtonData().isCancelButton()) {
                 return;
             }

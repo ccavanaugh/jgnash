@@ -332,7 +332,7 @@ public class TransactionPaneController implements TransactionEntryController, In
         payeeTextField.setText(null);
 
         datePicker.setEditable(true);
-        if (!Options.getRememberLastDate()) {
+        if (!Options.getRememberLastDate().get()) {
             datePicker.setValue(LocalDate.now());
         }
 
