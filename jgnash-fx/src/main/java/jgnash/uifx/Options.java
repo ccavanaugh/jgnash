@@ -29,6 +29,9 @@ import javafx.beans.value.ChangeListener;
  * @author Craig Cavanaugh
  */
 public class Options {
+
+    private static final Preferences p = Preferences.userNodeForPackage(Options.class);
+
     private static final String CONFIRM_ON_DELETE = "confirmDelete";
 
     private static final String ACCOUNTING_TERMS = "accountingTerms";
@@ -41,41 +44,41 @@ public class Options {
 
     private static final String FUZZY_MATCH = "autoCompleteFuzzyMatchEnabled";
 
-    private static SimpleBooleanProperty useAccountingTerms = new SimpleBooleanProperty(null, ACCOUNTING_TERMS, false);
+    private static final SimpleBooleanProperty useAccountingTerms;
 
-    private static SimpleBooleanProperty confirmTransactionDelete = new SimpleBooleanProperty(null, CONFIRM_ON_DELETE, true);
+    private static final SimpleBooleanProperty confirmTransactionDelete;
 
-    private static SimpleBooleanProperty rememberDate = new SimpleBooleanProperty(null, REMEMBER_DATE, true);
+    private static final SimpleBooleanProperty rememberDate;
 
-    private static SimpleBooleanProperty autoCompleteEnabled = new SimpleBooleanProperty(null, AUTO_COMPLETE, true);
+    private static final SimpleBooleanProperty autoCompleteEnabled;
 
-    private static SimpleBooleanProperty autoCompleteIgnoreCaseEnabled = new SimpleBooleanProperty(null, IGNORE_CASE, false);
+    private static final SimpleBooleanProperty autoCompleteIgnoreCaseEnabled;
 
-    private static SimpleBooleanProperty autoCompleteFuzzyMatchEnabled = new SimpleBooleanProperty(null, FUZZY_MATCH, false);
+    private static final SimpleBooleanProperty autoCompleteFuzzyMatchEnabled;
+
+    private static final ChangeListener<Boolean> booleanChangeListener;
 
     static {
-        final Preferences p = Preferences.userNodeForPackage(Options.class);
-
-        final ChangeListener<Boolean> booleanChangeListener = (observable, oldValue, newValue) ->
+        booleanChangeListener = (observable, oldValue, newValue) ->
                 p.putBoolean(((SimpleBooleanProperty)observable).getName(), newValue);
 
-        useAccountingTerms.set(p.getBoolean(ACCOUNTING_TERMS, false));
-        useAccountingTerms.addListener(booleanChangeListener);
+        useAccountingTerms = createBooleanProperty(ACCOUNTING_TERMS, false);
+        confirmTransactionDelete = createBooleanProperty(CONFIRM_ON_DELETE, true);
+        rememberDate = createBooleanProperty(REMEMBER_DATE, true);
+        autoCompleteEnabled = createBooleanProperty(AUTO_COMPLETE, true);
+        autoCompleteIgnoreCaseEnabled = createBooleanProperty(IGNORE_CASE, false);
+        autoCompleteFuzzyMatchEnabled = createBooleanProperty(FUZZY_MATCH, false);
+    }
 
-        confirmTransactionDelete.set(p.getBoolean(CONFIRM_ON_DELETE, true));
-        confirmTransactionDelete.addListener(booleanChangeListener);
+    private Options() {
+        // Utility class
+    }
 
-        rememberDate.set(p.getBoolean(REMEMBER_DATE, true));
-        rememberDate.addListener(booleanChangeListener);
+    private static SimpleBooleanProperty createBooleanProperty(final String name, final boolean defaultValue) {
+        final SimpleBooleanProperty property = new SimpleBooleanProperty(null, name, p.getBoolean(name, defaultValue));
+        property.addListener(booleanChangeListener);
 
-        autoCompleteEnabled.set(p.getBoolean(AUTO_COMPLETE, true));
-        autoCompleteEnabled.addListener(booleanChangeListener);
-
-        autoCompleteFuzzyMatchEnabled.set(p.getBoolean(FUZZY_MATCH, false));
-        autoCompleteFuzzyMatchEnabled.addListener(booleanChangeListener);
-
-        autoCompleteIgnoreCaseEnabled.set(p.getBoolean(IGNORE_CASE, true));
-        autoCompleteIgnoreCaseEnabled.addListener(booleanChangeListener);
+        return property;
     }
 
     /**
