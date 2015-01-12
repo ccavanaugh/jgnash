@@ -17,10 +17,14 @@
  */
 package jgnash.uifx.control;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import jgnash.uifx.control.autocomplete.AutoCompleteModel;
 
 import java.io.IOException;
@@ -44,6 +48,20 @@ public class AutoCompleteTextField<E> extends TextField {
         } catch (final IOException exception) {
             throw new RuntimeException(exception);
         }
+
+        // If the enter key is pressed to accept the auto complete,
+        // simulate a tab key press to focus the next field
+        addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(final KeyEvent event) {
+
+                if (event.getCode() == KeyCode.ENTER) {
+                    Platform.runLater(() -> fireEvent(new KeyEvent(AutoCompleteTextField.this,
+                            AutoCompleteTextField.this, KeyEvent.KEY_PRESSED, KeyEvent.CHAR_UNDEFINED, "",
+                            KeyCode.TAB, false, false, false, false)));
+                }
+            }
+        });
     }
 
     @Override
