@@ -2,7 +2,6 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -32,7 +31,7 @@
   </rowConstraints>
    <children>
        <Label text="%Label.Payee" GridPane.rowIndex="0" />
-       <TextField fx:id="payeeTextField" GridPane.columnIndex="1" />
+       <AutoCompleteTextField fx:id="payeeTextField" GridPane.columnIndex="1" />
        <Label text="%Label.Number" GridPane.columnIndex="2" />
        <TransactionNumberComboBox  fx:id="numberComboBox" editable="true" GridPane.columnIndex="3" />
 

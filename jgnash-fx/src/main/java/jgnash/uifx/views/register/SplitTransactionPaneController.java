@@ -30,8 +30,11 @@ import javafx.scene.control.TextField;
 
 import jgnash.engine.Account;
 import jgnash.engine.ReconciledState;
+import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
+import jgnash.uifx.control.AutoCompleteTextField;
 import jgnash.uifx.control.DecimalTextField;
+import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
 
 /**
  * Split Transaction Entry Controller for Credits and Debits
@@ -44,7 +47,7 @@ public class SplitTransactionPaneController implements Initializable {
     private DecimalTextField amountField;
 
     @FXML
-    private TextField memoField;
+    private AutoCompleteTextField<Transaction> memoField;
 
     @FXML
     private AccountExchangePane accountExchangePane;
@@ -69,6 +72,9 @@ public class SplitTransactionPaneController implements Initializable {
         accountExchangePane.getBaseAccountProperty().bind(getAccountProperty());
         accountExchangePane.getAmountProperty().bindBidirectional(amountField.decimalProperty());
         accountExchangePane.getAmountEditable().bind(amountField.editableProperty());
+
+        // Enabled auto completion
+        AutoCompleteFactory.setMemoModel(memoField);
     }
 
     ObjectProperty<Account> getAccountProperty() {

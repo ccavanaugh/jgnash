@@ -2,11 +2,11 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
+<?import jgnash.uifx.control.AutoCompleteTextField?>
 <?import jgnash.uifx.control.DecimalTextField?>
 <?import jgnash.uifx.views.register.AccountExchangePane?>
 
@@ -29,7 +29,7 @@
       <Label text="%Label.Amount" GridPane.columnIndex="2"/>
       <DecimalTextField fx:id="amountField" GridPane.columnIndex="3"/>
       <Label text="%Label.Memo" GridPane.rowIndex="1" />
-      <TextField fx:id="memoField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+      <AutoCompleteTextField fx:id="memoField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
 
       <GridPane GridPane.rowIndex="2" GridPane.columnSpan="4" GridPane.fillWidth="true"  GridPane.vgrow="NEVER" styleClass="form">
         <columnConstraints>

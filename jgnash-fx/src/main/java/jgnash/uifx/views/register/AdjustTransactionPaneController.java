@@ -17,11 +17,6 @@
  */
 package jgnash.uifx.views.register;
 
-import java.math.BigDecimal;
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ResourceBundle;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
@@ -30,8 +25,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
-
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -49,6 +42,11 @@ import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
 import jgnash.util.NotNull;
 
+import java.math.BigDecimal;
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ResourceBundle;
+
 /**
  * Transaction Entry Controller for Credits and Debits
  *
@@ -60,7 +58,7 @@ public class AdjustTransactionPaneController implements TransactionEntryControll
     private Button convertButton;
 
     @FXML
-    private TextField payeeTextField;
+    private AutoCompleteTextField<Transaction> payeeTextField;
 
     @FXML
     private TransactionNumberComboBox numberComboBox;
@@ -100,6 +98,9 @@ public class AdjustTransactionPaneController implements TransactionEntryControll
             @Override
             public void changed(final ObservableValue<? extends Account> observable, final Account oldValue, final Account newValue) {
                 amountField.scaleProperty().set(newValue.getCurrencyNode().getScale());
+
+                // Enabled auto completion for the payee field
+                AutoCompleteFactory.setPayeeModel(payeeTextField, newValue);
             }
         });
     }
