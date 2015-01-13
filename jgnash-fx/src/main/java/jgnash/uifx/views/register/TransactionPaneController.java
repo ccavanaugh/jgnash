@@ -125,6 +125,13 @@ public class TransactionPaneController implements TransactionEntryController, In
                 initializeSplitsDialog();
             }
         });
+
+        // If focus is lost, check and load the form with an existing transaction
+        payeeTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                handlePayeeFocus();
+            }
+        });
     }
 
     private void initializeSplitsDialog() {
@@ -139,6 +146,64 @@ public class TransactionPaneController implements TransactionEntryController, In
     void setPanelType(final PanelType panelType) {
         this.panelType = panelType;
     }
+
+    private void handlePayeeFocus() {
+        if (modTrans == null && Options.getAutoCompleteEnabled().get()) {
+            if (!payeeTextField.getText().isEmpty() && payeeTextField.getAutoCompleteModelObjectProperty().get() != null) {
+                Transaction transaction = payeeTextField.getAutoCompleteModelObjectProperty().get().getExtraInfo(payeeTextField.getText());
+                if (transaction != null) {
+                    if (canModifyTransaction(transaction)) {
+                        try {
+                            modifyTransaction(modifyTransactionForAutoComplete((Transaction) transaction.clone()));
+                        } catch (final CloneNotSupportedException e) {
+                            Logger.getLogger(TransactionPaneController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+                        }
+                        modTrans = null; // clear the modTrans field  TODO: use new transaction instead?
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Modify a transaction before it is used to complete the panel for auto fill. The supplied transaction must be a
+     * new or cloned transaction. It can't be a transaction that lives in the map. The returned transaction can be the
+     * supplied reference or may be a new instance
+     *
+     * @param t The transaction to modify
+     * @return the modified transaction
+     */
+    Transaction modifyTransactionForAutoComplete(final Transaction t) {
+
+        // tweak the transaction
+        t.setNumber(null);
+        t.setReconciled(ReconciledState.NOT_RECONCILED); // clear both sides
+
+        // set the last date as required
+        if (!Options.getRememberLastDate().get()) {
+            t.setDate(new Date());
+        } else {
+            t.setDate(datePicker.getDate());
+        }
+
+        // preserve any transaction entries that may have been entered first
+        if (!amountField.isEmpty() && !amountField.getText().isEmpty()) {
+            Transaction newTrans = buildTransaction();
+            t.clearTransactionEntries();
+            t.addTransactionEntries(newTrans.getTransactionEntries());
+        }
+
+        // preserve any preexisting memo field info
+        if (memoTextField.getText() != null && !memoTextField.getText().isEmpty()) {
+            t.setMemo(memoTextField.getText());
+        }
+
+        // Do not copy over attachments
+        t.setAttachment(null);
+
+        return t;
+    }
+
 
     @Override
     public void modifyTransaction(@NotNull final Transaction transaction) {
