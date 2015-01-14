@@ -17,8 +17,13 @@
  */
 package jgnash.uifx.views.accounts;
 
+import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -35,6 +40,7 @@ import jgnash.uifx.controllers.AccountTypeFilterFormController;
 import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
+import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -127,6 +133,34 @@ public final class StaticAccountsMethods {
                     StaticUIMethods.displayError(ResourceUtils.getBundle().getString("Message.Error.SecurityAccountUpdate"));
                 }
             }
+        }
+    }
+
+    public static Optional<Account> selectAccount(@Nullable final Account parentAccount) {
+        try {
+            final Stage dialog = new Stage(StageStyle.DECORATED);
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.initOwner(MainApplication.getPrimaryStage());
+            dialog.setTitle(ResourceUtils.getBundle().getString("Title.ParentAccount"));
+
+            final FXMLLoader loader = new FXMLLoader(SelectAccountController.class.getResource("SelectAccountForm.fxml"), ResourceUtils.getBundle());
+            dialog.setScene(new Scene(loader.load()));
+
+            final SelectAccountController controller = loader.getController();
+            dialog.setResizable(false);
+
+            StageUtils.addBoundsListener(dialog, AccountPropertiesController.class);
+
+            if (parentAccount != null) {
+                controller.setSelectedAccount(parentAccount);
+            }
+
+            dialog.showAndWait();
+
+            return controller.getSelectedAccount();
+        } catch (final IOException ex) {
+            Logger.getLogger(AccountPropertiesController.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            return Optional.empty();
         }
     }
 }

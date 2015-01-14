@@ -18,6 +18,7 @@
 package jgnash.uifx.views.accounts;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import jgnash.engine.Account;
@@ -31,9 +32,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.TreeView;
 import javafx.stage.Stage;
+import jgnash.util.NotNull;
 
 /**
  * Controller for selecting an account from a tree
+ *
+ * // TODO Need to add means of filtering an account
  *
  * @author Craig Cavanaugh
  */
@@ -44,11 +48,10 @@ public class SelectAccountController extends AbstractAccountTreeController imple
 
     @FXML
     private ButtonBar buttonBar;
-
     /**
      * Overrides the default implementation
      */
-    private Account selectedAccount = null;
+    @NotNull private Optional<Account> selectedAccount = Optional.empty();
 
     @Override
     protected TreeView<Account> getTreeView() {
@@ -83,19 +86,20 @@ public class SelectAccountController extends AbstractAccountTreeController imple
         okButton.setOnAction(event -> ((Stage) okButton.getScene().getWindow()).close());
 
         cancelButton.setOnAction(event -> {
-            selectedAccount = null;  // clear selections
+            selectedAccount = Optional.empty();  // clear selections
             ((Stage) cancelButton.getScene().getWindow()).close();
         });
 
         getSelectedAccountProperty().addListener(new ChangeListener<Account>() {
             @Override
             public void changed(final ObservableValue<? extends Account> observable, final Account oldValue, final Account newValue) {
-                selectedAccount = newValue;
+                selectedAccount = Optional.of(newValue);
             }
         });
     }
 
-    public Account getSelectedAccount() {
+    @NotNull
+    public Optional<Account> getSelectedAccount() {
         return selectedAccount;
     }
 }

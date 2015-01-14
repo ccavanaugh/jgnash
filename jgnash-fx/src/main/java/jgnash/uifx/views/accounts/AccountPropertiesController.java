@@ -17,22 +17,11 @@
  */
 package jgnash.uifx.views.accounts;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Iterator;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -40,23 +29,25 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.SecurityNode;
-import jgnash.uifx.MainApplication;
 import jgnash.uifx.control.CurrencyComboBox;
 import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.skin.StyleClass;
-import jgnash.uifx.util.StageUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
-import jgnash.util.ResourceUtils;
+
+import java.net.URL;
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.logging.Logger;
 
 /**
  * Loads all account properties into a form and returns a template Account based on the form properties
@@ -143,30 +134,9 @@ public class AccountPropertiesController implements Initializable {
 
     @FXML
     private void handleParentAccountAction(final ActionEvent actionEvent) {
-        try {
-            Stage dialog = new Stage(StageStyle.DECORATED);
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.initOwner(MainApplication.getPrimaryStage());
-            dialog.setTitle(ResourceUtils.getBundle().getString("Title.ParentAccount"));
-
-            FXMLLoader loader = new FXMLLoader(SelectAccountController.class.getResource("SelectAccountForm.fxml"), ResourceUtils.getBundle());
-            dialog.setScene(new Scene(loader.load()));
-
-            SelectAccountController controller = loader.getController();
-
-            dialog.setResizable(false);
-
-            StageUtils.addBoundsListener(dialog, AccountPropertiesController.class);
-
-            if (parentAccount != null) {
-                controller.setSelectedAccount(parentAccount);
-            }
-
-            dialog.showAndWait();
-
-            setParentAccount(controller.getSelectedAccount());
-        } catch (final IOException ex) {
-            Logger.getLogger(AccountPropertiesController.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+        final Optional<Account> optional = StaticAccountsMethods.selectAccount(parentAccount);
+        if (optional.isPresent()) {
+            setParentAccount(optional.get());
         }
     }
 
