@@ -134,7 +134,7 @@ public class AccountPropertiesController implements Initializable {
 
     @FXML
     private void handleParentAccountAction(final ActionEvent actionEvent) {
-        final Optional<Account> optional = StaticAccountsMethods.selectAccount(parentAccount);
+        final Optional<Account> optional = StaticAccountsMethods.selectAccount(parentAccount, baseAccount);
         if (optional.isPresent()) {
             setParentAccount(optional.get());
         }
