@@ -17,6 +17,9 @@
  */
 package jgnash.uifx.controllers;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableSet;
+import javafx.collections.SetChangeListener;
 import jgnash.engine.Account;
 import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
@@ -34,6 +37,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import jgnash.util.Nullable;
+
+import java.util.Collections;
+import java.util.TreeSet;
 
 /**
  * Abstract Controller handling a {@code TreeView} of {@code Account}s
@@ -56,6 +63,20 @@ public abstract class AbstractAccountTreeController implements MessageListener {
 
     abstract protected boolean isAccountSelectable(Account account);
 
+    final private ObservableSet<Account> filteredAccounts = FXCollections.observableSet(new TreeSet<>());
+
+    /**
+     * Adds accounts to be excluded from the list of selectable accounts
+     *
+     * @param filteredAccountsList collection of {@code Account} that should be excluded regardless
+     *                             of {@code isAccountVisible()}
+     */
+    public void addExcludeAccounts(@Nullable final Account... filteredAccountsList) {
+        if (filteredAccountsList != null) {
+            Collections.addAll(filteredAccounts, filteredAccountsList);
+        }
+    }
+
     public void initialize() {
         getTreeView().setShowRoot(false);
 
@@ -73,6 +94,8 @@ public abstract class AbstractAccountTreeController implements MessageListener {
                 }
             }
         });
+
+        filteredAccounts.addListener((SetChangeListener<Account>) change -> reload());
     }
 
     public ReadOnlyObjectProperty<Account> getSelectedAccountProperty() {
@@ -108,7 +131,9 @@ public abstract class AbstractAccountTreeController implements MessageListener {
     private synchronized void loadChildren(final TreeItem<Account> parentItem) {
         final Account parent = parentItem.getValue();
 
-        parent.getChildren(Comparators.getAccountByCode()).stream().filter(this::isAccountVisible).forEach(child -> {
+        parent.getChildren(Comparators.getAccountByCode()).stream().filter(child ->
+                !filteredAccounts.contains(child) && isAccountVisible(child)).forEach(child ->
+        {
             final TreeItem<Account> childItem = new TreeItem<>(child);
             childItem.setExpanded(true);
             parentItem.getChildren().add(childItem);

@@ -136,7 +136,7 @@ public final class StaticAccountsMethods {
         }
     }
 
-    public static Optional<Account> selectAccount(@Nullable final Account parentAccount) {
+    public static Optional<Account> selectAccount(@Nullable final Account parentAccount, @Nullable final Account... excluded) {
         try {
             final Stage dialog = new Stage(StageStyle.DECORATED);
             dialog.initModality(Modality.APPLICATION_MODAL);
@@ -154,6 +154,9 @@ public final class StaticAccountsMethods {
             if (parentAccount != null) {
                 controller.setSelectedAccount(parentAccount);
             }
+
+            // add excluded accounts if any
+            controller.addExcludeAccounts(excluded);
 
             dialog.showAndWait();
 
