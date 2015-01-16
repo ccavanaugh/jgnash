@@ -37,8 +37,6 @@ import jgnash.util.NotNull;
 /**
  * Controller for selecting an account from a tree
  *
- * // TODO Need to add means of filtering an account
- *
  * @author Craig Cavanaugh
  */
 public class SelectAccountController extends AbstractAccountTreeController implements Initializable {
