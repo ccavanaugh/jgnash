@@ -17,26 +17,15 @@
  */
 package jgnash.uifx.views.accounts;
 
-import java.math.BigDecimal;
-import java.net.URL;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.prefs.Preferences;
-
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
-
 import jgnash.engine.Account;
 import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
@@ -49,10 +38,18 @@ import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.util.EncodeDecode;
-
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
+
+import java.math.BigDecimal;
+import java.net.URL;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 
 /**
  * Accounts view controller
@@ -67,28 +64,28 @@ public class AccountsViewController implements Initializable, MessageListener {
 
     private final AccountTypeFilter typeFilter = new AccountTypeFilter(preferences);
 
-    protected ResourceBundle resources;
+    private ResourceBundle resources;
 
     @FXML
-    TreeTableView<Account> treeTableView;
+    private TreeTableView<Account> treeTableView;
 
     @FXML
-    Button newButton;
+    private Button newButton;
 
     @FXML
-    Button modifyButton;
+    private Button modifyButton;
 
     @FXML
-    Button reconcileButton;
+    private Button reconcileButton;
 
     @FXML
-    Button deleteButton;
+    private Button deleteButton;
 
     @FXML
-    Button filterButton;
+    private Button filterButton;
 
     @FXML
-    Button zoomButton;
+    private Button zoomButton;
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -119,7 +116,7 @@ public class AccountsViewController implements Initializable, MessageListener {
     }
 
     @SuppressWarnings("unchecked")
-    protected void initializeTreeTableView() {
+    void initializeTreeTableView() {
         treeTableView.setShowRoot(false);   // don't show the root
         treeTableView.setEditable(true);    // required for editable columns
         treeTableView.setTableMenuButtonVisible(true);
@@ -215,7 +212,7 @@ public class AccountsViewController implements Initializable, MessageListener {
         }
     }
 
-    protected Optional<Account> getSelectedAccount() {
+    Optional<Account> getSelectedAccount() {
         final TreeItem<Account> treeItem = treeTableView.getSelectionModel().getSelectedItem();
 
         if (treeItem != null) {
@@ -226,24 +223,24 @@ public class AccountsViewController implements Initializable, MessageListener {
     }
 
     @FXML
-    public void handleFilterAccountAction(final ActionEvent actionEvent) {
+    private void handleFilterAccountAction() {
         StaticAccountsMethods.showAccountFilterDialog(typeFilter);
     }
 
     @FXML
-    public void handleModifyAccountAction(final ActionEvent actionEvent) {
+    private void handleModifyAccountAction() {
         if (getSelectedAccount().isPresent()) {
             StaticAccountsMethods.showModifyAccountProperties(getSelectedAccount().get());
         }
     }
 
     @FXML
-    public void handleNewAccountAction(final ActionEvent actionEvent) {
+    private void handleNewAccountAction() {
         StaticAccountsMethods.showNewAccountPropertiesDialog();
     }
 
     @FXML
-    public void handleDeleteAccountAction(final ActionEvent actionEvent) {
+    private void handleDeleteAccountAction() {
         if (getSelectedAccount().isPresent()) {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             Objects.requireNonNull(engine);
@@ -269,7 +266,7 @@ public class AccountsViewController implements Initializable, MessageListener {
         }
     }
 
-    protected void loadAccountTree() {
+    void loadAccountTree() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
         if (engine != null) {
@@ -298,7 +295,7 @@ public class AccountsViewController implements Initializable, MessageListener {
         });
     }
 
-    public synchronized void reload() {
+    synchronized void reload() {
         Platform.runLater(this::loadAccountTree);
     }
 
