@@ -20,6 +20,7 @@ package jgnash.uifx.views.accounts;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -214,15 +215,14 @@ public class AccountsViewController implements Initializable, MessageListener {
         }
     }
 
-    // TODO replace with an ObjectProperty
-    protected Account getSelectedAccount() {
+    protected Optional<Account> getSelectedAccount() {
         final TreeItem<Account> treeItem = treeTableView.getSelectionModel().getSelectedItem();
 
         if (treeItem != null) {
-            return treeItem.getValue();
+            return Optional.ofNullable(treeItem.getValue());
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @FXML
@@ -232,10 +232,8 @@ public class AccountsViewController implements Initializable, MessageListener {
 
     @FXML
     public void handleModifyAccountAction(final ActionEvent actionEvent) {
-        final Account account = getSelectedAccount();
-
-        if (account != null) {
-            StaticAccountsMethods.showModifyAccountProperties(account);
+        if (getSelectedAccount().isPresent()) {
+            StaticAccountsMethods.showModifyAccountProperties(getSelectedAccount().get());
         }
     }
 
@@ -246,13 +244,11 @@ public class AccountsViewController implements Initializable, MessageListener {
 
     @FXML
     public void handleDeleteAccountAction(final ActionEvent actionEvent) {
-        final Account account = getSelectedAccount();
-
-        if (account != null) {
+        if (getSelectedAccount().isPresent()) {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             Objects.requireNonNull(engine);
 
-            if (!engine.removeAccount(account)) {
+            if (!engine.removeAccount(getSelectedAccount().get())) {
                 StaticUIMethods.displayError(resources.getString("Message.Error.AccountRemove"));
             }
         }
