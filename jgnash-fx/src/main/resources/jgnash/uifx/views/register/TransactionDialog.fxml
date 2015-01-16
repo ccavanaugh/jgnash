@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TabPane?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.Scene?>
+
+<fx:root type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" minWidth="680" minHeight="150">
+    <scene>
+        <Scene>
+            <BorderPane styleClass="dialog, form">
+                <center>
+                    <TabPane tabClosingPolicy="UNAVAILABLE" fx:id="tabPane" VBox.vgrow="NEVER"/>
+                </center>
+            </BorderPane>
+        </Scene>
+    </scene>
+</fx:root>
+
+

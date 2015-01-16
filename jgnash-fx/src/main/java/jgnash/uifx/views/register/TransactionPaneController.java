@@ -45,6 +45,9 @@ import jgnash.util.NotNull;
 public class TransactionPaneController extends AbstractBankTransactionPaneController {
 
     @FXML
+    protected Button cancelButton;
+
+    @FXML
     protected Button enterButton;
 
     @FXML

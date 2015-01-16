@@ -17,14 +17,23 @@
  */
 package jgnash.uifx.views.register;
 
+import java.util.Objects;
+import java.util.Optional;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
+import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.ReconcileManager;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
+import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.views.accounts.StaticAccountsMethods;
 import jgnash.util.NotNull;
 
 /**
@@ -88,6 +97,46 @@ public class AdjustTransactionPaneController extends AbstractBankTransactionPane
 
     @FXML
     private void convertAction() {
-        // TODO: Implement convert dialog
+        final Optional<Account> accountOptional = StaticAccountsMethods.selectAccount(null, accountProperty.get());
+        if (accountOptional.isPresent()) {
+            final Account opp = accountOptional.get();
+
+            final Transaction t = new Transaction();
+
+            t.setDate(datePicker.getDate());
+            t.setNumber(numberComboBox.getValue());
+            t.setPayee(payeeTextField.getText());
+
+            final TransactionEntry entry = new TransactionEntry();
+            entry.setMemo(memoTextField.getText());
+
+            if (amountField.getDecimal().signum() >= 0) {
+                entry.setCreditAccount(accountProperty.get());
+                entry.setDebitAccount(opp);
+            } else {
+                entry.setDebitAccount(accountProperty.get());
+                entry.setCreditAccount(opp);
+            }
+
+            entry.setCreditAmount(amountField.getDecimal().abs());
+            entry.setDebitAmount(amountField.getDecimal().abs().negate());
+
+            t.addTransactionEntry(entry);
+
+            ReconcileManager.reconcileTransaction(accountProperty.get(), t, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+
+            final Optional<Transaction> transactionOptional = TransactionDialog.showAndWait(accountProperty.get(), t);
+
+            if (transactionOptional.isPresent()) {
+                final Transaction tran = transactionOptional.get();
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                Objects.requireNonNull(engine);
+
+                if (engine.removeTransaction(modTrans)) {
+                    engine.addTransaction(tran);
+                }
+                clearForm();
+            }
+        }
     }
 }
