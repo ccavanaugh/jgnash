@@ -240,6 +240,9 @@ public abstract class RegisterTableController implements Initializable {
                             Platform.runLater(() -> {
                                 observableTransactions.addAll((Transaction)event.getObject(MessageProperty.TRANSACTION));
                                 FXCollections.sort(observableTransactions);
+
+                                // scroll to the new transaction
+                                scrollToTransaction((Transaction)event.getObject(MessageProperty.TRANSACTION));
                             });
                             break;
                         default:

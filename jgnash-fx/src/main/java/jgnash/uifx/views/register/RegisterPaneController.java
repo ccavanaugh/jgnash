@@ -18,11 +18,7 @@
 package jgnash.uifx.views.register;
 
 import java.net.URL;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -35,10 +31,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 
 import jgnash.engine.Account;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
-import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
 
 /**
@@ -160,37 +153,9 @@ public abstract class RegisterPaneController implements Initializable {
 
     @FXML
     private void handleDuplicateAction() {
+        clearForm();
 
-        final String eftNumber = resources.getString("Item.EFT");
-
-        for (final Transaction transaction: registerTableControllerProperty.get().getSelectedTransactions() ) {
-            clearForm();
-
-            try {
-                final Transaction clone = (Transaction) transaction.clone();
-                clone.setDate(DateUtils.today());
-
-                if (!clone.getNumber().isEmpty() && !clone.getNumber().equals(eftNumber)) {
-                    final String nextTransactionNumber = accountProperty.get().getNextTransactionNumber();    // may return an empty string
-                    if (!nextTransactionNumber.isEmpty()) {
-                        clone.setNumber(nextTransactionNumber);
-                    }
-                }
-
-                final Optional<Transaction> optional = TransactionDialog.showAndWait(accountProperty.get(), clone);
-
-                if (optional.isPresent()) {
-                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-                    Objects.requireNonNull(engine);
-
-                    engine.addTransaction(optional.get());
-
-                    Platform.runLater(() -> registerTableControllerProperty.get().scrollToTransaction(engine.getTransactionByUuid(optional.get().getUuid())));
-                }
-            } catch (final CloneNotSupportedException e) {
-                Logger.getLogger(RegisterPaneController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
-            }
-        }
+        RegisterActions.duplicateTransaction(accountProperty.get(), registerTableControllerProperty.get().getSelectedTransactions());
 
         // Request focus as it may have been lost
         register.getScene().getWindow().requestFocus();

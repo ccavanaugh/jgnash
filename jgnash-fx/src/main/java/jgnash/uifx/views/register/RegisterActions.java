@@ -17,7 +17,12 @@
  */
 package jgnash.uifx.views.register;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.scene.control.ButtonType;
 
@@ -28,12 +33,13 @@ import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.util.DateUtils;
 import jgnash.util.ResourceUtils;
 
 /**
  * @author Craig Cavanaugh
  */
-public class RegisterActions {
+class RegisterActions {
 
     private RegisterActions() {
         // Utility class
@@ -67,6 +73,38 @@ public class RegisterActions {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    static void duplicateTransaction(final Account account, final List<Transaction> transactions) {
+        final ResourceBundle resourceBundle = ResourceUtils.getBundle();
+
+        final String eftNumber = resourceBundle.getString("Item.EFT");
+
+        for (final Transaction transaction: transactions ) {
+
+            try {
+                final Transaction clone = (Transaction) transaction.clone();
+                clone.setDate(DateUtils.today());
+
+                if (!clone.getNumber().isEmpty() && !clone.getNumber().equals(eftNumber)) {
+                    final String nextTransactionNumber = account.getNextTransactionNumber();    // may return an empty string
+                    if (!nextTransactionNumber.isEmpty()) {
+                        clone.setNumber(nextTransactionNumber);
+                    }
+                }
+
+                final Optional<Transaction> optional = TransactionDialog.showAndWait(account, clone);
+
+                if (optional.isPresent()) {
+                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                    Objects.requireNonNull(engine);
+
+                    engine.addTransaction(optional.get());
+                }
+            } catch (final CloneNotSupportedException e) {
+                Logger.getLogger(RegisterActions.class.getName()).log(Level.SEVERE, e.getMessage(), e);
             }
         }
     }
