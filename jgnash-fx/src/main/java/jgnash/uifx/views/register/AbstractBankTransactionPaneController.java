@@ -159,12 +159,14 @@ abstract class AbstractBankTransactionPaneController implements TransactionEntry
     }
 
     @FXML
-    void handleCancelAction() {
+    @Override
+    public void handleCancelAction() {
         clearForm();
     }
 
     @FXML
-    void handleOkAction() {
+    @Override
+    public void handleEnterAction() {
         if (validateForm()) {
             if (modTrans == null) { // new transaction
                 Transaction newTrans = buildTransaction();

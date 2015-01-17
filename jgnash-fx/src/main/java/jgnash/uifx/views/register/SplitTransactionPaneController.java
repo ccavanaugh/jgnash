@@ -26,7 +26,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
 
 import jgnash.engine.Account;
 import jgnash.engine.ReconciledState;
@@ -161,7 +160,7 @@ public class SplitTransactionPaneController implements Initializable {
     }
 
     @FXML
-    private void okAction() {
+    private void handleEnterAction() {
         if (validateForm()) {
             final TransactionEntry entry = buildTransactionEntry();
 
@@ -176,7 +175,7 @@ public class SplitTransactionPaneController implements Initializable {
     }
 
     @FXML
-    private void cancelAction() {
+    private void handleCancelAction() {
         clearForm();
     }
 }
