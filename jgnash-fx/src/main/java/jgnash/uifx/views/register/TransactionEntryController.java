@@ -30,4 +30,8 @@ public interface TransactionEntryController {
     boolean validateForm();
 
     void clearForm();
+
+    void handleCancelAction();
+
+    void handleEnterAction();
 }
