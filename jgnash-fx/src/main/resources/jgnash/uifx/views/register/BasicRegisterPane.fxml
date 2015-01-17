@@ -22,7 +22,7 @@
                                 <Glyph fontFamily="FontAwesome" icon="MONEY"/>
                             </graphic>
                         </Button>
-                        <Button fx:id="duplicateButton" mnemonicParsing="false" text="%Button.Duplicate">
+                        <Button fx:id="duplicateButton" mnemonicParsing="false" onAction="#handleDuplicateAction" text="%Button.Duplicate">
                             <graphic>
                                 <Glyph fontFamily="FontAwesome" icon="COPY"/>
                             </graphic>

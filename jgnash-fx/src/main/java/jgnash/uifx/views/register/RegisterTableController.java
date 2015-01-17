@@ -165,6 +165,10 @@ public abstract class RegisterTableController implements Initializable {
         }
     }
 
+    List<Transaction> getSelectedTransactions() {
+        return tableView.getSelectionModel().getSelectedItems();
+    }
+
     protected void deleteTransactions() {
         final List<Transaction> transactionList = tableView.getSelectionModel().getSelectedItems();
 
