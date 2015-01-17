@@ -18,6 +18,7 @@
 package jgnash.uifx.views.register;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
@@ -149,5 +150,53 @@ public abstract class RegisterPaneController implements Initializable {
      */
     protected void clearForm() {
 
+    }
+
+    @FXML
+    private void handleDuplicateAction() {
+        for (final Transaction transaction: registerTableControllerProperty.get().getSelectedTransactions() ) {
+
+            try {
+                Transaction clone = (Transaction) transaction.clone();
+
+                // update number field
+
+                Optional<Transaction> optional = TransactionDialog.showAndWait(accountProperty.get(), clone);
+                if (optional.isPresent()) {
+
+                }
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
+            }
+
+
+            // clone the transaction
+            // display new transaction dialog
+
+        }
+
+        /*Transaction trans[] = getSelectedTransactions();
+
+        // walk through the array and duplicate each transaction
+        for (Transaction tran : trans) {
+            final DuplicateTransactionDialog d = DuplicateTransactionDialog.showDialog(getAccount(), tran);
+
+            final Transaction transaction = d.getTransaction();
+
+            if (transaction != null) {
+                EventQueue.invokeLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        clear();
+                        setSelectedTransaction(transaction);
+                    }
+                });
+            }
+        }
+        */
+
+        // Request focus as it may have been lost
+        register.getScene().getWindow().requestFocus();
     }
 }
