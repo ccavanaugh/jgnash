@@ -179,6 +179,12 @@ public abstract class RegisterTableController implements Initializable {
         RegisterActions.deleteTransactionAction(transactionList.toArray(new Transaction[transactionList.size()]));
     }
 
+    void duplicateTransactions() {
+        final List<Transaction> transactionList = tableView.getSelectionModel().getSelectedItems();
+
+        RegisterActions.duplicateTransaction(accountProperty.get(), transactionList);
+    }
+
     private class TransactionRowFactory implements Callback<TableView<Transaction>, TableRow<Transaction>> {
 
         @Override
@@ -199,8 +205,10 @@ public abstract class RegisterTableController implements Initializable {
 
             markedAs.getItems().addAll(markAsClearedItem, markAsReconciledItem, markAsUnreconciledItem);
 
-            // TODO Connect to dialogs, checks, and configuration
             final MenuItem duplicateItem = new MenuItem(resources.getString("Menu.Duplicate.Name"));
+            duplicateItem.setOnAction(event -> duplicateTransactions());
+
+            // TODO Create an account Window
             final MenuItem jumpItem = new MenuItem(resources.getString("Menu.Jump.Name"));
 
             final MenuItem deleteItem = new MenuItem(resources.getString("Menu.Delete.Name"));
