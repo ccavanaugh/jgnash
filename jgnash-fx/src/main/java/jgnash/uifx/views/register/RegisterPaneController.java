@@ -18,8 +18,11 @@
 package jgnash.uifx.views.register;
 
 import java.net.URL;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -32,7 +35,10 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
+import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
 
 /**
@@ -46,7 +52,7 @@ public abstract class RegisterPaneController implements Initializable {
     protected Button newButton;
 
     @FXML
-    protected Button duplicateButton; // TODO Implement handler
+    protected Button duplicateButton;
 
     @FXML
     protected Button deleteButton;
@@ -154,47 +160,37 @@ public abstract class RegisterPaneController implements Initializable {
 
     @FXML
     private void handleDuplicateAction() {
+
+        final String eftNumber = resources.getString("Item.EFT");
+
         for (final Transaction transaction: registerTableControllerProperty.get().getSelectedTransactions() ) {
+            clearForm();
 
             try {
-                Transaction clone = (Transaction) transaction.clone();
+                final Transaction clone = (Transaction) transaction.clone();
+                clone.setDate(DateUtils.today());
 
-                // update number field
-
-                Optional<Transaction> optional = TransactionDialog.showAndWait(accountProperty.get(), clone);
-                if (optional.isPresent()) {
-
-                }
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
-
-
-            // clone the transaction
-            // display new transaction dialog
-
-        }
-
-        /*Transaction trans[] = getSelectedTransactions();
-
-        // walk through the array and duplicate each transaction
-        for (Transaction tran : trans) {
-            final DuplicateTransactionDialog d = DuplicateTransactionDialog.showDialog(getAccount(), tran);
-
-            final Transaction transaction = d.getTransaction();
-
-            if (transaction != null) {
-                EventQueue.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        clear();
-                        setSelectedTransaction(transaction);
+                if (!clone.getNumber().isEmpty() && !clone.getNumber().equals(eftNumber)) {
+                    final String nextTransactionNumber = accountProperty.get().getNextTransactionNumber();    // may return an empty string
+                    if (!nextTransactionNumber.isEmpty()) {
+                        clone.setNumber(nextTransactionNumber);
                     }
-                });
+                }
+
+                final Optional<Transaction> optional = TransactionDialog.showAndWait(accountProperty.get(), clone);
+
+                if (optional.isPresent()) {
+                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                    Objects.requireNonNull(engine);
+
+                    engine.addTransaction(optional.get());
+
+                    Platform.runLater(() -> registerTableControllerProperty.get().scrollToTransaction(engine.getTransactionByUuid(optional.get().getUuid())));
+                }
+            } catch (final CloneNotSupportedException e) {
+                Logger.getLogger(RegisterPaneController.class.getName()).log(Level.SEVERE, e.getMessage(), e);
             }
         }
-        */
 
         // Request focus as it may have been lost
         register.getScene().getWindow().requestFocus();

@@ -60,7 +60,7 @@ import jgnash.uifx.util.TableViewManager;
  */
 public abstract class RegisterTableController implements Initializable {
 
-    final protected static String PREF_NODE_USER_ROOT = "/jgnash/uifx/views/register";
+    private final static String PREF_NODE_USER_ROOT = "/jgnash/uifx/views/register";
 
     @FXML
     protected TableView<Transaction> tableView;
@@ -80,7 +80,7 @@ public abstract class RegisterTableController implements Initializable {
 
     final private ReadOnlyObjectWrapper<Transaction> selectedTransactionProperty = new ReadOnlyObjectWrapper<>();
 
-    final protected ObservableList<Transaction> observableTransactions = FXCollections.observableArrayList();
+    private final ObservableList<Transaction> observableTransactions = FXCollections.observableArrayList();
 
     final protected SortedList<Transaction> sortedList = new SortedList<>(observableTransactions);
 
@@ -138,11 +138,11 @@ public abstract class RegisterTableController implements Initializable {
         return accountProperty;
     }
 
-    protected ReadOnlyObjectProperty<Transaction> getSelectedTransactionProperty() {
+    ReadOnlyObjectProperty<Transaction> getSelectedTransactionProperty() {
         return selectedTransactionProperty.getReadOnlyProperty();
     }
 
-    protected void clearTableSelection() {
+    void clearTableSelection() {
         tableView.getSelectionModel().clearSelection();
     }
 
@@ -150,9 +150,13 @@ public abstract class RegisterTableController implements Initializable {
         return accountPropertyWrapper;
     }
 
+    void scrollToTransaction(final Transaction transaction) {
+        tableView.scrollTo(transaction);
+    }
+
     abstract protected void buildTable();
 
-    protected void loadTable() {
+    void loadTable() {
         observableTransactions.clear();
 
         if (accountProperty.get() != null) {
@@ -169,7 +173,7 @@ public abstract class RegisterTableController implements Initializable {
         return tableView.getSelectionModel().getSelectedItems();
     }
 
-    protected void deleteTransactions() {
+    void deleteTransactions() {
         final List<Transaction> transactionList = tableView.getSelectionModel().getSelectedItems();
 
         RegisterActions.deleteTransactionAction(transactionList.toArray(new Transaction[transactionList.size()]));
