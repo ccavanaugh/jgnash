@@ -51,10 +51,10 @@ public class TransactionPaneController extends AbstractBankTransactionPaneContro
     protected Button enterButton;
 
     @FXML
-    protected Button splitsButton;
+    private Button splitsButton;
 
     @FXML
-    protected AccountExchangePane accountExchangePane;
+    private AccountExchangePane accountExchangePane;
 
     private PanelType panelType;
 

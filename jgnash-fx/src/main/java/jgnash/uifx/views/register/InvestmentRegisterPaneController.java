@@ -19,6 +19,8 @@ package jgnash.uifx.views.register;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,35 +28,35 @@ import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
-import jgnash.engine.AccountGroup;
-import jgnash.engine.AccountType;
+import jgnash.engine.InvestmentTransaction;
+import jgnash.engine.Transaction;
+import jgnash.uifx.StaticUIMethods;
+import jgnash.util.NotNull;
 
 /**
- * Register pane controller
+ * Investment Register pane controller
  *
  * @author Craig Cavanaugh
  */
 public class InvestmentRegisterPaneController extends RegisterPaneController {
 
     @FXML
-    public ComboBox<InvestmentTransactionFormController> actionComboBox;
+    private ComboBox<TransactionPane> actionComboBox;
 
     @FXML
-    protected StackPane register;
+    private StackPane register;
 
     @FXML
-    protected TabPane transactionForms;
+    private StackPane transactionForms;
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
         super.initialize(location, resources);
 
-        transactionForms.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+        actionComboBox.setEditable(false);
 
         // Load the register table
         try {
@@ -68,30 +70,38 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
         getAccountProperty().addListener((observable, oldValue, newValue) -> {
             buildTabs();
         });
+
+        actionComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (oldValue != null) {
+                oldValue.getController().clearForm();
+            }
+            transactionForms.getChildren().clear();
+            transactionForms.getChildren().addAll(newValue.getPane());
+        });
     }
 
     private void buildTabs() {
-        // TODO, fix for investment transactions
-        final AccountType accountType = getAccountProperty().get().getAccountType();
+        final String[] actions = new String[]{resources.getString("Transaction.BuyShare"),
+                resources.getString("Transaction.SellShare"), resources.getString("Transaction.TransferIn"),
+                resources.getString("Transaction.TransferOut"), resources.getString("Transaction.AddShare"),
+                resources.getString("Transaction.RemoveShare"), resources.getString("Transaction.ReinvestDiv"),
+                resources.getString("Transaction.Dividend"), resources.getString("Transaction.SplitShare"),
+                resources.getString("Transaction.MergeShare"), resources.getString("Transaction.ReturnOfCapital")};
 
-        final String[] tabNames = RegisterFactory.getCreditDebitTabNames(accountType);
+        final List<TransactionPane> transactionPanes = new ArrayList<>();
 
-        final Tab creditTab = buildTab(tabNames[0], PanelType.INCREASE);
-        final Tab debitTab = buildTab(tabNames[1], PanelType.DECREASE);
+        transactionPanes.add(buildCashTransferTab(actions[2], PanelType.INCREASE));
+        transactionPanes.add(buildCashTransferTab(actions[3], PanelType.DECREASE));
 
-        transactionForms.getTabs().addAll(creditTab, debitTab);
+        actionComboBox.getItems().addAll(transactionPanes);
 
-        if (accountType == AccountType.CHECKING || accountType == AccountType.CREDIT) {
-            transactionForms.getSelectionModel().select(debitTab);
-        } else if (accountType.getAccountGroup() == AccountGroup.INCOME) {
-            transactionForms.getSelectionModel().select(debitTab);
-        }
+        actionComboBox.getSelectionModel().select(0);    // force selection
     }
 
-    private Tab buildTab(final String tabName, final PanelType panelType) {
+    private TransactionPane buildCashTransferTab(final String name, final PanelType panelType) {
 
         try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TransactionPane.fxml"), resources);
+            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("InvestmentTransactionPane.fxml"), resources);
             final Pane pane = fxmlLoader.load();
 
             final TransactionPaneController transactionPaneController = fxmlLoader.getController();
@@ -99,25 +109,76 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
             transactionPaneController.setPanelType(panelType);
             transactionPaneController.getAccountProperty().bind(getAccountProperty());
 
-            final Tab tab = new Tab(tabName);
-            tab.setContent(pane);
-
-            return tab;
+            return new TransactionPane(name, transactionPaneController, pane);
         } catch (final IOException e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            throw new RuntimeException(e);
         }
-        return new Tab();
     }
 
     @FXML
-    private void okAction() {
+    private void handleEnterAction() {
+        actionComboBox.getSelectionModel().selectedItemProperty().get().getController().handleEnterAction();
     }
 
     @FXML
-    private void cancelAction() {
+    private void handleCancelAction() {
+        actionComboBox.getSelectionModel().selectedItemProperty().get().getController().handleCancelAction();
     }
 
     @FXML
     private void handleSecuritiesAction() {
+        //TODO: Implement
+    }
+
+    @Override
+    protected void modifyTransaction(@NotNull final Transaction transaction) {
+        if (transaction.areAccountsLocked()) {
+            StaticUIMethods.displayError(resources.getString("Message.TransactionModifyLocked"));
+            return;
+        }
+
+        if (transaction instanceof InvestmentTransaction) {
+            switch (transaction.getTransactionType()) {
+                default:
+                    // TODO: investment forms
+                    break;
+            }
+        } else {
+            if (transaction.getAmount(getAccountProperty().get()).signum() >= 0) {
+                actionComboBox.getSelectionModel().select(2);  // transferIn
+            } else {
+                actionComboBox.getSelectionModel().select(3);  // transferOut
+            }
+            actionComboBox.getSelectionModel().getSelectedItem().getController().modifyTransaction(transaction);
+        }
+    }
+
+    /**
+     * Utility class to hold the controller, form, and form name
+     */
+    private static class TransactionPane {
+
+        private final String name;
+        private final TransactionEntryController controller;
+        private final Pane pane;
+
+        private TransactionPane(final String name, final TransactionEntryController controller, final Pane pane) {
+            this.name = name;
+            this.controller = controller;
+            this.pane = pane;
+        }
+
+        public TransactionEntryController getController() {
+            return controller;
+        }
+
+        public Pane getPane() {
+            return pane;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 }

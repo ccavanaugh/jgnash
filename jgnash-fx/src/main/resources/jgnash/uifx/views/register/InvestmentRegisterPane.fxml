@@ -4,7 +4,6 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -50,7 +49,7 @@
     <bottom>
         <BorderPane>
             <center>
-                <TabPane fx:id="transactionForms"/>
+                <StackPane fx:id="transactionForms"/>
             </center>
             <bottom>
                 <GridPane styleClass="dialog, form">
@@ -67,8 +66,8 @@
                         <ComboBox fx:id="actionComboBox" GridPane.columnIndex="1" maxWidth="Infinity" minWidth="50" prefWidth="100"/>
                         <ButtonBar GridPane.columnIndex="2">
                             <buttons>
-                                <Button text="%Button.Ok" ButtonBar.buttonData="OK_DONE" onAction="#okAction"/>
-                                <Button text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#cancelAction"/>
+                                <Button text="%Button.Enter" ButtonBar.buttonData="OK_DONE" onAction="#handleEnterAction"/>
+                                <Button text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#handleCancelAction"/>
                             </buttons>
                         </ButtonBar>
                     </children>
