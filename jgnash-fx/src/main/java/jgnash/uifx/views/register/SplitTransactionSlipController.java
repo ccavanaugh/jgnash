@@ -40,7 +40,7 @@ import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
  *
  * @author Craig Cavanaugh
  */
-public class SplitTransactionPaneController implements Initializable {
+public class SplitTransactionSlipController implements Initializable {
 
     @FXML
     private DecimalTextField amountField;
@@ -59,7 +59,7 @@ public class SplitTransactionPaneController implements Initializable {
 
     private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
-    private PanelType panelType;
+    private SlipType slipType;
 
     private TransactionEntry oldEntry;
 
@@ -84,8 +84,8 @@ public class SplitTransactionPaneController implements Initializable {
         return transactionEntryListProperty;
     }
 
-    void setPanelType(final PanelType panelType) {
-        this.panelType = panelType;
+    void setSlipType(final SlipType slipType) {
+        this.slipType = slipType;
     }
 
     TransactionEntry buildTransactionEntry() {
@@ -94,7 +94,7 @@ public class SplitTransactionPaneController implements Initializable {
 
         int signum = amountField.getDecimal().signum();
 
-        if ((panelType == PanelType.DECREASE && signum >= 0) || (panelType == PanelType.INCREASE && signum < 0)) {
+        if ((slipType == SlipType.DECREASE && signum >= 0) || (slipType == SlipType.INCREASE && signum < 0)) {
             entry.setCreditAccount(accountExchangePane.getSelectedAccount());
             entry.setDebitAccount(accountProperty.get());
 
@@ -130,7 +130,7 @@ public class SplitTransactionPaneController implements Initializable {
 
         memoField.setText(entry.getMemo());
 
-        if (panelType == PanelType.DECREASE) {
+        if (slipType == SlipType.DECREASE) {
             accountExchangePane.setSelectedAccount(entry.getCreditAccount());
             amountField.setDecimal(entry.getDebitAmount().abs());
 

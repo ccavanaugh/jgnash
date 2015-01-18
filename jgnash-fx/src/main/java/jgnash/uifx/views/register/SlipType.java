@@ -18,7 +18,10 @@
 package jgnash.uifx.views.register;
 
 /**
+ * Panel type enumeration
+ *
  * @author Craig Cavanaugh
  */
-public class InvestmentTransactionFormController {
+public enum SlipType {
+    INCREASE, DECREASE
 }

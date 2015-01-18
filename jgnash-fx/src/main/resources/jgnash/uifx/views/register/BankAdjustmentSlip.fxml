@@ -16,7 +16,7 @@
 <?import org.controlsfx.glyphfont.Glyph?>
 
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="jgnash.uifx.views.register.AdjustTransactionPaneController" styleClass="form, dialog">
+          fx:controller="jgnash.uifx.views.register.BankAdjustmentSlipController" styleClass="form, dialog">
   <columnConstraints>
       <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
       <ColumnConstraints hgrow="SOMETIMES" />

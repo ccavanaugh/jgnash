@@ -14,7 +14,7 @@
 <?import jgnash.uifx.views.register.AttachmentPane?>
 
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="jgnash.uifx.views.register.TransactionPaneController" styleClass="form, dialog">
+          fx:controller="jgnash.uifx.views.register.SlipController" styleClass="form, dialog">
   <columnConstraints>
       <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
       <ColumnConstraints hgrow="SOMETIMES" />

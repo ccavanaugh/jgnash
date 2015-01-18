@@ -41,7 +41,7 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-public class AdjustTransactionPaneController extends AbstractBankTransactionPaneController {
+public class BankAdjustmentSlipController extends AbstractSlipController {
 
     @FXML
     private Button convertButton;
@@ -71,7 +71,7 @@ public class AdjustTransactionPaneController extends AbstractBankTransactionPane
     }
 
     @Override
-    protected boolean canModifyTransaction(final Transaction t) {
+    boolean canModifyTransaction(final Transaction t) {
         return t.getTransactionType() == TransactionType.SINGLENTRY;
     }
 

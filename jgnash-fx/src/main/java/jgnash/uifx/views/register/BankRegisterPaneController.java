@@ -43,7 +43,7 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-public class BasicRegisterPaneController extends RegisterPaneController {
+public class BankRegisterPaneController extends RegisterPaneController {
 
     @FXML
     protected Button jumpButton; // TODO Implement handler
@@ -88,13 +88,13 @@ public class BasicRegisterPaneController extends RegisterPaneController {
         if (!(transaction instanceof InvestmentTransaction)) {
             if (transaction.getTransactionType() == TransactionType.SINGLENTRY) {
                 transactionForms.getSelectionModel().select(adjustTab);
-                ((TransactionEntryController)adjustTab.getUserData()).modifyTransaction(transaction);
+                ((Slip)adjustTab.getUserData()).modifyTransaction(transaction);
             } else if (transaction.getAmount(getAccountProperty().get()).signum() >= 0) {
                 transactionForms.getSelectionModel().select(creditTab);
-                ((TransactionEntryController)creditTab.getUserData()).modifyTransaction(transaction);
+                ((Slip)creditTab.getUserData()).modifyTransaction(transaction);
             } else {
                 transactionForms.getSelectionModel().select(debitTab);
-                ((TransactionEntryController)debitTab.getUserData()).modifyTransaction(transaction);
+                ((Slip)debitTab.getUserData()).modifyTransaction(transaction);
             }
         } /*else {
             // TODO: Show investment transaction dialog
@@ -106,8 +106,8 @@ public class BasicRegisterPaneController extends RegisterPaneController {
 
         final String[] tabNames = RegisterFactory.getCreditDebitTabNames(accountType);
 
-        creditTab = buildTab(tabNames[0], PanelType.INCREASE);
-        debitTab = buildTab(tabNames[1], PanelType.DECREASE);
+        creditTab = buildTab(tabNames[0], SlipType.INCREASE);
+        debitTab = buildTab(tabNames[1], SlipType.DECREASE);
         adjustTab = buildAdjustTab();
 
         transactionForms.getTabs().addAll(creditTab, debitTab, adjustTab);
@@ -119,20 +119,20 @@ public class BasicRegisterPaneController extends RegisterPaneController {
         }
     }
 
-    private Tab buildTab(final String tabName, final PanelType panelType) {
+    private Tab buildTab(final String tabName, final SlipType slipType) {
 
         try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TransactionPane.fxml"), resources);
+            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BankSlip.fxml"), resources);
             final Pane pane = fxmlLoader.load();
 
-            final TransactionPaneController transactionPaneController = fxmlLoader.getController();
+            final SlipController slipController = fxmlLoader.getController();
 
-            transactionPaneController.setPanelType(panelType);
-            transactionPaneController.getAccountProperty().bind(getAccountProperty());
+            slipController.setSlipType(slipType);
+            slipController.getAccountProperty().bind(getAccountProperty());
 
             final Tab tab = new Tab(tabName);
             tab.setContent(pane);
-            tab.setUserData(transactionPaneController); // place a reference to the controller here
+            tab.setUserData(slipController); // place a reference to the controller here
 
             return tab;
         } catch (final IOException e) {
@@ -143,10 +143,10 @@ public class BasicRegisterPaneController extends RegisterPaneController {
 
     private Tab buildAdjustTab() {
         try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AdjustTransactionPane.fxml"), resources);
+            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BankAdjustmentSlip.fxml"), resources);
             final Pane pane = fxmlLoader.load();
 
-            final AdjustTransactionPaneController transactionPaneController = fxmlLoader.getController();
+            final BankAdjustmentSlipController transactionPaneController = fxmlLoader.getController();
 
             transactionPaneController.getAccountProperty().bind(getAccountProperty());
 
@@ -163,6 +163,6 @@ public class BasicRegisterPaneController extends RegisterPaneController {
 
     @Override
     protected void clearForm() {
-        ((TransactionEntryController)transactionForms.getSelectionModel().getSelectedItem().getUserData()).clearForm();
+        ((Slip)transactionForms.getSelectionModel().getSelectedItem().getUserData()).clearForm();
     }
 }

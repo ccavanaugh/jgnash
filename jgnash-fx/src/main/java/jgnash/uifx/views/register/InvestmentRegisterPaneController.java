@@ -95,26 +95,26 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
         final List<TransactionSlip> transactionPanes = new ArrayList<>();
 
         // TODO: more investment slips
-        transactionPanes.add(buildCashTransferTab(actions[2], PanelType.INCREASE));
-        transactionPanes.add(buildCashTransferTab(actions[3], PanelType.DECREASE));
+        transactionPanes.add(buildCashTransferTab(actions[2], SlipType.INCREASE));
+        transactionPanes.add(buildCashTransferTab(actions[3], SlipType.DECREASE));
 
         actionComboBox.getItems().addAll(transactionPanes);
 
         actionComboBox.getSelectionModel().select(0);    // force selection
     }
 
-    private TransactionSlip buildCashTransferTab(final String name, final PanelType panelType) {
+    private TransactionSlip buildCashTransferTab(final String name, final SlipType slipType) {
 
         try {
             final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("InvestmentTransactionPane.fxml"), resources);
             final Pane pane = fxmlLoader.load();
 
-            final TransactionPaneController transactionPaneController = fxmlLoader.getController();
+            final SlipController slipController = fxmlLoader.getController();
 
-            transactionPaneController.setPanelType(panelType);
-            transactionPaneController.getAccountProperty().bind(getAccountProperty());
+            slipController.setSlipType(slipType);
+            slipController.getAccountProperty().bind(getAccountProperty());
 
-            return new TransactionSlip(name, transactionPaneController, pane);
+            return new TransactionSlip(name, slipController, pane);
         } catch (final IOException e) {
             throw new RuntimeException(e);
         }
@@ -172,16 +172,16 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
     private static class TransactionSlip {
 
         private final String description;
-        private final TransactionEntryController controller;
+        private final Slip controller;
         private final Pane pane;
 
-        private TransactionSlip(final String description, final TransactionEntryController controller, final Pane pane) {
+        private TransactionSlip(final String description, final Slip controller, final Pane pane) {
             this.description = description;
             this.controller = controller;
             this.pane = pane;
         }
 
-        public TransactionEntryController getController() {
+        public Slip getController() {
             return controller;
         }
 

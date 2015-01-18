@@ -47,11 +47,11 @@ import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
 
 /**
- * Abstract bank transaction entry controller
+ * Abstract bank transaction entry slip controller
  *
  * @author Craig Cavanaugh
  */
-abstract class AbstractBankTransactionPaneController implements TransactionEntryController, Initializable {
+abstract class AbstractSlipController implements Slip, Initializable {
 
     @FXML
     protected DecimalTextField amountField;
@@ -74,14 +74,14 @@ abstract class AbstractBankTransactionPaneController implements TransactionEntry
     @FXML
     protected CheckBox reconciledButton;
 
-    final protected ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+    final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
     /**
      * Holds a reference to a transaction being modified
      */
-    protected Transaction modTrans = null;
+    Transaction modTrans = null;
 
-    protected ResourceBundle resources;
+    ResourceBundle resources;
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -269,7 +269,7 @@ abstract class AbstractBankTransactionPaneController implements TransactionEntry
         return t;
     }
 
-    public boolean validateForm() {
+    boolean validateForm() {
         return amountField.getDecimal().compareTo(BigDecimal.ZERO) != 0;
     }
 }

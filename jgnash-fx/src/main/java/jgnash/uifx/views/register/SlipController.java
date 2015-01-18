@@ -42,7 +42,7 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-public class TransactionPaneController extends AbstractBankTransactionPaneController {
+public class SlipController extends AbstractSlipController {
 
     @FXML
     protected Button cancelButton;
@@ -56,7 +56,7 @@ public class TransactionPaneController extends AbstractBankTransactionPaneContro
     @FXML
     private AccountExchangePane accountExchangePane;
 
-    private PanelType panelType;
+    private SlipType slipType;
 
     private SplitTransactionDialog splitsDialog;
 
@@ -82,8 +82,8 @@ public class TransactionPaneController extends AbstractBankTransactionPaneContro
         splitsDialog.getAccountProperty().setValue(getAccountProperty().get());
     }
 
-    void setPanelType(final PanelType panelType) {
-        this.panelType = panelType;
+    void setSlipType(final SlipType slipType) {
+        this.slipType = slipType;
     }
 
     @Override
@@ -108,7 +108,7 @@ public class TransactionPaneController extends AbstractBankTransactionPaneContro
             }
 
             if (modEntry == null) {
-                Logger logger = Logger.getLogger(TransactionPaneController.class.getName());
+                Logger logger = Logger.getLogger(SlipController.class.getName());
                 logger.warning("Was not able to modify the transaction");
             }
         }
@@ -152,7 +152,7 @@ public class TransactionPaneController extends AbstractBankTransactionPaneContro
                 selectedAccount = accountExchangePane.getSelectedAccount();
             }
 
-            if (panelType == PanelType.DECREASE && signum >= 0 || panelType == PanelType.INCREASE && signum == -1) {
+            if (slipType == SlipType.DECREASE && signum >= 0 || slipType == SlipType.INCREASE && signum == -1) {
                 if (hasEqualCurrencies()) {
                     transaction = TransactionFactory.generateDoubleEntryTransaction(selectedAccount,
                             accountProperty.get(), amountField.getDecimal().abs(), date, memoTextField.getText(),
@@ -221,7 +221,7 @@ public class TransactionPaneController extends AbstractBankTransactionPaneContro
                     try {
                         splitsDialog.getTransactionEntries().add((TransactionEntry) entry.clone());
                     } catch (CloneNotSupportedException e) {
-                        Logger.getLogger(TransactionPaneController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                        Logger.getLogger(SlipController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
                     }
                 }
                 amountField.setEditable(false);
@@ -246,7 +246,7 @@ public class TransactionPaneController extends AbstractBankTransactionPaneContro
                 }
             }
         } else if (t instanceof InvestmentTransaction) {
-            Logger logger = Logger.getLogger(TransactionPaneController.class.getName());
+            Logger logger = Logger.getLogger(SlipController.class.getName());
             logger.warning("unsupported transaction type");
         } else { // DoubleEntryTransaction
             accountExchangePane.setEnabled(!t.areAccountsHidden());
@@ -259,7 +259,7 @@ public class TransactionPaneController extends AbstractBankTransactionPaneContro
         if (t.getTransactionType() == TransactionType.DOUBLEENTRY) {
             TransactionEntry entry = t.getTransactionEntries().get(0);
 
-            if (panelType == PanelType.DECREASE) {
+            if (slipType == SlipType.DECREASE) {
                 accountExchangePane.setSelectedAccount(entry.getCreditAccount());
                 accountExchangePane.setExchangedAmount(entry.getCreditAmount());
             } else {
@@ -283,7 +283,7 @@ public class TransactionPaneController extends AbstractBankTransactionPaneContro
         splitsButton.setDisable(false);
     }
 
-    protected boolean canModifyTransaction(final Transaction t) {
+    boolean canModifyTransaction(final Transaction t) {
         boolean result = false;
 
         switch (t.getTransactionType()) {

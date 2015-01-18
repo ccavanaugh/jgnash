@@ -23,11 +23,9 @@ import jgnash.util.NotNull;
 /**
  * @author Craig Cavanaugh
  */
-public interface TransactionEntryController {
+public interface Slip {
 
     void modifyTransaction(@NotNull final Transaction transaction);
-
-    boolean validateForm();
 
     void clearForm();
 

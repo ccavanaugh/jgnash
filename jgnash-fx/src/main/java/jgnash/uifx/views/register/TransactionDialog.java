@@ -98,24 +98,24 @@ public class TransactionDialog extends Stage implements Initializable {
         });
     }
 
-    private Tab buildTab(final String tabName, final PanelType panelType) {
+    private Tab buildTab(final String tabName, final SlipType slipType) {
 
         try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TransactionPane.fxml"), resources);
+            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BankSlip.fxml"), resources);
             final Pane pane = fxmlLoader.load();
 
-            final TransactionPaneController transactionPaneController = fxmlLoader.getController();
+            final SlipController slipController = fxmlLoader.getController();
 
             // Override the default event handler for the enter and cancel buttons
-            transactionPaneController.enterButton.setOnAction(event -> handleEnterAction(transactionPaneController));
-            transactionPaneController.cancelButton.setOnAction(event -> tabPane.getScene().getWindow().hide());
+            slipController.enterButton.setOnAction(event -> handleEnterAction(slipController));
+            slipController.cancelButton.setOnAction(event -> tabPane.getScene().getWindow().hide());
 
-            transactionPaneController.setPanelType(panelType);
-            transactionPaneController.getAccountProperty().bind(getAccountProperty());
+            slipController.setSlipType(slipType);
+            slipController.getAccountProperty().bind(getAccountProperty());
 
             final Tab tab = new Tab(tabName);
             tab.setContent(pane);
-            tab.setUserData(transactionPaneController);
+            tab.setUserData(slipController);
 
             return tab;
         } catch (final IOException e) {
@@ -128,8 +128,8 @@ public class TransactionDialog extends Stage implements Initializable {
         final AccountType accountType = getAccountProperty().get().getAccountType();
         final String[] tabNames = RegisterFactory.getCreditDebitTabNames(accountType);
 
-        creditTab = buildTab(tabNames[0], PanelType.INCREASE);
-        debitTab = buildTab(tabNames[1], PanelType.DECREASE);
+        creditTab = buildTab(tabNames[0], SlipType.INCREASE);
+        debitTab = buildTab(tabNames[1], SlipType.DECREASE);
 
         tabPane.getTabs().addAll(creditTab, debitTab);
 
@@ -140,7 +140,7 @@ public class TransactionDialog extends Stage implements Initializable {
         }
     }
 
-    private void handleEnterAction(final TransactionPaneController controller) {
+    private void handleEnterAction(final SlipController controller) {
         if (controller.validateForm()) {
             transactionOptional = Optional.ofNullable(controller.buildTransaction());
             tabPane.getScene().getWindow().hide();
@@ -158,10 +158,10 @@ public class TransactionDialog extends Stage implements Initializable {
         if (!engine.isStored(transaction)) { // must not be a persisted transaction
             if (transaction.getAmount(accountProperty.get()).signum() >= 0) {
                 tabPane.getSelectionModel().select(creditTab);
-                ((TransactionPaneController)creditTab.getUserData()).modifyTransaction(transaction);
+                ((SlipController)creditTab.getUserData()).modifyTransaction(transaction);
             } else {
                 tabPane.getSelectionModel().select(debitTab);
-                ((TransactionPaneController)debitTab.getUserData()).modifyTransaction(transaction);
+                ((SlipController)debitTab.getUserData()).modifyTransaction(transaction);
             }
         }
     }

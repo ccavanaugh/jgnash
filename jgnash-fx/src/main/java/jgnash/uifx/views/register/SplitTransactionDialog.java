@@ -170,8 +170,8 @@ public class SplitTransactionDialog extends Stage implements Initializable {
     }
 
     private void newAction() {
-        ((SplitTransactionPaneController)creditTab.getUserData()).clearForm();
-        ((SplitTransactionPaneController)debitTab.getUserData()).clearForm();
+        ((SplitTransactionSlipController)creditTab.getUserData()).clearForm();
+        ((SplitTransactionSlipController)debitTab.getUserData()).clearForm();
         tableView.getSelectionModel().clearSelection();
     }
 
@@ -179,7 +179,7 @@ public class SplitTransactionDialog extends Stage implements Initializable {
         final TransactionEntry entry = tableView.getSelectionModel().getSelectedItem();
         if (entry != null) {
             tableView.getSelectionModel().clearSelection();
-            ((SplitTransactionPaneController)tabPane.getSelectionModel().getSelectedItem().getUserData()).clearForm();
+            ((SplitTransactionSlipController)tabPane.getSelectionModel().getSelectedItem().getUserData()).clearForm();
             transactionEntries.remove(entry);
         }
     }
@@ -195,10 +195,10 @@ public class SplitTransactionDialog extends Stage implements Initializable {
     private void modifyTransactionEntry(@NotNull final TransactionEntry transactionEntry) {
         if (transactionEntry.getCreditAccount() == accountProperty.get()) { // this is a credit
             tabPane.getSelectionModel().select(creditTab);
-            ((SplitTransactionPaneController)creditTab.getUserData()).modifyTransactionEntry(transactionEntry);
+            ((SplitTransactionSlipController)creditTab.getUserData()).modifyTransactionEntry(transactionEntry);
         } else {
             tabPane.getSelectionModel().select(debitTab);
-            ((SplitTransactionPaneController)debitTab.getUserData()).modifyTransactionEntry(transactionEntry);
+            ((SplitTransactionSlipController)debitTab.getUserData()).modifyTransactionEntry(transactionEntry);
         }
     }
 
@@ -261,25 +261,25 @@ public class SplitTransactionDialog extends Stage implements Initializable {
 
         creditTab = new Tab(tabNames[0]);
 
-        final SplitTransactionPaneController creditController = FXMLUtils.loadFXML(o -> {
+        final SplitTransactionSlipController creditController = FXMLUtils.loadFXML(o -> {
             creditTab.setContent((Node) o);
-        }, "SplitTransactionPane.fxml", resources);
+        }, "SplitTransactionSlip.fxml", resources);
 
         creditTab.setUserData(creditController);
 
-        creditController.setPanelType(PanelType.INCREASE);
+        creditController.setSlipType(SlipType.INCREASE);
         creditController.getAccountProperty().setValue(getAccountProperty().getValue());
         creditController.getTransactionEntryListProperty().setValue(transactionEntries);
 
         debitTab = new Tab(tabNames[1]);
 
-        SplitTransactionPaneController debitController = FXMLUtils.loadFXML(o -> {
+        SplitTransactionSlipController debitController = FXMLUtils.loadFXML(o -> {
             debitTab.setContent((Node) o);
-        }, "SplitTransactionPane.fxml", resources);
+        }, "SplitTransactionSlip.fxml", resources);
 
         debitTab.setUserData(debitController);
 
-        debitController.setPanelType(PanelType.DECREASE);
+        debitController.setSlipType(SlipType.DECREASE);
         debitController.getAccountProperty().setValue(getAccountProperty().getValue());
         debitController.getTransactionEntryListProperty().setValue(transactionEntries);
 
