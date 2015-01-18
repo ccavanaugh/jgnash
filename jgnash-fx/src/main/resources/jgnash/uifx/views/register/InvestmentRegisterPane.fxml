@@ -49,7 +49,7 @@
     <bottom>
         <BorderPane>
             <center>
-                <StackPane fx:id="transactionForms"/>
+                <StackPane fx:id="transactionSlips"/>
             </center>
             <bottom>
                 <GridPane styleClass="dialog, form">

@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,9 +32,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.views.accounts.SelectAccountSecuritiesDialog;
 import jgnash.util.NotNull;
 
 /**
@@ -44,13 +48,13 @@ import jgnash.util.NotNull;
 public class InvestmentRegisterPaneController extends RegisterPaneController {
 
     @FXML
-    private ComboBox<TransactionPane> actionComboBox;
+    private ComboBox<TransactionSlip> actionComboBox;
 
     @FXML
     private StackPane register;
 
     @FXML
-    private StackPane transactionForms;
+    private StackPane transactionSlips;
 
     @Override
     public void initialize(final URL location, final ResourceBundle resources) {
@@ -75,8 +79,8 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
             if (oldValue != null) {
                 oldValue.getController().clearForm();
             }
-            transactionForms.getChildren().clear();
-            transactionForms.getChildren().addAll(newValue.getPane());
+            transactionSlips.getChildren().clear();
+            transactionSlips.getChildren().addAll(newValue.getPane());
         });
     }
 
@@ -88,8 +92,9 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
                 resources.getString("Transaction.Dividend"), resources.getString("Transaction.SplitShare"),
                 resources.getString("Transaction.MergeShare"), resources.getString("Transaction.ReturnOfCapital")};
 
-        final List<TransactionPane> transactionPanes = new ArrayList<>();
+        final List<TransactionSlip> transactionPanes = new ArrayList<>();
 
+        // TODO: more investment slips
         transactionPanes.add(buildCashTransferTab(actions[2], PanelType.INCREASE));
         transactionPanes.add(buildCashTransferTab(actions[3], PanelType.DECREASE));
 
@@ -98,7 +103,7 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
         actionComboBox.getSelectionModel().select(0);    // force selection
     }
 
-    private TransactionPane buildCashTransferTab(final String name, final PanelType panelType) {
+    private TransactionSlip buildCashTransferTab(final String name, final PanelType panelType) {
 
         try {
             final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("InvestmentTransactionPane.fxml"), resources);
@@ -109,7 +114,7 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
             transactionPaneController.setPanelType(panelType);
             transactionPaneController.getAccountProperty().bind(getAccountProperty());
 
-            return new TransactionPane(name, transactionPaneController, pane);
+            return new TransactionSlip(name, transactionPaneController, pane);
         } catch (final IOException e) {
             throw new RuntimeException(e);
         }
@@ -127,7 +132,15 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
 
     @FXML
     private void handleSecuritiesAction() {
-        //TODO: Implement
+        final SelectAccountSecuritiesDialog dialog = new SelectAccountSecuritiesDialog(getAccountProperty().get(),
+                getAccountProperty().get().getSecurities());
+
+        if (dialog.showAndWait()) {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
+            engine.updateAccountSecurities(getAccountProperty().get(), dialog.getSelectedSecurities());
+        }
     }
 
     @Override
@@ -140,7 +153,7 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
         if (transaction instanceof InvestmentTransaction) {
             switch (transaction.getTransactionType()) {
                 default:
-                    // TODO: investment forms
+                    // TODO: more investment slips
                     break;
             }
         } else {
@@ -154,16 +167,16 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
     }
 
     /**
-     * Utility class to hold the controller, form, and form name
+     * Utility class to hold the controller, slips, and slip description
      */
-    private static class TransactionPane {
+    private static class TransactionSlip {
 
-        private final String name;
+        private final String description;
         private final TransactionEntryController controller;
         private final Pane pane;
 
-        private TransactionPane(final String name, final TransactionEntryController controller, final Pane pane) {
-            this.name = name;
+        private TransactionSlip(final String description, final TransactionEntryController controller, final Pane pane) {
+            this.description = description;
             this.controller = controller;
             this.pane = pane;
         }
@@ -178,7 +191,7 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
 
         @Override
         public String toString() {
-            return name;
+            return description;
         }
     }
 }
