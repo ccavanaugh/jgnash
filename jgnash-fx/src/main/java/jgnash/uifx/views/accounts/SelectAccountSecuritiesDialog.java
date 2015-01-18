@@ -62,7 +62,7 @@ import org.controlsfx.glyphfont.FontAwesome;
  *
  * @author Craig Cavanaugh
  */
-class SelectAccountSecuritiesDialog {
+public class SelectAccountSecuritiesDialog {
 
     private final Resource resources = Resource.get();
 
