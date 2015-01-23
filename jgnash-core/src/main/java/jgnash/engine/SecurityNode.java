@@ -347,5 +347,6 @@ public class SecurityNode extends CommodityNode {
 
         // load the cache list
         sortedHistoryNodeCache = new ArrayList<>(historyNodes);
+        Collections.sort(sortedHistoryNodeCache);   // JPA will be naturally sorted, but XML files will not
     }
 }
