@@ -26,6 +26,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.util.Callback;
 
 import jgnash.engine.Account;
 import jgnash.engine.Comparators;
@@ -50,8 +53,27 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
     final private SimpleBooleanProperty filterPlaceHoldersProperty = new SimpleBooleanProperty(false);
 
     public AccountComboBox() {
-        loadAccounts();
 
+        setCellFactory(new Callback<ListView<Account>, ListCell<Account>>() {
+            @Override
+            public ListCell<Account> call(final ListView<Account> param) {
+                return new ListCell<Account>() {
+                    @Override
+                    protected void updateItem(final Account item, final boolean empty) {
+                        super.updateItem(item, empty);
+
+                        if (empty || item == null) {
+                            setText(null);
+                            setGraphic(null);
+                        } else {
+                            setText(item.getPathName());
+                        }
+                    }
+                };
+            }
+        });
+
+        loadAccounts();
         registerListeners();
     }
 
