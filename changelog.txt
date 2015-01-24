@@ -28,7 +28,8 @@ Add ability to make an existing transaction a recurring transaction.
 
 Release 2.15.2
 ----------------------
-Dependencies updates, fix for some H2 database and Hibernate warnings
+01/24/14 Fix sorting issues with securities and currency history dialogs
+01/23/14 Dependencies updates, fix for some H2 database and Hibernate warnings
 
 Release 2.15.1
 ----------------------

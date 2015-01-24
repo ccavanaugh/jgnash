@@ -17,18 +17,14 @@
  */
 package jgnash.ui.commodity;
 
-import com.jgoodies.forms.builder.ButtonBarBuilder;
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -44,23 +40,24 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.engine.MathConstants;
 import jgnash.engine.ExchangeRate;
 import jgnash.engine.ExchangeRateHistoryNode;
+import jgnash.engine.MathConstants;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
@@ -71,7 +68,14 @@ import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.util.DialogUtils;
+import jgnash.util.DateUtils;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 /**
  * CurrencyModifyPanel is used for modifying the currencies and exchange rates.
@@ -109,7 +113,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
 
     private DatePanel dateField;
 
-    private JTable table;
+    private HistoryTable table;
 
     private HistoryModel model;
 
@@ -153,15 +157,15 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
 
         baseCurrencyCombo = new CurrencyComboBox();
         exchangeCurrencyCombo = new CurrencyComboBox();
-
-        model = new HistoryModel();
-
         dateField = new DatePanel();
 
         baseCurrencyCombo.addActionListener(this);
         exchangeCurrencyCombo.addActionListener(this);
 
-        table = new FormattedJTable(model);
+        model = new HistoryModel();
+
+        table = new HistoryTable();
+        table.setModel(model);
         table.setPreferredScrollableViewportSize(new java.awt.Dimension(150, 150));
         table.setCellSelectionEnabled(false);
         table.setColumnSelectionAllowed(false);
@@ -414,6 +418,48 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
                 }
             }
         });
+    }
+
+    private static class HistoryTable extends FormattedJTable {
+        private final DateFormat dateFormat = DateUtils.getShortDateFormat();
+
+        private final NumberFormat decimalFormat;
+
+        HistoryTable() {
+            decimalFormat = NumberFormat.getInstance();
+
+            if (decimalFormat instanceof DecimalFormat) {
+                decimalFormat.setMinimumFractionDigits(6);
+                decimalFormat.setMaximumFractionDigits(6);
+            }
+        }
+
+        /**
+         * Override prepareRenderer instead of using a custom renderer so the look and feel is preserved
+         *
+         * @see javax.swing.JTable#prepareRenderer(javax.swing.table.TableCellRenderer, int, int)
+         */
+        @Override
+        public Component prepareRenderer(final TableCellRenderer renderer, final int row, final int column) {
+            Component c = super.prepareRenderer(renderer, row, column);
+
+            HistoryModel model = (HistoryModel) getModel();
+
+            // column and row may have been reordered
+            final Object value = model.getValueAt(convertRowIndexToModel(row), convertColumnIndexToModel(column));
+
+            if (Date.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
+                if (value != null && value instanceof Date) {
+                    ((JLabel) c).setText(dateFormat.format(value));
+                }
+            } else if (BigDecimal.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
+                if (value != null && value instanceof BigDecimal) {
+                    ((JLabel) c).setText(decimalFormat.format(value));
+                }
+            }
+
+            return c;
+        }
     }
 
     private class HistoryModel extends DefaultTableModel {

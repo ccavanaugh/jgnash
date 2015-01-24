@@ -29,6 +29,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.Date;
 
@@ -40,6 +41,7 @@ import jgnash.engine.Transaction;
 import jgnash.text.CommodityFormat;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.ui.register.AccountBalanceDisplayManager;
+import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
 
 /**
@@ -47,14 +49,14 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  * @author axnotizes
- *
  */
-
 public class RegisterTable extends FormattedJTable {
 
     private NumberFormat fullFormat;
 
     private NumberFormat shortFormat;
+
+    private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
 
     public RegisterTable(final AccountTableModel dm) {
         super(dm);
@@ -89,6 +91,8 @@ public class RegisterTable extends FormattedJTable {
     public Component prepareRenderer(final TableCellRenderer renderer, final int row, final int column) {
         Component c = super.prepareRenderer(renderer, row, column);
 
+        final Object value = getModel().getValueAt(row, convertColumnIndexToModel(column));   // column may have been reordered
+
         if (getModel() instanceof AbstractRegisterTableModel) {
             Transaction t = ((AbstractRegisterTableModel) getModel()).getTransactionAt(row);
 
@@ -99,11 +103,8 @@ public class RegisterTable extends FormattedJTable {
             if (QuantityStyle.class.isAssignableFrom(getColumnClass(column)) && t instanceof InvestmentTransaction && c instanceof JLabel) {
                 ((JLabel) c).setHorizontalAlignment(SwingConstants.RIGHT);
 
-                NumberFormat numberFormat = CommodityFormat.getShortNumberFormat(((InvestmentTransaction) t).getSecurityNode());
-
-                Object value = getModel().getValueAt(row, convertColumnIndexToModel(column));   // column may have been reordered
-
                 if (value != null && value instanceof Number) {
+                    final NumberFormat numberFormat = CommodityFormat.getShortNumberFormat(((InvestmentTransaction) t).getSecurityNode());
                     ((JLabel) c).setText(numberFormat.format(value));
                 } else {
                     ((JLabel) c).setText("");
@@ -111,11 +112,13 @@ public class RegisterTable extends FormattedJTable {
             }
         }
 
-        if (FullCommodityStyle.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
+        if (Date.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
+            if (value != null && value instanceof Date) {
+                ((JLabel) c).setText(dateFormatter.format(value));
+            }
+        } else if (FullCommodityStyle.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
 
             ((JLabel) c).setHorizontalAlignment(SwingConstants.RIGHT);
-
-            Object value = getModel().getValueAt(row, convertColumnIndexToModel(column));   // column may have been reordered
 
             if (value != null && value instanceof Number) {
 
@@ -130,8 +133,6 @@ public class RegisterTable extends FormattedJTable {
         } else if (ShortCommodityStyle.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
 
             ((JLabel) c).setHorizontalAlignment(SwingConstants.RIGHT);
-
-            Object value = getModel().getValueAt(row, convertColumnIndexToModel(column));   // column may have been reordered
 
             if (value != null && value instanceof Number) {
                 ((JLabel) c).setText(shortFormat.format(value));

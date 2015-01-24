@@ -17,14 +17,9 @@
  */
 package jgnash.ui.commodity;
 
-import com.jgoodies.forms.builder.ButtonBarBuilder;
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -32,6 +27,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,12 +39,13 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
 
 import jgnash.engine.CommodityNode;
@@ -70,8 +67,14 @@ import jgnash.ui.components.JFloatField;
 import jgnash.ui.components.JIntegerField;
 import jgnash.ui.components.SecurityComboBox;
 import jgnash.ui.util.DialogUtils;
+import jgnash.util.DateUtils;
 import jgnash.util.Resource;
 
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
@@ -111,7 +114,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
 
     private JButton deleteButton;
 
-    private JTable table;
+    private HistoryTable table;
 
     private JButton updateButton;
 
@@ -159,8 +162,6 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
         highField = new JFloatField();
         securityCombo = new SecurityComboBox();
         volumeField = new JIntegerField();
-        model = new HistoryModel();
-        table = new FormattedJTable(model);
 
         updateButton = new JButton(rb.getString("Button.UpdateOnline"), Resource.getIcon("/jgnash/resource/applications-internet.png"));
 
@@ -169,8 +170,11 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
         applyButton = new JButton(rb.getString("Button.Add"));
         closeButton = new JButton(rb.getString("Button.Close"));
 
-        table.setPreferredScrollableViewportSize(new Dimension(150, 120));
+        model = new HistoryModel();
 
+        table = new HistoryTable();
+        table.setModel(model);
+        table.setPreferredScrollableViewportSize(new Dimension(150, 120));
         table.setCellSelectionEnabled(false);
         table.setColumnSelectionAllowed(false);
         table.setRowSelectionAllowed(true);
@@ -403,15 +407,46 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
         }
     }
 
-    private class HistoryModel extends DefaultTableModel implements MessageListener {
+    private static class HistoryTable extends FormattedJTable {
+        private final DateFormat dateFormat = DateUtils.getShortDateFormat();
 
-        SecurityNode node = null;
+        private final NumberFormat volumeFormat = NumberFormat.getIntegerInstance();
 
-        List<SecurityHistoryNode> history;        
+        /**
+         * Override prepareRenderer instead of using a custom renderer so the look and feel is preserved
+         *
+         * @see javax.swing.JTable#prepareRenderer(javax.swing.table.TableCellRenderer, int, int)
+         */
+        @Override
+        public Component prepareRenderer(final TableCellRenderer renderer, final int row, final int column) {
+            Component c = super.prepareRenderer(renderer, row, column);
 
-        private final NumberFormat volumeFormatter = NumberFormat.getIntegerInstance();
+            HistoryModel model = (HistoryModel) getModel();
 
-        private NumberFormat commodityFormatter;
+            // column and row may have been reordered
+            final Object value = model.getValueAt(convertRowIndexToModel(row), convertColumnIndexToModel(column));
+
+            if (Date.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
+                if (value != null && value instanceof Date) {
+                    ((JLabel) c).setText(dateFormat.format(value));
+                }
+            } else if (Long.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
+                ((JLabel) c).setText(volumeFormat.format(value));
+            } else if (BigDecimal.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
+                final NumberFormat commodityFormatter = CommodityFormat.getShortNumberFormat(model.getNode().getReportedCurrencyNode());
+
+                ((JLabel) c).setText(commodityFormatter.format(value));
+            }
+
+            return c;
+        }
+    }
+
+    private class HistoryModel extends AbstractTableModel implements MessageListener {
+
+        private SecurityNode node = null;
+
+        List<SecurityHistoryNode> history;
 
         private final String[] cNames = { rb.getString("Column.Date"), rb.getString("Column.Close"),
                         rb.getString("Column.Low"), rb.getString("Column.High"), rb.getString("Column.Volume") };
@@ -436,8 +471,6 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
             if (engine != null) {
                 history = engine.getSecurityHistory(node);
             }
-
-            commodityFormatter = CommodityFormat.getShortNumberFormat(node.getReportedCurrencyNode());
 
             fireTableDataChanged();
         }
@@ -464,13 +497,13 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
                     case 0:
                         return history.get(row).getDate();
                     case 1:
-                        return commodityFormatter.format(history.get(row).getPrice());
+                        return history.get(row).getPrice();
                     case 2:
-                        return commodityFormatter.format(history.get(row).getLow());
+                        return history.get(row).getLow();
                     case 3:
-                        return commodityFormatter.format(history.get(row).getHigh());
+                        return history.get(row).getHigh();
                     case 4:
-                        return volumeFormatter.format(history.get(row).getVolume());
+                        return history.get(row).getVolume();
                     default:
                         return "Error";
                 }
@@ -518,6 +551,10 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
                     });
                 }
             }
+        }
+
+        public SecurityNode getNode() {
+            return node;
         }
     }
 }
