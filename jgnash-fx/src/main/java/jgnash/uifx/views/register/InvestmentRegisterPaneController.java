@@ -48,7 +48,7 @@ import jgnash.util.NotNull;
 public class InvestmentRegisterPaneController extends RegisterPaneController {
 
     @FXML
-    private ComboBox<TransactionSlip> actionComboBox;
+    private ComboBox<SlipControllerContainer> actionComboBox;
 
     @FXML
     private StackPane register;
@@ -92,7 +92,7 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
                 resources.getString("Transaction.Dividend"), resources.getString("Transaction.SplitShare"),
                 resources.getString("Transaction.MergeShare"), resources.getString("Transaction.ReturnOfCapital")};
 
-        final List<TransactionSlip> transactionPanes = new ArrayList<>();
+        final List<SlipControllerContainer> transactionPanes = new ArrayList<>();
 
         // TODO: more investment slips
         transactionPanes.add(buildCashTransferTab(actions[2], SlipType.INCREASE));
@@ -103,7 +103,7 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
         actionComboBox.getSelectionModel().select(0);    // force selection
     }
 
-    private TransactionSlip buildCashTransferTab(final String name, final SlipType slipType) {
+    private SlipControllerContainer buildCashTransferTab(final String name, final SlipType slipType) {
 
         try {
             final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("InvestmentTransactionPane.fxml"), resources);
@@ -114,7 +114,7 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
             slipController.setSlipType(slipType);
             slipController.getAccountProperty().bind(getAccountProperty());
 
-            return new TransactionSlip(name, slipController, pane);
+            return new SlipControllerContainer(name, slipController, pane);
         } catch (final IOException e) {
             throw new RuntimeException(e);
         }
@@ -163,35 +163,6 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
                 actionComboBox.getSelectionModel().select(3);  // transferOut
             }
             actionComboBox.getSelectionModel().getSelectedItem().getController().modifyTransaction(transaction);
-        }
-    }
-
-    /**
-     * Utility class to hold the controller, slips, and slip description
-     */
-    private static class TransactionSlip {
-
-        private final String description;
-        private final Slip controller;
-        private final Pane pane;
-
-        private TransactionSlip(final String description, final Slip controller, final Pane pane) {
-            this.description = description;
-            this.controller = controller;
-            this.pane = pane;
-        }
-
-        public Slip getController() {
-            return controller;
-        }
-
-        public Pane getPane() {
-            return pane;
-        }
-
-        @Override
-        public String toString() {
-            return description;
         }
     }
 }
