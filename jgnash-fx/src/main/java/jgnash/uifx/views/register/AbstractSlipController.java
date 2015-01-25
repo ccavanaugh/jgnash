@@ -213,8 +213,8 @@ abstract class AbstractSlipController implements Slip, Initializable {
     }
 
     void handlePayeeFocusChange() {
-        if (modTrans == null && Options.getAutoCompleteEnabled().get()) {
-            if (!payeeTextField.getText().isEmpty() && payeeTextField.getAutoCompleteModelObjectProperty().get() != null) {
+        if (modTrans == null && Options.getAutoCompleteEnabled().get() && payeeTextField.getLength() > 0) {
+            if (payeeTextField.getAutoCompleteModelObjectProperty().get() != null) {
                 Transaction transaction = payeeTextField.getAutoCompleteModelObjectProperty().get().getExtraInfo(payeeTextField.getText());
                 if (transaction != null) {
                     if (canModifyTransaction(transaction)) {
