@@ -1558,6 +1558,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         attributesLock = new ReentrantReadWriteLock(true);
 
         cachedSortedChildren = new ArrayList<>(children);
+        Collections.sort(cachedSortedChildren); // JPA will be naturally sorted, but XML files will not
     }
 
     /**
