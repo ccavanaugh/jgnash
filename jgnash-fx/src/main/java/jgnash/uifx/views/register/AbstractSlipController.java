@@ -252,14 +252,14 @@ abstract class AbstractSlipController implements Slip, Initializable {
         }
 
         // preserve any transaction entries that may have been entered first
-        if (!amountField.isEmpty() && !amountField.getText().isEmpty()) {
+        if (amountField.getLength() > 0) {
             Transaction newTrans = buildTransaction();
             t.clearTransactionEntries();
             t.addTransactionEntries(newTrans.getTransactionEntries());
         }
 
         // preserve any preexisting memo field info
-        if (memoTextField.getText() != null && !memoTextField.getText().isEmpty()) {
+        if (memoTextField.getLength() > 0) {
             t.setMemo(memoTextField.getText());
         }
 
