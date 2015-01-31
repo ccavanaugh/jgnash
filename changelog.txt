@@ -28,6 +28,7 @@ Add ability to make an existing transaction a recurring transaction.
 
 Release 2.15.2
 ----------------------
+01/31/14 Fix for potential resource leak when export budgets to a spreadsheet
 01/24/14 Fix sorting issues with securities and currency history dialogs
 01/23/14 Initial sort order for security history was incorrect for XML and BXDS file formats
 01/22/14 Dependencies updates, fix for some H2 database and Hibernate warnings
