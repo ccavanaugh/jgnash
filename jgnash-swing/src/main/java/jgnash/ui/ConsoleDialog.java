@@ -181,9 +181,11 @@ public class ConsoleDialog {
 
         MBeanServer server = ManagementFactory.getPlatformMBeanServer();
         try {
-            HotSpotDiagnosticMXBean bean = ManagementFactory.newPlatformMXBeanProxy(server, "com.sun.management:type=HotSpotDiagnostic", HotSpotDiagnosticMXBean.class);
+            final HotSpotDiagnosticMXBean bean = ManagementFactory.newPlatformMXBeanProxy(server, "com.sun.management:type=HotSpotDiagnostic", HotSpotDiagnosticMXBean.class);
 
-            bean.dumpHeap(dumpFile.getAbsolutePath(), true);
+            if (dumpFile != null) {
+            	bean.dumpHeap(dumpFile.getAbsolutePath(), true);
+            }
         } catch (IOException e) {
             Logger.getLogger(ConsoleDialog.class.getCanonicalName()).log(Level.SEVERE, null, e);
         }
