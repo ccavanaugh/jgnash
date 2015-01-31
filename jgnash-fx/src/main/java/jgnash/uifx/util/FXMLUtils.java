@@ -9,7 +9,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -59,12 +58,12 @@ public class FXMLUtils {
      * Creates a new Stage with application defaults {@code StageStyle.DECORATED}, {@code Modality.APPLICATION_MODAL}
      * with the specified fxml file as the {@code Scene}.
      *
-     * @param controller {@code Initializable to pass to the {@code FXMLLoader}
+     * @param controller controller object to pass to the {@code FXMLLoader}
      * @param fileName name of the fxml file.  It's assumed to be in the same package as the controller
      * @param resourceBundle {@code ResourceBundle} to pass to the {@code FXMLLoader}
      * @return new {@code Stage}
      */
-    public static Stage loadFXML(final Initializable controller, final String fileName, final ResourceBundle resourceBundle) {
+    public static Stage loadFXML(final Object controller, final String fileName, final ResourceBundle resourceBundle) {
         final URL fxmlUrl = controller.getClass().getResource(fileName);
         final FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl, resourceBundle);
 
