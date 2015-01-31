@@ -168,26 +168,23 @@ public class ConsoleDialog {
 
         final String base = FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath();
         final String filesep = System.getProperty("file.separator");
-
-        File dumpFile = null;
-
-        // no more than 1000 dumps
-        for (int i = 1; i < MAX_DUMP_FILES; i++) {
-            dumpFile = new File(base + filesep + "jGnashHeapDump" + i + ".bin");
+               
+        for (int i = 1; i < MAX_DUMP_FILES; i++) {  // no more than 1000 dumps
+            final File dumpFile = new File(base + filesep + "jGnashHeapDump" + i + ".bin");
 
             if (!dumpFile.exists()) {
+            	final MBeanServer server = ManagementFactory.getPlatformMBeanServer();
+            	
+                try {
+                    final HotSpotDiagnosticMXBean bean = ManagementFactory.newPlatformMXBeanProxy(server, "com.sun.management:type=HotSpotDiagnostic", HotSpotDiagnosticMXBean.class);
+
+                    bean.dumpHeap(dumpFile.getAbsolutePath(), true);
+                } catch (IOException e) {
+                    Logger.getLogger(ConsoleDialog.class.getCanonicalName()).log(Level.SEVERE, null, e);
+                }
                 break;
             }
-        }
-
-        final MBeanServer server = ManagementFactory.getPlatformMBeanServer();
-        try {
-            final HotSpotDiagnosticMXBean bean = ManagementFactory.newPlatformMXBeanProxy(server, "com.sun.management:type=HotSpotDiagnostic", HotSpotDiagnosticMXBean.class);
-
-            bean.dumpHeap(dumpFile.getAbsolutePath(), true);
-        } catch (IOException e) {
-            Logger.getLogger(ConsoleDialog.class.getCanonicalName()).log(Level.SEVERE, null, e);
-        }
+        }        
     }
 
     public static void show() {
