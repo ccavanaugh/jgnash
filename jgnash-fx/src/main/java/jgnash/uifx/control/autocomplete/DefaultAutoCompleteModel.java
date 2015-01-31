@@ -20,6 +20,7 @@ package jgnash.uifx.control.autocomplete;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import javafx.beans.property.SimpleBooleanProperty;
 
@@ -123,8 +124,8 @@ abstract class DefaultAutoCompleteModel<E> implements AutoCompleteModel<E> {
      * @return null
      */
     @Override
-    public E getExtraInfo(final String key) {
-        return null;
+    public Optional<E> getExtraInfo(final String key) {
+        return Optional.empty();
     }
 
     /**

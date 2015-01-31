@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -240,11 +241,11 @@ public class AutoCompleteFactory {
         }
 
         @Override
-        public Transaction getExtraInfo(final String key) {
+        public Optional<Transaction> getExtraInfo(final String key) {
             if (ignoreCaseEnabled.get()) {
-                return (Transaction) transactions.get(key.toLowerCase(Locale.getDefault()));
+                return Optional.ofNullable((Transaction) transactions.get(key.toLowerCase(Locale.getDefault())));
             }
-            return (Transaction) transactions.get(key);
+            return Optional.ofNullable((Transaction) transactions.get(key));
         }
 
         /**

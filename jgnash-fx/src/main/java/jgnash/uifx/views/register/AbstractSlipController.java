@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -215,11 +216,12 @@ abstract class AbstractSlipController implements Slip, Initializable {
     void handlePayeeFocusChange() {
         if (modTrans == null && Options.getAutoCompleteEnabled().get() && payeeTextField.getLength() > 0) {
             if (payeeTextField.getAutoCompleteModelObjectProperty().get() != null) {
-                Transaction transaction = payeeTextField.getAutoCompleteModelObjectProperty().get().getExtraInfo(payeeTextField.getText());
-                if (transaction != null) {
-                    if (canModifyTransaction(transaction)) {
+                final Optional<Transaction> optional= payeeTextField.getAutoCompleteModelObjectProperty().get().getExtraInfo(payeeTextField.getText());
+
+                if (optional.isPresent()) {
+                    if (canModifyTransaction(optional.get())) {
                         try {
-                            modifyTransaction(modifyTransactionForAutoComplete((Transaction) transaction.clone()));
+                            modifyTransaction(modifyTransactionForAutoComplete((Transaction) optional.get().clone()));
                         } catch (final CloneNotSupportedException e) {
                             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
                         }
