@@ -18,7 +18,6 @@
 package jgnash.uifx.controllers;
 
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -32,9 +31,6 @@ import jgnash.uifx.tasks.BootEngineTask;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -46,10 +42,11 @@ import javafx.stage.Stage;
  *
  * @author Craig Cavanaugh
  */
-public class OpenDatabaseController implements Initializable {
+public class OpenDatabaseController {
 
     private static final String LAST_DIR = "LastDir";
 
+    @FXML
     private ResourceBundle resources;
 
     @FXML
@@ -67,11 +64,8 @@ public class OpenDatabaseController implements Initializable {
     @FXML
     protected PasswordField passwordField;
 
-    @FXML
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
-        this.resources = resources;
-
+    @FXML    
+    private void initialize() {        
         updateControlsState();
 
         localDatabaseField.setText(EngineFactory.getLastDatabase());
