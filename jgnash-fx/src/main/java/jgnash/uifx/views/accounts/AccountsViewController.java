@@ -20,6 +20,7 @@ package jgnash.uifx.views.accounts;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -128,14 +129,14 @@ public class AccountsViewController implements Initializable, MessageListener {
         nameColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getName()));
 
         final TreeTableColumn<Account, Integer> entriesColumn = new TreeTableColumn<>(resources.getString("Column.Entries"));
-        entriesColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getTransactionCount()));
+        entriesColumn.setCellValueFactory(param -> new SimpleIntegerProperty(param.getValue().getValue().getTransactionCount()).asObject());
 
         final TreeTableColumn<Account, BigDecimal> balanceColumn = new TreeTableColumn<>(resources.getString("Column.Balance"));
-        balanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getTreeBalance()));
+        balanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<BigDecimal>(param.getValue().getValue().getTreeBalance()));
         balanceColumn.setCellFactory(cell -> new AccountCommodityFormatTreeTableCell());
 
         final TreeTableColumn<Account, BigDecimal> reconciledBalanceColumn = new TreeTableColumn<>(resources.getString("Column.ReconciledBalance"));
-        reconciledBalanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getReconciledTreeBalance()));
+        reconciledBalanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<BigDecimal>(param.getValue().getValue().getReconciledTreeBalance()));
         reconciledBalanceColumn.setCellFactory(cell -> new AccountCommodityFormatTreeTableCell());
 
         final TreeTableColumn<Account, String> currencyColumn = new TreeTableColumn<>(resources.getString("Column.Currency"));
@@ -146,7 +147,7 @@ public class AccountsViewController implements Initializable, MessageListener {
 
         final TreeTableColumn<Account, Integer> codeColumn = new TreeTableColumn<>(resources.getString("Column.Code"));
         codeColumn.setEditable(true);
-        codeColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper(param.getValue().getValue().getAccountCode()));
+        codeColumn.setCellValueFactory(param -> new SimpleIntegerProperty(param.getValue().getValue().getAccountCode()).asObject());
         codeColumn.setCellFactory(param -> new IntegerEditingTreeTableCell());
         codeColumn.setOnEditCommit(event -> updateAccountCode(event.getRowValue().getValue(), event.getNewValue()));
 
