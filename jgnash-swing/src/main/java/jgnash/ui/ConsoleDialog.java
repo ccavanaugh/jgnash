@@ -32,6 +32,7 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
+import java.util.ResourceBundle;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -51,7 +52,7 @@ import jgnash.engine.Engine;
 import jgnash.ui.components.MemoryMonitor;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.NotNull;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.factories.Borders;
 import com.sun.management.HotSpotDiagnosticMXBean;
@@ -165,8 +166,8 @@ public class ConsoleDialog {
 
     private static void dumpHeap() {
 
-        String base = FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath();
-        String filesep = System.getProperty("file.separator");
+        final String base = FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath();
+        final String filesep = System.getProperty("file.separator");
 
         File dumpFile = null;
 
@@ -179,13 +180,11 @@ public class ConsoleDialog {
             }
         }
 
-        MBeanServer server = ManagementFactory.getPlatformMBeanServer();
+        final MBeanServer server = ManagementFactory.getPlatformMBeanServer();
         try {
             final HotSpotDiagnosticMXBean bean = ManagementFactory.newPlatformMXBeanProxy(server, "com.sun.management:type=HotSpotDiagnostic", HotSpotDiagnosticMXBean.class);
 
-            if (dumpFile != null) {
-            	bean.dumpHeap(dumpFile.getAbsolutePath(), true);
-            }
+            bean.dumpHeap(dumpFile.getAbsolutePath(), true);
         } catch (IOException e) {
             Logger.getLogger(ConsoleDialog.class.getCanonicalName()).log(Level.SEVERE, null, e);
         }
@@ -195,7 +194,7 @@ public class ConsoleDialog {
         if (dialog == null) { // only one visible window
             init();
 
-            Resource rb = Resource.get();
+            ResourceBundle rb = ResourceUtils.getBundle();
 
             JButton copyButton = new JButton(rb.getString("Button.CopyToClip"));
 
