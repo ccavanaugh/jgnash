@@ -19,11 +19,9 @@ package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.Date;
 
 import javafx.scene.control.TableCell;
 
-import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 
 /**
