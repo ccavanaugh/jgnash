@@ -132,11 +132,11 @@ public class AccountsViewController implements Initializable, MessageListener {
         entriesColumn.setCellValueFactory(param -> new SimpleIntegerProperty(param.getValue().getValue().getTransactionCount()).asObject());
 
         final TreeTableColumn<Account, BigDecimal> balanceColumn = new TreeTableColumn<>(resources.getString("Column.Balance"));
-        balanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<BigDecimal>(param.getValue().getValue().getTreeBalance()));
+        balanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().getValue().getTreeBalance()));
         balanceColumn.setCellFactory(cell -> new AccountCommodityFormatTreeTableCell());
 
         final TreeTableColumn<Account, BigDecimal> reconciledBalanceColumn = new TreeTableColumn<>(resources.getString("Column.ReconciledBalance"));
-        reconciledBalanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<BigDecimal>(param.getValue().getValue().getReconciledTreeBalance()));
+        reconciledBalanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().getValue().getReconciledTreeBalance()));
         reconciledBalanceColumn.setCellFactory(cell -> new AccountCommodityFormatTreeTableCell());
 
         final TreeTableColumn<Account, String> currencyColumn = new TreeTableColumn<>(resources.getString("Column.Currency"));
