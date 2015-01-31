@@ -327,12 +327,11 @@ public class BudgetResultsExport {
         
         try (final FileOutputStream out = new FileOutputStream(filename)) {
             wb.write(out);
+            wb.close();
         } catch (final Exception e) {
             Logger.getLogger(BudgetResultsExport.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
             message = e.getLocalizedMessage();
         }
-
-
         
         return message;
     }
