@@ -35,11 +35,11 @@ public class FXMLUtils {
      * @param fileName name of the fxml file.  It's assumed to be in the same package as the consumer
      * @param resourceBundle {@code ResourceBundle} to pass to the {@code FXMLLoader}
      * @param <R> must extend {code Node}
-     * @param <C> must implement {@code Initializable}
+     * @param <C> the fxml controller
      *
      * @return the controller for the fxml file
      */
-    public static <R, C extends Initializable> C loadFXML(final Consumer<R> consumer, final String fileName, final ResourceBundle resourceBundle) {
+    public static <R, C> C loadFXML(final Consumer<R> consumer, final String fileName, final ResourceBundle resourceBundle) {
         final URL fxmlUrl = consumer.getClass().getResource(fileName);
         final FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl, resourceBundle);
 

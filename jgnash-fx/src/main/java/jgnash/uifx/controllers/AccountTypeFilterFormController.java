@@ -17,13 +17,7 @@
  */
 package jgnash.uifx.controllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.CheckBox;
 import javafx.stage.Stage;
 
@@ -32,7 +26,7 @@ import jgnash.uifx.util.AccountTypeFilter;
 /**
  * @author Craig Cavanaugh
  */
-public class AccountTypeFilterFormController implements Initializable {
+public class AccountTypeFilterFormController {
 
     @FXML
     CheckBox bankAccountCheckBox;
@@ -44,13 +38,7 @@ public class AccountTypeFilterFormController implements Initializable {
     CheckBox incomeAccountCheckBox;
 
     @FXML
-    CheckBox hiddenAccountCheckBox;
-
-    @FXML
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
-
-    }
+    CheckBox hiddenAccountCheckBox;    
 
     public void setAccountTypeFilter(final AccountTypeFilter filter) {
 
