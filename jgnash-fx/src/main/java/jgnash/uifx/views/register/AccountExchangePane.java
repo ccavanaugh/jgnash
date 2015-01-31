@@ -193,14 +193,16 @@ public class AccountExchangePane extends GridPane implements Initializable {
     }
 
     private void exchangeRateFieldAction() {
-        if (getAmount().compareTo(BigDecimal.ZERO) == 0 && amountEditable.get()) {
-            if (exchangeRateField.getDecimal().compareTo(BigDecimal.ZERO) != 0) {
-                amountProperty.set(exchangeAmountProperty.get().divide(exchangeRateField.getDecimal(),
+        if (exchangeAmountProperty.get() != null) { // NPE if exchangeAmount has not been set
+            if (getAmount().compareTo(BigDecimal.ZERO) == 0 && amountEditable.get()) {
+                if (exchangeRateField.getDecimal().compareTo(BigDecimal.ZERO) != 0) {
+                    amountProperty.set(exchangeAmountProperty.get().divide(exchangeRateField.getDecimal(),
+                            MathConstants.mathContext).setScale(baseCurrencyProperty.get().getScale(), MathConstants.roundingMode));
+                }
+            } else {
+                exchangeAmountProperty.set(getAmount().multiply(exchangeRateField.getDecimal(),
                         MathConstants.mathContext).setScale(baseCurrencyProperty.get().getScale(), MathConstants.roundingMode));
             }
-        } else {
-            exchangeAmountProperty.set(getAmount().multiply(exchangeRateField.getDecimal(),
-                    MathConstants.mathContext).setScale(baseCurrencyProperty.get().getScale(), MathConstants.roundingMode));
         }
 
         Platform.runLater(popOver::hide);
