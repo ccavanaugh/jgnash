@@ -61,6 +61,7 @@ import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
 import com.sun.javafx.css.StyleManager;
+
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
@@ -72,6 +73,7 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
  *
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("restriction")
 public class MainApplication extends Application implements MessageListener {
     /**
      * Default style sheet
@@ -93,8 +95,8 @@ public class MainApplication extends Application implements MessageListener {
     private TabViewPane tabViewPane;
 
     private static BusyPane busyPane;
-
-    @Override
+   
+	@Override
     public void start(final Stage stage) throws Exception {
 
         // Force application wide style sheet. Use is StyleManager is a private API and may break later

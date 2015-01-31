@@ -58,6 +58,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author Craig Cavanaugh
  */
+@SuppressWarnings("restriction")
 public class ControlsTest extends Application {
 
     private String testFile;
@@ -73,8 +74,8 @@ public class ControlsTest extends Application {
 
         launch(args);
     }
-
-    @Override
+   
+	@Override
     public void start(final Stage primaryStage) throws Exception {
 
         Engine engine = createEngine();
