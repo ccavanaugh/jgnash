@@ -19,7 +19,6 @@ package jgnash.uifx.views.register;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,7 +34,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
@@ -62,7 +60,7 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
-public class SplitTransactionDialog extends Stage implements Initializable {
+public class SplitTransactionDialog extends Stage {
 
     private static final String PREF_NODE_USER_ROOT = "/jgnash/uifx/views/register/splits";
 
@@ -86,11 +84,12 @@ public class SplitTransactionDialog extends Stage implements Initializable {
     @FXML
     private TabPane tabPane;
 
+    @FXML
+    private ResourceBundle resources;
+
     private Tab creditTab;
 
     private Tab debitTab;
-
-    private ResourceBundle resources;
 
     private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
@@ -131,10 +130,8 @@ public class SplitTransactionDialog extends Stage implements Initializable {
         return transactionEntries;
     }
 
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
-        this.resources = resources;
-
+    @FXML
+    private void initialize() {
         getAccountProperty().addListener((observable, oldValue, newValue) -> {
             initTabs();
             loadTable();
@@ -261,9 +258,8 @@ public class SplitTransactionDialog extends Stage implements Initializable {
 
         creditTab = new Tab(tabNames[0]);
 
-        final SplitTransactionSlipController creditController = FXMLUtils.loadFXML(o -> {
-            creditTab.setContent((Node) o);
-        }, "SplitTransactionSlip.fxml", resources);
+        final SplitTransactionSlipController creditController = FXMLUtils.loadFXML(o -> creditTab.setContent((Node) o),
+                "SplitTransactionSlip.fxml", resources);
 
         creditTab.setUserData(creditController);
 
@@ -273,9 +269,8 @@ public class SplitTransactionDialog extends Stage implements Initializable {
 
         debitTab = new Tab(tabNames[1]);
 
-        SplitTransactionSlipController debitController = FXMLUtils.loadFXML(o -> {
-            debitTab.setContent((Node) o);
-        }, "SplitTransactionSlip.fxml", resources);
+        final SplitTransactionSlipController debitController = FXMLUtils.loadFXML(o -> debitTab.setContent((Node) o),
+                "SplitTransactionSlip.fxml", resources);
 
         debitTab.setUserData(debitController);
 

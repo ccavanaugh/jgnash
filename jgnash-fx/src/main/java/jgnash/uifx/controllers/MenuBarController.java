@@ -17,9 +17,10 @@
  */
 package jgnash.uifx.controllers;
 
-import java.net.URL;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -30,19 +31,12 @@ import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.tasks.CloseFileTask;
 
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-
 /**
  * Primary Menu Controller
  *
  * @author Craig Cavanaugh
  */
-public class MenuBarController implements Initializable, MessageListener {
+public class MenuBarController implements MessageListener {
 
     @FXML private MenuBar menuBar;
 
@@ -52,17 +46,15 @@ public class MenuBarController implements Initializable, MessageListener {
 
     @FXML private MenuItem exitMenuItem;
 
-    @Override
-    public void initialize(final URL url, final ResourceBundle resourceBundle) {
-        Objects.requireNonNull(menuBar);
-
+    @FXML
+    private void initialize() {
         closeMenuItem.setDisable(true);
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
     }
 
     @FXML
-    protected void handleExitAction(final ActionEvent actionEvent) {
+    private void handleExitAction() {
         if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
             CloseFileTask.initiateShutdown();
         } else {
@@ -71,19 +63,19 @@ public class MenuBarController implements Initializable, MessageListener {
     }
 
     @FXML
-    protected void handleCloseAction(final ActionEvent event) {
+    private void handleCloseAction() {
         if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
             CloseFileTask.initiateClose();
         }
     }
 
     @FXML
-    protected void handleOpenAction(final ActionEvent event) {
+    private void handleOpenAction() {
         StaticUIMethods.showOpenDialog();
     }
 
     @FXML
-    public void updateSecurities(ActionEvent actionEvent) {
+    private void updateSecurities() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         if (engine != null) {
             engine.startSecuritiesUpdate(0);
@@ -91,7 +83,7 @@ public class MenuBarController implements Initializable, MessageListener {
     }
 
     @FXML
-    public void updateCurrencies(ActionEvent actionEvent) {
+    private void updateCurrencies() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         if (engine != null) {
             engine.startExchangeRateUpdate(0);

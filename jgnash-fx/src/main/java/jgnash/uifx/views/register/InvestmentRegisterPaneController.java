@@ -18,11 +18,9 @@
 package jgnash.uifx.views.register;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,9 +54,10 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
     @FXML
     private StackPane transactionSlips;
 
+    @FXML
     @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
-        super.initialize(location, resources);
+    public void initialize() {
+        super.initialize();
 
         actionComboBox.setEditable(false);
 

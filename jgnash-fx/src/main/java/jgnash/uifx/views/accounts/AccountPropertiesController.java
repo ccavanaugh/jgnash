@@ -17,11 +17,16 @@
  */
 package jgnash.uifx.views.accounts;
 
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.logging.Logger;
+
 import javafx.application.Platform;
 import javafx.beans.binding.BooleanBinding;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -30,6 +35,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
+
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.AccountType;
@@ -41,20 +47,12 @@ import jgnash.uifx.skin.StyleClass;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 
-import java.net.URL;
-import java.util.Iterator;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.logging.Logger;
-
 /**
  * Loads all account properties into a form and returns a template Account based on the form properties
  *
  * @author Craig Cavanaugh
  */
-public class AccountPropertiesController implements Initializable {
+public class AccountPropertiesController {
 
     private boolean result = false;
 
@@ -100,6 +98,7 @@ public class AccountPropertiesController implements Initializable {
     @FXML
     private Button securitiesButton;
 
+    @FXML
     private ResourceBundle resources;
 
     private Account parentAccount;
@@ -110,11 +109,8 @@ public class AccountPropertiesController implements Initializable {
 
     private final Set<SecurityNode> securityNodeSet = new TreeSet<>();
 
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
-
-        this.resources = resources;
-
+    @FXML
+    public void initialize() {
         accountTypeComboBox.setCellFactory(param -> new DisabledListCell());    // set cell factory
         accountTypeComboBox.getItems().addAll(AccountType.values());
         accountTypeComboBox.setValue(AccountType.BANK); // set default value
@@ -133,7 +129,7 @@ public class AccountPropertiesController implements Initializable {
     }
 
     @FXML
-    private void handleParentAccountAction(final ActionEvent actionEvent) {
+    private void handleParentAccountAction() {
         final Optional<Account> optional = StaticAccountsMethods.selectAccount(parentAccount, baseAccount);
         if (optional.isPresent()) {
             setParentAccount(optional.get());
@@ -221,7 +217,7 @@ public class AccountPropertiesController implements Initializable {
     }
 
     @FXML
-    public void handleSecuritiesButtonAction(final ActionEvent actionEvent) {
+    public void handleSecuritiesButtonAction() {
 
         final SelectAccountSecuritiesDialog control = new SelectAccountSecuritiesDialog(baseAccount, securityNodeSet);
 
@@ -255,13 +251,13 @@ public class AccountPropertiesController implements Initializable {
         }
     }
     @FXML
-    private void okAction(final ActionEvent actionEvent) {
+    private void okAction() {
         result = true;
         ((Stage) nameTextField.getScene().getWindow()).close();
     }
 
     @FXML
-    private void cancelAction(final ActionEvent actionEvent) {
+    private void cancelAction() {
         result = false;
         ((Stage) nameTextField.getScene().getWindow()).close();
     }

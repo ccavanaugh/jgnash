@@ -18,7 +18,6 @@
 package jgnash.uifx.views.register;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -29,7 +28,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
@@ -52,11 +50,12 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
-public class TransactionDialog extends Stage implements Initializable {
+public class TransactionDialog extends Stage {
 
     @FXML
     private TabPane tabPane;
 
+    @FXML
     private ResourceBundle resources;
 
     private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
@@ -89,10 +88,8 @@ public class TransactionDialog extends Stage implements Initializable {
         return accountProperty;
     }
 
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
-        this.resources = resources;
-
+    @FXML
+    private void initialize() {
         getAccountProperty().addListener((observable, oldValue, newValue) -> {
             buildTabs();
         });

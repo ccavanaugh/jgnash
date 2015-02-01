@@ -19,7 +19,6 @@ package jgnash.uifx.views.register;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,12 +32,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import javax.imageio.ImageIO;
+
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
@@ -52,14 +52,12 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.ImageDialog;
 import jgnash.util.ResourceUtils;
 
-import javax.imageio.ImageIO;
-
 /**
  * Controller for handling transaction attachments
  *
  * @author Craig Cavanaugh
  */
-public class AttachmentPane extends GridPane implements Initializable {
+public class AttachmentPane extends GridPane {
 
     private static final String LAST_DIR = "LastDir";
 
@@ -76,6 +74,7 @@ public class AttachmentPane extends GridPane implements Initializable {
 
     private boolean moveAttachment = false;
 
+    @FXML
     private ResourceBundle resources;
 
     public AttachmentPane() {
@@ -90,10 +89,8 @@ public class AttachmentPane extends GridPane implements Initializable {
         }
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        this.resources = resources;
-
+    @FXML
+    private void initialize() {
         attachmentButton.disableProperty().bind(Bindings.isNotNull(attachmentProperty));
         deleteAttachmentButton.disableProperty().bind(Bindings.isNull(attachmentProperty));
         viewAttachmentButton.disableProperty().bind(Bindings.isNull(attachmentProperty));

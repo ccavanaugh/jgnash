@@ -19,8 +19,6 @@ package jgnash.uifx.views.register;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -30,7 +28,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -50,7 +47,7 @@ import org.controlsfx.control.PopOver;
  *
  * @author Craig Cavanaugh
  */
-public class AccountExchangePane extends GridPane implements Initializable {
+public class AccountExchangePane extends GridPane {
 
     @FXML
     private AccountComboBox accountCombo;
@@ -100,8 +97,8 @@ public class AccountExchangePane extends GridPane implements Initializable {
         }
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    @FXML
+    private void initialize() {
 
         accountCombo.disableProperty().bind(disableProperty);
         expandButton.disableProperty().bind(disableProperty);

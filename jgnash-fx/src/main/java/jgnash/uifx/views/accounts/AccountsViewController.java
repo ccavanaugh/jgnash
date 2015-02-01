@@ -17,16 +17,24 @@
  */
 package jgnash.uifx.views.accounts;
 
+import java.math.BigDecimal;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
+
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
+
 import jgnash.engine.Account;
 import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
@@ -39,25 +47,17 @@ import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.util.EncodeDecode;
+
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
-
-import java.math.BigDecimal;
-import java.net.URL;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 
 /**
  * Accounts view controller
  *
  * @author Craig Cavanaugh
  */
-public class AccountsViewController implements Initializable, MessageListener {
+public class AccountsViewController implements MessageListener {
 
     private final static String COLUMN_VISIBILITY = "ColumnVisibility";
 
@@ -65,6 +65,7 @@ public class AccountsViewController implements Initializable, MessageListener {
 
     private final AccountTypeFilter typeFilter = new AccountTypeFilter(preferences);
 
+    @FXML
     private ResourceBundle resources;
 
     @FXML
@@ -88,10 +89,8 @@ public class AccountsViewController implements Initializable, MessageListener {
     @FXML
     private Button zoomButton;
 
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
-        this.resources = resources;
-
+    @FXML
+    private void initialize() {
         final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
 
         newButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.PLUS));

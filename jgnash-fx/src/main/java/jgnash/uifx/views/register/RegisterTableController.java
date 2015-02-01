@@ -17,7 +17,6 @@
  */
 package jgnash.uifx.views.register;
 
-import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -33,7 +32,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -58,7 +56,7 @@ import jgnash.uifx.util.TableViewManager;
  *
  * @author Craig Cavanaugh
  */
-public abstract class RegisterTableController implements Initializable {
+public abstract class RegisterTableController {
 
     private final static String PREF_NODE_USER_ROOT = "/jgnash/uifx/views/register";
 
@@ -71,6 +69,7 @@ public abstract class RegisterTableController implements Initializable {
     @FXML
     protected Label accountNameLabel;
 
+    @FXML
     protected ResourceBundle resources;
 
     /**
@@ -90,10 +89,8 @@ public abstract class RegisterTableController implements Initializable {
 
     final private AccountPropertyWrapper accountPropertyWrapper = new AccountPropertyWrapper();
 
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
-        this.resources = resources;
-
+    @FXML
+    void initialize() {
         // Bind the account property
         getAccountPropertyWrapper().getAccountProperty().bind(accountProperty);
 

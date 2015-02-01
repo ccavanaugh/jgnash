@@ -17,14 +17,11 @@
  */
 package jgnash.uifx.views.register;
 
-import java.net.URL;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 
 import jgnash.engine.Account;
@@ -40,7 +37,7 @@ import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
  *
  * @author Craig Cavanaugh
  */
-public class SplitTransactionSlipController implements Initializable {
+public class SplitTransactionSlipController {
 
     @FXML
     private DecimalTextField amountField;
@@ -65,8 +62,8 @@ public class SplitTransactionSlipController implements Initializable {
 
     private final SimpleObjectProperty<List<TransactionEntry>> transactionEntryListProperty = new SimpleObjectProperty<>();
 
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
+    @FXML
+    private void initialize() {
         // Bind necessary properties to the exchange panel
         accountExchangePane.getBaseAccountProperty().bind(getAccountProperty());
         accountExchangePane.getAmountProperty().bindBidirectional(amountField.decimalProperty());

@@ -17,9 +17,7 @@
  */
 package jgnash.uifx.views.register;
 
-import java.net.URL;
 import java.util.Date;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,9 +60,10 @@ public class SlipController extends AbstractSlipController {
 
     private TransactionEntry modEntry = null;
 
+    @FXML
     @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
-        super.initialize(location, resources);
+    public void initialize() {
+        super.initialize();
 
         // Bind necessary properties to the exchange panel
         accountExchangePane.getBaseAccountProperty().bind(getAccountProperty());

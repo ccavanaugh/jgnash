@@ -19,13 +19,11 @@ package jgnash.uifx.control;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -43,9 +41,11 @@ import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 /**
+ * Exception dialog
+ *
  * @author Craig Cavanaugh
  */
-public class ExceptionDialog implements Initializable {
+public class ExceptionDialog {
 
     @FXML
     private Button clipboardButton;
@@ -78,8 +78,8 @@ public class ExceptionDialog implements Initializable {
         textArea.setText(stackTrace);
     }
 
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
+    @FXML
+    private void initialize() {
         final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
 
         message.setGraphic(fontAwesome.create(FontAwesome.Glyph.EXCLAMATION_TRIANGLE)

@@ -18,7 +18,6 @@
 package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
-import java.net.URL;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
@@ -31,7 +30,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 
 import jgnash.engine.Account;
@@ -52,7 +50,7 @@ import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
  *
  * @author Craig Cavanaugh
  */
-abstract class AbstractSlipController implements Slip, Initializable {
+abstract class AbstractSlipController implements Slip {
 
     @FXML
     protected DecimalTextField amountField;
@@ -82,11 +80,11 @@ abstract class AbstractSlipController implements Slip, Initializable {
      */
     Transaction modTrans = null;
 
+    @FXML
     ResourceBundle resources;
 
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
-        this.resources = resources;
+    @FXML
+    public void initialize() {
 
         // Number combo needs to know the account in order to determine the next transaction number
         numberComboBox.getAccountProperty().bind(getAccountProperty());

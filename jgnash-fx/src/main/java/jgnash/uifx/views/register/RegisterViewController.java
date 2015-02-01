@@ -17,7 +17,6 @@
  */
 package jgnash.uifx.views.register;
 
-import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,7 +26,6 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
@@ -51,7 +49,7 @@ import jgnash.util.DefaultDaemonThreadFactory;
  *
  * @author Craig Cavanaugh
  */
-public class RegisterViewController implements Initializable {
+public class RegisterViewController {
 
     private static final String DIVIDER_POSITION = "DividerPosition";
 
@@ -77,6 +75,9 @@ public class RegisterViewController implements Initializable {
     @FXML
     private StackPane registerPane;
 
+    @FXML
+    private ResourceBundle resources;
+
     final static ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
     private final Preferences preferences = Preferences.userNodeForPackage(RegisterViewController.class);
@@ -84,8 +85,6 @@ public class RegisterViewController implements Initializable {
     private final AccountTypeFilter typeFilter = new AccountTypeFilter(Preferences.userNodeForPackage(getClass()));
 
     private RegisterPaneController registerPaneController;
-
-    private ResourceBundle resources;
 
     private final AbstractAccountTreeController accountTreeController = new AbstractAccountTreeController() {
         @Override
@@ -112,10 +111,8 @@ public class RegisterViewController implements Initializable {
         }
     };
 
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
-        this.resources = resources;
-
+    @FXML
+    private void initialize() {
         accountTreeController.initialize(); // must initialize the account controller
 
         // Filter changes should force a reload of the tree
@@ -189,7 +186,7 @@ public class RegisterViewController implements Initializable {
     }
 
     @FXML
-    public void handleFilterAccountAction() {
+    private void handleFilterAccountAction() {
         StaticAccountsMethods.showAccountFilterDialog(typeFilter);
     }
 

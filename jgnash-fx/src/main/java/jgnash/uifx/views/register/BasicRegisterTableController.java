@@ -18,9 +18,7 @@
 package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
-import java.net.URL;
 import java.util.Date;
-import java.util.ResourceBundle;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -49,9 +47,10 @@ public class BasicRegisterTableController extends RegisterTableController {
 
     final private double[] PREF_COLUMN_WEIGHTS = {0, 0, 33, 33, 33, 0, 0, 0, 0};
 
+    @FXML
     @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
-        super.initialize(location, resources);
+    void initialize() {
+        super.initialize();
 
         // Bind the reconciledBalance Label to the account property wrapper
         reconciledBalanceLabel.textProperty().bind(getAccountPropertyWrapper().getReconciledAmountProperty());

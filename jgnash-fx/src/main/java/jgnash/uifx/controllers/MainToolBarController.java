@@ -17,13 +17,8 @@
  */
 package jgnash.uifx.controllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 
 import jgnash.engine.Engine;
@@ -38,29 +33,29 @@ import jgnash.uifx.tasks.CloseFileTask;
 /**
  * @author Craig Cavanaugh
  */
-public class MainToolBarController implements Initializable, MessageListener {
+public class MainToolBarController implements MessageListener {
 
     @FXML
-    public Button closeButton;
+    private Button closeButton;
 
     @FXML
-    public Button updateCurrencies;
+    private Button updateCurrencies;
 
     @FXML
-    Button updateSecurities;
+    private Button updateSecurities;
 
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
+    @FXML
+    private void initialize() {
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
     }
 
     @FXML
-    private void handleOpenAction(final ActionEvent event) {
+    private void handleOpenAction() {
         StaticUIMethods.showOpenDialog();
     }
 
     @FXML
-    private void handleCloseAction(ActionEvent actionEvent) {
+    private void handleCloseAction() {
         if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
             CloseFileTask.initiateShutdown();
         }
@@ -90,7 +85,7 @@ public class MainToolBarController implements Initializable, MessageListener {
     }
 
     @FXML
-    private void handleSecuritiesUpdateAction(final ActionEvent actionEvent) {
+    private void handleSecuritiesUpdateAction() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         if (engine != null) {
             engine.startSecuritiesUpdate(0);
@@ -98,7 +93,7 @@ public class MainToolBarController implements Initializable, MessageListener {
     }
 
     @FXML
-    private void handleCurrenciesUpdateAction(ActionEvent actionEvent) {
+    private void handleCurrenciesUpdateAction() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         if (engine != null) {
             engine.startExchangeRateUpdate(0);

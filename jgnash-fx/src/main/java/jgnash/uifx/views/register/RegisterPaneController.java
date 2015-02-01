@@ -17,7 +17,6 @@
  */
 package jgnash.uifx.views.register;
 
-import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
@@ -26,7 +25,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 
@@ -39,7 +37,7 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-public abstract class RegisterPaneController implements Initializable {
+public abstract class RegisterPaneController {
 
     @FXML
     protected Button newButton;
@@ -56,6 +54,7 @@ public abstract class RegisterPaneController implements Initializable {
     @FXML
     protected StackPane register;
 
+    @FXML
     protected ResourceBundle resources;
 
     /**
@@ -74,9 +73,8 @@ public abstract class RegisterPaneController implements Initializable {
         return accountProperty;
     }
 
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
-        this.resources = resources;
+    @FXML
+    void initialize() {
 
         /**
          * The Buttons may be null depending on the form tha was loaded with this controller

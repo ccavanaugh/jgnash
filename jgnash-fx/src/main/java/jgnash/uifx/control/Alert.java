@@ -17,12 +17,10 @@
  */
 package jgnash.uifx.control;
 
-import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
@@ -45,7 +43,7 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
  *
  * @author Craig Cavanaugh
  */
-public class Alert implements Initializable {
+public class Alert {
 
     static final int ICON_SIZE = 48;
 
@@ -100,11 +98,6 @@ public class Alert implements Initializable {
         }
 
         setContentText(contentText);
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
     }
 
     public void setTitle(final String title) {

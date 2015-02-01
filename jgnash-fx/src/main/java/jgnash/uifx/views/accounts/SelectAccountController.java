@@ -17,21 +17,19 @@
  */
 package jgnash.uifx.views.accounts;
 
-import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
-import jgnash.engine.Account;
-import jgnash.uifx.controllers.AbstractAccountTreeController;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.TreeView;
 import javafx.stage.Stage;
+
+import jgnash.engine.Account;
+import jgnash.uifx.controllers.AbstractAccountTreeController;
 import jgnash.util.NotNull;
 
 /**
@@ -39,7 +37,10 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-public class SelectAccountController extends AbstractAccountTreeController implements Initializable {
+public class SelectAccountController extends AbstractAccountTreeController {
+
+    @FXML
+    private ResourceBundle resources;
 
     @FXML
     private TreeView<Account> treeView;
@@ -66,9 +67,9 @@ public class SelectAccountController extends AbstractAccountTreeController imple
         return true;
     }
 
-    @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
-        initialize();
+    @FXML
+    public void initialize() {
+        super.initialize();
 
         getTreeView().setShowRoot(true);
 
