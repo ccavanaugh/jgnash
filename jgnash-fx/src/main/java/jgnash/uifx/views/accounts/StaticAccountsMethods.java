@@ -60,9 +60,8 @@ public final class StaticAccountsMethods {
         dialog.initOwner(MainApplication.getPrimaryStage());
         dialog.setTitle(ResourceUtils.getBundle().getString("Title.VisibleAccountTypes"));
 
-        AccountTypeFilterFormController controller = FXMLUtils.loadFXML(o -> {
-            dialog.setScene(new Scene((Parent) o));
-        }, "AccountTypeFilterForm.fxml", ResourceUtils.getBundle());
+        AccountTypeFilterFormController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
+                "AccountTypeFilterForm.fxml", ResourceUtils.getBundle());
 
         controller.setAccountTypeFilter(accountTypeFilter);
 
@@ -79,7 +78,7 @@ public final class StaticAccountsMethods {
         dialog.initOwner(MainApplication.getPrimaryStage());
         dialog.setTitle(ResourceUtils.getBundle().getString("Title.NewAccount"));
 
-        final AccountPropertiesController controller = FXMLUtils.loadFXML(o -> {dialog.setScene(new Scene((Parent) o));},
+        final AccountPropertiesController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
                 "AccountProperties.fxml", ResourceUtils.getBundle());
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
@@ -107,7 +106,7 @@ public final class StaticAccountsMethods {
         dialog.initOwner(MainApplication.getPrimaryStage());
         dialog.setTitle(ResourceUtils.getBundle().getString("Title.ModifyAccount"));
 
-        final AccountPropertiesController controller = FXMLUtils.loadFXML(o -> {dialog.setScene(new Scene((Parent) o));},
+        final AccountPropertiesController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
                 "AccountProperties.fxml", ResourceUtils.getBundle());
 
         controller.loadProperties(account);
@@ -162,7 +161,7 @@ public final class StaticAccountsMethods {
 
             return controller.getSelectedAccount();
         } catch (final IOException ex) {
-            Logger.getLogger(AccountPropertiesController.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+            Logger.getLogger(StaticAccountsMethods.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             return Optional.empty();
         }
     }
