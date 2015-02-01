@@ -44,9 +44,9 @@ import jgnash.util.ResourceUtils;
  */
 public class ImageDialog {
 
-    private Stage dialog;
+    private final Stage dialog;
 
-    private ImageView imageView = new ImageView();
+    private final ImageView imageView = new ImageView();
 
     public static void showImage(final Path path) {
         ImageDialog imageDialog = new ImageDialog();
@@ -55,7 +55,7 @@ public class ImageDialog {
         imageDialog.dialog.show();
     }
 
-    ImageDialog() {
+    private ImageDialog() {
         final ResourceBundle resources = ResourceUtils.getBundle();
 
         dialog = new Stage(StageStyle.DECORATED);

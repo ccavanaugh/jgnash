@@ -30,9 +30,9 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
-public class RegisterFactory {
+class RegisterFactory {
 
-    private static ResourceBundle rb = ResourceUtils.getBundle();
+    private static final ResourceBundle rb = ResourceUtils.getBundle();
 
     private static final String[] BANK_NAMES = { rb.getString("Column.Date"), rb.getString("Column.Num"),
             rb.getString("Column.Payee"), rb.getString("Column.Memo"), rb.getString("Column.Account"),
@@ -111,7 +111,7 @@ public class RegisterFactory {
             rb.getString("Column.Memo"), rb.getString("Column.Deposit"), rb.getString("Column.Withdrawal"),
             rb.getString("Column.Balance") };
 
-    /*private static final String[] SPLIT_GAINLOSS_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
+    /*private static final String[] SPLIT_GAIN_LOSS_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
             rb.getString("Column.Memo"), rb.getString("Column.Gain"), rb.getString("Column.Loss"),
             rb.getString("Column.Balance") };*/
 

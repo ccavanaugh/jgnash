@@ -37,11 +37,11 @@ abstract class DefaultAutoCompleteModel<E> implements AutoCompleteModel<E> {
 
     private final List<String> list = new LinkedList<>();
 
-    protected final SimpleBooleanProperty autoCompleteEnabled = new SimpleBooleanProperty(true);
+    private final SimpleBooleanProperty autoCompleteEnabled = new SimpleBooleanProperty(true);
 
-    protected final SimpleBooleanProperty ignoreCaseEnabled = new SimpleBooleanProperty(false);
+    final SimpleBooleanProperty ignoreCaseEnabled = new SimpleBooleanProperty(false);
 
-    protected final SimpleBooleanProperty fuzzyMatchEnabled = new SimpleBooleanProperty(false);
+    private final SimpleBooleanProperty fuzzyMatchEnabled = new SimpleBooleanProperty(false);
 
     DefaultAutoCompleteModel() {
 

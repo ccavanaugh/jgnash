@@ -67,7 +67,7 @@ public class ControlsTest extends Application {
 
     private final boolean oldExportState = EngineFactory.exportXMLOnClose();
 
-    static final char[] PASSWORD = new char[]{};
+    private static final char[] PASSWORD = new char[]{};
 
     public static void main(final String[] args) {
         //Locale.setDefault(Locale.FRANCE);
@@ -156,7 +156,7 @@ public class ControlsTest extends Application {
         cleanup();
     }
 
-    private Engine createEngine() throws Exception {
+    private Engine createEngine() {
         try {
             testFile = Files.createTempFile("test", "." + DataStoreType.BINARY_XSTREAM.getDataStore().getFileExt()).toFile().getAbsolutePath();
             tempFile = testFile;

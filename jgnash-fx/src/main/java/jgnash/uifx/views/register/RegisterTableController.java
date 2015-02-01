@@ -75,17 +75,17 @@ public abstract class RegisterTableController {
     /**
      * Active account for the pane
      */
-    final protected ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+    final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
     final private ReadOnlyObjectWrapper<Transaction> selectedTransactionProperty = new ReadOnlyObjectWrapper<>();
 
     private final ObservableList<Transaction> observableTransactions = FXCollections.observableArrayList();
 
-    final protected SortedList<Transaction> sortedList = new SortedList<>(observableTransactions);
+    final SortedList<Transaction> sortedList = new SortedList<>(observableTransactions);
 
     final private MessageBusHandler messageBusHandler = new MessageBusHandler();
 
-    protected TableViewManager<Transaction> tableViewManager;
+    TableViewManager<Transaction> tableViewManager;
 
     final private AccountPropertyWrapper accountPropertyWrapper = new AccountPropertyWrapper();
 
@@ -131,7 +131,7 @@ public abstract class RegisterTableController {
 
     abstract Callback<Integer, Double> getColumnWeightFactory();
 
-    protected ObjectProperty<Account> getAccountProperty() {
+    ObjectProperty<Account> getAccountProperty() {
         return accountProperty;
     }
 
@@ -143,7 +143,7 @@ public abstract class RegisterTableController {
         tableView.getSelectionModel().clearSelection();
     }
 
-    protected AccountPropertyWrapper getAccountPropertyWrapper() {
+    AccountPropertyWrapper getAccountPropertyWrapper() {
         return accountPropertyWrapper;
     }
 

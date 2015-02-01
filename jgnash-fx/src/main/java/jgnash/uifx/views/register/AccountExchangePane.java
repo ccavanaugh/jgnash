@@ -244,7 +244,7 @@ public class AccountExchangePane extends GridPane {
         return baseAccountProperty;
     }
 
-    public ObjectProperty<CurrencyNode> getBaseCurrencyProperty() {
+    ObjectProperty<CurrencyNode> getBaseCurrencyProperty() {
         return baseCurrencyProperty;
     }
 

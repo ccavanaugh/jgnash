@@ -67,7 +67,7 @@ public abstract class RegisterPaneController {
      */
     final ObjectProperty<Transaction> selectedTransactionProperty = new SimpleObjectProperty<>();
 
-    protected final ObjectProperty<RegisterTableController> registerTableControllerProperty = new SimpleObjectProperty<>();
+    final ObjectProperty<RegisterTableController> registerTableControllerProperty = new SimpleObjectProperty<>();
 
     ObjectProperty<Account> getAccountProperty() {
         return accountProperty;
@@ -138,14 +138,14 @@ public abstract class RegisterPaneController {
      *
      * @param transaction {@code Transaction} to be modified
      */
-    protected void modifyTransaction(@NotNull final Transaction transaction) {
+    void modifyTransaction(@NotNull final Transaction transaction) {
 
     }
 
     /**
      * Default empty implementation.
      */
-    protected void clearForm() {
+    void clearForm() {
 
     }
 

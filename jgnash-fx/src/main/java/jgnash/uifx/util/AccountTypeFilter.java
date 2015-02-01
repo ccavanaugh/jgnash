@@ -38,10 +38,10 @@ public class AccountTypeFilter {
     private static final String INCOME_VISIBLE = "IncomeVisible";
     private static final String ACCOUNT_VISIBLE = "AccountVisible";
 
-    protected final BooleanProperty accountTypesVisible = new SimpleBooleanProperty(true);
-    protected final BooleanProperty expenseTypesVisible = new SimpleBooleanProperty(true);
-    protected final BooleanProperty incomeTypesVisible = new SimpleBooleanProperty(true);
-    protected final BooleanProperty hiddenTypesVisible = new SimpleBooleanProperty(true);
+    private final BooleanProperty accountTypesVisible = new SimpleBooleanProperty(true);
+    private final BooleanProperty expenseTypesVisible = new SimpleBooleanProperty(true);
+    private final BooleanProperty incomeTypesVisible = new SimpleBooleanProperty(true);
+    private final BooleanProperty hiddenTypesVisible = new SimpleBooleanProperty(true);
 
     private final Preferences preferences;
 
@@ -76,19 +76,19 @@ public class AccountTypeFilter {
         return hiddenTypesVisible;
     }
 
-    protected boolean getAccountTypesVisible() {
+    boolean getAccountTypesVisible() {
         return accountTypesVisible.get();
     }
 
-    protected boolean getExpenseTypesVisible() {
+    boolean getExpenseTypesVisible() {
         return expenseTypesVisible.get();
     }
 
-    protected boolean getHiddenTypesVisible() {
+    boolean getHiddenTypesVisible() {
         return hiddenTypesVisible.get();
     }
 
-    protected boolean getIncomeTypesVisible() {
+    boolean getIncomeTypesVisible() {
         return incomeTypesVisible.get();
     }
 

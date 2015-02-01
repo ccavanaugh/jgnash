@@ -82,13 +82,13 @@ public class MainApplication extends Application implements MessageListener {
 
     private static final Logger logger = Logger.getLogger(MainApplication.class.getName());
 
-    private ResourceBundle rb = ResourceUtils.getBundle();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
-    private Executor backgroundExecutor = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
+    private final Executor backgroundExecutor = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
     private final StatusBarLogHandler statusBarLogHandler = new StatusBarLogHandler();
 
-    protected static Stage primaryStage;
+    private static Stage primaryStage;
 
     private StatusBar statusBar;
 

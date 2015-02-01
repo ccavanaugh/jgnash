@@ -49,7 +49,7 @@ import java.util.TreeSet;
  */
 public abstract class AbstractAccountTreeController implements MessageListener {
 
-    protected ReadOnlyObjectWrapper<Account> selectedAccountProperty = new ReadOnlyObjectWrapper<>();
+    private final ReadOnlyObjectWrapper<Account> selectedAccountProperty = new ReadOnlyObjectWrapper<>();
 
     protected abstract TreeView<Account> getTreeView();
 
@@ -114,7 +114,7 @@ public abstract class AbstractAccountTreeController implements MessageListener {
         Platform.runLater(this::loadAccountTree);
     }
 
-    protected void loadAccountTree() {
+    void loadAccountTree() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
         if (engine != null) {

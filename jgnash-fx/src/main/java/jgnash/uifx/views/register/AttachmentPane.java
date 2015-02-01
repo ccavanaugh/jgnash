@@ -70,7 +70,7 @@ public class AttachmentPane extends GridPane {
     @FXML
     protected Button deleteAttachmentButton;
 
-    private SimpleObjectProperty<Path> attachmentProperty = new SimpleObjectProperty<>(null);
+    private final SimpleObjectProperty<Path> attachmentProperty = new SimpleObjectProperty<>(null);
 
     private boolean moveAttachment = false;
 

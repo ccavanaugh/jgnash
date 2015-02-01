@@ -78,7 +78,7 @@ public class RegisterViewController {
     @FXML
     private ResourceBundle resources;
 
-    final static ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
+    private final static ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
     private final Preferences preferences = Preferences.userNodeForPackage(RegisterViewController.class);
 

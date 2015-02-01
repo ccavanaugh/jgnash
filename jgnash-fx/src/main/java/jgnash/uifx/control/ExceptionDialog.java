@@ -59,7 +59,7 @@ public class ExceptionDialog {
     @FXML
     private Label message;
 
-    private Stage dialog;
+    private final Stage dialog;
 
     private final String stackTrace;
 

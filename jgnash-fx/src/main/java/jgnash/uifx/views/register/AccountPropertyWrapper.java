@@ -46,23 +46,23 @@ import jgnash.util.DefaultDaemonThreadFactory;
  *
  * @author Craig Cavanaugh
  */
-public class AccountPropertyWrapper implements MessageListener {
+class AccountPropertyWrapper implements MessageListener {
 
-    final static ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
+    private final static ExecutorService executorService = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
 
     private final Object numberFormatLock = new Object();
 
-    private ReadOnlyStringWrapper reconciledAmountProperty = new ReadOnlyStringWrapper();
+    private final ReadOnlyStringWrapper reconciledAmountProperty = new ReadOnlyStringWrapper();
 
-    private ReadOnlyStringWrapper accountBalanceProperty = new ReadOnlyStringWrapper();
+    private final ReadOnlyStringWrapper accountBalanceProperty = new ReadOnlyStringWrapper();
 
-    private ReadOnlyStringWrapper cashBalanceProperty = new ReadOnlyStringWrapper();
+    private final ReadOnlyStringWrapper cashBalanceProperty = new ReadOnlyStringWrapper();
 
-    private ReadOnlyStringWrapper marketValueProperty = new ReadOnlyStringWrapper();
+    private final ReadOnlyStringWrapper marketValueProperty = new ReadOnlyStringWrapper();
 
-    private ReadOnlyStringWrapper accountNameProperty = new ReadOnlyStringWrapper();
+    private final ReadOnlyStringWrapper accountNameProperty = new ReadOnlyStringWrapper();
 
-    private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
     private NumberFormat numberFormat;  // not thread safe
 

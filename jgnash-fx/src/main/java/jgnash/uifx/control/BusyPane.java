@@ -38,11 +38,11 @@ public class BusyPane extends StackPane {
 
     private static final String BUSY_PANE_STYLE = "busy-pane";
 
-    private ImageView imageView;
+    private final ImageView imageView;
 
-    private Label messageLabel;
+    private final Label messageLabel;
 
-    private ProgressIndicator progressIndicator;
+    private final ProgressIndicator progressIndicator;
 
     public BusyPane() {
 

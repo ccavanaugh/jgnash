@@ -39,7 +39,7 @@ import jgnash.util.EncodeDecode;
  */
 public class StageUtils {
 
-    public static final String DEFAULT_KEY = "bounds";
+    private static final String DEFAULT_KEY = "bounds";
 
     /**
      * Restores and saves the size and location of a stage

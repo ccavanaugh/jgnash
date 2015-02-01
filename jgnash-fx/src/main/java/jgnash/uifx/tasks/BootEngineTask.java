@@ -25,11 +25,11 @@ public class BootEngineTask extends Task<String> {
 
     private static final int INDETERMINATE = -1;
 
-    private boolean remote;
-    private String localFile;
-    private char[] password;
-    private String serverName;
-    private int port;
+    private final boolean remote;
+    private final String localFile;
+    private final char[] password;
+    private final String serverName;
+    private final int port;
 
     private BootEngineTask(final String localFile, final char[] password, final boolean remote, final String serverName, final int port) {
         this.localFile = localFile;

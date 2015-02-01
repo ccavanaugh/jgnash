@@ -204,7 +204,7 @@ public class DecimalTextField extends TextField {
      *
      * @return {@code false} if empty
      */
-    public boolean isEmpty() {
+    boolean isEmpty() {
         boolean result = true;
 
         if (getText() != null) {

@@ -62,7 +62,7 @@ public class Alert {
         YES_NO
     }
 
-    private Stage dialog;
+    private final Stage dialog;
 
     public Alert(@NotNull final AlertType alertType, final String contentText) {
         final ResourceBundle resources = ResourceUtils.getBundle();
