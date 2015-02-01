@@ -62,16 +62,12 @@ public class Alert {
         YES_NO
     }
 
-    AlertType alertType;
-
-    Stage dialog;
+    private Stage dialog;
 
     public Alert(@NotNull final AlertType alertType, final String contentText) {
         final ResourceBundle resources = ResourceUtils.getBundle();
 
         dialog = FXMLUtils.loadFXML(this, "AlertDialog.fxml", resources);
-
-        this.alertType = alertType;
 
         final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
 
@@ -108,7 +104,7 @@ public class Alert {
         dialog.initOwner(window);
     }
 
-    public void setContentText(final String contentText) {
+    void setContentText(final String contentText) {
         message.setText(contentText);
     }
 
@@ -116,7 +112,7 @@ public class Alert {
         message.setGraphic(node);
     }
 
-    public void setButtons(final ButtonType... buttons) {
+    void setButtons(final ButtonType... buttons) {
         for (final ButtonType buttonType : buttons) {
             final Button button = new Button(buttonType.getText());
             ButtonBar.setButtonData(button, buttonType.getButtonData());
