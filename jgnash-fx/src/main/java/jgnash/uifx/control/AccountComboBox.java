@@ -52,23 +52,8 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
     public AccountComboBox() {
 
-        // Display the full pathname of the account and not just the name
-        final ListCell<Account> listCell = new ListCell<Account>() {
-            @Override
-            protected void updateItem(final Account item, final boolean empty) {
-                super.updateItem(item, empty);
-
-                if (empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                } else {
-                    setText(item.getPathName());
-                }
-            }
-        };
-
-        setButtonCell(listCell);
-        setCellFactory(param -> listCell);
+        setButtonCell(new AccountPathListCell());
+        setCellFactory(param -> new AccountPathListCell());
 
         loadAccounts();
         registerListeners();
@@ -144,5 +129,22 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
                     break;
             }
         });
+    }
+
+    /**
+     * Display the full pathname of the account and not just the name
+     */
+    private static class AccountPathListCell extends ListCell<Account> {
+        @Override
+        protected void updateItem(final Account item, final boolean empty) {
+            super.updateItem(item, empty);
+
+            if (empty || item == null) {
+                setText(null);
+                setGraphic(null);
+            } else {
+                setText(item.getPathName());
+            }
+        }
     }
 }
