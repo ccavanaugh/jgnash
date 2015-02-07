@@ -67,7 +67,7 @@ public class BankRegisterPaneController extends RegisterPaneController {
         // Load the register table
         try {
             final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BasicRegisterTable.fxml"), resources);
-            register.getChildren().add(fxmlLoader.load());
+            registerTablePane.getChildren().add(fxmlLoader.load());
             registerTableControllerProperty.setValue(fxmlLoader.getController());
         } catch (final IOException e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);

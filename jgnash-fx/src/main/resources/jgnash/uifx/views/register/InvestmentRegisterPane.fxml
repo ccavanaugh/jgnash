@@ -18,7 +18,7 @@
     <center>
         <VBox>
             <children>
-                <StackPane fx:id="register" VBox.vgrow="ALWAYS"/>
+                <StackPane fx:id="registerTablePane" VBox.vgrow="ALWAYS"/>
                 <ToolBar VBox.vgrow="NEVER">
                     <items>
                         <Button fx:id="newButton" mnemonicParsing="false" text="%Button.New">

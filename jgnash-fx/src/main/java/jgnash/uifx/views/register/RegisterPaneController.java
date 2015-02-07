@@ -50,10 +50,10 @@ public abstract class RegisterPaneController {
     protected Button deleteButton;
 
     /**
-     * The register table and controls should be loaded into this pane
+     * The register table and labels should be loaded into this pane
      */
     @FXML
-    protected StackPane register;
+    protected StackPane registerTablePane;
 
     @FXML
     protected ResourceBundle resources;
