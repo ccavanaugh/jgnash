@@ -29,10 +29,6 @@
             <artifactId>jgnash-resources</artifactId>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>jidesoft</artifactId>
-        </dependency>
-        <dependency>
             <groupId>args4j</groupId>
             <artifactId>args4j</artifactId>
         </dependency>
