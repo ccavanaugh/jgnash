@@ -194,6 +194,15 @@ public class MainApplication extends Application implements MessageListener {
     }
 
     /**
+     * Requests focus for the primary {@code Stage}
+     *
+     * @see javafx.stage.Stage#requestFocus()
+     */
+    public static void requestFocus() {
+        getPrimaryStage().requestFocus();
+    }
+
+    /**
      * Sets the application in a busy state and waits for the provided {@code Task} to complete.
      * The caller is responsible for starting the task.
      *
