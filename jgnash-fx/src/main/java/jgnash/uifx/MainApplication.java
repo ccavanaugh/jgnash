@@ -129,7 +129,7 @@ public class MainApplication extends Application implements MessageListener {
         scene.getStylesheets().add(DEFAULT_CSS);
 
         stage.setTitle(MainFX.VERSION);
-        stage.getIcons().add(StaticUIMethods.getImage("/jgnash/resource/gnome-money.png"));
+        stage.getIcons().add(StaticUIMethods.getApplicationIcon());
         stage.setScene(scene);
         stage.setResizable(true);
 

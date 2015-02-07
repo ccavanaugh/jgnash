@@ -42,6 +42,8 @@ import jgnash.util.ResourceUtils;
  */
 public class StaticUIMethods {
 
+    private static final String APP_ICON = "/jgnash/resource/gnome-money.png";
+
     private StaticUIMethods() {
         // Utility class
     }
@@ -110,18 +112,18 @@ public class StaticUIMethods {
         MainApplication.setBusy(task);
     }
 
+
     /**
-     * Returns a JavaFx Image from the class path
+     * Returns the primary application icon
      *
-     * @param image resource path
      * @return {@code} Image or {@code null} if not found
      */
     @Nullable
-    public static Image getImage(final String image) {
+    public static Image getApplicationIcon() {
         Image resourceImage;
 
         try {
-            resourceImage = new Image(StaticUIMethods.class.getResourceAsStream(image));
+            resourceImage = new Image(StaticUIMethods.class.getResourceAsStream(APP_ICON));
         } catch (final Exception ex) {
             Logger.getLogger(StaticUIMethods.class.getName()).log(Level.WARNING, ex.getLocalizedMessage(), ex);
             resourceImage = null;
