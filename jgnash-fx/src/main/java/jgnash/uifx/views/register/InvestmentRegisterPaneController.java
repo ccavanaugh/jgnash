@@ -49,9 +49,6 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
     private ComboBox<SlipControllerContainer> actionComboBox;
 
     @FXML
-    private StackPane register;
-
-    @FXML
     private StackPane transactionSlips;
 
     @FXML

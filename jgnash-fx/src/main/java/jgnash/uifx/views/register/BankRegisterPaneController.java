@@ -27,7 +27,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 
 import jgnash.engine.AccountGroup;
 import jgnash.engine.AccountType;
@@ -45,9 +44,6 @@ public class BankRegisterPaneController extends RegisterPaneController {
 
     @FXML
     protected Button jumpButton; // TODO Implement handler
-
-    @FXML
-    protected StackPane register;
 
     @FXML
     protected TabPane transactionForms;

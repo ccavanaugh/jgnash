@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.StackPane;
 
 /**
  * Locked Investment Register pane controller
@@ -31,9 +30,6 @@ import javafx.scene.layout.StackPane;
  * @author Craig Cavanaugh
  */
 public class LockedInvestmentRegisterPaneController extends RegisterPaneController {
-
-    @FXML
-    protected StackPane register;  // not used
 
     @FXML
     @Override
