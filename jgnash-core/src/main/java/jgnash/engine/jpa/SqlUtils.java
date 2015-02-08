@@ -23,6 +23,7 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -106,7 +107,10 @@ public class SqlUtils {
                             fileVersion = resultSet.getFloat("fileversion");
                         }
                     }
-                    connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for correct file closure
+                    // must issue a shutdown for correct file closure
+                    try (final PreparedStatement statement =  connection.prepareStatement("SHUTDOWN")) {
+                        statement.execute();
+                    }
                 } catch (final SQLException e) {
                     logger.log(Level.SEVERE, e.getMessage(), e);
                 }
@@ -137,12 +141,17 @@ public class SqlUtils {
                         // table name is TRANSACT_TRANSACTIONENTRY
                         // need to rename the column TRANSACT_UUID to TRANSACTION_UUID
                         if (resultSet.getString(4).equals("TRANSACT_UUID") && resultSet.getString(3).equals("TRANSACT_TRANSACTIONENTRY")) {
-                            connection.prepareStatement("ALTER TABLE TRANSACT_TRANSACTIONENTRY ALTER COLUMN TRANSACT_UUID RENAME TO TRANSACTION_UUID").execute();
-                            logger.info("Correcting column name for Hibernate HHH-9389");
+                            try (final PreparedStatement statement = connection.prepareStatement("ALTER TABLE TRANSACT_TRANSACTIONENTRY ALTER COLUMN TRANSACT_UUID RENAME TO TRANSACTION_UUID")) {
+                                statement.execute();
+                                logger.info("Correcting column name for Hibernate HHH-9389");
+                            }
                         }
                     }
 
-                    connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for correct file closure
+                    // must issue a shutdown for correct file closure
+                    try (final PreparedStatement statement =  connection.prepareStatement("SHUTDOWN")) {
+                        statement.execute();
+                    }
                 } catch (final SQLException e) {
                     logger.log(Level.SEVERE, e.getMessage(), e);
                     result = false;
@@ -184,7 +193,10 @@ public class SqlUtils {
                         tableNames.add(resultSet.getString(3) + "," + resultSet.getString(4));
                     }
 
-                    connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for correct file closure
+                    // must issue a shutdown for correct file closure
+                    try (final PreparedStatement statement =  connection.prepareStatement("SHUTDOWN")) {
+                        statement.execute();
+                    }
                 } catch (final SQLException e) {
                     logger.log(Level.SEVERE, e.getMessage(), e);
                 }
@@ -219,7 +231,10 @@ public class SqlUtils {
 
             // Send shutdown to close the database
             try (final Connection connection = DriverManager.getConnection(url, JpaConfiguration.DEFAULT_USER, new String(password))) {
-                connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for correct file closure
+                // must issue a shutdown for correct file closure
+                try (final PreparedStatement statement =  connection.prepareStatement("SHUTDOWN")) {
+                    statement.execute();
+                }
             } catch (final SQLException e) {
                 logger.log(Level.SEVERE, e.getMessage(), e);
             }
