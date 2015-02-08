@@ -104,6 +104,8 @@ public class Engine {
 
     private final static long MAXIMUM_TRASH_AGE = 5 * 60 * 1000; // 5 minutes
 
+    private static final float EPSILON = .001f;
+
     private final Resource rb = Resource.get();
 
     private final ReentrantReadWriteLock accountLock;
@@ -592,7 +594,7 @@ public class Engine {
             fixMarkedRemovalTransactions();
 
             // if the file version is not current, then update it
-            if (getConfig().getFileVersion() != CURRENT_VERSION) {
+            if (!nearlyEquals(getConfig().getFileVersion(), CURRENT_VERSION, EPSILON)) {
                 final Config localConfig = getConfig();
                 localConfig.setFileVersion(CURRENT_VERSION);
                 getConfigDAO().update(localConfig);
@@ -601,6 +603,22 @@ public class Engine {
             configLock.writeLock().unlock();
             accountLock.writeLock().unlock();
             commodityLock.writeLock().unlock();
+        }
+    }
+
+    /**
+     * Checks double values for equality
+     *
+     * @param a float value to test for equality
+     * @param b float value to test for equality
+     * @param epsilon allowed error
+     * @return {@code true} if the values are equal or very close
+     */
+    public static boolean nearlyEquals(final double a, final double b, final double epsilon) {
+        if (a == b) { // quick check for equality
+            return true;
+        } else { // use relative error
+            return Math.abs(a - b) <= epsilon;
         }
     }
 
