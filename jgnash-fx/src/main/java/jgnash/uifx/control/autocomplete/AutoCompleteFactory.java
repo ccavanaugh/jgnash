@@ -55,6 +55,8 @@ public class AutoCompleteFactory {
 
     private static MemoModel memoModel;
 
+    private static final Object synchronizationObject = new Object();
+
     /**
      * Use an ExecutorService to manage the number of running threads
      */
@@ -66,11 +68,12 @@ public class AutoCompleteFactory {
 
     /**
      * Sets the {@code AutoCompleteModel} for {@code Transaction} memos to an {@code AutoCompleteTextField<Transaction>}
+     *
      * @param autoCompleteTextField text field to bind to
      */
     public static void setMemoModel(final AutoCompleteTextField<Transaction> autoCompleteTextField) {
         if (Options.getAutoCompleteEnabled().get()) {
-            synchronized(pool) {
+            synchronized(synchronizationObject) {
                 if (memoModel == null) {
                     memoModel = new MemoModel();
                 }
@@ -81,6 +84,7 @@ public class AutoCompleteFactory {
 
     /**
      * Sets the {@code AutoCompleteModel} for {@code Transaction} payees to an {@code AutoCompleteTextField<Transaction>}
+     *
      * @param autoCompleteTextField text field to bind to
      */
     public static void setPayeeModel(final AutoCompleteTextField<Transaction> autoCompleteTextField, final Account account) {
