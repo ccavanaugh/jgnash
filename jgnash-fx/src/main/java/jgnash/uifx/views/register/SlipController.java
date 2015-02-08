@@ -124,8 +124,9 @@ public class SlipController extends AbstractSlipController {
         return result;
     }
 
+    @NotNull
     @Override
-    Transaction buildTransaction() {
+    public Transaction buildTransaction() {
 
         Transaction transaction;
 

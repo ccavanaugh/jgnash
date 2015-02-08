@@ -46,8 +46,9 @@ public class BankAdjustmentSlipController extends AbstractSlipController {
     @FXML
     private Button convertButton;
 
+    @NotNull
     @Override
-    protected Transaction buildTransaction() {
+    public Transaction buildTransaction() {
         return TransactionFactory.generateSingleEntryTransaction(accountProperty.get(), amountField.getDecimal(),
                 datePicker.getDate(), memoTextField.getText(), payeeTextField.getText(), numberComboBox.getValue());
     }

@@ -29,6 +29,7 @@ import javafx.scene.control.ButtonType;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.uifx.Options;
@@ -95,7 +96,13 @@ class RegisterActions {
                     }
                 }
 
-                final Optional<Transaction> optional = TransactionDialog.showAndWait(account, clone);
+                final Optional<Transaction> optional;
+
+                if (transaction instanceof InvestmentTransaction) {
+                    optional = InvestmentTransactionDialog.showAndWait(account, clone);
+                } else {
+                    optional= TransactionDialog.showAndWait(account, clone);
+                }
 
                 if (optional.isPresent()) {
                     final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);

@@ -32,4 +32,19 @@ public interface Slip {
     void handleCancelAction();
 
     void handleEnterAction();
+
+    /**
+     * Validates the form
+     *
+     * @return return {@code true} if the form entry is valid, {@code false} otherwise
+     */
+    boolean validateForm();
+
+    /**
+     * Builds and returns a new {@code Transaction} based on form contents
+     *
+     * @return new {@code Transaction} instance
+     */
+    @NotNull
+    Transaction buildTransaction();
 }

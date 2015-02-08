@@ -112,13 +112,6 @@ abstract class AbstractSlipController implements Slip {
     }
 
     /**
-     * Builds and returns a new {@code Transaction} based on form contents
-     *
-     * @return new {@code Transaction} instance
-     */
-    abstract Transaction buildTransaction();
-
-    /**
      * Determines is this form can be used to modify a transaction
      *
      * @param transaction {@code Transaction} to confirm
@@ -269,7 +262,7 @@ abstract class AbstractSlipController implements Slip {
         return t;
     }
 
-    boolean validateForm() {
+    public boolean validateForm() {
         return amountField.getDecimal().compareTo(BigDecimal.ZERO) != 0;
     }
 }
