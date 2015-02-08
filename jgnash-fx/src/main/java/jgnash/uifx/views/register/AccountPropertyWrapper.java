@@ -95,6 +95,7 @@ class AccountPropertyWrapper implements MessageListener {
                 if (event.getObject(MessageProperty.ACCOUNT).equals(accountProperty.get())) {
                     updateProperties();
                 }
+                break;
             default:
         }
     }
