@@ -56,6 +56,7 @@ import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.factories.Borders;
 import com.sun.management.HotSpotDiagnosticMXBean;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Simple dialog to display info dumped to the console. Makes it easy for end
@@ -208,6 +209,8 @@ public class ConsoleDialog {
             JButton gcButton = new JButton(rb.getString("Button.ForceGC"));
 
             gcButton.addActionListener(new ActionListener() {
+
+                @SuppressFBWarnings({"DM_GC"})
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     System.gc();
