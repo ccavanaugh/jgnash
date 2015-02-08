@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Properties;
@@ -42,6 +43,8 @@ import jgnash.engine.attachment.LocalAttachmentManager;
 import jgnash.engine.concurrent.DistributedLockManager;
 import jgnash.engine.concurrent.LocalLockManager;
 import jgnash.util.FileUtils;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Abstract JPA DataStore
@@ -155,7 +158,7 @@ public abstract class AbstractJpaDataStore implements DataStore {
                     engine = new Engine(new JpaEngineDAO(em, false), new LocalLockManager(), new LocalAttachmentManager(), engineName);
 
                     this.fileName = fileName;
-                    this.password = password;
+                    this.password = password.clone();   // clone to protect against side effects
 
                     remote = false;
                 } catch (final Exception e) {
@@ -236,6 +239,7 @@ public abstract class AbstractJpaDataStore implements DataStore {
         return Files.exists(Paths.get(FileUtils.stripFileExtension(fileName) + "." + getFileExt()));
     }
 
+    @SuppressFBWarnings({"DMI_EMPTY_DB_PASSWORD"})
     boolean initEmptyDatabase(final String fileName) {
         boolean result = false;
 
@@ -243,19 +247,30 @@ public abstract class AbstractJpaDataStore implements DataStore {
         final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
         try (final Connection connection = DriverManager.getConnection(url, "sa", "")) {
-            connection.prepareStatement("CREATE USER " + JpaConfiguration.DEFAULT_USER + " PASSWORD \"\" ADMIN").execute();
-            connection.commit();
+            try (final PreparedStatement statement = connection.prepareStatement("CREATE USER " + JpaConfiguration.DEFAULT_USER + " PASSWORD \"\" ADMIN")) {
+                statement.execute();
+                connection.commit();
+            }
 
-            connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for a correct shutdown
+            // absolutely required for a correct shutdown
+            try (final PreparedStatement statement = connection.prepareStatement("SHUTDOWN")) {
+                statement.execute();
+            }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
         try (final Connection connection = DriverManager.getConnection(url, JpaConfiguration.DEFAULT_USER, "")) {
-            connection.prepareStatement("DROP USER SA").execute();
-            connection.commit();
+            try (final PreparedStatement statement = connection.prepareStatement("DROP USER SA")) {
+                statement.execute();
+                connection.commit();
+            }
 
-            connection.prepareStatement("SHUTDOWN").execute(); // absolutely required for a correct shutdown
+            // absolutely required for a correct shutdown
+            try (final PreparedStatement statement = connection.prepareStatement("SHUTDOWN")) {
+                statement.execute();
+            }
+
             result = true;
         } catch (final SQLException e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
