@@ -76,7 +76,7 @@ public class TransactionDialog extends Stage {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
         }
 
-        initOwner(MainApplication.getPrimaryStage());
+        initOwner(MainApplication.getInstance().getPrimaryStage());
         initStyle(StageStyle.DECORATED);
         initModality(Modality.APPLICATION_MODAL);
         setTitle(ResourceUtils.getBundle().getString("Title.NewTrans"));

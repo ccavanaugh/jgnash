@@ -100,7 +100,7 @@ public class OpenDatabaseController {
         FileChooser fileChooser = new FileChooser();
         configureFileChooser(fileChooser);
 
-        File file = fileChooser.showOpenDialog(MainApplication.getPrimaryStage());
+        File file = fileChooser.showOpenDialog(MainApplication.getInstance().getPrimaryStage());
 
         if (file != null) {
             Preferences pref = Preferences.userNodeForPackage(OpenDatabaseController.class);

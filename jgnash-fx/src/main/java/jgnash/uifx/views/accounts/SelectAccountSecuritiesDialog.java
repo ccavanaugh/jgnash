@@ -115,7 +115,7 @@ public class SelectAccountSecuritiesDialog {
         // Create the base dialog
         final Stage dialog = new Stage(StageStyle.DECORATED);
         dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(MainApplication.getPrimaryStage());
+        dialog.initOwner(MainApplication.getInstance().getPrimaryStage());
         dialog.setTitle(resources.getString("Title.AccountSecurities"));
 
         final Label availableLabel = new Label(resources.getString("Title.Available"));

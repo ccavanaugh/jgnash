@@ -192,7 +192,7 @@ public class AttachmentPane extends GridPane {
             fileChooser.setInitialFileName(attachmentProperty.get().getFileName().toString());
         }
 
-        final File selectedFile = fileChooser.showOpenDialog(MainApplication.getPrimaryStage());
+        final File selectedFile = fileChooser.showOpenDialog(MainApplication.getInstance().getPrimaryStage());
         if (selectedFile != null) {
             pref.put(LAST_DIR, selectedFile.getParent());   // save last good directory location
 

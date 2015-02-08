@@ -57,7 +57,7 @@ public final class StaticAccountsMethods {
     public static void showAccountFilterDialog(final AccountTypeFilter accountTypeFilter) {
         final Stage dialog = new Stage(StageStyle.DECORATED);
         dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(MainApplication.getPrimaryStage());
+        dialog.initOwner(MainApplication.getInstance().getPrimaryStage());
         dialog.setTitle(ResourceUtils.getBundle().getString("Title.VisibleAccountTypes"));
 
         AccountTypeFilterFormController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
@@ -75,7 +75,7 @@ public final class StaticAccountsMethods {
     public static void showNewAccountPropertiesDialog() {
         final Stage dialog = new Stage(StageStyle.DECORATED);
         dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(MainApplication.getPrimaryStage());
+        dialog.initOwner(MainApplication.getInstance().getPrimaryStage());
         dialog.setTitle(ResourceUtils.getBundle().getString("Title.NewAccount"));
 
         final AccountPropertiesController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
@@ -103,7 +103,7 @@ public final class StaticAccountsMethods {
     public static void showModifyAccountProperties(final Account account) {
         final Stage dialog = new Stage(StageStyle.DECORATED);
         dialog.initModality(Modality.WINDOW_MODAL);
-        dialog.initOwner(MainApplication.getPrimaryStage());
+        dialog.initOwner(MainApplication.getInstance().getPrimaryStage());
         dialog.setTitle(ResourceUtils.getBundle().getString("Title.ModifyAccount"));
 
         final AccountPropertiesController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
@@ -139,7 +139,7 @@ public final class StaticAccountsMethods {
         try {
             final Stage dialog = new Stage(StageStyle.DECORATED);
             dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.initOwner(MainApplication.getPrimaryStage());
+            dialog.initOwner(MainApplication.getInstance().getPrimaryStage());
             dialog.setTitle(ResourceUtils.getBundle().getString("Title.ParentAccount"));
 
             final FXMLLoader loader = new FXMLLoader(SelectAccountController.class.getResource("SelectAccountForm.fxml"), ResourceUtils.getBundle());

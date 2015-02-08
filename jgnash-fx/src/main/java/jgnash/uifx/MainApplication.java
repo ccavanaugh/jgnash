@@ -61,7 +61,6 @@ import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
 import com.sun.javafx.css.StyleManager;
-
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
@@ -73,7 +72,6 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
  *
  * @author Craig Cavanaugh
  */
-@SuppressWarnings("restriction")
 public class MainApplication extends Application implements MessageListener {
     /**
      * Default style sheet
@@ -88,15 +86,32 @@ public class MainApplication extends Application implements MessageListener {
 
     private final StatusBarLogHandler statusBarLogHandler = new StatusBarLogHandler();
 
-    private static Stage primaryStage;
+    private Stage primaryStage;
 
     private StatusBar statusBar;
 
     private TabViewPane tabViewPane;
 
-    private static BusyPane busyPane;
-   
-	@Override
+    private BusyPane busyPane;
+
+    /**
+     * Application Singleton
+     */
+    private static MainApplication instance;
+
+    @Override
+    public void init() throws Exception {
+        if (instance == null) {
+            instance = this;
+        }
+    }
+
+    public static MainApplication getInstance() {
+        return instance;
+    }
+
+    @Override
+    @SuppressWarnings("restriction")
     public void start(final Stage stage) throws Exception {
 
         // Force application wide style sheet. Use is StyleManager is a private API and may break later
@@ -185,11 +200,11 @@ public class MainApplication extends Application implements MessageListener {
     }
 
     /**
-     * Provides access to the primary stage.
+     * Provides access to the primary {@code Application} stage.
      *
      * @return the primary stage
      */
-    public static Stage getPrimaryStage() {
+    public Stage getPrimaryStage() {
         return primaryStage;
     }
 
@@ -198,7 +213,7 @@ public class MainApplication extends Application implements MessageListener {
      *
      * @see javafx.stage.Stage#requestFocus()
      */
-    public static void requestFocus() {
+    public void requestFocus() {
         getPrimaryStage().requestFocus();
     }
 
@@ -208,7 +223,7 @@ public class MainApplication extends Application implements MessageListener {
      *
      * @param task long running {@code Task} to monitor
      */
-    public static void setBusy(@Nullable final Task<?> task) {
+    public void setBusy(@Nullable final Task<?> task) {
         busyPane.setTask(task);
     }
 

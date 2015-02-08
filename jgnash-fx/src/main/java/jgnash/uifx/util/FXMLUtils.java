@@ -69,7 +69,7 @@ public class FXMLUtils {
 
         final Stage stage = new Stage(StageStyle.DECORATED);
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initOwner(MainApplication.getPrimaryStage());
+        stage.initOwner(MainApplication.getInstance().getPrimaryStage());
 
         try {
             fxmlLoader.setController(controller);
@@ -95,7 +95,7 @@ public class FXMLUtils {
 
         final Stage stage = new Stage(StageStyle.DECORATED);
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initOwner(MainApplication.getPrimaryStage());
+        stage.initOwner(MainApplication.getInstance().getPrimaryStage());
 
         try {
             stage.setScene(new Scene(fxmlLoader.load()));

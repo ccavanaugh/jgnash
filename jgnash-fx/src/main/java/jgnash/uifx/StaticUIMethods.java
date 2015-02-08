@@ -62,7 +62,7 @@ public class StaticUIMethods {
         final Alert alert = new Alert(Alert.AlertType.ERROR, message);
 
         alert.setTitle(ResourceUtils.getBundle().getString("Title.Error"));
-        alert.initOwner(MainApplication.getPrimaryStage());
+        alert.initOwner(MainApplication.getInstance().getPrimaryStage());
 
         Platform.runLater(alert::showAndWait);
     }
@@ -71,7 +71,7 @@ public class StaticUIMethods {
         final Alert alert = new Alert(Alert.AlertType.INFORMATION, message);
 
         alert.setTitle(ResourceUtils.getBundle().getString("Title.Information"));
-        alert.initOwner(MainApplication.getPrimaryStage());
+        alert.initOwner(MainApplication.getInstance().getPrimaryStage());
 
         Platform.runLater(alert::showAndWait);
     }
@@ -80,7 +80,7 @@ public class StaticUIMethods {
         final Alert alert = new Alert(Alert.AlertType.WARNING, message);
 
         alert.setTitle(ResourceUtils.getBundle().getString("Title.Warning"));
-        alert.initOwner(MainApplication.getPrimaryStage());
+        alert.initOwner(MainApplication.getInstance().getPrimaryStage());
 
         Platform.runLater(alert::showAndWait);
     }
@@ -96,7 +96,7 @@ public class StaticUIMethods {
         final Alert alert = new Alert(Alert.AlertType.YES_NO, message);
 
         alert.setTitle(title);
-        alert.initOwner(MainApplication.getPrimaryStage());
+        alert.initOwner(MainApplication.getInstance().getPrimaryStage());
 
         return alert.showAndWait().get();
     }
@@ -109,7 +109,7 @@ public class StaticUIMethods {
     }
 
     public static void displayTaskProgress(final Task<?> task) {
-        MainApplication.setBusy(task);
+        MainApplication.getInstance().setBusy(task);
     }
 
 
