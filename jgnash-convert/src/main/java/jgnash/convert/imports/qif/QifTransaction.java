@@ -23,11 +23,14 @@ import java.util.Date;
 
 import jgnash.engine.Account;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * Transaction object for a QIF transaction
  *
  * @author Craig Cavanaugh
  */
+@SuppressFBWarnings({"URF_UNREAD_FIELD"})
 public class QifTransaction {
 
     /**

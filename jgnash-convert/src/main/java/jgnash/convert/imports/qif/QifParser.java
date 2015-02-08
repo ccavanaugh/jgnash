@@ -28,6 +28,8 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * The QIF format seems to be very broken. Various applications and services
  * export it differently, some have even extended an already broken format to
@@ -48,6 +50,7 @@ import java.util.logging.Logger;
  * 
  * @author Craig Cavanaugh
  */
+@SuppressFBWarnings({"URF_UNREAD_FIELD"})
 public final class QifParser {
 
     private String dateFormat = QifUtils.US_FORMAT;
