@@ -306,6 +306,16 @@ public class SelectAccountSecuritiesDialog {
         public int compareTo(@NotNull final LockedSecurity other) {
             return securityNode.compareTo(other.securityNode);
         }
+
+        @Override
+        public boolean equals(final Object o) {
+            return this == o || o instanceof LockedSecurity && securityNode.equals(((LockedSecurity) o).securityNode);
+        }
+
+        @Override
+        public int hashCode() {
+            return securityNode.hashCode();
+        }
     }
 
     /**
