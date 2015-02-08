@@ -20,17 +20,16 @@ package jgnash.ui.components;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import jgnash.ui.ThemeManager;
-import jgnash.ui.register.RegisterFactory;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
+
+import jgnash.ui.ThemeManager;
+import jgnash.ui.register.RegisterFactory;
 
 /**
  * Table with improved default formatting capability
@@ -92,11 +91,7 @@ public class FormattedJTable extends JTable {
             
             if (Number.class.isAssignableFrom(getColumnClass(column))) {                         
                 ((JLabel) c).setHorizontalAlignment(SwingConstants.RIGHT);
-            } else if (String.class.isAssignableFrom(getColumnClass(column))) {
-                ((JLabel) c).setHorizontalAlignment(defaultAlignment);   
-            } else if (Date.class.isAssignableFrom(getColumnClass(column))) {  // special handling for dates
-                ((JLabel) c).setHorizontalAlignment(defaultAlignment);
-            } else {
+            } else {    // dates, string, anything else...
                 ((JLabel) c).setHorizontalAlignment(defaultAlignment);
             }
         }
