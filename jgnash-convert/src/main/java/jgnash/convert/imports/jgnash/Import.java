@@ -381,9 +381,11 @@ public class Import {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        for (Account account : parentMap.keySet()) {
+        for (final Map.Entry<Account, String> entry : parentMap.entrySet()) {
+            final Account account = entry.getKey();
+
             if (account.getAccountType() != AccountType.ROOT) {
-                Account parent = accountMap.get(parentMap.get(account));
+                Account parent = accountMap.get(entry.getValue());
                 if (!account.getParent().equals(parent)) {
                     if (engine.moveAccount(account, parent)) {
                         logger.log(Level.FINEST, "Moving {0} to {1}", new Object[]{account.getName(), parent.getName()});
@@ -396,8 +398,9 @@ public class Import {
     }
 
     private void lockAccounts() {
-        for (String id : lockMap.keySet()) {
-            accountMap.get(id).setLocked(lockMap.get(id));
+
+        for (final Map.Entry<String, Boolean> entry : lockMap.entrySet()) {
+            accountMap.get(entry.getKey()).setLocked(entry.getValue());
         }
 
         logger.info("Account lock complete");

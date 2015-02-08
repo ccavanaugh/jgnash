@@ -73,9 +73,9 @@ import org.jfree.data.general.PieDataset;
  */
 public class PayeePieChart {
 
-    private static final String STARTDATE = "startDate";
+    private static final String START_DATE = "startDate";
 
-    private static final String FILTERTAG = "filter:";
+    private static final String FILTER_TAG = "filter:";
 
     private static final Pattern POUND_DELIMITER_PATTERN = Pattern.compile("#");
 
@@ -164,7 +164,7 @@ public class PayeePieChart {
 
         Date dStart = DateUtils.subtractYear(DateUtils.getFirstDayOfTheMonth(new Date()));
 
-        long start = pref.getLong(STARTDATE, dStart.getTime());
+        long start = pref.getLong(START_DATE, dStart.getTime());
 
         startField.setDate(new Date(start));
 
@@ -195,12 +195,12 @@ public class PayeePieChart {
         builder.nextLine();
 
         // row 5
-        FormLayout sublayout = new FormLayout("180dlu:g, 1dlu, 180dlu:g", "f:180dlu:g");
-        DefaultFormBuilder subbuilder = new DefaultFormBuilder(sublayout);
-        subbuilder.append(chartPanelCredit);
-        subbuilder.append(chartPanelDebit);
+        FormLayout subLayout = new FormLayout("180dlu:g, 1dlu, 180dlu:g", "f:180dlu:g");
+        DefaultFormBuilder subBuilder = new DefaultFormBuilder(subLayout);
+        subBuilder.append(chartPanelCredit);
+        subBuilder.append(chartPanelDebit);
         
-        builder.append(subbuilder.getPanel(), 11);
+        builder.append(subBuilder.getPanel(), 11);
         builder.nextLine();
         builder.nextLine();
 
@@ -232,7 +232,7 @@ public class PayeePieChart {
                 }
                 filtersChanged = false;
 
-                String[] list = POUND_DELIMITER_PATTERN.split(pref.get(FILTERTAG + newAccount.hashCode(), ""));
+                String[] list = POUND_DELIMITER_PATTERN.split(pref.get(FILTER_TAG + newAccount.hashCode(), ""));
                 filterList.clear();
                 for (String filter : list) {
                     if (!filter.isEmpty()) {
@@ -243,7 +243,7 @@ public class PayeePieChart {
                 refreshFilters();
 
                 setCurrentAccount(newAccount);
-                pref.putLong(STARTDATE, startField.getDate().getTime());
+                pref.putLong(START_DATE, startField.getDate().getTime());
             }
         });
 
@@ -252,7 +252,7 @@ public class PayeePieChart {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 setCurrentAccount(currentAccount);
-                pref.putLong(STARTDATE, startField.getDate().getTime());
+                pref.putLong(START_DATE, startField.getDate().getTime());
             }
         });
 
@@ -281,8 +281,8 @@ public class PayeePieChart {
                     sb.append(filter);
                     sb.append('#');
                 }
-                //System.out.println("Save = " + FILTERTAG + currentAccount.hashCode() + " = " + sb.toString());
-                pref.put(FILTERTAG + currentAccount.hashCode(), sb.toString());
+                //System.out.println("Save = " + FILTER_TAG + currentAccount.hashCode() + " = " + sb.toString());
+                pref.put(FILTER_TAG + currentAccount.hashCode(), sb.toString());
                 filtersChanged = false;
             }
         });
@@ -439,10 +439,10 @@ public class PayeePieChart {
 
             CurrencyNode currency = a.getCurrencyNode();
 
-            for (TranTuple touple : list) {
+            for (final TranTuple tranTuple : list) {
 
-                Transaction tran = touple.transaction;
-                Account account = touple.account;
+                Transaction tran = tranTuple.transaction;
+                Account account = tranTuple.account;
 
                 String payee = tran.getPayee();
                 BigDecimal sum = tran.getAmount(account);
@@ -471,15 +471,16 @@ public class PayeePieChart {
                 names.put(payee, sum);
             }
 
-            for (String key : names.keySet()) {
-                BigDecimal value = names.get(key);
+            for (final Map.Entry<String, BigDecimal> entry : names.entrySet()) {
+                BigDecimal value = entry.getValue();
 
                 if (value.compareTo(BigDecimal.ZERO) == -1) {
                     value = value.negate();
-                    returnValue[1].setValue(key, value);
+                    returnValue[1].setValue(entry.getKey(), value);
                 }
-                else
-                    returnValue[0].setValue(key, value);
+                else {
+                    returnValue[0].setValue(entry.getKey(), value);
+                }
             }
         }
         return returnValue;
