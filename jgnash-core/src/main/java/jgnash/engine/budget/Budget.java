@@ -21,21 +21,28 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
+
 import jgnash.engine.Account;
 import jgnash.engine.StoredObject;
 import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Resource;
 
-import javax.persistence.*;
-
 /**
  * Budget Object
- * 
+ *
  * @author Craig Cavanaugh
  */
 @Entity
-public class Budget extends StoredObject implements Comparable<Budget> {
+public class Budget extends StoredObject implements Comparable<Budget>, Cloneable {
 
     /**
      * Budget name
@@ -97,8 +104,8 @@ public class Budget extends StoredObject implements Comparable<Budget> {
 
     /**
      * Sets the goals for an {@code Account}
-     * 
-     * @param account Account
+     *
+     * @param account    Account
      * @param budgetGoal budget goals
      */
     public void setBudgetGoal(final Account account, final BudgetGoal budgetGoal) {
@@ -117,7 +124,7 @@ public class Budget extends StoredObject implements Comparable<Budget> {
     /**
      * Returns and accounts goals. If goals have not yet been specified, then an empty set is automatically assigned and
      * returned
-     * 
+     *
      * @param account {@code Account} to retrieve the goals for
      * @return the goals
      */
@@ -164,7 +171,7 @@ public class Budget extends StoredObject implements Comparable<Budget> {
 
     /**
      * Returns the global display period for this budget
-     * 
+     *
      * @return The period for this budget
      */
     public BudgetPeriod getBudgetPeriod() {
@@ -173,7 +180,7 @@ public class Budget extends StoredObject implements Comparable<Budget> {
 
     /**
      * Sets the global display period for this budget
-     * 
+     *
      * @param budgetPeriod The budget period
      */
     public void setBudgetPeriod(final BudgetPeriod budgetPeriod) {
@@ -182,7 +189,7 @@ public class Budget extends StoredObject implements Comparable<Budget> {
 
     /**
      * Returns a clone of this {@code Budget}
-     * 
+     *
      * @return clone
      */
     @Override
@@ -195,8 +202,8 @@ public class Budget extends StoredObject implements Comparable<Budget> {
 
         budget.accountGoals = new HashMap<>();
 
-        for (final String key : accountGoals.keySet()) {
-            budget.accountGoals.put(key, (BudgetGoal) accountGoals.get(key).clone());
+        for (final Map.Entry<String, BudgetGoal> entry : accountGoals.entrySet()) {
+            budget.accountGoals.put(entry.getKey(), (BudgetGoal) entry.getValue().clone());
         }
 
         budget.setBudgetPeriod(getBudgetPeriod());
@@ -206,7 +213,7 @@ public class Budget extends StoredObject implements Comparable<Budget> {
 
     /**
      * Returns the working year for the budget
-     * 
+     *
      * @return the activeYear
      */
     public int getWorkingYear() {
@@ -215,9 +222,9 @@ public class Budget extends StoredObject implements Comparable<Budget> {
 
     /**
      * Sets the working year for the budget.
-     * <p>
+     * <p/>
      * This is a transient property primarily used to help UI component communicate the working year.
-     * 
+     *
      * @param workingYear the working year to set
      */
     public void setWorkingYear(int workingYear) {
