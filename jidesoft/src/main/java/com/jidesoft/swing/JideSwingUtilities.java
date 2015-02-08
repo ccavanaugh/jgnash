@@ -29,6 +29,7 @@ class JideSwingUtilities implements SwingConstants {
 
     private static class viewportSynchronizationChangeListener implements ChangeListener {
 
+        @edu.umd.cs.findbugs.annotations.SuppressFBWarnings({"WMI_WRONG_MAP_ITERATOR"})
         @SuppressWarnings("rawtypes")
 		@Override
         public void stateChanged(ChangeEvent e) {

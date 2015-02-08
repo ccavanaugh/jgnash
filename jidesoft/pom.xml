@@ -9,4 +9,12 @@
     <artifactId>jidesoft</artifactId>
     <name>JIDE Software</name>
     <description>Portion of the JIDE Software distribution</description>
+
+    <dependencies>
+      <dependency>
+	        <groupId>com.google.code.findbugs</groupId>
+	        <artifactId>annotations</artifactId>
+	        <version>${findbugs-annotations.version}</version>
+        </dependency>
+    </dependencies>
 </project>
