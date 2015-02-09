@@ -33,6 +33,8 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * Exchange rate history node for a {@code ExchangeRate}.
  * {@code ExchangeRateHistoryNode} objects are immutable.
@@ -79,6 +81,17 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
         return getDate().compareTo(node.getDate());
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        return this == o || o instanceof ExchangeRateHistoryNode && getDate().equals(((ExchangeRateHistoryNode) o).getDate());
+    }
+
+    @Override
+    public int hashCode() {
+        return date.hashCode();
+    }
+
+    @SuppressFBWarnings({"EI_EXPOSE_REP"})
     public Date getDate() {
         return date;
     }

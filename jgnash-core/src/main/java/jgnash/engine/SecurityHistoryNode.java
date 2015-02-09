@@ -19,6 +19,7 @@ package jgnash.engine;
 
 import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
+import jgnash.util.Nullable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,6 +33,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Historical data for a {@code SecurityNode}.
@@ -65,19 +68,36 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
     public SecurityHistoryNode() {
     }
 
-    public void setHigh(final BigDecimal high) {
+    /**
+     * Public constructor for creating a history node
+     * @param date date
+     * @param price closing price
+     * @param volume closing volume
+     * @param high high price for the day
+     * @param low low price for the day
+     */
+    public SecurityHistoryNode(@Nullable final Date date, @Nullable final BigDecimal price, final long volume,
+                               @Nullable final BigDecimal high, @Nullable final BigDecimal low) {
+        setDate(date);
+        setPrice(price);
+        setVolume(volume);
+        setHigh(high);
+        setLow(low);
+    }
+
+    protected void setHigh(final BigDecimal high) {
         if (high != null) {
             this.high = high;
         }
     }
 
-    public void setLow(final BigDecimal low) {
+    protected void setLow(final BigDecimal low) {
         if (low != null) {
             this.low = low;
         }
     }
 
-    public void setVolume(final long volume) {
+    protected void setVolume(final long volume) {
         this.volume = volume;
     }
 
@@ -93,17 +113,18 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
         return volume;
     }
 
-    public void setDate(final Date date) {
+    protected void setDate(final Date date) {
         Objects.requireNonNull(date);
 
         this.date = DateUtils.trimDate(date);
     }
 
+    @SuppressFBWarnings({"EI_EXPOSE_REP"})
     public Date getDate() {
         return date;
     }
 
-    public void setPrice(final BigDecimal price) {
+    protected void setPrice(final BigDecimal price) {
         if (price != null) {
             this.price = price;
         }
@@ -122,5 +143,15 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
     @Override
     public int compareTo(@NotNull final SecurityHistoryNode node) {
         return getDate().compareTo(node.getDate());
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        return this == o || o instanceof SecurityHistoryNode && getDate().compareTo(((SecurityHistoryNode) o).getDate()) == 0;
+    }
+
+   @Override
+    public int hashCode() {
+       return date.hashCode();
     }
 }

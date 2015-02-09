@@ -273,20 +273,10 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
     }
 
     private void addNode() {
-        SecurityHistoryNode history = new SecurityHistoryNode();
-        history.setDate(dateField.getDate());
-        history.setPrice(closeField.getDecimal());
-        history.setVolume(volumeField.longValue());
+        final SecurityHistoryNode history = new SecurityHistoryNode(dateField.getDate(), closeField.getDecimal(),
+                volumeField.longValue(), highField.getDecimal(), lowField.getDecimal());
 
-        if (!highField.getText().isEmpty()) {
-            history.setHigh(highField.getDecimal());
-        }
-
-        if (!lowField.getText().isEmpty()) {
-            history.setLow(lowField.getDecimal());
-        }
-
-        Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
         if (engine != null) {
             engine.addSecurityHistory(securityCombo.getSelectedSecurityNode(), history);

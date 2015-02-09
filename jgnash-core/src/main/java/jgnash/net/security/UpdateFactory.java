@@ -222,13 +222,7 @@ public class UpdateFactory {
                                 final BigDecimal close = new BigDecimal(fields[4]);
                                 final long volume = Long.parseLong(fields[5]);
 
-                                final SecurityHistoryNode node = new SecurityHistoryNode();
-
-                                node.setDate(date);
-                                node.setPrice(close);
-                                node.setVolume(volume);
-                                node.setHigh(high);
-                                node.setLow(low);
+                                final SecurityHistoryNode node = new SecurityHistoryNode(date, close, volume, high, low);
 
                                 if (engine != null && !Thread.currentThread().isInterrupted()) {
                                     engine.addSecurityHistory(securityNode, node);
@@ -276,16 +270,11 @@ public class UpdateFactory {
                 if (!Thread.currentThread().isInterrupted()) {  // check for thread interruption
                     if (parser.parse(securityNode)) {
 
-                        final SecurityHistoryNode history = new SecurityHistoryNode();
-
-                        history.setPrice(parser.getPrice());
-                        history.setVolume(parser.getVolume());
-                        history.setHigh(parser.getHigh());
-                        history.setLow(parser.getLow());
-                        history.setDate(parser.getDate());  // returned date from the parser
+                        final SecurityHistoryNode node = new SecurityHistoryNode(parser.getDate(), parser.getPrice(),
+                                parser.getVolume(), parser.getHigh(), parser.getLow());
 
                         if (!Thread.currentThread().isInterrupted()) { // check for thread interruption
-                            result = e.addSecurityHistory(securityNode, history);
+                            result = e.addSecurityHistory(securityNode, node);
 
                             if (result) {
                                 logger.info(Resource.get().getString("Message.UpdatedPrice", securityNode.getSymbol()));

@@ -1299,13 +1299,9 @@ public class Import {
                     case XMLStreamConstants.END_ELEMENT:
                         if (reader.getName().equals(parsingElement)) {
                             // build the security history node;
-                            SecurityHistoryNode hNode = new SecurityHistoryNode();
-
-                            hNode.setDate(decodeDate(elementMap.get("date")));
-                            hNode.setHigh(new BigDecimal(elementMap.get("high")));
-                            hNode.setLow(new BigDecimal(elementMap.get("low")));
-                            hNode.setPrice(new BigDecimal(elementMap.get("price")));
-                            hNode.setVolume(Long.parseLong(elementMap.get("volume")));
+                            final SecurityHistoryNode hNode = new SecurityHistoryNode(decodeDate(elementMap.get("date")),
+                                    new BigDecimal(elementMap.get("price")), Long.parseLong(elementMap.get("volume")),
+                                    new BigDecimal(elementMap.get("high")), new BigDecimal(elementMap.get("low")));
 
                             elementMap.clear();
 
