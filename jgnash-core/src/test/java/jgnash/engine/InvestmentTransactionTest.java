@@ -1,5 +1,15 @@
 package jgnash.engine;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.junit.Test;
+
 import static jgnash.engine.TransactionFactory.generateBuyXTransaction;
 import static jgnash.engine.TransactionFactory.generateDividendXTransaction;
 import static jgnash.engine.TransactionFactory.generateMergeXTransaction;
@@ -9,19 +19,6 @@ import static jgnash.engine.TransactionFactory.generateSplitXTransaction;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
 /**
  * Unit tests for investment account transactions
@@ -29,95 +26,17 @@ import org.junit.Test;
  * @author Peti
  * @author Craig Cavanaugh
  */
-public class InvestmentTransactionTest {
-
-    private String database;
-
-    private Engine e;
-
-    private Account incomeAccount;
-
-    private Account expenseAccount;
-
-    private Account usdBankAccount;
-
-    private Account equityAccount;
-
-    private Account investAccount;
-
-    private SecurityNode securityNode1;
-
-    private static final char[] PASSWORD = new char[]{};
+public class InvestmentTransactionTest extends AbstractEngineTest {
 
     public InvestmentTransactionTest() {
     }
 
-    @Before
-    public void setUp() {
-        // Creating database
+    @Override
+    protected Engine createEngine() throws Exception {
         database = EngineFactory.getDefaultDatabase() + "-investTransaction-test.xml";
         EngineFactory.deleteDatabase(database);
 
-        try {
-            e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
-
-            // Creating currencies
-            CurrencyNode defaultCurrency = DefaultCurrencies.buildCustomNode("USD");
-
-            e.addCurrency(defaultCurrency);
-            e.setDefaultCurrency(defaultCurrency);
-
-            CurrencyNode cadCurrency = DefaultCurrencies.buildCustomNode("CAD");
-            e.addCurrency(cadCurrency);
-
-            // Creating securities
-            securityNode1 = new SecurityNode(defaultCurrency);
-
-            securityNode1.setSymbol("GOOGLE");
-            assertTrue(e.addSecurity(securityNode1));
-
-            // Creating accounts
-            incomeAccount = new Account(AccountType.INCOME, defaultCurrency);
-            incomeAccount.setName("Income Account");
-            e.addAccount(e.getRootAccount(), incomeAccount);
-
-            expenseAccount = new Account(AccountType.EXPENSE, defaultCurrency);
-            expenseAccount.setName("Expense Account");
-            e.addAccount(e.getRootAccount(), expenseAccount);
-
-            usdBankAccount = new Account(AccountType.BANK, defaultCurrency);
-            usdBankAccount.setName("USD Bank Account");
-            e.addAccount(e.getRootAccount(), usdBankAccount);
-
-            Account cadBankAccount = new Account(AccountType.BANK, cadCurrency);
-            cadBankAccount.setName("CAD Bank Account");
-            e.addAccount(e.getRootAccount(), cadBankAccount);
-
-            equityAccount = new Account(AccountType.EQUITY, defaultCurrency);
-            equityAccount.setName("Equity Account");
-            e.addAccount(e.getRootAccount(), equityAccount);
-
-            Account liabilityAccount = new Account(AccountType.LIABILITY, defaultCurrency);
-            liabilityAccount.setName("Liability Account");
-            e.addAccount(e.getRootAccount(), liabilityAccount);
-
-            investAccount = new Account(AccountType.INVEST, defaultCurrency);
-            investAccount.setName("Invest Account");
-            e.addAccount(e.getRootAccount(), investAccount);
-
-            // Adding security to the invest account
-            List<SecurityNode> securityNodeList = new ArrayList<>();
-            securityNodeList.add(securityNode1);
-            assertTrue(e.updateAccountSecurities(investAccount, securityNodeList));
-        } catch (final Exception e) {
-            fail(e.getMessage());
-        }
-    }
-
-    @After
-    public void tearDown() {
-        EngineFactory.closeEngine(EngineFactory.DEFAULT);
-        EngineFactory.deleteDatabase(database);
+        return EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
     }
 
     @Test
