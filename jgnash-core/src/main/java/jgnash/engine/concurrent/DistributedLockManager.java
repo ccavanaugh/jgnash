@@ -32,6 +32,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jgnash.net.ConnectionFactory;
 import jgnash.util.EncryptionManager;
 import jgnash.util.NotNull;
@@ -210,6 +211,7 @@ public class DistributedLockManager implements LockManager {
         changeLockState(lockId, type, DistributedLockServer.UNLOCK);
     }
 
+    @SuppressFBWarnings({"JLM_JSR166_UTILCONCURRENT_MONITORENTER"})
     void changeLockState(final String lockId, final String type, final String lockState) {
         final String threadId = uuid + '-' + Thread.currentThread().getId();
         final String lockMessage = MessageFormat.format(PATTERN, lockState, lockId, threadId, type);
