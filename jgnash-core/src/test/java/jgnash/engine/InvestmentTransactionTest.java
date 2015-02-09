@@ -271,6 +271,7 @@ public class InvestmentTransactionTest {
         transactionDate2 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-27", new ParsePosition(0));
         securityPrice2 = new BigDecimal("3.00");
 
+        history = new SecurityHistoryNode();
         history.setDate(transactionDate2);
         history.setPrice(securityPrice2);
 
