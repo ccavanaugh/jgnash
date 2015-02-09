@@ -61,21 +61,17 @@ public class ExceptionDialog {
 
     private final Stage dialog;
 
-    private final String stackTrace;
+    private String stackTrace;
+
+    private final Throwable throwable;
 
     public ExceptionDialog(final Throwable throwable) {
         final ResourceBundle resources = ResourceUtils.getBundle();
 
+        this.throwable = throwable;
+
         dialog = FXMLUtils.loadFXML(this, "ExceptionDialog.fxml", resources);
         dialog.setTitle(resources.getString("Title.UncaughtException"));
-
-        message.setText(throwable.getLocalizedMessage());
-
-        final StringWriter sw = new StringWriter();
-        throwable.printStackTrace(new PrintWriter(sw));
-
-        stackTrace = sw.toString();
-        textArea.setText(stackTrace);
     }
 
     @FXML
@@ -96,6 +92,14 @@ public class ExceptionDialog {
     }
 
     public void showAndWait() {
+        message.setText(throwable.getLocalizedMessage());
+
+        final StringWriter sw = new StringWriter();
+        throwable.printStackTrace(new PrintWriter(sw));
+
+        stackTrace = sw.toString();
+        textArea.setText(stackTrace);
+
         dialog.setResizable(false);
         dialog.showAndWait();
     }
