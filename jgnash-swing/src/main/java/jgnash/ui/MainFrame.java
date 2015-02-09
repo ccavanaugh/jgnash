@@ -55,6 +55,7 @@ import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.DefaultEditorKit;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jgnash.Main;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -204,6 +205,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
      * Performs a controlled shutdown to ensure the file is written and closed
      * before the UI disappears
      */
+    @SuppressFBWarnings({"DM_EXIT"})
     private void performControlledShutdown() {
 
         closeAllWindows(); // close any open windows first

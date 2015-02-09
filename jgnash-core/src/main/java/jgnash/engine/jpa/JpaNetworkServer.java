@@ -33,6 +33,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jgnash.engine.AttachmentUtils;
 import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
@@ -78,6 +79,7 @@ public class JpaNetworkServer {
 
     private static final String SERVER_ENGINE = "server";
 
+    @SuppressFBWarnings({"DM_EXIT"})
     public synchronized void startServer(final String fileName, final int port, final char[] password) {
 
         File file = new File(fileName);
