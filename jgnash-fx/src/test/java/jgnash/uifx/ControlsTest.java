@@ -45,12 +45,14 @@ import jgnash.engine.DataStoreType;
 import jgnash.engine.DefaultCurrencies;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.SecurityNode;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.TransactionNumberComboBox;
 
 import com.sun.javafx.css.StyleManager;
+import jgnash.uifx.control.SecurityComboBox;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -79,7 +81,7 @@ public class ControlsTest extends Application {
     public void start(final Stage primaryStage) throws Exception {
 
         Engine engine = createEngine();
-        //Objects.requireNonNull(engine);
+        Objects.requireNonNull(engine);
 
         // Force application wide style sheet. Use is StyleManager is a private API and may break later
         Application.setUserAgentStylesheet(null);
@@ -134,10 +136,12 @@ public class ControlsTest extends Application {
         Button exceptionButton = new Button("Show Exception");
         exceptionButton.setOnAction(event -> StaticUIMethods.displayException(new Exception("Test exception")));
 
-        VBox vBox = new VBox();
-        vBox.getChildren().addAll(decimalTextField, decimalTextField2, datePicker, new AccountComboBox(), numberComboBox, btn, exceptionButton);
+        SecurityComboBox securityComboBox = new SecurityComboBox();
 
-        primaryStage.setScene(new Scene(vBox, 300, 250));
+        VBox vBox = new VBox();
+        vBox.getChildren().addAll(decimalTextField, decimalTextField2, datePicker, new AccountComboBox(), numberComboBox, btn, exceptionButton, securityComboBox);
+
+        primaryStage.setScene(new Scene(vBox, 300, 350));
 
         primaryStage.getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
         primaryStage.getScene().getRoot().getStyleClass().addAll("form", "dialog");
@@ -192,6 +196,20 @@ public class ControlsTest extends Application {
         account.setName("Bank Accounts");
 
         engine.addAccount(engine.getRootAccount(), account);
+
+        SecurityNode securityNode = new SecurityNode();
+        securityNode.setSymbol("GGG");
+        securityNode.setDescription("Google");
+        securityNode.setReportedCurrencyNode(engine.getDefaultCurrency());
+
+        engine.addSecurity(securityNode);
+
+        securityNode = new SecurityNode();
+        securityNode.setSymbol("MSFT");
+        securityNode.setDescription("Microsoft");
+        securityNode.setReportedCurrencyNode(engine.getDefaultCurrency());
+
+        engine.addSecurity(securityNode);
 
         return engine;
     }
