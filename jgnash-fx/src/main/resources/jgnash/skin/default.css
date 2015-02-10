@@ -17,6 +17,14 @@
     -fx-faint-focus-color: transparent;
 }
 
+.table-row-cell {
+    -fx-cell-size: 1.75em;
+}
+
+.tree-table-row-cell {
+    -fx-cell-size: 1.75em;
+}
+
 .dialog > .dialog-pane > .button-bar {
     -fx-font-size: 1.0em;
 }
