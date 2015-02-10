@@ -69,7 +69,10 @@ public class FXMLUtils {
 
         final Stage stage = new Stage(StageStyle.DECORATED);
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initOwner(MainApplication.getInstance().getPrimaryStage());
+
+        if (MainApplication.getInstance() != null) {    // null check is only necessary to pass unit tests
+            stage.initOwner(MainApplication.getInstance().getPrimaryStage());
+        }
 
         try {
             fxmlLoader.setController(controller);
