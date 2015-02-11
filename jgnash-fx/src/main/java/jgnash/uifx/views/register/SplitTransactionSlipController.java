@@ -168,11 +168,13 @@ public class SplitTransactionSlipController {
             transactionEntryListProperty.get().add(entry);
 
             clearForm();
+            memoField.requestFocus();
         }
     }
 
     @FXML
     private void handleCancelAction() {
         clearForm();
+        memoField.requestFocus();
     }
 }

@@ -154,6 +154,7 @@ abstract class AbstractSlipController implements Slip {
     @Override
     public void handleCancelAction() {
         clearForm();
+        payeeTextField.requestFocus();
     }
 
     @FXML
@@ -201,6 +202,7 @@ abstract class AbstractSlipController implements Slip {
                 }
             }
             clearForm();
+            payeeTextField.requestFocus();
         }
     }
 
