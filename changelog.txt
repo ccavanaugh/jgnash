@@ -28,6 +28,7 @@ Add ability to make an existing transaction a recurring transaction.
 
 Release 2.15.2
 ----------------------
+02/12/15 Add tooltip to the investment gains and fees details buttons
 02/09/15 SecurityHistoryNodes are now immutable to prevent database corruption
 02/08/15 Insure resource cleanup if an SQL error is thrown
 01/31/15 Fix for potential resource leak when exporting budgets to a spreadsheet

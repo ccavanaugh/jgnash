@@ -41,6 +41,7 @@ import jgnash.ui.ThemeManager;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.plaf.NimbusUtils;
 import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * UI Panel for handling investment transaction fees
@@ -79,6 +80,7 @@ class FeePanel extends JPanel implements ActionListener {
 
         feeButton.addActionListener(this);
         feeButton.setFocusPainted(false);
+        feeButton.setToolTipText(ResourceUtils.getBundle().getString("ToolTip.ShowDetails"));
 
         if (ThemeManager.isLookAndFeelNimbus()) {
             NimbusUtils.reduceNimbusButtonMargin(feeButton);

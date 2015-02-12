@@ -33,6 +33,7 @@ import jgnash.ui.ThemeManager;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.plaf.NimbusUtils;
 import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -70,6 +71,7 @@ class GainsPanel extends JPanel implements ActionListener {
 
         gainsButton.addActionListener(this);
         gainsButton.setFocusPainted(false);
+        gainsButton.setToolTipText(ResourceUtils.getBundle().getString("ToolTip.ShowDetails"));
 
         if (ThemeManager.isLookAndFeelNimbus()) {
             NimbusUtils.reduceNimbusButtonMargin(gainsButton);
