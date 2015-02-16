@@ -65,8 +65,6 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
 
         final List<SecurityNode> nodeList = engine.getSecurities();
 
-        System.out.println(nodeList.size());
-
         // extract and reuse the default model
         items = getItems();
 
