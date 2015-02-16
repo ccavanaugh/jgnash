@@ -90,7 +90,11 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
 
         final List<SlipControllerContainer> transactionPanes = new ArrayList<>();
 
+
+
         // TODO: more investment slips
+        transactionPanes.add(buildBuyShareTab(actions[0]));
+        //transactionPanes.add(buildBuyShareTab(actions[1], SlipType.SELL_SHARES));
         transactionPanes.add(buildCashTransferTab(actions[2], SlipType.INCREASE));
         transactionPanes.add(buildCashTransferTab(actions[3], SlipType.DECREASE));
 
@@ -108,6 +112,22 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
             final SlipController slipController = fxmlLoader.getController();
 
             slipController.setSlipType(slipType);
+            slipController.getAccountProperty().bind(getAccountProperty());
+
+            return new SlipControllerContainer(name, slipController, pane);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private SlipControllerContainer buildBuyShareTab(final String name) {
+
+        try {
+            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BuyShareSlip.fxml"), resources);
+            final Pane pane = fxmlLoader.load();
+
+            final BuyShareSlipController slipController = fxmlLoader.getController();
+
             slipController.getAccountProperty().bind(getAccountProperty());
 
             return new SlipControllerContainer(name, slipController, pane);
@@ -148,8 +168,13 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
 
         if (transaction instanceof InvestmentTransaction) {
             switch (transaction.getTransactionType()) {
-                default:
-                    // TODO: more investment slips
+                case BUYSHARE:
+                    actionComboBox.getSelectionModel().select(0);
+                    break;
+                case SELLSHARE:
+                    //actionComboBox.getSelectionModel().select(1);
+                    break;
+                default: // TODO: more investment slips
                     break;
             }
         } else {
@@ -158,7 +183,8 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
             } else {
                 actionComboBox.getSelectionModel().select(3);  // transferOut
             }
-            actionComboBox.getSelectionModel().getSelectedItem().getController().modifyTransaction(transaction);
         }
+
+        actionComboBox.getSelectionModel().getSelectedItem().getController().modifyTransaction(transaction);
     }
 }
