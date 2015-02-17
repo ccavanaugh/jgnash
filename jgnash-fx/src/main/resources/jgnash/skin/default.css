@@ -1,5 +1,20 @@
 /*
  * Reduce the overall font size of the application
+
+  Windows 12px -> em units    -> Mac 13px      |
+  ----------------------------------------
+       1px     -> 0.083333em  -> 1.08px ~ 2px
+       2px     -> 0.166667em  -> 2.16px ~ 3px
+       3px  = 0.25em
+       4px  = 0.333333em
+       5px  = 0.416667em
+       6px  = 0.5em
+       7px  = 0.583333em
+       8px  = 0.666667em
+       9px  = 0.75em
+      10px  = 0.833333em
+      11px  = 0.916667em
+      12px  = 1em
  */
 .root{
     -fx-font-size: 0.833333em;
