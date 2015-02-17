@@ -59,9 +59,9 @@
 
     <!-- Row 3 -->
     <Label text="%Label.Account" GridPane.rowIndex="3" />
-    <AccountExchangePane fx:id="accountExchangePane" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true" GridPane.columnSpan="4" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-    <GridPane styleClass="form" GridPane.halignment="LEFT" GridPane.vgrow="NEVER" GridPane.hgrow="NEVER" GridPane.columnSpan="3" GridPane.columnIndex="5" GridPane.rowIndex="3" >
+    <GridPane styleClass="form" GridPane.halignment="LEFT" GridPane.vgrow="NEVER" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true" GridPane.columnSpan="7" GridPane.columnIndex="1" GridPane.rowIndex="3" >
       <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS" />
         <ColumnConstraints hgrow="NEVER" />
         <ColumnConstraints minWidth="8" maxWidth="8"/>
         <ColumnConstraints hgrow="NEVER" />
@@ -70,8 +70,9 @@
         <RowConstraints vgrow="NEVER" />
       </rowConstraints>
       <children>
-        <AttachmentPane fx:id="attachmentPane"  />
-        <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared" GridPane.columnIndex="2"/>
+        <AccountExchangePane fx:id="accountExchangePane" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true" />
+        <AttachmentPane fx:id="attachmentPane"  GridPane.columnIndex="1"/>
+        <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared" GridPane.columnIndex="3"/>
       </children>
     </GridPane>
   </children>
