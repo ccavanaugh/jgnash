@@ -22,10 +22,6 @@
       <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="95" />
       <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="95" />
-      <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="95" />
-      <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="95" maxWidth="95" />
   </columnConstraints>
   <rowConstraints>
@@ -37,29 +33,43 @@
   <children>
     <!-- Row 0 -->
     <Label text="%Label.Security" />
-    <SecurityComboBox fx:id="securityComboBox" maxWidth="Infinity" GridPane.fillWidth="true" GridPane.columnSpan="5" GridPane.columnIndex="1" />
-    <Label text="%Label.Number" GridPane.columnIndex="6" />
-    <TransactionNumberComboBox  fx:id="numberComboBox" editable="true" GridPane.columnIndex="7" />
+    <SecurityComboBox fx:id="securityComboBox" maxWidth="Infinity" GridPane.fillWidth="true" GridPane.columnIndex="1" />
+    <Label text="%Label.Number" GridPane.columnIndex="2" />
+    <TransactionNumberComboBox  fx:id="numberComboBox" editable="true" GridPane.columnIndex="3" />
 
     <!-- Row 1 -->
     <Label text="%Label.Price" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-    <DecimalTextField fx:id="priceField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-    <Label text="%Label.Quantity" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-    <DecimalTextField fx:id="quantityField" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-    <Label text="%Label.Fees" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-    <FeesPane fx:id="feesPane" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-    <Label text="%Label.Date" GridPane.columnIndex="6" GridPane.rowIndex="1" />
-    <DatePickerEx fx:id="datePicker" GridPane.columnIndex="7" GridPane.rowIndex="1" />
+    <GridPane styleClass="form" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.fillWidth="true">
+      <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS" minWidth="95" />
+        <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+        <ColumnConstraints hgrow="ALWAYS" minWidth="95" />
+        <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+        <ColumnConstraints hgrow="ALWAYS" minWidth="95" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints vgrow="NEVER" />
+      </rowConstraints>
+      <children>
+        <DecimalTextField fx:id="priceField" GridPane.columnIndex="0" />
+        <Label text="%Label.Quantity" GridPane.columnIndex="1" />
+        <DecimalTextField fx:id="quantityField" GridPane.columnIndex="2" />
+        <Label text="%Label.Fees" GridPane.columnIndex="3" />
+        <FeesPane fx:id="feesPane" GridPane.columnIndex="4" />
+      </children>
+    </GridPane>
+    <Label text="%Label.Date" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+    <DatePickerEx fx:id="datePicker" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
     <!-- Row 2 -->
     <Label text="%Label.Memo" GridPane.rowIndex="2" />
-    <AutoCompleteTextField fx:id="memoTextField"  GridPane.fillWidth="true" GridPane.columnSpan="5" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-    <Label text="%Label.Total" GridPane.columnIndex="6" GridPane.rowIndex="2" />
-    <DecimalTextField fx:id="amountField" GridPane.columnIndex="7" GridPane.rowIndex="2" />
+    <AutoCompleteTextField fx:id="memoTextField"  GridPane.fillWidth="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+    <Label text="%Label.Total" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+    <DecimalTextField fx:id="amountField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
 
     <!-- Row 3 -->
     <Label text="%Label.Account" GridPane.rowIndex="3" />
-    <GridPane styleClass="form" GridPane.halignment="LEFT" GridPane.vgrow="NEVER" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true" GridPane.columnSpan="7" GridPane.columnIndex="1" GridPane.rowIndex="3" >
+    <GridPane styleClass="form" GridPane.halignment="LEFT" GridPane.vgrow="NEVER" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true" GridPane.columnSpan="3" GridPane.columnIndex="1" GridPane.rowIndex="3" >
       <columnConstraints>
         <ColumnConstraints hgrow="ALWAYS" />
         <ColumnConstraints hgrow="NEVER" />
