@@ -82,7 +82,7 @@
 
 .info-bar {
     -fx-hgap: 0.333333em;
-	-fx-padding: 10px;
+	-fx-padding: 0.833333em;
 	-fx-pref-height: 2.0em;
 	-fx-background-color: lightgray, -fx-body-color;
 	-fx-background-insets: 0, 1;
