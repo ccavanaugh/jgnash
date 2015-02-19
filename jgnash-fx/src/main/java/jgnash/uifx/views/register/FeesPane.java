@@ -34,6 +34,7 @@ import javafx.scene.layout.GridPane;
 import jgnash.engine.Account;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionTag;
+import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.util.ResourceUtils;
 
@@ -84,7 +85,7 @@ public class FeesPane extends GridPane {
 
     private void handleDetailsAction() {
         // TODO show dialog
-
+        StaticUIMethods.displayWarning("Not implemented");
     }
 
     public List<TransactionEntry> getTransactions() {

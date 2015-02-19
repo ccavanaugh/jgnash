@@ -65,7 +65,7 @@
     <Label text="%Label.Memo" GridPane.rowIndex="2" />
     <AutoCompleteTextField fx:id="memoTextField"  GridPane.fillWidth="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
     <Label text="%Label.Total" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-    <DecimalTextField fx:id="amountField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+    <DecimalTextField fx:id="totalField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
 
     <!-- Row 3 -->
     <Label text="%Label.Account" GridPane.rowIndex="3" />
