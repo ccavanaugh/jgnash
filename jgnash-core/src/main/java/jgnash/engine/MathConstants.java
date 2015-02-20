@@ -42,6 +42,16 @@ public final class MathConstants {
      */
     public static final int EXCHANGE_RATE_ACCURACY = 6;
 
+    /**
+     * Number of significant digits to the right of the decimal separator
+     */
+    public static final int SECURITY_PRICE_ACCURACY = 6;
+
+    /**
+     * Number of significant digits to the right of the decimal separator
+     */
+    public static final int SECURITY_QUANTITY_ACCURACY = 6;
+
     private MathConstants() {
         // restrict instantiation
     }
