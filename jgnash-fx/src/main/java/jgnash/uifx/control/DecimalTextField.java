@@ -83,9 +83,14 @@ public class DecimalTextField extends TextField {
     private final ObjectProperty<BigDecimal> decimalProperty = new SimpleObjectProperty<>();
 
     /**
-     * Controls the number of fixed decimal places
+     * Controls the maximum number of displayed decimal places
      */
     private final SimpleIntegerProperty scaleProperty = new SimpleIntegerProperty();
+
+    /**
+     * Controls the minimum number of displayed decimal places
+     */
+    private final SimpleIntegerProperty minScaleProperty = new SimpleIntegerProperty();
 
     static {
         FLOAT = getAllowedChars();
@@ -155,13 +160,23 @@ public class DecimalTextField extends TextField {
             public void changed(final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue) {
                 if (format instanceof DecimalFormat) {
                     format.setMaximumFractionDigits(scaleProperty.get());
-                    format.setMinimumFractionDigits(scaleProperty.get());
+                }
+                evaluateAndSet();
+            }
+        });
+
+        minScaleProperty.addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if (format instanceof DecimalFormat) {
+                    format.setMinimumFractionDigits(minScaleProperty.get());
                 }
                 evaluateAndSet();
             }
         });
 
         scaleProperty.set(DEFAULT_SCALE); // trigger update to the format
+        minScaleProperty.set(DEFAULT_SCALE);
     }
 
     public ObjectProperty<BigDecimal> decimalProperty() {
@@ -170,6 +185,10 @@ public class DecimalTextField extends TextField {
 
     public IntegerProperty scaleProperty() {
         return scaleProperty;
+    }
+
+    public IntegerProperty minScaleProperty() {
+        return minScaleProperty;
     }
 
     private void evaluateAndSet() {
