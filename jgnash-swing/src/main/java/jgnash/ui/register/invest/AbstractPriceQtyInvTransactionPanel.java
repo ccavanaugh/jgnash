@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import javax.swing.JTextField;
 
 import jgnash.engine.Account;
+import jgnash.engine.MathConstants;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.AccountSecurityComboBox;
 import jgnash.ui.components.AutoCompleteFactory;
@@ -34,7 +35,6 @@ import jgnash.ui.components.JFloatField;
  * that requires date, price, quantity, and security fields
  *
  * @author Craig Cavanaugh
- *
  */
 public abstract class AbstractPriceQtyInvTransactionPanel extends AbstractInvTransactionPanel {
 
@@ -57,8 +57,8 @@ public abstract class AbstractPriceQtyInvTransactionPanel extends AbstractInvTra
 
         datePanel = new DatePanel();
         memoField = AutoCompleteFactory.getMemoField();
-        priceField = new JFloatField(0, 6, account.getCurrencyNode().getScale());
-        quantityField = new JFloatField(0, 6, 2);
+        priceField = new JFloatField(0, MathConstants.SECURITY_PRICE_ACCURACY, account.getCurrencyNode().getScale());
+        quantityField = new JFloatField(0, MathConstants.SECURITY_QUANTITY_ACCURACY, 2);
         reconciledButton = new javax.swing.JCheckBox(rb.getString("Button.Cleared"));
         securityCombo = new AccountSecurityComboBox(account);
 
