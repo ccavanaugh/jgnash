@@ -19,24 +19,12 @@ package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
 
-import jgnash.engine.Account;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionFactory;
-import jgnash.engine.TransactionType;
-import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.control.AutoCompleteTextField;
-import jgnash.uifx.control.DatePickerEx;
-import jgnash.uifx.control.DecimalTextField;
-import jgnash.uifx.control.SecurityComboBox;
 import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.util.NotNull;
 
@@ -45,16 +33,10 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-public class BuyShareSlipController implements Slip {
+public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
 
     @FXML
     private FeesPane feesPane;
-
-    @FXML
-    private DecimalTextField quantityField;
-
-    @FXML
-    private DecimalTextField priceField;
 
     @FXML
     protected TransactionNumberComboBox numberComboBox;
@@ -63,37 +45,11 @@ public class BuyShareSlipController implements Slip {
     protected AttachmentPane attachmentPane;
 
     @FXML
-    protected DecimalTextField totalField;
-
-    @FXML
-    protected DatePickerEx datePicker;
-
-    @FXML
-    private SecurityComboBox securityComboBox;
-
-    @FXML
-    protected AutoCompleteTextField<Transaction> memoTextField;
-
-    @FXML
     private AccountExchangePane accountExchangePane;
 
     @FXML
-    protected CheckBox reconciledButton;
-
-    @FXML
-    ResourceBundle resources;
-
-    /**
-     * Holds a reference to a transaction being modified
-     */
-    Transaction modTrans = null;
-
-    private TransactionEntry modEntry = null;
-
-    final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
-
-    @FXML
     public void initialize() {
+        super.initialize();
 
         // Bind necessary properties to the exchange panel
         accountExchangePane.getBaseAccountProperty().bind(getAccountProperty());
@@ -102,40 +58,14 @@ public class BuyShareSlipController implements Slip {
 
         // Lazy init when account property is set
         accountProperty.addListener((observable, oldValue, newValue) -> {
-            //initializeSplitsDialog(); // initialize the splits dialog
+
         });
     }
 
-    ObjectProperty<Account> getAccountProperty() {
-        return accountProperty;
-    }
 
     @Override
     public void modifyTransaction(@NotNull final Transaction transaction) {
-        if (transaction.areAccountsLocked()) {
-            clearForm();
-            StaticUIMethods.displayError(resources.getString("Message.TransactionModifyLocked"));
-            return;
-        }
 
-        newTransaction(transaction); // load the form
-
-        modTrans = transaction; // save reference to old transaction
-        modTrans = attachmentPane.modifyTransaction(modTrans);
-
-        if (!canModifyTransaction(transaction) && transaction.getTransactionType() == TransactionType.SPLITENTRY) {
-            for (final TransactionEntry entry : transaction.getTransactionEntries()) {
-                if (entry.getCreditAccount().equals(getAccountProperty().get()) || entry.getDebitAccount().equals(getAccountProperty().get())) {
-                    modEntry = entry;
-                    break;
-                }
-            }
-
-            if (modEntry == null) {
-                Logger logger = Logger.getLogger(BuyShareSlipController.class.getName());
-                logger.warning("Was not able to modify the transaction");
-            }
-        }
     }
 
     void updateTotalField() {
@@ -174,8 +104,6 @@ public class BuyShareSlipController implements Slip {
     public void clearForm() {
         feesPane.clearForm();
 
-        modEntry = null;
-
         accountExchangePane.setEnabled(true);
         accountExchangePane.setExchangedAmount(null);
         updateTotalField();
@@ -189,24 +117,5 @@ public class BuyShareSlipController implements Slip {
     @Override
     public void handleEnterAction() {
 
-    }
-
-    boolean canModifyTransaction(final Transaction t) {
-        boolean result = false;
-
-        switch (t.getTransactionType()) {
-            case DOUBLEENTRY:
-                result = true;
-                break;
-            case SPLITENTRY:
-                if (t.getCommonAccount().equals(accountProperty.get())) {
-                    result = true;
-                }
-                break;
-            default:
-                break;
-        }
-
-        return result;
     }
 }
