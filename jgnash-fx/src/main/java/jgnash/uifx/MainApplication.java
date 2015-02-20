@@ -57,6 +57,7 @@ import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.accounts.AccountsViewController;
 import jgnash.uifx.views.register.RegisterViewController;
 import jgnash.util.DefaultDaemonThreadFactory;
+import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
@@ -108,6 +109,11 @@ public class MainApplication extends Application implements MessageListener {
 
     public static MainApplication getInstance() {
         return instance;
+    }
+
+    @NotNull
+    public static Logger getLogger() {
+        return logger;
     }
 
     @Override
