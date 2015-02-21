@@ -19,7 +19,6 @@ package jgnash.engine;
 
 import jgnash.util.DateUtils;
 
-import java.io.ObjectStreamException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -260,8 +259,7 @@ public class ExchangeRate extends StoredObject {
         return super.hashCode() * 67 + rateId.hashCode();
     }
 
-    @SuppressWarnings("RedundantThrows")
-    private Object readResolve() throws ObjectStreamException {
+    protected Object readResolve() {
         postLoad();
         return this;
     }

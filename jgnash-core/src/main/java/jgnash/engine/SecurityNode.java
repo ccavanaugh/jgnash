@@ -336,7 +336,7 @@ public class SecurityNode extends CommodityNode {
         }
     }
 
-    private Object readResolve() {
+    protected Object readResolve() {
         postLoad();
         return this;
     }
