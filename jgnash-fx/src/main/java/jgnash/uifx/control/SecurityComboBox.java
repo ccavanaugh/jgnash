@@ -17,6 +17,10 @@
  */
 package jgnash.uifx.control;
 
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Objects;
+
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -24,6 +28,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
+
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -34,22 +39,20 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Objects;
-
 /**
  * ComboBox that allows selection of a SecurityNode and manages it's own model
- *
+ * <p/>
  * The default operation is to load all known {@code SecurityNodes}.  If the
  * {@code accountProperty} is set, then only the account's {@code SecurityNodes}
  * will be available for selection.
  *
  * @author Craig Cavanaugh
  */
-public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageListener{
+public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageListener {
 
-    /** Model for the ComboBox */
+    /**
+     * Model for the ComboBox
+     */
     private ObservableList<SecurityNode> items;
 
     final private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
@@ -77,7 +80,7 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
             loadModel();
         });
 
-        MessageBus.getInstance().registerListener(this, MessageChannel.COMMODITY, MessageChannel.SYSTEM);
+        MessageBus.getInstance().registerListener(this, MessageChannel.ACCOUNT, MessageChannel.COMMODITY, MessageChannel.SYSTEM);
     }
 
     private void loadModel() {
@@ -103,9 +106,20 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
         if (event.getObject(MessageProperty.COMMODITY) instanceof SecurityNode) {
 
             final SecurityNode node = (SecurityNode) event.getObject(MessageProperty.COMMODITY);
+            final Account account = (Account) event.getObject(MessageProperty.ACCOUNT);
 
             Platform.runLater(() -> {
                 switch (event.getEvent()) {
+                    case ACCOUNT_SECURITY_ADD:
+                        if (account != null && account.equals(accountProperty.get())) {
+                            items.add(node);
+                        }
+                        break;
+                    case ACCOUNT_SECURITY_REMOVE:
+                        if (account != null && account.equals(accountProperty.get())) {
+                            items.removeAll(node);
+                        }
+                        break;
                     case SECURITY_REMOVE:
                         items.removeAll(node);
                         break;
