@@ -83,7 +83,7 @@ public class CurrencyComboBox extends ComboBox<CurrencyNode> implements MessageL
     public void messagePosted(final Message event) {
         if (event.getObject(MessageProperty.COMMODITY) instanceof CurrencyNode) {
 
-            final CurrencyNode node = (CurrencyNode) event.getObject(MessageProperty.COMMODITY);
+            final CurrencyNode node = event.getObject(MessageProperty.COMMODITY);
 
             Platform.runLater(() -> {
                 switch (event.getEvent()) {

@@ -247,7 +247,7 @@ public abstract class RegisterTableController {
                                 FXCollections.sort(observableTransactions);
 
                                 // scroll to the new transaction
-                                scrollToTransaction((Transaction)event.getObject(MessageProperty.TRANSACTION));
+                                scrollToTransaction(event.getObject(MessageProperty.TRANSACTION));
                             });
                             break;
                         default:

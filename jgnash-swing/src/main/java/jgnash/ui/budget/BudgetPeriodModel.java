@@ -249,7 +249,7 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
     }
 
     private void processTransactionEvent(final Message message) {
-        final Transaction transaction = (Transaction) message.getObject(MessageProperty.TRANSACTION);
+        final Transaction transaction = message.getObject(MessageProperty.TRANSACTION);
 
         if (isBetween(transaction.getDate())) { // don't update unless needed
 
@@ -265,7 +265,7 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
     }
 
     private void updateBudget(final Message message) {
-        Budget updatedBudget = (Budget) message.getObject(MessageProperty.BUDGET);
+        Budget updatedBudget = message.getObject(MessageProperty.BUDGET);
 
         if (updatedBudget.equals(budget)) {
             fireUpdate(getExpandingBudgetTableModel().getObjects());
@@ -273,10 +273,10 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
     }
 
     private void updateBudgetPeriod(final Message message) {
-        Budget updatedBudget = (Budget) message.getObject(MessageProperty.BUDGET);
+        Budget updatedBudget = message.getObject(MessageProperty.BUDGET);
 
         if (updatedBudget.equals(budget)) {
-            Account account = (Account) message.getObject(MessageProperty.ACCOUNT);
+            Account account = message.getObject(MessageProperty.ACCOUNT);
             fireUpdate(account.getAncestors());
         }
     }

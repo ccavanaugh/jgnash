@@ -282,7 +282,7 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
                     clear();
                     break;
                 case ACCOUNT_REMOVE:
-                    Account account = (Account) event.getObject(MessageProperty.ACCOUNT);
+                    Account account = event.getObject(MessageProperty.ACCOUNT);
 
                     int index = accounts.indexOf(account);
 

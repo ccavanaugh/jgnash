@@ -287,7 +287,7 @@ public class InvestmentTransactionPanel extends JPanel implements MessageListene
         /* must check modTrans outside the event queue otherwise modTrans is cleared first
          * before check*/
         if (modTrans != null) {
-            Transaction t = (Transaction) event.getObject(MessageProperty.TRANSACTION);
+            Transaction t = event.getObject(MessageProperty.TRANSACTION);
             switch (event.getEvent()) {
                 case TRANSACTION_REMOVE:
                     if (modTrans.equals(t)) {

@@ -194,7 +194,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
 
             try {
 
-                final Transaction transaction = (Transaction) event.getObject(MessageProperty.TRANSACTION);
+                final Transaction transaction = event.getObject(MessageProperty.TRANSACTION);
 
                 EventQueue.invokeLater(new Runnable() {
 

@@ -621,7 +621,7 @@ public class BudgetResultsModel implements MessageListener {
     }
 
     private void processAccountEvent(final Message message) {
-        Account account = (Account) message.getObject(MessageProperty.ACCOUNT);
+        Account account = message.getObject(MessageProperty.ACCOUNT);
 
         switch (message.getEvent()) {
             case ACCOUNT_ADD:
@@ -644,7 +644,7 @@ public class BudgetResultsModel implements MessageListener {
     }
 
     private void processBudgetEvent(final Message message) {
-        Budget messageBudget = (Budget) message.getObject(MessageProperty.BUDGET);
+        Budget messageBudget = message.getObject(MessageProperty.BUDGET);
 
         if (budget.equals(messageBudget)) {
             switch (message.getEvent()) {
@@ -652,7 +652,7 @@ public class BudgetResultsModel implements MessageListener {
                     clearCached();
                     break;
                 case BUDGET_GOAL_UPDATE:
-                    Account account = (Account) message.getObject(MessageProperty.ACCOUNT);
+                    Account account = message.getObject(MessageProperty.ACCOUNT);
                     clearCached(account);
                     break;
                 case BUDGET_REMOVE:
@@ -665,7 +665,7 @@ public class BudgetResultsModel implements MessageListener {
     }
 
     private void processTransactionEvent(final Message message) {
-        final Transaction transaction = (Transaction) message.getObject(MessageProperty.TRANSACTION);
+        final Transaction transaction = message.getObject(MessageProperty.TRANSACTION);
 
         for (BudgetPeriodDescriptor descriptor : descriptorList) {
             if (descriptor.isBetween(transaction.getDate())) {

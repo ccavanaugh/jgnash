@@ -286,7 +286,7 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
 
         if (event.getObject(MessageProperty.COMMODITY) instanceof SecurityNode) {
 
-            final SecurityNode node = (SecurityNode) event.getObject(MessageProperty.COMMODITY);
+            final SecurityNode node = event.getObject(MessageProperty.COMMODITY);
 
             EventQueue.invokeLater(new Runnable() {
 

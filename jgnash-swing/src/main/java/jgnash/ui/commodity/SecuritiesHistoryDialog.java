@@ -516,7 +516,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
 
         @Override
         public void messagePosted(final Message event) {
-            CommodityNode eNode = (CommodityNode) event.getObject(MessageProperty.COMMODITY);
+            CommodityNode eNode = event.getObject(MessageProperty.COMMODITY);
 
             if (node != null) {
                 if (node.equals(eNode)) {

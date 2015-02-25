@@ -240,11 +240,11 @@ public class ExpandingBudgetTableModel extends AbstractExpandingTableModel<Accou
             public void run() {
                 switch (message.getEvent()) {
                     case ACCOUNT_ADD:
-                        final Account addAccount = (Account) message.getObject(MessageProperty.ACCOUNT);
+                        final Account addAccount = message.getObject(MessageProperty.ACCOUNT);
                         addAccount(addAccount);
                         break;
                     case ACCOUNT_REMOVE:
-                        final Account removeAccount = (Account) message.getObject(MessageProperty.ACCOUNT);
+                        final Account removeAccount = message.getObject(MessageProperty.ACCOUNT);
                         removeAccount(removeAccount);
                         break;
                     case ACCOUNT_MODIFY:

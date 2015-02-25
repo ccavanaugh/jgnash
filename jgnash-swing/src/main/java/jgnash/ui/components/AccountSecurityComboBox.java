@@ -63,10 +63,10 @@ public class AccountSecurityComboBox extends AbstractCommodityComboBox<SecurityN
 
     @Override
     public void messagePosted(final Message event) {
-        final Account a = (Account) event.getObject(MessageProperty.ACCOUNT);
+        final Account a = event.getObject(MessageProperty.ACCOUNT);
 
         if (account.equals(a)) {
-            final SecurityNode node = (SecurityNode) event.getObject(MessageProperty.COMMODITY);
+            final SecurityNode node = event.getObject(MessageProperty.COMMODITY);
 
             EventQueue.invokeLater(new Runnable() {
 
@@ -83,11 +83,11 @@ public class AccountSecurityComboBox extends AbstractCommodityComboBox<SecurityN
                             break;
                         case SECURITY_REMOVE:
                         case ACCOUNT_SECURITY_REMOVE:
-                            CommodityNode snode = getSelectedNode();
+                            final CommodityNode commodityNode = getSelectedNode();
                             model.removeElement(node);
 
-                            if (snode != null && node != null) {
-                                if (snode.equals(node)) {
+                            if (commodityNode != null && node != null) {
+                                if (commodityNode.equals(node)) {
                                     setSelectedItem(null);
                                 }
                             }

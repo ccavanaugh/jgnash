@@ -80,7 +80,7 @@ public class SecurityComboBox extends AbstractCommodityComboBox<SecurityNode> {
 
     @Override
     public void messagePosted(final Message event) {
-        final CommodityNode node = (CommodityNode) event.getObject(MessageProperty.COMMODITY);
+        final CommodityNode node = event.getObject(MessageProperty.COMMODITY);
 
         if (node instanceof SecurityNode) {
 

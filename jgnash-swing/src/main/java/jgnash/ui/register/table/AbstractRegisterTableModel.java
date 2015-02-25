@@ -273,7 +273,7 @@ public abstract class AbstractRegisterTableModel extends AbstractTableModel impl
                             unregister();
                             return;
                         case TRANSACTION_ADD:
-                            Transaction t = (Transaction) event.getObject(MessageProperty.TRANSACTION);
+                            Transaction t = event.getObject(MessageProperty.TRANSACTION);
                             int index = account.indexOf(t);
                             balanceCache.ensureCapacity(account.getTransactionCount());
                             balanceCache.clear(index);

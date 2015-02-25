@@ -58,7 +58,7 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
     final private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
     public SecurityComboBox() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("SecurityComboBox.fxml"));
+        final FXMLLoader loader = new FXMLLoader(getClass().getResource("SecurityComboBox.fxml"));
         loader.setRoot(this);
         loader.setController(this);
 
@@ -105,8 +105,8 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
     public void messagePosted(final Message event) {
         if (event.getObject(MessageProperty.COMMODITY) instanceof SecurityNode) {
 
-            final SecurityNode node = (SecurityNode) event.getObject(MessageProperty.COMMODITY);
-            final Account account = (Account) event.getObject(MessageProperty.ACCOUNT);
+            final SecurityNode node = event.getObject(MessageProperty.COMMODITY);
+            final Account account = event.getObject(MessageProperty.ACCOUNT);
 
             Platform.runLater(() -> {
                 switch (event.getEvent()) {

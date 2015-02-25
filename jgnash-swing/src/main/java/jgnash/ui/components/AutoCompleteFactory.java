@@ -239,7 +239,7 @@ public class AutoCompleteFactory {
         public void messagePosted(final Message event) {
             switch (event.getEvent()) {
                 case TRANSACTION_ADD:
-                    Transaction t = (Transaction) event.getObject(MessageProperty.TRANSACTION);
+                    Transaction t = event.getObject(MessageProperty.TRANSACTION);
                     load(t);
                     return;
                 case FILE_NEW_SUCCESS:
@@ -341,8 +341,8 @@ public class AutoCompleteFactory {
 
         @Override
         public void messagePosted(final Message event) {
-            Account a = (Account) event.getObject(MessageProperty.ACCOUNT);
-            Transaction t = (Transaction) event.getObject(MessageProperty.TRANSACTION);
+            Account a = event.getObject(MessageProperty.ACCOUNT);
+            Transaction t = event.getObject(MessageProperty.TRANSACTION);
 
             switch (event.getEvent()) {
                 case TRANSACTION_ADD:

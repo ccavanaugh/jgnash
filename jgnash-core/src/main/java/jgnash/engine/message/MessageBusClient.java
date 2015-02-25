@@ -286,7 +286,7 @@ class MessageBusClient {
         Objects.requireNonNull(engine);
 
         if (message.getChannel() == MessageChannel.ACCOUNT) {
-            final Account account = (Account) message.getObject(MessageProperty.ACCOUNT);
+            final Account account = message.getObject(MessageProperty.ACCOUNT);
             switch (message.getEvent()) {
                 case ACCOUNT_ADD:
                 case ACCOUNT_REMOVE:
@@ -307,7 +307,7 @@ class MessageBusClient {
         }
 
         if (message.getChannel() == MessageChannel.BUDGET) {
-            final Budget budget = (Budget) message.getObject(MessageProperty.BUDGET);
+            final Budget budget = message.getObject(MessageProperty.BUDGET);
             switch (message.getEvent()) {
                 case BUDGET_ADD:
                 case BUDGET_UPDATE:
@@ -325,7 +325,7 @@ class MessageBusClient {
             switch (message.getEvent()) {
                 case CURRENCY_ADD:
                 case CURRENCY_MODIFY:
-                    final CommodityNode currency = (CommodityNode) message.getObject(MessageProperty.COMMODITY);
+                    final CommodityNode currency = message.getObject(MessageProperty.COMMODITY);
                     engine.refresh(currency);
                     message.setObject(MessageProperty.COMMODITY, engine.getCurrencyNodeByUuid(currency.getUuid()));
                     break;
@@ -333,13 +333,13 @@ class MessageBusClient {
                 case SECURITY_MODIFY:
                 case SECURITY_HISTORY_ADD:
                 case SECURITY_HISTORY_REMOVE:
-                    final CommodityNode node = (CommodityNode) message.getObject(MessageProperty.COMMODITY);
+                    final CommodityNode node = message.getObject(MessageProperty.COMMODITY);
                     engine.refresh(node);
                     message.setObject(MessageProperty.COMMODITY, engine.getSecurityNodeByUuid(node.getUuid()));
                     break;
                 case EXCHANGE_RATE_ADD:
                 case EXCHANGE_RATE_REMOVE:
-                    final ExchangeRate rate = (ExchangeRate) message.getObject(MessageProperty.EXCHANGE_RATE);
+                    final ExchangeRate rate = message.getObject(MessageProperty.EXCHANGE_RATE);
                     engine.refresh(rate);
                     message.setObject(MessageProperty.EXCHANGE_RATE, engine.getExchangeRateByUuid(rate.getUuid()));
                     break;
@@ -351,7 +351,7 @@ class MessageBusClient {
         if (message.getChannel() == MessageChannel.CONFIG) {
             switch (message.getEvent()) {
                 case CONFIG_MODIFY:
-                    final Config config = (Config) message.getObject(MessageProperty.CONFIG);
+                    final Config config = message.getObject(MessageProperty.CONFIG);
                     engine.refresh(config);
                     message.setObject(MessageProperty.CONFIG, engine.getStoredObjectByUuid(Config.class, config.getUuid()));
                     break;
@@ -364,7 +364,7 @@ class MessageBusClient {
             switch (message.getEvent()) {
                 case REMINDER_ADD:
                 case REMINDER_REMOVE:
-                    final Reminder reminder = (Reminder) message.getObject(MessageProperty.REMINDER);
+                    final Reminder reminder = message.getObject(MessageProperty.REMINDER);
                     engine.refresh(reminder);
                     message.setObject(MessageProperty.REMINDER, engine.getReminderByUuid(reminder.getUuid()));
                     break;
@@ -378,11 +378,11 @@ class MessageBusClient {
             switch (message.getEvent()) {
                 case TRANSACTION_ADD:
                 case TRANSACTION_REMOVE:
-                    final Transaction transaction = (Transaction) message.getObject(MessageProperty.TRANSACTION);
+                    final Transaction transaction = message.getObject(MessageProperty.TRANSACTION);
                     engine.refresh(transaction);
                     message.setObject(MessageProperty.TRANSACTION, engine.getTransactionByUuid(transaction.getUuid()));
 
-                    final Account account = (Account) message.getObject(MessageProperty.ACCOUNT);
+                    final Account account = message.getObject(MessageProperty.ACCOUNT);
                     engine.refresh(account);
                     message.setObject(MessageProperty.ACCOUNT, engine.getAccountByUuid(account.getUuid()));
                     break;

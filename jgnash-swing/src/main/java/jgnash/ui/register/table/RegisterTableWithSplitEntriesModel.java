@@ -262,7 +262,7 @@ public class RegisterTableWithSplitEntriesModel extends RegisterTableModel {
                             unregister();
                             break;
                         case TRANSACTION_ADD:
-                            Transaction t = (Transaction) event.getObject(MessageProperty.TRANSACTION);
+                            Transaction t = event.getObject(MessageProperty.TRANSACTION);
                             updateData();
                             int index = indexOfWrapper(t);
 

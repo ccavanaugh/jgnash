@@ -303,7 +303,7 @@ public final class ExpandingAccountTableModel extends AbstractExpandingTableMode
                 return;
             }
 
-            final Account a = (Account) event.getObject(MessageProperty.ACCOUNT);
+            final Account a = event.getObject(MessageProperty.ACCOUNT);
 
             EventQueue.invokeLater(new Runnable() {
 

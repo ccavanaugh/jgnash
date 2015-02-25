@@ -416,7 +416,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
             @Override
             public void run() {
 
-                Account a = (Account) event.getObject(MessageProperty.ACCOUNT);
+                Account a = event.getObject(MessageProperty.ACCOUNT);
 
                 if (account.equals(a)) {
                     switch (event.getEvent()) {
@@ -425,7 +425,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
                             updateAccountInfo();
                             break;
                         case TRANSACTION_ADD:
-                            final Transaction t = (Transaction) event.getObject(MessageProperty.TRANSACTION);
+                            final Transaction t = event.getObject(MessageProperty.TRANSACTION);
                             final int index = account.indexOf(t);
 
                             if (index == account.getTransactionCount() - 1) {
@@ -445,7 +445,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
 
                 if (event.getEvent() == ChannelEvent.SECURITY_HISTORY_ADD || event.getEvent() == ChannelEvent.SECURITY_HISTORY_REMOVE) {
 
-                    SecurityNode node = (SecurityNode) event.getObject(MessageProperty.COMMODITY);
+                    SecurityNode node = event.getObject(MessageProperty.COMMODITY);
 
                     if (account.containsSecurity(node)) {
                         updateAccountInfo();
