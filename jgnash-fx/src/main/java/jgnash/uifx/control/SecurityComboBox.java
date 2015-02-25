@@ -18,10 +18,13 @@
 package jgnash.uifx.control;
 
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
+import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
@@ -32,11 +35,15 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
 import java.util.Objects;
 
 /**
  * ComboBox that allows selection of a SecurityNode and manages it's own model
+ *
+ * The default operation is to load all known {@code SecurityNodes}.  If the
+ * {@code accountProperty} is set, then only the account's {@code SecurityNodes}
+ * will be available for selection.
  *
  * @author Craig Cavanaugh
  */
@@ -45,10 +52,18 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
     /** Model for the ComboBox */
     private ObservableList<SecurityNode> items;
 
+    final private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+
     public SecurityComboBox() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("SecurityComboBox.fxml"));
         loader.setRoot(this);
         loader.setController(this);
+
+        // extract and reuse the default model
+        items = getItems();
+
+        // warp in a sorted list
+        setItems(new SortedList<>(items, null));
 
         try {
             loader.load();
@@ -57,26 +72,30 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
         }
 
         Platform.runLater(this::loadModel); // lazy load to let the ui build happen faster
+
+        accountProperty.addListener((observable, oldValue, newValue) -> {
+            loadModel();
+        });
+
+        MessageBus.getInstance().registerListener(this, MessageChannel.COMMODITY, MessageChannel.SYSTEM);
     }
 
     private void loadModel() {
-        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-        Objects.requireNonNull(engine);
+        final Collection<SecurityNode> securityNodes;
 
-        final List<SecurityNode> nodeList = engine.getSecurities();
-
-        // extract and reuse the default model
-        items = getItems();
-
-        // warp in a sorted list
-        setItems(new SortedList<>(items, null));
-
-        if (!nodeList.isEmpty()) {
-            items.addAll(nodeList);
-            getSelectionModel().select(0);
+        if (accountProperty.get() != null) {
+            items.clear();
+            securityNodes = accountProperty.get().getSecurities();
+        } else {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+            securityNodes = engine.getSecurities();
         }
 
-        MessageBus.getInstance().registerListener(this, MessageChannel.COMMODITY, MessageChannel.SYSTEM);
+        if (!securityNodes.isEmpty()) {
+            items.addAll(securityNodes);
+            getSelectionModel().select(0);
+        }
     }
 
     @Override
@@ -104,5 +123,9 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
                 }
             });
         }
+    }
+
+    public ObjectProperty<Account> accountProperty() {
+        return accountProperty;
     }
 }

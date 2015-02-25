@@ -73,6 +73,8 @@ public abstract class AbstractPriceQtyInvSlipController extends AbstractInvSlipC
             totalField.scaleProperty().setValue(newValue.getCurrencyNode().getScale());
             totalField.minScaleProperty().setValue(newValue.getCurrencyNode().getScale());
         });
+
+        securityComboBox.accountProperty().bind(accountProperty);
     }
 
     @Override
