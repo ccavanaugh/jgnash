@@ -58,7 +58,7 @@ public class FeesPane extends GridPane {
     @FXML
     private ResourceBundle resources;
 
-    private final SimpleObjectProperty<BigDecimal> decimalProperty = new SimpleObjectProperty<>(null);
+    private final SimpleObjectProperty<BigDecimal> decimalProperty = new SimpleObjectProperty<>(BigDecimal.ZERO);
 
     private final SimpleObjectProperty<Account> accountProperty = new SimpleObjectProperty<>(null);
 
@@ -151,7 +151,7 @@ public class FeesPane extends GridPane {
      */
     void clearForm() {
         feeList = new ArrayList<>();
-        feesField.setDecimal(null);
+        decimalProperty.setValue(BigDecimal.ZERO);
     }
 
     public SimpleObjectProperty<BigDecimal> getDecimalProperty() {

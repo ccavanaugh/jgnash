@@ -30,6 +30,7 @@ import jgnash.uifx.control.AutoCompleteTextField;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.SecurityComboBox;
+import jgnash.uifx.control.TransactionNumberComboBox;
 
 /**
  * @author Craig Cavanaugh
@@ -47,6 +48,9 @@ public abstract class AbstractPriceQtyInvSlipController extends AbstractInvSlipC
 
     @FXML
     DecimalTextField priceField;
+
+    @FXML
+    TransactionNumberComboBox numberComboBox;
 
     @FXML
     SecurityComboBox securityComboBox;
@@ -90,6 +94,7 @@ public abstract class AbstractPriceQtyInvSlipController extends AbstractInvSlipC
             datePicker.setValue(LocalDate.now());
         }
 
+        numberComboBox.setValue("");
         memoTextField.clear();
         priceField.setDecimal(null);
         quantityField.setDecimal(null);

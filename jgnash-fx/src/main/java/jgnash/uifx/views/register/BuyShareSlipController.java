@@ -17,16 +17,22 @@
  */
 package jgnash.uifx.views.register;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import javafx.fxml.FXML;
-
+import jgnash.engine.AbstractInvestmentTransactionEntry;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.InvestmentTransaction;
+import jgnash.engine.ReconcileManager;
+import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
+import jgnash.engine.TransactionEntryBuyX;
 import jgnash.engine.TransactionFactory;
-import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.util.NotNull;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Transaction Entry Controller for Credits and Debits
@@ -37,9 +43,6 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
 
     @FXML
     private FeesPane feesPane;
-
-    @FXML
-    protected TransactionNumberComboBox numberComboBox;
 
     @FXML
     protected AttachmentPane attachmentPane;
@@ -56,16 +59,47 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
         accountExchangePane.getAmountProperty().bindBidirectional(totalField.decimalProperty());
         accountExchangePane.getAmountEditable().bind(totalField.editableProperty());
 
-        // Lazy init when account property is set
-        accountProperty.addListener((observable, oldValue, newValue) -> {
-
-        });
+        feesPane.getAccountProperty().bind(getAccountProperty());
     }
-
 
     @Override
     public void modifyTransaction(@NotNull final Transaction transaction) {
+        if (!(transaction instanceof InvestmentTransaction)) {
+            throw new IllegalArgumentException("bad tranType");
+        }
+        clearForm();
 
+        datePicker.setDate(transaction.getDate());
+
+        List<TransactionEntry> entries = transaction.getTransactionEntries();
+
+        feesPane.setTransactionEntries(((InvestmentTransaction) transaction).getInvestmentFeeEntries());
+
+        entries.stream().filter(e -> e instanceof TransactionEntryBuyX).forEach(e -> {
+            final AbstractInvestmentTransactionEntry entry = (AbstractInvestmentTransactionEntry) e;
+
+            memoTextField.setText(e.getMemo());
+            priceField.setDecimal(entry.getPrice());
+            quantityField.setDecimal(entry.getQuantity());
+            securityComboBox.setValue(entry.getSecurityNode());
+
+            /* TODO by default investment account is assigned to debit account.  Should only have to look at the
+             * credit side of the entry for information
+             */
+            if (entry.getCreditAccount().equals(getAccountProperty().get())) {
+                accountExchangePane.setSelectedAccount(entry.getDebitAccount());
+                accountExchangePane.setExchangedAmount(entry.getDebitAmount().abs());
+            } else {
+                accountExchangePane.setSelectedAccount(entry.getCreditAccount());
+                accountExchangePane.setExchangedAmount(entry.getCreditAmount());
+            }
+        });
+
+        updateTotalField();
+
+        modTrans = transaction;
+
+        reconciledButton.setSelected(transaction.getReconciled(getAccountProperty().get()) != ReconciledState.NOT_RECONCILED);
     }
 
     void updateTotalField() {
@@ -96,14 +130,13 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
                 quantityField.getDecimal(), exchangeRate, datePicker.getDate(), memoTextField.getText(), fees);
     }
 
-    void newTransaction(final Transaction t) {
-        clearForm();
-    }
-
     @Override
     public void clearForm() {
+        super.clearForm();
+
         feesPane.clearForm();
 
+        attachmentPane.clear();
         accountExchangePane.setEnabled(true);
         accountExchangePane.setExchangedAmount(null);
         updateTotalField();
@@ -111,11 +144,42 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
 
     @Override
     public void handleCancelAction() {
-
+        clearForm();
+        focusFirstComponent();
     }
 
     @Override
     public void handleEnterAction() {
+        if (validateForm()) {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
+            Objects.requireNonNull(engine);
+
+            if (modTrans == null) {
+                final Transaction newTrans = buildTransaction();
+
+                // Need to set the reconciled state
+                ReconcileManager.reconcileTransaction(getAccountProperty().get(), newTrans, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+
+                engine.addTransaction(newTrans);
+            } else {
+                final Transaction newTrans = buildTransaction();
+
+                newTrans.setDateEntered(modTrans.getDateEntered());
+
+                /* Need to preserve the reconciled state of the opposite side
+                 * if both sides are not automatically reconciled
+                 */
+                ReconcileManager.reconcileTransaction(getAccountProperty().get(), newTrans, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+
+                if (engine.isTransactionValid(newTrans)) {
+                    if (engine.removeTransaction(modTrans)) {
+                        engine.addTransaction(newTrans);
+                    }
+                }
+            }
+            clearForm();
+            focusFirstComponent();
+        }
     }
 }
