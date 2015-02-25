@@ -89,8 +89,15 @@ public class Message implements Serializable, Cloneable {
         properties.put(Objects.requireNonNull(key), Objects.requireNonNull(value));
     }
 
-    public Object getObject(final MessageProperty key) {
-        return properties.get(key);
+    /**
+     * Returns a {@code StoredObject} given a property key
+     * @param key {@code MessageProperty} to search for
+     * @param <T> instance of {@code StoredObject}
+     * @return object if found, {@code null} otherwise
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends StoredObject> T getObject(final MessageProperty key) {
+        return (T) properties.get(key);
     }
 
     public String getSource() {
