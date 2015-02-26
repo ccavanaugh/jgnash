@@ -307,6 +307,6 @@ public class SlipController extends AbstractSlipController {
         splitsDialog.showAndWait();
 
         amountField.setEditable(splitsDialog.getTransactionEntries().size() == 0);
-        amountField.setDecimal(splitsDialog.getBalance());
+        amountField.setDecimal(splitsDialog.getBalance().abs());
     }
 }
