@@ -175,6 +175,9 @@
                             <classpathPrefix>lib/</classpathPrefix>
                             <mainClass>jgnash.Main</mainClass>
                         </manifest>
+                        <manifestEntries>
+                          <Application-Name>jGnash</Application-Name>
+                        </manifestEntries>
                     </archive>
                     <finalName>jgnash2</finalName>
                 </configuration>
