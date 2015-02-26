@@ -17,26 +17,23 @@
  */
 package jgnash.uifx.views.register;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
-
 import jgnash.engine.Account;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionTag;
-import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.util.ResourceUtils;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -62,7 +59,9 @@ public class FeesPane extends GridPane {
 
     private final SimpleObjectProperty<Account> accountProperty = new SimpleObjectProperty<>(null);
 
-    private List<TransactionEntry> feeList = new ArrayList<>();
+    //private List<TransactionEntry> feeList = new ArrayList<>();
+
+    private FeesDialog feesDialog;
 
     public FeesPane() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FeesPane.fxml"), ResourceUtils.getBundle());
@@ -81,14 +80,27 @@ public class FeesPane extends GridPane {
         detailsButton.setOnAction(event -> handleDetailsAction());
 
         feesField.decimalProperty().bindBidirectional(getDecimalProperty());
+
+        feesDialog = new FeesDialog();
+
+        accountProperty.addListener((observable, oldValue, newValue) -> {
+            feesDialog.getAccountProperty().setValue(getAccountProperty().get());
+        });
     }
 
     private void handleDetailsAction() {
-        // TODO show dialog
-        StaticUIMethods.displayWarning("Not implemented");
+        feesDialog.showAndWait();
+
+        feesField.setEditable(feesDialog.getTransactionEntries().size() == 0);
+
+        if (feesDialog.getTransactionEntries().size() != 0) {
+            feesField.setDecimal(feesDialog.getBalance().abs());
+        }
     }
 
     public List<TransactionEntry> getTransactions() {
+
+        final List<TransactionEntry> feeList = feesDialog.getTransactionEntries();
 
         // adjust the cash balance of the investment account
         if (feeList.isEmpty() && feesField.getDecimal().compareTo(BigDecimal.ZERO) != 0) {  // ignore zero balance fees
@@ -106,7 +118,11 @@ public class FeesPane extends GridPane {
      * @param fees {@code List} of fees to clone
      */
     public void setTransactionEntries(final List<TransactionEntry> fees) {
-        feeList = new ArrayList<>();
+        //feeList = new ArrayList<>();
+
+        final List<TransactionEntry> feeList = feesDialog.getTransactionEntries();
+
+        //feesDialog.getTransactionEntries()
 
         if (fees.size() == 1) {
             TransactionEntry e = fees.get(0);
@@ -139,7 +155,7 @@ public class FeesPane extends GridPane {
     private BigDecimal sumFees() {
         BigDecimal sum = BigDecimal.ZERO;
 
-        for (TransactionEntry entry : feeList) {
+        for (TransactionEntry entry : feesDialog.getTransactionEntries()) {
             sum = sum.add(entry.getAmount(getAccountProperty().get()));
         }
 
@@ -150,7 +166,7 @@ public class FeesPane extends GridPane {
      * Clear the form and remove all entries
      */
     void clearForm() {
-        feeList = new ArrayList<>();
+        feesDialog.getTransactionEntries().clear();
         decimalProperty.setValue(BigDecimal.ZERO);
     }
 
