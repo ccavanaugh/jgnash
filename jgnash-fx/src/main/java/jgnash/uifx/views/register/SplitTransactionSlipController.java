@@ -17,74 +17,23 @@
  */
 package jgnash.uifx.views.register;
 
-import java.util.List;
-
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
-
-import jgnash.engine.Account;
 import jgnash.engine.ReconciledState;
-import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
-import jgnash.uifx.control.AutoCompleteTextField;
-import jgnash.uifx.control.DecimalTextField;
-import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
 
 /**
  * Split Transaction Entry Controller for Credits and Debits
  *
  * @author Craig Cavanaugh
  */
-public class SplitTransactionSlipController {
-
-    @FXML
-    private DecimalTextField amountField;
-
-    @FXML
-    private AutoCompleteTextField<Transaction> memoField;
-
-    @FXML
-    private AccountExchangePane accountExchangePane;
-
-    @FXML
-    private CheckBox reconciledButton;
-
-    @FXML
-    private AttachmentPane attachmentPane;
-
-    private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+public class SplitTransactionSlipController extends AbstractTransactionEntrySlipController {
 
     private SlipType slipType;
-
-    private TransactionEntry oldEntry;
-
-    private final SimpleObjectProperty<List<TransactionEntry>> transactionEntryListProperty = new SimpleObjectProperty<>();
-
-    @FXML
-    private void initialize() {
-        // Bind necessary properties to the exchange panel
-        accountExchangePane.getBaseAccountProperty().bind(getAccountProperty());
-        accountExchangePane.getAmountProperty().bindBidirectional(amountField.decimalProperty());
-        accountExchangePane.getAmountEditable().bind(amountField.editableProperty());
-
-        // Enabled auto completion
-        AutoCompleteFactory.setMemoModel(memoField);
-    }
-
-    ObjectProperty<Account> getAccountProperty() {
-        return accountProperty;
-    }
-
-    ObjectProperty<List<TransactionEntry>> getTransactionEntryListProperty() {
-        return transactionEntryListProperty;
-    }
 
     void setSlipType(final SlipType slipType) {
         this.slipType = slipType;
     }
 
+    @Override
     TransactionEntry buildTransactionEntry() {
         TransactionEntry entry = new TransactionEntry();
         entry.setMemo(memoField.getText());
@@ -118,10 +67,7 @@ public class SplitTransactionSlipController {
         return entry;
     }
 
-   private boolean hasEqualCurrencies() {
-        return accountProperty.get().getCurrencyNode().equals(accountExchangePane.getSelectedAccount().getCurrencyNode());
-    }
-
+    @Override
     void modifyTransactionEntry(final TransactionEntry entry) {
         oldEntry = entry;
 
@@ -140,41 +86,5 @@ public class SplitTransactionSlipController {
         }
 
         reconciledButton.setSelected(entry.getReconciled(accountProperty.get()) != ReconciledState.NOT_RECONCILED);
-    }
-
-    void clearForm() {
-        oldEntry = null;
-
-        memoField.setText(null);
-        amountField.setDecimal(null);
-        reconciledButton.setSelected(false);
-        accountExchangePane.setExchangedAmount(null);
-    }
-
-    // TODO: Form validation visual
-    private boolean validateForm() {
-        return !amountField.getText().equals("");
-    }
-
-    @FXML
-    private void handleEnterAction() {
-        if (validateForm()) {
-            final TransactionEntry entry = buildTransactionEntry();
-
-            if (oldEntry != null) {
-                transactionEntryListProperty.get().remove(oldEntry);
-            }
-
-            transactionEntryListProperty.get().add(entry);
-
-            clearForm();
-            memoField.requestFocus();
-        }
-    }
-
-    @FXML
-    private void handleCancelAction() {
-        clearForm();
-        memoField.requestFocus();
     }
 }
