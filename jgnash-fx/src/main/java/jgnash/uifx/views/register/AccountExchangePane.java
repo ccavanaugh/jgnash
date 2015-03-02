@@ -125,7 +125,6 @@ public class AccountExchangePane extends GridPane {
             updateControlVisibility();
         });
 
-        accountCombo.getFilterPlaceHoldersProperty().set(true);
         accountCombo.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 exchangeAmountField.scaleProperty().setValue(newValue.getCurrencyNode().getScale());

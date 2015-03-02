@@ -17,9 +17,6 @@
  */
 package jgnash.uifx.control;
 
-import java.util.List;
-import java.util.Objects;
-
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -27,7 +24,6 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
-
 import jgnash.engine.Account;
 import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
@@ -39,6 +35,9 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.util.NotNull;
 
+import java.util.List;
+import java.util.Objects;
+
 /**
  * ComboBox of available accounts
  *
@@ -48,7 +47,11 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
     final private ObservableList<Account> filteredAccountList = FXCollections.observableArrayList();
 
-    final private SimpleBooleanProperty filterPlaceHoldersProperty = new SimpleBooleanProperty(false);
+    final private SimpleBooleanProperty showHiddenAccountsProperty = new SimpleBooleanProperty(false);
+
+    final private SimpleBooleanProperty showLockedAccountsProperty = new SimpleBooleanProperty(false);
+
+    final private SimpleBooleanProperty showPlaceHoldersProperty = new SimpleBooleanProperty(false);
 
     public AccountComboBox() {
 
@@ -63,14 +66,28 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
         filteredAccountList.addAll(account);
     }
 
-    public SimpleBooleanProperty getFilterPlaceHoldersProperty() {
-        return filterPlaceHoldersProperty;
+    public SimpleBooleanProperty getShowHiddenAccountsProperty() {
+        return showHiddenAccountsProperty;
+    }
+
+    public SimpleBooleanProperty getShowLockedAccountsProperty() {
+        return showLockedAccountsProperty;
+    }
+
+    public SimpleBooleanProperty getShowPlaceHoldersProperty() {
+        return showPlaceHoldersProperty;
     }
 
     private void loadAccounts(@NotNull final List<Account> accounts) {
         accounts.stream().filter(account -> !filteredAccountList.contains(account)).forEach(account -> {
 
-            if (getFilterPlaceHoldersProperty().get() && !account.isPlaceHolder()) {
+            if (account.isVisible() && !account.isPlaceHolder() && !account.isLocked()) {
+                getItems().add(account);
+            } else if (account.isPlaceHolder() && getShowPlaceHoldersProperty().get()) {
+                getItems().add(account);
+            } else if (!account.isVisible() && getShowHiddenAccountsProperty().get()) {
+                getItems().add(account);
+            } else if (account.isLocked() && getShowLockedAccountsProperty().get()) {
                 getItems().add(account);
             }
 
@@ -105,7 +122,11 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
             }
         });
 
-        filterPlaceHoldersProperty.addListener((observable, oldValue, newValue) -> {
+        showPlaceHoldersProperty.addListener((observable, oldValue, newValue) -> {
+            loadAccounts();
+        });
+
+        showHiddenAccountsProperty.addListener((observable, oldValue, newValue) -> {
             loadAccounts();
         });
     }
