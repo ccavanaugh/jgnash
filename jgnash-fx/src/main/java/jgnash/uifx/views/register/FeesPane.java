@@ -112,11 +112,7 @@ public class FeesPane extends GridPane {
      * @param fees {@code List} of fees to clone
      */
     public void setTransactionEntries(final List<TransactionEntry> fees) {
-        //feeList = new ArrayList<>();
-
         final List<TransactionEntry> feeList = feesDialog.getTransactionEntries();
-
-        //feesDialog.getTransactionEntries()
 
         if (fees.size() == 1) {
             TransactionEntry e = fees.get(0);
@@ -132,7 +128,7 @@ public class FeesPane extends GridPane {
                 feesField.setDecimal(sumFees().abs());
             }
         } else {
-            for (TransactionEntry entry : fees) { // clone the provided set's entries
+            for (final TransactionEntry entry : fees) { // clone the provided set's entries
                 try {
                     feeList.add((TransactionEntry) entry.clone());
                 } catch (CloneNotSupportedException e) {

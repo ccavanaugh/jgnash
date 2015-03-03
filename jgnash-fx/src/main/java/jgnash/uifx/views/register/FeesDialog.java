@@ -59,7 +59,7 @@ import java.util.logging.Logger;
  *
  * @author Craig Cavanaugh
  */
-public class FeesDialog extends Stage {
+class FeesDialog extends Stage {
 
     private static final String PREF_NODE_USER_ROOT = "/jgnash/uifx/views/register/fees";
 
@@ -98,7 +98,7 @@ public class FeesDialog extends Stage {
 
     private final SortedList<TransactionEntry> sortedList = new SortedList<>(transactionEntries);
 
-    public FeesDialog() {
+    FeesDialog() {
         final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("SplitTransactionDialog.fxml"), ResourceUtils.getBundle());
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -121,11 +121,11 @@ public class FeesDialog extends Stage {
         });
     }
 
-    public ObjectProperty<Account> getAccountProperty() {
+    ObjectProperty<Account> getAccountProperty() {
         return accountProperty;
     }
 
-    public ObservableList<TransactionEntry> getTransactionEntries() {
+    ObservableList<TransactionEntry> getTransactionEntries() {
         return transactionEntries;
     }
 
@@ -278,6 +278,7 @@ public class FeesDialog extends Stage {
         debitController.getTransactionEntryListProperty().setValue(transactionEntries);
 
         tabPane.getTabs().addAll(creditTab, debitTab);
+        tabPane.getSelectionModel().select(debitTab);   // debit tab should be the default
     }
 
     private BigDecimal getBalanceAt(final TransactionEntry transactionEntry) {
@@ -293,6 +294,14 @@ public class FeesDialog extends Stage {
             }
         }
         return balance;
+    }
+
+    BigDecimal getBalance() {
+        if (sortedList.isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+
+        return getBalanceAt(sortedList.get(sortedList.size() - 1));
     }
 
     private void closeAction() {
@@ -311,13 +320,5 @@ public class FeesDialog extends Stage {
                 setValue(t.getDebitAccount().getName());
             }
         }
-    }
-
-    BigDecimal getBalance() {
-        if (sortedList.isEmpty()) {
-            return BigDecimal.ZERO;
-        }
-
-        return getBalanceAt(sortedList.get(sortedList.size() - 1));
     }
 }
