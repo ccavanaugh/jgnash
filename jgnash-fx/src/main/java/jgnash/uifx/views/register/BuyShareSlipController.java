@@ -103,13 +103,11 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
     }
 
     void updateTotalField() {
-        BigDecimal fee = feesPane.getDecimalProperty().get();
-        BigDecimal quantity = quantityField.getDecimal();
-        BigDecimal price = priceField.getDecimal();
+        final BigDecimal quantity = quantityField.getDecimal();
 
-        BigDecimal value = quantity.multiply(price);
+        BigDecimal value = quantity.multiply(priceField.getDecimal());
 
-        value = value.add(fee);
+        value = value.add(feesPane.getDecimal());
 
         totalField.setDecimal(value);
     }

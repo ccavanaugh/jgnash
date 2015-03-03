@@ -55,11 +55,7 @@ public class FeesPane extends GridPane {
     @FXML
     private ResourceBundle resources;
 
-    private final SimpleObjectProperty<BigDecimal> decimalProperty = new SimpleObjectProperty<>(BigDecimal.ZERO);
-
     private final SimpleObjectProperty<Account> accountProperty = new SimpleObjectProperty<>(null);
-
-    //private List<TransactionEntry> feeList = new ArrayList<>();
 
     private FeesDialog feesDialog;
 
@@ -78,8 +74,6 @@ public class FeesPane extends GridPane {
     @FXML
     private void initialize() {
         detailsButton.setOnAction(event -> handleDetailsAction());
-
-        feesField.decimalProperty().bindBidirectional(getDecimalProperty());
 
         feesDialog = new FeesDialog();
 
@@ -167,11 +161,11 @@ public class FeesPane extends GridPane {
      */
     void clearForm() {
         feesDialog.getTransactionEntries().clear();
-        decimalProperty.setValue(BigDecimal.ZERO);
+        feesField.setDecimal(null);
     }
 
-    public SimpleObjectProperty<BigDecimal> getDecimalProperty() {
-        return decimalProperty;
+    public BigDecimal getDecimal() {
+        return feesField.getDecimal();
     }
 
     public SimpleObjectProperty<Account> getAccountProperty() {
