@@ -83,7 +83,7 @@ public abstract class AbstractPriceQtyInvSlipController extends AbstractInvSlipC
 
     @Override
     protected void focusFirstComponent() {
-        memoTextField.requestFocus();
+        priceField.requestFocus();
     }
 
     @Override
