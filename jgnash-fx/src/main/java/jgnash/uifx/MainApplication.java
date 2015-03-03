@@ -158,7 +158,7 @@ public class MainApplication extends Application implements MessageListener {
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
 
-        StageUtils.addBoundsListener(stage, getClass());
+        StageUtils.addBoundsListener(stage, MainApplication.class);
 
         stage.show();
 
