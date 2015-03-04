@@ -17,13 +17,6 @@
  */
 package jgnash.uifx.views.register;
 
-import java.io.IOException;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -31,19 +24,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-
-import jgnash.engine.Account;
-import jgnash.engine.AccountGroup;
-import jgnash.engine.AccountType;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.Transaction;
-import jgnash.uifx.MainApplication;
-import jgnash.uifx.util.StageUtils;
+import jgnash.engine.*;
+import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.ResourceUtils;
+
+import java.io.IOException;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A Dialog for creating and editing new transactions
@@ -66,22 +57,9 @@ public class TransactionDialog extends Stage {
     private Tab debitTab;
 
     private TransactionDialog() {
-        final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("TransactionDialog.fxml"), ResourceUtils.getBundle());
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
+        FXMLUtils.loadFXML(this, "TransactionDialog.fxml", ResourceUtils.getBundle());
 
-        try {
-            fxmlLoader.load();
-        } catch (final IOException e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-        }
-
-        initOwner(MainApplication.getInstance().getPrimaryStage());
-        initStyle(StageStyle.DECORATED);
-        initModality(Modality.APPLICATION_MODAL);
         setTitle(ResourceUtils.getBundle().getString("Title.NewTrans"));
-
-        StageUtils.addBoundsListener(this, TransactionDialog.class);
     }
 
     private ObjectProperty<Account> getAccountProperty() {

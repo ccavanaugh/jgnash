@@ -17,15 +17,6 @@
  */
 package jgnash.uifx.views.register;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -34,19 +25,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-
-import jgnash.engine.Account;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.Transaction;
-import jgnash.uifx.MainApplication;
+import jgnash.engine.*;
 import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.util.StageUtils;
+import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.ResourceUtils;
+
+import java.io.IOException;
+import java.util.*;
 
 /**
  * A Dialog for creating and editing new investment transactions
@@ -75,22 +61,9 @@ public class InvestmentTransactionDialog extends Stage {
     private Optional<Transaction> transactionOptional = Optional.empty();
 
     private InvestmentTransactionDialog() {
-        final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("InvestmentTransactionDialog.fxml"), ResourceUtils.getBundle());
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
+        FXMLUtils.loadFXML(this, "InvestmentTransactionDialog.fxml", ResourceUtils.getBundle());
 
-        try {
-            fxmlLoader.load();
-        } catch (final IOException e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-        }
-
-        initOwner(MainApplication.getInstance().getPrimaryStage());
-        initStyle(StageStyle.DECORATED);
-        initModality(Modality.APPLICATION_MODAL);
         setTitle(ResourceUtils.getBundle().getString("Title.NewTrans"));
-
-        StageUtils.addBoundsListener(this, InvestmentTransactionDialog.class);
     }
 
     private ObjectProperty<Account> getAccountProperty() {

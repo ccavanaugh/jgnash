@@ -27,32 +27,20 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.stage.Modality;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import jgnash.engine.Account;
 import jgnash.engine.TransactionEntry;
 import jgnash.text.CommodityFormat;
-import jgnash.uifx.MainApplication;
 import jgnash.uifx.util.FXMLUtils;
-import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Split Transaction entry dialog
@@ -99,22 +87,9 @@ class FeesDialog extends Stage {
     private final SortedList<TransactionEntry> sortedList = new SortedList<>(transactionEntries);
 
     FeesDialog() {
-        final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("SplitTransactionDialog.fxml"), ResourceUtils.getBundle());
-        fxmlLoader.setRoot(this);
-        fxmlLoader.setController(this);
+        FXMLUtils.loadFXML(this, "SplitTransactionDialog.fxml", ResourceUtils.getBundle());
 
-        try {
-            fxmlLoader.load();
-        } catch (final IOException e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-        }
-
-        initOwner(MainApplication.getInstance().getPrimaryStage());
-        initStyle(StageStyle.DECORATED);
-        initModality(Modality.APPLICATION_MODAL);
         setTitle(ResourceUtils.getBundle().getString("Title.InvFees"));
-
-        StageUtils.addBoundsListener(this, FeesDialog.class);
 
         setOnShowing(event -> {
             tableViewManager.restoreLayout();   // restore layout and pack after the table is visible

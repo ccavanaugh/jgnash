@@ -1,5 +1,13 @@
 package jgnash.uifx.util;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import jgnash.uifx.MainApplication;
+import jgnash.util.NotNull;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URL;
@@ -7,14 +15,6 @@ import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-
-import jgnash.uifx.MainApplication;
 
 /**
  * FXML Utility methods
@@ -25,6 +25,33 @@ public class FXMLUtils {
 
     private FXMLUtils() {
         // Utility class
+    }
+
+    /**
+     * Loads a scene and sets the specified {@code Stage} as the root and controller.  Application defaults are
+     * set for the {@code Stage}
+     *
+     * @param stage {@code Stage}
+     * @param fileName name of the fxml file.  It's assumed to be in the same package as the stage
+     * @param resourceBundle {@code ResourceBundle} to pass to the {@code FXMLLoader}
+     */
+    public static void loadFXML(@NotNull final Stage stage, @NotNull final String fileName, @NotNull final ResourceBundle resourceBundle) {
+        final FXMLLoader fxmlLoader = new FXMLLoader(stage.getClass().getResource(fileName), resourceBundle);
+        fxmlLoader.setRoot(stage);
+        fxmlLoader.setController(stage);
+
+        try {
+            fxmlLoader.load();
+        } catch (final IOException e) {
+            Logger.getLogger(stage.getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
+        }
+
+        stage.initOwner(MainApplication.getInstance().getPrimaryStage());
+        stage.getScene().getStylesheets().addAll(MainApplication.DEFAULT_CSS);
+        stage.initStyle(StageStyle.DECORATED);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        StageUtils.addBoundsListener(stage, stage.getClass());
     }
 
     /**
