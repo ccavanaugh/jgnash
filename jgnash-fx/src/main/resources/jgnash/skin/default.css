@@ -40,9 +40,10 @@
     -fx-cell-size: 1.75em;
 }
 
+/*
 .dialog > .dialog-pane > .button-bar {
     -fx-font-size: 1.0em;
-}
+}*/
 
 /*
  * Adjust margins of the status bar for improved appearance
@@ -53,7 +54,7 @@
 }
 
 .view-title {
-    -fx-font-size: 1.1em;
+    -fx-font-size: 0.916667em;
     -fx-font-weight: bold;
 }
 
@@ -86,7 +87,7 @@
 	-fx-pref-height: 2.0em;
 	-fx-background-color: lightgray, -fx-body-color;
 	-fx-background-insets: 0, 1;
-	-fx-font-size: 1.0em;
+	-fx-font-size: 0.916667em;
     -fx-font-weight: bold;
 }
 

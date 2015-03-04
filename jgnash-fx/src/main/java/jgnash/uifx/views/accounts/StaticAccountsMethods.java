@@ -60,8 +60,10 @@ public final class StaticAccountsMethods {
         dialog.initOwner(MainApplication.getInstance().getPrimaryStage());
         dialog.setTitle(ResourceUtils.getBundle().getString("Title.VisibleAccountTypes"));
 
-        AccountTypeFilterFormController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
+        final AccountTypeFilterFormController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
                 "AccountTypeFilterForm.fxml", ResourceUtils.getBundle());
+
+        dialog.getScene().getStylesheets().addAll(MainApplication.DEFAULT_CSS);
 
         controller.setAccountTypeFilter(accountTypeFilter);
 
@@ -80,6 +82,8 @@ public final class StaticAccountsMethods {
 
         final AccountPropertiesController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
                 "AccountProperties.fxml", ResourceUtils.getBundle());
+
+        dialog.getScene().getStylesheets().addAll(MainApplication.DEFAULT_CSS);
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
@@ -108,6 +112,8 @@ public final class StaticAccountsMethods {
 
         final AccountPropertiesController controller = FXMLUtils.loadFXML(o -> dialog.setScene(new Scene((Parent) o)),
                 "AccountProperties.fxml", ResourceUtils.getBundle());
+
+        dialog.getScene().getStylesheets().addAll(MainApplication.DEFAULT_CSS);
 
         controller.loadProperties(account);
 
@@ -144,6 +150,7 @@ public final class StaticAccountsMethods {
 
             final FXMLLoader loader = new FXMLLoader(SelectAccountController.class.getResource("SelectAccountForm.fxml"), ResourceUtils.getBundle());
             dialog.setScene(new Scene(loader.load()));
+            dialog.getScene().getStylesheets().addAll(MainApplication.DEFAULT_CSS);
 
             final SelectAccountController controller = loader.getController();
             dialog.setResizable(false);

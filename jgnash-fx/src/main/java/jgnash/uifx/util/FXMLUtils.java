@@ -76,7 +76,11 @@ public class FXMLUtils {
 
         try {
             fxmlLoader.setController(controller);
-            stage.setScene(new Scene(fxmlLoader.load()));
+
+            final Scene scene = new Scene(fxmlLoader.load());
+            scene.getStylesheets().addAll(MainApplication.DEFAULT_CSS);
+
+            stage.setScene(scene);
         } catch (final IOException ioe) { // log and throw an unchecked exception
             Logger.getLogger(FXMLUtils.class.getName()).log(Level.SEVERE, ioe.getMessage(), ioe);
             throw new UncheckedIOException(ioe);
@@ -101,7 +105,10 @@ public class FXMLUtils {
         stage.initOwner(MainApplication.getInstance().getPrimaryStage());
 
         try {
-            stage.setScene(new Scene(fxmlLoader.load()));
+            final Scene scene = new Scene(fxmlLoader.load());
+            scene.getStylesheets().addAll(MainApplication.DEFAULT_CSS);
+
+            stage.setScene(scene);
         } catch (final IOException ioe) { // log and throw an unchecked exception
             Logger.getLogger(FXMLUtils.class.getName()).log(Level.SEVERE, ioe.getMessage(), ioe);
             throw new UncheckedIOException(ioe);
