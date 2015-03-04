@@ -83,6 +83,11 @@ public class AccountExchangePane extends GridPane {
 
     final private SimpleBooleanProperty amountEditable = new SimpleBooleanProperty();
 
+    /**
+     * Determines if the base account will be visible for selection
+     */
+    final private SimpleBooleanProperty filterBaseAccount = new SimpleBooleanProperty(true);
+
     final private SimpleBooleanProperty disableProperty = new SimpleBooleanProperty(false);
 
     public AccountExchangePane() {
@@ -112,7 +117,9 @@ public class AccountExchangePane extends GridPane {
                 throw new RuntimeException("baseCurrency does not match baseAccount currency");
             }
 
-            accountCombo.filterAccount(newValue);
+            if (getFilterBaseAccount().get()){
+                accountCombo.filterAccount(newValue);
+            }
             getBaseCurrencyProperty().setValue(newValue.getCurrencyNode());
         });
 
@@ -273,5 +280,9 @@ public class AccountExchangePane extends GridPane {
 
     void setEnabled(final boolean enabled) {
         disableProperty().setValue(!enabled);
+    }
+
+    public SimpleBooleanProperty getFilterBaseAccount() {
+        return filterBaseAccount;
     }
 }

@@ -54,12 +54,19 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
     public void initialize() {
         super.initialize();
 
+        // don't filter the base account for investment transactions
+        accountExchangePane.getFilterBaseAccount().set(false);
+
         // Bind necessary properties to the exchange panel
         accountExchangePane.getBaseAccountProperty().bind(getAccountProperty());
         accountExchangePane.getAmountProperty().bindBidirectional(totalField.decimalProperty());
         accountExchangePane.getAmountEditable().bind(totalField.editableProperty());
 
         feesPane.getAccountProperty().bind(getAccountProperty());
+
+        getAccountProperty().addListener((observable, oldValue, newValue) -> {
+            clearForm();
+        });
     }
 
     @Override
@@ -137,6 +144,7 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
         attachmentPane.clear();
         accountExchangePane.setEnabled(true);
         accountExchangePane.setExchangedAmount(null);
+        accountExchangePane.setSelectedAccount(getAccountProperty().get());
         updateTotalField();
     }
 
