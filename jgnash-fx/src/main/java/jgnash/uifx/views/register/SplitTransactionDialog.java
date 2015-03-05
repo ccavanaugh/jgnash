@@ -96,7 +96,7 @@ public class SplitTransactionDialog extends Stage {
         });
     }
 
-    public ObjectProperty<Account> getAccountProperty() {
+    public ObjectProperty<Account> accountProperty() {
         return accountProperty;
     }
 
@@ -106,7 +106,7 @@ public class SplitTransactionDialog extends Stage {
 
     @FXML
     private void initialize() {
-        getAccountProperty().addListener((observable, oldValue, newValue) -> {
+        accountProperty().addListener((observable, oldValue, newValue) -> {
             initTabs();
             loadTable();
         });
@@ -176,7 +176,7 @@ public class SplitTransactionDialog extends Stage {
     private void loadTable() {
         tableViewManager = new TableViewManager<>(tableView, PREF_NODE_USER_ROOT);
         tableViewManager.setColumnWeightFactory(getColumnWeightFactory());
-        tableViewManager.setPreferenceKeyFactory(() -> getAccountProperty().get().getUuid());
+        tableViewManager.setPreferenceKeyFactory(() -> accountProperty().get().getUuid());
 
         sortedList.comparatorProperty().bind(tableView.comparatorProperty());
 
@@ -190,7 +190,7 @@ public class SplitTransactionDialog extends Stage {
     }
 
     private void buildTable() {
-        final String[] columnNames = RegisterFactory.getSplitColumnNames(getAccountProperty().get().getAccountType());
+        final String[] columnNames = RegisterFactory.getSplitColumnNames(accountProperty().get().getAccountType());
 
         final TableColumn<TransactionEntry, String> accountColumn = new TableColumn<>(columnNames[0]);
         accountColumn.setCellValueFactory(param -> new AccountNameWrapper(param.getValue()));
@@ -202,11 +202,11 @@ public class SplitTransactionDialog extends Stage {
         memoColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getMemo()));
 
         final TableColumn<TransactionEntry, BigDecimal> increaseColumn = new TableColumn<>(columnNames[3]);
-        increaseColumn.setCellValueFactory(param -> new IncreaseAmountProperty(param.getValue().getAmount(getAccountProperty().getValue())));
+        increaseColumn.setCellValueFactory(param -> new IncreaseAmountProperty(param.getValue().getAmount(accountProperty().getValue())));
         increaseColumn.setCellFactory(cell -> new TransactionEntryCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
 
         final TableColumn<TransactionEntry, BigDecimal> decreaseColumn = new TableColumn<>(columnNames[4]);
-        decreaseColumn.setCellValueFactory(param -> new DecreaseAmountProperty(param.getValue().getAmount(getAccountProperty().getValue())));
+        decreaseColumn.setCellValueFactory(param -> new DecreaseAmountProperty(param.getValue().getAmount(accountProperty().getValue())));
         decreaseColumn.setCellFactory(cell -> new TransactionEntryCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
 
         final TableColumn<TransactionEntry, BigDecimal> balanceColumn = new TableColumn<>(columnNames[5]);
@@ -218,9 +218,9 @@ public class SplitTransactionDialog extends Stage {
 
         tableViewManager.setColumnFormatFactory(param -> {
             if (param == balanceColumn) {
-                return CommodityFormat.getFullNumberFormat(getAccountProperty().getValue().getCurrencyNode());
+                return CommodityFormat.getFullNumberFormat(accountProperty().getValue().getCurrencyNode());
             } else if (param == increaseColumn || param == decreaseColumn) {
-                return CommodityFormat.getShortNumberFormat(getAccountProperty().getValue().getCurrencyNode());
+                return CommodityFormat.getShortNumberFormat(accountProperty().getValue().getCurrencyNode());
             }
 
             return null;
@@ -228,7 +228,7 @@ public class SplitTransactionDialog extends Stage {
     }
 
     private void initTabs() {
-        final String[] tabNames = RegisterFactory.getCreditDebitTabNames(getAccountProperty().get().getAccountType());
+        final String[] tabNames = RegisterFactory.getCreditDebitTabNames(accountProperty().get().getAccountType());
 
         creditTab = new Tab(tabNames[0]);
 
@@ -238,7 +238,7 @@ public class SplitTransactionDialog extends Stage {
         creditTab.setUserData(creditController);
 
         creditController.setSlipType(SlipType.INCREASE);
-        creditController.getAccountProperty().setValue(getAccountProperty().getValue());
+        creditController.getAccountProperty().setValue(accountProperty().getValue());
         creditController.getTransactionEntryListProperty().setValue(transactionEntries);
 
         debitTab = new Tab(tabNames[1]);
@@ -249,7 +249,7 @@ public class SplitTransactionDialog extends Stage {
         debitTab.setUserData(debitController);
 
         debitController.setSlipType(SlipType.DECREASE);
-        debitController.getAccountProperty().setValue(getAccountProperty().getValue());
+        debitController.getAccountProperty().setValue(accountProperty().getValue());
         debitController.getTransactionEntryListProperty().setValue(transactionEntries);
 
         tabPane.getTabs().addAll(creditTab, debitTab);
@@ -280,7 +280,7 @@ public class SplitTransactionDialog extends Stage {
 
             final Account creditAccount = t.getCreditAccount();
 
-            if (creditAccount != getAccountProperty().get()) {
+            if (creditAccount != accountProperty().get()) {
                 setValue(creditAccount.getName());
             } else {
                 setValue(t.getDebitAccount().getName());

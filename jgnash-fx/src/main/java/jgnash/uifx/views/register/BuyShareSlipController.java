@@ -47,16 +47,16 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
         super.initialize();
 
         // don't filter the base account for investment transactions
-        accountExchangePane.getFilterBaseAccount().set(false);
+        accountExchangePane.filterBaseAccountProperty().set(false);
 
         // Bind necessary properties to the exchange panel
-        accountExchangePane.getBaseAccountProperty().bind(getAccountProperty());
-        accountExchangePane.getAmountProperty().bindBidirectional(totalField.decimalProperty());
-        accountExchangePane.getAmountEditable().bind(totalField.editableProperty());
+        accountExchangePane.baseAccountProperty().bind(accountProperty());
+        accountExchangePane.amountProperty().bindBidirectional(totalField.decimalProperty());
+        accountExchangePane.amountEditableProperty().bind(totalField.editableProperty());
 
-        feesPane.getAccountProperty().bind(getAccountProperty());
+        feesPane.accountProperty().bind(accountProperty());
 
-        getAccountProperty().addListener((observable, oldValue, newValue) -> {
+        accountProperty().addListener((observable, oldValue, newValue) -> {
             clearForm();
         });
 
@@ -91,7 +91,7 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
             /* TODO by default investment account is assigned to debit account.  Should only have to look at the
              * credit side of the entry for information
              */
-            if (entry.getCreditAccount().equals(getAccountProperty().get())) {
+            if (entry.getCreditAccount().equals(accountProperty().get())) {
                 accountExchangePane.setSelectedAccount(entry.getDebitAccount());
                 accountExchangePane.setExchangedAmount(entry.getDebitAmount().abs());
             } else {
@@ -102,7 +102,7 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
 
         modTrans = transaction;
 
-        reconciledButton.setSelected(transaction.getReconciled(getAccountProperty().get()) != ReconciledState.NOT_RECONCILED);
+        reconciledButton.setSelected(transaction.getReconciled(accountProperty().get()) != ReconciledState.NOT_RECONCILED);
     }
 
     void updateTotalField() {
@@ -117,11 +117,11 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
     @NotNull
     @Override
     public Transaction buildTransaction() {
-        final BigDecimal exchangeRate = accountExchangePane.getExchangeAmountProperty().getValue();
+        final BigDecimal exchangeRate = accountExchangePane.exchangeAmountProperty().getValue();
         final List<TransactionEntry> fees = feesPane.getTransactions();
 
         return TransactionFactory.generateBuyXTransaction(accountExchangePane.getSelectedAccount(),
-                getAccountProperty().get(), securityComboBox.getValue(), priceField.getDecimal(),
+                accountProperty().get(), securityComboBox.getValue(), priceField.getDecimal(),
                 quantityField.getDecimal(), exchangeRate, datePicker.getDate(), memoTextField.getText(), fees);
     }
 
@@ -134,7 +134,7 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
         attachmentPane.clear();
         accountExchangePane.setEnabled(true);
         accountExchangePane.setExchangedAmount(null);
-        accountExchangePane.setSelectedAccount(getAccountProperty().get());
+        accountExchangePane.setSelectedAccount(accountProperty().get());
     }
 
     @Override
@@ -154,7 +154,7 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
                 final Transaction newTrans = buildTransaction();
 
                 // Need to set the reconciled state
-                ReconcileManager.reconcileTransaction(getAccountProperty().get(), newTrans, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+                ReconcileManager.reconcileTransaction(accountProperty().get(), newTrans, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
 
                 engine.addTransaction(newTrans);
             } else {
@@ -165,7 +165,7 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
                 /* Need to preserve the reconciled state of the opposite side
                  * if both sides are not automatically reconciled
                  */
-                ReconcileManager.reconcileTransaction(getAccountProperty().get(), newTrans, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+                ReconcileManager.reconcileTransaction(accountProperty().get(), newTrans, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
 
                 if (engine.isTransactionValid(newTrans)) {
                     if (engine.removeTransaction(modTrans)) {

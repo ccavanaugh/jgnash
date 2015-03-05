@@ -86,7 +86,7 @@ public class TransactionDialog extends Stage {
             slipController.cancelButton.setOnAction(event -> tabPane.getScene().getWindow().hide());
 
             slipController.setSlipType(slipType);
-            slipController.getAccountProperty().bind(getAccountProperty());
+            slipController.accountProperty().bind(getAccountProperty());
 
             final Tab tab = new Tab(tabName);
             tab.setContent(pane);

@@ -91,7 +91,7 @@ public class AutoCompleteTextField<E> extends TextField {
         super.replaceText(start, end, "");  // force call to super super.replaceText to prevent bounds errors
     }
 
-    public ObjectProperty<AutoCompleteModel<E>> getAutoCompleteModelObjectProperty() {
+    public ObjectProperty<AutoCompleteModel<E>> autoCompleteModelObjectProperty() {
         return autoCompleteModelObjectProperty;
     }
 }

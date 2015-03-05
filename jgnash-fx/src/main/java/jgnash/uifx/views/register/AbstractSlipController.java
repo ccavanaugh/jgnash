@@ -87,7 +87,7 @@ abstract class AbstractSlipController implements Slip {
     public void initialize() {
 
         // Number combo needs to know the account in order to determine the next transaction number
-        numberComboBox.getAccountProperty().bind(getAccountProperty());
+        numberComboBox.accountProperty().bind(accountProperty());
 
         AutoCompleteFactory.setMemoModel(memoTextField);
 
@@ -146,7 +146,7 @@ abstract class AbstractSlipController implements Slip {
         attachmentPane.clear();
     }
 
-    ObjectProperty<Account> getAccountProperty() {
+    ObjectProperty<Account> accountProperty() {
         return accountProperty;
     }
 
@@ -208,8 +208,8 @@ abstract class AbstractSlipController implements Slip {
 
     void handlePayeeFocusChange() {
         if (modTrans == null && Options.getAutoCompleteEnabled().get() && payeeTextField.getLength() > 0) {
-            if (payeeTextField.getAutoCompleteModelObjectProperty().get() != null) {
-                final Optional<Transaction> optional= payeeTextField.getAutoCompleteModelObjectProperty().get().getExtraInfo(payeeTextField.getText());
+            if (payeeTextField.autoCompleteModelObjectProperty().get() != null) {
+                final Optional<Transaction> optional= payeeTextField.autoCompleteModelObjectProperty().get().getExtraInfo(payeeTextField.getText());
 
                 if (optional.isPresent()) {
                     if (canModifyTransaction(optional.get())) {

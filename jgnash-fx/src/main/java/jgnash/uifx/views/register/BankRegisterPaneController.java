@@ -73,7 +73,7 @@ public class BankRegisterPaneController extends RegisterPaneController {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
 
-        getAccountProperty().addListener((observable, oldValue, newValue) -> {
+        accountProperty().addListener((observable, oldValue, newValue) -> {
             buildTabs();
         });
     }
@@ -84,7 +84,7 @@ public class BankRegisterPaneController extends RegisterPaneController {
             if (transaction.getTransactionType() == TransactionType.SINGLENTRY) {
                 transactionForms.getSelectionModel().select(adjustTab);
                 ((Slip)adjustTab.getUserData()).modifyTransaction(transaction);
-            } else if (transaction.getAmount(getAccountProperty().get()).signum() >= 0) {
+            } else if (transaction.getAmount(accountProperty().get()).signum() >= 0) {
                 transactionForms.getSelectionModel().select(creditTab);
                 ((Slip)creditTab.getUserData()).modifyTransaction(transaction);
             } else {
@@ -97,7 +97,7 @@ public class BankRegisterPaneController extends RegisterPaneController {
     }
 
     private void buildTabs() {
-        final AccountType accountType = getAccountProperty().get().getAccountType();
+        final AccountType accountType = accountProperty().get().getAccountType();
 
         final String[] tabNames = RegisterFactory.getCreditDebitTabNames(accountType);
 
@@ -123,7 +123,7 @@ public class BankRegisterPaneController extends RegisterPaneController {
             final SlipController slipController = fxmlLoader.getController();
 
             slipController.setSlipType(slipType);
-            slipController.getAccountProperty().bind(getAccountProperty());
+            slipController.accountProperty().bind(accountProperty());
 
             final Tab tab = new Tab(tabName);
             tab.setContent(pane);
@@ -143,7 +143,7 @@ public class BankRegisterPaneController extends RegisterPaneController {
 
             final BankAdjustmentSlipController transactionPaneController = fxmlLoader.getController();
 
-            transactionPaneController.getAccountProperty().bind(getAccountProperty());
+            transactionPaneController.accountProperty().bind(accountProperty());
 
             final Tab tab = new Tab(resources.getString("Tab.Adjust"));
             tab.setContent(pane);

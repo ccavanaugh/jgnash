@@ -92,10 +92,10 @@ public abstract class RegisterTableController {
     @FXML
     void initialize() {
         // Bind the account property
-        getAccountPropertyWrapper().getAccountProperty().bind(accountProperty);
+        getAccountPropertyWrapper().accountProperty().bind(accountProperty);
 
-        accountNameLabel.textProperty().bind(getAccountPropertyWrapper().getAccountNameProperty());
-        balanceLabel.textProperty().bind(getAccountPropertyWrapper().getAccountBalanceProperty());
+        accountNameLabel.textProperty().bind(getAccountPropertyWrapper().accountNameProperty());
+        balanceLabel.textProperty().bind(getAccountPropertyWrapper().accountBalanceProperty());
 
         tableView.setTableMenuButtonVisible(true);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);

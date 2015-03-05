@@ -48,7 +48,7 @@ public class SplitTransactionSlipController extends AbstractTransactionEntrySlip
                 entry.setAmount(amountField.getDecimal().abs());
             } else {
                 entry.setDebitAmount(amountField.getDecimal().abs().negate());
-                entry.setCreditAmount(accountExchangePane.getExchangeAmountProperty().get().abs());
+                entry.setCreditAmount(accountExchangePane.exchangeAmountProperty().get().abs());
             }
         } else {
             entry.setCreditAccount(accountProperty.get());
@@ -58,7 +58,7 @@ public class SplitTransactionSlipController extends AbstractTransactionEntrySlip
                 entry.setAmount(amountField.getDecimal().abs());
             } else {
                 entry.setCreditAmount(amountField.getDecimal().abs());
-                entry.setDebitAmount(accountExchangePane.getExchangeAmountProperty().get().abs().negate());
+                entry.setDebitAmount(accountExchangePane.exchangeAmountProperty().get().abs().negate());
             }
         }
 

@@ -67,7 +67,7 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
 
-        getAccountProperty().addListener((observable, oldValue, newValue) -> {
+        accountProperty().addListener((observable, oldValue, newValue) -> {
             buildTabs();
         });
 
@@ -112,7 +112,7 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
             final SlipController slipController = fxmlLoader.getController();
 
             slipController.setSlipType(slipType);
-            slipController.getAccountProperty().bind(getAccountProperty());
+            slipController.accountProperty().bind(accountProperty());
 
             return new SlipControllerContainer(name, slipController, pane);
         } catch (final IOException e) {
@@ -128,7 +128,7 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
 
             final BuyShareSlipController slipController = fxmlLoader.getController();
 
-            slipController.getAccountProperty().bind(getAccountProperty());
+            slipController.accountProperty().bind(accountProperty());
 
             return new SlipControllerContainer(name, slipController, pane);
         } catch (final IOException e) {
@@ -148,14 +148,14 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
 
     @FXML
     private void handleSecuritiesAction() {
-        final SelectAccountSecuritiesDialog dialog = new SelectAccountSecuritiesDialog(getAccountProperty().get(),
-                getAccountProperty().get().getSecurities());
+        final SelectAccountSecuritiesDialog dialog = new SelectAccountSecuritiesDialog(accountProperty().get(),
+                accountProperty().get().getSecurities());
 
         if (dialog.showAndWait()) {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             Objects.requireNonNull(engine);
 
-            engine.updateAccountSecurities(getAccountProperty().get(), dialog.getSelectedSecurities());
+            engine.updateAccountSecurities(accountProperty().get(), dialog.getSelectedSecurities());
         }
     }
 
@@ -178,7 +178,7 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
                     break;
             }
         } else {
-            if (transaction.getAmount(getAccountProperty().get()).signum() >= 0) {
+            if (transaction.getAmount(accountProperty().get()).signum() >= 0) {
                 actionComboBox.getSelectionModel().select(2);  // transferIn
             } else {
                 actionComboBox.getSelectionModel().select(3);  // transferOut

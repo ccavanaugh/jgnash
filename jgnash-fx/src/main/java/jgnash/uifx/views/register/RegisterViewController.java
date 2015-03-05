@@ -143,7 +143,7 @@ public class RegisterViewController {
 
     private void showAccount() {
         if (registerPaneController != null) {
-            registerPaneController.getAccountProperty().unbind();
+            registerPaneController.accountProperty().unbind();
             registerPane.getChildren().clear();
         }
 
@@ -167,7 +167,7 @@ public class RegisterViewController {
         registerPaneController = FXMLUtils.loadFXML(scene -> registerPane.getChildren().add((Node) scene), formResource, resources);
 
         // Push the account to the controller at the end of the application thread
-        Platform.runLater(() -> registerPaneController.getAccountProperty().setValue(accountTreeController.getSelectedAccountProperty().get()));
+        Platform.runLater(() -> registerPaneController.accountProperty().setValue(accountTreeController.getSelectedAccountProperty().get()));
     }
 
     private void restoreLastSelectedAccount() {

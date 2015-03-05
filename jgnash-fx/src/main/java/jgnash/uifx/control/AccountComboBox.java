@@ -66,15 +66,15 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
         filteredAccountList.addAll(account);
     }
 
-    public SimpleBooleanProperty getShowHiddenAccountsProperty() {
+    public SimpleBooleanProperty showHiddenAccountsProperty() {
         return showHiddenAccountsProperty;
     }
 
-    public SimpleBooleanProperty getShowLockedAccountsProperty() {
+    public SimpleBooleanProperty showLockedAccountsProperty() {
         return showLockedAccountsProperty;
     }
 
-    public SimpleBooleanProperty getShowPlaceHoldersProperty() {
+    public SimpleBooleanProperty showPlaceHoldersProperty() {
         return showPlaceHoldersProperty;
     }
 
@@ -83,11 +83,11 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
             if (account.isVisible() && !account.isPlaceHolder() && !account.isLocked()) {
                 getItems().add(account);
-            } else if (account.isPlaceHolder() && getShowPlaceHoldersProperty().get()) {
+            } else if (account.isPlaceHolder() && showPlaceHoldersProperty().get()) {
                 getItems().add(account);
-            } else if (!account.isVisible() && getShowHiddenAccountsProperty().get()) {
+            } else if (!account.isVisible() && showHiddenAccountsProperty().get()) {
                 getItems().add(account);
-            } else if (account.isLocked() && getShowLockedAccountsProperty().get()) {
+            } else if (account.isLocked() && showLockedAccountsProperty().get()) {
                 getItems().add(account);
             }
 

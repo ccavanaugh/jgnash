@@ -61,7 +61,7 @@ public class TransactionNumberComboBox extends ComboBox<String> {
 
         setOnAction(event -> new Thread(() -> {
             if (nextNumberItem.equals(getValue())) {
-                final Account account = getAccountProperty().getValue();
+                final Account account = accountProperty().getValue();
 
                 if (account != null) {
                     final String next = account.getNextTransactionNumber();
@@ -71,7 +71,7 @@ public class TransactionNumberComboBox extends ComboBox<String> {
         }).start());
     }
 
-    public ObjectProperty<Account> getAccountProperty() {
+    public ObjectProperty<Account> accountProperty() {
         return accountProperty;
     }
 }

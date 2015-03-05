@@ -62,9 +62,9 @@ abstract class AbstractTransactionEntrySlipController {
     @FXML
     private void initialize() {
         // Bind necessary properties to the exchange panel
-        accountExchangePane.getBaseAccountProperty().bind(getAccountProperty());
-        accountExchangePane.getAmountProperty().bindBidirectional(amountField.decimalProperty());
-        accountExchangePane.getAmountEditable().bind(amountField.editableProperty());
+        accountExchangePane.baseAccountProperty().bind(getAccountProperty());
+        accountExchangePane.amountProperty().bindBidirectional(amountField.decimalProperty());
+        accountExchangePane.amountEditableProperty().bind(amountField.editableProperty());
 
         // Enabled auto completion
         AutoCompleteFactory.setMemoModel(memoField);

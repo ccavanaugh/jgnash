@@ -79,7 +79,7 @@ public class FeesPane extends GridPane {
         feesDialog = new FeesDialog();
 
         accountProperty.addListener((observable, oldValue, newValue) -> {
-            feesDialog.getAccountProperty().setValue(getAccountProperty().get());
+            feesDialog.accountProperty().setValue(accountProperty().get());
         });
     }
 
@@ -99,7 +99,7 @@ public class FeesPane extends GridPane {
 
         // adjust the cash balance of the investment account
         if (feeList.isEmpty() && feesField.getDecimal().compareTo(BigDecimal.ZERO) != 0) {  // ignore zero balance fees
-            TransactionEntry fee = new TransactionEntry(getAccountProperty().get(), feesField.getDecimal().abs().negate());
+            TransactionEntry fee = new TransactionEntry(accountProperty().get(), feesField.getDecimal().abs().negate());
             fee.setTransactionTag(TransactionTag.INVESTMENT_FEE);
 
             feeList.add(fee);
@@ -119,7 +119,7 @@ public class FeesPane extends GridPane {
             TransactionEntry e = fees.get(0);
 
             if (e.getCreditAccount().equals(e.getDebitAccount())) {
-                feesField.setDecimal(e.getAmount(getAccountProperty().get()).abs());
+                feesField.setDecimal(e.getAmount(accountProperty().get()).abs());
             } else {
                 try {
                     feeList.add((TransactionEntry) e.clone()); // copy over the provided set's entry
@@ -147,7 +147,7 @@ public class FeesPane extends GridPane {
         BigDecimal sum = BigDecimal.ZERO;
 
         for (TransactionEntry entry : feesDialog.getTransactionEntries()) {
-            sum = sum.add(entry.getAmount(getAccountProperty().get()));
+            sum = sum.add(entry.getAmount(accountProperty().get()));
         }
 
         return sum;
@@ -165,7 +165,7 @@ public class FeesPane extends GridPane {
         return feesField.getDecimal();
     }
 
-    public SimpleObjectProperty<Account> getAccountProperty() {
+    public SimpleObjectProperty<Account> accountProperty() {
         return accountProperty;
     }
 

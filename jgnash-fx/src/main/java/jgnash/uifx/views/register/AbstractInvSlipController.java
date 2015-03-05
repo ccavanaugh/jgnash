@@ -51,7 +51,7 @@ public abstract class AbstractInvSlipController implements Slip {
 
     final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
-    ObjectProperty<Account> getAccountProperty() {
+    ObjectProperty<Account> accountProperty() {
         return accountProperty;
     }
 
@@ -76,7 +76,7 @@ public abstract class AbstractInvSlipController implements Slip {
                 final Transaction newTrans = buildTransaction();
 
                 // Need to set the reconciled state
-                ReconcileManager.reconcileTransaction(getAccountProperty().get(), newTrans,
+                ReconcileManager.reconcileTransaction(accountProperty().get(), newTrans,
                         reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
 
                 engine.addTransaction(newTrans);
@@ -88,7 +88,7 @@ public abstract class AbstractInvSlipController implements Slip {
                 /* Need to preserve the reconciled state of the opposite side
                  * if both sides are not automatically reconciled
                  */
-                ReconcileManager.reconcileTransaction(getAccountProperty().get(), newTrans,
+                ReconcileManager.reconcileTransaction(accountProperty().get(), newTrans,
                         reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
 
                 if (engine.isTransactionValid(newTrans)) {

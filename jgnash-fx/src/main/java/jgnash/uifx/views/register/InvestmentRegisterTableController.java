@@ -55,8 +55,8 @@ public class InvestmentRegisterTableController extends RegisterTableController {
         super.initialize();
 
         // Bind the label text to the account property wrapper
-        cashBalanceLabel.textProperty().bind(getAccountPropertyWrapper().getCashBalanceProperty());
-        marketValueLabel.textProperty().bind(getAccountPropertyWrapper().getMarketValueProperty());
+        cashBalanceLabel.textProperty().bind(getAccountPropertyWrapper().cashBalanceProperty());
+        marketValueLabel.textProperty().bind(getAccountPropertyWrapper().marketValueProperty());
     }
 
     @Override

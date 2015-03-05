@@ -118,7 +118,7 @@ public class InvestmentTransactionDialog extends Stage {
             final SlipController slipController = fxmlLoader.getController();
 
             slipController.setSlipType(slipType);
-            slipController.getAccountProperty().bind(getAccountProperty());
+            slipController.accountProperty().bind(getAccountProperty());
 
             return new SlipControllerContainer(name, slipController, pane);
         } catch (final IOException e) {

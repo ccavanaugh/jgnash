@@ -166,27 +166,27 @@ class AccountPropertyWrapper implements MessageListener {
         }
     }
 
-    public ReadOnlyStringProperty getReconciledAmountProperty() {
+    public ReadOnlyStringProperty reconciledAmountProperty() {
         return reconciledAmountProperty.getReadOnlyProperty();
     }
 
-    public ReadOnlyStringProperty getAccountBalanceProperty() {
+    public ReadOnlyStringProperty accountBalanceProperty() {
         return accountBalanceProperty.getReadOnlyProperty();
     }
 
-    public ReadOnlyStringProperty getCashBalanceProperty() {
+    public ReadOnlyStringProperty cashBalanceProperty() {
         return cashBalanceProperty.getReadOnlyProperty();
     }
 
-    public ReadOnlyStringProperty getMarketValueProperty() {
+    public ReadOnlyStringProperty marketValueProperty() {
         return marketValueProperty.getReadOnlyProperty();
     }
 
-    public ReadOnlyStringProperty getAccountNameProperty() {
+    public ReadOnlyStringProperty accountNameProperty() {
         return accountNameProperty.getReadOnlyProperty();
     }
 
-    public ObjectProperty<Account> getAccountProperty() {
+    public ObjectProperty<Account> accountProperty() {
         return accountProperty;
     }
 }

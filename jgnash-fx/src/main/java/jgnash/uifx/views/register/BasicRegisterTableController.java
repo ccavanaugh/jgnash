@@ -53,7 +53,7 @@ public class BasicRegisterTableController extends RegisterTableController {
         super.initialize();
 
         // Bind the reconciledBalance Label to the account property wrapper
-        reconciledBalanceLabel.textProperty().bind(getAccountPropertyWrapper().getReconciledAmountProperty());
+        reconciledBalanceLabel.textProperty().bind(getAccountPropertyWrapper().reconciledAmountProperty());
     }
 
     @Override

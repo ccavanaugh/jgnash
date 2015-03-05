@@ -131,7 +131,7 @@ public class ControlsTest extends Application {
         System.out.println(decimalTextField2.decimalProperty().isBound());
 
         TransactionNumberComboBox numberComboBox = new TransactionNumberComboBox();
-        numberComboBox.getAccountProperty().setValue(engine.getAccountList().get(0));
+        numberComboBox.accountProperty().setValue(engine.getAccountList().get(0));
 
         Button exceptionButton = new Button("Show Exception");
         exceptionButton.setOnAction(event -> StaticUIMethods.displayException(new Exception("Test exception")));

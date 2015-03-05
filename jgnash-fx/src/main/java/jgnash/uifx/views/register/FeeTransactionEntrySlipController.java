@@ -41,7 +41,7 @@ public class FeeTransactionEntrySlipController extends AbstractTransactionEntryS
         if (hasEqualCurrencies()) {
             entry.setCreditAmount(amountField.getDecimal().abs());
         } else {
-            entry.setCreditAmount(accountExchangePane.getExchangeAmountProperty().get().abs());
+            entry.setCreditAmount(accountExchangePane.exchangeAmountProperty().get().abs());
         }
 
         entry.setTransactionTag(TransactionTag.INVESTMENT_FEE);

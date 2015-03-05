@@ -79,14 +79,14 @@ public class BankAdjustmentSlipController extends AbstractSlipController {
     void newTransaction(final Transaction t) {
         clearForm();
 
-        amountField.setDecimal(t.getAmount(getAccountProperty().get()));
+        amountField.setDecimal(t.getAmount(accountProperty().get()));
 
         memoTextField.setText(t.getMemo());
         payeeTextField.setText(t.getPayee());
         numberComboBox.setValue(t.getNumber());
 
         datePicker.setDate(t.getDate());
-        reconciledButton.setSelected(t.getReconciled(getAccountProperty().get()) != ReconciledState.NOT_RECONCILED);
+        reconciledButton.setSelected(t.getReconciled(accountProperty().get()) != ReconciledState.NOT_RECONCILED);
     }
 
     @Override

@@ -70,7 +70,7 @@ public abstract class RegisterPaneController {
 
     final ObjectProperty<RegisterTableController> registerTableControllerProperty = new SimpleObjectProperty<>();
 
-    ObjectProperty<Account> getAccountProperty() {
+    ObjectProperty<Account> accountProperty() {
         return accountProperty;
     }
 
@@ -105,7 +105,7 @@ public abstract class RegisterPaneController {
                 selectedTransactionProperty.bind(newValue.getSelectedTransactionProperty());
 
                 // Bind the register pane to this account property
-                newValue.getAccountProperty().bind(getAccountProperty());
+                newValue.getAccountProperty().bind(accountProperty());
             }
         });
 

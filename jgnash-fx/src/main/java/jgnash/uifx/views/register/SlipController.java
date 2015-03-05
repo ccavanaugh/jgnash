@@ -66,9 +66,9 @@ public class SlipController extends AbstractSlipController {
         super.initialize();
 
         // Bind necessary properties to the exchange panel
-        accountExchangePane.getBaseAccountProperty().bind(getAccountProperty());
-        accountExchangePane.getAmountProperty().bindBidirectional(amountField.decimalProperty());
-        accountExchangePane.getAmountEditable().bind(amountField.editableProperty());
+        accountExchangePane.baseAccountProperty().bind(accountProperty());
+        accountExchangePane.amountProperty().bindBidirectional(amountField.decimalProperty());
+        accountExchangePane.amountEditableProperty().bind(amountField.editableProperty());
 
         // Lazy init when account property is set
         accountProperty.addListener((observable, oldValue, newValue) -> {
@@ -78,7 +78,7 @@ public class SlipController extends AbstractSlipController {
 
     private void initializeSplitsDialog() {
         splitsDialog = new SplitTransactionDialog();
-        splitsDialog.getAccountProperty().setValue(getAccountProperty().get());
+        splitsDialog.accountProperty().setValue(accountProperty().get());
     }
 
     void setSlipType(final SlipType slipType) {
@@ -100,7 +100,7 @@ public class SlipController extends AbstractSlipController {
 
         if (!canModifyTransaction(transaction) && transaction.getTransactionType() == TransactionType.SPLITENTRY) {
             for (final TransactionEntry entry : transaction.getTransactionEntries()) {
-                if (entry.getCreditAccount().equals(getAccountProperty().get()) || entry.getDebitAccount().equals(getAccountProperty().get())) {
+                if (entry.getCreditAccount().equals(accountProperty().get()) || entry.getDebitAccount().equals(accountProperty().get())) {
                     modEntry = entry;
                     break;
                 }
@@ -159,7 +159,7 @@ public class SlipController extends AbstractSlipController {
                             payeeTextField.getText(), numberComboBox.getValue());
                 } else {
                     transaction = TransactionFactory.generateDoubleEntryTransaction(selectedAccount,
-                            accountProperty.get(), accountExchangePane.getExchangeAmountProperty().get().abs(),
+                            accountProperty.get(), accountExchangePane.exchangeAmountProperty().get().abs(),
                             amountField.getDecimal().abs().negate(), date, memoTextField.getText(),
                             payeeTextField.getText(), numberComboBox.getValue());
                 }
@@ -171,7 +171,7 @@ public class SlipController extends AbstractSlipController {
                 } else {
                     transaction = TransactionFactory.generateDoubleEntryTransaction(accountProperty.get(),
                             selectedAccount, amountField.getDecimal().abs(),
-                            accountExchangePane.getExchangeAmountProperty().get().abs().negate(), date,
+                            accountExchangePane.exchangeAmountProperty().get().abs().negate(), date,
                             memoTextField.getText(), payeeTextField.getText(), numberComboBox.getValue());
                 }
             }
@@ -199,14 +199,14 @@ public class SlipController extends AbstractSlipController {
     void newTransaction(final Transaction t) {
         clearForm();
 
-        amountField.setDecimal(t.getAmount(getAccountProperty().get()).abs());
+        amountField.setDecimal(t.getAmount(accountProperty().get()).abs());
 
         memoTextField.setText(t.getMemo());
         payeeTextField.setText(t.getPayee());
         numberComboBox.setValue(t.getNumber());
 
         datePicker.setDate(t.getDate());
-        reconciledButton.setSelected(t.getReconciled(getAccountProperty().get()) != ReconciledState.NOT_RECONCILED);
+        reconciledButton.setSelected(t.getReconciled(accountProperty().get()) != ReconciledState.NOT_RECONCILED);
 
         if (t.getTransactionType() == TransactionType.SPLITENTRY) {
             accountExchangePane.setSelectedAccount(t.getCommonAccount()); // display common account
@@ -225,7 +225,7 @@ public class SlipController extends AbstractSlipController {
                     }
                 }
                 amountField.setEditable(false);
-                amountField.setDecimal(t.getAmount(getAccountProperty().get()).abs());
+                amountField.setDecimal(t.getAmount(accountProperty().get()).abs());
             } else { // not the same common account, can only modify the entry
                 splitsButton.setDisable(true);
                 payeeTextField.setEditable(false);
@@ -233,13 +233,13 @@ public class SlipController extends AbstractSlipController {
                 datePicker.setEditable(false);
 
                 amountField.setEditable(true);
-                amountField.setDecimal(t.getAmount(getAccountProperty().get()).abs());
+                amountField.setDecimal(t.getAmount(accountProperty().get()).abs());
 
                 for (final TransactionEntry entry : t.getTransactionEntries()) {
-                    if (entry.getCreditAccount() == getAccountProperty().get()) {
+                    if (entry.getCreditAccount() == accountProperty().get()) {
                         accountExchangePane.setExchangedAmount(entry.getDebitAmount().abs());
                         break;
-                    } else if (entry.getDebitAccount() == getAccountProperty().get()) {
+                    } else if (entry.getDebitAccount() == accountProperty().get()) {
                         accountExchangePane.setExchangedAmount(entry.getCreditAmount());
                         break;
                     }

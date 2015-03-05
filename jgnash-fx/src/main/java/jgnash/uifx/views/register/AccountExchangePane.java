@@ -81,12 +81,12 @@ public class AccountExchangePane extends GridPane {
 
     final private ObjectProperty<BigDecimal> amountProperty = new SimpleObjectProperty<>(BigDecimal.ZERO);
 
-    final private SimpleBooleanProperty amountEditable = new SimpleBooleanProperty();
+    final private SimpleBooleanProperty amountEditableProperty = new SimpleBooleanProperty();
 
     /**
      * Determines if the base account will be visible for selection
      */
-    final private SimpleBooleanProperty filterBaseAccount = new SimpleBooleanProperty(true);
+    final private SimpleBooleanProperty filterBaseAccountProperty = new SimpleBooleanProperty(true);
 
     final private SimpleBooleanProperty disableProperty = new SimpleBooleanProperty(false);
 
@@ -117,10 +117,10 @@ public class AccountExchangePane extends GridPane {
                 throw new RuntimeException("baseCurrency does not match baseAccount currency");
             }
 
-            if (getFilterBaseAccount().get()){
+            if (filterBaseAccountProperty().get()){
                 accountCombo.filterAccount(newValue);
             }
-            getBaseCurrencyProperty().setValue(newValue.getCurrencyNode());
+            baseCurrencyProperty().setValue(newValue.getCurrencyNode());
         });
 
         baseCurrencyProperty.addListener((observable, oldValue, newValue) -> {
@@ -197,7 +197,7 @@ public class AccountExchangePane extends GridPane {
 
     private void exchangeRateFieldAction() {
         if (exchangeAmountProperty.get() != null) { // NPE if exchangeAmount has not been set
-            if (getAmount().compareTo(BigDecimal.ZERO) == 0 && amountEditable.get()) {
+            if (getAmount().compareTo(BigDecimal.ZERO) == 0 && amountEditableProperty.get()) {
                 if (exchangeRateField.getDecimal().compareTo(BigDecimal.ZERO) != 0) {
                     amountProperty.set(exchangeAmountProperty.get().divide(exchangeRateField.getDecimal(),
                             MathConstants.mathContext).setScale(baseCurrencyProperty.get().getScale(), MathConstants.roundingMode));
@@ -212,7 +212,7 @@ public class AccountExchangePane extends GridPane {
     }
 
     private void exchangeAmountFieldAction() {
-        if (getAmount().compareTo(BigDecimal.ZERO) == 0 && amountEditable.get()) {
+        if (getAmount().compareTo(BigDecimal.ZERO) == 0 && amountEditableProperty.get()) {
             if (exchangeRateField.getDecimal().compareTo(BigDecimal.ZERO) != 0) {
                 amountProperty.set(exchangeAmountProperty.get().divide(exchangeRateField.getDecimal(),
                         MathConstants.mathContext).setScale(baseCurrencyProperty.get().getScale(), MathConstants.roundingMode));
@@ -225,8 +225,8 @@ public class AccountExchangePane extends GridPane {
     }
 
     private void updateControlVisibility() {
-        if (getSelectedAccount() != null && getBaseCurrencyProperty() != null) {
-            if (getSelectedAccount().getCurrencyNode() == getBaseCurrencyProperty().get()) {
+        if (getSelectedAccount() != null && baseCurrencyProperty() != null) {
+            if (getSelectedAccount().getCurrencyNode() == baseCurrencyProperty().get()) {
                 getChildren().removeAll(label, exchangeAmountField, expandButton);
             } else {
                 if (!getChildren().contains(label)) {
@@ -246,24 +246,24 @@ public class AccountExchangePane extends GridPane {
         }
     }
 
-    public ObjectProperty<Account> getBaseAccountProperty() {
+    public ObjectProperty<Account> baseAccountProperty() {
         return baseAccountProperty;
     }
 
-    ObjectProperty<CurrencyNode> getBaseCurrencyProperty() {
+    ObjectProperty<CurrencyNode> baseCurrencyProperty() {
         return baseCurrencyProperty;
     }
 
-    public ObjectProperty<BigDecimal> getExchangeAmountProperty() {
+    public ObjectProperty<BigDecimal> exchangeAmountProperty() {
         return exchangeAmountProperty;
     }
 
-    public ObjectProperty<BigDecimal> getAmountProperty() {
+    public ObjectProperty<BigDecimal> amountProperty() {
         return amountProperty;
     }
 
-    public SimpleBooleanProperty getAmountEditable() {
-        return amountEditable;
+    public SimpleBooleanProperty amountEditableProperty() {
+        return amountEditableProperty;
     }
 
     public Account getSelectedAccount() {
@@ -282,7 +282,7 @@ public class AccountExchangePane extends GridPane {
         disableProperty().setValue(!enabled);
     }
 
-    public SimpleBooleanProperty getFilterBaseAccount() {
-        return filterBaseAccount;
+    public SimpleBooleanProperty filterBaseAccountProperty() {
+        return filterBaseAccountProperty;
     }
 }
