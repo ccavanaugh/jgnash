@@ -17,17 +17,8 @@
  */
 package jgnash.uifx.control;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Objects;
-
 import javafx.application.Platform;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -35,7 +26,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-
 import jgnash.engine.MathConstants;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
@@ -43,6 +33,11 @@ import jgnash.util.Nullable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Objects;
 
 /**
  * Text field for entering decimal values
@@ -91,6 +86,11 @@ public class DecimalTextField extends TextField {
      * Controls the minimum number of displayed decimal places
      */
     private final SimpleIntegerProperty minScaleProperty = new SimpleIntegerProperty();
+
+    /**
+     * Displays a blank field if {@code decimalProperty} is zero
+     */
+    private final BooleanProperty blankWhenZero = new SimpleBooleanProperty(true);
 
     static {
         FLOAT = getAllowedChars();
@@ -146,10 +146,10 @@ public class DecimalTextField extends TextField {
         decimalProperty().addListener(new ChangeListener<BigDecimal>() {
             @Override
             public void changed(final ObservableValue<? extends BigDecimal> observable, final BigDecimal oldValue, final BigDecimal newValue) {
-                if (newValue != null) {
-                    setText(format.format(newValue.doubleValue()));
-                } else {
+                if (newValue == null || (blankWhenZero().get() && newValue.compareTo(BigDecimal.ZERO) == 0)) {
                     setText("");
+                } else {
+                    setText(format.format(newValue.doubleValue()));
                 }
             }
         });
@@ -349,5 +349,9 @@ public class DecimalTextField extends TextField {
             }
         }
         return "";
+    }
+
+    public BooleanProperty blankWhenZero() {
+        return blankWhenZero;
     }
 }
