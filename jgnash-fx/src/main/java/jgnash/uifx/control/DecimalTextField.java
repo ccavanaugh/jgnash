@@ -92,9 +92,9 @@ public class DecimalTextField extends TextField {
     private final SimpleIntegerProperty minScaleProperty = new SimpleIntegerProperty();
 
     /**
-     * Displays a blank field if {@code decimalProperty} is zero
+     * Displays an empty field if {@code decimalProperty} is zero
      */
-    private final BooleanProperty blankWhenZeroProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty emptyWhenZeroProperty = new SimpleBooleanProperty(true);
 
     static {
         FLOAT = getAllowedChars();
@@ -150,7 +150,7 @@ public class DecimalTextField extends TextField {
         decimalProperty().addListener(new ChangeListener<BigDecimal>() {
             @Override
             public void changed(final ObservableValue<? extends BigDecimal> observable, final BigDecimal oldValue, final BigDecimal newValue) {
-                if (newValue == null || (blankWhenZeroProperty().get() && newValue.compareTo(BigDecimal.ZERO) == 0)) {
+                if (newValue == null || (emptyWhenZeroProperty().get() && newValue.compareTo(BigDecimal.ZERO) == 0)) {
                     setText("");
                 } else {
                     setText(format.format(newValue.doubleValue()));
@@ -360,7 +360,7 @@ public class DecimalTextField extends TextField {
         return "";
     }
 
-    public BooleanProperty blankWhenZeroProperty() {
-        return blankWhenZeroProperty;
+    public BooleanProperty emptyWhenZeroProperty() {
+        return emptyWhenZeroProperty;
     }
 }
