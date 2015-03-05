@@ -17,17 +17,9 @@
  */
 package jgnash.uifx.views.register;
 
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
-import jgnash.engine.AbstractInvestmentTransactionEntry;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.ReconcileManager;
-import jgnash.engine.ReconciledState;
-import jgnash.engine.Transaction;
-import jgnash.engine.TransactionEntry;
-import jgnash.engine.TransactionEntryBuyX;
-import jgnash.engine.TransactionFactory;
+import jgnash.engine.*;
 import jgnash.util.NotNull;
 
 import java.math.BigDecimal;
@@ -67,6 +59,12 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
         getAccountProperty().addListener((observable, oldValue, newValue) -> {
             clearForm();
         });
+
+        final ChangeListener<BigDecimal> changeListener = (observable, oldValue, newValue) -> updateTotalField();
+
+        quantityField.decimalProperty().addListener(changeListener);
+        priceField.decimalProperty().addListener(changeListener);
+        feesPane.decimalProperty().addListener(changeListener);
     }
 
     @Override
@@ -102,21 +100,13 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
             }
         });
 
-        updateTotalField();
-
         modTrans = transaction;
 
         reconciledButton.setSelected(transaction.getReconciled(getAccountProperty().get()) != ReconciledState.NOT_RECONCILED);
     }
 
     void updateTotalField() {
-        final BigDecimal quantity = quantityField.getDecimal();
-
-        BigDecimal value = quantity.multiply(priceField.getDecimal());
-
-        value = value.add(feesPane.getDecimal());
-
-        totalField.setDecimal(value);
+        totalField.setDecimal(quantityField.getDecimal().multiply(priceField.getDecimal()).add(feesPane.getDecimal()));
     }
 
     @Override
@@ -145,7 +135,6 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
         accountExchangePane.setEnabled(true);
         accountExchangePane.setExchangedAmount(null);
         accountExchangePane.setSelectedAccount(getAccountProperty().get());
-        updateTotalField();
     }
 
     @Override

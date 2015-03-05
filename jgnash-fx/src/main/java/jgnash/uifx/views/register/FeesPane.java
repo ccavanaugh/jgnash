@@ -17,6 +17,7 @@
  */
 package jgnash.uifx.views.register;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -166,5 +167,9 @@ public class FeesPane extends GridPane {
 
     public SimpleObjectProperty<Account> getAccountProperty() {
         return accountProperty;
+    }
+
+    public ObjectProperty<BigDecimal> decimalProperty() {
+        return feesField.decimalProperty();
     }
 }
