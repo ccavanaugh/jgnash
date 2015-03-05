@@ -125,7 +125,7 @@ abstract class AbstractSlipController implements Slip {
         modTrans = null;
 
         amountField.setEditable(true);
-        amountField.setDecimal(null);
+        amountField.setDecimal(BigDecimal.ZERO);
 
         reconciledButton.setDisable(false);
         reconciledButton.setSelected(false);

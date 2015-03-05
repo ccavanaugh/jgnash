@@ -23,5 +23,5 @@ package jgnash.uifx.views.register;
  * @author Craig Cavanaugh
  */
 public enum SlipType {
-    INCREASE, DECREASE, BUY_SHARES, SELL_SHARES
+    INCREASE, DECREASE
 }

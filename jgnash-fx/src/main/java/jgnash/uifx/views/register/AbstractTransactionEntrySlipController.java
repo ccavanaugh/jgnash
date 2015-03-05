@@ -17,6 +17,7 @@
  */
 package jgnash.uifx.views.register;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javafx.beans.property.ObjectProperty;
@@ -55,7 +56,7 @@ abstract class AbstractTransactionEntrySlipController {
 
     final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
-    final SimpleObjectProperty<List<TransactionEntry>> transactionEntryListProperty = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<List<TransactionEntry>> transactionEntryListProperty = new SimpleObjectProperty<>();
 
     TransactionEntry oldEntry;
 
@@ -95,7 +96,7 @@ abstract class AbstractTransactionEntrySlipController {
         oldEntry = null;
 
         memoField.setText(null);
-        amountField.setDecimal(null);
+        amountField.setDecimal(BigDecimal.ZERO);
         reconciledButton.setSelected(false);
         accountExchangePane.setExchangedAmount(null);
     }

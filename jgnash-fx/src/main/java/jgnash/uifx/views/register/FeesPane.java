@@ -158,7 +158,7 @@ public class FeesPane extends GridPane {
      */
     void clearForm() {
         feesDialog.getTransactionEntries().clear();
-        feesField.setDecimal(null);
+        feesField.setDecimal(BigDecimal.ZERO);
     }
 
     public BigDecimal getDecimal() {

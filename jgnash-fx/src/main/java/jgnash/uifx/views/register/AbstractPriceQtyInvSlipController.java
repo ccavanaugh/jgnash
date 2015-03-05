@@ -17,6 +17,7 @@
  */
 package jgnash.uifx.views.register;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.logging.Logger;
 
@@ -96,10 +97,11 @@ public abstract class AbstractPriceQtyInvSlipController extends AbstractInvSlipC
 
         numberComboBox.setValue("");
         memoTextField.clear();
-        priceField.setDecimal(null);
-        quantityField.setDecimal(null);
+        priceField.setDecimal(BigDecimal.ZERO);
+        quantityField.setDecimal(BigDecimal.ZERO);
+        totalField.setDecimal(BigDecimal.ZERO);
+
         reconciledButton.setSelected(false);
-        totalField.setDecimal(null);
     }
 
     @Override

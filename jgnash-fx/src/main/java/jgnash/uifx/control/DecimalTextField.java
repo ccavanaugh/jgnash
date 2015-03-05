@@ -18,7 +18,12 @@
 package jgnash.uifx.control;
 
 import javafx.application.Platform;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -28,7 +33,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import jgnash.engine.MathConstants;
 import jgnash.util.NotNull;
-import jgnash.util.Nullable;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -196,18 +200,23 @@ public class DecimalTextField extends TextField {
         if (!t.isEmpty()) {
             // round the value to scale
             setDecimal(new BigDecimal(t).setScale(scaleProperty.get(), MathConstants.roundingMode));
-        }
-    }
-
-    public void setDecimal(@Nullable final BigDecimal decimal) {
-        if (decimal != null) {
-            decimalProperty.setValue(decimal.setScale(scaleProperty.get(), MathConstants.roundingMode));
         } else {
-            decimalProperty().setValue(null);
+            setDecimal(BigDecimal.ZERO);
         }
     }
 
-    public BigDecimal getDecimal() {
+    /**
+     * Sets the decimal value for the field
+     *
+     * @param decimal {@code BigDecimal}
+     */
+    public void setDecimal(@NotNull final BigDecimal decimal) {
+        Objects.requireNonNull(decimal);
+
+        decimalProperty.setValue(decimal.setScale(scaleProperty.get(), MathConstants.roundingMode));
+    }
+
+    public @NotNull BigDecimal getDecimal() {
         if (!isEmpty()) {
             try {
                 return new BigDecimal(evaluateInput());

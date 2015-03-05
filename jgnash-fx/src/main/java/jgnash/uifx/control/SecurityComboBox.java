@@ -53,7 +53,7 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
     /**
      * Model for the ComboBox
      */
-    private ObservableList<SecurityNode> items;
+    final private ObservableList<SecurityNode> items;
 
     final private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 

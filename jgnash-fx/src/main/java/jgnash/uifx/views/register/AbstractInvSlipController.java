@@ -55,7 +55,7 @@ public abstract class AbstractInvSlipController implements Slip {
         return accountProperty;
     }
 
-    public void initialize() {
+    void initialize() {
 
         // Lazy init when account property is set
         accountProperty.addListener((observable, oldValue, newValue) -> {
