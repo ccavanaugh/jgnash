@@ -26,17 +26,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import jgnash.engine.Account;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.SecurityNode;
-import jgnash.uifx.MainApplication;
-import jgnash.uifx.skin.StyleClass;
-import jgnash.uifx.util.StageUtils;
-import jgnash.util.NotNull;
-import jgnash.util.Nullable;
-import jgnash.util.Resource;
-
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.scene.Scene;
@@ -54,6 +43,18 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.SecurityNode;
+import jgnash.uifx.MainApplication;
+import jgnash.uifx.skin.StyleClass;
+import jgnash.uifx.util.StageUtils;
+import jgnash.util.NotNull;
+import jgnash.util.Nullable;
+import jgnash.util.Resource;
+
 import org.controlsfx.glyphfont.FontAwesome;
 
 /**
