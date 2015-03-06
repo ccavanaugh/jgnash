@@ -189,7 +189,8 @@ public class SplitTransactionDialog extends Stage {
         return param -> PREF_COLUMN_WEIGHTS[param];
     }
 
-    private void buildTable() {
+    @SuppressWarnings("unchecked")
+	private void buildTable() {
         final String[] columnNames = RegisterFactory.getSplitColumnNames(accountProperty().get().getAccountType());
 
         final TableColumn<TransactionEntry, String> accountColumn = new TableColumn<>(columnNames[0]);

@@ -188,8 +188,9 @@ class FeesDialog extends Stage {
     Callback<Integer, Double> getColumnWeightFactory() {
         return param -> PREF_COLUMN_WEIGHTS[param];
     }
-
-    private void buildTable() {
+    
+    @SuppressWarnings("unchecked")
+	private void buildTable() {
         final String[] columnNames = RegisterFactory.getSplitColumnNames(accountProperty().get().getAccountType());
 
         final TableColumn<TransactionEntry, String> accountColumn = new TableColumn<>(columnNames[0]);
@@ -213,7 +214,7 @@ class FeesDialog extends Stage {
         balanceColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(getBalanceAt(param.getValue())));
         balanceColumn.setCellFactory(cell -> new TransactionEntryCommodityFormatTableCell(CommodityFormat.getFullNumberFormat(accountProperty.get().getCurrencyNode())));
         balanceColumn.setSortable(false);   // do not allow a sort on the balance
-
+            
         tableView.getColumns().addAll(memoColumn, accountColumn, reconciledColumn, increaseColumn, decreaseColumn, balanceColumn);
 
         tableViewManager.setColumnFormatFactory(param -> {
