@@ -67,7 +67,6 @@ public class SplitTransactionSlipController extends AbstractTransactionEntrySlip
         return entry;
     }
 
-    @Override
     void modifyTransactionEntry(final TransactionEntry entry) {
         oldEntry = entry;
 

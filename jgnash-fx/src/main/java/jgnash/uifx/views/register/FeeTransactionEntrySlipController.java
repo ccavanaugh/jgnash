@@ -51,7 +51,6 @@ public class FeeTransactionEntrySlipController extends AbstractTransactionEntryS
         return entry;
     }
 
-    @Override
     void modifyTransactionEntry(final TransactionEntry entry) {
         oldEntry = entry;
 

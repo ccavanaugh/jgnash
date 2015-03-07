@@ -17,6 +17,9 @@
  */
 package jgnash.uifx.views.register;
 
+import java.math.BigDecimal;
+import java.util.ResourceBundle;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -28,9 +31,13 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+
 import jgnash.engine.Account;
 import jgnash.engine.TransactionEntry;
 import jgnash.text.CommodityFormat;
@@ -38,9 +45,6 @@ import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
-
-import java.math.BigDecimal;
-import java.util.ResourceBundle;
 
 /**
  * Split Transaction entry dialog
@@ -69,14 +73,12 @@ class FeesDialog extends Stage {
     private TableView<TransactionEntry> tableView;
 
     @FXML
-    private TabPane tabPane;
+    private StackPane formPane;
 
     @FXML
     private ResourceBundle resources;
 
-    private Tab creditTab;
-
-    private Tab debitTab;
+    private FeeTransactionEntrySlipController debitController;
 
     private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
@@ -87,7 +89,7 @@ class FeesDialog extends Stage {
     private final SortedList<TransactionEntry> sortedList = new SortedList<>(transactionEntries);
 
     FeesDialog() {
-        FXMLUtils.loadFXML(this, "SplitTransactionDialog.fxml", ResourceUtils.getBundle());
+        FXMLUtils.loadFXML(this, "FeesDialog.fxml", ResourceUtils.getBundle());
 
         setTitle(ResourceUtils.getBundle().getString("Title.InvFees"));
 
@@ -107,7 +109,7 @@ class FeesDialog extends Stage {
     @FXML
     private void initialize() {
         accountProperty().addListener((observable, oldValue, newValue) -> {
-            initTabs();
+            initForm();
             loadTable();
         });
 
@@ -141,8 +143,7 @@ class FeesDialog extends Stage {
     }
 
     private void newAction() {
-        ((SplitTransactionSlipController)creditTab.getUserData()).clearForm();
-        ((SplitTransactionSlipController)debitTab.getUserData()).clearForm();
+        debitController.clearForm();
         tableView.getSelectionModel().clearSelection();
     }
 
@@ -150,7 +151,7 @@ class FeesDialog extends Stage {
         final TransactionEntry entry = tableView.getSelectionModel().getSelectedItem();
         if (entry != null) {
             tableView.getSelectionModel().clearSelection();
-            ((SplitTransactionSlipController)tabPane.getSelectionModel().getSelectedItem().getUserData()).clearForm();
+            debitController.clearForm();
             transactionEntries.remove(entry);
         }
     }
@@ -164,13 +165,7 @@ class FeesDialog extends Stage {
     }
 
     private void modifyTransactionEntry(@NotNull final TransactionEntry transactionEntry) {
-        if (transactionEntry.getCreditAccount() == accountProperty.get()) { // this is a credit
-            tabPane.getSelectionModel().select(creditTab);
-            ((SplitTransactionSlipController)creditTab.getUserData()).modifyTransactionEntry(transactionEntry);
-        } else {
-            tabPane.getSelectionModel().select(debitTab);
-            ((SplitTransactionSlipController)debitTab.getUserData()).modifyTransactionEntry(transactionEntry);
-        }
+        debitController.modifyTransactionEntry(transactionEntry);
     }
 
     private void loadTable() {
@@ -228,33 +223,12 @@ class FeesDialog extends Stage {
         });
     }
 
-    private void initTabs() {
-        final String[] tabNames = RegisterFactory.getCreditDebitTabNames(accountProperty().get().getAccountType());
+    private void initForm() {
+        debitController = FXMLUtils.loadFXML(o -> formPane.getChildren().addAll((Node) o),
+                "FeeTransactionEntrySlip.fxml", resources);
 
-        creditTab = new Tab(tabNames[0]);
-
-        final SplitTransactionSlipController creditController = FXMLUtils.loadFXML(o -> creditTab.setContent((Node) o),
-                "SplitTransactionSlip.fxml", resources);
-
-        creditTab.setUserData(creditController);
-
-        creditController.setSlipType(SlipType.INCREASE);
-        creditController.getAccountProperty().setValue(accountProperty().getValue());
-        creditController.getTransactionEntryListProperty().setValue(transactionEntries);
-
-        debitTab = new Tab(tabNames[1]);
-
-        final SplitTransactionSlipController debitController = FXMLUtils.loadFXML(o -> debitTab.setContent((Node) o),
-                "SplitTransactionSlip.fxml", resources);
-
-        debitTab.setUserData(debitController);
-
-        debitController.setSlipType(SlipType.DECREASE);
-        debitController.getAccountProperty().setValue(accountProperty().getValue());
+        debitController.getAccountProperty().bind(accountProperty);
         debitController.getTransactionEntryListProperty().setValue(transactionEntries);
-
-        tabPane.getTabs().addAll(creditTab, debitTab);
-        tabPane.getSelectionModel().select(debitTab);   // debit tab should be the default
     }
 
     private BigDecimal getBalanceAt(final TransactionEntry transactionEntry) {

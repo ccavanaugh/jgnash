@@ -140,7 +140,7 @@ public class FeesPane extends GridPane {
             feesField.setDecimal(sumFees().abs());
         }
 
-        feesField.setDisable(feeList.size() > 1);
+        feesField.setEditable(feeList.size() < 1);
     }
 
     private BigDecimal sumFees() {

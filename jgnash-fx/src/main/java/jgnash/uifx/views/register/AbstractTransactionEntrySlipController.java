@@ -73,8 +73,6 @@ abstract class AbstractTransactionEntrySlipController {
 
     abstract TransactionEntry buildTransactionEntry();
 
-    abstract void modifyTransactionEntry(final TransactionEntry entry);
-
     ObjectProperty<Account> getAccountProperty() {
         return accountProperty;
     }
