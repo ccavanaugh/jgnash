@@ -81,6 +81,12 @@
     -fx-spacing: 0.5em;
 }
 
+.border {
+    -fx-border-color:-fx-box-border;
+    -fx-border-width: 1;
+    -fx-border-style: solid;
+}
+
 .info-bar {
     -fx-hgap: 0.333333em;
 	-fx-padding: 0.833333em;
