@@ -32,7 +32,7 @@
                 <bottom>
                     <VBox styleClass="dialog, form">
                         <children>
-                            <TabPane tabClosingPolicy="UNAVAILABLE" fx:id="tabPane" VBox.vgrow="NEVER"/>
+                            <TabPane tabClosingPolicy="UNAVAILABLE" fx:id="tabPane" VBox.vgrow="NEVER" styleClass="border"/>
                             <ButtonBar VBox.vgrow="NEVER">
                                 <buttons>
                                     <Button fx:id="closeButton" text="%Button.Close" ButtonBar.buttonData="CANCEL_CLOSE"/>
