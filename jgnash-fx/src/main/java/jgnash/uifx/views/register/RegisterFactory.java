@@ -143,7 +143,7 @@ class RegisterFactory {
                 names = SPLIT_LIABILITY_NAMES;
             } else if (accountType.getAccountGroup() == AccountGroup.ASSET) {
                 names = SPLIT_BANK_NAMES;
-            } else {
+            } else {    // Investment accounts
                 names = SPLIT_GENERIC_NAMES;
             }
         }
