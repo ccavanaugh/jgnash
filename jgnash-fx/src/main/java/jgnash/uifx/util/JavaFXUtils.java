@@ -3,15 +3,22 @@ package jgnash.uifx.util;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 
 /**
  * Utility methods for {@code Scene}
  *
  * @author Craig Cavanaugh
  */
-public class SceneUtils {
+public class JavaFXUtils {
 
-    private SceneUtils() {
+    public static final KeyCombination ENTER_KEY = new KeyCodeCombination(KeyCode.ENTER);
+
+    public static final KeyCombination ESCAPE_KEY = new KeyCodeCombination(KeyCode.ESCAPE);
+
+    private JavaFXUtils() {
         // utility class
     }
 

@@ -25,13 +25,10 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 
 import jgnash.uifx.control.autocomplete.AutoCompleteModel;
-import jgnash.uifx.util.SceneUtils;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Text field for auto completion of values
@@ -41,8 +38,6 @@ import jgnash.uifx.util.SceneUtils;
 public class AutoCompleteTextField<E> extends TextField {
 
     private final ObjectProperty<AutoCompleteModel<E>> autoCompleteModelObjectProperty = new SimpleObjectProperty<>();
-
-    private static final KeyCombination ENTER_KEY = new KeyCodeCombination(KeyCode.ENTER);
 
     public AutoCompleteTextField() {
         final FXMLLoader loader = new FXMLLoader(getClass().getResource("AutoCompleteTextField.fxml"));
@@ -60,8 +55,8 @@ public class AutoCompleteTextField<E> extends TextField {
         addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             @Override
             public void handle(final KeyEvent event) {
-                if (ENTER_KEY.match(event)) {
-                    Platform.runLater(() -> SceneUtils.focusNext(AutoCompleteTextField.this));
+                if (JavaFXUtils.ENTER_KEY.match(event)) {
+                    Platform.runLater(() -> JavaFXUtils.focusNext(AutoCompleteTextField.this));
                 }
             }
         });
