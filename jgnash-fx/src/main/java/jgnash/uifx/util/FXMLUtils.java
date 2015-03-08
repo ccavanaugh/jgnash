@@ -16,7 +16,6 @@ import javax.inject.Inject;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -73,7 +72,7 @@ public class FXMLUtils {
      * @param <C>            the fxml controller
      * @return the controller for the fxml file
      */
-    public static <R extends Parent, C> C loadFXML(final Consumer<R> consumer, final String fileName, final ResourceBundle resourceBundle) {
+    public static <R, C> C loadFXML(final Consumer<R> consumer, final String fileName, final ResourceBundle resourceBundle) {
         final URL fxmlUrl = consumer.getClass().getResource(fileName);
         final FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl, resourceBundle);
 
