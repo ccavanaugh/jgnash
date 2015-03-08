@@ -1,20 +1,29 @@
 package jgnash.uifx.util;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import jgnash.uifx.MainApplication;
-import jgnash.util.NotNull;
-
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.lang.reflect.Field;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.inject.Inject;
+
+import javafx.beans.property.ObjectProperty;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+import jgnash.uifx.MainApplication;
+import jgnash.util.NotNull;
 
 /**
  * FXML Utility methods
@@ -31,8 +40,8 @@ public class FXMLUtils {
      * Loads a scene and sets the specified {@code Stage} as the root and controller.  Application defaults are
      * set for the {@code Stage}
      *
-     * @param stage {@code Stage}
-     * @param fileName name of the fxml file.  It's assumed to be in the same package as the stage
+     * @param stage          {@code Stage}
+     * @param fileName       name of the fxml file.  It's assumed to be in the same package as the stage
      * @param resourceBundle {@code ResourceBundle} to pass to the {@code FXMLLoader}
      */
     public static void loadFXML(@NotNull final Stage stage, @NotNull final String fileName, @NotNull final ResourceBundle resourceBundle) {
@@ -57,15 +66,14 @@ public class FXMLUtils {
     /**
      * Reduces boilerplate code to load an fxml file
      *
-     * @param consumer {@code Consumer to pass to the parent node},
-     * @param fileName name of the fxml file.  It's assumed to be in the same package as the consumer
+     * @param consumer       {@code Consumer to pass to the parent node},
+     * @param fileName       name of the fxml file.  It's assumed to be in the same package as the consumer
      * @param resourceBundle {@code ResourceBundle} to pass to the {@code FXMLLoader}
-     * @param <R> must extend {code Node}
-     * @param <C> the fxml controller
-     *
+     * @param <R>            must extend {code Node}
+     * @param <C>            the fxml controller
      * @return the controller for the fxml file
      */
-    public static <R, C> C loadFXML(final Consumer<R> consumer, final String fileName, final ResourceBundle resourceBundle) {
+    public static <R extends Parent, C> C loadFXML(final Consumer<R> consumer, final String fileName, final ResourceBundle resourceBundle) {
         final URL fxmlUrl = consumer.getClass().getResource(fileName);
         final FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl, resourceBundle);
 
@@ -74,6 +82,9 @@ public class FXMLUtils {
             C controller = fxmlLoader.getController();
             consumer.accept(root);
 
+            // Inject the root into the controller
+            injectParent(controller, root);
+
             return controller;
         } catch (final IOException ioe) { // log and throw an unchecked exception
             Logger.getLogger(FXMLUtils.class.getName()).log(Level.SEVERE, ioe.getMessage(), ioe);
@@ -81,12 +92,46 @@ public class FXMLUtils {
         }
     }
 
+    private static Field[] getDeclaredFields(final Class clazz) {
+        final List<Field> fields = new ArrayList<>();
+        fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+
+        if (clazz.getSuperclass() != null) {
+            fields.addAll(Arrays.asList(getDeclaredFields(clazz.getSuperclass())));
+        }
+        return fields.toArray(new Field[fields.size()]);
+    }
+
+    /**
+     * Injects a value into a field of initialized type {@code ObjectProperty}.  The field must also be annotated
+     * with {@code javax.inject.Inject}
+     *
+     * @param object {@code Object} to search for field
+     * @param value  value to set
+     * @see javafx.beans.property.ObjectProperty
+     * @see javax.inject.Inject
+     */
+    @SuppressWarnings("unchecked")
+    private static void injectParent(final Object object, final Object value) {
+        for (final Field field : getDeclaredFields(object.getClass())) {
+            if (field.isAnnotationPresent(Inject.class) && field.getName().equals("parentProperty")) {
+                field.setAccessible(true);
+                try {
+                    final ObjectProperty property = (ObjectProperty) field.get(object);
+                    property.setValue(value);
+                } catch (IllegalAccessException e) {
+                    Logger.getLogger(FXMLUtils.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+                }
+            }
+        }
+    }
+
     /**
      * Creates a new Stage with application defaults {@code StageStyle.DECORATED}, {@code Modality.APPLICATION_MODAL}
      * with the specified fxml file as the {@code Scene}.
      *
-     * @param controller controller object to pass to the {@code FXMLLoader}
-     * @param fileName name of the fxml file.  It's assumed to be in the same package as the controller
+     * @param controller     controller object to pass to the {@code FXMLLoader}
+     * @param fileName       name of the fxml file.  It's assumed to be in the same package as the controller
      * @param resourceBundle {@code ResourceBundle} to pass to the {@code FXMLLoader}
      * @return new {@code Stage}
      */
@@ -108,6 +153,9 @@ public class FXMLUtils {
             scene.getStylesheets().addAll(MainApplication.DEFAULT_CSS);
 
             stage.setScene(scene);
+
+            // Inject the scene into the controller
+            injectParent(controller, scene);
         } catch (final IOException ioe) { // log and throw an unchecked exception
             Logger.getLogger(FXMLUtils.class.getName()).log(Level.SEVERE, ioe.getMessage(), ioe);
             throw new UncheckedIOException(ioe);
@@ -120,7 +168,7 @@ public class FXMLUtils {
      * Creates a new Stage with application defaults {@code StageStyle.DECORATED}, {@code Modality.APPLICATION_MODAL}
      * with the specified fxml {@code URL} as the {@code Scene}.
      *
-     * @param fxmlUrl the fxml {@code URL}
+     * @param fxmlUrl        the fxml {@code URL}
      * @param resourceBundle {@code ResourceBundle} to pass to the {@code FXMLLoader}
      * @return new {@code Stage}
      */
