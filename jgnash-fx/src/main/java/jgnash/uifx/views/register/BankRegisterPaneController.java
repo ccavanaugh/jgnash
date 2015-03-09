@@ -17,12 +17,7 @@
  */
 package jgnash.uifx.views.register;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
@@ -66,13 +61,11 @@ public class BankRegisterPaneController extends RegisterPaneController {
         transactionForms.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         // Load the register table
-        try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BasicRegisterTable.fxml"), resources);
-            registerTablePane.getChildren().add(fxmlLoader.load());
-            registerTableControllerProperty.setValue(fxmlLoader.getController());
-        } catch (final IOException e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-        }
+        final RegisterTableController controller = FXMLUtils.loadFXML(o -> {
+            registerTablePane.getChildren().add((Node) o);
+        }, "BasicRegisterTable.fxml", resources);
+
+        registerTableControllerProperty.setValue(controller);
 
         accountProperty().addListener((observable, oldValue, newValue) -> {
             buildTabs();
