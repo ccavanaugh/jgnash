@@ -20,10 +20,19 @@ package jgnash.uifx.views.register;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
+import javafx.scene.input.KeyEvent;
 
 import jgnash.engine.Account;
 import jgnash.engine.Transaction;
@@ -31,6 +40,7 @@ import jgnash.engine.TransactionEntry;
 import jgnash.uifx.control.AutoCompleteTextField;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Abstract controller for spit transaction entries of various types
@@ -38,6 +48,9 @@ import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
  * @author Craig Cavanaugh
  */
 abstract class AbstractTransactionEntrySlipController {
+
+    @Inject
+    private final ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
 
     @FXML
     DecimalTextField amountField;
@@ -69,6 +82,31 @@ abstract class AbstractTransactionEntrySlipController {
 
         // Enabled auto completion
         AutoCompleteFactory.setMemoModel(memoField);
+
+        // Install an event handler when the parent has been set via injection
+        parentProperty.addListener(new ChangeListener<Parent>() {
+            @Override
+            public void changed(final ObservableValue<? extends Parent> observable, final Parent oldValue, final Parent newValue) {
+                newValue.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+                    @Override
+                    public void handle(final KeyEvent event) {
+                        if (JavaFXUtils.ESCAPE_KEY.match(event)) {  // clear the form if an escape key is detected
+                            clearForm();
+                        } else if (JavaFXUtils.ENTER_KEY.match(event)) {    // handle an enter key if detected
+                            if (validateForm()) {
+                                Platform.runLater(AbstractTransactionEntrySlipController.this::handleEnterAction);
+                            } else {
+                                Platform.runLater(() -> {
+                                    if (event.getSource() instanceof Node) {
+                                        JavaFXUtils.focusNext((Node) event.getSource());
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+            }
+        });
     }
 
     abstract TransactionEntry buildTransactionEntry();

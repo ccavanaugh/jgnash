@@ -25,12 +25,19 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.inject.Inject;
+
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
+import javafx.scene.input.KeyEvent;
 
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
@@ -44,6 +51,7 @@ import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * Abstract bank transaction entry slip controller
@@ -51,6 +59,9 @@ import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
  * @author Craig Cavanaugh
  */
 abstract class AbstractSlipController implements Slip {
+
+    @Inject
+    private final ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
 
     @FXML
     protected DecimalTextField amountField;
@@ -91,7 +102,6 @@ abstract class AbstractSlipController implements Slip {
 
         AutoCompleteFactory.setMemoModel(memoTextField);
 
-
         accountProperty.addListener(new ChangeListener<Account>() {
             @Override
             public void changed(final ObservableValue<? extends Account> observable, final Account oldValue, final Account newValue) {
@@ -107,6 +117,32 @@ abstract class AbstractSlipController implements Slip {
         payeeTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) {
                 handlePayeeFocusChange();
+            }
+        });
+
+        // Install an event handler when the parent has been set via injection
+        parentProperty.addListener(new ChangeListener<Parent>() {
+            @Override
+            public void changed(final ObservableValue<? extends Parent> observable, final Parent oldValue, final Parent newValue) {
+
+                newValue.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+                    @Override
+                    public void handle(final KeyEvent event) {
+                        if (JavaFXUtils.ESCAPE_KEY.match(event)) {  // clear the form if an escape key is detected
+                            clearForm();
+                        } else if (JavaFXUtils.ENTER_KEY.match(event)) {    // handle an enter key if detected
+                            if (validateForm()) {
+                                Platform.runLater(AbstractSlipController.this::handleEnterAction);
+                            } else {
+                                Platform.runLater(() -> {
+                                    if (event.getSource() instanceof Node) {
+                                        JavaFXUtils.focusNext((Node) event.getSource());
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
             }
         });
     }

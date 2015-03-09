@@ -23,16 +23,17 @@ import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.Pane;
 
 import jgnash.engine.AccountGroup;
 import jgnash.engine.AccountType;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionType;
+import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.NotNull;
 
 /**
@@ -83,13 +84,13 @@ public class BankRegisterPaneController extends RegisterPaneController {
         if (!(transaction instanceof InvestmentTransaction)) {
             if (transaction.getTransactionType() == TransactionType.SINGLENTRY) {
                 transactionForms.getSelectionModel().select(adjustTab);
-                ((Slip)adjustTab.getUserData()).modifyTransaction(transaction);
+                ((Slip) adjustTab.getUserData()).modifyTransaction(transaction);
             } else if (transaction.getAmount(accountProperty().get()).signum() >= 0) {
                 transactionForms.getSelectionModel().select(creditTab);
-                ((Slip)creditTab.getUserData()).modifyTransaction(transaction);
+                ((Slip) creditTab.getUserData()).modifyTransaction(transaction);
             } else {
                 transactionForms.getSelectionModel().select(debitTab);
-                ((Slip)debitTab.getUserData()).modifyTransaction(transaction);
+                ((Slip) debitTab.getUserData()).modifyTransaction(transaction);
             }
         } /*else {
             // TODO: Show investment transaction dialog
@@ -115,49 +116,34 @@ public class BankRegisterPaneController extends RegisterPaneController {
     }
 
     private Tab buildTab(final String tabName, final SlipType slipType) {
+        final Tab tab = new Tab(tabName);
+        final SlipController slipController = FXMLUtils.loadFXML(o -> {
+            tab.setContent((Node) o);
+        }, "BankSlip.fxml", resources);
 
-        try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BankSlip.fxml"), resources);
-            final Pane pane = fxmlLoader.load();
+        slipController.setSlipType(slipType);
+        slipController.accountProperty().bind(accountProperty());
 
-            final SlipController slipController = fxmlLoader.getController();
+        tab.setUserData(slipController); // place a reference to the controller here
 
-            slipController.setSlipType(slipType);
-            slipController.accountProperty().bind(accountProperty());
-
-            final Tab tab = new Tab(tabName);
-            tab.setContent(pane);
-            tab.setUserData(slipController); // place a reference to the controller here
-
-            return tab;
-        } catch (final IOException e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-        }
-        return new Tab();
+        return tab;
     }
 
     private Tab buildAdjustTab() {
-        try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BankAdjustmentSlip.fxml"), resources);
-            final Pane pane = fxmlLoader.load();
+        final Tab tab = new Tab(resources.getString("Tab.Adjust"));
+        final BankAdjustmentSlipController transactionPaneController = FXMLUtils.loadFXML(o -> {
+            tab.setContent((Node) o);
+        }, "BankAdjustmentSlip.fxml", resources);
 
-            final BankAdjustmentSlipController transactionPaneController = fxmlLoader.getController();
+        transactionPaneController.accountProperty().bind(accountProperty());
 
-            transactionPaneController.accountProperty().bind(accountProperty());
+        tab.setUserData(transactionPaneController); // place a reference to the controller here
 
-            final Tab tab = new Tab(resources.getString("Tab.Adjust"));
-            tab.setContent(pane);
-            tab.setUserData(transactionPaneController); // place a reference to the controller here
-
-            return tab;
-        } catch (final IOException e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-        }
-        return new Tab();
+        return tab;
     }
 
     @Override
     protected void clearForm() {
-        ((Slip)transactionForms.getSelectionModel().getSelectedItem().getUserData()).clearForm();
+        ((Slip) transactionForms.getSelectionModel().getSelectedItem().getUserData()).clearForm();
     }
 }

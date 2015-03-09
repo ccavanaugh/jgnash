@@ -20,10 +20,19 @@ package jgnash.uifx.views.register;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import javax.inject.Inject;
+
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
+import javafx.scene.input.KeyEvent;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
@@ -32,11 +41,15 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.ReconcileManager;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * @author Craig Cavanaugh
  */
 public abstract class AbstractInvSlipController implements Slip {
+
+    @Inject
+    private final ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
 
     @FXML
     ResourceBundle resources;
@@ -61,6 +74,31 @@ public abstract class AbstractInvSlipController implements Slip {
         accountProperty.addListener((observable, oldValue, newValue) -> {
             if (!newValue.memberOf(AccountGroup.INVEST)) {
                 throw new RuntimeException(resources.getString("Message.Error.InvalidAccountGroup"));
+            }
+        });
+
+        // Install an event handler when the parent has been set via injection
+        parentProperty.addListener(new ChangeListener<Parent>() {
+            @Override
+            public void changed(final ObservableValue<? extends Parent> observable, final Parent oldValue, final Parent newValue) {
+                newValue.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+                    @Override
+                    public void handle(final KeyEvent event) {
+                        if (JavaFXUtils.ESCAPE_KEY.match(event)) {  // clear the form if an escape key is detected
+                            clearForm();
+                        } else if (JavaFXUtils.ENTER_KEY.match(event)) {    // handle an enter key if detected
+                            if (validateForm()) {
+                                Platform.runLater(AbstractInvSlipController.this::handleEnterAction);
+                            } else {
+                                Platform.runLater(() -> {
+                                    if (event.getSource() instanceof Node) {
+                                        JavaFXUtils.focusNext((Node) event.getSource());
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
             }
         });
     }
