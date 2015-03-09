@@ -71,7 +71,7 @@ public abstract class AbstractTransactionEntryDialog extends Stage {
 
     private final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
-    TableViewManager<TransactionEntry> tableViewManager;
+    private TableViewManager<TransactionEntry> tableViewManager;
 
     private final ObservableList<TransactionEntry> transactionEntries = FXCollections.observableArrayList();
 
