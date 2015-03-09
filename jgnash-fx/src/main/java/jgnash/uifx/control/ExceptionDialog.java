@@ -23,8 +23,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javax.inject.Inject;
+
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -46,6 +50,9 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
  * @author Craig Cavanaugh
  */
 public class ExceptionDialog {
+
+    @Inject
+    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
 
     @FXML
     private Button clipboardButton;
@@ -81,7 +88,7 @@ public class ExceptionDialog {
         message.setGraphic(fontAwesome.create(FontAwesome.Glyph.EXCLAMATION_TRIANGLE)
                 .color(Color.DARKRED).size(Alert.ICON_SIZE));
 
-        closeButton.setOnAction(event -> ((Stage)((Node)event.getSource()).getScene().getWindow()).close());
+        closeButton.setOnAction(event -> ((Stage) parentProperty.get().getWindow()).close());
 
         clipboardButton.setOnAction(event -> {
             Clipboard clipboard = Clipboard.getSystemClipboard();

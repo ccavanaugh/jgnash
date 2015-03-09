@@ -20,8 +20,13 @@ package jgnash.uifx.control;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javax.inject.Inject;
+
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -46,6 +51,9 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
 public class Alert {
 
     static final int ICON_SIZE = 48;
+
+    @Inject
+    private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
 
     @FXML
     private Label message;
@@ -119,7 +127,7 @@ public class Alert {
 
             button.setOnAction(event -> {
                 Alert.this.buttonType = buttonType;
-                ((Stage)((Node)event.getSource()).getScene().getWindow()).close();
+                ((Stage)parentProperty.get().getWindow()).close();
             });
 
             buttonBar.getButtons().add(button);
