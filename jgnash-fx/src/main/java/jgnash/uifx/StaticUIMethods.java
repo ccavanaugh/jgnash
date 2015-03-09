@@ -44,6 +44,8 @@ public class StaticUIMethods {
 
     private static final String APP_ICON = "/jgnash/resource/gnome-money.png";
 
+    private static Image applicationImage;
+
     private StaticUIMethods() {
         // Utility class
     }
@@ -120,16 +122,17 @@ public class StaticUIMethods {
      */
     @Nullable
     public static Image getApplicationIcon() {
-        Image resourceImage;
+        if (applicationImage == null) {
+            try {
+                applicationImage = new Image(StaticUIMethods.class.getResourceAsStream(APP_ICON));
+            } catch (final Exception ex) {
+                Logger.getLogger(StaticUIMethods.class.getName()).log(Level.WARNING, ex.getLocalizedMessage(), ex);
+                applicationImage = null;
+            }
 
-        try {
-            resourceImage = new Image(StaticUIMethods.class.getResourceAsStream(APP_ICON));
-        } catch (final Exception ex) {
-            Logger.getLogger(StaticUIMethods.class.getName()).log(Level.WARNING, ex.getLocalizedMessage(), ex);
-            resourceImage = null;
         }
 
-        return resourceImage;
+        return applicationImage;
     }
 
     /**
