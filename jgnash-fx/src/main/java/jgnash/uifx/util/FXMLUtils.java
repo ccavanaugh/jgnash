@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import jgnash.uifx.MainApplication;
+import jgnash.uifx.StaticUIMethods;
 import jgnash.util.NotNull;
 
 /**
@@ -58,6 +59,7 @@ public class FXMLUtils {
         stage.getScene().getStylesheets().addAll(MainApplication.DEFAULT_CSS);
         stage.initStyle(StageStyle.DECORATED);
         stage.initModality(Modality.APPLICATION_MODAL);
+        stage.getIcons().add(StaticUIMethods.getApplicationIcon());
 
         StageUtils.addBoundsListener(stage, stage.getClass());
     }
@@ -152,6 +154,7 @@ public class FXMLUtils {
             scene.getStylesheets().addAll(MainApplication.DEFAULT_CSS);
 
             stage.setScene(scene);
+            stage.getIcons().add(StaticUIMethods.getApplicationIcon());
 
             // Inject the scene into the controller
             injectParent(controller, scene);
@@ -183,6 +186,7 @@ public class FXMLUtils {
             scene.getStylesheets().addAll(MainApplication.DEFAULT_CSS);
 
             stage.setScene(scene);
+            stage.getIcons().add(StaticUIMethods.getApplicationIcon());
         } catch (final IOException ioe) { // log and throw an unchecked exception
             Logger.getLogger(FXMLUtils.class.getName()).log(Level.SEVERE, ioe.getMessage(), ioe);
             throw new UncheckedIOException(ioe);
