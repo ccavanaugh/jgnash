@@ -94,7 +94,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
         final Calendar cal = Calendar.getInstance();
 
         cal.setTime(new Date());
-        cal.add(Calendar.MONDAY, -1);
+        cal.add(Calendar.MONTH, -1);
         startField.setDate(cal.getTime());
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
