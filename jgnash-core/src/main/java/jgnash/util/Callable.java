@@ -24,7 +24,7 @@ package jgnash.util;
  *
  * @param <R> The type of the return type of the <code>call</code> method.
  */
-// @FunctionalInterface //TODO Java 8 Annotation to support compiler
+@FunctionalInterface
 public interface Callable<R> {
 
     /**
