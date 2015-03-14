@@ -22,7 +22,7 @@
         <maven.build.timestamp.format>yyyy/MM/dd-HH:mm</maven.build.timestamp.format>
         <buildDate>${maven.build.timestamp}</buildDate>
 
-        <java-version>1.7</java-version>
+        <java-version>1.8</java-version>
         <junit-version>4.11</junit-version>
         <javahelp-version>2.0.05</javahelp-version>
         <args4j.version>2.0.23</args4j.version>

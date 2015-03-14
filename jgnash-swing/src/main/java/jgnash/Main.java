@@ -126,7 +126,7 @@ public final class Main {
 
         System.out.println(version);
 
-        if (version < 1.7f) {
+        if (version < 1.8f) {
             System.out.println(Resource.get().getString("Message.JVM7"));
             System.out.println(Resource.get().getString("Message.Version") + " " + System.getProperty("java.version") + "\n");
 
