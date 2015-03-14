@@ -35,8 +35,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.print.PageFormat;
 import java.awt.print.PrinterJob;
 import java.io.File;
@@ -358,13 +356,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
         zoomComboBox.setMaximumSize(new Dimension(90, zoomInButton.getMinimumSize().height));
         zoomComboBox.setMinimumSize(new Dimension(90, zoomInButton.getMinimumSize().height));
         zoomComboBox.setPreferredSize(new Dimension(90, zoomInButton.getPreferredSize().height));
-        zoomComboBox.addItemListener(new ItemListener() {
-
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                zoomStateChange();
-            }
-        });
+        zoomComboBox.addItemListener(evt -> zoomStateChange());
         zoomComboBox.addActionListener(this);
         toolBar.add(zoomComboBox);
 
@@ -548,9 +540,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setMultiSelectionEnabled(false);
 
-        for (JRSaveContributor saveContributor : saveContributors) {
-            fileChooser.addChoosableFileFilter(saveContributor);
-        }
+        saveContributors.forEach(fileChooser::addChoosableFileFilter);
 
         // restore the last save format
         if (p.get(LAST_CONTRIBUTOR, null) != null) {
@@ -627,15 +617,11 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
             @Override
             public Void doInBackground() {
 
-                EventQueue.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        try {
-                            JasperPrintManager.printReport(jPrint, true);
-                        } catch (JRException ex) {
-                            LOG.log(Level.SEVERE, ex.getMessage(), ex);
-                        }
+                EventQueue.invokeLater(() -> {
+                    try {
+                        JasperPrintManager.printReport(jPrint, true);
+                    } catch (JRException ex) {
+                        LOG.log(Level.SEVERE, ex.getMessage(), ex);
                     }
                 });
 
@@ -653,15 +639,11 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
             }
         }
 
-        EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(() -> {
+            printButton.setEnabled(false);
+            DynamicJasperReportPanel.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-            @Override
-            public void run() {
-                printButton.setEnabled(false);
-                DynamicJasperReportPanel.this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-
-                new PrintWorker().execute();
-            }
+            new PrintWorker().execute();
         });
     }
 
@@ -904,13 +886,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
 
             LOG.log(Level.SEVERE, ex.getMessage(), ex);
 
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    JOptionPane.showMessageDialog(DynamicJasperReportPanel.this, getBundleString("error.displaying"));
-                }
-            });
+            EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(DynamicJasperReportPanel.this, getBundleString("error.displaying")));
         }
 
     }
@@ -937,41 +913,37 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(final ActionEvent e) {
 
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                if (e.getSource() == saveButton) {
-                    saveAction();
-                } else if (e.getSource() == printButton) {
-                    printAction();
-                } else if (e.getSource() == pageSetupButton) {
-                    pageSetupAction();
-                } else if (e.getSource() == firstButton) {
-                    firstPageAction();
-                } else if (e.getSource() == previousButton) {
-                    previousPageAction();
-                } else if (e.getSource() == nextButton) {
-                    nextPageAction();
-                } else if (e.getSource() == lastButton) {
-                    lastPageAction();
-                } else if (e.getSource() == actualSizeButton) {
-                    actualSizeAction();
-                } else if (e.getSource() == fitPageButton) {
-                    fitPageAction();
-                } else if (e.getSource() == fitWidthButton) {
-                    fitWidthAction();
-                } else if (e.getSource() == zoomInButton) {
-                    zoomInAction();
-                } else if (e.getSource() == zoomOutButton) {
-                    zoomOutAction();
-                } else if (e.getSource() == zoomComboBox) {
-                    zoomAction();
-                } else if (e.getSource() == fontSizeComboBox) {
-                    fontAction();
-                } else if (e.getSource() == helpButton) {
-                    UIApplication.showHelp(UIApplication.REPORTS_ID);
-                }
+        EventQueue.invokeLater(() -> {
+            if (e.getSource() == saveButton) {
+                saveAction();
+            } else if (e.getSource() == printButton) {
+                printAction();
+            } else if (e.getSource() == pageSetupButton) {
+                pageSetupAction();
+            } else if (e.getSource() == firstButton) {
+                firstPageAction();
+            } else if (e.getSource() == previousButton) {
+                previousPageAction();
+            } else if (e.getSource() == nextButton) {
+                nextPageAction();
+            } else if (e.getSource() == lastButton) {
+                lastPageAction();
+            } else if (e.getSource() == actualSizeButton) {
+                actualSizeAction();
+            } else if (e.getSource() == fitPageButton) {
+                fitPageAction();
+            } else if (e.getSource() == fitWidthButton) {
+                fitWidthAction();
+            } else if (e.getSource() == zoomInButton) {
+                zoomInAction();
+            } else if (e.getSource() == zoomOutButton) {
+                zoomOutAction();
+            } else if (e.getSource() == zoomComboBox) {
+                zoomAction();
+            } else if (e.getSource() == fontSizeComboBox) {
+                fontAction();
+            } else if (e.getSource() == helpButton) {
+                UIApplication.showHelp(UIApplication.REPORTS_ID);
             }
         });
     }

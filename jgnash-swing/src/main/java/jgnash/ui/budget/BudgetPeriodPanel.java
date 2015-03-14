@@ -17,10 +17,6 @@
  */
 package jgnash.ui.budget;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.EventQueue;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -32,8 +28,6 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.ToolTipManager;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 
@@ -46,6 +40,10 @@ import jgnash.engine.message.MessageListener;
 import jgnash.text.CommodityFormat;
 import jgnash.ui.components.ShadowBorder;
 import jgnash.ui.util.JTableUtils;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 import org.jdesktop.swingx.JXTitledPanel;
 
@@ -176,12 +174,7 @@ final class BudgetPeriodPanel extends JPanel {
 
         private void registerListeners() {
 
-            model.addTableModelListener(new TableModelListener() {
-                @Override
-                public void tableChanged(TableModelEvent e) {
-                    fireTableDataChanged();
-                }
-            });
+            model.addTableModelListener(e -> fireTableDataChanged());
 
             model.addMessageListener(this);
         }
@@ -235,12 +228,9 @@ final class BudgetPeriodPanel extends JPanel {
                 case ACCOUNT_MODIFY:
                 case BUDGET_UPDATE:
                     groups = model.getExpandingBudgetTableModel().getAccountGroups();
-                    EventQueue.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            fireTableDataChanged();
-                            JTableUtils.packTables(table, footerTable); 
-                        }
+                    EventQueue.invokeLater(() -> {
+                        fireTableDataChanged();
+                        JTableUtils.packTables(table, footerTable);
                     });
                     break;
                 default:

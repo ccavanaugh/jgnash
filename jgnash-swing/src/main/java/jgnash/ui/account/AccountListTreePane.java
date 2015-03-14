@@ -38,7 +38,12 @@ import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.RootAccount;
-import jgnash.engine.message.*;
+import jgnash.engine.message.ChannelEvent;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageListener;
+import jgnash.engine.message.MessageProperty;
 
 /**
  * Extends {@code JScrollPane} to create a component that lists a tree of available accounts. A JTree is used for
@@ -234,36 +239,20 @@ public class AccountListTreePane extends JScrollPane implements TreeSelectionLis
 
     private synchronized void refresh() {
         // update on event thread
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                if (AccountListTreePane.getEngine() != null) {
-                    model.reload();
-                    scrollToTop();
-                }
+        EventQueue.invokeLater(() -> {
+            if (AccountListTreePane.getEngine() != null) {
+                model.reload();
+                scrollToTop();
             }
         });
     }
 
     synchronized public void expand() {
         if (EventQueue.isDispatchThread()) {
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    _expand();
-                }
-            });
+            EventQueue.invokeLater(AccountListTreePane.this::_expand);
         } else {
             try {
-                EventQueue.invokeAndWait(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        _expand();
-                    }
-                });
+                EventQueue.invokeAndWait(AccountListTreePane.this::_expand);
             } catch (InterruptedException | InvocationTargetException e) {
                 System.err.println(e);
             }
@@ -288,13 +277,7 @@ public class AccountListTreePane extends JScrollPane implements TreeSelectionLis
     public void messagePosted(final Message event) {
 
         if (event.getEvent() == ChannelEvent.FILE_CLOSING) {
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    close();
-                }
-            });
+            EventQueue.invokeLater(AccountListTreePane.this::close);
             return;
         }
 
@@ -304,42 +287,38 @@ public class AccountListTreePane extends JScrollPane implements TreeSelectionLis
 
         final Account a = event.getObject(MessageProperty.ACCOUNT);
 
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                switch (event.getEvent()) {
-                    case ACCOUNT_ADD:
-                        model.reload();
-                        expand();
-                        break;
-                    case ACCOUNT_MODIFY:
-                        model.reload();
-                        expand();
-                        break;
-                    case ACCOUNT_REMOVE:
-                        if (a != null && selectedAccount != null) {
-                            if (selectedAccount.equals(a)) {
-                                selectedAccount = null;
-                            }
-                            model.removeAccount(a);
-                        } else {
-                            model.reload();
-                            expand();
+        EventQueue.invokeLater(() -> {
+            switch (event.getEvent()) {
+                case ACCOUNT_ADD:
+                    model.reload();
+                    expand();
+                    break;
+                case ACCOUNT_MODIFY:
+                    model.reload();
+                    expand();
+                    break;
+                case ACCOUNT_REMOVE:
+                    if (a != null && selectedAccount != null) {
+                        if (selectedAccount.equals(a)) {
+                            selectedAccount = null;
                         }
-                        break;
-                    case ACCOUNT_VISIBILITY_CHANGE:
+                        model.removeAccount(a);
+                    } else {
                         model.reload();
                         expand();
-                        break;
-                    case FILE_LOAD_SUCCESS:
-                    case FILE_NEW_SUCCESS:
-                        refresh();
-                        expand();
-                        break;
-                    default: // ignore any other messages that don't belong to us
-                        break;
-                }
+                    }
+                    break;
+                case ACCOUNT_VISIBILITY_CHANGE:
+                    model.reload();
+                    expand();
+                    break;
+                case FILE_LOAD_SUCCESS:
+                case FILE_NEW_SUCCESS:
+                    refresh();
+                    expand();
+                    break;
+                default: // ignore any other messages that don't belong to us
+                    break;
             }
         });
     }

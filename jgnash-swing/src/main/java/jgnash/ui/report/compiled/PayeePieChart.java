@@ -17,13 +17,8 @@
  */
 package jgnash.ui.report.compiled;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.EventQueue;
 import java.awt.TextField;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -55,6 +50,9 @@ import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -113,27 +111,23 @@ public class PayeePieChart {
 
     public static void show() {
 
-        EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(() -> {
 
-            @Override
-            public void run() {
+            Resource rb1 = Resource.get();
 
-                Resource rb = Resource.get();
+            PayeePieChart chart = new PayeePieChart();
 
-                PayeePieChart chart = new PayeePieChart();
+            JPanel p = chart.createPanel();
+            GenericCloseDialog d = new GenericCloseDialog(p, rb1.getString("Title.AccountBalance"));
+            d.pack();
 
-                JPanel p = chart.createPanel();
-                GenericCloseDialog d = new GenericCloseDialog(p, rb.getString("Title.AccountBalance"));
-                d.pack();
-                
-                d.setMinimumSize(d.getSize());
-                
-                DialogUtils.addBoundsListener(d);
-                
-                d.setModal(false);
+            d.setMinimumSize(d.getSize());
 
-                d.setVisible(true);
-            }
+            DialogUtils.addBoundsListener(d);
+
+            d.setModal(false);
+
+            d.setVisible(true);
         });
     }
 
@@ -218,118 +212,84 @@ public class PayeePieChart {
 
         JPanel panel = builder.getPanel();
 
-        combo.addActionListener(new ActionListener() {
+        combo.addActionListener(e -> {
+            Account newAccount = combo.getSelectedAccount();
 
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                Account newAccount = combo.getSelectedAccount();
-
-                if (filtersChanged) {
-                    int result = JOptionPane.showConfirmDialog(null, rb.getString("Message.SaveFilters"), "Warning", JOptionPane.YES_NO_OPTION);
-                    if (result == JOptionPane.YES_OPTION) {
-                        saveButton.doClick();
-                    }
-                }
-                filtersChanged = false;
-
-                String[] list = POUND_DELIMITER_PATTERN.split(pref.get(FILTER_TAG + newAccount.hashCode(), ""));
-                filterList.clear();
-                for (String filter : list) {
-                    if (!filter.isEmpty()) {
-                        //System.out.println("Adding filter: #" + filter + "#");
-                        filterList.add(filter);
-                    }
-                }
-                refreshFilters();
-
-                setCurrentAccount(newAccount);
-                pref.putLong(START_DATE, startField.getDate().getTime());
-            }
-        });
-
-        refreshButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                setCurrentAccount(currentAccount);
-                pref.putLong(START_DATE, startField.getDate().getTime());
-            }
-        });
-
-        clearPrefButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                int result = JOptionPane.showConfirmDialog(null, rb.getString("Message.MasterDelete"), "Warning", JOptionPane.YES_NO_OPTION);
+            if (filtersChanged) {
+                int result = JOptionPane.showConfirmDialog(null, rb.getString("Message.SaveFilters"), "Warning", JOptionPane.YES_NO_OPTION);
                 if (result == JOptionPane.YES_OPTION) {
-                    try {
-                        pref.clear();
-                    } catch (Exception ex) {
-                        System.out.println("Exception clearing preferences" + ex);
-                    }
+                    saveButton.doClick();
+                }
+            }
+            filtersChanged = false;
+
+            String[] list = POUND_DELIMITER_PATTERN.split(pref.get(FILTER_TAG + newAccount.hashCode(), ""));
+            filterList.clear();
+            for (String filter : list) {
+                if (!filter.isEmpty()) {
+                    //System.out.println("Adding filter: #" + filter + "#");
+                    filterList.add(filter);
+                }
+            }
+            refreshFilters();
+
+            setCurrentAccount(newAccount);
+            pref.putLong(START_DATE, startField.getDate().getTime());
+        });
+
+        refreshButton.addActionListener(e -> {
+            setCurrentAccount(currentAccount);
+            pref.putLong(START_DATE, startField.getDate().getTime());
+        });
+
+        clearPrefButton.addActionListener(e -> {
+            int result = JOptionPane.showConfirmDialog(null, rb.getString("Message.MasterDelete"), "Warning", JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.YES_OPTION) {
+                try {
+                    pref.clear();
+                } catch (Exception ex) {
+                    System.out.println("Exception clearing preferences" + ex);
                 }
             }
         });
 
-        saveButton.addActionListener(new ActionListener() {
+        saveButton.addActionListener(e -> {
+            final StringBuilder sb = new StringBuilder();
 
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                StringBuilder sb = new StringBuilder();
-
-                for (String filter : filterList) {
-                    sb.append(filter);
-                    sb.append('#');
-                }
-                //System.out.println("Save = " + FILTER_TAG + currentAccount.hashCode() + " = " + sb.toString());
-                pref.put(FILTER_TAG + currentAccount.hashCode(), sb.toString());
-                filtersChanged = false;
+            for (String filter : filterList) {
+                sb.append(filter);
+                sb.append('#');
             }
+            //System.out.println("Save = " + FILTER_TAG + currentAccount.hashCode() + " = " + sb.toString());
+            pref.put(FILTER_TAG + currentAccount.hashCode(), sb.toString());
+            filtersChanged = false;
         });
 
-        addFilterButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                String newFilter = txtAddFilter.getText();
-                filterList.remove(newFilter);
-                if (!newFilter.isEmpty()) {
-                    filterList.add(newFilter);
-                    filtersChanged = true;
-                    txtAddFilter.setText("");
-                }
-                refreshFilters();
+        addFilterButton.addActionListener(e -> {
+            String newFilter = txtAddFilter.getText();
+            filterList.remove(newFilter);
+            if (!newFilter.isEmpty()) {
+                filterList.add(newFilter);
+                filtersChanged = true;
+                txtAddFilter.setText("");
             }
+            refreshFilters();
         });
 
-        deleteFilterButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                if (!filterList.isEmpty()) {
-                    String filter = (String) filterCombo.getSelectedItem();
-                    filterList.remove(filter);
-                    filtersChanged = true;
-                }
-                refreshFilters();
+        deleteFilterButton.addActionListener(e -> {
+            if (!filterList.isEmpty()) {
+                String filter = (String) filterCombo.getSelectedItem();
+                filterList.remove(filter);
+                filtersChanged = true;
             }
+            refreshFilters();
         });
 
-        useFilters.addActionListener(new ActionListener() {
+        useFilters.addActionListener(e -> setCurrentAccount(currentAccount));
 
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                setCurrentAccount(currentAccount);
-            }
-        });
-
-        showPercentCheck.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                ((PiePlot) chartPanelCredit.getChart().getPlot()).setLabelGenerator(showPercentCheck.isSelected() ? percentLabels : defaultLabels);
-                ((PiePlot) chartPanelDebit.getChart().getPlot()).setLabelGenerator(showPercentCheck.isSelected() ? percentLabels : defaultLabels);
-            }
+        showPercentCheck.addActionListener(e -> {
+            ((PiePlot) chartPanelCredit.getChart().getPlot()).setLabelGenerator(showPercentCheck.isSelected() ? percentLabels : defaultLabels);
+            ((PiePlot) chartPanelDebit.getChart().getPlot()).setLabelGenerator(showPercentCheck.isSelected() ? percentLabels : defaultLabels);
         });
 
         return panel;
@@ -337,9 +297,7 @@ public class PayeePieChart {
 
     private void refreshFilters() {
         filterCombo.removeAllItems();
-        for (String aFilterList : filterList) {
-            filterCombo.addItem(aFilterList);
-        }
+        filterList.forEach(filterCombo::addItem);
     }
 
     private void setCurrentAccount(final Account a) {
@@ -435,7 +393,7 @@ public class PayeePieChart {
             //System.out.print("Account = "); System.out.println(a);
             Map<String, BigDecimal> names = new HashMap<>();
 
-            List<TranTuple> list = getTransactions(a, new ArrayList<TranTuple>(), startField.getDate(), endField.getDate());
+            List<TranTuple> list = getTransactions(a, new ArrayList<>(), startField.getDate(), endField.getDate());
 
             CurrencyNode currency = a.getCurrencyNode();
 

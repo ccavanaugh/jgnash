@@ -17,12 +17,7 @@
  */
 package jgnash.ui.report.compiled;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -47,6 +42,10 @@ import jgnash.ui.register.AccountBalanceDisplayManager;
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;
 
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
+
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
@@ -67,7 +66,6 @@ import org.jfree.data.time.TimeSeriesCollection;
  * @author Craig Cavanaugh
  * @author Dany Veilleux
  * @author Peter Vida
- *
  */
 public class RunningAccountBalanceChart {
 
@@ -87,20 +85,16 @@ public class RunningAccountBalanceChart {
 
     public static void show() {
 
-        EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(() -> {
+            Resource rb1 = Resource.get();
 
-            @Override
-            public void run() {
-                Resource rb = Resource.get();
+            RunningAccountBalanceChart chart = new RunningAccountBalanceChart();
 
-                RunningAccountBalanceChart chart = new RunningAccountBalanceChart();
-
-                JPanel p = chart.createPanel();
-                GenericCloseDialog d = new GenericCloseDialog(p, rb.getString("Title.EndMonthBalance"));
-                d.pack();
-                d.setModal(false);
-                d.setVisible(true);
-            }
+            JPanel p = chart.createPanel();
+            GenericCloseDialog d = new GenericCloseDialog(p, rb1.getString("Title.EndMonthBalance"));
+            d.pack();
+            d.setModal(false);
+            d.setVisible(true);
         });
     }
 
@@ -155,48 +149,36 @@ public class RunningAccountBalanceChart {
 
         final JPanel panel = builder.getPanel();
 
-        ActionListener listener = new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateSubAccountBox();
-                Account a = combo.getSelectedAccount();
-                if (a == null) {
-                    return;
-                }
-                chartPanel.setChart(createVerticalXYBarChart(a));
-                panel.validate();
+        ActionListener listener = e -> {
+            updateSubAccountBox();
+            Account a = combo.getSelectedAccount();
+            if (a == null) {
+                return;
             }
+            chartPanel.setChart(createVerticalXYBarChart(a));
+            panel.validate();
         };
 
-        hideLockedAccountCheckBox.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                combo.setHideLocked(hideLockedAccountCheckBox.isSelected());
-                updateSubAccountBox();
-                Account a = combo.getSelectedAccount();
-                if (a == null) {
-                    return;
-                }
-                chartPanel.setChart(createVerticalXYBarChart(a));
-                panel.validate();
+        hideLockedAccountCheckBox.addActionListener(e -> {
+            combo.setHideLocked(hideLockedAccountCheckBox.isSelected());
+            updateSubAccountBox();
+            Account a = combo.getSelectedAccount();
+            if (a == null) {
+                return;
             }
+            chartPanel.setChart(createVerticalXYBarChart(a));
+            panel.validate();
         });
 
-        hidePlaceholderAccountCheckBox.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                combo.setHidePlaceholder(hidePlaceholderAccountCheckBox.isSelected());
-                updateSubAccountBox();
-                Account a = combo.getSelectedAccount();
-                if (a == null) {
-                    return;
-                }
-                chartPanel.setChart(createVerticalXYBarChart(a));
-                panel.validate();
+        hidePlaceholderAccountCheckBox.addActionListener(e -> {
+            combo.setHidePlaceholder(hidePlaceholderAccountCheckBox.isSelected());
+            updateSubAccountBox();
+            Account a = combo.getSelectedAccount();
+            if (a == null) {
+                return;
             }
+            chartPanel.setChart(createVerticalXYBarChart(a));
+            panel.validate();
         });
 
         updateSubAccountBox();

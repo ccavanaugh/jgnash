@@ -153,14 +153,10 @@ public class ExpandingAccountTablePanel extends JPanel implements ActionListener
         if (e.getClickCount() >= 2) {
             final Account account = accountPane.getSelectedAccount(e.getPoint());
 
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    if (account != null) {
-                        if (!account.isPlaceHolder()) {
-                            RegisterFrame.showDialog(account);
-                        }
+            EventQueue.invokeLater(() -> {
+                if (account != null) {
+                    if (!account.isPlaceHolder()) {
+                        RegisterFrame.showDialog(account);
                     }
                 }
             });
@@ -207,13 +203,9 @@ public class ExpandingAccountTablePanel extends JPanel implements ActionListener
         final JButton[] list = { newButton, modifyButton, reconcileButton, deleteButton, filterButton, zoomButton };
 
         // Change each buttons state on the EDT thread
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                for (JButton button : list) {
-                    button.setEnabled(e);
-                }
+        EventQueue.invokeLater(() -> {
+            for (JButton button : list) {
+                button.setEnabled(e);
             }
         });
     }
@@ -362,21 +354,17 @@ public class ExpandingAccountTablePanel extends JPanel implements ActionListener
 
             final String command = actionEvent.getActionCommand();
 
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    if (command.equals(NEW)) {
-                        createAccount();
-                    } else if (actionEvent.getSource() == delete) {
-                        deleteAccount();
-                    } else if (command.equals(MODIFY)) {
-                        modifyAccount();
-                    } else if (actionEvent.getSource() == menuVisible) {
-                        toggleAccountVisibility();
-                    } else if (actionEvent.getSource() == reconcile) {
-                        accountPane.reconcileAccount();
-                    }
+            EventQueue.invokeLater(() -> {
+                if (command.equals(NEW)) {
+                    createAccount();
+                } else if (actionEvent.getSource() == delete) {
+                    deleteAccount();
+                } else if (command.equals(MODIFY)) {
+                    modifyAccount();
+                } else if (actionEvent.getSource() == menuVisible) {
+                    toggleAccountVisibility();
+                } else if (actionEvent.getSource() == reconcile) {
+                    accountPane.reconcileAccount();
                 }
             });
         }

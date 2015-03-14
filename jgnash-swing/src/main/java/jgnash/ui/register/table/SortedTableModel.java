@@ -203,23 +203,13 @@ public class SortedTableModel extends RegisterTableModel implements SortableTabl
                     unregister();
                     return;
                 case TRANSACTION_ADD:
-                    EventQueue.invokeLater(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            balanceCache.ensureCapacity(account.getTransactionCount());
-                            addTransaction((Transaction) event.getObject(MessageProperty.TRANSACTION));
-                        }
+                    EventQueue.invokeLater(() -> {
+                        balanceCache.ensureCapacity(account.getTransactionCount());
+                        addTransaction(event.getObject(MessageProperty.TRANSACTION));
                     });
                     return;
                 case TRANSACTION_REMOVE:
-                    EventQueue.invokeLater(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            removeTransaction((Transaction) event.getObject(MessageProperty.TRANSACTION));
-                        }
-                    });
+                    EventQueue.invokeLater(() -> removeTransaction(event.getObject(MessageProperty.TRANSACTION)));
                     return;
                 default: // ignore any other messages that don't belong to us
                     break;

@@ -227,30 +227,27 @@ public class MessageBus {
 
     public void fireEvent(final Message message) {
 
-        pool.execute(new Runnable() {
-            @Override
-            public void run() {
-                // Look for and post to local listeners
-                final Set<WeakReference<MessageListener>> set = map.get(message.getChannel());
+        pool.execute(() -> {
+            // Look for and post to local listeners
+            final Set<WeakReference<MessageListener>> set = map.get(message.getChannel());
 
-                if (set != null) {
-                    for (WeakReference<MessageListener> ref : set) {
-                        MessageListener l = ref.get();
-                        if (l != null) {
-                            l.messagePosted(message);
-                        }
+            if (set != null) {
+                for (WeakReference<MessageListener> ref : set) {
+                    MessageListener l = ref.get();
+                    if (l != null) {
+                        l.messagePosted(message);
                     }
                 }
+            }
 
-                /* Post a remote message if configured to do so and filter system events.
-                 *
-                 * Do not re-post a remote message otherwise it will just loop through the
-                 * remote message system
-                 * */
-                if (!message.isRemote()) {
-                    if (messageBusClient != null && message.getChannel() != MessageChannel.SYSTEM) {
-                        messageBusClient.sendRemoteMessage(message);
-                    }
+            /* Post a remote message if configured to do so and filter system events.
+             *
+             * Do not re-post a remote message otherwise it will just loop through the
+             * remote message system
+             * */
+            if (!message.isRemote()) {
+                if (messageBusClient != null && message.getChannel() != MessageChannel.SYSTEM) {
+                    messageBusClient.sendRemoteMessage(message);
                 }
             }
         });

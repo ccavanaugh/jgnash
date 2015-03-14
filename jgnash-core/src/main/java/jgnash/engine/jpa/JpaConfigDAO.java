@@ -17,10 +17,6 @@
  */
 package jgnash.engine.jpa;
 
-import jgnash.engine.Config;
-import jgnash.engine.dao.ConfigDAO;
-
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -31,6 +27,9 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
+import jgnash.engine.Config;
+import jgnash.engine.dao.ConfigDAO;
 
 /**
  * Config DAO
@@ -55,27 +54,24 @@ class JpaConfigDAO extends AbstractJpaDAO implements ConfigDAO {
         emLock.lock();
 
         try {
-            Future<Config> future = executorService.submit(new Callable<Config>() {
-                @Override
-                public Config call() throws Exception {
-                    Config defaultConfig;
-                    try {
-                        CriteriaBuilder cb = em.getCriteriaBuilder();
-                        CriteriaQuery<Config> cq = cb.createQuery(Config.class);
-                        Root<Config> root = cq.from(Config.class);
-                        cq.select(root);
+            Future<Config> future = executorService.submit(() -> {
+                Config defaultConfig1;
+                try {
+                    CriteriaBuilder cb = em.getCriteriaBuilder();
+                    CriteriaQuery<Config> cq = cb.createQuery(Config.class);
+                    Root<Config> root = cq.from(Config.class);
+                    cq.select(root);
 
-                        TypedQuery<Config> q = em.createQuery(cq);
+                    TypedQuery<Config> q = em.createQuery(cq);
 
-                        defaultConfig = q.getSingleResult();
+                    defaultConfig1 = q.getSingleResult();
 
-                    } catch (Exception e) {
-                        defaultConfig = new Config();
-                        em.persist(defaultConfig);
-                        logger.info("Generating new default config");
-                    }
-                    return defaultConfig;
+                } catch (Exception e) {
+                    defaultConfig1 = new Config();
+                    em.persist(defaultConfig1);
+                    logger.info("Generating new default config");
                 }
+                return defaultConfig1;
             });
 
             defaultConfig = future.get();

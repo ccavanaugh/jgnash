@@ -68,35 +68,31 @@ public class AccountSecurityComboBox extends AbstractCommodityComboBox<SecurityN
         if (account.equals(a)) {
             final SecurityNode node = event.getObject(MessageProperty.COMMODITY);
 
-            EventQueue.invokeLater(new Runnable() {
+            EventQueue.invokeLater(() -> {
+                switch (event.getEvent()) {
+                    case ACCOUNT_REMOVE:
+                        MessageBus.getInstance().unregisterListener(AccountSecurityComboBox.this, MessageChannel.ACCOUNT, MessageChannel.COMMODITY);
+                        model.removeAllElements();
+                        account = null;
+                        break;
+                    case ACCOUNT_SECURITY_ADD:
+                        model.addElement(node);
+                        break;
+                    case SECURITY_REMOVE:
+                    case ACCOUNT_SECURITY_REMOVE:
+                        final CommodityNode commodityNode = getSelectedNode();
+                        model.removeElement(node);
 
-                @Override
-                public void run() {
-                    switch (event.getEvent()) {
-                        case ACCOUNT_REMOVE:
-                            MessageBus.getInstance().unregisterListener(AccountSecurityComboBox.this, MessageChannel.ACCOUNT, MessageChannel.COMMODITY);
-                            model.removeAllElements();
-                            account = null;
-                            break;
-                        case ACCOUNT_SECURITY_ADD:
-                            model.addElement(node);
-                            break;
-                        case SECURITY_REMOVE:
-                        case ACCOUNT_SECURITY_REMOVE:
-                            final CommodityNode commodityNode = getSelectedNode();
-                            model.removeElement(node);
-
-                            if (commodityNode != null && node != null) {
-                                if (commodityNode.equals(node)) {
-                                    setSelectedItem(null);
-                                }
+                        if (commodityNode != null && node != null) {
+                            if (commodityNode.equals(node)) {
+                                setSelectedItem(null);
                             }
-                            break;
-                        case SECURITY_MODIFY:
-                            updateNode(node);
-                            break;
-                        default:
-                    }
+                        }
+                        break;
+                    case SECURITY_MODIFY:
+                        updateNode(node);
+                        break;
+                    default:
                 }
             });
         }

@@ -125,25 +125,21 @@ public class OpenAction {
             }
         }
 
-        EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(() -> {
 
-            @Override
-            public void run() {
+            final OpenDatabaseDialog d = new OpenDatabaseDialog(UIApplication.getFrame());
 
-                final OpenDatabaseDialog d = new OpenDatabaseDialog(UIApplication.getFrame());
+            d.setDatabasePath(EngineFactory.getLastDatabase());
+            d.setPort(EngineFactory.getLastPort());
+            d.setHost(EngineFactory.getLastHost());
+            d.setRemote(EngineFactory.getLastRemote());
 
-                d.setDatabasePath(EngineFactory.getLastDatabase());
-                d.setPort(EngineFactory.getLastPort());
-                d.setHost(EngineFactory.getLastHost());
-                d.setRemote(EngineFactory.getLastRemote());
+            d.setVisible(true);
 
-                d.setVisible(true);
-
-                if (d.getResult()) {
-                    pool.execute(new BootEngine(d));
-                }
-
+            if (d.getResult()) {
+                pool.execute(new BootEngine(d));
             }
+
         });
     }
 

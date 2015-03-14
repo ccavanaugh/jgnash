@@ -18,7 +18,6 @@
 package jgnash.ui.report.compiled;
 
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -47,6 +46,7 @@ import jgnash.util.Resource;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
@@ -100,21 +100,17 @@ public class MonthlyAccountBalanceChartCompare {
 
     public static void show() {
 
-        EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(() -> {
+            Resource rb1 = Resource.get();
 
-            @Override
-            public void run() {
-                Resource rb = Resource.get();
+            MonthlyAccountBalanceChartCompare chart = new MonthlyAccountBalanceChartCompare();
 
-                MonthlyAccountBalanceChartCompare chart = new MonthlyAccountBalanceChartCompare();
+            JPanel p = chart.createPanel();
+            GenericCloseDialog d = new GenericCloseDialog(p, rb1.getString("Title.AccountBalance"));
+            d.pack();
+            d.setModal(false);
 
-                JPanel p = chart.createPanel();
-                GenericCloseDialog d = new GenericCloseDialog(p, rb.getString("Title.AccountBalance"));
-                d.pack();
-                d.setModal(false);
-
-                d.setVisible(true);
-            }
+            d.setVisible(true);
         });
     }
 
@@ -177,32 +173,28 @@ public class MonthlyAccountBalanceChartCompare {
 
         final JPanel panel = builder.getPanel();
 
-        ActionListener listener = new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    if (e.getSource() == jcb_compare) {
-                        combo2.setEnabled(jcb_compare.isSelected());
-                    }
-
-                    Account account = combo1.getSelectedAccount();
-                    if (account == null) {
-                        return;
-                    }
-
-                    Account account2 = combo2.getSelectedAccount();
-                    if (jcb_compare.isSelected() && account2 == null) {
-                        return;
-                    }
-
-                    updateSubAccountBox();
-
-                    chartPanel.setChart(createVerticalXYBarChart(account, account2));
-                    panel.validate();
-                } catch (final Exception ex) {
-                    Logger.getLogger(MonthlyAccountBalanceChartCompare.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+        ActionListener listener = e -> {
+            try {
+                if (e.getSource() == jcb_compare) {
+                    combo2.setEnabled(jcb_compare.isSelected());
                 }
+
+                Account account = combo1.getSelectedAccount();
+                if (account == null) {
+                    return;
+                }
+
+                Account account2 = combo2.getSelectedAccount();
+                if (jcb_compare.isSelected() && account2 == null) {
+                    return;
+                }
+
+                updateSubAccountBox();
+
+                chartPanel.setChart(createVerticalXYBarChart(account, account2));
+                panel.validate();
+            } catch (final Exception ex) {
+                Logger.getLogger(MonthlyAccountBalanceChartCompare.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             }
         };
 
@@ -211,56 +203,48 @@ public class MonthlyAccountBalanceChartCompare {
         jcb_compare.addActionListener(listener);
         subAccountCheckBox.addActionListener(listener);
 
-        hideLockedAccountCheckBox.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                combo1.setHideLocked(hideLockedAccountCheckBox.isSelected());
-                combo2.setHideLocked(hideLockedAccountCheckBox.isSelected());
-                try {
-                    Account account = combo1.getSelectedAccount();
-                    if (account == null) {
-                        return;
-                    }
-
-                    Account account2 = combo2.getSelectedAccount();
-                    if (jcb_compare.isSelected() && account2 == null) {
-                        return;
-                    }
-
-                    updateSubAccountBox();
-
-                    chartPanel.setChart(createVerticalXYBarChart(account, account2));
-                    panel.validate();
-                } catch (final Exception ex) {
-                    Logger.getLogger(MonthlyAccountBalanceChartCompare.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+        hideLockedAccountCheckBox.addActionListener(e -> {
+            combo1.setHideLocked(hideLockedAccountCheckBox.isSelected());
+            combo2.setHideLocked(hideLockedAccountCheckBox.isSelected());
+            try {
+                Account account = combo1.getSelectedAccount();
+                if (account == null) {
+                    return;
                 }
+
+                Account account2 = combo2.getSelectedAccount();
+                if (jcb_compare.isSelected() && account2 == null) {
+                    return;
+                }
+
+                updateSubAccountBox();
+
+                chartPanel.setChart(createVerticalXYBarChart(account, account2));
+                panel.validate();
+            } catch (final Exception ex) {
+                Logger.getLogger(MonthlyAccountBalanceChartCompare.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             }
         });
 
-        hidePlaceholderAccountCheckBox.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                combo1.setHidePlaceholder(hidePlaceholderAccountCheckBox.isSelected());
-                combo2.setHidePlaceholder(hidePlaceholderAccountCheckBox.isSelected());
-                try {
-                    Account account = combo1.getSelectedAccount();
-                    if (account == null) {
-                        return;
-                    }
-                    Account account2 = combo2.getSelectedAccount();
-                    if (jcb_compare.isSelected() && account2 == null) {
-                        return;
-                    }
-
-                    updateSubAccountBox();
-
-                    chartPanel.setChart(createVerticalXYBarChart(account, account2));
-                    panel.validate();
-                } catch (final Exception ex) {
-                    Logger.getLogger(MonthlyAccountBalanceChartCompare.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+        hidePlaceholderAccountCheckBox.addActionListener(e -> {
+            combo1.setHidePlaceholder(hidePlaceholderAccountCheckBox.isSelected());
+            combo2.setHidePlaceholder(hidePlaceholderAccountCheckBox.isSelected());
+            try {
+                Account account = combo1.getSelectedAccount();
+                if (account == null) {
+                    return;
                 }
+                Account account2 = combo2.getSelectedAccount();
+                if (jcb_compare.isSelected() && account2 == null) {
+                    return;
+                }
+
+                updateSubAccountBox();
+
+                chartPanel.setChart(createVerticalXYBarChart(account, account2));
+                panel.validate();
+            } catch (final Exception ex) {
+                Logger.getLogger(MonthlyAccountBalanceChartCompare.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             }
         });
         refreshButton.addActionListener(listener);

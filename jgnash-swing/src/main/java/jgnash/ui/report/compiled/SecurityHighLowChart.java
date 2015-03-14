@@ -17,24 +17,7 @@
  */
 package jgnash.ui.report.compiled;
 
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.DateAxis;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.axis.ValueAxis;
-import org.jfree.chart.labels.HighLowItemLabelGenerator;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.HighLowRenderer;
-import org.jfree.data.xy.AbstractXYDataset;
-import org.jfree.data.xy.DefaultHighLowDataset;
-
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -47,6 +30,21 @@ import jgnash.engine.SecurityNode;
 import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.components.SecurityComboBox;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
+
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.labels.HighLowItemLabelGenerator;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.HighLowRenderer;
+import org.jfree.data.xy.AbstractXYDataset;
+import org.jfree.data.xy.DefaultHighLowDataset;
 
 /**
  * Security High / Low Chart
@@ -63,21 +61,17 @@ public class SecurityHighLowChart {
 
     public static void show() {
 
-        EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(() -> {
 
-            @Override
-            public void run() {
+            Resource rb1 = Resource.get();
 
-                Resource rb = Resource.get();
+            SecurityHighLowChart chart = new SecurityHighLowChart();
+            JPanel p = chart.createPanel();
 
-                SecurityHighLowChart chart = new SecurityHighLowChart();
-                JPanel p = chart.createPanel();
-
-                GenericCloseDialog d = new GenericCloseDialog(p, rb.getString("Title.AccountBalance"));
-                d.pack();
-                d.setModal(false);
-                d.setVisible(true);
-            }
+            GenericCloseDialog d = new GenericCloseDialog(p, rb1.getString("Title.AccountBalance"));
+            d.pack();
+            d.setModal(false);
+            d.setVisible(true);
         });
     }
 
@@ -159,13 +153,7 @@ public class SecurityHighLowChart {
         builder.appendRow(RowSpec.decode("fill:p:g"));
         builder.append(chartPanel, 2);
 
-        combo.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateChart();
-            }
-        });
+        combo.addActionListener(e -> updateChart());
 
         return builder.getPanel();
     }

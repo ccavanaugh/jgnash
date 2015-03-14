@@ -135,19 +135,15 @@ public class SortedInvestmentTableModel extends InvestmentRegisterTableModel imp
     @Override
     public void messagePosted(final Message event) {
         if (event.getObject(MessageProperty.ACCOUNT) == account) {
-            EventQueue.invokeLater(new Runnable() {
+            EventQueue.invokeLater(() -> {
+                switch (event.getEvent()) {
+                    case TRANSACTION_ADD:
+                    case TRANSACTION_REMOVE:
+                        getTransactions();
+                        break;
+                    default: // ignore any other messages that don't matter
 
-                @Override
-                public void run() {
-                    switch (event.getEvent()) {
-                        case TRANSACTION_ADD:
-                        case TRANSACTION_REMOVE:
-                            getTransactions();
-                            break;
-                        default: // ignore any other messages that don't matter
-
-                            break;
-                    }
+                        break;
                 }
             });
         }

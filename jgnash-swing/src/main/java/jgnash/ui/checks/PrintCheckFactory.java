@@ -43,51 +43,48 @@ public class PrintCheckFactory {
      */
     public static void showDialog() {
 
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                boolean checkNum; // Automatically increment the check number
+        EventQueue.invokeLater(() -> {
+            boolean checkNum; // Automatically increment the check number
 
-                TransactionListDialog tld = new TransactionListDialog();
+            TransactionListDialog tld = new TransactionListDialog();
 
-                tld.setVisible(true);
+            tld.setVisible(true);
 
-                if (!tld.getReturnStatus() || tld.getPrintableTransactions().isEmpty()) {
-                    return;
-                }
-
-                PrintCheckDialog pcd = new PrintCheckDialog();
-                pcd.setVisible(true);
-
-                if (!pcd.getReturnStatus()) {
-                    return;
-                }
-
-                CheckLayout checkLayout = pcd.getCheckLayout();
-                int numChecks = checkLayout.getNumberOfChecks();
-                int startPosition = pcd.getStartPosition();
-
-                List<Transaction> trans = tld.getPrintableTransactions();
-
-                checkNum = pcd.incrementCheckNumbers();
-
-                int i = 0;
-                while (i < trans.size()) {
-                    Transaction[] pTrans = new Transaction[numChecks];
-                    for (int j = startPosition; j < numChecks && i < trans.size(); j++) {
-                        if (checkNum) {
-                            trans.set(i, changeTransNum(trans.get(i)));
-                        }
-                        pTrans[j] = trans.get(i);
-                        i++;
-                    }
-                    startPosition = 0; // first iteration is a special case
-
-                    PrintableCheckLayout layout = new PrintableCheckLayout(checkLayout);
-                    layout.print(pTrans); // print the first sheet
-                }
-
+            if (!tld.getReturnStatus() || tld.getPrintableTransactions().isEmpty()) {
+                return;
             }
+
+            PrintCheckDialog pcd = new PrintCheckDialog();
+            pcd.setVisible(true);
+
+            if (!pcd.getReturnStatus()) {
+                return;
+            }
+
+            CheckLayout checkLayout = pcd.getCheckLayout();
+            int numChecks = checkLayout.getNumberOfChecks();
+            int startPosition = pcd.getStartPosition();
+
+            List<Transaction> trans = tld.getPrintableTransactions();
+
+            checkNum = pcd.incrementCheckNumbers();
+
+            int i = 0;
+            while (i < trans.size()) {
+                Transaction[] pTrans = new Transaction[numChecks];
+                for (int j = startPosition; j < numChecks && i < trans.size(); j++) {
+                    if (checkNum) {
+                        trans.set(i, changeTransNum(trans.get(i)));
+                    }
+                    pTrans[j] = trans.get(i);
+                    i++;
+                }
+                startPosition = 0; // first iteration is a special case
+
+                PrintableCheckLayout layout = new PrintableCheckLayout(checkLayout);
+                layout.print(pTrans); // print the first sheet
+            }
+
         });
     }
 

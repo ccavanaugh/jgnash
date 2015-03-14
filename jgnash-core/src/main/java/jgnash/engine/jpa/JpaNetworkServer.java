@@ -17,6 +17,8 @@
  */
 package jgnash.engine.jpa;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.io.File;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -33,7 +35,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jgnash.engine.AttachmentUtils;
 import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
@@ -136,30 +137,23 @@ public class JpaNetworkServer {
                     ScheduledExecutorService backupExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
 
                     // run commit every backup period after startup
-                    backupExecutor.scheduleWithFixedDelay(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            if (dirty) {
-                                exportXML(engine, fileName);
-                                EngineFactory.removeOldCompressedXML(fileName);
-                                dirty = false;
-                            }
+                    backupExecutor.scheduleWithFixedDelay(() -> {
+                        if (dirty) {
+                            exportXML(engine, fileName);
+                            EngineFactory.removeOldCompressedXML(fileName);
+                            dirty = false;
                         }
                     }, BACKUP_PERIOD, BACKUP_PERIOD, TimeUnit.HOURS);
 
-                    LocalServerListener listener = new LocalServerListener() {
-                        @Override
-                        public void messagePosted(final String event) {
+                    LocalServerListener listener = event -> {
 
-                            // look for a remote request to stop the server
-                            if (event.startsWith(STOP_SERVER_MESSAGE)) {
-                                Logger.getLogger(JpaNetworkServer.class.getName()).info("Remote shutdown request was received");
-                                stopServer();
-                            }
-
-                            dirty = true;
+                        // look for a remote request to stop the server
+                        if (event.startsWith(STOP_SERVER_MESSAGE)) {
+                            Logger.getLogger(JpaNetworkServer.class.getName()).info("Remote shutdown request was received");
+                            stopServer();
                         }
+
+                        dirty = true;
                     };
 
                     messageBusServer.addLocalListener(listener);

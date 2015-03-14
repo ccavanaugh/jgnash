@@ -58,15 +58,11 @@ public class RunJavaScriptAction extends AbstractEnabledAction {
 
             final String file = chooser.getSelectedFile().getAbsolutePath();
 
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    try (final Reader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
-                        new ScriptEngineManager().getEngineByName("JavaScript").eval(reader);
-                    } catch (IOException | ScriptException e) {
-                        Logger.getLogger(RunJavaScriptAction.class.getName()).log(Level.SEVERE, e.toString(), e);
-                    }
+            EventQueue.invokeLater(() -> {
+                try (final Reader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
+                    new ScriptEngineManager().getEngineByName("JavaScript").eval(reader);
+                } catch (IOException | ScriptException ex) {
+                    Logger.getLogger(RunJavaScriptAction.class.getName()).log(Level.SEVERE, ex.toString(), ex);
                 }
             });
         }

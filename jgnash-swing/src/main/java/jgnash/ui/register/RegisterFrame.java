@@ -169,20 +169,16 @@ public final class RegisterFrame extends JFrame implements MessageListener {
     @Override
     public void messagePosted(final Message event) {
         if (event.getObject(MessageProperty.ACCOUNT).equals(account)) {
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    switch (event.getEvent()) {
-                        case ACCOUNT_MODIFY: // name change, moved, etc.
-                            updateTitle();
-                            break;
-                        case ACCOUNT_REMOVE: // we were deleted!
-                            dispatchEvent(new WindowEvent(RegisterFrame.this, WindowEvent.WINDOW_CLOSING));
-                            break;
-                        default:
-                            break;
-                    }
+            EventQueue.invokeLater(() -> {
+                switch (event.getEvent()) {
+                    case ACCOUNT_MODIFY: // name change, moved, etc.
+                        updateTitle();
+                        break;
+                    case ACCOUNT_REMOVE: // we were deleted!
+                        dispatchEvent(new WindowEvent(RegisterFrame.this, WindowEvent.WINDOW_CLOSING));
+                        break;
+                    default:
+                        break;
                 }
             });
         }
@@ -208,31 +204,21 @@ public final class RegisterFrame extends JFrame implements MessageListener {
 
         for (final RegisterFrame d : dialogList) {
             if (account.equals(d.account)) {
-                EventQueue.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        if (t != null) {
-                            d.setSelectedTransaction(t);
-                        }
-
-                        if (d.getExtendedState() == ICONIFIED) {
-                            d.setExtendedState(NORMAL);
-                        }
-                                               
-                        d.toFront();
+                EventQueue.invokeLater(() -> {
+                    if (t != null) {
+                        d.setSelectedTransaction(t);
                     }
+
+                    if (d.getExtendedState() == ICONIFIED) {
+                        d.setExtendedState(NORMAL);
+                    }
+
+                    d.toFront();
                 });
                 return;
             }
         }
 
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                new RegisterFrame(account, t).setVisible(true);
-            }
-        });
+        EventQueue.invokeLater(() -> new RegisterFrame(account, t).setVisible(true));
     }
 }

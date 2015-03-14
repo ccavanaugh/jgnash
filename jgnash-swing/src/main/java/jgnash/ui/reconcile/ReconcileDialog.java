@@ -68,6 +68,7 @@ import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+
 import org.jdesktop.swingx.JXTitledPanel;
 
 /**
@@ -140,13 +141,9 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
         layoutMainPanel();
 
         // pack the tables on the EDT
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                JTableUtils.packTable(debitTable);
-                JTableUtils.packTable(creditTable);
-            }
+        EventQueue.invokeLater(() -> {
+            JTableUtils.packTable(debitTable);
+            JTableUtils.packTable(creditTable);
         });
 
         registerListeners();
@@ -313,25 +310,20 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
      */
     @Override
     public void messagePosted(final Message event) {
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            @SuppressWarnings("fallthrough")
-            public void run() {
-                switch (event.getEvent()) {
-                    case ACCOUNT_REMOVE:
-                        if (!event.getObject(MessageProperty.ACCOUNT).equals(account)) {
-                            return;
-                        }
-                        // drop through to close
-                    case FILE_NEW_SUCCESS:
-                    case FILE_CLOSING:
-                    case FILE_LOAD_SUCCESS:
-                        closeDialog();
-                        break;
-                    default:
-                        break;
-                }
+        EventQueue.invokeLater(() -> {
+            switch (event.getEvent()) {
+                case ACCOUNT_REMOVE:
+                    if (!event.getObject(MessageProperty.ACCOUNT).equals(account)) {
+                        return;
+                    }
+                    // drop through to close
+                case FILE_NEW_SUCCESS:
+                case FILE_CLOSING:
+                case FILE_LOAD_SUCCESS:
+                    closeDialog();
+                    break;
+                default:
+                    break;
             }
         });
 

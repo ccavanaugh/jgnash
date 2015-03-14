@@ -33,14 +33,11 @@ public class ReconcileAccountAction {
     public static void reconcileAccount(final Account account) {
         if (account != null) {
 
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    ReconcileSettingsDialog dlg = new ReconcileSettingsDialog(account);
+            EventQueue.invokeLater(() -> {
+                ReconcileSettingsDialog dlg = new ReconcileSettingsDialog(account);
 
-                    if (dlg.showDialog()) {
-                        new ReconcileDialog(account, dlg.getStatementDate(), dlg.getOpeningBalance(), dlg.getClosingBalance()).setVisible(true);
-                    }
+                if (dlg.showDialog()) {
+                    new ReconcileDialog(account, dlg.getStatementDate(), dlg.getOpeningBalance(), dlg.getClosingBalance()).setVisible(true);
                 }
             });
         }

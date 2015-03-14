@@ -32,7 +32,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * processing
  *
  * @author Craig Cavanaugh
- *
  */
 public class MessageProxy {
 
@@ -103,29 +102,18 @@ public class MessageProxy {
 
         try {
 
-            THREAD_POOL.submit(new Runnable() {
+            THREAD_POOL.submit(() -> {
+                Iterator<WeakReference<MessageListener>> iterator = messageListeners.iterator();
 
-                @Override
-                public void run() {
-                    Iterator<WeakReference<MessageListener>> iterator = messageListeners.iterator();
+                while (iterator.hasNext()) {
+                    WeakReference<MessageListener> reference = iterator.next();
 
-                    while (iterator.hasNext()) {
-                        WeakReference<MessageListener> reference = iterator.next();
+                    final MessageListener actionListener = reference.get();
 
-                        final MessageListener actionListener = reference.get();
-
-                        if (actionListener != null) {
-
-                            THREAD_POOL.submit(new Runnable() {
-
-                                @Override
-                                public void run() {
-                                    actionListener.messagePosted(message);
-                                }
-                            });
-                        } else {
-                            iterator.remove();
-                        }
+                    if (actionListener != null) {
+                        THREAD_POOL.submit(() -> actionListener.messagePosted(message));
+                    } else {
+                        iterator.remove();
                     }
                 }
             });

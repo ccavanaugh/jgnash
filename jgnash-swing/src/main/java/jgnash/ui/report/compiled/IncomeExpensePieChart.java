@@ -17,14 +17,9 @@
  */
 package jgnash.ui.report.compiled;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.Cursor;
 import java.awt.EventQueue;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -40,10 +35,10 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
-import jgnash.engine.Comparators;
-import jgnash.engine.CurrencyNode;
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
+import jgnash.engine.Comparators;
+import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.RootAccount;
@@ -54,6 +49,9 @@ import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.util.CursorUtils;
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;
@@ -112,22 +110,18 @@ public class IncomeExpensePieChart {
 
     public static void show() {
 
-        EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(() -> {
 
-            @Override
-            public void run() {
+            Resource rb1 = Resource.get();
 
-                Resource rb = Resource.get();
+            IncomeExpensePieChart chart = new IncomeExpensePieChart();
 
-                IncomeExpensePieChart chart = new IncomeExpensePieChart();
+            JPanel p = chart.createPanel();
+            GenericCloseDialog d = new GenericCloseDialog(p, rb1.getString("Title.AccountBalance"));
+            d.pack();
+            d.setModal(false);
 
-                JPanel p = chart.createPanel();
-                GenericCloseDialog d = new GenericCloseDialog(p, rb.getString("Title.AccountBalance"));
-                d.pack();
-                d.setModal(false);
-
-                d.setVisible(true);
-            }
+            d.setVisible(true);
         });
     }
 
@@ -182,39 +176,19 @@ public class IncomeExpensePieChart {
 
         JPanel panel = builder.getPanel();
 
-        combo.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                setCurrentAccount(combo.getSelectedAccount());
-                pref.putLong(STARTDATE, startField.getDate().getTime());
-            }
+        combo.addActionListener(e -> {
+            setCurrentAccount(combo.getSelectedAccount());
+            pref.putLong(STARTDATE, startField.getDate().getTime());
         });
 
-        refreshButton.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                setCurrentAccount(currentAccount);
-                pref.putLong(STARTDATE, startField.getDate().getTime());
-            }
+        refreshButton.addActionListener(e -> {
+            setCurrentAccount(currentAccount);
+            pref.putLong(STARTDATE, startField.getDate().getTime());
         });
 
-        showEmptyCheck.addActionListener(new ActionListener() {
+        showEmptyCheck.addActionListener(e -> setCurrentAccount(currentAccount));
 
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                setCurrentAccount(currentAccount);
-            }
-        });
-
-        showPercentCheck.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                ((PiePlot) chartPanel.getChart().getPlot()).setLabelGenerator(showPercentCheck.isSelected() ? percentLabels : defaultLabels);
-            }
-        });
+        showPercentCheck.addActionListener(e -> ((PiePlot) chartPanel.getChart().getPlot()).setLabelGenerator(showPercentCheck.isSelected() ? percentLabels : defaultLabels));
 
         ChartMouseListener mouseListener = new ChartMouseListener() {
 

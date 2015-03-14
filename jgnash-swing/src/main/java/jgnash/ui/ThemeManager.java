@@ -17,8 +17,6 @@
  */
 package jgnash.ui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -204,14 +202,11 @@ public class ThemeManager {
                 button.setActionCommand(lookAndFeel);
                 button.setName(newLAF.getName());
 
-                button.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(final ActionEvent e) {
-                        Preferences pref = Preferences.userNodeForPackage(ThemeManager.class);
-                        pref.put(LF, e.getActionCommand());
+                button.addActionListener(e -> {
+                    Preferences pref = Preferences.userNodeForPackage(ThemeManager.class);
+                    pref.put(LF, e.getActionCommand());
 
-                        restartUI();
-                    }
+                    restartUI();
                 });
 
                 lfButtonGroup.add(button);
@@ -290,14 +285,11 @@ public class ThemeManager {
             button = new JRadioButtonMenuItem();
             button.setText(theme.getName());
             button.setActionCommand(theme.getClass().getName());
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    Preferences pref = Preferences.userNodeForPackage(ThemeManager.class);
-                    pref.put(THEME, e.getActionCommand());
+            button.addActionListener(e -> {
+                Preferences pref1 = Preferences.userNodeForPackage(ThemeManager.class);
+                pref1.put(THEME, e.getActionCommand());
 
-                    restartUI();
-                }
+                restartUI();
             });
 
             themeButtonGroup.add(button);
@@ -323,14 +315,11 @@ public class ThemeManager {
             // add the button to the global look and feel
             lfButtonGroup.add(button);
 
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(final ActionEvent e) {
-                    Preferences pref = Preferences.userNodeForPackage(ThemeManager.class);
-                    pref.put(LF, e.getActionCommand());
+            button.addActionListener(e -> {
+                Preferences pref = Preferences.userNodeForPackage(ThemeManager.class);
+                pref.put(LF, e.getActionCommand());
 
-                    restartUI();
-                }
+                restartUI();
             });
 
             substanceMenu.add(button);

@@ -197,13 +197,9 @@ public class Engine {
         trashExecutor = new ScheduledThreadPoolExecutor(1, new DefaultDaemonThreadFactory());
 
         // run trash cleanup every 5 minutes 1 minute after startup
-        trashExecutor.scheduleWithFixedDelay(new Runnable() {
-
-            @Override
-            public void run() {
-                if (!Thread.currentThread().isInterrupted()) {
-                    emptyTrash();
-                }
+        trashExecutor.scheduleWithFixedDelay(() -> {
+            if (!Thread.currentThread().isInterrupted()) {
+                emptyTrash();
             }
         }, 1, 5, TimeUnit.MINUTES);
 

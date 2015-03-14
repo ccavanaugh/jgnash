@@ -75,6 +75,7 @@ import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
@@ -124,13 +125,9 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
 
     public static void showDialog(final JFrame parent) {
 
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                SecuritiesHistoryDialog d = new SecuritiesHistoryDialog(parent);
-                d.setVisible(true);
-            }
+        EventQueue.invokeLater(() -> {
+            SecuritiesHistoryDialog d = new SecuritiesHistoryDialog(parent);
+            d.setVisible(true);
         });
     }
 
@@ -520,23 +517,19 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
 
             if (node != null) {
                 if (node.equals(eNode)) {
-                    EventQueue.invokeLater(new Runnable() {
+                    EventQueue.invokeLater(() -> {
+                        switch (event.getEvent()) {
+                            case SECURITY_HISTORY_ADD:
+                            case SECURITY_HISTORY_REMOVE:
+                                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-                        @Override
-                        public void run() {
-                            switch (event.getEvent()) {
-                                case SECURITY_HISTORY_ADD:
-                                case SECURITY_HISTORY_REMOVE:
-                                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-
-                                    if (engine != null) {
-                                        history = engine.getSecurityHistory(node);
-                                    }
-                                    fireTableDataChanged();
-                                    updateChart();
-                                    return;
-                                default:
-                            }
+                                if (engine != null) {
+                                    history = engine.getSecurityHistory(node);
+                                }
+                                fireTableDataChanged();
+                                updateChart();
+                                return;
+                            default:
                         }
                     });
                 }

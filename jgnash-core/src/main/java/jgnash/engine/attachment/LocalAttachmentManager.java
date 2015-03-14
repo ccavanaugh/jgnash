@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -97,11 +96,7 @@ public class LocalAttachmentManager implements AttachmentManager {
 
     @Override
     public Future<Path> getAttachment(final String attachment) {
-        return executorService.submit(new Callable<Path>() {
-            @Override
-            public Path call() throws Exception {
-                return Paths.get(AttachmentUtils.getAttachmentPath() + File.separator + attachment);
-            }
-        });
+        return executorService.submit(() ->
+                Paths.get(AttachmentUtils.getAttachmentPath() + File.separator + attachment));
     }
 }

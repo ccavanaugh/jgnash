@@ -17,24 +17,23 @@
  */
 package jgnash.engine.jpa;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.AccountType;
 import jgnash.engine.RootAccount;
 import jgnash.engine.SecurityNode;
 import jgnash.engine.dao.AccountDAO;
-
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Account DAO
@@ -60,22 +59,19 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
         emLock.lock();
 
         try {
-            Future<RootAccount> future = executorService.submit(new Callable<RootAccount>() {
-                @Override
-                public RootAccount call() throws Exception {
-                    Query q = em.createQuery("select a from RootAccount a");
+            Future<RootAccount> future = executorService.submit(() -> {
+                Query q = em.createQuery("select a from RootAccount a");
 
-                    List<RootAccount> list = (List<RootAccount>) q.getResultList();
+                List<RootAccount> list = (List<RootAccount>) q.getResultList();
 
-                    if (list.size() == 1) {
-                        return list.get(0);
-                    } else if (list.size() > 1) {
-                        logger.log(Level.SEVERE, "More than one RootAccount was found: " + list.size(), new Exception());
-                        return list.get(0);
-                    }
-
-                    return null;
+                if (list.size() == 1) {
+                    return list.get(0);
+                } else if (list.size() > 1) {
+                    logger.log(Level.SEVERE, "More than one RootAccount was found: " + list.size(), new Exception());
+                    return list.get(0);
                 }
+
+                return null;
             });
 
             root = future.get();
@@ -99,13 +95,10 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
         emLock.lock();
 
         try {
-            Future<List<Account>> future = executorService.submit(new Callable<List<Account>>() {
-                @Override
-                public List<Account> call() throws Exception {
-                    Query q = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = false");
+            Future<List<Account>> future = executorService.submit(() -> {
+                Query q = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = false");
 
-                    return new ArrayList<>(q.getResultList());
-                }
+                return new ArrayList<>(q.getResultList());
             });
 
             accountList = future.get();
@@ -128,17 +121,14 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
         emLock.lock();
 
         try {
-            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
-                @Override
-                public Boolean call() throws Exception {
+            Future<Boolean> future = executorService.submit(() -> {
 
-                    em.getTransaction().begin();
-                    em.persist(child);
-                    em.merge(parent);
-                    em.getTransaction().commit();
+                em.getTransaction().begin();
+                em.persist(child);
+                em.merge(parent);
+                em.getTransaction().commit();
 
-                    return true;
-                }
+                return true;
             });
 
             result = future.get();
@@ -160,15 +150,12 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
         emLock.lock();
 
         try {
-            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
-                @Override
-                public Boolean call() throws Exception {
-                    em.getTransaction().begin();
-                    em.persist(account);
-                    em.getTransaction().commit();
+            Future<Boolean> future = executorService.submit(() -> {
+                em.getTransaction().begin();
+                em.persist(account);
+                em.getTransaction().commit();
 
-                    return true;
-                }
+                return true;
             });
 
             result = future.get();
@@ -196,15 +183,12 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
         emLock.lock();
 
         try {
-            Future<List<Account>> future = executorService.submit(new Callable<List<Account>>() {
-                @Override
-                public List<Account> call() throws Exception {
-                    String queryString = "SELECT a FROM Account a WHERE a.accountType = :type AND a.markedForRemoval = false";
-                    Query query = em.createQuery(queryString);
-                    query.setParameter("type", type);
+            Future<List<Account>> future = executorService.submit(() -> {
+                String queryString = "SELECT a FROM Account a WHERE a.accountType = :type AND a.markedForRemoval = false";
+                Query query = em.createQuery(queryString);
+                query.setParameter("type", type);
 
-                    return new ArrayList<>(query.getResultList());
-                }
+                return new ArrayList<>(query.getResultList());
             });
 
             accountList = future.get();

@@ -26,13 +26,20 @@ import java.text.DateFormat;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultRowSorter;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.RowSorter;
+import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
-import jgnash.engine.Account;
 import jgnash.convert.imports.ImportTransaction;
+import jgnash.engine.Account;
 import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.util.DateUtils;
@@ -71,33 +78,29 @@ class ImportTable extends FormattedJTable {
 
             @Override
             public void mouseClicked(final MouseEvent e) {
-                EventQueue.invokeLater(new Runnable() {
+                EventQueue.invokeLater(() -> {
+                    int row = rowAtPoint(e.getPoint());
+                    int col = columnAtPoint(e.getPoint());
 
-                    @Override
-                    public void run() {
-                        int row = rowAtPoint(e.getPoint());
-                        int col = columnAtPoint(e.getPoint());
+                    if (col == 0 && row >= 0) {
+                        row = convertRowIndexToModel(row);
+                        col = convertColumnIndexToModel(col);
 
-                        if (col == 0 && row >= 0) {
-                            row = convertRowIndexToModel(row);
-                            col = convertColumnIndexToModel(col);
+                        if (col == 0) {
+                            ImportTransaction t = transactions.get(row);
 
-                            if (col == 0) {
-                                ImportTransaction t = transactions.get(row);
-
-                                if (t.getState() == ImportTransaction.ImportState.EQUAL) {
-                                    t.setState(ImportTransaction.ImportState.NOT_EQUAL);
-                                    model.fireTableCellUpdated(row, col);
-                                } else if (t.getState() == ImportTransaction.ImportState.NOT_EQUAL) {
-                                    t.setState(ImportTransaction.ImportState.EQUAL);
-                                    model.fireTableCellUpdated(row, col);
-                                } else if (t.getState() == ImportTransaction.ImportState.NEW) {
-                                    t.setState(ImportTransaction.ImportState.IGNORE);
-                                    model.fireTableCellUpdated(row, col);
-                                } else if (t.getState() == ImportTransaction.ImportState.IGNORE) {
-                                    t.setState(ImportTransaction.ImportState.NEW);
-                                    model.fireTableCellUpdated(row, col);
-                                }
+                            if (t.getState() == ImportTransaction.ImportState.EQUAL) {
+                                t.setState(ImportTransaction.ImportState.NOT_EQUAL);
+                                model.fireTableCellUpdated(row, col);
+                            } else if (t.getState() == ImportTransaction.ImportState.NOT_EQUAL) {
+                                t.setState(ImportTransaction.ImportState.EQUAL);
+                                model.fireTableCellUpdated(row, col);
+                            } else if (t.getState() == ImportTransaction.ImportState.NEW) {
+                                t.setState(ImportTransaction.ImportState.IGNORE);
+                                model.fireTableCellUpdated(row, col);
+                            } else if (t.getState() == ImportTransaction.ImportState.IGNORE) {
+                                t.setState(ImportTransaction.ImportState.NEW);
+                                model.fireTableCellUpdated(row, col);
                             }
                         }
                     }

@@ -46,22 +46,18 @@ public abstract class AbstractEnabledAction extends AbstractAction implements Me
     @Override
     public void messagePosted(final Message event) {
 
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                switch (event.getEvent()) {
-                    case FILE_CLOSING:
-                        setEnabled(false);
-                        break;
-                    case FILE_NEW_SUCCESS:
-                    case FILE_LOAD_SUCCESS:
-                    case UI_RESTARTED:
-                        setEnabled(true);
-                        break;
-                    default:
-                        break;
-                }
+        EventQueue.invokeLater(() -> {
+            switch (event.getEvent()) {
+                case FILE_CLOSING:
+                    setEnabled(false);
+                    break;
+                case FILE_NEW_SUCCESS:
+                case FILE_LOAD_SUCCESS:
+                case UI_RESTARTED:
+                    setEnabled(true);
+                    break;
+                default:
+                    break;
             }
         });
     }

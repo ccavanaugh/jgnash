@@ -200,65 +200,45 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
      * Displays the last active account
      */
     final void showLast() {
-        EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(() -> {
+            String uuid = prefs.get(ACTIVE_ACCOUNT, null);
+            if (uuid != null) {
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                Objects.requireNonNull(engine);
 
-            @Override
-            public void run() {
-                String uuid = prefs.get(ACTIVE_ACCOUNT, null);
-                if (uuid != null) {
-                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-                    Objects.requireNonNull(engine);
-
-                    setAccount(engine.getAccountByUuid(uuid));
-                }
+                setAccount(engine.getAccountByUuid(uuid));
             }
         });
     }
 
     public void setAccount(final Account account) {
         if (account != null) {
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    registerTree.setSelectedAccount(account);
-                }
-            });
+            EventQueue.invokeLater(() -> registerTree.setSelectedAccount(account));
         }
     }
 
     private void showAccount(final Account account) {
-        EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(() -> {
+            saveCurrentRegisterLayout(); // save current register column configuration
 
-            @Override
-            public void run() {
-                saveCurrentRegisterLayout(); // save current register column configuration
+            int pos = registerPane.getDividerLocation(); // remember old location
 
-                int pos = registerPane.getDividerLocation(); // remember old location
+            AbstractRegisterPanel p = RegisterFactory.createRegisterPanel(account); // create a new register
 
-                AbstractRegisterPanel p = RegisterFactory.createRegisterPanel(account); // create a new register
+            boolean layout = p.restoreColumnLayout(); // restore the register panel layout
 
-                boolean layout = p.restoreColumnLayout(); // restore the register panel layout
+            registerPane.setRightComponent(p);
+            registerPane.setDividerLocation(pos); // restore the old location
 
-                registerPane.setRightComponent(p);
-                registerPane.setDividerLocation(pos); // restore the old location
-
-                if (!layout) {
-                    EventQueue.invokeLater(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            JTableUtils.packTable(getActiveTable());
-                        }
-                    });
-                }
-
-                // remember the divider position
-                prefs.putInt(DIVIDER, pos);
-
-                // remember the current active account
-                prefs.put(ACTIVE_ACCOUNT, account.getUuid()); // update the active account
+            if (!layout) {
+                EventQueue.invokeLater(() -> JTableUtils.packTable(getActiveTable()));
             }
+
+            // remember the divider position
+            prefs.putInt(DIVIDER, pos);
+
+            // remember the current active account
+            prefs.put(ACTIVE_ACCOUNT, account.getUuid()); // update the active account
         });
     }
 
@@ -295,17 +275,13 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
     }
 
     private void enableButtons(final boolean e) {
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                columnsButton.setEnabled(e);
-                filterButton.setEnabled(e);
-                printButton.setEnabled(e);
-                reconcileButton.setEnabled(e);
-                resizeButton.setEnabled(e);
-                zoomButton.setEnabled(e);
-            }
+        EventQueue.invokeLater(() -> {
+            columnsButton.setEnabled(e);
+            filterButton.setEnabled(e);
+            printButton.setEnabled(e);
+            reconcileButton.setEnabled(e);
+            resizeButton.setEnabled(e);
+            zoomButton.setEnabled(e);
         });
     }
 
@@ -409,27 +385,23 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
 
     @Override
     public void messagePosted(final Message event) {
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                switch (event.getEvent()) {
-                    case FILE_CLOSING:
-                        destroy();
-                        break;
-                    case FILE_LOAD_SUCCESS:
-                        showLast();
-                        enableButtons(true);
-                        break;
-                    case FILE_NEW_SUCCESS:
-                        enableButtons(true);
-                        break;
-                    case ACCOUNT_REMOVE:
-                        _removeAccount((Account) event.getObject(MessageProperty.ACCOUNT));
-                        break;
-                    default:
-                        break;
-                }
+        EventQueue.invokeLater(() -> {
+            switch (event.getEvent()) {
+                case FILE_CLOSING:
+                    destroy();
+                    break;
+                case FILE_LOAD_SUCCESS:
+                    showLast();
+                    enableButtons(true);
+                    break;
+                case FILE_NEW_SUCCESS:
+                    enableButtons(true);
+                    break;
+                case ACCOUNT_REMOVE:
+                    _removeAccount(event.getObject(MessageProperty.ACCOUNT));
+                    break;
+                default:
+                    break;
             }
         });
     }

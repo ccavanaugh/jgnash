@@ -253,30 +253,26 @@ public class RegisterTableWithSplitEntriesModel extends RegisterTableModel {
     @Override
     public void messagePosted(final Message event) {
         if (account.equals(event.getObject(MessageProperty.ACCOUNT))) {
-            EventQueue.invokeLater(new Runnable() {
+            EventQueue.invokeLater(() -> {
+                switch (event.getEvent()) {
+                    case FILE_CLOSING:
+                        unregister();
+                        break;
+                    case TRANSACTION_ADD:
+                        Transaction t = event.getObject(MessageProperty.TRANSACTION);
+                        updateData();
+                        int index = indexOfWrapper(t);
 
-                @Override
-                public void run() {
-                    switch (event.getEvent()) {
-                        case FILE_CLOSING:
-                            unregister();
-                            break;
-                        case TRANSACTION_ADD:
-                            Transaction t = event.getObject(MessageProperty.TRANSACTION);
-                            updateData();
-                            int index = indexOfWrapper(t);
-
-                            if (index >= 0) {
-                                fireTableRowsInserted(index, index);
-                            }
-                            break;
-                        case TRANSACTION_REMOVE:
-                            updateData();
-                            fireTableDataChanged();
-                            break;
-                        default:
-                            break;
-                    }
+                        if (index >= 0) {
+                            fireTableRowsInserted(index, index);
+                        }
+                        break;
+                    case TRANSACTION_REMOVE:
+                        updateData();
+                        fireTableDataChanged();
+                        break;
+                    default:
+                        break;
                 }
             });
         }

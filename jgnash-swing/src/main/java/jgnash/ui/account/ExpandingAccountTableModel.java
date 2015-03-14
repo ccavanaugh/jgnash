@@ -18,8 +18,6 @@
 package jgnash.ui.account;
 
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Collection;
@@ -93,13 +91,7 @@ public final class ExpandingAccountTableModel extends AbstractExpandingTableMode
 
         MessageBus.getInstance().registerListener(messageListener, MessageChannel.ACCOUNT, MessageChannel.COMMODITY, MessageChannel.SYSTEM);
 
-        AccountBalanceDisplayManager.addAccountBalanceDisplayModeChangeListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                fireTableDataChanged();
-            }
-        });
+        AccountBalanceDisplayManager.addAccountBalanceDisplayModeChangeListener(e -> fireTableDataChanged());
 
         restorePreferences();
     }
@@ -305,30 +297,26 @@ public final class ExpandingAccountTableModel extends AbstractExpandingTableMode
 
             final Account a = event.getObject(MessageProperty.ACCOUNT);
 
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    switch (event.getEvent()) {
-                        case ACCOUNT_ADD:
-                            addNode(a);
-                            break;
-                        case ACCOUNT_REMOVE:
-                            removeNode(a);
-                            break;
-                        case ACCOUNT_MODIFY:
-                        case ACCOUNT_VISIBILITY_CHANGE:
-                        case SECURITY_HISTORY_ADD:
-                        case SECURITY_HISTORY_REMOVE:
-                            fireNodeChanged();
-                            break;
-                        case FILE_LOAD_SUCCESS:
-                        case FILE_NEW_SUCCESS:
-                            logger.warning("Should not have received a load and new file notification");
-                            break;
-                        default: // ignore any other messages that don't belong to us
-                            break;
-                    }
+            EventQueue.invokeLater(() -> {
+                switch (event.getEvent()) {
+                    case ACCOUNT_ADD:
+                        addNode(a);
+                        break;
+                    case ACCOUNT_REMOVE:
+                        removeNode(a);
+                        break;
+                    case ACCOUNT_MODIFY:
+                    case ACCOUNT_VISIBILITY_CHANGE:
+                    case SECURITY_HISTORY_ADD:
+                    case SECURITY_HISTORY_REMOVE:
+                        fireNodeChanged();
+                        break;
+                    case FILE_LOAD_SUCCESS:
+                    case FILE_NEW_SUCCESS:
+                        logger.warning("Should not have received a load and new file notification");
+                        break;
+                    default: // ignore any other messages that don't belong to us
+                        break;
                 }
             });
         }

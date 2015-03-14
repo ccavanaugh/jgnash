@@ -68,9 +68,7 @@ public class TransactionNumberComboBox extends JComboBox<String> {
         final List<String> items = engine.getTransactionNumberList();
         final ComboBoxModel<String> model = getModel();
 
-        for (String s : items) {
-            ((DefaultComboBoxModel<String>) model).addElement(s);
-        }
+        items.forEach(((DefaultComboBoxModel<String>) model)::addElement);
 
         account = a;
 
@@ -105,20 +103,16 @@ public class TransactionNumberComboBox extends JComboBox<String> {
      * Clear any text selection and restore the caret position
      */
     private void clearSelection() {
-        EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(() -> {
+            JTextComponent e = (JTextComponent) TransactionNumberComboBox.this.getEditor().getEditorComponent();
 
-            @Override
-            public void run() {
-                JTextComponent e = (JTextComponent) TransactionNumberComboBox.this.getEditor().getEditorComponent();
+            int length = e.getText().length();
 
-                int length = e.getText().length();
+            int position = e.getCaretPosition();
 
-                int position = e.getCaretPosition();
-
-                e.setSelectionStart(length);
-                e.setSelectionEnd(length);
-                e.setCaretPosition(position);
-            }
+            e.setSelectionStart(length);
+            e.setSelectionEnd(length);
+            e.setCaretPosition(position);
         });
     }
 

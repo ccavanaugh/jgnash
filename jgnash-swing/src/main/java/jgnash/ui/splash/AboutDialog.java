@@ -17,11 +17,6 @@
  */
 package jgnash.ui.splash;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -51,6 +46,11 @@ import jgnash.ui.StaticUIMethods;
 import jgnash.ui.util.HTMLResource;
 import jgnash.util.Resource;
 
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
+
 import org.jfree.ui.about.SystemPropertiesPanel;
 
 /**
@@ -73,13 +73,9 @@ public class AboutDialog extends JDialog implements ActionListener {
 
     public static void showDialog(final Frame parent) {
 
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                JDialog dlg = new AboutDialog(parent, false);
-                dlg.setVisible(true);
-            }
+        EventQueue.invokeLater(() -> {
+            JDialog dlg = new AboutDialog(parent, false);
+            dlg.setVisible(true);
         });
     }
 

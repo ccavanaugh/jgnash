@@ -17,12 +17,12 @@
  */
 package jgnash.ui.components;
 
-import java.awt.*;
+import java.awt.EventQueue;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.swing.*;
+import javax.swing.JComboBox;
 
 import jgnash.engine.CommodityNode;
 import jgnash.engine.message.MessageListener;
@@ -69,24 +69,16 @@ public abstract class AbstractCommodityComboBox<T extends CommodityNode> extends
             setSelectedIndex(-1);
         } else {
 
-            threadPool.execute(new Runnable() {
-                @Override
-                public void run() {
-                    int size = model.getSize();
+            threadPool.execute(() -> {
+                int size = model.getSize();
 
-                    for (int i = 0; i < size; i++) {
-                        if (node.matches(model.getElementAt(i))) {
-                            final T tNode = model.getElementAt(i);
+                for (int i = 0; i < size; i++) {
+                    if (node.matches(model.getElementAt(i))) {
+                        final T tNode = model.getElementAt(i);
 
-                            EventQueue.invokeLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    setSelectedItem(tNode);
-                                }
-                            });
+                        EventQueue.invokeLater(() -> setSelectedItem(tNode));
 
-                            break;
-                        }
+                        break;
                     }
                 }
             });

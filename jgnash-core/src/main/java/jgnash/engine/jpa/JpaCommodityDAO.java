@@ -17,20 +17,11 @@
  */
 package jgnash.engine.jpa;
 
-import jgnash.engine.Account;
-import jgnash.engine.CommodityNode;
-import jgnash.engine.CurrencyNode;
-import jgnash.engine.ExchangeRate;
-import jgnash.engine.SecurityHistoryNode;
-import jgnash.engine.SecurityNode;
-import jgnash.engine.dao.CommodityDAO;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -42,6 +33,14 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
+import jgnash.engine.Account;
+import jgnash.engine.CommodityNode;
+import jgnash.engine.CurrencyNode;
+import jgnash.engine.ExchangeRate;
+import jgnash.engine.SecurityHistoryNode;
+import jgnash.engine.SecurityNode;
+import jgnash.engine.dao.CommodityDAO;
 
 /**
  * Commodity DAO
@@ -66,15 +65,12 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
         emLock.lock();
 
         try {
-            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
-                @Override
-                public Boolean call() throws Exception {
-                    em.getTransaction().begin();
-                    em.persist(node);
-                    em.getTransaction().commit();
+            Future<Boolean> future = executorService.submit(() -> {
+                em.getTransaction().begin();
+                em.persist(node);
+                em.getTransaction().commit();
 
-                    return true;
-                }
+                return true;
             });
 
             result = future.get();
@@ -94,17 +90,14 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
         emLock.lock();
 
         try {
-            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
-                @Override
-                public Boolean call() throws Exception {
+            Future<Boolean> future = executorService.submit(() -> {
 
-                    em.getTransaction().begin();
-                    em.persist(historyNode);
-                    em.persist(node);
-                    em.getTransaction().commit();
+                em.getTransaction().begin();
+                em.persist(historyNode);
+                em.persist(node);
+                em.getTransaction().commit();
 
-                    return true;
-                }
+                return true;
             });
 
             result = future.get();
@@ -127,17 +120,14 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
         emLock.lock();
 
         try {
-            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
-                @Override
-                public Boolean call() throws Exception {
+            Future<Boolean> future = executorService.submit(() -> {
 
-                    em.getTransaction().begin();
-                    em.persist(node);
-                    em.persist(historyNode);
-                    em.getTransaction().commit();
+                em.getTransaction().begin();
+                em.persist(node);
+                em.persist(historyNode);
+                em.getTransaction().commit();
 
-                    return true;
-                }
+                return true;
             });
 
             result = future.get();
@@ -172,18 +162,15 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
         emLock.lock();
 
         try {
-            Future<List<CurrencyNode>> future = executorService.submit(new Callable<List<CurrencyNode>>() {
-                @Override
-                public List<CurrencyNode> call() throws Exception {
-                    CriteriaBuilder cb = em.getCriteriaBuilder();
-                    CriteriaQuery<CurrencyNode> cq = cb.createQuery(CurrencyNode.class);
-                    Root<CurrencyNode> root = cq.from(CurrencyNode.class);
-                    cq.select(root);
+            Future<List<CurrencyNode>> future = executorService.submit(() -> {
+                CriteriaBuilder cb = em.getCriteriaBuilder();
+                CriteriaQuery<CurrencyNode> cq = cb.createQuery(CurrencyNode.class);
+                Root<CurrencyNode> root = cq.from(CurrencyNode.class);
+                cq.select(root);
 
-                    TypedQuery<CurrencyNode> q = em.createQuery(cq);
+                TypedQuery<CurrencyNode> q = em.createQuery(cq);
 
-                    return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
-                }
+                return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
             });
 
             currencyNodeList = future.get();
@@ -211,27 +198,24 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
         emLock.lock();
 
         try {
-            Future<ExchangeRate> future = executorService.submit(new Callable<ExchangeRate>() {
-                @Override
-                public ExchangeRate call() throws Exception {
-                    ExchangeRate exchangeRate = null;
+            Future<ExchangeRate> future = executorService.submit(() -> {
+                ExchangeRate exchangeRate1 = null;
 
-                    CriteriaBuilder cb = em.getCriteriaBuilder();
-                    CriteriaQuery<ExchangeRate> cq = cb.createQuery(ExchangeRate.class);
-                    Root<ExchangeRate> root = cq.from(ExchangeRate.class);
-                    cq.select(root);
+                CriteriaBuilder cb = em.getCriteriaBuilder();
+                CriteriaQuery<ExchangeRate> cq = cb.createQuery(ExchangeRate.class);
+                Root<ExchangeRate> root = cq.from(ExchangeRate.class);
+                cq.select(root);
 
-                    TypedQuery<ExchangeRate> q = em.createQuery(cq);
+                TypedQuery<ExchangeRate> q = em.createQuery(cq);
 
-                    for (ExchangeRate rate : q.getResultList()) {
-                        if (rate.getRateId().equals(rateId)) {
-                            exchangeRate = rate;
-                            break;
-                        }
+                for (ExchangeRate rate : q.getResultList()) {
+                    if (rate.getRateId().equals(rateId)) {
+                        exchangeRate1 = rate;
+                        break;
                     }
-
-                    return exchangeRate;
                 }
+
+                return exchangeRate1;
             });
 
             exchangeRate = future.get();
@@ -265,18 +249,15 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
         emLock.lock();
 
         try {
-            Future<List<SecurityNode>> future = executorService.submit(new Callable<List<SecurityNode>>() {
-                @Override
-                public List<SecurityNode> call() throws Exception {
-                    CriteriaBuilder cb = em.getCriteriaBuilder();
-                    CriteriaQuery<SecurityNode> cq = cb.createQuery(SecurityNode.class);
-                    Root<SecurityNode> root = cq.from(SecurityNode.class);
-                    cq.select(root);
+            Future<List<SecurityNode>> future = executorService.submit(() -> {
+                CriteriaBuilder cb = em.getCriteriaBuilder();
+                CriteriaQuery<SecurityNode> cq = cb.createQuery(SecurityNode.class);
+                Root<SecurityNode> root = cq.from(SecurityNode.class);
+                cq.select(root);
 
-                    TypedQuery<SecurityNode> q = em.createQuery(cq);
+                TypedQuery<SecurityNode> q = em.createQuery(cq);
 
-                    return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
-                }
+                return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
             });
 
             securityNodeList = future.get();
@@ -297,18 +278,15 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
         emLock.lock();
 
         try {
-            Future<List<ExchangeRate>> future = executorService.submit(new Callable<List<ExchangeRate>>() {
-                @Override
-                public List<ExchangeRate> call() throws Exception {
-                    CriteriaBuilder cb = em.getCriteriaBuilder();
-                    CriteriaQuery<ExchangeRate> cq = cb.createQuery(ExchangeRate.class);
-                    Root<ExchangeRate> root = cq.from(ExchangeRate.class);
-                    cq.select(root);
+            Future<List<ExchangeRate>> future = executorService.submit(() -> {
+                CriteriaBuilder cb = em.getCriteriaBuilder();
+                CriteriaQuery<ExchangeRate> cq = cb.createQuery(ExchangeRate.class);
+                Root<ExchangeRate> root = cq.from(ExchangeRate.class);
+                cq.select(root);
 
-                    TypedQuery<ExchangeRate> q = em.createQuery(cq);
+                TypedQuery<ExchangeRate> q = em.createQuery(cq);
 
-                    return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
-                }
+                return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
             });
 
             exchangeRateList = future.get();
@@ -330,14 +308,11 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
         emLock.lock();
 
         try {
-            Future<Void> future = executorService.submit(new Callable<Void>() {
-                @Override
-                public Void call() throws Exception {
-                    em.getTransaction().begin();
-                    em.persist(eRate);
-                    em.getTransaction().commit();
-                    return null;
-                }
+            Future<Void> future = executorService.submit(() -> {
+                em.getTransaction().begin();
+                em.persist(eRate);
+                em.getTransaction().commit();
+                return null;
             });
 
             future.get(); // block
@@ -368,25 +343,22 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
         emLock.lock();
 
         try {
-            Future<Set<CurrencyNode>> future = executorService.submit(new Callable<Set<CurrencyNode>>() {
-                @Override
-                public Set<CurrencyNode> call() throws Exception {
-                    Query q = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = false");
+            Future<Set<CurrencyNode>> future = executorService.submit(() -> {
+                Query q = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = false");
 
-                    List<Account> accountList = q.getResultList();
+                List<Account> accountList = q.getResultList();
 
-                    Set<CurrencyNode> currencies = new HashSet<>();
+                Set<CurrencyNode> currencies = new HashSet<>();
 
-                    for (Account account : accountList) {
-                        currencies.add(account.getCurrencyNode());
+                for (Account account : accountList) {
+                    currencies.add(account.getCurrencyNode());
 
-                        for (SecurityNode node : account.getSecurities()) {
-                            currencies.add(node.getReportedCurrencyNode());
-                        }
+                    for (SecurityNode node : account.getSecurities()) {
+                        currencies.add(node.getReportedCurrencyNode());
                     }
-
-                    return currencies;
                 }
+
+                return currencies;
             });
 
             currencyNodeSet = future.get();

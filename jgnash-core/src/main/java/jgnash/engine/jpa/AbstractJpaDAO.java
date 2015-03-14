@@ -17,17 +17,20 @@
  */
 package jgnash.engine.jpa;
 
-import jgnash.engine.StoredObject;
-import jgnash.engine.dao.AbstractDAO;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
-import java.util.Objects;
-import java.util.concurrent.*;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import jgnash.engine.StoredObject;
+import jgnash.engine.dao.AbstractDAO;
 
 /**
  * Abstract DAO
@@ -76,16 +79,13 @@ abstract class AbstractJpaDAO extends AbstractDAO {
         emLock.lock();
 
         try {
-            final Future<T> future = executorService.submit(new Callable<T>() {
-                @Override
-                public T call() throws Exception {
+            final Future<T> future = executorService.submit(() -> {
 
-                    em.getTransaction().begin();
-                    T mergedObject = em.merge(object);
-                    em.getTransaction().commit();
+                em.getTransaction().begin();
+                T mergedObject = em.merge(object);
+                em.getTransaction().commit();
 
-                    return mergedObject;
-                }
+                return mergedObject;
             });
 
             return future.get();
@@ -105,12 +105,7 @@ abstract class AbstractJpaDAO extends AbstractDAO {
         emLock.lock();
 
         try {
-            Future<T> future = executorService.submit(new Callable<T>() {
-                @Override
-                public T call() throws Exception {
-                    return em.find(tClass, uuid);
-                }
-            });
+            final Future<T> future = executorService.submit(() -> em.find(tClass, uuid));
 
             object = future.get();
         } catch (NoResultException e) {

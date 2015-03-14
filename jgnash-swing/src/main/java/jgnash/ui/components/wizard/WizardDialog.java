@@ -17,12 +17,6 @@
  */
 package jgnash.ui.components.wizard;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -46,9 +40,14 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 /**
  * Wizard dialog
@@ -151,13 +150,7 @@ public class WizardDialog extends JDialog implements ActionListener {
 
         taskList = new JList<>();
         taskList.setBorder(new EtchedBorder());
-        taskList.addListSelectionListener(new ListSelectionListener() {
-
-            @Override
-            public void valueChanged(ListSelectionEvent evt) {
-                selectionAction(evt);
-            }
-        });
+        taskList.addListSelectionListener(WizardDialog.this::selectionAction);
 
         taskList.setCellRenderer(new WizardPageRenderer(taskList.getCellRenderer()));
     }

@@ -17,17 +17,18 @@
  */
 package jgnash.ui.actions;
 
+import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.util.Objects;
+
+import javax.swing.JOptionPane;
+
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.CurrencyComboBox;
 import jgnash.ui.util.builder.Action;
 import jgnash.util.Resource;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.util.Objects;
 
 /**
  * UI Action to open the new file dialog
@@ -40,25 +41,21 @@ public class DefaultCurrencyAction extends AbstractEnabledAction {
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(() -> {
+            Resource rb = Resource.get();
 
-            @Override
-            public void run() {
-                Resource rb = Resource.get();
+            CurrencyComboBox combo = new CurrencyComboBox();
 
-                CurrencyComboBox combo = new CurrencyComboBox();
+            Object[] options = {rb.getString("Button.Ok"), rb.getString("Button.Cancel")};
+            int result = JOptionPane.showOptionDialog(UIApplication.getFrame(), combo, rb.getString("Title.SelDefCurr"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
 
-                Object[] options = {rb.getString("Button.Ok"), rb.getString("Button.Cancel")};
-                int result = JOptionPane.showOptionDialog(UIApplication.getFrame(), combo, rb.getString("Title.SelDefCurr"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
+            if (result == JOptionPane.YES_OPTION) {
 
-                if (result == JOptionPane.YES_OPTION) {
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                Objects.requireNonNull(engine);
 
-                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-                    Objects.requireNonNull(engine);
-
-                    engine.setDefaultCurrency(combo.getSelectedNode());
-                    JOptionPane.showMessageDialog(UIApplication.getFrame(), rb.getString("Message.CurrChange") + " " + engine.getDefaultCurrency().getSymbol());
-                }
+                engine.setDefaultCurrency(combo.getSelectedNode());
+                JOptionPane.showMessageDialog(UIApplication.getFrame(), rb.getString("Message.CurrChange") + " " + engine.getDefaultCurrency().getSymbol());
             }
         });
     }

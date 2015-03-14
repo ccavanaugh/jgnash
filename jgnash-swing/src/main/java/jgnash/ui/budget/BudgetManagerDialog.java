@@ -17,19 +17,6 @@
  */
 package jgnash.ui.budget;
 
-import com.jgoodies.forms.builder.ButtonStackBuilder;
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-import javax.swing.WindowConstants;
-
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -39,6 +26,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.WindowConstants;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -55,6 +49,12 @@ import jgnash.ui.components.YesNoDialog;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.ButtonStackBuilder;
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * BudgetManagerDialog is for creating and deleting budgets
@@ -81,14 +81,10 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
 
     public static void showDialog() {
 
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                BudgetManagerDialog d = new BudgetManagerDialog();
-                DialogUtils.addBoundsListener(d);
-                d.setVisible(true);
-            }
+        EventQueue.invokeLater(() -> {
+            BudgetManagerDialog d = new BudgetManagerDialog();
+            DialogUtils.addBoundsListener(d);
+            d.setVisible(true);
         });
     }
 
@@ -160,12 +156,7 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
             model.addElement(new BudgetObject(budget));
         }
         
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                budgetList.setModel(model);
-            }
-        });
+        EventQueue.invokeLater(() -> budgetList.setModel(model));
     }
 
     @Override
@@ -174,20 +165,17 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         }
 
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                if (e.getSource() == newButton) {
-                    createNewBudget();
-                } else if (e.getSource() == deleteButton) {
-                    deleteBudget();
-                } else if (e.getSource() == duplicateButton) {
-                    cloneBudget();
-                } else if (e.getSource() == renameButton) {
-                    renameBudget();
-                } else if (e.getSource() == newAutoButton) {
-                    createNewAutoBudget();
-                }
+        EventQueue.invokeLater(() -> {
+            if (e.getSource() == newButton) {
+                createNewBudget();
+            } else if (e.getSource() == deleteButton) {
+                deleteBudget();
+            } else if (e.getSource() == duplicateButton) {
+                cloneBudget();
+            } else if (e.getSource() == renameButton) {
+                renameBudget();
+            } else if (e.getSource() == newAutoButton) {
+                createNewAutoBudget();
             }
         });
     }
@@ -247,11 +235,8 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
             String message = values.size() == 1 ? rb.getString("Message.ConfirmBudgetDelete") : rb.getString("Message.ConfirmMultipleBudgetDelete");
 
             if (YesNoDialog.showYesNoDialog(UIApplication.getFrame(), new JLabel(message), rb.getString("Title.Confirm"))) {
-                for (BudgetObject value : values) {
-                    if (!e.removeBudget(value.getBudget())) {
-                        StaticUIMethods.displayError(rb.getString("Message.Error.BudgetRemove"));
-                    }
-                }
+                values.stream().filter(value -> !e.removeBudget(value.getBudget())).
+                        forEach(value -> StaticUIMethods.displayError(rb.getString("Message.Error.BudgetRemove")));
             }
         }
     }

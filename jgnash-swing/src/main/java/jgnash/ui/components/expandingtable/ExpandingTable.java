@@ -30,6 +30,7 @@ import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JTable;
@@ -37,6 +38,7 @@ import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
+
 import jgnash.ui.ThemeManager;
 import jgnash.ui.util.IconUtils;
 
@@ -123,13 +125,7 @@ public class ExpandingTable<E extends Comparable<? super E>> extends JTable {
             @Override
             public void keyTyped(final KeyEvent e) {
                 if (Character.isLetterOrDigit(e.getKeyChar())) {
-                    EventQueue.invokeLater(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            handleKeyboardSelect(e.getKeyChar());
-                        }
-                    });
+                    EventQueue.invokeLater(() -> handleKeyboardSelect(e.getKeyChar()));
                 }
             }
         });
@@ -170,20 +166,10 @@ public class ExpandingTable<E extends Comparable<? super E>> extends JTable {
     private void processMouseClicked(final E object) {
         if (object != null) {
 
-            EventQueue.invokeLater(new Runnable() {
+            EventQueue.invokeLater(() -> {
+                model.toggleExpansion(object);
 
-                @Override
-                public void run() {
-                    model.toggleExpansion(object);
-
-                    EventQueue.invokeLater(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            setSelectedObject(object);
-                        }
-                    });
-                }
+                EventQueue.invokeLater(() -> setSelectedObject(object));
             });
         }
     }

@@ -17,6 +17,12 @@
  */
 package jgnash.ui.wizards.imports.jgnash;
 
+import java.awt.EventQueue;
+import java.awt.Frame;
+import java.util.prefs.Preferences;
+
+import javax.swing.SwingWorker;
+
 import jgnash.convert.imports.jgnash.Import;
 import jgnash.engine.DataStoreType;
 import jgnash.engine.EngineFactory;
@@ -25,12 +31,6 @@ import jgnash.ui.UIApplication;
 import jgnash.ui.components.wizard.WizardDialog;
 import jgnash.ui.wizards.file.NewFileDialog;
 import jgnash.util.Resource;
-
-import java.awt.EventQueue;
-import java.awt.Frame;
-import java.util.prefs.Preferences;
-
-import javax.swing.SwingWorker;
 
 /**
  * Dialog for creating a new file
@@ -53,49 +53,46 @@ public class ImportDialog extends WizardDialog {
 
     public static void showDialog(final Frame parent) {
 
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                ImportDialog d = new ImportDialog(parent);
+        EventQueue.invokeLater(() -> {
+            ImportDialog d = new ImportDialog(parent);
 
-                final String LAST_FILE = "file0";
-                Preferences pref = Preferences.userNodeForPackage(ImportDialog.class);
-                String lastFile = pref.get(LAST_FILE, "");
+            final String LAST_FILE = "file0";
+            Preferences pref = Preferences.userNodeForPackage(ImportDialog.class);
+            String lastFile = pref.get(LAST_FILE, "");
 
-                if (!lastFile.isEmpty()) {
-                    d.setSetting(ImportDialog.Settings.IMPORT_FILE, lastFile);
-                }
-
-                d.setSetting(NewFileDialog.Settings.DATABASE_NAME, EngineFactory.getDefaultDatabase());
-
-                d.addTaskPage(new ImportZero());
-                d.addTaskPage(new ImportOne());
-
-                d.setLocationRelativeTo(parent);
-                d.setVisible(true);
-
-                if (d.isWizardValid()) {
-                    final String database = (String) d.getSetting(NewFileDialog.Settings.DATABASE_NAME);
-
-                    final String importFile = (String) d.getSetting(Settings.IMPORT_FILE);
-                    final DataStoreType type = (DataStoreType) d.getSetting(NewFileDialog.Settings.TYPE);
-
-                    // have to close the engine first
-                    EngineFactory.closeEngine(EngineFactory.DEFAULT);
-
-                    // try to delete any existing database
-                    EngineFactory.deleteDatabase(database);
-
-                    try {
-                        EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, type);
-
-                        new ImportFile(importFile).execute();
-                    } catch (final Exception e) {
-                        StaticUIMethods.displayError(e.getMessage());
-                    }
-                }
-
+            if (!lastFile.isEmpty()) {
+                d.setSetting(Settings.IMPORT_FILE, lastFile);
             }
+
+            d.setSetting(NewFileDialog.Settings.DATABASE_NAME, EngineFactory.getDefaultDatabase());
+
+            d.addTaskPage(new ImportZero());
+            d.addTaskPage(new ImportOne());
+
+            d.setLocationRelativeTo(parent);
+            d.setVisible(true);
+
+            if (d.isWizardValid()) {
+                final String database = (String) d.getSetting(NewFileDialog.Settings.DATABASE_NAME);
+
+                final String importFile = (String) d.getSetting(Settings.IMPORT_FILE);
+                final DataStoreType type = (DataStoreType) d.getSetting(NewFileDialog.Settings.TYPE);
+
+                // have to close the engine first
+                EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+                // try to delete any existing database
+                EngineFactory.deleteDatabase(database);
+
+                try {
+                    EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, type);
+
+                    new ImportFile(importFile).execute();
+                } catch (final Exception e) {
+                    StaticUIMethods.displayError(e.getMessage());
+                }
+            }
+
         });
     }
 

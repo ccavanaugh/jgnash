@@ -18,13 +18,9 @@
 package jgnash.engine.jpa;
 
 
-import jgnash.engine.dao.RecurringDAO;
-import jgnash.engine.recurring.Reminder;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -35,6 +31,9 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
+import jgnash.engine.dao.RecurringDAO;
+import jgnash.engine.recurring.Reminder;
 
 /**
  * Reminder DAO
@@ -61,19 +60,16 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
         emLock.lock();
 
         try {
-            Future<List<Reminder>> future = executorService.submit(new Callable<List<Reminder>>() {
-                @Override
-                public List<Reminder> call() throws Exception {
+            Future<List<Reminder>> future = executorService.submit(() -> {
 
-                    CriteriaBuilder cb = em.getCriteriaBuilder();
-                    CriteriaQuery<Reminder> cq = cb.createQuery(Reminder.class);
-                    Root<Reminder> root = cq.from(Reminder.class);
-                    cq.select(root);
+                CriteriaBuilder cb = em.getCriteriaBuilder();
+                CriteriaQuery<Reminder> cq = cb.createQuery(Reminder.class);
+                Root<Reminder> root = cq.from(Reminder.class);
+                cq.select(root);
 
-                    TypedQuery<Reminder> q = em.createQuery(cq);
+                TypedQuery<Reminder> q = em.createQuery(cq);
 
-                    return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
-                }
+                return stripMarkedForRemoval(new ArrayList<>(q.getResultList()));
             });
 
             reminderList = future.get();
@@ -96,15 +92,12 @@ class JpaRecurringDAO extends AbstractJpaDAO implements RecurringDAO {
         emLock.lock();
 
         try {
-            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
-                @Override
-                public Boolean call() throws Exception {
-                    em.getTransaction().begin();
-                    em.persist(reminder);
-                    em.getTransaction().commit();
+            Future<Boolean> future = executorService.submit(() -> {
+                em.getTransaction().begin();
+                em.persist(reminder);
+                em.getTransaction().commit();
 
-                    return true;
-                }
+                return true;
             });
 
             result = future.get();

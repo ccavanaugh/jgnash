@@ -17,17 +17,6 @@
  */
 package jgnash.engine.concurrent;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import jgnash.util.EncodeDecode;
-import jgnash.util.EncryptionManager;
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
@@ -48,6 +37,17 @@ import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import jgnash.util.EncodeDecode;
+import jgnash.util.EncryptionManager;
 
 /**
  * Distributed Lock Server
@@ -246,11 +246,9 @@ public class DistributedLockServer {
                 for (ReadWriteLock readWriteLock : lockMap.values()) {  // look at every lock
 
                     // if the remoteThread starts with the uuid, request a cleanup
-                    for (String remoteThread : readWriteLock.readingThreads.keySet()) {
-                        if (remoteThread.startsWith(uuid)) {    // cleanup a stale lock
-                            readWriteLock.cleanupStaleThread(remoteThread);
-                        }
-                    }
+                    // cleanup a stale lock
+                    readWriteLock.readingThreads.keySet().stream().filter(remoteThread ->
+                            remoteThread.startsWith(uuid)).forEach(readWriteLock::cleanupStaleThread);
 
                     if (readWriteLock.hasWriteThread(uuid)) {
                         readWriteLock.cleanupStaleWriteThread();
@@ -265,13 +263,9 @@ public class DistributedLockServer {
 
         @Override
         public void channelRead(final ChannelHandlerContext ctx, final Object msg) {
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    processMessage(ctx, msg.toString());
-
-                    ReferenceCountUtil.release(msg);
-                }
+            executorService.submit(() -> {
+                processMessage(ctx, msg.toString());
+                ReferenceCountUtil.release(msg);
             });
         }
 

@@ -84,24 +84,20 @@ public class SecurityComboBox extends AbstractCommodityComboBox<SecurityNode> {
 
         if (node instanceof SecurityNode) {
 
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    switch (event.getEvent()) {
-                        case SECURITY_ADD:
-                            model.addElement((SecurityNode) node);
-                            return;
-                        case SECURITY_REMOVE:
-                            model.removeElement(node);
-                            return;
-                        case SECURITY_MODIFY:
-                            updateNode((SecurityNode) node);
-                            return;
-                        default:
-                    }
-
+            EventQueue.invokeLater(() -> {
+                switch (event.getEvent()) {
+                    case SECURITY_ADD:
+                        model.addElement((SecurityNode) node);
+                        return;
+                    case SECURITY_REMOVE:
+                        model.removeElement(node);
+                        return;
+                    case SECURITY_MODIFY:
+                        updateNode((SecurityNode) node);
+                        return;
+                    default:
                 }
+
             });
         }
     }

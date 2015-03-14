@@ -49,12 +49,12 @@ import javax.swing.border.EmptyBorder;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.engine.recurring.PendingReminder;
-import jgnash.engine.recurring.Reminder;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
+import jgnash.engine.recurring.PendingReminder;
+import jgnash.engine.recurring.Reminder;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.FormattedJTable;
@@ -146,18 +146,14 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
      */
     public static void showDialog(final Frame parent) {
 
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                Resource rb = Resource.get();
-                GenericCloseDialog d = new GenericCloseDialog(parent, new RecurringPanel(), rb.getString("Title.Reminders"));
-                d.pack();
-                d.setMinimumSize(d.getSize());
-                DialogUtils.addBoundsListener(d, "panelbounds");
-                d.setModal(false);
-                d.setVisible(true);
-            }
+        EventQueue.invokeLater(() -> {
+            Resource rb1 = Resource.get();
+            GenericCloseDialog d = new GenericCloseDialog(parent, new RecurringPanel(), rb1.getString("Title.Reminders"));
+            d.pack();
+            d.setMinimumSize(d.getSize());
+            DialogUtils.addBoundsListener(d, "panelbounds");
+            d.setModal(false);
+            d.setVisible(true);
         });
     }
 
@@ -400,13 +396,10 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
             timer.setInitialDelay(START_UP_DELAY);
 
             // Don't start until the UI has caught up
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    timer.start();
+            EventQueue.invokeLater(() -> {
+                timer.start();
 
-                    Logger.getLogger(RecurringPanel.class.getName()).info("Recurring timer started");
-                }
+                Logger.getLogger(RecurringPanel.class.getName()).info("Recurring timer started");
             });
         }
     }

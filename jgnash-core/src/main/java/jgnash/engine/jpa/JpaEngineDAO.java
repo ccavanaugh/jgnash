@@ -17,20 +17,9 @@
  */
 package jgnash.engine.jpa;
 
-import jgnash.engine.StoredObject;
-import jgnash.engine.dao.AccountDAO;
-import jgnash.engine.dao.BudgetDAO;
-import jgnash.engine.dao.CommodityDAO;
-import jgnash.engine.dao.ConfigDAO;
-import jgnash.engine.dao.EngineDAO;
-import jgnash.engine.dao.RecurringDAO;
-import jgnash.engine.dao.TransactionDAO;
-import jgnash.engine.dao.TrashDAO;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -42,6 +31,16 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
+import jgnash.engine.StoredObject;
+import jgnash.engine.dao.AccountDAO;
+import jgnash.engine.dao.BudgetDAO;
+import jgnash.engine.dao.CommodityDAO;
+import jgnash.engine.dao.ConfigDAO;
+import jgnash.engine.dao.EngineDAO;
+import jgnash.engine.dao.RecurringDAO;
+import jgnash.engine.dao.TransactionDAO;
+import jgnash.engine.dao.TrashDAO;
 
 /**
  * Engine DAO
@@ -149,18 +148,15 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
         emLock.lock();
 
         try {
-            Future<List<StoredObject>> future = executorService.submit(new Callable<List<StoredObject>>() {
-                @Override
-                public List<StoredObject> call() throws Exception {
-                    CriteriaBuilder cb = em.getCriteriaBuilder();
-                    CriteriaQuery<StoredObject> cq = cb.createQuery(StoredObject.class);
-                    Root<StoredObject> root = cq.from(StoredObject.class);
-                    cq.select(root);
+            Future<List<StoredObject>> future = executorService.submit(() -> {
+                CriteriaBuilder cb = em.getCriteriaBuilder();
+                CriteriaQuery<StoredObject> cq = cb.createQuery(StoredObject.class);
+                Root<StoredObject> root = cq.from(StoredObject.class);
+                cq.select(root);
 
-                    TypedQuery<StoredObject> q = em.createQuery(cq);
+                TypedQuery<StoredObject> q = em.createQuery(cq);
 
-                    return new ArrayList<>(q.getResultList());
-                }
+                return new ArrayList<>(q.getResultList());
             });
 
             list = future.get();
@@ -182,18 +178,15 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
 
         try {
 
-            Future<List<T>> future = executorService.submit(new Callable<List<T>>() {
-                @Override
-                public List<T> call() throws Exception {
-                    CriteriaBuilder cb = em.getCriteriaBuilder();
-                    CriteriaQuery<T> cq = cb.createQuery(tClass);
-                    Root<T> root = cq.from(tClass);
-                    cq.select(root);
+            Future<List<T>> future = executorService.submit(() -> {
+                CriteriaBuilder cb = em.getCriteriaBuilder();
+                CriteriaQuery<T> cq = cb.createQuery(tClass);
+                Root<T> root = cq.from(tClass);
+                cq.select(root);
 
-                    TypedQuery<T> q = em.createQuery(cq);
+                TypedQuery<T> q = em.createQuery(cq);
 
-                    return new ArrayList<>(q.getResultList());
-                }
+                return new ArrayList<>(q.getResultList());
             });
 
             list = future.get();
@@ -216,12 +209,9 @@ public class JpaEngineDAO extends AbstractJpaDAO implements EngineDAO {
         emLock.lock();
 
         try {
-            Future<Void> future = executorService.submit(new Callable<Void>() {
-                @Override
-                public Void call() {
-                    em.refresh(object);
-                    return null;
-                }
+            Future<Void> future = executorService.submit(() -> {
+                em.refresh(object);
+                return null;
             });
 
             future.get();

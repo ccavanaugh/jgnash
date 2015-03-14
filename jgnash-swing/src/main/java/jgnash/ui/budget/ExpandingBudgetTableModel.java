@@ -18,9 +18,7 @@
 package jgnash.ui.budget;
 
 import java.awt.EventQueue;
-
 import java.util.Collection;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -234,33 +232,29 @@ public class ExpandingBudgetTableModel extends AbstractExpandingTableModel<Accou
         }
 
         // must push update onto the EDT for the view to update correctly
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                switch (message.getEvent()) {
-                    case ACCOUNT_ADD:
-                        final Account addAccount = message.getObject(MessageProperty.ACCOUNT);
-                        addAccount(addAccount);
-                        break;
-                    case ACCOUNT_REMOVE:
-                        final Account removeAccount = message.getObject(MessageProperty.ACCOUNT);
-                        removeAccount(removeAccount);
-                        break;
-                    case ACCOUNT_MODIFY:
+        EventQueue.invokeLater(() -> {
+            switch (message.getEvent()) {
+                case ACCOUNT_ADD:
+                    final Account addAccount = message.getObject(MessageProperty.ACCOUNT);
+                    addAccount(addAccount);
+                    break;
+                case ACCOUNT_REMOVE:
+                    final Account removeAccount = message.getObject(MessageProperty.ACCOUNT);
+                    removeAccount(removeAccount);
+                    break;
+                case ACCOUNT_MODIFY:
+                    updateAccountStructure();
+                    break;
+                case BUDGET_UPDATE:
+                    if (message.getObject(MessageProperty.BUDGET).equals(budget)) {
                         updateAccountStructure();
-                        break;
-                    case BUDGET_UPDATE:
-                        if (message.getObject(MessageProperty.BUDGET).equals(budget)) {
-                            updateAccountStructure();
-                        }
-                        break;
-                    default:
-                        break;
-                }
-
-                proxy.forwardMessage(message); // pass through all messages
+                    }
+                    break;
+                default:
+                    break;
             }
+
+            proxy.forwardMessage(message); // pass through all messages
         });
     }
 }

@@ -26,11 +26,11 @@ import javax.swing.table.AbstractTableModel;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.engine.recurring.Reminder;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
+import jgnash.engine.recurring.Reminder;
 import jgnash.util.Resource;
 
 /**
@@ -130,13 +130,7 @@ public class RecurringTableModel extends AbstractTableModel implements MessageLi
     @Override
     public void fireTableDataChanged() {
         synchronized (lock) {
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    RecurringTableModel.super.fireTableDataChanged();
-                }
-            });
+            EventQueue.invokeLater(RecurringTableModel.super::fireTableDataChanged);
         }
     }
 
@@ -151,26 +145,22 @@ public class RecurringTableModel extends AbstractTableModel implements MessageLi
 
     @Override
     public void messagePosted(final Message event) {
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                switch (event.getEvent()) {
-                    case REMINDER_ADD:
-                    case REMINDER_REMOVE:
-                    case FILE_LOAD_SUCCESS:
-                        loadReminders();
-                        fireTableDataChanged();
-                        break;
-                    case FILE_CLOSING:
-                        synchronized (lock) {
-                            reminders = Collections.emptyList();
-                        }
-                        fireTableDataChanged();
-                        break;
-                    default:
-                        break;
-                }
+        EventQueue.invokeLater(() -> {
+            switch (event.getEvent()) {
+                case REMINDER_ADD:
+                case REMINDER_REMOVE:
+                case FILE_LOAD_SUCCESS:
+                    loadReminders();
+                    fireTableDataChanged();
+                    break;
+                case FILE_CLOSING:
+                    synchronized (lock) {
+                        reminders = Collections.emptyList();
+                    }
+                    fireTableDataChanged();
+                    break;
+                default:
+                    break;
             }
         });
     }

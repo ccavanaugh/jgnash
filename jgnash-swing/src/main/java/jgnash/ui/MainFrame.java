@@ -17,6 +17,8 @@
  */
 package jgnash.ui;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -55,7 +57,6 @@ import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.DefaultEditorKit;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jgnash.Main;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -63,8 +64,8 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
-import jgnash.net.security.YahooParser;
 import jgnash.net.security.UpdateFactory;
+import jgnash.net.security.YahooParser;
 import jgnash.plugin.Plugin;
 import jgnash.plugin.PluginFactory;
 import jgnash.ui.account.ExpandingAccountTablePanel;
@@ -79,7 +80,6 @@ import jgnash.ui.recurring.RecurringPanel;
 import jgnash.ui.register.MainRegisterPanel;
 import jgnash.ui.register.RegisterEvent;
 import jgnash.ui.register.RegisterFrame;
-import jgnash.ui.register.RegisterListener;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.builder.ActionParser;
 import jgnash.util.Resource;
@@ -166,14 +166,11 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
         addWindowListener(new ShutdownAdapter());
 
-        RegisterFrame.addRegisterListener(new RegisterListener() {
-            @Override
-            public void registerEvent(RegisterEvent e) {
-                if (e.getAction() == RegisterEvent.Action.OPEN) {
-                    addWindowItem(e);
-                } else if (e.getAction() == RegisterEvent.Action.CLOSE) {
-                    removeWindowItem(e);
-                }
+        RegisterFrame.addRegisterListener(e -> {
+            if (e.getAction() == RegisterEvent.Action.OPEN) {
+                addWindowItem(e);
+            } else if (e.getAction() == RegisterEvent.Action.CLOSE) {
+                removeWindowItem(e);
             }
         });
 
@@ -304,17 +301,14 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     }
 
     private void addWindowItem(final RegisterEvent e) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                RegisterFrame d = (RegisterFrame) e.getSource();
-                JMenuItem mi = new JMenuItem(new WindowAction(d));
+        EventQueue.invokeLater(() -> {
+            RegisterFrame d = (RegisterFrame) e.getSource();
+            JMenuItem mi = new JMenuItem(new WindowAction(d));
 
-                int size = windowMenu.getMenuComponentCount();
+            int size = windowMenu.getMenuComponentCount();
 
-                windowMenu.insert(mi, size - 2);
-                windowMenu.setEnabled(true);
-            }
+            windowMenu.insert(mi, size - 2);
+            windowMenu.setEnabled(true);
         });
     }
 
@@ -479,16 +473,13 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     }
 
     public void closeAllWindows() {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                for (Component c : windowMenu.getMenuComponents()) {
-                    if (c instanceof JMenuItem) {
-                        JMenuItem m = (JMenuItem) c;
-                        if (m.getAction() instanceof WindowAction) {
-                            RegisterFrame d = (RegisterFrame) m.getAction().getValue(REGISTER_KEY);
-                            d.dispatchEvent(new WindowEvent(d, WindowEvent.WINDOW_CLOSING));
-                        }
+        EventQueue.invokeLater(() -> {
+            for (Component c : windowMenu.getMenuComponents()) {
+                if (c instanceof JMenuItem) {
+                    JMenuItem m = (JMenuItem) c;
+                    if (m.getAction() instanceof WindowAction) {
+                        RegisterFrame d = (RegisterFrame) m.getAction().getValue(REGISTER_KEY);
+                        d.dispatchEvent(new WindowEvent(d, WindowEvent.WINDOW_CLOSING));
                     }
                 }
             }
@@ -496,12 +487,9 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     }
 
     final void displayStatus(final String message) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                statusField.setForeground(infoColor);
-                statusField.setText(message);
-            }
+        EventQueue.invokeLater(() -> {
+            statusField.setForeground(infoColor);
+            statusField.setText(message);
         });
     }
 
@@ -510,25 +498,19 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         // If not on the EDT, invoke on the EDT and wait block until complete... prevents a race condition
         if (!EventQueue.isDispatchThread()) {
             try {
-                EventQueue.invokeAndWait(new Runnable() {
-                    @Override
-                    public void run() {
-                        busyLayerUI.start();
-                        waitPanel.setMessage(message);
-                        waitPanel.setWaiting(true);
-                    }
+                EventQueue.invokeAndWait(() -> {
+                    busyLayerUI.start();
+                    waitPanel.setMessage(message);
+                    waitPanel.setWaiting(true);
                 });
             } catch (final InterruptedException | InvocationTargetException ex) {
                 logger.log(Level.SEVERE, null, ex);
             }
         } else {
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    busyLayerUI.start();
-                    waitPanel.setMessage(message);
-                    waitPanel.setWaiting(true);
-                }
+            EventQueue.invokeLater(() -> {
+                busyLayerUI.start();
+                waitPanel.setMessage(message);
+                waitPanel.setWaiting(true);
             });
         }
     }
@@ -538,23 +520,17 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
             waitPanel.setWaiting(false);
             busyLayerUI.stop();
         } else {
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    waitPanel.setWaiting(false);
-                    busyLayerUI.stop();
-                }
+            EventQueue.invokeLater(() -> {
+                waitPanel.setWaiting(false);
+                busyLayerUI.stop();
             });
         }
     }
 
     private void displayWarning(final String message) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                statusField.setForeground(Color.RED);
-                statusField.setText(message);
-            }
+        EventQueue.invokeLater(() -> {
+            statusField.setForeground(Color.RED);
+            statusField.setText(message);
         });
     }
 
@@ -599,41 +575,38 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     @Override
     public void messagePosted(final Message event) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                switch (event.getEvent()) {
-                    case FILE_CLOSING:
-                        setOpenState(false);
-                        updateTitle();
-                        removeViews();
-                        break;
-                    case FILE_NOT_FOUND:
-                        break; // ignore for now
-                    case FILE_IO_ERROR:
-                        //StaticUIMethods.displayError(event.description);
-                        break;
-                    case FILE_LOAD_FAILED:
-                        break; // ignore for now
-                    case ACCOUNT_REMOVE_FAILED:
-                        StaticUIMethods.displayError(rb.getString("Message.Error.AccountRemove"));
-                        break;
-                    case FILE_LOAD_SUCCESS:
-                    case FILE_NEW_SUCCESS:
-                        setOpenState(true);
-                        addViews();
-                        updateTitle();
-                        break;
-                    case BACKGROUND_PROCESS_STARTED:
-                        setNetworkBusy(true);
-                        break;
-                    case BACKGROUND_PROCESS_STOPPED:
-                        setNetworkBusy(false);
-                        break;
-                    default:
-                        // ignore any other messages that don't belong to us
-                        break;
-                }
+        EventQueue.invokeLater(() -> {
+            switch (event.getEvent()) {
+                case FILE_CLOSING:
+                    setOpenState(false);
+                    updateTitle();
+                    removeViews();
+                    break;
+                case FILE_NOT_FOUND:
+                    break; // ignore for now
+                case FILE_IO_ERROR:
+                    //StaticUIMethods.displayError(event.description);
+                    break;
+                case FILE_LOAD_FAILED:
+                    break; // ignore for now
+                case ACCOUNT_REMOVE_FAILED:
+                    StaticUIMethods.displayError(rb.getString("Message.Error.AccountRemove"));
+                    break;
+                case FILE_LOAD_SUCCESS:
+                case FILE_NEW_SUCCESS:
+                    setOpenState(true);
+                    addViews();
+                    updateTitle();
+                    break;
+                case BACKGROUND_PROCESS_STARTED:
+                    setNetworkBusy(true);
+                    break;
+                case BACKGROUND_PROCESS_STOPPED:
+                    setNetworkBusy(false);
+                    break;
+                default:
+                    // ignore any other messages that don't belong to us
+                    break;
             }
         });
 
@@ -650,22 +623,19 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     }
 
     private void removeWindowItem(final RegisterEvent e) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                RegisterFrame d = (RegisterFrame) e.getSource();
+        EventQueue.invokeLater(() -> {
+            RegisterFrame d = (RegisterFrame) e.getSource();
 
-                for (Component c : windowMenu.getMenuComponents()) {
-                    if (c instanceof JMenuItem) {
-                        JMenuItem m = (JMenuItem) c;
-                        if (m.getAction() instanceof WindowAction) {
-                            if (d == m.getAction().getValue(REGISTER_KEY)) {
-                                windowMenu.remove(c);
-                                if (windowMenu.getItemCount() < 3) {
-                                    windowMenu.setEnabled(false);
-                                }
-                                return;
+            for (Component c : windowMenu.getMenuComponents()) {
+                if (c instanceof JMenuItem) {
+                    JMenuItem m = (JMenuItem) c;
+                    if (m.getAction() instanceof WindowAction) {
+                        if (d == m.getAction().getValue(REGISTER_KEY)) {
+                            windowMenu.remove(c);
+                            if (windowMenu.getItemCount() < 3) {
+                                windowMenu.setEnabled(false);
                             }
+                            return;
                         }
                     }
                 }
@@ -685,12 +655,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     private void shutDown() {
         closeAllWindows(); // force all windows closed for a clean looking exit
 
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                dispatchEvent(new WindowEvent(MainFrame.this, WindowEvent.WINDOW_CLOSING));
-            }
-        });
+        EventQueue.invokeLater(() -> dispatchEvent(new WindowEvent(MainFrame.this, WindowEvent.WINDOW_CLOSING)));
     }
 
     private void updateTitle() {
@@ -711,15 +676,12 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         public synchronized void publish(final LogRecord record) {
 
             // update on the event thread to prevent display corruption
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
+            EventQueue.invokeLater(() -> {
 
-                    if (record.getLevel() == Level.WARNING || record.getLevel() == Level.SEVERE) {
-                        displayWarning(record.getMessage());
-                    } else if (record.getLevel() == Level.INFO) {
-                        displayStatus(record.getMessage());
-                    }
+                if (record.getLevel() == Level.WARNING || record.getLevel() == Level.SEVERE) {
+                    displayWarning(record.getMessage());
+                } else if (record.getLevel() == Level.INFO) {
+                    displayStatus(record.getMessage());
                 }
             });
         }
@@ -753,14 +715,11 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         public void actionPerformed(ActionEvent e) {
             final RegisterFrame d = (RegisterFrame) getValue(REGISTER_KEY);
 
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (d.getExtendedState() == ICONIFIED) {
-                        d.setExtendedState(NORMAL);
-                    }
-                    d.toFront();
+            EventQueue.invokeLater(() -> {
+                if (d.getExtendedState() == ICONIFIED) {
+                    d.setExtendedState(NORMAL);
                 }
+                d.toFront();
             });
         }
     }

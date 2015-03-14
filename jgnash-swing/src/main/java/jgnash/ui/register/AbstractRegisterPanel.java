@@ -241,13 +241,9 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
             final Transaction transaction = d.getTransaction();
 
             if (transaction != null) {
-                EventQueue.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        clear();
-                        setSelectedTransaction(transaction);
-                    }
+                EventQueue.invokeLater(() -> {
+                    clear();
+                    setSelectedTransaction(transaction);
                 });
             }
         }
@@ -264,21 +260,16 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
 
         if (t != null) {
             if (t.getTransactionType() == TransactionType.DOUBLEENTRY) {
-                Set<Account> set = t.getAccounts();
-
-                for (Account a : set) {
-                    if (!getAccount().equals(a)) {
-                        RegisterFrame.showDialog(a, t);
-                    }
-                }
+                final Set<Account> set = t.getAccounts();
+                set.stream().filter(a -> !getAccount().equals(a)).forEach(a -> RegisterFrame.showDialog(a, t));
             } else if (t.getTransactionType() == TransactionType.SPLITENTRY) {
-                Account common = t.getCommonAccount();
+                final Account common = t.getCommonAccount();
 
                 if (!getAccount().equals(common)) {
                     RegisterFrame.showDialog(common, t);
                 }
             } else if (t instanceof InvestmentTransaction) {
-                Account invest = ((InvestmentTransaction) t).getInvestmentAccount();
+                final Account invest = ((InvestmentTransaction) t).getInvestmentAccount();
 
                 if (!getAccount().equals(invest)) {
                     RegisterFrame.showDialog(invest, t);
@@ -308,14 +299,11 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
 
     public void setSelectedTransaction(final Transaction t) {
 
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                final int row = getTableModel().indexOf(t);
+        EventQueue.invokeLater(() -> {
+            final int row = getTableModel().indexOf(t);
 
-                if (row >= 0) {
-                    setSelectedRow(row);
-                }
+            if (row >= 0) {
+                setSelectedRow(row);
             }
         });
 
@@ -411,45 +399,42 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
 
         final Account account = getAccount();
 
-        EventQueue.invokeLater(new Runnable() { // must update on EDT or a deadlock can occur
+        // must update on EDT or a deadlock can occur
+        EventQueue.invokeLater(() -> {
 
-            @Override
-            public void run() {
+            Account a = event.getObject(MessageProperty.ACCOUNT);
 
-                Account a = event.getObject(MessageProperty.ACCOUNT);
-
-                if (account.equals(a)) {
-                    switch (event.getEvent()) {
-                        case ACCOUNT_MODIFY:
-                            updateAccountState();
-                            updateAccountInfo();
-                            break;
-                        case TRANSACTION_ADD:
-                            final Transaction t = event.getObject(MessageProperty.TRANSACTION);
-                            final int index = account.indexOf(t);
-
-                            if (index == account.getTransactionCount() - 1) {
-                                autoScroll();
-                            }
-
-                            setSelectedTransaction(t);
-                            updateAccountInfo();
-                            break;
-                        case TRANSACTION_REMOVE:
-                            updateAccountInfo();
-                            break;
-                        default:
-                            break;
-                    }
-                }
-
-                if (event.getEvent() == ChannelEvent.SECURITY_HISTORY_ADD || event.getEvent() == ChannelEvent.SECURITY_HISTORY_REMOVE) {
-
-                    SecurityNode node = event.getObject(MessageProperty.COMMODITY);
-
-                    if (account.containsSecurity(node)) {
+            if (account.equals(a)) {
+                switch (event.getEvent()) {
+                    case ACCOUNT_MODIFY:
+                        updateAccountState();
                         updateAccountInfo();
-                    }
+                        break;
+                    case TRANSACTION_ADD:
+                        final Transaction t = event.getObject(MessageProperty.TRANSACTION);
+                        final int index = account.indexOf(t);
+
+                        if (index == account.getTransactionCount() - 1) {
+                            autoScroll();
+                        }
+
+                        setSelectedTransaction(t);
+                        updateAccountInfo();
+                        break;
+                    case TRANSACTION_REMOVE:
+                        updateAccountInfo();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if (event.getEvent() == ChannelEvent.SECURITY_HISTORY_ADD || event.getEvent() == ChannelEvent.SECURITY_HISTORY_REMOVE) {
+
+                SecurityNode node = event.getObject(MessageProperty.COMMODITY);
+
+                if (account.containsSecurity(node)) {
+                    updateAccountInfo();
                 }
             }
         });
@@ -459,16 +444,12 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
      * Must place at the end of the event list for this to work
      */
     private void autoScroll() {
-        EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(() -> {
 
-            @Override
-            public void run() {
+            final JTable table = getTable();
 
-                final JTable table = getTable();
-
-                Rectangle cell = table.getCellRect(table.getRowCount() - 1, 0, true);
-                table.scrollRectToVisible(cell);
-            }
+            Rectangle cell = table.getCellRect(table.getRowCount() - 1, 0, true);
+            table.scrollRectToVisible(cell);
         });
     }
 

@@ -30,7 +30,6 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -131,29 +130,26 @@ public class DistributedAttachmentManager implements AttachmentManager {
     @Override
     public Future<Path> getAttachment(final String attachment) {
 
-        return executorService.submit(new Callable<Path>() {
-            @Override
-            public Path call() throws Exception {
-                Path path = Paths.get(tempAttachmentPath + File.separator + Paths.get(attachment).getFileName());
+        return executorService.submit(() -> {
+            Path path = Paths.get(tempAttachmentPath + File.separator + Paths.get(attachment).getFileName());
 
-                if (Files.notExists(path)) {
-                    fileClient.requestFile(Paths.get(attachment));  // Request the file and place in a a temp location
+            if (Files.notExists(path)) {
+                fileClient.requestFile(Paths.get(attachment));  // Request the file and place in a a temp location
 
-                    long now = new Date().getTime();
+                long now = new Date().getTime();
 
-                    while ((new Date().getTime() - now) < TRANSFER_TIMEOUT) {
-                        if (Files.exists(path)) {
-                            break;
-                        }
+                while ((new Date().getTime() - now) < TRANSFER_TIMEOUT) {
+                    if (Files.exists(path)) {
+                        break;
                     }
                 }
-
-                if (Files.notExists(path)) {
-                    path = null;
-                }
-
-                return path;
             }
+
+            if (Files.notExists(path)) {
+                path = null;
+            }
+
+            return path;
         });
     }
 

@@ -17,22 +17,21 @@
  */
 package jgnash.ui.components;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.EventQueue;
 import java.util.prefs.Preferences;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.UIDefaults;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.FontUIResource;
 
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 import org.pushingpixels.substance.api.fonts.FontPolicy;
@@ -81,14 +80,7 @@ public class SubstanceFontSlider extends JPanel {
             @Override
             public void stateChanged(final ChangeEvent e) {
 
-                EventQueue.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        fontSizeLabel.setText(slider.getValue() + baseSize + " pt.");
-                    }
-
-                });
+                EventQueue.invokeLater(() -> fontSizeLabel.setText(slider.getValue() + baseSize + " pt."));
 
                 if (!slider.getModel().getValueIsAdjusting()) {
                     final int adjust = slider.getValue();
@@ -109,25 +101,15 @@ public class SubstanceFontSlider extends JPanel {
     }
 
     private void adjustSize(final int adjust) {
-        EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(() -> {
+            SubstanceLookAndFeel.setFontPolicy(null);
+            final FontSet substanceCoreFontSet = SubstanceLookAndFeel.getFontPolicy().getFontSet(SUBSTANCE_FONT_SET, null);
 
-            @Override
-            public void run() {
-                SubstanceLookAndFeel.setFontPolicy(null);
-                final FontSet substanceCoreFontSet = SubstanceLookAndFeel.getFontPolicy().getFontSet(SUBSTANCE_FONT_SET, null);
+            FontPolicy newFontPolicy = (lafName, table) -> new WrapperFontSet(substanceCoreFontSet, adjust);
 
-                FontPolicy newFontPolicy = new FontPolicy() {
+            SubstanceLookAndFeel.setFontPolicy(newFontPolicy);
 
-                    @Override
-                    public FontSet getFontSet(final String lafName, final UIDefaults table) {
-                        return new WrapperFontSet(substanceCoreFontSet, adjust);
-                    }
-                };
-
-                SubstanceLookAndFeel.setFontPolicy(newFontPolicy);
-
-                fontSizeLabel.setText(adjust + baseSize + " pt.");
-            }
+            fontSizeLabel.setText(adjust + baseSize + " pt.");
         });
     }
 

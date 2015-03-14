@@ -17,11 +17,6 @@
  */
 package jgnash.ui.recurring;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -51,6 +46,11 @@ import jgnash.ui.components.FormattedJTable;
 import jgnash.ui.components.TimePeriodCombo;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 /**
  * A dialog for displaying recurring event / transactions when they occur.
@@ -111,13 +111,7 @@ class NotificationDialog extends JDialog implements ActionListener, ListSelectio
     }
 
     private void setSnoozeTime(final int snooze) {
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                periodCombo.setSelectedPeriod(snooze);
-            }
-        });
+        EventQueue.invokeLater(() -> periodCombo.setSelectedPeriod(snooze));
     }
 
     private void layoutMainPanel() {
@@ -181,12 +175,7 @@ class NotificationDialog extends JDialog implements ActionListener, ListSelectio
                     // update the last fired date... date returned from the iterator
                     reminder.setLastDate(); // mark as complete
                     if (!engine.updateReminder(reminder)) {
-                        EventQueue.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                StaticUIMethods.displayError(rb.getString("Message.Error.ReminderUpdate"));
-                            }
-                        });
+                        EventQueue.invokeLater(() -> StaticUIMethods.displayError(rb.getString("Message.Error.ReminderUpdate")));
                     }
                 }
             }
@@ -206,13 +195,9 @@ class NotificationDialog extends JDialog implements ActionListener, ListSelectio
                 final int selectedRow = table.getSelectedRow();
                 if (selectedRow >= 0) {
 
-                    EventQueue.invokeLater(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            model.toggleSelectedState(table.convertRowIndexToModel(selectedRow));
-                            table.clearSelection(); // clear the selection
-                        }
+                    EventQueue.invokeLater(() -> {
+                        model.toggleSelectedState(table.convertRowIndexToModel(selectedRow));
+                        table.clearSelection(); // clear the selection
                     });
                 }
             }

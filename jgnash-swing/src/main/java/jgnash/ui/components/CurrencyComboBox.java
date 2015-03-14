@@ -70,25 +70,21 @@ public class CurrencyComboBox extends AbstractCommodityComboBox<CurrencyNode> {
 
         if (node instanceof CurrencyNode) {
 
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    switch (event.getEvent()) {
-                        case CURRENCY_REMOVE:
-                            model.removeElement(node);
-                            break;
-                        case CURRENCY_ADD:
-                            model.addElement((CurrencyNode) node);
-                            break;
-                        case CURRENCY_MODIFY:
-                            updateNode((CurrencyNode) node);
-                            break;
-                        default:
-                            break;
-                    }
-
+            EventQueue.invokeLater(() -> {
+                switch (event.getEvent()) {
+                    case CURRENCY_REMOVE:
+                        model.removeElement(node);
+                        break;
+                    case CURRENCY_ADD:
+                        model.addElement((CurrencyNode) node);
+                        break;
+                    case CURRENCY_MODIFY:
+                        updateNode((CurrencyNode) node);
+                        break;
+                    default:
+                        break;
                 }
+
             });
         }
     }

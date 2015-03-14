@@ -45,7 +45,8 @@ import jgnash.engine.message.MessageProperty;
 import jgnash.engine.message.MessageProxy;
 import jgnash.util.Resource;
 
-import static javax.swing.event.TableModelEvent.*;
+import static javax.swing.event.TableModelEvent.ALL_COLUMNS;
+import static javax.swing.event.TableModelEvent.UPDATE;
 
 /**
  * A display model for a budget period/descriptor.
@@ -106,12 +107,7 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
         expandingBudgetTableModel.addMessageListener(this);
 
         // automatically forward table events
-        expandingBudgetTableModelListener = new TableModelListener() {
-            @Override
-            public void tableChanged(final TableModelEvent e) {
-                fireTableChanged(e);
-            }
-        };
+        expandingBudgetTableModelListener = BudgetPeriodModel.this::fireTableChanged;
 
         expandingBudgetTableModel.addTableModelListener(expandingBudgetTableModelListener);
     }
@@ -315,37 +311,33 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
             return;
         }
 
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                switch (message.getEvent()) {
-                    case ACCOUNT_ADD:
-                    case ACCOUNT_REMOVE:
-                    case ACCOUNT_MODIFY:
-                        fireUpdate(expandingBudgetTableModel.getObjects());
-                        break;
-                    case BUDGET_UPDATE:
-                        updateBudget(message);
-                        break;
-                    case BUDGET_GOAL_UPDATE:
-                        updateBudgetPeriod(message);
-                        break;
-                    case BUDGET_REMOVE:
-                        if (message.getObject(MessageProperty.BUDGET).equals(budget)) {
-                            unregisterListeners();
-                        }
-                        break;
-                    case TRANSACTION_ADD:
-                    case TRANSACTION_REMOVE:
-                        processTransactionEvent(message);
-                        break;
-                    default:
-                        break;
-                }
-
-                proxy.forwardMessage(message);
+        EventQueue.invokeLater(() -> {
+            switch (message.getEvent()) {
+                case ACCOUNT_ADD:
+                case ACCOUNT_REMOVE:
+                case ACCOUNT_MODIFY:
+                    fireUpdate(expandingBudgetTableModel.getObjects());
+                    break;
+                case BUDGET_UPDATE:
+                    updateBudget(message);
+                    break;
+                case BUDGET_GOAL_UPDATE:
+                    updateBudgetPeriod(message);
+                    break;
+                case BUDGET_REMOVE:
+                    if (message.getObject(MessageProperty.BUDGET).equals(budget)) {
+                        unregisterListeners();
+                    }
+                    break;
+                case TRANSACTION_ADD:
+                case TRANSACTION_REMOVE:
+                    processTransactionEvent(message);
+                    break;
+                default:
+                    break;
             }
+
+            proxy.forwardMessage(message);
         });
     }
 }

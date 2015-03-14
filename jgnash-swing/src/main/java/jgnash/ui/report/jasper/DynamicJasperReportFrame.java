@@ -72,13 +72,7 @@ final class DynamicJasperReportFrame extends JFrame {
     }
 
     void setReportName(final String name) {
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                setTitle("jGnash - " + name);
-            }
-        });
+        EventQueue.invokeLater(() -> setTitle("jGnash - " + name));
     }
 
     private void unregisterLogHandler() {
@@ -137,24 +131,14 @@ final class DynamicJasperReportFrame extends JFrame {
     }
 
     void displayWaitMessage(final String message) {
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                waitPanel.setMessage(message);
-                waitPanel.setWaiting(true);
-            }
+        EventQueue.invokeLater(() -> {
+            waitPanel.setMessage(message);
+            waitPanel.setWaiting(true);
         });
     }
 
     void stopWaitMessage() {
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                waitPanel.setWaiting(false);
-            }
-        });
+        EventQueue.invokeLater(() -> waitPanel.setWaiting(false));
     }
 
     void setStatus(final String status) {
@@ -166,13 +150,7 @@ final class DynamicJasperReportFrame extends JFrame {
         @Override
         public void publish(final LogRecord record) {
             // update on the event thread to prevent display corruption
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    waitPanel.setMessage(record.getMessage());
-                }
-            });
+            EventQueue.invokeLater(() -> waitPanel.setMessage(record.getMessage()));
         }
 
         /**

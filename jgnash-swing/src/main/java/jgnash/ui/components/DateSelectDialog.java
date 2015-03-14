@@ -17,12 +17,7 @@
  */
 package jgnash.ui.components;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.Date;
 
@@ -31,6 +26,9 @@ import javax.swing.JPanel;
 
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 import org.jdesktop.swingx.JXMonthView;
 import org.jdesktop.swingx.calendar.DateSelectionModel.SelectionMode;
@@ -89,13 +87,9 @@ class DateSelectDialog extends GenericCloseDialog {
         view.setTraversable(true);
         view.setShowingLeadingDays(true);
         view.setShowingTrailingDays(true);
-        view.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                if (e.getActionCommand().equals(JGJXMonthView.DATE_ACCEPTED)) {
-                    closeWindow();
-                }
+        view.addActionListener(e -> {
+            if (e.getActionCommand().equals(JGJXMonthView.DATE_ACCEPTED)) {
+                closeWindow();
             }
         });
 
@@ -103,13 +97,9 @@ class DateSelectDialog extends GenericCloseDialog {
 
         JButton today = new JButton(rb.getString("Button.Today"));
 
-        today.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                view.setFirstDisplayedDay(new Date());
-                view.setSelectionDate(new Date());
-            }
+        today.addActionListener(e -> {
+            view.setFirstDisplayedDay(new Date());
+            view.setSelectionDate(new Date());
         });
 
         FormLayout layout = new FormLayout("fill:p:g", "f:p:g, $rgap, f:p");

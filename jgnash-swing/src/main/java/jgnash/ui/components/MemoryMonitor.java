@@ -57,14 +57,10 @@ public class MemoryMonitor extends JProgressBar {
         setFont(getFont().deriveFont(getFont().getSize2D() - 1f).deriveFont(Font.PLAIN));
 
         /* A reusable runnable */
-        final Runnable update = new Runnable() {
-
-            @Override
-            public void run() {
-                setMaximum(total);
-                setValue(used);
-                setString(used + "/" + total + " MB");
-            }
+        final Runnable update = () -> {
+            setMaximum(total);
+            setValue(used);
+            setString(used + "/" + total + " MB");
         };
 
         Timer timer = new Timer(true);

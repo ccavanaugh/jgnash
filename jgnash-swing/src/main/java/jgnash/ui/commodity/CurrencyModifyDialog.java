@@ -90,14 +90,10 @@ public class CurrencyModifyDialog extends JDialog implements MessageListener, Li
 
     public static void showDialog() {
 
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                CurrencyModifyDialog d = new CurrencyModifyDialog();
-                DialogUtils.addBoundsListener(d);
-                d.setVisible(true);
-            }
+        EventQueue.invokeLater(() -> {
+            CurrencyModifyDialog d = new CurrencyModifyDialog();
+            DialogUtils.addBoundsListener(d);
+            d.setVisible(true);
         });
     }
 
@@ -300,48 +296,44 @@ public class CurrencyModifyDialog extends JDialog implements MessageListener, Li
 
         if (node instanceof CurrencyNode) {
 
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    switch (event.getEvent()) {
-                        case CURRENCY_REMOVE:
-                            model.removeElement((CurrencyNode) node);
-                            if (currentCurrency.equals(node)) {
-                                clearForm();
-                            }
-                            break;
-                        case CURRENCY_REMOVE_FAILED:
-                            JOptionPane.showMessageDialog(CurrencyModifyDialog.this, rb.getString("Message.Warn.CurrencyInUse"), rb.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
-                            break;
-                        case CURRENCY_ADD:
-
+            EventQueue.invokeLater(() -> {
+                switch (event.getEvent()) {
+                    case CURRENCY_REMOVE:
+                        model.removeElement((CurrencyNode) node);
+                        if (currentCurrency.equals(node)) {
                             clearForm();
-                            model.addElement((CurrencyNode) node);
+                        }
+                        break;
+                    case CURRENCY_REMOVE_FAILED:
+                        JOptionPane.showMessageDialog(CurrencyModifyDialog.this, rb.getString("Message.Warn.CurrencyInUse"), rb.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+                        break;
+                    case CURRENCY_ADD:
 
-                            break;
-                        case CURRENCY_ADD_FAILED:
-                            JOptionPane.showMessageDialog(CurrencyModifyDialog.this, rb.getString("Message.Error.AddCurrency"), rb.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
-                            break;
-                        case CURRENCY_MODIFY:
+                        clearForm();
+                        model.addElement((CurrencyNode) node);
 
-                            // node will be stale
-                            model.removeElement((CurrencyNode) node);
-                            model.addElement(getEngine().getCurrency(node.getSymbol()));
+                        break;
+                    case CURRENCY_ADD_FAILED:
+                        JOptionPane.showMessageDialog(CurrencyModifyDialog.this, rb.getString("Message.Error.AddCurrency"), rb.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+                        break;
+                    case CURRENCY_MODIFY:
 
-                            if (currentCurrency.equals(node)) {
-                                updateForm();
-                            }
+                        // node will be stale
+                        model.removeElement((CurrencyNode) node);
+                        model.addElement(getEngine().getCurrency(node.getSymbol()));
 
-                            break;
-                        case CURRENCY_MODIFY_FAILED:
-                            JOptionPane.showMessageDialog(CurrencyModifyDialog.this, rb.getString("Message.Error.ModifyCurrency"), rb.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
-                            break;
-                        default:
-                            break;
-                    }
+                        if (currentCurrency.equals(node)) {
+                            updateForm();
+                        }
 
+                        break;
+                    case CURRENCY_MODIFY_FAILED:
+                        JOptionPane.showMessageDialog(CurrencyModifyDialog.this, rb.getString("Message.Error.ModifyCurrency"), rb.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+                        break;
+                    default:
+                        break;
                 }
+
             });
         }
     }

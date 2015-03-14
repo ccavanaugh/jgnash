@@ -17,13 +17,9 @@
  */
 package jgnash.engine.jpa;
 
-import jgnash.engine.budget.Budget;
-import jgnash.engine.dao.BudgetDAO;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -31,6 +27,9 @@ import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+
+import jgnash.engine.budget.Budget;
+import jgnash.engine.dao.BudgetDAO;
 
 /**
  * Budget DAO
@@ -52,15 +51,12 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
         emLock.lock();
 
         try {
-            Future<Boolean> future = executorService.submit(new Callable<Boolean>() {
-                @Override
-                public Boolean call() throws Exception {
-                    em.getTransaction().begin();
-                    em.persist(budget);
-                    em.getTransaction().commit();
+            Future<Boolean> future = executorService.submit(() -> {
+                em.getTransaction().begin();
+                em.persist(budget);
+                em.getTransaction().commit();
 
-                    return true;
-                }
+                return true;
             });
 
             result = future.get();
@@ -86,13 +82,10 @@ public class JpaBudgetDAO extends AbstractJpaDAO implements BudgetDAO {
         emLock.lock();
 
         try {
-            Future<List<Budget>> future = executorService.submit(new Callable<List<Budget>>() {
-                @Override
-                public List<Budget> call() throws Exception {
-                    Query q = em.createQuery("SELECT b FROM Budget b WHERE b.markedForRemoval = false");
+            Future<List<Budget>> future = executorService.submit(() -> {
+                Query q = em.createQuery("SELECT b FROM Budget b WHERE b.markedForRemoval = false");
 
-                    return new ArrayList<>(q.getResultList());
-                }
+                return new ArrayList<>(q.getResultList());
             });
 
             budgetList = future.get(); // block until complete

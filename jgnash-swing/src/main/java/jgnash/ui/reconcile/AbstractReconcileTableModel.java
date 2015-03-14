@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -97,11 +98,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
         rwl.writeLock().lock();
 
         try {
-            for (Transaction t : account.getSortedTransactionList()) {
-                if (reconcilable(t)) {
-                    list.add(new RecTransaction(t));
-                }
-            }
+            list.addAll(account.getSortedTransactionList().parallelStream().filter(this::reconcilable).map(RecTransaction::new).collect(Collectors.toList()));
         } finally {
             rwl.writeLock().unlock();
         }
@@ -196,33 +193,29 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
 
                 final Transaction transaction = event.getObject(MessageProperty.TRANSACTION);
 
-                EventQueue.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        switch (event.getEvent()) {
-                            case TRANSACTION_REMOVE:
-                                RecTransaction trans = findTransaction(transaction);
-                                if (trans != null) {
-                                    int index = list.indexOf(trans);
-                                    list.remove(index);
-                                    fireTableRowsDeleted(index, index);
+                EventQueue.invokeLater(() -> {
+                    switch (event.getEvent()) {
+                        case TRANSACTION_REMOVE:
+                            RecTransaction trans = findTransaction(transaction);
+                            if (trans != null) {
+                                int index = list.indexOf(trans);
+                                list.remove(index);
+                                fireTableRowsDeleted(index, index);
+                            }
+                            break;
+                        case TRANSACTION_ADD:
+                            if (isShowable(transaction)) {
+                                RecTransaction newTran = new RecTransaction(transaction);
+                                int index = Collections.binarySearch(list, newTran);
+                                if (index < 0) {
+                                    index = -index - 1;
+                                    list.add(index, newTran);
+                                    fireTableRowsInserted(index, index);
                                 }
-                                break;
-                            case TRANSACTION_ADD:
-                                if (isShowable(transaction)) {
-                                    RecTransaction newTran = new RecTransaction(transaction);
-                                    int index = Collections.binarySearch(list, newTran);
-                                    if (index < 0) {
-                                        index = -index - 1;
-                                        list.add(index, newTran);
-                                        fireTableRowsInserted(index, index);
-                                    }
-                                }
-                                break;
-                            default:
-                                break;
-                        }
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 });
             } finally {
@@ -325,17 +318,17 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
 
         Objects.requireNonNull(engine);
 
-        for (final RecTransaction transaction : transactions) {
-            if (transaction.getReconciled() != transaction.transaction.getReconciled(account)) {
+        // Set to the requested reconcile state
+// must not be reconciled or cleared
+        transactions.parallelStream().filter(transaction -> transaction.getReconciled() != transaction.transaction.getReconciled(account)).forEach(transaction -> {
 
-                // Set to the requested reconcile state
-                if (transaction.getReconciled() != ReconciledState.NOT_RECONCILED) {
-                    engine.setTransactionReconciled(transaction.transaction, account, reconciledState);
-                } else { // must not be reconciled or cleared
-                    engine.setTransactionReconciled(transaction.transaction, account, transaction.getReconciled());
-                }
+            // Set to the requested reconcile state
+            if (transaction.getReconciled() != ReconciledState.NOT_RECONCILED) {
+                engine.setTransactionReconciled(transaction.transaction, account, reconciledState);
+            } else { // must not be reconciled or cleared
+                engine.setTransactionReconciled(transaction.transaction, account, transaction.getReconciled());
             }
-        }
+        });
     }
 
     /**

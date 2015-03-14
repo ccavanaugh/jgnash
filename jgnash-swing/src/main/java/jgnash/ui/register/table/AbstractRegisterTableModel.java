@@ -254,39 +254,29 @@ public abstract class AbstractRegisterTableModel extends AbstractTableModel impl
     public void messagePosted(final Message event) {
 
         if (event.getEvent() == ChannelEvent.CURRENCY_MODIFY || event.getEvent() == ChannelEvent.SECURITY_MODIFY) {
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    fireTableDataChanged();
-                }
-            });
+            EventQueue.invokeLater(AbstractRegisterTableModel.this::fireTableDataChanged);
         }
 
         if (account.equals(event.getObject(MessageProperty.ACCOUNT))) {
-            EventQueue.invokeLater(new Runnable() {
+            EventQueue.invokeLater(() -> {
+                switch (event.getEvent()) {
+                    case FILE_CLOSING:
+                        unregister();
+                        return;
+                    case TRANSACTION_ADD:
+                        Transaction t = event.getObject(MessageProperty.TRANSACTION);
+                        int index = account.indexOf(t);
+                        balanceCache.ensureCapacity(account.getTransactionCount());
+                        balanceCache.clear(index);
+                        fireTableRowsInserted(index, index);
+                        break;
+                    case TRANSACTION_REMOVE:
+                        balanceCache.clear();
+                        fireTableDataChanged();
+                        break;
+                    default:
+                        break;
 
-                @Override
-                public void run() {
-                    switch (event.getEvent()) {
-                        case FILE_CLOSING:
-                            unregister();
-                            return;
-                        case TRANSACTION_ADD:
-                            Transaction t = event.getObject(MessageProperty.TRANSACTION);
-                            int index = account.indexOf(t);
-                            balanceCache.ensureCapacity(account.getTransactionCount());
-                            balanceCache.clear(index);
-                            fireTableRowsInserted(index, index);
-                            break;
-                        case TRANSACTION_REMOVE:
-                            balanceCache.clear();
-                            fireTableDataChanged();
-                            break;
-                        default:
-                            break;
-
-                    }
                 }
             });
         }

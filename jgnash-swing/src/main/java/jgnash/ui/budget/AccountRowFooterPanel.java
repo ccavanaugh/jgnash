@@ -17,13 +17,6 @@
  */
 package jgnash.ui.budget;
 
-import org.jdesktop.swingx.JXPanel;
-import org.jdesktop.swingx.JXTitledPanel;
-
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.EventQueue;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -54,11 +47,18 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.text.CommodityFormat;
 import jgnash.ui.components.ShadowBorder;
+import jgnash.ui.util.JTableUtils;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
+
+import org.jdesktop.swingx.JXPanel;
+import org.jdesktop.swingx.JXTitledPanel;
 
 import static javax.swing.event.TableModelEvent.ALL_COLUMNS;
 import static javax.swing.event.TableModelEvent.UPDATE;
-import jgnash.ui.util.JTableUtils;
 
 /**
  * Panel to display a row footer which summarizes account totals
@@ -204,13 +204,7 @@ public class AccountRowFooterPanel extends JPanel {
 
         private void registerListeners() {
 
-            summaryModel.addTableModelListener(new TableModelListener() {
-
-                @Override
-                public void tableChanged(TableModelEvent e) {
-                    fireTableDataChanged();
-                }
-            });
+            summaryModel.addTableModelListener(e -> fireTableDataChanged());
 
             model.addMessageListener(this);
         }
@@ -254,12 +248,7 @@ public class AccountRowFooterPanel extends JPanel {
                 case ACCOUNT_MODIFY:
                 case BUDGET_UPDATE:
                     groups = model.getAccountGroups();
-                    EventQueue.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            fireTableDataChanged();
-                        }
-                    });
+                    EventQueue.invokeLater(FooterModel.this::fireTableDataChanged);
                     break;
                 default:
                     break;  // ignore any other events
@@ -288,13 +277,7 @@ public class AccountRowFooterPanel extends JPanel {
 
         private void registerListeners() {
             // pass through the events from the wrapped table model
-            listener = new TableModelListener() {
-
-                @Override
-                public void tableChanged(final TableModelEvent e) {
-                    fireTableChanged(e);
-                }
-            };
+            listener = AccountRowSummaryModel.this::fireTableChanged;
 
             model.addTableModelListener(listener);
             model.addMessageListener(this);
@@ -356,26 +339,18 @@ public class AccountRowFooterPanel extends JPanel {
         }
 
         private void processBudgetGoalUpdate(final Message message) {
-            Runnable thread = new Runnable() {
+            final Runnable thread = () -> {
 
-                @Override
-                public void run() {
+                List<Account> accountList = ((Account) message.getObject(MessageProperty.ACCOUNT)).getAncestors();
 
-                    List<Account> accountList = ((Account) message.getObject(MessageProperty.ACCOUNT)).getAncestors();
+                for (Account account : accountList) {
 
-                    for (Account account : accountList) {
+                    final int row = model.indexOf(account);
 
-                        final int row = model.indexOf(account);
-
-                        EventQueue.invokeLater(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                fireTableChanged(new TableModelEvent(AccountRowSummaryModel.this, row, row, ALL_COLUMNS, UPDATE));
-                                JTableUtils.packTables(table, footerTable); 
-                            }
-                        });
-                    }
+                    EventQueue.invokeLater(() -> {
+                        fireTableChanged(new TableModelEvent(AccountRowSummaryModel.this, row, row, ALL_COLUMNS, UPDATE));
+                        JTableUtils.packTables(table, footerTable);
+                    });
                 }
             };
 
@@ -384,31 +359,23 @@ public class AccountRowFooterPanel extends JPanel {
 
         private void processTransactionEvent(final Message message) {
 
-            Runnable thread = new Runnable() {
+            final Runnable thread = () -> {
+                final Transaction transaction = message.getObject(MessageProperty.TRANSACTION);
 
-                @Override
-                public void run() {
-                    final Transaction transaction = message.getObject(MessageProperty.TRANSACTION);
+                // build a list of accounts include ancestors that will be impacted by the transaction changes
+                final Set<Account> accounts = new HashSet<>();
 
-                    // build a list of accounts include ancestors that will be impacted by the transaction changes
-                    final Set<Account> accounts = new HashSet<>();
+                for (Account account : transaction.getAccounts()) {
+                    accounts.addAll(account.getAncestors());
+                }
 
-                    for (Account account : transaction.getAccounts()) {
-                        accounts.addAll(account.getAncestors());
-                    }
+                for (Account account : accounts) {
+                    final int row = model.indexOf(account);
 
-                    for (Account account : accounts) {
-                        final int row = model.indexOf(account);
-
-                        EventQueue.invokeLater(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                fireTableChanged(new TableModelEvent(AccountRowSummaryModel.this, row, row, ALL_COLUMNS, UPDATE));
-                                JTableUtils.packTables(table, footerTable); 
-                            }
-                        });
-                    }
+                    EventQueue.invokeLater(() -> {
+                        fireTableChanged(new TableModelEvent(AccountRowSummaryModel.this, row, row, ALL_COLUMNS, UPDATE));
+                        JTableUtils.packTables(table, footerTable);
+                    });
                 }
             };
 

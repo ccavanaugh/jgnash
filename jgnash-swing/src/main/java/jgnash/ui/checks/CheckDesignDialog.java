@@ -132,12 +132,7 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
      */
     public static void main(final String args[]) {
 
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new CheckDesignDialog(null).setVisible(true);
-            }
-        });
+        EventQueue.invokeLater(() -> new CheckDesignDialog(null).setVisible(true));
     }
 
     private void initComponents() {

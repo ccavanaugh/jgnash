@@ -17,6 +17,24 @@
  */
 package jgnash.engine.message;
 
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.Delimiters;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
+import io.netty.util.CharsetUtil;
+import io.netty.util.ReferenceCountUtil;
+
 import java.io.CharArrayWriter;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
@@ -40,23 +58,6 @@ import jgnash.util.EncryptionManager;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.CompactWriter;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.DelimiterBasedFrameDecoder;
-import io.netty.handler.codec.Delimiters;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
-import io.netty.util.CharsetUtil;
-import io.netty.util.ReferenceCountUtil;
 
 /**
  * Message bus client for remote connections
@@ -187,18 +188,15 @@ class MessageBusClient {
                 logger.log(Level.FINE, "messageReceived: {0}", plainMessage);
 
                 if (plainMessage.startsWith("<Message")) {
-                    executorService.submit(new Runnable() {
-                        @Override
-                        public void run() {
-                            final Message message = (Message) xstream.fromXML(plainMessage);
+                    executorService.submit(() -> {
+                        final Message message = (Message) xstream.fromXML(plainMessage);
 
-                            final Engine engine = EngineFactory.getEngine(name);
-                            Objects.requireNonNull(engine);
+                        final Engine engine = EngineFactory.getEngine(name);
+                        Objects.requireNonNull(engine);
 
-                            // ignore our own messages
-                            if (!engine.getUuid().equals(message.getSource())) {
-                                processRemoteMessage(message);
-                            }
+                        // ignore our own messages
+                        if (!engine.getUuid().equals(message.getSource())) {
+                            processRemoteMessage(message);
                         }
                     });
                 } else if (plainMessage.startsWith(MessageBusServer.PATH_PREFIX)) {

@@ -68,12 +68,9 @@ public class JTextFieldEx extends JTextField {
         FocusListener focusListener = new FocusAdapter() {
             @Override
             public void focusGained(final FocusEvent e) {
-                EventQueue.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isEditable() && JTextFieldEx.select) {
-                            selectAll();
-                        }
+                EventQueue.invokeLater(() -> {
+                    if (isEditable() && JTextFieldEx.select) {
+                        selectAll();
                     }
                 });
             }

@@ -17,9 +17,6 @@
  */
 package jgnash.ui.wizards.file;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -32,8 +29,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
 import javax.swing.text.StyledEditorKit;
 
 import jgnash.engine.DataStoreType;
@@ -44,6 +39,9 @@ import jgnash.ui.components.wizard.WizardPage;
 import jgnash.ui.util.TextResource;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * New file wizard panel
@@ -85,13 +83,7 @@ public class NewFileOne extends JPanel implements WizardPage, ActionListener {
         typeCombo = new DataStoreTypeCombo();
         typeCombo.addActionListener(this);
 
-        dbNameField.addCaretListener(new CaretListener() {
-
-            @Override
-            public void caretUpdate(CaretEvent e) {
-                checkForOverwrite();
-            }
-        });
+        dbNameField.addCaretListener(e -> checkForOverwrite());
 
         typeCombo.setSelectedItem(DataStoreType.BINARY_XSTREAM);
     }
@@ -175,13 +167,9 @@ public class NewFileOne extends JPanel implements WizardPage, ActionListener {
     private void updateFileExtensionAction() {
         if (!dbNameField.getText().isEmpty()) {
 
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    String fileName = FileUtils.stripFileExtension(dbNameField.getText());
-                    dbNameField.setText(fileName + "." + typeCombo.getSelectedDataStoreType().getDataStore().getFileExt());
-                }
+            EventQueue.invokeLater(() -> {
+                String fileName = FileUtils.stripFileExtension(dbNameField.getText());
+                dbNameField.setText(fileName + "." + typeCombo.getSelectedDataStoreType().getDataStore().getFileExt());
             });
         }
     }

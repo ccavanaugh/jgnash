@@ -148,24 +148,20 @@ public class AccountListComboBox extends JComboBox<Account> implements MessageLi
 
     @Override
     public void messagePosted(final Message event) {
-        EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(() -> {
+            if (event.getEvent() == ChannelEvent.FILE_CLOSING) {
+                MessageBus.getInstance().unregisterListener(AccountListComboBox.this, MessageChannel.ACCOUNT, MessageChannel.SYSTEM);
+                ((AbstractModel) getModel()).messagePosted(event);
+            } else {
+                Account account = getSelectedAccount();
+                ((AbstractModel) getModel()).messagePosted(event);
 
-            @Override
-            public void run() {
-                if (event.getEvent() == ChannelEvent.FILE_CLOSING) {
-                    MessageBus.getInstance().unregisterListener(AccountListComboBox.this, MessageChannel.ACCOUNT, MessageChannel.SYSTEM);
-                    ((AbstractModel) getModel()).messagePosted(event);
+                if (account != null && event.getEvent() != ChannelEvent.ACCOUNT_REMOVE
+                        && !account.equals(event.getObject(MessageProperty.ACCOUNT))) {
+                    setSelectedAccount(account);
                 } else {
-                    Account account = getSelectedAccount();
-                    ((AbstractModel) getModel()).messagePosted(event);
-
-                    if (account != null && event.getEvent() != ChannelEvent.ACCOUNT_REMOVE
-                            && !account.equals(event.getObject(MessageProperty.ACCOUNT))) {
-                        setSelectedAccount(account);
-                    } else {
-                        if (getModel().getSize() > 0) {
-                            setSelectedIndex(0);
-                        }
+                    if (getModel().getSize() > 0) {
+                        setSelectedIndex(0);
                     }
                 }
             }

@@ -20,7 +20,6 @@ package jgnash.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
@@ -219,11 +218,8 @@ public final class FileUtils {
 
             final Pattern p = SearchUtils.createSearchPattern(pattern, false);
 
-            File[] files = directory.listFiles(new FilenameFilter() {
-                @Override
-                public boolean accept(final File dir, final String name) {
-                    return p.matcher(name).matches();
-                }
+            File[] files = directory.listFiles((dir, name) -> {
+                return p.matcher(name).matches();
             });
 
             fileList.addAll(Arrays.asList(files));

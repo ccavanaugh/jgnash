@@ -17,11 +17,6 @@
  */
 package jgnash.ui.register.invest;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
@@ -45,9 +40,13 @@ import jgnash.ui.components.ShadowBorder;
 import jgnash.ui.register.AbstractRegisterPanel;
 import jgnash.ui.register.RegisterEvent;
 import jgnash.ui.register.RegisterFactory;
-import jgnash.ui.register.RegisterListener;
 import jgnash.ui.register.table.AbstractRegisterTableModel;
 import jgnash.ui.register.table.RegisterTable;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 /**
  * Main view for an investment account register. This displays the account's transactions and the forms for adding,
@@ -100,13 +99,9 @@ public class InvestmentRegisterPanel extends AbstractRegisterPanel implements Ac
         transactionPanel = new InvestmentTransactionPanel(account);
 
         // add a listener to detect a cancel action
-        transactionPanel.addRegisterListener(new RegisterListener() {
-
-            @Override
-            public void registerEvent(RegisterEvent e) {
-                if (e.getAction() == RegisterEvent.Action.CANCEL) {
-                    table.clearSelection();
-                }
+        transactionPanel.addRegisterListener(e -> {
+            if (e.getAction() == RegisterEvent.Action.CANCEL) {
+                table.clearSelection();
             }
         });
 

@@ -18,7 +18,6 @@
 package jgnash.ui.components;
 
 import java.awt.EventQueue;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Collections;
@@ -214,19 +213,15 @@ public class AutoCompleteFactory {
         final void init() {
             MessageBus.getInstance().registerListener(this, MessageChannel.TRANSACTION, MessageChannel.SYSTEM);
 
-            listener = new PropertyChangeListener() {
-
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (evt.getPropertyName().equals(IGNORE_CASE) && evt.getNewValue() != evt.getOldValue()) {
-                        setIgnoreCase((Boolean) evt.getNewValue());
-                        reload();
-                    } else if (evt.getPropertyName().equals(AUTO_COMPLETE) && evt.getNewValue() != evt.getOldValue()) {
-                        setEnabled((Boolean) evt.getNewValue());
-                    } else if (evt.getPropertyName().equals(FUZZY_MATCH) && evt.getNewValue() != evt.getOldValue()) {
-                        setFuzzyMatch((Boolean) evt.getNewValue());
-                        reload();
-                    }
+            listener = evt -> {
+                if (evt.getPropertyName().equals(IGNORE_CASE) && evt.getNewValue() != evt.getOldValue()) {
+                    setIgnoreCase((Boolean) evt.getNewValue());
+                    reload();
+                } else if (evt.getPropertyName().equals(AUTO_COMPLETE) && evt.getNewValue() != evt.getOldValue()) {
+                    setEnabled((Boolean) evt.getNewValue());
+                } else if (evt.getPropertyName().equals(FUZZY_MATCH) && evt.getNewValue() != evt.getOldValue()) {
+                    setFuzzyMatch((Boolean) evt.getNewValue());
+                    reload();
                 }
             };
 
@@ -259,29 +254,25 @@ public class AutoCompleteFactory {
         void load() {
             load = true;
 
-            pool.execute(new Runnable() {
+            pool.execute(() -> {
+                try {
+                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                    Objects.requireNonNull(engine);
 
-                @Override
-                public void run() {
-                    try {
-                        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-                        Objects.requireNonNull(engine);
+                    List<Transaction> transactions = engine.getTransactions();
 
-                        List<Transaction> transactions = engine.getTransactions();
+                    // sort the transactions for consistent order
+                    Collections.sort(transactions);
 
-                        // sort the transactions for consistent order
-                        Collections.sort(transactions);
-
-                        for (Transaction t : transactions) {
-                            if (load) {
-                                load(t);
-                            } else {
-                                return;
-                            }
+                    for (Transaction t : transactions) {
+                        if (load) {
+                            load(t);
+                        } else {
+                            return;
                         }
-                    } catch (Exception e) {
-                        Logger.getLogger(TransactionModel.class.getName()).log(Level.INFO, e.getLocalizedMessage(), e);
                     }
+                } catch (Exception e) {
+                    Logger.getLogger(TransactionModel.class.getName()).log(Level.INFO, e.getLocalizedMessage(), e);
                 }
             });
         }
@@ -319,24 +310,11 @@ public class AutoCompleteFactory {
 
         @Override
         void load() {
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-
-                    pool.execute(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            if (account != null) {
-                                for (Transaction t : account.getSortedTransactionList()) {
-                                    load(t);
-                                }
-                            }
-                        }
-                    });
+            EventQueue.invokeLater(() -> pool.execute(() -> {
+                if (account != null) {
+                    account.getSortedTransactionList().forEach(this::load);
                 }
-            });
+            }));
         }
 
         @Override
@@ -404,14 +382,11 @@ public class AutoCompleteFactory {
          * @param t transaction to remove
          */
         void removeExtraInfo(final Transaction t) {
-            pool.execute(new Runnable() {
-                @Override
-                public void run() {
-                    if (ignoreCase) {
-                        transactions.removeValue(t.getPayee().toLowerCase(Locale.getDefault()), t);
-                    } else {
-                        transactions.removeValue(t.getPayee(), t);
-                    }
+            pool.execute(() -> {
+                if (ignoreCase) {
+                    transactions.removeValue(t.getPayee().toLowerCase(Locale.getDefault()), t);
+                } else {
+                    transactions.removeValue(t.getPayee(), t);
                 }
             });
         }
@@ -422,7 +397,7 @@ public class AutoCompleteFactory {
 
             switch (event.getEvent()) {
                 case TRANSACTION_REMOVE:
-                    removeExtraInfo((Transaction) event.getObject(MessageProperty.TRANSACTION));
+                    removeExtraInfo(event.getObject(MessageProperty.TRANSACTION));
                     return;
                 default:
             }

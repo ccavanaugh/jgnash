@@ -21,8 +21,6 @@ import java.awt.BorderLayout;
 import java.awt.Dialog;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -56,7 +54,6 @@ import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.factories.Borders;
 import com.sun.management.HotSpotDiagnosticMXBean;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Simple dialog to display info dumped to the console. Makes it easy for end
@@ -150,13 +147,10 @@ public class ConsoleDialog {
                 @Override
                 public void publish(final LogRecord record) {
                     // update on the event thread to prevent display corruption
-                    EventQueue.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            synchronized (consoleLock) {
-                                if (console != null) {
-                                    console.append(record.getMessage() + "\n");
-                                }
+                    EventQueue.invokeLater(() -> {
+                        synchronized (consoleLock) {
+                            if (console != null) {
+                                console.append(record.getMessage() + "\n");
                             }
                         }
                     });
@@ -196,35 +190,22 @@ public class ConsoleDialog {
 
             JButton copyButton = new JButton(rb.getString("Button.CopyToClip"));
 
-            copyButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (console != null) {
-                        console.selectAll();
-                        console.copy();
-                    }
+            copyButton.addActionListener(e -> {
+                if (console != null) {
+                    console.selectAll();
+                    console.copy();
                 }
             });
 
             JButton gcButton = new JButton(rb.getString("Button.ForceGC"));
 
-            gcButton.addActionListener(new ActionListener() {
-
-                @SuppressFBWarnings({"DM_GC"})
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    System.gc();
-                }
-            });
+            gcButton.addActionListener(e -> System.gc());
 
             JButton heapButton = new JButton(rb.getString("Button.CreateHeapDump"));
 
-            heapButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (console != null) {
-                        dumpHeap();
-                    }
+            heapButton.addActionListener(e -> {
+                if (console != null) {
+                    dumpHeap();
                 }
             });
 
@@ -237,12 +218,9 @@ public class ConsoleDialog {
                 public void windowClosing(WindowEvent evt) {
                     /* force the shut down to the end of the event thread.
                      * Lets other listeners do their job */
-                    EventQueue.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            synchronized (consoleLock) {
-                                ConsoleDialog.close();
-                            }
+                    EventQueue.invokeLater(() -> {
+                        synchronized (consoleLock) {
+                            ConsoleDialog.close();
                         }
                     });
                 }

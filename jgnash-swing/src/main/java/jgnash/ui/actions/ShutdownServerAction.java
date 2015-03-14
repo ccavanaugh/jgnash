@@ -17,13 +17,13 @@
  */
 package jgnash.ui.actions;
 
+import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+
 import jgnash.engine.message.MessageBus;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.RemoteConnectionDialog;
 import jgnash.ui.util.builder.Action;
-
-import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
 
 /**
  * UI Action to gracefully shutdown a remote server
@@ -35,20 +35,17 @@ public class ShutdownServerAction extends AbstractEnabledAction {
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                RemoteConnectionDialog dialog = new RemoteConnectionDialog(UIApplication.getFrame());
+        EventQueue.invokeLater(() -> {
+            RemoteConnectionDialog dialog = new RemoteConnectionDialog(UIApplication.getFrame());
 
-                dialog.setVisible(true);
+            dialog.setVisible(true);
 
-                if (dialog.getResult()) {
-                    final int port = dialog.getPort() + 1; // message server is base + 1;
-                    final String host = dialog.getHost();
-                    final char[] password = dialog.getPassword();
+            if (dialog.getResult()) {
+                final int port = dialog.getPort() + 1; // message server is base + 1;
+                final String host = dialog.getHost();
+                final char[] password = dialog.getPassword();
 
-                    MessageBus.getInstance().shutDownRemoteServer(host, port, password);
-                }
+                MessageBus.getInstance().shutDownRemoteServer(host, port, password);
             }
         });
     }

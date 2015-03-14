@@ -17,14 +17,7 @@
  */
 package jgnash.ui.budget;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.util.DefaultUnitConverter;
-
 import java.awt.Dimension;
-
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -54,6 +47,12 @@ import jgnash.ui.util.TextResource;
 import jgnash.ui.util.ValidationFactory;
 import jgnash.util.Resource;
 
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
+import com.jgoodies.forms.util.DefaultUnitConverter;
+
 /**
  * BudgetWizardDialog is a mini wizard for creating a new budget based on historical data
  *
@@ -82,14 +81,10 @@ final class BudgetWizardDialog extends JDialog implements ActionListener {
 
     public static void showDialog() {
 
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                BudgetWizardDialog d = new BudgetWizardDialog();
-                DialogUtils.addBoundsListener(d);
-                d.setVisible(true);
-            }
+        EventQueue.invokeLater(() -> {
+            BudgetWizardDialog d = new BudgetWizardDialog();
+            DialogUtils.addBoundsListener(d);
+            d.setVisible(true);
         });
     }
 

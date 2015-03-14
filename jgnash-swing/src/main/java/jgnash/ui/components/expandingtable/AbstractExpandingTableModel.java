@@ -247,13 +247,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
     public void fireTableDataChanged() {
 
         // push the notification onto the end of the EDT
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                AbstractExpandingTableModel.super.fireTableDataChanged();
-            }
-        });
+        EventQueue.invokeLater(AbstractExpandingTableModel.super::fireTableDataChanged);
     }
 
     /**

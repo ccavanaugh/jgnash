@@ -119,14 +119,10 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
 
     public static void showDialog(final JFrame parent) {
 
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                CurrencyExchangeDialog d = new CurrencyExchangeDialog(parent);
-                DialogUtils.addBoundsListener(d);
-                d.setVisible(true);
-            }
+        EventQueue.invokeLater(() -> {
+            CurrencyExchangeDialog d = new CurrencyExchangeDialog(parent);
+            DialogUtils.addBoundsListener(d);
+            d.setVisible(true);
         });
     }
 
@@ -196,13 +192,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
         updateButton.addActionListener(this);
         stopButton.addActionListener(this);
 
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                updateModel();
-            }
-        });
+        EventQueue.invokeLater(CurrencyExchangeDialog.this::updateModel);
     }
 
     private void layoutMainPanel() {
@@ -401,21 +391,17 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
 
     @Override
     public void messagePosted(final Message event) {
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                switch (event.getEvent()) {
-                    case EXCHANGE_RATE_ADD:
-                    case EXCHANGE_RATE_REMOVE:
-                        ExchangeRate rate = event.getObject(MessageProperty.EXCHANGE_RATE);
-                        if (rate.equals(getSelectedExchangeRate())) {
-                            updateModel();
-                        }
-                        break;
-                    default:
-                        break;
-                }
+        EventQueue.invokeLater(() -> {
+            switch (event.getEvent()) {
+                case EXCHANGE_RATE_ADD:
+                case EXCHANGE_RATE_REMOVE:
+                    ExchangeRate rate = event.getObject(MessageProperty.EXCHANGE_RATE);
+                    if (rate.equals(getSelectedExchangeRate())) {
+                        updateModel();
+                    }
+                    break;
+                default:
+                    break;
             }
         });
     }

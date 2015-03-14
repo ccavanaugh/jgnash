@@ -17,23 +17,27 @@
  */
 package jgnash.ui.option;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-import jgnash.net.ConnectionFactory;
-import jgnash.net.NetworkAuthenticator;
-
-import jgnash.ui.components.JIntegerField;
-import jgnash.ui.components.JTextFieldEx;
-import jgnash.util.Resource;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+
+import javax.swing.JCheckBox;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+
+import jgnash.net.ConnectionFactory;
+import jgnash.net.NetworkAuthenticator;
+import jgnash.ui.components.JIntegerField;
+import jgnash.ui.components.JTextFieldEx;
+import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Panel for general program options
@@ -75,12 +79,9 @@ class NetworkOptions extends JPanel implements ActionListener, FocusListener {
         nameField.addFocusListener(this);
         passwordField.addFocusListener(this);
 
-        connectionTimeout.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(final ChangeEvent e) {
-                ConnectionFactory.setConnectionTimeout(((SpinnerNumberModel)connectionTimeout.getModel()).getNumber().intValue());
-            }
-        });
+        connectionTimeout.addChangeListener(e ->
+                ConnectionFactory.setConnectionTimeout(((SpinnerNumberModel)connectionTimeout.getModel())
+                        .getNumber().intValue()));
     }
 
     private void initComponents() {

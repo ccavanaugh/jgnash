@@ -83,15 +83,11 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
     public static void showDialog(final JFrame parent) {
         final Resource rb = Resource.get();
 
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                GenericCloseDialog d = new GenericCloseDialog(parent, new SecurityModifyPanel(), rb.getString("Title.CreateModifyCommodities"));
-                d.setMinimumSize(d.getSize());
-                DialogUtils.addBoundsListener(d);
-                d.setVisible(true);
-            }
+        EventQueue.invokeLater(() -> {
+            GenericCloseDialog d = new GenericCloseDialog(parent, new SecurityModifyPanel(), rb.getString("Title.CreateModifyCommodities"));
+            d.setMinimumSize(d.getSize());
+            DialogUtils.addBoundsListener(d);
+            d.setVisible(true);
         });
     }
 
@@ -288,37 +284,33 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
 
             final SecurityNode node = event.getObject(MessageProperty.COMMODITY);
 
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    switch (event.getEvent()) {
-                        case SECURITY_REMOVE:
-                            model.removeElement(node);
-                            clearForm();
-                            break;
-                        case SECURITY_REMOVE_FAILED:
-                            String message = "Commodity " + node + " cannot be removed";
-                            JOptionPane.showMessageDialog(SecurityModifyPanel.this, message, rb.getString("Message.Warn.CommodityInUse"), JOptionPane.WARNING_MESSAGE);
-                            break;
-                        case SECURITY_ADD:
-                            clearForm();
-                            model.addElement(node);
-                            break;
-                        case SECURITY_ADD_FAILED:
-                            JOptionPane.showMessageDialog(SecurityModifyPanel.this, rb.getString("Message.Error.AddCommodity"), rb.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
-                            break;
-                        case SECURITY_MODIFY:
-                            clearForm();
-                            model.removeElement(node); // force load of new instance
-                            model.addElement(node);
-                            model.fireContentsChanged();
-                            break;
-                        case SECURITY_MODIFY_FAILED:
-                            JOptionPane.showMessageDialog(SecurityModifyPanel.this, rb.getString("Message.Error.ModifyCommodity"), rb.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
-                            break;
-                        default:
-                    }
+            EventQueue.invokeLater(() -> {
+                switch (event.getEvent()) {
+                    case SECURITY_REMOVE:
+                        model.removeElement(node);
+                        clearForm();
+                        break;
+                    case SECURITY_REMOVE_FAILED:
+                        String message = "Commodity " + node + " cannot be removed";
+                        JOptionPane.showMessageDialog(SecurityModifyPanel.this, message, rb.getString("Message.Warn.CommodityInUse"), JOptionPane.WARNING_MESSAGE);
+                        break;
+                    case SECURITY_ADD:
+                        clearForm();
+                        model.addElement(node);
+                        break;
+                    case SECURITY_ADD_FAILED:
+                        JOptionPane.showMessageDialog(SecurityModifyPanel.this, rb.getString("Message.Error.AddCommodity"), rb.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+                        break;
+                    case SECURITY_MODIFY:
+                        clearForm();
+                        model.removeElement(node); // force load of new instance
+                        model.addElement(node);
+                        model.fireContentsChanged();
+                        break;
+                    case SECURITY_MODIFY_FAILED:
+                        JOptionPane.showMessageDialog(SecurityModifyPanel.this, rb.getString("Message.Error.ModifyCommodity"), rb.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+                        break;
+                    default:
                 }
             });
         }

@@ -17,11 +17,6 @@
  */
 package jgnash.ui.register.invest;
 
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -40,6 +35,9 @@ import jgnash.engine.TransactionEntryBuyX;
 import jgnash.engine.TransactionFactory;
 import jgnash.ui.register.AccountExchangePanel;
 import jgnash.ui.util.ValidationFactory;
+
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Form for buying shares.
@@ -72,13 +70,9 @@ public final class BuySharePanel extends AbstractPriceQtyInvTransactionPanel {
 
         feePanel.addFocusListener(focusListener);
 
-        feePanel.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (e.getSource() == feePanel) {
-                    updateTotalField();
-                }
+        feePanel.addActionListener(e -> {
+            if (e.getSource() == feePanel) {
+                updateTotalField();
             }
         });
 

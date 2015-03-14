@@ -17,22 +17,26 @@
  */
 package jgnash.ui.option;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 
 import jgnash.ui.ThemeManager;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.JTextFieldEx;
 import jgnash.ui.register.TransactionNumberDialog;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Panel for general program options
@@ -65,15 +69,11 @@ class GeneralOptions extends JPanel implements ActionListener {
         numButton.addActionListener(this);
         animationsEnabled.addActionListener(this);
 
-        nimbusFontSpinner.addChangeListener(new ChangeListener() {
+        nimbusFontSpinner.addChangeListener(e -> {
 
-            @Override
-            public void stateChanged(final ChangeEvent e) {
+            final int size = ((SpinnerNumberModel) nimbusFontSpinner.getModel()).getNumber().intValue();
 
-                final int size = ((SpinnerNumberModel) nimbusFontSpinner.getModel()).getNumber().intValue();
-
-                ThemeManager.setNimbusFontSize(size);
-            }
+            ThemeManager.setNimbusFontSize(size);
         });
     }
 

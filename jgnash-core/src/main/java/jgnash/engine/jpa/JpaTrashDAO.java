@@ -18,16 +18,10 @@
 package jgnash.engine.jpa;
 
 
-import jgnash.engine.StoredObject;
-import jgnash.engine.TrashObject;
-import jgnash.engine.dao.TrashDAO;
-import jgnash.util.DefaultDaemonThreadFactory;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -41,6 +35,11 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
+import jgnash.engine.StoredObject;
+import jgnash.engine.TrashObject;
+import jgnash.engine.dao.TrashDAO;
+import jgnash.util.DefaultDaemonThreadFactory;
 
 /**
  * Trash DAO
@@ -61,13 +60,7 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
         trashExecutor = Executors.newSingleThreadScheduledExecutor(new DefaultDaemonThreadFactory());
 
         // run trash cleanup every 2 minutes 1 minute after startup
-        trashExecutor.scheduleWithFixedDelay(new Runnable() {
-
-            @Override
-            public void run() {
-                cleanupEntityTrash();
-            }
-        }, 1, 2, TimeUnit.MINUTES);
+        trashExecutor.scheduleWithFixedDelay((Runnable) JpaTrashDAO.this::cleanupEntityTrash, 1, 2, TimeUnit.MINUTES);
     }
 
     void stopTrashExecutor() {
@@ -89,18 +82,15 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
         emLock.lock();
 
         try {
-            Future<List<TrashObject>> future = executorService.submit(new Callable<List<TrashObject>>() {
-                @Override
-                public List<TrashObject> call() throws Exception {
-                    CriteriaBuilder cb = em.getCriteriaBuilder();
-                    CriteriaQuery<TrashObject> cq = cb.createQuery(TrashObject.class);
-                    Root<TrashObject> root = cq.from(TrashObject.class);
-                    cq.select(root);
+            Future<List<TrashObject>> future = executorService.submit(() -> {
+                CriteriaBuilder cb = em.getCriteriaBuilder();
+                CriteriaQuery<TrashObject> cq = cb.createQuery(TrashObject.class);
+                Root<TrashObject> root = cq.from(TrashObject.class);
+                cq.select(root);
 
-                    TypedQuery<TrashObject> q = em.createQuery(cq);
+                TypedQuery<TrashObject> q = em.createQuery(cq);
 
-                    return new ArrayList<>(q.getResultList());
-                }
+                return new ArrayList<>(q.getResultList());
             });
 
             trashObjectList = future.get();
@@ -118,17 +108,14 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
         emLock.lock();
 
         try {
-            Future<Void> future = executorService.submit(new Callable<Void>() {
-                @Override
-                public Void call() throws Exception {
-                    em.getTransaction().begin();
+            Future<Void> future = executorService.submit(() -> {
+                em.getTransaction().begin();
 
-                    em.persist(trashObject.getObject());
-                    em.persist(trashObject);
-                    em.getTransaction().commit();
+                em.persist(trashObject.getObject());
+                em.persist(trashObject);
+                em.getTransaction().commit();
 
-                    return null;
-                }
+                return null;
             });
 
             future.get();   // block
@@ -144,21 +131,18 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
         emLock.lock();
 
         try {
-            Future<Void> future = executorService.submit(new Callable<Void>() {
-                @Override
-                public Void call() throws Exception {
-                    em.getTransaction().begin();
+            Future<Void> future = executorService.submit(() -> {
+                em.getTransaction().begin();
 
-                    StoredObject object = trashObject.getObject();
+                StoredObject object = trashObject.getObject();
 
-                    em.remove(object);
-                    em.remove(trashObject);
+                em.remove(object);
+                em.remove(trashObject);
 
-                    logger.info("Removed TrashObject");
+                logger.info("Removed TrashObject");
 
-                    em.getTransaction().commit();
-                    return null;
-                }
+                em.getTransaction().commit();
+                return null;
             });
 
             future.get(); // block
@@ -174,16 +158,13 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
         emLock.lock();
 
         try {
-            Future<Void> future = executorService.submit(new Callable<Void>() {
-                @Override
-                public Void call() throws Exception {
-                    em.getTransaction().begin();
-                    em.persist(entity);
-                    em.persist(new JpaTrashEntity(entity));
-                    em.getTransaction().commit();
+            Future<Void> future = executorService.submit(() -> {
+                em.getTransaction().begin();
+                em.persist(entity);
+                em.persist(new JpaTrashEntity(entity));
+                em.getTransaction().commit();
 
-                    return null;
-                }
+                return null;
             });
 
             future.get();   // block
@@ -200,37 +181,34 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
         logger.info("Checking for entity trash");
 
         try {
-            Future<Void> future = executorService.submit(new Callable<Void>() {
-                @Override
-                public Void call() throws Exception {
+            Future<Void> future = executorService.submit(() -> {
 
-                    CriteriaBuilder cb = em.getCriteriaBuilder();
-                    CriteriaQuery<JpaTrashEntity> cq = cb.createQuery(JpaTrashEntity.class);
-                    Root<JpaTrashEntity> root = cq.from(JpaTrashEntity.class);
-                    cq.select(root);
+                CriteriaBuilder cb = em.getCriteriaBuilder();
+                CriteriaQuery<JpaTrashEntity> cq = cb.createQuery(JpaTrashEntity.class);
+                Root<JpaTrashEntity> root = cq.from(JpaTrashEntity.class);
+                cq.select(root);
 
-                    TypedQuery<JpaTrashEntity> q = em.createQuery(cq);
+                TypedQuery<JpaTrashEntity> q = em.createQuery(cq);
 
-                    for (JpaTrashEntity trashEntity : q.getResultList()) {
-                        final long now = new Date().getTime();
+                for (JpaTrashEntity trashEntity : q.getResultList()) {
+                    final long now = new Date().getTime();
 
-                        if (now - trashEntity.getDate().getTime() >= MAXIMUM_ENTITY_TRASH_AGE) {
-                            Class<?> clazz = Class.forName(trashEntity.getClassName());
-                            Object entity = em.find(clazz, trashEntity.getEntityId());
+                    if (now - trashEntity.getDate().getTime() >= MAXIMUM_ENTITY_TRASH_AGE) {
+                        Class<?> clazz = Class.forName(trashEntity.getClassName());
+                        Object entity = em.find(clazz, trashEntity.getEntityId());
 
-                            em.getTransaction().begin();
+                        em.getTransaction().begin();
 
-                            if (entity != null) {
-                                em.remove(entity);
-                                logger.log(Level.INFO, "Removed entity trash: {0}@{1}", new Object[]{trashEntity.getClassName(), trashEntity.getEntityId()});
-                            }
-                            em.remove(trashEntity);
-
-                            em.getTransaction().commit();
+                        if (entity != null) {
+                            em.remove(entity);
+                            logger.log(Level.INFO, "Removed entity trash: {0}@{1}", new Object[]{trashEntity.getClassName(), trashEntity.getEntityId()});
                         }
+                        em.remove(trashEntity);
+
+                        em.getTransaction().commit();
                     }
-                    return null;
                 }
+                return null;
             });
 
             future.get();

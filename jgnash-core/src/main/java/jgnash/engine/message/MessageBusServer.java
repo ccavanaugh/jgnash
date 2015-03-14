@@ -17,18 +17,6 @@
  */
 package jgnash.engine.message;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import jgnash.engine.DataStoreType;
-import jgnash.util.EncryptionManager;
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandler;
@@ -49,6 +37,18 @@ import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import jgnash.engine.DataStoreType;
+import jgnash.util.EncryptionManager;
 
 /**
  * Message bus server for remote connections
@@ -239,13 +239,10 @@ public class MessageBusServer {
 
         @Override
         public void channelRead(final ChannelHandlerContext ctx, final Object msg) {
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    processMessage(msg.toString());
+            executorService.submit(() -> {
+                processMessage(msg.toString());
 
-                    ReferenceCountUtil.release(msg);
-                }
+                ReferenceCountUtil.release(msg);
             });
         }
 

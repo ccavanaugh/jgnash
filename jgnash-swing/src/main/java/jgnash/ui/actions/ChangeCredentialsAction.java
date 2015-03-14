@@ -17,11 +17,11 @@
  */
 package jgnash.ui.actions;
 
-import jgnash.ui.components.ChangeDatabasePasswordDialog;
-import jgnash.ui.util.builder.Action;
-
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
+
+import jgnash.ui.components.ChangeDatabasePasswordDialog;
+import jgnash.ui.util.builder.Action;
 
 /**
  * UI Action to change database credentials
@@ -33,12 +33,7 @@ public class ChangeCredentialsAction extends AbstractEnabledAction {
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new ChangeDatabasePasswordDialog().setVisible(true);
-            }
-        });
+        EventQueue.invokeLater(() -> new ChangeDatabasePasswordDialog().setVisible(true));
     }
 
     @Override

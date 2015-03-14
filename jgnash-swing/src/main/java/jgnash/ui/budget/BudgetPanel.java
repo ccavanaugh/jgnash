@@ -17,13 +17,6 @@
  */
 package jgnash.ui.budget;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jidesoft.swing.JideScrollPane;
-
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -40,6 +33,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -74,6 +68,13 @@ import jgnash.ui.UIApplication;
 import jgnash.ui.components.RollOverButton;
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jidesoft.swing.JideScrollPane;
 
 /**
  * Panel for displaying a budget
@@ -220,13 +221,9 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
                     budgetCombo
                             .setMaximumSize(new Dimension(COMBO_BOX_WIDTH, budgetCombo.getPreferredSize().height * 3));
 
-                    budgetCombo.addActionListener(new ActionListener() {
-
-                        @Override
-                        public void actionPerformed(final ActionEvent e) {
-                            if (activeBudget != budgetCombo.getSelectedBudget()) {
-                                refreshDisplay();
-                            }
+                    budgetCombo.addActionListener(e -> {
+                        if (activeBudget != budgetCombo.getSelectedBudget()) {
+                            refreshDisplay();
                         }
                     });
 
@@ -270,28 +267,20 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
     }
 
     private void updateControlsState() {
-        Runnable r = new Runnable() {
+        Runnable r = () -> {
+            final int budgetCount = engine.getBudgetList().size();
 
-            @Override
-            public void run() {
-                final int budgetCount = engine.getBudgetList().size();
+            EventQueue.invokeLater(() -> {
+                if (budgetCount > 0) {
+                    budgetPropertiesButton.setEnabled(true);
 
-                EventQueue.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        if (budgetCount > 0) {
-                            budgetPropertiesButton.setEnabled(true);
-
-                            // export cannot handle and daily export
-                            budgetExportButton.setEnabled(activeBudget.getBudgetPeriod() != BudgetPeriod.DAILY);
-                        } else {
-                            budgetPropertiesButton.setEnabled(false);
-                            budgetExportButton.setEnabled(false);
-                        }
-                    }
-                });
-            }
+                    // export cannot handle and daily export
+                    budgetExportButton.setEnabled(activeBudget.getBudgetPeriod() != BudgetPeriod.DAILY);
+                } else {
+                    budgetPropertiesButton.setEnabled(false);
+                    budgetExportButton.setEnabled(false);
+                }
+            });
         };
 
         submit(r);
@@ -473,31 +462,23 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
 
     private void updateSummaryColumnVisibility() {
 
-        Runnable runnable = new Runnable() {
+        Runnable runnable = () -> {
+            preferences.putBoolean(COL_VISIBLE, summaryColVisibleCheckBox.isSelected());
 
-            @Override
-            public void run() {
-                preferences.putBoolean(COL_VISIBLE, summaryColVisibleCheckBox.isSelected());
+            EventQueue.invokeLater(() -> {
+                if (summaryColVisibleCheckBox.isSelected()) {
+                    if (activeBudget.getBudgetPeriod() != BudgetPeriod.YEARLY) { // summary is redundant for a yearly view
+                        addSummaryColumn();
 
-                EventQueue.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        if (summaryColVisibleCheckBox.isSelected()) {
-                            if (activeBudget.getBudgetPeriod() != BudgetPeriod.YEARLY) { // summary is redundant for a yearly view
-                                addSummaryColumn();
-
-                                if (summaryRowVisibleCheckBox.isSelected()) {
-                                    addSummaryCorner();
-                                }
-                            }
-                        } else {
-                            removeSummaryColumn();
-                            removeSummaryCorner();
+                        if (summaryRowVisibleCheckBox.isSelected()) {
+                            addSummaryCorner();
                         }
                     }
-                });
-            }
+                } else {
+                    removeSummaryColumn();
+                    removeSummaryCorner();
+                }
+            });
         };
 
         submit(runnable);
@@ -505,30 +486,22 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
 
     private void updateSummaryRowVisibility() {
 
-        Runnable runnable = new Runnable() {
+        Runnable runnable = () -> {
+            preferences.putBoolean(ROW_VISIBLE, summaryRowVisibleCheckBox.isSelected());
 
-            @Override
-            public void run() {
-                preferences.putBoolean(ROW_VISIBLE, summaryRowVisibleCheckBox.isSelected());
+            EventQueue.invokeLater(() -> {
+                if (summaryRowVisibleCheckBox.isSelected()) {
+                    addSummaryRows();
 
-                EventQueue.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        if (summaryRowVisibleCheckBox.isSelected()) {
-                            addSummaryRows();
-
-                            if (summaryColVisibleCheckBox.isSelected()
-                                    && activeBudget.getBudgetPeriod() != BudgetPeriod.YEARLY) {
-                                addSummaryCorner();
-                            }
-                        } else {
-                            removeSummaryRows();
-                            removeSummaryCorner();
-                        }
+                    if (summaryColVisibleCheckBox.isSelected()
+                            && activeBudget.getBudgetPeriod() != BudgetPeriod.YEARLY) {
+                        addSummaryCorner();
                     }
-                });
-            }
+                } else {
+                    removeSummaryRows();
+                    removeSummaryCorner();
+                }
+            });
         };
 
         submit(runnable);
@@ -554,33 +527,23 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
      */
     private void showCurrentPeriod() {
 
-        Runnable r = new Runnable() {
+        Runnable r = () -> {
 
-            @Override
-            public void run() {
+            final Date today = new Date();
 
-                final Date today = new Date();
+            for (int i = 0; i < panels.size(); i++) {
+                if (panels.get(i).isBetween(today)) {
+                    final BudgetPeriodPanel panel;
 
-                for (int i = 0; i < panels.size(); i++) {
-                    if (panels.get(i).isBetween(today)) {
-                        final BudgetPeriodPanel panel;
-
-                        if (i > 2) {
-                            panel = panels.get(i - 2);
-                        } else if (i > 1) {
-                            panel = panels.get(i - 1);
-                        } else {
-                            panel = panels.get(i);
-                        }
-
-                        EventQueue.invokeLater(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                panel.scrollRectToVisible(panel.getBounds());
-                            }
-                        });
+                    if (i > 2) {
+                        panel = panels.get(i - 2);
+                    } else if (i > 1) {
+                        panel = panels.get(i - 1);
+                    } else {
+                        panel = panels.get(i);
                     }
+
+                    EventQueue.invokeLater(() -> panel.scrollRectToVisible(panel.getBounds()));
                 }
             }
         };
@@ -608,33 +571,16 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
     }
 
     private void showManagerDialog() {
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-                BudgetManagerDialog.showDialog();
-            }
-        };
+        Runnable r = BudgetManagerDialog::showDialog;
 
         submit(r);
     }
 
     private void showPropertiesDialog() {
-        Runnable r = new Runnable() {
-
-            @Override
-            public void run() {
-
-                EventQueue.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        BudgetPropertiesDialog d = new BudgetPropertiesDialog(activeBudget);
-                        d.setVisible(true);
-                    }
-                });
-            }
-        };
+        Runnable r = () -> EventQueue.invokeLater(() -> {
+            BudgetPropertiesDialog d = new BudgetPropertiesDialog(activeBudget);
+            d.setVisible(true);
+        });
 
         submit(r);
     }
@@ -643,46 +589,35 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
     public void messagePosted(final Message event) {
         switch (event.getEvent()) {
             case BUDGET_ADD:
-                EventQueue.invokeLater(new Runnable() {
+                EventQueue.invokeLater(() -> {
+                    int budgetCount = engine.getBudgetList().size();
 
-                    @Override
-                    public void run() {
-                        int budgetCount = engine.getBudgetList().size();
-
-                        if (budgetCount == 1) {
-                            showBudgetPane();
-                        }
-
-                        updateControlsState();
+                    if (budgetCount == 1) {
+                        showBudgetPane();
                     }
+
+                    updateControlsState();
                 });
                 break;
             case BUDGET_REMOVE:
-                EventQueue.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        if (engine.getBudgetList().isEmpty()) {
-                            removeBudgetPane();
-                            overviewPanel.updateSparkLines();
-                        }
-
-                        if (activeBudget.equals(event.getObject(MessageProperty.BUDGET))) {
-                            refreshDisplay();
-                        }
-
-                        updateControlsState();
+                EventQueue.invokeLater(() -> {
+                    if (engine.getBudgetList().isEmpty()) {
+                        removeBudgetPane();
+                        overviewPanel.updateSparkLines();
                     }
+
+                    if (activeBudget.equals(event.getObject(MessageProperty.BUDGET))) {
+                        refreshDisplay();
+                    }
+
+                    updateControlsState();
                 });
                 break;
             case BUDGET_UPDATE:
-                EventQueue.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (activeBudget.equals(event.getObject(MessageProperty.BUDGET))) {
-                            refreshDisplay();
-                            updateControlsState();
-                        }
+                EventQueue.invokeLater(() -> {
+                    if (activeBudget.equals(event.getObject(MessageProperty.BUDGET))) {
+                        refreshDisplay();
+                        updateControlsState();
                     }
                 });
 
@@ -698,12 +633,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
             case FILE_CLOSING:
                 MessageBus.getInstance().unregisterListener(this, MessageChannel.BUDGET);
                 MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM);
-                EventQueue.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        removeBudgetPane();
-                    }
-                });
+                EventQueue.invokeLater(BudgetPanel.this::removeBudgetPane);
                 engine = null;
                 break;
             default:
@@ -716,11 +646,8 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
     }
 
     Icon getSparkLineIcon(final AccountGroup group) {
-        List<BigDecimal> remaining = new ArrayList<>();
-
-        for (final BudgetPeriodDescriptor descriptor : resultsModel.getDescriptorList()) {
-            remaining.add(resultsModel.getResults(descriptor, group).getRemaining());
-        }
+        List<BigDecimal> remaining = resultsModel.getDescriptorList().parallelStream().map(descriptor ->
+                resultsModel.getResults(descriptor, group).getRemaining()).collect(Collectors.toList());
 
         return BudgetSparkline.getSparklineImage(remaining);
     }

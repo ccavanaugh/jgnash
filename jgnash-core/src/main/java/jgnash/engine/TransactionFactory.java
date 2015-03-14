@@ -47,7 +47,10 @@ public class TransactionFactory {
      * @param memo Transaction memo
      * @return new Investment Transaction
      */
-    public static InvestmentTransaction generateAddXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo) {
+    public static InvestmentTransaction generateAddXTransaction(final Account investmentAccount,
+                                                                final SecurityNode node, final BigDecimal price,
+                                                                final BigDecimal quantity, final Date date,
+                                                                final String memo) {
         Objects.requireNonNull(investmentAccount);
         Objects.requireNonNull(node);
         Objects.requireNonNull(price);
@@ -83,7 +86,10 @@ public class TransactionFactory {
      * @param memo Transaction memo
      * @return new Transaction
      */
-    public static InvestmentTransaction import1xBuyXTransaction(final Account account, final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final BigDecimal exchangeRate, final BigDecimal fee, final Date date, final String memo) {
+    public static InvestmentTransaction import1xBuyXTransaction(final Account account, final Account investmentAccount,
+                                                                final SecurityNode node, final BigDecimal price,
+                                                                final BigDecimal quantity, final BigDecimal exchangeRate,
+                                                                final BigDecimal fee, final Date date, final String memo) {
 
         assert account != null && investmentAccount != null && node != null && price != null && quantity != null;
         assert exchangeRate != null && fee != null && date != null && memo != null;
@@ -116,7 +122,11 @@ public class TransactionFactory {
      * @param fees List of transaction fees
      * @return new Transaction
      */
-    public static InvestmentTransaction generateBuyXTransaction(final Account account, final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final BigDecimal exchangeRate, final Date date, final String memo, final Collection<TransactionEntry> fees) {
+    public static InvestmentTransaction generateBuyXTransaction(final Account account, final Account investmentAccount,
+                                                                final SecurityNode node, final BigDecimal price,
+                                                                final BigDecimal quantity, final BigDecimal exchangeRate,
+                                                                final Date date, final String memo,
+                                                                final Collection<TransactionEntry> fees) {
         Objects.requireNonNull(account);
         Objects.requireNonNull(investmentAccount);
         Objects.requireNonNull(node);
@@ -138,7 +148,8 @@ public class TransactionFactory {
         transaction.setDate(date);
         transaction.setMemo(memo);
 
-        TransactionEntryBuyX entry = new TransactionEntryBuyX(account, investmentAccount, node, price, quantity, exchangeRate);
+        TransactionEntryBuyX entry = new TransactionEntryBuyX(account, investmentAccount, node, price, quantity,
+                exchangeRate);
         entry.setMemo(memo);
 
         transaction.setPayee(buildPayee("Word.Buy", node, price, quantity));
@@ -162,9 +173,11 @@ public class TransactionFactory {
             if (!account.equals(investmentAccount)) {
 
                 byte scale = account.getCurrencyNode().getScale();
-                BigDecimal exchangedAmount = nonCashBalanceFees.abs().multiply(exchangeRate).setScale(scale, MathConstants.roundingMode);
+                BigDecimal exchangedAmount = nonCashBalanceFees.abs().multiply(exchangeRate).setScale(scale,
+                        MathConstants.roundingMode);
 
-                TransactionEntry tran = new TransactionEntry(investmentAccount, account, nonCashBalanceFees, exchangedAmount.negate());
+                TransactionEntry tran = new TransactionEntry(investmentAccount, account, nonCashBalanceFees,
+                        exchangedAmount.negate());
                 tran.setMemo(memo);
                 tran.setTransactionTag(TransactionTag.INVESTMENT_CASH_TRANSFER);
                 transaction.addTransactionEntry(tran);
@@ -193,7 +206,13 @@ public class TransactionFactory {
      * @param memo Transaction memo
      * @return new InvestmentTransaction
      */
-    public static InvestmentTransaction generateDividendXTransaction(final Account incomeAccount, final Account investmentAccount, final Account cashAccount, final SecurityNode node, final BigDecimal dividend, final BigDecimal incomeExchangedAmount, final BigDecimal cashExchangedAmount, final Date date, final String memo) {
+    public static InvestmentTransaction generateDividendXTransaction(final Account incomeAccount,
+                                                                     final Account investmentAccount,
+                                                                     final Account cashAccount, final SecurityNode node,
+                                                                     final BigDecimal dividend,
+                                                                     final BigDecimal incomeExchangedAmount,
+                                                                     final BigDecimal cashExchangedAmount,
+                                                                     final Date date, final String memo) {
         Objects.requireNonNull(incomeAccount);
         Objects.requireNonNull(cashAccount);
         Objects.requireNonNull(investmentAccount);
@@ -209,7 +228,8 @@ public class TransactionFactory {
         transaction.setDate(date);
         transaction.setMemo(memo);
 
-        final TransactionEntryDividendX entry = new TransactionEntryDividendX(incomeAccount, investmentAccount, node, dividend, incomeExchangedAmount);
+        final TransactionEntryDividendX entry = new TransactionEntryDividendX(incomeAccount, investmentAccount, node,
+                dividend, incomeExchangedAmount);
         entry.setMemo(memo);
 
         final Resource rb = Resource.get();
@@ -220,7 +240,8 @@ public class TransactionFactory {
         transaction.addTransactionEntry(entry);
 
         if (!cashAccount.equals(investmentAccount)) {
-            TransactionEntry tran = new TransactionEntry(cashAccount, investmentAccount, cashExchangedAmount, dividend.negate());
+            TransactionEntry tran = new TransactionEntry(cashAccount, investmentAccount, cashExchangedAmount,
+                    dividend.negate());
             tran.setMemo(memo);
             tran.setTransactionTag(TransactionTag.INVESTMENT_CASH_TRANSFER);
             transaction.addTransactionEntry(tran);
@@ -248,7 +269,13 @@ public class TransactionFactory {
      * @param memo Transaction memo
      * @return new InvestmentTransaction
      */
-    public static InvestmentTransaction generateRocXTransaction(final Account incomeAccount, final Account investmentAccount, final Account cashAccount, final SecurityNode node, final BigDecimal dividend, final BigDecimal incomeExchangedAmount, final BigDecimal cashExchangedAmount, final Date date, final String memo) {
+    public static InvestmentTransaction generateRocXTransaction(final Account incomeAccount,
+                                                                final Account investmentAccount,
+                                                                final Account cashAccount, final SecurityNode node,
+                                                                final BigDecimal dividend,
+                                                                final BigDecimal incomeExchangedAmount,
+                                                                final BigDecimal cashExchangedAmount,
+                                                                final Date date, final String memo) {
         Objects.requireNonNull(incomeAccount);
         Objects.requireNonNull(cashAccount);
         Objects.requireNonNull(investmentAccount);
@@ -264,18 +291,21 @@ public class TransactionFactory {
         transaction.setDate(date);
         transaction.setMemo(memo);
 
-        final TransactionEntryRocX entry = new TransactionEntryRocX(incomeAccount, investmentAccount, node, dividend, incomeExchangedAmount);
+        final TransactionEntryRocX entry = new TransactionEntryRocX(incomeAccount, investmentAccount, node, dividend,
+                incomeExchangedAmount);
         entry.setMemo(memo);
 
         final Resource rb = Resource.get();
         final NumberFormat format = CommodityFormat.getFullNumberFormat(incomeAccount.getCurrencyNode());
 
-        transaction.setPayee(rb.getString("Word.ReturnOfCapital") + " : " + node.getSymbol() + " @ " + format.format(dividend));
+        transaction.setPayee(rb.getString("Word.ReturnOfCapital") + " : " + node.getSymbol() + " @ "
+                + format.format(dividend));
 
         transaction.addTransactionEntry(entry);
 
         if (!cashAccount.equals(investmentAccount)) {
-            TransactionEntry tran = new TransactionEntry(cashAccount, investmentAccount, cashExchangedAmount, dividend.negate());
+            TransactionEntry tran = new TransactionEntry(cashAccount, investmentAccount, cashExchangedAmount,
+                    dividend.negate());
             tran.setMemo(memo);
             tran.setTransactionTag(TransactionTag.INVESTMENT_CASH_TRANSFER);
             transaction.addTransactionEntry(tran);
@@ -301,7 +331,10 @@ public class TransactionFactory {
      * @param number Transaction number
      * @return new Transaction
      */
-    public static Transaction generateDoubleEntryTransaction(final Account creditAccount, final Account debitAccount, final BigDecimal creditAmount, final BigDecimal debitAmount, final Date date, final String memo, final String payee, final String number) {
+    public static Transaction generateDoubleEntryTransaction(final Account creditAccount, final Account debitAccount,
+                                                             final BigDecimal creditAmount, final BigDecimal debitAmount,
+                                                             final Date date, final String memo, final String payee,
+                                                             final String number) {
         Objects.requireNonNull(creditAccount);
         Objects.requireNonNull(debitAccount);
 
@@ -334,7 +367,9 @@ public class TransactionFactory {
      * @param number Transaction number
      * @return new Transaction
      */
-    public static Transaction generateDoubleEntryTransaction(final Account creditAccount, final Account debitAccount, final BigDecimal amount, final Date date, final String memo, final String payee, final String number) {
+    public static Transaction generateDoubleEntryTransaction(final Account creditAccount, final Account debitAccount,
+                                                             final BigDecimal amount, final Date date, final String memo,
+                                                             final String payee, final String number) {
         Objects.requireNonNull(creditAccount);
         Objects.requireNonNull(debitAccount);
 
@@ -366,7 +401,10 @@ public class TransactionFactory {
      * @param memo Transaction memo
      * @return new Investment Transaction
      */
-    public static InvestmentTransaction generateMergeXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo) {
+    public static InvestmentTransaction generateMergeXTransaction(final Account investmentAccount,
+                                                                  final SecurityNode node, final BigDecimal price,
+                                                                  final BigDecimal quantity, final Date date,
+                                                                  final String memo) {
         Objects.requireNonNull(investmentAccount);
         Objects.requireNonNull(node);
         Objects.requireNonNull(price);
@@ -401,7 +439,13 @@ public class TransactionFactory {
      * @param gains Gain/Loss entry(s)
      * @return new InvestmentTransaction
      */
-    public static InvestmentTransaction generateReinvestDividendXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo, final Collection<TransactionEntry> fees, final Collection<TransactionEntry> gains) {
+    public static InvestmentTransaction generateReinvestDividendXTransaction(final Account investmentAccount,
+                                                                             final SecurityNode node,
+                                                                             final BigDecimal price,
+                                                                             final BigDecimal quantity, final Date date,
+                                                                             final String memo,
+                                                                             final Collection<TransactionEntry> fees,
+                                                                             final Collection<TransactionEntry> gains) {
         Objects.requireNonNull(investmentAccount);
         Objects.requireNonNull(node);
         Objects.requireNonNull(price);
@@ -493,7 +537,10 @@ public class TransactionFactory {
      * @param memo Transaction memo
      * @return new Investment Transaction
      */
-    public static InvestmentTransaction generateRemoveXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo) {
+    public static InvestmentTransaction generateRemoveXTransaction(final Account investmentAccount,
+                                                                   final SecurityNode node, final BigDecimal price,
+                                                                   final BigDecimal quantity, final Date date,
+                                                                   final String memo) {
         Objects.requireNonNull(investmentAccount);
         Objects.requireNonNull(node);
         Objects.requireNonNull(price);
@@ -529,7 +576,10 @@ public class TransactionFactory {
      * @param memo Transaction memo
      * @return new Transaction
      */
-    public static InvestmentTransaction import1xSellXTransaction(final Account account, final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final BigDecimal exchange, final BigDecimal fee, final Date date, final String memo) {
+    public static InvestmentTransaction import1xSellXTransaction(final Account account, final Account investmentAccount,
+                                                                 final SecurityNode node, final BigDecimal price,
+                                                                 final BigDecimal quantity, final BigDecimal exchange,
+                                                                 final BigDecimal fee, final Date date, final String memo) {
         Objects.requireNonNull(account);
         Objects.requireNonNull(investmentAccount);
         Objects.requireNonNull(node);
@@ -551,7 +601,8 @@ public class TransactionFactory {
             fees.add(e);
         }
 
-        return generateSellXTransaction(account, investmentAccount, node, price, quantity, exchange, date, memo, fees, new ArrayList<TransactionEntry>());
+        return generateSellXTransaction(account, investmentAccount, node, price, quantity, exchange, date, memo, fees,
+                new ArrayList<>());
     }
 
     /**
@@ -569,7 +620,11 @@ public class TransactionFactory {
      * @param gains Gains/Loss entries
      * @return new Transaction
      */
-    public static InvestmentTransaction generateSellXTransaction(final Account account, final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final BigDecimal exchangeRate, final Date date, final String memo, final Collection<TransactionEntry> fees, final Collection<TransactionEntry> gains) {
+    public static InvestmentTransaction generateSellXTransaction(final Account account, final Account investmentAccount,
+                                                                 final SecurityNode node, final BigDecimal price,
+                                                                 final BigDecimal quantity, final BigDecimal exchangeRate,
+                                                                 final Date date, final String memo, final Collection<TransactionEntry> fees,
+                                                                 final Collection<TransactionEntry> gains) {
         Objects.requireNonNull(account);
         Objects.requireNonNull(investmentAccount);
         Objects.requireNonNull(node);
@@ -599,7 +654,8 @@ public class TransactionFactory {
         transaction.setDate(date);
         transaction.setMemo(memo);
 
-        final TransactionEntrySellX entry = new TransactionEntrySellX(account, investmentAccount, node, price, quantity, exchangeRate);
+        final TransactionEntrySellX entry = new TransactionEntrySellX(account, investmentAccount, node, price, quantity,
+                exchangeRate);
         entry.setMemo(memo);
 
         transaction.setPayee(buildPayee("Word.Sell", node, price, quantity));
@@ -624,7 +680,8 @@ public class TransactionFactory {
                 byte scale = account.getCurrencyNode().getScale();
                 BigDecimal exchangedAmount = nonCashBalanceFees.abs().multiply(exchangeRate).setScale(scale, MathConstants.roundingMode);
 
-                TransactionEntry tran = new TransactionEntry(investmentAccount, account, nonCashBalanceFees, exchangedAmount.negate());
+                TransactionEntry tran = new TransactionEntry(investmentAccount, account, nonCashBalanceFees,
+                        exchangedAmount.negate());
                 tran.setMemo(memo);
                 tran.setTransactionTag(TransactionTag.INVESTMENT_CASH_TRANSFER);
                 transaction.addTransactionEntry(tran);
@@ -669,7 +726,9 @@ public class TransactionFactory {
      * @param number Transaction number
      * @return new Transaction
      */
-    public static Transaction generateSingleEntryTransaction(final Account account, final BigDecimal amount, final Date date, final String memo, final String payee, final String number) {
+    public static Transaction generateSingleEntryTransaction(final Account account, final BigDecimal amount,
+                                                             final Date date, final String memo, final String payee,
+                                                             final String number) {
         Objects.requireNonNull(account);
         Objects.requireNonNull(amount);
         Objects.requireNonNull(date);
@@ -702,7 +761,10 @@ public class TransactionFactory {
      * @param memo Transaction memo
      * @return new Investment Transaction
      */
-    public static InvestmentTransaction generateSplitXTransaction(final Account investmentAccount, final SecurityNode node, final BigDecimal price, final BigDecimal quantity, final Date date, final String memo) {
+    public static InvestmentTransaction generateSplitXTransaction(final Account investmentAccount,
+                                                                  final SecurityNode node, final BigDecimal price,
+                                                                  final BigDecimal quantity, final Date date,
+                                                                  final String memo) {
 
         assert investmentAccount != null && node != null && price != null && quantity != null;
         assert date != null && memo != null;
@@ -721,7 +783,8 @@ public class TransactionFactory {
         return transaction;
     }
 
-    private static String buildPayee(final String wordProperty, final SecurityNode node, final BigDecimal price, final BigDecimal quantity) {
+    private static String buildPayee(final String wordProperty, final SecurityNode node, final BigDecimal price,
+                                     final BigDecimal quantity) {
         final Resource rb = Resource.get();
 
         final NumberFormat format = CommodityFormat.getFullNumberFormat(node);

@@ -17,12 +17,7 @@
  */
 package jgnash.ui.report.compiled;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -48,6 +43,10 @@ import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.register.AccountBalanceDisplayManager;
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -88,21 +87,17 @@ public class MonthlyAccountBalanceChart {
 
     public static void show() {
 
-        EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(() -> {
+            Resource rb1 = Resource.get();
 
-            @Override
-            public void run() {
-                Resource rb = Resource.get();
+            MonthlyAccountBalanceChart chart = new MonthlyAccountBalanceChart();
 
-                MonthlyAccountBalanceChart chart = new MonthlyAccountBalanceChart();
+            JPanel p = chart.createPanel();
+            GenericCloseDialog d = new GenericCloseDialog(p, rb1.getString("Title.AccountBalance"));
+            d.pack();
+            d.setModal(false);
 
-                JPanel p = chart.createPanel();
-                GenericCloseDialog d = new GenericCloseDialog(p, rb.getString("Title.AccountBalance"));
-                d.pack();
-                d.setModal(false);
-
-                d.setVisible(true);
-            }
+            d.setVisible(true);
         });
     }
 
@@ -158,67 +153,55 @@ public class MonthlyAccountBalanceChart {
 
         final JPanel panel = builder.getPanel();
 
-        ActionListener listener = new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    Account account = combo.getSelectedAccount();
-                    if (account == null) {
-                        return;
-                    }
-
-                    updateSubAccountBox();
-
-                    chartPanel.setChart(createVerticalXYBarChart(account));
-                    panel.validate();
-                } catch (final Exception ex) {
-                    Logger.getLogger(MonthlyAccountBalanceChart.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+        ActionListener listener = e -> {
+            try {
+                Account account = combo.getSelectedAccount();
+                if (account == null) {
+                    return;
                 }
+
+                updateSubAccountBox();
+
+                chartPanel.setChart(createVerticalXYBarChart(account));
+                panel.validate();
+            } catch (final Exception ex) {
+                Logger.getLogger(MonthlyAccountBalanceChart.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             }
         };
 
         combo.addActionListener(listener);
 
-        hideLockedAccountCheckBox.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                combo.setHideLocked(hideLockedAccountCheckBox.isSelected());
-                try {
-                    Account account = combo.getSelectedAccount();
-                    if (account == null) {
-                        return;
-                    }
-
-                    updateSubAccountBox();
-
-                    chartPanel.setChart(createVerticalXYBarChart(account));
-                    panel.validate();
-                } catch (final Exception ex) {
-                    Logger.getLogger(MonthlyAccountBalanceChart.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+        hideLockedAccountCheckBox.addActionListener(e -> {
+            combo.setHideLocked(hideLockedAccountCheckBox.isSelected());
+            try {
+                Account account = combo.getSelectedAccount();
+                if (account == null) {
+                    return;
                 }
+
+                updateSubAccountBox();
+
+                chartPanel.setChart(createVerticalXYBarChart(account));
+                panel.validate();
+            } catch (final Exception ex) {
+                Logger.getLogger(MonthlyAccountBalanceChart.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             }
         });
 
-        hidePlaceholderAccountCheckBox.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                combo.setHidePlaceholder(hidePlaceholderAccountCheckBox.isSelected());
-                try {
-                    Account account = combo.getSelectedAccount();
-                    if (account == null) {
-                        return;
-                    }
-
-                    updateSubAccountBox();
-
-                    chartPanel.setChart(createVerticalXYBarChart(account));
-                    panel.validate();
-                } catch (final Exception ex) {
-                    Logger.getLogger(MonthlyAccountBalanceChart.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
+        hidePlaceholderAccountCheckBox.addActionListener(e -> {
+            combo.setHidePlaceholder(hidePlaceholderAccountCheckBox.isSelected());
+            try {
+                Account account = combo.getSelectedAccount();
+                if (account == null) {
+                    return;
                 }
+
+                updateSubAccountBox();
+
+                chartPanel.setChart(createVerticalXYBarChart(account));
+                panel.validate();
+            } catch (final Exception ex) {
+                Logger.getLogger(MonthlyAccountBalanceChart.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             }
         });
         refreshButton.addActionListener(listener);

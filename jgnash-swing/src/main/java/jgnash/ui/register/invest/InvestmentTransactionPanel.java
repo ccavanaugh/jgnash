@@ -17,10 +17,6 @@
  */
 package jgnash.ui.register.invest;
 
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.CardLayout;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -52,6 +48,10 @@ import jgnash.ui.register.PanelType;
 import jgnash.ui.register.RegisterEvent;
 import jgnash.ui.register.RegisterListener;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Panel that uses a CardLayout to display the investment transaction forms.
@@ -291,13 +291,7 @@ public class InvestmentTransactionPanel extends JPanel implements MessageListene
             switch (event.getEvent()) {
                 case TRANSACTION_REMOVE:
                     if (modTrans.equals(t)) {
-                        EventQueue.invokeLater(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                cancelAction();
-                            }
-                        });
+                        EventQueue.invokeLater(this::cancelAction);
                     }
                     break;
                 default:

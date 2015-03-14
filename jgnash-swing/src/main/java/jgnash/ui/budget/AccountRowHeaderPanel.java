@@ -17,10 +17,6 @@
  */
 package jgnash.ui.budget;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
@@ -32,8 +28,6 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
@@ -46,6 +40,10 @@ import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetGoal;
 import jgnash.ui.components.ShadowBorder;
 import jgnash.ui.components.expandingtable.ExpandingTable;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 import org.jdesktop.swingx.JXTitledPanel;
 
@@ -200,12 +198,9 @@ final class AccountRowHeaderPanel extends JPanel {
         GroupTableModel() {
             groups = tableModel.getAccountGroups();
 
-            tableModel.addTableModelListener(new TableModelListener() {
-                @Override
-                public void tableChanged(TableModelEvent e) {
-                    groups = tableModel.getAccountGroups();
-                    fireTableDataChanged();
-                }
+            tableModel.addTableModelListener(e -> {
+                groups = tableModel.getAccountGroups();
+                fireTableDataChanged();
             });
         }
 

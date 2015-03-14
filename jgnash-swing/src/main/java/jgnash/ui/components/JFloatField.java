@@ -357,15 +357,11 @@ public class JFloatField extends JTextFieldEx {
         @Override
         public void focusLost(final FocusEvent e) {
             if (!e.isTemporary()) {
-                EventQueue.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        String t = eval();
-                        if (!t.isEmpty()) {
-                            // round the value to scale
-                            setDecimal(new BigDecimal(t).setScale(scale, MathConstants.roundingMode));
-                        }
+                EventQueue.invokeLater(() -> {
+                    String t = eval();
+                    if (!t.isEmpty()) {
+                        // round the value to scale
+                        setDecimal(new BigDecimal(t).setScale(scale, MathConstants.roundingMode));
                     }
                 });
             }

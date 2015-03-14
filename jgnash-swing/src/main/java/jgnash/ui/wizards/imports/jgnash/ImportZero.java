@@ -17,9 +17,6 @@
  */
 package jgnash.ui.wizards.imports.jgnash;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,8 +29,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
 import javax.swing.text.StyledEditorKit;
 
 import jgnash.ui.actions.ImportPathAction;
@@ -41,6 +36,9 @@ import jgnash.ui.components.wizard.WizardPage;
 import jgnash.ui.util.TextResource;
 import jgnash.util.FileMagic;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * New file wizard panel
@@ -79,13 +77,7 @@ public class ImportZero extends JPanel implements WizardPage, ActionListener {
         validFileLabel.setIcon(UIManager.getIcon("OptionPane.warningIcon"));
         validFileLabel.setFont(validFileLabel.getFont().deriveFont(Font.ITALIC));
 
-        fileImportField.addCaretListener(new CaretListener() {
-
-            @Override
-            public void caretUpdate(CaretEvent e) {
-                validateFile();
-            }
-        });
+        fileImportField.addCaretListener(e -> validateFile());
     }
 
     private void layoutMainPanel() {

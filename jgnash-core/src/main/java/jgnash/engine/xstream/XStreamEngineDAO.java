@@ -27,7 +27,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import jgnash.engine.StoredObject;
-import jgnash.engine.dao.*;
+import jgnash.engine.dao.AccountDAO;
+import jgnash.engine.dao.BudgetDAO;
+import jgnash.engine.dao.CommodityDAO;
+import jgnash.engine.dao.ConfigDAO;
+import jgnash.engine.dao.EngineDAO;
+import jgnash.engine.dao.RecurringDAO;
+import jgnash.engine.dao.TransactionDAO;
+import jgnash.engine.dao.TrashDAO;
 
 /**
  * XML Engine DAO Interface
@@ -74,16 +81,11 @@ public class XStreamEngineDAO extends AbstractXStreamDAO implements EngineDAO {
                     return;
                 }
 
-                future = commitExecutor.schedule(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        if (commitCount.get() > 0) {
-                            Logger.getLogger(XStreamEngineDAO.class.getName()).info("Committing file");
-                            commitAndReset();
-                        }
+                future = commitExecutor.schedule(() -> {
+                    if (commitCount.get() > 0) {
+                        Logger.getLogger(XStreamEngineDAO.class.getName()).info("Committing file");
+                        commitAndReset();
                     }
-
                 }, 0, TimeUnit.SECONDS);
             }
         }, MAX_COMMIT_TIME * 1000, MAX_COMMIT_TIME * 1000);

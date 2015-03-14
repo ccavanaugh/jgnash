@@ -241,13 +241,7 @@ final class AccountRowHeaderResizeHandler extends MouseInputAdapter {
                 return;
             }
 
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    restoreWidth();
-                }
-            });
+            EventQueue.invokeLater(AccountRowHeaderResizeHandler.this::restoreWidth);
         }
     }
 }

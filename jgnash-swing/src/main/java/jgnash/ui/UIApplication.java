@@ -17,9 +17,10 @@
  */
 package jgnash.ui;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Dialog;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -92,15 +93,11 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
         
             // try to load the last open file
             try {
-                EventQueue.invokeAndWait(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        if (file != null) {
-                            mainFrame.loadFile(file, password);
-                        } else if (EngineFactory.openLastOnStartup()) {
-                            mainFrame.loadLast();
-                        }
+                EventQueue.invokeAndWait(() -> {
+                    if (file != null) {
+                        mainFrame.loadFile(file, password);
+                    } else if (EngineFactory.openLastOnStartup()) {
+                        mainFrame.loadLast();
                     }
                 });
             } catch (final InterruptedException | InvocationTargetException e) {
@@ -113,13 +110,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
         if (initFrame()) {         
 
             // try to connect to the remove host
-            EventQueue.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    mainFrame.openRemote(host, port, password);
-                }
-            });
+            EventQueue.invokeLater(() -> mainFrame.openRemote(host, port, password));
         }
     }
 
@@ -143,13 +134,9 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
             result = true;
 
             try {
-                EventQueue.invokeAndWait(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        mainFrame = new MainFrame();
-                        mainFrame.setVisible(true);
-                    }
+                EventQueue.invokeAndWait(() -> {
+                    mainFrame = new MainFrame();
+                    mainFrame.setVisible(true);
                 });
             } catch (InterruptedException | InvocationTargetException e) {
                 throw new RuntimeException(e);
@@ -188,13 +175,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
 
     public static void enableHelpOnButton(final JButton button, final String id) {
 
-        button.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                showHelp(id);
-            }
-        });
+        button.addActionListener(e -> showHelp(id));
     }
 
     public static synchronized void showHelp(final String id) {
@@ -242,13 +223,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
     }
 
     public static void repaint() {
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                mainFrame.repaint();
-            }
-        });
+        EventQueue.invokeLater(mainFrame::repaint);
     }
 
     @Override
@@ -261,13 +236,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
 
         logger.log(Level.SEVERE, e.getMessage(), e);
 
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                new ExceptionDialog(getFrame(), e).setVisible(true);
-            }
-        });
+        EventQueue.invokeLater(() -> new ExceptionDialog(getFrame(), e).setVisible(true));
     }
 
     /**
@@ -275,38 +244,34 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
      */
     public static void restartUI() {
 
-        EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(() -> {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-            @Override
-            public void run() {
-                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            if (engine != null) {
+                MessageBus messageBus = MessageBus.getInstance(engine.getName());
+                Message message = new Message(MessageChannel.SYSTEM, ChannelEvent.UI_RESTARTING, engine);
 
-                if (engine != null) {
-                    MessageBus messageBus = MessageBus.getInstance(engine.getName());
-                    Message message = new Message(MessageChannel.SYSTEM, ChannelEvent.UI_RESTARTING, engine);
+                messageBus.fireEvent(message);
+            }
 
-                    messageBus.fireEvent(message);
-                }
+            helpBroker = null;
 
-                helpBroker = null;
+            mainFrame.setVisible(false);
+            mainFrame.dispose(false);
 
-                mainFrame.setVisible(false);
-                mainFrame.dispose(false);
+            // recreate the main UI twice to flush look and feel info from the JXSwing components
+            mainFrame = new MainFrame();
+            mainFrame.dispose(false);
 
-                // recreate the main UI twice to flush look and feel info from the JXSwing components
-                mainFrame = new MainFrame();
-                mainFrame.dispose(false);
+            mainFrame = new MainFrame();
+            mainFrame.setVisible(true);
 
-                mainFrame = new MainFrame();
-                mainFrame.setVisible(true);
+            if (engine != null) {
 
-                if (engine != null) {
+                MessageBus messageBus = MessageBus.getInstance(engine.getName());
+                Message message = new Message(MessageChannel.SYSTEM, ChannelEvent.UI_RESTARTED, engine);
 
-                    MessageBus messageBus = MessageBus.getInstance(engine.getName());
-                    Message message = new Message(MessageChannel.SYSTEM, ChannelEvent.UI_RESTARTED, engine);
-
-                    messageBus.fireEvent(message);
-                }
+                messageBus.fireEvent(message);
             }
         });
     }

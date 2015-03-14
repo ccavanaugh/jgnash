@@ -263,14 +263,10 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
 
     @Override
     public void messagePosted(final Message event) {
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                if (event.getEvent() == ChannelEvent.TRANSACTION_REMOVE) {
-                    if (event.getObject(MessageProperty.TRANSACTION).equals(modTrans)) {
-                        clearForm();
-                    }
+        EventQueue.invokeLater(() -> {
+            if (event.getEvent() == ChannelEvent.TRANSACTION_REMOVE) {
+                if (event.getObject(MessageProperty.TRANSACTION).equals(modTrans)) {
+                    clearForm();
                 }
             }
         });

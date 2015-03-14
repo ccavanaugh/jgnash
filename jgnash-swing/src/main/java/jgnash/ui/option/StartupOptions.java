@@ -17,10 +17,6 @@
  */
 package jgnash.ui.option;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -29,13 +25,15 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import jgnash.engine.EngineFactory;
 import jgnash.net.currency.CurrencyUpdateFactory;
 import jgnash.net.security.UpdateFactory;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Startup options panel
@@ -86,16 +84,12 @@ class StartupOptions extends JPanel implements ActionListener {
         removeBackupButton.addActionListener(this);
         openLastOnStartup.addActionListener(this);
 
-        removeBackupCountSpinner.addChangeListener(new ChangeListener() {
+        removeBackupCountSpinner.addChangeListener(e -> {
+            SpinnerModel dateModel = removeBackupCountSpinner.getModel();
+            if (dateModel instanceof SpinnerNumberModel) {
+                Number count = ((SpinnerNumberModel) dateModel).getNumber();
 
-            @Override
-            public void stateChanged(final ChangeEvent e) {
-                SpinnerModel dateModel = removeBackupCountSpinner.getModel();
-                if (dateModel instanceof SpinnerNumberModel) {
-                    Number count = ((SpinnerNumberModel) dateModel).getNumber();
-
-                    EngineFactory.setMaximumBackups((Integer) count);
-                }
+                EngineFactory.setMaximumBackups((Integer) count);
             }
         });
     }

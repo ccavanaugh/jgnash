@@ -17,26 +17,7 @@
  */
 package jgnash.engine.concurrent;
 
-import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import jgnash.net.ConnectionFactory;
-import jgnash.util.EncryptionManager;
-import jgnash.util.NotNull;
-
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
@@ -54,6 +35,25 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
+
+import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import jgnash.net.ConnectionFactory;
+import jgnash.util.EncryptionManager;
+import jgnash.util.NotNull;
 
 /**
  * Lock manager for distributed engine instances
@@ -308,13 +308,10 @@ public class DistributedLockManager implements LockManager {
 
         @Override
         public void channelRead(final ChannelHandlerContext ctx, final Object msg) {
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    processMessage(msg.toString());
+            executorService.submit(() -> {
+                processMessage(msg.toString());
 
-                    ReferenceCountUtil.release(msg);
-                }
+                ReferenceCountUtil.release(msg);
             });
         }
 

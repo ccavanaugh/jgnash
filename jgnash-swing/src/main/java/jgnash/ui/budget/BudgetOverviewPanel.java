@@ -17,12 +17,6 @@
  */
 package jgnash.ui.budget;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +26,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.swing.Icon;
 import javax.swing.JLabel;
@@ -48,6 +43,12 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Overview panel for the displayed period
@@ -89,7 +90,7 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
          *
          * Excess execution requests will be silently discarded 
          */
-        updateIconExecutor = new ThreadPoolExecutor(0, 1, 0, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(2));
+        updateIconExecutor = new ThreadPoolExecutor(0, 1, 0, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(2));
         updateIconExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
     }
 
@@ -134,44 +135,36 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
      */
     private void setupSpinnerModel() {
 
-        Runnable r = new Runnable() {
+        Runnable r = () -> {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
 
-            @Override
-            public void run() {
-                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-                Objects.requireNonNull(engine);
+            int minYear = DateUtils.getCurrentYear();
+            int maxYear = DateUtils.getCurrentYear() + 1;
 
-                int minYear = DateUtils.getCurrentYear();
-                int maxYear = DateUtils.getCurrentYear() + 1;
+            for (Transaction transaction : engine.getTransactions()) {
 
-                for (Transaction transaction : engine.getTransactions()) {
+                int year = DateUtils.getYear(transaction.getDate());
 
-                    int year = DateUtils.getYear(transaction.getDate());
+                minYear = Math.min(minYear, year);
+                maxYear = Math.max(maxYear, year);
+            }
 
-                    minYear = Math.min(minYear, year);
-                    maxYear = Math.max(maxYear, year);
+            final int _minYear = minYear;
+            final int _maxYear = maxYear;
+
+            // changes to the spinner must be pushed to the EDT
+            EventQueue.invokeLater(() -> {
+                if (model != null) {
+                    model.setMinimum(_minYear);
+                    model.setMaximum(_maxYear);
                 }
 
-                final int _minYear = minYear;
-                final int _maxYear = maxYear;
+                yearSpinner.setEnabled(true);
 
-                // changes to the spinner must be pushed to the EDT
-                EventQueue.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        if (model != null) {
-                            model.setMinimum(_minYear);
-                            model.setMaximum(_maxYear);
-                        }
-
-                        yearSpinner.setEnabled(true);
-
-                        // register the listener after the model has been updated, otherwise unnecessary updates will occur
-                        yearSpinner.addChangeListener(BudgetOverviewPanel.this);
-                    }
-                });
-            }
+                // register the listener after the model has been updated, otherwise unnecessary updates will occur
+                yearSpinner.addChangeListener(BudgetOverviewPanel.this);
+            });
         };
 
         budgetPanel.submit(r);
@@ -192,53 +185,41 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
 
     void updateSparkLines() {
 
-        Runnable r = new Runnable() {
+        Runnable r = () -> {
 
-            @Override
-            public void run() {
+            final List<AccountGroup> groups = new ArrayList<>(budgetPanel.getAccountGroups());
 
-                final List<AccountGroup> groups = new ArrayList<>(budgetPanel.getAccountGroups());
+            final List<Icon> icons = groups.parallelStream().map(budgetPanel::getSparkLineIcon).collect(Collectors.toList());
 
-                final List<Icon> icons = new ArrayList<>();
+            EventQueue.invokeLater(() -> {
+                FormLayout layout = (FormLayout) sparkLinePanel.getLayout();
 
-                for (AccountGroup group : groups) {
-                    icons.add(budgetPanel.getSparkLineIcon(group));
+                // remove all components and columns
+                sparkLinePanel.removeAll();
+
+                int columnCount = layout.getColumnCount();
+
+                for (int i = columnCount; i >= 1; i--) {
+                    layout.removeColumn(i);
                 }
 
-                EventQueue.invokeLater(new Runnable() {
+                // create components and columns and add
+                if (!icons.isEmpty()) {
+                    layout.appendColumn(ColumnSpec.decode("d"));
+                    sparkLinePanel.add(getLabel(groups.get(0), icons.get(0)), CC.xy(1, 1));
 
-                    @Override
-                    public void run() {
-                        FormLayout layout = (FormLayout) sparkLinePanel.getLayout();
+                    for (int i = 1; i < icons.size(); i++) {
+                        layout.appendColumn(ColumnSpec.decode("2dlu"));
+                        layout.appendColumn(ColumnSpec.decode("d"));
 
-                        // remove all components and columns
-                        sparkLinePanel.removeAll();
-
-                        int columnCount = layout.getColumnCount();
-
-                        for (int i = columnCount; i >= 1; i--) {
-                            layout.removeColumn(i);
-                        }
-
-                        // create components and columns and add
-                        if (!icons.isEmpty()) {
-                            layout.appendColumn(ColumnSpec.decode("d"));
-                            sparkLinePanel.add(getLabel(groups.get(0), icons.get(0)), CC.xy(1, 1));
-
-                            for (int i = 1; i < icons.size(); i++) {
-                                layout.appendColumn(ColumnSpec.decode("2dlu"));
-                                layout.appendColumn(ColumnSpec.decode("d"));
-
-                                sparkLinePanel.add(getLabel(groups.get(i), icons.get(i)), CC.xy(i * 2 + 1, 1));
-                            }
-                        }
-
-                        // force the complete panel to update so icons show
-                        invalidate();
-                        validate();
+                        sparkLinePanel.add(getLabel(groups.get(i), icons.get(i)), CC.xy(i * 2 + 1, 1));
                     }
-                });
-            }
+                }
+
+                // force the complete panel to update so icons show
+                invalidate();
+                validate();
+            });
         };
 
         updateIconExecutor.execute(r);

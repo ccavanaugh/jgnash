@@ -26,11 +26,15 @@ import java.lang.reflect.Field;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.*;
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
-import com.jgoodies.forms.builder.ButtonBarBuilder;
 import jgnash.util.Resource;
 import jgnash.util.Version;
+
+import com.jgoodies.forms.builder.ButtonBarBuilder;
 
 /**
  * Keep various odds and ends here instead of in the main class
@@ -66,21 +70,17 @@ public class StaticUIMethods {
      * @param message error message to display
      */
     public static void displayMessage(final String message, final String title, final int type) {
-        EventQueue.invokeLater(new Runnable() {
+        EventQueue.invokeLater(() -> {
+            Frame frame = UIApplication.getFrame();
 
-            @Override
-            public void run() {
-                Frame frame = UIApplication.getFrame();
+            KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+            Window window = keyboardFocusManager.getActiveWindow();
 
-                KeyboardFocusManager keyboardFocusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-                Window window = keyboardFocusManager.getActiveWindow();
-
-                if (window != null && window instanceof Frame) {
-                    frame = (Frame) window;
-                }
-
-                JOptionPane.showMessageDialog(frame, message, title, type);
+            if (window != null && window instanceof Frame) {
+                frame = (Frame) window;
             }
+
+            JOptionPane.showMessageDialog(frame, message, title, type);
         });
     }
 

@@ -116,31 +116,24 @@ public final class BudgetComboBox extends JComboBox<Budget> {
                     break;
                 case BUDGET_REMOVE:
                     if (event.getObject(MessageProperty.BUDGET) != null) {
-                        EventQueue.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                Object selected = getSelectedItem();
+                        EventQueue.invokeLater(() -> {
+                            Object selected = getSelectedItem();
 
-                                removeElement(event.getObject(MessageProperty.BUDGET));
+                            removeElement(event.getObject(MessageProperty.BUDGET));
 
-                                if (selected == event.getObject(MessageProperty.BUDGET) && getSize() > 0) {
-                                    setSelectedItem(getElementAt(0));
-                                }
+                            if (selected == event.getObject(MessageProperty.BUDGET) && getSize() > 0) {
+                                setSelectedItem(getElementAt(0));
                             }
                         });
                     }
                     break;
                 case BUDGET_ADD:
                     if (event.getObject(MessageProperty.BUDGET) != null) {
-                        EventQueue.invokeLater(new Runnable() {
+                        EventQueue.invokeLater(() -> {
+                            addElement(event.getObject(MessageProperty.BUDGET));
 
-                            @Override
-                            public void run() {
-                                addElement((Budget) event.getObject(MessageProperty.BUDGET));
-
-                                if (getSize() == 1) {
-                                    setSelectedItem(event.getObject(MessageProperty.BUDGET));
-                                }
+                            if (getSize() == 1) {
+                                setSelectedItem(event.getObject(MessageProperty.BUDGET));
                             }
                         });
                     }

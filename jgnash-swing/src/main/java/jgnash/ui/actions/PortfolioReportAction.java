@@ -46,42 +46,29 @@ public class PortfolioReportAction extends AbstractEnabledAction {
     @Override
     public void messagePosted(final Message event) {
 
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                switch (event.getEvent()) {
-                    case FILE_CLOSING:
-                        setEnabled(false);
-                        break;
-                    case FILE_NEW_SUCCESS:
-                    case FILE_LOAD_SUCCESS:
-                    case ACCOUNT_REMOVE:
-                    case ACCOUNT_ADD:
-                        updateEnabledState();
-                        break;
-                    default:
-                        break;
-                }
+        EventQueue.invokeLater(() -> {
+            switch (event.getEvent()) {
+                case FILE_CLOSING:
+                    setEnabled(false);
+                    break;
+                case FILE_NEW_SUCCESS:
+                case FILE_LOAD_SUCCESS:
+                case ACCOUNT_REMOVE:
+                case ACCOUNT_ADD:
+                    updateEnabledState();
+                    break;
+                default:
+                    break;
             }
         });
     }
 
     private void updateEnabledState() {
 
-        Thread thread = new Thread(new Runnable() {
+        Thread thread = new Thread(() -> {
+            final boolean enabled1 = hasInvestmentAccount();
 
-            @Override
-            public void run() {
-                final boolean enabled = hasInvestmentAccount();
-
-                EventQueue.invokeLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        setEnabled(enabled);
-                    }
-                });
-            }
+            EventQueue.invokeLater(() -> setEnabled(enabled1));
         }, "updateEnabledState");
 
         thread.setPriority(Thread.MIN_PRIORITY);

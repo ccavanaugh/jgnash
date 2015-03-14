@@ -17,11 +17,6 @@
  */
 package jgnash.ui.register;
 
-import com.jgoodies.forms.builder.ButtonBarBuilder;
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -33,8 +28,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
@@ -49,6 +42,11 @@ import jgnash.ui.components.ShadowBorder;
 import jgnash.ui.register.invest.InvestmentTransactionDialog;
 import jgnash.ui.register.table.AbstractRegisterTableModel;
 import jgnash.ui.register.table.RegisterTable;
+
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Main view for a generic account register. This displays the account's transactions and the forms for adding,
@@ -140,12 +138,7 @@ public class RegisterPanel extends AbstractRegisterPanel implements ActionListen
 
         restoreLastTabUsed();
 
-        tabbedPane.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                saveLastTabUsed(tabbedPane.getSelectedIndex());
-            }
-        });
+        tabbedPane.addChangeListener(e -> saveLastTabUsed(tabbedPane.getSelectedIndex()));
 
         table.addKeyListener(this);
 
@@ -205,12 +198,7 @@ public class RegisterPanel extends AbstractRegisterPanel implements ActionListen
 
             final int index = tabPreferences.getInt(id, tabbedPane.getSelectedIndex());
 
-            EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    tabbedPane.setSelectedIndex(index);
-                }
-            });
+            EventQueue.invokeLater(() -> tabbedPane.setSelectedIndex(index));
         }
     }
 

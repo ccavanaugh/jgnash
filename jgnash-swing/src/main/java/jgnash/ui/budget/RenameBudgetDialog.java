@@ -17,10 +17,6 @@
  */
 package jgnash.ui.budget;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.Dialog;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -42,6 +38,10 @@ import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.ValidationFactory;
 import jgnash.util.Resource;
 
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
+
 /**
  * RenameBudgetDialog is for changing the name of a budget
  *
@@ -61,14 +61,10 @@ class RenameBudgetDialog extends JDialog implements ActionListener {
 
     public static void showDialog(final Budget budget, final Dialog parent) {
 
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                RenameBudgetDialog d = new RenameBudgetDialog(budget, parent);
-                DialogUtils.addBoundsListener(d);
-                d.setVisible(true);
-            }
+        EventQueue.invokeLater(() -> {
+            RenameBudgetDialog d = new RenameBudgetDialog(budget, parent);
+            DialogUtils.addBoundsListener(d);
+            d.setVisible(true);
         });
     }
 

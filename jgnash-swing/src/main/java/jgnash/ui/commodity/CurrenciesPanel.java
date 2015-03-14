@@ -17,9 +17,6 @@
  */
 package jgnash.ui.commodity;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
@@ -47,6 +44,9 @@ import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.ValidationFactory;
 import jgnash.util.NotNull;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Creates a panel for adding and removing currencies. A static method is provided for displaying the panel in a dialog.
@@ -78,16 +78,12 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
     public static void showDialog(final JFrame parent) {
         final Resource rb = Resource.get();
 
-        EventQueue.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                GenericCloseDialog d = new GenericCloseDialog(parent, new CurrenciesPanel(), rb.getString("Title.AddRemCurr"));
-                d.pack();
-                d.setMinimumSize(d.getSize());
-                DialogUtils.addBoundsListener(d);
-                d.setVisible(true);
-            }
+        EventQueue.invokeLater(() -> {
+            GenericCloseDialog d = new GenericCloseDialog(parent, new CurrenciesPanel(), rb.getString("Title.AddRemCurr"));
+            d.pack();
+            d.setMinimumSize(d.getSize());
+            DialogUtils.addBoundsListener(d);
+            d.setVisible(true);
         });
     }
 
@@ -172,7 +168,7 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
         ValidationFactory.showValidationError(rb.getString("Message.Error.MissingSymbol"), customField);
     }
 
-    private void addAction() {        
+    private void addAction() {
         for (CurrencyNode obj : aJList.getSelectedValuesList()) {
             if (obj != null) {
                 aList.removeElement(obj);
@@ -184,8 +180,6 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
 
     private void removeAction() {
         for (CurrencyElement element : cJList.getSelectedValuesList()) {
-            
-
             if (element.isEnabled()) {
                 if (engine.removeCommodity(element.getNode())) {
                     cList.removeElement(element);
@@ -202,9 +196,7 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
 
         List<CurrencyNode> availNodes = engine.getCurrencies();
 
-        for (CurrencyNode node : availNodes) {
-            defaultNodes.remove(node);
-        }
+        availNodes.forEach(defaultNodes::remove);
 
         aList = new SortedListModel<>(defaultNodes);
         aJList = new JList<>(aList);

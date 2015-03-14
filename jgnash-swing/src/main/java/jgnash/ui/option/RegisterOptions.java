@@ -17,16 +17,9 @@
  */
 package jgnash.ui.option;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.factories.CC;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -42,6 +35,11 @@ import jgnash.ui.components.AutoCompleteFactory;
 import jgnash.ui.register.AbstractTransactionPanel;
 import jgnash.ui.register.RegisterFactory;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
 
 import org.jdesktop.swingx.JXColorSelectionButton;
 
@@ -130,35 +128,23 @@ class RegisterOptions extends JPanel implements ActionListener {
         autoReconcileBothSidesButton.addActionListener(this);
         autoReconcileIncomeExpenseButton.addActionListener(this);
 
-        oddButton.addPropertyChangeListener("background", new PropertyChangeListener() {
+        oddButton.addPropertyChangeListener("background", evt -> {
+            RegisterFactory.setOddColor(oddButton.getBackground());
+            oddButton.setToolTipText(buildColorString(oddButton.getBackground()));
 
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                RegisterFactory.setOddColor(oddButton.getBackground());
-                oddButton.setToolTipText(buildColorString(oddButton.getBackground()));
-
-                UIApplication.repaint();
-            }
+            UIApplication.repaint();
         });
 
-        evenButton.addPropertyChangeListener("background", new PropertyChangeListener() {
+        evenButton.addPropertyChangeListener("background", evt -> {
+            RegisterFactory.setEvenColor(evenButton.getBackground());
+            evenButton.setToolTipText(buildColorString(evenButton.getBackground()));
 
-            @Override
-            public void propertyChange(final PropertyChangeEvent evt) {
-                RegisterFactory.setEvenColor(evenButton.getBackground());
-                evenButton.setToolTipText(buildColorString(evenButton.getBackground()));
-
-                UIApplication.repaint();
-            }
+            UIApplication.repaint();
         });
 
-        autoCompleteCheckBox.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ignoreCaseCheckBox.setEnabled(autoCompleteCheckBox.isSelected());
-                fuzzyMatchCheckBox.setEnabled(autoCompleteCheckBox.isSelected());
-            }
+        autoCompleteCheckBox.addActionListener(e -> {
+            ignoreCaseCheckBox.setEnabled(autoCompleteCheckBox.isSelected());
+            fuzzyMatchCheckBox.setEnabled(autoCompleteCheckBox.isSelected());
         });
     }
 
