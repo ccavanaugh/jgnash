@@ -29,6 +29,7 @@ Add ability to make an existing transaction a recurring transaction.
 Release 2.16.0
 ----------------------
 03/14/15 Java 8 is required for 2.16.0 and newer
+03/14/15 Historical import of securities did not preset the prior month as intended.
 
 Release 2.15.2
 ----------------------
