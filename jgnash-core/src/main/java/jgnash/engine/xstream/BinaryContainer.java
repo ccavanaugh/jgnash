@@ -44,6 +44,7 @@ import jgnash.engine.StoredObjectComparator;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.recurring.Reminder;
 import jgnash.util.FileUtils;
+import jgnash.util.NotNull;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
@@ -88,8 +89,12 @@ class BinaryContainer extends AbstractXStreamContainer {
      * @param objects Collection of StoredObjects to write
      * @param file    file to write
      */
-    public static synchronized void writeBinary(final Collection<StoredObject> objects, final File file) {
-        Logger logger = Logger.getLogger(BinaryContainer.class.getName());
+    public static synchronized void writeBinary(@NotNull final Collection<StoredObject> objects, @NotNull final File file) {
+        final Logger logger = Logger.getLogger(BinaryContainer.class.getName());
+
+        if (file.getParentFile().mkdirs()) {
+            logger.info("Created missing directories");
+        }
 
         if (file.exists()) {
             File backup = new File(file.getAbsolutePath() + ".backup");

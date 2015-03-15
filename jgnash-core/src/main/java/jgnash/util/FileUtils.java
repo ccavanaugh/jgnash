@@ -156,7 +156,11 @@ public final class FileUtils {
         return result;
     }
 
-    public static void compressFile(final File source, final File destination) {
+    public static void compressFile(@NotNull final File source, @NotNull final File destination) {
+
+        if (destination.getParentFile().mkdirs()) {
+            Logger.getLogger(FileUtils.class.getName()).info("Created directories");
+        }
 
         // Try to open the zip file for output
         try (FileOutputStream fos = new FileOutputStream(destination);
