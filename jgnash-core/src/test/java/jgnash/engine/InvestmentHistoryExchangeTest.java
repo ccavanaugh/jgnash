@@ -1,5 +1,6 @@
 package jgnash.engine;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -194,11 +195,10 @@ import static org.junit.Assert.*;
 
      @Before
      public void setUp() {
-         // Creating database
-         database = EngineFactory.getDefaultDatabase() + "-investHist-test.bxds";
-         EngineFactory.deleteDatabase(database);
-
          try {
+             database = File.createTempFile("jgnash", ".bxds").getAbsolutePath();
+             EngineFactory.deleteDatabase(database);
+
              e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.BINARY_XSTREAM);
 
              // Creating currencies
