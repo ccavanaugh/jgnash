@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import jgnash.engine.jpa.JpaH2DataStore;
 import jgnash.engine.jpa.JpaHsqlDataStore;
 import jgnash.engine.jpa.SqlUtils;
+import jgnash.util.FileUtils;
 
 import org.junit.Test;
 
@@ -47,6 +48,12 @@ public class JpaHsqlEngineTest extends EngineTest {
 
         try {
             testFile = Files.createTempFile("jpa-test", "." + JpaHsqlDataStore.FILE_EXT).toString();
+
+            final String base = FileUtils.stripFileExtension(testFile);
+
+            // these files will show up after close
+            new File(base + ".properties").deleteOnExit();
+            new File(base + ".lobs").deleteOnExit();
         } catch (IOException ex) {
             Logger.getLogger(JpaHsqlEngineTest.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
             fail();
