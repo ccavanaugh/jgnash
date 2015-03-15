@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -236,9 +237,9 @@ public class SecurityNode extends CommodityNode {
      * Returns the {@code SecurityHistoryNode} with the matching date
      *
      * @param date Date to match
-     * @return {@code null} if an exact match is not found
+     * @return {@code Optional} contain a matching node
      */
-    public SecurityHistoryNode getHistoryNode(final Date date) {
+    public Optional<SecurityHistoryNode> getHistoryNode(final Date date) {
         final Date testDate = DateUtils.trimDate(date);
 
         lock.readLock().lock();
@@ -256,7 +257,7 @@ public class SecurityNode extends CommodityNode {
                 }
             }
 
-            return hNode;
+            return Optional.ofNullable(hNode);
         } finally {
             lock.readLock().unlock();
         }
@@ -266,9 +267,9 @@ public class SecurityNode extends CommodityNode {
      * Returns the {@code SecurityHistoryNode} with the closet matching date without exceeding the request date
      *
      * @param date {@code Date} to match
-     * @return {@code null} if no history nodes exist or predate the requested date
+     * @return {@code Optional} containing a {@code SecurityHistoryNode} if a match is found
      */
-    public SecurityHistoryNode getClosestHistoryNode(final Date date) {
+    public Optional<SecurityHistoryNode> getClosestHistoryNode(final Date date) {
         final Date testDate = DateUtils.trimDate(date);
 
         lock.readLock().lock();
@@ -286,7 +287,7 @@ public class SecurityNode extends CommodityNode {
                 }
             }
 
-            return hNode;
+            return Optional.ofNullable(hNode);
         } finally {
             lock.readLock().unlock();
         }
@@ -295,10 +296,10 @@ public class SecurityNode extends CommodityNode {
     private BigDecimal getMarketPrice(final Date date) {
         BigDecimal marketPrice = BigDecimal.ZERO;
 
-        final SecurityHistoryNode historyNode = getClosestHistoryNode(date);
+        final Optional<SecurityHistoryNode> optional = getClosestHistoryNode(date);
 
-        if (historyNode != null) {
-            marketPrice = historyNode.getPrice();
+        if (optional.isPresent()) {
+            marketPrice = optional.get().getPrice();
         }
 
         return marketPrice;

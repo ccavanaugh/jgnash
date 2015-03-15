@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
@@ -311,10 +312,11 @@ public class Engine {
         final Date marketDate = DateUtils.trimDate(date);
 
         // Search for the exact history node record
-        SecurityHistoryNode hNode = node.getHistoryNode(marketDate);
+        //SecurityHistoryNode hNode = node.getHistoryNode(marketDate);
+        Optional<SecurityHistoryNode> optional = node.getHistoryNode(marketDate);
 
         // not null, must be an exact match, return the value because it has precedence
-        if (hNode != null) {
+        if (optional.isPresent()) {
             return node.getMarketPrice(marketDate, baseCurrency);
         }
 
@@ -322,11 +324,11 @@ public class Engine {
         Date priceDate = new Date(0);
         BigDecimal price = BigDecimal.ZERO;
 
-        hNode = node.getClosestHistoryNode(marketDate);
+        optional = node.getClosestHistoryNode(marketDate);
 
-        if (hNode != null) {    // Closest option so far
-            price = hNode.getPrice();
-            priceDate = hNode.getDate();
+        if (optional.isPresent()) {    // Closest option so far
+            price = optional.get().getPrice();
+            priceDate = optional.get().getDate();
         }
 
         // Compare against transactions
@@ -1446,14 +1448,14 @@ public class Engine {
         boolean status = false;
 
         try {
-            final SecurityHistoryNode historyNode = node.getHistoryNode(date);
+            final Optional<SecurityHistoryNode> optional = node.getHistoryNode(date);
 
-            if (historyNode != null) {
+            if (optional.isPresent()) {
                 status = node.removeHistoryNode(date);
 
                 if (status) {   // removal was a success, make sure we cleanup properly
-                    moveObjectToTrash(historyNode);
-                    status = getCommodityDAO().removeSecurityHistory(node, historyNode);
+                    moveObjectToTrash(optional.get());
+                    status = getCommodityDAO().removeSecurityHistory(node, optional.get());
                 }
             }
 

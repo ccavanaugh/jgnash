@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,11 +15,7 @@ import org.junit.Test;
 
 import static jgnash.engine.InvestmentTransactionTest.createTransactionEntry;
 import static jgnash.engine.TransactionFactory.generateBuyXTransaction;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
   * Unit test for investment history and exchange rate combinations
@@ -76,34 +73,34 @@ import static org.junit.Assert.fail;
          future.setPrice(new BigDecimal("502.00"));
          assertTrue(e.addSecurityHistory(securityNode, future));
 
-         SecurityHistoryNode search = securityNode.getClosestHistoryNode(getDate("2014-06-26"));
-         assertEquals(old, search);
+         Optional<SecurityHistoryNode> search = securityNode.getClosestHistoryNode(getDate("2014-06-26"));
+         assertEquals(old, search.get());
 
          search = securityNode.getClosestHistoryNode(getDate("2014-06-27"));
-         assertEquals(today, search);
+         assertEquals(today, search.get());
 
          search = securityNode.getClosestHistoryNode(getDate("2014-06-28"));
-         assertEquals(future, search);
+         assertEquals(future, search.get());
 
          // postdate closest search, should return null
          search = securityNode.getClosestHistoryNode(getDate("2014-06-29"));
-         assertEquals(future, search);
+         assertEquals(future, search.get());
 
          // predate closest search, should return null
          search = securityNode.getClosestHistoryNode(getDate("2014-06-25"));
-         assertNull(search);
+         assertFalse(search.isPresent());
 
          // predate exact match, should turn null;
          search = securityNode.getHistoryNode(getDate("2014-06-25"));
-         assertNull(search);
+         assertFalse(search.isPresent());
 
          // postdate exact match, should turn null;
          search = securityNode.getHistoryNode(getDate("2014-06-29"));
-         assertNull(search);
+         assertFalse(search.isPresent());
 
          // exact match, should match
          search = securityNode.getHistoryNode(getDate("2014-06-27"));
-         assertEquals(today, search);
+         assertEquals(today, search.get());
 
          BigDecimal price = Engine.getMarketPrice(Collections.<Transaction>emptyList(), securityNode, usdCurrency, getDate("2014-06-29"));
          assertEquals(new BigDecimal("502.00"), price);
@@ -172,14 +169,14 @@ import static org.junit.Assert.fail;
          assertTrue(e.addTransaction(it));
 
          price = Engine.getMarketPrice(investAccount.getSortedTransactionList(), securityNode, usdCurrency, getDate("2014-07-01"));
-         assertNull(securityNode.getHistoryNode(getDate("2014-07-01")));
+         assertFalse(securityNode.getHistoryNode(getDate("2014-07-01")).isPresent());
          assertEquals(new BigDecimal("502.34"), price);
 
          price = Engine.getMarketPrice(investAccount.getSortedTransactionList(), securityNode, usdCurrency, getDate("2014-07-02"));
-         assertNull(securityNode.getHistoryNode(getDate("2014-07-02")));
+         assertFalse(securityNode.getHistoryNode(getDate("2014-07-02")).isPresent());
          assertEquals(new BigDecimal("502.34"), price);
 
-         assertNull(securityNode.getHistoryNode(getDate("2014-06-30")));
+         assertFalse(securityNode.getHistoryNode(getDate("2014-06-30")).isPresent());
          price = Engine.getMarketPrice(investAccount.getSortedTransactionList(), securityNode, usdCurrency, getDate("2014-06-30"));
          assertEquals(new BigDecimal("501.34"), price);
 
@@ -187,7 +184,7 @@ import static org.junit.Assert.fail;
          future2.setDate(getDate("2014-07-02"));
          future2.setPrice(new BigDecimal("503.00"));
          assertTrue(e.addSecurityHistory(securityNode, future2));
-         assertNotNull(securityNode.getHistoryNode(getDate("2014-07-02")));
+         assertTrue(securityNode.getHistoryNode(getDate("2014-07-02")).isPresent());
 
          price = Engine.getMarketPrice(investAccount.getSortedTransactionList(), securityNode, usdCurrency, getDate("2014-07-02"));
 
@@ -263,7 +260,14 @@ import static org.junit.Assert.fail;
 
      @After
      public void tearDown() {
+         // Don't dump a backup
+         boolean export = EngineFactory.exportXMLOnClose();
+         EngineFactory.setExportXMLOnClose(false);
+
          EngineFactory.closeEngine(EngineFactory.DEFAULT);
          EngineFactory.deleteDatabase(database);
+
+         // Restore the old state
+         EngineFactory.setExportXMLOnClose(export);
      }
  }
