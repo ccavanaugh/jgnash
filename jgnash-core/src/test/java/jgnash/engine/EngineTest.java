@@ -17,9 +17,11 @@
  */
 package jgnash.engine;
 
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
@@ -32,19 +34,14 @@ import jgnash.engine.budget.BudgetPeriod;
 import jgnash.engine.recurring.DailyReminder;
 import jgnash.engine.recurring.Reminder;
 import jgnash.util.DateUtils;
+import jgnash.util.FileUtils;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * @author Craig Cavanaugh
@@ -102,6 +99,11 @@ public abstract class EngineTest {
         EngineFactory.setExportXMLOnClose(oldExportState);
 
         Files.deleteIfExists(Paths.get(testFile));
+
+        final String attachmentDir = System.getProperty("java.io.tmpdir") + File.separator + "attachments";
+        final Path directory = Paths.get(attachmentDir);
+
+        FileUtils.deletePathAndContents(directory);
     }
 
     @Test
