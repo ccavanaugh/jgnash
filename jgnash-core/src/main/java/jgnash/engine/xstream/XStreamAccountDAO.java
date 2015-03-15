@@ -17,15 +17,15 @@
  */
 package jgnash.engine.xstream;
 
+import java.util.List;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
 import jgnash.engine.RootAccount;
 import jgnash.engine.SecurityNode;
 import jgnash.engine.dao.AccountDAO;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * XML Account DAO
@@ -127,14 +127,6 @@ public class XStreamAccountDAO extends AbstractXStreamDAO implements AccountDAO 
     }
 
     private List<Account> getAccountByType(final AccountType type) {
-        List<Account> list = new ArrayList<>();
-
-        for (Account a : getAccountList()) {
-            if (a.getAccountType() == type) {
-                list.add(a);
-            }
-        }
-
-        return list;
+        return getAccountList().parallelStream().filter(a -> a.getAccountType() == type).collect(Collectors.toList());
     }
 }

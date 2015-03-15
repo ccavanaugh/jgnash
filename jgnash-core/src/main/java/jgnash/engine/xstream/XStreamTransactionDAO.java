@@ -17,11 +17,11 @@
  */
 package jgnash.engine.xstream;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import jgnash.engine.Transaction;
 import jgnash.engine.dao.TransactionDAO;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Transaction XML DAO
@@ -68,14 +68,8 @@ public class XStreamTransactionDAO extends AbstractXStreamDAO implements Transac
 
     @Override
     public List<Transaction> getTransactionsWithAttachments() {
-        List<Transaction> transactionList = new ArrayList<>();
-
-        for (Transaction transaction : container.query(Transaction.class)) {
-            if (!transaction.isMarkedForRemoval() && transaction.getAttachment() != null) {
-                transactionList.add(transaction);
-            }
-        }
-
-        return transactionList;
+        return container.query(Transaction.class).parallelStream()
+                .filter(transaction -> !transaction.isMarkedForRemoval() && transaction.getAttachment() != null)
+                .collect(Collectors.toList());
     }
 }

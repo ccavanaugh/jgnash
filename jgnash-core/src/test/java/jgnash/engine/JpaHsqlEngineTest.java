@@ -17,12 +17,6 @@
  */
 package jgnash.engine;
 
-import jgnash.engine.jpa.JpaH2DataStore;
-import jgnash.engine.jpa.JpaHsqlDataStore;
-import jgnash.engine.jpa.SqlUtils;
-
-import org.junit.Test;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,6 +24,12 @@ import java.nio.file.Paths;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import jgnash.engine.jpa.JpaH2DataStore;
+import jgnash.engine.jpa.JpaHsqlDataStore;
+import jgnash.engine.jpa.SqlUtils;
+
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -73,9 +73,7 @@ public class JpaHsqlEngineTest extends EngineTest {
 
         Set<String> tableNames = SqlUtils.getTableAndColumnNames(testFile, PASSWORD);
 
-        for (final String tableName : tableNames) {
-            System.out.println(tableName);
-        }
+        tableNames.forEach(System.out::println);
     }
 
     @Test

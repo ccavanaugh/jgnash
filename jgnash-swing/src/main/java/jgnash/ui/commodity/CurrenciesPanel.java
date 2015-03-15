@@ -50,7 +50,7 @@ import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Creates a panel for adding and removing currencies. A static method is provided for displaying the panel in a dialog.
- * 
+ *
  * @author Craig Cavanaugh
  */
 public class CurrenciesPanel extends JPanel implements ActionListener {
@@ -169,24 +169,19 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
     }
 
     private void addAction() {
-        for (CurrencyNode obj : aJList.getSelectedValuesList()) {
-            if (obj != null) {
-                aList.removeElement(obj);
-                cList.addElement(new CurrencyElement(obj, true));
-                engine.addCurrency(obj);
-            }
-        }
+        aJList.getSelectedValuesList().stream().filter(obj -> obj != null).forEach(obj -> {
+            aList.removeElement(obj);
+            cList.addElement(new CurrencyElement(obj, true));
+            engine.addCurrency(obj);
+        });
     }
 
     private void removeAction() {
-        for (CurrencyElement element : cJList.getSelectedValuesList()) {
-            if (element.isEnabled()) {
-                if (engine.removeCommodity(element.getNode())) {
-                    cList.removeElement(element);
-                    aList.addElement(element.getNode());
-                }
-            }
-        }
+        cJList.getSelectedValuesList().stream().filter(CurrencyElement::isEnabled)
+                .filter(element -> engine.removeCommodity(element.getNode())).forEach(element -> {
+            cList.removeElement(element);
+            aList.addElement(element.getNode());
+        });
     }
 
     private void buildLists() {
@@ -218,7 +213,7 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
 
     /**
      * Invoked when an action occurs
-     * 
+     *
      * @param e action event
      */
 

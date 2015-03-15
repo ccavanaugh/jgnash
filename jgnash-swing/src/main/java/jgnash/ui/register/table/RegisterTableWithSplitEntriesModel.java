@@ -20,6 +20,7 @@ package jgnash.ui.register.table;
 import java.awt.EventQueue;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
@@ -32,10 +33,9 @@ import jgnash.ui.register.AccountBalanceDisplayManager;
 
 /**
  * Register table model supporting split entries transactions.
- * 
+ *
  * @author Craig Cavanaugh
  * @author Vincent Frison
- *
  * @see jgnash.ui.register.RegisterFactory#getTableModel(boolean, jgnash.engine.Account, boolean)
  */
 public class RegisterTableWithSplitEntriesModel extends RegisterTableModel {
@@ -157,7 +157,7 @@ public class RegisterTableWithSplitEntriesModel extends RegisterTableModel {
     /**
      * Update the internal data from the specified index. Note that this index is not relative to the account
      * transaction list but to the internal data.
-     * 
+     *
      * @param startIndex internal data index from which transactions need to updated.
      */
     private void updateData(final int startIndex) {
@@ -185,11 +185,10 @@ public class RegisterTableWithSplitEntriesModel extends RegisterTableModel {
 
                     // load only the entries that impact this account
                     if (splitImpact > 1) {
-                        for (TransactionEntry e : t.getTransactionEntries()) {
-                            if (e.getAmount(account).signum() != 0) {
-                                data.add(new TransactionWrapper(t, e));
-                            }
-                        }
+                        data.addAll(t.getTransactionEntries().stream()
+                                .filter(e -> e.getAmount(account).signum() != 0)
+                                .map(e -> new TransactionWrapper(t, e))
+                                .collect(Collectors.toList()));
                     }
                 }
             }

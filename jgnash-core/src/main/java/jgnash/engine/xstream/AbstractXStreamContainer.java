@@ -17,8 +17,6 @@
  */
 package jgnash.engine.xstream;
 
-import com.thoughtworks.xstream.XStream;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -33,17 +31,44 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
-import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
-import com.thoughtworks.xstream.hibernate.converter.*;
-import com.thoughtworks.xstream.hibernate.mapper.HibernateMapper;
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
-import com.thoughtworks.xstream.mapper.MapperWrapper;
-
-import jgnash.engine.*;
+import jgnash.engine.Account;
+import jgnash.engine.AmortizeObject;
+import jgnash.engine.CommodityNode;
+import jgnash.engine.Config;
+import jgnash.engine.CurrencyNode;
+import jgnash.engine.ExchangeRate;
+import jgnash.engine.ExchangeRateHistoryNode;
+import jgnash.engine.InvestmentTransaction;
+import jgnash.engine.RootAccount;
+import jgnash.engine.SecurityHistoryNode;
+import jgnash.engine.SecurityNode;
+import jgnash.engine.StoredObject;
+import jgnash.engine.Transaction;
+import jgnash.engine.TransactionEntry;
+import jgnash.engine.TransactionEntryAddX;
+import jgnash.engine.TransactionEntryBuyX;
+import jgnash.engine.TransactionEntryDividendX;
+import jgnash.engine.TransactionEntryMergeX;
+import jgnash.engine.TransactionEntryReinvestDivX;
+import jgnash.engine.TransactionEntryRemoveX;
+import jgnash.engine.TransactionEntrySellX;
+import jgnash.engine.TransactionEntrySplitX;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetGoal;
 import jgnash.engine.budget.BudgetPeriod;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentCollectionConverter;
+import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentMapConverter;
+import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentSortedMapConverter;
+import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentSortedSetConverter;
+import com.thoughtworks.xstream.hibernate.converter.HibernateProxyConverter;
+import com.thoughtworks.xstream.hibernate.mapper.HibernateMapper;
+import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
+import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 /**
  * Abstract XStream container
@@ -73,14 +98,8 @@ abstract class AbstractXStreamContainer {
      */
     @SuppressWarnings("unchecked")
     static <T extends StoredObject> List<T> query(final Collection<StoredObject> values, final Class<T> clazz) {
-        ArrayList<T> list = new ArrayList<>();
-
-        for (StoredObject o : values) {
-            if (clazz.isAssignableFrom(o.getClass())) {
-                list.add((T) o);
-            }
-        }
-        return list;
+        return values.parallelStream().filter(o -> clazz.isAssignableFrom(o.getClass()))
+                .map(o -> (T) o).collect(Collectors.toList());
     }
 
     static XStream configureXStream(final XStream xstream) {

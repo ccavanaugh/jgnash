@@ -107,11 +107,9 @@ public class NewFileTwo extends JPanel implements WizardPage {
             String symbol = DefaultCurrencies.getDefault().getSymbol();
 
             // set the default currency by matching the default locale
-            for (CurrencyNode node : currencies) {
-                if (symbol.equals(node.getSymbol())) {
-                    currencyCombo.setSelectedItem(node);
-                }
-            }
+            currencies.stream()
+                    .filter(node -> symbol.equals(node.getSymbol()))
+                    .forEach(currencyCombo::setSelectedItem);
         } catch (final IllegalArgumentException e) {
             Logger.getLogger(NewFileTwo.class.getName()).warning("Unable to construct the default currency from the default system Locale");
         }

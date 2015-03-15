@@ -17,6 +17,10 @@
  */
 package jgnash.engine.xstream;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import jgnash.engine.Account;
 import jgnash.engine.CommodityNode;
 import jgnash.engine.CurrencyNode;
@@ -25,10 +29,6 @@ import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.engine.StoredObject;
 import jgnash.engine.dao.CommodityDAO;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Hides all the db4o commodity code
@@ -62,15 +62,11 @@ public class XStreamCommodityDAO extends AbstractXStreamDAO implements Commodity
 
     @Override
     public Set<CurrencyNode> getActiveCurrencies() {
-        Set<CurrencyNode> set = new HashSet<>();
+        Set<CurrencyNode> set = stripMarkedForRemoval(container.query(Account.class))
+                .parallelStream().map(Account::getCurrencyNode).collect(Collectors.toSet());
 
-        for (Account a : stripMarkedForRemoval(container.query(Account.class))) {
-            set.add(a.getCurrencyNode());
-        }
-
-        for (SecurityNode node : stripMarkedForRemoval(container.query(SecurityNode.class))) {
-            set.add(node.getReportedCurrencyNode());
-        }
+        set.addAll(stripMarkedForRemoval(container.query(SecurityNode.class))
+                .parallelStream().map(SecurityNode::getReportedCurrencyNode).collect(Collectors.toList()));
 
         return set;
     }

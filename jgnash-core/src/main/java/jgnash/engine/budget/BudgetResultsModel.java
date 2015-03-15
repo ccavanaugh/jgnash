@@ -17,6 +17,21 @@
  */
 package jgnash.engine.budget;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
+
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.AccountType;
@@ -33,20 +48,6 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.engine.message.MessageProxy;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Model for budget results
@@ -200,13 +201,8 @@ public class BudgetResultsModel implements MessageListener {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        Set<Account> accountSet = new HashSet<>();
-
-        for (Account account : engine.getAccountList()) {
-            if (includeAccount(account)) {
-                accountSet.add(account);
-            }
-        }
+        Set<Account> accountSet = engine.getAccountList().stream()
+                .filter(this::includeAccount).collect(Collectors.toSet());
 
         accountLock.writeLock().lock();
 
@@ -223,9 +219,8 @@ public class BudgetResultsModel implements MessageListener {
         try {
             EnumSet<AccountGroup> accountSet = EnumSet.noneOf(AccountGroup.class);
 
-            for (Account account : accounts) {
-                accountSet.add(account.getAccountType().getAccountGroup());
-            }
+            accountSet.addAll(accounts.stream()
+                    .map(account -> account.getAccountType().getAccountGroup()).collect(Collectors.toList()));
 
             // create a list and sort
             List<AccountGroup> groups = new ArrayList<>(accountSet);
@@ -262,15 +257,7 @@ public class BudgetResultsModel implements MessageListener {
         accountLock.readLock().lock();
 
         try {
-            Set<Account> accountSet = new HashSet<>();
-
-            for (Account account : accounts) {
-                if (account.memberOf(group)) {
-                    accountSet.add(account);
-                }
-            }
-
-            return accountSet;
+            return accounts.stream().filter(account -> account.memberOf(group)).collect(Collectors.toSet());
         } finally {
             accountLock.readLock().unlock();
         }
@@ -280,7 +267,7 @@ public class BudgetResultsModel implements MessageListener {
      * Gets results by descriptor and account (per account results)
      *
      * @param descriptor BudgetPeriodDescriptor descriptor
-     * @param account Account
+     * @param account    Account
      * @return cached or newly created BudgetPeriodResults
      */
     public BudgetPeriodResults getResults(final BudgetPeriodDescriptor descriptor, final Account account) {
@@ -378,7 +365,7 @@ public class BudgetResultsModel implements MessageListener {
      * AccountGroup)
      *
      * @param descriptor BudgetPeriodDescriptor for summary
-     * @param group AccountGroup for summary
+     * @param group      AccountGroup for summary
      * @return summary results
      */
     public BudgetPeriodResults getResults(final BudgetPeriodDescriptor descriptor, final AccountGroup group) {
@@ -450,7 +437,6 @@ public class BudgetResultsModel implements MessageListener {
             cacheLock.unlock();
         }
     }
-
 
 
     private BudgetPeriodResults buildAccountResults(final BudgetPeriodDescriptor descriptor, final Account account) {
@@ -602,16 +588,15 @@ public class BudgetResultsModel implements MessageListener {
 
             try {
                 // clear cached results
-                for (Account ancestor : account.getAncestors()) {
-                    if (accounts.contains(ancestor)) {
-                        for (BudgetPeriodDescriptor descriptor : descriptorList) {
-                            clear(ancestor);
-                            clear(descriptor, ancestor);
-                            clear(ancestor.getAccountType().getAccountGroup()); // could be mixed group tree
-                            clear(descriptor, ancestor.getAccountType().getAccountGroup());
-                        }
+                // could be mixed group tree
+                account.getAncestors().stream().filter(accounts::contains).forEach(ancestor -> {
+                    for (BudgetPeriodDescriptor descriptor : descriptorList) {
+                        clear(ancestor);
+                        clear(descriptor, ancestor);
+                        clear(ancestor.getAccountType().getAccountGroup()); // could be mixed group tree
+                        clear(descriptor, ancestor.getAccountType().getAccountGroup());
                     }
-                }
+                });
             } finally {
                 cacheLock.unlock();
             }
@@ -667,19 +652,16 @@ public class BudgetResultsModel implements MessageListener {
     private void processTransactionEvent(final Message message) {
         final Transaction transaction = message.getObject(MessageProperty.TRANSACTION);
 
-        for (BudgetPeriodDescriptor descriptor : descriptorList) {
-            if (descriptor.isBetween(transaction.getDate())) {
-                final Set<Account> accountSet = new HashSet<>();
+        descriptorList.stream().filter(descriptor -> descriptor.isBetween(transaction.getDate()))
+                .forEach(descriptor -> {
+                    final Set<Account> accountSet = new HashSet<>();
 
-                for (Account account : transaction.getAccounts()) {
-                    accountSet.addAll(account.getAncestors());
-                }
+                    for (Account account : transaction.getAccounts()) {
+                        accountSet.addAll(account.getAncestors());
+                    }
 
-                for (Account account : accountSet) {
-                    clearCached(account);
-                }
-            }
-        }
+                    accountSet.forEach(this::clearCached);
+                });
     }
 
     @Override

@@ -37,6 +37,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -313,9 +314,7 @@ public class Account extends StoredObject implements Comparable<Account> {
     public Set<AccountProperty> getProperties() {
         Set<AccountProperty> properties = EnumSet.noneOf(AccountProperty.class);
 
-        for (String propertyKey : propertyMap.keySet()) {
-            properties.add(AccountProperty.valueOf(propertyKey));
-        }
+        properties.addAll(propertyMap.keySet().stream().map(AccountProperty::valueOf).collect(Collectors.toList()));
 
         return properties;
     }
@@ -1092,15 +1091,9 @@ public class Account extends StoredObject implements Comparable<Account> {
         transactionLock.readLock().lock();
 
         try {
-            final ArrayList<Transaction> list = new ArrayList<>();
-
-            for (Transaction transaction : transactions) {
-                if (DateUtils.after(transaction.getDate(), startDate, true) && DateUtils.before(transaction.getDate(), endDate, true)) {
-                    list.add(transaction);
-                }
-            }
-
-            return list;
+            return transactions.parallelStream().filter(transaction
+                    -> DateUtils.after(transaction.getDate(), startDate, true)
+                    && DateUtils.before(transaction.getDate(), endDate, true)).sorted().collect(Collectors.toList());
         } finally {
             transactionLock.readLock().unlock();
         }
@@ -1376,15 +1369,8 @@ public class Account extends StoredObject implements Comparable<Account> {
         securitiesLock.readLock().lock();
 
         try {
-            final Set<SecurityNode> set = new TreeSet<>();
-
-            for (final Transaction t : transactions) {
-                if (t instanceof InvestmentTransaction) {
-                    set.add(((InvestmentTransaction) t).getSecurityNode());
-                }
-            }
-
-            return set;
+            return transactions.parallelStream().filter(t -> t instanceof InvestmentTransaction).map(t ->
+                    ((InvestmentTransaction) t).getSecurityNode()).collect(Collectors.toCollection(TreeSet::new));
         } finally {
             securitiesLock.readLock().unlock();
             transactionLock.readLock().unlock();

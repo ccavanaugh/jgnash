@@ -32,7 +32,6 @@ import javax.swing.plaf.FontUIResource;
  * Manages the look and feel and metal theme
  * 
  * @author Craig Cavanaugh
- *
  */
 public class NimbusUtils {
 
@@ -78,76 +77,69 @@ public class NimbusUtils {
         }
 
         // reduce font sizes
-        for (Object keyObj : defaults.keySet()) {
+        defaults.keySet().stream().filter(keyObj -> keyObj instanceof String).forEach(keyObj -> {
+            String key = (String) keyObj;
 
-            if (keyObj instanceof String) {
-                String key = (String) keyObj;
+            if (key.contains("font")) {
 
-                if (key.contains("font")) {
+                Object object = defaults.get(key);
 
-                    Object object = defaults.get(key);
+                if (object instanceof Font) {
+                    Font font = (Font) object;
 
-                    if (object instanceof Font) {
-                        Font font = (Font) object;
+                    Font derived = font.deriveFont((float) size);
 
-                        Font derived = font.deriveFont((float) size);
+                    defaults.put(key, derived);
 
-                        defaults.put(key, derived);
+                } else if (object instanceof FontUIResource) {
+                    FontUIResource resource = (FontUIResource) object;
 
-                    } else if (object instanceof FontUIResource) {
-                        FontUIResource resource = (FontUIResource) object;
-
-                        FontUIResource derived = new FontUIResource(resource.deriveFont((float) size));
-                        defaults.put(key, derived);
-                    }
-                }
-            }
-        }
-
-        // reduce content Margins
-        for (Object keyObj : defaults.keySet()) {
-            if (keyObj instanceof String) {
-                String key = (String) keyObj;
-
-                if (key.contains("contentMargins") || key.contains("padding")) {
-
-                    Insets derived = (Insets) ((Insets) defaults.get(key)).clone();
-
-                    if (derived.left > 0) {
-                        derived.left = (int) Math.ceil(derived.left * growthPercentage);
-                    }
-
-                    if (derived.right > 0) {
-                        derived.right = (int) Math.ceil(derived.right * growthPercentage);
-                    }
-
-                    if (derived.top > 0) {
-                        derived.top = (int) Math.ceil(derived.top * growthPercentage);
-                    }
-
-                    if (derived.bottom > 0) {
-                        derived.bottom = (int) Math.ceil(derived.bottom * growthPercentage);
-                    }
-
+                    FontUIResource derived = new FontUIResource(resource.deriveFont((float) size));
                     defaults.put(key, derived);
                 }
             }
-        }
+        });
 
         // reduce content Margins
-        for (Object keyObj : defaults.keySet()) {
-            if (keyObj instanceof String) {
-                String key = (String) keyObj;
+        defaults.keySet().stream().filter(keyObj -> keyObj instanceof String).forEach(keyObj -> {
+            String key = (String) keyObj;
 
-                if (key.contains("textIconGap") || key.contains("size") || key.contains("thumbWidth") || key.contains("thumbHeight")) {
+            if (key.contains("contentMargins") || key.contains("padding")) {
 
-                    Integer integer = (Integer) defaults.get(key);
-                    Integer derived = (int) Math.ceil((float) integer * growthPercentage);
+                Insets derived = (Insets) ((Insets) defaults.get(key)).clone();
 
-                    defaults.put(key, derived);
+                if (derived.left > 0) {
+                    derived.left = (int) Math.ceil(derived.left * growthPercentage);
                 }
+
+                if (derived.right > 0) {
+                    derived.right = (int) Math.ceil(derived.right * growthPercentage);
+                }
+
+                if (derived.top > 0) {
+                    derived.top = (int) Math.ceil(derived.top * growthPercentage);
+                }
+
+                if (derived.bottom > 0) {
+                    derived.bottom = (int) Math.ceil(derived.bottom * growthPercentage);
+                }
+
+                defaults.put(key, derived);
             }
-        }
+        });
+
+        // reduce content Margins
+        defaults.keySet().stream().filter(keyObj -> keyObj instanceof String).forEach(keyObj -> {
+            String key = (String) keyObj;
+
+            if (key.contains("textIconGap") || key.contains("size") || key.contains("thumbWidth") || key.contains("thumbHeight")) {
+
+                Integer integer = (Integer) defaults.get(key);
+                Integer derived = (int) Math.ceil((float) integer * growthPercentage);
+
+                defaults.put(key, derived);
+            }
+        });
     }
 
     /**

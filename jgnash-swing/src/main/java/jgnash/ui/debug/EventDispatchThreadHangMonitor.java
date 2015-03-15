@@ -261,11 +261,8 @@ public final class EventDispatchThreadHangMonitor extends EventQueue {
             // The other dispatches, which have been waiting, need to be credited extra time.
             // We do this rather simplistically by pretending they've just been redispatched.
             Thread currentEventDispatchThread = Thread.currentThread();
-            for (DispatchInfo dispatchInfo : dispatches) {
-                if (dispatchInfo.eventDispatchThread == currentEventDispatchThread) {
-                    dispatchInfo.lastDispatchTimeMillis = System.currentTimeMillis();
-                }
-            }
+            dispatches.stream().filter(dispatchInfo -> dispatchInfo.eventDispatchThread == currentEventDispatchThread)
+                    .forEach(dispatchInfo -> dispatchInfo.lastDispatchTimeMillis = System.currentTimeMillis());
         }
         debug("post");
     }

@@ -24,6 +24,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -222,21 +223,14 @@ class JpaAccountDAO extends AbstractJpaDAO implements AccountDAO {
      */
     @Override
     public List<Account> getInvestmentAccountList() {
-        List<Account> list = new ArrayList<>();
-
         emLock.lock();
 
         try {
-            for (final Account a : getAccountList()) {
-                if (a.memberOf(AccountGroup.INVEST)) {
-                    list.add(a);
-                }
-            }
+            return getAccountList().parallelStream().filter(a -> a.memberOf(AccountGroup.INVEST))
+                    .collect(Collectors.toList());
         } finally {
             emLock.unlock();
         }
-
-        return list;
     }
 
     /*

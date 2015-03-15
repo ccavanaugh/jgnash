@@ -16,18 +16,19 @@
  */
 package net.bzzt.swift.mt940.exporter;
 
-import net.bzzt.swift.mt940.Mt940Entry;
-import net.bzzt.swift.mt940.Mt940Entry.SollHabenKennung;
-import net.bzzt.swift.mt940.Mt940File;
-import net.bzzt.swift.mt940.Mt940Record;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jgnash.convert.imports.ImportBank;
 import jgnash.convert.imports.ImportTransaction;
+
+import net.bzzt.swift.mt940.Mt940Entry;
+import net.bzzt.swift.mt940.Mt940Entry.SollHabenKennung;
+import net.bzzt.swift.mt940.Mt940File;
+import net.bzzt.swift.mt940.Mt940Record;
 
 /**
  * The Mt940 Exporter converts a parsed Mt940File to jGnash-specific
@@ -52,14 +53,12 @@ public class Mt940Exporter {
      * @param file file to import
      * @return list of import transactions
      */
-    private static List<ImportTransaction> convertTransactions(Mt940File file) {
-        List<ImportTransaction> retval = new ArrayList<>();
+    private static List<ImportTransaction> convertTransactions(final Mt940File file) {
+        List<ImportTransaction> retVal = new ArrayList<>();
         for (Mt940Record record : file.getRecords()) {
-            for (Mt940Entry entry : record.getEntries()) {
-                retval.add(convert(entry));
-            }
+            retVal.addAll(record.getEntries().stream().map(Mt940Exporter::convert).collect(Collectors.toList()));
         }
-        return retval;
+        return retVal;
     }
 
     /**

@@ -6,10 +6,13 @@
 package com.jidesoft.swing;
 
 
-import java.awt.*;
-import java.util.*;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.JViewport;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -31,7 +34,7 @@ class JideSwingUtilities implements SwingConstants {
 
         @edu.umd.cs.findbugs.annotations.SuppressFBWarnings({"WMI_WRONG_MAP_ITERATOR"})
         @SuppressWarnings("rawtypes")
-		@Override
+        @Override
         public void stateChanged(ChangeEvent e) {
             if (!(e.getSource() instanceof JViewport)) {
                 return;
@@ -68,11 +71,9 @@ class JideSwingUtilities implements SwingConstants {
                     @SuppressWarnings("unchecked")
                     Map<JViewport, Integer> viewportMap = (Map) slaveProperty;
 
-                    for (JViewport viewport : viewportMap.keySet()) {
-                        if (viewport != masterViewport && !allViewportToSync.containsKey(viewport) && viewportMap.get(viewport) == orientation) {
-                            viewportToAdd.put(viewport, viewportMap.get(viewport));
-                        }
-                    }
+                    viewportMap.keySet().stream()
+                            .filter(viewport -> viewport != masterViewport && !allViewportToSync.containsKey(viewport) && viewportMap.get(viewport) == orientation)
+                            .forEach(viewport -> viewportToAdd.put(viewport, viewportMap.get(viewport)));
                 }
                 if (viewportToAdd.isEmpty()) {
                     break;
@@ -105,7 +106,7 @@ class JideSwingUtilities implements SwingConstants {
      * Synchronizes the two viewports. The view position changes in the master view, the slave view's view position will
      * change too. Generally speaking, if you want the two viewports to synchronize vertically, they should have the
      * same height. If horizontally, the same width.
-     * <p/>
+     * <p>
      * It's OK if you call this method with the same master viewport and slave viewport duplicate times. It won't cause
      * multiple events fired.
      *
@@ -113,7 +114,7 @@ class JideSwingUtilities implements SwingConstants {
      * @param slaveViewport  the slave viewport
      * @param orientation    the orientation. It could be either SwingConstants.HORIZONTAL or SwingConstants.VERTICAL.
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static void synchronizeView(final JViewport masterViewport, final JViewport slaveViewport, final int orientation) {
         if (masterViewport == null || slaveViewport == null) {
             return;
@@ -153,7 +154,7 @@ class JideSwingUtilities implements SwingConstants {
      * @param slaveViewport  the slave viewport
      */
     @SuppressWarnings("rawtypes")
-	public static void unsynchronizeView(final JViewport masterViewport, final JViewport slaveViewport) {
+    public static void unsynchronizeView(final JViewport masterViewport, final JViewport slaveViewport) {
         if (masterViewport == null || slaveViewport == null) {
             return;
         }

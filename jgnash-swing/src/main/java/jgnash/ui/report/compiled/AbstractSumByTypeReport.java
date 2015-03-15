@@ -17,12 +17,6 @@
  */
 package jgnash.ui.report.compiled;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-
-import net.sf.jasperreports.engine.JasperPrint;
-
 import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -36,6 +30,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -55,6 +50,12 @@ import jgnash.ui.report.ColumnStyle;
 import jgnash.ui.report.jasper.DynamicJasperReport;
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
+
+import net.sf.jasperreports.engine.JasperPrint;
 
 /**
  * Abstract Report that groups and sums by {@code AccountGroup} and has a
@@ -193,13 +194,8 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        Set<Account> accountSet = new TreeSet<>();
-
-        for (Account a : engine.getAccountList()) {
-            if (types.contains(a.getAccountType())) {
-                accountSet.add(a);
-            }
-        }
+        Set<Account> accountSet = engine.getAccountList().stream().
+                filter(a -> types.contains(a.getAccountType())).collect(Collectors.toCollection(TreeSet::new));
 
         return new ArrayList<>(accountSet);
     }
@@ -271,9 +267,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
         }
 
         public void addAccounts(final Collection<Account> accounts) {
-            for (Account account : accounts) {
-                addAccount(account);
-            }
+            accounts.forEach(this::addAccount);
         }
 
         public void addRow(final Row row) {

@@ -26,7 +26,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
+import jgnash.convert.imports.ImportUtils;
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
 import jgnash.engine.CurrencyNode;
@@ -37,7 +39,6 @@ import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionFactory;
-import jgnash.convert.imports.ImportUtils;
 
 /**
  * QifImport takes a couple of simple steps to prevent importing a duplicate account. Other than that, duplicate
@@ -172,20 +173,16 @@ public class QifImport {
         final List<Account> retList = new ArrayList<>();
         final List<Account> list = engine.getAccountList();
 
-        for (Account a : list) {
-            if (a.getAccountType() == AccountType.BANK || a.getAccountType() == AccountType.CASH) {
-                retList.add(a);
-            }
-        }
+        retList.addAll(list.stream()
+                .filter(a -> a.getAccountType() == AccountType.BANK || a.getAccountType() == AccountType.CASH)
+                .collect(Collectors.toList()));
 
         return retList;
     }
 
     private void loadAccountMap() {
         List<Account> list = getBankAccountList();
-        for (Account aList : list) {
-            loadAccountMap(aList);
-        }
+        list.forEach(this::loadAccountMap);
     }
 
     private void loadAccountMap(final Account acc) {

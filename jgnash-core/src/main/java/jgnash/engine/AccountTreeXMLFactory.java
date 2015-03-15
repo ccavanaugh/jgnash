@@ -208,11 +208,8 @@ public class AccountTreeXMLFactory {
          */
         private void fixCurrencies(final Engine engine, final Account account) {
 
-            for (final CurrencyNode currencyNode : engine.getCurrencies()) {
-                if (account.getCurrencyNode().matches(currencyNode)) {
-                    account.setCurrencyNode(currencyNode);
-                }
-            }
+            engine.getCurrencies().stream().filter(currencyNode -> account.getCurrencyNode()
+                    .matches(currencyNode)).forEach(account::setCurrencyNode);
 
             // match SecurityNodes to prevent duplicates
             if (account.memberOf(AccountGroup.INVEST)) {

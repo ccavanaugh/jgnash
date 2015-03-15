@@ -69,9 +69,7 @@ public class JpaH2EngineTest extends EngineTest {
 
         Set<String> tableNames = SqlUtils.getTableAndColumnNames(testFile, PASSWORD);
 
-        for (final String tableName : tableNames) {
-            System.out.println(tableName);
-        }
+        tableNames.forEach(System.out::println);
     }
 
     @Test

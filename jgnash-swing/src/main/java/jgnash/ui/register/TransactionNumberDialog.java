@@ -17,10 +17,6 @@
  */
 package jgnash.ui.register;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,6 +44,10 @@ import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.JTextFieldEx;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Displays a list of default user configurable items for transaction numbers
@@ -123,9 +123,7 @@ public class TransactionNumberDialog extends JDialog implements ActionListener {
         model = new DefaultListModel<>();
         final List<String> items = engine.getTransactionNumberList();
 
-        for (String s : items) {
-            model.addElement(s);
-        }
+        items.forEach(model::addElement);
 
         list = new JList<>(model);
 

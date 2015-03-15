@@ -28,7 +28,6 @@ import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import jgnash.engine.Account;
 import jgnash.engine.Transaction;
 import jgnash.engine.dao.TransactionDAO;
 
@@ -87,9 +86,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
                 em.getTransaction().begin();
                 em.persist(transaction);
 
-                for (final Account account : transaction.getAccounts()) {
-                    em.persist(account);
-                }
+                transaction.getAccounts().forEach(em::persist);
                 em.getTransaction().commit();
 
                 return true;
@@ -124,9 +121,7 @@ class JpaTransactionDAO extends AbstractJpaDAO implements TransactionDAO {
                 em.getTransaction().begin();
 
                 // look at accounts this transaction impacted and update the accounts
-                for (final Account account : transaction.getAccounts()) {
-                    em.persist(account);
-                }
+                transaction.getAccounts().forEach(em::persist);
 
                 em.persist(transaction);    // saved, removed with the trash
                 em.getTransaction().commit();

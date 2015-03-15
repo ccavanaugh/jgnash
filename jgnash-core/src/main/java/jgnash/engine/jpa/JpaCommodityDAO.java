@@ -26,6 +26,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -344,18 +345,16 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
 
         try {
             Future<Set<CurrencyNode>> future = executorService.submit(() -> {
-                Query q = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = false");
+                final Query q = em.createQuery("SELECT a FROM Account a WHERE a.markedForRemoval = false");
 
-                List<Account> accountList = q.getResultList();
-
-                Set<CurrencyNode> currencies = new HashSet<>();
+                final List<Account> accountList = q.getResultList();
+                final Set<CurrencyNode> currencies = new HashSet<>();
 
                 for (Account account : accountList) {
                     currencies.add(account.getCurrencyNode());
 
-                    for (SecurityNode node : account.getSecurities()) {
-                        currencies.add(node.getReportedCurrencyNode());
-                    }
+                    currencies.addAll(account.getSecurities().parallelStream()
+                            .map(SecurityNode::getReportedCurrencyNode).collect(Collectors.toList()));
                 }
 
                 return currencies;

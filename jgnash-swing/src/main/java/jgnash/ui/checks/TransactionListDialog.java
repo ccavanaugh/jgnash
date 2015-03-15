@@ -17,11 +17,6 @@
  */
 package jgnash.ui.checks;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,9 +25,9 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -53,6 +48,11 @@ import jgnash.ui.UIApplication;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 /**
  * Displays a dialog that list all printable transactions. Specific transactions can be selected to print.
@@ -150,16 +150,9 @@ class TransactionListDialog extends JDialog implements ActionListener, ListSelec
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        List<Transaction> l = new ArrayList<>();
-
-        for (final Transaction t : engine.getTransactions()) {
-            if (PRINT.equalsIgnoreCase(t.getNumber())) {
-                l.add(t);
-            }
-        }
-
-        Collections.sort(l); // use natural sort order
-        return l;
+        return engine.getTransactions().stream()
+                .filter(t -> PRINT.equalsIgnoreCase(t.getNumber()))
+                .sorted().collect(Collectors.toList());
     }
 
     public boolean getReturnStatus() {
@@ -226,10 +219,7 @@ class TransactionListDialog extends JDialog implements ActionListener, ListSelec
         private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
 
         Model(final List<Transaction> list) {
-
-            for (Transaction t : list) {
-                wrapperList.add(new Wrapper(t));
-            }
+            wrapperList.addAll(list.stream().map(Wrapper::new).collect(Collectors.toList()));
         }
 
         @Override
@@ -314,16 +304,8 @@ class TransactionListDialog extends JDialog implements ActionListener, ListSelec
         }
 
         public List<Transaction> getPrintableTransactions() {
-
-            ArrayList<Transaction> list = new ArrayList<>();
-
-            for (Wrapper w : wrapperList) {
-                if (w.print) {
-                    list.add(w.transaction);
-                }
-            }
-
-            return list;
+            return wrapperList.stream().filter(w -> w.print)
+                    .map(w -> w.transaction).collect(Collectors.toList());
         }
 
         void clearAll() {

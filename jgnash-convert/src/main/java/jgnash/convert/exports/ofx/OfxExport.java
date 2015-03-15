@@ -198,9 +198,7 @@ public class OfxExport implements OfxTags {
      * Writes all bank account transactions within the date range
      */
     private void writeBankTransactions() {
-        for (Transaction transaction : account.getTransactions(startDate, endDate)) {
-            writeBankTransaction(transaction);
-        }
+        account.getTransactions(startDate, endDate).forEach(this::writeBankTransaction);
     }
 
     /**

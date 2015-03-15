@@ -162,23 +162,21 @@ class NotificationDialog extends JDialog implements ActionListener, ListSelectio
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         } else if (e.getSource() == okButton) {
 
-            for (PendingReminder pending : reminders) {
-                if (pending.isSelected()) {
-                    Reminder reminder = pending.getReminder();
-                    if (reminder.getTransaction() != null) { // add the transaction
-                        Transaction t = reminder.getTransaction();
+            reminders.stream().filter(PendingReminder::isSelected).forEach(pending -> {
+                Reminder reminder = pending.getReminder();
+                if (reminder.getTransaction() != null) { // add the transaction
+                    Transaction t = reminder.getTransaction();
 
-                        // Update to the commit date (commit date can be modified)
-                        t.setDate(pending.getCommitDate());
-                        engine.addTransaction(t);
-                    }
-                    // update the last fired date... date returned from the iterator
-                    reminder.setLastDate(); // mark as complete
-                    if (!engine.updateReminder(reminder)) {
-                        EventQueue.invokeLater(() -> StaticUIMethods.displayError(rb.getString("Message.Error.ReminderUpdate")));
-                    }
+                    // Update to the commit date (commit date can be modified)
+                    t.setDate(pending.getCommitDate());
+                    engine.addTransaction(t);
                 }
-            }
+                // update the last fired date... date returned from the iterator
+                reminder.setLastDate(); // mark as complete
+                if (!engine.updateReminder(reminder)) {
+                    EventQueue.invokeLater(() -> StaticUIMethods.displayError(rb.getString("Message.Error.ReminderUpdate")));
+                }
+            });
 
             // close the dialog
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));

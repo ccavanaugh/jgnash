@@ -26,7 +26,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +44,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import jgnash.engine.attachment.AttachmentManager;
 import jgnash.engine.budget.Budget;
@@ -76,7 +76,7 @@ import jgnash.util.Resource;
 
 /**
  * Engine class
- * <p/>
+ * <p>
  * When objects are removed, they are wrapped in a TrashObject so they may still be referenced for messaging and cleanup
  * operations. After a predefined period of time, they are permanently removed.
  *
@@ -225,6 +225,7 @@ public class Engine {
     /**
      * Registers a {@code Handler} with the class logger.
      * This also ensures the static logger is initialized.
+     *
      * @param handler {@code Handler} to register
      */
     public static void addLogHandler(final Handler handler) {
@@ -251,16 +252,16 @@ public class Engine {
         final List<ScheduledFuture<Boolean>> futures = new ArrayList<>();
 
         // Load of the scheduler with the tasks and save the futures
-        for (final SecurityNode securityNode : getSecurities()) {
-            if (securityNode.getQuoteSource() != QuoteSource.NONE) { // failure will occur if source is not defined
-                futures.add(backgroundExecutorService.schedule(new BackgroundCallable<>(new UpdateFactory.UpdateSecurityNodeCallable(securityNode)),
-                        delay, TimeUnit.SECONDS));
-            }
-        }
+        // failure will occur if source is not defined
+        getSecurities().stream().filter(securityNode ->
+                securityNode.getQuoteSource() != QuoteSource.NONE).forEach(securityNode -> { // failure will occur if source is not defined
+            futures.add(backgroundExecutorService.schedule(new BackgroundCallable<>(
+                    new UpdateFactory.UpdateSecurityNodeCallable(securityNode)), delay, TimeUnit.SECONDS));
+        });
 
         // Cleanup thread that monitor for excess network connection failures
         new Thread() {
-            
+
             @Override
             public void run() {
                 short errorCount = 0;
@@ -481,39 +482,38 @@ public class Engine {
             /* Check for null account number strings */
             if (getConfig().getFileVersion() < 2.01f) {
                 logInfo("Checking for null account numbers");
-                for (Account account : getAccountDAO().getAccountList()) {
-                    if (account.getAccountNumber() == null) {
-                        account.setAccountNumber("");
-                        getAccountDAO().updateAccount(account);
-                        logInfo("Fixed null account number");
-                    }
-                }
+                getAccountDAO().getAccountList().stream().filter(account -> account.getAccountNumber() == null)
+                        .forEach(account -> {
+                            account.setAccountNumber("");
+                            getAccountDAO().updateAccount(account);
+                            logInfo("Fixed null account number");
+                        });
             }
 
             /* Check for detached accounts */
             if (getConfig().getFileVersion() < 2.02f) {
-                for (Account account : getAccountDAO().getAccountList()) {
-                    if (account.getParent() == null && !account.instanceOf(AccountType.ROOT)) {
-                        account.setParent(getRootAccount());
+                getAccountDAO().getAccountList().stream()
+                        .filter(account -> account.getParent() == null && !account.instanceOf(AccountType.ROOT))
+                        .forEach(account -> {
+                            account.setParent(getRootAccount());
 
-                        getAccountDAO().updateAccount(account);
-                        getAccountDAO().updateAccount(getRootAccount());
-                        logInfo("Fixing a detached account: " + account.getName());
-                    }
-                }
+                            getAccountDAO().updateAccount(account);
+                            getAccountDAO().updateAccount(getRootAccount());
+                            logInfo("Fixing a detached account: " + account.getName());
+                        });
             }
 
             if (getConfig().getFileVersion() < 2.02f) {
                 logInfo("Checking for a recursive account structure");
-                for (Account account : getAccountDAO().getAccountList()) {
-                    if (account.equals(account.getParent())) {
-                        logWarning("Correcting recursive account structure:" + account.getName());
-                        account.setParent(getRootAccount());
+                getAccountDAO().getAccountList().stream()
+                        .filter(account -> account.equals(account.getParent()))
+                        .forEach(account -> {
+                            logWarning("Correcting recursive account structure:" + account.getName());
+                            account.setParent(getRootAccount());
 
-                        getAccountDAO().updateAccount(account);
-                        getAccountDAO().updateAccount(getRootAccount());
-                    }
-                }
+                            getAccountDAO().updateAccount(account);
+                            getAccountDAO().updateAccount(getRootAccount());
+                        });
             }
 
             if (getConfig().getFileVersion() < 2.03f) {
@@ -522,13 +522,8 @@ public class Engine {
 
             // check for multiple root accounts
             if (getConfig().getFileVersion() < 2.04f) {
-                List<RootAccount> roots = new ArrayList<>();
-
-                for (StoredObject o : getStoredObjects()) {
-                    if (o instanceof RootAccount) {
-                        roots.add((RootAccount) o);
-                    }
-                }
+                List<RootAccount> roots = getStoredObjects().stream()
+                        .filter(o -> o instanceof RootAccount).map(o -> (RootAccount) o).collect(Collectors.toList());
 
                 if (roots.size() > 1) {
                     logger.warning("Removing extra root accounts");
@@ -539,11 +534,8 @@ public class Engine {
                     for (int i = 1; i < roots.size(); i++) {
                         RootAccount extraRoot = roots.get(i);
 
-                        for (Account child : extraRoot.getChildren()) {
-                            if (!moveAccount(child, root)) {
-                                logWarning(rb.getString("Message.Error.MoveAccount"));
-                            }
-                        }
+                        extraRoot.getChildren().stream().filter(child -> !moveAccount(child, root))
+                                .forEach(child -> logWarning(rb.getString("Message.Error.MoveAccount")));
 
                         moveObjectToTrash(extraRoot);
                     }
@@ -557,12 +549,12 @@ public class Engine {
 
             // force income and expense account to only be display in a budget by default
             if (getConfig().getFileVersion() < 2.2f) {
-                for (Account account : getAccountList()) {
-                    if (!account.memberOf(AccountGroup.INCOME) && !account.memberOf(AccountGroup.EXPENSE)) {
-                        account.setExcludedFromBudget(true);
-                        getAccountDAO().updateAccount(account);
-                    }
-                }
+                getAccountList().stream()
+                        .filter(account -> !account.memberOf(AccountGroup.INCOME) && !account.memberOf(AccountGroup.EXPENSE))
+                        .forEach(account -> {
+                            account.setExcludedFromBudget(true);
+                            getAccountDAO().updateAccount(account);
+                        });
             }
 
             // migrate amortization object to new storage format and remove and orphaned transactions from removal and modifications of reminders
@@ -579,11 +571,7 @@ public class Engine {
 
             // purge stale budget goals for place holder accounts
             if (getConfig().getFileVersion() < 2.14f) {
-                for (final Account account : getAccountList()) {
-                    if (account.isPlaceHolder()) {
-                        purgeBudgetGoal(account);
-                    }
-                }
+                getAccountList().stream().filter(Account::isPlaceHolder).forEach(this::purgeBudgetGoal);
             }
 
             // fix transaction incorrectly marked for removal
@@ -605,8 +593,8 @@ public class Engine {
     /**
      * Checks double values for equality
      *
-     * @param a float value to test for equality
-     * @param b float value to test for equality
+     * @param a       float value to test for equality
+     * @param b       float value to test for equality
      * @param epsilon allowed error
      * @return {@code true} if the values are equal or very close
      */
@@ -640,53 +628,46 @@ public class Engine {
         }
 
         for (CurrencyNode node : discard) {
-            for (Account account : getAccountList()) {
-                if (account.getCurrencyNode() == node) {
-                    account.setCurrencyNode(keepMap.get(node.getSymbol()));
-                    getAccountDAO().updateAccount(account);
-                }
-            }
+            getAccountList().stream().filter(account -> account.getCurrencyNode() == node).forEach(account -> {
+                account.setCurrencyNode(keepMap.get(node.getSymbol()));
+                getAccountDAO().updateAccount(account);
+            });
 
-            for (SecurityNode sNode : getSecurities()) {
-                if (sNode.getReportedCurrencyNode() == node) {
-                    sNode.setReportedCurrencyNode(keepMap.get(node.getSymbol()));
-                    getCommodityDAO().updateCommodityNode(sNode);
-                }
-            }
+            getSecurities().stream().filter(sNode -> sNode.getReportedCurrencyNode() == node).forEach(sNode -> {
+                sNode.setReportedCurrencyNode(keepMap.get(node.getSymbol()));
+                getCommodityDAO().updateCommodityNode(sNode);
+            });
 
             removeCommodity(node);
         }
     }
 
     private void clearObsoleteExchangeRates() {
-
-        for (ExchangeRate rate : getCommodityDAO().getExchangeRates()) {
-            if (getBaseCurrencies(rate.getRateId()) == null) {
-                removeExchangeRate(rate);
-            }
-        }
+        getCommodityDAO().getExchangeRates().stream()
+                .filter(rate -> getBaseCurrencies(rate.getRateId()) == null)
+                .forEach(this::removeExchangeRate);
     }
 
     private void fixMarkedRemovalTransactions() {
         for (final Account account : getAccountList()) {
-            for (final Transaction transaction : account.getSortedTransactionList()) {
-                if (transaction.isMarkedForRemoval()) {
-                    transaction.setMarkedForRemoval(false);
-                    getTransactionDAO().updateTransaction(transaction);
-                    logger.warning("Fixed transaction incorrectly marked for removal");
-                }
-            }
-
-            for (final Reminder reminder : getReminders()) {
-                if (reminder.getTransaction() != null) {    // reminder transaction may be null
-                    final Transaction transaction = reminder.getTransaction();
-                    if (transaction.isMarkedForRemoval()) {
+            account.getSortedTransactionList().stream()
+                    .filter(StoredObject::isMarkedForRemoval)
+                    .forEach(transaction -> {
                         transaction.setMarkedForRemoval(false);
                         getTransactionDAO().updateTransaction(transaction);
                         logger.warning("Fixed transaction incorrectly marked for removal");
-                    }
-                }
-            }
+                    });
+
+            getReminders().stream()
+                    .filter(reminder -> reminder.getTransaction() != null) // reminder transaction may be null
+                    .forEach(reminder -> {
+                        final Transaction transaction = reminder.getTransaction();
+                        if (transaction.isMarkedForRemoval()) {
+                            transaction.setMarkedForRemoval(false);
+                            getTransactionDAO().updateTransaction(transaction);
+                            logger.warning("Fixed transaction incorrectly marked for removal");
+                        }
+                    });
         }
     }
 
@@ -852,11 +833,8 @@ public class Engine {
 
             final long now = new Date().getTime();
 
-            for (TrashObject o : trash) {
-                if (now - o.getDate().getTime() >= MAXIMUM_TRASH_AGE) {
-                    getTrashDAO().remove(o);
-                }
-            }
+            trash.stream().filter(o -> now - o.getDate().getTime() >= MAXIMUM_TRASH_AGE)
+                    .forEach(o -> getTrashDAO().remove(o));
         } finally {
             engineLock.writeLock().unlock();
 
@@ -1022,7 +1000,7 @@ public class Engine {
 
     /**
      * Adds a new CurrencyNode to the data set.
-     * <p/>
+     * <p>
      * Checks and prevents the addition of a duplicate Currencies.
      *
      * @param node new CurrencyNode to add
@@ -1077,7 +1055,7 @@ public class Engine {
 
     /**
      * Adds a new SecurityNode to the data set.
-     * <p/>
+     * <p>
      * Checks and prevents the addition of a duplicate SecurityNode.
      *
      * @param node new SecurityNode to add
@@ -1169,15 +1147,8 @@ public class Engine {
      * @return list of investment accounts
      */
     Set<Account> getInvestmentAccountList(final SecurityNode node) {
-
-        Set<Account> accounts = new HashSet<>();
-
-        for (Account account : getInvestmentAccountList()) {
-            if (account.containsSecurity(node)) {
-                accounts.add(account);
-            }
-        }
-        return accounts;
+        return getInvestmentAccountList().parallelStream()
+                .filter(account -> account.containsSecurity(node)).collect(Collectors.toSet());
     }
 
     /**
@@ -1187,10 +1158,7 @@ public class Engine {
      * @param node SecurityNode that was changed
      */
     private void clearCachedAccountBalance(final SecurityNode node) {
-
-        for (Account account : getInvestmentAccountList(node)) {
-            clearCachedAccountBalance(account);
-        }
+        getInvestmentAccountList(node).forEach(this::clearCachedAccountBalance);
     }
 
     /**
@@ -1442,11 +1410,9 @@ public class Engine {
 
                 List<SecurityHistoryNode> hNodes = node.getHistoryNodes();
 
-                for (SecurityHistoryNode hNode : hNodes) {
-                    if (!removeSecurityHistory(node, hNode.getDate())) {
-                        logSevere(rb.getString("Message.Error.HistRemoval", hNode.getDate(), node.getSymbol()));
-                    }
-                }
+                hNodes.stream()
+                        .filter(hNode -> !removeSecurityHistory(node, hNode.getDate()))
+                        .forEach(hNode -> logSevere(rb.getString("Message.Error.HistRemoval", hNode.getDate(), node.getSymbol())));
                 moveObjectToTrash(node);
             }
 
@@ -1801,7 +1767,7 @@ public class Engine {
      * @param accountName Account name to search for. <b>Must not be null</b>
      * @return The matching account. {@code null} if not found.
      */
-    public Account getAccountByName(final String accountName) {
+    public Account getAccountByName(@NotNull final String accountName) {
         Objects.requireNonNull(accountName);
 
         final List<Account> list = getAccountList();
@@ -1822,8 +1788,8 @@ public class Engine {
      *
      * @return List of income accounts
      */
-    @NotNull public List<Account> getIncomeAccountList() {
-
+    @NotNull
+    public List<Account> getIncomeAccountList() {
         return getAccountDAO().getIncomeAccountList();
     }
 
@@ -1832,8 +1798,8 @@ public class Engine {
      *
      * @return List if expense accounts
      */
-    @NotNull public List<Account> getExpenseAccountList() {
-
+    @NotNull
+    public List<Account> getExpenseAccountList() {
         return getAccountDAO().getExpenseAccountList();
     }
 
@@ -1844,16 +1810,7 @@ public class Engine {
      * @return member accounts
      */
     public List<Account> getAccounts(final AccountGroup group) {
-        final List<Account> accountList = new ArrayList<>();
-        final List<Account> list = getAccountList();
-
-        for (final Account account : list) {
-            if (account.memberOf(group)) {
-                accountList.add(account);
-            }
-        }
-
-        return accountList;
+        return getAccountList().parallelStream().filter(account -> account.memberOf(group)).collect(Collectors.toList());
     }
 
     /**
@@ -2214,18 +2171,17 @@ public class Engine {
         accountLock.writeLock().lock();
 
         try {
+            getAccounts(AccountGroup.LIABILITY).stream()
+                    .filter(account -> account.getProperty(AccountProperty.AMORTIZEOBJECT) != null)
+                    .forEach(account -> {
 
-            for (Account account : getAccounts(AccountGroup.LIABILITY)) {
-                if (account.getProperty(AccountProperty.AMORTIZEOBJECT) != null) {
+                        AmortizeObject oldAmortizeObject = (AmortizeObject) account.getProperty(AccountProperty.AMORTIZEOBJECT);
 
-                    AmortizeObject oldAmortizeObject = (AmortizeObject) account.getProperty(AccountProperty.AMORTIZEOBJECT);
+                        account.setAmortizeObject(oldAmortizeObject);
 
-                    account.setAmortizeObject(oldAmortizeObject);
-
-                    account.removeProperty(AccountProperty.AMORTIZEOBJECT);
-                    getAccountDAO().removeAccountProperty(account, oldAmortizeObject);
-                }
-            }
+                        account.removeProperty(AccountProperty.AMORTIZEOBJECT);
+                        getAccountDAO().removeAccountProperty(account, oldAmortizeObject);
+                    });
         } finally {
             accountLock.writeLock().unlock();
         }
@@ -2636,28 +2592,27 @@ public class Engine {
 
             if (result) {
                 /* Add the transaction to each account */
-                for (Account account : transaction.getAccounts()) {
-                    if (!account.addTransaction(transaction)) {
-                        logSevere("Failed to add the Transaction");
-                    }
-                }
+                transaction.getAccounts().stream()
+                        .filter(account -> !account.addTransaction(transaction))
+                        .forEach(account -> logSevere("Failed to add the Transaction"));
                 result = getTransactionDAO().addTransaction(transaction);
 
                 logInfo(rb.getString("Message.TransactionAdd"));
 
                 /* If successful, extract and enter a default exchange rate for the transaction date if a rate has not been set */
                 if (result) {
-                    for (TransactionEntry entry : transaction.getTransactionEntries()) {
-                        if (entry.isMultiCurrency()) {
-                            final ExchangeRate rate = getExchangeRate(entry.getDebitAccount().getCurrencyNode(), entry.getCreditAccount().getCurrencyNode());
+                    // no rate for the date has been set
+                    transaction.getTransactionEntries().stream()
+                            .filter(TransactionEntry::isMultiCurrency)
+                            .forEach(entry -> {
+                                final ExchangeRate rate = getExchangeRate(entry.getDebitAccount().getCurrencyNode(), entry.getCreditAccount().getCurrencyNode());
 
-                            if (rate.getRate(transaction.getDate()).equals(BigDecimal.ZERO)) { // no rate for the date has been set
-                                final BigDecimal exchangeRate = entry.getDebitAmount().abs().divide(entry.getCreditAmount().abs(), MathConstants.mathContext);
+                                if (rate.getRate(transaction.getDate()).equals(BigDecimal.ZERO)) { // no rate for the date has been set
+                                    final BigDecimal exchangeRate = entry.getDebitAmount().abs().divide(entry.getCreditAmount().abs(), MathConstants.mathContext);
 
-                                setExchangeRate(entry.getCreditAccount().getCurrencyNode(), entry.getDebitAccount().getCurrencyNode(), exchangeRate, transaction.getDate());
-                            }
-                        }
-                    }
+                                    setExchangeRate(entry.getCreditAccount().getCurrencyNode(), entry.getDebitAccount().getCurrencyNode(), exchangeRate, transaction.getDate());
+                                }
+                            });
                 }
             }
 
@@ -2682,11 +2637,9 @@ public class Engine {
             }
 
             /* Remove the transaction from each account */
-            for (Account account : transaction.getAccounts()) {
-                if (!account.removeTransaction(transaction)) {
-                    logSevere("Failed to remove the Transaction");
-                }
-            }
+            transaction.getAccounts().stream()
+                    .filter(account -> !account.removeTransaction(transaction))
+                    .forEach(account -> logSevere("Failed to remove the Transaction"));
 
             logInfo(rb.getString("Message.TransactionRemove"));
 

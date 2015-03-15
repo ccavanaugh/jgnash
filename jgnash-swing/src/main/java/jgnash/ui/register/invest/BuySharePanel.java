@@ -147,26 +147,24 @@ public final class BuySharePanel extends AbstractPriceQtyInvTransactionPanel {
 
         feePanel.setTransactionEntries(((InvestmentTransaction) tran).getInvestmentFeeEntries());
 
-        for (TransactionEntry e : entries) {
-            if (e instanceof TransactionEntryBuyX) {
-                AbstractInvestmentTransactionEntry entry = (AbstractInvestmentTransactionEntry) e;
+        entries.stream().filter(e -> e instanceof TransactionEntryBuyX).forEach(e -> {
+            AbstractInvestmentTransactionEntry entry = (AbstractInvestmentTransactionEntry) e;
 
-                memoField.setText(e.getMemo());
-                priceField.setDecimal(entry.getPrice());
-                quantityField.setDecimal(entry.getQuantity());
-                securityCombo.setSelectedNode(entry.getSecurityNode());
+            memoField.setText(e.getMemo());
+            priceField.setDecimal(entry.getPrice());
+            quantityField.setDecimal(entry.getQuantity());
+            securityCombo.setSelectedNode(entry.getSecurityNode());
 
-                // TODO by default investment account is assigned to debit account.  Should only have
-                // look at the credit side of the entry for information
-                if (entry.getCreditAccount().equals(account)) {
-                    accountExchangePanel.setSelectedAccount(entry.getDebitAccount());
-                    accountExchangePanel.setExchangedAmount(entry.getDebitAmount().abs());
-                } else {
-                    accountExchangePanel.setSelectedAccount(entry.getCreditAccount());
-                    accountExchangePanel.setExchangedAmount(entry.getCreditAmount());
-                }
+            // TODO by default investment account is assigned to debit account.  Should only have
+            // look at the credit side of the entry for information
+            if (entry.getCreditAccount().equals(account)) {
+                accountExchangePanel.setSelectedAccount(entry.getDebitAccount());
+                accountExchangePanel.setExchangedAmount(entry.getDebitAmount().abs());
+            } else {
+                accountExchangePanel.setSelectedAccount(entry.getCreditAccount());
+                accountExchangePanel.setExchangedAmount(entry.getCreditAmount());
             }
-        }
+        });
 
         updateTotalField();
 

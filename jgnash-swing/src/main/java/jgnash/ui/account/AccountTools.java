@@ -77,9 +77,7 @@ class AccountTools {
             if (accType.getAccountGroup() == AccountGroup.INVEST) {
                 Collection<SecurityNode> collection = dlg.getAccountSecurities();
 
-                for (SecurityNode node : collection) {
-                    newAccount.addSecurity(node);
-                }
+                collection.forEach(newAccount::addSecurity);
             }
 
             newAccount.setName(dlg.getAccountName());

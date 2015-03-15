@@ -17,10 +17,6 @@
  */
 package jgnash.engine;
 
-import jgnash.util.DateUtils;
-import jgnash.util.NotNull;
-import jgnash.util.Nullable;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,6 +30,7 @@ import java.util.TreeSet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
 
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -46,6 +43,10 @@ import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import jgnash.util.DateUtils;
+import jgnash.util.NotNull;
+import jgnash.util.Nullable;
 
 /**
  * Base class for transactions
@@ -460,11 +461,8 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         l.lock();
 
         try {
-            for (TransactionEntry e : transactionEntries) {
-                if (e.getTransactionTag() == tag) {
-                    list.add(e);
-                }
-            }
+            list.addAll(transactionEntries.stream()
+                    .filter(e -> e.getTransactionTag() == tag).collect(Collectors.toList()));
         } finally {
             l.unlock();
         }
@@ -478,9 +476,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * @param entries collection of TransactionEntry(s)
      */
     public void addTransactionEntries(final Collection<TransactionEntry> entries) {
-        for (TransactionEntry entry : entries) {
-            addTransactionEntry(entry);
-        }
+        entries.forEach(this::addTransactionEntry);
     }
 
     /**

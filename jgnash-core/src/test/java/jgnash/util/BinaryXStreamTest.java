@@ -27,15 +27,14 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.binary.BinaryStreamDriver;
+
 import org.junit.Test;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Unit test for binary xstream
@@ -47,17 +46,13 @@ public class BinaryXStreamTest {
     @Test
     public void testFile() {
 
-        List<String> stringData = new ArrayList<>();
+        final List<String> stringData = new ArrayList<>();
 
         for (int i = 0; i < 100; i++) {
             stringData.add(UUID.randomUUID().toString());
         }
 
-        List<Integer> integerData = new ArrayList<>();
-
-        for (String uuid : stringData) {
-            integerData.add(uuid.hashCode());
-        }
+        final List<Integer> integerData = stringData.stream().map(String::hashCode).collect(Collectors.toList());
 
         File tempFile = null;
 

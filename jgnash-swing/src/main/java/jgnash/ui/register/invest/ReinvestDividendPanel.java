@@ -17,9 +17,6 @@
  */
 package jgnash.ui.register.invest;
 
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -39,11 +36,13 @@ import jgnash.engine.TransactionEntryReinvestDivX;
 import jgnash.engine.TransactionFactory;
 import jgnash.ui.util.ValidationFactory;
 
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
 /**
  * Form for buying and selling shares.
  *
  * @author Craig Cavanaugh
- *
  */
 public final class ReinvestDividendPanel extends AbstractPriceQtyInvTransactionPanel {
 
@@ -141,16 +140,15 @@ public final class ReinvestDividendPanel extends AbstractPriceQtyInvTransactionP
 
         gainsPanel.setTransactionEntries(((InvestmentTransaction) tran).getInvestmentGainLossEntries());
 
-        for (TransactionEntry e : entries) {
-            if (e instanceof TransactionEntryReinvestDivX) {
-                AbstractInvestmentTransactionEntry entry = (AbstractInvestmentTransactionEntry) e;
+        entries.stream().filter(e -> e instanceof TransactionEntryReinvestDivX)
+                .forEach(e -> {
+                    AbstractInvestmentTransactionEntry entry = (AbstractInvestmentTransactionEntry) e;
 
-                memoField.setText(e.getMemo());
-                priceField.setDecimal(entry.getPrice());
-                quantityField.setDecimal(entry.getQuantity());
-                securityCombo.setSelectedNode(entry.getSecurityNode());
-            }
-        }
+                    memoField.setText(e.getMemo());
+                    priceField.setDecimal(entry.getPrice());
+                    quantityField.setDecimal(entry.getQuantity());
+                    securityCombo.setSelectedNode(entry.getSecurityNode());
+                });
 
         updateTotalField();
 

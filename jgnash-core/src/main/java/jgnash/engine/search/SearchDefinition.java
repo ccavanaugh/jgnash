@@ -18,8 +18,8 @@
 package jgnash.engine.search;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import jgnash.engine.Transaction;
 
@@ -67,13 +67,6 @@ public class SearchDefinition {
     }
 
     public Set<Transaction> matches(final Collection<Transaction> transactions) {
-        Set<Transaction> set = new HashSet<>();
-
-        for (Transaction t : transactions) {
-            if (matches(t)) {
-                set.add(t);
-            }
-        }
-        return set;
+        return transactions.stream().filter(this::matches).collect(Collectors.toSet());
     }
 }

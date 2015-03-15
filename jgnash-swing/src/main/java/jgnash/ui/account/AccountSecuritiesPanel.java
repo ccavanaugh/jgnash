@@ -17,17 +17,13 @@
  */
 package jgnash.ui.account;
 
-import com.jgoodies.forms.builder.ButtonStackBuilder;
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -44,9 +40,12 @@ import jgnash.ui.components.SortedListModel;
 import jgnash.util.NotNull;
 import jgnash.util.Resource;
 
+import com.jgoodies.forms.builder.ButtonStackBuilder;
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
+
 /**
  * @author Craig Cavanaugh
- *
  */
 class AccountSecuritiesPanel extends JPanel implements ActionListener {
 
@@ -153,30 +152,17 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
 
     public Set<SecurityNode> getSecuritiesList() {
 
-        TreeSet<SecurityNode> set = new TreeSet<>();
-
-        for (SecurityElement e : selectedModel.asList()) {
-            set.add(e.getNode());
-        }
-
-        return set;
+        return selectedModel.asList().stream()
+                .map(SecurityElement::getNode).collect(Collectors.toCollection(TreeSet::new));
     }
 
     private void buildAvailableList() {
 
-        List<SecurityElement> list = new ArrayList<>();
+        List<SecurityElement> list = engine.getSecurities().stream()
+                .map(node -> new SecurityElement(node, true)).collect(Collectors.toList());
 
-        for (SecurityNode node : engine.getSecurities()) {
-            list.add(new SecurityElement(node, true));
-        }
-
-        ArrayList<SecurityElement> tList = new ArrayList<>();
-
-        for (SecurityElement node : list) {
-            if (!selectedModel.contains(node)) {
-                tList.add(node);
-            }
-        }
+        List<SecurityElement> tList = list.stream()
+                .filter(node -> !selectedModel.contains(node)).collect(Collectors.toList());
 
         availModel = new SortedListModel<>(tList);
         availJList.setModel(availModel);

@@ -17,10 +17,6 @@
  */
 package jgnash.ui.wizards.file;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JEditorPane;
@@ -55,9 +52,12 @@ import jgnash.ui.util.ToggleSelectionModel;
 import jgnash.util.ClassPathUtils;
 import jgnash.util.Resource;
 
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
+
 /**
  * @author Craig Cavanaugh
- * 
  */
 public class NewFileFour extends JPanel implements WizardPage {
 
@@ -79,9 +79,7 @@ public class NewFileFour extends JPanel implements WizardPage {
 
         DefaultListModel<Account> model = new DefaultListModel<>();
 
-        for (RootAccount account : getLocalizedAccountSet()) {
-            model.addElement(account);
-        }
+        getLocalizedAccountSet().forEach(model::addElement);
 
         accountList.setModel(model);
         accountList.setSelectionModel(new ToggleSelectionModel());
@@ -162,7 +160,7 @@ public class NewFileFour extends JPanel implements WizardPage {
     /**
      * toString must return a valid description for this page that will appear
      * in the task list of the WizardDialog
-     * 
+     *
      * @return Title of this page
      */
     @Override
@@ -181,26 +179,24 @@ public class NewFileFour extends JPanel implements WizardPage {
 
     @Override
     public void putSettings(final Map<Enum<?>, Object> map) {
-        List<RootAccount> accounts = new ArrayList<>();
+        final List<RootAccount> accounts = accountList.getSelectedValuesList().stream()
+                .map(o -> (RootAccount) o)
+                .collect(Collectors.toList());
 
-        for (Object o : accountList.getSelectedValuesList()) {
-            accounts.add((RootAccount) o);
-
-        }
         map.put(NewFileDialog.Settings.ACCOUNT_SET, accounts);
     }
 
     private static Collection<RootAccount> getLocalizedAccountSet() {
         List<RootAccount> files = new ArrayList<>();
 
-        for (String string : getAccountSetList()) {           
-            
+        for (String string : getAccountSetList()) {
+
             try (InputStream stream = Object.class.getResourceAsStream(string)) {
                 RootAccount account = AccountTreeXMLFactory.loadAccountTree(stream);
                 files.add(account);
             } catch (IOException e) {
                 Logger.getLogger(NewFileFour.class.getName()).log(Level.SEVERE, null, e);
-            }            
+            }
         }
 
         return files;
@@ -211,9 +207,9 @@ public class NewFileFour extends JPanel implements WizardPage {
 
         List<String> set = new ArrayList<>();
 
-        if (path != null) {           
+        if (path != null) {
             try (InputStream stream = Object.class.getResourceAsStream(path + "/set.txt");
-                    BufferedReader r = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
+                 BufferedReader r = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
 
                 String line = r.readLine();
 

@@ -81,15 +81,13 @@ class AccountTreeModel extends DefaultTreeModel {
         synchronized (lock) {
             final Account parent = (Account) parentNode.getUserObject();
 
-            for (final Account child : parent.getChildren(Comparators.getAccountByCode())) {
-                if (isAccountVisible(child)) {
-                    final DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(child);
-                    insertNodeInto(childNode, parentNode, parentNode.getChildCount());
-                    if (child.getChildCount() > 0) {
-                        loadChildren(childNode);
-                    }
+            parent.getChildren(Comparators.getAccountByCode()).stream().filter(this::isAccountVisible).forEach(child -> {
+                final DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(child);
+                insertNodeInto(childNode, parentNode, parentNode.getChildCount());
+                if (child.getChildCount() > 0) {
+                    loadChildren(childNode);
                 }
-            }
+            });
         }
     }
 
