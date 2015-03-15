@@ -17,6 +17,13 @@
  */
 package jgnash.engine;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.junit.AfterClass;
 
 /**
@@ -25,9 +32,22 @@ import org.junit.AfterClass;
  */
 public class XMLEngineTest extends EngineTest {
 
+    private static String tempFile;
+    private static boolean export;
+
     @Override
     public Engine createEngine() throws Exception {
-        testFile = "xml-account-test.xml";
+        export = EngineFactory.exportXMLOnClose();
+        EngineFactory.setExportXMLOnClose(false);
+
+        try {
+            testFile = Files.createTempFile("test", "." + DataStoreType.XML.getDataStore().getFileExt()).toFile().getAbsolutePath();
+            tempFile = testFile;
+
+            new File(testFile + ".backup").deleteOnExit();
+        } catch (IOException e1) {
+            Logger.getLogger(XMLEngineTest.class.getName()).log(Level.SEVERE, e1.getLocalizedMessage(), e1);
+        }
 
         EngineFactory.deleteDatabase(testFile);
 
@@ -35,8 +55,9 @@ public class XMLEngineTest extends EngineTest {
     }
 
     @AfterClass
-    public static void cleanup() {
-        EngineFactory.deleteDatabase("xml-account-test.xml");
-        EngineFactory.deleteDatabase("xml-account-test.xml.backup");
+    public static void cleanup() throws IOException {
+        Files.deleteIfExists(Paths.get(tempFile));
+
+        EngineFactory.setExportXMLOnClose(export);
     }
 }

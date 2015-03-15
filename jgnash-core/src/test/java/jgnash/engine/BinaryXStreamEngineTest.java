@@ -17,13 +17,14 @@
  */
 package jgnash.engine;
 
-import org.junit.AfterClass;
-
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.junit.AfterClass;
 
 /**
  * @author Craig Cavanaugh
@@ -31,12 +32,19 @@ import java.util.logging.Logger;
 public class BinaryXStreamEngineTest extends EngineTest {
 
     private static String tempFile;
+    private static boolean export;
 
     @Override
     public Engine createEngine() throws Exception {
+        export = EngineFactory.exportXMLOnClose();
+
+        EngineFactory.setExportXMLOnClose(false);
+
         try {
-            testFile = Files.createTempFile("test", "." + DataStoreType.BINARY_XSTREAM.getDataStore().getFileExt()).toFile().getAbsolutePath();
+            testFile = Files.createTempFile("jgnash-", "." + DataStoreType.BINARY_XSTREAM.getDataStore().getFileExt()).toFile().getAbsolutePath();
             tempFile = testFile;
+
+            new File(testFile + ".backup").deleteOnExit();
         } catch (IOException e1) {
             Logger.getLogger(BinaryXStreamEngineTest.class.getName()).log(Level.SEVERE, e1.getLocalizedMessage(), e1);
         }
@@ -48,8 +56,8 @@ public class BinaryXStreamEngineTest extends EngineTest {
 
     @AfterClass
     public static void cleanup() throws IOException {
-
         Files.deleteIfExists(Paths.get(tempFile));
-        Files.deleteIfExists(Paths.get(tempFile + ".backup"));
+
+        EngineFactory.setExportXMLOnClose(export);
     }
 }
