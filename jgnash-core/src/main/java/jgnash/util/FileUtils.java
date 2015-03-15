@@ -24,9 +24,13 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -59,6 +63,31 @@ public final class FileUtils {
     private static final String[] FILE_LOCK_EXTENSIONS = new String[]{JpaHsqlDataStore.LOCK_EXT, JpaH2DataStore.LOCK_EXT, ".lock"};
 
     private FileUtils() {
+    }
+
+    /**
+     * Deletes a path and it's contents
+     *
+     * @param path {@code Path} to delete
+     * @throws IOException
+     */
+    public static void deletePathAndContents(final Path path) throws IOException {
+        if (Files.exists(path)) {   // only try if it exists
+
+            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(final Path dir, final IOException ex) throws IOException {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        }
     }
 
     /**
@@ -213,7 +242,7 @@ public final class FileUtils {
      * @param directory base directory for the search
      * @param pattern   DOS search pattern
      * @return a List of matching Files. The list will be empty if no matches
-     *         are found or if the directory is not valid.
+     * are found or if the directory is not valid.
      */
     public static List<File> getDirectoryListing(final File directory, final String pattern) {
         List<File> fileList = new ArrayList<>();
