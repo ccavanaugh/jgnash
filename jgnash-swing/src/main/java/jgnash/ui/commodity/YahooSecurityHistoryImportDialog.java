@@ -237,9 +237,9 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
 
         private volatile boolean run = true;
 
-        private Date start;
+        private final Date start;
 
-        private Date end;
+        private final Date end;
 
         private final SecurityNode[] sNodes;
 

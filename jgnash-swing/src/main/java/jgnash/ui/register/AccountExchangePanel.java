@@ -17,20 +17,6 @@
  */
 package jgnash.ui.register;
 
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormLayout;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JToggleButton;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-
 import java.awt.BorderLayout;
 import java.awt.Insets;
 import java.awt.Point;
@@ -42,6 +28,15 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.math.BigDecimal;
 import java.util.Objects;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JToggleButton;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 
 import jgnash.engine.Account;
 import jgnash.engine.CurrencyNode;
@@ -55,6 +50,11 @@ import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.JFloatField;
 import jgnash.util.Resource;
 
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+
 /**
  * UI Form for handling the exchange of currencies
  * 
@@ -62,15 +62,15 @@ import jgnash.util.Resource;
  */
 public class AccountExchangePanel extends JPanel implements ActionListener, FocusListener, PopupMenuListener, ItemListener, MessageListener {
 
-    private CurrencyNode baseCurrency;
+    private final CurrencyNode baseCurrency;
 
-    private AccountListComboBox accountCombo;
+    private final AccountListComboBox accountCombo;
 
-    private JLabel amountLabel;
+    private final JLabel amountLabel;
 
-    private JFloatField exchangeAmountField;
+    private final JFloatField exchangeAmountField;
 
-    private JToggleButton expandButton;
+    private final JToggleButton expandButton;
 
     private boolean isLayoutCompact = true;
 
@@ -79,11 +79,11 @@ public class AccountExchangePanel extends JPanel implements ActionListener, Focu
      */
     private JFloatField amountField = null;
 
-    private JPopupMenu detailWindow;
+    private final JPopupMenu detailWindow;
 
-    private JFloatField exchangeRateField;
+    private final JFloatField exchangeRateField;
 
-    private JLabel conversionLabel;
+    private final JLabel conversionLabel;
 
     private long eventTime;
 
