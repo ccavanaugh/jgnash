@@ -261,38 +261,7 @@ public class Engine {
         });
 
         // Cleanup thread that monitor for excess network connection failures
-        new Thread() {
-
-            @Override
-            public void run() {
-                short errorCount = 0;
-
-                // Wait for completion of each task and if too many errors occur, cancel all of them
-                for (final ScheduledFuture<Boolean> future : futures) {
-                    try {
-                        if (!future.get(1, TimeUnit.MINUTES)) {
-                            errorCount++;
-                        }
-                    } catch (final InterruptedException | ExecutionException | TimeoutException e) {
-                        logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-                        errorCount++;
-                    } catch (final CancellationException e) {
-                        errorCount = Short.MAX_VALUE;   // force a failure
-                        break; // futures are being canceled externally, exit the thread
-                    }
-
-                    if (errorCount > MAX_ERRORS) {
-                        break;
-                    }
-                }
-
-                if (errorCount > MAX_ERRORS) {
-                    for (final ScheduledFuture<Boolean> future : futures) {
-                        future.cancel(false);
-                    }
-                }
-            }
-        }.start();
+        new SecuritiesUpdateThread(futures).start();
     }
 
     /**
@@ -600,7 +569,7 @@ public class Engine {
      * @param epsilon allowed error
      * @return {@code true} if the values are equal or very close
      */
-    public static boolean nearlyEquals(final double a, final double b, final double epsilon) {
+    private static boolean nearlyEquals(final double a, final double b, final double epsilon) {
         if (a == b) { // quick check for equality
             return true;
         } else { // use relative error
@@ -2814,6 +2783,48 @@ public class Engine {
 
     public void putBoolean(@NotNull final String key, final boolean value) {
         setPreference(key, Boolean.toString(value));
+    }
+
+    /**
+     * Handles background update of securities
+     */
+    private static class SecuritiesUpdateThread extends Thread {
+
+        private final List<ScheduledFuture<Boolean>> futures;
+
+        public SecuritiesUpdateThread(List<ScheduledFuture<Boolean>> futures) {
+            this.futures = futures;
+        }
+
+        @Override
+        public void run() {
+            short errorCount = 0;
+
+            // Wait for completion of each task and if too many errors occur, cancel all of them
+            for (final ScheduledFuture<Boolean> future : futures) {
+                try {
+                    if (!future.get(1, TimeUnit.MINUTES)) {
+                        errorCount++;
+                    }
+                } catch (final InterruptedException | ExecutionException | TimeoutException e) {
+                    logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+                    errorCount++;
+                } catch (final CancellationException e) {
+                    errorCount = Short.MAX_VALUE;   // force a failure
+                    break; // futures are being canceled externally, exit the thread
+                }
+
+                if (errorCount > MAX_ERRORS) {
+                    break;
+                }
+            }
+
+            if (errorCount > MAX_ERRORS) {
+                for (final ScheduledFuture<Boolean> future : futures) {
+                    future.cancel(false);
+                }
+            }
+        }
     }
 
     /**
