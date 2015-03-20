@@ -17,6 +17,9 @@
  */
 package jgnash.uifx.control;
 
+import java.util.List;
+import java.util.Objects;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -24,6 +27,8 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+
 import jgnash.engine.Account;
 import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
@@ -35,8 +40,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.util.NotNull;
 
-import java.util.List;
-import java.util.Objects;
+import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 
 /**
  * ComboBox of available accounts
@@ -60,6 +64,12 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
         loadAccounts();
         registerListeners();
+
+        // TODO: Hokey hack to ensure selection is visible when the list is shown.
+        setOnMouseClicked(event -> {
+            final ListView listView = ((ComboBoxListViewSkin) getSkin()).getListView();
+            listView.scrollTo(getSelectionModel().getSelectedIndex());
+        });
     }
 
     public void filterAccount(@NotNull final Account... account) {
