@@ -110,4 +110,17 @@ public class SplitTransactionDialog extends AbstractTransactionEntryDialog {
 
         tabPane.getTabs().addAll(creditTab, debitTab);
     }
+
+    void showAndWait(final SlipType slipType) {
+        switch (slipType) {
+            case DECREASE:
+                tabPane.getSelectionModel().select(debitTab);
+                break;
+            case INCREASE:
+                tabPane.getSelectionModel().select(creditTab);
+                break;
+        }
+
+        showAndWait();
+    }
 }

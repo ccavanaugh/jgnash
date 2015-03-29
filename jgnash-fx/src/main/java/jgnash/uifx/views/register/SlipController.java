@@ -304,7 +304,7 @@ public class SlipController extends AbstractSlipController {
 
     @FXML
     private void splitsAction() {
-        splitsDialog.showAndWait();
+        splitsDialog.showAndWait(slipType);
 
         amountField.setEditable(splitsDialog.getTransactionEntries().size() == 0);
         amountField.setDecimal(splitsDialog.getBalance().abs());
