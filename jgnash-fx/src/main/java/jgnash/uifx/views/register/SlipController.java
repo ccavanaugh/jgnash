@@ -308,5 +308,7 @@ public class SlipController extends AbstractSlipController {
 
         amountField.setEditable(splitsDialog.getTransactionEntries().size() == 0);
         amountField.setDecimal(splitsDialog.getBalance().abs());
+
+        accountExchangePane.setEnabled(splitsDialog.getTransactionEntries().size() == 0);
     }
 }
