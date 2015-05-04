@@ -22,7 +22,6 @@ import java.io.IOException;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
@@ -52,12 +51,9 @@ public class AutoCompleteTextField<E> extends TextField {
 
         // If the enter key is pressed to accept the auto complete,
         // simulate a tab key press to focus the next field
-        addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(final KeyEvent event) {
-                if (JavaFXUtils.ENTER_KEY.match(event)) {
-                    Platform.runLater(() -> JavaFXUtils.focusNext(AutoCompleteTextField.this));
-                }
+        addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (JavaFXUtils.ENTER_KEY.match(event)) {
+                Platform.runLater(() -> JavaFXUtils.focusNext(AutoCompleteTextField.this));
             }
         });
     }
@@ -75,7 +71,12 @@ public class AutoCompleteTextField<E> extends TextField {
 
             if (newText != null && !currText.isEmpty()) { // found a match and the field is not empty
                 clear(); // clear existing text
-                super.replaceText(0, 0, currText.substring(0, start + 1) + newText.substring(start + 1)); // replace with the new text string
+
+                //System.out.println(currText);
+                //System.out.println(newText);
+
+                //super.replaceText(0, 0, currText.substring(0, start + 1) + newText.substring(start + 1)); // replace with the new text string
+                super.replaceText(0, 0, currText.substring(0, start) + newText.substring(start)); // replace with the new text string
 
                 // highlight the remainder of the auto-completed text
                 positionCaret(start + 1);
