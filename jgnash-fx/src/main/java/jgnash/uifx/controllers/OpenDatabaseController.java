@@ -23,19 +23,20 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
-import jgnash.engine.DataStoreType;
-import jgnash.engine.EngineFactory;
-import jgnash.uifx.MainApplication;
-import jgnash.uifx.control.IntegerTextField;
-import jgnash.uifx.tasks.BootEngineTask;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import jgnash.engine.DataStoreType;
+import jgnash.engine.EngineFactory;
+import jgnash.uifx.MainApplication;
+import jgnash.uifx.control.IntegerTextField;
+import jgnash.uifx.tasks.BootEngineTask;
 
 /**
  * FXML Controller for opening a file or database
@@ -68,7 +69,7 @@ public class OpenDatabaseController {
     private void initialize() {        
         updateControlsState();
 
-        localDatabaseField.setText(EngineFactory.getLastDatabase());
+        setDatabaseField(EngineFactory.getLastDatabase());
         databaseServerField.setText(EngineFactory.getLastHost());
         portField.setInteger(EngineFactory.getLastPort());
         remoteServerCheckBox.setSelected(EngineFactory.getLastRemote());
@@ -89,6 +90,11 @@ public class OpenDatabaseController {
         }
     }
 
+    private void setDatabaseField(final String database) {
+        localDatabaseField.setText(database);
+        localDatabaseField.setTooltip(new Tooltip(database));
+    }
+
     @FXML
     protected void handleRemoteAction(final ActionEvent event) {
         updateControlsState();
@@ -106,7 +112,7 @@ public class OpenDatabaseController {
             Preferences pref = Preferences.userNodeForPackage(OpenDatabaseController.class);
             pref.put(LAST_DIR, file.getParentFile().getAbsolutePath());
 
-            localDatabaseField.setText(file.getAbsolutePath());
+            setDatabaseField(file.getAbsolutePath());
         }
     }
 
