@@ -338,7 +338,9 @@ public class TransactionFactory {
         Objects.requireNonNull(creditAccount);
         Objects.requireNonNull(debitAccount);
 
-        assert creditAccount != debitAccount;
+        if (creditAccount == debitAccount) {
+            throw new RuntimeException(Resource.get().getString("Message.Error.CreditDebit.Equal"));
+        }
 
         Transaction transaction = new Transaction();
 
@@ -373,7 +375,9 @@ public class TransactionFactory {
         Objects.requireNonNull(creditAccount);
         Objects.requireNonNull(debitAccount);
 
-        assert creditAccount != debitAccount;
+        if (creditAccount == debitAccount) {
+            throw new RuntimeException(Resource.get().getString("Message.Error.CreditDebit.Equal"));
+        }
 
         Transaction transaction = new Transaction();
 
@@ -766,8 +770,12 @@ public class TransactionFactory {
                                                                   final BigDecimal quantity, final Date date,
                                                                   final String memo) {
 
-        assert investmentAccount != null && node != null && price != null && quantity != null;
-        assert date != null && memo != null;
+        Objects.requireNonNull(investmentAccount);
+        Objects.requireNonNull(node);
+        Objects.requireNonNull(price);
+        Objects.requireNonNull(quantity);
+        Objects.requireNonNull(date);
+        Objects.requireNonNull(memo);
 
         InvestmentTransaction transaction = new InvestmentTransaction();
         transaction.setDate(date);
