@@ -131,18 +131,22 @@ public class OpenDatabaseController {
 
         List<String> types = new ArrayList<>();
 
-        for (DataStoreType type : DataStoreType.values()) {
-            types.add("*." + type.getDataStore().getFileExt());
+        for (final DataStoreType type : DataStoreType.values()) {
+            if (type.getDataStore() != null) {
+                types.add("*." + type.getDataStore().getFileExt());
+            }
         }
 
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter(resources.getString("Label.jGnashFiles"), types)
         );
 
-        for (DataStoreType type : DataStoreType.values()) {
-            fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter(type.toString(), "*." + type.getDataStore().getFileExt())
-            );
+        for (final DataStoreType type : DataStoreType.values()) {
+            if (type.getDataStore() != null) {
+                fileChooser.getExtensionFilters().addAll(
+                        new FileChooser.ExtensionFilter(type.toString(), "*." + type.getDataStore().getFileExt())
+                );
+            }
         }
 
         fileChooser.getExtensionFilters().addAll(
