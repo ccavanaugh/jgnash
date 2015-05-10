@@ -26,6 +26,7 @@ import jgnash.engine.jpa.JpaH2DataStore;
 import jgnash.engine.jpa.JpaHsqlDataStore;
 import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.engine.xstream.XMLDataStore;
+import jgnash.util.Nullable;
 import jgnash.util.Resource;
 
 /**
@@ -67,13 +68,14 @@ public enum DataStoreType {
 
     private final transient Class<? extends DataStore> dataStore;
 
-    private DataStoreType(final String description, final boolean supportsLocal, final boolean supportsRemote, final Class<? extends DataStore> dataStore) {
+    DataStoreType(final String description, final boolean supportsLocal, final boolean supportsRemote, final Class<? extends DataStore> dataStore) {
         this.description = description;
         this.supportsLocal = supportsLocal;
         this.supportsRemote = supportsRemote;
         this.dataStore = dataStore;
     }
 
+    @Nullable
     public DataStore getDataStore() {
         try {
             Constructor<?> storeConst = dataStore.getDeclaredConstructor();
