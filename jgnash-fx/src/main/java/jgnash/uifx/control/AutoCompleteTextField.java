@@ -60,9 +60,6 @@ public class AutoCompleteTextField<E> extends TextField {
 
     @Override
     public void replaceText(final int start, final int end, final String text) {
-        // If the replaced text would end up being invalid, then simply
-        // ignore this call!
-
         super.replaceText(start, end, text);
 
         if (autoCompleteModelObjectProperty.get() != null) {
@@ -72,15 +69,17 @@ public class AutoCompleteTextField<E> extends TextField {
             if (newText != null && !currText.isEmpty()) { // found a match and the field is not empty
                 clear(); // clear existing text
 
-                //System.out.println(currText);
-                //System.out.println(newText);
+                if (start + 1 > currText.length()) {    // delete action has occurred
+                    setText(currText.substring(0, start));
+                    positionCaret(start);
+                } else {
+                    // replace with the new text string
+                    super.replaceText(0, 0, currText.substring(0, start + 1) + newText.substring(start + 1));
 
-                //super.replaceText(0, 0, currText.substring(0, start + 1) + newText.substring(start + 1)); // replace with the new text string
-                super.replaceText(0, 0, currText.substring(0, start) + newText.substring(start)); // replace with the new text string
-
-                // highlight the remainder of the auto-completed text
-                positionCaret(start + 1);
-                selectEnd();
+                    // highlight the remainder of the auto-completed text
+                    positionCaret(start + 1);
+                    selectEnd();
+                }
             }
         }
     }
