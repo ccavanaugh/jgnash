@@ -23,8 +23,6 @@ import java.util.ResourceBundle;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -98,12 +96,9 @@ public abstract class AbstractTransactionEntryDialog extends Stage {
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         // Modify a {@code TransactionEntry} on selection
-        tableView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TransactionEntry>() {
-            @Override
-            public void changed(final ObservableValue<? extends TransactionEntry> observable, final TransactionEntry oldValue, final TransactionEntry newValue) {
-                if (newValue != null) { // null can occur when the transaction entry list changes
-                    modifyTransactionEntry(newValue);
-                }
+        tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) { // null can occur when the transaction entry list changes
+                modifyTransactionEntry(newValue);
             }
         });
 
