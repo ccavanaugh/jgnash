@@ -39,7 +39,7 @@ public enum TransactionTag {
 
     private final transient String description;
 
-    private TransactionTag(String description) {
+    TransactionTag(String description) {
         this.description = description;
     }
 

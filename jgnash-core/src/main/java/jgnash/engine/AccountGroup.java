@@ -37,7 +37,7 @@ public enum AccountGroup {
 
     private final transient String description;
 
-    private AccountGroup(final String description) {
+    AccountGroup(final String description) {
         this.description = description;
     }
 

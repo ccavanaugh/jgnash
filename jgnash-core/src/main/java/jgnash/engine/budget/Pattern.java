@@ -36,7 +36,7 @@ public enum Pattern {
 
     private final transient String description;
 
-    private Pattern(final String description) {
+    Pattern(final String description) {
         this.description = description;
     }
 

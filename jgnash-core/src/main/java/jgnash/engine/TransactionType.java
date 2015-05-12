@@ -47,7 +47,7 @@ public enum TransactionType {
 
     final transient private String transactionTypeName;
 
-    private TransactionType(String name) {
+    TransactionType(String name) {
         transactionTypeName = name;
     }
 

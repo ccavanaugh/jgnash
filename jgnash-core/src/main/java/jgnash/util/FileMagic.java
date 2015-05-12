@@ -58,7 +58,7 @@ public class FileMagic {
 
     private static final String WINDOWS_1252 = "windows-1252";
 
-    public static enum FileType {
+    public enum FileType {
         db4o, BinaryXStream, OfxV1, OfxV2, jGnash1XML, jGnash2XML, h2, hsql, unknown
     }
 

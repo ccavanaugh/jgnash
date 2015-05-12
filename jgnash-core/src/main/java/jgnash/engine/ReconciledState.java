@@ -31,7 +31,7 @@ public enum ReconciledState {
 
     private final transient String symbol;
 
-    private ReconciledState(final String symbol) {
+    ReconciledState(final String symbol) {
         this.symbol = symbol;
     }
 

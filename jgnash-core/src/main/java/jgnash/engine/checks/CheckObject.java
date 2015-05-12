@@ -38,7 +38,7 @@ public class CheckObject implements Serializable {
 
         final transient private String typeName;
 
-        private CheckObjectType(String name) {
+        CheckObjectType(final String name) {
             this.typeName = name;
         }
 

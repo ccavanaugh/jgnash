@@ -57,7 +57,7 @@ public enum AccountType {
 
     private final transient boolean mutable;
 
-    private AccountType(final String description, final AccountGroup accountGroup, final Class<? extends AccountProxy> accountProxy, final boolean mutable) {
+    AccountType(final String description, final AccountGroup accountGroup, final Class<? extends AccountProxy> accountProxy, final boolean mutable) {
         this.description = description;
         this.accountGroup = accountGroup;
         this.accountProxy = accountProxy;

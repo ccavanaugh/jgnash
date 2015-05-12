@@ -35,7 +35,7 @@ public enum ReminderType {
 
     private final transient String typeName;
 
-    private ReminderType(String name) {
+    ReminderType(String name) {
         typeName = name;
     }
 

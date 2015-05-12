@@ -19,15 +19,14 @@ package jgnash.engine;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import jgnash.net.security.NullParser;
 import jgnash.net.security.SecurityParser;
 import jgnash.net.security.YahooAUParser;
-import jgnash.net.security.YahooUSParser;
 import jgnash.net.security.YahooUKParser;
+import jgnash.net.security.YahooUSParser;
 import jgnash.util.Resource;
 
 /**
@@ -47,7 +46,7 @@ public enum QuoteSource {
 
     private final transient Class<? extends SecurityParser> parser;
 
-    private QuoteSource(String description, final Class<? extends SecurityParser> parser) {
+    QuoteSource(String description, final Class<? extends SecurityParser> parser) {
         this.description = description;
         this.parser = parser;
     }

@@ -23,7 +23,6 @@ import jgnash.util.Resource;
  * Budget BudgetPeriod Enum
  * 
  * @author Craig Cavanaugh
- *
  */
 public enum BudgetPeriod {
 
@@ -36,7 +35,7 @@ public enum BudgetPeriod {
 
     private final transient String description;
 
-    private BudgetPeriod(final String description) {
+    BudgetPeriod(final String description) {
         this.description = description;
     }
 
