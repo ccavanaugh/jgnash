@@ -17,9 +17,6 @@
  */
 package jgnash.ui.actions;
 
-import jgnash.engine.DataStoreType;
-import jgnash.util.Resource;
-
 import java.awt.Component;
 import java.io.File;
 import java.util.logging.Logger;
@@ -28,6 +25,10 @@ import java.util.prefs.Preferences;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
+import jgnash.engine.DataStoreType;
+import jgnash.util.NotNull;
+import jgnash.util.Resource;
+
 /**
  * UI Action to request database path from the user
  *
@@ -35,7 +36,7 @@ import javax.swing.filechooser.FileFilter;
  */
 public class DatabasePathAction {
 
-    public static enum Type {
+    public enum Type {
         OPEN,
         NEW
     }
@@ -50,12 +51,14 @@ public class DatabasePathAction {
         return databaseNameAction(parent, type, DataStoreType.values());
     }
 
-    public static String databaseNameAction(final Component parent, final Type type, final DataStoreType... dataStoreTypes) {
+    public static String databaseNameAction(final Component parent, final Type type, @NotNull final DataStoreType... dataStoreTypes) {
 
         String[] ext = new String[dataStoreTypes.length];
 
         for (int i = 0; i < dataStoreTypes.length; i++) {
-            ext[i] = dataStoreTypes[i].getDataStore().getFileExt();
+            if (dataStoreTypes[i].getDataStore() != null) {
+                ext[i] = dataStoreTypes[i].getDataStore().getFileExt();
+            }
         }
 
         Resource rb = Resource.get();
@@ -63,11 +66,13 @@ public class DatabasePathAction {
         StringBuilder description = new StringBuilder(rb.getString("Label.jGnashFiles") + " (");
 
         for (int i = 0; i < dataStoreTypes.length; i++) {
-            description.append("*.");
-            description.append(dataStoreTypes[i].getDataStore().getFileExt());
+            if (dataStoreTypes[i].getDataStore() != null) {
+                description.append("*.");
+                description.append(dataStoreTypes[i].getDataStore().getFileExt());
 
-            if (i < dataStoreTypes.length - 1) {
-                description.append(", ");
+                if (i < dataStoreTypes.length - 1) {
+                    description.append(", ");
+                }
             }
         }
 
