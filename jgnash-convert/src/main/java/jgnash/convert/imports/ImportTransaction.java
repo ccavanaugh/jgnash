@@ -30,7 +30,7 @@ import jgnash.engine.Account;
  * @author Nicolas Bouillon
  */
 public class ImportTransaction {
-    public static enum ImportState {
+    public enum ImportState {
         NEW,
         EQUAL,
         IGNORE,
