@@ -63,7 +63,7 @@ public class Alert {
 
     private ButtonType buttonType = ButtonType.CANCEL;  // default is cancelled
 
-    public static enum AlertType {
+    public enum AlertType {
         ERROR,
         WARNING,
         INFORMATION,
