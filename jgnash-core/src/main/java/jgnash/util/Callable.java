@@ -34,5 +34,5 @@ public interface Callable<R> {
 
      * @return An object of type R that may be determined based on the provided parameter value.
      */
-    public R call();
+    R call();
 }

@@ -24,6 +24,5 @@ package jgnash.ui.register.table;
  */
 public interface RegisterModel extends AccountTableModel {
 
-    public int[] getPreferredColumnWeights();
-
+    int[] getPreferredColumnWeights();
 }

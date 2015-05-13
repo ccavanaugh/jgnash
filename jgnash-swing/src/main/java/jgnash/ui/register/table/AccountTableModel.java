@@ -29,5 +29,5 @@ import jgnash.engine.Account;
  */
 interface AccountTableModel extends TableModel {
 
-    public Account getAccount();
+    Account getAccount();
 }

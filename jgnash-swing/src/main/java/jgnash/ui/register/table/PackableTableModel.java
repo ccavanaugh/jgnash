@@ -15,13 +15,11 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package jgnash.ui.register.table;
 
 import javax.swing.table.TableModel;
 
 public interface PackableTableModel extends TableModel {
 
-    public int[] getPreferredColumnWeights();
-
+    int[] getPreferredColumnWeights();
 }

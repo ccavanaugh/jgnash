@@ -49,12 +49,12 @@ public interface Plugin {
     /**
      * Client property key for the idref of the preceding menu item when adding a plugin specific menu item
      */
-    static final String PRECEDINGMENUIDREF = "PrecedingMenuIdref";
+    String PRECEDINGMENUIDREF = "PrecedingMenuIdref";
 
     /**
      * Client property key for the name of the options tab to add
      */
-    static final String OPTIONSNAME = "OptionsName";
+    String OPTIONSNAME = "OptionsName";
 
     /**
      * Return a descriptive name for the plugin

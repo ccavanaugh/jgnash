@@ -33,13 +33,13 @@ public interface TransactionDAO {
      * 
      * @return List of transactions
      */
-    public List<Transaction> getTransactions();
+    List<Transaction> getTransactions();
 
-    public boolean addTransaction(Transaction transaction);
+    boolean addTransaction(Transaction transaction);
 
-    public Transaction getTransactionByUuid(final String uuid);
+    Transaction getTransactionByUuid(final String uuid);
 
-    public boolean removeTransaction(Transaction transaction);
+    boolean removeTransaction(Transaction transaction);
 
     /**
      * Transactions are generally immutable and should not be updated
@@ -47,13 +47,13 @@ public interface TransactionDAO {
      *
      * @param transaction {@code Transaction} to update
        */
-    public void updateTransaction(Transaction transaction);
+    void updateTransaction(Transaction transaction);
 
     /**
      * Returns a list of transactions with external links.
      *
      * @return List of transactions
      */
-    public List<Transaction> getTransactionsWithAttachments();
+    List<Transaction> getTransactionsWithAttachments();
 
 }

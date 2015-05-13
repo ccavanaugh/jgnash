@@ -25,15 +25,14 @@ import jgnash.engine.TrashObject;
  * Trash DAO Interface
  *
  * @author Craig Cavanaugh
- *
  */
 public interface TrashDAO {
 
-    public List<TrashObject> getTrashObjects();
+    List<TrashObject> getTrashObjects();
 
-    public void add(TrashObject trashObject);
+    void add(TrashObject trashObject);
 
-    public void remove(TrashObject trashObject);
+    void remove(TrashObject trashObject);
 
-    public void addEntityTrash(Object entity);
+    void addEntityTrash(Object entity);
 }

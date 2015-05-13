@@ -36,6 +36,6 @@ public interface LockManager {
      *
      * @return a new or cached ReentrantReadWriteLock
      */
-    public ReentrantReadWriteLock getLock(final String lockId);
+    ReentrantReadWriteLock getLock(final String lockId);
 
 }

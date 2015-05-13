@@ -28,11 +28,11 @@ import jgnash.engine.recurring.Reminder;
  */
 public interface RecurringDAO {
 
-    public List<Reminder> getReminderList();
+    List<Reminder> getReminderList();
 
-    public boolean addReminder(Reminder reminder);
+    boolean addReminder(Reminder reminder);
 
-    public Reminder getReminderByUuid(final String uuid);
+    Reminder getReminderByUuid(final String uuid);
 
-    public boolean updateReminder(Reminder reminder);
+    boolean updateReminder(Reminder reminder);
 }

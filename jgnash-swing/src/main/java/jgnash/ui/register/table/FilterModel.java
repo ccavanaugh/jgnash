@@ -26,7 +26,7 @@ public interface FilterModel extends RegisterModel {
     /**
      * @param filter The Filter to set.
      */
-    public void setFilter(String filter);
+    void setFilter(String filter);
 
-    public void setColumnVisible(String name, boolean visible);
+    void setColumnVisible(String name, boolean visible);
 }

@@ -24,19 +24,19 @@ package jgnash.ui.account;
  */
 interface AccountFilterModel {
 
-    public boolean isAccountVisible();
+    boolean isAccountVisible();
 
-    public boolean isExpenseVisible();
+    boolean isExpenseVisible();
 
-    public boolean isHiddenVisible();
+    boolean isHiddenVisible();
 
-    public boolean isIncomeVisible();
+    boolean isIncomeVisible();
 
-    public void setAccountVisible(boolean visible);
+    void setAccountVisible(boolean visible);
 
-    public void setExpenseVisible(boolean visible);
+    void setExpenseVisible(boolean visible);
 
-    public void setHiddenVisible(boolean visible);
+    void setHiddenVisible(boolean visible);
 
-    public void setIncomeVisible(boolean visible);
+    void setIncomeVisible(boolean visible);
 }

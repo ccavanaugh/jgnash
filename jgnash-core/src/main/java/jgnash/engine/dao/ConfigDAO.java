@@ -26,7 +26,7 @@ import jgnash.engine.Config;
  */
 public interface ConfigDAO {
 
-    public Config getDefaultConfig();
+    Config getDefaultConfig();
 
-    public void update(Config config);
+    void update(Config config);
 }

@@ -28,304 +28,304 @@ public interface OfxTags {
     /**
      * Account ID
      */
-    static String ACCTID = "ACCTID";
+    String ACCTID = "ACCTID";
 
     /**
      * Account Type
      */
-    static String ACCTTYPE = "ACCTTYPE";
+    String ACCTTYPE = "ACCTTYPE";
 
     /**
      * Available balance
      */
-    static String AVAILBAL = "AVAILBAL";
+    String AVAILBAL = "AVAILBAL";
 
     /**
      * Balance Amount
      */
-    static String BALAMT = "BALAMT";
+    String BALAMT = "BALAMT";
 
     /**
      * Bank Account info
      */
-    static String BANKACCTFROM = "BANKACCTFROM";
+    String BANKACCTFROM = "BANKACCTFROM";
 
     /**
      * Credit Card info
      */
-    static String CCACCTFROM = "CCACCTFROM";
+    String CCACCTFROM = "CCACCTFROM";
 
     /**
      * Investment Account info
      */
-    static String INVACCTFROM = "INVACCTFROM";
+    String INVACCTFROM = "INVACCTFROM";
 
     /**
      * Bank ID
      */
-    static String BANKID = "BANKID";
+    String BANKID = "BANKID";
 
     /**
      * Stock purchase
      */
-    static String BUYSTOCK = "BUYSTOCK";
+    String BUYSTOCK = "BUYSTOCK";
 
-    static String BUYTYPE = "BUYTYPE";
+    String BUYTYPE = "BUYTYPE";
 
     /**
      * Branch identifier. May be required for some non-US banks
      */
-    static String BRANCHID = "BRANCHID";
+    String BRANCHID = "BRANCHID";
 
     /**
      * Bank transaction list
      */
-    static String BANKTRANLIST = "BANKTRANLIST";
+    String BANKTRANLIST = "BANKTRANLIST";
 
-    static String INVTRANLIST = "INVTRANLIST";
+    String INVTRANLIST = "INVTRANLIST";
 
-    static String INVTRAN = "INVTRAN";
+    String INVTRAN = "INVTRAN";
 
-    static String INVBUY = "INVBUY";
+    String INVBUY = "INVBUY";
 
-    static String INVSELL = "INVSELL";
+    String INVSELL = "INVSELL";
 
-    static String BROKERID = "BROKERID";
+    String BROKERID = "BROKERID";
 
     /**
      * Check number
      */
-    static String CHECKNUM = "CHECKNUM";
+    String CHECKNUM = "CHECKNUM";
 
-    static String CODE = "CODE";
+    String CODE = "CODE";
 
-    static String CURDEF = "CURDEF";
+    String CURDEF = "CURDEF";
 
-    static String CURRENCY = "CURRENCY";
+    String CURRENCY = "CURRENCY";
 
     /**
      * Checking account type
      * @see #ACCTTYPE
      */
-    static String CHECKING = "CHECKING";
+    String CHECKING = "CHECKING";
 
     /**
      * Credit line account type
      * @see #ACCTTYPE
      */
-    static String CREDITLINE = "CREDITLINE";
+    String CREDITLINE = "CREDITLINE";
 
     /**
      * Money market account type
      * @see #ACCTTYPE
      */
-    static String MONEYMRKT = "MONEYMRKT";
+    String MONEYMRKT = "MONEYMRKT";
 
     /**
      * Savings account type
      * @see #ACCTTYPE
      */
-    static String SAVINGS = "SAVINGS";
+    String SAVINGS = "SAVINGS";
 
     /**
      * Credit transaction
      * @see #TRNTYPE
      */
-    static String CREDIT = "CREDIT";
+    String CREDIT = "CREDIT";
 
     /**
      * Debit transaction
      * @see #TRNTYPE
      */
-    static String DEBIT = "DEBIT";
+    String DEBIT = "DEBIT";
 
     /**
      * Date of balance
      * @see #LEDGERBAL
      * @see #AVAILBAL
      */
-    static String DTASOF = "DTASOF";
+    String DTASOF = "DTASOF";
 
     /**
      * End date of transaction list
      */
-    static String DTEND = "DTEND";
+    String DTEND = "DTEND";
 
     /**
      * Date posted
      */
-    static String DTPOSTED = "DTPOSTED";
+    String DTPOSTED = "DTPOSTED";
 
     /**
      * Date user initiated transaction
      */
-    static String DTUSER = "DTUSER";
+    String DTUSER = "DTUSER";
 
-    static String DTSERVER = "DTSERVER";
+    String DTSERVER = "DTSERVER";
 
     /**
      * Start date of transaction list
      */
-    static String DTSTART = "DTSTART";
+    String DTSTART = "DTSTART";
 
-    static String DTTRADE = "DTTRADE";
+    String DTTRADE = "DTTRADE";
 
-    static String DTSETTLE = "DTSETTLE";
+    String DTSETTLE = "DTSETTLE";
 
-    static String FI = "FI";
+    String FI = "FI";
 
-    static String FID = "FID";
+    String FID = "FID";
 
     /**
      * Financial Institution transaction id
      */
-    static String FITID = "FITID";
+    String FITID = "FITID";
 
 
-    static String LANGUAGE = "LANGUAGE";
+    String LANGUAGE = "LANGUAGE";
 
     /**
      * Account balance
      */
-    static String LEDGERBAL = "LEDGERBAL";
+    String LEDGERBAL = "LEDGERBAL";
 
     /**
      * Transaction memo
      */
-    static String MEMO = "MEMO";
+    String MEMO = "MEMO";
 
-    static String MESSAGE = "MESSAGE";
+    String MESSAGE = "MESSAGE";
 
     /**
      * Name of payee or transaction description, may be used exclusive of {@code PAYEE}
      * @see #PAYEE
      */
-    static String NAME = "NAME";
+    String NAME = "NAME";
 
-    static String OFX = "OFX";
+    String OFX = "OFX";
 
-    static String ORG = "ORG";
+    String ORG = "ORG";
 
-    static String ORIGCURRENCY = "ORIGCURRENCY";
+    String ORIGCURRENCY = "ORIGCURRENCY";
 
     /**
      * Name of payee, may be used exclusive of {@code NAME}
      * @see #NAME
      */
-    static String PAYEE = "PAYEE";
+    String PAYEE = "PAYEE";
 
-    static String PAYEEID = "PAYEEID";
+    String PAYEEID = "PAYEEID";
 
-    static String REFNUM = "REFNUM";
+    String REFNUM = "REFNUM";
 
-    static String SEVERITY = "SEVERITY";
+    String SEVERITY = "SEVERITY";
 
-    static String SECID = "SECID";
+    String SECID = "SECID";
 
     /**
      * Accounting SIC code
      */
-    static String SIC = "SIC";
+    String SIC = "SIC";
 
     /**
      * Sign-on Message Set Aggregate
      */
-    static String SIGNONMSGSRSV1 = "SIGNONMSGSRSV1";
+    String SIGNONMSGSRSV1 = "SIGNONMSGSRSV1";
 
-    static String SONRS = "SONRS";
+    String SONRS = "SONRS";
 
-    static String STATUS = "STATUS";
+    String STATUS = "STATUS";
 
     /**
      * Bank statement response aggregate
      */
-    static String STMTRS = "STMTRS";
+    String STMTRS = "STMTRS";
 
     /**
      * Investment account bank transaction
      */
-    static String INVBANKTRAN = "INVBANKTRAN";
+    String INVBANKTRAN = "INVBANKTRAN";
 
     /**
      * Credit Card statement response aggregate
      */
-    static String CCSTMTRS = "CCSTMTRS";
+    String CCSTMTRS = "CCSTMTRS";
 
     /**
      * Investment statement response aggregate
      */
-    static String INVSTMTRS = "INVSTMTRS";
+    String INVSTMTRS = "INVSTMTRS";
 
     /**
      * Bank Transaction
      */
-    static String STMTTRN = "STMTTRN";
+    String STMTTRN = "STMTTRN";
 
-    static String STMTTRNRS = "STMTTRNRS";
+    String STMTTRNRS = "STMTTRNRS";
 
-    static String SUBACCTSEC = "SUBACCTSEC";
+    String SUBACCTSEC = "SUBACCTSEC";
 
-    static String SUBACCTFUND = "SUBACCTFUND";
+    String SUBACCTFUND = "SUBACCTFUND";
 
-    static String SELLSTOCK = "SELLSTOCK";
+    String SELLSTOCK = "SELLSTOCK";
 
-    static String SELLTYPE = "SELLTYPE";
+    String SELLTYPE = "SELLTYPE";
 
-    static String CCSTMTTRNRS = "CCSTMTTRNRS";
+    String CCSTMTTRNRS = "CCSTMTTRNRS";
 
-    static String INVSTMTTRNRS = "INVSTMTTRNRS";
+    String INVSTMTTRNRS = "INVSTMTTRNRS";
 
-    static String REINVEST = "REINVEST";
+    String REINVEST = "REINVEST";
 
-    static String INCOME = "INCOME";
+    String INCOME = "INCOME";
 
-    static String INCOMETYPE = "INCOMETYPE";
+    String INCOMETYPE = "INCOMETYPE";
 
     /**
      * Transaction amount
      */
-    static String TRNAMT = "TRNAMT";
+    String TRNAMT = "TRNAMT";
 
     /**
      * Transaction type
      */
-    static String TRNTYPE = "TRNTYPE";
+    String TRNTYPE = "TRNTYPE";
 
     /**
      * Client Assigned Globally Unique Transaction ID
      */
-    static String TRNUID = "TRNUID";
+    String TRNUID = "TRNUID";
 
-    static String TOTAL = "TOTAL";
+    String TOTAL = "TOTAL";
 
-    static String USERKEY = "USERKEY";
+    String USERKEY = "USERKEY";
 
-    static String UNIQUEID = "UNIQUEID";
+    String UNIQUEID = "UNIQUEID";
 
-    static String UNIQUEIDTYPE = "UNIQUEIDTYPE";
+    String UNIQUEIDTYPE = "UNIQUEIDTYPE";
 
-    static String UNITS = "UNITS";
+    String UNITS = "UNITS";
 
-    static String UNITPRICE = "UNITPRICE";
+    String UNITPRICE = "UNITPRICE";
 
-    static String COMMISSION = "COMMISSION";
+    String COMMISSION = "COMMISSION";
 
     /**
      * Bank Message Set Aggregate
      */
-    static String BANKMSGSRSV1 = "BANKMSGSRSV1";
+    String BANKMSGSRSV1 = "BANKMSGSRSV1";
 
-    static String CREDITCARDMSGSRSV1 = "CREDITCARDMSGSRSV1";
+    String CREDITCARDMSGSRSV1 = "CREDITCARDMSGSRSV1";
 
-    static String INVSTMTMSGSRSV1 = "INVSTMTMSGSRSV1";
+    String INVSTMTMSGSRSV1 = "INVSTMTMSGSRSV1";
 
     /**
      * Intuit mucking up the OFX standard, Bank Id, In signon message
      */
-    static String INTUBID = "INTU.BID";
+    String INTUBID = "INTU.BID";
 
     /**
      * Intuit mucking up the OFX standard, User Id, In signon message
      */
-    static String INTUUSERID = "INTU.USERID";
+    String INTUUSERID = "INTU.USERID";
 }

@@ -17,24 +17,23 @@
  */
 package jgnash.engine.dao;
 
+import java.util.List;
+import java.util.Set;
+
 import jgnash.engine.CommodityNode;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.ExchangeRate;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 
-import java.util.List;
-import java.util.Set;
-
 /**
  * Commodity DAO Interface
  *
  * @author Craig Cavanaugh
- *
  */
 public interface CommodityDAO {
 
-    public boolean addCommodity(CommodityNode node);
+    boolean addCommodity(CommodityNode node);
 
     /**
      * Call after a {@code ExchangeRateHistoryNode} has been added.  This pushes the update
@@ -43,7 +42,7 @@ public interface CommodityDAO {
      *
      * @return true if successful
      */
-    public boolean addExchangeRateHistory(final ExchangeRate rate);
+    boolean addExchangeRateHistory(final ExchangeRate rate);
 
     /**
      * Call after a {@code SecurityHistoryNode} has been added.  This pushes the update
@@ -53,26 +52,26 @@ public interface CommodityDAO {
      *
      * @return true if successful
      */
-    public boolean addSecurityHistory(final SecurityNode node, final SecurityHistoryNode historyNode);
+    boolean addSecurityHistory(final SecurityNode node, final SecurityHistoryNode historyNode);
 
     /**
      * Returns the active currencies
      *
      * @return set of active currencies
      */
-    public Set<CurrencyNode> getActiveCurrencies();
+    Set<CurrencyNode> getActiveCurrencies();
 
-    public List<CurrencyNode> getCurrencies();
+    List<CurrencyNode> getCurrencies();
 
-    public CurrencyNode getCurrencyByUuid(final String uuid);
+    CurrencyNode getCurrencyByUuid(final String uuid);
 
-    public SecurityNode getSecurityByUuid(final String uuid);
+    SecurityNode getSecurityByUuid(final String uuid);
 
-    public ExchangeRate getExchangeNode(final String rateId);
+    ExchangeRate getExchangeNode(final String rateId);
 
-    public ExchangeRate getExchangeRateByUuid(final String uuid);
+    ExchangeRate getExchangeRateByUuid(final String uuid);
 
-    public List<SecurityNode> getSecurities();
+    List<SecurityNode> getSecurities();
 
     /**
      * Call after a {@code ExchangeRateHistoryNode} has been removed.  This pushes the update
@@ -81,7 +80,7 @@ public interface CommodityDAO {
      *
      * @return true if successful
      */
-    public boolean removeExchangeRateHistory(final ExchangeRate rate);
+    boolean removeExchangeRateHistory(final ExchangeRate rate);
 
     /**
      * Call after a {@code SecurityHistoryNode} has been removed.  This pushes the update
@@ -91,11 +90,11 @@ public interface CommodityDAO {
      *
      * @return true if successful
      */
-    public boolean removeSecurityHistory(final SecurityNode node, final SecurityHistoryNode historyNode);
+    boolean removeSecurityHistory(final SecurityNode node, final SecurityHistoryNode historyNode);
 
-    public void addExchangeRate(ExchangeRate eRate);
+    void addExchangeRate(ExchangeRate eRate);
 
-    public boolean updateCommodityNode(final CommodityNode node);
+    boolean updateCommodityNode(final CommodityNode node);
 
-    public List<ExchangeRate> getExchangeRates();
+    List<ExchangeRate> getExchangeRates();
 }

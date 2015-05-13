@@ -21,34 +21,22 @@ import java.util.Date;
 
 /**
  * Interface for a clipping register table model.  The top and bottom of the data will be
- * clipped by starting and ending date
- * <p/>
+ * clipped by starting and ending date.
  *
  * @author Craig Cavanaugh
- *
  */
 public interface ClippingModel extends RegisterModel {
     /**
      * @param startDate The startDate to set.
      */
-    public void setStartDate(Date startDate);
-
-//    /**
-//     * @return Returns the startDate.
-//     */
-//    public Date getStartDate();
+    void setStartDate(Date startDate);
 
     /**
      * @param stopDate The stopDate to set.
      */
-    public void setEndDate(Date stopDate);
+    void setEndDate(Date stopDate);
 
-//    /**
-//     * @return Returns the stopDate.
-//     */
-//    public Date getEndDate();
+    void setEndIndex(int end);
 
-    public void setEndIndex(int end);
-
-    public void setStartIndex(int start);
+    void setStartIndex(int start);
 }

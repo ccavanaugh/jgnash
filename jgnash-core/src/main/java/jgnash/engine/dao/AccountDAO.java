@@ -27,17 +27,16 @@ import jgnash.engine.SecurityNode;
  * Account DAO Interface
  *
  * @author Craig Cavanaugh
- *
  */
 public interface AccountDAO {
 
-    public RootAccount getRootAccount();
+    RootAccount getRootAccount();
 
-    public List<Account> getAccountList();
+    List<Account> getAccountList();
 
-    public boolean addAccount(Account parent, final Account child);
+    boolean addAccount(Account parent, final Account child);
 
-    public boolean addRootAccount(RootAccount account);
+    boolean addRootAccount(RootAccount account);
 
     /**
      * Adds a SecurityNode from a InvestmentAccount
@@ -46,36 +45,36 @@ public interface AccountDAO {
      * @param node    security to add
      * @return true if success
      */
-    public boolean addAccountSecurity(final Account account, final SecurityNode node);
+    boolean addAccountSecurity(final Account account, final SecurityNode node);
 
     /**
      * Returns a list of IncomeAccounts
      *
      * @return list of income accounts
      */
-    public List<Account> getIncomeAccountList();
+    List<Account> getIncomeAccountList();
 
     /**
      * Returns a list of ExpenseAccounts
      *
      * @return list of expense accounts
      */
-    public List<Account> getExpenseAccountList();
+    List<Account> getExpenseAccountList();
 
     /**
      * Returns a list of InvestmentAccounts
      *
      * @return list of investment accounts
      */
-    public List<Account> getInvestmentAccountList();
+    List<Account> getInvestmentAccountList();
 
-    public Account getAccountByUuid(final String uuid);
+    Account getAccountByUuid(final String uuid);
 
-    public boolean updateAccount(Account account);
+    boolean updateAccount(Account account);
 
     @SuppressWarnings({"UnusedReturnValue", "UnusedParameters"})
     @Deprecated
-    public boolean removeAccountProperty(Account account, Object object);
+    boolean removeAccountProperty(Account account, Object object);
 
     /**
      * Toggles the visibility of an account given its ID.
@@ -84,6 +83,6 @@ public interface AccountDAO {
      * @return <tt>true</tt> if the supplied account ID was found
      *         <tt>false</tt> if the supplied account ID was not found
      */
-    public boolean toggleAccountVisibility(final Account account);
+    boolean toggleAccountVisibility(final Account account);
 
 }

@@ -28,25 +28,25 @@ import jgnash.engine.StoredObject;
  */
 public interface EngineDAO {
 
-    public AccountDAO getAccountDAO();
+    AccountDAO getAccountDAO();
 
-    public BudgetDAO getBudgetDAO();
+    BudgetDAO getBudgetDAO();
 
-    public CommodityDAO getCommodityDAO();
+    CommodityDAO getCommodityDAO();
 
-    public ConfigDAO getConfigDAO();
+    ConfigDAO getConfigDAO();
 
-    public RecurringDAO getRecurringDAO();
+    RecurringDAO getRecurringDAO();
 
-    public TransactionDAO getTransactionDAO();
+    TransactionDAO getTransactionDAO();
 
-    public TrashDAO getTrashDAO();
+    TrashDAO getTrashDAO();
 
-    public <T> T getObjectByUuid(Class<T> tClass, final String uuid);
+    <T> T getObjectByUuid(Class<T> tClass, final String uuid);
 
-    public List<StoredObject> getStoredObjects();
+    List<StoredObject> getStoredObjects();
 
-    public <T extends StoredObject> List<T> getStoredObjects(Class<T> tClass);
+    <T extends StoredObject> List<T> getStoredObjects(Class<T> tClass);
 
     /**
      * Force the object to be reloaded from the underlying database
@@ -54,7 +54,7 @@ public interface EngineDAO {
      *
      * @param object object to refresh
      */
-    public void refresh(StoredObject object);
+    void refresh(StoredObject object);
 
-    public void shutdown();
+    void shutdown();
 }
