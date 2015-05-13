@@ -29,6 +29,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.StoredObject;
 import jgnash.engine.attachment.LocalAttachmentManager;
 import jgnash.engine.concurrent.LocalLockManager;
+import jgnash.util.NotNull;
 import jgnash.util.Resource;
 
 /**
@@ -99,6 +100,7 @@ public class BinaryXStreamDataStore implements DataStore {
      * @see BinaryXStreamDataStore#FILE_EXT
      */
     @Override
+    @NotNull
     public final String getFileExt() {
         return FILE_EXT;
     }

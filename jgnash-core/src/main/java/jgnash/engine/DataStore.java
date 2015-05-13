@@ -20,11 +20,12 @@ package jgnash.engine;
 import java.io.File;
 import java.util.Collection;
 
+import jgnash.util.NotNull;
+
 /**
  * Interface for data storage backends
  *
  * @author Craig Cavanaugh
- *
  */
 public interface DataStore {
 
@@ -59,6 +60,7 @@ public interface DataStore {
      * 
      * @return file extension
      */
+    @NotNull
     String getFileExt();
 
     /**

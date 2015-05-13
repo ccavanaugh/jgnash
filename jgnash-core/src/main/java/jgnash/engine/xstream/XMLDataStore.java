@@ -29,6 +29,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.StoredObject;
 import jgnash.engine.attachment.LocalAttachmentManager;
 import jgnash.engine.concurrent.LocalLockManager;
+import jgnash.util.NotNull;
 import jgnash.util.Resource;
 
 /**
@@ -98,6 +99,7 @@ public class XMLDataStore implements DataStore {
      * @see DataStore#getFileExt()
      * @see XMLDataStore#FILE_EXT
      */
+    @NotNull
     @Override
     public final String getFileExt() {
         return FILE_EXT;

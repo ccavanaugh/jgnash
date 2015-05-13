@@ -17,14 +17,15 @@
  */
 package jgnash.engine.jpa;
 
-import jgnash.engine.DataStoreType;
-import jgnash.util.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.logging.Level;
+
+import jgnash.engine.DataStoreType;
+import jgnash.util.FileUtils;
+import jgnash.util.NotNull;
 
 /**
  * JPA specific code for data storage and creating an engine
@@ -48,6 +49,7 @@ public class JpaH2DataStore extends AbstractJpaDataStore {
         return true; // H2 starts cleanly without an initial file
     }
 
+    @NotNull
     @Override
     public String getFileExt() {
         return FILE_EXT;
