@@ -22,7 +22,6 @@ package jgnash.ui.register;
  * 
  * @author Peter Vida
  * @author Craig Cavanaugh
- *
  */
 public enum AccountBalanceDisplayMode {
     NONE(1),
@@ -31,7 +30,7 @@ public enum AccountBalanceDisplayMode {
 
     private final transient int value;
 
-    private AccountBalanceDisplayMode(final int value) {
+    AccountBalanceDisplayMode(final int value) {
         this.value = value;
     }
 
