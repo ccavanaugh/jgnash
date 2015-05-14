@@ -127,6 +127,11 @@ public class DefaultAutoCompleteModel implements AutoCompleteModel {
         return null;
     }
 
+    @Override
+    public List getAllExtraInfo(final String key) {
+        return Collections.EMPTY_LIST;
+    }
+
     /**
      * Tests if the source string starts with the prefix string. Case is
      * ignored.

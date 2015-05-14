@@ -367,11 +367,24 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
      */
     @Override
     protected boolean canModifyTransaction(final Transaction t) {
-        boolean result = false;
+        boolean result = false; // fail unless proven otherwise
 
         switch (t.getTransactionType()) {
             case DOUBLEENTRY:
-                result = true;
+                final TransactionEntry entry = t.getTransactionEntries().get(0);
+
+                // Prevent loading of a single entry scenario into the form.  The user may not detect it
+                // and the engine will throw an exception if undetected.
+                if (panelType == PanelType.DECREASE) {
+                    if (!getAccount().equals(entry.getCreditAccount())) {
+                        result = true;
+                    }
+                } else {
+                    if (!getAccount().equals(entry.getDebitAccount())) {
+                        result = true;
+                    }
+                }
+
                 break;
             case SPLITENTRY:
                 if (t.getCommonAccount().equals(getAccount())) {

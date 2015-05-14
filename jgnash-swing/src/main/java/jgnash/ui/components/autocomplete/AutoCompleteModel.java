@@ -17,6 +17,8 @@
  */
 package jgnash.ui.components.autocomplete;
 
+import java.util.List;
+
 /**
  * Auto complete model interface
  *
@@ -47,4 +49,14 @@ public interface AutoCompleteModel {
      */
     Object getExtraInfo(String key);
 
+    /**
+     * Returns extra information that might be stored with a
+     * found string returned by doLookAhead().  This information
+     * can be used to populate other fields based on matching the
+     * string key.
+     *
+     * @param key The string key most likely returned from doLookAhead()
+     * @return A list of objects that would give extra information about the key
+     */
+    List getAllExtraInfo(String key);
 }

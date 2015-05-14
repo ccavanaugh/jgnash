@@ -26,6 +26,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -349,19 +350,17 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
                 AutoCompleteTextField f = (AutoCompleteTextField) payeeField;
 
                 if (f.getText() != null && !f.getText().isEmpty()) {
-                    final Transaction t = (Transaction) f.getModel().getExtraInfo(f.getText());
-                    if (t != null) {
-                        /* Make sure the transaction can be used within this
-                         * form, otherwise a ClassCastException may occur.
-                         * The transaction is cloned here to protect against modification
-                         */
-                        if (canModifyTransaction(t)) {
+                    final List transactions = f.getModel().getAllExtraInfo(f.getText());
+
+                    for (final Object t : transactions) {
+                        if (canModifyTransaction((Transaction) t)) {
                             try {
-                                modifyTransaction(modifyTransactionForAutoComplete((Transaction) t.clone()));
+                                modifyTransaction(modifyTransactionForAutoComplete((Transaction) ((Transaction)t).clone()));
                             } catch (CloneNotSupportedException ex) {
                                 Logger.getLogger(PayeeFocusListener.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
                             }
                             modTrans = null;
+                            break;
                         }
                     }
                 }

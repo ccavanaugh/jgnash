@@ -375,6 +375,13 @@ public class AutoCompleteFactory {
             return transactions.get(key);
         }
 
+        public List<Transaction> getAllExtraInfo(final String key) {
+            if (ignoreCase) {
+                return transactions.getAll(key.toLowerCase(Locale.getDefault()));
+            }
+            return transactions.getAll(key);
+        }
+
         /**
          * Removes the transaction associated with the payee. This is done so
          * that deleted transactions can be garbage collected.

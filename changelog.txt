@@ -28,6 +28,7 @@ Add ability to make an existing transaction a recurring transaction.
 
 Release 2.16.0
 ----------------------
+05/14/15 Autocomplete now makes better choices for debit and credit transactions
 03/14/15 Ensure directory has been created first before trying to write a file.
 03/14/15 Historical import dialog for securities did not preset the prior month as intended.
 03/14/15 Java 8 is required for 2.16.0 and newer
