@@ -18,19 +18,20 @@
 package jgnash.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * A HashMap that allows multiple values for the same key.  If multiple
  * values exist for a given key, the values are treated as a FILO buffer.
- * <p/>
+ * <p>
  * This class is thread-safe
- *
- * @author Craig Cavanaugh
  *
  * @param <K> Key class
  * @param <V> Object class
+ * @author Craig Cavanaugh
  */
 public class MultiHashMap<K, V> extends HashMap<K, Object> {
 
@@ -85,33 +86,31 @@ public class MultiHashMap<K, V> extends HashMap<K, Object> {
         }
     }
 
-    //     /**
-    //      * Returns all of the objects associated with a given key.  This is guaranteed to
-    //      * return a valid list.
-    //      *
-    //      * @param key The key to use
-    //      * @return The list of values associated with the key
-    //      */
-    //     @SuppressWarnings("unchecked")
-    //     public List getAll(Object key) {
-    //         Lock readLock = lock.readLock();
-    //
-    //         try {
-    //             readLock.lock();
-    //
-    //             Object v = super.get(key);
-    //             if (v instanceof ArrayList) {
-    //                 return Collections.unmodifiableList((ArrayList) v);
-    //             } else if (v == null) {
-    //                 return Collections.EMPTY_LIST;
-    //             } else {
-    //                 return Collections.singletonList(v);
-    //             }
-    //         } finally {
-    //             readLock.unlock();
-    //         }
-    //     }
-    
+    /**
+     * Returns all of the objects associated with a given key.  This is guaranteed to
+     * return a valid list.
+     *
+     * @param key The key to use
+     * @return The list of values associated with the key
+     */
+    @SuppressWarnings("unchecked")
+    public List<V> getAll(final Object key) {
+        lock.readLock().lock();
+
+        try {
+            Object v = super.get(key);
+            if (v instanceof ArrayList) {
+                return Collections.unmodifiableList((ArrayList) v);
+            } else if (v == null) {
+                return Collections.emptyList();
+            } else {
+                return Collections.singletonList((V) v);
+            }
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
     @SuppressWarnings({"unchecked", "rawtypes", "element-type-mismatch"})
     @Override
     public Object remove(final Object key) {
