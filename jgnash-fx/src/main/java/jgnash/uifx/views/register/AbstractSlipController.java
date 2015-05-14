@@ -20,7 +20,7 @@ package jgnash.uifx.views.register;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
-import java.util.Optional;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -233,16 +233,20 @@ abstract class AbstractSlipController implements Slip {
     void handlePayeeFocusChange() {
         if (modTrans == null && Options.getAutoCompleteEnabled().get() && payeeTextField.getLength() > 0) {
             if (payeeTextField.autoCompleteModelObjectProperty().get() != null) {
-                final Optional<Transaction> optional= payeeTextField.autoCompleteModelObjectProperty().get().getExtraInfo(payeeTextField.getText());
 
-                if (optional.isPresent()) {
-                    if (canModifyTransaction(optional.get())) {
+                // The autocomplete model may return multiple solutions.  Choose the first solution that works
+                final List<Transaction> transactions = payeeTextField.autoCompleteModelObjectProperty()
+                        .get().getAllExtraInfo(payeeTextField.getText());
+
+                for (final Transaction transaction : transactions) {
+                    if (canModifyTransaction(transaction)) {
                         try {
-                            modifyTransaction(modifyTransactionForAutoComplete((Transaction) optional.get().clone()));
+                            modifyTransaction(modifyTransactionForAutoComplete((Transaction) transaction.clone()));
                         } catch (final CloneNotSupportedException e) {
                             Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
                         }
                         modTrans = null; // clear the modTrans field  TODO: use new transaction instead?
+                        break;
                     }
                 }
             }
