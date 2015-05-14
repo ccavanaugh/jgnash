@@ -20,7 +20,6 @@ package jgnash.uifx.control.autocomplete;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 import javafx.beans.property.SimpleBooleanProperty;
 
@@ -113,19 +112,6 @@ abstract class DefaultAutoCompleteModel<E> implements AutoCompleteModel<E> {
         synchronized (list) {
             list.clear();
         }
-    }
-
-    /**
-     * Returns extra information that might be stored with a found string
-     * returned by doLookAhead(). This information can be used to populate other
-     * fields based on matching the string key.
-     * 
-     * @param key The string key most likely returned from doLookAhead()
-     * @return null
-     */
-    @Override
-    public Optional<E> getExtraInfo(final String key) {
-        return Optional.empty();
     }
 
     /**

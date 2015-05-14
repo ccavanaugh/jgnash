@@ -45,17 +45,6 @@ public interface AutoCompleteModel {
      * string key.
      *
      * @param key The string key most likely returned from doLookAhead()
-     * @return Any object that would give extra information about the key
-     */
-    Object getExtraInfo(String key);
-
-    /**
-     * Returns extra information that might be stored with a
-     * found string returned by doLookAhead().  This information
-     * can be used to populate other fields based on matching the
-     * string key.
-     *
-     * @param key The string key most likely returned from doLookAhead()
      * @return A list of objects that would give extra information about the key
      */
     List getAllExtraInfo(String key);

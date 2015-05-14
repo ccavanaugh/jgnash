@@ -114,19 +114,6 @@ public class DefaultAutoCompleteModel implements AutoCompleteModel {
         }
     }
 
-    /**
-     * Returns extra information that might be stored with a found string
-     * returned by doLookAhead(). This information can be used to populate other
-     * fields based on matching the string key.
-     * 
-     * @param key The string key most likely returned from doLookAhead()
-     * @return null
-     */
-    @Override
-    public Object getExtraInfo(final String key) {
-        return null;
-    }
-
     @Override
     public List getAllExtraInfo(final String key) {
         return Collections.EMPTY_LIST;

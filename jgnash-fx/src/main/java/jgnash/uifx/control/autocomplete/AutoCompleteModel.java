@@ -18,7 +18,6 @@
 package jgnash.uifx.control.autocomplete;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Auto complete model interface
@@ -37,17 +36,6 @@ public interface AutoCompleteModel<E> {
      * @return string that was found if any
      */
     String doLookAhead(String content);
-
-    /**
-     * Returns extra information that might be stored with a
-     * found string returned by doLookAhead().  This information
-     * can be used to populate other fields based on matching the
-     * string key.
-     *
-     * @param key The string key most likely returned from doLookAhead()
-     * @return Any object that would give extra information about the key
-     */
-    Optional<E> getExtraInfo(String key);
 
     /**
      * Returns extra information that might be stored with a
