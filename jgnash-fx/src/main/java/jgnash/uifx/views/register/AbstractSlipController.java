@@ -30,9 +30,6 @@ import javax.inject.Inject;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -102,15 +99,12 @@ abstract class AbstractSlipController implements Slip {
 
         AutoCompleteFactory.setMemoModel(memoTextField);
 
-        accountProperty.addListener(new ChangeListener<Account>() {
-            @Override
-            public void changed(final ObservableValue<? extends Account> observable, final Account oldValue, final Account newValue) {
-                // Set the number of fixed decimal places for entry
-                amountField.scaleProperty().set(newValue.getCurrencyNode().getScale());
+        accountProperty.addListener((observable, oldValue, newValue) -> {
+            // Set the number of fixed decimal places for entry
+            amountField.scaleProperty().set(newValue.getCurrencyNode().getScale());
 
-                // Enabled auto completion for the payee field
-                AutoCompleteFactory.setPayeeModel(payeeTextField, newValue);
-            }
+            // Enabled auto completion for the payee field
+            AutoCompleteFactory.setPayeeModel(payeeTextField, newValue);
         });
 
         // If focus is lost, check and load the form with an existing transaction
@@ -121,29 +115,23 @@ abstract class AbstractSlipController implements Slip {
         });
 
         // Install an event handler when the parent has been set via injection
-        parentProperty.addListener(new ChangeListener<Parent>() {
-            @Override
-            public void changed(final ObservableValue<? extends Parent> observable, final Parent oldValue, final Parent newValue) {
+        parentProperty.addListener((observable, oldValue, newValue) -> {
 
-                newValue.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-                    @Override
-                    public void handle(final KeyEvent event) {
-                        if (JavaFXUtils.ESCAPE_KEY.match(event)) {  // clear the form if an escape key is detected
-                            clearForm();
-                        } else if (JavaFXUtils.ENTER_KEY.match(event)) {    // handle an enter key if detected
-                            if (validateForm()) {
-                                Platform.runLater(AbstractSlipController.this::handleEnterAction);
-                            } else {
-                                Platform.runLater(() -> {
-                                    if (event.getSource() instanceof Node) {
-                                        JavaFXUtils.focusNext((Node) event.getSource());
-                                    }
-                                });
+            newValue.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+                if (JavaFXUtils.ESCAPE_KEY.match(event)) {  // clear the form if an escape key is detected
+                    clearForm();
+                } else if (JavaFXUtils.ENTER_KEY.match(event)) {    // handle an enter key if detected
+                    if (validateForm()) {
+                        Platform.runLater(AbstractSlipController.this::handleEnterAction);
+                    } else {
+                        Platform.runLater(() -> {
+                            if (event.getSource() instanceof Node) {
+                                JavaFXUtils.focusNext((Node) event.getSource());
                             }
-                        }
+                        });
                     }
-                });
-            }
+                }
+            });
         });
     }
 
