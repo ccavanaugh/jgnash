@@ -129,6 +129,20 @@ abstract class DefaultAutoCompleteModel<E> implements AutoCompleteModel<E> {
     }
 
     /**
+     * Returns extra information that might be stored with a
+     * found string returned by doLookAhead().  This information
+     * can be used to populate other fields based on matching the
+     * string key.
+     *
+     * @param key The string key most likely returned from doLookAhead()
+     * @return A list of objects that would give extra information about the key
+     */
+    @Override
+    public List<E> getAllExtraInfo(final String key) {
+        return Collections.emptyList();
+    }
+
+    /**
      * Tests if the source string starts with the prefix string. Case is
      * ignored.
      * 
