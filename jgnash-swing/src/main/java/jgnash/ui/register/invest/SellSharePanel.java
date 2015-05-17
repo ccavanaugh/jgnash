@@ -99,7 +99,8 @@ public final class SellSharePanel extends AbstractPriceQtyInvTransactionPanel im
     }
 
     private void layoutMainPanel() {
-        FormLayout layout = new FormLayout("right:d, $lcgap, 50dlu:g, 8dlu, right:d, $lcgap, max(65dlu;min)", "f:d, $nlgap, f:d, $nlgap, f:d, $nlgap, f:d");
+        FormLayout layout = new FormLayout("right:d, $lcgap, 50dlu:g, 8dlu, right:d, $lcgap, max(65dlu;min)",
+                "f:d, $nlgap, f:d, $nlgap, f:d, $nlgap, f:d");
 
         layout.setRowGroups(new int[][]{{1, 3, 5, 7}});
         CellConstraints cc = new CellConstraints();
@@ -107,7 +108,8 @@ public final class SellSharePanel extends AbstractPriceQtyInvTransactionPanel im
         setLayout(layout);
 
         /* Create a sub panel to work around a column spanning problem in FormLayout */
-        JPanel subPanel = buildHorizontalSubPanel("max(48dlu;min):g(0.5), 8dlu, d, $lcgap, max(48dlu;min):g(0.5), 8dlu, d, 4dlu, max(48dlu;min)", ValidationFactory.wrap(priceField), "Label.Quantity", ValidationFactory.wrap(quantityField),
+        JPanel subPanel = buildHorizontalSubPanel("max(48dlu;min):g(0.5), 8dlu, d, $lcgap, max(48dlu;min):g(0.5), 8dlu, d, 4dlu, max(48dlu;min)",
+                ValidationFactory.wrap(priceField), "Label.Quantity", ValidationFactory.wrap(quantityField),
                 "Label.Gains", gainsPanel);
 
         add("Label.Security", cc.xy(1, 1));
@@ -159,9 +161,8 @@ public final class SellSharePanel extends AbstractPriceQtyInvTransactionPanel im
 
         gainsPanel.setTransactionEntries(((InvestmentTransaction) tran).getInvestmentGainLossEntries());
 
-        entries.stream().filter(e -> e instanceof TransactionEntrySellX)
-                .forEach(e -> {
-                    AbstractInvestmentTransactionEntry entry = (AbstractInvestmentTransactionEntry) e;
+        entries.stream().filter(e -> e instanceof TransactionEntrySellX).forEach(e -> {
+                    final AbstractInvestmentTransactionEntry entry = (AbstractInvestmentTransactionEntry) e;
 
                     memoField.setText(e.getMemo());
                     priceField.setDecimal(entry.getPrice());
@@ -187,7 +188,9 @@ public final class SellSharePanel extends AbstractPriceQtyInvTransactionPanel im
 
         Collection<TransactionEntry> gains = gainsPanel.getTransactions();
 
-        return TransactionFactory.generateSellXTransaction(accountExchangePanel.getSelectedAccount(), getAccount(), securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), exchangeRate, datePanel.getDate(), memoField.getText(), fees, gains);
+        return TransactionFactory.generateSellXTransaction(accountExchangePanel.getSelectedAccount(),
+                getAccount(), securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(),
+                exchangeRate, datePanel.getDate(), memoField.getText(), fees, gains);
     }
 
     @Override
