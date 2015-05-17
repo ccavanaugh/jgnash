@@ -20,6 +20,7 @@ package jgnash.uifx.views.register;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -32,8 +33,9 @@ import jgnash.engine.ReconcileManager;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
-import jgnash.engine.TransactionEntryBuyX;
+import jgnash.engine.TransactionEntrySellX;
 import jgnash.engine.TransactionFactory;
+import jgnash.engine.TransactionType;
 import jgnash.util.NotNull;
 
 /**
@@ -41,7 +43,10 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
+public class SellShareSlipController extends AbstractPriceQtyInvSlipController {
+
+    @FXML
+    private GainLossPane gainLossPane;
 
     @FXML
     private FeePane feePane;
@@ -64,6 +69,7 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
         accountExchangePane.amountProperty().bindBidirectional(totalField.decimalProperty());
         accountExchangePane.amountEditableProperty().bind(totalField.editableProperty());
 
+        gainLossPane.accountProperty().bind(accountProperty());
         feePane.accountProperty().bind(accountProperty());
 
         accountProperty().addListener((observable, oldValue, newValue) -> {
@@ -74,23 +80,24 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
 
         quantityField.decimalProperty().addListener(changeListener);
         priceField.decimalProperty().addListener(changeListener);
+        gainLossPane.decimalProperty().addListener(changeListener);
         feePane.decimalProperty().addListener(changeListener);
     }
 
     @Override
     public void modifyTransaction(@NotNull final Transaction transaction) {
-        if (!(transaction instanceof InvestmentTransaction)) {
+        if (transaction.getTransactionType() != TransactionType.SELLSHARE) {
             throw new IllegalArgumentException("bad tranType");
         }
+
         clearForm();
 
         datePicker.setDate(transaction.getDate());
 
-        List<TransactionEntry> entries = transaction.getTransactionEntries();
-
         feePane.setTransactionEntries(((InvestmentTransaction) transaction).getInvestmentFeeEntries());
+        gainLossPane.setTransactionEntries(((InvestmentTransaction) transaction).getInvestmentGainLossEntries());
 
-        entries.stream().filter(e -> e instanceof TransactionEntryBuyX).forEach(e -> {
+        transaction.getTransactionEntries().stream().filter(e -> e instanceof TransactionEntrySellX).forEach(e -> {
             final AbstractInvestmentTransactionEntry entry = (AbstractInvestmentTransactionEntry) e;
 
             memoTextField.setText(e.getMemo());
@@ -98,15 +105,13 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
             quantityField.setDecimal(entry.getQuantity());
             securityComboBox.setValue(entry.getSecurityNode());
 
-            /* TODO by default investment account is assigned to debit account.  Should only have to look at the
-             * credit side of the entry for information
-             */
             if (entry.getCreditAccount().equals(accountProperty().get())) {
                 accountExchangePane.setSelectedAccount(entry.getDebitAccount());
                 accountExchangePane.setExchangedAmount(entry.getDebitAmount().abs());
             } else {
-                accountExchangePane.setSelectedAccount(entry.getCreditAccount());
-                accountExchangePane.setExchangedAmount(entry.getCreditAmount());
+                //accountExchangePane.setSelectedAccount(entry.getCreditAccount());
+                //accountExchangePane.setExchangedAmount(entry.getCreditAmount());
+                Logger.getLogger(SellShareSlipController.class.getName()).warning("was not expected");
             }
         });
 
@@ -116,7 +121,7 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
     }
 
     void updateTotalField() {
-        totalField.setDecimal(quantityField.getDecimal().multiply(priceField.getDecimal()).add(feePane.getDecimal()));
+        totalField.setDecimal(quantityField.getDecimal().multiply(priceField.getDecimal()).add(gainLossPane.getDecimal()));
     }
 
     @Override
@@ -128,11 +133,12 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
     @Override
     public Transaction buildTransaction() {
         final BigDecimal exchangeRate = accountExchangePane.exchangeAmountProperty().getValue();
+        final List<TransactionEntry> gains = gainLossPane.getTransactions();
         final List<TransactionEntry> fees = feePane.getTransactions();
 
-        return TransactionFactory.generateBuyXTransaction(accountExchangePane.getSelectedAccount(),
+        return TransactionFactory.generateSellXTransaction(accountExchangePane.getSelectedAccount(),
                 accountProperty().get(), securityComboBox.getValue(), priceField.getDecimal(),
-                quantityField.getDecimal(), exchangeRate, datePicker.getDate(), memoTextField.getText(), fees);
+                quantityField.getDecimal(), exchangeRate, datePicker.getDate(), memoTextField.getText(), fees, gains);
     }
 
     @Override
@@ -140,6 +146,7 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
         super.clearForm();
 
         feePane.clearForm();
+        gainLossPane.clearForm();
 
         attachmentPane.clear();
         accountExchangePane.setEnabled(true);

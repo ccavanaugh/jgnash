@@ -20,18 +20,20 @@ package jgnash.uifx.views.register;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionTag;
 
+
 /**
- * Fees Entry Controller for investment fees
+ * Split Transaction Entry Controller for investment gains and loss
  *
  * @author Craig Cavanaugh
  */
-public class FeeTransactionEntrySlipController extends SplitTransactionSlipController {
+public class GainLossTransactionEntrySlipController extends SplitTransactionSlipController {
 
     @Override
     TransactionEntry buildTransactionEntry() {
         final TransactionEntry entry = super.buildTransactionEntry();
-        entry.setTransactionTag(TransactionTag.INVESTMENT_FEE);
+        entry.setTransactionTag(TransactionTag.GAIN_LOSS);
 
         return entry;
     }
+
 }

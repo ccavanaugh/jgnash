@@ -90,11 +90,9 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
 
         final List<SlipControllerContainer> transactionPanes = new ArrayList<>();
 
-
-
         // TODO: more investment slips
         transactionPanes.add(buildBuyShareTab(actions[0]));
-        //transactionPanes.add(buildBuyShareTab(actions[1], SlipType.SELL_SHARES));
+        transactionPanes.add(buildSellShareTab(actions[1]));
         transactionPanes.add(buildCashTransferTab(actions[2], SlipType.INCREASE));
         transactionPanes.add(buildCashTransferTab(actions[3], SlipType.DECREASE));
 
@@ -127,6 +125,22 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
             final Pane pane = fxmlLoader.load();
 
             final BuyShareSlipController slipController = fxmlLoader.getController();
+
+            slipController.accountProperty().bind(accountProperty());
+
+            return new SlipControllerContainer(name, slipController, pane);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private SlipControllerContainer buildSellShareTab(final String name) {
+
+        try {
+            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("SellShareSlip.fxml"), resources);
+            final Pane pane = fxmlLoader.load();
+
+            final SellShareSlipController slipController = fxmlLoader.getController();
 
             slipController.accountProperty().bind(accountProperty());
 
@@ -172,7 +186,7 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
                     actionComboBox.getSelectionModel().select(0);
                     break;
                 case SELLSHARE:
-                    //actionComboBox.getSelectionModel().select(1);
+                    actionComboBox.getSelectionModel().select(1);
                     break;
                 default: // TODO: more investment slips
                     break;

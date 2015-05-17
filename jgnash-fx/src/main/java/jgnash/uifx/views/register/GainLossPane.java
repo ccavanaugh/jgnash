@@ -17,24 +17,25 @@
  */
 package jgnash.uifx.views.register;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.layout.GridPane;
-import jgnash.engine.Account;
-import jgnash.engine.TransactionEntry;
-import jgnash.engine.TransactionTag;
-import jgnash.uifx.control.DecimalTextField;
-import jgnash.util.ResourceUtils;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
+
+import jgnash.engine.Account;
+import jgnash.engine.TransactionEntry;
+import jgnash.engine.TransactionTag;
+import jgnash.uifx.control.DecimalTextField;
+import jgnash.util.ResourceUtils;
 
 
 /**
@@ -45,23 +46,23 @@ import java.util.logging.Logger;
  *
  * @author Craig Cavanaugh
  */
-public class FeesPane extends GridPane {
+public class GainLossPane extends GridPane {
 
     @FXML
     protected Button detailsButton;
 
     @FXML
-    private DecimalTextField feesField;
+    private DecimalTextField gainsField;
 
     @FXML
     private ResourceBundle resources;
 
     private final SimpleObjectProperty<Account> accountProperty = new SimpleObjectProperty<>(null);
 
-    private FeesDialog feesDialog;
+    private GainLossDialog gainLossDialog;
 
-    public FeesPane() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("FeesPane.fxml"), ResourceUtils.getBundle());
+    public GainLossPane() {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("GainLossPane.fxml"), ResourceUtils.getBundle());
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
@@ -76,30 +77,30 @@ public class FeesPane extends GridPane {
     private void initialize() {
         detailsButton.setOnAction(event -> handleDetailsAction());
 
-        feesDialog = new FeesDialog();
+        gainLossDialog = new GainLossDialog();
 
         accountProperty.addListener((observable, oldValue, newValue) -> {
-            feesDialog.accountProperty().setValue(accountProperty().get());
+            gainLossDialog.accountProperty().setValue(accountProperty().get());
         });
     }
 
     private void handleDetailsAction() {
-        feesDialog.showAndWait();
+        gainLossDialog.showAndWait();
 
-        feesField.setEditable(feesDialog.getTransactionEntries().size() == 0);
+        gainsField.setEditable(gainLossDialog.getTransactionEntries().size() == 0);
 
-        if (feesDialog.getTransactionEntries().size() != 0) {
-            feesField.setDecimal(feesDialog.getBalance().abs());
+        if (gainLossDialog.getTransactionEntries().size() != 0) {
+            gainsField.setDecimal(gainLossDialog.getBalance().abs());
         }
     }
 
     public List<TransactionEntry> getTransactions() {
 
-        final List<TransactionEntry> feeList = feesDialog.getTransactionEntries();
+        final List<TransactionEntry> feeList = gainLossDialog.getTransactionEntries();
 
         // adjust the cash balance of the investment account
-        if (feeList.isEmpty() && feesField.getDecimal().compareTo(BigDecimal.ZERO) != 0) {  // ignore zero balance fees
-            TransactionEntry fee = new TransactionEntry(accountProperty().get(), feesField.getDecimal().abs().negate());
+        if (feeList.isEmpty() && gainsField.getDecimal().compareTo(BigDecimal.ZERO) != 0) {  // ignore zero balance fees
+            TransactionEntry fee = new TransactionEntry(accountProperty().get(), gainsField.getDecimal().abs().negate());
             fee.setTransactionTag(TransactionTag.INVESTMENT_FEE);
 
             feeList.add(fee);
@@ -113,40 +114,40 @@ public class FeesPane extends GridPane {
      * @param fees {@code List} of fees to clone
      */
     public void setTransactionEntries(final List<TransactionEntry> fees) {
-        final List<TransactionEntry> feeList = feesDialog.getTransactionEntries();
+        final List<TransactionEntry> transactionEntries = gainLossDialog.getTransactionEntries();
 
         if (fees.size() == 1) {
             TransactionEntry e = fees.get(0);
 
             if (e.getCreditAccount().equals(e.getDebitAccount())) {
-                feesField.setDecimal(e.getAmount(accountProperty().get()).abs());
+                gainsField.setDecimal(e.getAmount(accountProperty().get()).abs());
             } else {
                 try {
-                    feeList.add((TransactionEntry) e.clone()); // copy over the provided set's entry
+                    transactionEntries.add((TransactionEntry) e.clone()); // copy over the provided set's entry
                 } catch (CloneNotSupportedException e1) {
-                    Logger.getLogger(FeesPane.class.getName()).log(Level.SEVERE, e1.getLocalizedMessage(), e1);
+                    Logger.getLogger(GainLossPane.class.getName()).log(Level.SEVERE, e1.getLocalizedMessage(), e1);
                 }
-                feesField.setDecimal(sumFees().abs());
+                gainsField.setDecimal(sumGains().abs());
             }
         } else {
             for (final TransactionEntry entry : fees) { // clone the provided set's entries
                 try {
-                    feeList.add((TransactionEntry) entry.clone());
+                    transactionEntries.add((TransactionEntry) entry.clone());
                 } catch (CloneNotSupportedException e) {
-                    Logger.getLogger(FeesPane.class.getName()).log(Level.SEVERE, e.toString(), e);
+                    Logger.getLogger(GainLossPane.class.getName()).log(Level.SEVERE, e.toString(), e);
                 }
             }
 
-            feesField.setDecimal(sumFees().abs());
+            gainsField.setDecimal(sumGains().abs());
         }
 
-        feesField.setEditable(feeList.size() < 1);
+        gainsField.setEditable(transactionEntries.size() < 1);
     }
 
-    private BigDecimal sumFees() {
+    private BigDecimal sumGains() {
         BigDecimal sum = BigDecimal.ZERO;
 
-        for (TransactionEntry entry : feesDialog.getTransactionEntries()) {
+        for (TransactionEntry entry : gainLossDialog.getTransactionEntries()) {
             sum = sum.add(entry.getAmount(accountProperty().get()));
         }
 
@@ -157,12 +158,12 @@ public class FeesPane extends GridPane {
      * Clear the form and remove all entries
      */
     void clearForm() {
-        feesDialog.getTransactionEntries().clear();
-        feesField.setDecimal(BigDecimal.ZERO);
+        gainLossDialog.getTransactionEntries().clear();
+        gainsField.setDecimal(BigDecimal.ZERO);
     }
 
     public BigDecimal getDecimal() {
-        return feesField.getDecimal();
+        return gainsField.getDecimal();
     }
 
     public SimpleObjectProperty<Account> accountProperty() {
@@ -170,6 +171,6 @@ public class FeesPane extends GridPane {
     }
 
     public ObjectProperty<BigDecimal> decimalProperty() {
-        return feesField.decimalProperty();
+        return gainsField.decimalProperty();
     }
 }

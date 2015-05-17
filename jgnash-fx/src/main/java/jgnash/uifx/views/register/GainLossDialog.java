@@ -29,13 +29,13 @@ import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
 /**
- * Fees entry dialog
+ * Gains / Loss entry dialog
  *
  * @author Craig Cavanaugh
  */
-class FeesDialog extends AbstractTransactionEntryDialog {
+class GainLossDialog extends AbstractTransactionEntryDialog {
 
-    private static final String PREF_NODE_USER_ROOT = "/jgnash/uifx/views/register/fees";
+    private static final String PREF_NODE_USER_ROOT = "/jgnash/uifx/views/register/gainLoss";
 
     @FXML
     private StackPane formPane;
@@ -43,11 +43,12 @@ class FeesDialog extends AbstractTransactionEntryDialog {
     @FXML
     private ResourceBundle resources;
 
-    private FeeTransactionEntrySlipController debitController;
+    private
+    GainLossTransactionEntrySlipController gainLossController;
 
-    FeesDialog() {
-        FXMLUtils.loadFXML(this, "FeesDialog.fxml", ResourceUtils.getBundle());
-        setTitle(ResourceUtils.getBundle().getString("Title.InvFees"));
+    GainLossDialog() {
+        FXMLUtils.loadFXML(this, "GainLossDialog.fxml", ResourceUtils.getBundle());
+        setTitle(ResourceUtils.getBundle().getString("Title.InvGainsLoss"));
     }
 
     @Override
@@ -57,7 +58,7 @@ class FeesDialog extends AbstractTransactionEntryDialog {
 
     @Override
     void newAction() {
-        debitController.clearForm();
+        gainLossController.clearForm();
         tableView.getSelectionModel().clearSelection();
     }
 
@@ -66,22 +67,24 @@ class FeesDialog extends AbstractTransactionEntryDialog {
         final TransactionEntry entry = tableView.getSelectionModel().getSelectedItem();
         if (entry != null) {
             tableView.getSelectionModel().clearSelection();
-            debitController.clearForm();
+            gainLossController.clearForm();
             getTransactionEntries().remove(entry);
         }
     }
 
     @Override
     void modifyTransactionEntry(@NotNull final TransactionEntry transactionEntry) {
-        debitController.modifyTransactionEntry(transactionEntry);
+        gainLossController.modifyTransactionEntry(transactionEntry);
     }
 
     @Override
    void initForm() {
-        debitController = FXMLUtils.loadFXML(o -> formPane.getChildren().addAll((Node) o),
-                "FeeTransactionEntrySlip.fxml", resources);
+        gainLossController = FXMLUtils.loadFXML(o -> formPane.getChildren().addAll((Node) o),
+                "GainLossTransactionEntrySlip.fxml", resources);
 
-        debitController.getAccountProperty().bind(accountProperty());
-        debitController.getTransactionEntryListProperty().setValue(getTransactionEntries());
+        gainLossController.getAccountProperty().bind(accountProperty());
+        gainLossController.getTransactionEntryListProperty().setValue(getTransactionEntries());
+
+        gainLossController.setSlipType(SlipType.INCREASE);
     }
 }

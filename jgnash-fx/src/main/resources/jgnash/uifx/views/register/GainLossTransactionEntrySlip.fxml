@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import jgnash.uifx.control.AutoCompleteTextField?>
+<?import jgnash.uifx.control.DecimalTextField?>
+<?import jgnash.uifx.views.register.AccountExchangePane?>
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="jgnash.uifx.views.register.GainLossTransactionEntrySlipController" styleClass="form, dialog">
+  <columnConstraints>
+      <ColumnConstraints hgrow="NEVER"/>
+      <ColumnConstraints hgrow="SOMETIMES" />
+      <ColumnConstraints hgrow="NEVER"/>
+      <ColumnConstraints hgrow="NEVER" minWidth="95" maxWidth="95"/>
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints vgrow="NEVER" />
+    <RowConstraints vgrow="NEVER" />
+    <RowConstraints vgrow="NEVER" />
+  </rowConstraints>
+   <children>
+      <Label text="%Label.Account"/>
+      <AccountExchangePane fx:id="accountExchangePane" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true"/>
+      <Label text="%Label.Amount" GridPane.columnIndex="2"/>
+      <DecimalTextField fx:id="amountField" GridPane.columnIndex="3"/>
+      <Label text="%Label.Memo" GridPane.rowIndex="1" />
+      <AutoCompleteTextField fx:id="memoField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+
+      <GridPane GridPane.rowIndex="2" GridPane.columnSpan="4" GridPane.fillWidth="true"  GridPane.vgrow="NEVER" styleClass="form">
+        <columnConstraints>
+            <ColumnConstraints hgrow="NEVER" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints vgrow="NEVER" />
+        </rowConstraints>
+         <children>
+            <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared" />
+            <ButtonBar GridPane.columnIndex="1" >
+               <buttons>
+                 <Button text="%Button.Enter" ButtonBar.buttonData="OK_DONE" onAction="#handleEnterAction"/>
+                 <Button text="%Button.Clear" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#handleCancelAction"/>
+               </buttons>
+             </ButtonBar>
+         </children>
+      </GridPane>
+   </children>
+</GridPane>
