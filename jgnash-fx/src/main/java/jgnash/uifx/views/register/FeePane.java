@@ -24,19 +24,15 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
 
 import jgnash.engine.Account;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionTag;
-import jgnash.uifx.control.DecimalTextField;
+import jgnash.uifx.control.DetailedDecimalTextField;
 import jgnash.util.ResourceUtils;
-
 
 /**
  * UI Panel for handling investment transaction fees
@@ -46,14 +42,7 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
-public class FeePane extends BorderPane {
-
-    @FXML
-    protected Button detailsButton;
-
-    @FXML
-    private DecimalTextField feesField;
-
+public class FeePane extends DetailedDecimalTextField {
     @FXML
     private ResourceBundle resources;
 
@@ -75,8 +64,6 @@ public class FeePane extends BorderPane {
 
     @FXML
     private void initialize() {
-        detailsButton.setOnAction(event -> handleDetailsAction());
-
         feeDialog = new FeeDialog();
 
         accountProperty.addListener((observable, oldValue, newValue) -> {
@@ -84,13 +71,14 @@ public class FeePane extends BorderPane {
         });
     }
 
-    private void handleDetailsAction() {
+    @Override
+    public void show() {
         feeDialog.showAndWait();
 
-        feesField.setEditable(feeDialog.getTransactionEntries().size() == 0);
+        setEditable(feeDialog.getTransactionEntries().size() == 0);
 
         if (feeDialog.getTransactionEntries().size() != 0) {
-            feesField.setDecimal(feeDialog.getBalance().abs());
+            setDecimal(feeDialog.getBalance().abs());
         }
     }
 
@@ -99,8 +87,8 @@ public class FeePane extends BorderPane {
         final List<TransactionEntry> feeList = feeDialog.getTransactionEntries();
 
         // adjust the cash balance of the investment account
-        if (feeList.isEmpty() && feesField.getDecimal().compareTo(BigDecimal.ZERO) != 0) {  // ignore zero balance fees
-            TransactionEntry fee = new TransactionEntry(accountProperty().get(), feesField.getDecimal().abs().negate());
+        if (feeList.isEmpty() && getDecimal().compareTo(BigDecimal.ZERO) != 0) {  // ignore zero balance fees
+            TransactionEntry fee = new TransactionEntry(accountProperty().get(), getDecimal().abs().negate());
             fee.setTransactionTag(TransactionTag.INVESTMENT_FEE);
 
             feeList.add(fee);
@@ -120,14 +108,14 @@ public class FeePane extends BorderPane {
             TransactionEntry e = fees.get(0);
 
             if (e.getCreditAccount().equals(e.getDebitAccount())) {
-                feesField.setDecimal(e.getAmount(accountProperty().get()).abs());
+                setDecimal(e.getAmount(accountProperty().get()).abs());
             } else {
                 try {
                     feeList.add((TransactionEntry) e.clone()); // copy over the provided set's entry
                 } catch (CloneNotSupportedException e1) {
                     Logger.getLogger(FeePane.class.getName()).log(Level.SEVERE, e1.getLocalizedMessage(), e1);
                 }
-                feesField.setDecimal(sumFees().abs());
+                setDecimal(sumFees().abs());
             }
         } else {
             for (final TransactionEntry entry : fees) { // clone the provided set's entries
@@ -138,11 +126,10 @@ public class FeePane extends BorderPane {
                 }
             }
 
-            feesField.setDecimal(sumFees().abs());
+            setDecimal(sumFees().abs());
         }
 
-        feesField.setEditable(feeList.size() < 1);
-
+        setEditable(feeList.size() < 1);
     }
 
     private BigDecimal sumFees() {
@@ -160,18 +147,11 @@ public class FeePane extends BorderPane {
      */
     void clearForm() {
         feeDialog.getTransactionEntries().clear();
-        feesField.setDecimal(BigDecimal.ZERO);
-    }
-
-    public BigDecimal getDecimal() {
-        return feesField.getDecimal();
+        setDecimal(BigDecimal.ZERO);
     }
 
     public SimpleObjectProperty<Account> accountProperty() {
         return accountProperty;
     }
-
-    public ObjectProperty<BigDecimal> decimalProperty() {
-        return feesField.decimalProperty();
-    }
 }
+

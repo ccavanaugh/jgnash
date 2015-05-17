@@ -1,0 +1,3 @@
+<?import javafx.scene.control.ComboBoxBase?>
+<fx:root type="javafx.scene.control.ComboBoxBase" xmlns:fx="http://javafx.com/fxml">
+</fx:root>

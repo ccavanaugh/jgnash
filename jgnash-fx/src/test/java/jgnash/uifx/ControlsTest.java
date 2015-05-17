@@ -30,8 +30,6 @@ import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -49,10 +47,11 @@ import jgnash.engine.SecurityNode;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
+import jgnash.uifx.control.DetailedDecimalTextField;
+import jgnash.uifx.control.SecurityComboBox;
 import jgnash.uifx.control.TransactionNumberComboBox;
 
 import com.sun.javafx.css.StyleManager;
-import jgnash.uifx.control.SecurityComboBox;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -104,18 +103,12 @@ public class ControlsTest extends Application {
             System.out.println("Selected date: " + date);
         });
 
-        decimalTextField.decimalProperty().addListener(new ChangeListener<BigDecimal>() {
-            @Override
-            public void changed(ObservableValue<? extends BigDecimal> observable, BigDecimal oldValue, BigDecimal newValue) {
-                System.out.println("decimalTextField: " + newValue);
-            }
+        decimalTextField.decimalProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("decimalTextField: " + newValue);
         });
 
-        decimalTextField2.decimalProperty().addListener(new ChangeListener<BigDecimal>() {
-            @Override
-            public void changed(ObservableValue<? extends BigDecimal> observable, BigDecimal oldValue, BigDecimal newValue) {
-                System.out.println("decimalTextField2: " + newValue);
-            }
+        decimalTextField2.decimalProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("decimalTextField2: " + newValue);
         });
 
         ObjectProperty<BigDecimal> decimalProperty = new SimpleObjectProperty<>();
@@ -138,8 +131,10 @@ public class ControlsTest extends Application {
 
         SecurityComboBox securityComboBox = new SecurityComboBox();
 
+        DetailedDecimalTextField feesField = new DetailedDecimalTextField();
+
         VBox vBox = new VBox();
-        vBox.getChildren().addAll(decimalTextField, decimalTextField2, datePicker, new AccountComboBox(), numberComboBox, btn, exceptionButton, securityComboBox);
+        vBox.getChildren().addAll(decimalTextField, decimalTextField2, datePicker, new AccountComboBox(), numberComboBox, btn, exceptionButton, securityComboBox, feesField);
 
         primaryStage.setScene(new Scene(vBox, 300, 350));
 

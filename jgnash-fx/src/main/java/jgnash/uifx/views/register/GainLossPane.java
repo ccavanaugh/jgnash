@@ -24,19 +24,15 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
 
 import jgnash.engine.Account;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionTag;
-import jgnash.uifx.control.DecimalTextField;
+import jgnash.uifx.control.DetailedDecimalTextField;
 import jgnash.util.ResourceUtils;
-
 
 /**
  * UI Panel for handling investment transaction fees
@@ -46,13 +42,7 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
-public class GainLossPane extends BorderPane {
-
-    @FXML
-    protected Button detailsButton;
-
-    @FXML
-    private DecimalTextField gainsField;
+public class GainLossPane extends DetailedDecimalTextField {
 
     @FXML
     private ResourceBundle resources;
@@ -75,8 +65,6 @@ public class GainLossPane extends BorderPane {
 
     @FXML
     private void initialize() {
-        detailsButton.setOnAction(event -> handleDetailsAction());
-
         gainLossDialog = new GainLossDialog();
 
         accountProperty.addListener((observable, oldValue, newValue) -> {
@@ -84,13 +72,14 @@ public class GainLossPane extends BorderPane {
         });
     }
 
-    private void handleDetailsAction() {
+    @Override
+    public void show() {
         gainLossDialog.showAndWait();
 
-        gainsField.setEditable(gainLossDialog.getTransactionEntries().size() == 0);
+        setEditable(gainLossDialog.getTransactionEntries().size() == 0);
 
         if (gainLossDialog.getTransactionEntries().size() != 0) {
-            gainsField.setDecimal(gainLossDialog.getBalance().abs());
+           setDecimal(gainLossDialog.getBalance().abs());
         }
     }
 
@@ -99,8 +88,8 @@ public class GainLossPane extends BorderPane {
         final List<TransactionEntry> feeList = gainLossDialog.getTransactionEntries();
 
         // adjust the cash balance of the investment account
-        if (feeList.isEmpty() && gainsField.getDecimal().compareTo(BigDecimal.ZERO) != 0) {  // ignore zero balance fees
-            TransactionEntry fee = new TransactionEntry(accountProperty().get(), gainsField.getDecimal().abs().negate());
+        if (feeList.isEmpty() && getDecimal().compareTo(BigDecimal.ZERO) != 0) {  // ignore zero balance fees
+            TransactionEntry fee = new TransactionEntry(accountProperty().get(), getDecimal().abs().negate());
             fee.setTransactionTag(TransactionTag.INVESTMENT_FEE);
 
             feeList.add(fee);
@@ -120,14 +109,14 @@ public class GainLossPane extends BorderPane {
             TransactionEntry e = fees.get(0);
 
             if (e.getCreditAccount().equals(e.getDebitAccount())) {
-                gainsField.setDecimal(e.getAmount(accountProperty().get()).abs());
+                setDecimal(e.getAmount(accountProperty().get()).abs());
             } else {
                 try {
                     transactionEntries.add((TransactionEntry) e.clone()); // copy over the provided set's entry
                 } catch (CloneNotSupportedException e1) {
                     Logger.getLogger(GainLossPane.class.getName()).log(Level.SEVERE, e1.getLocalizedMessage(), e1);
                 }
-                gainsField.setDecimal(sumGains().abs());
+                setDecimal(sumGains().abs());
             }
         } else {
             for (final TransactionEntry entry : fees) { // clone the provided set's entries
@@ -138,10 +127,10 @@ public class GainLossPane extends BorderPane {
                 }
             }
 
-            gainsField.setDecimal(sumGains().abs());
+            setDecimal(sumGains().abs());
         }
 
-        gainsField.setEditable(transactionEntries.size() < 1);
+        setEditable(transactionEntries.size() < 1);
     }
 
     private BigDecimal sumGains() {
@@ -159,18 +148,10 @@ public class GainLossPane extends BorderPane {
      */
     void clearForm() {
         gainLossDialog.getTransactionEntries().clear();
-        gainsField.setDecimal(BigDecimal.ZERO);
-    }
-
-    public BigDecimal getDecimal() {
-        return gainsField.getDecimal();
+        setDecimal(BigDecimal.ZERO);
     }
 
     public SimpleObjectProperty<Account> accountProperty() {
         return accountProperty;
-    }
-
-    public ObjectProperty<BigDecimal> decimalProperty() {
-        return gainsField.decimalProperty();
     }
 }

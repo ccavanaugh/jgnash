@@ -58,6 +58,7 @@ public class SellShareSlipController extends AbstractPriceQtyInvSlipController {
     private AccountExchangePane accountExchangePane;
 
     @FXML
+    @Override
     public void initialize() {
         super.initialize();
 
