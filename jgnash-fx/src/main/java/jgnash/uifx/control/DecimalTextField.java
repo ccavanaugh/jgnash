@@ -17,6 +17,16 @@
  */
 package jgnash.uifx.control;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Objects;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -26,22 +36,13 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+
 import jgnash.engine.MathConstants;
 import jgnash.util.NotNull;
-
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Objects;
 
 /**
  * Text field for entering decimal values
@@ -127,34 +128,27 @@ public class DecimalTextField extends TextField {
             }
         });
 
-        addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<javafx.scene.input.KeyEvent>() {
-            @Override
-            public void handle(final KeyEvent event) {
+        addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            //Raise a flag the Decimal key has been pressed so it can be
+            // forced to a comma or period based on locale
+            if (event.getCode() == KeyCode.DECIMAL) {
+                forceFraction = true;
+            }
 
-                //Raise a flag the Decimal key has been pressed so it can be
-                // forced to a comma or period based on locale
-                if (event.getCode() == KeyCode.DECIMAL) {
-                    forceFraction = true;
-                }
-
-                // For evaluation if the enter key is pressed
-                if (event.getCode() == KeyCode.ENTER) {
-                    Platform.runLater(() -> {
-                        evaluateAndSet();
-                        positionCaret(getText().length());
-                    });
-                }
+            // For evaluation if the enter key is pressed
+            if (event.getCode() == KeyCode.ENTER) {
+                Platform.runLater(() -> {
+                    evaluateAndSet();
+                    positionCaret(getText().length());
+                });
             }
         });
 
-        decimalProperty().addListener(new ChangeListener<BigDecimal>() {
-            @Override
-            public void changed(final ObservableValue<? extends BigDecimal> observable, final BigDecimal oldValue, final BigDecimal newValue) {
-                if (newValue == null || (emptyWhenZeroProperty().get() && newValue.compareTo(BigDecimal.ZERO) == 0)) {
-                    setText("");
-                } else {
-                    setText(format.format(newValue.doubleValue()));
-                }
+        decimalProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || (emptyWhenZeroProperty().get() && newValue.compareTo(BigDecimal.ZERO) == 0)) {
+                setText("");
+            } else {
+                setText(format.format(newValue.doubleValue()));
             }
         });
 
