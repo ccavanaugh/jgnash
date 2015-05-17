@@ -36,13 +36,13 @@
 
     <!-- Row 1 -->
     <Label text="%Label.Price" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-    <GridPane styleClass="form" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.fillWidth="true" gridLinesVisible="true">
+    <GridPane styleClass="form" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.fillWidth="true">
       <columnConstraints>
-        <ColumnConstraints hgrow="ALWAYS" minWidth="95" />
+        <ColumnConstraints hgrow="ALWAYS" minWidth="80" />
         <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-        <ColumnConstraints hgrow="ALWAYS" minWidth="95" />
+        <ColumnConstraints hgrow="ALWAYS" minWidth="80" />
         <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-        <ColumnConstraints hgrow="ALWAYS" minWidth="95" />
+        <ColumnConstraints hgrow="ALWAYS" minWidth="80" />
       </columnConstraints>
       <rowConstraints>
         <RowConstraints vgrow="NEVER" />

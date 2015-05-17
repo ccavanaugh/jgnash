@@ -2,22 +2,15 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import jgnash.uifx.control.DecimalTextField?>
 <?import org.controlsfx.glyphfont.Glyph?>
-<fx:root type="javafx.scene.layout.GridPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-  <columnConstraints>
-    <ColumnConstraints hgrow="NEVER"/>
-    <ColumnConstraints prefWidth="2" />
-    <ColumnConstraints hgrow="SOMETIMES" />
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints vgrow="NEVER" />
-  </rowConstraints>
-  <children>
+<fx:root type="javafx.scene.layout.BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+  <center>
     <DecimalTextField fx:id="gainsField"/>
+  </center>
+  <right>
     <Button fx:id="detailsButton" mnemonicParsing="false" GridPane.columnIndex="2" styleClass="icon-button">
       <graphic>
         <Glyph fontFamily="FontAwesome" icon="PENCIL_SQUARE" />
@@ -26,5 +19,5 @@
         <Tooltip text="%ToolTip.ShowDetails"/>
       </tooltip>
     </Button>
-  </children>
+  </right>
 </fx:root>

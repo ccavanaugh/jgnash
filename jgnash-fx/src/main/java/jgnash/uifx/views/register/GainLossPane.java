@@ -29,7 +29,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.BorderPane;
 
 import jgnash.engine.Account;
 import jgnash.engine.TransactionEntry;
@@ -46,7 +46,7 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
-public class GainLossPane extends GridPane {
+public class GainLossPane extends BorderPane {
 
     @FXML
     protected Button detailsButton;
