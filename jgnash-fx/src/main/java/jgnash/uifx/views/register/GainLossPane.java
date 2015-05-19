@@ -31,7 +31,7 @@ import javafx.fxml.FXMLLoader;
 import jgnash.engine.Account;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionTag;
-import jgnash.uifx.control.DetailedDecimalTextField;
+import jgnash.uifx.control.DetailedDecimalTextField2;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -42,7 +42,7 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
-public class GainLossPane extends DetailedDecimalTextField {
+public class GainLossPane extends DetailedDecimalTextField2 {
 
     @FXML
     private ResourceBundle resources;
@@ -149,6 +149,7 @@ public class GainLossPane extends DetailedDecimalTextField {
     void clearForm() {
         gainLossDialog.getTransactionEntries().clear();
         setDecimal(BigDecimal.ZERO);
+        setEditable(true);
     }
 
     public SimpleObjectProperty<Account> accountProperty() {
