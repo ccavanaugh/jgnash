@@ -17,6 +17,11 @@
  */
 package jgnash.uifx.control;
 
+import javafx.application.Platform;
+import javafx.scene.control.DatePicker;
+import javafx.scene.input.KeyEvent;
+import javafx.util.StringConverter;
+
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -28,12 +33,6 @@ import java.time.format.DecimalStyle;
 import java.time.format.FormatStyle;
 import java.util.Date;
 import java.util.Locale;
-
-import javafx.application.Platform;
-import javafx.event.EventHandler;
-import javafx.scene.control.DatePicker;
-import javafx.scene.input.KeyEvent;
-import javafx.util.StringConverter;
 
 /**
  * Enhanced DatePicker.  Adds short cuts for date entry with better input character filters
@@ -64,58 +63,52 @@ public class DatePickerEx extends DatePicker {
 
         setConverter(new DateConverter());
 
-        getEditor().addEventFilter(KeyEvent.KEY_TYPED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(final KeyEvent event) {
-                if (ALLOWED_DATE_CHARACTERS.indexOf(event.getCharacter().charAt(0)) < 0) {
-                    event.consume();
-                }
+        getEditor().addEventFilter(KeyEvent.KEY_TYPED, event -> {
+            if (ALLOWED_DATE_CHARACTERS.indexOf(event.getCharacter().charAt(0)) < 0) {
+                event.consume();
             }
         });
 
-        getEditor().addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(final KeyEvent event) {
-                final int caretPosition = getEditor().getCaretPosition();
-                final LocalDate date = getValue();
+        getEditor().addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+            final int caretPosition = getEditor().getCaretPosition();
+            final LocalDate date = getValue();
 
-                switch (event.getCode()) {
-                    case ADD:
-                    case UP:
-                    case KP_UP:
-                        Platform.runLater(() -> {
-                            setValue(date.plusDays(1));
-                            getEditor().positionCaret(caretPosition);
-                        });
-                        break;
-                    case SUBTRACT:
-                    case DOWN:
-                    case KP_DOWN:
-                        Platform.runLater(() -> {
-                            setValue(date.minusDays(1));
-                            getEditor().positionCaret(caretPosition);
-                        });
-                        break;
-                    case T:
-                        Platform.runLater(() -> {
-                            setValue(LocalDate.now());
-                            getEditor().positionCaret(caretPosition);
-                        });
-                        break;
-                    case PAGE_UP:
-                        Platform.runLater(() -> {
-                            setValue(date.plusMonths(1));
-                            getEditor().positionCaret(caretPosition);
-                        });
-                        break;
-                    case PAGE_DOWN:
-                        Platform.runLater(() -> {
-                            setValue(date.minusMonths(1));
-                            getEditor().positionCaret(caretPosition);
-                        });
-                        break;
-                    default:
-                }
+            switch (event.getCode()) {
+                case ADD:
+                case UP:
+                case KP_UP:
+                    Platform.runLater(() -> {
+                        setValue(date.plusDays(1));
+                        getEditor().positionCaret(caretPosition);
+                    });
+                    break;
+                case SUBTRACT:
+                case DOWN:
+                case KP_DOWN:
+                    Platform.runLater(() -> {
+                        setValue(date.minusDays(1));
+                        getEditor().positionCaret(caretPosition);
+                    });
+                    break;
+                case T:
+                    Platform.runLater(() -> {
+                        setValue(LocalDate.now());
+                        getEditor().positionCaret(caretPosition);
+                    });
+                    break;
+                case PAGE_UP:
+                    Platform.runLater(() -> {
+                        setValue(date.plusMonths(1));
+                        getEditor().positionCaret(caretPosition);
+                    });
+                    break;
+                case PAGE_DOWN:
+                    Platform.runLater(() -> {
+                        setValue(date.minusMonths(1));
+                        getEditor().positionCaret(caretPosition);
+                    });
+                    break;
+                default:
             }
         });
     }

@@ -17,9 +17,14 @@
  */
 package jgnash.uifx.controllers;
 
+import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import jgnash.engine.Account;
 import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
@@ -29,14 +34,6 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.util.TreeSearch;
-
-import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import jgnash.util.Nullable;
 
 import java.util.Collections;
@@ -84,16 +81,14 @@ public abstract class AbstractAccountTreeController implements MessageListener {
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT);
 
-        getTreeView().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<TreeItem<Account>>() {
-            @Override
-            public void changed(final ObservableValue<? extends TreeItem<Account>> observable, final TreeItem<Account> oldValue, final TreeItem<Account> newValue) {
-                if (newValue != null) {
-                    if (isAccountSelectable(newValue.getValue())) {
-                        selectedAccountProperty.setValue(newValue.getValue());
+        getTreeView().getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    if (newValue != null) {
+                        if (isAccountSelectable(newValue.getValue())) {
+                            selectedAccountProperty.setValue(newValue.getValue());
+                        }
                     }
-                }
-            }
-        });
+                });
 
         filteredAccounts.addListener((SetChangeListener<Account>) change -> reload());
     }
