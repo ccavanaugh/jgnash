@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import jgnash.uifx.control.DetailedDecimalTextField;
+import javafx.scene.control.ComboBoxBase;
 
 import com.sun.javafx.scene.control.behavior.ComboBoxBaseBehavior;
 import com.sun.javafx.scene.control.behavior.KeyBinding;
@@ -44,8 +44,8 @@ public class DetailedDecimalTextFieldBehavior extends ComboBoxBaseBehavior<BigDe
      */
     protected static final String CLOSE_ACTION = "Close";
 
-    public DetailedDecimalTextFieldBehavior(final DetailedDecimalTextField feesField) {
-        super(feesField, KEY_BINDINGS);
+    public DetailedDecimalTextFieldBehavior(final ComboBoxBase<BigDecimal> base) {
+        super(base, KEY_BINDINGS);
     }
 
     @Override

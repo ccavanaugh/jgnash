@@ -1,25 +1,10 @@
-/*
- * jGnash, a personal finance application
- * Copyright (C) 2001-2015 Craig Cavanaugh
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
 package jgnash.uifx.control;
 
 import java.math.BigDecimal;
 
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.scene.control.ComboBoxBase;
 import javafx.scene.control.Skin;
 
@@ -34,49 +19,67 @@ import jgnash.util.NotNull;
  */
 public class DetailedDecimalTextField extends ComboBoxBase<BigDecimal> {
 
-    private DecimalTextField decimalTextField;
-    private DetailedDecimalTextFieldSkin skin;
+    private static final String STYLE_CLASS_COMBO_BOX = "combo-box"; //NON-NLS
+    private static final String STYLE_CLASS_FORMATTED_COMBO_BOX = "date-picker"; //NON-NLS
+    private static final String STYLE_CLASS_DECIMAL_COMBO_BOX = "decimal-details"; //NON-NLS
 
     public DetailedDecimalTextField() {
-        skin =  new DetailedDecimalTextFieldSkin(this);
-        decimalTextField = skin.getDecimalTextField();
-
-        getStyleClass().add(DEFAULT_STYLE_CLASS);
-        setEditable(true);
+        getStyleClass().addAll(STYLE_CLASS_COMBO_BOX, STYLE_CLASS_FORMATTED_COMBO_BOX, STYLE_CLASS_DECIMAL_COMBO_BOX);
     }
 
-    public DecimalTextField getDecimalTextField() {
-        if (decimalTextField == null) {
-            decimalTextField = new DecimalTextField();
+    /**
+     * The editor for the ComboBox. It is used for both editable text field and non-editable text field.
+     */
+    private ReadOnlyObjectWrapper<DecimalTextField> editor;
+
+    public final DecimalTextField getEditor() {
+        return editorProperty().get();
+    }
+
+    public final ReadOnlyObjectProperty<DecimalTextField> editorProperty() {
+        if (editor == null) {
+            editor = new ReadOnlyObjectWrapper<>(this, "editor"); //NON-NLS
+            DecimalTextField field = createDecimalTextField();
+            field.decimalProperty().bindBidirectional(valueProperty());
+            field.editableProperty().bindBidirectional(editableProperty());
+            editor.set(field);
         }
-        return decimalTextField;
+        return editor.getReadOnlyProperty();
     }
 
     /**
      * @see DecimalTextField#decimalProperty()
      */
     public ObjectProperty<BigDecimal> decimalProperty() {
-        return decimalTextField.decimalProperty();
+        return getEditor().decimalProperty();
     }
 
     /**
      * @see DecimalTextField#getDecimal()
      */
-    public @NotNull BigDecimal getDecimal() {
-        return decimalTextField.getDecimal();
+    public @NotNull
+    BigDecimal getDecimal() {
+        return getEditor().getDecimal();
     }
 
     /**
      * @see DecimalTextField#setDecimal(BigDecimal)
      */
     public void setDecimal(@NotNull final BigDecimal decimal) {
-        decimalTextField.setDecimal(decimal);
+        getEditor().setDecimal(decimal);
     }
 
-    /** {@inheritDoc} */
-    @Override protected Skin<?> createDefaultSkin() {
-        return skin;
+    /**
+     * Creates a DecimalTextField. Subclass can override it to create a DecimalTextField subclass.
+     *
+     * @return a DecimalTextField
+     */
+    protected DecimalTextField createDecimalTextField() {
+        return new DecimalTextField();
     }
 
-    private static final String DEFAULT_STYLE_CLASS = "decimal-details";
+    @Override
+    protected Skin<?> createDefaultSkin() {
+        return new DetailedDecimalTextFieldSkin(this);
+    }
 }

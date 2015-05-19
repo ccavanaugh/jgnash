@@ -1,3 +1,2 @@
-<?import jgnash.uifx.control.DetailedDecimalTextField?>
 <fx:root type="jgnash.uifx.control.DetailedDecimalTextField" xmlns:fx="http://javafx.com/fxml">
 </fx:root>

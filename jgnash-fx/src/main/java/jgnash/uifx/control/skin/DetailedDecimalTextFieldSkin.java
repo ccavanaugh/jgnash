@@ -19,6 +19,8 @@ package jgnash.uifx.control.skin;
 
 import java.math.BigDecimal;
 
+import javafx.application.Platform;
+import javafx.css.PseudoClass;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
@@ -30,28 +32,36 @@ import jgnash.uifx.control.behavior.DetailedDecimalTextFieldBehavior;
 import com.sun.javafx.scene.control.skin.ComboBoxPopupControl;
 
 /**
- * Skin for DetailedDecimalTextField
- *
  * @author Craig Cavanaugh
  */
 public class DetailedDecimalTextFieldSkin extends ComboBoxPopupControl<BigDecimal> {
 
-    private DetailedDecimalTextField detailedDecimalTextField;
-    private DecimalTextField decimalTextField;
+    private final DetailedDecimalTextField detailedDecimalTextField;
+
+    private DecimalTextField textField;
 
     public DetailedDecimalTextFieldSkin(final DetailedDecimalTextField detailedDecimalTextField) {
         super(detailedDecimalTextField, new DetailedDecimalTextFieldBehavior(detailedDecimalTextField));
-
         this.detailedDecimalTextField = detailedDecimalTextField;
+
+        // editable input node
+        textField = getInputNode();
+
+        if (textField != null) {
+            getChildren().add(textField);
+        }
+
+        // move focus in to the text field if the detailedDecimalTextField is editable
+        detailedDecimalTextField.focusedProperty().addListener((ov, t, hasFocus) -> {
+            if (detailedDecimalTextField.isEditable() && hasFocus) {
+                Platform.runLater(textField::requestFocus);
+            }
+        });
     }
 
     @Override
     protected Node getPopupContent() {
         return null;
-    }
-
-    public DecimalTextField getDecimalTextField() {
-        return decimalTextField;
     }
 
     @Override
@@ -66,13 +76,47 @@ public class DetailedDecimalTextFieldSkin extends ComboBoxPopupControl<BigDecima
 
     @Override
     public Node getDisplayNode() {
-        if (decimalTextField == null) {
-            decimalTextField = detailedDecimalTextField.getDecimalTextField();
-            decimalTextField.editableProperty().bindBidirectional(detailedDecimalTextField.editableProperty());
-
-            updateDisplayNode();
-        }
-
-        return decimalTextField;
+        Node displayNode = getInputNode();
+        updateDisplayNode();
+        return displayNode;
     }
+
+    private BigDecimal initialDecimalFieldValue = null;
+
+    private DecimalTextField getInputNode() {
+        if (textField != null) return textField;
+
+        textField = detailedDecimalTextField.getEditor();
+        textField.setFocusTraversable(true);
+        textField.promptTextProperty().bindBidirectional(detailedDecimalTextField.promptTextProperty());
+
+        initialDecimalFieldValue = textField.getDecimal();
+
+        textField.focusedProperty().addListener((ov, t, hasFocus) -> {
+            // RT-21454 starts here
+            if (!hasFocus) {
+                setTextFromTextFieldIntoComboBoxValue();
+                pseudoClassStateChanged(CONTAINS_FOCUS_PSEUDO_CLASS_STATE, false);
+            }
+            else {
+                pseudoClassStateChanged(CONTAINS_FOCUS_PSEUDO_CLASS_STATE, true);
+            }
+        });
+
+        return textField;
+    }
+
+    protected void updateDisplayNode() {
+        final BigDecimal value = detailedDecimalTextField.getValue();
+
+        if (initialDecimalFieldValue != null) {
+            textField.setDecimal(initialDecimalFieldValue);
+            initialDecimalFieldValue = null;
+        }
+        else {
+            detailedDecimalTextField.setValue(value);
+        }
+    }
+
+    private static PseudoClass CONTAINS_FOCUS_PSEUDO_CLASS_STATE = PseudoClass.getPseudoClass("contains-focus"); //NON-NLS
 }
