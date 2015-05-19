@@ -65,8 +65,8 @@ public class OpenDatabaseController {
     @FXML
     protected PasswordField passwordField;
 
-    @FXML    
-    private void initialize() {        
+    @FXML
+    private void initialize() {
         updateControlsState();
 
         setDatabaseField(EngineFactory.getLastDatabase());
@@ -132,9 +132,7 @@ public class OpenDatabaseController {
         List<String> types = new ArrayList<>();
 
         for (final DataStoreType type : DataStoreType.values()) {
-            if (type.getDataStore() != null) {
-                types.add("*." + type.getDataStore().getFileExt());
-            }
+            types.add("*." + type.getDataStore().getFileExt());
         }
 
         fileChooser.getExtensionFilters().addAll(
@@ -142,11 +140,9 @@ public class OpenDatabaseController {
         );
 
         for (final DataStoreType type : DataStoreType.values()) {
-            if (type.getDataStore() != null) {
-                fileChooser.getExtensionFilters().addAll(
-                        new FileChooser.ExtensionFilter(type.toString(), "*." + type.getDataStore().getFileExt())
-                );
-            }
+            fileChooser.getExtensionFilters().addAll(
+                    new FileChooser.ExtensionFilter(type.toString(), "*." + type.getDataStore().getFileExt())
+            );
         }
 
         fileChooser.getExtensionFilters().addAll(

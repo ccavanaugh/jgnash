@@ -56,9 +56,7 @@ public class DatabasePathAction {
         String[] ext = new String[dataStoreTypes.length];
 
         for (int i = 0; i < dataStoreTypes.length; i++) {
-            if (dataStoreTypes[i].getDataStore() != null) {
-                ext[i] = dataStoreTypes[i].getDataStore().getFileExt();
-            }
+            ext[i] = dataStoreTypes[i].getDataStore().getFileExt();
         }
 
         Resource rb = Resource.get();
@@ -66,13 +64,11 @@ public class DatabasePathAction {
         StringBuilder description = new StringBuilder(rb.getString("Label.jGnashFiles") + " (");
 
         for (int i = 0; i < dataStoreTypes.length; i++) {
-            if (dataStoreTypes[i].getDataStore() != null) {
-                description.append("*.");
-                description.append(dataStoreTypes[i].getDataStore().getFileExt());
+            description.append("*.");
+            description.append(dataStoreTypes[i].getDataStore().getFileExt());
 
-                if (i < dataStoreTypes.length - 1) {
-                    description.append(", ");
-                }
+            if (i < dataStoreTypes.length - 1) {
+                description.append(", ");
             }
         }
 

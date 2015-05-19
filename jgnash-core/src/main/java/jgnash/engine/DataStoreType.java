@@ -17,17 +17,16 @@
  */
 package jgnash.engine;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import jgnash.engine.jpa.JpaH2DataStore;
 import jgnash.engine.jpa.JpaHsqlDataStore;
 import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.engine.xstream.XMLDataStore;
-import jgnash.util.Nullable;
 import jgnash.util.Resource;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Storage type enumeration
@@ -75,15 +74,15 @@ public enum DataStoreType {
         this.dataStore = dataStore;
     }
 
-    @Nullable
     public DataStore getDataStore() {
         try {
             Constructor<?> storeConst = dataStore.getDeclaredConstructor();
             return (DataStore) storeConst.newInstance();
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException ex) {
             Logger.getLogger(DataStoreType.class.getName()).log(Level.SEVERE, null, ex);
+
+            throw new RuntimeException(ex);
         }
-        return null; // unable to create object
     }
 
     @Override
