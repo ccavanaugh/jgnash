@@ -267,7 +267,7 @@ public class UpdateFactory {
             if (e != null && securityNode.getQuoteSource() != QuoteSource.NONE) {
                 final SecurityParser parser = securityNode.getQuoteSource().getParser();
 
-                if (!Thread.currentThread().isInterrupted()) {  // check for thread interruption
+                if (parser != null && !Thread.currentThread().isInterrupted()) {  // check for thread interruption
                     if (parser.parse(securityNode)) {
 
                         final SecurityHistoryNode node = new SecurityHistoryNode(parser.getDate(), parser.getPrice(),
