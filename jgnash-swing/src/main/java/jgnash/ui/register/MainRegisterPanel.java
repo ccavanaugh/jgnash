@@ -310,22 +310,23 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
 
     private void exportAction() {
 
-        Account account = registerTree.getSelectedAccount();
+        if (getActiveTable() != null) {
+            final Account account = registerTree.getSelectedAccount();
 
-        if (account != null && account.getTransactionCount() > 1) {
-            Date startDate = account.getTransactionAt(0).getDate();
-            Date endDate = account.getTransactionAt(account.getTransactionCount() - 1).getDate();
+            if (account != null && account.getTransactionCount() > 1) {
+                Date startDate = account.getTransactionAt(0).getDate();
+                Date endDate = account.getTransactionAt(account.getTransactionCount() - 1).getDate();
 
-            final int[] rows = getActiveTable().getSelectedRows(); // fetch selected rows
+                final int[] rows = getActiveTable().getSelectedRows(); // fetch selected rows
 
-            if (rows.length > 1) {
-                startDate = account.getTransactionAt(rows[0]).getDate();
-                endDate = account.getTransactionAt(rows[rows.length - 1]).getDate();
+                if (rows.length > 1) {
+                    startDate = account.getTransactionAt(rows[0]).getDate();
+                    endDate = account.getTransactionAt(rows[rows.length - 1]).getDate();
+                }
+
+                ExportTransactionsAction.exportTransactions(account, startDate, endDate);
             }
-
-            ExportTransactionsAction.exportTransactions(account, startDate, endDate);
         }
-
     }
 
     /**
@@ -342,13 +343,16 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
      * Display a register print report
      */
     private void printAction() {
-        final int[] rows = getActiveTable().getSelectedRows(); // fetch selected accounts
+        if (getActiveTable() != null) {
 
-        Account a = registerTree.getSelectedAccount();
-        if (a != null && rows.length < 2) {
-            new AccountRegisterReport(a).showReport();
-        } else if (a != null) { // display the selected rows
-            new AccountRegisterReport(registerTree.getSelectedAccount(), rows[0], rows[rows.length - 1]).showReport();
+            final int[] rows = getActiveTable().getSelectedRows(); // fetch selected accounts
+
+            Account a = registerTree.getSelectedAccount();
+            if (a != null && rows.length < 2) {
+                new AccountRegisterReport(a).showReport();
+            } else if (a != null) { // display the selected rows
+                new AccountRegisterReport(registerTree.getSelectedAccount(), rows[0], rows[rows.length - 1]).showReport();
+            }
         }
     }
 
