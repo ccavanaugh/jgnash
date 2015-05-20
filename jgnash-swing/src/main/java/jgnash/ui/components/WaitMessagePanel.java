@@ -17,10 +17,6 @@
  */
 package jgnash.ui.components;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
@@ -28,6 +24,10 @@ import java.awt.event.MouseAdapter;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
 
 import org.jdesktop.swingx.JXPanel;
 
@@ -52,9 +52,7 @@ public final class WaitMessagePanel extends JXPanel {
         messageLabel.setFont(messageLabel.getFont().deriveFont(Font.BOLD, 20f));
         messageLabel.setHorizontalAlignment(SwingConstants.CENTER);        
 
-        addMouseListener(new MouseAdapter() {
-            // empty adapter to block input
-        });
+        addMouseListener(new EmptyMouseAdapter());
     }
 
     /**
@@ -90,5 +88,9 @@ public final class WaitMessagePanel extends JXPanel {
 
     public void setWaiting(final boolean busy) {
         setVisible(busy);        
+    }
+
+    private static class EmptyMouseAdapter extends MouseAdapter {
+        // empty adapter to block input
     }
 }

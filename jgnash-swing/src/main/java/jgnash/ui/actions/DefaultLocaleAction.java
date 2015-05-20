@@ -40,53 +40,13 @@ import jgnash.util.Resource;
  * UI Action to open the new file dialog
  * 
  * @author Craig Cavanaugh
- *
  */
 @Action("locale-command")
 public class DefaultLocaleAction extends AbstractAction {
 
     @Override
     public void actionPerformed(final ActionEvent e) {
-        final Resource rb = Resource.get();
-
-        SwingWorker<LocaleObject[], Void> worker = new SwingWorker<LocaleObject[], Void>() {
-
-            private Object[] options;
-
-            @Override
-            public LocaleObject[] doInBackground() {
-
-                options = new Object[] { rb.getString("Button.Ok"), rb.getString("Button.Cancel") };
-
-                Locale[] tList = Locale.getAvailableLocales();
-                LocaleObject[] list = new LocaleObject[tList.length];
-                for (int i = 0; i < list.length; i++) {
-                    list[i] = new LocaleObject(tList[i]);
-                }
-                Arrays.sort(list);
-
-                return list;
-            }
-
-            @Override
-            public void done() {
-                try {
-                    JComboBox<LocaleObject> combo = new JComboBox<>(get());
-                    combo.setSelectedItem(new LocaleObject(Locale.getDefault()));
-
-                    int result = JOptionPane.showOptionDialog(UIApplication.getFrame(), combo, rb.getString("Title.SelDefLocale"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
-
-                    if (result == JOptionPane.YES_OPTION) {
-                        LocaleObject o = (LocaleObject) combo.getSelectedItem();
-                        Resource.setLocale(o.locale);
-
-                        JOptionPane.showMessageDialog(UIApplication.getFrame(), o + "\n" + rb.getString("Message.RestartLocale"));
-                    }
-                } catch (InterruptedException | ExecutionException | HeadlessException e) {
-                    Logger.getLogger(DefaultLocaleAction.class.getName()).log(Level.SEVERE, null, e);                  
-                }
-            }
-        };
+        SwingWorker<LocaleObject[], Void> worker = new LocaleSwingWorker();
 
         worker.execute();
     }
@@ -132,6 +92,50 @@ public class DefaultLocaleAction extends AbstractAction {
 
         public boolean equals(final LocaleObject obj) {
             return obj.locale.equals(locale);
+        }
+    }
+
+    private static class LocaleSwingWorker extends SwingWorker<LocaleObject[], Void> {
+
+        final Resource rb = Resource.get();
+        private Object[] options;
+
+
+        @Override
+        public LocaleObject[] doInBackground() {
+
+            options = new Object[] { rb.getString("Button.Ok"), rb.getString("Button.Cancel") };
+
+            Locale[] tList = Locale.getAvailableLocales();
+            LocaleObject[] list = new LocaleObject[tList.length];
+            for (int i = 0; i < list.length; i++) {
+                list[i] = new LocaleObject(tList[i]);
+            }
+            Arrays.sort(list);
+
+            return list;
+        }
+
+        @Override
+        public void done() {
+            try {
+                final JComboBox<LocaleObject> combo = new JComboBox<>(get());
+                combo.setSelectedItem(new LocaleObject(Locale.getDefault()));
+
+                final int result = JOptionPane.showOptionDialog(UIApplication.getFrame(), combo,
+                        rb.getString("Title.SelDefLocale"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE,
+                        null, options, options[1]);
+
+                if (result == JOptionPane.YES_OPTION) {
+                    LocaleObject o = (LocaleObject) combo.getSelectedItem();
+                    Resource.setLocale(o.locale);
+
+                    JOptionPane.showMessageDialog(UIApplication.getFrame(),
+                            o + "\n" + rb.getString("Message.RestartLocale"));
+                }
+            } catch (final InterruptedException | ExecutionException | HeadlessException e) {
+                Logger.getLogger(LocaleSwingWorker.class.getName()).log(Level.SEVERE, null, e);
+            }
         }
     }
 }

@@ -34,6 +34,7 @@ import java.awt.event.WindowListener;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -364,12 +365,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
             }
         });
 
-        actionParser.preLoadAction("open-command", new AbstractAction() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                OpenAction.openAction();
-            }
-        });
+        actionParser.preLoadAction("open-command", new OpenFileAction());
 
         actionParser.preLoadAction("account-filter-command", new AbstractEnabledAction() {
             @Override
@@ -385,27 +381,9 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
             }
         });
 
-        actionParser.preLoadAction("currency-background-update-command", new AbstractEnabledAction() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        actionParser.preLoadAction("currency-background-update-command", new UpdateExchangeRateAction());
 
-                if (engine != null) {
-                    engine.startExchangeRateUpdate(0);
-                }
-            }
-        });
-
-        actionParser.preLoadAction("security-background-update-command", new AbstractEnabledAction() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-
-                if (engine != null) {
-                    engine.startSecuritiesUpdate(0);
-                }
-            }
-        });
+        actionParser.preLoadAction("security-background-update-command", new UpdateSecuritiesAction());
 
         actionParser.loadFile("/jgnash/resource/main-frame-actions.xml");
 
@@ -418,6 +396,9 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         viewMenu = (JMenu) actionParser.getJMenuItem("view-menu-command");
         reportMenu = (JMenu) actionParser.getJMenuItem("report-menu-command");
         windowMenu = (JMenu) actionParser.getJMenuItem("window-menu-command");
+
+        Objects.requireNonNull(windowMenu);
+
         windowMenu.setEnabled(false);
 
         editAction = actionParser.getAction("edit-menu-command");
@@ -660,6 +641,35 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     private void updateTitle() {
         new UpdateTitleWorker().execute();
+    }
+
+    private static class UpdateExchangeRateAction extends AbstractEnabledAction {
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+            if (engine != null) {
+                engine.startExchangeRateUpdate(0);
+            }
+        }
+    }
+
+    private static class UpdateSecuritiesAction extends AbstractEnabledAction {
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+            if (engine != null) {
+                engine.startSecuritiesUpdate(0);
+            }
+        }
+    }
+
+    private static class OpenFileAction extends AbstractAction {
+        @Override
+        public void actionPerformed(final ActionEvent e) {
+            OpenAction.openAction();
+        }
     }
 
     private class LogHandler extends Handler {

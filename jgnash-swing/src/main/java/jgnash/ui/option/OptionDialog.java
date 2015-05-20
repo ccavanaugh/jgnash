@@ -70,15 +70,7 @@ public class OptionDialog extends JDialog implements ActionListener {
         
         final int oldNimbusFontSize = ThemeManager.getNimbusFontSize();
 
-        addWindowListener(new WindowAdapter() {
-
-            @Override
-            public void windowClosed(final WindowEvent e) {
-                if (ThemeManager.getNimbusFontSize() != oldNimbusFontSize && ThemeManager.isLookAndFeelNimbus()) {
-                    EventQueue.invokeLater(UIApplication::restartUI);
-                }
-            }
-        });
+        addWindowListener(new LFWindowAdapter(oldNimbusFontSize));
     }
 
     private void initComponents() {
@@ -140,6 +132,22 @@ public class OptionDialog extends JDialog implements ActionListener {
     public void actionPerformed(final ActionEvent e) {
         if (e.getSource() == closeButton) {
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        }
+    }
+
+    private static class LFWindowAdapter extends WindowAdapter {
+
+        private final int oldNimbusFontSize;
+
+        public LFWindowAdapter(int oldNimbusFontSize) {
+            this.oldNimbusFontSize = oldNimbusFontSize;
+        }
+
+        @Override
+        public void windowClosed(final WindowEvent e) {
+            if (ThemeManager.getNimbusFontSize() != oldNimbusFontSize && ThemeManager.isLookAndFeelNimbus()) {
+                EventQueue.invokeLater(UIApplication::restartUI);
+            }
         }
     }
 }

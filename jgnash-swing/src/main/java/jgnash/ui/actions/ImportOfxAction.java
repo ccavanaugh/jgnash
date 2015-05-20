@@ -30,14 +30,14 @@ import javax.swing.JFileChooser;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import jgnash.engine.Account;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
 import jgnash.convert.imports.ofx.OfxBank;
 import jgnash.convert.imports.ofx.OfxImport;
 import jgnash.convert.imports.ofx.OfxTransaction;
 import jgnash.convert.imports.ofx.OfxV1ToV2;
 import jgnash.convert.imports.ofx.OfxV2Parser;
+import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.util.builder.Action;
 import jgnash.ui.wizards.imports.ImportDialog;
@@ -147,27 +147,39 @@ public class ImportOfxAction extends AbstractEnabledAction {
                     final List<OfxTransaction> transactions = (List<OfxTransaction>) d.getSetting(ImportDialog.Settings.TRANSACTIONS);
 
                     // import threads in the background
-                    new Thread() {
-
-                        @Override
-                        public void run() {
-                            String accountNumber = bank.accountId;
-
-                            /* set the account number if not a match */
-                            if (accountNumber != null && !accountNumber.equals(account.getAccountNumber())) {
-                                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-                                Objects.requireNonNull(engine);
-
-                                engine.setAccountNumber(account, accountNumber);
-                            }
-
-                            /* Import the transactions */
-                            OfxImport.importTransactions(transactions, account);
-                        }
-                    }.start();
+                    new ImportThread(bank, account, transactions).start();
                 }
             } catch (InterruptedException | ExecutionException ex) {
                 Logger.getLogger(Import.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        private static class ImportThread extends Thread {
+
+            private final OfxBank bank;
+            private final Account account;
+            private final List<OfxTransaction> transactions;
+
+            public ImportThread(final OfxBank bank, final Account account, final List<OfxTransaction> transactions) {
+                this.bank = bank;
+                this.account = account;
+                this.transactions = transactions;
+            }
+
+            @Override
+            public void run() {
+                String accountNumber = bank.accountId;
+
+                /* set the account number if not a match */
+                if (accountNumber != null && !accountNumber.equals(account.getAccountNumber())) {
+                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                    Objects.requireNonNull(engine);
+
+                    engine.setAccountNumber(account, accountNumber);
+                }
+
+                /* Import the transactions */
+                OfxImport.importTransactions(transactions, account);
             }
         }
     }

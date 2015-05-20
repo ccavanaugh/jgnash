@@ -17,6 +17,8 @@
  */
 package jgnash.engine;
 
+import io.netty.util.ResourceLeakDetector;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -33,15 +35,10 @@ import jgnash.engine.jpa.JpaHsqlDataStore;
 import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.util.EncryptionManager;
 
-import io.netty.util.ResourceLeakDetector;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * File transfer test
@@ -81,14 +78,8 @@ public class FileTransferTest {
 
         final String serverFile = testFile;
 
-        new Thread() {
-
-            @Override
-            public void run() {
-                System.out.println("starting server");
-                networkServer.startServer(serverFile, port, password);
-            }
-        }.start();
+        System.out.println("starting server");
+        new StartServerThread(networkServer, serverFile, port, password).start();
 
         Thread.sleep(4000);
 
@@ -113,9 +104,11 @@ public class FileTransferTest {
             assertEquals(tempAttachment.toFile().length(), newPath.toFile().length()); // same length?
             assertNotEquals(tempAttachment.toString(), newPath.toString()); // different files?
 
+            final Path attachmentPath = AttachmentUtils.getAttachmentDirectory(Paths.get(testFile));
+            assertNotNull(attachmentPath);
 
             // Create a new temp file in the directory
-            tempAttachment = Files.createTempFile(AttachmentUtils.getAttachmentDirectory(Paths.get(testFile)), "tempfile2-", ".txt");
+            tempAttachment = Files.createTempFile(attachmentPath, "tempfile2-", ".txt");
             tempAttachment.toFile().deleteOnExit();
 
             //write it
@@ -168,14 +161,8 @@ public class FileTransferTest {
 
         final String serverFile = testFile;
 
-        new Thread() {
-
-            @Override
-            public void run() {
-                Logger.getLogger(FileTransferTest.class.getName()).info("Starting Server");
-                networkServer.startServer(serverFile, port, password);
-            }
-        }.start();
+        Logger.getLogger(FileTransferTest.class.getName()).info("Starting Server");
+        new StartServerThread(networkServer, serverFile, port, password).start();
 
         Thread.sleep(4000);
 
@@ -210,8 +197,11 @@ public class FileTransferTest {
             assertTrue(e.addAttachment(moveFile, false));
             assertFalse(Files.exists(moveFile));
 
+            final Path attachmentPath = AttachmentUtils.getAttachmentDirectory(Paths.get(testFile));
+            assertNotNull(attachmentPath);
+
             // Create a new temp file in the directory
-            tempAttachment = Files.createTempFile(AttachmentUtils.getAttachmentDirectory(Paths.get(testFile)), "tempfile2-", ".txt");
+            tempAttachment = Files.createTempFile(attachmentPath, "tempfile2-", ".txt");
             tempAttachment.toFile().deleteOnExit();
 
             //write it
@@ -232,5 +222,25 @@ public class FileTransferTest {
             fail();
         }
 
+    }
+
+    private static class StartServerThread extends Thread {
+
+        private final JpaNetworkServer networkServer;
+        private final String serverFile;
+        private final int port;
+        private final char[] password;
+
+        public StartServerThread(JpaNetworkServer networkServer, String serverFile, int port, char[] password) {
+            this.networkServer = networkServer;
+            this.serverFile = serverFile;
+            this.port = port;
+            this.password = password;
+        }
+
+        @Override
+        public void run() {
+            networkServer.startServer(serverFile, port, password);
+        }
     }
 }
