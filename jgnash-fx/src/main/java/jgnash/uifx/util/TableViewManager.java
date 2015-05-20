@@ -29,7 +29,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.function.ToDoubleFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -139,12 +138,9 @@ public class TableViewManager<S> {
         cellItems.remove(null);
 
         if (cellItems.size() > 0) { // don't try if there is no data or the stream function will throw an error
-            maxWidth = cellItems.parallelStream().filter(s -> s != null).mapToDouble(new ToDoubleFunction<Object>() {
-                @Override
-                public double applyAsDouble(final Object o) {
-                    final Format format = columnFormatFactory.get().call(column);   // thread local format per thread
-                    return calculateDisplayedWidth(format != null ? format.format(o) : o.toString(), column.getStyle());
-                }
+            maxWidth = cellItems.parallelStream().filter(s -> s != null).mapToDouble(o -> {
+                final Format format = columnFormatFactory.get().call(column);   // thread local format per thread
+                return calculateDisplayedWidth(format != null ? format.format(o) : o.toString(), column.getStyle());
             }).max().getAsDouble();
         }
 

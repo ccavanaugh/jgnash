@@ -26,8 +26,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -101,14 +99,11 @@ public abstract class RegisterTableController {
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         // Load the table on change and set the row factory if the account in not locked
-        getAccountProperty().addListener(new ChangeListener<Account>() {
-            @Override
-            public void changed(ObservableValue<? extends Account> observable, Account oldValue, Account newValue) {
-                loadAccount();
+        getAccountProperty().addListener((observable, oldValue, newValue) -> {
+            loadAccount();
 
-                if (!newValue.isLocked()) {
-                    tableView.setRowFactory(new TransactionRowFactory());
-                }
+            if (!newValue.isLocked()) {
+                tableView.setRowFactory(new TransactionRowFactory());
             }
         });
 

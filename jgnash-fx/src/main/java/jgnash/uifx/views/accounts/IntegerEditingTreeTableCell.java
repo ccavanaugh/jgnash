@@ -17,13 +17,11 @@
  */
 package jgnash.uifx.views.accounts;
 
-import jgnash.engine.Account;
-import jgnash.uifx.control.IntegerTextField;
-
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.TreeTableCell;
+
+import jgnash.engine.Account;
+import jgnash.uifx.control.IntegerTextField;
 
 /**
 * {@code TreeTableCell} editor for Integers
@@ -82,12 +80,9 @@ class IntegerEditingTreeTableCell extends TreeTableCell<Account, Integer> {
         integerTextField.setInteger(getItem());
         integerTextField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
 
-        integerTextField.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
-                if (!newValue) {
-                    commitEdit(integerTextField.getInteger());
-                }
+        integerTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                commitEdit(integerTextField.getInteger());
             }
         });
     }

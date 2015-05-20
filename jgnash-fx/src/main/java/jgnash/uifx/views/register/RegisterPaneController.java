@@ -22,8 +22,6 @@ import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
@@ -96,36 +94,28 @@ public abstract class RegisterPaneController {
         }
 
         // When changed, bind the selected transaction and account properties
-        registerTableControllerProperty.addListener(new ChangeListener<RegisterTableController>() {
-            @Override
-            public void changed(final ObservableValue<? extends RegisterTableController> observable,
-                                final RegisterTableController oldValue, final RegisterTableController newValue) {
+        registerTableControllerProperty.addListener((observable, oldValue, newValue) -> {
 
-                // Bind transaction selection to the register table controller
-                selectedTransactionProperty.bind(newValue.getSelectedTransactionProperty());
+            // Bind transaction selection to the register table controller
+            selectedTransactionProperty.bind(newValue.getSelectedTransactionProperty());
 
-                // Bind the register pane to this account property
-                newValue.getAccountProperty().bind(accountProperty());
-            }
+            // Bind the register pane to this account property
+            newValue.getAccountProperty().bind(accountProperty());
         });
 
         // When changed, call for transaction modification if not null
-        selectedTransactionProperty.addListener(new ChangeListener<Transaction>() {
-            @Override
-            public void changed(final ObservableValue<? extends Transaction> observable, final Transaction oldValue,
-                                final Transaction newValue) {
+        selectedTransactionProperty.addListener((observable, oldValue, newValue) -> {
 
-                /* Push to the end of the application thread to allow other UI controls to update before
-                * updating many transaction form controls */
+            /* Push to the end of the application thread to allow other UI controls to update before
+            * updating many transaction form controls */
 
-                Platform.runLater(() -> {
-                    if (newValue != null) {
-                        modifyTransaction(newValue);
-                    } else {
-                        clearForm(); // selection was forcibly cleared, better clear the form
-                    }
-                });
-            }
+            Platform.runLater(() -> {
+                if (newValue != null) {
+                    modifyTransaction(newValue);
+                } else {
+                    clearForm(); // selection was forcibly cleared, better clear the form
+                }
+            });
         });
     }
 

@@ -23,8 +23,6 @@ import java.util.concurrent.Executors;
 import java.util.prefs.Preferences;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -119,20 +117,14 @@ public class RegisterViewController {
         typeFilter.addListener(observable -> accountTreeController.reload());
 
         // Remember the last divider location
-        splitPane.getDividers().get(0).positionProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue) {
-                executorService.submit(() -> preferences.putDouble(DIVIDER_POSITION, (Double) newValue));
-            }
+        splitPane.getDividers().get(0).positionProperty().addListener((observable, oldValue, newValue) -> {
+            executorService.submit(() -> preferences.putDouble(DIVIDER_POSITION, (Double) newValue));
         });
 
         // Remember the last account selection
-        accountTreeController.getSelectedAccountProperty().addListener(new ChangeListener<Account>() {
-            @Override
-            public void changed(final ObservableValue<? extends Account> observable, final Account oldValue, final Account newValue) {
-                executorService.submit(() -> preferences.put(LAST_ACCOUNT, newValue.getUuid()));
-                showAccount();
-            }
+        accountTreeController.getSelectedAccountProperty().addListener((observable, oldValue, newValue) -> {
+            executorService.submit(() -> preferences.put(LAST_ACCOUNT, newValue.getUuid()));
+            showAccount();
         });
 
         // Restore divider location

@@ -24,8 +24,6 @@ import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -154,12 +152,9 @@ public class AccountExchangePane extends GridPane {
 
         // Call exchangeRateFieldAction() on entry or loss of focus
         exchangeRateField.setOnAction(event -> exchangeRateFieldAction());
-        exchangeRateField.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(final ObservableValue<? extends Boolean> observable, final Boolean oldValue, final Boolean newValue) {
-                if (!newValue) {
-                    exchangeRateFieldAction();
-                }
+        exchangeRateField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                exchangeRateFieldAction();
             }
         });
 
