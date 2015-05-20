@@ -17,6 +17,8 @@
  */
 package jgnash.engine;
 
+import jgnash.util.NotNull;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -51,9 +53,9 @@ public class AttachmentUtils {
     public static boolean createAttachmentDirectory(final Path baseFile) {
         boolean result = false;
 
-        Path attachmentPath = getAttachmentDirectory(baseFile);
+        final Path attachmentPath = getAttachmentDirectory(baseFile);
 
-        if (Files.notExists(attachmentPath)) {
+        if (attachmentPath != null && Files.notExists(attachmentPath)) {
             try {
                 Files.createDirectories(attachmentPath);
                 result = true;
@@ -73,7 +75,7 @@ public class AttachmentUtils {
      * @param baseFile base file for attachment directory
      * @return directory for all attachments
      */
-    public static Path getAttachmentDirectory(final Path baseFile) {
+    public static Path getAttachmentDirectory(@NotNull final Path baseFile) {
         if (baseFile.getParent() != null) {
             return Paths.get(baseFile.getParent() + File.separator + ATTACHMENT_BASE);
         }
