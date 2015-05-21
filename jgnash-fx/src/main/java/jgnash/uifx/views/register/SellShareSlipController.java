@@ -19,17 +19,13 @@ package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Logger;
 
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 
 import jgnash.engine.AbstractInvestmentTransactionEntry;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
 import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.ReconcileManager;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
@@ -94,6 +90,7 @@ public class SellShareSlipController extends AbstractPriceQtyInvSlipController {
         clearForm();
 
         datePicker.setDate(transaction.getDate());
+        numberComboBox.setValue(transaction.getNumber());
 
         feePane.setTransactionEntries(((InvestmentTransaction) transaction).getInvestmentFeeEntries());
         gainLossPane.setTransactionEntries(((InvestmentTransaction) transaction).getInvestmentGainLossEntries());
@@ -116,6 +113,8 @@ public class SellShareSlipController extends AbstractPriceQtyInvSlipController {
             }
         });
 
+        attachmentPane.modifyTransaction(transaction);
+
         modTrans = transaction;
 
         reconciledButton.setSelected(transaction.getReconciled(accountProperty().get()) != ReconciledState.NOT_RECONCILED);
@@ -137,9 +136,13 @@ public class SellShareSlipController extends AbstractPriceQtyInvSlipController {
         final List<TransactionEntry> gains = gainLossPane.getTransactions();
         final List<TransactionEntry> fees = feePane.getTransactions();
 
-        return TransactionFactory.generateSellXTransaction(accountExchangePane.getSelectedAccount(),
+        final Transaction transaction = TransactionFactory.generateSellXTransaction(accountExchangePane.getSelectedAccount(),
                 accountProperty().get(), securityComboBox.getValue(), priceField.getDecimal(),
                 quantityField.getDecimal(), exchangeRate, datePicker.getDate(), memoTextField.getText(), fees, gains);
+
+        transaction.setNumber(numberComboBox.getValue());
+
+        return attachmentPane.buildTransaction(transaction);
     }
 
     @Override
@@ -159,40 +162,5 @@ public class SellShareSlipController extends AbstractPriceQtyInvSlipController {
     public void handleCancelAction() {
         clearForm();
         focusFirstComponent();
-    }
-
-    @Override
-    public void handleEnterAction() {
-        if (validateForm()) {
-            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-
-            Objects.requireNonNull(engine);
-
-            if (modTrans == null) {
-                final Transaction newTrans = buildTransaction();
-
-                // Need to set the reconciled state
-                ReconcileManager.reconcileTransaction(accountProperty().get(), newTrans, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
-
-                engine.addTransaction(newTrans);
-            } else {
-                final Transaction newTrans = buildTransaction();
-
-                newTrans.setDateEntered(modTrans.getDateEntered());
-
-                /* Need to preserve the reconciled state of the opposite side
-                 * if both sides are not automatically reconciled
-                 */
-                ReconcileManager.reconcileTransaction(accountProperty().get(), newTrans, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
-
-                if (engine.isTransactionValid(newTrans)) {
-                    if (engine.removeTransaction(modTrans)) {
-                        engine.addTransaction(newTrans);
-                    }
-                }
-            }
-            clearForm();
-            focusFirstComponent();
-        }
     }
 }
