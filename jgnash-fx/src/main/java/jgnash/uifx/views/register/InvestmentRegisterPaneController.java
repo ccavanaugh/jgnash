@@ -34,6 +34,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
+import jgnash.engine.TransactionType;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.views.accounts.SelectAccountSecuritiesDialog;
@@ -95,6 +96,8 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
         transactionPanes.add(buildSellShareTab(actions[1]));
         transactionPanes.add(buildCashTransferTab(actions[2], SlipType.INCREASE));
         transactionPanes.add(buildCashTransferTab(actions[3], SlipType.DECREASE));
+        transactionPanes.add(buildAdjustShareTab(actions[4], TransactionType.ADDSHARE));
+        transactionPanes.add(buildAdjustShareTab(actions[5], TransactionType.REMOVESHARE));
 
         actionComboBox.getItems().addAll(transactionPanes);
 
@@ -110,6 +113,23 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
             final SlipController slipController = fxmlLoader.getController();
 
             slipController.setSlipType(slipType);
+            slipController.accountProperty().bind(accountProperty());
+
+            return new SlipControllerContainer(name, slipController, pane);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private SlipControllerContainer buildAdjustShareTab(final String name, final TransactionType transactionType) {
+
+        try {
+            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AdjustSharesSlip.fxml"), resources);
+            final Pane pane = fxmlLoader.load();
+
+            final AdjustSharesSlipController slipController = fxmlLoader.getController();
+
+            slipController.setTransactionType(transactionType);
             slipController.accountProperty().bind(accountProperty());
 
             return new SlipControllerContainer(name, slipController, pane);
@@ -187,6 +207,12 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
                     break;
                 case SELLSHARE:
                     actionComboBox.getSelectionModel().select(1);
+                    break;
+                case ADDSHARE:
+                    actionComboBox.getSelectionModel().select(4);
+                    break;
+                case REMOVESHARE:
+                    actionComboBox.getSelectionModel().select(5);
                     break;
                 default: // TODO: more investment slips
                     break;
