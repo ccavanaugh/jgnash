@@ -106,6 +106,7 @@ public class DetailedDecimalTextFieldSkin extends ComboBoxPopupControl<BigDecima
         return textField;
     }
 
+    @Override
     protected void updateDisplayNode() {
         final BigDecimal value = detailedDecimalTextField.getValue();
 
@@ -118,5 +119,5 @@ public class DetailedDecimalTextFieldSkin extends ComboBoxPopupControl<BigDecima
         }
     }
 
-    private static PseudoClass CONTAINS_FOCUS_PSEUDO_CLASS_STATE = PseudoClass.getPseudoClass("contains-focus"); //NON-NLS
+    private static final PseudoClass CONTAINS_FOCUS_PSEUDO_CLASS_STATE = PseudoClass.getPseudoClass("contains-focus");
 }
