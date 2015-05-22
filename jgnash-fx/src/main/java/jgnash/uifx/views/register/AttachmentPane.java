@@ -200,11 +200,13 @@ public class AttachmentPane extends GridPane {
 
             // TODO, add option to copy the file instead of moving it
 
+            final Path attachmentDirectory = AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile));
+
             if (baseFile.startsWith(EngineFactory.REMOTE_PREFIX)) { // working remotely
                 moveAttachment = true;
-            } else if (!AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)).toString().equals(selectedFile.getParent())) {
+            } else if (attachmentDirectory != null && !attachmentDirectory.toString().equals(selectedFile.getParent())) {
                 String message = ResourceUtils.getString("Message.Warn.MoveFile", selectedFile.toString(),
-                        AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)).toString());
+                        attachmentDirectory.toString());
 
                 if (!StaticUIMethods.showConfirmationDialog(resources.getString("Title.MoveFile"), message).getButtonData().isCancelButton()) {
                     moveAttachment = true;
@@ -214,7 +216,7 @@ public class AttachmentPane extends GridPane {
 
                     if (newPath.toFile().exists()) {
                         message = ResourceUtils.getString("Message.Warn.SameFile", selectedFile.toString(),
-                                AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)).toString());
+                                attachmentDirectory.toString());
 
                         StaticUIMethods.displayWarning(message);
                         moveAttachment = false;

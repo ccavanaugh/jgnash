@@ -17,22 +17,6 @@
  */
 package jgnash.ui.register;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-import jgnash.engine.AttachmentUtils;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.Transaction;
-import jgnash.ui.StaticUIMethods;
-import jgnash.ui.UIApplication;
-import jgnash.ui.components.ImageDialog;
-import jgnash.ui.components.YesNoDialog;
-import jgnash.util.Resource;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -45,6 +29,28 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+
+import javax.imageio.ImageIO;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingWorker;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import jgnash.engine.AttachmentUtils;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.Transaction;
+import jgnash.ui.StaticUIMethods;
+import jgnash.ui.UIApplication;
+import jgnash.ui.components.ImageDialog;
+import jgnash.ui.components.YesNoDialog;
+import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Manages transaction attachments
@@ -200,12 +206,14 @@ class AttachmentPanel extends JPanel implements ActionListener {
 
                 // TODO, add option to copy the file
 
+                final Path attachmentDirectory = AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile));
+
                 if (baseFile.startsWith(EngineFactory.REMOTE_PREFIX)) { // working remotely
                     moveAttachment = true;
-                } else if (!AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)).toString().equals(selectedFile.getParent())) {
+                } else if (attachmentDirectory != null && !attachmentDirectory.toString().equals(selectedFile.getParent())) {
 
                     String message = rb.getString("Message.Warn.MoveFile", selectedFile.toString(),
-                            AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)).toString());
+                            attachmentDirectory.toString());
 
                     result = YesNoDialog.showYesNoDialog(UIApplication.getFrame(), new JLabel(message), rb.getString("Title.MoveFile"));
 
@@ -217,7 +225,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
 
                         if (newPath.toFile().exists()) {
                             message = rb.getString("Message.Warn.SameFile", selectedFile.toString(),
-                                    AttachmentUtils.getAttachmentDirectory(Paths.get(baseFile)).toString());
+                                    attachmentDirectory.toString());
 
                             StaticUIMethods.displayWarning(message);
                             moveAttachment = false;
