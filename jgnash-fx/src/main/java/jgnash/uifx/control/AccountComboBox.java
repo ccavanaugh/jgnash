@@ -76,14 +76,17 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
         filteredAccountList.addAll(account);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public SimpleBooleanProperty showHiddenAccountsProperty() {
         return showHiddenAccountsProperty;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public SimpleBooleanProperty showLockedAccountsProperty() {
         return showLockedAccountsProperty;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public SimpleBooleanProperty showPlaceHoldersProperty() {
         return showPlaceHoldersProperty;
     }
