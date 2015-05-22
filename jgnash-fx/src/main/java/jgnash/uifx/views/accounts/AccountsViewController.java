@@ -116,7 +116,7 @@ public class AccountsViewController implements MessageListener {
     }
 
     @SuppressWarnings("unchecked")
-    void initializeTreeTableView() {
+    private void initializeTreeTableView() {
         treeTableView.setShowRoot(false);   // don't show the root
         treeTableView.setEditable(true);    // required for editable columns
         treeTableView.setTableMenuButtonVisible(true);
@@ -212,7 +212,7 @@ public class AccountsViewController implements MessageListener {
         }
     }
 
-    Optional<Account> getSelectedAccount() {
+    private Optional<Account> getSelectedAccount() {
         final TreeItem<Account> treeItem = treeTableView.getSelectionModel().getSelectedItem();
 
         if (treeItem != null) {
@@ -266,7 +266,7 @@ public class AccountsViewController implements MessageListener {
         }
     }
 
-    void loadAccountTree() {
+    private void loadAccountTree() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
         if (engine != null) {
@@ -295,7 +295,7 @@ public class AccountsViewController implements MessageListener {
         });
     }
 
-    synchronized void reload() {
+    private synchronized void reload() {
         Platform.runLater(this::loadAccountTree);
     }
 

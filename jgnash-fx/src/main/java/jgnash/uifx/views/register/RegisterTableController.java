@@ -142,13 +142,13 @@ public abstract class RegisterTableController {
         return accountPropertyWrapper;
     }
 
-    void scrollToTransaction(final Transaction transaction) {
+    private void scrollToTransaction(final Transaction transaction) {
         tableView.scrollTo(transaction);
     }
 
     abstract protected void buildTable();
 
-    void loadTable() {
+    private void loadTable() {
         observableTransactions.clear();
 
         if (accountProperty.get() != null) {
@@ -171,7 +171,7 @@ public abstract class RegisterTableController {
         RegisterActions.deleteTransactionAction(transactionList.toArray(new Transaction[transactionList.size()]));
     }
 
-    void duplicateTransactions() {
+    private void duplicateTransactions() {
         final List<Transaction> transactionList = tableView.getSelectionModel().getSelectedItems();
 
         RegisterActions.duplicateTransaction(accountProperty.get(), transactionList);

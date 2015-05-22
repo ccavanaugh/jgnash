@@ -76,7 +76,7 @@ public class BankAdjustmentSlipController extends AbstractSlipController {
         return t.getTransactionType() == TransactionType.SINGLENTRY;
     }
 
-    void newTransaction(final Transaction t) {
+    private void newTransaction(final Transaction t) {
         clearForm();
 
         amountField.setDecimal(t.getAmount(accountProperty().get()));

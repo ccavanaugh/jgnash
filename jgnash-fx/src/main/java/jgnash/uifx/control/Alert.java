@@ -112,7 +112,7 @@ public class Alert {
         dialog.initOwner(window);
     }
 
-    void setContentText(final String contentText) {
+    private void setContentText(final String contentText) {
         message.setText(contentText);
     }
 
@@ -120,7 +120,7 @@ public class Alert {
         message.setGraphic(node);
     }
 
-    void setButtons(final ButtonType... buttons) {
+    private void setButtons(final ButtonType... buttons) {
         for (final ButtonType buttonType : buttons) {
             final Button button = new Button(buttonType.getText());
             ButtonBar.setButtonData(button, buttonType.getButtonData());

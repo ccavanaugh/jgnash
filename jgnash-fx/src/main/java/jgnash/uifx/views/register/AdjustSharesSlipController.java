@@ -80,7 +80,7 @@ public class AdjustSharesSlipController extends AbstractPriceQtyInvSlipControlle
         modTrans = transaction;
     }
 
-    void updateTotalField() {
+    private void updateTotalField() {
         totalField.setDecimal(quantityField.getDecimal().multiply(priceField.getDecimal()));
     }
 

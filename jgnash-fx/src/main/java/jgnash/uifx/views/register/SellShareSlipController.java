@@ -120,7 +120,7 @@ public class SellShareSlipController extends AbstractPriceQtyInvSlipController {
         reconciledButton.setSelected(transaction.getReconciled(accountProperty().get()) != ReconciledState.NOT_RECONCILED);
     }
 
-    void updateTotalField() {
+    private void updateTotalField() {
         totalField.setDecimal(quantityField.getDecimal().multiply(priceField.getDecimal()).add(gainLossPane.getDecimal()));
     }
 

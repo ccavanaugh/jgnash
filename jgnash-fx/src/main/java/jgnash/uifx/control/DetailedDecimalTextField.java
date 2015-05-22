@@ -36,7 +36,7 @@ public class DetailedDecimalTextField extends ComboBoxBase<BigDecimal> {
         return editorProperty().get();
     }
 
-    public final ReadOnlyObjectProperty<DecimalTextField> editorProperty() {
+    private ReadOnlyObjectProperty<DecimalTextField> editorProperty() {
         if (editor == null) {
             editor = new ReadOnlyObjectWrapper<>(this, "editor"); //NON-NLS
             DecimalTextField field = createDecimalTextField();
@@ -65,6 +65,7 @@ public class DetailedDecimalTextField extends ComboBoxBase<BigDecimal> {
     /**
      * @see DecimalTextField#setDecimal(BigDecimal)
      */
+    @SuppressWarnings("WeakerAccess")
     public void setDecimal(@NotNull final BigDecimal decimal) {
         getEditor().setDecimal(decimal);
     }
@@ -74,7 +75,7 @@ public class DetailedDecimalTextField extends ComboBoxBase<BigDecimal> {
      *
      * @return a DecimalTextField
      */
-    protected DecimalTextField createDecimalTextField() {
+    private DecimalTextField createDecimalTextField() {
         return new DecimalTextField();
     }
 

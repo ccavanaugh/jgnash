@@ -226,7 +226,7 @@ public class DecimalTextField extends TextField {
      *
      * @return {@code false} if empty
      */
-    boolean isEmpty() {
+    private boolean isEmpty() {
         boolean result = true;
 
         if (getText() != null) {
@@ -354,6 +354,7 @@ public class DecimalTextField extends TextField {
         return "";
     }
 
+    @SuppressWarnings("WeakerAccess")
     public BooleanProperty emptyWhenZeroProperty() {
         return emptyWhenZeroProperty;
     }

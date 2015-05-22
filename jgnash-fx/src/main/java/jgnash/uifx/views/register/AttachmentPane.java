@@ -153,7 +153,7 @@ public class AttachmentPane extends GridPane {
         return engine.addAttachment(attachmentProperty.get(), false);
     }
 
-    void showImageAction() {
+    private void showImageAction() {
         if (attachmentProperty.get() != null) {
             if (Files.exists(attachmentProperty.get())) {
                 ImageDialog.showImage(attachmentProperty.get());

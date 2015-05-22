@@ -37,12 +37,12 @@ public class DetailedDecimalTextFieldBehavior extends ComboBoxBaseBehavior<BigDe
     /**
      * Opens the Popup
      */
-    protected static final String OPEN_ACTION = "Open";
+    private static final String OPEN_ACTION = "Open";
 
     /**
      * Closes the Popup
      */
-    protected static final String CLOSE_ACTION = "Close";
+    private static final String CLOSE_ACTION = "Close";
 
     public DetailedDecimalTextFieldBehavior(final ComboBoxBase<BigDecimal> base) {
         super(base, KEY_BINDINGS);
@@ -70,7 +70,7 @@ public class DetailedDecimalTextFieldBehavior extends ComboBoxBaseBehavior<BigDe
         }
     }
 
-    protected static final List<KeyBinding> KEY_BINDINGS = new ArrayList<>();
+    private static final List<KeyBinding> KEY_BINDINGS = new ArrayList<>();
 
     static {
         KEY_BINDINGS.add(new KeyBinding(F4, KEY_RELEASED, "togglePopup"));

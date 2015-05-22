@@ -150,7 +150,7 @@ public abstract class AbstractTransactionEntryDialog extends Stage {
         tableView.setItems(sortedList);
     }
 
-    Callback<Integer, Double> getColumnWeightFactory() {
+    private Callback<Integer, Double> getColumnWeightFactory() {
         return param -> PREF_COLUMN_WEIGHTS[param];
     }
 

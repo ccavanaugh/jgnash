@@ -230,7 +230,7 @@ abstract class AbstractSlipController implements Slip {
         }
     }
 
-    void handlePayeeFocusChange() {
+    private void handlePayeeFocusChange() {
         if (modTrans == null && Options.getAutoCompleteEnabled().get() && payeeTextField.getLength() > 0) {
             if (payeeTextField.autoCompleteModelObjectProperty().get() != null) {
 
@@ -261,7 +261,7 @@ abstract class AbstractSlipController implements Slip {
      * @param t The transaction to modify
      * @return the modified transaction
      */
-    Transaction modifyTransactionForAutoComplete(final Transaction t) {
+    private Transaction modifyTransactionForAutoComplete(final Transaction t) {
 
         // tweak the transaction
         t.setNumber(null);

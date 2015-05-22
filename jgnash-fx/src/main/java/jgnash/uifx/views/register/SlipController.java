@@ -183,11 +183,11 @@ public class SlipController extends AbstractSlipController {
         return transaction;
     }
 
-    boolean hasEqualCurrencies() {
+    private boolean hasEqualCurrencies() {
         return accountProperty.get().getCurrencyNode().equals(accountExchangePane.getSelectedAccount().getCurrencyNode());
     }
 
-    Account getOppositeSideAccount(final Transaction t) {
+    private Account getOppositeSideAccount(final Transaction t) {
         TransactionEntry entry = t.getTransactionEntries().get(0);
 
         if (entry.getCreditAccount().equals(accountProperty.get())) {
@@ -196,7 +196,7 @@ public class SlipController extends AbstractSlipController {
         return entry.getCreditAccount();
     }
 
-    void newTransaction(final Transaction t) {
+    private void newTransaction(final Transaction t) {
         clearForm();
 
         amountField.setDecimal(t.getAmount(accountProperty().get()).abs());

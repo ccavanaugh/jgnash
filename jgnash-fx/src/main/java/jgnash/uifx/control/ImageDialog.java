@@ -83,7 +83,7 @@ public class ImageDialog {
         StageUtils.addBoundsListener(dialog, ImageDialog.class);
     }
 
-    void setImage(final Path path) {
+    private void setImage(final Path path) {
         if (Files.exists(path)) {
             try {
                 final Image image = new Image(path.toUri().toURL().toString(), true);

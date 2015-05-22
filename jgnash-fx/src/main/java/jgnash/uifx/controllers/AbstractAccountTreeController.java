@@ -17,6 +17,9 @@
  */
 package jgnash.uifx.controllers;
 
+import java.util.Collections;
+import java.util.TreeSet;
+
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -25,6 +28,7 @@ import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+
 import jgnash.engine.Account;
 import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
@@ -35,9 +39,6 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.util.TreeSearch;
 import jgnash.util.Nullable;
-
-import java.util.Collections;
-import java.util.TreeSet;
 
 /**
  * Abstract Controller handling a {@code TreeView} of {@code Account}s
@@ -109,7 +110,7 @@ public abstract class AbstractAccountTreeController implements MessageListener {
         Platform.runLater(this::loadAccountTree);
     }
 
-    void loadAccountTree() {
+    private void loadAccountTree() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
         if (engine != null) {
