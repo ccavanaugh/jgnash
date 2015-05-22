@@ -76,23 +76,7 @@ public class AccountTypeFilter {
         return hiddenTypesVisible;
     }
 
-    boolean getAccountTypesVisible() {
-        return accountTypesVisible.get();
-    }
-
-    boolean getExpenseTypesVisible() {
-        return expenseTypesVisible.get();
-    }
-
-    boolean getHiddenTypesVisible() {
-        return hiddenTypesVisible.get();
-    }
-
-    boolean getIncomeTypesVisible() {
-        return incomeTypesVisible.get();
-    }
-
-   private void setFilter(final boolean visible, final String propertyKey) {
+    private void setFilter(final boolean visible, final String propertyKey) {
         preferences.putBoolean(propertyKey, visible);
     }
 
@@ -105,16 +89,16 @@ public class AccountTypeFilter {
     public boolean isAccountVisible(final Account a) {
         final AccountType type = a.getAccountType();
 
-        if (type == AccountType.INCOME && getIncomeTypesVisible()) {
-            if (!a.isVisible() && getHiddenTypesVisible() || a.isVisible()) {
+        if (type == AccountType.INCOME && incomeTypesVisible.get()) {
+            if (!a.isVisible() && hiddenTypesVisible.get() || a.isVisible()) {
                 return true;
             }
-        } else if (type == AccountType.EXPENSE && getExpenseTypesVisible()) {
-            if (!a.isVisible() && getHiddenTypesVisible() || a.isVisible()) {
+        } else if (type == AccountType.EXPENSE && expenseTypesVisible.get()) {
+            if (!a.isVisible() && hiddenTypesVisible.get() || a.isVisible()) {
                 return true;
             }
-        } else if (type != AccountType.INCOME && type != AccountType.EXPENSE && getAccountTypesVisible()) {
-            if (!a.isVisible() && getHiddenTypesVisible() || a.isVisible()) {
+        } else if (type != AccountType.INCOME && type != AccountType.EXPENSE && accountTypesVisible.get()) {
+            if (!a.isVisible() && hiddenTypesVisible.get() || a.isVisible()) {
                 return true;
             }
         }
