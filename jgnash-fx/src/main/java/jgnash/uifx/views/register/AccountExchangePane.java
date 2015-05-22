@@ -179,7 +179,7 @@ public class AccountExchangePane extends GridPane {
         }
     }
 
-    void amountFieldAction() {
+    private void amountFieldAction() {
         if (exchangeRateField.getDecimal().compareTo(BigDecimal.ZERO) == 0) {
             if (getAmount().compareTo(BigDecimal.ZERO) != 0) {
                 exchangeRateField.setDecimal(exchangeAmountProperty.get().divide(getAmount(), MathConstants.mathContext));
@@ -245,7 +245,8 @@ public class AccountExchangePane extends GridPane {
         return baseAccountProperty;
     }
 
-    ObjectProperty<CurrencyNode> baseCurrencyProperty() {
+    @SuppressWarnings("WeakerAccess")
+    public ObjectProperty<CurrencyNode> baseCurrencyProperty() {
         return baseCurrencyProperty;
     }
 
