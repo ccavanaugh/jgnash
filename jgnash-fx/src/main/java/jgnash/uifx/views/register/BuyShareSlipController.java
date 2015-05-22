@@ -107,9 +107,8 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
             }
         });
 
-        attachmentPane.modifyTransaction(transaction);
-
         modTrans = transaction;
+        modTrans = attachmentPane.modifyTransaction(modTrans);
 
         reconciledButton.setSelected(transaction.getReconciled(accountProperty().get()) != ReconciledState.NOT_RECONCILED);
     }

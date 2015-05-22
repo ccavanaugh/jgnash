@@ -78,6 +78,7 @@ public class AdjustSharesSlipController extends AbstractPriceQtyInvSlipControlle
         reconciledButton.setSelected(transaction.getReconciled(accountProperty().get()) != ReconciledState.NOT_RECONCILED);
 
         modTrans = transaction;
+        modTrans = attachmentPane.modifyTransaction(modTrans);
     }
 
     private void updateTotalField() {
