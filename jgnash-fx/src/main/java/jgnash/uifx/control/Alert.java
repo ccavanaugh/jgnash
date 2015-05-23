@@ -20,8 +20,6 @@ package jgnash.uifx.control;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javax.inject.Inject;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -36,6 +34,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.util.InjectFXML;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
@@ -52,7 +51,7 @@ public class Alert {
 
     static final int ICON_SIZE = 48;
 
-    @Inject
+    @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
 
     @FXML

@@ -30,7 +30,6 @@
         <h2.version>1.3.176</h2.version>
         <hibernate-entitymanager.version>4.3.10.Final</hibernate-entitymanager.version>
         <hibernate-jpa-2.1-api.version>1.0.0.Final</hibernate-jpa-2.1-api.version>
-        <javax-inject.version>1</javax-inject.version>
         <hsqldb.version>2.3.2</hsqldb.version>
         <c3p0.version>0.9.5-pre10</c3p0.version>
         <sl4j.version>1.7.12</sl4j.version>
@@ -138,11 +137,6 @@
                 <groupId>javax.help</groupId>
                 <artifactId>javahelp</artifactId>
                 <version>${javahelp-version}</version>
-            </dependency>
-            <dependency>
-                <groupId>javax.inject</groupId>
-                <artifactId>javax.inject</artifactId>
-                <version>${javax-inject.version}</version>
             </dependency>
             <dependency>
                 <groupId>args4j</groupId>

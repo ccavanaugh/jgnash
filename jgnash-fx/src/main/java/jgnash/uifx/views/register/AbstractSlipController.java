@@ -25,8 +25,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
-
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -49,6 +47,7 @@ import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
 import jgnash.uifx.util.JavaFXUtils;
+import jgnash.uifx.util.InjectFXML;
 
 /**
  * Abstract bank transaction entry slip controller
@@ -57,7 +56,7 @@ import jgnash.uifx.util.JavaFXUtils;
  */
 abstract class AbstractSlipController implements Slip {
 
-    @Inject
+    @InjectFXML
     private final ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
 
     @FXML

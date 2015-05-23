@@ -23,8 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import javax.inject.Inject;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -38,6 +36,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.util.InjectFXML;
 import jgnash.util.ResourceUtils;
 
 import org.controlsfx.glyphfont.FontAwesome;
@@ -51,7 +50,7 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
  */
 public class ExceptionDialog {
 
-    @Inject
+    @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
 
     @FXML

@@ -20,8 +20,6 @@ package jgnash.uifx.views.register;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import javax.inject.Inject;
-
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -39,13 +37,14 @@ import jgnash.engine.ReconcileManager;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.uifx.util.JavaFXUtils;
+import jgnash.uifx.util.InjectFXML;
 
 /**
  * @author Craig Cavanaugh
  */
 public abstract class AbstractInvSlipController implements Slip {
 
-    @Inject
+    @InjectFXML
     private final ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
 
     @FXML

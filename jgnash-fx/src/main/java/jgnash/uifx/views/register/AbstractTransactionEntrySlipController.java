@@ -20,8 +20,6 @@ package jgnash.uifx.views.register;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -38,6 +36,7 @@ import jgnash.uifx.control.AutoCompleteTextField;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
 import jgnash.uifx.util.JavaFXUtils;
+import jgnash.uifx.util.InjectFXML;
 
 /**
  * Abstract controller for spit transaction entries of various types
@@ -46,7 +45,7 @@ import jgnash.uifx.util.JavaFXUtils;
  */
 abstract class AbstractTransactionEntrySlipController {
 
-    @Inject
+    @InjectFXML
     private final ObjectProperty<Parent> parentProperty = new SimpleObjectProperty<>();
 
     @FXML

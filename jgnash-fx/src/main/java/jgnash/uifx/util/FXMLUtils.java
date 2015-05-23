@@ -12,8 +12,6 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.inject.Inject;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -110,12 +108,12 @@ public class FXMLUtils {
      * @param object {@code Object} to search for field
      * @param value  value to set
      * @see javafx.beans.property.ObjectProperty
-     * @see javax.inject.Inject
+     * @see InjectFXML
      */
     @SuppressWarnings("unchecked")
     private static void injectParent(final Object object, final Object value) {
         for (final Field field : getDeclaredFields(object.getClass())) {
-            if (field.isAnnotationPresent(Inject.class) && field.getName().equals("parentProperty")) {
+            if (field.isAnnotationPresent(InjectFXML.class) && field.getName().equals("parentProperty")) {
                 field.setAccessible(true);
                 try {
                     final ObjectProperty property = (ObjectProperty) field.get(object);
