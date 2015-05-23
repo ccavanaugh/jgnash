@@ -34,12 +34,11 @@ import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.uifx.MainApplication;
 import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.controllers.AccountTypeFilterFormController;
 import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
+import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 

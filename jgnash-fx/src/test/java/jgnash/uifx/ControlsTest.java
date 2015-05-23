@@ -50,6 +50,7 @@ import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.DetailedDecimalTextField;
 import jgnash.uifx.control.SecurityComboBox;
 import jgnash.uifx.control.TransactionNumberComboBox;
+import jgnash.uifx.views.main.MainApplication;
 
 import com.sun.javafx.css.StyleManager;
 

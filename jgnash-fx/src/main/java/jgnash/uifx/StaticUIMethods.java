@@ -30,6 +30,7 @@ import jgnash.uifx.control.Alert;
 import jgnash.uifx.control.ExceptionDialog;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
+import jgnash.uifx.views.main.MainApplication;
 import jgnash.uifx.views.main.OpenDatabaseController;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;

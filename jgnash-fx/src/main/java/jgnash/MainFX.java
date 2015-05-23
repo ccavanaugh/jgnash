@@ -17,11 +17,11 @@
  */
 package jgnash;
 
-import jgnash.uifx.MainApplication;
-import jgnash.uifx.StaticUIMethods;
-import jgnash.util.Version;
-
 import javafx.application.Application;
+
+import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.views.main.MainApplication;
+import jgnash.util.Version;
 
 /**
  * Main launch point for the JavaFX UI

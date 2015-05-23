@@ -28,7 +28,7 @@ import javafx.scene.layout.StackPane;
 
 import jgnash.engine.Account;
 import jgnash.engine.Transaction;
-import jgnash.uifx.MainApplication;
+import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.NotNull;
 
 /**

@@ -27,7 +27,7 @@ import javafx.scene.control.TreeView;
 import javafx.stage.Stage;
 
 import jgnash.engine.Account;
-import jgnash.uifx.controllers.AbstractAccountTreeController;
+import jgnash.uifx.control.AbstractAccountTreeController;
 import jgnash.util.NotNull;
 
 /**

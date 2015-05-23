@@ -35,7 +35,7 @@ import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.uifx.controllers.AbstractAccountTreeController;
+import jgnash.uifx.control.AbstractAccountTreeController;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.uifx.util.FXMLUtils;

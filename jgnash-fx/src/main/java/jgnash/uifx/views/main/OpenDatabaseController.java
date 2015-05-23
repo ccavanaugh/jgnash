@@ -34,7 +34,6 @@ import javafx.stage.Stage;
 
 import jgnash.engine.DataStoreType;
 import jgnash.engine.EngineFactory;
-import jgnash.uifx.MainApplication;
 import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.tasks.BootEngineTask;
 

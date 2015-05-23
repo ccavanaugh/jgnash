@@ -32,9 +32,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import jgnash.uifx.MainApplication;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.StageUtils;
+import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.ResourceUtils;
 
 /**

@@ -47,9 +47,9 @@ import jgnash.engine.AttachmentUtils;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
-import jgnash.uifx.MainApplication;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.ImageDialog;
+import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.ResourceUtils;
 
 /**
