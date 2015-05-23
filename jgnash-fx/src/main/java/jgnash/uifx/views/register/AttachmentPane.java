@@ -104,6 +104,11 @@ public class AttachmentPane extends GridPane {
         attachmentProperty.setValue(null);
     }
 
+    /**
+     * Builder method for extracting an attachment from an existing {@code Transaction}
+     * @param transaction {@code Transaction} to extract attachment information from
+     * @return the provided {@code Transaction}
+     */
     Transaction modifyTransaction(final Transaction transaction) {
         new Thread(() -> {
             if (transaction.getAttachment() != null && !transaction.getAttachment().isEmpty()) {
@@ -125,6 +130,11 @@ public class AttachmentPane extends GridPane {
         return transaction;
     }
 
+    /**
+     * Builder method for binding an attachment to a {@code Transaction}
+     * @param transaction {@code Transaction} to update
+     * @return the provided {@code Transaction}
+     */
     Transaction buildTransaction(final Transaction transaction) {
         if (attachmentProperty.get() != null) {
             if (moveAttachment) {
