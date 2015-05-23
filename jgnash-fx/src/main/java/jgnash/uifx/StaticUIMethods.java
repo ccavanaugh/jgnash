@@ -26,12 +26,11 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-import jgnash.MainFX;
 import jgnash.uifx.control.Alert;
 import jgnash.uifx.control.ExceptionDialog;
-import jgnash.uifx.controllers.OpenDatabaseController;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
+import jgnash.uifx.views.main.OpenDatabaseController;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
@@ -51,7 +50,8 @@ public class StaticUIMethods {
     }
 
     public static void showOpenDialog() {
-        final Stage dialog = FXMLUtils.loadFXML(MainFX.class.getResource("fxml/OpenDatabaseForm.fxml"), ResourceUtils.getBundle());
+        final Stage dialog = FXMLUtils.loadFXML(OpenDatabaseController.class.getResource("OpenDatabaseForm.fxml"),
+                ResourceUtils.getBundle());
         dialog.setTitle(ResourceUtils.getBundle().getString("Title.Open"));
         dialog.setResizable(false);
 

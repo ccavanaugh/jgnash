@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.Tooltip?>
-
 <?import org.controlsfx.glyphfont.Glyph?>
-
 <ToolBar
     xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
-    fx:controller="jgnash.uifx.controllers.MainToolBarController">
+    fx:controller="jgnash.uifx.views.main.MainToolBarController">
     <items>
         <Button mnemonicParsing="false" onAction="#handleOpenAction" text="%Menu.Open.Name">
             <graphic>

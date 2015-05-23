@@ -15,12 +15,11 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.uifx.controllers;
+package jgnash.uifx.views.main;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.Button;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -32,41 +31,22 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.tasks.CloseFileTask;
 
 /**
- * Primary Menu Controller
- *
  * @author Craig Cavanaugh
  */
-public class MenuBarController implements MessageListener {
+public class MainToolBarController implements MessageListener {
 
-    @FXML private MenuBar menuBar;
+    @FXML
+    private Button closeButton;
 
-    @FXML private MenuItem openMenuItem;
+    @FXML
+    private Button updateCurrencies;
 
-    @FXML private MenuItem closeMenuItem;
-
-    @FXML private MenuItem exitMenuItem;
+    @FXML
+    private Button updateSecurities;
 
     @FXML
     private void initialize() {
-        closeMenuItem.setDisable(true);
-
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
-    }
-
-    @FXML
-    private void handleExitAction() {
-        if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
-            CloseFileTask.initiateShutdown();
-        } else {
-            Platform.exit();
-        }
-    }
-
-    @FXML
-    private void handleCloseAction() {
-        if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
-            CloseFileTask.initiateClose();
-        }
     }
 
     @FXML
@@ -75,7 +55,37 @@ public class MenuBarController implements MessageListener {
     }
 
     @FXML
-    private void updateSecurities() {
+    private void handleCloseAction() {
+        if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
+            CloseFileTask.initiateShutdown();
+        }
+    }
+
+    @Override
+    public void messagePosted(final Message event) {
+
+        Platform.runLater(() -> {
+            switch (event.getEvent()) {
+                case FILE_NEW_SUCCESS:
+                case FILE_LOAD_SUCCESS:
+                    updateSecurities.setDisable(false);
+                    updateCurrencies.setDisable(false);
+                    closeButton.setDisable(false);
+                    break;
+                case FILE_CLOSING:
+                case FILE_LOAD_FAILED:
+                    updateSecurities.setDisable(true);
+                    updateCurrencies.setDisable(true);
+                    closeButton.setDisable(true);
+                    break;
+                default:
+                    break;
+            }
+        });
+    }
+
+    @FXML
+    private void handleSecuritiesUpdateAction() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         if (engine != null) {
             engine.startSecuritiesUpdate(0);
@@ -83,31 +93,10 @@ public class MenuBarController implements MessageListener {
     }
 
     @FXML
-    private void updateCurrencies() {
+    private void handleCurrenciesUpdateAction() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         if (engine != null) {
             engine.startExchangeRateUpdate(0);
         }
-    }
-
-    @Override
-    public void messagePosted(final Message event) {
-        Platform.runLater(() -> {
-            switch (event.getEvent()) {
-                case FILE_LOAD_SUCCESS:
-                case FILE_NEW_SUCCESS:
-                    closeMenuItem.setDisable(false);
-                    break;
-                case FILE_CLOSING:
-                    closeMenuItem.setDisable(true);
-                    break;
-                case FILE_IO_ERROR:
-                case FILE_LOAD_FAILED:
-                case FILE_NOT_FOUND:
-                    StaticUIMethods.displayError("File system error TBD");  // TODO: need a description
-                default:
-                    break;
-            }
-        });
     }
 }

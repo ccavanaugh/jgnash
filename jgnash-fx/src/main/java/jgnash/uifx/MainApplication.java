@@ -55,6 +55,8 @@ import jgnash.uifx.control.TabViewPane;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.accounts.AccountsViewController;
+import jgnash.uifx.views.main.MainToolBarController;
+import jgnash.uifx.views.main.MenuBarController;
 import jgnash.uifx.views.register.RegisterViewController;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
@@ -62,6 +64,7 @@ import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
 import com.sun.javafx.css.StyleManager;
+
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
@@ -128,8 +131,8 @@ public class MainApplication extends Application implements MessageListener {
 
         busyPane = new BusyPane();
 
-        final MenuBar menuBar = FXMLLoader.load(MainFX.class.getResource("fxml/MainMenuBar.fxml"), rb);
-        final ToolBar mainToolBar = FXMLLoader.load(MainFX.class.getResource("fxml/MainToolBar.fxml"), rb);
+        final MenuBar menuBar = FXMLLoader.load(MenuBarController.class.getResource("MainMenuBar.fxml"), rb);
+        final ToolBar mainToolBar = FXMLLoader.load(MainToolBarController.class.getResource("MainToolBar.fxml"), rb);
         tabViewPane = new TabViewPane();
 
         final VBox top = new VBox();
