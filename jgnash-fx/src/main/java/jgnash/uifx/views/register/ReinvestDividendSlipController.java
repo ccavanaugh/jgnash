@@ -131,10 +131,4 @@ public class ReinvestDividendSlipController extends AbstractPriceQtyInvSlipContr
 
         attachmentPane.clear();
     }
-
-    @Override
-    public void handleCancelAction() {
-        clearForm();
-        focusFirstComponent();
-    }
 }

@@ -156,10 +156,4 @@ public class SellShareSlipController extends AbstractPriceQtyInvSlipController {
         accountExchangePane.setExchangedAmount(null);
         accountExchangePane.setSelectedAccount(accountProperty().get());
     }
-
-    @Override
-    public void handleCancelAction() {
-        clearForm();
-        focusFirstComponent();
-    }
 }

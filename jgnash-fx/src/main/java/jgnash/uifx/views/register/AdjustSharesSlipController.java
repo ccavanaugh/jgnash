@@ -115,10 +115,4 @@ public class AdjustSharesSlipController extends AbstractPriceQtyInvSlipControlle
 
         attachmentPane.clear();
     }
-
-    @Override
-    public void handleCancelAction() {
-        clearForm();
-        focusFirstComponent();
-    }
 }

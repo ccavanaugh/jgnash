@@ -36,8 +36,8 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.ReconcileManager;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
-import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * @author Craig Cavanaugh
@@ -128,6 +128,12 @@ public abstract class AbstractInvSlipController implements Slip {
             clearForm();
             focusFirstComponent();
         }
+    }
+
+    @Override
+    public void handleCancelAction() {
+        clearForm();
+        focusFirstComponent();
     }
 
     abstract protected void focusFirstComponent();
