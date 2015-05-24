@@ -89,7 +89,9 @@ public class AccountExchangePane extends GridPane {
     final private SimpleBooleanProperty disableProperty = new SimpleBooleanProperty(false);
 
     public AccountExchangePane() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AccountExchangePane.fxml"), ResourceUtils.getBundle());
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AccountExchangePane.fxml"),
+                ResourceUtils.getBundle());
+
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
@@ -102,6 +104,8 @@ public class AccountExchangePane extends GridPane {
 
     @FXML
     private void initialize() {
+
+        popOver.detachableProperty().setValue(false);
 
         accountCombo.disableProperty().bind(disableProperty);
         expandButton.disableProperty().bind(disableProperty);
@@ -182,11 +186,13 @@ public class AccountExchangePane extends GridPane {
     private void amountFieldAction() {
         if (exchangeRateField.getDecimal().compareTo(BigDecimal.ZERO) == 0) {
             if (getAmount().compareTo(BigDecimal.ZERO) != 0) {
-                exchangeRateField.setDecimal(exchangeAmountProperty.get().divide(getAmount(), MathConstants.mathContext));
+                exchangeRateField.setDecimal(exchangeAmountProperty.get().divide(getAmount(),
+                        MathConstants.mathContext));
             }
         } else {
             exchangeAmountProperty.set(getAmount().multiply(exchangeRateField.getDecimal(),
-                    MathConstants.mathContext).setScale(baseCurrencyProperty.get().getScale(), MathConstants.roundingMode));
+                    MathConstants.mathContext).setScale(baseCurrencyProperty.get().getScale(),
+                    MathConstants.roundingMode));
         }
     }
 
@@ -195,11 +201,13 @@ public class AccountExchangePane extends GridPane {
             if (getAmount().compareTo(BigDecimal.ZERO) == 0 && amountEditableProperty.get()) {
                 if (exchangeRateField.getDecimal().compareTo(BigDecimal.ZERO) != 0) {
                     amountProperty.set(exchangeAmountProperty.get().divide(exchangeRateField.getDecimal(),
-                            MathConstants.mathContext).setScale(baseCurrencyProperty.get().getScale(), MathConstants.roundingMode));
+                            MathConstants.mathContext).setScale(baseCurrencyProperty.get().getScale(),
+                            MathConstants.roundingMode));
                 }
             } else {
                 exchangeAmountProperty.set(getAmount().multiply(exchangeRateField.getDecimal(),
-                        MathConstants.mathContext).setScale(baseCurrencyProperty.get().getScale(), MathConstants.roundingMode));
+                        MathConstants.mathContext).setScale(baseCurrencyProperty.get().getScale(),
+                        MathConstants.roundingMode));
             }
         }
 
@@ -210,11 +218,13 @@ public class AccountExchangePane extends GridPane {
         if (getAmount().compareTo(BigDecimal.ZERO) == 0 && amountEditableProperty.get()) {
             if (exchangeRateField.getDecimal().compareTo(BigDecimal.ZERO) != 0) {
                 amountProperty.set(exchangeAmountProperty.get().divide(exchangeRateField.getDecimal(),
-                        MathConstants.mathContext).setScale(baseCurrencyProperty.get().getScale(), MathConstants.roundingMode));
+                        MathConstants.mathContext).setScale(baseCurrencyProperty.get().getScale(),
+                        MathConstants.roundingMode));
             }
         } else {
             if (getAmount().compareTo(BigDecimal.ZERO) != 0) {
-                exchangeRateField.setDecimal(exchangeAmountProperty.get().divide(getAmount(), MathConstants.mathContext));
+                exchangeRateField.setDecimal(exchangeAmountProperty.get().divide(getAmount(),
+                        MathConstants.mathContext));
             }
         }
     }
@@ -236,7 +246,8 @@ public class AccountExchangePane extends GridPane {
             popOver.hide();
         } else {
             // update the label before the popover is shown
-            exchangeLabel.setText(CommodityFormat.getConversion(baseCurrencyProperty.get(), accountCombo.getValue().getCurrencyNode()));
+            exchangeLabel.setText(CommodityFormat.getConversion(baseCurrencyProperty.get(),
+                    accountCombo.getValue().getCurrencyNode()));
             popOver.show(expandButton);
         }
     }
