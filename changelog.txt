@@ -25,6 +25,7 @@ Budgeting
 - flexible start / end period for different fiscal years
 Reinstate archive capability.
 Add ability to make an existing transaction a recurring transaction.
+Improved handling of memo's in split transactions.  The split entry memo should show up in the applicable account
 
 Release 2.16.0
 ----------------------
