@@ -99,6 +99,7 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
         transactionPanes.add(buildAdjustShareTab(actions[4], TransactionType.ADDSHARE));
         transactionPanes.add(buildAdjustShareTab(actions[5], TransactionType.REMOVESHARE));
         transactionPanes.add(buildReinvestDividendTab(actions[6]));
+        transactionPanes.add(buildDividendTab(actions[7]));
 
         actionComboBox.getItems().addAll(transactionPanes);
 
@@ -187,6 +188,22 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
         }
     }
 
+    private SlipControllerContainer buildDividendTab(final String name) {
+
+        try {
+            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DividendSlip.fxml"), resources);
+            final Pane pane = fxmlLoader.load();
+
+            final DividendSlipController slipController = fxmlLoader.getController();
+
+            slipController.accountProperty().bind(accountProperty());
+
+            return new SlipControllerContainer(name, slipController, pane);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @FXML
     private void handleEnterAction() {
         actionComboBox.getSelectionModel().selectedItemProperty().get().getController().handleEnterAction();
@@ -233,6 +250,9 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
                     break;
                 case REINVESTDIV:
                     actionComboBox.getSelectionModel().select(6);
+                    break;
+                case DIVIDEND:
+                    actionComboBox.getSelectionModel().select(7);
                     break;
                 default: // TODO: more investment slips
                     break;
