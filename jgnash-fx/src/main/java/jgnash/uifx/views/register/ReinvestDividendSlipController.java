@@ -72,7 +72,7 @@ public class ReinvestDividendSlipController extends AbstractPriceQtyInvSlipContr
     @Override
     public void modifyTransaction(@NotNull final Transaction transaction) {
         if (transaction.getTransactionType() != TransactionType.REINVESTDIV) {
-            throw new IllegalArgumentException("bad tranType");
+            throw new IllegalArgumentException(resources.getString("Message.Error.InvalidTransactionType"));
         }
 
         clearForm();

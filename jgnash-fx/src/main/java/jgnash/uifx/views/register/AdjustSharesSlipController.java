@@ -63,7 +63,7 @@ public class AdjustSharesSlipController extends AbstractPriceQtyInvSlipControlle
     public void modifyTransaction(@NotNull final Transaction transaction) {
         if (!(transaction.getTransactionType() == TransactionType.REMOVESHARE ||
                 transaction.getTransactionType() == TransactionType.ADDSHARE)) {
-            throw new IllegalArgumentException("bad tranType");
+            throw new IllegalArgumentException(resources.getString("Message.Error.InvalidTransactionType"));
         }
 
         clearForm();

@@ -30,6 +30,7 @@ import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionEntryBuyX;
 import jgnash.engine.TransactionFactory;
+import jgnash.engine.TransactionType;
 import jgnash.util.NotNull;
 
 /**
@@ -75,8 +76,8 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
 
     @Override
     public void modifyTransaction(@NotNull final Transaction transaction) {
-        if (!(transaction instanceof InvestmentTransaction)) {
-            throw new IllegalArgumentException("bad tranType");
+        if (transaction.getTransactionType() != TransactionType.BUYSHARE) {
+            throw new IllegalArgumentException(resources.getString("Message.Error.InvalidTransactionType"));
         }
         clearForm();
 
