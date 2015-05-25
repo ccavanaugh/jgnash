@@ -123,11 +123,6 @@ public class SellShareSlipController extends AbstractPriceQtyInvSlipController {
         totalField.setDecimal(quantityField.getDecimal().multiply(priceField.getDecimal()).add(gainLossPane.getDecimal()));
     }
 
-    @Override
-    public boolean validateForm() {
-        return true;
-    }
-
     @NotNull
     @Override
     public Transaction buildTransaction() {

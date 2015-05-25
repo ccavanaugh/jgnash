@@ -33,6 +33,7 @@ import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.util.ValidationFactory;
 import jgnash.util.NotNull;
 
 /**
@@ -117,8 +118,9 @@ public class SlipController extends AbstractSlipController {
     public boolean validateForm() {
         boolean result = super.validateForm();
 
-        if (result) {
-            result =  accountExchangePane.getSelectedAccount() != null;
+        if (accountExchangePane.getSelectedAccount() == null) {
+            ValidationFactory.showValidationError(accountExchangePane, resources.getString("Message.Error.Value"));
+            result = false;
         }
 
         return result;

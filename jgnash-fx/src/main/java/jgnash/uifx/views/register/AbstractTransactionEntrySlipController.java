@@ -19,6 +19,7 @@ package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -35,8 +36,9 @@ import jgnash.engine.TransactionEntry;
 import jgnash.uifx.control.AutoCompleteTextField;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
-import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
+import jgnash.uifx.util.ValidationFactory;
 
 /**
  * Abstract controller for spit transaction entries of various types
@@ -62,6 +64,9 @@ abstract class AbstractTransactionEntrySlipController {
 
     @FXML
     AttachmentPane attachmentPane;
+
+    @FXML
+    private ResourceBundle resources;
 
     final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
@@ -113,9 +118,13 @@ abstract class AbstractTransactionEntrySlipController {
         return accountProperty.get().getCurrencyNode().equals(accountExchangePane.getSelectedAccount().getCurrencyNode());
     }
 
-    // TODO: Form validation visual
     private boolean validateForm() {
-        return !amountField.getText().equals("");
+        if (amountField.getDecimal().compareTo(BigDecimal.ZERO) == 0) {
+            ValidationFactory.showValidationError(amountField, resources.getString("Message.Error.Value"));
+            return false;
+        }
+
+        return true;
     }
 
     void clearForm() {

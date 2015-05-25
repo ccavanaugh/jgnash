@@ -102,11 +102,6 @@ public class ReinvestDividendSlipController extends AbstractPriceQtyInvSlipContr
         totalField.setDecimal(quantityField.getDecimal().multiply(priceField.getDecimal()).subtract(feePane.getDecimal()));
     }
 
-    @Override
-    public boolean validateForm() {
-        return true;
-    }
-
     @NotNull
     @Override
     public Transaction buildTransaction() {

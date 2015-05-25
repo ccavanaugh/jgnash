@@ -85,11 +85,6 @@ public class AdjustSharesSlipController extends AbstractPriceQtyInvSlipControlle
         totalField.setDecimal(quantityField.getDecimal().multiply(priceField.getDecimal()));
     }
 
-    @Override
-    public boolean validateForm() {
-        return true;
-    }
-
     @NotNull
     @Override
     public Transaction buildTransaction() {

@@ -46,8 +46,9 @@ import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
-import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
+import jgnash.uifx.util.ValidationFactory;
 
 /**
  * Abstract bank transaction entry slip controller
@@ -291,7 +292,14 @@ abstract class AbstractSlipController implements Slip {
         return t;
     }
 
+    @Override
     public boolean validateForm() {
-        return amountField.getDecimal().compareTo(BigDecimal.ZERO) != 0;
+
+        if (amountField.getDecimal().compareTo(BigDecimal.ZERO) == 0) {
+            ValidationFactory.showValidationError(amountField, resources.getString("Message.Error.Value"));
+            return false;
+        }
+
+        return true;
     }
 }

@@ -38,6 +38,7 @@ import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.SecurityComboBox;
 import jgnash.uifx.control.TransactionNumberComboBox;
+import jgnash.uifx.util.ValidationFactory;
 import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.NotNull;
 
@@ -182,13 +183,15 @@ public class DividendSlipController extends AbstractInvSlipController {
     public boolean validateForm() {
         if (securityComboBox.getValue() == null) {
             logger.warning(resources.getString("Message.Error.SecuritySelection"));
-            //showValidationError(resources.getString("Message.Error.SecuritySelection"), securityComboBox);
+            ValidationFactory.showValidationError(securityComboBox,
+                    resources.getString("Message.Error.SecuritySelection"));
             return false;
         }
 
         if (dividendField.getLength() == 0) {
             logger.warning(resources.getString("Message.Error.DividendValue"));
-            //showValidationError(resources.getString("Message.Error.DividendValue"), priceField);
+            ValidationFactory.showValidationError(dividendField,
+                    resources.getString("Message.Error.DividendValue"));
             return false;
         }
 

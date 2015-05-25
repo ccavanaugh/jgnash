@@ -31,6 +31,7 @@ import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.SecurityComboBox;
 import jgnash.uifx.control.TransactionNumberComboBox;
+import jgnash.uifx.util.ValidationFactory;
 import jgnash.uifx.views.main.MainApplication;
 
 /**
@@ -106,24 +107,26 @@ public abstract class AbstractPriceQtyInvSlipController extends AbstractInvSlipC
 
     @Override
     public boolean validateForm() {
+        boolean result = true;
+
         if (securityComboBox.getValue() == null) {
             logger.warning(resources.getString("Message.Error.SecuritySelection"));
-            //showValidationError(resources.getString("Message.Error.SecuritySelection"), securityComboBox);
-            return false;
+            ValidationFactory.showValidationError(securityComboBox, resources.getString("Message.Error.SecuritySelection"));
+            result = false;
         }
 
         if (priceField.getLength() == 0) {
             logger.warning(resources.getString("Message.Error.SecurityPrice"));
-            //showValidationError(resources.getString("Message.Error.SecurityPrice"), priceField);
-            return false;
+            ValidationFactory.showValidationError(priceField, resources.getString("Message.Error.SecurityPrice"));
+            result = false;
         }
 
         if (quantityField.getLength() == 0) {
             logger.warning(resources.getString("Message.Error.SecurityQuantity"));
-            //showValidationError(resources.getString("Message.Error.SecurityQuantity"), quantityField);
-            return false;
+            ValidationFactory.showValidationError(quantityField, resources.getString("Message.Error.SecurityQuantity"));
+            result = false;
         }
 
-        return true;
+        return result;
     }
 }
