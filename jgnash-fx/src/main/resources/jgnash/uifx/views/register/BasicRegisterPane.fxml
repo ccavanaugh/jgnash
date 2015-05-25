@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.control.ToolBar?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Button?>
-
-<?import org.controlsfx.glyphfont.Glyph?>
-
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="jgnash.uifx.views.register.BankRegisterPaneController">
     <center>
@@ -19,22 +17,22 @@
                     <items>
                         <Button fx:id="newButton" mnemonicParsing="false" text="%Button.New">
                             <graphic>
-                                <Glyph fontFamily="FontAwesome" icon="MONEY"/>
+                                <FontAwesomeIconView glyphName="MONEY"/>
                             </graphic>
                         </Button>
                         <Button fx:id="duplicateButton" mnemonicParsing="false" onAction="#handleDuplicateAction" text="%Button.Duplicate">
                             <graphic>
-                                <Glyph fontFamily="FontAwesome" icon="COPY"/>
+                                <FontAwesomeIconView glyphName="COPY"/>
                             </graphic>
                         </Button>
                         <Button fx:id="jumpButton" mnemonicParsing="false" text="%Button.Jump">
                             <graphic>
-                                <Glyph fontFamily="FontAwesome" icon="EXTERNAL_LINK"/>
+                                <FontAwesomeIconView glyphName="EXTERNAL_LINK"/>
                             </graphic>
                         </Button>
                         <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction" text="%Button.Delete">
                             <graphic>
-                                <Glyph fontFamily="FontAwesome" icon="TRASH_ALT"/>
+                                <FontAwesomeIconView glyphName="TRASH_ALT"/>
                             </graphic>
                         </Button>
                     </items>

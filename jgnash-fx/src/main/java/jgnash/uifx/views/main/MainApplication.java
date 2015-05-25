@@ -17,6 +17,8 @@
  */
 package jgnash.uifx.views.main;
 
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+
 import java.io.IOException;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
@@ -37,7 +39,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -54,6 +56,7 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.BusyPane;
 import jgnash.uifx.control.TabViewPane;
 import jgnash.uifx.tasks.CloseFileTask;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.accounts.AccountsViewController;
 import jgnash.uifx.views.register.RegisterViewController;
@@ -65,10 +68,6 @@ import jgnash.util.ResourceUtils;
 import com.sun.javafx.css.StyleManager;
 
 import org.controlsfx.control.StatusBar;
-import org.controlsfx.glyphfont.FontAwesome;
-import org.controlsfx.glyphfont.Glyph;
-import org.controlsfx.glyphfont.GlyphFont;
-import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 /**
  * JavaFX version of jGnash.
@@ -310,19 +309,19 @@ public class MainApplication extends Application implements MessageListener {
 
     private class StatusBarLogHandler extends Handler {
 
-        final Glyph INFO;
+        private static final String GRAPHIC_SIZE = "0.8em";
 
-        final Glyph WARNING;
+        final Text INFO;
 
-        final Glyph SEVERE;
+        final Text WARNING;
+
+        final Text SEVERE;
 
         public StatusBarLogHandler() {
-            final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
-            final double defaultSize = fontAwesome.getDefaultSize();
 
-            INFO = fontAwesome.create(FontAwesome.Glyph.INFO).size(defaultSize - 2f);
-            WARNING = fontAwesome.create(FontAwesome.Glyph.FLAG).size(defaultSize - 2f);
-            SEVERE = fontAwesome.create(FontAwesome.Glyph.BUG).color(Color.DARKRED).size(defaultSize - 2f);
+            INFO = JavaFXUtils.createGlyph(FontAwesomeIcon.INFO, GRAPHIC_SIZE);
+            WARNING = JavaFXUtils.createGlyph(FontAwesomeIcon.FLAG, GRAPHIC_SIZE);
+            SEVERE = JavaFXUtils.createGlyph(FontAwesomeIcon.BUG, GRAPHIC_SIZE, "darkred");
         }
 
         @Override
@@ -344,7 +343,7 @@ public class MainApplication extends Application implements MessageListener {
             }
         }
 
-        private void updateStatus(final String status, final Glyph glyph) {
+        private void updateStatus(final String status, final Text glyph) {
             Platform.runLater(() -> {
                 statusBar.setText(status);
                 statusBar.setGraphic(glyph);

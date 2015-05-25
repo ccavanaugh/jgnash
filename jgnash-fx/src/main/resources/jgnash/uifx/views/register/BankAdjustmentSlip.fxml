@@ -1,20 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?><?import javafx.scene.control.Button?>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-
 <?import jgnash.uifx.control.AutoCompleteTextField?>
 <?import jgnash.uifx.control.DatePickerEx?>
 <?import jgnash.uifx.control.DecimalTextField?>
 <?import jgnash.uifx.control.TransactionNumberComboBox?>
 <?import jgnash.uifx.views.register.AttachmentPane?>
-
-<?import javafx.scene.control.Tooltip?>
-<?import org.controlsfx.glyphfont.Glyph?>
-
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="jgnash.uifx.views.register.BankAdjustmentSlipController" styleClass="form, dialog">
   <columnConstraints>
@@ -59,9 +58,9 @@
        <DecimalTextField fx:id="amountField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
      <ButtonBar GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="3">
        <buttons>
-           <Button fx:id="convertButton" ButtonBar.buttonData="LEFT" onAction="#convertAction" styleClass="icon-button">
+           <Button fx:id="convertButton" ButtonBar.buttonData="LEFT" onAction="#convertAction">
                <graphic>
-                   <Glyph fontFamily="FontAwesome" icon="ADJUST"/>
+                   <FontAwesomeIconView glyphName="ADJUST"/>
                </graphic>
                <tooltip>
                    <Tooltip text="%ToolTip.ConvertSEntry"/>

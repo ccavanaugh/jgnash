@@ -17,6 +17,8 @@
  */
 package jgnash.uifx.control;
 
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -32,16 +34,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.DataFormat;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.ResourceUtils;
-
-import org.controlsfx.glyphfont.FontAwesome;
-import org.controlsfx.glyphfont.GlyphFont;
-import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 /**
  * Exception dialog
@@ -82,10 +80,7 @@ public class ExceptionDialog {
 
     @FXML
     private void initialize() {
-        final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
-
-        message.setGraphic(fontAwesome.create(FontAwesome.Glyph.EXCLAMATION_TRIANGLE)
-                .color(Color.DARKRED).size(Alert.ICON_SIZE));
+        message.setGraphic(JavaFXUtils.createGlyph(FontAwesomeIcon.EXCLAMATION_TRIANGLE, Alert.ICON_SIZE, "darkred"));
 
         closeButton.setOnAction(event -> ((Stage) parentProperty.get().getWindow()).close());
 

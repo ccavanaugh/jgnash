@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.ComboBox?>
@@ -11,8 +12,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import org.controlsfx.glyphfont.Glyph?>
-
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="jgnash.uifx.views.register.InvestmentRegisterPaneController">
     <center>
@@ -23,22 +22,22 @@
                     <items>
                         <Button fx:id="newButton" mnemonicParsing="false" text="%Button.New">
                             <graphic>
-                                <Glyph fontFamily="FontAwesome" icon="MONEY"/>
+                                <FontAwesomeIconView glyphName="MONEY"/>
                             </graphic>
                         </Button>
                         <Button fx:id="duplicateButton" mnemonicParsing="false" onAction="#handleDuplicateAction" text="%Button.Duplicate">
                             <graphic>
-                                <Glyph fontFamily="FontAwesome" icon="COPY"/>
+                                <FontAwesomeIconView glyphName="COPY"/>
                             </graphic>
                         </Button>
                         <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction" text="%Button.Delete">
                             <graphic>
-                                <Glyph fontFamily="FontAwesome" icon="TRASH_ALT"/>
+                                <FontAwesomeIconView glyphName="TRASH_ALT"/>
                             </graphic>
                         </Button>
                         <Button mnemonicParsing="false" onAction="#handleSecuritiesAction" text="%Button.AvailSecurities">
                             <graphic>
-                                <Glyph fontFamily="FontAwesome" icon="BOOKMARK"/>
+                                <FontAwesomeIconView glyphName="BOOKMARK"/>
                             </graphic>
                         </Button>
                     </items>

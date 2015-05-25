@@ -105,10 +105,6 @@
     -fx-font-weight: bold;
 }
 
-.icon-button {
-    -fx-padding: 0.233333em 0.666667em 0.233333em 0.666667em;
-}
-
 #disabled-cell {
     -fx-opacity: 0.4;
     -fx-font-weight: bold;

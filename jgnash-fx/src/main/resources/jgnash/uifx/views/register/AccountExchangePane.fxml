@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -8,7 +9,6 @@
 <?import jgnash.uifx.control.AccountComboBox?>
 <?import jgnash.uifx.control.DecimalTextField?>
 <?import org.controlsfx.control.PopOver?>
-<?import org.controlsfx.glyphfont.Glyph?>
 <fx:root type="javafx.scene.layout.GridPane" maxHeight="-Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity"
       xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="form">
   <fx:define>
@@ -46,9 +46,9 @@
     <AccountComboBox fx:id="accountCombo" maxWidth="Infinity" minWidth="50" prefWidth="100"/>
     <Label fx:id="label" text="%Label.ExchangeAmount" GridPane.columnIndex="1"/>
     <DecimalTextField fx:id="exchangeAmountField" GridPane.columnIndex="2" minWidth="80" maxWidth="80"/>
-    <Button fx:id="expandButton" GridPane.columnIndex="3" styleClass="icon-button">
+    <Button fx:id="expandButton" GridPane.columnIndex="3">
       <graphic>
-        <Glyph fontFamily="FontAwesome" icon="EXCHANGE"/>
+        <FontAwesomeIconView glyphName="EXCHANGE"/>
       </graphic>
     </Button>
   </children>

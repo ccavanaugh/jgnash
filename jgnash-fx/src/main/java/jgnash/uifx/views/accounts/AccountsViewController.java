@@ -48,10 +48,6 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.util.EncodeDecode;
 
-import org.controlsfx.glyphfont.FontAwesome;
-import org.controlsfx.glyphfont.GlyphFont;
-import org.controlsfx.glyphfont.GlyphFontRegistry;
-
 /**
  * Accounts view controller
  *
@@ -91,14 +87,6 @@ public class AccountsViewController implements MessageListener {
 
     @FXML
     private void initialize() {
-        final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
-
-        newButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.PLUS));
-        modifyButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.EDIT));
-        reconcileButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.ADJUST));
-        deleteButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.TIMES));
-        filterButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.FILTER));
-        zoomButton.setGraphic(fontAwesome.create(FontAwesome.Glyph.EXTERNAL_LINK_SQUARE));
 
         modifyButton.setDisable(true);
         deleteButton.setDisable(true);

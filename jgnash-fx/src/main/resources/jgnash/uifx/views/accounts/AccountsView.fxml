@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.TreeTableView?>
@@ -9,12 +10,36 @@
     <top>
         <ToolBar>
             <items>
-                <Button fx:id="newButton" mnemonicParsing="false" onAction="#handleNewAccountAction" text="%Button.New"/>
-                <Button fx:id="modifyButton" mnemonicParsing="false" onAction="#handleModifyAccountAction" text="%Button.Modify"/>
-                <Button fx:id="reconcileButton" mnemonicParsing="false" text="%Button.Reconcile"/>
-                <Button fx:id="deleteButton" mnemonicParsing="false" text="%Button.Delete" onAction="#handleDeleteAccountAction"/>
-                <Button fx:id="filterButton" mnemonicParsing="false" onAction="#handleFilterAccountAction" text="%Button.Filter"/>
-                <Button fx:id="zoomButton" mnemonicParsing="false" text="%Button.Zoom"/>
+                <Button fx:id="newButton" mnemonicParsing="false" onAction="#handleNewAccountAction" text="%Button.New" >
+                    <graphic>
+                        <FontAwesomeIconView glyphName="PLUS"/>
+                    </graphic>
+                </Button>
+                <Button fx:id="modifyButton" mnemonicParsing="false" onAction="#handleModifyAccountAction" text="%Button.Modify">
+                    <graphic>
+                        <FontAwesomeIconView glyphName="EDIT"/>
+                    </graphic>
+                </Button>
+                <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAccountAction" text="%Button.Delete">
+                    <graphic>
+                        <FontAwesomeIconView glyphName="TRASH_ALT"/>
+                    </graphic>
+                </Button>
+                <Button fx:id="reconcileButton" mnemonicParsing="false" text="%Button.Reconcile">
+                    <graphic>
+                        <FontAwesomeIconView glyphName="ADJUST"/>
+                    </graphic>
+                </Button>
+                <Button fx:id="filterButton" mnemonicParsing="false" onAction="#handleFilterAccountAction" text="%Button.Filter">
+                    <graphic>
+                        <FontAwesomeIconView glyphName="FILTER"/>
+                    </graphic>
+                </Button>
+                <Button fx:id="zoomButton" mnemonicParsing="false" text="%Button.Zoom">
+                    <graphic>
+                        <FontAwesomeIconView glyphName="EXTERNAL_LINK_SQUARE"/>
+                    </graphic>
+                </Button>
             </items>
         </ToolBar>
     </top>

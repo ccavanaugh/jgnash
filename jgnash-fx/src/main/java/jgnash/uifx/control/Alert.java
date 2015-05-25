@@ -17,6 +17,8 @@
  */
 package jgnash.uifx.control;
 
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -29,18 +31,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
-
-import org.controlsfx.glyphfont.FontAwesome;
-import org.controlsfx.glyphfont.GlyphFont;
-import org.controlsfx.glyphfont.GlyphFontRegistry;
 
 /**
  * A Better behaved Alert class
@@ -49,7 +47,7 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
  */
 public class Alert {
 
-    static final int ICON_SIZE = 48;
+    static final String ICON_SIZE = "3.5em";
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
@@ -76,23 +74,21 @@ public class Alert {
 
         dialog = FXMLUtils.loadFXML(this, "AlertDialog.fxml", resources);
 
-        final GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
-
         switch (alertType) {
             case ERROR:
-                setGraphic(fontAwesome.create(FontAwesome.Glyph.EXCLAMATION_TRIANGLE).color(Color.DARKRED).size(ICON_SIZE));
+                setGraphic(JavaFXUtils.createGlyph(FontAwesomeIcon.EXCLAMATION_TRIANGLE, ICON_SIZE, "darkred"));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case WARNING:
-                setGraphic(fontAwesome.create(FontAwesome.Glyph.EXCLAMATION_CIRCLE).color(Color.DARKGOLDENROD).size(ICON_SIZE));
+                setGraphic(JavaFXUtils.createGlyph(FontAwesomeIcon.EXCLAMATION_CIRCLE, ICON_SIZE, "darkgoldenrod"));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case INFORMATION:
-                setGraphic(fontAwesome.create(FontAwesome.Glyph.INFO_CIRCLE).color(Color.DARKGOLDENROD).size(ICON_SIZE));
+                setGraphic(JavaFXUtils.createGlyph(FontAwesomeIcon.INFO_CIRCLE, ICON_SIZE, "darkgoldenrod"));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case YES_NO:
-                setGraphic(fontAwesome.create(FontAwesome.Glyph.QUESTION_CIRCLE).size(ICON_SIZE));
+                setGraphic(JavaFXUtils.createGlyph(FontAwesomeIcon.QUESTION_CIRCLE, ICON_SIZE));
                 ButtonType buttonTypeYes = new ButtonType(resources.getString("Button.Yes"), ButtonBar.ButtonData.YES);
                 ButtonType buttonTypeNo = new ButtonType(resources.getString("Button.No"), ButtonBar.ButtonData.NO);
                 setButtons(buttonTypeYes, buttonTypeNo);
