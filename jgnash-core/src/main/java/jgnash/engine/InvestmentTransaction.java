@@ -315,6 +315,7 @@ public class InvestmentTransaction extends Transaction {
 
         switch (getTransactionType()) {
             case DIVIDEND:
+            case RETURNOFCAPITAL:
                 return getAmount(getInvestmentAccount());
             case REINVESTDIV:
             case SELLSHARE:
