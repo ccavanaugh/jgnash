@@ -100,6 +100,8 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
         transactionPanes.add(buildAdjustShareTab(actions[5], TransactionType.REMOVESHARE));
         transactionPanes.add(buildReinvestDividendTab(actions[6]));
         transactionPanes.add(buildDividendTab(actions[7]));
+        transactionPanes.add(buildSplitMergeTab(actions[8], TransactionType.SPLITSHARE));
+        transactionPanes.add(buildSplitMergeTab(actions[9], TransactionType.MERGESHARE));
 
         actionComboBox.getItems().addAll(transactionPanes);
 
@@ -204,6 +206,23 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
         }
     }
 
+    private SlipControllerContainer buildSplitMergeTab(final String name, final TransactionType transactionType) {
+
+        try {
+            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("SplitMergeSharesSlip.fxml"), resources);
+            final Pane pane = fxmlLoader.load();
+
+            final SplitMergeSharesSlipController slipController = fxmlLoader.getController();
+
+            slipController.setTransactionType(transactionType);
+            slipController.accountProperty().bind(accountProperty());
+
+            return new SlipControllerContainer(name, slipController, pane);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @FXML
     private void handleEnterAction() {
         actionComboBox.getSelectionModel().selectedItemProperty().get().getController().handleEnterAction();
@@ -253,6 +272,12 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
                     break;
                 case DIVIDEND:
                     actionComboBox.getSelectionModel().select(7);
+                    break;
+                case SPLITSHARE:
+                    actionComboBox.getSelectionModel().select(8);
+                    break;
+                case MERGESHARE:
+                    actionComboBox.getSelectionModel().select(9);
                     break;
                 default: // TODO: more investment slips
                     break;
