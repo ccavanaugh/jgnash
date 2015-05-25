@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import jgnash.uifx.control.AutoCompleteTextField?>
+<?import jgnash.uifx.control.DatePickerEx?>
+<?import jgnash.uifx.control.DecimalTextField?>
+<?import jgnash.uifx.control.SecurityComboBox?>
+<?import jgnash.uifx.control.TransactionNumberComboBox?>
+<?import jgnash.uifx.views.register.AccountExchangePane?>
+<?import jgnash.uifx.views.register.AttachmentPane?>
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="jgnash.uifx.views.register.ReturnOfCapitalSlipController" styleClass="form, dialog">
+  <columnConstraints>
+      <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="95" />
+      <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="95" maxWidth="95" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints vgrow="NEVER" />
+    <RowConstraints vgrow="NEVER" />
+    <RowConstraints vgrow="NEVER" />
+    <RowConstraints vgrow="NEVER" />
+  </rowConstraints>
+  <children>
+    <!-- Row 0 -->
+    <Label text="%Label.Security" />
+    <SecurityComboBox fx:id="securityComboBox" maxWidth="Infinity" GridPane.fillWidth="true" GridPane.columnIndex="1" />
+    <Label text="%Label.Number" GridPane.columnIndex="2" />
+    <TransactionNumberComboBox  fx:id="numberComboBox" editable="true" GridPane.columnIndex="3" />
+
+    <!-- Row 1 -->
+    <Label text="%Label.Memo" GridPane.rowIndex="1" />
+    <AutoCompleteTextField fx:id="memoTextField"  GridPane.fillWidth="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+    <Label text="%Label.Date" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+    <DatePickerEx fx:id="datePicker" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+
+    <!-- Row 2 -->
+    <Label text="%Label.IncomeAccount" GridPane.rowIndex="2" />
+    <AccountExchangePane fx:id="incomeExchangePane"  GridPane.fillWidth="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+    <Label text="%Label.ReturnOfCapital" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+    <DecimalTextField fx:id="returnOfCapitalField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+
+    <!-- Row 3 -->
+    <Label text="%Label.Account" GridPane.rowIndex="3" />
+    <GridPane styleClass="form" GridPane.halignment="LEFT" GridPane.vgrow="NEVER" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true" GridPane.columnSpan="3" GridPane.columnIndex="1" GridPane.rowIndex="3" >
+      <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS" />
+        <ColumnConstraints hgrow="NEVER" />
+        <ColumnConstraints minWidth="8" maxWidth="8"/>
+        <ColumnConstraints hgrow="NEVER" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints vgrow="NEVER" />
+      </rowConstraints>
+      <children>
+        <AccountExchangePane fx:id="accountExchangePane" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true" />
+        <AttachmentPane fx:id="attachmentPane"  GridPane.columnIndex="1"/>
+        <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared" GridPane.columnIndex="3"/>
+      </children>
+    </GridPane>
+  </children>
+</GridPane>

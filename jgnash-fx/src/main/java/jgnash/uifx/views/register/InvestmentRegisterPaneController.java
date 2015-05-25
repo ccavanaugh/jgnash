@@ -102,6 +102,7 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
         transactionPanes.add(buildDividendTab(actions[7]));
         transactionPanes.add(buildSplitMergeTab(actions[8], TransactionType.SPLITSHARE));
         transactionPanes.add(buildSplitMergeTab(actions[9], TransactionType.MERGESHARE));
+        transactionPanes.add(buildReturnOfCapitalTab(actions[10]));
 
         actionComboBox.getItems().addAll(transactionPanes);
 
@@ -223,6 +224,22 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
         }
     }
 
+    private SlipControllerContainer buildReturnOfCapitalTab(final String name) {
+
+        try {
+            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ReturnOfCapitalSlip.fxml"), resources);
+            final Pane pane = fxmlLoader.load();
+
+            final ReturnOfCapitalSlipController slipController = fxmlLoader.getController();
+
+            slipController.accountProperty().bind(accountProperty());
+
+            return new SlipControllerContainer(name, slipController, pane);
+        } catch (final IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @FXML
     private void handleEnterAction() {
         actionComboBox.getSelectionModel().selectedItemProperty().get().getController().handleEnterAction();
@@ -279,7 +296,10 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
                 case MERGESHARE:
                     actionComboBox.getSelectionModel().select(9);
                     break;
-                default: // TODO: more investment slips
+                case RETURNOFCAPITAL:
+                    actionComboBox.getSelectionModel().select(10);
+                    break;
+                default:
                     break;
             }
         } else {
