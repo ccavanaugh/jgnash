@@ -17,6 +17,7 @@
  */
 package jgnash.uifx.views.register;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -238,8 +239,13 @@ public abstract class RegisterTableController {
                             break;
                         case TRANSACTION_ADD:
                             Platform.runLater(() -> {
-                                observableTransactions.addAll((Transaction)event.getObject(MessageProperty.TRANSACTION));
-                                FXCollections.sort(observableTransactions, tableView.getComparator());
+                                final Transaction transaction = event.getObject(MessageProperty.TRANSACTION);
+
+                                final int index = Collections.binarySearch(observableTransactions, transaction, tableView.getComparator());
+
+                                if (index < 0) {
+                                    observableTransactions.add(-index - 1, transaction);
+                                }
 
                                 // scroll to the new transaction
                                 scrollToTransaction(event.getObject(MessageProperty.TRANSACTION));
