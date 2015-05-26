@@ -239,7 +239,7 @@ public abstract class RegisterTableController {
                         case TRANSACTION_ADD:
                             Platform.runLater(() -> {
                                 observableTransactions.addAll((Transaction)event.getObject(MessageProperty.TRANSACTION));
-                                FXCollections.sort(observableTransactions);
+                                FXCollections.sort(observableTransactions, tableView.getComparator());
 
                                 // scroll to the new transaction
                                 scrollToTransaction(event.getObject(MessageProperty.TRANSACTION));
