@@ -69,7 +69,7 @@ public class JavaFXUtils {
                 .style(String.format("-fx-font-size: %s;", size)).build();
     }
 
-    public static Text createGlyph(final FontAwesomeIcon icon) {
+    /*public static Text createGlyph(final FontAwesomeIcon icon) {
         return GlyphsBuilder.create(FontAwesomeIconView.class).glyph(icon).build();
-    }
+    }*/
 }
