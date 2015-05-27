@@ -79,7 +79,7 @@ abstract class AbstractSlipController implements Slip {
     protected AutoCompleteTextField<Transaction> payeeTextField;
 
     @FXML
-    protected CheckBox reconciledButton;
+    private CheckBox reconciledButton;
 
     final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
@@ -93,6 +93,8 @@ abstract class AbstractSlipController implements Slip {
 
     @FXML
     public void initialize() {
+
+        reconciledButton.setAllowIndeterminate(true);
 
         // Number combo needs to know the account in order to determine the next transaction number
         numberComboBox.accountProperty().bind(accountProperty());
@@ -135,6 +137,30 @@ abstract class AbstractSlipController implements Slip {
         });
     }
 
+    void setReconciledState(final ReconciledState reconciledState) {
+        switch (reconciledState) {
+            case NOT_RECONCILED:
+                reconciledButton.setIndeterminate(false);
+                reconciledButton.setSelected(false);
+                break;
+            case RECONCILED:
+                reconciledButton.setIndeterminate(false);
+                reconciledButton.setSelected(true);
+                break;
+            case CLEARED:
+                reconciledButton.setIndeterminate(true);
+        }
+    }
+
+    ReconciledState getReconciledState() {
+        if (reconciledButton.isIndeterminate()) {
+            return ReconciledState.CLEARED;
+        } else if (reconciledButton.isSelected()) {
+            return ReconciledState.RECONCILED;
+        }
+        return ReconciledState.NOT_RECONCILED;
+    }
+
     /**
      * Determines is this form can be used to modify a transaction
      *
@@ -153,6 +179,7 @@ abstract class AbstractSlipController implements Slip {
 
         reconciledButton.setDisable(false);
         reconciledButton.setSelected(false);
+        reconciledButton.setIndeterminate(false);
 
         payeeTextField.setEditable(true);
         payeeTextField.setText(null);
@@ -188,8 +215,7 @@ abstract class AbstractSlipController implements Slip {
             if (modTrans == null) { // new transaction
                 Transaction newTrans = buildTransaction();
 
-                ReconcileManager.reconcileTransaction(accountProperty.get(), newTrans,
-                        reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+                ReconcileManager.reconcileTransaction(accountProperty.get(), newTrans, getReconciledState());
 
                 newTrans = attachmentPane.buildTransaction(newTrans);  // chain the transaction build
 
@@ -214,8 +240,7 @@ abstract class AbstractSlipController implements Slip {
                  * Reconcile the modified transaction for this account.
                  * This must be performed last to ensure consistent results per the ReconcileManager rules
                  */
-                ReconcileManager.reconcileTransaction(accountProperty.get(), newTrans,
-                        reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+                ReconcileManager.reconcileTransaction(accountProperty.get(), newTrans, getReconciledState());
 
                 newTrans = attachmentPane.buildTransaction(newTrans);  // chain the transaction build
 

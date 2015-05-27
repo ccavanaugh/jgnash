@@ -27,7 +27,6 @@ import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.ReconcileManager;
-import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionFactory;
@@ -86,7 +85,7 @@ public class BankAdjustmentSlipController extends AbstractSlipController {
         numberComboBox.setValue(t.getNumber());
 
         datePicker.setDate(t.getDate());
-        reconciledButton.setSelected(t.getReconciled(accountProperty().get()) != ReconciledState.NOT_RECONCILED);
+        setReconciledState(t.getReconciled(accountProperty().get()));
     }
 
     @Override
@@ -124,7 +123,7 @@ public class BankAdjustmentSlipController extends AbstractSlipController {
 
             t.addTransactionEntry(entry);
 
-            ReconcileManager.reconcileTransaction(accountProperty.get(), t, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+            ReconcileManager.reconcileTransaction(accountProperty.get(), t, getReconciledState());
 
             final Optional<Transaction> transactionOptional = TransactionDialog.showAndWait(accountProperty.get(), t);
 

@@ -27,7 +27,6 @@ import javafx.scene.control.Button;
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.ReconcileManager;
-import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionFactory;
@@ -179,8 +178,7 @@ public class SlipController extends AbstractSlipController {
             }
         }
 
-        ReconcileManager.reconcileTransaction(accountProperty.get(), transaction,
-                reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+        ReconcileManager.reconcileTransaction(accountProperty.get(), transaction, getReconciledState());
 
         return transaction;
     }
@@ -208,7 +206,8 @@ public class SlipController extends AbstractSlipController {
         numberComboBox.setValue(t.getNumber());
 
         datePicker.setDate(t.getDate());
-        reconciledButton.setSelected(t.getReconciled(accountProperty().get()) != ReconciledState.NOT_RECONCILED);
+
+        setReconciledState(t.getReconciled(accountProperty().get()));
 
         if (t.getTransactionType() == TransactionType.SPLITENTRY) {
             accountExchangePane.setSelectedAccount(t.getCommonAccount()); // display common account
