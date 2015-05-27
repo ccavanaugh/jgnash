@@ -90,7 +90,7 @@ public abstract class AbstractPriceQtyInvSlipController extends AbstractInvSlipC
 
     @Override
     public void clearForm() {
-        modTrans = null;
+        super.clearForm();
 
         if (!Options.getRememberLastDate().get()) {
             datePicker.setValue(LocalDate.now());
@@ -101,8 +101,6 @@ public abstract class AbstractPriceQtyInvSlipController extends AbstractInvSlipC
         priceField.setDecimal(BigDecimal.ZERO);
         quantityField.setDecimal(BigDecimal.ZERO);
         totalField.setDecimal(BigDecimal.ZERO);
-
-        reconciledButton.setSelected(false);
     }
 
     @Override

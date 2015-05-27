@@ -17,17 +17,15 @@
  */
 package jgnash.uifx.views.register;
 
-import java.math.BigDecimal;
-
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
-
 import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.util.NotNull;
+
+import java.math.BigDecimal;
 
 /**
  * Transaction Entry Controller for Adding and Removing shares
@@ -75,7 +73,7 @@ public class AdjustSharesSlipController extends AbstractPriceQtyInvSlipControlle
         quantityField.setDecimal(((InvestmentTransaction)transaction).getQuantity());
         securityComboBox.setValue(((InvestmentTransaction)transaction).getSecurityNode());
 
-        reconciledButton.setSelected(transaction.getReconciled(accountProperty().get()) != ReconciledState.NOT_RECONCILED);
+        setReconciledState(transaction.getReconciled(accountProperty().get()));
 
         modTrans = transaction;
         modTrans = attachmentPane.modifyTransaction(modTrans);

@@ -17,22 +17,20 @@
  */
 package jgnash.uifx.views.register;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.logging.Logger;
-
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
-
 import jgnash.engine.AbstractInvestmentTransactionEntry;
 import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionEntrySellX;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.util.NotNull;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Transaction Entry Controller for Credits and Debits
@@ -116,7 +114,7 @@ public class SellShareSlipController extends AbstractPriceQtyInvSlipController {
         modTrans = transaction;
         modTrans = attachmentPane.modifyTransaction(modTrans);
 
-        reconciledButton.setSelected(transaction.getReconciled(accountProperty().get()) != ReconciledState.NOT_RECONCILED);
+        setReconciledState(transaction.getReconciled(accountProperty().get()));
     }
 
     private void updateTotalField() {

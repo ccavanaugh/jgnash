@@ -17,9 +17,6 @@
  */
 package jgnash.uifx.views.register;
 
-import java.util.Objects;
-import java.util.ResourceBundle;
-
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -28,16 +25,18 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyEvent;
-
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.ReconcileManager;
-import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.JavaFXUtils;
+import jgnash.util.NotNull;
+
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 /**
  * @author Craig Cavanaugh
@@ -51,7 +50,7 @@ public abstract class AbstractInvSlipController implements Slip {
     ResourceBundle resources;
 
     @FXML
-    CheckBox reconciledButton;
+    private CheckBox reconciledButton;
 
     /**
      * Holds a reference to a transaction being modified
@@ -65,6 +64,9 @@ public abstract class AbstractInvSlipController implements Slip {
     }
 
     void initialize() {
+
+        // Needed to support tri-state capability
+        reconciledButton.setAllowIndeterminate(true);
 
         // Lazy init when account property is set
         accountProperty.addListener((observable, oldValue, newValue) -> {
@@ -94,6 +96,12 @@ public abstract class AbstractInvSlipController implements Slip {
     }
 
     @Override
+    @NotNull
+    public CheckBox getReconcileButton() {
+        return reconciledButton;
+    }
+
+    @Override
     public void handleEnterAction() {
         if (validateForm()) {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
@@ -104,8 +112,7 @@ public abstract class AbstractInvSlipController implements Slip {
                 final Transaction newTrans = buildTransaction();
 
                 // Need to set the reconciled state
-                ReconcileManager.reconcileTransaction(accountProperty().get(), newTrans,
-                        reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+                ReconcileManager.reconcileTransaction(accountProperty().get(), newTrans, getReconciledState());
 
                 engine.addTransaction(newTrans);
             } else {
@@ -116,8 +123,7 @@ public abstract class AbstractInvSlipController implements Slip {
                 /* Need to preserve the reconciled state of the opposite side
                  * if both sides are not automatically reconciled
                  */
-                ReconcileManager.reconcileTransaction(accountProperty().get(), newTrans,
-                        reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+                ReconcileManager.reconcileTransaction(accountProperty().get(), newTrans, getReconciledState());
 
                 if (engine.isTransactionValid(newTrans)) {
                     if (engine.removeTransaction(modTrans)) {
@@ -134,6 +140,15 @@ public abstract class AbstractInvSlipController implements Slip {
     public void handleCancelAction() {
         clearForm();
         focusFirstComponent();
+    }
+
+    @Override
+    public void clearForm() {
+        modTrans = null;
+
+        reconciledButton.setDisable(false);
+        reconciledButton.setSelected(false);
+        reconciledButton.setIndeterminate(false);
     }
 
     abstract protected void focusFirstComponent();

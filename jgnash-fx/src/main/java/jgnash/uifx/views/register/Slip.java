@@ -17,6 +17,8 @@
  */
 package jgnash.uifx.views.register;
 
+import javafx.scene.control.CheckBox;
+import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.util.NotNull;
 
@@ -47,4 +49,31 @@ public interface Slip {
      */
     @NotNull
     Transaction buildTransaction();
+
+    @NotNull
+    CheckBox getReconcileButton();
+
+    default void setReconciledState(final ReconciledState reconciledState) {
+        switch (reconciledState) {
+            case NOT_RECONCILED:
+                getReconcileButton().setIndeterminate(false);
+                getReconcileButton().setSelected(false);
+                break;
+            case RECONCILED:
+                getReconcileButton().setIndeterminate(false);
+                getReconcileButton().setSelected(true);
+                break;
+            case CLEARED:
+                getReconcileButton().setIndeterminate(true);
+        }
+    }
+
+    default ReconciledState getReconciledState() {
+        if (getReconcileButton().isIndeterminate()) {
+            return ReconciledState.CLEARED;
+        } else if (getReconcileButton().isSelected()) {
+            return ReconciledState.RECONCILED;
+        }
+        return ReconciledState.NOT_RECONCILED;
+    }
 }

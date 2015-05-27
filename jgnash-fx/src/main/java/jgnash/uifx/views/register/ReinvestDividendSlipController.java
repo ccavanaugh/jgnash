@@ -17,21 +17,19 @@
  */
 package jgnash.uifx.views.register;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
-
 import jgnash.engine.AbstractInvestmentTransactionEntry;
 import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionEntryReinvestDivX;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.util.NotNull;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Transaction Entry Controller for Reinvested dividends
@@ -95,7 +93,7 @@ public class ReinvestDividendSlipController extends AbstractPriceQtyInvSlipContr
         modTrans = transaction;
         modTrans = attachmentPane.modifyTransaction(modTrans);
 
-        reconciledButton.setSelected(transaction.getReconciled(accountProperty().get()) != ReconciledState.NOT_RECONCILED);
+        setReconciledState(transaction.getReconciled(accountProperty().get()));
     }
 
     private void updateTotalField() {

@@ -17,14 +17,6 @@
  */
 package jgnash.uifx.views.register;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -33,7 +25,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyEvent;
-
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -49,6 +40,15 @@ import jgnash.uifx.control.autocomplete.AutoCompleteFactory;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.ValidationFactory;
+import jgnash.util.NotNull;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Abstract bank transaction entry slip controller
@@ -94,6 +94,7 @@ abstract class AbstractSlipController implements Slip {
     @FXML
     public void initialize() {
 
+        // Needed to support tri-state capability
         reconciledButton.setAllowIndeterminate(true);
 
         // Number combo needs to know the account in order to determine the next transaction number
@@ -137,28 +138,10 @@ abstract class AbstractSlipController implements Slip {
         });
     }
 
-    void setReconciledState(final ReconciledState reconciledState) {
-        switch (reconciledState) {
-            case NOT_RECONCILED:
-                reconciledButton.setIndeterminate(false);
-                reconciledButton.setSelected(false);
-                break;
-            case RECONCILED:
-                reconciledButton.setIndeterminate(false);
-                reconciledButton.setSelected(true);
-                break;
-            case CLEARED:
-                reconciledButton.setIndeterminate(true);
-        }
-    }
-
-    ReconciledState getReconciledState() {
-        if (reconciledButton.isIndeterminate()) {
-            return ReconciledState.CLEARED;
-        } else if (reconciledButton.isSelected()) {
-            return ReconciledState.RECONCILED;
-        }
-        return ReconciledState.NOT_RECONCILED;
+    @Override
+    @NotNull
+    public CheckBox getReconcileButton() {
+        return reconciledButton;
     }
 
     /**

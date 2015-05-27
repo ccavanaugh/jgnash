@@ -17,15 +17,8 @@
  */
 package jgnash.uifx.views.register;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.logging.Logger;
-
 import javafx.fxml.FXML;
-
 import jgnash.engine.AbstractInvestmentTransactionEntry;
-import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionEntryRocX;
@@ -41,6 +34,11 @@ import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.uifx.util.ValidationFactory;
 import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.NotNull;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Return of Capital entry controller
@@ -161,12 +159,12 @@ public class ReturnOfCapitalSlipController extends AbstractInvSlipController {
         modTrans = transaction;
         modTrans = attachmentPane.modifyTransaction(modTrans);
 
-        reconciledButton.setSelected(transaction.getReconciled(accountProperty().get()) != ReconciledState.NOT_RECONCILED);
+        setReconciledState(transaction.getReconciled(accountProperty().get()));
     }
 
     @Override
     public void clearForm() {
-        modTrans = null;
+        super.clearForm();
 
         if (!Options.getRememberLastDate().get()) {
             datePicker.setValue(LocalDate.now());
@@ -178,8 +176,6 @@ public class ReturnOfCapitalSlipController extends AbstractInvSlipController {
 
         accountExchangePane.setSelectedAccount(accountProperty().get());
         incomeExchangePane.setSelectedAccount(accountProperty().get());
-
-        reconciledButton.setSelected(false);
     }
 
     @Override
