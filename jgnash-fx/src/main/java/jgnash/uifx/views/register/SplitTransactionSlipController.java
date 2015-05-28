@@ -17,7 +17,6 @@
  */
 package jgnash.uifx.views.register;
 
-import jgnash.engine.ReconciledState;
 import jgnash.engine.TransactionEntry;
 
 /**
@@ -62,7 +61,7 @@ public class SplitTransactionSlipController extends AbstractTransactionEntrySlip
             }
         }
 
-        entry.setReconciled(accountProperty.get(), reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+        entry.setReconciled(accountProperty.get(), getReconciledState());
 
         return entry;
     }
@@ -84,6 +83,6 @@ public class SplitTransactionSlipController extends AbstractTransactionEntrySlip
             accountExchangePane.setExchangedAmount(entry.getDebitAmount().abs());
         }
 
-        reconciledButton.setSelected(entry.getReconciled(accountProperty.get()) != ReconciledState.NOT_RECONCILED);
+        setReconciledState(entry.getReconciled(accountProperty.get()));
     }
 }

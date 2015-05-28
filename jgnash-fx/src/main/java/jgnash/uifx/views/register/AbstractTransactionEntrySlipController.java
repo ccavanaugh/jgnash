@@ -31,6 +31,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyEvent;
 
 import jgnash.engine.Account;
+import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.uifx.control.AutoCompleteTextField;
@@ -60,7 +61,7 @@ abstract class AbstractTransactionEntrySlipController {
     AccountExchangePane accountExchangePane;
 
     @FXML
-    CheckBox reconciledButton;
+    private CheckBox reconciledButton;
 
     @FXML
     AttachmentPane attachmentPane;
@@ -76,6 +77,8 @@ abstract class AbstractTransactionEntrySlipController {
 
     @FXML
     private void initialize() {
+        reconciledButton.setAllowIndeterminate(true);
+
         // Bind necessary properties to the exchange panel
         accountExchangePane.baseAccountProperty().bind(getAccountProperty());
         accountExchangePane.amountProperty().bindBidirectional(amountField.decimalProperty());
@@ -104,6 +107,30 @@ abstract class AbstractTransactionEntrySlipController {
         });
     }
 
+    void setReconciledState(final ReconciledState reconciledState) {
+        switch (reconciledState) {
+            case NOT_RECONCILED:
+                reconciledButton.setIndeterminate(false);
+                reconciledButton.setSelected(false);
+                break;
+            case RECONCILED:
+                reconciledButton.setIndeterminate(false);
+                reconciledButton.setSelected(true);
+                break;
+            case CLEARED:
+                reconciledButton.setIndeterminate(true);
+        }
+    }
+
+    ReconciledState getReconciledState() {
+        if (reconciledButton.isIndeterminate()) {
+            return ReconciledState.CLEARED;
+        } else if (reconciledButton.isSelected()) {
+            return ReconciledState.RECONCILED;
+        }
+        return ReconciledState.NOT_RECONCILED;
+    }
+
     abstract TransactionEntry buildTransactionEntry();
 
     ObjectProperty<Account> getAccountProperty() {
@@ -130,9 +157,12 @@ abstract class AbstractTransactionEntrySlipController {
     void clearForm() {
         oldEntry = null;
 
+        reconciledButton.setDisable(false);
+        reconciledButton.setSelected(false);
+        reconciledButton.setIndeterminate(false);
+
         memoField.setText(null);
         amountField.setDecimal(BigDecimal.ZERO);
-        reconciledButton.setSelected(false);
         accountExchangePane.setExchangedAmount(null);
     }
 
