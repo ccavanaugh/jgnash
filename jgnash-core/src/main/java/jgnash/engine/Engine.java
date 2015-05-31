@@ -1379,7 +1379,8 @@ public class Engine {
             } else {
                 // Remove all history nodes first so they are not left behind
 
-                List<SecurityHistoryNode> hNodes = node.getHistoryNodes();
+                // A copy is made to prevent a concurrent modification error to the underlying list, Bug #208
+                final List<SecurityHistoryNode> hNodes = new ArrayList<>(node.getHistoryNodes());
 
                 hNodes.stream()
                         .filter(hNode -> !removeSecurityHistory(node, hNode.getDate()))
