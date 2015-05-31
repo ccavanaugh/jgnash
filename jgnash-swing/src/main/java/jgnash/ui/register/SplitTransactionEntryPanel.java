@@ -17,7 +17,6 @@
  */
 package jgnash.ui.register;
 
-import jgnash.engine.ReconciledState;
 import jgnash.engine.TransactionEntry;
 import jgnash.ui.register.table.SplitsRegisterTableModel;
 
@@ -65,7 +64,7 @@ public class SplitTransactionEntryPanel extends AbstractTransactionEntryPanel {
             }
         }
 
-        entry.setReconciled(account, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+        entry.setReconciled(account, getReconciledState());
 
         return entry;
     }
@@ -87,6 +86,6 @@ public class SplitTransactionEntryPanel extends AbstractTransactionEntryPanel {
             accountPanel.setExchangedAmount(entry.getDebitAmount().abs());
         }
 
-        reconciledButton.setSelected(entry.getReconciled(getAccount()) != ReconciledState.NOT_RECONCILED);
+        setReconciledState(entry.getReconciled(getAccount()));
     }
 }

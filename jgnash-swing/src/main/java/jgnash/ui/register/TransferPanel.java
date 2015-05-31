@@ -17,16 +17,15 @@
  */
 package jgnash.ui.register;
 
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
 import jgnash.engine.Account;
 import jgnash.engine.ReconcileManager;
-import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionFactory;
 import jgnash.ui.util.ValidationFactory;
+
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Handles the transfer of money between accounts.
@@ -45,7 +44,8 @@ public class TransferPanel extends AbstractExchangeTransactionPanel {
     }
 
     private void layoutMainPanel() {
-        FormLayout layout = new FormLayout("right:d, $lcgap, 50dlu:g, 8dlu, right:d, $lcgap, max(48dlu;min)", "f:d, $nlgap, f:d, $nlgap, f:d, $nlgap, f:d");
+        FormLayout layout = new FormLayout("right:d, $lcgap, 50dlu:g, 8dlu, right:d, $lcgap, max(48dlu;min)",
+                "f:d, $nlgap, f:d, $nlgap, f:d, $nlgap, f:d");
 
         layout.setRowGroups(new int[][] { { 1, 3, 5, 7 } });
         CellConstraints cc = new CellConstraints();
@@ -81,19 +81,28 @@ public class TransferPanel extends AbstractExchangeTransactionPanel {
 
         if (panelType == PanelType.DECREASE && signum >= 0 || signum == -1) {
             if (hasEqualCurrencies()) {
-                transaction = TransactionFactory.generateDoubleEntryTransaction(accountPanel.getSelectedAccount(), getAccount(), amountField.getDecimal().abs(), datePanel.getDate(), memoField.getText(), payee, number);
+                transaction = TransactionFactory.generateDoubleEntryTransaction(accountPanel.getSelectedAccount(),
+                        getAccount(), amountField.getDecimal().abs(), datePanel.getDate(), memoField.getText(), payee,
+                        number);
             } else {
-                transaction = TransactionFactory.generateDoubleEntryTransaction(accountPanel.getSelectedAccount(), getAccount(), accountPanel.getExchangedAmount().abs(), amountField.getDecimal().abs().negate(), datePanel.getDate(), memoField.getText(), payee, number);
+                transaction = TransactionFactory.generateDoubleEntryTransaction(accountPanel.getSelectedAccount(),
+                        getAccount(), accountPanel.getExchangedAmount().abs(), amountField.getDecimal().abs().negate(),
+                        datePanel.getDate(), memoField.getText(), payee, number);
             }
         } else {
             if (hasEqualCurrencies()) {
-                transaction = TransactionFactory.generateDoubleEntryTransaction(getAccount(), accountPanel.getSelectedAccount(), amountField.getDecimal().abs(), datePanel.getDate(), memoField.getText(), payee, number);
+                transaction = TransactionFactory.generateDoubleEntryTransaction(getAccount(),
+                        accountPanel.getSelectedAccount(), amountField.getDecimal().abs(), datePanel.getDate(),
+                        memoField.getText(), payee, number);
             } else {
-                transaction = TransactionFactory.generateDoubleEntryTransaction(getAccount(), accountPanel.getSelectedAccount(), amountField.getDecimal().abs(), accountPanel.getExchangedAmount().abs().negate(), datePanel.getDate(), memoField.getText(), payee, number);
+                transaction = TransactionFactory.generateDoubleEntryTransaction(getAccount(),
+                        accountPanel.getSelectedAccount(), amountField.getDecimal().abs(),
+                        accountPanel.getExchangedAmount().abs().negate(), datePanel.getDate(), memoField.getText(),
+                        payee, number);
             }
         }
 
-        ReconcileManager.reconcileTransaction(getAccount(), transaction, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+        ReconcileManager.reconcileTransaction(getAccount(), transaction, getReconciledState());
 
         return transaction;
     }

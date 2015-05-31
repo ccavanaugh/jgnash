@@ -31,7 +31,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -50,6 +49,7 @@ import jgnash.engine.message.MessageProperty;
 import jgnash.ui.components.AutoCompleteFactory;
 import jgnash.ui.components.AutoCompleteTextField;
 import jgnash.ui.components.DatePanel;
+import jgnash.ui.components.IndeterminateCheckBox;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.components.TransactionNumberComboBox;
 import jgnash.ui.util.ValidationFactory;
@@ -69,7 +69,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
 
     final JButton cancelButton;
 
-    protected final JCheckBox reconciledButton;
+    private final IndeterminateCheckBox reconciledButton;
 
     final JFloatField amountField;
 
@@ -106,7 +106,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
         numberField = new TransactionNumberComboBox(account);
         payeeField = AutoCompleteFactory.getPayeeField(account);
 
-        reconciledButton = new JCheckBox(rb.getString("Button.Cleared"));
+        reconciledButton = new IndeterminateCheckBox(rb.getString("Button.Cleared"));
         reconciledButton.setHorizontalTextPosition(SwingConstants.LEADING);
         reconciledButton.setMargin(new Insets(0, 0, 0, 0));
 
@@ -152,6 +152,11 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
 
     private void registerMessageBusListeners() {
         MessageBus.getInstance().registerListener(this, MessageChannel.TRANSACTION);
+    }
+
+    @Override
+    protected IndeterminateCheckBox getReconcileCheckBox() {
+        return reconciledButton;
     }
 
     Account getAccount() {
@@ -221,7 +226,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
             if (modTrans == null) {
                 Transaction newTrans = buildTransaction();
 
-                ReconcileManager.reconcileTransaction(getAccount(), newTrans, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+                ReconcileManager.reconcileTransaction(getAccount(), newTrans, getReconciledState());
 
                 newTrans = attachmentPanel.buildTransaction(newTrans);  // chain the transaction build
 
@@ -246,7 +251,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
                  * Reconcile the modified transaction for this account.
                  * This must be performed last to ensure consistent results per the ReconcileManager rules
                  */
-                ReconcileManager.reconcileTransaction(getAccount(), newTrans, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+                ReconcileManager.reconcileTransaction(getAccount(), newTrans, getReconciledState());
 
                 newTrans = attachmentPanel.buildTransaction(newTrans);  // chain the transaction build
 

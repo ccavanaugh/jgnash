@@ -17,15 +17,11 @@
  */
 package jgnash.ui.register.invest;
 
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 
 import jgnash.engine.AbstractInvestmentTransactionEntry;
@@ -44,11 +40,13 @@ import jgnash.ui.components.JFloatField;
 import jgnash.ui.register.AccountExchangePanel;
 import jgnash.ui.util.ValidationFactory;
 
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
 /**
  * Form for buying and selling shares.
  * 
  * @author Craig Cavanaugh
- *
  */
 public final class ReturnOfCapitalPanel extends AbstractInvTransactionPanel {
 
@@ -76,8 +74,6 @@ public final class ReturnOfCapitalPanel extends AbstractInvTransactionPanel {
 
         securityCombo = new AccountSecurityComboBox(account);
 
-        reconciledButton = new JCheckBox(rb.getString("Button.Reconciled"));
-
         incomeExchangePanel = new AccountExchangePanel(getAccount().getCurrencyNode(), null, dividendField);
 
         accountExchangePanel = new AccountExchangePanel(getAccount().getCurrencyNode(), null, dividendField);
@@ -85,7 +81,7 @@ public final class ReturnOfCapitalPanel extends AbstractInvTransactionPanel {
         datePanel.getDateField().addKeyListener(keyListener);
         memoField.addKeyListener(keyListener);
         securityCombo.addKeyListener(keyListener);
-        reconciledButton.addKeyListener(keyListener);
+        getReconcileCheckBox().addKeyListener(keyListener);
 
         layoutPanel();
 
@@ -114,7 +110,7 @@ public final class ReturnOfCapitalPanel extends AbstractInvTransactionPanel {
 
         add("Label.IncomeAccount", cc.xy(1, 5));
         add(incomeExchangePanel, cc.xy(3, 5));
-        add(reconciledButton, cc.xyw(5, 5, 3));
+        add(getReconcileCheckBox(), cc.xyw(5, 5, 3));
 
         add("Label.Account", cc.xy(1, 7));
         add(accountExchangePanel, cc.xy(3, 7));
@@ -154,7 +150,7 @@ public final class ReturnOfCapitalPanel extends AbstractInvTransactionPanel {
 
         modTrans = tran;
 
-        reconciledButton.setSelected(tran.getReconciled(getAccount()) != ReconciledState.NOT_RECONCILED);
+        setReconciledState(tran.getReconciled(getAccount()));
     }
 
     @Override
@@ -184,7 +180,7 @@ public final class ReturnOfCapitalPanel extends AbstractInvTransactionPanel {
 
         memoField.setText(null);
 
-        reconciledButton.setSelected(false);
+        setReconciledState(ReconciledState.NOT_RECONCILED);
 
         accountExchangePanel.setSelectedAccount(getAccount());
         incomeExchangePanel.setSelectedAccount(getAccount());

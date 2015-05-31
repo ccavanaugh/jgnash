@@ -28,7 +28,6 @@ import javax.swing.JPanel;
 import jgnash.engine.AbstractInvestmentTransactionEntry;
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionEntryBuyX;
@@ -50,7 +49,7 @@ public final class BuySharePanel extends AbstractPriceQtyInvTransactionPanel {
 
     private final AccountExchangePanel accountExchangePanel;
 
-    BuySharePanel(Account account) {
+    BuySharePanel(final Account account) {
         super(account);
 
         feePanel = new FeePanel(account);
@@ -85,7 +84,7 @@ public final class BuySharePanel extends AbstractPriceQtyInvTransactionPanel {
         priceField.addKeyListener(keyListener);
         quantityField.addKeyListener(keyListener);
         securityCombo.addKeyListener(keyListener);
-        reconciledButton.addKeyListener(keyListener);
+        getReconcileCheckBox().addKeyListener(keyListener);
 
         clearForm();
     }
@@ -119,7 +118,7 @@ public final class BuySharePanel extends AbstractPriceQtyInvTransactionPanel {
         add("Label.Account", cc.xy(1, 7));
 
         add(accountExchangePanel, cc.xy(3, 7));
-        add(reconciledButton, cc.xyw(5, 7, 3));
+        add(getReconcileCheckBox(), cc.xyw(5, 7, 3));
     }
 
     void updateTotalField() {
@@ -135,7 +134,7 @@ public final class BuySharePanel extends AbstractPriceQtyInvTransactionPanel {
     }
 
     @Override
-    public void modifyTransaction(Transaction tran) {
+    public void modifyTransaction(final Transaction tran) {
         if (!(tran instanceof InvestmentTransaction)) {
             throw new IllegalArgumentException("bad tranType");
         }
@@ -170,7 +169,7 @@ public final class BuySharePanel extends AbstractPriceQtyInvTransactionPanel {
 
         modTrans = tran;
 
-        reconciledButton.setSelected(tran.getReconciled(getAccount()) != ReconciledState.NOT_RECONCILED);
+        setReconciledState(tran.getReconciled(getAccount()));
     }
 
     @Override
@@ -180,7 +179,9 @@ public final class BuySharePanel extends AbstractPriceQtyInvTransactionPanel {
 
         List<TransactionEntry> fees = feePanel.getTransactions();
 
-        return TransactionFactory.generateBuyXTransaction(accountExchangePanel.getSelectedAccount(), getAccount(), securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), exchangeRate, datePanel.getDate(), memoField.getText(), fees);
+        return TransactionFactory.generateBuyXTransaction(accountExchangePanel.getSelectedAccount(), getAccount(),
+                securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), exchangeRate,
+                datePanel.getDate(), memoField.getText(), fees);
     }
 
     @Override

@@ -17,11 +17,6 @@
  */
 package jgnash.ui.register;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,7 +24,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -39,8 +33,14 @@ import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.AutoCompleteFactory;
+import jgnash.ui.components.IndeterminateCheckBox;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.register.table.SplitsRegisterTableModel;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Abstract Entry panel for spit transactions of various types
@@ -52,7 +52,7 @@ public abstract class AbstractTransactionEntryPanel extends AbstractEntryFormPan
 
     protected AccountExchangePanel accountPanel;
 
-    protected JCheckBox reconciledButton;
+    private IndeterminateCheckBox reconciledButton;
 
     protected JFloatField amountField;
 
@@ -87,7 +87,7 @@ public abstract class AbstractTransactionEntryPanel extends AbstractEntryFormPan
 
         memoField = AutoCompleteFactory.getMemoField();
 
-        reconciledButton = new JCheckBox(rb.getString("Button.Reconciled"));
+        reconciledButton = new IndeterminateCheckBox(rb.getString("Button.Reconciled"));
         reconciledButton.setHorizontalTextPosition(SwingConstants.LEADING);
         reconciledButton.setMargin(new Insets(0, 0, 0, 0));
 
@@ -144,6 +144,11 @@ public abstract class AbstractTransactionEntryPanel extends AbstractEntryFormPan
         builder.append(reconciledButton, StaticUIMethods.buildOKCancelBar(enterButton, cancelButton));
 
         return builder.getPanel();
+    }
+
+    @Override
+    protected IndeterminateCheckBox getReconcileCheckBox() {
+        return reconciledButton;
     }
 
     @Override

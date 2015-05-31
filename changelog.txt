@@ -29,6 +29,7 @@ Improved handling of memo's in split transactions.  The split entry memo should 
 
 Release 2.16.0
 ----------------------
+05/31/15 Changed the reconcile checkbox to support three states for not-reconciled, cleared, and reconciled.
 05/25/15 Return of Capital transactions were not being shown in the register table correctly.
 05/14/15 Autocomplete now makes better choices for debit and credit transactions
 03/14/15 Ensure directory has been created first before trying to write a file.

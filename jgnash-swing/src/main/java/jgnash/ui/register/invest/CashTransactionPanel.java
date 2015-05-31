@@ -17,15 +17,15 @@
  */
 package jgnash.ui.register.invest;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-
 import javax.swing.JPanel;
 
 import jgnash.engine.Account;
 import jgnash.ui.register.PanelType;
 import jgnash.ui.register.TransactionPanel;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Cash Transaction panel for the investment account register
@@ -44,7 +44,7 @@ public final class CashTransactionPanel extends TransactionPanel {
         FormLayout layout = new FormLayout("left:m:g", "f:d:g");
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 
-        builder.append(reconciledButton);
+        builder.append(getReconcileCheckBox());
 
         return builder.getPanel();
     }
