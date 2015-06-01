@@ -106,9 +106,11 @@ public class InvestmentTransactionDialog extends Stage {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        if (!engine.isStored(transaction)) { // must not be a persisted transaction
-            investmentSlipManager.modifyTransaction(transaction);
+        if (engine.isStored(transaction)) {
+            setTitle(ResourceUtils.getBundle().getString("Title.ModifyTransaction"));
         }
+
+        investmentSlipManager.modifyTransaction(transaction);
     }
 
     public static Optional<Transaction> showAndWait(final Account account, final Transaction transaction) {
