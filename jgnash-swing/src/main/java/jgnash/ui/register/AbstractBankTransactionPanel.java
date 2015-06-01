@@ -211,7 +211,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
     /**
      * Method that is called when the cancel button is used
      */
-    void cancelAction() {
+    private void cancelAction() {
         clearForm();
         fireCancelAction();
         focusFirstComponent();
@@ -308,7 +308,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
      * @param t The transaction to modify
      * @return the modified transaction
      */
-    Transaction modifyTransactionForAutoComplete(final Transaction t) {
+    private Transaction modifyTransactionForAutoComplete(final Transaction t) {
 
         // tweak the transaction
         t.setNumber(null);

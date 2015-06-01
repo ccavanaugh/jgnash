@@ -278,7 +278,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         }
     }
 
-    void reconcileAction(final ReconciledState reconciled) {
+    private void reconcileAction(final ReconciledState reconciled) {
         final Transaction t = getSelectedTransaction();
         if (t != null) {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
@@ -320,7 +320,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         return trans;
     }
 
-    void setSelectedRow(final int row) {
+    private void setSelectedRow(final int row) {
         if (row >= 0) {
             JTable table = getTable();
             table.scrollRectToVisible(table.getCellRect(row, 0, true));

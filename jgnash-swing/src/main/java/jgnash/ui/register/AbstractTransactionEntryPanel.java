@@ -189,7 +189,7 @@ public abstract class AbstractTransactionEntryPanel extends AbstractEntryFormPan
         }
     }
 
-    void cancelAction() {
+    private void cancelAction() {
         clearForm();
         fireCancelAction();
         focusFirstComponent();
