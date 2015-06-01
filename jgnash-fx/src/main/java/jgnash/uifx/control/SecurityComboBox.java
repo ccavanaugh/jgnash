@@ -83,6 +83,12 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
         MessageBus.getInstance().registerListener(this, MessageChannel.ACCOUNT, MessageChannel.COMMODITY, MessageChannel.SYSTEM);
     }
 
+    public void setSecurityNode(final SecurityNode securityNode) {
+
+        // Selection is not always consistent unless pushed to the EDT
+        Platform.runLater(() -> setValue(securityNode));
+    }
+
     private void loadModel() {
         final Collection<SecurityNode> securityNodes;
 

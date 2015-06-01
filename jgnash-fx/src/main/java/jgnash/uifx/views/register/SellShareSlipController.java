@@ -17,8 +17,13 @@
  */
 package jgnash.uifx.views.register;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.logging.Logger;
+
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
+
 import jgnash.engine.AbstractInvestmentTransactionEntry;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
@@ -27,10 +32,6 @@ import jgnash.engine.TransactionEntrySellX;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.util.NotNull;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Transaction Entry Controller for Credits and Debits
@@ -99,7 +100,7 @@ public class SellShareSlipController extends AbstractPriceQtyInvSlipController {
             memoTextField.setText(e.getMemo());
             priceField.setDecimal(entry.getPrice());
             quantityField.setDecimal(entry.getQuantity());
-            securityComboBox.setValue(entry.getSecurityNode());
+            securityComboBox.setSecurityNode(entry.getSecurityNode());
 
             if (entry.getCreditAccount().equals(accountProperty().get())) {
                 accountExchangePane.setSelectedAccount(entry.getDebitAccount());

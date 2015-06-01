@@ -17,7 +17,13 @@
  */
 package jgnash.uifx.views.register;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.logging.Logger;
+
 import javafx.fxml.FXML;
+
 import jgnash.engine.AbstractInvestmentTransactionEntry;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
@@ -34,11 +40,6 @@ import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.uifx.util.ValidationFactory;
 import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.NotNull;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Return of Capital entry controller
@@ -142,7 +143,7 @@ public class ReturnOfCapitalSlipController extends AbstractInvSlipController {
                 AbstractInvestmentTransactionEntry entry = (AbstractInvestmentTransactionEntry) e;
 
                 memoTextField.setText(e.getMemo());
-                securityComboBox.setValue(entry.getSecurityNode());
+                securityComboBox.setSecurityNode(entry.getSecurityNode());
 
                 incomeExchangePane.setSelectedAccount(entry.getDebitAccount());
                 incomeExchangePane.setExchangedAmount(entry.getDebitAmount().abs());

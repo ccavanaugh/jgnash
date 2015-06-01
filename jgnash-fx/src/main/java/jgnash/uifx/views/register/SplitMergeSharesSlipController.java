@@ -72,7 +72,7 @@ public class SplitMergeSharesSlipController extends AbstractPriceQtyInvSlipContr
         numberComboBox.setValue(transaction.getNumber());
         priceField.setDecimal(((InvestmentTransaction)transaction).getPrice());
         quantityField.setDecimal(((InvestmentTransaction)transaction).getQuantity());
-        securityComboBox.setValue(((InvestmentTransaction)transaction).getSecurityNode());
+        securityComboBox.setSecurityNode(((InvestmentTransaction)transaction).getSecurityNode());
 
         setReconciledState(transaction.getReconciled(accountProperty().get()));
 
