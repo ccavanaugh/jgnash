@@ -787,6 +787,9 @@ public class Engine {
         messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STARTED, this));
 
         engineLock.writeLock().lock();
+        commodityLock.writeLock().lock();
+        accountLock.writeLock().lock();
+        budgetLock.writeLock().lock();
 
         try {
             logger.info("Checking for trash");
@@ -807,6 +810,10 @@ public class Engine {
             trash.stream().filter(o -> now - o.getDate().getTime() >= MAXIMUM_TRASH_AGE)
                     .forEach(o -> getTrashDAO().remove(o));
         } finally {
+
+            budgetLock.writeLock().unlock();
+            accountLock.writeLock().unlock();
+            commodityLock.writeLock().unlock();
             engineLock.writeLock().unlock();
 
             messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STOPPED, this));
