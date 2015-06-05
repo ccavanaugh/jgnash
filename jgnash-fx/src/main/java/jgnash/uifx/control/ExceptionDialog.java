@@ -34,11 +34,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.DataFormat;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import jgnash.resource.font.FontAwesomeImageView;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -80,7 +81,7 @@ public class ExceptionDialog {
 
     @FXML
     private void initialize() {
-        message.setGraphic(JavaFXUtils.createGlyph(FontAwesomeIcon.EXCLAMATION_TRIANGLE, Alert.ICON_SIZE, "darkred"));
+        message.setGraphic(new FontAwesomeImageView(FontAwesomeIcon.EXCLAMATION_TRIANGLE, Alert.ICON_SIZE, Color.DARKRED));
 
         closeButton.setOnAction(event -> ((Stage) parentProperty.get().getWindow()).close());
 

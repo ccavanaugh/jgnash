@@ -17,9 +17,7 @@
  */
 package jgnash.uifx.util;
 
-import de.jensd.fx.glyphs.GlyphsBuilder;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -27,7 +25,9 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
+import javafx.scene.paint.Color;
+
+import jgnash.resource.font.FontAwesomeImageView;
 
 import org.controlsfx.control.decoration.Decoration;
 import org.controlsfx.control.decoration.Decorator;
@@ -40,14 +40,15 @@ import org.controlsfx.control.decoration.GraphicDecoration;
  */
 public class ValidationFactory {
 
+    public static final double ALERT_SIZE = 9.0;
+
     private ValidationFactory() {
         // utility  class
     }
 
     private static Decoration createDecoration() {
-        final Text glyphIcon = GlyphsBuilder.create(FontAwesomeIconView.class)
-                .glyph(FontAwesomeIcon.EXCLAMATION_TRIANGLE)
-                .style("-fx-font-size: 0.9em; -fx-text-fill: white; -fx-fill: darkred;").build();
+        final FontAwesomeImageView glyphIcon = new FontAwesomeImageView(FontAwesomeIcon.EXCLAMATION_TRIANGLE,
+                ALERT_SIZE, Color.DARKRED);
 
         return new GraphicDecoration(glyphIcon, Pos.BOTTOM_LEFT, 0, 10);
     }

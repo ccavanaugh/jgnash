@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import jgnash.resource.font.FontAwesomeImageView?>
 <fx:root type="javafx.scene.layout.GridPane" maxHeight="-Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity"
       xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="form">
   <columnConstraints>
@@ -19,7 +19,7 @@
   <children>
     <Button fx:id="attachmentButton" mnemonicParsing="false" >
       <graphic>
-        <FontAwesomeIconView glyphName="LINK"/>
+        <FontAwesomeImageView glyphName="LINK"/>
       </graphic>
       <tooltip>
         <Tooltip text="%ToolTip.AddAttachment"/>
@@ -27,7 +27,7 @@
     </Button>
     <Button fx:id="viewAttachmentButton" mnemonicParsing="false" GridPane.columnIndex="1" >
       <graphic>
-        <FontAwesomeIconView glyphName="EYE"/>
+        <FontAwesomeImageView glyphName="EYE"/>
       </graphic>
       <tooltip>
         <Tooltip text="%ToolTip.ViewAttachment"/>
@@ -35,7 +35,7 @@
     </Button>
     <Button fx:id="deleteAttachmentButton" mnemonicParsing="false" GridPane.columnIndex="2">
       <graphic>
-        <FontAwesomeIconView glyphName="UNLINK"/>
+        <FontAwesomeImageView glyphName="UNLINK"/>
       </graphic>
       <tooltip>
         <Tooltip text="%ToolTip.DeleteAttachment"/>

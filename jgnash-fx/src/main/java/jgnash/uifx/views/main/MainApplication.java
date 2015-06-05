@@ -35,11 +35,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ToolBar;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -52,11 +53,11 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.net.security.UpdateFactory;
 import jgnash.net.security.YahooParser;
+import jgnash.resource.font.FontAwesomeImageView;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.BusyPane;
 import jgnash.uifx.control.TabViewPane;
 import jgnash.uifx.tasks.CloseFileTask;
-import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.accounts.AccountsViewController;
 import jgnash.uifx.views.register.RegisterViewController;
@@ -309,19 +310,19 @@ public class MainApplication extends Application implements MessageListener {
 
     private class StatusBarLogHandler extends Handler {
 
-        private static final String GRAPHIC_SIZE = "0.8em";
+        private static final double GRAPHIC_SIZE = 11;
 
-        final Text INFO;
+        final ImageView INFO;
 
-        final Text WARNING;
+        final ImageView WARNING;
 
-        final Text SEVERE;
+        final ImageView SEVERE;
 
         public StatusBarLogHandler() {
 
-            INFO = JavaFXUtils.createGlyph(FontAwesomeIcon.INFO, GRAPHIC_SIZE);
-            WARNING = JavaFXUtils.createGlyph(FontAwesomeIcon.FLAG, GRAPHIC_SIZE);
-            SEVERE = JavaFXUtils.createGlyph(FontAwesomeIcon.BUG, GRAPHIC_SIZE, "darkred");
+            INFO = new FontAwesomeImageView(FontAwesomeIcon.INFO, GRAPHIC_SIZE);
+            WARNING = new FontAwesomeImageView(FontAwesomeIcon.FLAG, GRAPHIC_SIZE);
+            SEVERE = new FontAwesomeImageView(FontAwesomeIcon.BUG, GRAPHIC_SIZE, Color.DARKRED);
         }
 
         @Override
@@ -343,7 +344,7 @@ public class MainApplication extends Application implements MessageListener {
             }
         }
 
-        private void updateStatus(final String status, final Text glyph) {
+        private void updateStatus(final String status, final ImageView glyph) {
             Platform.runLater(() -> {
                 statusBar.setText(status);
                 statusBar.setGraphic(glyph);
