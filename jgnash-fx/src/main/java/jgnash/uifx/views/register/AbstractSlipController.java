@@ -17,6 +17,16 @@
  */
 package jgnash.uifx.views.register;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -25,6 +35,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyEvent;
+
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -41,14 +52,6 @@ import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.ValidationFactory;
 import jgnash.util.NotNull;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Abstract bank transaction entry slip controller
@@ -243,8 +246,10 @@ abstract class AbstractSlipController implements Slip {
             if (payeeTextField.autoCompleteModelObjectProperty().get() != null) {
 
                 // The autocomplete model may return multiple solutions.  Choose the first solution that works
-                final List<Transaction> transactions = payeeTextField.autoCompleteModelObjectProperty()
-                        .get().getAllExtraInfo(payeeTextField.getText());
+                final List<Transaction> transactions = new ArrayList<>(payeeTextField.autoCompleteModelObjectProperty()
+                        .get().getAllExtraInfo(payeeTextField.getText()));
+
+                Collections.reverse(transactions);  // reverse the transactions, most recent first
 
                 for (final Transaction transaction : transactions) {
                     if (canModifyTransaction(transaction)) {

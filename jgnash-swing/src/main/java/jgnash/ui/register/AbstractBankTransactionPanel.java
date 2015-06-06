@@ -25,6 +25,8 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -350,12 +352,15 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
          * @see FocusAdapter#focusLost(java.awt.event.FocusEvent)
          */
         @Override
+        @SuppressWarnings("unchecked")
         public void focusLost(final FocusEvent e) {
             if (modTrans == null && autoComplete) {
                 AutoCompleteTextField f = (AutoCompleteTextField) payeeField;
 
                 if (f.getText() != null && !f.getText().isEmpty()) {
-                    final List transactions = f.getModel().getAllExtraInfo(f.getText());
+                    final List transactions = new ArrayList<>(f.getModel().getAllExtraInfo(f.getText()));
+
+                    Collections.reverse(transactions);
 
                     for (final Object t : transactions) {
                         if (canModifyTransaction((Transaction) t)) {
