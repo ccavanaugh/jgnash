@@ -68,8 +68,6 @@ import jgnash.util.ResourceUtils;
 
 import com.sun.javafx.css.StyleManager;
 
-import org.controlsfx.control.StatusBar;
-
 /**
  * JavaFX version of jGnash.
  *
@@ -283,9 +281,9 @@ public class MainApplication extends Application implements MessageListener {
     private void setBusyBackground(final boolean busy) {
         Platform.runLater(() -> {
             if (busy) {
-                statusBar.setProgress(-1);
+                statusBar.progressProperty().set(-1);
             } else {
-                statusBar.setProgress(0);
+                statusBar.progressProperty().set(0);
             }
         });
     }
@@ -346,8 +344,8 @@ public class MainApplication extends Application implements MessageListener {
 
         private void updateStatus(final String status, final ImageView glyph) {
             Platform.runLater(() -> {
-                statusBar.setText(status);
-                statusBar.setGraphic(glyph);
+                statusBar.textProperty().setValue(status);
+                statusBar.graphicProperty().setValue(glyph);
             });
         }
     }

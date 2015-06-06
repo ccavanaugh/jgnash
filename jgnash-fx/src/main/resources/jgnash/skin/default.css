@@ -54,11 +54,18 @@
 }*/
 
 /*
- * Adjust margins of the status bar for improved appearance
+ * Adjust margins of the status label for improved appearance
  */
 .status-label {
     -fx-graphic-text-gap: 0.833333em;
-    -fx-label-padding: 0em 0em 0em 0.75em;
+    -fx-label-padding: 0em 0em 0em 0.25em;
+}
+
+.status-bar {
+	-fx-padding: 4px;
+	-fx-pref-height: 30px;
+	-fx-background-color: lightgray, -fx-body-color;
+	-fx-background-insets: 0, 1
 }
 
 .view-title {
