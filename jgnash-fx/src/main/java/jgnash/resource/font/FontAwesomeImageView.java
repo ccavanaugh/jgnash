@@ -132,7 +132,7 @@ public class FontAwesomeImageView extends ImageView {
         if (imageCache.containsKey(key)) {
             return imageCache.get(key);
         } else {
-            final double width = Math.max(DEFAULT_SIZE, getWidth(character));
+            final double width = Math.max(DEFAULT_SIZE, getWidth(character, size));
 
             final Canvas canvas = new Canvas(width, size);
             final GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -154,9 +154,9 @@ public class FontAwesomeImageView extends ImageView {
         }
     }
 
-    private static double getWidth(final char character) {
+    private static double getWidth(final char character, final double size) {
         final Text text = new Text(String.valueOf(character));
-        text.fontProperty().setValue(new Font(FONT_NAME, DEFAULT_SIZE));
+        text.fontProperty().setValue(new Font(FONT_NAME, size));
         new Scene(new Group(text));
 
         text.applyCss();
