@@ -8,10 +8,11 @@
   <menus>
     <Menu mnemonicParsing="false" text="%Menu.File.Name">
       <items>
-        <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#handleOpenAction" text="%Menu.Open.Name" />
-        <SeparatorMenuItem mnemonicParsing="false" />
-        <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#handleCloseAction" text="%Menu.Close.Name" />
-        <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#handleExitAction" text="%Menu.Exit.Name" />
+          <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#handleOpenAction" text="%Menu.Open.Name" />
+          <MenuItem mnemonicParsing="false" onAction="#handleNewAction" text="%Menu.New.Name" />
+          <SeparatorMenuItem mnemonicParsing="false" />
+          <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#handleCloseAction" text="%Menu.Close.Name" />
+          <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#handleExitAction" text="%Menu.Exit.Name" />
       </items>
     </Menu>
     <Menu mnemonicParsing="false" text="%Menu.Edit.Name">

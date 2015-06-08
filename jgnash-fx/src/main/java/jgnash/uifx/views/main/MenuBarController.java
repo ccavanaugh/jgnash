@@ -17,6 +17,8 @@
  */
 package jgnash.uifx.views.main;
 
+import java.util.Objects;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
@@ -30,6 +32,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.tasks.CloseFileTask;
+import jgnash.uifx.wizard.file.NewFileWizard;
 
 /**
  * Primary Menu Controller
@@ -77,17 +80,25 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void updateSecurities() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-        if (engine != null) {
-            engine.startSecuritiesUpdate(0);
-        }
+
+        Objects.requireNonNull(engine);
+
+        engine.startSecuritiesUpdate(0);
     }
 
     @FXML
     private void updateCurrencies() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-        if (engine != null) {
-            engine.startExchangeRateUpdate(0);
-        }
+
+        Objects.requireNonNull(engine);
+
+        engine.startExchangeRateUpdate(0);
+    }
+
+    @FXML
+    private void handleNewAction() {
+        NewFileWizard wizard = new NewFileWizard();
+        //wizard.showAndWait();
     }
 
     @Override
@@ -110,4 +121,6 @@ public class MenuBarController implements MessageListener {
             }
         });
     }
+
+
 }
