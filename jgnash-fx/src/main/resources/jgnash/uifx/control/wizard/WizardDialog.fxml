@@ -13,8 +13,8 @@
           prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.45"
           fx:controller="jgnash.uifx.control.wizard.WizardDialogController" styleClass="form, dialog">
   <columnConstraints>
-    <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="100.0" />
-    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="NEVER" minWidth="140" maxWidth="140"/>
+    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0"  />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
@@ -23,15 +23,16 @@
    <children>
       <TitledPane animated="false" collapsible="false" maxHeight="Infinity" text="%Title.Steps">
          <content>
-            <ListView fx:id="taskList" prefHeight="200.0" prefWidth="200.0" />
+            <ListView fx:id="taskList" minWidth="75"/>
          </content>
       </TitledPane>
-      <TitledPane fx:id="taskTitlePane" animated="false" collapsible="false" maxHeight="Infinity" text="%Title.Steps" GridPane.columnIndex="1">
+      <TitledPane fx:id="taskTitlePane" animated="false" collapsible="false" maxHeight="Infinity" text="%Title.Steps"
+                  GridPane.columnIndex="1" GridPane.fillHeight="true">
          <content>
             <StackPane fx:id="taskPane" prefHeight="150.0" prefWidth="200.0" />
          </content>
       </TitledPane>
-      <ButtonBar prefHeight="40.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+      <ButtonBar GridPane.columnSpan="2" GridPane.rowIndex="1">
         <buttons>
             <Button fx:id="backButton" onAction="#handleBackAction" mnemonicParsing="false" text="%Button.Back">
                 <graphic>
@@ -43,7 +44,7 @@
                     <FontAwesomeImageView glyphName="CHEVRON_RIGHT"/>
                 </graphic>
             </Button>
-            <Button ButtonBar.buttonData="BIG_GAP" visible="false"/>
+            <Button ButtonBar.buttonData="SMALL_GAP" visible="false"/>
             <Button fx:id="finishButton" onAction="#handleFinishAction" mnemonicParsing="false" text="%Button.Finish" />
             <Button fx:id="cancelButton" onAction="#handleCancelAction" mnemonicParsing="false" text="%Button.Cancel" />
         </buttons>

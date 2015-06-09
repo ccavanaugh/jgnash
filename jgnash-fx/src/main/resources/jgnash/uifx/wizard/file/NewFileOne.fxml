@@ -8,10 +8,10 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-          prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1"
-          xmlns="http://javafx.com/javafx/8.0.45" fx:controller="jgnash.uifx.wizard.file.NewFileOneController"
-          styleClass="form">
+<?import jgnash.resource.font.FontAwesomeImageView?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.45"
+          fx:controller="jgnash.uifx.wizard.file.NewFileOneController" styleClass="form">
   <columnConstraints>
       <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
       <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
@@ -23,11 +23,19 @@
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <TextArea fx:id="textArea" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" GridPane.columnSpan="3" />
-      <Label text="Label" GridPane.rowIndex="1" />
-      <Label text="Label" GridPane.rowIndex="2" />
-      <ComboBox fx:id="storageTypeComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
-      <Button fx:id="fileButton" mnemonicParsing="false" text="Button" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-      <TextField fx:id="fileNameField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+       <TextArea fx:id="textArea" editable="false"  wrapText="true" GridPane.columnSpan="3" GridPane.fillHeight="true"
+                 GridPane.vgrow="ALWAYS" maxWidth="Infinity"/>
+
+       <Label text="%Label.StorageType" GridPane.rowIndex="1" />
+       <ComboBox fx:id="storageTypeComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2"
+                 maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true" GridPane.rowIndex="1" />
+
+       <Label text="%Label.DatabaseName" GridPane.rowIndex="2" />
+       <TextField fx:id="fileNameField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" minWidth="75"/>
+       <Button fx:id="fileButton" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="2">
+           <graphic>
+               <FontAwesomeImageView glyphName="ELLIPSIS_H"/>
+           </graphic>
+       </Button>
    </children>
 </GridPane>

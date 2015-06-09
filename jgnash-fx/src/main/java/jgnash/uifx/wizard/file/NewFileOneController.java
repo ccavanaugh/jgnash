@@ -49,6 +49,11 @@ public class NewFileOneController implements WizardPaneController<NewFileWizard.
     @FXML
     private ResourceBundle resources;
 
+    @FXML
+    private void initialize() {
+        textArea.setText("dummy text");
+    }
+
     @Override
     public boolean isPaneValid() {
         return false;
