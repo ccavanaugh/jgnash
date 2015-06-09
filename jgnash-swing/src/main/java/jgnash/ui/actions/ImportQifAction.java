@@ -33,21 +33,21 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.Transaction;
 import jgnash.convert.imports.qif.NoAccountException;
 import jgnash.convert.imports.qif.QifImport;
 import jgnash.convert.imports.qif.QifUtils;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.Transaction;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.MultiLineLabel;
 import jgnash.ui.components.YesNoDialog;
 import jgnash.ui.util.DialogUtils;
-import jgnash.ui.util.TextResource;
 import jgnash.ui.util.builder.Action;
 import jgnash.ui.wizards.imports.qif.PartialDialog;
 import jgnash.util.Resource;
+import jgnash.util.TextResource;
 
 /**
  * @author Craig Cavanaugh

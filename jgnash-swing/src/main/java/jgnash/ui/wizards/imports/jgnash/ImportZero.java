@@ -33,9 +33,9 @@ import javax.swing.text.StyledEditorKit;
 
 import jgnash.ui.actions.ImportPathAction;
 import jgnash.ui.components.wizard.WizardPage;
-import jgnash.ui.util.TextResource;
 import jgnash.util.FileMagic;
 import jgnash.util.Resource;
+import jgnash.util.TextResource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;

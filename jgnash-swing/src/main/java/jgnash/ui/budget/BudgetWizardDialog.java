@@ -43,9 +43,9 @@ import jgnash.engine.budget.BudgetPeriod;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.DialogUtils;
-import jgnash.ui.util.TextResource;
 import jgnash.ui.util.ValidationFactory;
 import jgnash.util.Resource;
+import jgnash.util.TextResource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;

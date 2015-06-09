@@ -30,8 +30,8 @@ import jgnash.engine.CurrencyNode;
 import jgnash.engine.DefaultCurrencies;
 import jgnash.ui.components.SortedComboBoxModel;
 import jgnash.ui.components.wizard.WizardPage;
-import jgnash.ui.util.TextResource;
 import jgnash.util.Resource;
+import jgnash.util.TextResource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;

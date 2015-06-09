@@ -17,10 +17,6 @@
  */
 package jgnash.ui.wizards.imports.qif;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -35,8 +31,12 @@ import javax.swing.text.StyledEditorKit;
 
 import jgnash.convert.imports.qif.QifAccount;
 import jgnash.ui.components.wizard.WizardPage;
-import jgnash.ui.util.TextResource;
 import jgnash.util.Resource;
+import jgnash.util.TextResource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 /**
  * Wizard Page for a partial qif import.

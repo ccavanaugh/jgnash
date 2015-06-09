@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.ui.util;
+package jgnash.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,37 +24,34 @@ import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jgnash.util.ClassPathUtils;
-
 /**
  * This class is for returning URL's to localized text files.
- * 
- * @author Craig Cavanaugh
  *
+ * @author Craig Cavanaugh
  */
 public class TextResource {
 
-    private static final String ROOTPATH = "/jgnash/resource/text";
+    private static final String ROOT_PATH = "/jgnash/resource/text";
 
     /**
      * Contains only static methods
      */
     private TextResource() {
     }
-    
+
     /**
      * Find a locale specific text file given the file name. Multiple lines of text are preserved.
-     * 
+     *
      * @param fileName the file name of the text file to look for.
      * @return a String containing the contents of the file.
      */
     public static String getString(final String fileName) {
-        
-        final String root = ClassPathUtils.getLocalizedPath(ROOTPATH);
+
+        final String root = ClassPathUtils.getLocalizedPath(ROOT_PATH);
         final StringBuilder sb = new StringBuilder();
-        
-        try (InputStream s = Object.class.getResourceAsStream(root + "/" + fileName)) {            
-            if (s != null) {                                
+
+        try (InputStream s = Object.class.getResourceAsStream(root + "/" + fileName)) {
+            if (s != null) {
                 try (BufferedReader b = new BufferedReader(new InputStreamReader(s, "8859_1"))) {
                     String t = loadConvert(b.readLine());
                     while (t != null) {
@@ -63,21 +60,21 @@ public class TextResource {
                         if (t != null) {
                             sb.append('\n');
                         }
-                    }                    
-                }                
-            }                                    
+                    }
+                }
+            }
         } catch (IOException e) {
             Logger.getLogger(TextResource.class.getName()).log(Level.SEVERE, null, e);
         }
-                                                  
+
         return sb.toString();
     }
 
     /**
      * Converts encoded &#92;uxxxx to unicode chars and changes special saved chars to their original forms
-     * <p/>
+     * <p>
      * This was copied from the JDK source code; Properties.java
-     * 
+     *
      * @param string unicode formatted string
      * @return string without unicode characters
      */
@@ -92,9 +89,9 @@ public class TextResource {
 
         final int len = string.length();
 
-        StringBuilder outBuffer = new StringBuilder(len);
+        final StringBuilder outBuffer = new StringBuilder(len);
 
-        for (int x = 0; x < len;) {
+        for (int x = 0; x < len; ) {
             aChar = string.charAt(x++);
             if (aChar == '\\') {
                 aChar = string.charAt(x++);

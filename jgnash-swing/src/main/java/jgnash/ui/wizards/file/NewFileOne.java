@@ -36,9 +36,9 @@ import jgnash.engine.EngineFactory;
 import jgnash.ui.actions.DatabasePathAction;
 import jgnash.ui.components.DataStoreTypeCombo;
 import jgnash.ui.components.wizard.WizardPage;
-import jgnash.ui.util.TextResource;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
+import jgnash.util.TextResource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;

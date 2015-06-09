@@ -47,10 +47,10 @@ import jgnash.engine.AccountTreeXMLFactory;
 import jgnash.engine.RootAccount;
 import jgnash.ui.components.CheckListCellRenderer;
 import jgnash.ui.components.wizard.WizardPage;
-import jgnash.ui.util.TextResource;
 import jgnash.ui.util.ToggleSelectionModel;
 import jgnash.util.ClassPathUtils;
 import jgnash.util.Resource;
+import jgnash.util.TextResource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;

@@ -17,10 +17,6 @@
  */
 package jgnash.ui.wizards.imports;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import java.util.Map;
 
 import javax.swing.JPanel;
@@ -30,8 +26,12 @@ import javax.swing.text.StyledEditorKit;
 import jgnash.engine.Account;
 import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.wizard.WizardPage;
-import jgnash.ui.util.TextResource;
 import jgnash.util.Resource;
+import jgnash.util.TextResource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 /**
  * First part of import wizard for import of OFX or Mt940 files from online
