@@ -21,10 +21,10 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+import jgnash.uifx.control.DataStoreTypeComboBox;
 import jgnash.uifx.control.wizard.WizardPaneController;
 
 /**
@@ -38,7 +38,7 @@ public class NewFileOneController implements WizardPaneController<NewFileWizard.
     private TextArea textArea;
 
     @FXML
-    private ComboBox storageTypeComboBox;
+    private DataStoreTypeComboBox storageTypeComboBox;
 
     @FXML
     private Button fileButton;

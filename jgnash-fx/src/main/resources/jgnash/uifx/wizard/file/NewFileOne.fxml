@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -9,7 +8,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import jgnash.resource.font.FontAwesomeImageView?>
-
+<?import jgnash.uifx.control.DataStoreTypeComboBox?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.45"
           fx:controller="jgnash.uifx.wizard.file.NewFileOneController" styleClass="form">
   <columnConstraints>
@@ -27,7 +26,7 @@
                  GridPane.vgrow="ALWAYS" maxWidth="Infinity"/>
 
        <Label text="%Label.StorageType" GridPane.rowIndex="1" />
-       <ComboBox fx:id="storageTypeComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2"
+       <DataStoreTypeComboBox fx:id="storageTypeComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2"
                  maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true" GridPane.rowIndex="1" />
 
        <Label text="%Label.DatabaseName" GridPane.rowIndex="2" />
