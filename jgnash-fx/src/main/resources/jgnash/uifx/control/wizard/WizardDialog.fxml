@@ -11,7 +11,7 @@
 <?import jgnash.resource.font.FontAwesomeImageView?>
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
           prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.45"
-          fx:controller="jgnash.uifx.control.wizard.WizardDialog" styleClass="form, dialog">
+          fx:controller="jgnash.uifx.control.wizard.WizardDialogController" styleClass="form, dialog">
   <columnConstraints>
     <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />

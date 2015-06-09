@@ -19,16 +19,14 @@ package jgnash.uifx.control.wizard;
 
 import java.util.Map;
 
-import javafx.scene.layout.Pane;
-
 /**
  * Interface for a task pane in a {@code WizardPane}
  *
  * @author Craig Cavanaugh
  */
-public abstract class WizardPane<K extends Enum> extends Pane {
+public interface WizardPaneController<K extends Enum> {
 
-    public abstract boolean isPaneValid();
+    boolean isPaneValid();
 
     /**
      * Called after a page has been made active.  The page
@@ -36,8 +34,7 @@ public abstract class WizardPane<K extends Enum> extends Pane {
      *
      * @param map preferences are accessible here
      */
-    @SuppressWarnings("unused")
-    void getSettings(final Map<K, Object> map) {
+    default void getSettings(final Map<K, Object> map) {
 
     }
 
@@ -47,8 +44,7 @@ public abstract class WizardPane<K extends Enum> extends Pane {
      *
      * @param map place to put default preferences
      */
-    @SuppressWarnings("unused")
-    void putSettings(final Map<K, Object> map) {
+    default void putSettings(final Map<K, Object> map) {
 
     }
 }

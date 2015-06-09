@@ -33,6 +33,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -43,7 +44,7 @@ import jgnash.uifx.util.InjectFXML;
  *
  * @author Craig Cavanaugh
  */
-public class WizardDialog<K extends Enum> {
+public class WizardDialogController<K extends Enum> {
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
@@ -55,7 +56,7 @@ public class WizardDialog<K extends Enum> {
     protected ResourceBundle resources;
 
     @FXML
-    private ListView<WizardPane<K>> taskList;
+    private ListView<WizardPaneController<K>> taskList;
 
     @FXML
     private StackPane taskPane;
@@ -78,11 +79,7 @@ public class WizardDialog<K extends Enum> {
 
     private final IntegerProperty selectedIndex = new SimpleIntegerProperty();
 
-    //protected final Stage dialog;
-
-    public WizardDialog() {
-        //dialog = FXMLUtils.loadFXML(WizardDialog.this, "WizardDialog.fxml", ResourceUtils.getBundle());
-    }
+    private final Map<WizardPaneController<K>, Pane> paneMap = new HashMap<>();
 
     /*public void showAndWait() {
         dialog.setResizable(false);
@@ -104,13 +101,12 @@ public class WizardDialog<K extends Enum> {
         selectedIndex.bind(taskList.getSelectionModel().selectedIndexProperty());
     }
 
-    public void addTaskPane(final WizardPane<K> wizardPane) {
+    public void addTaskPane(final WizardPaneController<K> wizardPaneController, Pane pane) {
+        Objects.requireNonNull(wizardPaneController);
+        Objects.requireNonNull(pane);
 
-        Objects.requireNonNull(taskList);
-
-        taskList.getItems().add(wizardPane);
-
-
+        taskList.getItems().add(wizardPaneController);
+        paneMap.put(wizardPaneController, pane);
 
         // force selection if this is the first pane
         if (taskList.getItems().size() == 1) {
@@ -126,17 +122,17 @@ public class WizardDialog<K extends Enum> {
         settings.put(key, value);
 
         /* New setting. Tell each page to read */
-        for (WizardPane<K> wizardPane : taskList.getItems()) {
-            wizardPane.getSettings(settings);
+        for (WizardPaneController<K> wizardPaneController : taskList.getItems()) {
+            wizardPaneController.getSettings(settings);
         }
     }
 
-    private void handleTaskChange(final WizardPane<K> wizardPane) {
-        taskTitlePane.textProperty().setValue(wizardPane.toString());
+    private void handleTaskChange(final WizardPaneController<K> wizardPaneController) {
+        taskTitlePane.textProperty().setValue(wizardPaneController.toString());
         updateButtonState();
 
         taskPane.getChildren().clear();
-        taskPane.getChildren().addAll(wizardPane);
+        taskPane.getChildren().addAll(paneMap.get(wizardPaneController));
     }
 
     private void updateButtonState() {
@@ -149,8 +145,8 @@ public class WizardDialog<K extends Enum> {
         if (selectedIndex.get() == taskList.getItems().size() - 1) {
             boolean _valid = true;
 
-            for (WizardPane<K> wizardPane : taskList.getItems()) {
-                if (!wizardPane.isPaneValid()) {
+            for (WizardPaneController<K> wizardPaneController : taskList.getItems()) {
+                if (!wizardPaneController.isPaneValid()) {
                     _valid = false;
                 }
             }
@@ -200,12 +196,12 @@ public class WizardDialog<K extends Enum> {
     private void handleFinishAction() {
         validProperty.setValue(true);
 
-        for (WizardPane<K> wizardPane : taskList.getItems()) {
-            if (!wizardPane.isPaneValid()) {
+        for (WizardPaneController<K> wizardPaneController : taskList.getItems()) {
+            if (!wizardPaneController.isPaneValid()) {
                 validProperty.setValue(false);
                 break;
             }
-            wizardPane.putSettings(settings);
+            wizardPaneController.putSettings(settings);
         }
 
         if (validProperty.get()) {

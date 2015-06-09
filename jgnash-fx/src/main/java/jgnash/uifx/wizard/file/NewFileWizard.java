@@ -20,15 +20,16 @@ package jgnash.uifx.wizard.file;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
-import jgnash.uifx.control.wizard.WizardDialog;
+import jgnash.uifx.control.wizard.WizardDialogController;
+import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -37,8 +38,6 @@ import jgnash.util.ResourceUtils;
  * @author Craig Cavanaugh
  */
 public class NewFileWizard {
-
-    private ResourceBundle resources = ResourceUtils.getBundle();
 
     public enum Settings {
         CURRENCIES,
@@ -52,33 +51,41 @@ public class NewFileWizard {
 
     public NewFileWizard() {
 
-        URL fxmlUrl = WizardDialog.class.getResource("WizardDialog.fxml");
-        FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl, ResourceUtils.getBundle());
+        final ResourceBundle resources = ResourceUtils.getBundle();
 
-        final Stage stage = new Stage(StageStyle.DECORATED);
-        stage.initModality(Modality.APPLICATION_MODAL);
+        final ObjectProperty<WizardDialogController<Settings>> dialogProperty = new SimpleObjectProperty<>();
+
+        final URL fxmlUrl = WizardDialogController.class.getResource("WizardDialog.fxml");
+
+        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, new ControllerConsumer(dialogProperty), ResourceUtils.getBundle());
         stage.setTitle(resources.getString("Title.NewFile"));
 
         try {
+            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewFileOne.fxml"), resources);
+            final Pane pane = fxmlLoader.load();
 
-            Pane pane = fxmlLoader.load();
-            WizardDialog<NewFileWizard.Settings> wizardController = fxmlLoader.getController();
-
-            stage.setScene(new Scene(pane));
-
-            fxmlUrl = NewFileOneController.class.getResource("NewFileOne.fxml");
-            fxmlLoader = new FXMLLoader(fxmlUrl, ResourceUtils.getBundle());
-
-            wizardController.addTaskPane(fxmlLoader.getRoot());
+            dialogProperty.get().addTaskPane(fxmlLoader.getController(), pane);
 
             //wizardController.setSetting(Settings.CURRENCIES, DefaultCurrencies.generateCurrencies());
             //wizardController.setSetting(Settings.DATABASE_NAME, EngineFactory.getDefaultDatabase());
-
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         stage.showAndWait();
+    }
+
+    private static class ControllerConsumer implements Consumer<WizardDialogController<Settings>> {
+        private final ObjectProperty<WizardDialogController<Settings>> dialogProperty;
+
+        public ControllerConsumer(ObjectProperty<WizardDialogController<Settings>> dialogProperty) {
+            this.dialogProperty = dialogProperty;
+        }
+
+        @Override
+        public void accept(WizardDialogController<Settings> settingsWizardDialog) {
+            dialogProperty.setValue(settingsWizardDialog);
+        }
     }
 }

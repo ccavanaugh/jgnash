@@ -17,20 +17,22 @@
  */
 package jgnash.uifx.wizard.file;
 
+import java.util.ResourceBundle;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
-import jgnash.uifx.control.wizard.WizardPane;
+import jgnash.uifx.control.wizard.WizardPaneController;
 
 /**
  * New file wizard panel
  *
  * @author Craig Cavanaugh
  */
-public class NewFileOneController extends WizardPane<NewFileWizard.Settings> {
+public class NewFileOneController implements WizardPaneController<NewFileWizard.Settings> {
 
     @FXML
     private TextArea textArea;
@@ -44,12 +46,16 @@ public class NewFileOneController extends WizardPane<NewFileWizard.Settings> {
     @FXML
     private TextField fileNameField;
 
-    /*NewFileOneController() {
-        FXMLUtils.loadFXML(this, "NewFileOne.fxml", ResourceUtils.getBundle());
-    }*/
+    @FXML
+    private ResourceBundle resources;
 
     @Override
     public boolean isPaneValid() {
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "1. " + resources.getString("Title.DatabaseCfg");
     }
 }
