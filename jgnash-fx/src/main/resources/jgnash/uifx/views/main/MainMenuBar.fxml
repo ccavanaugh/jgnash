@@ -4,12 +4,21 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import jgnash.resource.font.FontAwesomeImageView?>
 <MenuBar fx:id="menuBar" useSystemMenuBar="true" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.main.MenuBarController">
   <menus>
     <Menu mnemonicParsing="false" text="%Menu.File.Name">
       <items>
-          <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#handleOpenAction" text="%Menu.Open.Name" />
-          <MenuItem mnemonicParsing="false" onAction="#handleNewAction" text="%Menu.New.Name" />
+          <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#handleOpenAction" text="%Menu.Open.Name">
+              <graphic>
+                  <FontAwesomeImageView glyphName="FOLDER_OPEN" />
+              </graphic>
+          </MenuItem>
+          <MenuItem mnemonicParsing="false" onAction="#handleNewAction" text="%Menu.New.Name">
+              <graphic>
+                  <FontAwesomeImageView glyphName="FILE" />
+              </graphic>
+          </MenuItem>
           <SeparatorMenuItem mnemonicParsing="false" />
           <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#handleCloseAction" text="%Menu.Close.Name" />
           <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#handleExitAction" text="%Menu.Exit.Name" />
@@ -20,24 +29,33 @@
         <MenuItem mnemonicParsing="false" text="%Menu.Delete.Name" />
       </items>
     </Menu>
-    <Menu mnemonicParsing="false" text="%Menu.Help.Name">
-      <items>
-        <MenuItem mnemonicParsing="false" text="%Menu.About.Name" />
-      </items>
-    </Menu>
     <Menu mnemonicParsing="false" text="%Menu.Tools.Name">
        <items>
          <Menu mnemonicParsing="false" text="%Menu.Securities.Name">
            <items>
-             <MenuItem mnemonicParsing="false" text="%Menu.BackgroundSecurityUpdate.Name" onAction="#updateSecurities"/>
+             <MenuItem mnemonicParsing="false" text="%Menu.BackgroundSecurityUpdate.Name" onAction="#updateSecurities">
+                 <graphic>
+                     <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
+                 </graphic>
+             </MenuItem>
+
            </items>
          </Menu>
             <Menu mnemonicParsing="false" text="%Menu.Currency.Name">
               <items>
-                <MenuItem  mnemonicParsing="false" text="%Menu.BackgroundCurrencyUpdate.Name" onAction="#updateCurrencies"/>
+                <MenuItem  mnemonicParsing="false" text="%Menu.BackgroundCurrencyUpdate.Name" onAction="#updateCurrencies">
+                    <graphic>
+                        <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
+                    </graphic>
+                </MenuItem>
               </items>
             </Menu>
        </items>
     </Menu>
+      <Menu mnemonicParsing="false" text="%Menu.Help.Name">
+          <items>
+              <MenuItem mnemonicParsing="false" text="%Menu.About.Name" />
+          </items>
+      </Menu>
   </menus>
 </MenuBar>
