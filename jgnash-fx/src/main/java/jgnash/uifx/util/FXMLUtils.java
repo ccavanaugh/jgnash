@@ -192,4 +192,41 @@ public class FXMLUtils {
 
         return stage;
     }
+
+    /**
+     * Creates a new Stage with application defaults {@code StageStyle.DECORATED}, {@code Modality.APPLICATION_MODAL}
+     * with the specified fxml {@code URL} as the {@code Scene}.  The controller is returned via a {@code Consumer}
+     *
+     * @param fxmlUrl        the fxml {@code URL}
+     * @param resourceBundle {@code ResourceBundle} to pass to the {@code FXMLLoader}
+     * @param consumer       consumer for the controller
+     * @param <C>            the fxml controller
+     * @return new {@code Stage}
+     */
+    public static<C> Stage loadFXML(final URL fxmlUrl, final Consumer<C> consumer, final ResourceBundle resourceBundle) {
+        final FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl, resourceBundle);
+
+        final Stage stage = new Stage(StageStyle.DECORATED);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initOwner(MainApplication.getInstance().getPrimaryStage());
+
+        try {
+            final Scene scene = new Scene(fxmlLoader.load());
+            scene.getStylesheets().addAll(MainApplication.DEFAULT_CSS);
+
+            C controller = fxmlLoader.getController();
+            consumer.accept(controller);
+
+            stage.setScene(scene);
+            stage.getIcons().add(StaticUIMethods.getApplicationIcon());
+
+            // Inject the scene into the controller
+            injectParent(controller, scene);
+        } catch (final IOException ioe) { // log and throw an unchecked exception
+            Logger.getLogger(FXMLUtils.class.getName()).log(Level.SEVERE, ioe.getMessage(), ioe);
+            throw new UncheckedIOException(ioe);
+        }
+
+        return stage;
+    }
 }
