@@ -17,22 +17,23 @@
  */
 package jgnash.uifx.wizard.file;
 
-import java.io.File;
-import java.util.Map;
-import java.util.ResourceBundle;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-
 import jgnash.engine.DataStoreType;
+import jgnash.engine.EngineFactory;
 import jgnash.uifx.actions.DatabasePathAction;
 import jgnash.uifx.control.DataStoreTypeComboBox;
 import jgnash.uifx.control.wizard.WizardPaneController;
+import jgnash.uifx.util.ValidationFactory;
 import jgnash.util.FileUtils;
 import jgnash.util.TextResource;
+
+import java.io.File;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * New file wizard panel
@@ -61,8 +62,10 @@ public class NewFileOneController implements WizardPaneController<NewFileWizard.
         textArea.setText(TextResource.getString("NewFileOne.txt"));
         storageTypeComboBox.setValue(DataStoreType.H2_DATABASE);
 
-        fileNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-        });
+        // push this to the end of the EDT, otherwise the dialog does not display correctly
+        Platform.runLater(() -> fileNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+            checkForOverwrite();
+        }));
     }
 
     @Override
@@ -91,8 +94,6 @@ public class NewFileOneController implements WizardPaneController<NewFileWizard.
         }
     }
 
-
-
     @Override
     public boolean isPaneValid() {
         return !fileNameField.getText().isEmpty();
@@ -120,6 +121,16 @@ public class NewFileOneController implements WizardPaneController<NewFileWizard.
                 String fileName = FileUtils.stripFileExtension(fileNameField.getText());
                 fileNameField.setText(fileName + "." + storageTypeComboBox.getValue().getDataStore().getFileExt());
             });
+        }
+    }
+
+    private void checkForOverwrite() {
+        ValidationFactory.removeStickyValidation(fileNameField);
+
+        if (EngineFactory.doesDatabaseExist(fileNameField.getText(), storageTypeComboBox.getValue())) {
+            ValidationFactory.showValidationWarning(fileNameField, resources.getString("Message.OverwriteDB"), true);
+        } else {
+            fileNameField.setTooltip(null);
         }
     }
 }
