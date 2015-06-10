@@ -21,14 +21,17 @@ import java.io.File;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+import jgnash.engine.DataStoreType;
 import jgnash.uifx.actions.DatabasePathAction;
 import jgnash.uifx.control.DataStoreTypeComboBox;
 import jgnash.uifx.control.wizard.WizardPaneController;
+import jgnash.util.FileUtils;
 import jgnash.util.TextResource;
 
 /**
@@ -56,6 +59,10 @@ public class NewFileOneController implements WizardPaneController<NewFileWizard.
     @FXML
     private void initialize() {
         textArea.setText(TextResource.getString("NewFileOne.txt"));
+        storageTypeComboBox.setValue(DataStoreType.H2_DATABASE);
+
+        fileNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+        });
     }
 
     @Override
@@ -64,6 +71,27 @@ public class NewFileOneController implements WizardPaneController<NewFileWizard.
         map.put(NewFileWizard.Settings.TYPE, storageTypeComboBox.getValue());
         map.put(NewFileWizard.Settings.PASSWORD, "");
     }
+
+    @Override
+    public void getSettings(final Map<NewFileWizard.Settings, Object> map) {
+        DataStoreType type = (DataStoreType) map.get(NewFileWizard.Settings.TYPE);
+
+        if (type != null) {
+            storageTypeComboBox.setValue(type);
+        }
+
+        final String fileName = (String) map.get(NewFileWizard.Settings.DATABASE_NAME);
+
+        if (fileName != null) {
+            if (FileUtils.fileHasExtension(fileName)) {
+                fileNameField.setText(fileName);
+            } else {
+                fileNameField.setText(fileName + "." + storageTypeComboBox.getValue().getDataStore().getFileExt());
+            }
+        }
+    }
+
+
 
     @Override
     public boolean isPaneValid() {
@@ -81,6 +109,17 @@ public class NewFileOneController implements WizardPaneController<NewFileWizard.
 
         if (file != null) {
             fileNameField.setText(file.getAbsolutePath());
+        }
+    }
+
+    @FXML
+    private void handleDataStoreTypeAction() {
+        if (!fileNameField.getText().isEmpty()) {
+
+            Platform.runLater(() -> {
+                String fileName = FileUtils.stripFileExtension(fileNameField.getText());
+                fileNameField.setText(fileName + "." + storageTypeComboBox.getValue().getDataStore().getFileExt());
+            });
         }
     }
 }

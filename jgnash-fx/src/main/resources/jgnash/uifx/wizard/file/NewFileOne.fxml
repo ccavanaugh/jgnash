@@ -26,7 +26,7 @@
                  GridPane.vgrow="ALWAYS" maxWidth="Infinity"/>
 
        <Label text="%Label.StorageType" GridPane.rowIndex="1" />
-       <DataStoreTypeComboBox fx:id="storageTypeComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2"
+       <DataStoreTypeComboBox fx:id="storageTypeComboBox" onAction="#handleDataStoreTypeAction" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2"
                  maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true" GridPane.rowIndex="1" />
 
        <Label text="%Label.DatabaseName" GridPane.rowIndex="2" />
