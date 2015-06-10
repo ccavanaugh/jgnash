@@ -28,6 +28,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import jgnash.engine.DefaultCurrencies;
+import jgnash.engine.EngineFactory;
 import jgnash.uifx.control.wizard.WizardDialogController;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.ResourceUtils;
@@ -53,21 +55,21 @@ public class NewFileWizard {
 
         final ResourceBundle resources = ResourceUtils.getBundle();
 
-        final ObjectProperty<WizardDialogController<Settings>> dialogProperty = new SimpleObjectProperty<>();
+        final ObjectProperty<WizardDialogController<Settings>> wizardControllerProperty = new SimpleObjectProperty<>();
 
         final URL fxmlUrl = WizardDialogController.class.getResource("WizardDialog.fxml");
 
-        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, new ControllerConsumer(dialogProperty), ResourceUtils.getBundle());
+        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, new ControllerConsumer(wizardControllerProperty), ResourceUtils.getBundle());
         stage.setTitle(resources.getString("Title.NewFile"));
 
         try {
             final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewFileOne.fxml"), resources);
             final Pane pane = fxmlLoader.load();
 
-            dialogProperty.get().addTaskPane(fxmlLoader.getController(), pane);
+            wizardControllerProperty.get().addTaskPane(fxmlLoader.getController(), pane);
 
-            //wizardController.setSetting(Settings.CURRENCIES, DefaultCurrencies.generateCurrencies());
-            //wizardController.setSetting(Settings.DATABASE_NAME, EngineFactory.getDefaultDatabase());
+            wizardControllerProperty.get().setSetting(Settings.CURRENCIES, DefaultCurrencies.generateCurrencies());
+            wizardControllerProperty.get().setSetting(Settings.DATABASE_NAME, EngineFactory.getDefaultDatabase());
 
         } catch (IOException e) {
             e.printStackTrace();

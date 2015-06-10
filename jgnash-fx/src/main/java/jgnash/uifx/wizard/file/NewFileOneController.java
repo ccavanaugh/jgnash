@@ -17,6 +17,8 @@
  */
 package jgnash.uifx.wizard.file;
 
+import java.io.File;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
@@ -24,8 +26,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+import jgnash.uifx.actions.DatabasePathAction;
 import jgnash.uifx.control.DataStoreTypeComboBox;
 import jgnash.uifx.control.wizard.WizardPaneController;
+import jgnash.util.TextResource;
 
 /**
  * New file wizard panel
@@ -51,16 +55,32 @@ public class NewFileOneController implements WizardPaneController<NewFileWizard.
 
     @FXML
     private void initialize() {
-        textArea.setText("dummy text");
+        textArea.setText(TextResource.getString("NewFileOne.txt"));
+    }
+
+    @Override
+    public void putSettings(final Map<NewFileWizard.Settings, Object> map) {
+        map.put(NewFileWizard.Settings.DATABASE_NAME, fileNameField.getText());
+        map.put(NewFileWizard.Settings.TYPE, storageTypeComboBox.getValue());
+        map.put(NewFileWizard.Settings.PASSWORD, "");
     }
 
     @Override
     public boolean isPaneValid() {
-        return false;
+        return !fileNameField.getText().isEmpty();
     }
 
     @Override
     public String toString() {
         return "1. " + resources.getString("Title.DatabaseCfg");
+    }
+
+    @FXML
+    private void handleFileButtonAction() {
+        final File file = DatabasePathAction.getFileToSave();
+
+        if (file != null) {
+            fileNameField.setText(file.getAbsolutePath());
+        }
     }
 }

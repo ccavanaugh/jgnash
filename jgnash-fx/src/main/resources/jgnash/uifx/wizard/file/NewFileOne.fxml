@@ -30,8 +30,8 @@
                  maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true" GridPane.rowIndex="1" />
 
        <Label text="%Label.DatabaseName" GridPane.rowIndex="2" />
-       <TextField fx:id="fileNameField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" minWidth="75"/>
-       <Button fx:id="fileButton" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="2">
+       <TextField fx:id="fileNameField" GridPane.columnIndex="1" GridPane.rowIndex="2" minWidth="75"/>
+       <Button onAction="#handleFileButtonAction" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="2">
            <graphic>
                <FontAwesomeImageView glyphName="ELLIPSIS_H"/>
            </graphic>
