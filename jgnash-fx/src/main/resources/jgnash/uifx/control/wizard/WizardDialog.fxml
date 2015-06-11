@@ -9,21 +9,21 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import jgnash.resource.font.FontAwesomeImageView?>
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-          prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.45"
+<GridPane maxHeight="Infinity" maxWidth="Infinity" prefHeight="400.0" prefWidth="600.0"
+          xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.45"
           fx:controller="jgnash.uifx.control.wizard.WizardDialogController" styleClass="form, dialog">
   <columnConstraints>
-    <ColumnConstraints hgrow="NEVER" minWidth="140" maxWidth="140"/>
-    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0"  />
+    <ColumnConstraints hgrow="NEVER" minWidth="160" prefWidth="-Infinity"/>
+    <ColumnConstraints hgrow="ALWAYS" minWidth="400"  />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <TitledPane animated="false" collapsible="false" maxHeight="Infinity" text="%Title.Steps">
+      <TitledPane animated="false" collapsible="false" prefWidth="-Infinity" maxHeight="Infinity" text="%Title.Steps">
          <content>
-            <ListView fx:id="taskList" minWidth="75"/>
+            <ListView fx:id="taskList" prefWidth="-Infinity"/>
          </content>
       </TitledPane>
       <TitledPane fx:id="taskTitlePane" animated="false" collapsible="false" maxHeight="Infinity" text="%Title.Steps"

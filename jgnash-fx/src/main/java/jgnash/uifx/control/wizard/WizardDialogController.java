@@ -81,11 +81,6 @@ public class WizardDialogController<K extends Enum> {
 
     private final Map<WizardPaneController<K>, Pane> paneMap = new HashMap<>();
 
-    /*public void showAndWait() {
-        dialog.setResizable(false);
-        dialog.showAndWait();
-    }*/
-
     @FXML
     private void initialize() {
         cancelButton.setCancelButton(true);
