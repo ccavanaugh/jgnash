@@ -28,7 +28,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import jgnash.engine.DefaultCurrencies;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.control.wizard.WizardDialogController;
 import jgnash.uifx.util.FXMLUtils;
@@ -43,7 +42,6 @@ public class NewFileWizard {
 
     public enum Settings {
         CURRENCIES,
-        DEFAULT_CURRENCIES,
         DEFAULT_CURRENCY,
         DATABASE_NAME,
         ACCOUNT_SET,
@@ -63,12 +61,16 @@ public class NewFileWizard {
         stage.setTitle(resources.getString("Title.NewFile"));
 
         try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewFileOne.fxml"), resources);
-            final Pane pane = fxmlLoader.load();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewFileOne.fxml"), resources);
+            Pane pane = fxmlLoader.load();
 
             wizardControllerProperty.get().addTaskPane(fxmlLoader.getController(), pane);
 
-            wizardControllerProperty.get().setSetting(Settings.CURRENCIES, DefaultCurrencies.generateCurrencies());
+            fxmlLoader = new FXMLLoader(getClass().getResource("NewFileTwo.fxml"), resources);
+            pane = fxmlLoader.load();
+
+            wizardControllerProperty.get().addTaskPane(fxmlLoader.getController(), pane);
+
             wizardControllerProperty.get().setSetting(Settings.DATABASE_NAME, EngineFactory.getDefaultDatabase());
 
         } catch (IOException e) {

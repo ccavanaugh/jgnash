@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
@@ -120,6 +121,8 @@ public class WizardDialogController<K extends Enum> {
         for (WizardPaneController<K> wizardPaneController : taskList.getItems()) {
             wizardPaneController.getSettings(settings);
         }
+
+        updateButtonState();
     }
 
     private void handleTaskChange(final WizardPaneController<K> wizardPaneController) {
@@ -173,8 +176,10 @@ public class WizardDialogController<K extends Enum> {
             // select the next page
             taskList.getSelectionModel().select(selectedIndex.get() + 1);
 
-            // tell the active page to update
-            taskList.getSelectionModel().getSelectedItem().getSettings(settings);
+            Platform.runLater(() -> {
+                // tell the active page to update
+                taskList.getSelectionModel().getSelectedItem().getSettings(settings);
+            });
         }
     }
 
