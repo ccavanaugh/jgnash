@@ -42,7 +42,7 @@ import org.controlsfx.control.decoration.GraphicDecoration;
  */
 public class ValidationFactory {
 
-    private static final double ALERT_SIZE = 12.0;
+    private static final double ALERT_SIZE = 14.0;  // icon size
 
     private ValidationFactory() {
         // utility  class
@@ -56,7 +56,7 @@ public class ValidationFactory {
     }
 
     private static Decoration createWarningDecoration() {
-        final FontAwesomeImageView glyphIcon = new FontAwesomeImageView(FontAwesomeIcon.EXCLAMATION_TRIANGLE,
+        final FontAwesomeImageView glyphIcon = new FontAwesomeImageView(FontAwesomeIcon.INFO_CIRCLE,
                 ALERT_SIZE, Color.DARKGOLDENROD);
 
         return new GraphicDecoration(glyphIcon, Pos.BOTTOM_LEFT, 0, 0);
