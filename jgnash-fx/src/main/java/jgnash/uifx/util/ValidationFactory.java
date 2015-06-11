@@ -73,6 +73,16 @@ public class ValidationFactory {
     }
 
     /**
+     * Show a validation warning on a control
+     *
+     * @param control {@code Control} to attach to
+     * @param error tooltip to display
+     */
+    public static void showValidationWarning(final Control control, final String error) {
+        showValidation(control, createWarningDecoration(), error, false);
+    }
+
+    /**
      * Show a validation error on a control
      *
      * @param control {@code Control} to attach to
