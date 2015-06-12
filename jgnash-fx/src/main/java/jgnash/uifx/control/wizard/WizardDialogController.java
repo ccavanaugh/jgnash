@@ -24,20 +24,24 @@ import java.util.ResourceBundle;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.util.InjectFXML;
 
 /**
@@ -82,6 +86,8 @@ public class WizardDialogController<K extends Enum> {
 
     private final Map<WizardPaneController<K>, Pane> paneMap = new HashMap<>();
 
+    private final DoubleProperty taskListWidth = new SimpleDoubleProperty();
+
     @FXML
     private void initialize() {
         cancelButton.setCancelButton(true);
@@ -94,10 +100,16 @@ public class WizardDialogController<K extends Enum> {
             handleTaskChange(newValue);
         });
 
+        taskList.setCellFactory(param -> new ControllerListCell());
+
+        // bind the min and max width to a value we control.  ListView does a terrible job of controlling it's width
+        taskList.minWidthProperty().bind(taskListWidth);
+        taskList.maxWidthProperty().bind(taskListWidth);
+
         selectedIndex.bind(taskList.getSelectionModel().selectedIndexProperty());
     }
 
-    public void addTaskPane(final WizardPaneController<K> wizardPaneController, Pane pane) {
+    public void addTaskPane(final WizardPaneController<K> wizardPaneController, final Pane pane) {
         Objects.requireNonNull(wizardPaneController);
         Objects.requireNonNull(pane);
 
@@ -108,6 +120,9 @@ public class WizardDialogController<K extends Enum> {
         if (taskList.getItems().size() == 1) {
             taskList.getSelectionModel().select(0);
         }
+
+        // update the preferred task list width
+        taskListWidth.setValue(Math.max(getControllerDescriptionWidth(wizardPaneController), taskListWidth.get()));
     }
 
     public Object getSetting(final K key) {
@@ -206,6 +221,44 @@ public class WizardDialogController<K extends Enum> {
 
         if (validProperty.get()) {
             ((Stage) parentProperty.get().getWindow()).close();
+        }
+    }
+
+    /**
+     * Determines the preferred width of the {@code ListCell} for a better visual width of the task list
+     * @param item controller we need the optimal width off
+     * @return preferred width
+     */
+    private double getControllerDescriptionWidth(final WizardPaneController<K> item) {
+        final ControllerListCell cell = new ControllerListCell();
+        cell.updateItem(item, false);
+
+        return cell.prefWidth(-1);
+    }
+
+    /**
+     * Custom list cell.  Marks any bad pages with a font change
+     */
+    private class ControllerListCell extends ListCell<WizardPaneController<K>> {
+
+        public ControllerListCell() {
+            super();
+            updateListView(taskList);
+            setSkin(createDefaultSkin());
+        }
+
+        @Override
+        protected void updateItem(final WizardPaneController<K> item, final boolean empty) {
+            super.updateItem(item, empty);
+            if (!empty) {
+                setText(item.toString());
+
+                if (!item.isPaneValid()) {
+                    setId(StyleClass.NORMAL_NEGATIVE_CELL);
+                } else {
+                    setId(StyleClass.NORMAL_CELL);
+                }
+            }
         }
     }
 }

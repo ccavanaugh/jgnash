@@ -13,7 +13,7 @@
           xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.45"
           fx:controller="jgnash.uifx.control.wizard.WizardDialogController" styleClass="form, dialog">
   <columnConstraints>
-    <ColumnConstraints hgrow="NEVER" minWidth="160" prefWidth="-Infinity"/>
+    <ColumnConstraints hgrow="NEVER" />
     <ColumnConstraints hgrow="ALWAYS" minWidth="400"  />
   </columnConstraints>
   <rowConstraints>
@@ -21,9 +21,9 @@
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <TitledPane animated="false" collapsible="false" prefWidth="-Infinity" maxHeight="Infinity" text="%Title.Steps">
+      <TitledPane animated="false" collapsible="false"  maxHeight="Infinity" text="%Title.Steps">
          <content>
-            <ListView fx:id="taskList" prefWidth="-Infinity"/>
+            <ListView fx:id="taskList" />
          </content>
       </TitledPane>
       <TitledPane fx:id="taskTitlePane" animated="false" collapsible="false" maxHeight="Infinity" text="%Title.Steps"
