@@ -26,7 +26,9 @@ import java.util.Map;
  */
 public interface WizardPaneController<K extends Enum> {
 
-    boolean isPaneValid();
+    default boolean isPaneValid() {
+        return true;
+    }
 
     /**
      * Called after a page has been made active.  The page
