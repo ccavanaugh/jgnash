@@ -42,9 +42,9 @@ class AccountCommodityFormatTreeTableCell extends TreeTableCell<Account, BigDeci
             setText(format.format(amount));
 
             if (amount.signum() < 0) {
-                setId(StyleClass.NORMAL_NEGATIVE_CELL);
+                setId(StyleClass.NORMAL_NEGATIVE_CELL_ID);
             } else {
-                setId(StyleClass.NORMAL_CELL);
+                setId(StyleClass.NORMAL_CELL_ID);
             }
         } else {
             setText(null);

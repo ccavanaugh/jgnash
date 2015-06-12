@@ -254,9 +254,9 @@ public class WizardDialogController<K extends Enum> {
                 setText(item.toString());
 
                 if (!item.isPaneValid()) {
-                    setId(StyleClass.NORMAL_NEGATIVE_CELL);
+                    setId(StyleClass.NORMAL_NEGATIVE_CELL_ID);
                 } else {
-                    setId(StyleClass.NORMAL_CELL);
+                    setId(StyleClass.NORMAL_CELL_ID);
                 }
             }
         }
