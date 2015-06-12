@@ -20,10 +20,11 @@ package jgnash.uifx.views.accounts;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 
+import javafx.scene.control.TreeTableCell;
+
 import jgnash.engine.Account;
 import jgnash.text.CommodityFormat;
-
-import javafx.scene.control.TreeTableCell;
+import jgnash.uifx.skin.StyleClass;
 
 /**
  * @author Craig Cavanaugh
@@ -41,9 +42,9 @@ class AccountCommodityFormatTreeTableCell extends TreeTableCell<Account, BigDeci
             setText(format.format(amount));
 
             if (amount.signum() < 0) {
-                setId("normal-negative-label");
+                setId(StyleClass.NORMAL_NEGATIVE_CELL);
             } else {
-                setId("normal-label");
+                setId(StyleClass.NORMAL_CELL);
             }
         } else {
             setText(null);
