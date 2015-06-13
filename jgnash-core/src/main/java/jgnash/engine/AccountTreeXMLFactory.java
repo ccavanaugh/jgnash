@@ -17,6 +17,7 @@
  */
 package jgnash.engine;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -29,12 +30,16 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jgnash.util.ClassPathUtils;
 import jgnash.util.Resource;
 
 import com.thoughtworks.xstream.XStream;
@@ -49,6 +54,8 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
  */
 public class AccountTreeXMLFactory {
     private static final Charset ENCODING = StandardCharsets.UTF_8;
+
+    private static final String RESOURCE_ROOT_PATH = "/jgnash/resource/account";
 
     private static XStream getStream() {
         XStream xstream = new XStream(new PureJavaReflectionProvider(), new StaxDriver());
@@ -319,6 +326,44 @@ public class AccountTreeXMLFactory {
                 importChildren(engine, child);
             }
         }
+    }
+
+    public static Collection<RootAccount> getLocalizedAccountSet() {
+        final List<RootAccount> files = new ArrayList<>();
+
+        for (final String string : getAccountSetList()) {
+
+            try (final InputStream stream = Object.class.getResourceAsStream(string)) {
+                final RootAccount account = AccountTreeXMLFactory.loadAccountTree(stream);
+                files.add(account);
+            } catch (final IOException e) {
+                Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+
+        return files;
+    }
+
+    private static List<String> getAccountSetList() {
+        final String path = ClassPathUtils.getLocalizedPath(RESOURCE_ROOT_PATH);
+
+        final List<String> set = new ArrayList<>();
+
+        if (path != null) {
+            try (final InputStream stream = Object.class.getResourceAsStream(path + "/set.txt");
+                 final BufferedReader r = new BufferedReader(new InputStreamReader(stream, ENCODING))) {
+
+                String line = r.readLine();
+
+                while (line != null) {
+                    set.add(path + "/" + line);
+                    line = r.readLine();
+                }
+            } catch (final IOException ex) {
+                Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return set;
     }
 
     private AccountTreeXMLFactory() {
