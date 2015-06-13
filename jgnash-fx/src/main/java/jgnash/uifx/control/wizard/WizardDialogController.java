@@ -40,6 +40,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.util.InjectFXML;
@@ -61,7 +62,7 @@ public class WizardDialogController<K extends Enum> {
     protected ResourceBundle resources;
 
     @FXML
-    private ListView<WizardPaneController<K>> taskList;
+    private ListView<ObjectProperty<Pair<String, Boolean>>> taskList;
 
     @FXML
     private StackPane taskPane;
@@ -113,7 +114,12 @@ public class WizardDialogController<K extends Enum> {
         Objects.requireNonNull(wizardPaneController);
         Objects.requireNonNull(pane);
 
-        taskList.getItems().add(wizardPaneController);
+        // Listen for changes to the controller descriptor
+        wizardPaneController.getDescriptor().addListener(observable -> {
+            taskList.refresh();
+        });
+
+        taskList.getItems().add(wizardPaneController.getDescriptor());
         paneMap.put(wizardPaneController, pane);
 
         // force selection if this is the first pane
@@ -133,19 +139,31 @@ public class WizardDialogController<K extends Enum> {
         settings.put(key, value);
 
         /* New setting. Tell each page to read */
-        for (WizardPaneController<K> wizardPaneController : taskList.getItems()) {
+        for (WizardPaneController<K> wizardPaneController : paneMap.keySet()) {
             wizardPaneController.getSettings(settings);
         }
 
         updateButtonState();
     }
 
-    private void handleTaskChange(final WizardPaneController<K> wizardPaneController) {
-        taskTitlePane.textProperty().setValue(wizardPaneController.toString());
+    private void handleTaskChange(final ObjectProperty<Pair<String, Boolean>> descriptor) {
+        taskTitlePane.textProperty().setValue(descriptor.get().getKey());
         updateButtonState();
 
-        taskPane.getChildren().clear();
-        taskPane.getChildren().addAll(paneMap.get(wizardPaneController));
+        paneMap.keySet().stream().filter(controller -> controller.getDescriptor().equals(descriptor)).forEach(controller -> {
+            taskPane.getChildren().clear();
+            taskPane.getChildren().addAll(paneMap.get(controller));
+        });
+    }
+
+    private WizardPaneController<K> getController(final ObjectProperty<Pair<String, Boolean>> descriptor) {
+        for (final WizardPaneController<K> wizardPaneController : paneMap.keySet()) {
+            if (wizardPaneController.getDescriptor().equals(descriptor)) {
+                return wizardPaneController;
+            }
+        }
+
+        throw new RuntimeException("Did not find a controller match for the descriptor");
     }
 
     private void updateButtonState() {
@@ -156,15 +174,15 @@ public class WizardDialogController<K extends Enum> {
         }
 
         if (selectedIndex.get() == taskList.getItems().size() - 1) {
-            boolean _valid = true;
+            boolean valid = true;
 
-            for (WizardPaneController<K> wizardPaneController : taskList.getItems()) {
+            for (WizardPaneController<K> wizardPaneController : paneMap.keySet()) {
                 if (!wizardPaneController.isPaneValid()) {
-                    _valid = false;
+                    valid = false;
                 }
             }
 
-            finishButton.setDisable(!_valid);
+            finishButton.setDisable(!valid);
         } else {
             finishButton.setDisable(true);
         }
@@ -186,14 +204,14 @@ public class WizardDialogController<K extends Enum> {
     private void handleNextAction() {
         if (selectedIndex.get() < taskList.getItems().size() - 1) {
             // store an setting on the active page. May be necessary for the next page
-            taskList.getSelectionModel().getSelectedItem().putSettings(settings);
+            getController(taskList.getSelectionModel().getSelectedItem()).putSettings(settings);
 
             // select the next page
             taskList.getSelectionModel().select(selectedIndex.get() + 1);
 
             Platform.runLater(() -> {
                 // tell the active page to update
-                taskList.getSelectionModel().getSelectedItem().getSettings(settings);
+                getController(taskList.getSelectionModel().getSelectedItem()).getSettings(settings);
             });
         }
     }
@@ -211,7 +229,7 @@ public class WizardDialogController<K extends Enum> {
     private void handleFinishAction() {
         validProperty.setValue(true);
 
-        for (WizardPaneController<K> wizardPaneController : taskList.getItems()) {
+        for (WizardPaneController<K> wizardPaneController : paneMap.keySet()) {
             if (!wizardPaneController.isPaneValid()) {
                 validProperty.setValue(false);
                 break;
@@ -231,7 +249,7 @@ public class WizardDialogController<K extends Enum> {
      */
     private double getControllerDescriptionWidth(final WizardPaneController<K> item) {
         final ControllerListCell cell = new ControllerListCell();
-        cell.updateItem(item, false);
+        cell.updateItem(item.getDescriptor(), false);
 
         return cell.prefWidth(-1);
     }
@@ -239,7 +257,7 @@ public class WizardDialogController<K extends Enum> {
     /**
      * Custom list cell.  Marks any bad pages with a font change
      */
-    private class ControllerListCell extends ListCell<WizardPaneController<K>> {
+    private class ControllerListCell extends ListCell<ObjectProperty<Pair<String, Boolean>>> {
 
         public ControllerListCell() {
             super();
@@ -248,12 +266,12 @@ public class WizardDialogController<K extends Enum> {
         }
 
         @Override
-        protected void updateItem(final WizardPaneController<K> item, final boolean empty) {
+        protected void updateItem(final ObjectProperty<Pair<String, Boolean>> item, final boolean empty) {
             super.updateItem(item, empty);
             if (!empty) {
-                setText(item.toString());
+                setText(item.getValue().getKey());
 
-                if (!item.isPaneValid()) {
+                if (!item.getValue().getValue()) {
                     setId(StyleClass.NORMAL_NEGATIVE_CELL_ID);
                 } else {
                     setId(StyleClass.NORMAL_CELL_ID);

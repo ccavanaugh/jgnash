@@ -17,41 +17,27 @@
  */
 package jgnash.uifx.control.wizard;
 
-import java.util.Map;
-
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.util.Pair;
 
 /**
- * Interface for a task pane in a {@code WizardPane}
+ * Support class to make implementation of {@code WizardPaneController} less repetitive.  Subclasses are required
+ * to overwrite {@code toString()} and return a meaningful description.
  *
  * @author Craig Cavanaugh
  */
-public interface WizardPaneController<K extends Enum> {
+public abstract class AbstractWizardPaneController<K extends Enum> implements WizardPaneController<K> {
 
-    default boolean isPaneValid() {
-        return true;
+    private final SimpleObjectProperty<Pair<String, Boolean>> descriptorProperty =
+            new SimpleObjectProperty<>(new Pair<>("", false));
+
+    @Override
+    public ObjectProperty<Pair<String, Boolean>> getDescriptor() {
+        return descriptorProperty;
     }
 
-    /**
-     * Called after a page has been made active.  The page
-     * can load predefined settings/preferences when called.
-     *
-     * @param map preferences are accessible here
-     */
-    default void getSettings(final Map<K, Object> map) {
-
+    protected void updateDescriptor() {
+        descriptorProperty.setValue(new Pair<>(toString(), isPaneValid()));
     }
-
-    /**
-     * Called on the active prior to switching to the next page.  The page
-     * can save settings/preferences to be used later
-     *
-     * @param map place to put default preferences
-     */
-   default void putSettings(final Map<K, Object> map) {
-
-   }
-
-    ObjectProperty<Pair<String, Boolean>> getDescriptor();
 }

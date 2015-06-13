@@ -17,30 +17,31 @@
  */
 package jgnash.uifx.wizard.file;
 
+import java.io.File;
+import java.util.Map;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+
 import jgnash.engine.DataStoreType;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.actions.DatabasePathAction;
 import jgnash.uifx.control.DataStoreTypeComboBox;
-import jgnash.uifx.control.wizard.WizardPaneController;
+import jgnash.uifx.control.wizard.AbstractWizardPaneController;
 import jgnash.uifx.util.ValidationFactory;
 import jgnash.util.FileUtils;
 import jgnash.util.TextResource;
-
-import java.io.File;
-import java.util.Map;
-import java.util.ResourceBundle;
 
 /**
  * New file wizard panel
  *
  * @author Craig Cavanaugh
  */
-public class NewFileOneController implements WizardPaneController<NewFileWizard.Settings> {
+public class NewFileOneController extends AbstractWizardPaneController<NewFileWizard.Settings> {
 
     @FXML
     private TextArea textArea;
@@ -66,6 +67,8 @@ public class NewFileOneController implements WizardPaneController<NewFileWizard.
         Platform.runLater(() -> fileNameField.textProperty().addListener((observable, oldValue, newValue) -> {
             checkForOverwrite();
         }));
+
+        updateDescriptor();
     }
 
     @Override
@@ -92,6 +95,8 @@ public class NewFileOneController implements WizardPaneController<NewFileWizard.
                 fileNameField.setText(fileName + "." + storageTypeComboBox.getValue().getDataStore().getFileExt());
             }
         }
+
+        updateDescriptor();
     }
 
     @Override
@@ -111,6 +116,8 @@ public class NewFileOneController implements WizardPaneController<NewFileWizard.
         if (file != null) {
             fileNameField.setText(file.getAbsolutePath());
         }
+
+        updateDescriptor();
     }
 
     @FXML

@@ -31,7 +31,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
 
 import jgnash.engine.CurrencyNode;
-import jgnash.uifx.control.wizard.WizardPaneController;
+import jgnash.uifx.control.wizard.AbstractWizardPaneController;
 import jgnash.util.TextResource;
 
 /**
@@ -39,7 +39,7 @@ import jgnash.util.TextResource;
  *
  * @author Craig Cavanaugh
  */
-public class NewFileThreeController implements WizardPaneController<NewFileWizard.Settings> {
+public class NewFileThreeController extends AbstractWizardPaneController<NewFileWizard.Settings> {
 
     @FXML
     private ListView<CurrencyNode> selectedList;
@@ -59,6 +59,8 @@ public class NewFileThreeController implements WizardPaneController<NewFileWizar
 
         availableList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        updateDescriptor();
     }
 
     @Override

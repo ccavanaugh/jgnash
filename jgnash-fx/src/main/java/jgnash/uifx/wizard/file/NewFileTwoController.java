@@ -31,7 +31,7 @@ import javafx.scene.control.TextArea;
 
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.DefaultCurrencies;
-import jgnash.uifx.control.wizard.WizardPaneController;
+import jgnash.uifx.control.wizard.AbstractWizardPaneController;
 import jgnash.util.TextResource;
 
 /**
@@ -39,7 +39,7 @@ import jgnash.util.TextResource;
  *
  * @author Craig Cavanaugh
  */
-public class NewFileTwoController implements WizardPaneController<NewFileWizard.Settings> {
+public class NewFileTwoController extends AbstractWizardPaneController<NewFileWizard.Settings> {
 
     // Do not use a CurrencyComboBox at this point or it will boot the engine
     @FXML
@@ -80,6 +80,8 @@ public class NewFileTwoController implements WizardPaneController<NewFileWizard.
         } catch (final IllegalArgumentException e) {
             Logger.getLogger(NewFileTwoController.class.getName()).warning("Unable to construct the default currency from the default system Locale");
         }
+
+        updateDescriptor();
     }
 
     @Override
@@ -94,6 +96,6 @@ public class NewFileTwoController implements WizardPaneController<NewFileWizard.
 
     @FXML
     private void handleDefaultCurrencyAction() {
-
+        updateDescriptor();
     }
 }
