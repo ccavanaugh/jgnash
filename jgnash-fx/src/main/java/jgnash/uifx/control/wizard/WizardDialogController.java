@@ -114,6 +114,9 @@ public class WizardDialogController<K extends Enum> {
         Objects.requireNonNull(wizardPaneController);
         Objects.requireNonNull(pane);
 
+        wizardPaneController.getSettings(settings);
+        wizardPaneController.putSettings(settings);
+
         // Listen for changes to the controller descriptor
         wizardPaneController.getDescriptor().addListener(observable -> {
             taskList.refresh();
@@ -129,6 +132,8 @@ public class WizardDialogController<K extends Enum> {
 
         // update the preferred task list width
         taskListWidth.setValue(Math.max(getControllerDescriptionWidth(wizardPaneController), taskListWidth.get()));
+
+        updateButtonState();
     }
 
     public Object getSetting(final K key) {

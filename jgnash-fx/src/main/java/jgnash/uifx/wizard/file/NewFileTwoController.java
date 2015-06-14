@@ -22,7 +22,6 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
@@ -55,7 +54,7 @@ public class NewFileTwoController extends AbstractWizardPaneController<NewFileWi
     private void initialize() {
         textArea.setText(TextResource.getString("NewFileTwo.txt"));
 
-        Platform.runLater(this::initDefaultCurrencies); // run in the background for faster launch
+        initDefaultCurrencies();
     }
 
     @Override

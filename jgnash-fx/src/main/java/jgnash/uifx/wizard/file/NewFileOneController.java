@@ -88,12 +88,10 @@ public class NewFileOneController extends AbstractWizardPaneController<NewFileWi
 
         final String fileName = (String) map.get(NewFileWizard.Settings.DATABASE_NAME);
 
-        if (fileName != null) {
-            if (FileUtils.fileHasExtension(fileName)) {
-                fileNameField.setText(fileName);
-            } else {
-                fileNameField.setText(fileName + "." + storageTypeComboBox.getValue().getDataStore().getFileExt());
-            }
+        if (FileUtils.fileHasExtension(fileName)) {
+            fileNameField.setText(fileName);
+        } else {
+            fileNameField.setText(fileName + "." + storageTypeComboBox.getValue().getDataStore().getFileExt());
         }
 
         updateDescriptor();

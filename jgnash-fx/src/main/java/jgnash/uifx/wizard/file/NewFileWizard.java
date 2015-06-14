@@ -62,6 +62,9 @@ public class NewFileWizard {
         final Stage stage = FXMLUtils.loadFXML(fxmlUrl, new ControllerConsumer(wizardControllerProperty), ResourceUtils.getBundle());
         stage.setTitle(resources.getString("Title.NewFile"));
 
+        wizardControllerProperty.get().setSetting(Settings.DATABASE_NAME, EngineFactory.getDefaultDatabase());
+        wizardControllerProperty.get().setSetting(Settings.DEFAULT_CURRENCIES, DefaultCurrencies.generateCurrencies());
+
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewFileOne.fxml"), resources);
             Pane pane = fxmlLoader.load();
@@ -79,8 +82,10 @@ public class NewFileWizard {
             pane = fxmlLoader.load();
             wizardControllerProperty.get().addTaskPane(fxmlLoader.getController(), pane);
 
-            wizardControllerProperty.get().setSetting(Settings.DATABASE_NAME, EngineFactory.getDefaultDatabase());
-            wizardControllerProperty.get().setSetting(Settings.DEFAULT_CURRENCIES, DefaultCurrencies.generateCurrencies());
+            fxmlLoader = new FXMLLoader(getClass().getResource("NewFileSummary.fxml"), resources);
+            pane = fxmlLoader.load();
+            wizardControllerProperty.get().addTaskPane(fxmlLoader.getController(), pane);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
