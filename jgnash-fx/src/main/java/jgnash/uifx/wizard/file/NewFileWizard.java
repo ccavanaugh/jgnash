@@ -75,6 +75,10 @@ public class NewFileWizard {
             pane = fxmlLoader.load();
             wizardControllerProperty.get().addTaskPane(fxmlLoader.getController(), pane);
 
+            fxmlLoader = new FXMLLoader(getClass().getResource("NewFileFour.fxml"), resources);
+            pane = fxmlLoader.load();
+            wizardControllerProperty.get().addTaskPane(fxmlLoader.getController(), pane);
+
             wizardControllerProperty.get().setSetting(Settings.DATABASE_NAME, EngineFactory.getDefaultDatabase());
             wizardControllerProperty.get().setSetting(Settings.DEFAULT_CURRENCIES, DefaultCurrencies.generateCurrencies());
         } catch (IOException e) {
