@@ -59,7 +59,7 @@ public class NewFileWizard {
     }
 
     @SuppressWarnings("unchecked")
-    public NewFileWizard() {
+    private NewFileWizard() {
 
         final ResourceBundle resources = ResourceUtils.getBundle();
 
@@ -118,6 +118,10 @@ public class NewFileWizard {
                 StaticUIMethods.displayError(e.getMessage());
             }
         }
+    }
+
+    public static void show() {
+        new NewFileWizard();
     }
 
     private static class ControllerConsumer implements Consumer<WizardDialogController<Settings>> {

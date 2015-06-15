@@ -41,13 +41,17 @@ import jgnash.uifx.wizard.file.NewFileWizard;
  */
 public class MenuBarController implements MessageListener {
 
-    @FXML private MenuBar menuBar;
+    @FXML
+    private MenuBar menuBar;
 
-    @FXML private MenuItem openMenuItem;
+    @FXML
+    private MenuItem openMenuItem;
 
-    @FXML private MenuItem closeMenuItem;
+    @FXML
+    private MenuItem closeMenuItem;
 
-    @FXML private MenuItem exitMenuItem;
+    @FXML
+    private MenuItem exitMenuItem;
 
     @FXML
     private void initialize() {
@@ -97,8 +101,7 @@ public class MenuBarController implements MessageListener {
 
     @FXML
     private void handleNewAction() {
-        NewFileWizard wizard = new NewFileWizard();
-        //wizard.showAndWait();
+        NewFileWizard.show();
     }
 
     @Override
