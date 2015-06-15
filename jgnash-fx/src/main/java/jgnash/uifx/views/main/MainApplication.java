@@ -60,6 +60,7 @@ import jgnash.uifx.control.TabViewPane;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.accounts.AccountsViewController;
+import jgnash.uifx.views.recurring.RecurringViewController;
 import jgnash.uifx.views.register.RegisterViewController;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
@@ -174,12 +175,13 @@ public class MainApplication extends Application implements MessageListener {
 
     private void addViews() {
         try {
-            Pane accountsPane = FXMLLoader.load(AccountsViewController.class.getResource("AccountsView.fxml"), ResourceUtils.getBundle());
-            Pane registerPane = FXMLLoader.load(RegisterViewController.class.getResource("RegisterView.fxml"), ResourceUtils.getBundle());
+            final Pane accountsPane = FXMLLoader.load(AccountsViewController.class.getResource("AccountsView.fxml"), ResourceUtils.getBundle());
+            final Pane registerPane = FXMLLoader.load(RegisterViewController.class.getResource("RegisterView.fxml"), ResourceUtils.getBundle());
+            final Pane recurringPane = FXMLLoader.load(RecurringViewController.class.getResource("RecurringView.fxml"), ResourceUtils.getBundle());
 
             tabViewPane.addTab(accountsPane, rb.getString("Tab.Accounts"));
             tabViewPane.addTab(registerPane, rb.getString("Tab.Register"));
-            tabViewPane.addTab(null, rb.getString("Tab.Reminders"));
+            tabViewPane.addTab(recurringPane, rb.getString("Tab.Reminders"));
             tabViewPane.addTab(null, rb.getString("Tab.Budgeting"));
         } catch (final IOException e) {
             StaticUIMethods.displayException(e);
