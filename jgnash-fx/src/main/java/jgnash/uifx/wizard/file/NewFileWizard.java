@@ -19,7 +19,9 @@ package jgnash.uifx.wizard.file;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.function.Consumer;
 
 import javafx.beans.property.ObjectProperty;
@@ -28,10 +30,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import jgnash.engine.CurrencyNode;
+import jgnash.engine.DataStoreType;
 import jgnash.engine.DefaultCurrencies;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.RootAccount;
+import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.wizard.WizardDialogController;
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.util.NewFileUtility;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -51,6 +58,7 @@ public class NewFileWizard {
         PASSWORD
     }
 
+    @SuppressWarnings("unchecked")
     public NewFileWizard() {
 
         final ResourceBundle resources = ResourceUtils.getBundle();
@@ -65,26 +73,28 @@ public class NewFileWizard {
         wizardControllerProperty.get().setSetting(Settings.DATABASE_NAME, EngineFactory.getDefaultDatabase());
         wizardControllerProperty.get().setSetting(Settings.DEFAULT_CURRENCIES, DefaultCurrencies.generateCurrencies());
 
+        final WizardDialogController<Settings> wizardController =  wizardControllerProperty.get();
+
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewFileOne.fxml"), resources);
             Pane pane = fxmlLoader.load();
-            wizardControllerProperty.get().addTaskPane(fxmlLoader.getController(), pane);
+            wizardController.addTaskPane(fxmlLoader.getController(), pane);
 
             fxmlLoader = new FXMLLoader(getClass().getResource("NewFileTwo.fxml"), resources);
             pane = fxmlLoader.load();
-            wizardControllerProperty.get().addTaskPane(fxmlLoader.getController(), pane);
+            wizardController.addTaskPane(fxmlLoader.getController(), pane);
 
             fxmlLoader = new FXMLLoader(getClass().getResource("NewFileThree.fxml"), resources);
             pane = fxmlLoader.load();
-            wizardControllerProperty.get().addTaskPane(fxmlLoader.getController(), pane);
+            wizardController.addTaskPane(fxmlLoader.getController(), pane);
 
             fxmlLoader = new FXMLLoader(getClass().getResource("NewFileFour.fxml"), resources);
             pane = fxmlLoader.load();
-            wizardControllerProperty.get().addTaskPane(fxmlLoader.getController(), pane);
+            wizardController.addTaskPane(fxmlLoader.getController(), pane);
 
             fxmlLoader = new FXMLLoader(getClass().getResource("NewFileSummary.fxml"), resources);
             pane = fxmlLoader.load();
-            wizardControllerProperty.get().addTaskPane(fxmlLoader.getController(), pane);
+            wizardController.addTaskPane(fxmlLoader.getController(), pane);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -93,6 +103,21 @@ public class NewFileWizard {
         stage.setResizable(false);
 
         stage.showAndWait();
+
+        if (wizardController.validProperty().get()) {
+            final String database = (String) wizardController.getSetting(Settings.DATABASE_NAME);
+            final Set<CurrencyNode> nodes = (Set<CurrencyNode>) wizardController.getSetting(Settings.CURRENCIES);
+            final CurrencyNode defaultCurrency = (CurrencyNode) wizardController.getSetting(Settings.DEFAULT_CURRENCY);
+            final DataStoreType type = (DataStoreType)wizardController.getSetting(Settings.TYPE);
+            final String password = (String)wizardController.getSetting(Settings.PASSWORD);
+            final List<RootAccount> accountList = (List<RootAccount>) wizardController.getSetting(Settings.ACCOUNT_SET);
+
+            try {
+                NewFileUtility.buildNewFile(database, type, password.toCharArray(), defaultCurrency, nodes, accountList);
+            } catch (final IOException e) {
+                StaticUIMethods.displayError(e.getMessage());
+            }
+        }
     }
 
     private static class ControllerConsumer implements Consumer<WizardDialogController<Settings>> {

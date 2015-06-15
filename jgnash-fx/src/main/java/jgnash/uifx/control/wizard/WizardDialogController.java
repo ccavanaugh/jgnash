@@ -27,6 +27,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -108,6 +110,10 @@ public class WizardDialogController<K extends Enum> {
         taskList.maxWidthProperty().bind(taskListWidth);
 
         selectedIndex.bind(taskList.getSelectionModel().selectedIndexProperty());
+    }
+
+    public ReadOnlyBooleanProperty validProperty() {
+        return new ReadOnlyBooleanWrapper(validProperty.get());
     }
 
     public void addTaskPane(final WizardPaneController<K> wizardPaneController, final Pane pane) {
