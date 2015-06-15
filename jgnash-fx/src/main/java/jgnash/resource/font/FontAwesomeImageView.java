@@ -24,6 +24,7 @@ import java.util.HashMap;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.fxml.FXML;
 import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -45,7 +46,7 @@ public class FontAwesomeImageView extends ImageView {
 
     private static final String FONT_NAME = "FontAwesome"; //$NON-NLS-1$
 
-    public static final double DEFAULT_SIZE = 11.0;
+    private static final double DEFAULT_SIZE = 11.0;
 
     private final ObjectProperty<Object> glyphName = new SimpleObjectProperty<>();
 
@@ -85,28 +86,32 @@ public class FontAwesomeImageView extends ImageView {
      *
      * @param value This can either be the Glyph Name or a unicode character representing the glyph.
      */
-    @SuppressWarnings("unused")
+    @FXML
     public void setGlyphName(final Object value) {
         glyphName.set(value);
     }
 
+    @FXML
     public Object getGlyphName() {
         return glyphName.get();
     }
 
-    @SuppressWarnings("unused")
+    @FXML
     public void setColor(final Color value) {
         color.setValue(value);
     }
 
+    @FXML
     public Color getColor() {
         return color.get();
     }
 
+    @FXML
     public void setSize(final Double value) {
         size.setValue(value);
     }
 
+    @FXML
     public Double getSize() {
         return size.getValue();
     }

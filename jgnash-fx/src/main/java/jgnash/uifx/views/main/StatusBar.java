@@ -37,7 +37,7 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
-public class StatusBar extends StackPane {
+class StatusBar extends StackPane {
 
     private final StringProperty text = new SimpleStringProperty(this, "text");
 
