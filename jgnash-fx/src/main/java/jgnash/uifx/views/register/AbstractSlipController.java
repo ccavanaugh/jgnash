@@ -307,7 +307,7 @@ abstract class AbstractSlipController implements Slip {
 
     @Override
     public boolean validateForm() {
-        if (payeeTextField.getText().isEmpty()) {
+        if (payeeTextField.getText() == null || payeeTextField.getText().isEmpty()) {
             ValidationFactory.showValidationWarning(payeeTextField, resources.getString("Message.Warn.EmptyPayee"));
         }
 
