@@ -95,6 +95,8 @@ public class NewFileOneController extends AbstractWizardPaneController<NewFileWi
         }
 
         updateDescriptor();
+
+        Platform.runLater(this::checkForOverwrite);
     }
 
     @Override
