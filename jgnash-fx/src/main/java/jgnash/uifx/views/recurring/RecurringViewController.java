@@ -19,14 +19,18 @@ package jgnash.uifx.views.recurring;
 
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.logging.Logger;
 
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -34,8 +38,12 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.recurring.Reminder;
+import jgnash.uifx.Options;
+import jgnash.uifx.StaticUIMethods;
 
 /**
  * Controller for recurring events
@@ -53,6 +61,10 @@ public class RecurringViewController implements MessageListener {
     private final ObservableList<Reminder> observableReminderList = FXCollections.observableArrayList();
 
     private final SortedList<Reminder> sortedReminderList = new SortedList<>(observableReminderList);
+
+    final private ReadOnlyObjectWrapper<Reminder> selectedReminderProperty = new ReadOnlyObjectWrapper<>();
+
+    private Timer timer = null;
 
     @FXML
     @SuppressWarnings("unchecked")
@@ -72,9 +84,13 @@ public class RecurringViewController implements MessageListener {
 
         tableView.getColumns().addAll(descriptionColumn, frequencyColumn, enabledColumn);
 
+        selectedReminderProperty.bind(tableView.getSelectionModel().selectedItemProperty());
+
         sortedReminderList.comparatorProperty().bind(tableView.comparatorProperty());
 
         tableView.setItems(sortedReminderList);
+
+        MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
 
         Platform.runLater(this::loadTable);
     }
@@ -87,8 +103,41 @@ public class RecurringViewController implements MessageListener {
         observableReminderList.addAll(engine.getReminders());
     }
 
-    @Override
-    public void messagePosted(Message event) {
+    private void stopTimer() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
 
+            Logger.getLogger(RecurringViewController.class.getName()).info("Recurring timer stopped");
+        }
+    }
+
+    @Override
+    public void messagePosted(final Message message) {
+        switch (message.getEvent()) {
+            case FILE_CLOSING:
+                stopTimer();
+                MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM);
+                break;
+            default:
+        }
+    }
+
+    @FXML
+    private void handleDeleteAction() {
+
+        if (selectedReminderProperty.get() != null) {
+            if (Options.getConfirmDeleteReminderEnabled().get()) {
+                if (StaticUIMethods.showConfirmationDialog("Title.Confirm", "Message.ConfirmReminderDelete")
+                        .getButtonData() != ButtonBar.ButtonData.YES) {
+                    return;
+                }
+            }
+
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
+            engine.removeReminder(selectedReminderProperty.get());
+        }
     }
 }
