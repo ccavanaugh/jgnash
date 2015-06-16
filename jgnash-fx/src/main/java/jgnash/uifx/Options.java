@@ -32,9 +32,11 @@ public class Options {
 
     private static final Preferences p = Preferences.userNodeForPackage(Options.class);
 
-    private static final String CONFIRM_ON_DELETE = "confirmDelete";
+    private static final String CONFIRM_DELETE_REMINDER = "confirmDeleteReminder";
 
-    private static final String ACCOUNTING_TERMS = "accountingTerms";
+    private static final String CONFIRM_DELETE_TRANSACTION = "confirmDeleteTransaction";
+
+    private static final String ACCOUNTING_TERMS = "useAccountingTerms";
 
     private static final String REMEMBER_DATE = "rememberDate";
 
@@ -46,7 +48,9 @@ public class Options {
 
     private static final SimpleBooleanProperty useAccountingTerms;
 
-    private static final SimpleBooleanProperty confirmTransactionDelete;
+    private static final SimpleBooleanProperty confirmDeleteTransaction;
+
+    private static final SimpleBooleanProperty confirmDeleteReminder;
 
     private static final SimpleBooleanProperty rememberDate;
 
@@ -63,7 +67,8 @@ public class Options {
                 p.putBoolean(((SimpleBooleanProperty)observable).getName(), newValue);
 
         useAccountingTerms = createBooleanProperty(ACCOUNTING_TERMS, false);
-        confirmTransactionDelete = createBooleanProperty(CONFIRM_ON_DELETE, true);
+        confirmDeleteTransaction = createBooleanProperty(CONFIRM_DELETE_TRANSACTION, true);
+        confirmDeleteReminder = createBooleanProperty(CONFIRM_DELETE_REMINDER, true);
         rememberDate = createBooleanProperty(REMEMBER_DATE, true);
         autoCompleteEnabled = createBooleanProperty(AUTO_COMPLETE, true);
         autoCompleteIgnoreCaseEnabled = createBooleanProperty(IGNORE_CASE, false);
@@ -82,12 +87,21 @@ public class Options {
     }
 
     /**
-     * Returns the availability of sortable registers
+     * Returns transaction deletion confirmation
      *
      * @return true if confirm on transaction delete is enabled, false otherwise
      */
     public static BooleanProperty getConfirmTransactionDeleteEnabled() {
-        return confirmTransactionDelete;
+        return confirmDeleteTransaction;
+    }
+
+    /**
+     * Returns reminder deletion confirmation
+     *
+     * @return true if confirm on transaction delete is enabled, false otherwise
+     */
+    public static BooleanProperty getConfirmDeleteReminderEnabled() {
+        return confirmDeleteReminder;
     }
 
     public static BooleanProperty getAccountingTermsEnabled() {
