@@ -20,7 +20,9 @@ package jgnash.uifx;
 import java.util.prefs.Preferences;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.value.ChangeListener;
 
 /**
@@ -46,6 +48,10 @@ public class Options {
 
     private static final String FUZZY_MATCH = "autoCompleteFuzzyMatchEnabled";
 
+    private final static String REMINDER_SNOOZE = "reminderSnooze";
+
+    private static final int DEFAULT_SNOOZE = 15 * 60 * 1000;
+
     private static final SimpleBooleanProperty useAccountingTerms;
 
     private static final SimpleBooleanProperty confirmDeleteTransaction;
@@ -60,11 +66,18 @@ public class Options {
 
     private static final SimpleBooleanProperty autoCompleteFuzzyMatchEnabled;
 
+    private static final SimpleLongProperty reminderSnooze;
+
     private static final ChangeListener<Boolean> booleanChangeListener;
+
+    private static final ChangeListener<Number> longChangeListener;
 
     static {
         booleanChangeListener = (observable, oldValue, newValue) ->
                 p.putBoolean(((SimpleBooleanProperty)observable).getName(), newValue);
+
+        longChangeListener = (observable, oldValue, newValue) ->
+                p.putLong(((SimpleLongProperty) observable).getName(), (Long) newValue);
 
         useAccountingTerms = createBooleanProperty(ACCOUNTING_TERMS, false);
         confirmDeleteTransaction = createBooleanProperty(CONFIRM_DELETE_TRANSACTION, true);
@@ -73,6 +86,8 @@ public class Options {
         autoCompleteEnabled = createBooleanProperty(AUTO_COMPLETE, true);
         autoCompleteIgnoreCaseEnabled = createBooleanProperty(IGNORE_CASE, false);
         autoCompleteFuzzyMatchEnabled = createBooleanProperty(FUZZY_MATCH, false);
+
+        reminderSnooze = createLongProperty(REMINDER_SNOOZE,  DEFAULT_SNOOZE);
     }
 
     private Options() {
@@ -82,6 +97,13 @@ public class Options {
     private static SimpleBooleanProperty createBooleanProperty(final String name, final boolean defaultValue) {
         final SimpleBooleanProperty property = new SimpleBooleanProperty(null, name, p.getBoolean(name, defaultValue));
         property.addListener(booleanChangeListener);
+
+        return property;
+    }
+
+    private static SimpleLongProperty createLongProperty(final String name, final long defaultValue) {
+        final SimpleLongProperty property = new SimpleLongProperty(null, name, p.getLong(name, defaultValue));
+        property.addListener(longChangeListener);
 
         return property;
     }
@@ -142,5 +164,14 @@ public class Options {
      */
     public static BooleanProperty getAutoCompleteFuzzyMatchEnabled() {
         return autoCompleteFuzzyMatchEnabled;
+    }
+
+    /**
+     * Provides access to the property controlling the snooze time between reminder events
+     *
+     * @return {@code LongProperty} controlling snooze time
+     */
+    public static LongProperty getReminderSnooze() {
+        return reminderSnooze;
     }
 }
