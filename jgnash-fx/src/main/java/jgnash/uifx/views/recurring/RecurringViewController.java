@@ -19,9 +19,11 @@ package jgnash.uifx.views.recurring;
 
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.Timer;
 import java.util.logging.Logger;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -34,6 +36,7 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.util.Duration;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -64,7 +67,9 @@ public class RecurringViewController implements MessageListener {
 
     final private ReadOnlyObjectWrapper<Reminder> selectedReminderProperty = new ReadOnlyObjectWrapper<>();
 
-    private Timer timer = null;
+    private Timeline timeline = null;
+
+    private static final int START_UP_DELAY = 2 * 60 * 1000;
 
     @FXML
     @SuppressWarnings("unchecked")
@@ -93,6 +98,8 @@ public class RecurringViewController implements MessageListener {
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
 
         Platform.runLater(this::loadTable);
+
+        startTimer();
     }
 
     private void loadTable() {
@@ -103,13 +110,30 @@ public class RecurringViewController implements MessageListener {
         observableReminderList.addAll(engine.getReminders());
     }
 
+    private void startTimer() {
+        if (timeline == null) {
+            timeline = new Timeline(new KeyFrame(
+                    Duration.millis(Options.getReminderSnooze().get()),
+                    ae -> showReminderDialog()));
+
+            timeline.setCycleCount(Animation.INDEFINITE);
+            timeline.setDelay(Duration.millis(START_UP_DELAY));
+            timeline.play();
+        }
+    }
+
     private void stopTimer() {
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
+        if (timeline != null) {
+            timeline.stop();
+            timeline = null;
 
             Logger.getLogger(RecurringViewController.class.getName()).info("Recurring timer stopped");
         }
+    }
+
+    private void showReminderDialog() {
+        Logger.getLogger(RecurringViewController.class.getName()).info("Show dialog");
+
     }
 
     @Override
@@ -125,7 +149,6 @@ public class RecurringViewController implements MessageListener {
 
     @FXML
     private void handleDeleteAction() {
-
         if (selectedReminderProperty.get() != null) {
             if (Options.getConfirmDeleteReminderEnabled().get()) {
                 if (StaticUIMethods.showConfirmationDialog("Title.Confirm", "Message.ConfirmReminderDelete")

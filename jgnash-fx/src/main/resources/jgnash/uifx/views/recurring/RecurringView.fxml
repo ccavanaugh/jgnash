@@ -20,7 +20,7 @@
                         <FontAwesomeImageView glyphName="EDIT"/>
                     </graphic>
                 </Button>
-                <Button mnemonicParsing="false" text="%Button.Delete">
+                <Button mnemonicParsing="false" text="%Button.Delete" onAction="#handleDeleteAction">
                     <graphic>
                         <FontAwesomeImageView glyphName="TRASH_ALT"/>
                     </graphic>
