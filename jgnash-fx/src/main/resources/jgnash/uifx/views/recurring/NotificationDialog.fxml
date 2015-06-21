@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.Scene?>
+<?import javafx.stage.Stage?>
+<?import jgnash.uifx.control.TimePeriodComboBox?>
+
+<fx:root type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="jgnash.uifx.views.recurring.NotificationDialog" minWidth="680" minHeight="440">
+    <scene>
+        <Scene>
+            <BorderPane>
+                <center>
+                    <VBox styleClass="dialog, form">
+                        <children>
+                            <TableView fx:id="tableView" VBox.vgrow="ALWAYS"/>
+                            <TimePeriodComboBox fx:id="snoozeComboBox" VBox.vgrow="NEVER"/>
+                        </children>
+                    </VBox>
+                </center>
+                <bottom>
+                    <ButtonBar VBox.vgrow="NEVER">
+                        <buttons>
+                            <Button onAction="#handleCancelAction" mnemonicParsing="false"
+                                    text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE"/>
+                            <Button onAction="#handleOkayAction" mnemonicParsing="false"
+                                    text="%Button.Ok" ButtonBar.buttonData="OK_DONE"/>
+                        </buttons>
+                    </ButtonBar>
+                </bottom>
+            </BorderPane>
+        </Scene>
+    </scene>
+</fx:root>
+
+
