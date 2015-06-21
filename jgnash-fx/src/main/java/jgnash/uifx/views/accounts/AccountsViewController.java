@@ -302,7 +302,7 @@ public class AccountsViewController implements MessageListener {
                 break;
             case FILE_CLOSING:
                 Platform.runLater(() -> treeTableView.setRoot(null));
-                MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT);
+                MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT, MessageChannel.TRANSACTION);
                 break;
             default:
                 break;
