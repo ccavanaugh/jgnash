@@ -97,7 +97,7 @@ public class AccountsViewController implements MessageListener {
 
         Platform.runLater(this::loadAccountTree);
 
-        MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT);
+        MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT, MessageChannel.TRANSACTION);
 
         // Register invalidation listeners to force a reload
         typeFilter.addListener(observable -> reload());
@@ -295,6 +295,10 @@ public class AccountsViewController implements MessageListener {
             case ACCOUNT_MODIFY:
             case ACCOUNT_REMOVE:
                 reload();
+                break;
+            case TRANSACTION_ADD:
+            case TRANSACTION_REMOVE:
+                treeTableView.refresh();    //TODO implement a better model that listens to account balance changes
                 break;
             case FILE_CLOSING:
                 Platform.runLater(() -> treeTableView.setRoot(null));
