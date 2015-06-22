@@ -84,6 +84,7 @@ class GainLossDialog extends AbstractTransactionEntryDialog {
 
         gainLossController.getAccountProperty().bind(accountProperty());
         gainLossController.getTransactionEntryListProperty().setValue(getTransactionEntries());
+        gainLossController.comparatorProperty().bind(tableView.comparatorProperty());
 
         gainLossController.setSlipType(SlipType.INCREASE);
     }

@@ -96,6 +96,7 @@ public class SplitTransactionDialog extends AbstractTransactionEntryDialog {
         creditController.setSlipType(SlipType.INCREASE);
         creditController.getAccountProperty().setValue(accountProperty().getValue());
         creditController.getTransactionEntryListProperty().setValue(getTransactionEntries());
+        creditController.comparatorProperty().bind(tableView.comparatorProperty());
 
         debitTab = new Tab(tabNames[1]);
 
@@ -107,6 +108,7 @@ public class SplitTransactionDialog extends AbstractTransactionEntryDialog {
         debitController.setSlipType(SlipType.DECREASE);
         debitController.getAccountProperty().setValue(accountProperty().getValue());
         debitController.getTransactionEntryListProperty().setValue(getTransactionEntries());
+        debitController.comparatorProperty().bind(tableView.comparatorProperty());
 
         tabPane.getTabs().addAll(creditTab, debitTab);
     }

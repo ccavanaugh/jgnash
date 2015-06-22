@@ -18,6 +18,8 @@
 package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -71,7 +73,9 @@ abstract class AbstractTransactionEntrySlipController {
 
     final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
-    private final SimpleObjectProperty<List<TransactionEntry>> transactionEntryListProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<List<TransactionEntry>> transactionEntryListProperty = new SimpleObjectProperty<>();
+
+    private final ObjectProperty<Comparator<TransactionEntry>> comparatorProperty = new SimpleObjectProperty<>();
 
     TransactionEntry oldEntry;
 
@@ -141,6 +145,10 @@ abstract class AbstractTransactionEntrySlipController {
         return transactionEntryListProperty;
     }
 
+    ObjectProperty<Comparator<TransactionEntry>> comparatorProperty() {
+        return comparatorProperty;
+    }
+
     boolean hasEqualCurrencies() {
         return accountProperty.get().getCurrencyNode().equals(accountExchangePane.getSelectedAccount().getCurrencyNode());
     }
@@ -171,11 +179,17 @@ abstract class AbstractTransactionEntrySlipController {
         if (validateForm()) {
             final TransactionEntry entry = buildTransactionEntry();
 
+            final List<TransactionEntry> entries = transactionEntryListProperty.get();
+
             if (oldEntry != null) {
-                transactionEntryListProperty.get().remove(oldEntry);
+                entries.remove(oldEntry);
             }
 
-            transactionEntryListProperty.get().add(entry);
+            final int index = Collections.binarySearch(entries, entry, comparatorProperty.get());
+
+            if (index < 0) {
+                entries.add(-index - 1, entry);
+            }
 
             clearForm();
             memoField.requestFocus();

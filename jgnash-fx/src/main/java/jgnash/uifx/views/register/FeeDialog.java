@@ -84,6 +84,7 @@ class FeeDialog extends AbstractTransactionEntryDialog {
 
         feeController.getAccountProperty().bind(accountProperty());
         feeController.getTransactionEntryListProperty().setValue(getTransactionEntries());
+        feeController.comparatorProperty().bind(tableView.comparatorProperty());
 
         feeController.setSlipType(SlipType.DECREASE);
     }
