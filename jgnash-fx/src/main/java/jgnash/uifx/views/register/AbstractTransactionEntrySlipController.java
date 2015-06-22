@@ -84,7 +84,7 @@ abstract class AbstractTransactionEntrySlipController {
         reconciledButton.setAllowIndeterminate(true);
 
         // Bind necessary properties to the exchange panel
-        accountExchangePane.baseAccountProperty().bind(getAccountProperty());
+        accountExchangePane.baseAccountProperty().bind(accountProperty());
         accountExchangePane.amountProperty().bindBidirectional(amountField.decimalProperty());
         accountExchangePane.amountEditableProperty().bind(amountField.editableProperty());
 
@@ -137,11 +137,11 @@ abstract class AbstractTransactionEntrySlipController {
 
     abstract TransactionEntry buildTransactionEntry();
 
-    ObjectProperty<Account> getAccountProperty() {
+    ObjectProperty<Account> accountProperty() {
         return accountProperty;
     }
 
-    ObjectProperty<List<TransactionEntry>> getTransactionEntryListProperty() {
+    ObjectProperty<List<TransactionEntry>> transactionEntryListProperty() {
         return transactionEntryListProperty;
     }
 
