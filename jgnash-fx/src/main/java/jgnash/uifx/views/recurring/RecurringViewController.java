@@ -31,6 +31,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.TableColumn;
@@ -134,6 +135,9 @@ public class RecurringViewController implements MessageListener {
     private void showReminderDialog() {
         Logger.getLogger(RecurringViewController.class.getName()).info("Show dialog");
 
+        final NotificationDialog notificationDialog = new NotificationDialog();
+        notificationDialog.showAndWait();
+
     }
 
     @Override
@@ -162,5 +166,10 @@ public class RecurringViewController implements MessageListener {
 
             engine.removeReminder(selectedReminderProperty.get());
         }
+    }
+
+    @FXML
+    private void handleRefreshAction() {
+        showReminderDialog();
     }
 }

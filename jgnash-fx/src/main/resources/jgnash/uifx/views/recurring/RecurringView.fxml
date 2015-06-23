@@ -26,7 +26,7 @@
                     </graphic>
                 </Button>
                 <Separator orientation="VERTICAL"/>
-                <Button mnemonicParsing="false" text="%Button.CheckReminders">
+                <Button mnemonicParsing="false" text="%Button.CheckReminders" onAction="#handleRefreshAction">
                     <graphic>
                         <FontAwesomeImageView glyphName="REFRESH"/>
                     </graphic>

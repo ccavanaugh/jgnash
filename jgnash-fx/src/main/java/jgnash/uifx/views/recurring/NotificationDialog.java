@@ -22,6 +22,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -46,6 +47,12 @@ import java.util.ResourceBundle;
 public class NotificationDialog extends Stage {
 
     @FXML
+    private Button cancelButton;
+
+    @FXML
+    private Button okButton;
+
+    @FXML
     private TableView<PendingReminder> tableView;
 
     @FXML
@@ -67,7 +74,7 @@ public class NotificationDialog extends Stage {
 
     @FXML
     private void initialize() {
-        tableView.setTableMenuButtonVisible(true);
+        tableView.setTableMenuButtonVisible(false);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         final TableColumn<PendingReminder, Boolean> enabledColumn = new TableColumn<>(resources.getString("Column.Approve"));
@@ -80,14 +87,19 @@ public class NotificationDialog extends Stage {
 
         final TableColumn<PendingReminder, String> descriptionColumn = new TableColumn<>(resources.getString("Column.Description"));
         descriptionColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getReminder().getDescription()));
+
+        tableView.getColumns().addAll(enabledColumn, dateColumn, descriptionColumn);
+
+        okButton.onActionProperty().setValue(event -> handleOkayAction());
+        cancelButton.onActionProperty().setValue(event -> handleCancelAction());
     }
 
-    @FXML
+
     private void handleCancelAction() {
-
+        close();
     }
 
-    @FXML
+
     private void handleOkayAction() {
 
     }

@@ -2,32 +2,44 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.Scene?>
 <?import javafx.stage.Stage?>
 <?import jgnash.uifx.control.TimePeriodComboBox?>
 
 <fx:root type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-         fx:controller="jgnash.uifx.views.recurring.NotificationDialog" minWidth="680" minHeight="440">
+         minWidth="680" minHeight="380">
     <scene>
         <Scene>
-            <BorderPane>
+            <BorderPane styleClass="dialog, form">
                 <center>
-                    <VBox styleClass="dialog, form">
+                    <GridPane styleClass="form">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="NEVER"/>
+                            <ColumnConstraints hgrow="ALWAYS" />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints vgrow="ALWAYS" />
+                            <RowConstraints vgrow="NEVER" />
+                        </rowConstraints>
                         <children>
-                            <TableView fx:id="tableView" VBox.vgrow="ALWAYS"/>
-                            <TimePeriodComboBox fx:id="snoozeComboBox" VBox.vgrow="NEVER"/>
+                            <TableView fx:id="tableView" GridPane.columnSpan="2" GridPane.fillWidth="true" />
+                            <Label text="%Label.RemindLater" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                            <TimePeriodComboBox fx:id="snoozeComboBox" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                         </children>
-                    </VBox>
+                    </GridPane>
                 </center>
                 <bottom>
-                    <ButtonBar VBox.vgrow="NEVER">
+                    <ButtonBar>
                         <buttons>
-                            <Button onAction="#handleCancelAction" mnemonicParsing="false"
+                            <Button fx:id="cancelButton" mnemonicParsing="false"
                                     text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE"/>
-                            <Button onAction="#handleOkayAction" mnemonicParsing="false"
+                            <Button fx:id="okButton" mnemonicParsing="false"
                                     text="%Button.Ok" ButtonBar.buttonData="OK_DONE"/>
                         </buttons>
                     </ButtonBar>
