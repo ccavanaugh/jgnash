@@ -17,6 +17,11 @@
  */
 package jgnash.uifx.views.recurring;
 
+import java.text.DateFormat;
+import java.util.Collection;
+import java.util.Date;
+import java.util.ResourceBundle;
+
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -28,16 +33,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.stage.Stage;
+
 import jgnash.engine.recurring.PendingReminder;
+import jgnash.uifx.Options;
 import jgnash.uifx.control.TimePeriodComboBox;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.DateUtils;
 import jgnash.util.ResourceUtils;
-
-import java.text.DateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.ResourceBundle;
 
 /**
  * A dialog for displaying recurring event / transactions when they occur.
@@ -73,6 +75,7 @@ public class NotificationDialog extends Stage {
     }
 
     @FXML
+    @SuppressWarnings("unchecked")
     private void initialize() {
         tableView.setTableMenuButtonVisible(false);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -92,6 +95,11 @@ public class NotificationDialog extends Stage {
 
         okButton.onActionProperty().setValue(event -> handleOkayAction());
         cancelButton.onActionProperty().setValue(event -> handleCancelAction());
+
+        snoozeComboBox.setSelectedPeriod(Options.reminderSnoozePeriodProperty().get());
+
+        // Bind options to the snooze period property
+        Options.reminderSnoozePeriodProperty().bind(snoozeComboBox.periodProperty());
     }
 
 
@@ -101,7 +109,7 @@ public class NotificationDialog extends Stage {
 
 
     private void handleOkayAction() {
-
+        close();
     }
 
     private static class DateTableCell extends TableCell<PendingReminder, Date> {

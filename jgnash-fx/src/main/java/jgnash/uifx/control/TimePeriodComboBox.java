@@ -17,13 +17,15 @@
  */
 package jgnash.uifx.control;
 
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ComboBox;
-import jgnash.util.ResourceUtils;
-
 import java.io.IOException;
 import java.util.ResourceBundle;
+
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ComboBox;
+
+import jgnash.util.ResourceUtils;
 
 /**
  * ComboBox that allows for selection of predetermined periods of times
@@ -36,6 +38,8 @@ public class TimePeriodComboBox extends ComboBox<String> {
 
     private int[] periods = new int[0];
 
+    private final ReadOnlyIntegerWrapper periodProperty = new ReadOnlyIntegerWrapper();
+
     public TimePeriodComboBox() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("TimePeriodComboBox.fxml"));
         loader.setRoot(this);
@@ -47,7 +51,16 @@ public class TimePeriodComboBox extends ComboBox<String> {
             throw new RuntimeException(exception);
         }
 
-        Platform.runLater(this::loadModel); // lazy load to let the ui build happen faster
+        loadModel();
+
+        // Update the period property automatically
+        valueProperty().addListener((observable, oldValue, newValue) -> {
+            periodProperty.setValue(periods[getSelectionModel().getSelectedIndex()]);
+        });
+    }
+
+    public ReadOnlyIntegerProperty periodProperty() {
+        return periodProperty.getReadOnlyProperty();
     }
 
     private void loadModel() {
@@ -57,8 +70,7 @@ public class TimePeriodComboBox extends ComboBox<String> {
         assert periods.length == descriptions.length;
 
         getItems().addAll(getDescriptions());
-
-        Platform.runLater(() -> setValue(getItems().get(0)));
+        getItems().get(0);
     }
 
     /**
@@ -74,15 +86,6 @@ public class TimePeriodComboBox extends ComboBox<String> {
                 break;
             }
         }
-    }
-
-    /**
-     * Returns the selected period in milliseconds
-     *
-     * @return selected period in milliseconds
-     */
-    public int getSelectedPeriod() {
-        return periods[getSelectionModel().getSelectedIndex()];
     }
 
     private static int[] getPeriods() {

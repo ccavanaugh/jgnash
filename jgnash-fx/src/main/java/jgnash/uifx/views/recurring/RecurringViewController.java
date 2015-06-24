@@ -17,6 +17,7 @@
  */
 package jgnash.uifx.views.recurring;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -31,7 +32,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.TableColumn;
@@ -45,6 +45,7 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
+import jgnash.engine.recurring.PendingReminder;
 import jgnash.engine.recurring.Reminder;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
@@ -114,7 +115,7 @@ public class RecurringViewController implements MessageListener {
     private void startTimer() {
         if (timeline == null) {
             timeline = new Timeline(new KeyFrame(
-                    Duration.millis(Options.getReminderSnooze().get()),
+                    Duration.millis(Options.reminderSnoozePeriodProperty().get()),
                     ae -> showReminderDialog()));
 
             timeline.setCycleCount(Animation.INDEFINITE);
@@ -135,9 +136,20 @@ public class RecurringViewController implements MessageListener {
     private void showReminderDialog() {
         Logger.getLogger(RecurringViewController.class.getName()).info("Show dialog");
 
-        final NotificationDialog notificationDialog = new NotificationDialog();
-        notificationDialog.showAndWait();
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
+        Objects.requireNonNull(engine);
+
+        Collection<PendingReminder> pendingReminders = engine.getPendingReminders();
+
+        if (!pendingReminders.isEmpty()) {
+            final NotificationDialog notificationDialog = new NotificationDialog();
+
+            notificationDialog.setReminders(pendingReminders);
+            notificationDialog.showAndWait();
+
+            //notificationDialog.sn
+        }
     }
 
     @Override
