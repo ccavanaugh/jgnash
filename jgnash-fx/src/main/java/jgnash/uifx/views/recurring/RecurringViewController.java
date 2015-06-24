@@ -166,7 +166,7 @@ public class RecurringViewController implements MessageListener {
     @FXML
     private void handleDeleteAction() {
         if (selectedReminderProperty.get() != null) {
-            if (Options.getConfirmDeleteReminderEnabled().get()) {
+            if (Options.confirmOnDeleteReminderProperty().get()) {
                 if (StaticUIMethods.showConfirmationDialog("Title.Confirm", "Message.ConfirmReminderDelete")
                         .getButtonData() != ButtonBar.ButtonData.YES) {
                     return;

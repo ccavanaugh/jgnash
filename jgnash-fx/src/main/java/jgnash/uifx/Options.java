@@ -113,20 +113,20 @@ public class Options {
      *
      * @return true if confirm on transaction delete is enabled, false otherwise
      */
-    public static BooleanProperty getConfirmTransactionDeleteEnabled() {
+    public static BooleanProperty confirmOnTransactionDeleteProperty() {
         return confirmDeleteTransaction;
     }
 
     /**
      * Returns reminder deletion confirmation
      *
-     * @return true if confirm on transaction delete is enabled, false otherwise
+     * @return true if confirm on reminder delete is enabled, false otherwise
      */
-    public static BooleanProperty getConfirmDeleteReminderEnabled() {
+    public static BooleanProperty confirmOnDeleteReminderProperty() {
         return confirmDeleteReminder;
     }
 
-    public static BooleanProperty getAccountingTermsEnabled() {
+    public static BooleanProperty useAccountingTermsProperty() {
         return useAccountingTerms;
     }
 
@@ -136,7 +136,7 @@ public class Options {
      *
      * @return true if the last date should be reused
      */
-    public static BooleanProperty getRememberLastDate() {
+    public static BooleanProperty rememberLastDateProperty() {
         return rememberDate;
     }
 
@@ -145,7 +145,7 @@ public class Options {
      *
      * @return {@code BooleanProperty} controlling enabled state
      */
-    public static BooleanProperty getAutoCompleteEnabled() {
+    public static BooleanProperty useAutoCompleteProperty() {
         return autoCompleteEnabled;
     }
 
@@ -154,7 +154,7 @@ public class Options {
      *
      * @return {@code BooleanProperty} controlling case sensitivity
      */
-    public static BooleanProperty getAutoCompleteIgnoreCaseEnabled() {
+    public static BooleanProperty ignoreCaseForAutoCompleteProperty() {
         return autoCompleteIgnoreCaseEnabled;
     }
 
@@ -162,7 +162,7 @@ public class Options {
      *
      * @return {@code BooleanProperty} controlling fuzzy match
      */
-    public static BooleanProperty getAutoCompleteFuzzyMatchEnabled() {
+    public static BooleanProperty useFuzzyMatchForAutoCompleteProperty() {
         return autoCompleteFuzzyMatchEnabled;
     }
 

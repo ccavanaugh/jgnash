@@ -171,7 +171,7 @@ abstract class AbstractSlipController implements Slip {
         payeeTextField.setText(null);
 
         datePicker.setEditable(true);
-        if (!Options.getRememberLastDate().get()) {
+        if (!Options.rememberLastDateProperty().get()) {
             datePicker.setValue(LocalDate.now());
         }
 
@@ -242,7 +242,7 @@ abstract class AbstractSlipController implements Slip {
     }
 
     private void handlePayeeFocusChange() {
-        if (modTrans == null && Options.getAutoCompleteEnabled().get() && payeeTextField.getLength() > 0) {
+        if (modTrans == null && Options.useAutoCompleteProperty().get() && payeeTextField.getLength() > 0) {
             if (payeeTextField.autoCompleteModelObjectProperty().get() != null) {
 
                 // The autocomplete model may return multiple solutions.  Choose the first solution that works
@@ -281,7 +281,7 @@ abstract class AbstractSlipController implements Slip {
         t.setReconciled(ReconciledState.NOT_RECONCILED); // clear both sides
 
         // set the last date as required
-        if (!Options.getRememberLastDate().get()) {
+        if (!Options.rememberLastDateProperty().get()) {
             t.setDate(new Date());
         } else {
             t.setDate(datePicker.getDate());

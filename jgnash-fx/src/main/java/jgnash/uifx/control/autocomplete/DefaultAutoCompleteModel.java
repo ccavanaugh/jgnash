@@ -45,9 +45,9 @@ abstract class DefaultAutoCompleteModel<E> implements AutoCompleteModel<E> {
     DefaultAutoCompleteModel() {
 
         // bind preferences to the global options
-        autoCompleteEnabled.bindBidirectional(Options.getAutoCompleteEnabled());
-        ignoreCaseEnabled.bindBidirectional(Options.getAutoCompleteIgnoreCaseEnabled());
-        fuzzyMatchEnabled.bindBidirectional(Options.getAutoCompleteFuzzyMatchEnabled());
+        autoCompleteEnabled.bindBidirectional(Options.useAutoCompleteProperty());
+        ignoreCaseEnabled.bindBidirectional(Options.ignoreCaseForAutoCompleteProperty());
+        fuzzyMatchEnabled.bindBidirectional(Options.useFuzzyMatchForAutoCompleteProperty());
     }
 
     /**
