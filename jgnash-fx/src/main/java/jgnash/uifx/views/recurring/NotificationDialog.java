@@ -91,6 +91,8 @@ public class NotificationDialog extends Stage {
         final TableColumn<PendingReminder, String> descriptionColumn = new TableColumn<>(resources.getString("Column.Description"));
         descriptionColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getReminder().getDescription()));
 
+        tableView.setItems(observableReminderList);
+
         tableView.getColumns().addAll(enabledColumn, dateColumn, descriptionColumn);
 
         okButton.onActionProperty().setValue(event -> handleOkayAction());

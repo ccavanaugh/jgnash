@@ -28,7 +28,7 @@
                             <RowConstraints vgrow="NEVER" />
                         </rowConstraints>
                         <children>
-                            <TableView fx:id="tableView" GridPane.columnSpan="2" GridPane.fillWidth="true" />
+                            <TableView fx:id="tableView" GridPane.columnSpan="2" GridPane.fillWidth="true" prefHeight="200"/>
                             <Label text="%Label.RemindLater" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
                             <TimePeriodComboBox fx:id="snoozeComboBox" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                         </children>
@@ -38,9 +38,9 @@
                     <ButtonBar>
                         <buttons>
                             <Button fx:id="cancelButton" mnemonicParsing="false"
-                                    text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE"/>
+                                    text="%Button.RemindLater" ButtonBar.buttonData="CANCEL_CLOSE"/>
                             <Button fx:id="okButton" mnemonicParsing="false"
-                                    text="%Button.Ok" ButtonBar.buttonData="OK_DONE"/>
+                                    text="%Button.AckSel" ButtonBar.buttonData="OK_DONE"/>
                         </buttons>
                     </ButtonBar>
                 </bottom>
