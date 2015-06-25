@@ -59,6 +59,8 @@ public class FXMLUtils {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.getIcons().add(StaticUIMethods.getApplicationIcon());
 
+        stage.sizeToScene();    // force a resize, some stages need a push
+
         StageUtils.addBoundsListener(stage, stage.getClass());
     }
 
@@ -154,6 +156,8 @@ public class FXMLUtils {
             stage.setScene(scene);
             stage.getIcons().add(StaticUIMethods.getApplicationIcon());
 
+            stage.sizeToScene();    // force a resize, some stages need a push
+
             // Inject the scene into the controller
             injectParent(controller, scene);
         } catch (final IOException ioe) { // log and throw an unchecked exception
@@ -185,6 +189,8 @@ public class FXMLUtils {
 
             stage.setScene(scene);
             stage.getIcons().add(StaticUIMethods.getApplicationIcon());
+
+            stage.sizeToScene();    // force a resize, some stages need a push
         } catch (final IOException ioe) { // log and throw an unchecked exception
             Logger.getLogger(FXMLUtils.class.getName()).log(Level.SEVERE, ioe.getMessage(), ioe);
             throw new UncheckedIOException(ioe);
@@ -219,6 +225,8 @@ public class FXMLUtils {
 
             stage.setScene(scene);
             stage.getIcons().add(StaticUIMethods.getApplicationIcon());
+
+            stage.sizeToScene();    // force a resize, some stages need a push
 
             // Inject the scene into the controller
             injectParent(controller, scene);
