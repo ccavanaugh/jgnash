@@ -306,7 +306,7 @@ public class MonthlyAccountBalanceChartCompare {
 
     private TimeSeriesCollection createTimeSeriesCollection(final Account account, final Account a2) {
         //always use this method
-        //if (subAccountCheckBox.isSelected()) {
+        //if (subAccountCheckBox.isApproved()) {
         // Getting the dates to calculate
         Date start = DateUtils.getFirstDayOfTheMonth(startDateField.getDate());
         Date stop = DateUtils.getLastDayOfTheMonth(endDateField.getDate());

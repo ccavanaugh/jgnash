@@ -81,7 +81,7 @@ public class ReminderObjectTableModel extends AbstractTableModel {
     public Object getValueAt(final int rowIndex, final int columnIndex) {
         switch (columnIndex) {
             case 0:
-                if (reminders.get(rowIndex).isSelected()) {
+                if (reminders.get(rowIndex).isApproved()) {
                     return enabledSymbol;
                 }
                 return null;
@@ -95,7 +95,7 @@ public class ReminderObjectTableModel extends AbstractTableModel {
     }
 
     void toggleSelectedState(final int index) {
-        reminders.get(index).setSelected(!reminders.get(index).isSelected());
+        reminders.get(index).setApproved(!reminders.get(index).isApproved());
         fireTableRowsUpdated(index, index);
     }
 

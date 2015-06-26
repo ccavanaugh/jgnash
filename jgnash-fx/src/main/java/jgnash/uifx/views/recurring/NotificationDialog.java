@@ -76,14 +76,14 @@ public class NotificationDialog extends Stage {
     }
 
     public Collection<PendingReminder> getApprovedReminders() {
-       return observableReminderList.stream().filter(PendingReminder::isSelected).collect(Collectors.toList());
+       return observableReminderList.stream().filter(PendingReminder::isApproved).collect(Collectors.toList());
     }
 
     @FXML
     @SuppressWarnings("unchecked")
     private void initialize() {
         final TableColumn<PendingReminder, Boolean> enabledColumn = new TableColumn<>(resources.getString("Column.Approve"));
-        enabledColumn.setCellValueFactory(param -> new SimpleBooleanProperty(param.getValue().isSelected()));
+        enabledColumn.setCellValueFactory(param -> new SimpleBooleanProperty(param.getValue().isApproved()));
         enabledColumn.setCellFactory(CheckBoxTableCell.forTableColumn(enabledColumn));
 
         final TableColumn<PendingReminder, Date> dateColumn = new TableColumn<>(resources.getString("Column.Date"));
@@ -102,7 +102,7 @@ public class NotificationDialog extends Stage {
         // Toggle the selection
         tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                newValue.setSelected(!newValue.isSelected());
+                newValue.setApproved(!newValue.isApproved());
                 tableView.refresh();
                 Platform.runLater(() -> tableView.getSelectionModel().clearSelection());
             }

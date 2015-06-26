@@ -902,7 +902,7 @@ public class Engine {
     }
 
     public void processPendingReminders(final Collection<PendingReminder> pendingReminders) {
-        pendingReminders.stream().filter(PendingReminder::isSelected).forEach(pending -> {
+        pendingReminders.stream().filter(PendingReminder::isApproved).forEach(pending -> {
             final Reminder reminder = pending.getReminder();
 
             if (reminder.getTransaction() != null) { // add the transaction

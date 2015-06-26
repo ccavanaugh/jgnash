@@ -41,11 +41,11 @@ public class PendingReminder implements Comparable<PendingReminder> {
     private Date commitDate = null;
 
     /**
-     * Marked state of the reminder
+     * Approved state of the reminder
      */
-    private boolean selected;
+    private boolean approved;
 
-    public PendingReminder(Reminder reminder, Date date) {
+    public PendingReminder(final Reminder reminder, final Date date) {
         this.reminder = reminder;
         eventDate = (Date) date.clone();
         commitDate = (Date) date.clone();
@@ -68,7 +68,7 @@ public class PendingReminder implements Comparable<PendingReminder> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -84,17 +84,17 @@ public class PendingReminder implements Comparable<PendingReminder> {
     }
 
     /**
-     * @return Returns the selected.
+     * @return Returns the approved.
      */
-    public synchronized final boolean isSelected() {
-        return selected;
+    public synchronized final boolean isApproved() {
+        return approved;
     }
 
     /**
-     * @param selected The selected to set.
+     * @param approved The approved to set.
      */
-    public synchronized final void setSelected(boolean selected) {
-        this.selected = selected;
+    public synchronized final void setApproved(boolean approved) {
+        this.approved = approved;
     }
 
     /**
