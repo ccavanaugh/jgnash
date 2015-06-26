@@ -15,7 +15,7 @@
          minWidth="680" minHeight="380">
     <scene>
         <Scene>
-            <BorderPane styleClass="dialog, form">
+            <BorderPane styleClass="dialog, form" prefWidth="680" prefHeight="380">
                 <center>
                     <GridPane styleClass="form">
                         <columnConstraints>
