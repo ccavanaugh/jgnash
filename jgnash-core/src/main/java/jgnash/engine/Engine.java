@@ -17,6 +17,34 @@
  */
 package jgnash.engine;
 
+import jgnash.engine.attachment.AttachmentManager;
+import jgnash.engine.budget.Budget;
+import jgnash.engine.budget.BudgetGoal;
+import jgnash.engine.concurrent.LockManager;
+import jgnash.engine.dao.AccountDAO;
+import jgnash.engine.dao.BudgetDAO;
+import jgnash.engine.dao.CommodityDAO;
+import jgnash.engine.dao.ConfigDAO;
+import jgnash.engine.dao.EngineDAO;
+import jgnash.engine.dao.RecurringDAO;
+import jgnash.engine.dao.TransactionDAO;
+import jgnash.engine.dao.TrashDAO;
+import jgnash.engine.message.ChannelEvent;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageProperty;
+import jgnash.engine.recurring.PendingReminder;
+import jgnash.engine.recurring.RecurringIterator;
+import jgnash.engine.recurring.Reminder;
+import jgnash.net.currency.CurrencyUpdateFactory;
+import jgnash.net.security.UpdateFactory;
+import jgnash.util.DateUtils;
+import jgnash.util.DefaultDaemonThreadFactory;
+import jgnash.util.NotNull;
+import jgnash.util.Nullable;
+import jgnash.util.Resource;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Path;
@@ -46,34 +74,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
-import jgnash.engine.attachment.AttachmentManager;
-import jgnash.engine.budget.Budget;
-import jgnash.engine.budget.BudgetGoal;
-import jgnash.engine.concurrent.LockManager;
-import jgnash.engine.dao.AccountDAO;
-import jgnash.engine.dao.BudgetDAO;
-import jgnash.engine.dao.CommodityDAO;
-import jgnash.engine.dao.ConfigDAO;
-import jgnash.engine.dao.EngineDAO;
-import jgnash.engine.dao.RecurringDAO;
-import jgnash.engine.dao.TransactionDAO;
-import jgnash.engine.dao.TrashDAO;
-import jgnash.engine.message.ChannelEvent;
-import jgnash.engine.message.Message;
-import jgnash.engine.message.MessageBus;
-import jgnash.engine.message.MessageChannel;
-import jgnash.engine.message.MessageProperty;
-import jgnash.engine.recurring.PendingReminder;
-import jgnash.engine.recurring.RecurringIterator;
-import jgnash.engine.recurring.Reminder;
-import jgnash.net.currency.CurrencyUpdateFactory;
-import jgnash.net.security.UpdateFactory;
-import jgnash.util.DateUtils;
-import jgnash.util.DefaultDaemonThreadFactory;
-import jgnash.util.NotNull;
-import jgnash.util.Nullable;
-import jgnash.util.Resource;
 
 /**
  * Engine class
@@ -899,6 +899,25 @@ public class Engine {
         }
 
         return pendingList;
+    }
+
+    public void processPendingReminders(final Collection<PendingReminder> pendingReminders) {
+        pendingReminders.stream().filter(PendingReminder::isSelected).forEach(pending -> {
+            final Reminder reminder = pending.getReminder();
+
+            if (reminder.getTransaction() != null) { // add the transaction
+                final Transaction t = reminder.getTransaction();
+
+                // Update to the commit date (commit date can be modified)
+                t.setDate(pending.getCommitDate());
+                addTransaction(t);
+            }
+            // update the last fired date... date returned from the iterator
+            reminder.setLastDate(); // mark as complete
+            if (!updateReminder(reminder)) {
+                logSevere(rb.getString("Message.Error.ReminderUpdate"));
+            }
+        });
     }
 
     public <T extends StoredObject> T getStoredObjectByUuid(final Class<T> tClass, final String uuid) {

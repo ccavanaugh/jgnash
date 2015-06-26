@@ -17,29 +17,13 @@
  */
 package jgnash.ui.recurring;
 
-import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.util.List;
-import java.util.Objects;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.WindowConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.engine.Transaction;
 import jgnash.engine.recurring.PendingReminder;
-import jgnash.engine.recurring.Reminder;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.FormattedJTable;
@@ -47,10 +31,15 @@ import jgnash.ui.components.TimePeriodCombo;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * A dialog for displaying recurring event / transactions when they occur.
@@ -155,28 +144,13 @@ class NotificationDialog extends JDialog implements ActionListener, ListSelectio
      */
     @Override
     public void actionPerformed(final ActionEvent e) {
-        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-        Objects.requireNonNull(engine);
-
         if (e.getSource() == cancelButton) {
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
         } else if (e.getSource() == okButton) {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
 
-            reminders.stream().filter(PendingReminder::isSelected).forEach(pending -> {
-                Reminder reminder = pending.getReminder();
-                if (reminder.getTransaction() != null) { // add the transaction
-                    Transaction t = reminder.getTransaction();
-
-                    // Update to the commit date (commit date can be modified)
-                    t.setDate(pending.getCommitDate());
-                    engine.addTransaction(t);
-                }
-                // update the last fired date... date returned from the iterator
-                reminder.setLastDate(); // mark as complete
-                if (!engine.updateReminder(reminder)) {
-                    EventQueue.invokeLater(() -> StaticUIMethods.displayError(rb.getString("Message.Error.ReminderUpdate")));
-                }
-            });
+            engine.processPendingReminders(reminders);
 
             // close the dialog
             dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
