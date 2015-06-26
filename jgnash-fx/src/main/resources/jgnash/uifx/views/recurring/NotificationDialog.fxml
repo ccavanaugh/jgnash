@@ -11,7 +11,6 @@
 <?import javafx.scene.Scene?>
 <?import javafx.stage.Stage?>
 <?import jgnash.uifx.control.TimePeriodComboBox?>
-
 <fx:root type="javafx.stage.Stage" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
          minWidth="680" minHeight="380">
     <scene>
@@ -21,14 +20,14 @@
                     <GridPane styleClass="form">
                         <columnConstraints>
                             <ColumnConstraints hgrow="NEVER"/>
-                            <ColumnConstraints hgrow="ALWAYS" />
+                            <ColumnConstraints hgrow="SOMETIMES" />
                         </columnConstraints>
                         <rowConstraints>
                             <RowConstraints vgrow="ALWAYS" />
-                            <RowConstraints vgrow="NEVER" />
+                            <RowConstraints vgrow="SOMETIMES" />
                         </rowConstraints>
                         <children>
-                            <TableView fx:id="tableView" GridPane.columnSpan="2" GridPane.fillWidth="true" prefHeight="200"/>
+                            <TableView fx:id="tableView" GridPane.columnSpan="2" GridPane.fillWidth="true" prefHeight="200" tableMenuButtonVisible="false"/>
                             <Label text="%Label.RemindLater" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
                             <TimePeriodComboBox fx:id="snoozeComboBox" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                         </children>

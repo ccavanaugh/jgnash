@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -77,9 +78,6 @@ public class NotificationDialog extends Stage {
     @FXML
     @SuppressWarnings("unchecked")
     private void initialize() {
-        tableView.setTableMenuButtonVisible(false);
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
         final TableColumn<PendingReminder, Boolean> enabledColumn = new TableColumn<>(resources.getString("Column.Approve"));
         enabledColumn.setCellValueFactory(param -> new SimpleBooleanProperty(param.getValue().isSelected()));
         enabledColumn.setCellFactory(CheckBoxTableCell.forTableColumn(enabledColumn));
@@ -94,6 +92,17 @@ public class NotificationDialog extends Stage {
         tableView.setItems(observableReminderList);
 
         tableView.getColumns().addAll(enabledColumn, dateColumn, descriptionColumn);
+
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        // Toggle the selection
+        tableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                newValue.setSelected(!newValue.isSelected());
+                tableView.refresh();
+                Platform.runLater(() -> tableView.getSelectionModel().clearSelection());
+            }
+        });
 
         okButton.onActionProperty().setValue(event -> handleOkayAction());
         cancelButton.onActionProperty().setValue(event -> handleCancelAction());

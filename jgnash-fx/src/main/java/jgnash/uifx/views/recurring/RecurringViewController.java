@@ -97,7 +97,7 @@ public class RecurringViewController implements MessageListener {
 
         tableView.setItems(sortedReminderList);
 
-        MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
+        MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM, MessageChannel.REMINDER);
 
         Platform.runLater(this::loadTable);
 
@@ -109,7 +109,7 @@ public class RecurringViewController implements MessageListener {
 
         Objects.requireNonNull(engine);
 
-        observableReminderList.addAll(engine.getReminders());
+        observableReminderList.setAll(engine.getReminders());
     }
 
     private void startTimer() {
@@ -140,7 +140,7 @@ public class RecurringViewController implements MessageListener {
 
         Objects.requireNonNull(engine);
 
-        Collection<PendingReminder> pendingReminders = engine.getPendingReminders();
+        final Collection<PendingReminder> pendingReminders = engine.getPendingReminders();
 
         if (!pendingReminders.isEmpty()) {
             final NotificationDialog notificationDialog = new NotificationDialog();
@@ -148,7 +148,7 @@ public class RecurringViewController implements MessageListener {
             notificationDialog.setReminders(pendingReminders);
             notificationDialog.showAndWait();
 
-            //notificationDialog.sn
+            // TODO process selections
         }
     }
 
@@ -157,7 +157,12 @@ public class RecurringViewController implements MessageListener {
         switch (message.getEvent()) {
             case FILE_CLOSING:
                 stopTimer();
-                MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM);
+                observableReminderList.removeAll();
+                MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM, MessageChannel.REMINDER);
+                break;
+            case REMINDER_ADD:
+            case ACCOUNT_REMOVE:
+                loadTable();
                 break;
             default:
         }
