@@ -17,11 +17,6 @@
  */
 package jgnash.uifx.views.recurring;
 
-import java.util.Collection;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.logging.Logger;
-
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -38,7 +33,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.util.Duration;
-
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
@@ -49,6 +43,11 @@ import jgnash.engine.recurring.PendingReminder;
 import jgnash.engine.recurring.Reminder;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
+
+import java.util.Collection;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 /**
  * Controller for recurring events
@@ -137,7 +136,6 @@ public class RecurringViewController implements MessageListener {
         Logger.getLogger(RecurringViewController.class.getName()).info("Show dialog");
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-
         Objects.requireNonNull(engine);
 
         final Collection<PendingReminder> pendingReminders = engine.getPendingReminders();
@@ -148,7 +146,7 @@ public class RecurringViewController implements MessageListener {
             notificationDialog.setReminders(pendingReminders);
             notificationDialog.showAndWait();
 
-            // TODO process selections
+            engine.processPendingReminders(notificationDialog.getApprovedReminders());
         }
     }
 
