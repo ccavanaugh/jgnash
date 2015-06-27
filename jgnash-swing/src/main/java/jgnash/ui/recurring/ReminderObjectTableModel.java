@@ -17,9 +17,10 @@
  */
 package jgnash.ui.recurring;
 
-import javax.swing.table.AbstractTableModel;
-import java.text.DateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import javax.swing.table.AbstractTableModel;
 
 import jgnash.engine.recurring.PendingReminder;
 import jgnash.util.DateUtils;
@@ -40,7 +41,7 @@ public class ReminderObjectTableModel extends AbstractTableModel {
 
     private List<PendingReminder> reminders = null;
 
-    private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
+    private final DateTimeFormatter formatter = DateUtils.getShortDateTimeFormat();
 
     private char enabledSymbol = '\u2713';
 
@@ -88,7 +89,7 @@ public class ReminderObjectTableModel extends AbstractTableModel {
             case 1:
                 return reminders.get(rowIndex).getReminder().getDescription();
             case 2:
-                return dateFormatter.format(reminders.get(rowIndex).getCommitDate());
+                return formatter.format(reminders.get(rowIndex).getCommitDate());
             default:
                 return null;
         }

@@ -17,34 +17,6 @@
  */
 package jgnash.engine;
 
-import jgnash.engine.attachment.AttachmentManager;
-import jgnash.engine.budget.Budget;
-import jgnash.engine.budget.BudgetGoal;
-import jgnash.engine.concurrent.LockManager;
-import jgnash.engine.dao.AccountDAO;
-import jgnash.engine.dao.BudgetDAO;
-import jgnash.engine.dao.CommodityDAO;
-import jgnash.engine.dao.ConfigDAO;
-import jgnash.engine.dao.EngineDAO;
-import jgnash.engine.dao.RecurringDAO;
-import jgnash.engine.dao.TransactionDAO;
-import jgnash.engine.dao.TrashDAO;
-import jgnash.engine.message.ChannelEvent;
-import jgnash.engine.message.Message;
-import jgnash.engine.message.MessageBus;
-import jgnash.engine.message.MessageChannel;
-import jgnash.engine.message.MessageProperty;
-import jgnash.engine.recurring.PendingReminder;
-import jgnash.engine.recurring.RecurringIterator;
-import jgnash.engine.recurring.Reminder;
-import jgnash.net.currency.CurrencyUpdateFactory;
-import jgnash.net.security.UpdateFactory;
-import jgnash.util.DateUtils;
-import jgnash.util.DefaultDaemonThreadFactory;
-import jgnash.util.NotNull;
-import jgnash.util.Nullable;
-import jgnash.util.Resource;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Path;
@@ -74,6 +46,34 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import jgnash.engine.attachment.AttachmentManager;
+import jgnash.engine.budget.Budget;
+import jgnash.engine.budget.BudgetGoal;
+import jgnash.engine.concurrent.LockManager;
+import jgnash.engine.dao.AccountDAO;
+import jgnash.engine.dao.BudgetDAO;
+import jgnash.engine.dao.CommodityDAO;
+import jgnash.engine.dao.ConfigDAO;
+import jgnash.engine.dao.EngineDAO;
+import jgnash.engine.dao.RecurringDAO;
+import jgnash.engine.dao.TransactionDAO;
+import jgnash.engine.dao.TrashDAO;
+import jgnash.engine.message.ChannelEvent;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageProperty;
+import jgnash.engine.recurring.PendingReminder;
+import jgnash.engine.recurring.RecurringIterator;
+import jgnash.engine.recurring.Reminder;
+import jgnash.net.currency.CurrencyUpdateFactory;
+import jgnash.net.security.UpdateFactory;
+import jgnash.util.DateUtils;
+import jgnash.util.DefaultDaemonThreadFactory;
+import jgnash.util.NotNull;
+import jgnash.util.Nullable;
+import jgnash.util.Resource;
 
 /**
  * Engine class
@@ -909,7 +909,7 @@ public class Engine {
                 final Transaction t = reminder.getTransaction();
 
                 // Update to the commit date (commit date can be modified)
-                t.setDate(pending.getCommitDate());
+                t.setDate(DateUtils.asDate(pending.getCommitDate()));
                 addTransaction(t);
             }
             // update the last fired date... date returned from the iterator
@@ -1143,7 +1143,7 @@ public class Engine {
      * @param node security node
      * @return list of investment accounts
      */
-    Set<Account> getInvestmentAccountList(final SecurityNode node) {
+    private Set<Account> getInvestmentAccountList(final SecurityNode node) {
         return getInvestmentAccountList().parallelStream()
                 .filter(account -> account.containsSecurity(node)).collect(Collectors.toSet());
     }
@@ -1179,18 +1179,18 @@ public class Engine {
         }
     }
 
-    CurrencyNode[] getBaseCurrencies(final String exchangeRateId) {
+    private CurrencyNode[] getBaseCurrencies(final String exchangeRateId) {
 
         commodityLock.readLock().lock();
 
         try {
-            List<CurrencyNode> currencies = getCurrencies();
+            final List<CurrencyNode> currencies = getCurrencies();
 
             Collections.sort(currencies);
             Collections.reverse(currencies);
 
-            for (CurrencyNode node1 : currencies) {
-                for (CurrencyNode node2 : currencies) {
+            for (final CurrencyNode node1 : currencies) {
+                for (final CurrencyNode node2 : currencies) {
                     if (node1 != node2 && buildExchangeRateId(node1, node2).equals(exchangeRateId)) {
                         return new CurrencyNode[]{node1, node2};
                     }
@@ -1703,7 +1703,7 @@ public class Engine {
         }
     }
 
-    public boolean updateReminder(final Reminder reminder) {
+    private boolean updateReminder(final Reminder reminder) {
         return getReminderDAO().updateReminder(reminder);
     }
 

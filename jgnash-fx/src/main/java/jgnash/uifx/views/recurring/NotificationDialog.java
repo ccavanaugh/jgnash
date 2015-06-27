@@ -17,6 +17,12 @@
  */
 package jgnash.uifx.views.recurring;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -29,18 +35,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.stage.Stage;
+
 import jgnash.engine.recurring.PendingReminder;
 import jgnash.uifx.Options;
 import jgnash.uifx.control.TimePeriodComboBox;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.DateUtils;
 import jgnash.util.ResourceUtils;
-
-import java.text.DateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 /**
  * A dialog for displaying recurring event / transactions when they occur.
@@ -86,7 +87,7 @@ public class NotificationDialog extends Stage {
         enabledColumn.setCellValueFactory(param -> new SimpleBooleanProperty(param.getValue().isApproved()));
         enabledColumn.setCellFactory(CheckBoxTableCell.forTableColumn(enabledColumn));
 
-        final TableColumn<PendingReminder, Date> dateColumn = new TableColumn<>(resources.getString("Column.Date"));
+        final TableColumn<PendingReminder, LocalDate> dateColumn = new TableColumn<>(resources.getString("Column.Date"));
         dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getCommitDate()));
         dateColumn.setCellFactory(cell -> new DateTableCell());
 
@@ -126,15 +127,15 @@ public class NotificationDialog extends Stage {
         close();
     }
 
-    private static class DateTableCell extends TableCell<PendingReminder, Date> {
-        private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
+    private static class DateTableCell extends TableCell<PendingReminder, LocalDate> {
+        private final DateTimeFormatter formatter = DateUtils.getShortDateTimeFormat();
 
         @Override
-        protected void updateItem(final Date date, final boolean empty) {
+        protected void updateItem(final LocalDate date, final boolean empty) {
             super.updateItem(date, empty);  // required
 
             if (!empty && date != null) {
-                setText(dateFormatter.format(date));
+                setText(formatter.format(date));
             } else {
                 setText(null);
             }

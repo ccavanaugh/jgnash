@@ -17,8 +17,10 @@
  */
 package jgnash.engine.recurring;
 
+import java.time.LocalDate;
 import java.util.Date;
 
+import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
 
 /**
@@ -33,16 +35,16 @@ public class PendingReminder implements Comparable<PendingReminder> {
     /**
      * The date for the register if a transaction is generated
      */
-    private Date commitDate = null;
+    private LocalDate commitDate = null;
 
     /**
      * Approved state of the reminder
      */
     private boolean approved;
 
-    public PendingReminder(final Reminder reminder, final Date date) {
+    public PendingReminder(final @NotNull Reminder reminder, final @NotNull Date date) {
         this.reminder = reminder;
-        commitDate = (Date) date.clone();
+        commitDate = DateUtils.asLocalDate(date);
     }
 
     /**
@@ -87,15 +89,15 @@ public class PendingReminder implements Comparable<PendingReminder> {
     /**
      * @param approved The approved to set.
      */
-    public synchronized final void setApproved(boolean approved) {
+    public synchronized final void setApproved(final boolean approved) {
         this.approved = approved;
     }
 
     /**
      * @return Returns the commitDate.
      */
-    public synchronized final Date getCommitDate() {
-        return (Date) commitDate.clone();
+    public synchronized final LocalDate getCommitDate() {
+        return commitDate;
     }
 
     /**
