@@ -105,6 +105,12 @@ public class RecurringViewController implements MessageListener {
         Platform.runLater(this::loadTable);
 
         startTimer();
+
+        // Update the period when the snooze value changes
+        Options.reminderSnoozePeriodProperty().addListener((observable, oldValue, newValue) -> {
+            timeline.getKeyFrames().setAll(new KeyFrame(Duration.millis(newValue.intValue()),
+                    ae -> Platform.runLater(RecurringViewController.this::showReminderDialog)));
+        });
     }
 
     private void loadTable() {
@@ -152,9 +158,9 @@ public class RecurringViewController implements MessageListener {
                 notificationDialog.showAndWait();
 
                 engine.processPendingReminders(notificationDialog.getApprovedReminders());
-
-                dialogShowing.getAndSet(false);
             }
+
+            dialogShowing.getAndSet(false);
         }
     }
 
