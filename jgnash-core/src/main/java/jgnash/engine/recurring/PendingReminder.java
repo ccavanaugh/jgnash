@@ -31,11 +31,6 @@ public class PendingReminder implements Comparable<PendingReminder> {
     private Reminder reminder = null;
 
     /**
-     * The date the event should occur
-     */
-    private final Date eventDate;
-
-    /**
      * The date for the register if a transaction is generated
      */
     private Date commitDate = null;
@@ -47,7 +42,6 @@ public class PendingReminder implements Comparable<PendingReminder> {
 
     public PendingReminder(final Reminder reminder, final Date date) {
         this.reminder = reminder;
-        eventDate = (Date) date.clone();
         commitDate = (Date) date.clone();
     }
 
@@ -56,12 +50,12 @@ public class PendingReminder implements Comparable<PendingReminder> {
      */
     @Override
     public int compareTo(final @NotNull PendingReminder o) {
-        if (o.reminder == reminder && o.eventDate.equals(eventDate)) {
+        if (o.reminder == reminder && o.commitDate.equals(commitDate)) {
             return 0;
         }
 
         if (o.reminder == reminder) {
-            return eventDate.compareTo(o.eventDate);
+            return commitDate.compareTo(o.commitDate);
         }
 
         return reminder.compareTo(o.reminder);
@@ -73,14 +67,14 @@ public class PendingReminder implements Comparable<PendingReminder> {
             return true;
         }
         
-        return o instanceof PendingReminder && ((PendingReminder) o).reminder == reminder && ((PendingReminder) o).eventDate.equals(eventDate);
+        return o instanceof PendingReminder && ((PendingReminder) o).reminder == reminder && ((PendingReminder) o).commitDate.equals(commitDate);
     }
 
     @Override
     public int hashCode() {
         int hash = 5;
         hash = 79 * hash + (reminder != null ? reminder.hashCode() : 0);
-        return 79 * hash + (eventDate != null ? eventDate.hashCode() : 0);
+        return 79 * hash + (commitDate != null ? commitDate.hashCode() : 0);
     }
 
     /**
@@ -113,6 +107,6 @@ public class PendingReminder implements Comparable<PendingReminder> {
 
     @Override
     public String toString() {
-        return reminder.getDescription() + " " + eventDate;
+        return reminder.getDescription() + " " + commitDate;
     }
 }
