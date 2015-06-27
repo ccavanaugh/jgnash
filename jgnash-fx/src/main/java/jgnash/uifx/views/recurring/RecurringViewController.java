@@ -17,6 +17,12 @@
  */
 package jgnash.uifx.views.recurring;
 
+import java.util.Collection;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Logger;
+
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -33,6 +39,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.util.Duration;
+
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
@@ -43,11 +50,6 @@ import jgnash.engine.recurring.PendingReminder;
 import jgnash.engine.recurring.Reminder;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
-
-import java.util.Collection;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.logging.Logger;
 
 /**
  * Controller for recurring events
@@ -71,6 +73,8 @@ public class RecurringViewController implements MessageListener {
     private Timeline timeline = null;
 
     private static final int START_UP_DELAY = 2 * 60 * 1000;
+
+    final private AtomicBoolean dialogShowing = new AtomicBoolean(false);
 
     @FXML
     @SuppressWarnings("unchecked")
@@ -115,7 +119,7 @@ public class RecurringViewController implements MessageListener {
         if (timeline == null) {
             timeline = new Timeline(new KeyFrame(
                     Duration.millis(Options.reminderSnoozePeriodProperty().get()),
-                    ae -> showReminderDialog()));
+                    ae -> Platform.runLater(this::showReminderDialog)));
 
             timeline.setCycleCount(Animation.INDEFINITE);
             timeline.setDelay(Duration.millis(START_UP_DELAY));
@@ -135,18 +139,22 @@ public class RecurringViewController implements MessageListener {
     private void showReminderDialog() {
         Logger.getLogger(RecurringViewController.class.getName()).info("Show dialog");
 
-        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-        Objects.requireNonNull(engine);
+        if (dialogShowing.compareAndSet(false, true)) {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
 
-        final Collection<PendingReminder> pendingReminders = engine.getPendingReminders();
+            final Collection<PendingReminder> pendingReminders = engine.getPendingReminders();
 
-        if (!pendingReminders.isEmpty()) {
-            final NotificationDialog notificationDialog = new NotificationDialog();
+            if (!pendingReminders.isEmpty()) {
+                final NotificationDialog notificationDialog = new NotificationDialog();
 
-            notificationDialog.setReminders(pendingReminders);
-            notificationDialog.showAndWait();
+                notificationDialog.setReminders(pendingReminders);
+                notificationDialog.showAndWait();
 
-            engine.processPendingReminders(notificationDialog.getApprovedReminders());
+                engine.processPendingReminders(notificationDialog.getApprovedReminders());
+
+                dialogShowing.getAndSet(false);
+            }
         }
     }
 
