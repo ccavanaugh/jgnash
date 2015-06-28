@@ -13,7 +13,7 @@
     <inceptionYear>2001</inceptionYear>
 
     <prerequisites>
-        <maven>3.1.0</maven>
+        <maven>3.3.0</maven>
     </prerequisites>
 
     <properties>
@@ -88,11 +88,11 @@
             </snapshots>
         </repository>
 
-        <repository>
+        <!--<repository>
             <id>dynamicjasper</id>
             <name>Dynamic Jasper</name>
             <url>http://archiva.fdvs.com.ar/repository/public1/</url>
-        </repository>
+        </repository>-->
     </repositories>
 
     <dependencyManagement>
@@ -173,7 +173,6 @@
                 <artifactId>log4j</artifactId>
                 <version>${log4j.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>net.sf.docbook</groupId>
                 <artifactId>docbook-xsl</artifactId>
