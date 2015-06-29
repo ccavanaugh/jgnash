@@ -261,7 +261,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         return transactionLock;
     }
 
-    AccountProxy getProxy() {
+    private AccountProxy getProxy() {
         if (proxy == null) {
             proxy = getAccountType().getProxy(this);
         }

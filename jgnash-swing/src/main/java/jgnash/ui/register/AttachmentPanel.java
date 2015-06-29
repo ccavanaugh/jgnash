@@ -165,7 +165,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
         return engine.addAttachment(attachment, false);
     }
 
-    void attachmentAction() {
+    private void attachmentAction() {
         final Preferences pref = Preferences.userNodeForPackage(AbstractBankTransactionPanel.class);
         final String baseFile = EngineFactory.getActiveDatabase();
 
@@ -241,7 +241,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
         }
     }
 
-    void showImageAction() {
+    private void showImageAction() {
         if (attachment != null) {
             if (Files.exists(attachment)) {
                 ImageDialog.showImage(attachment.toFile());
@@ -251,7 +251,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
         }
     }
 
-    final void updateControlStates() {
+    private void updateControlStates() {
         attachmentButton.setEnabled(attachment == null);
         deleteButton.setEnabled(attachment != null);
         viewAttachmentButton.setEnabled(attachment != null);

@@ -52,7 +52,7 @@ import jgnash.util.Nullable;
  *
  * @author Craig Cavanaugh
  */
-public class AccountPropertiesController {
+class AccountPropertiesController {
 
     private boolean result = false;
 

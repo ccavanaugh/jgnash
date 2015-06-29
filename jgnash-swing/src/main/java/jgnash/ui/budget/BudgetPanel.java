@@ -236,7 +236,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
         worker.execute();
     }
 
-    void refreshDisplay() {
+    private void refreshDisplay() {
         logger.entering(BudgetPanel.class.getName(), "refreshDisplay");
 
         SwingWorker<Integer, Void> worker = new SwingWorker<Integer, Void>() {

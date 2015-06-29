@@ -121,7 +121,7 @@ public final class BuySharePanel extends AbstractPriceQtyInvTransactionPanel {
         add(getReconcileCheckBox(), cc.xyw(5, 7, 3));
     }
 
-    void updateTotalField() {
+    private void updateTotalField() {
         BigDecimal fee = feePanel.getDecimal();
         BigDecimal quantity = quantityField.getDecimal();
         BigDecimal price = priceField.getDecimal();
