@@ -33,7 +33,7 @@ import static org.junit.Assert.assertTrue;
 public class SecurityNodeTest extends AbstractEngineTest {
 
     @Override
-    protected Engine createEngine() throws Exception {
+    protected Engine createEngine() {
         database = EngineFactory.getDefaultDatabase() + "-jgnash-test.bxds";
         EngineFactory.deleteDatabase(database);
 

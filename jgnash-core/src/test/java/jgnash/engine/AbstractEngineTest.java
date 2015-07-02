@@ -54,7 +54,7 @@ public abstract class AbstractEngineTest {
 
     private final boolean oldExportState = EngineFactory.exportXMLOnClose();
 
-    protected abstract Engine createEngine() throws Exception;
+    protected abstract Engine createEngine();
 
     @Before
     public void setUp() throws Exception {
