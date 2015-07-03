@@ -88,11 +88,11 @@
             </snapshots>
         </repository>
 
-        <!--<repository>
+        <repository>
             <id>dynamicjasper</id>
             <name>Dynamic Jasper</name>
-            <url>http://archiva.fdvs.com.ar/repository/public1/</url>
-        </repository>-->
+            <url>http://nexus.fdvs.com.ar/content/groups/public/</url>
+        </repository>
     </repositories>
 
     <dependencyManagement>
