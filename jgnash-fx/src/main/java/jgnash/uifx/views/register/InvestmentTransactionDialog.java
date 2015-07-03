@@ -41,7 +41,7 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
-public class InvestmentTransactionDialog extends Stage {
+class InvestmentTransactionDialog extends Stage {
 
     @FXML
     private ComboBox<SlipControllerContainer> actionComboBox;

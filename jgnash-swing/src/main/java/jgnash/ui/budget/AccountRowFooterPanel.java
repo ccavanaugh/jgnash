@@ -153,7 +153,7 @@ public class AccountRowFooterPanel extends JPanel {
         table.setRowHeight(rowHeight);
     }
 
-    JComponent buildFooter() {
+    private JComponent buildFooter() {
         FormLayout layout = new FormLayout("d:g", "d");
 
         DefaultFormBuilder builder = new DefaultFormBuilder(layout, new JXPanel());

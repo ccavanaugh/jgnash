@@ -34,23 +34,23 @@ import static org.junit.Assert.assertTrue;
  */
 public abstract class AbstractEngineTest {
 
-    protected String database;
+    String database;
 
-    protected Engine e;
+    Engine e;
 
-    protected Account incomeAccount;
+    Account incomeAccount;
 
-    protected Account expenseAccount;
+    Account expenseAccount;
 
-    protected Account usdBankAccount;
+    Account usdBankAccount;
 
-    protected Account equityAccount;
+    Account equityAccount;
 
-    protected Account investAccount;
+    Account investAccount;
 
-    protected SecurityNode securityNode1;
+    SecurityNode securityNode1;
 
-    protected static final char[] PASSWORD = new char[]{};
+    static final char[] PASSWORD = new char[]{};
 
     private final boolean oldExportState = EngineFactory.exportXMLOnClose();
 
