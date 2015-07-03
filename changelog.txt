@@ -27,15 +27,17 @@ Reinstate archive capability.
 Add ability to make an existing transaction a recurring transaction.
 Improved handling of memo's in split transactions.  The split entry memo should show up in the applicable account
 
-Release 2.16.0
+Release 2.16.0 (Java 8)
 ----------------------
+07/03/15 Dependencies updates, fixes for some Hsqldb database issues and minor performance improvements.
+06/26/15 General cleanup and internal changes to support the new FX user interface in development.
 05/31/15 An exception would occur if a Security was removed immediately after it was created and loaded with history (Bug #208)
 05/31/15 Changed the reconcile checkbox to support three states for not-reconciled, cleared, and reconciled.
 05/25/15 Return of Capital transactions were not being shown in the register table correctly.
-05/14/15 Autocomplete now makes better choices for debit and credit transactions
+05/14/15 Autocomplete now makes better choices for debit and credit transactions.
 03/14/15 Ensure directory has been created first before trying to write a file.
-03/14/15 Historical import dialog for securities did not preset the prior month as intended.
-03/14/15 Java 8 is required for 2.16.0 and newer
+03/14/15 Historical import dialog for securities did not correctly preset the prior month as intended.
+03/14/15 Java 8 is now required for 2.16.0 and newer
 
 
 Release 2.15.2
