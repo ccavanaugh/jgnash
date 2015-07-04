@@ -43,7 +43,7 @@ import javax.swing.WindowConstants;
 import javax.swing.text.html.HTMLDocument;
 
 import jgnash.ui.StaticUIMethods;
-import jgnash.ui.util.HTMLResource;
+import jgnash.util.HTMLResource;
 import jgnash.util.Resource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;

@@ -15,21 +15,20 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.ui.util;
+package jgnash.util;
 
 import java.net.URL;
 import java.util.Locale;
 
 /**
- * This class is for returning URL's to localized html files. At this time it does not support variants or countries...
+ * This class is for returning URL's to localized html files
  * only language.
  * 
  * @author Craig Cavanaugh
- *
  */
 public class HTMLResource {
 
-    private static final String ROOTPATH = "/jgnash/resource/html/";
+    private static final String ROOT_PATH = "/jgnash/resource/html/";
 
     private static final String DEFAULT = "/jgnash/resource/html/en/";
 
@@ -48,7 +47,7 @@ public class HTMLResource {
     public static URL getURL(final String fileName) {
         String lang = Locale.getDefault().getLanguage();
 
-        URL url = Object.class.getResource(ROOTPATH + lang + "/" + fileName);
+        URL url = Object.class.getResource(ROOT_PATH + lang + "/" + fileName);
 
         if (url != null) {
             return url;
@@ -67,7 +66,7 @@ public class HTMLResource {
     public static InputStream getInputStream(final String fileName) {
         String lang = Locale.getDefault().getLanguage();
 
-        InputStream inputStream = Object.class.getResourceAsStream(ROOTPATH + lang + "/" + fileName);
+        InputStream inputStream = Object.class.getResourceAsStream(ROOT_PATH + lang + "/" + fileName);
 
         if (inputStream != null) {
             return inputStream;
