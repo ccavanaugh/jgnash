@@ -31,6 +31,7 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.about.AboutDialog;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.wizard.file.NewFileWizard;
 
@@ -104,6 +105,11 @@ public class MenuBarController implements MessageListener {
         NewFileWizard.show();
     }
 
+    @FXML
+    private void handleAboutAction() {
+        AboutDialog.showAndWait();
+    }
+
     @Override
     public void messagePosted(final Message event) {
         Platform.runLater(() -> {
@@ -124,6 +130,5 @@ public class MenuBarController implements MessageListener {
             }
         });
     }
-
 
 }

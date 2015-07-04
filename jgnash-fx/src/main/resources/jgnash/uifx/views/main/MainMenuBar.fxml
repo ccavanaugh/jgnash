@@ -54,7 +54,7 @@
     </Menu>
       <Menu mnemonicParsing="false" text="%Menu.Help.Name">
           <items>
-              <MenuItem mnemonicParsing="false" text="%Menu.About.Name" />
+              <MenuItem mnemonicParsing="false" text="%Menu.About.Name" onAction="#handleAboutAction"/>
           </items>
       </Menu>
   </menus>
