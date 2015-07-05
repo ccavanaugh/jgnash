@@ -29,13 +29,14 @@ public class RecurringEntryDialog {
         final Stage stage = FXMLUtils.loadFXML(RecurringPropertiesController.class.getResource("RecurringProperties.fxml")
                 , controllerProperty, ResourceUtils.getBundle());
 
+        Objects.requireNonNull(controllerProperty.get());
+
         if (reminder == null) {
             stage.setTitle(resources.getString("Title.NewReminder"));
         } else {
             stage.setTitle(resources.getString("Title.ModifyReminder"));
+            controllerProperty.get().showReminder(reminder);
         }
-
-        Objects.requireNonNull(controllerProperty.get());
 
         stage.showAndWait();
     }

@@ -17,6 +17,11 @@
  */
 package jgnash.uifx.views.recurring;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -27,9 +32,15 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import jgnash.engine.Account;
+import jgnash.engine.Transaction;
+import jgnash.engine.recurring.Reminder;
 import jgnash.uifx.control.AccountComboBox;
+import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.views.register.TransactionDialog;
+import jgnash.util.DateUtils;
 
 /**
  * Controller for creating and modifying a reminder
@@ -38,8 +49,13 @@ import jgnash.uifx.util.InjectFXML;
  */
 public class RecurringPropertiesController {
 
+    private static final int CURRENT = 0;
+
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+
+    @FXML
+    private DatePickerEx startDatePicker;
 
     @FXML
     private TabPane tabs;
@@ -51,7 +67,7 @@ public class RecurringPropertiesController {
     private TextField lastOccurrenceTextField;
 
     @FXML
-    private TextField daysPastDueTextField;
+    private IntegerTextField daysPastDueTextField;
 
     @FXML
     private CheckBox autoEnterCheckBox;
@@ -71,9 +87,51 @@ public class RecurringPropertiesController {
     @FXML
     private TextArea notesTextArea;
 
+    private Transaction transaction;
+
+    private final DateTimeFormatter dateFormatter = DateUtils.getShortDateTimeFormat();
+
     @FXML
     private void initialize() {
+        daysBeforeTextField.disableProperty().bind(autoEnterCheckBox.selectedProperty().not());
+    }
 
+    void showReminder(final Reminder reminder) {
+        final Account a = reminder.getAccount();
+
+        if (a != null) {
+            accountComboBox.setValue(a);
+        } else {
+            System.err.println("did not find account");
+        }
+
+        transaction = reminder.getTransaction();
+
+        if (transaction != null) {
+            payeeTextField.setText(transaction.getPayee());
+        }
+
+        descriptionTextField.setText(reminder.getDescription());
+        enabledCheckBox.setSelected(reminder.isEnabled());
+        startDatePicker.setDate(reminder.getStartDate());
+        notesTextArea.setText(reminder.getNotes());
+
+        //TODO freq tab
+
+        final LocalDate lastOccurrence = DateUtils.asLocalDate(reminder.getLastDate());
+
+        lastOccurrenceTextField.setText(dateFormatter.format(lastOccurrence));
+        autoEnterCheckBox.setSelected(reminder.isAutoCreate());
+        daysBeforeTextField.setInteger(reminder.getDaysAdvance());
+
+        final LocalDate nextDate = DateUtils.asLocalDate(reminder.getIterator().next());
+
+        final Period betweenDates = Period.between(nextDate, LocalDate.now());
+        if (betweenDates.getDays() > 0) {
+            daysPastDueTextField.setInteger(betweenDates.getDays());
+        } else {
+            daysPastDueTextField.setInteger(CURRENT);
+        }
     }
 
     @FXML
@@ -84,5 +142,21 @@ public class RecurringPropertiesController {
     @FXML
     private void cancelAction() {
         ((Stage) parentProperty.get().getWindow()).close();
+    }
+
+    @FXML
+    private void handleDeleteTransaction() {
+        transaction = null;
+        payeeTextField.setText(null);
+    }
+
+    @FXML
+    private void handleEditTransaction() {
+        final Optional<Transaction> optional = TransactionDialog.showAndWait(accountComboBox.getValue(), transaction);
+
+        if (optional.isPresent()) {
+            transaction = optional.get();
+            payeeTextField.setText(transaction.getPayee());
+        }
     }
 }

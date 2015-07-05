@@ -43,7 +43,7 @@
                         <TextField fx:id="payeeTextField" editable="false" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
                         <ButtonBar GridPane.rowIndex="2" GridPane.columnIndex="2">
                             <buttons>
-                                <Button text="%Button.Edit" ButtonBar.buttonData="LEFT" />
+                                <Button text="%Button.Edit" onAction="#handleEditTransaction" ButtonBar.buttonData="LEFT" />
                                 <Button text="%Button.Delete" ButtonBar.buttonData="LEFT" />
                             </buttons>
                         </ButtonBar>
@@ -69,7 +69,7 @@
                     </rowConstraints>
                     <children>
                         <Label text="%Label.FirstPayDate"/>
-                        <DatePickerEx GridPane.columnIndex="1"/>
+                        <DatePickerEx fx:id="startDatePicker" GridPane.columnIndex="1"/>
                         <CheckBox fx:id="enabledCheckBox" text="%Button.Enabled" GridPane.columnIndex="2"/>
                         <TabPane fx:id="tabs" GridPane.rowIndex="1" GridPane.columnSpan="3"/>
                     </children>
@@ -96,7 +96,7 @@
                         <TextField editable="false" fx:id="lastOccurrenceTextField" GridPane.rowIndex="1" GridPane.columnIndex="1" />
 
                         <Label text="%Label.DaysPastDue" GridPane.rowIndex="2"/>
-                        <TextField editable="false" fx:id="daysPastDueTextField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                        <IntegerTextField editable="false" fx:id="daysPastDueTextField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
                     </children>
                 </GridPane>
             </content>
