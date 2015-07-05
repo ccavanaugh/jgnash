@@ -205,11 +205,11 @@ public class FXMLUtils {
      *
      * @param fxmlUrl        the fxml {@code URL}
      * @param resourceBundle {@code ResourceBundle} to pass to the {@code FXMLLoader}
-     * @param consumer       consumer for the controller
+     * @param consumer       {@code ObjectProperty} to store the controller in
      * @param <C>            the fxml controller
      * @return new {@code Stage}
      */
-    public static<C> Stage loadFXML(final URL fxmlUrl, final Consumer<C> consumer, final ResourceBundle resourceBundle) {
+    public static<C> Stage loadFXML(final URL fxmlUrl, final ObjectProperty<C> consumer, final ResourceBundle resourceBundle) {
         final FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl, resourceBundle);
 
         final Stage stage = new Stage(StageStyle.DECORATED);
@@ -221,7 +221,7 @@ public class FXMLUtils {
             scene.getStylesheets().addAll(MainApplication.DEFAULT_CSS);
 
             C controller = fxmlLoader.getController();
-            consumer.accept(controller);
+            consumer.setValue(controller);
 
             stage.setScene(scene);
             stage.getIcons().add(StaticUIMethods.getApplicationIcon());

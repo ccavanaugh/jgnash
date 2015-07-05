@@ -22,7 +22,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -67,7 +66,7 @@ public class NewFileWizard {
 
         final URL fxmlUrl = WizardDialogController.class.getResource("WizardDialog.fxml");
 
-        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, new ControllerConsumer(wizardControllerProperty), ResourceUtils.getBundle());
+        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, wizardControllerProperty, ResourceUtils.getBundle());
         stage.setTitle(resources.getString("Title.NewFile"));
 
         wizardControllerProperty.get().setSetting(Settings.DATABASE_NAME, EngineFactory.getDefaultDatabase());
@@ -122,18 +121,5 @@ public class NewFileWizard {
 
     public static void show() {
         new NewFileWizard();
-    }
-
-    private static class ControllerConsumer implements Consumer<WizardDialogController<Settings>> {
-        private final ObjectProperty<WizardDialogController<Settings>> dialogProperty;
-
-        public ControllerConsumer(ObjectProperty<WizardDialogController<Settings>> dialogProperty) {
-            this.dialogProperty = dialogProperty;
-        }
-
-        @Override
-        public void accept(WizardDialogController<Settings> settingsWizardDialog) {
-            dialogProperty.setValue(settingsWizardDialog);
-        }
     }
 }
