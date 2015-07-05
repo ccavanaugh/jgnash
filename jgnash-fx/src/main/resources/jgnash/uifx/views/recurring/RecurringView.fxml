@@ -15,12 +15,12 @@
                         <FontAwesomeImageView glyphName="CALENDAR"/>
                     </graphic>
                 </Button>
-                <Button mnemonicParsing="false" text="%Button.Modify" onAction="#handleModifyAction">
+                <Button fx:id="modifyButton" mnemonicParsing="false" text="%Button.Modify" onAction="#handleModifyAction">
                     <graphic>
                         <FontAwesomeImageView glyphName="EDIT"/>
                     </graphic>
                 </Button>
-                <Button mnemonicParsing="false" text="%Button.Delete" onAction="#handleDeleteAction">
+                <Button fx:id="deleteButton" mnemonicParsing="false" text="%Button.Delete" onAction="#handleDeleteAction">
                     <graphic>
                         <FontAwesomeImageView glyphName="TRASH_ALT"/>
                     </graphic>

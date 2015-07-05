@@ -27,6 +27,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -34,6 +35,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -57,6 +59,12 @@ import jgnash.uifx.StaticUIMethods;
  * @author Craig Cavanaugh
  */
 public class RecurringViewController implements MessageListener {
+
+    @FXML
+    private Button modifyButton;
+
+    @FXML
+    private Button deleteButton;
 
     @FXML
     private TableView<Reminder> tableView;
@@ -94,11 +102,15 @@ public class RecurringViewController implements MessageListener {
 
         tableView.getColumns().addAll(descriptionColumn, frequencyColumn, enabledColumn);
 
-        selectedReminderProperty.bind(tableView.getSelectionModel().selectedItemProperty());
-
         sortedReminderList.comparatorProperty().bind(tableView.comparatorProperty());
 
         tableView.setItems(sortedReminderList);
+
+        selectedReminderProperty.bind(tableView.getSelectionModel().selectedItemProperty());
+
+        // bind enabled state of the buttons to the selected reminder property
+        deleteButton.disableProperty().bind(Bindings.isNull(selectedReminderProperty));
+        modifyButton.disableProperty().bind(Bindings.isNull(selectedReminderProperty));
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM, MessageChannel.REMINDER);
 
@@ -209,6 +221,6 @@ public class RecurringViewController implements MessageListener {
 
     @FXML
     private void handleModifyAction() {
-        RecurringEntryDialog.showAndWait(null);
+        RecurringEntryDialog.showAndWait(selectedReminderProperty.get());
     }
 }
