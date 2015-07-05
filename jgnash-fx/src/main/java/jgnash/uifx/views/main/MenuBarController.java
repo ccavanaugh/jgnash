@@ -85,7 +85,7 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleCloseAction() {
         if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
-            CloseFileTask.initiateClose();
+            CloseFileTask.initiateFileClose();
         }
     }
 

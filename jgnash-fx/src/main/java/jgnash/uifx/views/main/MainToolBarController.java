@@ -68,7 +68,7 @@ public class MainToolBarController implements MessageListener {
     @FXML
     private void handleCloseAction() {
         if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
-            CloseFileTask.initiateShutdown();
+            CloseFileTask.initiateFileClose();
         }
     }
 
