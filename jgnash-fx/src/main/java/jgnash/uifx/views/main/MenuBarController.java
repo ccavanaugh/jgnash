@@ -20,6 +20,8 @@ package jgnash.uifx.views.main;
 import java.util.Objects;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -43,6 +45,12 @@ import jgnash.uifx.wizard.file.NewFileWizard;
 public class MenuBarController implements MessageListener {
 
     @FXML
+    private MenuItem updateCurrenciesMenuItem;
+
+    @FXML
+    private MenuItem updateSecuritiesMenuItem;
+
+    @FXML
     private MenuBar menuBar;
 
     @FXML
@@ -54,9 +62,13 @@ public class MenuBarController implements MessageListener {
     @FXML
     private MenuItem exitMenuItem;
 
+    final private BooleanProperty disabled = new SimpleBooleanProperty(true);
+
     @FXML
     private void initialize() {
-        closeMenuItem.setDisable(true);
+        updateSecuritiesMenuItem.disableProperty().bind(disabled);
+        updateCurrenciesMenuItem.disableProperty().bind(disabled);
+        closeMenuItem.disableProperty().bind(disabled);
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
     }
@@ -116,10 +128,10 @@ public class MenuBarController implements MessageListener {
             switch (event.getEvent()) {
                 case FILE_LOAD_SUCCESS:
                 case FILE_NEW_SUCCESS:
-                    closeMenuItem.setDisable(false);
+                    disabled.setValue(false);
                     break;
                 case FILE_CLOSING:
-                    closeMenuItem.setDisable(true);
+                    disabled.setValue(true);
                     break;
                 case FILE_IO_ERROR:
                 case FILE_LOAD_FAILED:

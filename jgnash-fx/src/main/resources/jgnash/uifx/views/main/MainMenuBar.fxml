@@ -5,7 +5,8 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import jgnash.resource.font.FontAwesomeImageView?>
-<MenuBar fx:id="menuBar" useSystemMenuBar="true" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.main.MenuBarController">
+<MenuBar fx:id="menuBar" useSystemMenuBar="true" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+         fx:controller="jgnash.uifx.views.main.MenuBarController">
   <menus>
     <Menu mnemonicParsing="false" text="%Menu.File.Name">
       <items>
@@ -33,7 +34,7 @@
        <items>
          <Menu mnemonicParsing="false" text="%Menu.Securities.Name">
            <items>
-             <MenuItem mnemonicParsing="false" text="%Menu.BackgroundSecurityUpdate.Name" onAction="#updateSecurities">
+             <MenuItem fx:id="updateSecuritiesMenuItem" mnemonicParsing="false" text="%Menu.BackgroundSecurityUpdate.Name" onAction="#updateSecurities">
                  <graphic>
                      <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
                  </graphic>
@@ -43,7 +44,7 @@
          </Menu>
             <Menu mnemonicParsing="false" text="%Menu.Currency.Name">
               <items>
-                <MenuItem  mnemonicParsing="false" text="%Menu.BackgroundCurrencyUpdate.Name" onAction="#updateCurrencies">
+                <MenuItem  fx:id="updateCurrenciesMenuItem" mnemonicParsing="false" text="%Menu.BackgroundCurrencyUpdate.Name" onAction="#updateCurrencies">
                     <graphic>
                         <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
                     </graphic>
