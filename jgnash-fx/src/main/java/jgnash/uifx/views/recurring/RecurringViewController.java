@@ -201,4 +201,14 @@ public class RecurringViewController implements MessageListener {
     private void handleRefreshAction() {
         showReminderDialog();
     }
+
+    @FXML
+    private void handleNewAction() {
+        RecurringEntryDialog.showAndWait(null);
+    }
+
+    @FXML
+    private void handleModifyAction() {
+        RecurringEntryDialog.showAndWait(null);
+    }
 }

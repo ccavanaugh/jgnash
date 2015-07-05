@@ -10,12 +10,12 @@
     <top>
         <ToolBar>
             <items>
-                <Button mnemonicParsing="false" text="%Button.New">
+                <Button mnemonicParsing="false" text="%Button.New" onAction="#handleNewAction">
                     <graphic>
                         <FontAwesomeImageView glyphName="CALENDAR"/>
                     </graphic>
                 </Button>
-                <Button mnemonicParsing="false" text="%Button.Modify">
+                <Button mnemonicParsing="false" text="%Button.Modify" onAction="#handleModifyAction">
                     <graphic>
                         <FontAwesomeImageView glyphName="EDIT"/>
                     </graphic>
