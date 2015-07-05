@@ -18,6 +18,7 @@
  */
 .root{
     -fx-font-size: 0.833333em;
+    -fx-control-inner-background-alt: derive(lightgray,25%);
 }
 
 .decimal-details > .arrow-button > .arrow {
@@ -49,9 +50,11 @@
 }
 
 /*
-.dialog > .dialog-pane > .button-bar {
-    -fx-font-size: 1.0em;
-}*/
+ * Ensure we have odd/even background changes
+ */
+.tree-table-row-cell:odd {
+    -fx-background: -fx-control-inner-background-alt;
+}
 
 /*
  * Adjust margins of the status label for improved appearance
