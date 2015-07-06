@@ -38,7 +38,7 @@ public class NoneTabController implements RecurringTabController {
     @Override
     public void setReminder(@NotNull final Reminder reminder) {
         if (!(reminder instanceof OneTimeReminder)) {
-            throw new RuntimeException("Incorrect type");
+            throw new RuntimeException("Incorrect Reminder type");
         }
 
         this.reminder = reminder;

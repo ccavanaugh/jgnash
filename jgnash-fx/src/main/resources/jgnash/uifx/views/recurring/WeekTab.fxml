@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import jgnash.uifx.control.DatePickerEx?>
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="jgnash.uifx.views.recurring.DayTabController" styleClass="form, dialog">
+            fx:controller="jgnash.uifx.views.recurring.WeekTabController" styleClass="form, dialog">
     <fx:define>
         <ToggleGroup fx:id="buttonGroup"/>
         <Double fx:id="PICKER_WIDTH" fx:value="110.0"/>
@@ -31,7 +31,7 @@
     <children>
         <Label text="%Label.Every"/>
         <Spinner fx:id="numberSpinner" GridPane.columnIndex="1"/>
-        <Label text="%Tab.Day" GridPane.columnIndex="2"/>
+        <Label text="%Tab.Week" GridPane.columnIndex="2"/>
 
         <Label text="%Label.EndOn" GridPane.rowIndex="1"/>
         <RadioButton fx:id="noEndDateToggleButton" text="%Button.NoEndDate" toggleGroup="$buttonGroup"

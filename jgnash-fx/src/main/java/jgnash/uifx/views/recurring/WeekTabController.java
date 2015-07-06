@@ -21,20 +21,20 @@ import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
-
 import jgnash.engine.recurring.DailyReminder;
 import jgnash.engine.recurring.Reminder;
+import jgnash.engine.recurring.WeeklyReminder;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.util.NotNull;
 
 import java.util.Date;
 
 /**
- * Daily repeating reminder controller
+ * Weekly repeating reminder controller
  *
  * @author Craig Cavanaugh
  */
-public class DayTabController implements RecurringTabController {
+public class WeekTabController implements RecurringTabController {
 
     @FXML
     private RadioButton noEndDateToggleButton;
@@ -63,7 +63,7 @@ public class DayTabController implements RecurringTabController {
 
     @Override
     public Reminder getReminder() {
-        final DailyReminder r = (DailyReminder) reminder;
+        final WeeklyReminder r = (WeeklyReminder) reminder;
 
         Date endDate = null;
 
@@ -80,13 +80,13 @@ public class DayTabController implements RecurringTabController {
     @Override
     @SuppressWarnings("unchecked")
     public void setReminder(@NotNull final Reminder reminder) {
-        if (!(reminder instanceof DailyReminder)) {
+        if (!(reminder instanceof WeeklyReminder)) {
             throw new RuntimeException("Incorrect Reminder type");
         }
 
         this.reminder = reminder;
 
-        final DailyReminder r = (DailyReminder) reminder;
+        final WeeklyReminder r = (WeeklyReminder) reminder;
 
         numberSpinner.getValueFactory().setValue(r.getIncrement());
 

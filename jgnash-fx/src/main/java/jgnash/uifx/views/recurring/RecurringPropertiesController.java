@@ -115,27 +115,20 @@ public class RecurringPropertiesController {
         tabMap.put(YearlyReminder.class, 4);
 
         daysBeforeTextField.disableProperty().bind(autoEnterCheckBox.selectedProperty().not());
-        {
-            final Tab tab = new Tab();
-            tab.setText(resources.getString("Tab.None"));
 
-            RecurringTabController controller = FXMLUtils.loadFXML(o -> tab.setContent((Node) o), "NoneTab.fxml",
-                    resources);
-            tab.setUserData(controller);
-            tabs.getTabs().addAll(tab);
-        }
-        {
-            final Tab tab = new Tab();
-            tab.setText(resources.getString("Tab.Day"));
-
-            RecurringTabController controller = FXMLUtils.loadFXML(o -> tab.setContent((Node) o), "DayTab.fxml",
-                    resources);
-            tab.setUserData(controller);
-            tabs.getTabs().addAll(tab);
-        }
+        loadTab("NoneTab.fxml", "Tab.None");
+        loadTab("DayTab.fxml", "Tab.Day");
+        loadTab("WeekTab.fxml", "Tab.Week");
     }
 
+    private void loadTab(final String fxml, final String name) {
+        final Tab tab = new Tab();
+        tab.setText(resources.getString(name));
 
+        final RecurringTabController controller = FXMLUtils.loadFXML(o -> tab.setContent((Node) o), fxml, resources);
+        tab.setUserData(controller);
+        tabs.getTabs().addAll(tab);
+    }
 
     void showReminder(final Reminder reminder) {
         final Account a = reminder.getAccount();
