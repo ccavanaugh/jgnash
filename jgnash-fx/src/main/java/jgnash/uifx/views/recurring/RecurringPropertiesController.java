@@ -119,6 +119,7 @@ public class RecurringPropertiesController {
         loadTab("NoneTab.fxml", "Tab.None");
         loadTab("DayTab.fxml", "Tab.Day");
         loadTab("WeekTab.fxml", "Tab.Week");
+        loadTab("MonthTab.fxml", "Tab.Month");
     }
 
     private void loadTab(final String fxml, final String name) {

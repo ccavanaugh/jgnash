@@ -18,14 +18,16 @@
 package jgnash.uifx.views.recurring;
 
 import java.util.Date;
+import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 
+import jgnash.engine.recurring.MonthlyReminder;
 import jgnash.engine.recurring.Reminder;
-import jgnash.engine.recurring.WeeklyReminder;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.util.NotNull;
 
@@ -34,7 +36,13 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-public class WeekTabController implements RecurringTabController {
+public class MonthTabController implements RecurringTabController {
+
+    @FXML
+    private ResourceBundle resources;
+
+    @FXML
+    private ComboBox<String> typeComboBox;
 
     @FXML
     private RadioButton noEndDateToggleButton;
@@ -48,17 +56,20 @@ public class WeekTabController implements RecurringTabController {
     @FXML
     private Spinner numberSpinner;
 
-    private Reminder reminder = new WeeklyReminder();
+    private Reminder reminder = new MonthlyReminder();
 
     @FXML
     @SuppressWarnings("unchecked")
     private void initialize() {
-        numberSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 52, 1, 1));
+        numberSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 24, 1, 1));
 
         // bind enabled state
         endDatePicker.disableProperty().bind(noEndDateToggleButton.selectedProperty());
 
         noEndDateToggleButton.setSelected(true);
+
+        typeComboBox.getItems().addAll(resources.getString("Column.Date"), resources.getString("Column.Day"));
+        typeComboBox.getSelectionModel().select(0);
     }
 
     @Override
@@ -72,19 +83,22 @@ public class WeekTabController implements RecurringTabController {
         reminder.setIncrement(((Number) numberSpinner.getValue()).intValue());
         reminder.setEndDate(endDate);
 
+        ((MonthlyReminder) reminder).setType(typeComboBox.getSelectionModel().getSelectedIndex());
+
         return reminder;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void setReminder(@NotNull final Reminder reminder) {
-        if (!(reminder instanceof WeeklyReminder)) {
+        if (!(reminder instanceof MonthlyReminder)) {
             throw new RuntimeException("Incorrect Reminder type");
         }
 
         this.reminder = reminder;
 
         numberSpinner.getValueFactory().setValue(reminder.getIncrement());
+        typeComboBox.getSelectionModel().select(((MonthlyReminder) reminder).getType());
 
         if (reminder.getEndDate() != null) {
             endDatePicker.setDate(reminder.getEndDate());

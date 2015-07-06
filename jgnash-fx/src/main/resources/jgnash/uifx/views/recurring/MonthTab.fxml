@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import java.lang.Double?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import jgnash.uifx.control.DatePickerEx?>
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="jgnash.uifx.views.recurring.MonthTabController" styleClass="form, dialog">
+    <fx:define>
+        <ToggleGroup fx:id="buttonGroup"/>
+        <Double fx:id="PICKER_WIDTH" fx:value="110.0"/>
+    </fx:define>
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER"/>
+        <ColumnConstraints hgrow="NEVER" halignment="LEFT" />
+        <ColumnConstraints hgrow="NEVER" halignment="LEFT"/>
+        <ColumnConstraints hgrow="NEVER"/>
+        <ColumnConstraints hgrow="NEVER" halignment="LEFT" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+    <children>
+        <Label text="%Label.Every"/>
+        <Spinner fx:id="numberSpinner" GridPane.columnIndex="1"/>
+        <Label text="%Tab.Week" GridPane.columnIndex="2"/>
+        <Label text="%Label.By" GridPane.columnIndex="3"/>
+        <ComboBox fx:id="typeComboBox" GridPane.columnIndex="4"/>
+
+        <Label text="%Label.EndOn" GridPane.rowIndex="1"/>
+        <RadioButton fx:id="noEndDateToggleButton" text="%Button.NoEndDate" toggleGroup="$buttonGroup"
+                     GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <HBox GridPane.rowIndex="2" GridPane.columnIndex="1">
+            <children>
+                <RadioButton fx:id="dateToggleButton" toggleGroup="$buttonGroup" />
+                <DatePickerEx fx:id="endDatePicker" prefWidth="$PICKER_WIDTH"/>
+            </children>
+        </HBox >
+    </children>
+</GridPane>

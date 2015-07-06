@@ -17,6 +17,8 @@
  */
 package jgnash.uifx.views.recurring;
 
+import java.util.Date;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Spinner;
@@ -26,8 +28,6 @@ import jgnash.engine.recurring.DailyReminder;
 import jgnash.engine.recurring.Reminder;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.util.NotNull;
-
-import java.util.Date;
 
 /**
  * Daily repeating reminder controller
@@ -63,16 +63,14 @@ public class DayTabController implements RecurringTabController {
 
     @Override
     public Reminder getReminder() {
-        final DailyReminder r = (DailyReminder) reminder;
-
         Date endDate = null;
 
         if (noEndDateToggleButton.isSelected()) {
             endDate = endDatePicker.getDate();
         }
 
-        r.setIncrement(((Number) numberSpinner.getValue()).intValue());
-        r.setEndDate(endDate);
+        reminder.setIncrement(((Number) numberSpinner.getValue()).intValue());
+        reminder.setEndDate(endDate);
 
         return reminder;
     }
@@ -86,12 +84,10 @@ public class DayTabController implements RecurringTabController {
 
         this.reminder = reminder;
 
-        final DailyReminder r = (DailyReminder) reminder;
+        numberSpinner.getValueFactory().setValue(reminder.getIncrement());
 
-        numberSpinner.getValueFactory().setValue(r.getIncrement());
-
-        if (r.getEndDate() != null) {
-            endDatePicker.setDate(r.getEndDate());
+        if (reminder.getEndDate() != null) {
+            endDatePicker.setDate(reminder.getEndDate());
             dateToggleButton.setSelected(true);
         }
     }
