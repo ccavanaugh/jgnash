@@ -20,13 +20,17 @@ package jgnash.uifx.views.recurring;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -34,13 +38,20 @@ import javafx.stage.Stage;
 
 import jgnash.engine.Account;
 import jgnash.engine.Transaction;
+import jgnash.engine.recurring.DailyReminder;
+import jgnash.engine.recurring.MonthlyReminder;
+import jgnash.engine.recurring.OneTimeReminder;
 import jgnash.engine.recurring.Reminder;
+import jgnash.engine.recurring.WeeklyReminder;
+import jgnash.engine.recurring.YearlyReminder;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.IntegerTextField;
+import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.views.register.TransactionDialog;
 import jgnash.util.DateUtils;
+import jgnash.util.ResourceUtils;
 
 /**
  * Controller for creating and modifying a reminder
@@ -50,6 +61,8 @@ import jgnash.util.DateUtils;
 public class RecurringPropertiesController {
 
     private static final int CURRENT = 0;
+
+    private final ResourceBundle resources = ResourceUtils.getBundle();
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
@@ -91,10 +104,38 @@ public class RecurringPropertiesController {
 
     private final DateTimeFormatter dateFormatter = DateUtils.getShortDateTimeFormat();
 
+    private final HashMap<Class<?>, Integer> tabMap = new HashMap<>();
+
     @FXML
     private void initialize() {
+        tabMap.put(OneTimeReminder.class, 0);
+        tabMap.put(DailyReminder.class, 1);
+        tabMap.put(WeeklyReminder.class, 2);
+        tabMap.put(MonthlyReminder.class, 3);
+        tabMap.put(YearlyReminder.class, 4);
+
         daysBeforeTextField.disableProperty().bind(autoEnterCheckBox.selectedProperty().not());
+        {
+            final Tab tab = new Tab();
+            tab.setText(resources.getString("Tab.None"));
+
+            RecurringTabController controller = FXMLUtils.loadFXML(o -> tab.setContent((Node) o), "NoneTab.fxml",
+                    resources);
+            tab.setUserData(controller);
+            tabs.getTabs().addAll(tab);
+        }
+        {
+            final Tab tab = new Tab();
+            tab.setText(resources.getString("Tab.Day"));
+
+            RecurringTabController controller = FXMLUtils.loadFXML(o -> tab.setContent((Node) o), "DayTab.fxml",
+                    resources);
+            tab.setUserData(controller);
+            tabs.getTabs().addAll(tab);
+        }
     }
+
+
 
     void showReminder(final Reminder reminder) {
         final Account a = reminder.getAccount();
@@ -116,7 +157,8 @@ public class RecurringPropertiesController {
         startDatePicker.setDate(reminder.getStartDate());
         notesTextArea.setText(reminder.getNotes());
 
-        //TODO freq tab
+        tabs.getSelectionModel().select(tabMap.get(reminder.getClass()));
+        ((RecurringTabController)tabs.getSelectionModel().getSelectedItem().getUserData()).setReminder(reminder);
 
         final LocalDate lastOccurrence = DateUtils.asLocalDate(reminder.getLastDate());
 

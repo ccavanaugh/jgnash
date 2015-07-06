@@ -8,6 +8,7 @@ package jgnash.uifx.views.recurring;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.stage.Stage;
@@ -37,6 +38,13 @@ public class RecurringEntryDialog {
             stage.setTitle(resources.getString("Title.ModifyReminder"));
             controllerProperty.get().showReminder(reminder);
         }
+
+        // Execute after it's shown, force the minimum size
+        Platform.runLater(() -> {
+            stage.setMinHeight(stage.getHeight());
+            stage.setMinWidth(stage.getWidth());
+
+        });
 
         stage.showAndWait();
     }

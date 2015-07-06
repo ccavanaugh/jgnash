@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import jgnash.uifx.control.DatePickerEx?>
+<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="jgnash.uifx.views.recurring.DayTabController" styleClass="form, dialog">
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER"/>
+        <ColumnConstraints hgrow="ALWAYS"/>
+        <ColumnConstraints hgrow="NEVER"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+    <children>
+        <Label text="%Label.Every"/>
+        <Spinner fx:id="numberSpinner" GridPane.columnIndex="1">
+            <!--<valueFactory>
+                <javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory>
+                    <min>1</min>
+                    <max>365</max>
+                    <value>1</value>
+                    <wrapAround>true</wrapAround>
+                </javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory>
+            </valueFactory>-->
+        </Spinner>
+        <Label text="%Tab.Day" GridPane.columnIndex="2"/>
+
+        <Label text="%Label.EndOn" GridPane.rowIndex="1"/>
+        <RadioButton text="%Button.NoEndDate" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <RadioButton GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        <DatePickerEx GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+    </children>
+</GridPane>

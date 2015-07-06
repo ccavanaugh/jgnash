@@ -71,7 +71,7 @@
                         <Label text="%Label.FirstPayDate"/>
                         <DatePickerEx fx:id="startDatePicker" GridPane.columnIndex="1"/>
                         <CheckBox fx:id="enabledCheckBox" text="%Button.Enabled" GridPane.columnIndex="2"/>
-                        <TabPane fx:id="tabs" GridPane.rowIndex="1" GridPane.columnSpan="3"/>
+                        <TabPane fx:id="tabs" GridPane.rowIndex="1" GridPane.columnSpan="3" tabClosingPolicy="UNAVAILABLE"/>
                     </children>
                 </GridPane>
             </content>
