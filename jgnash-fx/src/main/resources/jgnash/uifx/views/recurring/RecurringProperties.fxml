@@ -69,7 +69,7 @@
                     </rowConstraints>
                     <children>
                         <Label text="%Label.FirstPayDate"/>
-                        <DatePickerEx fx:id="startDatePicker" GridPane.columnIndex="1"/>
+                        <DatePickerEx fx:id="startDatePicker" GridPane.columnIndex="1" prefWidth="110"/>
                         <CheckBox fx:id="enabledCheckBox" text="%Button.Enabled" GridPane.columnIndex="2"/>
                         <TabPane fx:id="tabs" GridPane.rowIndex="1" GridPane.columnSpan="3" tabClosingPolicy="UNAVAILABLE"/>
                     </children>

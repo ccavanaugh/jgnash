@@ -19,6 +19,7 @@ package jgnash.uifx.views.recurring;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 
 import jgnash.engine.recurring.DailyReminder;
 import jgnash.engine.recurring.Reminder;
@@ -35,6 +36,12 @@ public class DayTabController implements RecurringTabController {
     private Spinner numberSpinner;
 
     private Reminder reminder = new DailyReminder();
+
+    @FXML
+    @SuppressWarnings("unchecked")
+    private void initialize() {
+        numberSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 365, 1, 1));
+    }
 
     @Override
     public Reminder getReminder() {
