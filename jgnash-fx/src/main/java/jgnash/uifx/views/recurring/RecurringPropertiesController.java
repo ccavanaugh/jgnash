@@ -106,6 +106,8 @@ public class RecurringPropertiesController {
 
     private final HashMap<Class<?>, Integer> tabMap = new HashMap<>();
 
+    private Optional<Reminder> optionalReminder = Optional.empty();
+
     @FXML
     private void initialize() {
         tabMap.put(OneTimeReminder.class, 0);
@@ -155,9 +157,11 @@ public class RecurringPropertiesController {
         tabs.getSelectionModel().select(tabMap.get(reminder.getClass()));
         ((RecurringTabController)tabs.getSelectionModel().getSelectedItem().getUserData()).setReminder(reminder);
 
-        final LocalDate lastOccurrence = DateUtils.asLocalDate(reminder.getLastDate());
+        if (reminder.getLastDate() != null) {
+            final LocalDate lastOccurrence = DateUtils.asLocalDate(reminder.getLastDate());
+            lastOccurrenceTextField.setText(dateFormatter.format(lastOccurrence));
+        }
 
-        lastOccurrenceTextField.setText(dateFormatter.format(lastOccurrence));
         autoEnterCheckBox.setSelected(reminder.isAutoCreate());
         daysBeforeTextField.setInteger(reminder.getDaysAdvance());
 
@@ -171,9 +175,33 @@ public class RecurringPropertiesController {
         }
     }
 
+    private Reminder generateReminder() {
+        final RecurringTabController tab = (RecurringTabController) tabs.getSelectionModel().getSelectedItem().getUserData();
+
+        final Reminder reminder = tab.getReminder();
+
+        reminder.setDescription(descriptionTextField.getText());
+        reminder.setEnabled(enabledCheckBox.isSelected());
+        reminder.setStartDate(startDatePicker.getDate());
+        reminder.setNotes(notesTextArea.getText());
+
+        reminder.setAutoCreate(autoEnterCheckBox.isSelected());
+
+        reminder.setDaysAdvance(daysBeforeTextField.getInteger());
+        reminder.setAccount(accountComboBox.getValue());
+        reminder.setTransaction(transaction);
+
+        return reminder;
+    }
+
+    public Optional<Reminder> getReminder() {
+        return optionalReminder;
+    }
+
     @FXML
     private void okAction() {
         ((Stage) parentProperty.get().getWindow()).close();
+        optionalReminder = Optional.ofNullable(generateReminder());
     }
 
     @FXML

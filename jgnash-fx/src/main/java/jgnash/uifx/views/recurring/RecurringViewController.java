@@ -19,8 +19,10 @@ package jgnash.uifx.views.recurring;
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.animation.Animation;
@@ -52,6 +54,7 @@ import jgnash.engine.recurring.PendingReminder;
 import jgnash.engine.recurring.Reminder;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.util.ResourceUtils;
 
 /**
  * Controller for recurring events
@@ -216,11 +219,41 @@ public class RecurringViewController implements MessageListener {
 
     @FXML
     private void handleNewAction() {
-        RecurringEntryDialog.showAndWait(null);
+        final Optional<Reminder> reminder = RecurringEntryDialog.showAndWait(null);
+
+        if (reminder.isPresent()) {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
+            if (!engine.addReminder(reminder.get())) {
+                StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.ReminderAdd"));
+            }
+        }
     }
 
     @FXML
     private void handleModifyAction() {
-        RecurringEntryDialog.showAndWait(selectedReminderProperty.get());
+
+        final Reminder old = selectedReminderProperty.get();
+
+        try {
+            final Optional<Reminder> reminder = RecurringEntryDialog.showAndWait((Reminder) old.clone());
+
+            if (reminder.isPresent()) {
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                Objects.requireNonNull(engine);
+
+                if (engine.removeReminder(old)) { // remove the old
+                    if (!engine.addReminder(reminder.get())) { // add the new
+                        StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.ReminderUpdate"));
+                    }
+                } else {
+                    StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.ReminderUpdate"));
+                }
+
+            }
+        } catch (CloneNotSupportedException e) {
+            Logger.getLogger(RecurringViewController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
     }
 }
