@@ -19,6 +19,8 @@ package jgnash.uifx.views.register;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
@@ -41,6 +43,8 @@ import javafx.scene.control.TableView;
 import javafx.util.Callback;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.message.Message;
@@ -48,7 +52,11 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
+import jgnash.engine.recurring.MonthlyReminder;
+import jgnash.engine.recurring.Reminder;
 import jgnash.uifx.util.TableViewManager;
+import jgnash.uifx.views.recurring.RecurringEntryDialog;
+import jgnash.util.DateUtils;
 
 /**
  * Abstract Register Table with stats controller
@@ -178,6 +186,27 @@ public abstract class RegisterTableController {
         RegisterActions.duplicateTransaction(accountProperty.get(), transactionList);
     }
 
+    private void handleCreateNewReminder() {
+        try {
+            final Reminder reminder = new MonthlyReminder();
+            reminder.setAccount(accountProperty.get());
+            reminder.setStartDate(DateUtils.addMonth(selectedTransactionProperty.get().getDate()));
+            reminder.setTransaction((Transaction) selectedTransactionProperty.get().clone());
+            reminder.setDescription(selectedTransactionProperty.get().getPayee());
+            reminder.setNotes(selectedTransactionProperty.get().getMemo());
+
+            final Optional<Reminder> optional =  RecurringEntryDialog.showAndWait(reminder);
+            if (optional.isPresent()) {
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                Objects.requireNonNull(engine);
+
+                engine.addReminder(optional.get());
+            }
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+    }
+
     private class TransactionRowFactory implements Callback<TableView<Transaction>, TableRow<Transaction>> {
 
         @Override
@@ -207,7 +236,10 @@ public abstract class RegisterTableController {
             final MenuItem deleteItem = new MenuItem(resources.getString("Menu.Delete.Name"));
             deleteItem.setOnAction(event -> deleteTransactions());
 
-            rowMenu.getItems().addAll(markedAs, new SeparatorMenuItem(), duplicateItem, jumpItem, new SeparatorMenuItem(), deleteItem);
+            final MenuItem reminderItem = new MenuItem("Create new reminder");
+            reminderItem.setOnAction(event -> handleCreateNewReminder());
+
+            rowMenu.getItems().addAll(markedAs, new SeparatorMenuItem(), duplicateItem, jumpItem, new SeparatorMenuItem(), deleteItem, new SeparatorMenuItem(), reminderItem);
 
             // only display context menu for non-null items:
             row.contextMenuProperty().bind(
