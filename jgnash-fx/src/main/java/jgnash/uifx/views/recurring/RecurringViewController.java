@@ -188,7 +188,7 @@ public class RecurringViewController implements MessageListener {
                 MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM, MessageChannel.REMINDER);
                 break;
             case REMINDER_ADD:
-            case ACCOUNT_REMOVE:
+            case REMINDER_REMOVE:
                 loadTable();
                 break;
             default:
