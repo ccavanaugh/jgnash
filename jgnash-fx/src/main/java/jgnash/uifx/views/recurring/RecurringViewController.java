@@ -54,7 +54,6 @@ import jgnash.engine.recurring.PendingReminder;
 import jgnash.engine.recurring.Reminder;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
-import jgnash.util.ResourceUtils;
 
 /**
  * Controller for recurring events
@@ -199,7 +198,8 @@ public class RecurringViewController implements MessageListener {
     private void handleDeleteAction() {
         if (selectedReminderProperty.get() != null) {
             if (Options.confirmOnDeleteReminderProperty().get()) {
-                if (StaticUIMethods.showConfirmationDialog("Title.Confirm", "Message.ConfirmReminderDelete")
+                if (StaticUIMethods.showConfirmationDialog(resources.getString("Title.Confirm"),
+                        resources.getString("Message.ConfirmReminderDelete"))
                         .getButtonData() != ButtonBar.ButtonData.YES) {
                     return;
                 }
@@ -226,7 +226,7 @@ public class RecurringViewController implements MessageListener {
             Objects.requireNonNull(engine);
 
             if (!engine.addReminder(reminder.get())) {
-                StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.ReminderAdd"));
+                StaticUIMethods.displayError(resources.getString("Message.Error.ReminderAdd"));
             }
         }
     }
@@ -245,10 +245,10 @@ public class RecurringViewController implements MessageListener {
 
                 if (engine.removeReminder(old)) { // remove the old
                     if (!engine.addReminder(reminder.get())) { // add the new
-                        StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.ReminderUpdate"));
+                        StaticUIMethods.displayError(resources.getString("Message.Error.ReminderUpdate"));
                     }
                 } else {
-                    StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.ReminderUpdate"));
+                    StaticUIMethods.displayError(resources.getString("Message.Error.ReminderUpdate"));
                 }
 
             }
