@@ -21,13 +21,18 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import jgnash.engine.Account;
 import jgnash.engine.StoredObject;
 import jgnash.engine.Transaction;
 import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
-
-import javax.persistence.*;
 
 /**
  * This is an abstract class for scheduled reminders.
@@ -204,7 +209,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
         boolean result = false;
 
         if (transaction != null) {
-            result = this.transaction.equals(transaction);
+            result = transaction.equals(this.transaction);
         }
 
         return result;
