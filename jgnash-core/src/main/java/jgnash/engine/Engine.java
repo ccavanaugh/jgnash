@@ -64,6 +64,7 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageProperty;
+import jgnash.engine.recurring.MonthlyReminder;
 import jgnash.engine.recurring.PendingReminder;
 import jgnash.engine.recurring.RecurringIterator;
 import jgnash.engine.recurring.Reminder;
@@ -818,6 +819,27 @@ public class Engine {
 
             messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STOPPED, this));
         }
+    }
+
+    /**
+     * Creates a default reminder given a transaction and the primary account.  The Reminder will need to persisted.
+     * @param transaction Transaction for the reminder.  The transaction wil be cloned
+     * @param account primary account
+     * @return new default {@code MonthlyReminder}
+     */
+    public Reminder createDefaultReminder(final Transaction transaction, final Account account) {
+        final Reminder reminder = new MonthlyReminder();
+
+        try {
+            reminder.setAccount(account);
+            reminder.setStartDate(DateUtils.addMonth(transaction.getDate()));
+            reminder.setTransaction((Transaction) transaction.clone());
+            reminder.setDescription(transaction.getPayee());
+            reminder.setNotes(transaction.getMemo());
+        }  catch (final CloneNotSupportedException e) {
+            logSevere(e.getLocalizedMessage());
+        }
+        return reminder;
     }
 
     public boolean addReminder(final Reminder reminder) {

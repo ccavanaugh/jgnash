@@ -76,7 +76,7 @@ public class MonthTabController implements RecurringTabController {
     public Reminder getReminder() {
         Date endDate = null;
 
-        if (noEndDateToggleButton.isSelected()) {
+        if (dateToggleButton.isSelected()) {
             endDate = endDatePicker.getDate();
         }
 

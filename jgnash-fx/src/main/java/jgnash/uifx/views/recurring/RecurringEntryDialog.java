@@ -22,7 +22,7 @@ import jgnash.util.ResourceUtils;
 /**
  * @author Craig Cavanaugh
  */
-class RecurringEntryDialog {
+public class RecurringEntryDialog {
 
     private final ObjectProperty<RecurringPropertiesController> controllerProperty = new SimpleObjectProperty<>();
 

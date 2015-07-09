@@ -118,6 +118,8 @@ public class RecurringPropertiesController {
 
         daysBeforeTextField.disableProperty().bind(autoEnterCheckBox.selectedProperty().not());
 
+        daysPastDueTextField.setInteger(CURRENT);
+
         loadTab("NoneTab.fxml", "Tab.None");
         loadTab("DayTab.fxml", "Tab.Day");
         loadTab("WeekTab.fxml", "Tab.Week");
@@ -167,11 +169,14 @@ public class RecurringPropertiesController {
 
         final LocalDate nextDate = DateUtils.asLocalDate(reminder.getIterator().next());
 
-        final Period betweenDates = Period.between(nextDate, LocalDate.now());
-        if (betweenDates.getDays() > 0) {
-            daysPastDueTextField.setInteger(betweenDates.getDays());
-        } else {
-            daysPastDueTextField.setInteger(CURRENT);
+        if (nextDate != null) {
+
+            final Period betweenDates = Period.between(nextDate, LocalDate.now());
+            if (betweenDates.getDays() > 0) {
+                daysPastDueTextField.setInteger(betweenDates.getDays());
+            } else {
+                daysPastDueTextField.setInteger(CURRENT);
+            }
         }
     }
 
@@ -200,8 +205,9 @@ public class RecurringPropertiesController {
 
     @FXML
     private void okAction() {
+        optionalReminder = Optional.of(generateReminder());
+
         ((Stage) parentProperty.get().getWindow()).close();
-        optionalReminder = Optional.ofNullable(generateReminder());
     }
 
     @FXML

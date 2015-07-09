@@ -52,11 +52,9 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
-import jgnash.engine.recurring.MonthlyReminder;
 import jgnash.engine.recurring.Reminder;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.uifx.views.recurring.RecurringEntryDialog;
-import jgnash.util.DateUtils;
 
 /**
  * Abstract Register Table with stats controller
@@ -187,23 +185,15 @@ public abstract class RegisterTableController {
     }
 
     private void handleCreateNewReminder() {
-        try {
-            final Reminder reminder = new MonthlyReminder();
-            reminder.setAccount(accountProperty.get());
-            reminder.setStartDate(DateUtils.addMonth(selectedTransactionProperty.get().getDate()));
-            reminder.setTransaction((Transaction) selectedTransactionProperty.get().clone());
-            reminder.setDescription(selectedTransactionProperty.get().getPayee());
-            reminder.setNotes(selectedTransactionProperty.get().getMemo());
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
-            final Optional<Reminder> optional =  RecurringEntryDialog.showAndWait(reminder);
-            if (optional.isPresent()) {
-                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-                Objects.requireNonNull(engine);
+        final Reminder reminder = engine.createDefaultReminder(selectedTransactionProperty.get(), accountProperty.get());
 
-                engine.addReminder(optional.get());
-            }
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+        final Optional<Reminder> optional = RecurringEntryDialog.showAndWait(reminder);
+
+        if (optional.isPresent()) {
+            engine.addReminder(optional.get());
         }
     }
 
@@ -236,7 +226,7 @@ public abstract class RegisterTableController {
             final MenuItem deleteItem = new MenuItem(resources.getString("Menu.Delete.Name"));
             deleteItem.setOnAction(event -> deleteTransactions());
 
-            final MenuItem reminderItem = new MenuItem("Create new reminder");
+            final MenuItem reminderItem = new MenuItem(resources.getString("Menu.NewReminder.Name"));
             reminderItem.setOnAction(event -> handleCreateNewReminder());
 
             rowMenu.getItems().addAll(markedAs, new SeparatorMenuItem(), duplicateItem, jumpItem, new SeparatorMenuItem(), deleteItem, new SeparatorMenuItem(), reminderItem);
