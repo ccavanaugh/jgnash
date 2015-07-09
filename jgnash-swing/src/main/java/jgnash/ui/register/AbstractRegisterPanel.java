@@ -52,9 +52,11 @@ import jgnash.engine.message.ChannelEvent;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
+import jgnash.engine.recurring.Reminder;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.YesNoDialog;
+import jgnash.ui.recurring.RecurringEntryDialog;
 import jgnash.ui.register.table.AbstractRegisterTableModel;
 import jgnash.ui.register.table.RegisterTable;
 import jgnash.ui.util.JTableUtils;
@@ -328,6 +330,18 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         }
     }
 
+    private void handleCreateNewReminder() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        Reminder reminder = engine.createDefaultReminder(getSelectedTransaction(), getAccount());
+        reminder = RecurringEntryDialog.showDialog(reminder);
+
+        if (reminder != null) {
+            engine.addReminder(reminder);
+        }
+    }
+
     protected CommodityNode getAccountCurrencyNode() {
         return getAccount().getCurrencyNode();
     }
@@ -460,6 +474,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         private final JRadioButtonMenuItem cleared;
         private final JRadioButtonMenuItem reconciled;
         private final JRadioButtonMenuItem unreconciled;
+        private final JMenuItem newReminder;
         private final JMenuItem jump;
 
         public TransactionPopup() {
@@ -501,6 +516,12 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
             delete = new JMenuItem(rb.getString("Menu.Delete.Name"));
             delete.addActionListener(this);
             add(delete);
+
+            addSeparator();
+
+            newReminder = new JMenuItem(rb.getString("Menu.NewReminder.Name"));
+            newReminder.addActionListener(this);
+            add(newReminder);
         }
 
         @Override
@@ -517,6 +538,8 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
                 reconcileAction(ReconciledState.NOT_RECONCILED);
             } else if (e.getSource() == cleared) {
                 reconcileAction(ReconciledState.CLEARED);
+            } else if (e.getSource() == newReminder) {
+                handleCreateNewReminder();
             }
         }
 

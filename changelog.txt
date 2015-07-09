@@ -24,8 +24,11 @@ Budgeting
 - annotation, similar to transaction annotation, so the user can reference the reason for an exception in any given period.
 - flexible start / end period for different fiscal years
 Reinstate archive capability.
-Add ability to make an existing transaction a recurring transaction.
 Improved handling of memo's in split transactions.  The split entry memo should show up in the applicable account
+
+Release 2.17.0
+----------------------
+07/09/15 Add new capability to create a new recurring transaction from an existing transaction (context menu in the register)
 
 Release 2.16.0 (Java 8)
 ----------------------

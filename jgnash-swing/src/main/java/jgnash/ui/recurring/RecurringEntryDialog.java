@@ -17,12 +17,6 @@
  */
 package jgnash.ui.recurring;
 
-import com.jgoodies.forms.builder.ButtonBarBuilder;
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -58,13 +52,18 @@ import jgnash.ui.register.TransactionDialog;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.Resource;
 
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
 /**
  * Dialog for entry for recurring transactions.
  *
  * @author Craig Cavanaugh
- *
  */
-class RecurringEntryDialog extends JDialog implements ActionListener {
+public class RecurringEntryDialog extends JDialog implements ActionListener {
 
     private boolean result = false;
     private Reminder reminder = null;
@@ -120,7 +119,7 @@ class RecurringEntryDialog extends JDialog implements ActionListener {
         return showDialog(null);
     }
 
-    static Reminder showDialog(final Reminder reminder) {
+    public static Reminder showDialog(final Reminder reminder) {
         RecurringEntryDialog d = new RecurringEntryDialog(reminder);
         d.setMinimumSize(d.getSize());
         DialogUtils.addBoundsListener(d, "dialogbounds");
