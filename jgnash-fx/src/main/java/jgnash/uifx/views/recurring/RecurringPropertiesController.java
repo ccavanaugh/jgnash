@@ -17,13 +17,6 @@
  */
 package jgnash.uifx.views.recurring;
 
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -35,7 +28,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import jgnash.engine.Account;
 import jgnash.engine.Transaction;
 import jgnash.engine.recurring.DailyReminder;
@@ -52,6 +44,12 @@ import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.views.register.TransactionDialog;
 import jgnash.util.DateUtils;
 import jgnash.util.ResourceUtils;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 /**
  * Controller for creating and modifying a reminder
@@ -167,17 +165,7 @@ public class RecurringPropertiesController {
         autoEnterCheckBox.setSelected(reminder.isAutoCreate());
         daysBeforeTextField.setInteger(reminder.getDaysAdvance());
 
-        final LocalDate nextDate = DateUtils.asLocalDate(reminder.getIterator().next());
-
-        if (nextDate != null) {
-
-            final Period betweenDates = Period.between(nextDate, LocalDate.now());
-            if (betweenDates.getDays() > 0) {
-                daysPastDueTextField.setInteger(betweenDates.getDays());
-            } else {
-                daysPastDueTextField.setInteger(CURRENT);
-            }
-        }
+        daysPastDueTextField.setInteger(reminder.daysForNextPeriod());
     }
 
     private Reminder generateReminder() {
