@@ -78,7 +78,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * Number of periods to increment between events
      */
-    private int increment = 0;
+    private int increment = 1;
 
     /**
      * The last date the reminder was executed
