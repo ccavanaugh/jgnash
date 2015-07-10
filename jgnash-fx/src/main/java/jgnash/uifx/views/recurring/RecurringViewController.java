@@ -17,7 +17,9 @@
  */
 package jgnash.uifx.views.recurring;
 
+import java.text.DateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -39,6 +41,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -54,6 +57,7 @@ import jgnash.engine.recurring.PendingReminder;
 import jgnash.engine.recurring.Reminder;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.util.DateUtils;
 
 /**
  * Controller for recurring events
@@ -102,7 +106,15 @@ public class RecurringViewController implements MessageListener {
         enabledColumn.setCellValueFactory(param -> new SimpleBooleanProperty(param.getValue().isEnabled()));
         enabledColumn.setCellFactory(CheckBoxTableCell.forTableColumn(enabledColumn));
 
-        tableView.getColumns().addAll(descriptionColumn, frequencyColumn, enabledColumn);
+        final TableColumn<Reminder, Date> lastPosted = new TableColumn<>(resources.getString("Column.LastPosted"));
+        lastPosted.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLastDate()));
+        lastPosted.setCellFactory(cell -> new DateTableCell());
+
+        final TableColumn<Reminder, Date> due = new TableColumn<>(resources.getString("Column.Due"));
+        due.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getIterator().next()));
+        due.setCellFactory(cell -> new DateTableCell());
+
+        tableView.getColumns().addAll(descriptionColumn, frequencyColumn, enabledColumn, lastPosted, due);
 
         sortedReminderList.comparatorProperty().bind(tableView.comparatorProperty());
 
@@ -254,6 +266,22 @@ public class RecurringViewController implements MessageListener {
             }
         } catch (CloneNotSupportedException e) {
             Logger.getLogger(RecurringViewController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
+    }
+
+    private static class DateTableCell extends TableCell<Reminder, Date> {
+
+        private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
+
+        @Override
+        protected void updateItem(final Date date, final boolean empty) {
+            super.updateItem(date, empty);  // required
+
+            if (!empty && date != null) {
+                setText(dateFormatter.format(date));
+            } else {
+                setText(null);
+            }
         }
     }
 }
