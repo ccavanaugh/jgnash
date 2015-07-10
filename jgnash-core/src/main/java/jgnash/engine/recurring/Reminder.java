@@ -17,11 +17,11 @@
  */
 package jgnash.engine.recurring;
 
-import jgnash.engine.Account;
-import jgnash.engine.StoredObject;
-import jgnash.engine.Transaction;
-import jgnash.util.DateUtils;
-import jgnash.util.NotNull;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -29,11 +29,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import jgnash.engine.Account;
+import jgnash.engine.StoredObject;
+import jgnash.engine.Transaction;
+import jgnash.util.DateUtils;
+import jgnash.util.NotNull;
 
 /**
  * This is an abstract class for scheduled reminders.
@@ -221,7 +222,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
      *
      * @return the amount of days of this period, may be negative if past due
      */
-    public int daysForNextPeriod() {
+    public int getDaysForNextPeriod() {
         final LocalDate nextDate = DateUtils.asLocalDate(getIterator().next());
 
         if (nextDate != null) {
