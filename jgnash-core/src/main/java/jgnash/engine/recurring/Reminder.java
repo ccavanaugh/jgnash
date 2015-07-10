@@ -217,20 +217,6 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
         return result;
     }
 
-    /**
-     * Gets the amount of days until the next period.
-     *
-     * @return the amount of days of this period, may be negative if past due
-     */
-    public int getDaysForNextPeriod() {
-        final LocalDate nextDate = DateUtils.asLocalDate(getIterator().next());
-
-        if (nextDate != null) {
-           return Period.between(LocalDate.now(), nextDate).getDays();
-        }
-        return 0;
-    }
-
     public abstract ReminderType getReminderType();
 
     /**
