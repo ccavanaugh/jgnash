@@ -22,6 +22,7 @@ import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -59,6 +60,8 @@ public class DateUtils {
     private static final Pattern DAY_PATTERN = Pattern.compile("d{1,2}");
 
     private static final DateTimeFormatter shortDateTimeFormatter;
+
+    public static final String DEFAULT_XSTREAM_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS 'UTC'";
 
     static {
         final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
@@ -125,6 +128,21 @@ public class DateUtils {
 
         return null;
     }
+
+    /**
+     * Converts a {@code Date} into a {@code LocalDateTime} using the UTC timezone.
+     * @param date {@code Date} to convert
+     * @return an equivalent {@code LocalDateTime} or {@code null} if the supplied date was {@code null}
+     */
+    public static LocalDateTime asLocalDateTime(final Date date) {
+        if (date != null) {
+            return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.of("UTC")).toLocalDateTime();
+        }
+
+        return null;
+    }
+
+
 
     private static void updateMonthNames() {
         if (lastLocale != Locale.getDefault()) {
