@@ -20,9 +20,9 @@ package jgnash.engine.recurring;
 import java.util.Calendar;
 import java.util.Date;
 
-import jgnash.util.DateUtils;
-
 import javax.persistence.Entity;
+
+import jgnash.util.DateUtils;
 
 /**
  * A monthly reminder / iterator. Dates get a little weird when iterating by DAY
@@ -109,23 +109,24 @@ public class MonthlyReminder extends Reminder {
          */
         @Override
         public Date next() {
+            if (isEnabled()) {
+                if (type == DATE) {
+                    calendar.add(Calendar.MONTH, getIncrement());
+                } else {
+                    int week = calendar.get(Calendar.WEEK_OF_MONTH);
+                    int day = calendar.get(Calendar.DAY_OF_WEEK);
 
-            if (type == DATE) {
-                calendar.add(Calendar.MONTH, getIncrement());
-            } else {
-                int week = calendar.get(Calendar.WEEK_OF_MONTH);
-                int day = calendar.get(Calendar.DAY_OF_WEEK);
+                    calendar.add(Calendar.MONTH, getIncrement());
+                    calendar.set(Calendar.WEEK_OF_MONTH, week);
+                    calendar.set(Calendar.DAY_OF_WEEK, day);
+                }
+                final Date date = calendar.getTime();
 
-                calendar.add(Calendar.MONTH, getIncrement());
-                calendar.set(Calendar.WEEK_OF_MONTH, week);
-                calendar.set(Calendar.DAY_OF_WEEK, day);
-            }
-            Date date = calendar.getTime();
-
-            if (getEndDate() == null) {
-                return date;
-            } else if (DateUtils.before(date, getEndDate())) {
-                return date;
+                if (getEndDate() == null) {
+                    return date;
+                } else if (DateUtils.before(date, getEndDate())) {
+                    return date;
+                }
             }
             return null;
         }
