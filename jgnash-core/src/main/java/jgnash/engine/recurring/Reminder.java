@@ -17,11 +17,11 @@
  */
 package jgnash.engine.recurring;
 
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import jgnash.engine.Account;
+import jgnash.engine.StoredObject;
+import jgnash.engine.Transaction;
+import jgnash.util.DateUtils;
+import jgnash.util.NotNull;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -29,12 +29,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import jgnash.engine.Account;
-import jgnash.engine.StoredObject;
-import jgnash.engine.Transaction;
-import jgnash.util.DateUtils;
-import jgnash.util.NotNull;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This is an abstract class for scheduled reminders.
