@@ -50,7 +50,6 @@ import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.views.register.TransactionDialog;
 import jgnash.util.DateUtils;
-import jgnash.util.ResourceUtils;
 
 /**
  * Controller for creating and modifying a reminder
@@ -59,12 +58,11 @@ import jgnash.util.ResourceUtils;
  */
 public class RecurringPropertiesController {
 
-    private static final int CURRENT = 0;
-
-    private final ResourceBundle resources = ResourceUtils.getBundle();
-
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+
+    @FXML
+    private ResourceBundle resources;
 
     @FXML
     private DatePickerEx startDatePicker;
@@ -77,9 +75,6 @@ public class RecurringPropertiesController {
 
     @FXML
     private TextField lastOccurrenceTextField;
-
-    @FXML
-    private IntegerTextField daysPastDueTextField;
 
     @FXML
     private CheckBox autoEnterCheckBox;
@@ -116,8 +111,6 @@ public class RecurringPropertiesController {
         tabMap.put(YearlyReminder.class, 4);
 
         daysBeforeTextField.disableProperty().bind(autoEnterCheckBox.selectedProperty().not());
-
-        daysPastDueTextField.setInteger(CURRENT);
 
         loadTab("NoneTab.fxml", "Tab.None");
         loadTab("DayTab.fxml", "Tab.Day");
@@ -165,10 +158,6 @@ public class RecurringPropertiesController {
 
         autoEnterCheckBox.setSelected(reminder.isAutoCreate());
         daysBeforeTextField.setInteger(reminder.getDaysAdvance());
-
-        if (reminder.getDaysForNextPeriod() < 0) {
-            daysPastDueTextField.setInteger(reminder.getDaysForNextPeriod() * -1);
-        }
     }
 
     private Reminder generateReminder() {

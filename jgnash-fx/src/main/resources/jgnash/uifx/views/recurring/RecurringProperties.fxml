@@ -34,16 +34,20 @@
                     </rowConstraints>
                     <children>
                         <Label text="%Label.Account" GridPane.rowIndex="0"/>
-                        <AccountComboBox fx:id="accountComboBox" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.columnSpan="2"/>
+                        <AccountComboBox fx:id="accountComboBox" GridPane.columnIndex="1" GridPane.rowIndex="0"
+                                         GridPane.columnSpan="2"/>
 
                         <Label text="%Label.Description" GridPane.rowIndex="1"/>
-                        <TextField fx:id="descriptionTextField" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+                        <TextField fx:id="descriptionTextField" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                                   GridPane.columnSpan="2"/>
 
                         <Label text="%Label.Transaction" GridPane.rowIndex="2"/>
-                        <TextField fx:id="payeeTextField" editable="false" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                        <TextField fx:id="payeeTextField" editable="false" GridPane.rowIndex="2"
+                                   GridPane.columnIndex="1"/>
                         <ButtonBar GridPane.rowIndex="2" GridPane.columnIndex="2">
                             <buttons>
-                                <Button text="%Button.Edit" onAction="#handleEditTransaction" ButtonBar.buttonData="LEFT" />
+                                <Button text="%Button.Edit" onAction="#handleEditTransaction"
+                                        ButtonBar.buttonData="LEFT" />
                                 <Button text="%Button.Delete" ButtonBar.buttonData="LEFT" />
                             </buttons>
                         </ButtonBar>
@@ -71,7 +75,8 @@
                         <Label text="%Label.FirstPayDate"/>
                         <DatePickerEx fx:id="startDatePicker" GridPane.columnIndex="1" prefWidth="110"/>
                         <CheckBox fx:id="enabledCheckBox" text="%Button.Enabled" GridPane.columnIndex="2"/>
-                        <TabPane fx:id="tabs" GridPane.rowIndex="1" GridPane.columnSpan="3" tabClosingPolicy="UNAVAILABLE"/>
+                        <TabPane fx:id="tabs" GridPane.rowIndex="1" GridPane.columnSpan="3"
+                                 tabClosingPolicy="UNAVAILABLE"/>
                     </children>
                 </GridPane>
             </content>
@@ -86,17 +91,14 @@
                     <rowConstraints>
                         <RowConstraints vgrow="NEVER"/>
                         <RowConstraints vgrow="NEVER"/>
-                        <RowConstraints vgrow="NEVER"/>
                     </rowConstraints>
                     <children>
                         <CheckBox fx:id="autoEnterCheckBox" text="%Button.EnterDaysBefore"/>
                         <IntegerTextField fx:id="daysBeforeTextField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
                         <Label text="%Label.LastOccurrence" GridPane.rowIndex="1"/>
-                        <TextField editable="false" fx:id="lastOccurrenceTextField" GridPane.rowIndex="1" GridPane.columnIndex="1" />
-
-                        <Label text="%Label.DaysPastDue" GridPane.rowIndex="2"/>
-                        <IntegerTextField editable="false" fx:id="daysPastDueTextField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                        <TextField editable="false" fx:id="lastOccurrenceTextField" GridPane.rowIndex="1"
+                                   GridPane.columnIndex="1" />
                     </children>
                 </GridPane>
             </content>

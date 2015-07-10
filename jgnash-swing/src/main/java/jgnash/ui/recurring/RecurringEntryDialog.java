@@ -204,7 +204,7 @@ public class RecurringEntryDialog extends JDialog implements ActionListener {
     }
 
     private JPanel createEntryPanel() {
-        FormLayout layout = new FormLayout("right:p, 4dlu, 45dlu", "f:p, 3dlu, f:p, 3dlu, f:p");
+        FormLayout layout = new FormLayout("right:p, 4dlu, 45dlu", "f:p, 3dlu, f:p");
 
         CellConstraints cc = new CellConstraints();
 
@@ -212,7 +212,6 @@ public class RecurringEntryDialog extends JDialog implements ActionListener {
         autoEnterCheckBox = new JCheckBox(rb.getString("Button.EnterDaysBefore"));
         daysBeforeField = new JIntegerField();
         lastOccurrenceField = new JDateField();
-        JIntegerField daysPastDueField = new JIntegerField();
 
         p.add(autoEnterCheckBox, cc.xy(1, 1));
         p.add(daysBeforeField, cc.xy(3, 1));
@@ -220,12 +219,8 @@ public class RecurringEntryDialog extends JDialog implements ActionListener {
         p.add(new JLabel(rb.getString("Label.LastOccurrence")), cc.xy(1, 3));
         p.add(lastOccurrenceField, cc.xy(3, 3));
 
-        p.add(new JLabel(rb.getString("Label.DaysPastDue")), cc.xy(1, 5));
-        p.add(daysPastDueField, cc.xy(3, 5));
-
         lastOccurrenceField.setValue(null); // clear the date
         lastOccurrenceField.setEditable(false);
-        daysPastDueField.setEditable(false);
 
         return p;
     }
