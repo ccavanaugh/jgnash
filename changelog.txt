@@ -28,6 +28,7 @@ Improved handling of memo's in split transactions.  The split entry memo should 
 
 Release 2.17.0
 ----------------------
+07/10/15 Removed the days past due field in recurring form.  It's not needed because we have a Due date column now.
 07/09/15 Add aLast Posted date and Due date columns to the reminder table for easy reference
 07/09/15 Add new capability to create a new recurring transaction from an existing transaction (context menu in the register)
 
