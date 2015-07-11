@@ -44,8 +44,15 @@ import jgnash.util.Resource;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
+import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentCollectionConverter;
+import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentMapConverter;
+import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentSortedMapConverter;
+import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentSortedSetConverter;
+import com.thoughtworks.xstream.hibernate.converter.HibernateProxyConverter;
+import com.thoughtworks.xstream.hibernate.mapper.HibernateMapper;
+import com.thoughtworks.xstream.io.xml.KXml2Driver;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
+import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 /**
  * Import and export a tree of accounts
@@ -58,7 +65,17 @@ public class AccountTreeXMLFactory {
     private static final String RESOURCE_ROOT_PATH = "/jgnash/resource/account";
 
     private static XStream getStream() {
-        XStream xstream = new XStream(new PureJavaReflectionProvider(), new StaxDriver());
+
+        final XStream xstream = new XStream(new PureJavaReflectionProvider(), new KXml2Driver()) {
+
+            @Override
+            protected MapperWrapper wrapMapper(final MapperWrapper next) {
+                return new HibernateMapper(next);
+            }
+        };
+
+        xstream.ignoreUnknownElements();    // gracefully ignore fields in the file that do not have object members
+
         xstream.setMode(XStream.ID_REFERENCES);
 
         xstream.alias("Account", Account.class);
@@ -81,11 +98,22 @@ public class AccountTreeXMLFactory {
         xstream.omitField(StoredObject.class, "uuid");
         xstream.omitField(StoredObject.class, "markedForRemoval");
 
+        // Ignore fields required for JPA
+        xstream.omitField(StoredObject.class, "version");
+
         xstream.omitField(Account.class, "transactions");
         xstream.omitField(Account.class, "accountBalance");
         xstream.omitField(Account.class, "reconciledBalance");
+        xstream.omitField(Account.class, "attributes");
 
         xstream.omitField(SecurityNode.class, "historyNodes");
+
+        // Filters out the hibernate
+        xstream.registerConverter(new HibernateProxyConverter());
+        xstream.registerConverter(new HibernatePersistentCollectionConverter(xstream.getMapper()));
+        xstream.registerConverter(new HibernatePersistentMapConverter(xstream.getMapper()));
+        xstream.registerConverter(new HibernatePersistentSortedMapConverter(xstream.getMapper()));
+        xstream.registerConverter(new HibernatePersistentSortedSetConverter(xstream.getMapper()));
 
         return xstream;
     }
@@ -95,8 +123,8 @@ public class AccountTreeXMLFactory {
 
         XStream xstream = getStream();
 
-        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), ENCODING);
-             ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(writer))) {
+        try (final OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), ENCODING);
+             final ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(writer))) {
             out.writeObject(account);
         } catch (IOException e) {
             Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
@@ -114,8 +142,8 @@ public class AccountTreeXMLFactory {
 
         XStream xstream = getStream();
 
-        try (ObjectInputStream in = xstream.createObjectInputStream(reader)) {
-            Object o = in.readObject();
+        try (final ObjectInputStream in = xstream.createObjectInputStream(reader)) {
+            final Object o = in.readObject();
 
             if (o instanceof RootAccount) {
                 account = (RootAccount) o;
@@ -151,7 +179,7 @@ public class AccountTreeXMLFactory {
      * @param stream InputStream to use
      * @return RootAccount if stream is valid
      */
-    public static RootAccount loadAccountTree(final InputStream stream) {
+    private static RootAccount loadAccountTree(final InputStream stream) {
         try (Reader reader = new InputStreamReader(stream, ENCODING)) {
             return loadAccountTree(reader);
         } catch (IOException ex) {
