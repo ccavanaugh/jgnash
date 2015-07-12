@@ -41,6 +41,7 @@ import javax.swing.WindowConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.ListSelectionEvent;
 
+import jgnash.ui.util.IconUtils;
 import jgnash.util.Resource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -139,10 +140,10 @@ public class WizardDialog extends JDialog implements ActionListener {
         pagePanel = new JPanel(new CardLayout());
 
         backButton = new JButton(rb.getString("Button.Back"));
-        backButton.setIcon(Resource.getIcon("/jgnash/resource/go-previous.png"));
+        backButton.setIcon(IconUtils.getIcon("/jgnash/resource/go-previous.png"));
 
         nextButton = new JButton(rb.getString("Button.Next"));
-        nextButton.setIcon(Resource.getIcon("/jgnash/resource/go-next.png"));
+        nextButton.setIcon(IconUtils.getIcon("/jgnash/resource/go-next.png"));
         nextButton.setHorizontalTextPosition(SwingConstants.LEADING);
 
         finishButton = new JButton(rb.getString("Button.Finish"));

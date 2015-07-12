@@ -45,8 +45,8 @@ import jgnash.ui.components.CheckListCellRenderer;
 import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.util.DialogUtils;
+import jgnash.ui.util.IconUtils;
 import jgnash.ui.util.ToggleSelectionModel;
-import jgnash.util.Resource;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -91,7 +91,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
         setTitle(rb.getString("Title.HistoryImport"));
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-        setIconImage(Resource.getImage("/jgnash/resource/gnome-money.png"));
+        setIconImage(IconUtils.getImage("/jgnash/resource/gnome-money.png"));
 
         final Calendar cal = Calendar.getInstance();
 

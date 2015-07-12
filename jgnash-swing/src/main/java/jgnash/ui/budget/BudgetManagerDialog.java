@@ -47,6 +47,7 @@ import jgnash.ui.UIApplication;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.components.YesNoDialog;
 import jgnash.ui.util.DialogUtils;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Resource;
 
@@ -91,7 +92,7 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
     private BudgetManagerDialog() {
         super(UIApplication.getFrame(), true);
         setTitle(rb.getString("Title.BudgetManager"));
-        setIconImage(Resource.getImage("/jgnash/resource/gnome-money.png"));
+        setIconImage(IconUtils.getImage("/jgnash/resource/gnome-money.png"));
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         layoutMainPanel();

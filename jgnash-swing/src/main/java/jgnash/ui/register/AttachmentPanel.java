@@ -47,6 +47,7 @@ import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.ImageDialog;
 import jgnash.ui.components.YesNoDialog;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.Resource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -68,9 +69,9 @@ class AttachmentPanel extends JPanel implements ActionListener {
     private boolean moveAttachment = false;
 
     AttachmentPanel() {
-        attachmentButton = new JButton(Resource.getIcon("/jgnash/resource/mail-attachment.png"));
-        deleteButton = new JButton(Resource.getIcon("/jgnash/resource/edit-delete.png"));
-        viewAttachmentButton = new JButton(Resource.getIcon("/jgnash/resource/zoom-fit-best.png"));
+        attachmentButton = new JButton(IconUtils.getIcon("/jgnash/resource/mail-attachment.png"));
+        deleteButton = new JButton(IconUtils.getIcon("/jgnash/resource/edit-delete.png"));
+        viewAttachmentButton = new JButton(IconUtils.getIcon("/jgnash/resource/zoom-fit-best.png"));
 
         attachmentButton.setToolTipText(rb.getString("ToolTip.AddAttachment"));
         deleteButton.setToolTipText(rb.getString("ToolTip.DeleteAttachment"));

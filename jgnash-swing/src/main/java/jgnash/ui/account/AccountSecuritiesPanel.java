@@ -37,6 +37,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
 import jgnash.ui.components.SortedListModel;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Resource;
 
@@ -74,10 +75,10 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
     }
 
     private void initComponents() {
-        addButton = new JButton(rb.getString("Button.Add"), Resource.getIcon("/jgnash/resource/list-add.png"));
+        addButton = new JButton(rb.getString("Button.Add"), IconUtils.getIcon("/jgnash/resource/list-add.png"));
         addButton.setHorizontalTextPosition(SwingConstants.LEADING);
 
-        removeButton = new JButton(rb.getString("Button.Remove"), Resource.getIcon("/jgnash/resource/list-remove.png"));
+        removeButton = new JButton(rb.getString("Button.Remove"), IconUtils.getIcon("/jgnash/resource/list-remove.png"));
 
         availJList = new JList<>();
         selectedJList = new JList<>();

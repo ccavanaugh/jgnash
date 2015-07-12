@@ -82,6 +82,7 @@ import jgnash.ui.register.MainRegisterPanel;
 import jgnash.ui.register.RegisterEvent;
 import jgnash.ui.register.RegisterFrame;
 import jgnash.ui.util.DialogUtils;
+import jgnash.ui.util.IconUtils;
 import jgnash.ui.util.builder.ActionParser;
 import jgnash.util.Resource;
 import jgnash.util.ResourceUtils;
@@ -150,7 +151,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
         applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 
-        setIconImage(Resource.getImage("/jgnash/resource/gnome-money.png"));
+        setIconImage(IconUtils.getImage("/jgnash/resource/gnome-money.png"));
 
         buildUI();
 

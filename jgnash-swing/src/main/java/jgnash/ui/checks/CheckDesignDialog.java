@@ -56,6 +56,7 @@ import jgnash.engine.checks.CheckObject.CheckObjectType;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.JTextFieldEx;
 import jgnash.ui.components.RollOverButton;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.Resource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -139,10 +140,10 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
         toolBar = new JToolBar();
         toolBar.setRollover(true);
 
-        openButton = new RollOverButton(rb.getString("Menu.Open.Name"), Resource.getIcon("/jgnash/resource/document-open.png"));
+        openButton = new RollOverButton(rb.getString("Menu.Open.Name"), IconUtils.getIcon("/jgnash/resource/document-open.png"));
         openButton.setMnemonic(rb.getMnemonic("Menu.Open.Mnemonic"));
 
-        saveButton = new RollOverButton(rb.getString("Menu.Save.Name"), Resource.getIcon("/jgnash/resource/document-save.png"));
+        saveButton = new RollOverButton(rb.getString("Menu.Save.Name"), IconUtils.getIcon("/jgnash/resource/document-save.png"));
         saveButton.setMnemonic(rb.getMnemonic("Menu.Save.Mnemonic"));
 
         toolBar.add(openButton);

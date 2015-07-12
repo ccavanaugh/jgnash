@@ -24,11 +24,9 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;
+import javax.swing.JLayer;
 
 import jgnash.ui.AbstractLayerUI;
-import jgnash.util.Resource;
-
-import javax.swing.JLayer;
 
 /**
  * Validation factory methods
@@ -43,7 +41,7 @@ public class ValidationFactory {
     private static final String VALIDATION_PROPERTY = "validationProperty";
 
     static {
-        errorIcon = Resource.getIcon("/jgnash/resource/validation-error.png");
+        errorIcon = IconUtils.getIcon("/jgnash/resource/validation-error.png");
     }
 
     private ValidationFactory() {

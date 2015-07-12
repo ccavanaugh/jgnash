@@ -17,10 +17,6 @@
  */
 package jgnash.ui.components;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,7 +28,12 @@ import javax.swing.JDialog;
 
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * A simple dialog with a close button
@@ -52,7 +53,7 @@ public class GenericCloseDialog extends JDialog implements ActionListener {
         super(parent);
         setTitle(title);
         setModal(true);
-        setIconImage(Resource.getImage("/jgnash/resource/gnome-money.png"));
+        setIconImage(IconUtils.getImage("/jgnash/resource/gnome-money.png"));
         this.component = panel;
         layoutMainPanel();
 

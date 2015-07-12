@@ -17,7 +17,6 @@
  */
 package jgnash.util;
 
-import java.awt.Image;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -26,7 +25,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
 /**
@@ -146,36 +144,6 @@ public class Resource {
             logger.log(Level.WARNING, "The value ''{0}'' for key ''{1}'' is not valid.", new Object[]{value, key});
         }
         return keyStroke;
-    }
-
-    /**
-     * Creates an ImageIcon using a buffered image to take advantage of hardware
-     * rendering if it is available
-     *
-     * @param icon path to icon
-     * @return icon
-     */
-    public static ImageIcon getIcon(final String icon) {
-
-        ImageIcon imageIcon;
-
-        try {
-            imageIcon =  new ImageIcon(resource.getClass().getResource(icon));
-        } catch (NullPointerException e) {
-            imageIcon = null;
-        }
-
-        return imageIcon;
-    }
-
-    /**
-     * Creates an Image using the specified file
-     *
-     * @param icon path to icon
-     * @return new Image
-     */
-    public static Image getImage(final String icon) {
-        return getIcon(icon).getImage();
     }
 
     /**

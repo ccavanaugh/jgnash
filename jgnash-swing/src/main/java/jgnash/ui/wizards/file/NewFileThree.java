@@ -36,6 +36,7 @@ import javax.swing.text.StyledEditorKit;
 import jgnash.engine.CurrencyNode;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.components.wizard.WizardPage;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.Resource;
 import jgnash.util.TextResource;
 
@@ -66,11 +67,11 @@ public class NewFileThree extends JPanel implements WizardPage, ActionListener {
 
     private void initComponents() {
         addButton = new JButton(rb.getString("Button.Add"));
-        addButton.setIcon(Resource.getIcon("/jgnash/resource/list-add.png"));
+        addButton.setIcon(IconUtils.getIcon("/jgnash/resource/list-add.png"));
         addButton.setHorizontalTextPosition(SwingConstants.LEADING);
 
         removeButton = new JButton(rb.getString("Button.Remove"));
-        removeButton.setIcon(Resource.getIcon("/jgnash/resource/list-remove.png"));
+        removeButton.setIcon(IconUtils.getIcon("/jgnash/resource/list-remove.png"));
 
         aJList = new JList<>();
         cJList = new JList<>();

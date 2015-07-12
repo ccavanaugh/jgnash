@@ -53,6 +53,7 @@ import jgnash.ui.actions.ReconcileAccountAction;
 import jgnash.ui.components.RollOverButton;
 import jgnash.ui.register.table.AbstractRegisterTableModel;
 import jgnash.ui.report.compiled.AccountRegisterReport;
+import jgnash.ui.util.IconUtils;
 import jgnash.ui.util.JTableUtils;
 import jgnash.util.Resource;
 
@@ -113,37 +114,37 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
 
-        reconcileButton = new RollOverButton(rb.getString("Button.Reconcile"), Resource.getIcon("/jgnash/resource/view-refresh.png"));
+        reconcileButton = new RollOverButton(rb.getString("Button.Reconcile"), IconUtils.getIcon("/jgnash/resource/view-refresh.png"));
         reconcileButton.setToolTipText(rb.getString("ToolTip.ReconcileAccount"));
         reconcileButton.addActionListener(this);
         toolBar.add(reconcileButton);
 
-        filterButton = new RollOverButton(rb.getString("Button.Filter"), Resource.getIcon("/jgnash/resource/preferences-system.png"));
+        filterButton = new RollOverButton(rb.getString("Button.Filter"), IconUtils.getIcon("/jgnash/resource/preferences-system.png"));
         filterButton.setToolTipText(rb.getString("ToolTip.FilterAccounts"));
         filterButton.addActionListener(this);
         toolBar.add(filterButton);
 
-        columnsButton = new RollOverButton(rb.getString("Button.Columns"), Resource.getIcon("/jgnash/resource/stock_select-column.png"));
+        columnsButton = new RollOverButton(rb.getString("Button.Columns"), IconUtils.getIcon("/jgnash/resource/stock_select-column.png"));
         columnsButton.setToolTipText(rb.getString("ToolTip.ColumnVis"));
         columnsButton.addActionListener(this);
         toolBar.add(columnsButton);
 
-        resizeButton = new RollOverButton(rb.getString("Button.Resize"), Resource.getIcon("/jgnash/resource/stock_table-fit-width.png"));
+        resizeButton = new RollOverButton(rb.getString("Button.Resize"), IconUtils.getIcon("/jgnash/resource/stock_table-fit-width.png"));
         resizeButton.setToolTipText(rb.getString("ToolTip.ResizeColumns"));
         resizeButton.addActionListener(this);
         toolBar.add(resizeButton);
 
-        zoomButton = new RollOverButton(rb.getString("Button.Zoom"), Resource.getIcon("/jgnash/resource/edit-find.png"));
+        zoomButton = new RollOverButton(rb.getString("Button.Zoom"), IconUtils.getIcon("/jgnash/resource/edit-find.png"));
         zoomButton.setToolTipText(rb.getString("ToolTip.ZoomRegister"));
         zoomButton.addActionListener(this);
         toolBar.add(zoomButton);
 
-        printButton = new RollOverButton(rb.getString("Button.Print"), Resource.getIcon("/jgnash/resource/document-print.png"));
+        printButton = new RollOverButton(rb.getString("Button.Print"), IconUtils.getIcon("/jgnash/resource/document-print.png"));
         printButton.setToolTipText(rb.getString("ToolTip.PrintRegRep"));
         printButton.addActionListener(this);
         toolBar.add(printButton);
 
-        exportButton = new RollOverButton(rb.getString("Button.Export"), Resource.getIcon("/jgnash/resource/document-save-as.png"));
+        exportButton = new RollOverButton(rb.getString("Button.Export"), IconUtils.getIcon("/jgnash/resource/document-save-as.png"));
         exportButton.setToolTipText(rb.getString("ToolTip.ExportTransactions"));
         exportButton.addActionListener(this);
         toolBar.add(exportButton);

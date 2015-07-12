@@ -43,6 +43,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.JTextFieldEx;
 import jgnash.ui.util.DialogUtils;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.Resource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -110,8 +111,8 @@ public class TransactionNumberDialog extends JDialog implements ActionListener {
         insertButton = new JButton(rb.getString("Button.Insert"));
         removeButton = new JButton(rb.getString("Button.Remove"));
 
-        upButton = new JButton(Resource.getIcon("/jgnash/resource/stock_up-16.png"));
-        downButton = new JButton(Resource.getIcon("/jgnash/resource/stock_down-16.png"));
+        upButton = new JButton(IconUtils.getIcon("/jgnash/resource/stock_up-16.png"));
+        downButton = new JButton(IconUtils.getIcon("/jgnash/resource/stock_down-16.png"));
 
         insertButton.addActionListener(this);
         cancelButton.addActionListener(this);

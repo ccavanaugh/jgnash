@@ -62,6 +62,7 @@ import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.components.RollOverButton;
 import jgnash.ui.components.YesNoDialog;
 import jgnash.ui.util.DialogUtils;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.Resource;
 
 /**
@@ -164,11 +165,11 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
 
-        newButton = new RollOverButton(rb.getString("Button.New"), Resource.getIcon("/jgnash/resource/document-new.png"));
-        modifyButton = new RollOverButton(rb.getString("Button.Modify"), Resource.getIcon("/jgnash/resource/document-properties.png"));
-        deleteButton = new RollOverButton(rb.getString("Button.Delete"), Resource.getIcon("/jgnash/resource/edit-delete.png"));
+        newButton = new RollOverButton(rb.getString("Button.New"), IconUtils.getIcon("/jgnash/resource/document-new.png"));
+        modifyButton = new RollOverButton(rb.getString("Button.Modify"), IconUtils.getIcon("/jgnash/resource/document-properties.png"));
+        deleteButton = new RollOverButton(rb.getString("Button.Delete"), IconUtils.getIcon("/jgnash/resource/edit-delete.png"));
 
-        remindersButton = new RollOverButton(rb.getString("Button.CheckReminders"), Resource.getIcon("/jgnash/resource/view-refresh.png"));
+        remindersButton = new RollOverButton(rb.getString("Button.CheckReminders"), IconUtils.getIcon("/jgnash/resource/view-refresh.png"));
 
         reminderTable = new FormattedJTable();
         reminderTable.setAutoCreateRowSorter(true);

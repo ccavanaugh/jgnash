@@ -66,6 +66,7 @@ import jgnash.engine.message.MessageProperty;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.RollOverButton;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;
 
@@ -127,16 +128,16 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
         Resource rb = Resource.get();
 
         budgetExportButton = new RollOverButton(rb.getString("Button.ExportSpreadsheet"),
-                Resource.getIcon("/jgnash/resource/x-office-spreadsheet.png"));
+                IconUtils.getIcon("/jgnash/resource/x-office-spreadsheet.png"));
         budgetExportButton.addActionListener(this);
 
         budgetManagerButton = new RollOverButton(rb.getString("Button.BudgetMgr"),
-                Resource.getIcon("/jgnash/resource/document-new.png"));
+                IconUtils.getIcon("/jgnash/resource/document-new.png"));
         budgetManagerButton.setToolTipText(rb.getString("ToolTip.BudgetMgr"));
         budgetManagerButton.addActionListener(this);
 
         budgetPropertiesButton = new RollOverButton(rb.getString("Button.Properties"),
-                Resource.getIcon("/jgnash/resource/document-properties.png"));
+                IconUtils.getIcon("/jgnash/resource/document-properties.png"));
         budgetPropertiesButton.addActionListener(this);
 
         summaryRowVisibleCheckBox = new JCheckBox(rb.getString("Button.SumRowVis"));

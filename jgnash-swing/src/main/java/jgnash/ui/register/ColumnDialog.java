@@ -17,11 +17,6 @@
  */
 package jgnash.ui.register;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,7 +35,13 @@ import jgnash.ui.UIApplication;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.register.table.AbstractRegisterTableModel;
 import jgnash.ui.util.DialogUtils;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 /**
  * This dialog will display the available columns in a transaction register and
@@ -103,11 +104,11 @@ class ColumnDialog extends JDialog implements ActionListener {
         cancelButton = new JButton(rb.getString("Button.Cancel"));
 
         addButton = new JButton(rb.getString("Button.Add"));
-        addButton.setIcon(Resource.getIcon("/jgnash/resource/list-add.png"));
+        addButton.setIcon(IconUtils.getIcon("/jgnash/resource/list-add.png"));
         addButton.setHorizontalTextPosition(SwingConstants.LEADING);
 
         removeButton = new JButton(rb.getString("Button.Remove"));
-        removeButton.setIcon(Resource.getIcon("/jgnash/resource/list-remove.png"));
+        removeButton.setIcon(IconUtils.getIcon("/jgnash/resource/list-remove.png"));
 
         // generate the Jlists
         String[] names = model.getColumnNames();

@@ -51,8 +51,8 @@ import jgnash.ui.report.AbstractReportTableModel;
 import jgnash.ui.report.ColumnHeaderStyle;
 import jgnash.ui.report.ColumnStyle;
 import jgnash.ui.report.jasper.DynamicJasperReport;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -144,7 +144,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
                 SORT_ORDER_BALANCE_DESC_WITH_PERCENTILE});
         sortOrderList.setSelectedIndex(0);
 
-        refreshButton = new JButton(rb.getString("Button.Refresh"), Resource.getIcon("/jgnash/resource/view-refresh.png"));
+        refreshButton = new JButton(rb.getString("Button.Refresh"), IconUtils.getIcon("/jgnash/resource/view-refresh.png"));
 
         refreshButton.addActionListener(new AbstractAction() {
 

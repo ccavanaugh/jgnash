@@ -48,6 +48,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.text.CommodityFormat;
 import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.JFloatField;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.Resource;
 
 import com.jgoodies.forms.factories.Borders;
@@ -155,7 +156,7 @@ public class AccountExchangePanel extends JPanel implements ActionListener, Focu
         exchangeAmountField = new JFloatField(selectedCurrency);
         exchangeAmountField.addFocusListener(this);
 
-        expandButton = new JToggleButton(Resource.getIcon("/jgnash/resource/mail-send-receive.png"));
+        expandButton = new JToggleButton(IconUtils.getIcon("/jgnash/resource/mail-send-receive.png"));
         expandButton.setMargin(new Insets(0, 0, 0, 0));
 
         expandButton.addItemListener(this);

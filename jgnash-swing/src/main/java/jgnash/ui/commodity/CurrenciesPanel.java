@@ -41,6 +41,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.util.DialogUtils;
+import jgnash.ui.util.IconUtils;
 import jgnash.ui.util.ValidationFactory;
 import jgnash.util.NotNull;
 import jgnash.util.Resource;
@@ -97,11 +98,11 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
 
     private void initComponents() {
         addButton = new JButton(rb.getString("Button.Add"));
-        addButton.setIcon(Resource.getIcon("/jgnash/resource/list-add.png"));
+        addButton.setIcon(IconUtils.getIcon("/jgnash/resource/list-add.png"));
         addButton.setHorizontalTextPosition(SwingConstants.LEADING);
 
         removeButton = new JButton(rb.getString("Button.Remove"));
-        removeButton.setIcon(Resource.getIcon("/jgnash/resource/list-remove.png"));
+        removeButton.setIcon(IconUtils.getIcon("/jgnash/resource/list-remove.png"));
 
         customButton = new JButton(rb.getString("Button.Add"));
         customField = new JTextField();

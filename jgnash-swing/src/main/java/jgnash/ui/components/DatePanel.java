@@ -17,19 +17,22 @@
  */
 package jgnash.ui.components;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-
-import java.awt.*;
+import java.awt.Insets;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import jgnash.ui.ThemeManager;
 import jgnash.ui.plaf.NimbusUtils;
-import jgnash.util.Resource;
+import jgnash.ui.util.IconUtils;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Panel that contains a date field a displays a calendar.
@@ -46,7 +49,7 @@ public class DatePanel extends JPanel implements ActionListener {
     public DatePanel() {
         dateField = new JDateField();
 
-        button = new JButton(Resource.getIcon("/jgnash/resource/office-calendar.png"));
+        button = new JButton(IconUtils.getIcon("/jgnash/resource/office-calendar.png"));
 
         button.setMargin(new Insets(0, 0, 0, 0)); // take up less space
         button.addActionListener(this);
@@ -54,7 +57,7 @@ public class DatePanel extends JPanel implements ActionListener {
         if (ThemeManager.isLookAndFeelNimbus()) {
             NimbusUtils.reduceNimbusButtonMargin(button);
 
-            button.setIcon(NimbusUtils.scaleIcon(Resource.getIcon("/jgnash/resource/office-calendar.png")));
+            button.setIcon(NimbusUtils.scaleIcon(IconUtils.getIcon("/jgnash/resource/office-calendar.png")));
         }
 
         FormLayout layout = new FormLayout("max(40dlu;pref):g, 1px, min", "f:d:g");

@@ -68,6 +68,7 @@ import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.util.DialogUtils;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;
 
@@ -179,10 +180,10 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
 
         addButton = new JButton(rb.getString("Button.Add"));
         updateButton = new JButton(rb.getString("Button.UpdateOnline"));
-        updateButton.setIcon(Resource.getIcon("/jgnash/resource/applications-internet.png"));
+        updateButton.setIcon(IconUtils.getIcon("/jgnash/resource/applications-internet.png"));
         progressBar = new JProgressBar();
         stopButton = new JButton(rb.getString("Button.Stop"));
-        stopButton.setIcon(Resource.getIcon("/jgnash/resource/process-stop.png"));
+        stopButton.setIcon(IconUtils.getIcon("/jgnash/resource/process-stop.png"));
         stopButton.setEnabled(false);
 
         addButton.addActionListener(this);

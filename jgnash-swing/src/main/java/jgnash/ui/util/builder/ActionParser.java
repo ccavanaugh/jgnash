@@ -55,6 +55,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import jgnash.ui.components.RollOverButton;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.Resource;
 
 import org.xml.sax.Attributes;
@@ -347,7 +348,7 @@ public final class ActionParser extends DefaultHandler {
 
             if (aa.getValue(ICON_INDEX) != null) {
                 try {
-                    Icon icon = Resource.getIcon(aa.getValue(ICON_INDEX));
+                    Icon icon = IconUtils.getIcon(aa.getValue(ICON_INDEX));
                     action.putValue(Action.SMALL_ICON, icon);
                 } catch (Exception e) {
                     log.log(Level.WARNING, aa.getValue(ICON_INDEX) + " not found", e);

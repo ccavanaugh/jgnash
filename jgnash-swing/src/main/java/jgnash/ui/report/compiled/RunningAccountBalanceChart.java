@@ -39,6 +39,7 @@ import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.FilteredAccountListComboBox;
 import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.register.AccountBalanceDisplayManager;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;
 
@@ -104,7 +105,7 @@ public class RunningAccountBalanceChart {
         startDateField.setDate(start);
 
         JButton refreshButton = new JButton(rb.getString("Button.Refresh"));
-        refreshButton.setIcon(Resource.getIcon("/jgnash/resource/view-refresh.png"));
+        refreshButton.setIcon(IconUtils.getIcon("/jgnash/resource/view-refresh.png"));
 
         subAccountCheckBox = new JCheckBox(rb.getString("Button.IncludeSubAccounts"));
         subAccountCheckBox.setSelected(true);

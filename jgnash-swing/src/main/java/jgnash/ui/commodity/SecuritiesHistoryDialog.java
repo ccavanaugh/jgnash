@@ -69,8 +69,8 @@ import jgnash.ui.components.JFloatField;
 import jgnash.ui.components.JIntegerField;
 import jgnash.ui.components.SecurityComboBox;
 import jgnash.ui.util.DialogUtils;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
@@ -163,7 +163,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
         securityCombo = new SecurityComboBox();
         volumeField = new JIntegerField();
 
-        updateButton = new JButton(rb.getString("Button.UpdateOnline"), Resource.getIcon("/jgnash/resource/applications-internet.png"));
+        updateButton = new JButton(rb.getString("Button.UpdateOnline"), IconUtils.getIcon("/jgnash/resource/applications-internet.png"));
 
         deleteButton = new JButton(rb.getString("Button.Delete"));
         clearButton = new JButton(rb.getString("Button.Clear"));

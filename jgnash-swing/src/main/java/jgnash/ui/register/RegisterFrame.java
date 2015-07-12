@@ -43,7 +43,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.Resource;
+import jgnash.ui.util.IconUtils;
 
 /**
  * A Dialog that displays a single account register. Size and position is remembered
@@ -63,7 +63,7 @@ public final class RegisterFrame extends JFrame implements MessageListener {
     private RegisterFrame(final Account account) {
         super();
 
-        setIconImage(Resource.getImage("/jgnash/resource/gnome-money.png"));
+        setIconImage(IconUtils.getImage("/jgnash/resource/gnome-money.png"));
 
         this.account = account;
 

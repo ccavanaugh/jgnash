@@ -42,6 +42,7 @@ import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.Account;
 import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.FormattedJTable;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
@@ -191,16 +192,16 @@ class ImportTable extends FormattedJTable {
         private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
 
         public Model() {
-            notEqualIcon = Resource.getIcon("/jgnash/resource/not-equal.png");
+            notEqualIcon = IconUtils.getIcon("/jgnash/resource/not-equal.png");
             notEqualIcon.setDescription("not");
 
-            equalIcon = Resource.getIcon("/jgnash/resource/equal.png");
+            equalIcon = IconUtils.getIcon("/jgnash/resource/equal.png");
             equalIcon.setDescription("equals");
 
-            addIcon = Resource.getIcon("/jgnash/resource/add.png");
+            addIcon = IconUtils.getIcon("/jgnash/resource/add.png");
             addIcon.setDescription("add");
 
-            removeIcon = Resource.getIcon("/jgnash/resource/remove.png");
+            removeIcon = IconUtils.getIcon("/jgnash/resource/remove.png");
             removeIcon.setDescription("remove");
         }
 

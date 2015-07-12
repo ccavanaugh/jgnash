@@ -35,7 +35,7 @@ import javax.swing.JPanel;
 
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.Resource;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.ResourceUtils;
 
 import org.jdesktop.swingx.util.GraphicsUtilities;
@@ -51,7 +51,7 @@ public class ImageDialog extends JDialog {
 
     ImageDialog() {
         setTitle(ResourceUtils.getString("Title.ViewImage"));
-        setIconImage(Resource.getImage("/jgnash/resource/gnome-money.png"));
+        setIconImage(IconUtils.getImage("/jgnash/resource/gnome-money.png"));
 
         imagePanel = new ImagePanel();
 

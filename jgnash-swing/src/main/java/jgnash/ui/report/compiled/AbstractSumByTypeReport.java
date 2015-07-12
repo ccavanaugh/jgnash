@@ -49,8 +49,8 @@ import jgnash.ui.report.AbstractReportTableModel;
 import jgnash.ui.report.ColumnHeaderStyle;
 import jgnash.ui.report.ColumnStyle;
 import jgnash.ui.report.jasper.DynamicJasperReport;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -104,7 +104,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
         startDateField.setDate(startDate);
 
         refreshButton = new JButton(rb.getString("Button.Refresh"),
-                Resource.getIcon("/jgnash/resource/view-refresh.png"));
+                IconUtils.getIcon("/jgnash/resource/view-refresh.png"));
 
         refreshButton.addActionListener(new AbstractAction() {
 

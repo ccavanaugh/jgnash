@@ -17,11 +17,6 @@
  */
 package jgnash.ui.budget;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -44,7 +39,13 @@ import jgnash.engine.budget.BudgetPeriod;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.DialogUtils;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.Resource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Dialog for displaying and changing a budget's properties
@@ -76,7 +77,7 @@ final class BudgetPropertiesDialog extends JDialog implements ActionListener {
     public BudgetPropertiesDialog(final Budget budget) {
         super(UIApplication.getFrame(), true);
         setTitle(rb.getString("Title.BudgetProperties"));
-        setIconImage(Resource.getImage("/jgnash/resource/gnome-money.png"));
+        setIconImage(IconUtils.getImage("/jgnash/resource/gnome-money.png"));
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         this.budget = budget;

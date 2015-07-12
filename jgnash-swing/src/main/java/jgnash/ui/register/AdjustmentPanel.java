@@ -29,8 +29,8 @@ import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.account.AccountListDialog;
+import jgnash.ui.util.IconUtils;
 import jgnash.ui.util.ValidationFactory;
-import jgnash.util.Resource;
 
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -50,7 +50,7 @@ public final class AdjustmentPanel extends AbstractBankTransactionPanel {
     AdjustmentPanel(final Account account) {
         super(account);
 
-        convertButton = new JButton(Resource.getIcon("/jgnash/resource/edit-redo.png"));
+        convertButton = new JButton(IconUtils.getIcon("/jgnash/resource/edit-redo.png"));
         convertButton.setToolTipText(rb.getString("ToolTip.ConvertSEntry"));
         convertButton.addActionListener(this);
 
