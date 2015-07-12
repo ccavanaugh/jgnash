@@ -17,7 +17,6 @@
  */
 package jgnash.util;
 
-import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -94,22 +93,6 @@ public class Resource {
     }
 
     /**
-     * Gets a localized string with arguments
-     *
-     * @param key The key for the localized string
-     * @param arguments arguments to pass the the message formatter
-     * @return The localized string
-     */
-    public String getString(final String key, final Object... arguments) {
-        try {
-            return MessageFormat.format(resourceBundle.getString(key), arguments);
-        } catch (final MissingResourceException mre) {
-            logger.log(Level.WARNING, "Missing resource for: " + key, mre);
-            return key;
-        }
-    }
-
-    /**
      * Gets a localized string, which is one character long and will
      * be automatically transformed into a character.
      *
@@ -117,7 +100,7 @@ public class Resource {
      * @return char for mnemonic
      */
     public char getMnemonic(final String key) {
-        String value = getString(key);
+        String value = ResourceUtils.getString(key);
         if (value == null || value.length() != 1) {
             logger.log(Level.WARNING, "The value ''{0}'' for key ''{1}'' is not valid.", new Object[]{value, key});
             return "".charAt(0);
@@ -132,14 +115,14 @@ public class Resource {
      * @return localized KeyStroke
      */
     public KeyStroke getKeyStroke(final String key) {
-        String value = getString(key);
+        String value = ResourceUtils.getString(key);
         
         // if working on an QSX system, use the meta key instead of the control key
         if (value != null && value.contains("control") && OS.isSystemOSX()) {
             value = value.replace("control", "meta");
         }
         
-        KeyStroke keyStroke = KeyStroke.getKeyStroke(value);
+        final KeyStroke keyStroke = KeyStroke.getKeyStroke(value);
         if (keyStroke == null && value != null && !value.isEmpty()) {
             logger.log(Level.WARNING, "The value ''{0}'' for key ''{1}'' is not valid.", new Object[]{value, key});
         }

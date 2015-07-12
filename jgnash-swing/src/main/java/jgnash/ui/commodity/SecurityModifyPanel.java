@@ -21,6 +21,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -50,7 +51,7 @@ import jgnash.ui.components.JTextFieldEx;
 import jgnash.ui.components.QuoteSourceComboBox;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -65,7 +66,7 @@ import com.jgoodies.forms.layout.RowSpec;
 public class SecurityModifyPanel extends JPanel implements MessageListener, ActionListener {
 
     private final Engine engine;
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
     private JButton newButton;
     private JList<SecurityNode> securityList;
     private JButton deleteButton;
@@ -81,10 +82,9 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
     private boolean isModifying = false;
 
     public static void showDialog(final JFrame parent) {
-        final Resource rb = Resource.get();
-
         EventQueue.invokeLater(() -> {
-            GenericCloseDialog d = new GenericCloseDialog(parent, new SecurityModifyPanel(), rb.getString("Title.CreateModifyCommodities"));
+            final GenericCloseDialog d = new GenericCloseDialog(parent, new SecurityModifyPanel(),
+                    ResourceUtils.getString("Title.CreateModifyCommodities"));
             d.setMinimumSize(d.getSize());
             DialogUtils.addBoundsListener(d);
             d.setVisible(true);
@@ -179,7 +179,7 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
         securityList.addListSelectionListener(listener);
     }
 
-    void updateForm() {
+    private void updateForm() {
         SecurityNode node = securityList.getSelectedValue();
         if (node != null) {
             symbolField.setText(node.getSymbol());
@@ -233,11 +233,11 @@ public class SecurityModifyPanel extends JPanel implements MessageListener, Acti
             SecurityNode newNode = buildSecurityNode();
             if (isModifying && oldNode != null) {
                 if (!engine.updateCommodity(oldNode, newNode)) {
-                    StaticUIMethods.displayError(rb.getString("Message.Error.SecurityUpdate", newNode.getSymbol()));
+                    StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.SecurityUpdate", newNode.getSymbol()));
                 }
             } else {
                 if (!engine.addSecurity(newNode)) {
-                    StaticUIMethods.displayError(rb.getString("Message.Error.SecurityAdd", newNode.getSymbol()));
+                    StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.SecurityAdd", newNode.getSymbol()));
                 }
             }
         }

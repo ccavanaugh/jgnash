@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -48,7 +49,7 @@ import jgnash.ui.UIApplication;
 import jgnash.ui.components.ImageDialog;
 import jgnash.ui.components.YesNoDialog;
 import jgnash.ui.util.IconUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -64,7 +65,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
     private final JButton viewAttachmentButton;
     private final JButton attachmentButton;
     private final JButton deleteButton;
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
     private Path attachment = null;
     private boolean moveAttachment = false;
 
@@ -144,7 +145,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
                 } else {
                     transaction.setAttachment(null);
 
-                    final String message = rb.getString("Message.Error.TransferAttachment",
+                    final String message = ResourceUtils.getString("Message.Error.TransferAttachment",
                             attachment.getFileName().toString());
 
                     StaticUIMethods.displayError(message);
@@ -213,7 +214,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
                     moveAttachment = true;
                 } else if (attachmentDirectory != null && !attachmentDirectory.toString().equals(selectedFile.getParent())) {
 
-                    String message = rb.getString("Message.Warn.MoveFile", selectedFile.toString(),
+                    String message = ResourceUtils.getString("Message.Warn.MoveFile", selectedFile.toString(),
                             attachmentDirectory.toString());
 
                     result = YesNoDialog.showYesNoDialog(UIApplication.getFrame(), new JLabel(message), rb.getString("Title.MoveFile"));
@@ -225,7 +226,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
                                 File.separator + selectedFile.getName()).toPath();
 
                         if (newPath.toFile().exists()) {
-                            message = rb.getString("Message.Warn.SameFile", selectedFile.toString(),
+                            message = ResourceUtils.getString("Message.Warn.SameFile", selectedFile.toString(),
                                     attachmentDirectory.toString());
 
                             StaticUIMethods.displayWarning(message);
@@ -247,7 +248,8 @@ class AttachmentPanel extends JPanel implements ActionListener {
             if (Files.exists(attachment)) {
                 ImageDialog.showImage(attachment.toFile());
             } else {
-                StaticUIMethods.displayError(rb.getString("Message.Error.MissingAttachment", attachment.toString()));
+                StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.MissingAttachment",
+                        attachment.toString()));
             }
         }
     }

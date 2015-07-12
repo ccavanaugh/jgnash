@@ -21,6 +21,7 @@ import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,7 +40,6 @@ import jgnash.ui.UIApplication;
 import jgnash.ui.components.OpenDatabaseDialog;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.FileUtils;
-import jgnash.util.Resource;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -77,7 +77,7 @@ public class OpenAction {
 
             @Override
             protected Void doInBackground() throws Exception {
-                final Resource rb = Resource.get();
+                final ResourceBundle rb = ResourceUtils.getBundle();
 
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
 
@@ -152,7 +152,8 @@ public class OpenAction {
 
             @Override
             protected Void doInBackground() throws Exception {
-                final Resource rb = Resource.get();
+                final ResourceBundle rb = ResourceUtils.getBundle();
+
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
                 logger.fine("Booting the engine");
 
@@ -204,7 +205,7 @@ public class OpenAction {
 
                 final long startTime = System.currentTimeMillis();
 
-                final Resource rb = Resource.get();
+                final ResourceBundle rb = ResourceUtils.getBundle();
 
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
                 logger.fine("Booting the engine");
@@ -283,7 +284,8 @@ public class OpenAction {
 
             @Override
             protected Void doInBackground() throws Exception {
-                final Resource rb = Resource.get();
+                final ResourceBundle rb = ResourceUtils.getBundle();
+
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
                 logger.fine("Booting the engine");
 
@@ -333,10 +335,11 @@ public class OpenAction {
                     new Thread() {  // pop an information dialog about the backup file
                         @Override
                         public void run() {
-                            final Resource rb = Resource.get();
-                            final String message = rb.getString("Message.Info.Upgrade", fileName + "." + version);
 
-                            StaticUIMethods.displayMessage(message, rb.getString("Title.Information"),
+                            final String message = ResourceUtils.getString("Message.Info.Upgrade", fileName + "."
+                                    + version);
+
+                            StaticUIMethods.displayMessage(message, ResourceUtils.getString("Title.Information"),
                                     JOptionPane.INFORMATION_MESSAGE);
                         }
                     }.start();

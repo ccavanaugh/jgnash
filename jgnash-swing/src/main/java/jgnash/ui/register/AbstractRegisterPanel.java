@@ -62,6 +62,7 @@ import jgnash.ui.register.table.RegisterTable;
 import jgnash.ui.util.JTableUtils;
 import jgnash.util.EncodeDecode;
 import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Account register panels should extend this class
@@ -222,7 +223,8 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
                             new JLabel(rb.getString("Question.DeleteAttachment")),
                             rb.getString("Title.DeleteAttachment"))) {
                         if (!engine.removeAttachment(tran.getAttachment())) {
-                            StaticUIMethods.displayError(rb.getString("Message.Error.DeleteAttachment", tran.getAttachment()));
+                            StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.DeleteAttachment",
+                                    tran.getAttachment()));
                         }
                     }
                 }
