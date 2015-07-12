@@ -24,7 +24,7 @@ import javax.swing.SwingWorker;
 import jgnash.engine.EngineFactory;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.builder.Action;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * UI Action to close the current database
@@ -45,7 +45,7 @@ public class CloseEngineAction extends AbstractEnabledAction {
 
                 UIApplication.getFrame().closeAllWindows(); // close any open windows first
 
-                UIApplication.getFrame().displayWaitMessage(Resource.get().getString("Message.PleaseWait"));
+                UIApplication.getFrame().displayWaitMessage(ResourceUtils.getString("Message.PleaseWait"));
 
                 // Disk IO is heavy so delay and allow the UI to react before starting the close operation
                 Thread.sleep(750);

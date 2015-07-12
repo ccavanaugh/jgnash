@@ -30,7 +30,9 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.RootAccount;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.builder.Action;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
+
+//import jgnash.util.Resource;
 
 /**
  * Import a tree of accounts
@@ -43,12 +45,11 @@ public class ImportAccountsAction extends AbstractEnabledAction {
     private static final String ACCOUNTS_IMPORT_DIR = "AccountsImportDirectroy";
 
     private static void importAccounts() {
-        Preferences pref = Preferences.userNodeForPackage(ImportAccountsAction.class);
+        final Preferences pref = Preferences.userNodeForPackage(ImportAccountsAction.class);
 
-        final Resource rb = Resource.get();
-
-        JFileChooser chooser = new JFileChooser(pref.get(ACCOUNTS_IMPORT_DIR, null));
-        chooser.addChoosableFileFilter(new FileNameExtensionFilter(rb.getString("Label.XMLFiles") + " (*.xml)", "xml"));
+        final JFileChooser chooser = new JFileChooser(pref.get(ACCOUNTS_IMPORT_DIR, null));
+        chooser.addChoosableFileFilter(new FileNameExtensionFilter(ResourceUtils.getString("Label.XMLFiles")
+                + " (*.xml)", "xml"));
         chooser.setMultiSelectionEnabled(false);
 
         if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -59,7 +60,7 @@ public class ImportAccountsAction extends AbstractEnabledAction {
 
                 @Override
                 protected Void doInBackground() throws Exception {
-                    UIApplication.getFrame().displayWaitMessage(Resource.get().getString("Message.ImportWait"));
+                    UIApplication.getFrame().displayWaitMessage(ResourceUtils.getString("Message.ImportWait"));
 
                     RootAccount root = AccountTreeXMLFactory.loadAccountTree(file);
 

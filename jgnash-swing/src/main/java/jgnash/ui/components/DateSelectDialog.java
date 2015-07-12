@@ -25,7 +25,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -66,7 +66,7 @@ class DateSelectDialog extends GenericCloseDialog {
     }
 
     private DateSelectDialog(final Window parent, final Date date) {
-        super(parent, new JPanel(), Resource.get().getString("Title.SelDate"));
+        super(parent, new JPanel(), ResourceUtils.getString("Title.SelDate"));
         createPanel((JPanel) getComponent());
         setDate(date);
     }
@@ -93,9 +93,7 @@ class DateSelectDialog extends GenericCloseDialog {
             }
         });
 
-        Resource rb = Resource.get();
-
-        JButton today = new JButton(rb.getString("Button.Today"));
+        final JButton today = new JButton(ResourceUtils.getString("Button.Today"));
 
         today.addActionListener(e -> {
             view.setFirstDisplayedDay(new Date());

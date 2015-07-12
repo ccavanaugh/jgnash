@@ -34,6 +34,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -123,7 +124,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
 
     private ChartPanel chartPanel;
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     public static void showDialog(final JFrame parent) {
 

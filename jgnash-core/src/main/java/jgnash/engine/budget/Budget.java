@@ -34,7 +34,7 @@ import jgnash.engine.Account;
 import jgnash.engine.StoredObject;
 import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Budget Object
@@ -198,7 +198,7 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
         Budget budget = (Budget) super.clone();
 
         budget.setDescription(getDescription());
-        budget.setName(getName() + "(" + Resource.get().getString("Word.Copy") + ")");
+        budget.setName(getName() + "(" + ResourceUtils.getString("Word.Copy") + ")");
 
         budget.accountGoals = new HashMap<>();
 

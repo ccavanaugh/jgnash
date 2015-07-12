@@ -22,15 +22,21 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.PostLoad;
+
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
-import jgnash.util.Resource;
-
-import javax.persistence.*;
+import jgnash.util.ResourceUtils;
 
 /**
  * A general configuration class so that global configuration information may be stored inside the database
@@ -116,7 +122,8 @@ public class Config extends StoredObject {
 
     public List<String> getTransactionNumberList() {
         if (transactionNumberItems.isEmpty()) {
-            Resource rb = Resource.get();
+            final ResourceBundle rb = ResourceUtils.getBundle();
+
             transactionNumberItems.add(rb.getString("Item.EFT"));
             transactionNumberItems.add(rb.getString("Item.Trans"));
         }
@@ -129,7 +136,7 @@ public class Config extends StoredObject {
 
         try {
             if (key.isEmpty()) {
-                throw new RuntimeException(Resource.get().getString("Message.Error.EmptyKey"));
+                throw new RuntimeException(ResourceUtils.getString("Message.Error.EmptyKey"));
             }
 
             if (value == null) {    // find and remove
@@ -148,7 +155,7 @@ public class Config extends StoredObject {
 
         try {
             if (key.isEmpty()) {
-                throw new RuntimeException(Resource.get().getString("Message.Error.EmptyKey"));
+                throw new RuntimeException(ResourceUtils.getString("Message.Error.EmptyKey"));
             }
 
             return preferences.get(key);

@@ -23,23 +23,25 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.SwingWorker;
 
-import jgnash.engine.Account;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
 import jgnash.convert.imports.GenericImport;
 import jgnash.convert.imports.ImportBank;
 import jgnash.convert.imports.ImportTransaction;
+import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.actions.AbstractEnabledAction;
 import jgnash.ui.wizards.imports.ImportDialog;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
+
 import net.bzzt.swift.mt940.exporter.Mt940Exporter;
 import net.bzzt.swift.mt940.parser.Mt940Parser;
 
@@ -54,7 +56,7 @@ public class ImportMt940Action extends AbstractEnabledAction {
 
     public ImportMt940Action() {
 
-        Resource rb = Resource.get();
+        final ResourceBundle rb = ResourceUtils.getBundle();
 
         // set name, etc
         putValue(NAME, rb.getString("Menu.ImportMt940.Name"));
@@ -62,7 +64,7 @@ public class ImportMt940Action extends AbstractEnabledAction {
     }
 
     private static void importMt940() {
-        final Resource rb = Resource.get();
+        final ResourceBundle rb = ResourceUtils.getBundle();
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 

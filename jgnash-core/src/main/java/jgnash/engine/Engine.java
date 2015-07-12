@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
@@ -74,7 +75,7 @@ import jgnash.util.DateUtils;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Engine class
@@ -108,7 +109,7 @@ public class Engine {
 
     private static final float EPSILON = .001f;
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final ReentrantReadWriteLock accountLock;
 
@@ -1127,7 +1128,7 @@ public class Engine {
         // Remove old history of the same date if it exists
         if (node.contains(hNode.getDate())) {
             if (!removeSecurityHistory(node, hNode.getDate())) {
-                logSevere(rb.getString("Message.Error.HistRemoval", hNode.getDate(), node.getSymbol()));
+                logSevere(ResourceUtils.getString("Message.Error.HistRemoval", hNode.getDate(), node.getSymbol()));
                 return false;
             }
         }
@@ -1432,7 +1433,8 @@ public class Engine {
 
                 hNodes.stream()
                         .filter(hNode -> !removeSecurityHistory(node, hNode.getDate()))
-                        .forEach(hNode -> logSevere(rb.getString("Message.Error.HistRemoval", hNode.getDate(), node.getSymbol())));
+                        .forEach(hNode -> logSevere(ResourceUtils.getString("Message.Error.HistRemoval",
+                                hNode.getDate(), node.getSymbol())));
                 moveObjectToTrash(node);
             }
 
@@ -2364,7 +2366,8 @@ public class Engine {
                 for (SecurityNode node : oldList) {
                     if (!list.contains(node)) {
                         if (!removeAccountSecurity(acc, node)) {
-                            logWarning(rb.getString("Message.Error.SecurityAccountRemove", node.toString(), acc.getName()));
+                            logWarning(ResourceUtils.getString("Message.Error.SecurityAccountRemove", node.toString(),
+                                    acc.getName()));
                             result = false;
                         }
                     }
@@ -2373,7 +2376,8 @@ public class Engine {
                 for (SecurityNode node : list) {
                     if (!oldList.contains(node)) {
                         if (!addAccountSecurity(acc, node)) {
-                            logWarning(rb.getString("Message.Error.SecurityAccountRemove", node.toString(), acc.getName()));
+                            logWarning(ResourceUtils.getString("Message.Error.SecurityAccountRemove", node.toString(),
+                                    acc.getName()));
                             result = false;
                         }
                     }

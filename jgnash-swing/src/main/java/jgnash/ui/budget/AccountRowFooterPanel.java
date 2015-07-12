@@ -48,7 +48,7 @@ import jgnash.engine.message.MessageProperty;
 import jgnash.text.CommodityFormat;
 import jgnash.ui.components.ShadowBorder;
 import jgnash.ui.util.JTableUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.CC;
@@ -132,9 +132,7 @@ public class AccountRowFooterPanel extends JPanel {
     }
 
     private static JComponent buildHeader(final JTableHeader tableHeader) {
-        Resource rb = Resource.get();
-
-        JXTitledPanel panelHeader = new JXTitledPanel(rb.getString("Title.Summary"), tableHeader);
+        final JXTitledPanel panelHeader = new JXTitledPanel(ResourceUtils.getString("Title.Summary"), tableHeader);
         panelHeader.setBorder(ShadowBorder.getCompondShadowBorder());
 
         return panelHeader;
@@ -266,8 +264,8 @@ public class AccountRowFooterPanel extends JPanel {
 
         private transient TableModelListener listener;
 
-        private final String[] columnNames = {Resource.get().getString("Column.Budgeted"),
-            Resource.get().getString("Column.Actual"), Resource.get().getString("Column.Remaining")};
+        private final String[] columnNames = {ResourceUtils.getString("Column.Budgeted"),
+            ResourceUtils.getString("Column.Actual"), ResourceUtils.getString("Column.Remaining")};
 
         AccountRowSummaryModel(final ExpandingBudgetTableModel model) {
             this.model = model;

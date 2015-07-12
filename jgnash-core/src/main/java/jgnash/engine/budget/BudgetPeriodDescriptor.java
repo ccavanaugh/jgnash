@@ -21,7 +21,7 @@ import java.util.Date;
 import java.util.Objects;
 
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Immutable descriptor for a budget period
@@ -70,13 +70,13 @@ public class BudgetPeriodDescriptor {
                 endDate = startDate;
                 endPeriod = startPeriod;
 
-                periodDescription = Resource.get().getString("Pattern.NumericDate", startDate);
+                periodDescription = ResourceUtils.getString("Pattern.NumericDate", startDate);
                 break;
             case WEEKLY:
                 endDate = DateUtils.addDays(startDate, ONE_WEEK_INCREMENT);
                 endPeriod = startPeriod + ONE_WEEK_INCREMENT;
 
-                periodDescription = Resource.get().getString("Pattern.WeekOfYear", DateUtils.getWeekOfTheYear(startDate), budgetYear);
+                periodDescription = ResourceUtils.getString("Pattern.WeekOfYear", DateUtils.getWeekOfTheYear(startDate), budgetYear);
                 break;
             case BI_WEEKLY:
                 if (DateUtils.getWeekOfTheYear(startDate) != LEAP_WEEK) {
@@ -86,20 +86,20 @@ public class BudgetPeriodDescriptor {
                     endDate = DateUtils.addDays(startDate, ONE_WEEK_INCREMENT);
                     endPeriod = startPeriod + ONE_WEEK_INCREMENT;
                 }
-                periodDescription = Resource.get().getString("Pattern.DateRangeShort", startDate, endDate);
+                periodDescription = ResourceUtils.getString("Pattern.DateRangeShort", startDate, endDate);
                 break;
             case MONTHLY:
                 int days = DateUtils.getDaysInMonth(startDate);
                 endDate = DateUtils.getLastDayOfTheMonth(startDate);
                 endPeriod = startPeriod + days - 1;
 
-                periodDescription = Resource.get().getString("Pattern.MonthOfYear", startDate);
+                periodDescription = ResourceUtils.getString("Pattern.MonthOfYear", startDate);
                 break;
             case QUARTERLY:
                 endDate = DateUtils.getLastDayOfTheQuarter(startDate);
                 endPeriod = startPeriod + DateUtils.getDifferenceInDays(startDate, endDate);
 
-                periodDescription = Resource.get().getString("Pattern.QuarterOfYear", DateUtils.getQuarterNumber(startDate), budgetYear);
+                periodDescription = ResourceUtils.getString("Pattern.QuarterOfYear", DateUtils.getQuarterNumber(startDate), budgetYear);
                 break;
             case YEARLY:
                 endDate = DateUtils.getLastDayOfTheYear(startDate);

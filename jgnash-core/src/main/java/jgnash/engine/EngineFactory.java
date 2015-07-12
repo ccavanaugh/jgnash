@@ -17,19 +17,6 @@
  */
 package jgnash.engine;
 
-import jgnash.engine.jpa.SqlUtils;
-import jgnash.engine.message.ChannelEvent;
-import jgnash.engine.message.Message;
-import jgnash.engine.message.MessageBus;
-import jgnash.engine.message.MessageChannel;
-import jgnash.engine.xstream.BinaryXStreamDataStore;
-import jgnash.engine.xstream.XMLDataStore;
-import jgnash.util.FileMagic;
-import jgnash.util.FileMagic.FileType;
-import jgnash.util.FileUtils;
-import jgnash.util.Nullable;
-import jgnash.util.Resource;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -46,6 +33,19 @@ import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import javax.swing.filechooser.FileSystemView;
+
+import jgnash.engine.jpa.SqlUtils;
+import jgnash.engine.message.ChannelEvent;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.xstream.BinaryXStreamDataStore;
+import jgnash.engine.xstream.XMLDataStore;
+import jgnash.util.FileMagic;
+import jgnash.util.FileMagic.FileType;
+import jgnash.util.FileUtils;
+import jgnash.util.Nullable;
+import jgnash.util.ResourceUtils;
 
 /**
  * Factory class for obtaining an engine instance
@@ -295,7 +295,7 @@ public class EngineFactory {
         if (engine != null) {
 
 
-            logger.info(Resource.get().getString("Message.EngineStart"));
+            logger.info(ResourceUtils.getString("Message.EngineStart"));
             engineMap.put(engineName, engine);
             dataStoreMap.put(engineName, dataStore);
 
@@ -349,7 +349,7 @@ public class EngineFactory {
             engine = dataStore.getClientEngine(host, port, password, remoteDataBasePath);
 
             if (engine != null) {
-                logger.info(Resource.get().getString("Message.EngineStart"));
+                logger.info(ResourceUtils.getString("Message.EngineStart"));
 
                 engineMap.put(engineName, engine);
                 dataStoreMap.put(engineName, dataStore);

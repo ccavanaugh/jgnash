@@ -49,7 +49,7 @@ import jgnash.engine.SecurityNode;
 import jgnash.net.ConnectionFactory;
 import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Fetches latest stock prices in the background
@@ -157,7 +157,6 @@ public class UpdateFactory {
         @Override
         public Boolean call() throws Exception {
             final Calendar cal = Calendar.getInstance();
-            final Resource rb = Resource.get();
 
             boolean result = true;
 
@@ -233,8 +232,7 @@ public class UpdateFactory {
                         }
                     }
 
-                    String message = rb.getString("Message.UpdatedPrice", securityNode.getSymbol());
-                    logger.info(message);
+                    logger.info(ResourceUtils.getString("Message.UpdatedPrice", securityNode.getSymbol()));
                 }
             } catch (IOException | ParseException | NumberFormatException ex) {
                 logger.log(Level.SEVERE, null, ex);
@@ -277,7 +275,7 @@ public class UpdateFactory {
                             result = e.addSecurityHistory(securityNode, node);
 
                             if (result) {
-                                logger.info(Resource.get().getString("Message.UpdatedPrice", securityNode.getSymbol()));
+                                logger.info(ResourceUtils.getString("Message.UpdatedPrice", securityNode.getSymbol()));
                             }
                         }
                     }

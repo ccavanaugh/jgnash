@@ -84,6 +84,7 @@ import jgnash.ui.register.RegisterFrame;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.builder.ActionParser;
 import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import org.jdesktop.swingx.JXBusyLabel;
 import org.jdesktop.swingx.JXStatusBar;
@@ -210,7 +211,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
         if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
 
-            displayWaitMessage(Resource.get().getString("Message.StoreWait"));
+            displayWaitMessage(ResourceUtils.getString("Message.StoreWait"));
 
             try {
                 Thread.sleep(1000); // lets the UI start and get the users attention

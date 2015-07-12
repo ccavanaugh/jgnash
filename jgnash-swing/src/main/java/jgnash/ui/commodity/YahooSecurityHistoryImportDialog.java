@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -60,7 +61,7 @@ import static jgnash.util.Arrays.intListToArray;
  * @author Craig Cavanaugh
  */
 public class YahooSecurityHistoryImportDialog extends JDialog implements ActionListener {
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final DatePanel startField = new DatePanel();
 

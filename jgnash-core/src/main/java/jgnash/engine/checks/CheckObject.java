@@ -19,7 +19,7 @@ package jgnash.engine.checks;
 
 import java.io.Serializable;
 
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Check Object
@@ -29,12 +29,12 @@ import jgnash.util.Resource;
 public class CheckObject implements Serializable {
 
     public enum CheckObjectType {
-        AMOUNT(Resource.get().getString("Item.Amount")),
-        AMOUNT_TEXT(Resource.get().getString("Item.AmountText")),
-        DATE(Resource.get().getString("Item.Date")),
-        PAYEE(Resource.get().getString("Item.Payee")),
-        MEMO(Resource.get().getString("Item.Memo")),
-        ADDRESS(Resource.get().getString("Item.Address"));
+        AMOUNT(ResourceUtils.getString("Item.Amount")),
+        AMOUNT_TEXT(ResourceUtils.getString("Item.AmountText")),
+        DATE(ResourceUtils.getString("Item.Date")),
+        PAYEE(ResourceUtils.getString("Item.Payee")),
+        MEMO(ResourceUtils.getString("Item.Memo")),
+        ADDRESS(ResourceUtils.getString("Item.Address"));
 
         final transient private String typeName;
 

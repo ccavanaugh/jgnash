@@ -31,7 +31,7 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 import jgnash.util.Version;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
@@ -52,7 +52,7 @@ public class StaticUIMethods {
      * @param message error message to display
      */
     public static void displayError(final String message) {
-        displayMessage(message, Resource.get().getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+        displayMessage(message, ResourceUtils.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
     }
 
     /**
@@ -61,7 +61,7 @@ public class StaticUIMethods {
      * @param message error message to display
      */
     public static void displayWarning(final String message) {
-        displayMessage(message, Resource.get().getString("Title.Warning"), JOptionPane.WARNING_MESSAGE);
+        displayMessage(message, ResourceUtils.getString("Title.Warning"), JOptionPane.WARNING_MESSAGE);
     }
 
     /**

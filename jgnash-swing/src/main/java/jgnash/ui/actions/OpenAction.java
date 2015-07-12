@@ -40,6 +40,7 @@ import jgnash.ui.components.OpenDatabaseDialog;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.FileUtils;
 import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * UI Action to open a database
@@ -98,7 +99,7 @@ public class OpenAction {
                 } else {
                     try {
                         if (FileUtils.isFileLocked(dialog.getDatabasePath())) {
-                            StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
+                            StaticUIMethods.displayError(ResourceUtils.getString("Message.FileIsLocked"));
                         } else if (checkAndBackupOldVersion(dialog.getDatabasePath(), password)) {
                             engine = EngineFactory.bootLocalEngine(dialog.getDatabasePath(), EngineFactory.DEFAULT, password);
                         }
@@ -120,7 +121,7 @@ public class OpenAction {
                 UIApplication.getFrame().stopWaitMessage();
 
                 if (remoteConnectionFailed) {
-                    StaticUIMethods.displayError(Resource.get().getString("Message.Error.ServerConnection"));
+                    StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.ServerConnection"));
                 }
             }
         }
@@ -182,7 +183,7 @@ public class OpenAction {
                 if (!FileUtils.isFileLocked(database)) {
                     pool.execute(new BootEngine());
                 } else {
-                    StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
+                    StaticUIMethods.displayError(ResourceUtils.getString("Message.FileIsLocked"));
                 }
             } catch (final IOException e) {
                 logger.log(Level.SEVERE, e.toString(), e);
@@ -267,7 +268,7 @@ public class OpenAction {
                     if (!FileUtils.isFileLocked(database)) {
                         pool.execute(new BootEngine());
                     } else {
-                        StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
+                        StaticUIMethods.displayError(ResourceUtils.getString("Message.FileIsLocked"));
                     }
                 } catch (final IOException e) {
                     appLogger.log(Level.SEVERE, e.toString(), e);
@@ -311,7 +312,7 @@ public class OpenAction {
             final float version = EngineFactory.getFileVersion(new File(fileName), password);
 
             if (version <= 0) {
-                final String errorMessage = Resource.get().getString("Message.Error.InvalidUserPass");
+                final String errorMessage = ResourceUtils.getString("Message.Error.InvalidUserPass");
 
                 UIApplication.getLogger().warning(errorMessage);
 

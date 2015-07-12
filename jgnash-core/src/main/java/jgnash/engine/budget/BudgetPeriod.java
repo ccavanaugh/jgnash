@@ -17,7 +17,7 @@
  */
 package jgnash.engine.budget;
 
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Budget BudgetPeriod Enum
@@ -26,12 +26,12 @@ import jgnash.util.Resource;
  */
 public enum BudgetPeriod {
 
-    DAILY(Resource.get().getString("Period.Daily")),
-    WEEKLY(Resource.get().getString("Period.Weekly")),
-    BI_WEEKLY(Resource.get().getString("Period.BiWeekly")),
-    MONTHLY(Resource.get().getString("Period.Monthly")),
-    QUARTERLY(Resource.get().getString("Period.Quarterly")),
-    YEARLY(Resource.get().getString("Period.Yearly"));
+    DAILY(ResourceUtils.getString("Period.Daily")),
+    WEEKLY(ResourceUtils.getString("Period.Weekly")),
+    BI_WEEKLY(ResourceUtils.getString("Period.BiWeekly")),
+    MONTHLY(ResourceUtils.getString("Period.Monthly")),
+    QUARTERLY(ResourceUtils.getString("Period.Quarterly")),
+    YEARLY(ResourceUtils.getString("Period.Yearly"));
 
     private final transient String description;
 

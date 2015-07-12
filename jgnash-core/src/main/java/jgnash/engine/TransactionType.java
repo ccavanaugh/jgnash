@@ -17,7 +17,7 @@
  */
 package jgnash.engine;
 
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Transaction type class.
@@ -28,22 +28,22 @@ import jgnash.util.Resource;
 public enum TransactionType {
 
     // bank transactions
-    DOUBLEENTRY(Resource.get().getString("Transaction.DoubleEntry")),
-    SPLITENTRY(Resource.get().getString("Transaction.SplitEntry")),
-    SINGLENTRY(Resource.get().getString("Transaction.SingleEntry")),
+    DOUBLEENTRY(ResourceUtils.getString("Transaction.DoubleEntry")),
+    SPLITENTRY(ResourceUtils.getString("Transaction.SplitEntry")),
+    SINGLENTRY(ResourceUtils.getString("Transaction.SingleEntry")),
 
     // investment transactions
-    ADDSHARE(Resource.get().getString("Transaction.AddShare")),
-    BUYSHARE(Resource.get().getString("Transaction.BuyShare")),
-    DIVIDEND(Resource.get().getString("Transaction.Dividend")),
-    REINVESTDIV(Resource.get().getString("Transaction.ReinvestDiv")),
-    REMOVESHARE(Resource.get().getString("Transaction.RemoveShare")),
-    RETURNOFCAPITAL(Resource.get().getString("Transaction.ReturnOfCapital")),
-    SELLSHARE(Resource.get().getString("Transaction.SellShare")),
-    SPLITSHARE(Resource.get().getString("Transaction.SplitShare")),
-    MERGESHARE(Resource.get().getString("Transaction.MergeShare")),
+    ADDSHARE(ResourceUtils.getString("Transaction.AddShare")),
+    BUYSHARE(ResourceUtils.getString("Transaction.BuyShare")),
+    DIVIDEND(ResourceUtils.getString("Transaction.Dividend")),
+    REINVESTDIV(ResourceUtils.getString("Transaction.ReinvestDiv")),
+    REMOVESHARE(ResourceUtils.getString("Transaction.RemoveShare")),
+    RETURNOFCAPITAL(ResourceUtils.getString("Transaction.ReturnOfCapital")),
+    SELLSHARE(ResourceUtils.getString("Transaction.SellShare")),
+    SPLITSHARE(ResourceUtils.getString("Transaction.SplitShare")),
+    MERGESHARE(ResourceUtils.getString("Transaction.MergeShare")),
 
-    INVALID(Resource.get().getString("Word.Invalid"));
+    INVALID(ResourceUtils.getString("Word.Invalid"));
 
     final transient private String transactionTypeName;
 

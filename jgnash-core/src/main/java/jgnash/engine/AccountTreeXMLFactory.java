@@ -35,6 +35,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +43,7 @@ import java.util.logging.Logger;
 import jgnash.engine.xstream.LocalDateConverter;
 import jgnash.engine.xstream.LocalDateTimeConverter;
 import jgnash.util.ClassPathUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
@@ -254,25 +255,25 @@ public class AccountTreeXMLFactory {
 
             // match SecurityNodes to prevent duplicates
             if (account.memberOf(AccountGroup.INVEST)) {
-                Set<SecurityNode> nodes = account.getSecurities();
+                final Set<SecurityNode> nodes = account.getSecurities();
 
-                for (SecurityNode node : nodes) {
+                for (final SecurityNode node : nodes) {
                     SecurityNode sNode = engine.getSecurity(node.getSymbol());
 
                     if (sNode == null) { // no match found
                         try {
                             sNode = (SecurityNode) node.clone();
 
-                            for (CurrencyNode currencyNode : engine.getCurrencies()) {
+                            for (final CurrencyNode currencyNode : engine.getCurrencies()) {
                                 if (sNode.getReportedCurrencyNode().matches(currencyNode)) {
                                     sNode.setReportedCurrencyNode(currencyNode);
                                 }
                             }
                             if (!engine.addSecurity(sNode)) {
-                                final Resource rb = Resource.get();
+                                final ResourceBundle rb = ResourceUtils.getBundle();
                                 Logger.getLogger(AccountImport.class.getName()).log(Level.SEVERE, rb.getString("Message.Error.SecurityAdd"), sNode.getSymbol());
                             }
-                        } catch (CloneNotSupportedException e) {
+                        } catch (final CloneNotSupportedException e) {
                             Logger.getLogger(AccountImport.class.getName()).log(Level.SEVERE,
                                     e.getLocalizedMessage(), e);
                         }
@@ -301,9 +302,9 @@ public class AccountTreeXMLFactory {
 
             // match SecurityNodes to prevent duplicates
             if (account.memberOf(AccountGroup.INVEST)) {
-                Set<SecurityNode> nodes = account.getSecurities();
+                final Set<SecurityNode> nodes = account.getSecurities();
 
-                for (SecurityNode node : nodes) {
+                for (final SecurityNode node : nodes) {
                     SecurityNode sNode = engine.getSecurity(node.getSymbol());
 
                     if (sNode == null) { // no match found
@@ -313,10 +314,10 @@ public class AccountTreeXMLFactory {
                             sNode.setReportedCurrencyNode(engine.getDefaultCurrency());
 
                             if (!engine.addSecurity(sNode)) {
-                                final Resource rb = Resource.get();
+                                final ResourceBundle rb = ResourceUtils.getBundle();
                                 Logger.getLogger(AccountImport.class.getName()).log(Level.SEVERE, rb.getString("Message.Error.SecurityAdd"), sNode.getSymbol());
                             }
-                        } catch (CloneNotSupportedException e) {
+                        } catch (final CloneNotSupportedException e) {
                             Logger.getLogger(AccountImport.class.getName()).log(Level.SEVERE, e.toString(), e);
                         }
                     }
