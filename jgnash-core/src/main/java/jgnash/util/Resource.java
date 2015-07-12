@@ -17,12 +17,10 @@
  */
 package jgnash.util;
 
-import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 
 /**
  * This class controls the application locale and provides localized
@@ -37,11 +35,6 @@ public class Resource {
      */
     private ResourceBundle resourceBundle;
 
-    /**
-     * key for locale preference
-     */
-    private static final String LOCALE = "locale";
-
     private static final Logger logger = Logger.getLogger(Resource.class.getName());
 
     /**
@@ -50,8 +43,6 @@ public class Resource {
     private final static Resource resource;
 
     static {
-        Preferences p = Preferences.userNodeForPackage(Resource.class);
-        Locale.setDefault(EncodeDecode.decodeLocale(p.get(LOCALE, "")));
         resource = new Resource();
     }
 
@@ -88,18 +79,6 @@ public class Resource {
             logger.log(Level.WARNING, "Missing resource for: " + key, mre);
             return key;
         }
-    }
-
-    /**
-     * Sets the new default locale.  This must be called if overridden.
-     *
-     * @param l The new default locale
-     */
-    public static void setLocale(final Locale l) {
-        Locale.setDefault(l);
-        Preferences p = Preferences.userNodeForPackage(Resource.class);
-        p.put(LOCALE, EncodeDecode.encodeLocale(l));
-        resource.loadBundle(); // reload the resource bundle
     }
 
 }

@@ -20,7 +20,8 @@ package jgnash.util;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -35,8 +36,6 @@ public class EncodeDecode {
     private static final Pattern COMMA_DELIMITER_PATTERN = Pattern.compile(",");
 
     private static final char COMMA_DELIMITER = ',';
-
-    private static final Pattern LOCALE_DELIMITER_PATTERN = Pattern.compile("\\x2E");
 
     private EncodeDecode() {
     }
@@ -119,37 +118,6 @@ public class EncodeDecode {
             }
         }
         return rectangle;
-    }
-
-    public static String encodeLocale(final Locale locale) {
-        StringBuilder buf = new StringBuilder();
-        buf.append(locale.getLanguage());
-        if (!locale.getCountry().equals("")) {
-            buf.append('.');
-            buf.append(locale.getCountry());
-            if (!locale.getVariant().equals("")) {
-                buf.append('.');
-                buf.append(locale.getVariant());
-            }
-        }
-        return buf.toString();
-    }
-
-    public static Locale decodeLocale(final String locale) {
-        if (locale == null || locale.equals("") || locale.equals("null")) {
-            return Locale.getDefault();
-        } else if (locale.indexOf('.') == -1) {
-            return new Locale(locale);
-        } else {
-            String[] array = LOCALE_DELIMITER_PATTERN.split(locale);
-            if (array.length == 3) {
-                return new Locale(array[0], array[1], array[2]);
-            } else if (array.length == 2) {
-                return new Locale(array[0], array[1]);
-            } else { // should not happen
-                return Locale.getDefault();
-            }
-        }
     }
 
     /**

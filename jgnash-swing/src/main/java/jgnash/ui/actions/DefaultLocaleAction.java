@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +35,7 @@ import javax.swing.SwingWorker;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.builder.Action;
 import jgnash.util.NotNull;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * UI Action to open the new file dialog
@@ -97,7 +98,7 @@ public class DefaultLocaleAction extends AbstractAction {
 
     private static class LocaleSwingWorker extends SwingWorker<LocaleObject[], Void> {
 
-        final Resource rb = Resource.get();
+        final ResourceBundle rb = ResourceUtils.getBundle();
         private Object[] options;
 
 
@@ -127,8 +128,8 @@ public class DefaultLocaleAction extends AbstractAction {
                         null, options, options[1]);
 
                 if (result == JOptionPane.YES_OPTION) {
-                    LocaleObject o = (LocaleObject) combo.getSelectedItem();
-                    Resource.setLocale(o.locale);
+                    final LocaleObject o = (LocaleObject) combo.getSelectedItem();
+                    ResourceUtils.setLocale(o.locale);
 
                     JOptionPane.showMessageDialog(UIApplication.getFrame(),
                             o + "\n" + rb.getString("Message.RestartLocale"));
