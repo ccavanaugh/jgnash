@@ -171,6 +171,10 @@ abstract class AbstractXStreamContainer {
         xstream.registerConverter(new HibernatePersistentSortedMapConverter(xstream.getMapper()));
         xstream.registerConverter(new HibernatePersistentSortedSetConverter(xstream.getMapper()));
 
+        // Converters for new Java time API
+        xstream.registerConverter(new LocalDateConverter());
+        xstream.registerConverter(new LocalDateTimeConverter());
+
         return xstream;
     }
 

@@ -62,7 +62,9 @@ public class DateUtils {
     private static final DateTimeFormatter shortDateTimeFormatter;
 
     /**
-     * Pattern for a {@code java.time.format.DateTimeFormatter} to parse and format to the default
+     * Pattern for a {@code java.time.format.DateTimeFormatter} to parse and format to the default.  DateTimeFormatter
+     * does not like use of the 'z' literal, so force the UTC zone which is the XStream default.
+     *
      * {@code com.thoughtworks.xstream.converters.basic.DateConverter} format.
      */
     public static final String DEFAULT_XSTREAM_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS 'UTC'";

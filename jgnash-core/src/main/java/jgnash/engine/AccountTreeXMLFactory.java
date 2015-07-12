@@ -39,6 +39,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jgnash.engine.xstream.LocalDateConverter;
+import jgnash.engine.xstream.LocalDateTimeConverter;
 import jgnash.util.ClassPathUtils;
 import jgnash.util.Resource;
 
@@ -114,6 +116,10 @@ public class AccountTreeXMLFactory {
         xstream.registerConverter(new HibernatePersistentMapConverter(xstream.getMapper()));
         xstream.registerConverter(new HibernatePersistentSortedMapConverter(xstream.getMapper()));
         xstream.registerConverter(new HibernatePersistentSortedSetConverter(xstream.getMapper()));
+
+        // Converters for new Java time API
+        xstream.registerConverter(new LocalDateConverter());
+        xstream.registerConverter(new LocalDateTimeConverter());
 
         return xstream;
     }
