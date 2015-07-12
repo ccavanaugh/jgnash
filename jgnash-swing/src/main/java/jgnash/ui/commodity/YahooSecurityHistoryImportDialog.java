@@ -46,6 +46,7 @@ import jgnash.ui.components.SortedListModel;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.ToggleSelectionModel;
 import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -136,7 +137,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
     /**
      * Closes the dialog
      */
-    void closeDialog() {
+    private void closeDialog() {
         dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 
@@ -254,9 +255,11 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
 
             try {
                 // run the import in sequence
-                for (SecurityNode node : sNodes) {
+                for (final SecurityNode node : sNodes) {
                     if (run) { // continue?
-                        UpdateFactory.importHistory(node, start, end);
+                        if (!UpdateFactory.importHistory(node, start, end)) {
+                            StaticUIMethods.displayWarning(ResourceUtils.getString("Message.Error.SecurityUpdate", node.getSymbol()));
+                        }
                     }
                 }
             } finally {

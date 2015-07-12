@@ -61,6 +61,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.net.security.UpdateFactory;
 import jgnash.text.CommodityFormat;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.ui.components.JFloatField;
@@ -69,6 +70,7 @@ import jgnash.ui.components.SecurityComboBox;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.DateUtils;
 import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -262,10 +264,12 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
     }
 
     private void netAddNode() {
-        SecurityNode node = securityCombo.getSelectedSecurityNode();
+        final SecurityNode node = securityCombo.getSelectedSecurityNode();
 
         if (node != null) {
-            UpdateFactory.updateOne(node);
+            if (!UpdateFactory.updateOne(node)) {
+                StaticUIMethods.displayWarning(ResourceUtils.getString("Message.Error.SecurityUpdate", node.getSymbol()));
+            }
         }
     }
 
