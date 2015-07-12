@@ -141,10 +141,10 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
         toolBar.setRollover(true);
 
         openButton = new RollOverButton(rb.getString("Menu.Open.Name"), IconUtils.getIcon("/jgnash/resource/document-open.png"));
-        openButton.setMnemonic(rb.getMnemonic("Menu.Open.Mnemonic"));
+        openButton.setMnemonic(jgnash.ui.util.Resource.getMnemonic("Menu.Open.Mnemonic"));
 
         saveButton = new RollOverButton(rb.getString("Menu.Save.Name"), IconUtils.getIcon("/jgnash/resource/document-save.png"));
-        saveButton.setMnemonic(rb.getMnemonic("Menu.Save.Mnemonic"));
+        saveButton.setMnemonic(jgnash.ui.util.Resource.getMnemonic("Menu.Save.Mnemonic"));
 
         toolBar.add(openButton);
         toolBar.add(saveButton);

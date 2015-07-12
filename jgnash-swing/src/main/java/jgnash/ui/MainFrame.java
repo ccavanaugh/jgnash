@@ -333,7 +333,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
             } else if (components[i] instanceof JMenuItem) {
                 JMenuItem item = (JMenuItem) components[i];
 
-                if (precedingMenuIdref.equals(item.getClientProperty(ActionParser.IDREF_ATTRIBUTE))) {
+                if (precedingMenuIdref.equals(item.getClientProperty(ActionParser.ID_REF_ATTRIBUTE))) {
                     menu.add(newMenuItem, i + 1);
                     return;
                 }
@@ -352,7 +352,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     }
 
     private void buildUI() {
-        ActionParser actionParser = new ActionParser(this, Resource.get());
+        ActionParser actionParser = new ActionParser(this);
 
         actionParser.preLoadActions("jgnash.ui.actions");
 
@@ -469,7 +469,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         });
     }
 
-    final void displayStatus(final String message) {
+    private void displayStatus(final String message) {
         EventQueue.invokeLater(() -> {
             statusField.setForeground(infoColor);
             statusField.setText(message);
@@ -626,7 +626,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         });
     }
 
-    public void setNetworkBusy(final boolean busy) {
+    private void setNetworkBusy(final boolean busy) {
         backgroundOperationLabel.setBusy(busy);
     }
 

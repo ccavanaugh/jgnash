@@ -24,8 +24,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
-import javax.swing.KeyStroke;
-
 /**
  * This class controls the application locale and provides localized
  * strings, keystrokes, graphics, etc.
@@ -93,43 +91,6 @@ public class Resource {
     }
 
     /**
-     * Gets a localized string, which is one character long and will
-     * be automatically transformed into a character.
-     *
-     * @param key mnemonic key
-     * @return char for mnemonic
-     */
-    public char getMnemonic(final String key) {
-        String value = ResourceUtils.getString(key);
-        if (value == null || value.length() != 1) {
-            logger.log(Level.WARNING, "The value ''{0}'' for key ''{1}'' is not valid.", new Object[]{value, key});
-            return "".charAt(0);
-        }
-        return value.charAt(0);
-    }
-
-    /**
-     * Gets a localized keystroke.
-     *
-     * @param key KeyStroke key
-     * @return localized KeyStroke
-     */
-    public KeyStroke getKeyStroke(final String key) {
-        String value = ResourceUtils.getString(key);
-        
-        // if working on an QSX system, use the meta key instead of the control key
-        if (value != null && value.contains("control") && OS.isSystemOSX()) {
-            value = value.replace("control", "meta");
-        }
-        
-        final KeyStroke keyStroke = KeyStroke.getKeyStroke(value);
-        if (keyStroke == null && value != null && !value.isEmpty()) {
-            logger.log(Level.WARNING, "The value ''{0}'' for key ''{1}'' is not valid.", new Object[]{value, key});
-        }
-        return keyStroke;
-    }
-
-    /**
      * Sets the new default locale.  This must be called if overridden.
      *
      * @param l The new default locale
@@ -140,4 +101,5 @@ public class Resource {
         p.put(LOCALE, EncodeDecode.encodeLocale(l));
         resource.loadBundle(); // reload the resource bundle
     }
+
 }

@@ -171,7 +171,7 @@ public class ThemeManager {
         JMenu lfMenu = new JMenu();
 
         lfMenu.setText(rb.getString("Menu.LookAndFeel.Name"));
-        lfMenu.setMnemonic(rb.getMnemonic("Menu.LookAndFeel.Mnemonic"));
+        lfMenu.setMnemonic(jgnash.ui.util.Resource.getMnemonic("Menu.LookAndFeel.Mnemonic"));
 
         lfMenu.add(buildSubstanceMenu());
 
@@ -273,7 +273,7 @@ public class ThemeManager {
 
         themesMenu = new JMenu();
         themesMenu.setText(rb.getString("Menu.Themes.Name"));
-        themesMenu.setMnemonic(rb.getMnemonic("Menu.Themes.Mnemonic"));
+        themesMenu.setMnemonic(jgnash.ui.util.Resource.getMnemonic("Menu.Themes.Mnemonic"));
 
         ButtonGroup themeButtonGroup = new ButtonGroup();
         buildThemeList();
@@ -302,7 +302,7 @@ public class ThemeManager {
         return themesMenu;
     }
 
-    JMenu buildSubstanceMenu() {
+    private JMenu buildSubstanceMenu() {
         LookAndFeel lf = UIManager.getLookAndFeel();
 
         JMenu substanceMenu = new JMenu(rb.getString("Menu.SubstanceThemes.Name"));
