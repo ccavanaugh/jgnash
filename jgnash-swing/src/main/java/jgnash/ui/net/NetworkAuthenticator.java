@@ -15,10 +15,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.net;
+package jgnash.ui.net;
 
 import java.awt.GridLayout;
-import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.util.prefs.Preferences;
 
@@ -28,6 +27,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import jgnash.net.AbstractAuthenticator;
+
 /**
  * An Authenticator that will pop up a dialog and ask for http authentication
  * info if it has not assigned. This does not make authentication information
@@ -35,86 +36,12 @@ import javax.swing.JTextField;
  *
  * @author Craig Cavanaugh
  */
-public class NetworkAuthenticator extends Authenticator {
-
-    public static final String NODEHTTP = "/jgnash/http";
-
-    private static final String HTTPUSER = "httpuser";
-
-    private static final String HTTPPASS = "httppass";
-
-    public static final String USEPROXY = "useproxy";
-
-    private static final String USEAUTH = "useauth";
-
-    public static final String PROXYHOST = "proxyhost";
-
-    public static final String PROXYPORT = "proxyport";
-
-    private final Preferences auth = Preferences.userRoot().node(NODEHTTP);
-
-    public static void setName(String name) {
-        Preferences pref = Preferences.userRoot().node(NODEHTTP);
-        pref.put(HTTPUSER, name);
-    }
-
-    public static String getName() {
-        Preferences pref = Preferences.userRoot().node(NODEHTTP);
-        return pref.get(HTTPUSER, "user");
-    }
-
-    public static void setHost(String host) {
-        Preferences pref = Preferences.userRoot().node(NODEHTTP);
-        pref.put(PROXYHOST, host);
-    }
-
-    public static String getHost() {
-        Preferences pref = Preferences.userRoot().node(NODEHTTP);
-        return pref.get(PROXYHOST, "localhost");
-    }
-
-    public static void setPort(int port) {
-        Preferences pref = Preferences.userRoot().node(NODEHTTP);
-        pref.putInt(PROXYPORT, port);
-    }
-
-    public static int getPort() {
-        Preferences pref = Preferences.userRoot().node(NODEHTTP);
-        return pref.getInt(PROXYPORT, 8080);
-    }
-
-    public static void setPassword(String password) {
-        Preferences pref = Preferences.userRoot().node(NODEHTTP);
-        pref.put(HTTPPASS, password);
-    }
-
-    public static String getPassword() {
-        Preferences pref = Preferences.userRoot().node(NODEHTTP);
-        return pref.get(HTTPPASS, "");
-    }
-
-    public static void setUseAuthentication(boolean use) {
-        Preferences pref = Preferences.userRoot().node(NODEHTTP);
-        pref.putBoolean(USEAUTH, use);
-    }
-
-    public static void setUseProxy(boolean use) {
-        Preferences pref = Preferences.userRoot().node(NODEHTTP);
-        pref.putBoolean(USEPROXY, use);
-    }
-
-    public static boolean isProxyUsed() {
-        Preferences pref = Preferences.userRoot().node(NODEHTTP);
-        return pref.getBoolean(USEPROXY, false);
-    }
-
-    public static boolean isAuthenticationUsed() {
-        Preferences pref = Preferences.userRoot().node(NODEHTTP);
-        return pref.getBoolean(USEAUTH, false);
-    }
+public class NetworkAuthenticator extends AbstractAuthenticator {
 
     @Override
     protected PasswordAuthentication getPasswordAuthentication() {
+        Preferences auth = Preferences.userRoot().node(NODEHTTP);
+
         char pass[] = null;
         String user;
 

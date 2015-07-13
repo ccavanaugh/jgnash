@@ -34,11 +34,11 @@ import javax.swing.JOptionPane;
 import jgnash.engine.Engine;
 import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.engine.message.MessageBus;
-import jgnash.net.NetworkAuthenticator;
 import jgnash.net.security.YahooParser;
 import jgnash.ui.MainFrame;
 import jgnash.ui.UIApplication;
 import jgnash.ui.actions.OpenAction;
+import jgnash.ui.net.NetworkAuthenticator;
 import jgnash.util.EncryptionManager;
 import jgnash.util.FileUtils;
 import jgnash.util.OS;
@@ -188,7 +188,7 @@ public final class Main {
             System.getProperties().put("http.proxyPort", proxyPort);
 
             // this will deal with any authentication requests properly
-            java.net.Authenticator.setDefault(new jgnash.net.NetworkAuthenticator());
+            java.net.Authenticator.setDefault(new NetworkAuthenticator());
 
             System.out.println(ResourceUtils.getString("Message.Proxy") + proxyHost + ":" + proxyPort);
         }

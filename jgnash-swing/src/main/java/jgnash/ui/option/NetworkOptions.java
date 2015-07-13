@@ -31,9 +31,9 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
 import jgnash.net.ConnectionFactory;
-import jgnash.net.NetworkAuthenticator;
 import jgnash.ui.components.JIntegerField;
 import jgnash.ui.components.JTextFieldEx;
+import jgnash.ui.net.NetworkAuthenticator;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
