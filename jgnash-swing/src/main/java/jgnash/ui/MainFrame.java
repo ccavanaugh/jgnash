@@ -35,6 +35,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -84,7 +85,6 @@ import jgnash.ui.register.RegisterFrame;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.IconUtils;
 import jgnash.ui.util.builder.ActionParser;
-import jgnash.util.Resource;
 import jgnash.util.ResourceUtils;
 
 import org.jdesktop.swingx.JXBusyLabel;
@@ -112,7 +112,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     private MainViewPanel mainView;
 
-    private final transient Resource rb = Resource.get();
+    private final transient ResourceBundle rb = ResourceUtils.getBundle();
 
     private WaitMessagePanel waitPanel;
 

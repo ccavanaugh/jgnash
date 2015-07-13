@@ -17,14 +17,11 @@
  */
 package jgnash.ui.account;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.swing.JButton;
@@ -38,7 +35,11 @@ import jgnash.engine.SecurityNode;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Account dialog
@@ -46,7 +47,7 @@ import jgnash.util.Resource;
  * @author Craig Cavanaugh
  */
 class AccountDialog extends JDialog implements ActionListener {
-    private final transient Resource rb = Resource.get();
+    private final transient ResourceBundle rb = ResourceUtils.getBundle();
 
     private boolean returnStatus = false;
 

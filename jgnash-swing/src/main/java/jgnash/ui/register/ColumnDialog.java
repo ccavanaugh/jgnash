@@ -21,6 +21,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -36,7 +37,7 @@ import jgnash.ui.components.SortedListModel;
 import jgnash.ui.register.table.AbstractRegisterTableModel;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.IconUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -53,7 +54,7 @@ import com.jgoodies.forms.layout.RowSpec;
  */
 class ColumnDialog extends JDialog implements ActionListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private JButton addButton;
 

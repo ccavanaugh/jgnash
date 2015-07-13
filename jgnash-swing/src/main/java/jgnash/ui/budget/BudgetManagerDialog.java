@@ -24,6 +24,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -49,7 +50,7 @@ import jgnash.ui.components.YesNoDialog;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.IconUtils;
 import jgnash.util.NotNull;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.ButtonStackBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -64,7 +65,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public final class BudgetManagerDialog extends JDialog implements ActionListener, MessageListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private JButton closeButton;
 

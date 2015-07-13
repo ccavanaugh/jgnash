@@ -23,6 +23,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +31,7 @@ import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.text.CommodityFormat;
 import jgnash.util.FileUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -70,7 +71,7 @@ public class BudgetResultsExport {
         
         String message = null;
 
-        Resource rb = Resource.get();
+        final ResourceBundle rb = ResourceUtils.getBundle();
 
         Workbook wb;
 

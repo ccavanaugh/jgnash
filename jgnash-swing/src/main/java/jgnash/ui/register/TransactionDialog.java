@@ -19,6 +19,7 @@ package jgnash.ui.register;
 
 import java.awt.event.WindowEvent;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -33,7 +34,7 @@ import jgnash.engine.ReconcileManager;
 import jgnash.engine.Transaction;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -46,7 +47,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class TransactionDialog extends JDialog implements RegisterListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final Account account;
 

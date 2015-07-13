@@ -25,6 +25,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,7 +43,7 @@ import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.register.AccountBalanceDisplayManager;
 import jgnash.ui.util.IconUtils;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -85,7 +86,7 @@ public class MonthlyAccountBalanceChartCompare {
 
     //this is a customisation that can be removed for a more general release
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final DatePanel startDateField = new DatePanel();
 
@@ -102,12 +103,10 @@ public class MonthlyAccountBalanceChartCompare {
     public static void show() {
 
         EventQueue.invokeLater(() -> {
-            Resource rb1 = Resource.get();
-
             MonthlyAccountBalanceChartCompare chart = new MonthlyAccountBalanceChartCompare();
 
             JPanel p = chart.createPanel();
-            GenericCloseDialog d = new GenericCloseDialog(p, rb1.getString("Title.AccountBalance"));
+            GenericCloseDialog d = new GenericCloseDialog(p, ResourceUtils.getString("Title.AccountBalance"));
             d.pack();
             d.setModal(false);
 

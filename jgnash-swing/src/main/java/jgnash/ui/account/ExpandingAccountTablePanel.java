@@ -27,6 +27,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -49,7 +50,7 @@ import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.RollOverButton;
 import jgnash.ui.register.RegisterFrame;
 import jgnash.ui.util.IconUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Displays a list of accounts using a table and adds a toolbar for common account methods
@@ -58,7 +59,7 @@ import jgnash.util.Resource;
  */
 public class ExpandingAccountTablePanel extends JPanel implements ActionListener, MessageListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private ExpandingAccountTablePane accountPane;
 

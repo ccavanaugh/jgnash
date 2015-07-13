@@ -22,6 +22,7 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ResourceBundle;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -33,7 +34,7 @@ import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.ui.components.IndeterminateCheckBox;
 import jgnash.ui.util.ValidationFactory;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Abstract transaction entry form class
@@ -46,7 +47,7 @@ public abstract class AbstractEntryFormPanel extends JPanel {
     /**
      * Resource bundle
      */
-    protected final Resource rb = Resource.get();
+    protected final ResourceBundle rb = ResourceUtils.getBundle();
 
     /**
      * Validating key listener instance. Form components should install this instance for intelligent handling of the

@@ -17,13 +17,10 @@
  */
 package jgnash.ui.recurring;
 
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
+import java.util.ResourceBundle;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JLabel;
@@ -35,7 +32,11 @@ import javax.swing.SpinnerNumberModel;
 import jgnash.engine.recurring.Reminder;
 import jgnash.engine.recurring.YearlyReminder;
 import jgnash.ui.components.DatePanel;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
+
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Yearly reminder tab.
@@ -52,7 +53,7 @@ public class YearTab extends JPanel implements RecurringTab, ActionListener {
 
     private DatePanel endDateField;
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final ButtonGroup group = new ButtonGroup();
 

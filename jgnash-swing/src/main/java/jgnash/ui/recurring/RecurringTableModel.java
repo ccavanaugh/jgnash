@@ -22,6 +22,7 @@ import java.text.DateFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -33,7 +34,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.recurring.Reminder;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Table model for recurring iterators.
@@ -45,7 +46,7 @@ public class RecurringTableModel extends AbstractTableModel implements MessageLi
 
     private List<Reminder> reminders;
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final String[] names = new String[]{rb.getString("Column.Description"), rb.getString("Column.Freq"),
             rb.getString("Column.Enabled"), rb.getString("Column.LastPosted"), rb.getString("Column.Due")};

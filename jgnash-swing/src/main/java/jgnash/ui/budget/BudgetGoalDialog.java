@@ -25,6 +25,7 @@ import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,7 +63,7 @@ import jgnash.ui.components.JFloatField;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.IconUtils;
 import jgnash.ui.util.JTableUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -85,7 +86,7 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
     private static final int SCROLLPANE_HEIGHT = 200;
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private JComboBox<BudgetPeriod> budgetPeriodCombo;
 

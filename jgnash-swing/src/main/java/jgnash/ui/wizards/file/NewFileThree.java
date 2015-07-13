@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -37,7 +38,7 @@ import jgnash.engine.CurrencyNode;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.components.wizard.WizardPage;
 import jgnash.ui.util.IconUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 import jgnash.util.TextResource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -52,7 +53,7 @@ import com.jgoodies.forms.layout.RowSpec;
  */
 public class NewFileThree extends JPanel implements WizardPage, ActionListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
     private JEditorPane helpPane;
     private JList<CurrencyNode> aJList;
     private JButton addButton;

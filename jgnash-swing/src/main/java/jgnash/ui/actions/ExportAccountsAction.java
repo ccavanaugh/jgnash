@@ -17,20 +17,21 @@
  */
 package jgnash.ui.actions;
 
+import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import javax.swing.JFileChooser;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.event.ActionEvent;
 
 import jgnash.engine.AccountTreeXMLFactory;
 import jgnash.engine.EngineFactory;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.builder.Action;
 import jgnash.util.FileUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * UI Action to export the current account tree
@@ -44,7 +45,7 @@ public class ExportAccountsAction extends AbstractEnabledAction {
 
     private static void exportAccounts() {
 
-        final Resource rb = Resource.get();
+        final ResourceBundle rb = ResourceUtils.getBundle();
 
         final Preferences pref = Preferences.userNodeForPackage(ExportAccountsAction.class);
 

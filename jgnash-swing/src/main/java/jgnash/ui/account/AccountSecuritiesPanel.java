@@ -21,6 +21,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -39,7 +40,7 @@ import jgnash.engine.SecurityNode;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.util.IconUtils;
 import jgnash.util.NotNull;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.ButtonStackBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -50,7 +51,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 class AccountSecuritiesPanel extends JPanel implements ActionListener {
 
-    private final transient Resource rb = Resource.get();
+    private final transient ResourceBundle rb = ResourceUtils.getBundle();
 
     private final transient Engine engine;
 

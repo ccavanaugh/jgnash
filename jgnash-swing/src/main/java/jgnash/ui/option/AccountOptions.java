@@ -17,15 +17,12 @@
  */
 package jgnash.ui.option;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
@@ -38,7 +35,11 @@ import jgnash.engine.EngineFactory;
 import jgnash.ui.register.AccountBalanceDisplayManager;
 import jgnash.ui.register.AccountBalanceDisplayMode;
 import jgnash.ui.register.RegisterFactory;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Panel for general account options
@@ -47,7 +48,7 @@ import jgnash.util.Resource;
  */
 class AccountOptions extends JPanel implements ActionListener, FocusListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private JTextField accountSeparatorField;
 

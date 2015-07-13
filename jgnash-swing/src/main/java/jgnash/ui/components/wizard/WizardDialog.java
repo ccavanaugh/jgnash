@@ -26,6 +26,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -42,7 +43,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.ListSelectionEvent;
 
 import jgnash.ui.util.IconUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -77,7 +78,7 @@ public class WizardDialog extends JDialog implements ActionListener {
 
     private JList<WizardPage> taskList;
 
-    protected final Resource rb = Resource.get();
+    protected final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final Map<Enum<?>, Object> settings = new HashMap<>();
 

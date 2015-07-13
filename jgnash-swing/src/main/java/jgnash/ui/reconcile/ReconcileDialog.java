@@ -28,6 +28,7 @@ import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Date;
+import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -62,7 +63,7 @@ import jgnash.ui.register.RegisterFactory;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.JTableUtils;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -122,7 +123,7 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
 
     private final NumberFormat numberFormat;
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     public ReconcileDialog(final Account reconcileAccount, final Date closingDate, final BigDecimal openingBalance, final BigDecimal endingBalance) {
         super(UIApplication.getFrame(), false);

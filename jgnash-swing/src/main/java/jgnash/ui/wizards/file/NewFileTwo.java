@@ -18,6 +18,7 @@
 package jgnash.ui.wizards.file;
 
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -30,7 +31,7 @@ import jgnash.engine.CurrencyNode;
 import jgnash.engine.DefaultCurrencies;
 import jgnash.ui.components.SortedComboBoxModel;
 import jgnash.ui.components.wizard.WizardPage;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 import jgnash.util.TextResource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -43,7 +44,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class NewFileTwo extends JPanel implements WizardPage {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     // Do not use a CurrencyComboBox at this point or it will boot the engine
     private final JComboBox<CurrencyNode> currencyCombo = new JComboBox<>();

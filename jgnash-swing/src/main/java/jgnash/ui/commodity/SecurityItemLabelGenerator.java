@@ -20,10 +20,11 @@ package jgnash.ui.commodity;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.Date;
+import java.util.ResourceBundle;
 
 import jgnash.engine.SecurityNode;
 import jgnash.text.CommodityFormat;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import org.jfree.chart.labels.XYToolTipGenerator;
 import org.jfree.data.xy.OHLCDataset;
@@ -71,7 +72,7 @@ class SecurityItemLabelGenerator implements XYToolTipGenerator {
         this.dateFormatter = dateFormatter;
         this.numberFormatter = numberFormatter;
 
-        Resource rb = Resource.get();
+        ResourceBundle rb = ResourceUtils.getBundle();
 
         dateLabel = rb.getString("Label.Date");
 

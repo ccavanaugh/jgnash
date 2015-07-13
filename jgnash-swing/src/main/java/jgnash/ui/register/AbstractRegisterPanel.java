@@ -27,6 +27,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.prefs.Preferences;
 
@@ -61,7 +62,6 @@ import jgnash.ui.register.table.AbstractRegisterTableModel;
 import jgnash.ui.register.table.RegisterTable;
 import jgnash.ui.util.JTableUtils;
 import jgnash.util.EncodeDecode;
-import jgnash.util.Resource;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -72,9 +72,13 @@ import jgnash.util.ResourceUtils;
 public abstract class AbstractRegisterPanel extends JPanel implements MessageListener, KeyListener {
 
     private static final String NODE_REG_POS = "/jgnash/ui/register/positions";
+
     private static final String NODE_REG_WIDTH = "/jgnash/ui/register/widths";
+
     private static final String NODE_REG_VIS = "/jgnash/ui/register/visibility";
-    protected final Resource rb = Resource.get();
+
+    protected final ResourceBundle rb = ResourceUtils.getBundle();
+
     private final TransactionPopup popup = new TransactionPopup();
 
     protected abstract Account getAccount();

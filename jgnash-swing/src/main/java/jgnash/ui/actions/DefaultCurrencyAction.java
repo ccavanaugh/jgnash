@@ -20,6 +20,7 @@ package jgnash.ui.actions;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
 
@@ -28,13 +29,12 @@ import jgnash.engine.EngineFactory;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.CurrencyComboBox;
 import jgnash.ui.util.builder.Action;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * UI Action to open the new file dialog
  *
  * @author Craig Cavanaugh
- *
  */
 @Action("currency-default-command")
 public class DefaultCurrencyAction extends AbstractEnabledAction {
@@ -42,9 +42,9 @@ public class DefaultCurrencyAction extends AbstractEnabledAction {
     @Override
     public void actionPerformed(final ActionEvent e) {
         EventQueue.invokeLater(() -> {
-            Resource rb = Resource.get();
+            final ResourceBundle rb = ResourceUtils.getBundle();
 
-            CurrencyComboBox combo = new CurrencyComboBox();
+            final CurrencyComboBox combo = new CurrencyComboBox();
 
             Object[] options = {rb.getString("Button.Ok"), rb.getString("Button.Cancel")};
             int result = JOptionPane.showOptionDialog(UIApplication.getFrame(), combo, rb.getString("Title.SelDefCurr"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[1]);

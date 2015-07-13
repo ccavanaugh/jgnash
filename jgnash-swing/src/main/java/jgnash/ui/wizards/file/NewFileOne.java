@@ -22,6 +22,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
@@ -37,7 +38,7 @@ import jgnash.ui.actions.DatabasePathAction;
 import jgnash.ui.components.DataStoreTypeCombo;
 import jgnash.ui.components.wizard.WizardPage;
 import jgnash.util.FileUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 import jgnash.util.TextResource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -50,7 +51,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class NewFileOne extends JPanel implements WizardPage, ActionListener {
 
-    protected final Resource rb = Resource.get();
+    protected final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final JTextField dbNameField = new JTextField();
 

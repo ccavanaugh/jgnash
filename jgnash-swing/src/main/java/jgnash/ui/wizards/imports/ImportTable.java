@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.Collections;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultRowSorter;
@@ -46,14 +47,14 @@ import jgnash.ui.util.IconUtils;
 import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * @author Craig Cavanaugh
  */
 class ImportTable extends FormattedJTable {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final Model model;
 

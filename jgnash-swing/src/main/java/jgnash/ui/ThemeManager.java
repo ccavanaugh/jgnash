@@ -20,6 +20,7 @@ package jgnash.ui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -37,7 +38,7 @@ import javax.swing.plaf.metal.MetalTheme;
 import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 
 import jgnash.ui.plaf.NimbusUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import org.pushingpixels.lafwidget.animation.AnimationConfigurationManager;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
@@ -52,7 +53,8 @@ import org.pushingpixels.substance.api.skin.SkinInfo;
 @SuppressWarnings("restriction")
 public class ThemeManager {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
+
     private JMenu themesMenu = null;
     private final ArrayList<Object> themeList = new ArrayList<>();
     private ButtonGroup lfButtonGroup = new ButtonGroup();

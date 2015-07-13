@@ -18,6 +18,7 @@
 package jgnash.ui.register;
 
 import java.awt.event.WindowEvent;
+import java.util.ResourceBundle;
 
 import javax.swing.JDialog;
 import javax.swing.WindowConstants;
@@ -26,7 +27,7 @@ import jgnash.engine.Account;
 import jgnash.engine.Transaction;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * A Dialog for editing a newly created transaction.
@@ -40,7 +41,7 @@ public class EditTransactionDialog extends JDialog implements RegisterListener {
 
     EditTransactionDialog(final Account a, final PanelType transType) {
         super(UIApplication.getFrame(), true);
-        Resource rb = Resource.get();
+        ResourceBundle rb = ResourceUtils.getBundle();
         setTitle(rb.getString("Title.NewTrans") + " " + a.getPathName());
 
         transPanel = new TransactionPanel(a, transType);

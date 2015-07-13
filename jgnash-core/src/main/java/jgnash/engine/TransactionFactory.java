@@ -24,10 +24,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import jgnash.text.CommodityFormat;
-import jgnash.util.Resource;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -295,7 +295,8 @@ public class TransactionFactory {
                 incomeExchangedAmount);
         entry.setMemo(memo);
 
-        final Resource rb = Resource.get();
+        final ResourceBundle rb = ResourceUtils.getBundle();
+
         final NumberFormat format = CommodityFormat.getFullNumberFormat(incomeAccount.getCurrencyNode());
 
         transaction.setPayee(rb.getString("Word.ReturnOfCapital") + " : " + node.getSymbol() + " @ "

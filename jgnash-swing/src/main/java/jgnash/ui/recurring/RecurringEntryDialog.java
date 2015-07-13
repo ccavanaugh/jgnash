@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -50,7 +51,7 @@ import jgnash.ui.components.JIntegerField;
 import jgnash.ui.components.JTextFieldEx;
 import jgnash.ui.register.TransactionDialog;
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -81,7 +82,7 @@ public class RecurringEntryDialog extends JDialog implements ActionListener {
     private JButton okButton;
     private JTextArea notesArea;
     private AccountListComboBox accountCombo;
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
     private final HashMap<Class<?>, Integer> tabMap = new HashMap<>();
     private Transaction transaction = null;
 

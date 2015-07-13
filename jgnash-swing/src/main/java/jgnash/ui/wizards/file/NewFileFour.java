@@ -21,6 +21,7 @@ import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import javax.swing.DefaultListModel;
@@ -39,7 +40,7 @@ import jgnash.engine.RootAccount;
 import jgnash.ui.components.CheckListCellRenderer;
 import jgnash.ui.components.wizard.WizardPage;
 import jgnash.ui.util.ToggleSelectionModel;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 import jgnash.util.TextResource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -51,7 +52,7 @@ import com.jgoodies.forms.layout.RowSpec;
  */
 public class NewFileFour extends JPanel implements WizardPage {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private JList<Account> accountList;
 

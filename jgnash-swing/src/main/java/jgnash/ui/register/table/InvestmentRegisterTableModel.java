@@ -23,19 +23,19 @@ import java.util.Date;
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
+import jgnash.util.ResourceUtils;
 
 /**
  * Table model for investment transactions
  * 
  * @author Craig Cavanaugh
- *
  */
-
 public class InvestmentRegisterTableModel extends AbstractRegisterTableModel {
 
-    private static final String[] names = { rb.getString("Column.Date"), rb.getString("Column.Action"),
-                    rb.getString("Column.Investment"), rb.getString("Column.Clr"), rb.getString("Column.Quantity"),
-                    rb.getString("Column.Price"), rb.getString("Column.Total") };
+    private static final String[] names = { ResourceUtils.getString("Column.Date"),
+            ResourceUtils.getString("Column.Action"), ResourceUtils.getString("Column.Investment"),
+            ResourceUtils.getString("Column.Clr"), ResourceUtils.getString("Column.Quantity"),
+            ResourceUtils.getString("Column.Price"), ResourceUtils.getString("Column.Total") };
 
     private static final int[] PREF_COLUMN_WEIGHTS = { 0, 0, 20, 0, 0, 0, 0 };
 

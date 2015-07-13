@@ -18,11 +18,12 @@
 package jgnash.ui.actions;
 
 import java.awt.Component;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import javax.swing.JFileChooser;
 
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * UI Action to request database path from the user
@@ -37,7 +38,7 @@ public class ImportPathAction {
     }
 
     public static String databaseNameAction(Component parent) {
-        Resource rb = Resource.get();
+        ResourceBundle rb = ResourceUtils.getBundle();
 
         Preferences pref = Preferences.userNodeForPackage(ImportPathAction.class);
 

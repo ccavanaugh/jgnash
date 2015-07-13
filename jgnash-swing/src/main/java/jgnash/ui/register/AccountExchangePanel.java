@@ -28,6 +28,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -49,7 +50,7 @@ import jgnash.text.CommodityFormat;
 import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.util.IconUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -103,7 +104,7 @@ public class AccountExchangePanel extends JPanel implements ActionListener, Focu
         Objects.requireNonNull(baseCurrency);
         Objects.requireNonNull(amountField);
 
-        Resource rb = Resource.get();
+        final ResourceBundle rb = ResourceUtils.getBundle();
 
         this.baseCurrency = baseCurrency;
         this.amountField = amountField;
@@ -204,7 +205,7 @@ public class AccountExchangePanel extends JPanel implements ActionListener, Focu
     }
 
     private JPanel layoutRatePanel() {
-        Resource rb = Resource.get();
+        ResourceBundle rb = ResourceUtils.getBundle();
 
         CellConstraints cc = new CellConstraints();
         FormLayout layout = new FormLayout("d, 6dlu, right:d, $lcgap, max(48dlu;min)", "f:d");

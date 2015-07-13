@@ -23,6 +23,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -37,7 +38,7 @@ import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.Account;
 import jgnash.ui.components.wizard.WizardPage;
 import jgnash.ui.util.JTableUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 import jgnash.util.TextResource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -51,7 +52,7 @@ import com.jgoodies.forms.layout.RowSpec;
  */
 public class ImportTwo extends JPanel implements WizardPage, ActionListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private JButton deleteButton;
 

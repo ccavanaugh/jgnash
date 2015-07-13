@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +43,7 @@ import jgnash.text.CommodityFormat;
 import jgnash.ui.components.expandingtable.AbstractExpandingTableModel;
 import jgnash.ui.components.expandingtable.ExpandingTableNode;
 import jgnash.ui.register.AccountBalanceDisplayManager;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * TableModel that can expand and contract the displayed rows
@@ -81,7 +82,7 @@ public final class ExpandingAccountTableModel extends AbstractExpandingTableMode
     public ExpandingAccountTableModel() {
         logger.setLevel(Level.ALL);
 
-        Resource rb = Resource.get();
+        ResourceBundle rb = ResourceUtils.getBundle();
 
         columnNames = new String[] { rb.getString("Column.AccountName"), rb.getString("Column.Entries"),
                         rb.getString("Column.Balance"), rb.getString("Column.ReconciledBalance"),

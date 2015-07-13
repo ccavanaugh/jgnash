@@ -19,6 +19,7 @@ package jgnash.ui.account;
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import jgnash.engine.Account;
@@ -29,7 +30,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
 import jgnash.ui.StaticUIMethods;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Static account creation and modification methods
@@ -47,7 +48,7 @@ class AccountTools {
 
         Account parentAccount = account;
 
-        final Resource rb = Resource.get();
+        final ResourceBundle rb = ResourceUtils.getBundle();
 
         if (parentAccount == null) {            
             parentAccount = engine.getRootAccount();
@@ -104,7 +105,7 @@ class AccountTools {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        final Resource rb = Resource.get();
+        final ResourceBundle rb = ResourceUtils.getBundle();
 
         final Account parentAccount = account.getParent();
 

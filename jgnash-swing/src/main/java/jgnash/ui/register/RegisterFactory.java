@@ -19,6 +19,7 @@ package jgnash.ui.register;
 
 import java.awt.Color;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import jgnash.engine.Account;
@@ -39,7 +40,7 @@ import jgnash.ui.register.table.SortedInvestmentTableModel;
 import jgnash.ui.register.table.SortedRegisterTable;
 import jgnash.ui.register.table.SortedTableModel;
 import jgnash.ui.register.table.SplitsRegisterTableModel;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Factory class for constructing register tables and controlling global options for registers.
@@ -54,7 +55,7 @@ public class RegisterFactory {
 
     private static final String ODD_COLOR = "OddColor";
 
-    private static final Resource rb = Resource.get();
+    private static final ResourceBundle rb = ResourceUtils.getBundle();
 
     private static boolean sortable;
 

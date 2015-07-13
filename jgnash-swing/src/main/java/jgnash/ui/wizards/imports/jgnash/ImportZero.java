@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
@@ -34,7 +35,7 @@ import javax.swing.text.StyledEditorKit;
 import jgnash.ui.actions.ImportPathAction;
 import jgnash.ui.components.wizard.WizardPage;
 import jgnash.util.FileMagic;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 import jgnash.util.TextResource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -47,7 +48,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class ImportZero extends JPanel implements WizardPage, ActionListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final JTextField fileImportField = new JTextField();
 

@@ -20,6 +20,7 @@ package jgnash.ui.option;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -34,7 +35,7 @@ import jgnash.ui.UIApplication;
 import jgnash.ui.components.AutoCompleteFactory;
 import jgnash.ui.register.AbstractTransactionPanel;
 import jgnash.ui.register.RegisterFactory;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -51,7 +52,7 @@ import org.jdesktop.swingx.JXColorSelectionButton;
  */
 class RegisterOptions extends JPanel implements ActionListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private JButton evenButton;
 

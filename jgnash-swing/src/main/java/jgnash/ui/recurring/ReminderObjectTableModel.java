@@ -19,22 +19,22 @@ package jgnash.ui.recurring;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.swing.table.AbstractTableModel;
 
 import jgnash.engine.recurring.PendingReminder;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * TableModel for ReminderObjects
  * 
  * @author Craig Cavanaugh
- *
  */
 public class ReminderObjectTableModel extends AbstractTableModel {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final String[] cNames = { rb.getString("Column.Approve"), rb.getString("Column.Description"),
                     rb.getString("Column.Date") };

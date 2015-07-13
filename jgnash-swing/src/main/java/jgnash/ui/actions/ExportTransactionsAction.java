@@ -17,18 +17,21 @@
  */
 package jgnash.ui.actions;
 
-import jgnash.engine.Account;
-import jgnash.convert.exports.csv.CsvExport;
-import jgnash.convert.exports.ofx.OfxExport;
-import jgnash.ui.UIApplication;
-import jgnash.util.FileUtils;
-import jgnash.util.Resource;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.util.Date;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
+
+import javax.swing.JFileChooser;
+import javax.swing.SwingWorker;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import jgnash.convert.exports.csv.CsvExport;
+import jgnash.convert.exports.ofx.OfxExport;
+import jgnash.engine.Account;
+import jgnash.ui.UIApplication;
+import jgnash.util.FileUtils;
+import jgnash.util.ResourceUtils;
 
 /**
  * UI Action to export transactions to a CSV file
@@ -44,7 +47,7 @@ public class ExportTransactionsAction {
 
     public static void exportTransactions(final Account account, final Date startDate, final Date endDate) {
 
-        final Resource rb = Resource.get();
+        final ResourceBundle rb = ResourceUtils.getBundle();
 
         final Preferences pref = Preferences.userNodeForPackage(ExportTransactionsAction.class);
 

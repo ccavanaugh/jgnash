@@ -18,6 +18,7 @@
 package jgnash.ui.wizards.imports;
 
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
@@ -26,7 +27,7 @@ import javax.swing.text.StyledEditorKit;
 import jgnash.engine.Account;
 import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.wizard.WizardPage;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 import jgnash.util.TextResource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -46,7 +47,7 @@ public class ImportOne extends JPanel implements WizardPage {
 
     private JTextPane helpPane;
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     public ImportOne() {
         layoutMainPanel();

@@ -27,6 +27,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.WindowEvent;
 import java.awt.print.PageFormat;
 import java.text.DecimalFormat;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import javax.swing.DefaultComboBoxModel;
@@ -57,7 +58,7 @@ import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.JTextFieldEx;
 import jgnash.ui.components.RollOverButton;
 import jgnash.ui.util.IconUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -117,7 +118,7 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
 
     private final Preferences pref = Preferences.userNodeForPackage(CheckDesignDialog.class);
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     public CheckDesignDialog(final Frame parent) {
         super(parent, true);

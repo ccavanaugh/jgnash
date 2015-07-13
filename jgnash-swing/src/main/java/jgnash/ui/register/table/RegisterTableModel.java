@@ -23,16 +23,16 @@ import java.util.Date;
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
+import jgnash.util.ResourceUtils;
 
 /**
  * Generic register table model.
  * 
  * @author Craig Cavanaugh
- *
  */
 public class RegisterTableModel extends AbstractRegisterTableModel {
 
-    static final String split = rb.getString("Button.Splits");
+    static final String split = ResourceUtils.getString("Button.Splits");
 
     private static final int[] PREF_COLUMN_WEIGHTS = { 0, 0, 20, 20, 20, 0, 0, 0, 0 };
 

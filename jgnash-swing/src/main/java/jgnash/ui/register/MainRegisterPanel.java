@@ -25,6 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Date;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import javax.help.CSH;
@@ -55,7 +56,7 @@ import jgnash.ui.register.table.AbstractRegisterTableModel;
 import jgnash.ui.report.compiled.AccountRegisterReport;
 import jgnash.ui.util.IconUtils;
 import jgnash.ui.util.JTableUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * The main panel for displaying a tree of accounts and their transaction register This panel is not intended to be
@@ -97,7 +98,7 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
     }
 
     private void layoutMainPanel() {
-        final Resource rb = Resource.get();
+        final ResourceBundle rb = ResourceUtils.getBundle();
 
         JPanel toolPanel;
 
