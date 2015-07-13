@@ -17,13 +17,9 @@
  */
 package jgnash.util;
 
-import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
 import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -66,59 +62,6 @@ public class EncodeDecode {
         }
         return rect;
     }*/
-
-    public static String encodeRectangle(final Rectangle bounds) {
-        return String.valueOf(bounds.x) + COMMA_DELIMITER + bounds.y + COMMA_DELIMITER + bounds.width
-                + COMMA_DELIMITER + bounds.height;
-    }
-
-    public static String encodeRectangle2D(final double x, final double y, final double width, final double height) {
-        return String.valueOf(x) + COMMA_DELIMITER + y + COMMA_DELIMITER + width + COMMA_DELIMITER + height;
-    }
-
-    public static Rectangle decodeRectangle(final String bounds) {
-        if (bounds == null) {
-            return null;
-        }
-
-        Rectangle rectangle = null;
-        String[] array = COMMA_DELIMITER_PATTERN.split(bounds);
-        if (array.length == 4) {
-            try {
-                rectangle = new Rectangle();
-                rectangle.x = Integer.parseInt(array[0]);
-                rectangle.y = Integer.parseInt(array[1]);
-                rectangle.width = Integer.parseInt(array[2]);
-                rectangle.height = Integer.parseInt(array[3]);
-            } catch (final NumberFormatException nfe) {
-                Logger.getLogger(EncodeDecode.class.getName()).log(Level.SEVERE, null, nfe);
-                rectangle = null;
-            }
-        }
-        return rectangle;
-    }
-
-    public static Rectangle2D.Double decodeRectangle2D(final String bounds) {
-        if (bounds == null) {
-            return null;
-        }
-
-        Rectangle2D.Double rectangle = null;
-        String[] array = COMMA_DELIMITER_PATTERN.split(bounds);
-        if (array.length == 4) {
-            try {
-                rectangle = new Rectangle2D.Double();
-                rectangle.x = Float.parseFloat(array[0]);
-                rectangle.y = Float.parseFloat(array[1]);
-                rectangle.width = Float.parseFloat(array[2]);
-                rectangle.height = Float.parseFloat(array[3]);
-            } catch (final NumberFormatException nfe) {
-                Logger.getLogger(EncodeDecode.class.getName()).log(Level.SEVERE, null, nfe);
-                rectangle = null;
-            }
-        }
-        return rectangle;
-    }
 
     /**
      * Encodes a double array as a comma separated {@code String}. Values will be rounded to 2 decimal places
