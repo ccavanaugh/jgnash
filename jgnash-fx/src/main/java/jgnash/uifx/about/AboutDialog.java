@@ -17,10 +17,6 @@
  */
 package jgnash.uifx.about;
 
-import java.util.Properties;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
-
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -39,11 +35,15 @@ import javafx.scene.control.TableView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.web.WebView;
-
 import jgnash.uifx.util.TableViewManager;
 import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.HTMLResource;
+import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
+
+import java.util.Properties;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 /**
  * About Dialog
@@ -55,6 +55,8 @@ public class AboutDialog {
     private static final double FONT_SCALE = 0.8333;
 
     private static final String PREF_NODE_USER_ROOT = "/jgnash/uifx/about";
+
+    private static final int MAX_HEIGHT = 600;
 
     private AboutDialog() {
         // utility class
@@ -84,6 +86,8 @@ public class AboutDialog {
                 addHTMLTab("Apache License", "apache-license.html"),
                 addHTMLTab("XStream License", "xstream-license.html"),
                 getSystemPropertiesTab());
+
+        dialog.getDialogPane().setMaxHeight(MAX_HEIGHT);
 
         dialog.showAndWait();
     }
@@ -187,7 +191,7 @@ public class AboutDialog {
         }
 
         @Override
-        public int compareTo(final SystemProperty o) {
+        public int compareTo(@NotNull final SystemProperty o) {
             return keyProperty().get().compareTo(o.keyProperty().get());
         }
     }
