@@ -28,6 +28,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import jgnash.net.AbstractAuthenticator;
+import jgnash.util.ResourceUtils;
 
 /**
  * An Authenticator that will pop up a dialog and ask for http authentication
@@ -66,9 +67,9 @@ public class NetworkAuthenticator extends AbstractAuthenticator {
             JTextField username = new JTextField();
             JPasswordField password = new JPasswordField();
             JPanel panel = new JPanel(new GridLayout(2, 2));
-            panel.add(new JLabel("User Name"));
+            panel.add(new JLabel(ResourceUtils.getString("Label.UserName")));
             panel.add(username);
-            panel.add(new JLabel("Password"));
+            panel.add(new JLabel(ResourceUtils.getString("Label.Password")));
             panel.add(password);
             int option = JOptionPane.showConfirmDialog(null, new Object[]{"Site: " + getRequestingHost(),
                     "Realm: " + getRequestingPrompt(), panel}, "Enter Network Password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
