@@ -34,6 +34,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.about.AboutDialog;
+import jgnash.uifx.actions.DefaultLocaleAction;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.wizard.file.NewFileWizard;
 
@@ -143,4 +144,8 @@ public class MenuBarController implements MessageListener {
         });
     }
 
+    @FXML
+    private void changeDefaultLocale() {
+        DefaultLocaleAction.showAndWait();
+    }
 }

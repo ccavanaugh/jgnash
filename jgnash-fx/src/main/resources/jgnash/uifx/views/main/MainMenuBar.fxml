@@ -39,7 +39,6 @@
                      <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
                  </graphic>
              </MenuItem>
-
            </items>
          </Menu>
             <Menu mnemonicParsing="false" text="%Menu.Currency.Name">
@@ -51,6 +50,8 @@
                 </MenuItem>
               </items>
             </Menu>
+           <SeparatorMenuItem mnemonicParsing="false" />
+           <MenuItem text="%Menu.Locale.Name" onAction="#changeDefaultLocale"/>
        </items>
     </Menu>
       <Menu mnemonicParsing="false" text="%Menu.Help.Name">
