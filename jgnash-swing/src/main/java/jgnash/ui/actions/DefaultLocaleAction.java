@@ -17,13 +17,7 @@
  */
 package jgnash.ui.actions;
 
-import jgnash.ui.UIApplication;
-import jgnash.ui.util.builder.Action;
-import jgnash.util.LocaleObject;
-import jgnash.util.ResourceUtils;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -31,8 +25,18 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.AbstractAction;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
+
+import jgnash.ui.UIApplication;
+import jgnash.ui.util.builder.Action;
+import jgnash.util.LocaleObject;
+import jgnash.util.ResourceUtils;
+
 /**
- * UI Action to open the new file dialog
+ * UI Action to change the default locale
  * 
  * @author Craig Cavanaugh
  */
