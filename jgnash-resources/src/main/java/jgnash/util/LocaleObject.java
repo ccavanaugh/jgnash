@@ -17,7 +17,9 @@
  */
 package jgnash.util;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -52,9 +54,10 @@ public class LocaleObject implements Comparable<LocaleObject> {
 
     @Override
     public boolean equals(final Object obj) {
-        assert obj instanceof LocaleObject;
-
-        return equals((LocaleObject) obj);
+        if (obj != null && obj instanceof LocaleObject) {
+            return equals((LocaleObject) obj);
+        }
+        return false;
     }
 
     @Override
@@ -69,15 +72,16 @@ public class LocaleObject implements Comparable<LocaleObject> {
     }
 
     public static LocaleObject[] getLocaleObjects() {
-        Locale[] tList = Locale.getAvailableLocales();
+        final Locale[] tList = Locale.getAvailableLocales();
+        final List<LocaleObject> localeObjects = new ArrayList<>();
 
-        LocaleObject[] list = new LocaleObject[tList.length];
-
-        for (int i = 0; i < list.length; i++) {
-            list[i] = new LocaleObject(tList[i]);
+        for (final Locale aTList : tList) {
+            if (aTList.getDisplayName() != null && !aTList.getDisplayName().isEmpty()) {
+                localeObjects.add(new LocaleObject(aTList));
+            }
         }
 
-        Arrays.sort(list);
-        return list;
+        Collections.sort(localeObjects);
+        return localeObjects.toArray(new LocaleObject[localeObjects.size()]);
     }
 }
