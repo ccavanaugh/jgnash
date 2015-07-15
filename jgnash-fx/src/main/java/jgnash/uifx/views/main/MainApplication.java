@@ -30,6 +30,8 @@ import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -61,6 +63,7 @@ import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.accounts.AccountsViewController;
 import jgnash.uifx.views.recurring.RecurringViewController;
+import jgnash.uifx.views.register.RegisterStage;
 import jgnash.uifx.views.register.RegisterViewController;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
@@ -96,6 +99,8 @@ public class MainApplication extends Application implements MessageListener {
 
     private BusyPane busyPane;
 
+    private final ListProperty<RegisterStage> registerStageListProperty = new SimpleListProperty<>();
+
     /**
      * Application Singleton
      */
@@ -129,8 +134,16 @@ public class MainApplication extends Application implements MessageListener {
 
         busyPane = new BusyPane();
 
-        final MenuBar menuBar = FXMLLoader.load(MenuBarController.class.getResource("MainMenuBar.fxml"), rb);
+        final FXMLLoader fxmlLoader = new FXMLLoader(MenuBarController.class.getResource("MainMenuBar.fxml"), rb);
+
+        final MenuBar menuBar = fxmlLoader.load();
+        final MenuBarController controller = fxmlLoader.getController();
+
+        // bind the register stage list together
+        controller.registerStageListPropertyProperty().bindBidirectional(registerStageListProperty);
+
         final ToolBar mainToolBar = FXMLLoader.load(MainToolBarController.class.getResource("MainToolBar.fxml"), rb);
+
         tabViewPane = new TabViewPane();
 
         final VBox top = new VBox();
