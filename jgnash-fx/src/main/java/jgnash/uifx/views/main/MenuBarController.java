@@ -134,10 +134,6 @@ public class MenuBarController implements MessageListener {
                 case FILE_CLOSING:
                     disabled.setValue(true);
                     break;
-                case FILE_IO_ERROR:
-                case FILE_LOAD_FAILED:
-                case FILE_NOT_FOUND:
-                    StaticUIMethods.displayError("File system error TBD");  // TODO: need a description
                 default:
                     break;
             }
