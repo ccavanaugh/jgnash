@@ -257,13 +257,15 @@ public class MainApplication extends Application implements MessageListener {
                 });
                 break;
             case FILE_IO_ERROR:
-                logger.severe("IO error");
+                logger.warning(rb.getString("Message.Error.IOError"));
+                StaticUIMethods.displayError(rb.getString("Message.Error.IOError"));
                 break;
             case FILE_LOAD_FAILED:
-                logger.warning("Error occurred loading the file");
+                logger.warning(rb.getString("Message.Error.LoadingFile"));
+                StaticUIMethods.displayError(rb.getString("Message.Error.LoadingFile"));
                 break;
             case FILE_NOT_FOUND:
-                logger.warning("File was not found");
+                logger.warning(rb.getString("Message.Error.FileNotFound"));
                 break;
             case ACCOUNT_REMOVE_FAILED:
                 StaticUIMethods.displayError(rb.getString("Message.Error.AccountRemove"));
