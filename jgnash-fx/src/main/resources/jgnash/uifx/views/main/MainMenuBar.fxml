@@ -25,11 +25,6 @@
           <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#handleExitAction" text="%Menu.Exit.Name" />
       </items>
     </Menu>
-    <Menu mnemonicParsing="false" text="%Menu.Edit.Name">
-      <items>
-        <MenuItem mnemonicParsing="false" text="%Menu.Delete.Name" />
-      </items>
-    </Menu>
     <Menu mnemonicParsing="false" text="%Menu.Tools.Name">
        <items>
          <Menu mnemonicParsing="false" text="%Menu.Securities.Name">
