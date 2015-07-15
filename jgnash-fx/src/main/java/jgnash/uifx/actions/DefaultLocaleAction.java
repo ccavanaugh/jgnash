@@ -21,6 +21,8 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.scene.control.ChoiceDialog;
 
 import jgnash.uifx.StaticUIMethods;
@@ -37,23 +39,39 @@ public class DefaultLocaleAction {
 
     public static void showAndWait() {
 
-        final ResourceBundle resources = ResourceUtils.getBundle();
+        final Task<LocaleObject[]> task = new Task<LocaleObject[]>() {
+            final ResourceBundle resources = ResourceUtils.getBundle();
 
-        // TODO, run in background thread and don't block the UI
-        final LocaleObject[] localeObjects = LocaleObject.getLocaleObjects();
+            private LocaleObject[] localeObjects;
 
-        final ChoiceDialog<LocaleObject> dialog = new ChoiceDialog<>(new LocaleObject(Locale.getDefault()), localeObjects);
-        dialog.setTitle(resources.getString("Title.SelDefLocale"));
+            @Override
+            protected LocaleObject[] call() throws Exception {
+                localeObjects = LocaleObject.getLocaleObjects();
+                return localeObjects;
+            }
 
-        dialog.getDialogPane().getStylesheets().addAll(MainApplication.DEFAULT_CSS);
-        dialog.getDialogPane().getStyleClass().addAll("form", "dialog");
-        dialog.setHeaderText(resources.getString("Title.SelDefLocale"));
+            @Override
+            protected void succeeded() {
+                super.succeeded();
 
-        final Optional<LocaleObject> result = dialog.showAndWait();
+                Platform.runLater(() -> {
+                    final ChoiceDialog<LocaleObject> dialog = new ChoiceDialog<>(new LocaleObject(Locale.getDefault()), localeObjects);
+                    dialog.setTitle(resources.getString("Title.SelDefLocale"));
 
-        if (result.isPresent()) {
-            ResourceUtils.setLocale(result.get().getLocale());
-            StaticUIMethods.displayMessage(result.get() + "\n" + resources.getString("Message.RestartLocale"));
-        }
+                    dialog.getDialogPane().getStylesheets().addAll(MainApplication.DEFAULT_CSS);
+                    dialog.getDialogPane().getStyleClass().addAll("form", "dialog");
+                    dialog.setHeaderText(resources.getString("Title.SelDefLocale"));
+
+                    final Optional<LocaleObject> result = dialog.showAndWait();
+
+                    if (result.isPresent()) {
+                        ResourceUtils.setLocale(result.get().getLocale());
+                        StaticUIMethods.displayMessage(result.get() + "\n" + resources.getString("Message.RestartLocale"));
+                    }
+                });
+            }
+        };
+
+        new Thread(task).start();
     }
 }
