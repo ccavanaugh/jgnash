@@ -182,6 +182,13 @@ public class RegisterViewController {
         StaticAccountsMethods.showAccountFilterDialog(typeFilter);
     }
 
+    @FXML
+    private void handleZoomAction() {
+        if (accountTreeController.getSelectedAccountProperty().get() != null) {
+            new RegisterStage(accountTreeController.getSelectedAccountProperty().get()).show();
+        }
+    }
+
     private static final class DisabledTreeCell extends TreeCell<Account> {
         @Override
         public void updateItem(final Account account, final boolean empty) {

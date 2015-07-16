@@ -28,7 +28,7 @@
                         <Tooltip text="%ToolTip.FilterAccounts"/>
                     </tooltip>
                 </Button>
-                <Button fx:id="zoomButton" mnemonicParsing="false" text="%Button.Zoom">
+                <Button fx:id="zoomButton" mnemonicParsing="false" text="%Button.Zoom" onAction="#handleZoomAction">
                     <graphic>
                         <FontAwesomeImageView glyphName="EXTERNAL_LINK_SQUARE"/>
                     </graphic>

@@ -137,10 +137,10 @@ public class MainApplication extends Application implements MessageListener {
         final FXMLLoader fxmlLoader = new FXMLLoader(MenuBarController.class.getResource("MainMenuBar.fxml"), rb);
 
         final MenuBar menuBar = fxmlLoader.load();
-        final MenuBarController controller = fxmlLoader.getController();
+        //final MenuBarController controller = fxmlLoader.getController();
 
-        // bind the register stage list together
-        controller.registerStageListPropertyProperty().bindBidirectional(registerStageListProperty);
+        // bind the register stage lists together
+        registerStageListProperty.bindBidirectional(RegisterStage.registerStageListProperty());
 
         final ToolBar mainToolBar = FXMLLoader.load(MainToolBarController.class.getResource("MainToolBar.fxml"), rb);
 

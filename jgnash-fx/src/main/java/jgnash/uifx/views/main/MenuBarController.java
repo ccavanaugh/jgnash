@@ -17,16 +17,19 @@
  */
 package jgnash.uifx.views.main;
 
+import java.util.ArrayList;
+import java.util.Objects;
+
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleListProperty;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.message.Message;
@@ -39,8 +42,6 @@ import jgnash.uifx.actions.DefaultLocaleAction;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.views.register.RegisterStage;
 import jgnash.uifx.wizard.file.NewFileWizard;
-
-import java.util.Objects;
 
 /**
  * Primary Menu Controller
@@ -72,24 +73,23 @@ public class MenuBarController implements MessageListener {
 
     final private BooleanProperty disabled = new SimpleBooleanProperty(true);
 
-    /**
-     * RegisterStage list property
-     */
-    final private ListProperty<RegisterStage> registerStageListProperty = new SimpleListProperty<>();
-
     @FXML
     private void initialize() {
         updateSecuritiesMenuItem.disableProperty().bind(disabled);
         updateCurrenciesMenuItem.disableProperty().bind(disabled);
         closeMenuItem.disableProperty().bind(disabled);
 
-        windowMenu.disableProperty().bind(Bindings.or(disabled, registerStageListProperty.emptyProperty()));
+        windowMenu.disableProperty().bind(Bindings.or(disabled, RegisterStage.registerStageListProperty().emptyProperty()));
+
+        RegisterStage.registerStageListProperty().addListener((ListChangeListener<RegisterStage>) c -> {
+            if (c.wasAdded()) {
+                // TODO: create menu item
+            } else if (c.wasRemoved()) {
+                // TODO: remove menu item
+            }
+        });
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
-    }
-
-    ListProperty<RegisterStage> registerStageListPropertyProperty() {
-        return registerStageListProperty;
     }
 
     @FXML
@@ -165,6 +165,9 @@ public class MenuBarController implements MessageListener {
 
     @FXML
     private void closeAllWindows() {
-        // TODO, close all windows
+        // create a copy to avoid concurrent modification issues
+        final ArrayList<RegisterStage> registerStages = new ArrayList<>(RegisterStage.registerStageListProperty().get());
+
+        registerStages.forEach(RegisterStage::close);
     }
 }
