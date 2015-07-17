@@ -59,7 +59,7 @@ public class StageUtils {
         addBoundsListener(stage, prefNode.getName().replace('.', '/'));
     }
 
-    private static void addBoundsListener(final Stage stage, final String prefNode) {
+    public static void addBoundsListener(final Stage stage, final String prefNode) {
         final String bounds = Preferences.userRoot().node(prefNode).get(DEFAULT_KEY, null);
 
         if (bounds != null) { // restore to previous size and position
