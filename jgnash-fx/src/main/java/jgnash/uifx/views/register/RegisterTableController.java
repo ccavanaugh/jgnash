@@ -270,7 +270,6 @@ public abstract class RegisterTableController {
             final MenuItem duplicateItem = new MenuItem(resources.getString("Menu.Duplicate.Name"));
             duplicateItem.setOnAction(event -> duplicateTransactions());
 
-            // TODO Create an account Window
             final MenuItem jumpItem = new MenuItem(resources.getString("Menu.Jump.Name"));
             jumpItem.setOnAction(event -> handleJumpAction());
 
