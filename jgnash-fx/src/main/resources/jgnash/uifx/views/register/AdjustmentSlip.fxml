@@ -15,7 +15,7 @@
 <?import jgnash.uifx.control.TransactionNumberComboBox?>
 <?import jgnash.uifx.views.register.AttachmentPane?>
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="jgnash.uifx.views.register.BankAdjustmentSlipController" styleClass="form, dialog">
+          fx:controller="jgnash.uifx.views.register.AdjustmentSlipController" styleClass="form, dialog">
   <columnConstraints>
       <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
       <ColumnConstraints hgrow="SOMETIMES" />

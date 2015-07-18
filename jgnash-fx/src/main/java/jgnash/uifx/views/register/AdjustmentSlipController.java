@@ -40,7 +40,7 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-public class BankAdjustmentSlipController extends AbstractSlipController {
+public class AdjustmentSlipController extends AbstractSlipController {
 
     @FXML
     private Button convertButton;

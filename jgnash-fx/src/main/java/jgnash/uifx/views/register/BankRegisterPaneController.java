@@ -139,13 +139,13 @@ public class BankRegisterPaneController extends RegisterPaneController {
 
     private Tab buildAdjustTab() {
         final Tab tab = new Tab(resources.getString("Tab.Adjust"));
-        final BankAdjustmentSlipController transactionPaneController = FXMLUtils.loadFXML(o -> {
-            tab.setContent((Node) o);
-        }, "BankAdjustmentSlip.fxml", resources);
 
-        transactionPaneController.accountProperty().bind(accountProperty());
+        final AdjustmentSlipController adjustmentSlipController = FXMLUtils.loadFXML(o -> {tab.setContent((Node) o);
+        }, "AdjustmentSlip.fxml", resources);
 
-        tab.setUserData(transactionPaneController); // place a reference to the controller here
+        adjustmentSlipController.accountProperty().bind(accountProperty());
+
+        tab.setUserData(adjustmentSlipController); // place a reference to the controller here
 
         return tab;
     }
