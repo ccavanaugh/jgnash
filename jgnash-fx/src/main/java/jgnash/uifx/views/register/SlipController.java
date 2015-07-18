@@ -284,6 +284,7 @@ public class SlipController extends AbstractSlipController {
         splitsButton.setDisable(false);
     }
 
+    @Override
     boolean canModifyTransaction(final Transaction t) {
         boolean result = false; // fail unless proven otherwise
 

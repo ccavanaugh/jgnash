@@ -110,15 +110,19 @@ abstract class AbstractSlipController implements Slip {
             amountField.scaleProperty().set(newValue.getCurrencyNode().getScale());
 
             // Enabled auto completion for the payee field
-            AutoCompleteFactory.setPayeeModel(payeeTextField, newValue);
+            if (payeeTextField != null) {   // transfer slips do not use the payee field
+                AutoCompleteFactory.setPayeeModel(payeeTextField, newValue);
+            }
         });
 
         // If focus is lost, check and load the form with an existing transaction
-        payeeTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                handlePayeeFocusChange();
-            }
-        });
+        if (payeeTextField != null) {   // transfer slips do not use the payee field
+            payeeTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue) {
+                    handlePayeeFocusChange();
+                }
+            });
+        }
 
         // Install an event handler when the parent has been set via injection
         parentProperty.addListener((observable, oldValue, newValue) -> {
@@ -167,8 +171,10 @@ abstract class AbstractSlipController implements Slip {
         reconciledButton.setSelected(false);
         reconciledButton.setIndeterminate(false);
 
-        payeeTextField.setEditable(true);
-        payeeTextField.setText(null);
+        if (payeeTextField != null) {    // transfer slips do not use the payee field
+            payeeTextField.setEditable(true);
+            payeeTextField.setText(null);
+        }
 
         datePicker.setEditable(true);
         if (!Options.rememberLastDateProperty().get()) {
@@ -191,7 +197,11 @@ abstract class AbstractSlipController implements Slip {
     @Override
     public void handleCancelAction() {
         clearForm();
-        payeeTextField.requestFocus();
+        if (payeeTextField != null) {
+            payeeTextField.requestFocus();
+        } else {
+            memoTextField.requestFocus();
+        }
     }
 
     @FXML
@@ -237,7 +247,12 @@ abstract class AbstractSlipController implements Slip {
                 }
             }
             clearForm();
-            payeeTextField.requestFocus();
+
+            if (payeeTextField != null) {
+                payeeTextField.requestFocus();
+            } else {
+                memoTextField.requestFocus();
+            }
         }
     }
 
@@ -307,8 +322,10 @@ abstract class AbstractSlipController implements Slip {
 
     @Override
     public boolean validateForm() {
-        if (payeeTextField.getText() == null || payeeTextField.getText().isEmpty()) {
-            ValidationFactory.showValidationWarning(payeeTextField, resources.getString("Message.Warn.EmptyPayee"));
+        if (payeeTextField != null) {   // transfer slips do not use the payee field
+            if (payeeTextField.getText() == null || payeeTextField.getText().isEmpty()) {
+                ValidationFactory.showValidationWarning(payeeTextField, resources.getString("Message.Warn.EmptyPayee"));
+            }
         }
 
         if (amountField.getDecimal().compareTo(BigDecimal.ZERO) == 0) {

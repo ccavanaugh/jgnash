@@ -112,9 +112,10 @@ public class BankRegisterPaneController extends RegisterPaneController {
 
         creditTab = buildTab(tabNames[0], SlipType.INCREASE);
         debitTab = buildTab(tabNames[1], SlipType.DECREASE);
+        final Tab transferTab = buildTransferTab();
         adjustTab = buildAdjustTab();
 
-        transactionForms.getTabs().addAll(creditTab, debitTab, adjustTab);
+        transactionForms.getTabs().addAll(creditTab, debitTab, transferTab, adjustTab);
 
         if (accountType == AccountType.CHECKING || accountType == AccountType.CREDIT) {
             transactionForms.getSelectionModel().select(debitTab);
@@ -125,9 +126,8 @@ public class BankRegisterPaneController extends RegisterPaneController {
 
     private Tab buildTab(final String tabName, final SlipType slipType) {
         final Tab tab = new Tab(tabName);
-        final SlipController slipController = FXMLUtils.loadFXML(o -> {
-            tab.setContent((Node) o);
-        }, "BankSlip.fxml", resources);
+        final SlipController slipController = FXMLUtils.loadFXML(o -> {tab.setContent((Node) o);},
+                "BankSlip.fxml", resources);
 
         slipController.setSlipType(slipType);
         slipController.accountProperty().bind(accountProperty());
@@ -146,6 +146,19 @@ public class BankRegisterPaneController extends RegisterPaneController {
         adjustmentSlipController.accountProperty().bind(accountProperty());
 
         tab.setUserData(adjustmentSlipController); // place a reference to the controller here
+
+        return tab;
+    }
+
+    private Tab buildTransferTab() {
+        final Tab tab = new Tab(resources.getString("Tab.Transfer"));
+
+        final TransferSlipController slipController = FXMLUtils.loadFXML(o -> {tab.setContent((Node) o);
+        }, "TransferSlip.fxml", resources);
+
+        slipController.accountProperty().bind(accountProperty());
+
+        tab.setUserData(slipController); // place a reference to the controller here
 
         return tab;
     }
