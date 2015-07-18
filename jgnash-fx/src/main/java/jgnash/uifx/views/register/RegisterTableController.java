@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -45,8 +46,10 @@ import javafx.util.Callback;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
+import jgnash.engine.TransactionType;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
@@ -149,8 +152,32 @@ public abstract class RegisterTableController {
         return accountPropertyWrapper;
     }
 
+    /**
+     * Scrolls the view to ensure selection visibility.  If possible, the next index is shown for improved
+     * visual appearance.
+     *
+     * @param transaction transaction to show in table
+     */
     private void scrollToTransaction(final Transaction transaction) {
-        tableView.scrollTo(transaction);
+        final int index = tableView.getItems().indexOf(transaction);
+
+        if (index < tableView.getItems().size()) {
+            tableView.scrollTo(index + 1);
+        } else {
+            tableView.scrollTo(transaction);
+        }
+    }
+
+    /**
+     * Ensures the transaction is visible and selects it
+     * @param transaction Transaction that needs to be visible in the view
+     */
+    void selectTransaction(final Transaction transaction) {
+        scrollToTransaction(transaction);
+        tableView.getSelectionModel().select(transaction);
+
+        // The table needs to be focused for the row selection to highlight
+        Platform.runLater(tableView::requestFocus);
     }
 
     abstract protected void buildTable();
@@ -197,6 +224,29 @@ public abstract class RegisterTableController {
         }
     }
 
+    void handleJumpAction() {
+        Transaction t = selectedTransactionProperty.get();
+
+        if (t != null) {
+            if (t.getTransactionType() == TransactionType.DOUBLEENTRY) {
+                final Set<Account> set = t.getAccounts();
+                set.stream().filter(a -> !accountProperty.get().equals(a)).forEach(a -> RegisterStage.getRegisterStage(a).show(t));
+            } else if (t.getTransactionType() == TransactionType.SPLITENTRY) {
+                final Account common = t.getCommonAccount();
+
+                if (!accountProperty.get().equals(common)) {
+                    RegisterStage.getRegisterStage(common).show(t);
+                }
+            } else if (t instanceof InvestmentTransaction) {
+                final Account invest = ((InvestmentTransaction) t).getInvestmentAccount();
+
+                if (!accountProperty.get().equals(invest)) {
+                    RegisterStage.getRegisterStage(invest).show(t);
+                }
+            }
+        }
+    }
+
     private class TransactionRowFactory implements Callback<TableView<Transaction>, TableRow<Transaction>> {
 
         @Override
@@ -222,6 +272,7 @@ public abstract class RegisterTableController {
 
             // TODO Create an account Window
             final MenuItem jumpItem = new MenuItem(resources.getString("Menu.Jump.Name"));
+            jumpItem.setOnAction(event -> handleJumpAction());
 
             final MenuItem deleteItem = new MenuItem(resources.getString("Menu.Delete.Name"));
             deleteItem.setOnAction(event -> deleteTransactions());

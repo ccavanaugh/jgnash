@@ -82,14 +82,35 @@ public class MenuBarController implements MessageListener {
         windowMenu.disableProperty().bind(Bindings.or(disabled, RegisterStage.registerStageListProperty().emptyProperty()));
 
         RegisterStage.registerStageListProperty().addListener((ListChangeListener<RegisterStage>) c -> {
-            if (c.wasAdded()) {
-                // TODO: create menu item
-            } else if (c.wasRemoved()) {
-                // TODO: remove menu item
+            while (c.next()) {
+                if (c.wasAdded()) {
+                    c.getAddedSubList().forEach(MenuBarController.this::addWindowMenuItem);
+                } else if (c.wasRemoved()) {
+                    c.getAddedSubList().forEach(MenuBarController.this::removeWindowMenuItem);
+                }
             }
         });
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
+    }
+
+    private void addWindowMenuItem(final RegisterStage registerStage) {
+        final MenuItem menuItem = new MenuItem(registerStage.accountProperty().get().getName());
+        menuItem.setUserData(registerStage);
+
+        menuItem.setOnAction(event -> {
+            final RegisterStage stage = (RegisterStage) menuItem.getUserData();
+            stage.requestFocus();
+        });
+
+        registerStage.setOnHiding(event -> windowMenu.getItems().removeAll(menuItem));
+
+        windowMenu.getItems().add(0, menuItem);
+    }
+
+    private void removeWindowMenuItem(final RegisterStage registerStage) {
+        windowMenu.getItems().stream().filter(item -> item.getUserData() == registerStage).
+                forEach(item -> windowMenu.getItems().remove(item));
     }
 
     @FXML

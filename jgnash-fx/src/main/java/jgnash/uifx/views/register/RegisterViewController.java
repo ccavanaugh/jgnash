@@ -185,7 +185,7 @@ public class RegisterViewController {
     @FXML
     private void handleZoomAction() {
         if (accountTreeController.getSelectedAccountProperty().get() != null) {
-            new RegisterStage(accountTreeController.getSelectedAccountProperty().get()).show();
+            RegisterStage.getRegisterStage(accountTreeController.getSelectedAccountProperty().get()).show();
         }
     }
 

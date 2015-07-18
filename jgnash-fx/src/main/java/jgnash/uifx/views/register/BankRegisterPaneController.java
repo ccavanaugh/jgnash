@@ -17,11 +17,15 @@
  */
 package jgnash.uifx.views.register;
 
+import java.util.Objects;
+import java.util.Optional;
+
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+
 import jgnash.engine.AccountGroup;
 import jgnash.engine.AccountType;
 import jgnash.engine.Engine;
@@ -32,9 +36,6 @@ import jgnash.engine.TransactionType;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.NotNull;
 
-import java.util.Objects;
-import java.util.Optional;
-
 /**
  * Register pane controller
  *
@@ -43,7 +44,7 @@ import java.util.Optional;
 public class BankRegisterPaneController extends RegisterPaneController {
 
     @FXML
-    protected Button jumpButton; // TODO Implement handler
+    protected Button jumpButton;
 
     @FXML
     protected TabPane transactionForms;

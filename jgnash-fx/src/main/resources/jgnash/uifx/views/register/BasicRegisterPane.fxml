@@ -25,7 +25,7 @@
                                 <FontAwesomeImageView glyphName="COPY"/>
                             </graphic>
                         </Button>
-                        <Button fx:id="jumpButton" mnemonicParsing="false" text="%Button.Jump">
+                        <Button fx:id="jumpButton" mnemonicParsing="false" onAction="#handleJumpAction" text="%Button.Jump">
                             <graphic>
                                 <FontAwesomeImageView glyphName="EXTERNAL_LINK"/>
                             </graphic>

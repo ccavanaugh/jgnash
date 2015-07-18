@@ -133,11 +133,20 @@ public abstract class RegisterPaneController {
 
     }
 
+    void selectTransaction(@NotNull final Transaction transaction) {
+        registerTableControllerProperty.get().selectTransaction(transaction);
+    }
+
     /**
      * Default empty implementation.
      */
     void clearForm() {
 
+    }
+
+    @FXML
+    void handleJumpAction() {
+        registerTableControllerProperty.get().handleJumpAction();
     }
 
     @FXML
