@@ -1308,7 +1308,7 @@ public class Engine {
         return getCommodityDAO().getExchangeRateByUuid(uuid);
     }
 
-    public List<SecurityNode> getSecurities() {
+    @NotNull public List<SecurityNode> getSecurities() {
 
         commodityLock.readLock().lock();
 

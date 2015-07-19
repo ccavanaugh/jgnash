@@ -25,6 +25,7 @@ import jgnash.engine.CurrencyNode;
 import jgnash.engine.ExchangeRate;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
+import jgnash.util.NotNull;
 
 /**
  * Commodity DAO Interface
@@ -71,7 +72,7 @@ public interface CommodityDAO {
 
     ExchangeRate getExchangeRateByUuid(final String uuid);
 
-    List<SecurityNode> getSecurities();
+    @NotNull List<SecurityNode> getSecurities();
 
     /**
      * Call after a {@code ExchangeRateHistoryNode} has been removed.  This pushes the update

@@ -42,6 +42,7 @@ import jgnash.engine.ExchangeRate;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.engine.dao.CommodityDAO;
+import jgnash.util.NotNull;
 
 /**
  * Commodity DAO
@@ -244,7 +245,7 @@ class JpaCommodityDAO extends AbstractJpaDAO implements CommodityDAO {
      */
     @Override
     @SuppressWarnings("unchecked")
-    public List<SecurityNode> getSecurities() {
+    @NotNull public List<SecurityNode> getSecurities() {
         List<SecurityNode> securityNodeList = Collections.emptyList();
 
         emLock.lock();
