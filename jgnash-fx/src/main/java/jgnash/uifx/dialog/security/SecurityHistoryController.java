@@ -37,12 +37,14 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
+import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import jgnash.engine.CommodityNode;
@@ -62,6 +64,7 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.IntegerTextField;
+import jgnash.uifx.control.LocalDateAxis;
 import jgnash.uifx.control.SecurityComboBox;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.util.DateUtils;
@@ -78,6 +81,9 @@ public class SecurityHistoryController implements MessageListener {
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
 
     @FXML
+    private StackPane chartPane;
+
+    @FXML
     private Button addButton;
 
     @FXML
@@ -85,9 +91,6 @@ public class SecurityHistoryController implements MessageListener {
 
     @FXML
     private TableView<SecurityHistoryNode> tableView;
-
-    @FXML
-    private LineChart chart;
 
     @FXML
     private SecurityComboBox securityComboBox;
@@ -112,6 +115,8 @@ public class SecurityHistoryController implements MessageListener {
 
     @FXML
     private ResourceBundle resources;
+
+    private AreaChart<LocalDate, Number> chart;
 
     private final SimpleObjectProperty<SecurityHistoryNode> selectedSecurityHistoryNode = new SimpleObjectProperty<>();
 
@@ -180,6 +185,11 @@ public class SecurityHistoryController implements MessageListener {
 
         tableView.setItems(sortedList);
 
+        chart = new AreaChart<>(new LocalDateAxis(), new NumberAxis());
+        chart.setCreateSymbols(false);
+
+        chartPane.getChildren().addAll(chart);
+
         securityComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 numberFormatProperty.setValue(CommodityFormat.getShortNumberFormat(newValue.getReportedCurrencyNode()));
@@ -190,7 +200,10 @@ public class SecurityHistoryController implements MessageListener {
 
                 quoteSourceProperty.setValue(newValue.getQuoteSource());
 
-                loadTable();
+                Platform.runLater(() -> {
+                    loadTable();
+                    loadChart();
+                });
             }
         });
 
@@ -226,7 +239,7 @@ public class SecurityHistoryController implements MessageListener {
 
         final List<SecurityHistoryNode> historyNodes = new ArrayList<>(tableView.getSelectionModel().getSelectedItems());
 
-        Collections.reverse(historyNodes);  // work backwards
+        Collections.reverse(historyNodes);  // work backwards through the deletion list
 
         for (final SecurityHistoryNode historyNode : historyNodes) {
             engine.removeSecurityHistory(selectedSecurityNode.get(), historyNode.getDate());
@@ -269,6 +282,21 @@ public class SecurityHistoryController implements MessageListener {
         observableHistoryNodes.setAll(securityComboBox.getValue().getHistoryNodes());
     }
 
+    @SuppressWarnings("unchecked")
+    private void loadChart() {
+        new Thread(() -> {
+            final AreaChart.Series series = new AreaChart.Series();
+
+            series.setName(selectedSecurityNode.get().getSymbol());
+
+            for (final SecurityHistoryNode node : selectedSecurityNode.get().getHistoryNodes()) {
+                series.getData().add(new AreaChart.Data<>(DateUtils.asLocalDate(node.getDate()), node.getPrice()));
+            }
+
+            Platform.runLater(() -> chart.getData().setAll(series));
+        }).start();
+    }
+
     @Override
     public void messagePosted(final Message message) {
         final CommodityNode eventNode = message.getObject(MessageProperty.COMMODITY);
@@ -278,6 +306,7 @@ public class SecurityHistoryController implements MessageListener {
                 case SECURITY_HISTORY_REMOVE:
                 case SECURITY_HISTORY_ADD:
                     Platform.runLater(this::loadTable);
+                    Platform.runLater(this::loadChart);
                     break;
                 default:
             }
@@ -303,9 +332,7 @@ public class SecurityHistoryController implements MessageListener {
     private class BigDecimalFormatTableCell extends TableCell<SecurityHistoryNode, BigDecimal> {
 
         public BigDecimalFormatTableCell() {
-
-            // Right align
-            setStyle("-fx-alignment: center-right;");
+            setStyle("-fx-alignment: center-right;");  // Right align
         }
 
         @Override
@@ -325,9 +352,7 @@ public class SecurityHistoryController implements MessageListener {
         private final NumberFormat volumeFormat = NumberFormat.getIntegerInstance();
 
         public LongFormatTableCell() {
-
-            // Right align
-            setStyle("-fx-alignment: center-right;");
+            setStyle("-fx-alignment: center-right;"); // Right align
         }
 
         @Override
