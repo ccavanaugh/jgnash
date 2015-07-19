@@ -30,20 +30,20 @@
         </Menu>
         <Menu mnemonicParsing="false" text="%Menu.Tools.Name">
             <items>
-                <Menu mnemonicParsing="false" text="%Menu.Securities.Name">
+                <Menu fx:id="securitiesMenu" mnemonicParsing="false" text="%Menu.Securities.Name">
                     <items>
-                        <MenuItem fx:id="updateSecuritiesMenuItem" mnemonicParsing="false"
-                                  text="%Menu.BackgroundSecurityUpdate.Name" onAction="#updateSecurities">
+                        <MenuItem text="%Menu.ModifyCommodity.Name" mnemonicParsing="false" onAction="#handleCreateModifySecurities"/>
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <MenuItem mnemonicParsing="false" text="%Menu.BackgroundSecurityUpdate.Name" onAction="#updateSecurities">
                             <graphic>
                                 <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
                             </graphic>
                         </MenuItem>
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="%Menu.Currency.Name">
+                <Menu fx:id="currenciesMenu" mnemonicParsing="false" text="%Menu.Currency.Name">
                     <items>
-                        <MenuItem fx:id="updateCurrenciesMenuItem" mnemonicParsing="false"
-                                  text="%Menu.BackgroundCurrencyUpdate.Name" onAction="#updateCurrencies">
+                        <MenuItem mnemonicParsing="false" text="%Menu.BackgroundCurrencyUpdate.Name" onAction="#updateCurrencies">
                             <graphic>
                                 <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
                             </graphic>

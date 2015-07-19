@@ -17,8 +17,10 @@
  */
 package jgnash.uifx.views.main;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -29,6 +31,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.stage.Stage;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -39,7 +42,9 @@ import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.about.AboutDialog;
 import jgnash.uifx.actions.DefaultLocaleAction;
+import jgnash.uifx.dialog.security.CreateModifySecuritiesController;
 import jgnash.uifx.tasks.CloseFileTask;
+import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.views.register.RegisterStage;
 import jgnash.uifx.wizard.file.NewFileWizard;
 
@@ -51,13 +56,13 @@ import jgnash.uifx.wizard.file.NewFileWizard;
 public class MenuBarController implements MessageListener {
 
     @FXML
+    private Menu currenciesMenu;
+
+    @FXML
+    private Menu securitiesMenu;
+
+    @FXML
     private Menu windowMenu;
-
-    @FXML
-    private MenuItem updateCurrenciesMenuItem;
-
-    @FXML
-    private MenuItem updateSecuritiesMenuItem;
 
     @FXML
     private MenuBar menuBar;
@@ -71,12 +76,15 @@ public class MenuBarController implements MessageListener {
     @FXML
     private MenuItem exitMenuItem;
 
-    final private BooleanProperty disabled = new SimpleBooleanProperty(true);
+    private final BooleanProperty disabled = new SimpleBooleanProperty(true);
+
+    @FXML
+    private ResourceBundle resources;
 
     @FXML
     private void initialize() {
-        updateSecuritiesMenuItem.disableProperty().bind(disabled);
-        updateCurrenciesMenuItem.disableProperty().bind(disabled);
+        securitiesMenu.disableProperty().bind(disabled);
+        currenciesMenu.disableProperty().bind(disabled);
         closeMenuItem.disableProperty().bind(disabled);
 
         windowMenu.disableProperty().bind(Bindings.or(disabled, RegisterStage.registerStageListProperty().emptyProperty()));
@@ -190,5 +198,14 @@ public class MenuBarController implements MessageListener {
         final ArrayList<RegisterStage> registerStages = new ArrayList<>(RegisterStage.registerStageListProperty().get());
 
         registerStages.forEach(RegisterStage::close);
+    }
+
+    @FXML
+    private void handleCreateModifySecurities() {
+        final URL fxmlUrl = CreateModifySecuritiesController.class.getResource("CreateModifySecurities.fxml");
+        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
+        stage.setTitle(resources.getString("Title.CreateModifyCommodities"));
+
+        stage.showAndWait();
     }
 }
