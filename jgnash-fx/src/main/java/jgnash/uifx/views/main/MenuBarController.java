@@ -43,6 +43,7 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.about.AboutDialog;
 import jgnash.uifx.actions.DefaultLocaleAction;
 import jgnash.uifx.dialog.security.CreateModifySecuritiesController;
+import jgnash.uifx.dialog.security.SecurityHistoryController;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.views.register.RegisterStage;
@@ -201,10 +202,19 @@ public class MenuBarController implements MessageListener {
     }
 
     @FXML
-    private void handleCreateModifySecurities() {
+    private void handleCreateModifySecuritiesAction() {
         final URL fxmlUrl = CreateModifySecuritiesController.class.getResource("CreateModifySecurities.fxml");
         final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
         stage.setTitle(resources.getString("Title.CreateModifyCommodities"));
+
+        stage.showAndWait();
+    }
+
+    @FXML
+    private void handleSecuritiesHistoryAction() {
+        final URL fxmlUrl = SecurityHistoryController.class.getResource("SecurityHistory.fxml");
+        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
+        stage.setTitle(resources.getString("Title.ModifySecHistory"));
 
         stage.showAndWait();
     }

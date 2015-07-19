@@ -32,7 +32,10 @@
             <items>
                 <Menu fx:id="securitiesMenu" mnemonicParsing="false" text="%Menu.Securities.Name">
                     <items>
-                        <MenuItem text="%Menu.ModifyCommodity.Name" mnemonicParsing="false" onAction="#handleCreateModifySecurities"/>
+                        <MenuItem text="%Menu.ModifyCommodity.Name" mnemonicParsing="false"
+                                  onAction="#handleCreateModifySecuritiesAction"/>
+                        <MenuItem text="%Menu.HistoryCommodity.Name" mnemonicParsing="false"
+                                  onAction="#handleSecuritiesHistoryAction"/>
                         <SeparatorMenuItem mnemonicParsing="false"/>
                         <MenuItem mnemonicParsing="false" text="%Menu.BackgroundSecurityUpdate.Name" onAction="#updateSecurities">
                             <graphic>
