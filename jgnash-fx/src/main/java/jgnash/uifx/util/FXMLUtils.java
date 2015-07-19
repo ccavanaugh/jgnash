@@ -187,6 +187,8 @@ public class FXMLUtils {
             final Scene scene = new Scene(fxmlLoader.load());
             scene.getStylesheets().addAll(MainApplication.DEFAULT_CSS);
 
+            injectParent(fxmlLoader.getController(), scene);
+
             stage.setScene(scene);
             stage.getIcons().add(StaticUIMethods.getApplicationIcon());
 
