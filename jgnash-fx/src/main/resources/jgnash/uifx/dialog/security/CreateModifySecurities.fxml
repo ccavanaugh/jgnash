@@ -16,7 +16,7 @@
           fx:controller="jgnash.uifx.dialog.security.CreateModifySecuritiesController" styleClass="form, dialog">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="150.0" />
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="150.0" />
+        <ColumnConstraints hgrow="NEVER" minWidth="180.0" />
     </columnConstraints>
     <rowConstraints>
         <RowConstraints vgrow="ALWAYS"/>
