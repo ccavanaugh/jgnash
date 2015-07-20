@@ -71,22 +71,13 @@ public class ConnectionFactory {
     }
 
     @Nullable
-    public synchronized static URLConnection getConnection(String url) {
-        URLConnection connection = null;
-       
+    public synchronized static URLConnection getConnection(final String url) {
         try {
-            connection = getConnection(new URL(url));
+            return getConnection(new URL(url));
         } catch (final MalformedURLException ex) {
             Logger.getLogger(ConnectionFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        /* Set the connection timeout */
-        if (connection != null) {
-            connection.setConnectTimeout(getConnectionTimeout() * 1000);
-            connection.setReadTimeout(getConnectionTimeout() * 1000);
-        }
-
-        return connection;
+        return null;
     }
 
     @Nullable
