@@ -48,7 +48,7 @@
                      GridPane.columnSpan="4" GridPane.rowIndex="3"/>
         <ButtonBar GridPane.columnSpan="4" GridPane.rowIndex="4">
             <buttons>
-                <Button onAction="#handleOkAction" text="%Button.Ok" ButtonBar.buttonData="OK_DONE"/>
+                <Button fx:id="okButton" onAction="#handleOkAction" text="%Button.Ok" ButtonBar.buttonData="OK_DONE"/>
                 <Button cancelButton="true" onAction="#handleCancelAction" text="%Button.Cancel"
                         ButtonBar.buttonData="CANCEL_CLOSE"/>
             </buttons>

@@ -1,16 +1,21 @@
 package jgnash.uifx.dialog.security;
 
 import java.time.LocalDate;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
 
@@ -18,6 +23,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.QuoteSource;
 import jgnash.engine.SecurityNode;
+import jgnash.net.security.UpdateFactory;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
 
@@ -34,13 +40,16 @@ public class HistoricalImportController {
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
 
     @FXML
+    private Button okButton;
+
+    @FXML
     private DatePickerEx startDatePicker;
 
     @FXML
     private DatePickerEx endDatePicker;
 
     @FXML
-    private CheckListView checkListView;
+    private CheckListView<SecurityNode> checkListView;
 
     @FXML
     private ProgressBar progressBar;
@@ -48,24 +57,17 @@ public class HistoricalImportController {
     @FXML
     private ResourceBundle resources;
 
+    private Task<Void> updateTask = null;
+
     @FXML
-    @SuppressWarnings("unchecked")
     void initialize() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        final ObservableList<SecurityNode> securityNodes = FXCollections.observableArrayList();
-        securityNodes.addAll(engine.getSecurities());
+        final List<SecurityNode> securityNodes = engine.getSecurities().stream()
+                .filter(securityNode -> securityNode.getQuoteSource() != QuoteSource.NONE).collect(Collectors.toList());
 
-        final Iterator<SecurityNode> i = securityNodes.iterator();
-
-        while (i.hasNext()) {
-            if (i.next().getQuoteSource() == QuoteSource.NONE) {
-                i.remove();
-            }
-        }
-
-        FXCollections.sort(securityNodes);
+        Collections.sort(securityNodes);
 
         checkListView.getItems().addAll(securityNodes);
 
@@ -95,11 +97,55 @@ public class HistoricalImportController {
 
     @FXML
     private void handleOkAction() {
-        // TODO perform import
+
+        okButton.disableProperty().setValue(true);
+
+        updateTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                final Date startDate = startDatePicker.getDate();
+                final Date endDate = endDatePicker.getDate();
+
+                // create a defensive copy
+                final List<SecurityNode> securityNodes = new ArrayList<>(checkListView.getCheckModel().getCheckedItems());
+
+                for (int i = 0; i < securityNodes.size(); i++) {
+                    if (isCancelled()) {
+                        break;
+                    }
+
+                    UpdateFactory.importHistory(securityNodes.get(i), startDate, endDate);
+                    updateProgress(i + 1, securityNodes.size());
+                }
+
+                return null;
+            }
+        };
+
+        updateTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, event -> taskComplete());
+        updateTask.addEventHandler(WorkerStateEvent.WORKER_STATE_CANCELLED, event -> taskComplete());
+        updateTask.addEventHandler(WorkerStateEvent.WORKER_STATE_FAILED, event -> taskComplete());
+
+        progressBar.progressProperty().bind(updateTask.progressProperty());
+
+        new Thread(updateTask).start();
+    }
+
+    private void taskComplete() {
+        progressBar.progressProperty().unbind();
+        progressBar.progressProperty().set(0);
+        updateTask = null;
+
+        okButton.disableProperty().setValue(false);
     }
 
     @FXML
     private void handleCancelAction() {
-        ((Stage)parentProperty.get().getWindow()).close();
+
+        if (updateTask != null) {
+            updateTask.cancel();
+        }
+
+        ((Stage) parentProperty.get().getWindow()).close();
     }
 }
