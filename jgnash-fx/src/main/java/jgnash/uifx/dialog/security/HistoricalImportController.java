@@ -1,7 +1,12 @@
 package jgnash.uifx.dialog.security;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import javafx.beans.property.ObjectProperty;
@@ -133,7 +138,9 @@ public class HistoricalImportController {
 
         progressBar.progressProperty().bind(updateTask.progressProperty());
 
-        new Thread(updateTask).start();
+        final Thread thread = new Thread(updateTask);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     private void taskComplete() {
