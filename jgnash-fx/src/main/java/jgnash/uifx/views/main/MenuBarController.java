@@ -218,4 +218,13 @@ public class MenuBarController implements MessageListener {
 
         stage.showAndWait();
     }
+
+    @FXML
+    private void handleSecurityHistoryImportAction() {
+        final URL fxmlUrl = SecurityHistoryController.class.getResource("HistoricalImport.fxml");
+        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
+        stage.setTitle(resources.getString("Title.HistoryImport"));
+
+        stage.showAndWait();
+    }
 }

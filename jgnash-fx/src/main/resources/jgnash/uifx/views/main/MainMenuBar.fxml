@@ -36,6 +36,8 @@
                                   onAction="#handleCreateModifySecuritiesAction"/>
                         <MenuItem text="%Menu.HistoryCommodity.Name" mnemonicParsing="false"
                                   onAction="#handleSecuritiesHistoryAction"/>
+                        <MenuItem text="%Menu.HistoryImport.Name" mnemonicParsing="false"
+                                  onAction="#handleSecurityHistoryImportAction"/>
                         <SeparatorMenuItem mnemonicParsing="false"/>
                         <MenuItem mnemonicParsing="false" text="%Menu.BackgroundSecurityUpdate.Name" onAction="#updateSecurities">
                             <graphic>
