@@ -71,9 +71,9 @@ public class ConnectionFactory {
     }
 
     @Nullable
-    public synchronized static URLConnection getConnection(final String url) {
+    public synchronized static URLConnection openConnection(final String url) {
         try {
-            return getConnection(new URL(url));
+            return openConnection(new URL(url));
         } catch (final MalformedURLException ex) {
             Logger.getLogger(ConnectionFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -81,7 +81,7 @@ public class ConnectionFactory {
     }
 
     @Nullable
-    private synchronized static URLConnection getConnection(final URL url) {
+    private synchronized static URLConnection openConnection(final URL url) {
         URLConnection connection = null;
 
         try {

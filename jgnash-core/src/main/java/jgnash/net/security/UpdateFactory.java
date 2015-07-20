@@ -186,7 +186,7 @@ public class UpdateFactory {
                 /* Yahoo uses English locale for date format... force the locale */
                 final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
-                connection = ConnectionFactory.getConnection(r.toString());
+                connection = ConnectionFactory.openConnection(r.toString());
 
                 if (connection != null) {
 
