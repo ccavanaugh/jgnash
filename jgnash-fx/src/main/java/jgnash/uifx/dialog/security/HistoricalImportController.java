@@ -1,12 +1,7 @@
 package jgnash.uifx.dialog.security;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javafx.beans.property.ObjectProperty;
@@ -19,16 +14,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
 
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.QuoteSource;
-import jgnash.engine.SecurityNode;
+import jgnash.engine.*;
 import jgnash.net.security.UpdateFactory;
-import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.util.ResourceUtils;
-
 import org.controlsfx.control.CheckListView;
 
 /**
@@ -37,8 +26,6 @@ import org.controlsfx.control.CheckListView;
  * @author Craig Cavanaugh
  */
 public class HistoricalImportController {
-
-    private static final int MAX_ERROR_COUNT = 2;
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
@@ -101,8 +88,10 @@ public class HistoricalImportController {
 
     @FXML
     private void handleOkAction() {
-
         okButton.disableProperty().setValue(true);
+
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
         updateTask = new Task<Void>() {
             @Override
@@ -110,22 +99,33 @@ public class HistoricalImportController {
                 final Date startDate = startDatePicker.getDate();
                 final Date endDate = endDatePicker.getDate();
 
-                int errorCount = 0;
+                final Map<SecurityNode, List<SecurityHistoryNode>> historyMap = new HashMap<>();
 
                 // create a defensive copy
-                final List<SecurityNode> securityNodes = new ArrayList<>(checkListView.getCheckModel().getCheckedItems());
+                final List<SecurityNode> securityNodes =
+                        new ArrayList<>(checkListView.getCheckModel().getCheckedItems());
 
-                for (int i = 0; i < securityNodes.size(); i++) {
-                    if (isCancelled() || errorCount >= MAX_ERROR_COUNT) {
-                        break;
-                    }
+                // need to determine the total count
+                long historyCount = 0;
 
-                    if (!UpdateFactory.importHistory(securityNodes.get(i), startDate, endDate)) {
-                        errorCount++;
-                        StaticUIMethods.displayWarning(ResourceUtils.getString("Message.Error.SecurityUpdate",
-                                securityNodes.get(i).getSymbol()));
+                // Collect and count the number of nodes
+                for (final SecurityNode securityNode : securityNodes) {
+                    final List<SecurityHistoryNode> historyNodes =
+                            UpdateFactory.downloadHistory(securityNode, startDate, endDate);
+
+                    historyCount += historyNodes.size();
+
+                    historyMap.put(securityNode, historyNodes);
+                }
+
+                // need to track the total processed count
+                long processedHistory = 0;
+
+                for (final SecurityNode securityNode : historyMap.keySet()) {
+                    for (final SecurityHistoryNode historyNode : historyMap.get(securityNode)) {
+                        engine.addSecurityHistory(securityNode, historyNode);
+                        updateProgress(++processedHistory, historyCount);
                     }
-                    updateProgress(i + 1, securityNodes.size());
                 }
 
                 return null;
