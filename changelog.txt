@@ -31,7 +31,7 @@ Release 2.17.0
 07/20/15 Fixed an issue with historical investment downloads timing out when using a relational database.
 07/11/15 Fixed issues when exporting an account structure when using a relational database.
 07/10/15 Removed the days past due field in recurring form.  It's not needed because we have a Due date column now.
-07/09/15 Add aLast Posted date and Due date columns to the reminder table for easy reference
+07/09/15 Add Last Posted date and Due date columns to the reminder table for easy reference
 07/09/15 Add new capability to create a new recurring transaction from an existing transaction (context menu in the register)
 
 Release 2.16.0 (Java 8)
