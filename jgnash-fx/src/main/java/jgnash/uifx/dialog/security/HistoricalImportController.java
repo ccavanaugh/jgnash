@@ -148,6 +148,8 @@ public class HistoricalImportController {
         progressBar.progressProperty().set(0);
         updateTask = null;
 
+        checkListView.getCheckModel().clearChecks();
+
         okButton.disableProperty().setValue(false);
     }
 
