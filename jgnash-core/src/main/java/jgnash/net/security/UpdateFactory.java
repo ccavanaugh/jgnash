@@ -26,9 +26,12 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -183,14 +186,22 @@ public class UpdateFactory {
             URLConnection connection = null;
 
             try {
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                Objects.requireNonNull(engine);
+
                 /* Yahoo uses English locale for date format... force the locale */
                 final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
                 connection = ConnectionFactory.openConnection(r.toString());
 
+                final List<SecurityHistoryNode> newSecurityNodes = new ArrayList<>();
+
                 if (connection != null) {
 
-                    try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+                    // Read, parse, and load the new history nodes into a list to be persisted later.  A relational
+                    // database may stall and cause the network connection to timeout if persisted inline
+                    try (final BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(),
+                            StandardCharsets.UTF_8))) {
 
                         String l = in.readLine();
 
@@ -199,15 +210,12 @@ public class UpdateFactory {
                             result = false;
                         }
 
-                        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-
                         //Date,Open,High,Low,Close,Volume,Adj Close
                         //2007-02-13,14.75,14.86,14.47,14.60,17824500,14.60
 
                         l = in.readLine(); // prime the first read
 
                         while (l != null) {
-
                             if (Thread.currentThread().isInterrupted()) {
                                 Thread.currentThread().interrupt();
                                 return false;
@@ -215,17 +223,13 @@ public class UpdateFactory {
 
                             if (l.charAt(0) != '<') { // may have comments in file
                                 String[] fields = COMMA_DELIMITER_PATTERN.split(l);
-                                Date date = df.parse(fields[0]);
+                                final Date date = df.parse(fields[0]);
                                 final BigDecimal high = new BigDecimal(fields[2]);
                                 final BigDecimal low = new BigDecimal(fields[3]);
                                 final BigDecimal close = new BigDecimal(fields[4]);
                                 final long volume = Long.parseLong(fields[5]);
 
-                                final SecurityHistoryNode node = new SecurityHistoryNode(date, close, volume, high, low);
-
-                                if (engine != null && !Thread.currentThread().isInterrupted()) {
-                                    engine.addSecurityHistory(securityNode, node);
-                                }
+                                newSecurityNodes.add(new SecurityHistoryNode(date, close, volume, high, low));
                             }
 
                             l = in.readLine();
@@ -234,8 +238,13 @@ public class UpdateFactory {
 
                     logger.info(ResourceUtils.getString("Message.UpdatedPrice", securityNode.getSymbol()));
                 }
-            } catch (IOException | ParseException | NumberFormatException ex) {
+
+                for (final SecurityHistoryNode historyNode : newSecurityNodes) {
+                    engine.addSecurityHistory(securityNode, historyNode);
+                }
+            } catch (NullPointerException | IOException | ParseException | NumberFormatException ex) {
                 logger.log(Level.SEVERE, null, ex);
+                result = false;
             } finally {
                 if (connection != null) {
                     if (connection instanceof HttpURLConnection) {
