@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -46,6 +47,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import jgnash.engine.CommodityNode;
 import jgnash.engine.Engine;
@@ -212,6 +214,18 @@ public class SecurityHistoryController implements MessageListener {
                 loadForm();
             } else {
                 clearForm();
+            }
+        });
+
+        // Install a listener to unregister from the message bus when the window closes
+        parentProperty.addListener((observable, oldValue, scene) -> {
+            if (scene != null) {
+                scene.windowProperty().addListener((observable1, oldValue1, window) -> {
+                    window.addEventHandler(WindowEvent.WINDOW_HIDING, event -> {
+                        Logger.getLogger(SecurityHistoryController.class.getName()).info("Unregistered from the message bus");
+                        MessageBus.getInstance().unregisterListener(SecurityHistoryController.this, MessageChannel.COMMODITY);
+                    });
+                });
             }
         });
     }
