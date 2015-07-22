@@ -1,7 +1,18 @@
 package jgnash.uifx.dialog.security;
 
+import java.text.DateFormat;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javafx.beans.property.ObjectProperty;
@@ -11,13 +22,21 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
 
-import jgnash.engine.*;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.QuoteSource;
+import jgnash.engine.SecurityHistoryNode;
+import jgnash.engine.SecurityNode;
 import jgnash.net.security.UpdateFactory;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.util.DateUtils;
+import jgnash.util.ResourceUtils;
+
 import org.controlsfx.control.CheckListView;
 
 /**
@@ -29,6 +48,9 @@ public class HistoricalImportController {
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+
+    @FXML
+    private Label messageLabel;
 
     @FXML
     private Button okButton;
@@ -49,6 +71,8 @@ public class HistoricalImportController {
     private ResourceBundle resources;
 
     private Task<Void> updateTask = null;
+
+    private volatile boolean requestCancel = false;
 
     @FXML
     void initialize() {
@@ -87,8 +111,11 @@ public class HistoricalImportController {
     }
 
     @FXML
-    private void handleOkAction() {
+    private void handleStartAction() {
         okButton.disableProperty().setValue(true);
+        checkListView.disableProperty().setValue(true);
+
+        final DateFormat dateFormat = DateUtils.getShortDateFormat();
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
@@ -110,6 +137,8 @@ public class HistoricalImportController {
 
                 // Collect and count the number of nodes
                 for (final SecurityNode securityNode : securityNodes) {
+                    updateMessage(ResourceUtils.getString("Message.DownloadingX", securityNode.getSymbol()));
+
                     final List<SecurityHistoryNode> historyNodes =
                             UpdateFactory.downloadHistory(securityNode, startDate, endDate);
 
@@ -122,11 +151,20 @@ public class HistoricalImportController {
                 long processedHistory = 0;
 
                 for (final SecurityNode securityNode : historyMap.keySet()) {
-                    for (final SecurityHistoryNode historyNode : historyMap.get(securityNode)) {
-                        engine.addSecurityHistory(securityNode, historyNode);
-                        updateProgress(++processedHistory, historyCount);
+                    if (!requestCancel) {
+                        for (final SecurityHistoryNode historyNode : historyMap.get(securityNode)) {
+                            if (!requestCancel) {
+                                engine.addSecurityHistory(securityNode, historyNode);
+                                updateProgress(++processedHistory, historyCount);
+
+                                updateMessage(ResourceUtils.getString("Message.UpdatedPriceDate", securityNode.getSymbol(),
+                                        dateFormat.format(historyNode.getDate())));
+                            }
+                        }
                     }
                 }
+
+                updateMessage("");
 
                 return null;
             }
@@ -137,6 +175,7 @@ public class HistoricalImportController {
         updateTask.addEventHandler(WorkerStateEvent.WORKER_STATE_FAILED, event -> taskComplete());
 
         progressBar.progressProperty().bind(updateTask.progressProperty());
+        messageLabel.textProperty().bind(updateTask.messageProperty());
 
         final Thread thread = new Thread(updateTask);
         thread.setDaemon(true);
@@ -144,20 +183,32 @@ public class HistoricalImportController {
     }
 
     private void taskComplete() {
+        requestCancel = false;
+
         progressBar.progressProperty().unbind();
         progressBar.progressProperty().set(0);
+
+        messageLabel.textProperty().unbind();
         updateTask = null;
 
         checkListView.getCheckModel().clearChecks();
 
         okButton.disableProperty().setValue(false);
+        checkListView.disableProperty().setValue(false);
     }
 
     @FXML
     private void handleCancelAction() {
 
         if (updateTask != null) {
-            updateTask.cancel();
+            requestCancel = true;
+
+            try {
+                updateTask.get();    // wait for a graceful exit
+            } catch (final ExecutionException | InterruptedException e) {
+                Logger.getLogger(HistoricalImportController.class.getName()).log(Level.SEVERE,
+                        e.getLocalizedMessage(), e);
+            }
         }
 
         ((Stage) parentProperty.get().getWindow()).close();
