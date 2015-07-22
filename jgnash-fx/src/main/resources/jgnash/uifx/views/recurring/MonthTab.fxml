@@ -34,7 +34,7 @@
     <children>
         <Label text="%Label.Every"/>
         <Spinner fx:id="numberSpinner" GridPane.columnIndex="1"/>
-        <Label text="%Tab.Week" GridPane.columnIndex="2"/>
+        <Label text="%Tab.Month" GridPane.columnIndex="2"/>
         <Label text="%Label.By" GridPane.columnIndex="3"/>
         <ComboBox fx:id="typeComboBox" GridPane.columnIndex="4"/>
 
