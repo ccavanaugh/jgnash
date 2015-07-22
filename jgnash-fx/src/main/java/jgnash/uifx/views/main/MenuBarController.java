@@ -42,6 +42,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.about.AboutDialog;
 import jgnash.uifx.actions.DefaultLocaleAction;
+import jgnash.uifx.dialog.currency.AddRemoveCurrencyController;
 import jgnash.uifx.dialog.security.CreateModifySecuritiesController;
 import jgnash.uifx.dialog.security.SecurityHistoryController;
 import jgnash.uifx.tasks.CloseFileTask;
@@ -224,6 +225,15 @@ public class MenuBarController implements MessageListener {
         final URL fxmlUrl = SecurityHistoryController.class.getResource("HistoricalImport.fxml");
         final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
         stage.setTitle(resources.getString("Title.HistoryImport"));
+
+        stage.showAndWait();
+    }
+
+    @FXML
+    private void handleAddRemoveCurrenciesAction() {
+        final URL fxmlUrl = AddRemoveCurrencyController.class.getResource("AddRemoveCurrency.fxml");
+        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
+        stage.setTitle(resources.getString("Title.AddRemCurr"));
 
         stage.showAndWait();
     }

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import jgnash.resource.font.FontAwesomeImageView?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+          fx:controller="jgnash.uifx.dialog.currency.AddRemoveCurrencyController" styleClass="dialog, form">
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="ALWAYS"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+    <children>
+        <GridPane GridPane.rowIndex="0" styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0"/>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="100" vgrow="ALWAYS"/>
+            </rowConstraints>
+            <children>
+                <TitledPane text="%Title.Available" collapsible="false" minHeight="110" maxHeight="Infinity"
+                            GridPane.fillHeight="true">
+                    <content>
+                        <ListView fx:id="availableList"/>
+                    </content>
+                </TitledPane>
+                <VBox GridPane.columnIndex="1" fillWidth="true" styleClass="form" GridPane.fillHeight="true">
+                    <Button text="%Button.Add" onAction="#handleAddAction" contentDisplay="RIGHT" maxWidth="Infinity">
+                        <graphic>
+                            <FontAwesomeImageView glyphName="CHEVRON_RIGHT"/>
+                        </graphic>
+                    </Button>
+                    <Button text="%Button.Remove" onAction="#handleRemoveAction" contentDisplay="LEFT"
+                            maxWidth="Infinity">
+                        <graphic>
+                            <FontAwesomeImageView glyphName="CHEVRON_LEFT"/>
+                        </graphic>
+                    </Button>
+                </VBox>
+                <TitledPane text="%Title.Selected" collapsible="false" minHeight="110" maxHeight="Infinity"
+                            GridPane.fillHeight="true" GridPane.columnIndex="2">
+                    <content>
+                        <ListView fx:id="selectedList" />
+                    </content>
+                </TitledPane>
+            </children>
+        </GridPane>
+        <GridPane GridPane.rowIndex="1" styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" />
+                <ColumnConstraints hgrow="NEVER" />
+                <ColumnConstraints hgrow="NEVER" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+            <children>
+                <Label text="%Label.CreateCurr"/>
+                <TextField fx:id="newCurrencyTextField" minWidth="80" GridPane.columnIndex="1"/>
+                <Button text="%Button.Add" onAction="#handleNewCurrencyAction" GridPane.columnIndex="2"/>
+            </children>
+        </GridPane>
+        <ButtonBar GridPane.rowIndex="2">
+            <buttons>
+                <Button text="%Button.Close" onAction="#handleCloseAction" ButtonBar.buttonData="CANCEL_CLOSE"/>
+            </buttons>
+        </ButtonBar>
+    </children>
+</GridPane>

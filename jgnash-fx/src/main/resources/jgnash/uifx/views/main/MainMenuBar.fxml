@@ -48,6 +48,8 @@
                 </Menu>
                 <Menu fx:id="currenciesMenu" mnemonicParsing="false" text="%Menu.Currency.Name">
                     <items>
+                        <MenuItem text="%Menu.AddRemoveCurrency.Name" onAction="#handleAddRemoveCurrenciesAction"/>
+                        <SeparatorMenuItem mnemonicParsing="false"/>
                         <MenuItem mnemonicParsing="false" text="%Menu.BackgroundCurrencyUpdate.Name" onAction="#updateCurrencies">
                             <graphic>
                                 <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
