@@ -1124,18 +1124,17 @@ public class Engine {
      * @return <tt>true</tt> if successful
      */
     public boolean addSecurityHistory(@NotNull final SecurityNode node, @NotNull final SecurityHistoryNode hNode) {
-
-        // Remove old history of the same date if it exists
-        if (node.contains(hNode.getDate())) {
-            if (!removeSecurityHistory(node, hNode.getDate())) {
-                logSevere(ResourceUtils.getString("Message.Error.HistRemoval", hNode.getDate(), node.getSymbol()));
-                return false;
-            }
-        }
-
         commodityLock.writeLock().lock();
 
         try {
+            // Remove old history of the same date if it exists
+            if (node.contains(hNode.getDate())) {
+                if (!removeSecurityHistory(node, hNode.getDate())) {
+                    logSevere(ResourceUtils.getString("Message.Error.HistRemoval", hNode.getDate(), node.getSymbol()));
+                    return false;
+                }
+            }
+
             boolean status = node.addHistoryNode(hNode);
 
             if (status) {
