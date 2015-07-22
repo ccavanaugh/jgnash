@@ -15,7 +15,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -50,6 +52,18 @@ public class HistoricalImportController {
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
 
     @FXML
+    private Button stopButton;
+
+    @FXML
+    private Button selectAllButton;
+
+    @FXML
+    private Button clearAllButton;
+
+    @FXML
+    private Button invertAllButton;
+
+    @FXML
     private Label messageLabel;
 
     @FXML
@@ -74,6 +88,8 @@ public class HistoricalImportController {
 
     private volatile boolean requestCancel = false;
 
+    private BooleanProperty disableUIProperty = new SimpleBooleanProperty();
+
     @FXML
     void initialize() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
@@ -87,6 +103,16 @@ public class HistoricalImportController {
         checkListView.getItems().addAll(securityNodes);
 
         startDatePicker.setValue(LocalDate.now().minusMonths(1));
+
+        checkListView.disableProperty().bind(disableUIProperty);
+        endDatePicker.disableProperty().bind(disableUIProperty);
+        startDatePicker.disableProperty().bind(disableUIProperty);
+        okButton.disableProperty().bind(disableUIProperty);
+        selectAllButton.disableProperty().bind(disableUIProperty);
+        clearAllButton.disableProperty().bind(disableUIProperty);
+        invertAllButton.disableProperty().bind(disableUIProperty);
+
+        stopButton.disableProperty().bind(disableUIProperty.not());
     }
 
     @FXML
@@ -112,8 +138,7 @@ public class HistoricalImportController {
 
     @FXML
     private void handleStartAction() {
-        okButton.disableProperty().setValue(true);
-        checkListView.disableProperty().setValue(true);
+        disableUIProperty.setValue(true);
 
         final DateFormat dateFormat = DateUtils.getShortDateFormat();
 
@@ -141,6 +166,8 @@ public class HistoricalImportController {
 
                     final List<SecurityHistoryNode> historyNodes =
                             UpdateFactory.downloadHistory(securityNode, startDate, endDate);
+
+                    Collections.reverse(historyNodes);  // reverse the sort order
 
                     historyCount += historyNodes.size();
 
@@ -193,13 +220,18 @@ public class HistoricalImportController {
 
         checkListView.getCheckModel().clearChecks();
 
-        okButton.disableProperty().setValue(false);
-        checkListView.disableProperty().setValue(false);
+        disableUIProperty.setValue(false);
     }
 
     @FXML
     private void handleCancelAction() {
+        handleStopAction();
 
+        ((Stage) parentProperty.get().getWindow()).close();
+    }
+
+    @FXML
+    private void handleStopAction() {
         if (updateTask != null) {
             requestCancel = true;
 
@@ -210,7 +242,5 @@ public class HistoricalImportController {
                         e.getLocalizedMessage(), e);
             }
         }
-
-        ((Stage) parentProperty.get().getWindow()).close();
     }
 }

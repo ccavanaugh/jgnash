@@ -35,11 +35,11 @@
 
         <ButtonBar GridPane.columnSpan="4" GridPane.rowIndex="1">
             <buttons>
-                <Button onAction="#handleSelectAllAction" text="%Button.SelectAll" ButtonBar.buttonData="LEFT"
+                <Button fx:id="selectAllButton" onAction="#handleSelectAllAction" text="%Button.SelectAll" ButtonBar.buttonData="LEFT"
                         ButtonBar.buttonUniformSize="true"/>
-                <Button onAction="#handleClearAllAction" text="%Button.ClearAll" ButtonBar.buttonData="LEFT"
+                <Button fx:id="clearAllButton" onAction="#handleClearAllAction" text="%Button.ClearAll" ButtonBar.buttonData="LEFT"
                         ButtonBar.buttonUniformSize="true"/>
-                <Button onAction="#handleInvertSelectionAction" text="%Button.InvertSelection"
+                <Button fx:id="invertAllButton" onAction="#handleInvertSelectionAction" text="%Button.InvertSelection"
                         ButtonBar.buttonData="LEFT" ButtonBar.buttonUniformSize="true"/>
                 <Button ButtonBar.buttonData="SMALL_GAP" visible="false" />
             </buttons>
@@ -57,11 +57,23 @@
                 <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
             <children>
-                <Button fx:id="okButton" onAction="#handleStartAction" text="%Button.Start">
-                    <graphic>
-                        <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
-                    </graphic>
-                </Button>
+                <ButtonBar>
+                    <buttons>
+                        <Button fx:id="okButton" onAction="#handleStartAction" text="%Button.Start"
+                                ButtonBar.buttonData="LEFT">
+                            <graphic>
+                                <FontAwesomeImageView glyphName="PLAY"/>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="stopButton" onAction="#handleStopAction" text="%Button.Stop"
+                                ButtonBar.buttonData="RIGHT">
+                            <graphic>
+                                <FontAwesomeImageView glyphName="STOP"/>
+                            </graphic>
+                        </Button>
+                    </buttons>
+                </ButtonBar>
+
                 <Label fx:id="messageLabel" GridPane.columnIndex="1"/>
             </children>
         </GridPane>
