@@ -59,7 +59,7 @@
             <children>
                 <ButtonBar>
                     <buttons>
-                        <Button fx:id="okButton" onAction="#handleStartAction" text="%Button.Start"
+                        <Button fx:id="startButton" onAction="#handleStartAction" text="%Button.Start"
                                 ButtonBar.buttonData="LEFT">
                             <graphic>
                                 <FontAwesomeImageView glyphName="PLAY"/>
@@ -79,7 +79,7 @@
         </GridPane>
         <ButtonBar GridPane.columnSpan="4" GridPane.rowIndex="5">
             <buttons>
-                <Button cancelButton="true" onAction="#handleCancelAction" text="%Button.Close"
+                <Button cancelButton="true" onAction="#handleCloseAction" text="%Button.Close"
                         ButtonBar.buttonData="CANCEL_CLOSE"/>
             </buttons>
         </ButtonBar>
