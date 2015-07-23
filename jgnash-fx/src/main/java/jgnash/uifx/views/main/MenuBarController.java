@@ -41,6 +41,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.about.AboutDialog;
+import jgnash.uifx.actions.DefaultCurrencyAction;
 import jgnash.uifx.actions.DefaultLocaleAction;
 import jgnash.uifx.dialog.currency.AddRemoveCurrencyController;
 import jgnash.uifx.dialog.security.CreateModifySecuritiesController;
@@ -236,5 +237,10 @@ public class MenuBarController implements MessageListener {
         stage.setTitle(resources.getString("Title.AddRemCurr"));
 
         stage.showAndWait();
+    }
+
+    @FXML
+    private  void handleSetDefaultCurrencyAction() {
+        DefaultCurrencyAction.showAndWait();
     }
 }
