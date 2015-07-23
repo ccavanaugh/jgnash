@@ -339,6 +339,8 @@ public class SelectAccountSecuritiesDialog {
                 }
 
                 setText(item.toString());
+            } else {
+                setText("");
             }
         }
     }
