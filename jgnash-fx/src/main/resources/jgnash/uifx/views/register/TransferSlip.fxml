@@ -57,7 +57,7 @@
         <DecimalTextField fx:id="amountField" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
         <ButtonBar GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="3">
             <buttons>
-                <Button text="%Button.Enter" ButtonBar.buttonData="OK_DONE" onAction="#handleEnterAction"/>
+                <Button fx:id="enterButton" text="%Button.Enter" ButtonBar.buttonData="OK_DONE" onAction="#handleEnterAction"/>
                 <Button text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#handleCancelAction"/>
             </buttons>
         </ButtonBar>

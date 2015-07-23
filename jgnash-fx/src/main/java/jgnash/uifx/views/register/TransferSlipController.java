@@ -17,7 +17,9 @@
  */
 package jgnash.uifx.views.register;
 
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 
 import jgnash.engine.ReconcileManager;
 import jgnash.engine.Transaction;
@@ -30,6 +32,9 @@ import jgnash.util.NotNull;
  * @author Craig Cavanaugh
  */
 public class TransferSlipController extends AbstractSlipController {
+
+    @FXML
+    private Button enterButton;
 
     @FXML
     private AccountExchangePane accountExchangePane;
@@ -45,6 +50,9 @@ public class TransferSlipController extends AbstractSlipController {
         accountExchangePane.amountEditableProperty().bind(amountField.editableProperty());
 
         numberComboBox.setValue(resources.getString("Item.Trans"));
+
+        enterButton.disableProperty().bind(Bindings.or(amountField.textProperty().isEmpty(),
+                accountExchangePane.selectedAccountProperty().isNull()));
     }
 
     @NotNull

@@ -66,7 +66,7 @@
                    <Tooltip text="%ToolTip.ConvertSEntry"/>
                </tooltip>
            </Button>
-         <Button text="%Button.Enter" ButtonBar.buttonData="OK_DONE" onAction="#handleEnterAction"/>
+         <Button fx:id="enterButton" text="%Button.Enter" ButtonBar.buttonData="OK_DONE" onAction="#handleEnterAction"/>
          <Button text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#handleCancelAction"/>
        </buttons>
      </ButtonBar>

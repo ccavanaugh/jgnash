@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
@@ -74,6 +75,12 @@ public class SlipController extends AbstractSlipController {
         accountProperty.addListener((observable, oldValue, newValue) -> {
             initializeSplitsDialog(); // initialize the splits dialog
         });
+
+        // Bind the enter button, effectively negates the need for validation
+        if (enterButton != null) {  // enter button may not have been initialized if used for an investment slip
+            enterButton.disableProperty().bind(Bindings.or(amountField.textProperty().isEmpty(),
+                    accountExchangePane.selectedAccountProperty().isNull()));
+        }
     }
 
     private void initializeSplitsDialog() {
