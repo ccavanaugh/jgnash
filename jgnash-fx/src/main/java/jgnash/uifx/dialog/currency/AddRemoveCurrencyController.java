@@ -17,22 +17,14 @@
  */
 package jgnash.uifx.dialog.currency;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import jgnash.engine.CurrencyNode;
@@ -116,12 +108,34 @@ public class AddRemoveCurrencyController {
 
     @FXML
     private void handleAddAction() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
+        for (final CurrencyNode currencyNode : availableList.getSelectionModel().getSelectedItems()) {
+            engine.addCurrency(currencyNode);
+
+            availableList.getItems().removeAll(currencyNode);
+            selectedList.getItems().addAll(new LockedCurrency(currencyNode, false));
+        }
+
+        FXCollections.sort(selectedList.getItems());
     }
 
     @FXML
     private void handleRemoveAction() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
+
+        selectedList.getSelectionModel().getSelectedItems().stream()
+                .filter(node -> node != null && !node.isLocked()).forEach(node -> {
+            selectedList.getItems().removeAll(node);
+            availableList.getItems().addAll(node.getCurrencyNode());
+
+            engine.removeCommodity(node.getCurrencyNode());
+        });
+
+        FXCollections.sort(availableList.getItems());
     }
 
 
@@ -178,6 +192,10 @@ public class AddRemoveCurrencyController {
             return this == o || o instanceof LockedCurrency && currencyNode.equals(((LockedCurrency) o).currencyNode);
         }
 
+        CurrencyNode getCurrencyNode() {
+            return currencyNode;
+        }
+
         @Override
         public int hashCode() {
             int hash = currencyNode.hashCode();
@@ -204,6 +222,8 @@ public class AddRemoveCurrencyController {
                 }
 
                 setText(item.toString());
+            } else {
+                setText("");
             }
         }
     }
