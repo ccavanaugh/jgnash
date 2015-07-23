@@ -32,10 +32,10 @@
                 <RowConstraints minHeight="100" vgrow="ALWAYS"/>
             </rowConstraints>
             <children>
-                <TitledPane text="%Title.Available" collapsible="false" minHeight="110" maxHeight="Infinity"
+                <TitledPane text="%Title.Available" collapsible="false" minHeight="180" maxHeight="Infinity"
                             GridPane.fillHeight="true">
                     <content>
-                        <ListView fx:id="availableList"/>
+                        <ListView fx:id="availableList" prefHeight="180"/>
                     </content>
                 </TitledPane>
                 <VBox GridPane.columnIndex="1" fillWidth="true" styleClass="form" GridPane.fillHeight="true">
@@ -51,10 +51,10 @@
                         </graphic>
                     </Button>
                 </VBox>
-                <TitledPane text="%Title.Selected" collapsible="false" minHeight="110" maxHeight="Infinity"
+                <TitledPane text="%Title.Selected" collapsible="false" minHeight="180" maxHeight="Infinity"
                             GridPane.fillHeight="true" GridPane.columnIndex="2">
                     <content>
-                        <ListView fx:id="selectedList" />
+                        <ListView fx:id="selectedList" prefHeight="180" />
                     </content>
                 </TitledPane>
             </children>
@@ -71,7 +71,7 @@
             <children>
                 <Label text="%Label.CreateCurr"/>
                 <TextField fx:id="newCurrencyTextField" minWidth="80" GridPane.columnIndex="1"/>
-                <Button text="%Button.Add" onAction="#handleNewCurrencyAction" GridPane.columnIndex="2"/>
+                <Button fx:id="addButton" text="%Button.Add" onAction="#handleNewCurrencyAction" GridPane.columnIndex="2"/>
             </children>
         </GridPane>
         <ButtonBar GridPane.rowIndex="2">
