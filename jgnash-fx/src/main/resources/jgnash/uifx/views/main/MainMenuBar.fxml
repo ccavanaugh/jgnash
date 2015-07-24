@@ -49,6 +49,7 @@
                 <Menu fx:id="currenciesMenu" mnemonicParsing="false" text="%Menu.Currency.Name">
                     <items>
                         <MenuItem text="%Menu.AddRemoveCurrency.Name" onAction="#handleAddRemoveCurrenciesAction"/>
+                        <MenuItem text="%Menu.ModifyCurrency.Name" onAction="#handleModifyCurrenciesAction"/>
                         <MenuItem text="%Menu.DefaultCurrency.Name" onAction="#handleSetDefaultCurrencyAction"/>
                         <SeparatorMenuItem mnemonicParsing="false"/>
                         <MenuItem mnemonicParsing="false" text="%Menu.BackgroundCurrencyUpdate.Name" onAction="#updateCurrencies">

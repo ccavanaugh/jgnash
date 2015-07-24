@@ -44,6 +44,7 @@ import jgnash.uifx.about.AboutDialog;
 import jgnash.uifx.actions.DefaultCurrencyAction;
 import jgnash.uifx.actions.DefaultLocaleAction;
 import jgnash.uifx.dialog.currency.AddRemoveCurrencyController;
+import jgnash.uifx.dialog.currency.ModifyCurrencyController;
 import jgnash.uifx.dialog.security.CreateModifySecuritiesController;
 import jgnash.uifx.dialog.security.SecurityHistoryController;
 import jgnash.uifx.tasks.CloseFileTask;
@@ -240,7 +241,16 @@ public class MenuBarController implements MessageListener {
     }
 
     @FXML
-    private  void handleSetDefaultCurrencyAction() {
+    private void handleSetDefaultCurrencyAction() {
         DefaultCurrencyAction.showAndWait();
+    }
+
+    @FXML
+    private void handleModifyCurrenciesAction() {
+        final URL fxmlUrl = ModifyCurrencyController.class.getResource("ModifyCurrency.fxml");
+        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
+        stage.setTitle(resources.getString("Title.ModifyCurrencies"));
+
+        stage.showAndWait();
     }
 }
