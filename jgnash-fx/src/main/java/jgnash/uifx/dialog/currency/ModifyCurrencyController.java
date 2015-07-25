@@ -45,6 +45,7 @@ import jgnash.engine.message.MessageProperty;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.util.ResourceUtils;
 
 /**
  * Controller of modifying currencies
@@ -80,7 +81,7 @@ public class ModifyCurrencyController implements MessageListener {
     @FXML
     private ResourceBundle resources;
 
-    private SimpleObjectProperty<CurrencyNode> selectedCurrency = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<CurrencyNode> selectedCurrency = new SimpleObjectProperty<>();
 
     @FXML
     void initialize() {
@@ -101,8 +102,10 @@ public class ModifyCurrencyController implements MessageListener {
             });
         });
 
-        applyButton.disableProperty().bind(Bindings.or(symbolTextField.textProperty().isEmpty(),
+        applyButton.disableProperty().bind(Bindings.or(selectedCurrency.isNull(),
                 scaleTextField.textProperty().isEmpty()));
+
+        symbolTextField.disableProperty().bind(selectedCurrency.isNotNull());
 
         loadModel();
     }
@@ -123,34 +126,42 @@ public class ModifyCurrencyController implements MessageListener {
             scaleTextField.setInteger((int) selectedCurrency.get().getScale());
             prefixTextField.setText(selectedCurrency.get().getPrefix());
             suffixTextField.setText(selectedCurrency.get().getSuffix());
-
         } else {
-            handleClearAction();
+            clearForm();
         }
     }
 
-    @FXML
-    private void handleClearAction() {
-
+    private void clearForm() {
         symbolTextField.clear();
         descriptionTextField.clear();
         scaleTextField.clear();
         prefixTextField.clear();
         suffixTextField.clear();
+
+        listView.getSelectionModel().clearSelection();
+    }
+
+    @FXML
+    private void handleClearAction() {
+        clearForm();
     }
 
     @FXML
     private void handleApplyAction() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
         final CurrencyNode newNode = new CurrencyNode();
 
+        newNode.setSymbol(symbolTextField.getText());
         newNode.setDescription(descriptionTextField.getText());
         newNode.setPrefix(prefixTextField.getText());
         newNode.setScale(scaleTextField.getInteger().byteValue());
         newNode.setSuffix(suffixTextField.getText());
 
-
-        // make changes...
-
+        if (!engine.updateCommodity(selectedCurrency.get(), newNode)) {
+            StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.CurrencyUpdate", newNode.getSymbol()));
+        }
 
         loadModel();
     }
