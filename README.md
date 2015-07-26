@@ -3,6 +3,8 @@
 # jGnash README
 
 [![Join the chat at https://gitter.im/lenucksi/jgnash](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/lenucksi/jgnash?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![SNAP-CI Build Status](https://snap-ci.com/lenucksi/jgnash/branch/master/build_image)](https://snap-ci.com/lenucksi/jgnash/branch/master)
+[![Travis-CI Build Status](https://travis-ci.org/lenucksi/jgnash.svg?branch=master)](https://travis-ci.org/lenucksi/jgnash)
 
 [jGnash](https://sourceforge.net/projects/jgnash/) is a free (no strings attached!) personal finance manager with many of the same features as commercially-available software. It was created in order to make tracking your personal finances easy, but also provides the functionality required by advanced users. jGnash is cross-platform: jGnash 2 will run on any operating system that has a working Java 7 Runtime Environment (e.g., Linux, Mac OS X, and Microsoft Windows)
 
