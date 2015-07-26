@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -44,8 +45,9 @@ import jgnash.ui.components.CheckListCellRenderer;
 import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.util.DialogUtils;
+import jgnash.ui.util.IconUtils;
 import jgnash.ui.util.ToggleSelectionModel;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -59,7 +61,7 @@ import static jgnash.util.Arrays.intListToArray;
  * @author Craig Cavanaugh
  */
 public class YahooSecurityHistoryImportDialog extends JDialog implements ActionListener {
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final DatePanel startField = new DatePanel();
 
@@ -89,7 +91,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
         setTitle(rb.getString("Title.HistoryImport"));
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-        setIconImage(Resource.getImage("/jgnash/resource/gnome-money.png"));
+        setIconImage(IconUtils.getImage("/jgnash/resource/gnome-money.png"));
 
         final Calendar cal = Calendar.getInstance();
 
@@ -136,7 +138,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
     /**
      * Closes the dialog
      */
-    void closeDialog() {
+    private void closeDialog() {
         dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 
@@ -254,9 +256,11 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
 
             try {
                 // run the import in sequence
-                for (SecurityNode node : sNodes) {
+                for (final SecurityNode node : sNodes) {
                     if (run) { // continue?
-                        UpdateFactory.importHistory(node, start, end);
+                        if (!UpdateFactory.importHistory(node, start, end)) {
+                            StaticUIMethods.displayWarning(ResourceUtils.getString("Message.Error.SecurityUpdate", node.getSymbol()));
+                        }
                     }
                 }
             } finally {

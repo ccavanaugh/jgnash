@@ -22,7 +22,6 @@ import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
-import jgnash.util.Resource;
 
 /**
  * Static cursor utilities
@@ -80,7 +79,7 @@ public class CursorUtils {
                 final Point point = new Point(spot[0], spot[1]);
                 final Toolkit tk = Toolkit.getDefaultToolkit();
 
-                Image image = Resource.getImage(resource);
+                Image image = IconUtils.getImage(resource);
 
                 predefined[type] = tk.createCustomCursor(image, point, name);
             } catch (IndexOutOfBoundsException | HeadlessException e) {

@@ -30,4 +30,8 @@ public class StyleClass {
     public static final String DISABLED_CELL_ID = "disabled-cell";
 
     public static final String ENABLED_CELL_ID = "enabled-cell";
+
+    public static final String NORMAL_NEGATIVE_CELL_ID = "normal-negative-label";
+
+    public static final String NORMAL_CELL_ID = "normal-label";
 }

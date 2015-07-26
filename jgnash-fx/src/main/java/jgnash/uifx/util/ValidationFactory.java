@@ -17,17 +17,19 @@
  */
 package jgnash.uifx.util;
 
-import de.jensd.fx.glyphs.GlyphsBuilder;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Text;
+import javafx.scene.paint.Color;
+
+import jgnash.resource.font.FontAwesomeImageView;
 
 import org.controlsfx.control.decoration.Decoration;
 import org.controlsfx.control.decoration.Decorator;
@@ -40,16 +42,24 @@ import org.controlsfx.control.decoration.GraphicDecoration;
  */
 public class ValidationFactory {
 
+    private static final double ALERT_SIZE = 14.0;  // icon size
+
     private ValidationFactory() {
         // utility  class
     }
 
-    private static Decoration createDecoration() {
-        final Text glyphIcon = GlyphsBuilder.create(FontAwesomeIconView.class)
-                .glyph(FontAwesomeIcon.EXCLAMATION_TRIANGLE)
-                .style("-fx-font-size: 0.9em; -fx-text-fill: white; -fx-fill: darkred;").build();
+    private static Decoration createErrorDecoration() {
+        final FontAwesomeImageView glyphIcon = new FontAwesomeImageView(FontAwesomeIcon.EXCLAMATION_TRIANGLE,
+                ALERT_SIZE, Color.DARKRED);
 
-        return new GraphicDecoration(glyphIcon, Pos.BOTTOM_LEFT, 0, 10);
+        return new GraphicDecoration(glyphIcon, Pos.BOTTOM_LEFT, 0, 0);
+    }
+
+    private static Decoration createWarningDecoration() {
+        final FontAwesomeImageView glyphIcon = new FontAwesomeImageView(FontAwesomeIcon.INFO_CIRCLE,
+                ALERT_SIZE, Color.DARKGOLDENROD);
+
+        return new GraphicDecoration(glyphIcon, Pos.BOTTOM_LEFT, 0, 0);
     }
 
     /**
@@ -59,18 +69,63 @@ public class ValidationFactory {
      * @param error tooltip to display
      */
     public static void showValidationError(final Control control, final String error) {
+        showValidation(control, createErrorDecoration(), error, false);
+    }
 
-        final Decoration decoration = createDecoration();
+    /**
+     * Show a validation warning on a control
+     *
+     * @param control {@code Control} to attach to
+     * @param error tooltip to display
+     */
+    public static void showValidationWarning(final Control control, final String error) {
+        showValidation(control, createWarningDecoration(), error, false);
+    }
+
+    /**
+     * Show a validation error on a control
+     *
+     * @param control {@code Control} to attach to
+     * @param error tooltip to display
+     * @param sticky {@code true} if not removed when focus changes
+     */
+    private static void showValidation(final Control control, final Decoration decoration, final String error,
+                                       final boolean sticky) {
         Decorator.addDecoration(control, decoration);
 
         final Tooltip oldToolTip = control.getTooltip();
-
         control.setTooltip(new Tooltip(error));
 
-        control.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            control.setTooltip(oldToolTip);
-            Decorator.removeDecoration(control, decoration);
-        });
+        if (!sticky) {
+            final ChangeListener<Boolean> focusListener = new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    control.setTooltip(oldToolTip);
+                    Decorator.removeDecoration(control, decoration);
+                    control.focusedProperty().removeListener(this);
+                }
+            };
+
+            control.focusedProperty().addListener(focusListener);
+        }
+    }
+
+    /**
+     * Show a validation error on a control
+     *
+     * @param control {@code Control} to attach to
+     * @param error tooltip to display
+     * @param sticky {@code true} if not removed when focus changes
+     */
+    @SuppressWarnings("SameParameterValue")
+    public static void showValidationWarning(final Control control, final String error,  final boolean sticky) {
+        final Decoration decoration = createWarningDecoration();
+
+        showValidation(control, decoration, error, sticky);
+    }
+
+    public static void removeStickyValidation(final Control control) {
+        Decorator.removeAllDecorations(control);
     }
 
     /**
@@ -82,19 +137,25 @@ public class ValidationFactory {
     public static void showValidationError(final Pane pane, final String error) {
 
         for (final Node node : pane.getChildrenUnmodifiable()) {
-            final Decoration decoration = createDecoration();
+            final Decoration decoration = createErrorDecoration();
 
             if (node instanceof Control && !(node instanceof Label)) {
 
-                Decorator.addDecoration(node, createDecoration());
+                Decorator.addDecoration(node, createErrorDecoration());
 
                 final Tooltip oldToolTip = ((Control)node).getTooltip();
                 ((Control)node).setTooltip(new Tooltip(error));
 
-                node.focusedProperty().addListener((observable, oldValue, newValue) -> {
-                    ((Control)node).setTooltip(oldToolTip);
-                    Decorator.removeDecoration(pane, decoration);
-                });
+                final ChangeListener<Boolean> focusListener = new ChangeListener<Boolean>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                        ((Control)node).setTooltip(oldToolTip);
+                        Decorator.removeDecoration(pane, decoration);
+                        node.focusedProperty().removeListener(this);
+                    }
+                };
+
+                node.focusedProperty().addListener(focusListener);
 
                 break;
             }

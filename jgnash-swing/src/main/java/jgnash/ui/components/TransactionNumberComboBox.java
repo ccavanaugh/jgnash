@@ -20,6 +20,7 @@ package jgnash.ui.components;
 import java.awt.EventQueue;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.ComboBoxModel;
@@ -34,7 +35,7 @@ import javax.swing.text.PlainDocument;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Enhanced JComboBox; provides a UI to the user for entering transaction
@@ -50,7 +51,7 @@ public class TransactionNumberComboBox extends JComboBox<String> {
 
     // setup default item numbers
     static {
-        Resource rb = Resource.get();
+        ResourceBundle rb = ResourceUtils.getBundle();
 
         nextNumberItem = rb.getString("Item.NextNum");
 

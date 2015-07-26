@@ -18,6 +18,7 @@
 package jgnash.ui.register.invest;
 
 import java.awt.event.WindowEvent;
+import java.util.ResourceBundle;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -31,7 +32,7 @@ import jgnash.ui.UIApplication;
 import jgnash.ui.register.RegisterEvent;
 import jgnash.ui.register.RegisterListener;
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -49,7 +50,7 @@ public class InvestmentTransactionDialog extends JDialog implements RegisterList
     private final InvestmentTransactionPanel transactionPanel;
 
     public static void showDialog(InvestmentTransaction t) {
-        Resource rb = Resource.get();
+        ResourceBundle rb = ResourceUtils.getBundle();
 
         InvestmentTransactionDialog d = new InvestmentTransactionDialog(t.getInvestmentAccount());
 
@@ -80,7 +81,7 @@ public class InvestmentTransactionDialog extends JDialog implements RegisterList
     }
 
     private void layoutMainPanel() {
-        Resource rb = Resource.get();
+        ResourceBundle rb = ResourceUtils.getBundle();
 
         FormLayout layout = new FormLayout("right:d, 4dlu, f:d:g", "f:d, 3dlu, f:d, 8dlu, f:d");
         CellConstraints cc = new CellConstraints();

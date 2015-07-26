@@ -17,29 +17,31 @@
  */
 package jgnash.uifx.views.register;
 
+import java.util.Objects;
+import java.util.Optional;
+import java.util.ResourceBundle;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import jgnash.engine.*;
-import jgnash.uifx.StaticUIMethods;
+
+import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.Transaction;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.ResourceUtils;
-
-import java.io.IOException;
-import java.util.*;
 
 /**
  * A Dialog for creating and editing new investment transactions
  *
  * @author Craig Cavanaugh
  */
-public class InvestmentTransactionDialog extends Stage {
+class InvestmentTransactionDialog extends Stage {
 
     @FXML
     private ComboBox<SlipControllerContainer> actionComboBox;
@@ -60,13 +62,15 @@ public class InvestmentTransactionDialog extends Stage {
 
     private Optional<Transaction> transactionOptional = Optional.empty();
 
+    private InvestmentSlipManager investmentSlipManager;
+
     private InvestmentTransactionDialog() {
         FXMLUtils.loadFXML(this, "InvestmentTransactionDialog.fxml", ResourceUtils.getBundle());
 
         setTitle(ResourceUtils.getBundle().getString("Title.NewTrans"));
     }
 
-    private ObjectProperty<Account> getAccountProperty() {
+    private ObjectProperty<Account> accountProperty() {
         return accountProperty;
     }
 
@@ -75,55 +79,8 @@ public class InvestmentTransactionDialog extends Stage {
         enterButton.setOnAction(value -> handleEnterAction());
         cancelButton.setOnAction(value -> handleCancelAction());
 
-        actionComboBox.setEditable(false);
-
-        getAccountProperty().addListener((observable, oldValue, newValue) -> {
-            buildTabs();
-        });
-
-        actionComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (oldValue != null) {
-                oldValue.getController().clearForm();
-            }
-            transactionSlips.getChildren().clear();
-            transactionSlips.getChildren().addAll(newValue.getPane());
-        });
-    }
-
-    private void buildTabs() {
-        final String[] actions = new String[]{resources.getString("Transaction.BuyShare"),
-                resources.getString("Transaction.SellShare"), resources.getString("Transaction.TransferIn"),
-                resources.getString("Transaction.TransferOut"), resources.getString("Transaction.AddShare"),
-                resources.getString("Transaction.RemoveShare"), resources.getString("Transaction.ReinvestDiv"),
-                resources.getString("Transaction.Dividend"), resources.getString("Transaction.SplitShare"),
-                resources.getString("Transaction.MergeShare"), resources.getString("Transaction.ReturnOfCapital")};
-
-        final List<SlipControllerContainer> transactionPanes = new ArrayList<>();
-
-        // TODO: more investment slips
-        transactionPanes.add(buildCashTransferTab(actions[2], SlipType.INCREASE));
-        transactionPanes.add(buildCashTransferTab(actions[3], SlipType.DECREASE));
-
-        actionComboBox.getItems().addAll(transactionPanes);
-
-        actionComboBox.getSelectionModel().select(0);    // force selection
-    }
-
-    private SlipControllerContainer buildCashTransferTab(final String name, final SlipType slipType) {
-
-        try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("InvestmentTransactionPane.fxml"), resources);
-            final Pane pane = fxmlLoader.load();
-
-            final SlipController slipController = fxmlLoader.getController();
-
-            slipController.setSlipType(slipType);
-            slipController.accountProperty().bind(getAccountProperty());
-
-            return new SlipControllerContainer(name, slipController, pane);
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
+        investmentSlipManager = new InvestmentSlipManager(transactionSlips, actionComboBox);
+        investmentSlipManager.accountProperty().bind(accountProperty());
     }
 
     @FXML
@@ -149,25 +106,16 @@ public class InvestmentTransactionDialog extends Stage {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        if (!engine.isStored(transaction)) { // must not be a persisted transaction
-            if (transaction instanceof InvestmentTransaction) {
-                // TODO more forms
-                StaticUIMethods.displayWarning("Not implemented yet");
-            } else {
-                if (transaction.getAmount(accountProperty.get()).signum() >= 0) {
-                    actionComboBox.getSelectionModel().select(2); // transferIn
-                } else {
-                    actionComboBox.getSelectionModel().select(3); // transferOut
-                }
-            }
-
-            actionComboBox.getSelectionModel().getSelectedItem().getController().modifyTransaction(transaction);
+        if (engine.isStored(transaction)) {
+            setTitle(ResourceUtils.getBundle().getString("Title.ModifyTransaction"));
         }
+
+        investmentSlipManager.modifyTransaction(transaction);
     }
 
     public static Optional<Transaction> showAndWait(final Account account, final Transaction transaction) {
-        InvestmentTransactionDialog transactionDialog = new InvestmentTransactionDialog();
-        transactionDialog.getAccountProperty().setValue(account);
+        final InvestmentTransactionDialog transactionDialog = new InvestmentTransactionDialog();
+        transactionDialog.accountProperty().setValue(account);
         transactionDialog.setTransaction(transaction);
 
         // Lock the height of the dialog

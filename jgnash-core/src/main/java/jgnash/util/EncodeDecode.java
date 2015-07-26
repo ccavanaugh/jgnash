@@ -17,12 +17,9 @@
  */
 package jgnash.util;
 
-import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
 import java.text.DecimalFormat;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.regex.Pattern;
 
 /**
@@ -35,8 +32,6 @@ public class EncodeDecode {
     private static final Pattern COMMA_DELIMITER_PATTERN = Pattern.compile(",");
 
     private static final char COMMA_DELIMITER = ',';
-
-    private static final Pattern LOCALE_DELIMITER_PATTERN = Pattern.compile("\\x2E");
 
     private EncodeDecode() {
     }
@@ -67,90 +62,6 @@ public class EncodeDecode {
         }
         return rect;
     }*/
-
-    public static String encodeRectangle(final Rectangle bounds) {
-        return String.valueOf(bounds.x) + COMMA_DELIMITER + bounds.y + COMMA_DELIMITER + bounds.width
-                + COMMA_DELIMITER + bounds.height;
-    }
-
-    public static String encodeRectangle2D(final double x, final double y, final double width, final double height) {
-        return String.valueOf(x) + COMMA_DELIMITER + y + COMMA_DELIMITER + width + COMMA_DELIMITER + height;
-    }
-
-    public static Rectangle decodeRectangle(final String bounds) {
-        if (bounds == null) {
-            return null;
-        }
-
-        Rectangle rectangle = null;
-        String[] array = COMMA_DELIMITER_PATTERN.split(bounds);
-        if (array.length == 4) {
-            try {
-                rectangle = new Rectangle();
-                rectangle.x = Integer.parseInt(array[0]);
-                rectangle.y = Integer.parseInt(array[1]);
-                rectangle.width = Integer.parseInt(array[2]);
-                rectangle.height = Integer.parseInt(array[3]);
-            } catch (final NumberFormatException nfe) {
-                Logger.getLogger(EncodeDecode.class.getName()).log(Level.SEVERE, null, nfe);
-                rectangle = null;
-            }
-        }
-        return rectangle;
-    }
-
-    public static Rectangle2D.Double decodeRectangle2D(final String bounds) {
-        if (bounds == null) {
-            return null;
-        }
-
-        Rectangle2D.Double rectangle = null;
-        String[] array = COMMA_DELIMITER_PATTERN.split(bounds);
-        if (array.length == 4) {
-            try {
-                rectangle = new Rectangle2D.Double();
-                rectangle.x = Float.parseFloat(array[0]);
-                rectangle.y = Float.parseFloat(array[1]);
-                rectangle.width = Float.parseFloat(array[2]);
-                rectangle.height = Float.parseFloat(array[3]);
-            } catch (final NumberFormatException nfe) {
-                Logger.getLogger(EncodeDecode.class.getName()).log(Level.SEVERE, null, nfe);
-                rectangle = null;
-            }
-        }
-        return rectangle;
-    }
-
-    public static String encodeLocale(final Locale locale) {
-        StringBuilder buf = new StringBuilder();
-        buf.append(locale.getLanguage());
-        if (!locale.getCountry().equals("")) {
-            buf.append('.');
-            buf.append(locale.getCountry());
-            if (!locale.getVariant().equals("")) {
-                buf.append('.');
-                buf.append(locale.getVariant());
-            }
-        }
-        return buf.toString();
-    }
-
-    public static Locale decodeLocale(final String locale) {
-        if (locale == null || locale.equals("") || locale.equals("null")) {
-            return Locale.getDefault();
-        } else if (locale.indexOf('.') == -1) {
-            return new Locale(locale);
-        } else {
-            String[] array = LOCALE_DELIMITER_PATTERN.split(locale);
-            if (array.length == 3) {
-                return new Locale(array[0], array[1], array[2]);
-            } else if (array.length == 2) {
-                return new Locale(array[0], array[1]);
-            } else { // should not happen
-                return Locale.getDefault();
-            }
-        }
-    }
 
     /**
      * Encodes a double array as a comma separated {@code String}. Values will be rounded to 2 decimal places

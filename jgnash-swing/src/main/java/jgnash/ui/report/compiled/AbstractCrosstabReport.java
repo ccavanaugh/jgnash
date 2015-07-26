@@ -17,10 +17,6 @@
  */
 package jgnash.ui.report.compiled;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
@@ -55,8 +51,13 @@ import jgnash.ui.report.AbstractReportTableModel;
 import jgnash.ui.report.ColumnHeaderStyle;
 import jgnash.ui.report.ColumnStyle;
 import jgnash.ui.report.jasper.DynamicJasperReport;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
 
 import net.sf.jasperreports.engine.JasperPrint;
 
@@ -130,7 +131,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
         endDateField = new DatePanel();
         startDateField.setDate(startDate);
 
-        hideZeroBalanceAccounts = new JCheckBox(Resource.get().getString("Button.HideZeroBalance"));
+        hideZeroBalanceAccounts = new JCheckBox(ResourceUtils.getString("Button.HideZeroBalance"));
         hideZeroBalanceAccounts.setSelected(p.getBoolean(HIDE_ZERO_BALANCE, true));
 
         showLongNamesCheckBox = new JCheckBox(rb.getString("Button.UseLongNames"));
@@ -143,7 +144,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
                 SORT_ORDER_BALANCE_DESC_WITH_PERCENTILE});
         sortOrderList.setSelectedIndex(0);
 
-        refreshButton = new JButton(rb.getString("Button.Refresh"), Resource.getIcon("/jgnash/resource/view-refresh.png"));
+        refreshButton = new JButton(rb.getString("Button.Refresh"), IconUtils.getIcon("/jgnash/resource/view-refresh.png"));
 
         refreshButton.addActionListener(new AbstractAction() {
 

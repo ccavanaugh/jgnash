@@ -31,7 +31,6 @@ import javax.swing.JPanel;
 import jgnash.engine.AbstractInvestmentTransactionEntry;
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionEntrySellX;
@@ -95,7 +94,7 @@ public final class SellSharePanel extends AbstractPriceQtyInvTransactionPanel im
         priceField.addKeyListener(keyListener);
         quantityField.addKeyListener(keyListener);
         securityCombo.addKeyListener(keyListener);
-        reconciledButton.addKeyListener(keyListener);
+        getReconcileCheckBox().addKeyListener(keyListener);
     }
 
     private void layoutMainPanel() {
@@ -128,7 +127,7 @@ public final class SellSharePanel extends AbstractPriceQtyInvTransactionPanel im
         add("Label.Total", cc.xy(5, 5));
         add(totalField, cc.xy(7, 5));
 
-        add(reconciledButton, cc.xyw(5, 7, 3));
+        add(getReconcileCheckBox(), cc.xyw(5, 7, 3));
 
         add("Label.Account", cc.xy(1, 7));
         add(accountExchangePanel, cc.xy(3, 7));
@@ -177,7 +176,7 @@ public final class SellSharePanel extends AbstractPriceQtyInvTransactionPanel im
 
         modTrans = tran;
 
-        reconciledButton.setSelected(tran.getReconciled(getAccount()) != ReconciledState.NOT_RECONCILED);
+        setReconciledState(tran.getReconciled(getAccount()));
     }
 
     @Override

@@ -126,7 +126,7 @@ class RegisterFactory {
     public static String[] getSplitColumnNames(@NotNull final AccountType accountType) {
         String[] names; // reference to the correct column names
 
-        if (Options.getAccountingTermsEnabled().get()) {
+        if (Options.useAccountingTermsProperty().get()) {
             names = SPLIT_ACCOUNTING_NAMES;
         } else {
             if (accountType == AccountType.CREDIT) {
@@ -154,7 +154,7 @@ class RegisterFactory {
     public static String[] getColumnNames(@NotNull final AccountType accountType) {
         String[] names; // reference to the correct column names
 
-        if (Options.getAccountingTermsEnabled().get()) {
+        if (Options.useAccountingTermsProperty().get()) {
             names = ACCOUNTING_NAMES;
         } else {
             if (accountType == AccountType.CREDIT) {
@@ -189,7 +189,7 @@ class RegisterFactory {
      */
     public static String[] getCreditDebitTabNames(final AccountType accountType) {
 
-        if (Options.getAccountingTermsEnabled().get()) {
+        if (Options.useAccountingTermsProperty().get()) {
             if (accountType.getAccountGroup() == AccountGroup.INCOME
                     || accountType.getAccountGroup() == AccountGroup.EXPENSE
                     || accountType.getAccountGroup() == AccountGroup.ASSET

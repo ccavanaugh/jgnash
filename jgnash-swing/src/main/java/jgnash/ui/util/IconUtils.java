@@ -18,6 +18,7 @@
 package jgnash.ui.util;
 
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 import javax.swing.Icon;
@@ -25,10 +26,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 /**
- * Icon utility class
+ * Icon and Image utility class
  * 
  * @author Craig Cavanaugh
- *
  */
 public final class IconUtils {
 
@@ -54,5 +54,35 @@ public final class IconUtils {
         g.dispose();
 
         return new ImageIcon(bufferedImage);
+    }
+
+    /**
+     * Creates an ImageIcon using a buffered image to take advantage of hardware
+     * rendering if it is available
+     *
+     * @param icon path to icon
+     * @return icon
+     */
+    public static ImageIcon getIcon(final String icon) {
+
+        ImageIcon imageIcon;
+
+        try {
+            imageIcon =  new ImageIcon(IconUtils.class.getResource(icon));
+        } catch (NullPointerException e) {
+            imageIcon = null;
+        }
+
+        return imageIcon;
+    }
+
+    /**
+     * Creates an Image using the specified file
+     *
+     * @param icon path to icon
+     * @return new Image
+     */
+    public static Image getImage(final String icon) {
+        return getIcon(icon).getImage();
     }
 }

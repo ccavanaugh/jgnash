@@ -48,6 +48,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -63,7 +64,7 @@ import jgnash.ui.report.FontUtilities;
 import jgnash.ui.report.ReportFactory;
 import jgnash.ui.report.ReportPrintFactory;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import net.sf.jasperreports.engine.JRDataSource;
 import net.sf.jasperreports.engine.JRException;
@@ -77,7 +78,7 @@ import net.sf.jasperreports.engine.data.JRTableModelDataSource;
  */
 public abstract class DynamicJasperReport {
 
-    protected final Resource rb = Resource.get();
+    protected final ResourceBundle rb = ResourceUtils.getBundle();
 
     private DynamicJasperReportPanel viewer;
 

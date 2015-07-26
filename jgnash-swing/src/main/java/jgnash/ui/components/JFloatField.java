@@ -150,7 +150,7 @@ public class JFloatField extends JTextFieldEx {
      * @param maxScale max scale
      * @param minScale min scale
      */
-    void setScale(final int maxScale, final int minScale) {
+    private void setScale(final int maxScale, final int minScale) {
         scale = maxScale;
 
         if (format instanceof DecimalFormat) {
@@ -243,7 +243,7 @@ public class JFloatField extends JTextFieldEx {
      *
      * @return A string representation of the resulting decimal
      */
-    String eval() {
+    private String eval() {
         String text = getText();
 
         if (text == null || text.isEmpty()) {

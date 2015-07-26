@@ -19,9 +19,8 @@ package jgnash.ui.actions;
 
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
 import java.util.Locale;
-import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,11 +32,11 @@ import javax.swing.SwingWorker;
 
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.builder.Action;
-import jgnash.util.NotNull;
-import jgnash.util.Resource;
+import jgnash.util.LocaleObject;
+import jgnash.util.ResourceUtils;
 
 /**
- * UI Action to open the new file dialog
+ * UI Action to change the default locale
  * 
  * @author Craig Cavanaugh
  */
@@ -51,69 +50,16 @@ public class DefaultLocaleAction extends AbstractAction {
         worker.execute();
     }
 
-    /**
-     * Internal class for display Locale objects in a nice readable and sorted order
-     */
-    private static class LocaleObject implements Comparable<LocaleObject> {
-
-        final Locale locale;
-
-        private final String display;
-
-        LocaleObject(final Locale locale) {
-            this.locale = Objects.requireNonNull(locale);
-
-            display = locale.getDisplayName() + " - " + locale + "  [" + locale.getDisplayName(locale) + "]";
-        }
-
-        @Override
-        public final String toString() {
-            return display;
-        }
-
-        @Override
-        public int compareTo(final @NotNull LocaleObject o) {
-            return toString().compareTo(o.toString());
-        }
-
-        @Override
-        public boolean equals(final Object obj) {
-            assert obj instanceof LocaleObject;
-
-            return equals((LocaleObject) obj);
-        }
-
-        @Override
-        public int hashCode() {
-            int hash = 7;
-            hash = 47 * hash + this.locale.hashCode();
-            return 47 * hash + this.display.hashCode();
-        }
-
-        public boolean equals(final LocaleObject obj) {
-            return obj.locale.equals(locale);
-        }
-    }
-
     private static class LocaleSwingWorker extends SwingWorker<LocaleObject[], Void> {
 
-        final Resource rb = Resource.get();
+        final ResourceBundle rb = ResourceUtils.getBundle();
         private Object[] options;
-
 
         @Override
         public LocaleObject[] doInBackground() {
-
             options = new Object[] { rb.getString("Button.Ok"), rb.getString("Button.Cancel") };
 
-            Locale[] tList = Locale.getAvailableLocales();
-            LocaleObject[] list = new LocaleObject[tList.length];
-            for (int i = 0; i < list.length; i++) {
-                list[i] = new LocaleObject(tList[i]);
-            }
-            Arrays.sort(list);
-
-            return list;
+            return LocaleObject.getLocaleObjects();
         }
 
         @Override
@@ -127,8 +73,8 @@ public class DefaultLocaleAction extends AbstractAction {
                         null, options, options[1]);
 
                 if (result == JOptionPane.YES_OPTION) {
-                    LocaleObject o = (LocaleObject) combo.getSelectedItem();
-                    Resource.setLocale(o.locale);
+                    final LocaleObject o = (LocaleObject) combo.getSelectedItem();
+                    ResourceUtils.setLocale(o.getLocale());
 
                     JOptionPane.showMessageDialog(UIApplication.getFrame(),
                             o + "\n" + rb.getString("Message.RestartLocale"));

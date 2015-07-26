@@ -17,11 +17,6 @@
  */
 package jgnash.ui.register;
 
-import com.jgoodies.forms.builder.ButtonBarBuilder;
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dialog;
@@ -32,6 +27,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -49,7 +45,12 @@ import jgnash.ui.register.table.RegisterTable;
 import jgnash.ui.register.table.SplitsRegisterTableModel;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.JTableUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
+
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Makes modifications to a clone of the original transaction
@@ -60,7 +61,7 @@ import jgnash.util.Resource;
  */
 class SplitsDialog extends JDialog implements ListSelectionListener, ActionListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private SplitsRegisterTableModel model;
 

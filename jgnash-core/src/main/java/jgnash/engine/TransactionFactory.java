@@ -24,10 +24,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import jgnash.text.CommodityFormat;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Transaction Factory
@@ -140,7 +141,7 @@ public class TransactionFactory {
         // verify fees are tagged correctly
         for (TransactionEntry fee : fees) {
             if (fee.getTransactionTag() != TransactionTag.INVESTMENT_FEE) {
-                throw new RuntimeException(Resource.get().getString("Message.Error.InvalidTransactionTag"));
+                throw new RuntimeException(ResourceUtils.getString("Message.Error.InvalidTransactionTag"));
             }
         }
 
@@ -232,15 +233,14 @@ public class TransactionFactory {
                 dividend, incomeExchangedAmount);
         entry.setMemo(memo);
 
-        final Resource rb = Resource.get();
         final NumberFormat format = CommodityFormat.getFullNumberFormat(incomeAccount.getCurrencyNode());
 
-        transaction.setPayee(rb.getString("Word.Dividend") + " : " + node.getSymbol() + " @ " + format.format(dividend));
+        transaction.setPayee(ResourceUtils.getString("Word.Dividend") + " : " + node.getSymbol() + " @ " + format.format(dividend));
 
         transaction.addTransactionEntry(entry);
 
         if (!cashAccount.equals(investmentAccount)) {
-            TransactionEntry tran = new TransactionEntry(cashAccount, investmentAccount, cashExchangedAmount,
+            final TransactionEntry tran = new TransactionEntry(cashAccount, investmentAccount, cashExchangedAmount,
                     dividend.negate());
             tran.setMemo(memo);
             tran.setTransactionTag(TransactionTag.INVESTMENT_CASH_TRANSFER);
@@ -295,7 +295,8 @@ public class TransactionFactory {
                 incomeExchangedAmount);
         entry.setMemo(memo);
 
-        final Resource rb = Resource.get();
+        final ResourceBundle rb = ResourceUtils.getBundle();
+
         final NumberFormat format = CommodityFormat.getFullNumberFormat(incomeAccount.getCurrencyNode());
 
         transaction.setPayee(rb.getString("Word.ReturnOfCapital") + " : " + node.getSymbol() + " @ "
@@ -339,7 +340,7 @@ public class TransactionFactory {
         Objects.requireNonNull(debitAccount);
 
         if (creditAccount == debitAccount) {
-            throw new RuntimeException(Resource.get().getString("Message.Error.CreditDebit.Equal"));
+            throw new RuntimeException(ResourceUtils.getString("Message.Error.CreditDebit.Equal"));
         }
 
         Transaction transaction = new Transaction();
@@ -376,7 +377,7 @@ public class TransactionFactory {
         Objects.requireNonNull(debitAccount);
 
         if (creditAccount == debitAccount) {
-            throw new RuntimeException(Resource.get().getString("Message.Error.CreditDebit.Equal"));
+            throw new RuntimeException(ResourceUtils.getString("Message.Error.CreditDebit.Equal"));
         }
 
         Transaction transaction = new Transaction();
@@ -461,13 +462,13 @@ public class TransactionFactory {
 
         for (TransactionEntry fee : fees) {
             if (fee.getTransactionTag() != TransactionTag.INVESTMENT_FEE) {
-                throw new RuntimeException(Resource.get().getString("Message.Error.InvalidTransactionTag"));
+                throw new RuntimeException(ResourceUtils.getString("Message.Error.InvalidTransactionTag"));
             }
         }
 
         for (TransactionEntry gain : gains) {
             if (gain.getTransactionTag() != TransactionTag.GAIN_LOSS) {
-                throw new RuntimeException(Resource.get().getString("Message.Error.InvalidTransactionTag"));
+                throw new RuntimeException(ResourceUtils.getString("Message.Error.InvalidTransactionTag"));
             }
         }
 
@@ -479,12 +480,10 @@ public class TransactionFactory {
 
         entry.setMemo(memo);
 
-        final Resource rb = Resource.get();
-
         final NumberFormat format = CommodityFormat.getFullNumberFormat(node);
 
-        transaction.setPayee(rb.getString("Word.ReInvDiv") + " : " + node.getSymbol() + ' ' + quantity.toString()
-                + " @ " + format.format(quantity));
+        transaction.setPayee(ResourceUtils.getString("Word.ReInvDiv") + " : " + node.getSymbol() + ' '
+                + quantity.toString() + " @ " + format.format(quantity));
 
         transaction.addTransactionEntry(entry);
 
@@ -643,14 +642,14 @@ public class TransactionFactory {
         // verify fees are tagged correctly
         for (final TransactionEntry fee : fees) {
             if (fee.getTransactionTag() != TransactionTag.INVESTMENT_FEE) {
-                throw new RuntimeException(Resource.get().getString("Message.Error.InvalidTransactionTag"));
+                throw new RuntimeException(ResourceUtils.getString("Message.Error.InvalidTransactionTag"));
             }
         }
 
         // verify gains are tagged correctly
         for (final TransactionEntry gain : gains) {
             if (gain.getTransactionTag() != TransactionTag.GAIN_LOSS) {
-                throw new RuntimeException(Resource.get().getString("Message.Error.InvalidTransactionTag"));
+                throw new RuntimeException(ResourceUtils.getString("Message.Error.InvalidTransactionTag"));
             }
         }
 
@@ -793,11 +792,10 @@ public class TransactionFactory {
 
     private static String buildPayee(final String wordProperty, final SecurityNode node, final BigDecimal price,
                                      final BigDecimal quantity) {
-        final Resource rb = Resource.get();
 
         final NumberFormat format = CommodityFormat.getFullNumberFormat(node);
 
-        return rb.getString(wordProperty) + " : " + node.getSymbol() + ' ' + quantity.toString() + " @ "
+        return ResourceUtils.getString(wordProperty) + " : " + node.getSymbol() + ' ' + quantity.toString() + " @ "
                 + format.format(price);
     }
 

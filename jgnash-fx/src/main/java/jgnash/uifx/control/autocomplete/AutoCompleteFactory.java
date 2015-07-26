@@ -71,7 +71,7 @@ public class AutoCompleteFactory {
      * @param autoCompleteTextField text field to bind to
      */
     public static void setMemoModel(final AutoCompleteTextField<Transaction> autoCompleteTextField) {
-        if (Options.getAutoCompleteEnabled().get()) {
+        if (Options.useAutoCompleteProperty().get()) {
             synchronized(synchronizationObject) {
                 if (memoModel == null) {
                     memoModel = new MemoModel();
@@ -87,7 +87,7 @@ public class AutoCompleteFactory {
      * @param autoCompleteTextField text field to bind to
      */
     public static void setPayeeModel(final AutoCompleteTextField<Transaction> autoCompleteTextField, final Account account) {
-        if (Options.getAutoCompleteEnabled().get()) {
+        if (Options.useAutoCompleteProperty().get()) {
             autoCompleteTextField.autoCompleteModelObjectProperty().setValue(new PayeeAccountModel(account));
         }
     }

@@ -43,7 +43,7 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.engine.message.MessageProxy;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import static javax.swing.event.TableModelEvent.ALL_COLUMNS;
 import static javax.swing.event.TableModelEvent.UPDATE;
@@ -80,8 +80,8 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
 
     private static final Logger logger = Logger.getLogger(BudgetPeriodModel.class.getName());
 
-    private final String[] columnNames = {Resource.get().getString("Column.Budgeted"),
-            Resource.get().getString("Column.Actual"), Resource.get().getString("Column.Remaining")};
+    private final String[] columnNames = {ResourceUtils.getString("Column.Budgeted"),
+            ResourceUtils.getString("Column.Actual"), ResourceUtils.getString("Column.Remaining")};
 
     static {
         logger.setLevel(Level.ALL);
@@ -191,7 +191,7 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
         return expandingBudgetTableModel;
     }
 
-    BudgetPeriodResults getResults(final Account account) {
+    private BudgetPeriodResults getResults(final Account account) {
         if (account == null) {
             throw new IllegalArgumentException("account may not be null");
         }
@@ -218,7 +218,7 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
      * @see TableModelEvent
      * @see EventListenerList
      */
-    void fireTableRowsUpdated(int firstRow, int lastRow) {
+    private void fireTableRowsUpdated(int firstRow, int lastRow) {
         fireTableChanged(new TableModelEvent(this, firstRow, lastRow, ALL_COLUMNS, UPDATE));
     }
 
@@ -232,7 +232,7 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
      * @see javax.swing.event.TableModelEvent
      * @see EventListenerList
      */
-    void fireTableChanged(TableModelEvent e) {
+    private void fireTableChanged(TableModelEvent e) {
         // Guaranteed to return a non-null array
         Object[] listeners = listenerList.getListenerList();
         // Process the listeners last to first, notifying

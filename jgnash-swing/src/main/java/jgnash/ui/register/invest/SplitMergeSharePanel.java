@@ -17,9 +17,6 @@
  */
 package jgnash.ui.register.invest;
 
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -29,11 +26,13 @@ import javax.swing.JPanel;
 
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.ui.util.ValidationFactory;
+
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Form for creating Add/Remove share transactions.
@@ -44,7 +43,7 @@ public final class SplitMergeSharePanel extends AbstractPriceQtyInvTransactionPa
 
     private final TransactionType tranType;
 
-    SplitMergeSharePanel(Account account, TransactionType tranType) {
+    SplitMergeSharePanel(final Account account, final TransactionType tranType) {
         super(account);
 
         assert tranType == TransactionType.SPLITSHARE || tranType == TransactionType.MERGESHARE;
@@ -75,15 +74,20 @@ public final class SplitMergeSharePanel extends AbstractPriceQtyInvTransactionPa
 
     private void layoutMainPanel() {
 
-        FormLayout layout = new FormLayout("right:d, $lcgap, 50dlu:g, 8dlu, right:d, $lcgap, max(65dlu;min)", "f:d, $nlgap, f:d, $nlgap, f:d");
+        focusFirstComponent();
+
+        final FormLayout layout = new FormLayout("right:d, $lcgap, 50dlu:g, 8dlu, right:d, $lcgap, max(65dlu;min)",
+                "f:d, $nlgap, f:d, $nlgap, f:d");
 
         layout.setRowGroups(new int[][] { { 1, 3, 5 } });
-        CellConstraints cc = new CellConstraints();
+
+        final CellConstraints cc = new CellConstraints();
 
         setLayout(layout);
 
         /* Create a sub panel to work around a column spanning problem in FormLayout */
-        JPanel subPanel = buildHorizontalSubPanel("max(48dlu;min):g(0.5), 8dlu, d, $lcgap, max(48dlu;min):g(0.5)", ValidationFactory.wrap(priceField), "Label.Quantity", ValidationFactory.wrap(quantityField));
+        final JPanel subPanel = buildHorizontalSubPanel("max(48dlu;min):g(0.5), 8dlu, d, $lcgap, max(48dlu;min):g(0.5)",
+                ValidationFactory.wrap(priceField), "Label.Quantity", ValidationFactory.wrap(quantityField));
 
         add("Label.Security", cc.xy(1, 1));
         add(ValidationFactory.wrap(securityCombo), cc.xy(3, 1));
@@ -97,7 +101,7 @@ public final class SplitMergeSharePanel extends AbstractPriceQtyInvTransactionPa
 
         add("Label.Memo", cc.xy(1, 5));
         add(memoField, cc.xy(3, 5));
-        add(reconciledButton, cc.xyw(5, 5, 3));
+        add(getReconcileCheckBox(), cc.xyw(5, 5, 3));
     }
 
     @Override
@@ -108,7 +112,7 @@ public final class SplitMergeSharePanel extends AbstractPriceQtyInvTransactionPa
     }
 
     @Override
-    public void modifyTransaction(Transaction tran) {
+    public void modifyTransaction(final Transaction tran) {
 
         assert tran instanceof InvestmentTransaction;
 
@@ -126,7 +130,7 @@ public final class SplitMergeSharePanel extends AbstractPriceQtyInvTransactionPa
         quantityField.setDecimal(_tran.getQuantity());
         securityCombo.setSelectedNode(_tran.getSecurityNode());
 
-        reconciledButton.setSelected(tran.getReconciled(getAccount()) != ReconciledState.NOT_RECONCILED);
+        setReconciledState(tran.getReconciled(getAccount()));
 
         updateTotalField();
     }
@@ -134,9 +138,11 @@ public final class SplitMergeSharePanel extends AbstractPriceQtyInvTransactionPa
     @Override
     public Transaction buildTransaction() {
         if (tranType == TransactionType.SPLITSHARE) {
-            return TransactionFactory.generateSplitXTransaction(account, securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText());
+            return TransactionFactory.generateSplitXTransaction(account, securityCombo.getSelectedNode(),
+                    priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText());
         }
-        return TransactionFactory.generateMergeXTransaction(account, securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText());
+        return TransactionFactory.generateMergeXTransaction(account, securityCombo.getSelectedNode(),
+                priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText());
     }
 
     void updateTotalField() {

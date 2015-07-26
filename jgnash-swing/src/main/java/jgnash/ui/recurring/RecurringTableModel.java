@@ -18,9 +18,11 @@
 package jgnash.ui.recurring;
 
 import java.awt.EventQueue;
+import java.text.DateFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -31,7 +33,8 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.recurring.Reminder;
-import jgnash.util.Resource;
+import jgnash.util.DateUtils;
+import jgnash.util.ResourceUtils;
 
 /**
  * Table model for recurring iterators.
@@ -43,15 +46,18 @@ public class RecurringTableModel extends AbstractTableModel implements MessageLi
 
     private List<Reminder> reminders;
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
-    private final String[] names = new String[]{rb.getString("Column.Description"), rb.getString("Column.Freq"), rb.getString("Column.Enabled")};
+    private final String[] names = new String[]{rb.getString("Column.Description"), rb.getString("Column.Freq"),
+            rb.getString("Column.Enabled"), rb.getString("Column.LastPosted"), rb.getString("Column.Due")};
 
-    private final Class<?>[] classes = new Class<?>[]{String.class, String.class, String.class};
+    private final Class<?>[] classes = new Class<?>[]{String.class, String.class, String.class, String.class, String.class};
 
     private final Object lock = new Object();
 
     private char enabledSymbol = '\u2713';
+
+    private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
 
     /**
      * Creates a new instance of RecurringTableModel
@@ -97,7 +103,7 @@ public class RecurringTableModel extends AbstractTableModel implements MessageLi
     }
 
     @Override
-    public Class<?> getColumnClass(int column) {
+    public Class<?> getColumnClass(final int column) {
         return classes[column];
     }
 
@@ -109,7 +115,7 @@ public class RecurringTableModel extends AbstractTableModel implements MessageLi
     }
 
     @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
+    public Object getValueAt(final int rowIndex, final int columnIndex) {
         synchronized (lock) {
             switch (columnIndex) {
                 case 0:
@@ -119,6 +125,16 @@ public class RecurringTableModel extends AbstractTableModel implements MessageLi
                 case 2:
                     if (reminders.get(rowIndex).isEnabled()) {
                         return enabledSymbol;
+                    }
+                    return null;
+                case 3:
+                    if (reminders.get(rowIndex).getLastDate() != null) {
+                        return dateFormatter.format(reminders.get(rowIndex).getLastDate());
+                    }
+                    return null;
+                case 4:
+                    if (reminders.get(rowIndex).getIterator().next() != null) {
+                        return dateFormatter.format(reminders.get(rowIndex).getIterator().next());
                     }
                     return null;
                 default:

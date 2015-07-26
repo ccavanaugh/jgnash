@@ -17,21 +17,42 @@
  */
 package jgnash.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import com.thoughtworks.xstream.converters.basic.DateConverter;
+import org.junit.Test;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Craig Cavanaugh
  *
  */
 public class DateTest {
+
+    @Test
+    public void localDateTest() {
+        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateUtils.DEFAULT_XSTREAM_PATTERN);
+        final DateConverter dateConverter = new DateConverter();    // xstream converter
+
+        final Date now = new Date();
+        final LocalDateTime localDateTime = DateUtils.asLocalDateTime(now);
+
+        assertNotNull(localDateTime);
+
+        assertEquals(dateConverter.toString(now), dateTimeFormatter.format(localDateTime));
+
+        final LocalDateTime rewind = LocalDateTime.from(dateTimeFormatter.parse(dateTimeFormatter.format(localDateTime)));
+
+        assertEquals(localDateTime, rewind);
+    }
 
     @Test
     public void getNameOfMonthTest() {

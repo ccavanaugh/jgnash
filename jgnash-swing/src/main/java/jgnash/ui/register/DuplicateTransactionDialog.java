@@ -28,7 +28,7 @@ import jgnash.engine.EngineFactory;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * A Dialog for duplicating a transaction. If the date for the duplicate transaction is the same as the current date
@@ -67,7 +67,7 @@ class DuplicateTransactionDialog extends DateChkNumberDialog {
      * @param t the transaction to duplicate. This cannot be null.
      */
     private DuplicateTransactionDialog(final Account a, final Transaction t) {
-        super(a, Resource.get().getString("Title.DuplicateTransaction"));
+        super(a, ResourceUtils.getString("Title.DuplicateTransaction"));
 
         if (a == null) {
             throw new IllegalArgumentException("Account parameter was null");

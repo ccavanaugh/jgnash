@@ -21,6 +21,7 @@ import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,7 +40,7 @@ import jgnash.ui.UIApplication;
 import jgnash.ui.components.OpenDatabaseDialog;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.FileUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * UI Action to open a database
@@ -76,7 +77,7 @@ public class OpenAction {
 
             @Override
             protected Void doInBackground() throws Exception {
-                final Resource rb = Resource.get();
+                final ResourceBundle rb = ResourceUtils.getBundle();
 
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
 
@@ -98,7 +99,7 @@ public class OpenAction {
                 } else {
                     try {
                         if (FileUtils.isFileLocked(dialog.getDatabasePath())) {
-                            StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
+                            StaticUIMethods.displayError(ResourceUtils.getString("Message.FileIsLocked"));
                         } else if (checkAndBackupOldVersion(dialog.getDatabasePath(), password)) {
                             engine = EngineFactory.bootLocalEngine(dialog.getDatabasePath(), EngineFactory.DEFAULT, password);
                         }
@@ -120,7 +121,7 @@ public class OpenAction {
                 UIApplication.getFrame().stopWaitMessage();
 
                 if (remoteConnectionFailed) {
-                    StaticUIMethods.displayError(Resource.get().getString("Message.Error.ServerConnection"));
+                    StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.ServerConnection"));
                 }
             }
         }
@@ -151,7 +152,8 @@ public class OpenAction {
 
             @Override
             protected Void doInBackground() throws Exception {
-                final Resource rb = Resource.get();
+                final ResourceBundle rb = ResourceUtils.getBundle();
+
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
                 logger.fine("Booting the engine");
 
@@ -182,7 +184,7 @@ public class OpenAction {
                 if (!FileUtils.isFileLocked(database)) {
                     pool.execute(new BootEngine());
                 } else {
-                    StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
+                    StaticUIMethods.displayError(ResourceUtils.getString("Message.FileIsLocked"));
                 }
             } catch (final IOException e) {
                 logger.log(Level.SEVERE, e.toString(), e);
@@ -203,7 +205,7 @@ public class OpenAction {
 
                 final long startTime = System.currentTimeMillis();
 
-                final Resource rb = Resource.get();
+                final ResourceBundle rb = ResourceUtils.getBundle();
 
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
                 logger.fine("Booting the engine");
@@ -267,7 +269,7 @@ public class OpenAction {
                     if (!FileUtils.isFileLocked(database)) {
                         pool.execute(new BootEngine());
                     } else {
-                        StaticUIMethods.displayError(Resource.get().getString("Message.FileIsLocked"));
+                        StaticUIMethods.displayError(ResourceUtils.getString("Message.FileIsLocked"));
                     }
                 } catch (final IOException e) {
                     appLogger.log(Level.SEVERE, e.toString(), e);
@@ -282,7 +284,8 @@ public class OpenAction {
 
             @Override
             protected Void doInBackground() throws Exception {
-                final Resource rb = Resource.get();
+                final ResourceBundle rb = ResourceUtils.getBundle();
+
                 UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
                 logger.fine("Booting the engine");
 
@@ -311,7 +314,7 @@ public class OpenAction {
             final float version = EngineFactory.getFileVersion(new File(fileName), password);
 
             if (version <= 0) {
-                final String errorMessage = Resource.get().getString("Message.Error.InvalidUserPass");
+                final String errorMessage = ResourceUtils.getString("Message.Error.InvalidUserPass");
 
                 UIApplication.getLogger().warning(errorMessage);
 
@@ -332,10 +335,11 @@ public class OpenAction {
                     new Thread() {  // pop an information dialog about the backup file
                         @Override
                         public void run() {
-                            final Resource rb = Resource.get();
-                            final String message = rb.getString("Message.Info.Upgrade", fileName + "." + version);
 
-                            StaticUIMethods.displayMessage(message, rb.getString("Title.Information"),
+                            final String message = ResourceUtils.getString("Message.Info.Upgrade", fileName + "."
+                                    + version);
+
+                            StaticUIMethods.displayMessage(message, ResourceUtils.getString("Title.Information"),
                                     JOptionPane.INFORMATION_MESSAGE);
                         }
                     }.start();

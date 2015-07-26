@@ -17,12 +17,12 @@
  */
 package jgnash.engine;
 
-import jgnash.util.NotNull;
-import jgnash.util.Resource;
-
 import java.math.BigDecimal;
 
 import javax.persistence.Entity;
+
+import jgnash.util.NotNull;
+import jgnash.util.ResourceUtils;
 
 /**
  * Reinvest dividend transaction
@@ -44,7 +44,7 @@ public class TransactionEntryReinvestDivX extends TransactionEntryAbstractIncrea
     public TransactionEntryReinvestDivX(final Account investmentAccount, final SecurityNode securityNode, final BigDecimal price, final BigDecimal quantity) {
 
         if (investmentAccount.getAccountType().getAccountGroup() != AccountGroup.INVEST) {
-            throw new RuntimeException(Resource.get().getString("Message.Error.InvalidAccountGroup"));
+            throw new RuntimeException(ResourceUtils.getString("Message.Error.InvalidAccountGroup"));
         }
 
         setSecurityNode(securityNode);

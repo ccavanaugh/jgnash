@@ -68,7 +68,7 @@ import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileFilter;
 
 import jgnash.ui.UIApplication;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporterParameter;
@@ -86,7 +86,6 @@ import net.sf.jasperreports.view.save.JRSingleSheetXlsSaveContributor;
  * Panel to display reports created using DynamicJasper
  * 
  * @author Craig Cavanaugh
- *
  */
 class DynamicJasperReportPanel extends JPanel implements ActionListener {
 
@@ -244,7 +243,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
             fontModel.addElement(5 + i);
         }
         fontSizeComboBox = new JComboBox<>(fontModel);
-        fontSizeComboBox.setToolTipText(Resource.get().getString("ToolTip.FontSize"));
+        fontSizeComboBox.setToolTipText(ResourceUtils.getString("ToolTip.FontSize"));
         fontSizeComboBox.setSelectedItem(report.getBaseFontSize());
         fontSizeComboBox.addActionListener(this);
 
@@ -283,7 +282,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
         toolBar.add(new JToolBar.Separator());
 
         pageSetupButton = new JButton(new ImageIcon(getClass().getResource("/jgnash/resource/document-properties.png")));
-        pageSetupButton.setToolTipText(Resource.get().getString("ToolTip.PageSetup"));
+        pageSetupButton.setToolTipText(ResourceUtils.getString("ToolTip.PageSetup"));
         pageSetupButton.setFocusable(false);
         pageSetupButton.addActionListener(this);
         toolBar.add(pageSetupButton);
@@ -367,7 +366,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
         toolBar.add(zoomOutButton);
 
         helpButton = new JButton(new ImageIcon(getClass().getResource("/jgnash/resource/help-browser.png")));
-        helpButton.setToolTipText(Resource.get().getString("ToolTip.Help"));
+        helpButton.setToolTipText(ResourceUtils.getString("ToolTip.Help"));
         helpButton.setFocusable(false);
         helpButton.addActionListener(this);
 
@@ -966,7 +965,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
 
         @Override
         public JasperPrint doInBackground() {
-            frame.displayWaitMessage(Resource.get().getString("Message.PleaseWait"));
+            frame.displayWaitMessage(ResourceUtils.getString("Message.PleaseWait"));
             return report.createJasperPrint(false);
         }
 

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import org.controlsfx.control.CheckListView?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.45" maxHeight="Infinity" maxWidth="Infinity"
+          fx:controller="jgnash.uifx.wizard.file.NewFileFourController" styleClass="form">
+  <columnConstraints>
+      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" vgrow="NEVER" />
+    <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
+  </rowConstraints>
+   <children>
+       <TextArea fx:id="textArea" editable="false"  wrapText="true" prefRowCount="7" GridPane.fillHeight="true"  GridPane.columnSpan="2"/>
+       <CheckListView fx:id="accountSetsList" GridPane.fillHeight="true" GridPane.rowIndex="1" />
+       <TreeView fx:id="accountTreeView" GridPane.fillHeight="true" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+   </children>
+</GridPane>

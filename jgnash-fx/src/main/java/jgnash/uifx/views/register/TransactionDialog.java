@@ -17,6 +17,13 @@
  */
 package jgnash.uifx.views.register;
 
+import java.io.IOException;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -25,16 +32,17 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import jgnash.engine.*;
-import jgnash.uifx.util.FXMLUtils;
-import jgnash.util.ResourceUtils;
 
-import java.io.IOException;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import jgnash.engine.Account;
+import jgnash.engine.AccountGroup;
+import jgnash.engine.AccountType;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.Transaction;
+import jgnash.uifx.util.FXMLUtils;
+import jgnash.util.NotNull;
+import jgnash.util.Nullable;
+import jgnash.util.ResourceUtils;
 
 /**
  * A Dialog for creating and editing new transactions
@@ -141,10 +149,13 @@ public class TransactionDialog extends Stage {
         }
     }
 
-    public static Optional<Transaction> showAndWait(final Account account, final Transaction transaction) {
-        TransactionDialog transactionDialog = new TransactionDialog();
+    public static Optional<Transaction> showAndWait(@NotNull final Account account, @Nullable final Transaction transaction) {
+        final TransactionDialog transactionDialog = new TransactionDialog();
         transactionDialog.getAccountProperty().setValue(account);
-        transactionDialog.setTransaction(transaction);
+
+        if (transaction != null) {
+            transactionDialog.setTransaction(transaction);
+        }
 
         // Lock the height of the dialog
         transactionDialog.setMinHeight(transactionDialog.getHeight());

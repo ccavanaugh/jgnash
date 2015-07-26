@@ -28,7 +28,7 @@ import jgnash.util.FileMagic;
 import jgnash.util.FileMagic.FileType;
 import jgnash.util.FileUtils;
 import jgnash.util.Nullable;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,8 +44,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
-
-import javax.swing.filechooser.FileSystemView;
 
 /**
  * Factory class for obtaining an engine instance
@@ -163,7 +161,8 @@ public class EngineFactory {
 
         DataStore xmlDataStore = new XMLDataStore();
 
-        File xmlFile = new File(FileUtils.stripFileExtension(fileName) + "-" + dateFormat.format(new Date()) + "." + xmlDataStore.getFileExt());
+        File xmlFile = new File(FileUtils.stripFileExtension(fileName) + "-" + dateFormat.format(new Date())
+                + "." + xmlDataStore.getFileExt());
 
         // push the intermediary file to the temporary directory
         xmlFile = new File(System.getProperty("java.io.tmpdir"), xmlFile.getName());
@@ -245,7 +244,8 @@ public class EngineFactory {
      * @return new {@code Engine} instance if successful, null otherwise
      * @see Engine
      */
-    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName, final char[] password) {
+    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName,
+                                                      final char[] password) {
         DataStoreType type = getDataStoreByType(new File(fileName));
 
         Engine engine = null;
@@ -270,7 +270,9 @@ public class EngineFactory {
      * @see Engine
      * @see DataStoreType
      */
-    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName, final char[] password, final DataStoreType type) throws UnsupportedOperationException {
+    public static synchronized Engine bootLocalEngine(final String fileName, final String engineName,
+                                                      final char[] password, final DataStoreType type)
+            throws UnsupportedOperationException {
 
         if (!type.supportsLocal) {
             throw new UnsupportedOperationException("Local operation not supported for this type.");
@@ -295,7 +297,7 @@ public class EngineFactory {
         if (engine != null) {
 
 
-            logger.info(Resource.get().getString("Message.EngineStart"));
+            logger.info(ResourceUtils.getString("Message.EngineStart"));
             engineMap.put(engineName, engine);
             dataStoreMap.put(engineName, dataStore);
 
@@ -313,13 +315,14 @@ public class EngineFactory {
         return engine;
     }
 
-    public static synchronized Engine bootClientEngine(final String host, final int port, final char[] password, final String engineName) throws Exception {
+    public static synchronized Engine bootClientEngine(final String host, final int port, final char[] password,
+                                                       final String engineName) throws Exception {
 
         if (engineMap.get(engineName) != null) {
             throw new RuntimeException("A stale engine was found in the map");
         }
 
-        Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
+        final Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
 
         Engine engine = null;
 
@@ -329,11 +332,11 @@ public class EngineFactory {
             pref.put(LAST_HOST, host);
             pref.putBoolean(LAST_REMOTE, true);
 
-            MessageBus messageBus = MessageBus.getInstance(engineName);
+            final MessageBus messageBus = MessageBus.getInstance(engineName);
 
             // after starting the remote message bus, it should receive the path on the server
-            String remoteDataBasePath = messageBus.getRemoteDataBasePath();
-            DataStoreType dataStoreType = messageBus.getRemoteDataStoreType();
+            final String remoteDataBasePath = messageBus.getRemoteDataBasePath();
+            final DataStoreType dataStoreType = messageBus.getRemoteDataStoreType();
 
             if (remoteDataBasePath == null || remoteDataBasePath.isEmpty() || dataStoreType == null) {
                 throw new Exception("Invalid connection wih the message bus");
@@ -349,7 +352,7 @@ public class EngineFactory {
             engine = dataStore.getClientEngine(host, port, password, remoteDataBasePath);
 
             if (engine != null) {
-                logger.info(Resource.get().getString("Message.EngineStart"));
+                logger.info(ResourceUtils.getString("Message.EngineStart"));
 
                 engineMap.put(engineName, engine);
                 dataStoreMap.put(engineName, dataStore);
@@ -411,9 +414,9 @@ public class EngineFactory {
      * @return Default path to the database
      */
     public static synchronized String getDefaultDatabase() {
-        String base = FileSystemView.getFileSystemView().getDefaultDirectory().getAbsolutePath();
-        String userName = System.getProperty("user.name");
-        String fileSep = System.getProperty("file.separator");
+        final String base = System.getProperty("user.home");
+        final String userName = System.getProperty("user.name");
+        final String fileSep = System.getProperty("file.separator");
 
         return base + fileSep + DEFAULT_DIR + fileSep + userName;
     }

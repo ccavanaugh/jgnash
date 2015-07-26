@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import jgnash.resource.font.FontAwesomeImageView?>
+<?import jgnash.uifx.control.DataStoreTypeComboBox?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.45" maxHeight="Infinity" maxWidth="Infinity"
+          fx:controller="jgnash.uifx.wizard.file.NewFileOneController" styleClass="form">
+  <columnConstraints>
+      <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
+      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
+  </rowConstraints>
+   <children>
+       <TextArea fx:id="textArea" editable="false"  wrapText="true" GridPane.columnSpan="3" GridPane.fillHeight="true"
+                 GridPane.vgrow="ALWAYS" maxWidth="Infinity"/>
+
+       <Label text="%Label.StorageType" GridPane.rowIndex="1" />
+       <DataStoreTypeComboBox fx:id="storageTypeComboBox" onAction="#handleDataStoreTypeAction" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2"
+                 maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true" GridPane.rowIndex="1" />
+
+       <Label text="%Label.DatabaseName" GridPane.rowIndex="2" />
+       <TextField fx:id="fileNameField" GridPane.columnIndex="1" GridPane.rowIndex="2" minWidth="75"/>
+       <Button onAction="#handleFileButtonAction" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="2">
+           <graphic>
+               <FontAwesomeImageView glyphName="ELLIPSIS_H"/>
+           </graphic>
+       </Button>
+   </children>
+</GridPane>

@@ -17,15 +17,16 @@
  */
 package jgnash.uifx.views.register;
 
+import java.math.BigDecimal;
+
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
+
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.util.NotNull;
-
-import java.math.BigDecimal;
 
 /**
  * Transaction Entry Controller for Split and Merges shares
@@ -71,9 +72,9 @@ public class SplitMergeSharesSlipController extends AbstractPriceQtyInvSlipContr
         numberComboBox.setValue(transaction.getNumber());
         priceField.setDecimal(((InvestmentTransaction)transaction).getPrice());
         quantityField.setDecimal(((InvestmentTransaction)transaction).getQuantity());
-        securityComboBox.setValue(((InvestmentTransaction)transaction).getSecurityNode());
+        securityComboBox.setSecurityNode(((InvestmentTransaction)transaction).getSecurityNode());
 
-        setReconciledState(transaction.getReconciled(accountProperty().get()));;
+        setReconciledState(transaction.getReconciled(accountProperty().get()));
 
         modTrans = transaction;
         modTrans = attachmentPane.modifyTransaction(modTrans);

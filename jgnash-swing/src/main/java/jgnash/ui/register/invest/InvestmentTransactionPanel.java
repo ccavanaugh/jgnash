@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ResourceBundle;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -47,7 +48,7 @@ import jgnash.ui.register.AbstractEntryFormPanel;
 import jgnash.ui.register.PanelType;
 import jgnash.ui.register.RegisterEvent;
 import jgnash.ui.register.RegisterListener;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -79,14 +80,19 @@ public class InvestmentTransactionPanel extends JPanel implements MessageListene
 
     private AbstractEntryFormPanel[] cards = new AbstractEntryFormPanel[0];
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private static final String[] actions;
 
     static {
-        Resource eRb = Resource.get();
+        final ResourceBundle eRb = ResourceUtils.getBundle();
 
-        actions = new String[]{eRb.getString("Transaction.BuyShare"), eRb.getString("Transaction.SellShare"), eRb.getString("Transaction.TransferIn"), eRb.getString("Transaction.TransferOut"), eRb.getString("Transaction.AddShare"), eRb.getString("Transaction.RemoveShare"), eRb.getString("Transaction.ReinvestDiv"), eRb.getString("Transaction.Dividend"), eRb.getString("Transaction.SplitShare"), eRb.getString("Transaction.MergeShare"), eRb.getString("Transaction.ReturnOfCapital")};
+        actions = new String[]{eRb.getString("Transaction.BuyShare"), eRb.getString("Transaction.SellShare"),
+                eRb.getString("Transaction.TransferIn"), eRb.getString("Transaction.TransferOut"),
+                eRb.getString("Transaction.AddShare"), eRb.getString("Transaction.RemoveShare"),
+                eRb.getString("Transaction.ReinvestDiv"), eRb.getString("Transaction.Dividend"),
+                eRb.getString("Transaction.SplitShare"), eRb.getString("Transaction.MergeShare"),
+                eRb.getString("Transaction.ReturnOfCapital")};
     }
 
     InvestmentTransactionPanel(final Account account) {

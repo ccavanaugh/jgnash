@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -43,9 +44,9 @@ import jgnash.engine.budget.BudgetPeriod;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.DialogUtils;
-import jgnash.ui.util.TextResource;
 import jgnash.ui.util.ValidationFactory;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
+import jgnash.util.TextResource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -64,7 +65,7 @@ final class BudgetWizardDialog extends JDialog implements ActionListener {
 
     private static final int DLU_Y = 60;
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private JButton okButton;
 

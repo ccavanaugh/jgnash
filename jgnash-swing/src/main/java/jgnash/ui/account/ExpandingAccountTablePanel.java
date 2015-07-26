@@ -27,6 +27,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -48,7 +49,8 @@ import jgnash.engine.message.MessageListener;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.RollOverButton;
 import jgnash.ui.register.RegisterFrame;
-import jgnash.util.Resource;
+import jgnash.ui.util.IconUtils;
+import jgnash.util.ResourceUtils;
 
 /**
  * Displays a list of accounts using a table and adds a toolbar for common account methods
@@ -57,7 +59,7 @@ import jgnash.util.Resource;
  */
 public class ExpandingAccountTablePanel extends JPanel implements ActionListener, MessageListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private ExpandingAccountTablePane accountPane;
 
@@ -227,27 +229,27 @@ public class ExpandingAccountTablePanel extends JPanel implements ActionListener
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
 
-        newButton = new RollOverButton(rb.getString("Button.New"), Resource.getIcon("/jgnash/resource/document-new.png"));
+        newButton = new RollOverButton(rb.getString("Button.New"), IconUtils.getIcon("/jgnash/resource/document-new.png"));
         newButton.setToolTipText(rb.getString("ToolTip.NewAccount"));
         toolBar.add(newButton);
 
-        modifyButton = new RollOverButton(rb.getString("Button.Modify"), Resource.getIcon("/jgnash/resource/document-properties.png"));
+        modifyButton = new RollOverButton(rb.getString("Button.Modify"), IconUtils.getIcon("/jgnash/resource/document-properties.png"));
         modifyButton.setToolTipText(rb.getString("ToolTip.ModifyAccount"));
         toolBar.add(modifyButton);
 
-        reconcileButton = new RollOverButton(rb.getString("Button.Reconcile"), Resource.getIcon("/jgnash/resource/view-refresh.png"));
+        reconcileButton = new RollOverButton(rb.getString("Button.Reconcile"), IconUtils.getIcon("/jgnash/resource/view-refresh.png"));
         reconcileButton.setToolTipText(rb.getString("ToolTip.ReconcileAccount"));
         toolBar.add(reconcileButton);
 
-        deleteButton = new RollOverButton(rb.getString("Button.Delete"), Resource.getIcon("/jgnash/resource/edit-delete.png"));
+        deleteButton = new RollOverButton(rb.getString("Button.Delete"), IconUtils.getIcon("/jgnash/resource/edit-delete.png"));
         deleteButton.setToolTipText(rb.getString("ToolTip.DeleteAccount"));
         toolBar.add(deleteButton);
 
-        filterButton = new RollOverButton(rb.getString("Button.Filter"), Resource.getIcon("/jgnash/resource/preferences-system.png"));
+        filterButton = new RollOverButton(rb.getString("Button.Filter"), IconUtils.getIcon("/jgnash/resource/preferences-system.png"));
         filterButton.setToolTipText(rb.getString("ToolTip.FilterAccount"));
         toolBar.add(filterButton);
 
-        zoomButton = new RollOverButton(rb.getString("Button.Zoom"), Resource.getIcon("/jgnash/resource/edit-find.png"));
+        zoomButton = new RollOverButton(rb.getString("Button.Zoom"), IconUtils.getIcon("/jgnash/resource/edit-find.png"));
         toolBar.add(zoomButton);
 
         toolPanel.add(toolBar, BorderLayout.NORTH);

@@ -40,10 +40,21 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-public class BankAdjustmentSlipController extends AbstractSlipController {
+public class AdjustmentSlipController extends AbstractSlipController {
+
+    @FXML
+    private Button enterButton;
 
     @FXML
     private Button convertButton;
+
+    @FXML
+    @Override
+    public void initialize() {
+        super.initialize();
+
+        enterButton.disableProperty().bind(amountField.textProperty().isEmpty());
+    }
 
     @NotNull
     @Override

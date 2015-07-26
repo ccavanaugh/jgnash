@@ -19,6 +19,7 @@ package jgnash.ui.wizards.imports.jgnash;
 
 import java.awt.EventQueue;
 import java.awt.Frame;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import javax.swing.SwingWorker;
@@ -30,7 +31,7 @@ import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.wizard.WizardDialog;
 import jgnash.ui.wizards.file.NewFileDialog;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Dialog for creating a new file
@@ -105,7 +106,7 @@ public class ImportDialog extends WizardDialog {
 
         @Override
         protected Void doInBackground() throws Exception {
-            Resource rb = Resource.get();
+            ResourceBundle rb = ResourceUtils.getBundle();
             UIApplication.getFrame().displayWaitMessage(rb.getString("Message.PleaseWait"));
             Import.doImport(filename);
             return null;

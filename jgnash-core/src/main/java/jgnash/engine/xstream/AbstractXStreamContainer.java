@@ -58,6 +58,7 @@ import jgnash.engine.TransactionEntrySplitX;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetGoal;
 import jgnash.engine.budget.BudgetPeriod;
+import jgnash.util.NotNull;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
@@ -97,7 +98,7 @@ abstract class AbstractXStreamContainer {
      * @return A list of type T containing objects of type clazz
      */
     @SuppressWarnings("unchecked")
-    static <T extends StoredObject> List<T> query(final Collection<StoredObject> values, final Class<T> clazz) {
+    @NotNull static <T extends StoredObject> List<T> query(final Collection<StoredObject> values, final Class<T> clazz) {
         return values.parallelStream().filter(o -> clazz.isAssignableFrom(o.getClass()))
                 .map(o -> (T) o).collect(Collectors.toList());
     }
@@ -170,6 +171,10 @@ abstract class AbstractXStreamContainer {
         xstream.registerConverter(new HibernatePersistentMapConverter(xstream.getMapper()));
         xstream.registerConverter(new HibernatePersistentSortedMapConverter(xstream.getMapper()));
         xstream.registerConverter(new HibernatePersistentSortedSetConverter(xstream.getMapper()));
+
+        // Converters for new Java time API
+        xstream.registerConverter(new LocalDateConverter());
+        xstream.registerConverter(new LocalDateTimeConverter());
 
         return xstream;
     }

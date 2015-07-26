@@ -21,6 +21,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -37,8 +38,9 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
 import jgnash.ui.components.SortedListModel;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.NotNull;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.ButtonStackBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -49,7 +51,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 class AccountSecuritiesPanel extends JPanel implements ActionListener {
 
-    private final transient Resource rb = Resource.get();
+    private final transient ResourceBundle rb = ResourceUtils.getBundle();
 
     private final transient Engine engine;
 
@@ -74,10 +76,10 @@ class AccountSecuritiesPanel extends JPanel implements ActionListener {
     }
 
     private void initComponents() {
-        addButton = new JButton(rb.getString("Button.Add"), Resource.getIcon("/jgnash/resource/list-add.png"));
+        addButton = new JButton(rb.getString("Button.Add"), IconUtils.getIcon("/jgnash/resource/list-add.png"));
         addButton.setHorizontalTextPosition(SwingConstants.LEADING);
 
-        removeButton = new JButton(rb.getString("Button.Remove"), Resource.getIcon("/jgnash/resource/list-remove.png"));
+        removeButton = new JButton(rb.getString("Button.Remove"), IconUtils.getIcon("/jgnash/resource/list-remove.png"));
 
         availJList = new JList<>();
         selectedJList = new JList<>();

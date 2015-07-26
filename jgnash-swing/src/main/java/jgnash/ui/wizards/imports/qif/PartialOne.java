@@ -17,14 +17,11 @@
  */
 package jgnash.ui.wizards.imports.qif;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import javax.swing.JComboBox;
@@ -32,16 +29,20 @@ import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.text.StyledEditorKit;
 
-import jgnash.engine.Account;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
 import jgnash.convert.imports.qif.QifAccount;
 import jgnash.convert.imports.qif.QifTransaction;
 import jgnash.convert.imports.qif.QifUtils;
+import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.wizard.WizardPage;
-import jgnash.ui.util.TextResource;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
+import jgnash.util.TextResource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 /**
  * First part of import wizard for import of QIF files from online sources.
@@ -66,7 +67,7 @@ public class PartialOne extends JPanel implements WizardPage, ActionListener {
 
     private static final String DATE_FORMAT = "dateFormat";
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     public PartialOne(QifAccount qAcc) {
         this.qAcc = qAcc;

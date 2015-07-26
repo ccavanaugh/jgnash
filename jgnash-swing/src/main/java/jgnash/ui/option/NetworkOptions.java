@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.ResourceBundle;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -30,10 +31,10 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
 import jgnash.net.ConnectionFactory;
-import jgnash.net.NetworkAuthenticator;
 import jgnash.ui.components.JIntegerField;
 import jgnash.ui.components.JTextFieldEx;
-import jgnash.util.Resource;
+import jgnash.ui.net.NetworkAuthenticator;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -46,7 +47,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 class NetworkOptions extends JPanel implements ActionListener, FocusListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private JCheckBox authCheckBox;
 

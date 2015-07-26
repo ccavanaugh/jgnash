@@ -17,17 +17,12 @@
  */
 package jgnash.ui.recurring;
 
-import com.jgoodies.forms.builder.ButtonBarBuilder;
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -56,15 +51,20 @@ import jgnash.ui.components.JIntegerField;
 import jgnash.ui.components.JTextFieldEx;
 import jgnash.ui.register.TransactionDialog;
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
+
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Dialog for entry for recurring transactions.
  *
  * @author Craig Cavanaugh
- *
  */
-class RecurringEntryDialog extends JDialog implements ActionListener {
+public class RecurringEntryDialog extends JDialog implements ActionListener {
 
     private boolean result = false;
     private Reminder reminder = null;
@@ -82,7 +82,7 @@ class RecurringEntryDialog extends JDialog implements ActionListener {
     private JButton okButton;
     private JTextArea notesArea;
     private AccountListComboBox accountCombo;
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
     private final HashMap<Class<?>, Integer> tabMap = new HashMap<>();
     private Transaction transaction = null;
 
@@ -120,7 +120,7 @@ class RecurringEntryDialog extends JDialog implements ActionListener {
         return showDialog(null);
     }
 
-    static Reminder showDialog(final Reminder reminder) {
+    public static Reminder showDialog(final Reminder reminder) {
         RecurringEntryDialog d = new RecurringEntryDialog(reminder);
         d.setMinimumSize(d.getSize());
         DialogUtils.addBoundsListener(d, "dialogbounds");
@@ -205,7 +205,7 @@ class RecurringEntryDialog extends JDialog implements ActionListener {
     }
 
     private JPanel createEntryPanel() {
-        FormLayout layout = new FormLayout("right:p, 4dlu, 45dlu", "f:p, 3dlu, f:p, 3dlu, f:p");
+        FormLayout layout = new FormLayout("right:p, 4dlu, 45dlu", "f:p, 3dlu, f:p");
 
         CellConstraints cc = new CellConstraints();
 
@@ -213,7 +213,6 @@ class RecurringEntryDialog extends JDialog implements ActionListener {
         autoEnterCheckBox = new JCheckBox(rb.getString("Button.EnterDaysBefore"));
         daysBeforeField = new JIntegerField();
         lastOccurrenceField = new JDateField();
-        JIntegerField daysPastDueField = new JIntegerField();
 
         p.add(autoEnterCheckBox, cc.xy(1, 1));
         p.add(daysBeforeField, cc.xy(3, 1));
@@ -221,12 +220,8 @@ class RecurringEntryDialog extends JDialog implements ActionListener {
         p.add(new JLabel(rb.getString("Label.LastOccurrence")), cc.xy(1, 3));
         p.add(lastOccurrenceField, cc.xy(3, 3));
 
-        p.add(new JLabel(rb.getString("Label.DaysPastDue")), cc.xy(1, 5));
-        p.add(daysPastDueField, cc.xy(3, 5));
-
         lastOccurrenceField.setValue(null); // clear the date
         lastOccurrenceField.setEditable(false);
-        daysPastDueField.setEditable(false);
 
         return p;
     }

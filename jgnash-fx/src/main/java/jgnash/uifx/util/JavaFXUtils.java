@@ -1,16 +1,11 @@
 package jgnash.uifx.util;
 
-import de.jensd.fx.glyphs.GlyphsBuilder;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.text.Text;
 
 /**
  * Utility methods for {@code Scene}
@@ -57,19 +52,5 @@ public class JavaFXUtils {
                 }
             }
         }
-    }
-
-    public static Text createGlyph(final FontAwesomeIcon icon, final String size, final String color) {
-        return GlyphsBuilder.create(FontAwesomeIconView.class).glyph(icon)
-                .style(String.format("-fx-fill: %s; -fx-font-size: %s;", color, size)).build();
-    }
-
-    public static Text createGlyph(final FontAwesomeIcon icon, final String size) {
-        return GlyphsBuilder.create(FontAwesomeIconView.class).glyph(icon)
-                .style(String.format("-fx-font-size: %s;", size)).build();
-    }
-
-    public static Text createGlyph(final FontAwesomeIcon icon) {
-        return GlyphsBuilder.create(FontAwesomeIconView.class).glyph(icon).build();
     }
 }

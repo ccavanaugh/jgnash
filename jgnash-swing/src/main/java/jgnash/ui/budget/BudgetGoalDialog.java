@@ -17,6 +17,54 @@
  */
 package jgnash.ui.budget;
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.ToolTipManager;
+import javax.swing.WindowConstants;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
+
+import jgnash.engine.Account;
+import jgnash.engine.MathConstants;
+import jgnash.engine.budget.BudgetFactory;
+import jgnash.engine.budget.BudgetGoal;
+import jgnash.engine.budget.BudgetPeriod;
+import jgnash.engine.budget.BudgetPeriodDescriptor;
+import jgnash.engine.budget.BudgetPeriodDescriptorFactory;
+import jgnash.engine.budget.Pattern;
+import jgnash.text.CommodityFormat;
+import jgnash.ui.StaticUIMethods;
+import jgnash.ui.UIApplication;
+import jgnash.ui.components.FormattedJTable;
+import jgnash.ui.components.JFloatField;
+import jgnash.ui.util.DialogUtils;
+import jgnash.ui.util.IconUtils;
+import jgnash.ui.util.JTableUtils;
+import jgnash.util.ResourceUtils;
+
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -24,32 +72,6 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
 import com.jgoodies.forms.layout.RowSpec;
-import jgnash.engine.Account;
-import jgnash.engine.MathConstants;
-import jgnash.engine.budget.*;
-import jgnash.text.CommodityFormat;
-import jgnash.ui.StaticUIMethods;
-import jgnash.ui.UIApplication;
-import jgnash.ui.components.FormattedJTable;
-import jgnash.ui.components.JFloatField;
-import jgnash.ui.util.DialogUtils;
-import jgnash.ui.util.JTableUtils;
-import jgnash.util.Resource;
-
-import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * A Dialog to manage a BudgetGoal.
@@ -64,7 +86,7 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
 
     private static final int SCROLLPANE_HEIGHT = 200;
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private JComboBox<BudgetPeriod> budgetPeriodCombo;
 
@@ -109,7 +131,7 @@ public final class BudgetGoalDialog extends JDialog implements ActionListener {
     public BudgetGoalDialog(final Account account, final BudgetGoal budgetGoal, int workingYear) {
         super(UIApplication.getFrame(), true);
         setTitle(rb.getString("Title.BudgetGoal") + " - " + account.getName());
-        setIconImage(Resource.getImage("/jgnash/resource/gnome-money.png"));
+        setIconImage(IconUtils.getImage("/jgnash/resource/gnome-money.png"));
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         this.workingYear = workingYear;

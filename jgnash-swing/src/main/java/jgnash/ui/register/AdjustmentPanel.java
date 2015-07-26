@@ -17,25 +17,24 @@
  */
 package jgnash.ui.register;
 
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.event.ActionEvent;
 
 import javax.swing.JButton;
 
 import jgnash.engine.Account;
 import jgnash.engine.ReconcileManager;
-import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.account.AccountListDialog;
+import jgnash.ui.util.IconUtils;
 import jgnash.ui.util.ValidationFactory;
-import jgnash.util.Resource;
+
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Handles making Single entry transactions.
@@ -51,7 +50,7 @@ public final class AdjustmentPanel extends AbstractBankTransactionPanel {
     AdjustmentPanel(final Account account) {
         super(account);
 
-        convertButton = new JButton(Resource.getIcon("/jgnash/resource/edit-redo.png"));
+        convertButton = new JButton(IconUtils.getIcon("/jgnash/resource/edit-redo.png"));
         convertButton.setToolTipText(rb.getString("ToolTip.ConvertSEntry"));
         convertButton.addActionListener(this);
 
@@ -78,7 +77,7 @@ public final class AdjustmentPanel extends AbstractBankTransactionPanel {
         add("Label.Date", cc.xy(5, 3));
         add(datePanel, cc.xy(7, 3));
 
-        add(reconciledButton, cc.xywh(1, 5, 3, 1));
+        add(getReconcileCheckBox(), cc.xywh(1, 5, 3, 1));
         add("Label.Amount", cc.xy(5, 5));
         add(ValidationFactory.wrap(amountField), cc.xy(7, 5));
 
@@ -107,7 +106,7 @@ public final class AdjustmentPanel extends AbstractBankTransactionPanel {
         numberField.setText(t.getNumber());
         payeeField.setText(t.getPayee());
 
-        reconciledButton.setSelected(t.getReconciled(getAccount()) != ReconciledState.NOT_RECONCILED);
+        setReconciledState(t.getReconciled(getAccount()));
     }
 
     @Override
@@ -161,7 +160,7 @@ public final class AdjustmentPanel extends AbstractBankTransactionPanel {
         entry.setCreditAmount(amountField.getDecimal().abs());
         entry.setDebitAmount(amountField.getDecimal().abs().negate());
 
-        ReconcileManager.reconcileTransaction(getAccount(), t, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+        ReconcileManager.reconcileTransaction(getAccount(), t, getReconciledState());
 
         t.addTransactionEntry(entry);
 

@@ -20,7 +20,9 @@ package jgnash.uifx;
 import java.util.prefs.Preferences;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ChangeListener;
 
 /**
@@ -32,9 +34,11 @@ public class Options {
 
     private static final Preferences p = Preferences.userNodeForPackage(Options.class);
 
-    private static final String CONFIRM_ON_DELETE = "confirmDelete";
+    private static final String CONFIRM_DELETE_REMINDER = "confirmDeleteReminder";
 
-    private static final String ACCOUNTING_TERMS = "accountingTerms";
+    private static final String CONFIRM_DELETE_TRANSACTION = "confirmDeleteTransaction";
+
+    private static final String ACCOUNTING_TERMS = "useAccountingTerms";
 
     private static final String REMEMBER_DATE = "rememberDate";
 
@@ -44,9 +48,15 @@ public class Options {
 
     private static final String FUZZY_MATCH = "autoCompleteFuzzyMatchEnabled";
 
+    private final static String REMINDER_SNOOZE = "reminderSnoozePeriod";
+
+    private static final int DEFAULT_SNOOZE = 15 * 60 * 1000;
+
     private static final SimpleBooleanProperty useAccountingTerms;
 
-    private static final SimpleBooleanProperty confirmTransactionDelete;
+    private static final SimpleBooleanProperty confirmDeleteTransaction;
+
+    private static final SimpleBooleanProperty confirmDeleteReminder;
 
     private static final SimpleBooleanProperty rememberDate;
 
@@ -56,18 +66,28 @@ public class Options {
 
     private static final SimpleBooleanProperty autoCompleteFuzzyMatchEnabled;
 
+    private static final SimpleIntegerProperty reminderSnoozePeriod;
+
     private static final ChangeListener<Boolean> booleanChangeListener;
+
+    private static final ChangeListener<Number> integerChangeListener;
 
     static {
         booleanChangeListener = (observable, oldValue, newValue) ->
                 p.putBoolean(((SimpleBooleanProperty)observable).getName(), newValue);
 
+        integerChangeListener = (observable, oldValue, newValue) ->
+                p.putInt(((SimpleIntegerProperty) observable).getName(), (Integer) newValue);
+
         useAccountingTerms = createBooleanProperty(ACCOUNTING_TERMS, false);
-        confirmTransactionDelete = createBooleanProperty(CONFIRM_ON_DELETE, true);
+        confirmDeleteTransaction = createBooleanProperty(CONFIRM_DELETE_TRANSACTION, true);
+        confirmDeleteReminder = createBooleanProperty(CONFIRM_DELETE_REMINDER, true);
         rememberDate = createBooleanProperty(REMEMBER_DATE, true);
         autoCompleteEnabled = createBooleanProperty(AUTO_COMPLETE, true);
         autoCompleteIgnoreCaseEnabled = createBooleanProperty(IGNORE_CASE, false);
         autoCompleteFuzzyMatchEnabled = createBooleanProperty(FUZZY_MATCH, false);
+
+        reminderSnoozePeriod = createIntegerProperty(REMINDER_SNOOZE, DEFAULT_SNOOZE);
     }
 
     private Options() {
@@ -81,16 +101,32 @@ public class Options {
         return property;
     }
 
+    private static SimpleIntegerProperty createIntegerProperty(final String name, final int defaultValue) {
+        final SimpleIntegerProperty property = new SimpleIntegerProperty(null, name, p.getInt(name, defaultValue));
+        property.addListener(integerChangeListener);
+
+        return property;
+    }
+
     /**
-     * Returns the availability of sortable registers
+     * Returns transaction deletion confirmation
      *
      * @return true if confirm on transaction delete is enabled, false otherwise
      */
-    public static BooleanProperty getConfirmTransactionDeleteEnabled() {
-        return confirmTransactionDelete;
+    public static BooleanProperty confirmOnTransactionDeleteProperty() {
+        return confirmDeleteTransaction;
     }
 
-    public static BooleanProperty getAccountingTermsEnabled() {
+    /**
+     * Returns reminder deletion confirmation
+     *
+     * @return true if confirm on reminder delete is enabled, false otherwise
+     */
+    public static BooleanProperty confirmOnDeleteReminderProperty() {
+        return confirmDeleteReminder;
+    }
+
+    public static BooleanProperty useAccountingTermsProperty() {
         return useAccountingTerms;
     }
 
@@ -100,7 +136,7 @@ public class Options {
      *
      * @return true if the last date should be reused
      */
-    public static BooleanProperty getRememberLastDate() {
+    public static BooleanProperty rememberLastDateProperty() {
         return rememberDate;
     }
 
@@ -109,7 +145,7 @@ public class Options {
      *
      * @return {@code BooleanProperty} controlling enabled state
      */
-    public static BooleanProperty getAutoCompleteEnabled() {
+    public static BooleanProperty useAutoCompleteProperty() {
         return autoCompleteEnabled;
     }
 
@@ -118,7 +154,7 @@ public class Options {
      *
      * @return {@code BooleanProperty} controlling case sensitivity
      */
-    public static BooleanProperty getAutoCompleteIgnoreCaseEnabled() {
+    public static BooleanProperty ignoreCaseForAutoCompleteProperty() {
         return autoCompleteIgnoreCaseEnabled;
     }
 
@@ -126,7 +162,16 @@ public class Options {
      *
      * @return {@code BooleanProperty} controlling fuzzy match
      */
-    public static BooleanProperty getAutoCompleteFuzzyMatchEnabled() {
+    public static BooleanProperty useFuzzyMatchForAutoCompleteProperty() {
         return autoCompleteFuzzyMatchEnabled;
+    }
+
+    /**
+     * Provides access to the property controlling the snooze time between reminder events
+     *
+     * @return {@code IntegerProperty} controlling snooze time. Period is in milliseconds
+     */
+    public static IntegerProperty reminderSnoozePeriodProperty() {
+        return reminderSnoozePeriod;
     }
 }

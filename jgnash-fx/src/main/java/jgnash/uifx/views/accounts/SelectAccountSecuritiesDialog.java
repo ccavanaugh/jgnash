@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -53,7 +54,7 @@ import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import org.controlsfx.glyphfont.FontAwesome;
 
@@ -65,7 +66,7 @@ import org.controlsfx.glyphfont.FontAwesome;
  */
 public class SelectAccountSecuritiesDialog {
 
-    private final Resource resources = Resource.get();
+    private final ResourceBundle resources = ResourceUtils.getBundle();
 
     private Button moveToTarget;
     private Button moveToSource;
@@ -338,6 +339,8 @@ public class SelectAccountSecuritiesDialog {
                 }
 
                 setText(item.toString());
+            } else {
+                setText("");
             }
         }
     }

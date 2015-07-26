@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -49,7 +50,7 @@ import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -77,7 +78,7 @@ public class PayeePieChart {
 
     private static final Pattern POUND_DELIMITER_PATTERN = Pattern.compile("#");
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final Preferences pref = Preferences.userNodeForPackage(PayeePieChart.class);
 
@@ -112,13 +113,10 @@ public class PayeePieChart {
     public static void show() {
 
         EventQueue.invokeLater(() -> {
-
-            Resource rb1 = Resource.get();
-
             PayeePieChart chart = new PayeePieChart();
 
             JPanel p = chart.createPanel();
-            GenericCloseDialog d = new GenericCloseDialog(p, rb1.getString("Title.AccountBalance"));
+            GenericCloseDialog d = new GenericCloseDialog(p, ResourceUtils.getString("Title.AccountBalance"));
             d.pack();
 
             d.setMinimumSize(d.getSize());

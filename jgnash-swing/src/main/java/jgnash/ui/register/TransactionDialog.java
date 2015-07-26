@@ -17,12 +17,9 @@
  */
 package jgnash.ui.register;
 
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.event.WindowEvent;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -34,11 +31,14 @@ import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.ReconcileManager;
-import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
+
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * A Dialog for creating and editing new transactions
@@ -47,7 +47,7 @@ import jgnash.util.Resource;
  */
 public class TransactionDialog extends JDialog implements RegisterListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final Account account;
 
@@ -185,7 +185,7 @@ public class TransactionDialog extends JDialog implements RegisterListener {
             if (validateForm()) {
                 t = buildTransaction();
 
-                ReconcileManager.reconcileTransaction(getAccount(), t, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+                ReconcileManager.reconcileTransaction(getAccount(), t, getReconciledState());
 
                 fireOkAction();
             } else {

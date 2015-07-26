@@ -17,10 +17,12 @@
  */
 package jgnash.ui.components;
 
+import java.util.ResourceBundle;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * JComboBox intended for selecting predetermined periods of times
@@ -51,7 +53,7 @@ public class TimePeriodCombo extends JComboBox<String> {
 
     private static String[] getDescriptions() {
 
-        final Resource rb = Resource.get();
+        final ResourceBundle rb = ResourceUtils.getBundle();
 
         return new String[]{rb.getString("Period.5Min"), rb.getString("Period.10Min"), rb.getString("Period.15Min"),
                 rb.getString("Period.30Min"), rb.getString("Period.1Hr"), rb.getString("Period.2Hr"),

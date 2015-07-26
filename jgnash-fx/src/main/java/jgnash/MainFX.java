@@ -17,10 +17,15 @@
  */
 package jgnash;
 
+import java.net.Authenticator;
+import java.util.prefs.Preferences;
+
 import javafx.application.Application;
 
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.net.NetworkAuthenticator;
 import jgnash.uifx.views.main.MainApplication;
+import jgnash.util.ResourceUtils;
 import jgnash.util.Version;
 
 /**
@@ -40,7 +45,27 @@ public class MainFX {
         // Register the default exception handler
         Thread.setDefaultUncaughtExceptionHandler(new StaticUIMethods.ExceptionHandler());
 
+        setupNetworking();
+
         // Boot the application
         Application.launch(MainApplication.class, args);
+    }
+
+    private static void setupNetworking() {
+        final Preferences auth = Preferences.userRoot().node(NetworkAuthenticator.NODEHTTP);
+
+        if (auth.getBoolean(NetworkAuthenticator.USEPROXY, false)) {
+
+            final String proxyHost = auth.get(NetworkAuthenticator.PROXYHOST, "");
+            final String proxyPort = auth.get(NetworkAuthenticator.PROXYPORT, "");
+
+            System.getProperties().put("http.proxyHost", proxyHost);
+            System.getProperties().put("http.proxyPort", proxyPort);
+
+            // this will deal with any authentication requests properly
+            Authenticator.setDefault(new NetworkAuthenticator());
+
+            System.out.println(ResourceUtils.getString("Message.Proxy") + proxyHost + ":" + proxyPort);
+        }
     }
 }

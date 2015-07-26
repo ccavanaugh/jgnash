@@ -34,7 +34,6 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jgnash.engine.DataStoreType;
 import jgnash.engine.EngineFactory;
 import jgnash.util.FileUtils;
@@ -125,7 +124,6 @@ public class SqlUtils {
         return fileVersion;
     }
 
-    @SuppressFBWarnings({"IIL_PREPARE_STATEMENT_IN_LOOP"})
     public static boolean checkAndFixHibernate_HHH_9389(final String fileName, final char[] password) {
         boolean result = true;  // return false only if an error occurs
 
@@ -192,7 +190,7 @@ public class SqlUtils {
                     final ResultSet resultSet = metaData.getColumns(null, null, "%", "%");
 
                     while (resultSet.next()) {
-                        tableNames.add(resultSet.getString(3) + "," + resultSet.getString(4));
+                        tableNames.add(resultSet.getString(3).toUpperCase() + "," + resultSet.getString(4).toUpperCase());
                     }
 
                     // must issue a shutdown for correct file closure

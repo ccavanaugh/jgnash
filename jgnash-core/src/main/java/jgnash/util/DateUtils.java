@@ -20,6 +20,12 @@ package jgnash.util;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -53,6 +59,29 @@ public class DateUtils {
 
     private static final Pattern DAY_PATTERN = Pattern.compile("d{1,2}");
 
+    private static final DateTimeFormatter shortDateTimeFormatter;
+
+    /**
+     * Pattern for a {@code java.time.format.DateTimeFormatter} to parse and format to the default.  DateTimeFormatter
+     * does not like use of the 'z' literal, so force the UTC zone which is the XStream default.
+     *
+     * {@code com.thoughtworks.xstream.converters.basic.DateConverter} format.
+     */
+    public static final String DEFAULT_XSTREAM_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS 'UTC'";
+
+    static {
+        final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+
+        if (df instanceof SimpleDateFormat) {
+            String pattern = ((SimpleDateFormat) df).toPattern();
+            pattern = DAY_PATTERN.matcher(MONTH_PATTERN.matcher(pattern).replaceAll("MM")).replaceAll("dd");
+
+            shortDateTimeFormatter =  DateTimeFormatter.ofPattern(pattern);
+        } else {
+            shortDateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
+        }
+    }
+
     /**
      * ThreadLocal for a {@code GregorianCalendar}
      */
@@ -83,6 +112,43 @@ public class DateUtils {
 
     private DateUtils() {
     }
+
+    /**
+     * Converts a {@code LocalDate} into a {@code Date} using the default timezone
+     * @param localDate {@code LocalDate} to convert
+     * @return an equivalent {@code Date}
+     */
+    public static Date asDate(final LocalDate localDate) {
+        return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
+     * Converts a {@code Date} into a {@code LocalDate} using the default timezone.
+     * @param date {@code Date} to convert
+     * @return an equivalent {@code LocalDate} or {@code null} if the supplied date was {@code null}
+     */
+    public static LocalDate asLocalDate(final Date date) {
+        if (date != null) {
+            return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+        }
+
+        return null;
+    }
+
+    /**
+     * Converts a {@code Date} into a {@code LocalDateTime} using the UTC timezone.
+     * @param date {@code Date} to convert
+     * @return an equivalent {@code LocalDateTime} or {@code null} if the supplied date was {@code null}
+     */
+    public static LocalDateTime asLocalDateTime(final Date date) {
+        if (date != null) {
+            return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.of("UTC")).toLocalDateTime();
+        }
+
+        return null;
+    }
+
+
 
     private static void updateMonthNames() {
         if (lastLocale != Locale.getDefault()) {
@@ -721,6 +787,10 @@ public class DateUtils {
      */
     public static DateFormat getShortDateFormat() {
         return shortDateFormatHolder.get();
+    }
+
+    public static DateTimeFormatter getShortDateTimeFormat() {
+        return shortDateTimeFormatter;
     }
 
     /**

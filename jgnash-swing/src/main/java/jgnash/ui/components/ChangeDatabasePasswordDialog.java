@@ -17,23 +17,12 @@
  */
 package jgnash.ui.components;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-import jgnash.engine.jpa.SqlUtils;
-import jgnash.ui.StaticUIMethods;
-import jgnash.ui.UIApplication;
-import jgnash.ui.actions.DatabasePathAction;
-import jgnash.ui.util.DialogUtils;
-import jgnash.ui.util.ValidationFactory;
-import jgnash.util.FileMagic;
-import jgnash.util.Resource;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Arrays;
+import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -42,6 +31,19 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import jgnash.engine.jpa.SqlUtils;
+import jgnash.ui.StaticUIMethods;
+import jgnash.ui.UIApplication;
+import jgnash.ui.actions.DatabasePathAction;
+import jgnash.ui.util.DialogUtils;
+import jgnash.ui.util.ValidationFactory;
+import jgnash.util.FileMagic;
+import jgnash.util.ResourceUtils;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
+
 /**
  * Dialog to change credentials of a database
  *
@@ -49,7 +51,7 @@ import javax.swing.JTextField;
  */
 public class ChangeDatabasePasswordDialog extends JDialog implements ActionListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final JTextField fileField = new JTextFieldEx();
     private final JButton fileButton = new JButton("...");

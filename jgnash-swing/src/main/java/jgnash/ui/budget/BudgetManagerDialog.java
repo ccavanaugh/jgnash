@@ -24,6 +24,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,8 +48,9 @@ import jgnash.ui.UIApplication;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.components.YesNoDialog;
 import jgnash.ui.util.DialogUtils;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.NotNull;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.ButtonStackBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -63,7 +65,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public final class BudgetManagerDialog extends JDialog implements ActionListener, MessageListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private JButton closeButton;
 
@@ -91,7 +93,7 @@ public final class BudgetManagerDialog extends JDialog implements ActionListener
     private BudgetManagerDialog() {
         super(UIApplication.getFrame(), true);
         setTitle(rb.getString("Title.BudgetManager"));
-        setIconImage(Resource.getImage("/jgnash/resource/gnome-money.png"));
+        setIconImage(IconUtils.getImage("/jgnash/resource/gnome-money.png"));
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         layoutMainPanel();

@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.prefs.Preferences;
@@ -48,8 +49,9 @@ import jgnash.ui.report.AbstractReportTableModel;
 import jgnash.ui.report.ColumnHeaderStyle;
 import jgnash.ui.report.ColumnStyle;
 import jgnash.ui.report.jasper.DynamicJasperReport;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -96,13 +98,13 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
         startDateField = new DatePanel();
         endDateField = new DatePanel();
 
-        hideZeroBalanceAccounts = new JCheckBox(Resource.get().getString("Button.HideZeroBalance"));
+        hideZeroBalanceAccounts = new JCheckBox(ResourceUtils.getString("Button.HideZeroBalance"));
         hideZeroBalanceAccounts.setSelected(p.getBoolean(HIDE_ZERO_BALANCE, true));
 
         startDateField.setDate(startDate);
 
         refreshButton = new JButton(rb.getString("Button.Refresh"),
-                Resource.getIcon("/jgnash/resource/view-refresh.png"));
+                IconUtils.getIcon("/jgnash/resource/view-refresh.png"));
 
         refreshButton.addActionListener(new AbstractAction() {
 
@@ -260,7 +262,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
         private final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
 
-        private final Resource rb = Resource.get();
+        private final ResourceBundle rb = ResourceUtils.getBundle();
 
         public ReportModel(final CurrencyNode currency) {
             this.baseCurrency = currency;

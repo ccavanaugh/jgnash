@@ -19,18 +19,19 @@ package jgnash.ui.wizards.imports.qif;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.util.ResourceBundle;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 
-import jgnash.engine.Account;
 import jgnash.convert.imports.qif.QifAccount;
 import jgnash.convert.imports.qif.QifTransaction;
+import jgnash.engine.Account;
 import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * @author Craig Cavanaugh
@@ -38,7 +39,7 @@ import jgnash.util.Resource;
  */
 class PartialTable extends FormattedJTable {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final QifAccount qAccount;
 

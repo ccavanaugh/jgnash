@@ -19,12 +19,12 @@ package jgnash.uifx.tasks;
 
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.util.ResourceUtils;
-
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 
 /**
  * Task to close a file while updating progress
@@ -37,10 +37,10 @@ public class CloseFileTask extends Task<String> {
 
     private static final int INDETERMINATE = -1;
 
-    public static void initiateClose() {
-        CloseFileTask closeFileTask = new CloseFileTask();
+    public static void initiateFileClose() {
+        final CloseFileTask closeFileTask = new CloseFileTask();
 
-        Thread thread = new Thread(closeFileTask);
+        final Thread thread = new Thread(closeFileTask);
         thread.setDaemon(true);
         thread.start();
 
@@ -48,10 +48,10 @@ public class CloseFileTask extends Task<String> {
     }
 
     public static void initiateShutdown() {
-        CloseFileTask closeFileTask = new CloseFileTask();
+        final CloseFileTask closeFileTask = new CloseFileTask();
         closeFileTask.setOnSucceeded(event -> Platform.exit());
 
-        Thread thread = new Thread(closeFileTask);
+        final Thread thread = new Thread(closeFileTask);
         thread.setDaemon(true);
         thread.start();
 
@@ -60,7 +60,7 @@ public class CloseFileTask extends Task<String> {
 
     @Override
     protected String call() throws Exception {
-        ResourceBundle resources = ResourceUtils.getBundle();
+        final ResourceBundle resources = ResourceUtils.getBundle();
 
         try {
             updateMessage(resources.getString("Message.SavingFile"));

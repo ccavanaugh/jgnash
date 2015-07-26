@@ -17,16 +17,17 @@
  */
 package jgnash.ui.report.compiled;
 
+import java.awt.event.ActionEvent;
+import java.math.BigDecimal;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
+
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
-import java.awt.event.ActionEvent;
-import java.math.BigDecimal;
-import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 
-import com.jgoodies.forms.factories.Borders;
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.AccountType;
@@ -38,12 +39,12 @@ import jgnash.ui.report.AbstractReportTableModel;
 import jgnash.ui.report.ColumnHeaderStyle;
 import jgnash.ui.report.ColumnStyle;
 import jgnash.ui.report.jasper.DynamicJasperReport;
-import jgnash.util.Resource;
+import jgnash.ui.util.IconUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.FormLayout;
 
-import java.util.logging.Level;
 import net.sf.jasperreports.engine.JasperPrint;
 
 /**
@@ -79,7 +80,7 @@ public class PortfolioReport extends DynamicJasperReport {
 
         accountCombo = AccountListComboBox.getInstanceByType(AccountType.getAccountTypes(AccountGroup.INVEST));
 
-        refreshButton = new JButton(rb.getString("Button.Refresh"), Resource.getIcon("/jgnash/resource/view-refresh.png"));
+        refreshButton = new JButton(rb.getString("Button.Refresh"), IconUtils.getIcon("/jgnash/resource/view-refresh.png"));
 
         refreshButton.addActionListener(new AbstractAction() {
 

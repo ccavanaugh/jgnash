@@ -24,6 +24,7 @@ import javax.swing.JTextField;
 
 import jgnash.engine.Account;
 import jgnash.engine.MathConstants;
+import jgnash.engine.ReconciledState;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.AccountSecurityComboBox;
 import jgnash.ui.components.AutoCompleteFactory;
@@ -59,7 +60,6 @@ public abstract class AbstractPriceQtyInvTransactionPanel extends AbstractInvTra
         memoField = AutoCompleteFactory.getMemoField();
         priceField = new JFloatField(0, MathConstants.SECURITY_PRICE_ACCURACY, account.getCurrencyNode().getScale());
         quantityField = new JFloatField(0, MathConstants.SECURITY_QUANTITY_ACCURACY, 2);
-        reconciledButton = new javax.swing.JCheckBox(rb.getString("Button.Cleared"));
         securityCombo = new AccountSecurityComboBox(account);
 
         totalField = new JFloatField(account.getCurrencyNode());
@@ -81,7 +81,7 @@ public abstract class AbstractPriceQtyInvTransactionPanel extends AbstractInvTra
         memoField.setText(null);
         priceField.setDecimal(null);
         quantityField.setDecimal(null);
-        reconciledButton.setSelected(false);
+        setReconciledState(ReconciledState.NOT_RECONCILED);
         totalField.setDecimal(null);
     }
 

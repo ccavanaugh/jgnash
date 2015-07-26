@@ -21,6 +21,7 @@ import java.awt.EventQueue;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -34,7 +35,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.ui.register.AccountBalanceDisplayManager;
 import jgnash.util.BigDecimalCache;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * By default, the transactions are returned in the natural order of the account.
@@ -48,7 +49,7 @@ import jgnash.util.Resource;
  */
 public abstract class AbstractRegisterTableModel extends AbstractTableModel implements MessageListener, AccountTableModel, PackableTableModel {
 
-    static final Resource rb = Resource.get();
+    final ResourceBundle rb = ResourceUtils.getBundle();
 
     Account account;
 

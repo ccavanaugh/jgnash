@@ -20,6 +20,7 @@ package jgnash.ui.actions;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -33,21 +34,21 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.Transaction;
 import jgnash.convert.imports.qif.NoAccountException;
 import jgnash.convert.imports.qif.QifImport;
 import jgnash.convert.imports.qif.QifUtils;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.Transaction;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.MultiLineLabel;
 import jgnash.ui.components.YesNoDialog;
 import jgnash.ui.util.DialogUtils;
-import jgnash.ui.util.TextResource;
 import jgnash.ui.util.builder.Action;
 import jgnash.ui.wizards.imports.qif.PartialDialog;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
+import jgnash.util.TextResource;
 
 /**
  * @author Craig Cavanaugh
@@ -64,7 +65,7 @@ public class ImportQifAction extends AbstractEnabledAction {
     }
 
     private static void importQif() {
-        final Resource rb = Resource.get();
+        final ResourceBundle rb = ResourceUtils.getBundle();
 
         final Preferences pref = Preferences.userNodeForPackage(ImportQifAction.class);
 
@@ -168,7 +169,7 @@ public class ImportQifAction extends AbstractEnabledAction {
 
         String dateFormat = null;
 
-        Resource rb = Resource.get();
+        ResourceBundle rb = ResourceUtils.getBundle();
         Preferences pref = Preferences.userNodeForPackage(ImportQifAction.class);
 
         /* Create the combo for date format selection */

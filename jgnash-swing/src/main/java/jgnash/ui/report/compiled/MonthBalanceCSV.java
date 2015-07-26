@@ -27,9 +27,6 @@
 
 package jgnash.ui.report.compiled;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,7 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -58,7 +55,10 @@ import jgnash.engine.EngineFactory;
 import jgnash.ui.components.DatePanel;
 import jgnash.ui.register.AccountBalanceDisplayManager;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Export monthly balance information as a CSV (comma-separated variable) file
@@ -76,7 +76,7 @@ public final class MonthBalanceCSV {
 
     private final SimpleDateFormat df = new SimpleDateFormat("MMMMM");
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private boolean vertical = true;
 

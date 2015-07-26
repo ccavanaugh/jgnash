@@ -17,14 +17,11 @@
  */
 package jgnash.ui.components;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.util.ResourceBundle;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -34,17 +31,20 @@ import javax.swing.JLabel;
 import javax.swing.UIManager;
 
 import jgnash.ui.StaticUIMethods;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * A simple yes/no dialog.  A substitute for JOption pane that improves
  * locale support and creates a more consistent user interface
  *
  * @author Craig Cavanaugh
- *
  */
 public class YesNoDialog extends JDialog implements ActionListener {
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private JButton noButton;
 

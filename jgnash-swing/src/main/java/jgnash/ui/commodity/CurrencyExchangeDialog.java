@@ -30,6 +30,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -68,8 +69,9 @@ import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.util.DialogUtils;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -87,7 +89,7 @@ import com.jgoodies.forms.layout.RowSpec;
  */
 public class CurrencyExchangeDialog extends JDialog implements MessageListener, ActionListener, ListSelectionListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private CurrencyComboBox baseCurrencyCombo;
 
@@ -95,7 +97,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
 
     private Future<Void> updateFuture;
 
-    private final JFloatField rateField = new JFloatField(0, 6, 2);
+    private final JFloatField rateField = new JFloatField(0, MathConstants.EXCHANGE_RATE_ACCURACY, MathConstants.EXCHANGE_RATE_ACCURACY);
 
     private JButton updateButton;
 
@@ -179,10 +181,10 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
 
         addButton = new JButton(rb.getString("Button.Add"));
         updateButton = new JButton(rb.getString("Button.UpdateOnline"));
-        updateButton.setIcon(Resource.getIcon("/jgnash/resource/applications-internet.png"));
+        updateButton.setIcon(IconUtils.getIcon("/jgnash/resource/applications-internet.png"));
         progressBar = new JProgressBar();
         stopButton = new JButton(rb.getString("Button.Stop"));
-        stopButton.setIcon(Resource.getIcon("/jgnash/resource/process-stop.png"));
+        stopButton.setIcon(IconUtils.getIcon("/jgnash/resource/process-stop.png"));
         stopButton.setEnabled(false);
 
         addButton.addActionListener(this);
@@ -217,7 +219,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(new ButtonBarBuilder().addGlue().addButton(clearButton).build());
+        builder.append(new ButtonBarBuilder().addGlue().addButton(closeButton).build());
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
 
@@ -466,8 +468,8 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
             decimalFormat = NumberFormat.getInstance();
 
             if (decimalFormat instanceof DecimalFormat) {
-                decimalFormat.setMinimumFractionDigits(6);
-                decimalFormat.setMaximumFractionDigits(6);
+                decimalFormat.setMinimumFractionDigits(MathConstants.EXCHANGE_RATE_ACCURACY);
+                decimalFormat.setMaximumFractionDigits(MathConstants.EXCHANGE_RATE_ACCURACY);
             }
         }
 

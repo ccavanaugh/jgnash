@@ -18,18 +18,10 @@
 package jgnash.ui.wizards.file;
 
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import javax.swing.DefaultListModel;
@@ -47,10 +39,9 @@ import jgnash.engine.AccountTreeXMLFactory;
 import jgnash.engine.RootAccount;
 import jgnash.ui.components.CheckListCellRenderer;
 import jgnash.ui.components.wizard.WizardPage;
-import jgnash.ui.util.TextResource;
 import jgnash.ui.util.ToggleSelectionModel;
-import jgnash.util.ClassPathUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
+import jgnash.util.TextResource;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -61,9 +52,7 @@ import com.jgoodies.forms.layout.RowSpec;
  */
 public class NewFileFour extends JPanel implements WizardPage {
 
-    private final Resource rb = Resource.get();
-
-    private static final String ROOTPATH = "/jgnash/resource/account";
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private JList<Account> accountList;
 
@@ -79,12 +68,11 @@ public class NewFileFour extends JPanel implements WizardPage {
 
         DefaultListModel<Account> model = new DefaultListModel<>();
 
-        getLocalizedAccountSet().forEach(model::addElement);
+        AccountTreeXMLFactory.getLocalizedAccountSet().forEach(model::addElement);
 
         accountList.setModel(model);
         accountList.setSelectionModel(new ToggleSelectionModel());
         accountList.setCellRenderer(new CheckListCellRenderer<>(accountList.getCellRenderer()));
-
     }
 
     private void layoutMainPanel() {
@@ -184,44 +172,6 @@ public class NewFileFour extends JPanel implements WizardPage {
                 .collect(Collectors.toList());
 
         map.put(NewFileDialog.Settings.ACCOUNT_SET, accounts);
-    }
-
-    private static Collection<RootAccount> getLocalizedAccountSet() {
-        List<RootAccount> files = new ArrayList<>();
-
-        for (String string : getAccountSetList()) {
-
-            try (InputStream stream = Object.class.getResourceAsStream(string)) {
-                RootAccount account = AccountTreeXMLFactory.loadAccountTree(stream);
-                files.add(account);
-            } catch (IOException e) {
-                Logger.getLogger(NewFileFour.class.getName()).log(Level.SEVERE, null, e);
-            }
-        }
-
-        return files;
-    }
-
-    private static List<String> getAccountSetList() {
-        String path = ClassPathUtils.getLocalizedPath(ROOTPATH);
-
-        List<String> set = new ArrayList<>();
-
-        if (path != null) {
-            try (InputStream stream = Object.class.getResourceAsStream(path + "/set.txt");
-                 BufferedReader r = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
-
-                String line = r.readLine();
-
-                while (line != null) {
-                    set.add(path + "/" + line);
-                    line = r.readLine();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(NewFileFour.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        return set;
     }
 
     private static final class AccountModel extends DefaultTreeModel {

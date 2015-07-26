@@ -81,6 +81,8 @@ public class AccountExchangePane extends GridPane {
 
     final private SimpleBooleanProperty amountEditableProperty = new SimpleBooleanProperty();
 
+    final private ObjectProperty<Account> selectedAccountProperty = new SimpleObjectProperty<>();
+
     /**
      * Determines if the base account will be visible for selection
      */
@@ -141,6 +143,8 @@ public class AccountExchangePane extends GridPane {
                 updateControlVisibility();
             }
         });
+
+        selectedAccountProperty().bindBidirectional(accountCombo.valueProperty());
 
         expandButton.setOnAction(event -> handleExpandButton());
 
@@ -254,6 +258,10 @@ public class AccountExchangePane extends GridPane {
 
     public ObjectProperty<Account> baseAccountProperty() {
         return baseAccountProperty;
+    }
+
+    public ObjectProperty<Account> selectedAccountProperty() {
+        return selectedAccountProperty;
     }
 
     @SuppressWarnings("WeakerAccess")

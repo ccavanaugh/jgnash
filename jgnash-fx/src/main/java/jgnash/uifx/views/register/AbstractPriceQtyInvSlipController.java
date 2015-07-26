@@ -92,7 +92,7 @@ public abstract class AbstractPriceQtyInvSlipController extends AbstractInvSlipC
     public void clearForm() {
         super.clearForm();
 
-        if (!Options.getRememberLastDate().get()) {
+        if (!Options.rememberLastDateProperty().get()) {
             datePicker.setValue(LocalDate.now());
         }
 

@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
@@ -64,6 +65,7 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageProperty;
+import jgnash.engine.recurring.MonthlyReminder;
 import jgnash.engine.recurring.PendingReminder;
 import jgnash.engine.recurring.RecurringIterator;
 import jgnash.engine.recurring.Reminder;
@@ -73,7 +75,7 @@ import jgnash.util.DateUtils;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Engine class
@@ -107,7 +109,7 @@ public class Engine {
 
     private static final float EPSILON = .001f;
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final ReentrantReadWriteLock accountLock;
 
@@ -787,6 +789,9 @@ public class Engine {
         messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STARTED, this));
 
         engineLock.writeLock().lock();
+        commodityLock.writeLock().lock();
+        accountLock.writeLock().lock();
+        budgetLock.writeLock().lock();
 
         try {
             logger.info("Checking for trash");
@@ -807,10 +812,35 @@ public class Engine {
             trash.stream().filter(o -> now - o.getDate().getTime() >= MAXIMUM_TRASH_AGE)
                     .forEach(o -> getTrashDAO().remove(o));
         } finally {
+
+            budgetLock.writeLock().unlock();
+            accountLock.writeLock().unlock();
+            commodityLock.writeLock().unlock();
             engineLock.writeLock().unlock();
 
             messageBus.fireEvent(new Message(MessageChannel.SYSTEM, ChannelEvent.BACKGROUND_PROCESS_STOPPED, this));
         }
+    }
+
+    /**
+     * Creates a default reminder given a transaction and the primary account.  The Reminder will need to persisted.
+     * @param transaction Transaction for the reminder.  The transaction wil be cloned
+     * @param account primary account
+     * @return new default {@code MonthlyReminder}
+     */
+    public Reminder createDefaultReminder(final Transaction transaction, final Account account) {
+        final Reminder reminder = new MonthlyReminder();
+
+        try {
+            reminder.setAccount(account);
+            reminder.setStartDate(DateUtils.addMonth(transaction.getDate()));
+            reminder.setTransaction((Transaction) transaction.clone());
+            reminder.setDescription(transaction.getPayee());
+            reminder.setNotes(transaction.getMemo());
+        }  catch (final CloneNotSupportedException e) {
+            logSevere(e.getLocalizedMessage());
+        }
+        return reminder;
     }
 
     public boolean addReminder(final Reminder reminder) {
@@ -892,6 +922,25 @@ public class Engine {
         }
 
         return pendingList;
+    }
+
+    public void processPendingReminders(final Collection<PendingReminder> pendingReminders) {
+        pendingReminders.stream().filter(PendingReminder::isApproved).forEach(pending -> {
+            final Reminder reminder = pending.getReminder();
+
+            if (reminder.getTransaction() != null) { // add the transaction
+                final Transaction t = reminder.getTransaction();
+
+                // Update to the commit date (commit date can be modified)
+                t.setDate(DateUtils.asDate(pending.getCommitDate()));
+                addTransaction(t);
+            }
+            // update the last fired date... date returned from the iterator
+            reminder.setLastDate(); // mark as complete
+            if (!updateReminder(reminder)) {
+                logSevere(rb.getString("Message.Error.ReminderUpdate"));
+            }
+        });
     }
 
     public <T extends StoredObject> T getStoredObjectByUuid(final Class<T> tClass, final String uuid) {
@@ -1075,18 +1124,17 @@ public class Engine {
      * @return <tt>true</tt> if successful
      */
     public boolean addSecurityHistory(@NotNull final SecurityNode node, @NotNull final SecurityHistoryNode hNode) {
-
-        // Remove old history of the same date if it exists
-        if (node.contains(hNode.getDate())) {
-            if (!removeSecurityHistory(node, hNode.getDate())) {
-                logSevere(rb.getString("Message.Error.HistRemoval", hNode.getDate(), node.getSymbol()));
-                return false;
-            }
-        }
-
         commodityLock.writeLock().lock();
 
         try {
+            // Remove old history of the same date if it exists
+            if (node.contains(hNode.getDate())) {
+                if (!removeSecurityHistory(node, hNode.getDate())) {
+                    logSevere(ResourceUtils.getString("Message.Error.HistRemoval", hNode.getDate(), node.getSymbol()));
+                    return false;
+                }
+            }
+
             boolean status = node.addHistoryNode(hNode);
 
             if (status) {
@@ -1117,7 +1165,7 @@ public class Engine {
      * @param node security node
      * @return list of investment accounts
      */
-    Set<Account> getInvestmentAccountList(final SecurityNode node) {
+    private Set<Account> getInvestmentAccountList(final SecurityNode node) {
         return getInvestmentAccountList().parallelStream()
                 .filter(account -> account.containsSecurity(node)).collect(Collectors.toSet());
     }
@@ -1153,18 +1201,18 @@ public class Engine {
         }
     }
 
-    CurrencyNode[] getBaseCurrencies(final String exchangeRateId) {
+    private CurrencyNode[] getBaseCurrencies(final String exchangeRateId) {
 
         commodityLock.readLock().lock();
 
         try {
-            List<CurrencyNode> currencies = getCurrencies();
+            final List<CurrencyNode> currencies = getCurrencies();
 
             Collections.sort(currencies);
             Collections.reverse(currencies);
 
-            for (CurrencyNode node1 : currencies) {
-                for (CurrencyNode node2 : currencies) {
+            for (final CurrencyNode node1 : currencies) {
+                for (final CurrencyNode node2 : currencies) {
                     if (node1 != node2 && buildExchangeRateId(node1, node2).equals(exchangeRateId)) {
                         return new CurrencyNode[]{node1, node2};
                     }
@@ -1259,7 +1307,7 @@ public class Engine {
         return getCommodityDAO().getExchangeRateByUuid(uuid);
     }
 
-    public List<SecurityNode> getSecurities() {
+    @NotNull public List<SecurityNode> getSecurities() {
 
         commodityLock.readLock().lock();
 
@@ -1379,11 +1427,13 @@ public class Engine {
             } else {
                 // Remove all history nodes first so they are not left behind
 
-                List<SecurityHistoryNode> hNodes = node.getHistoryNodes();
+                // A copy is made to prevent a concurrent modification error to the underlying list, Bug #208
+                final List<SecurityHistoryNode> hNodes = new ArrayList<>(node.getHistoryNodes());
 
                 hNodes.stream()
                         .filter(hNode -> !removeSecurityHistory(node, hNode.getDate()))
-                        .forEach(hNode -> logSevere(rb.getString("Message.Error.HistRemoval", hNode.getDate(), node.getSymbol())));
+                        .forEach(hNode -> logSevere(ResourceUtils.getString("Message.Error.HistRemoval",
+                                hNode.getDate(), node.getSymbol())));
                 moveObjectToTrash(node);
             }
 
@@ -1676,7 +1726,7 @@ public class Engine {
         }
     }
 
-    public boolean updateReminder(final Reminder reminder) {
+    private boolean updateReminder(final Reminder reminder) {
         return getReminderDAO().updateReminder(reminder);
     }
 
@@ -2315,7 +2365,8 @@ public class Engine {
                 for (SecurityNode node : oldList) {
                     if (!list.contains(node)) {
                         if (!removeAccountSecurity(acc, node)) {
-                            logWarning(rb.getString("Message.Error.SecurityAccountRemove", node.toString(), acc.getName()));
+                            logWarning(ResourceUtils.getString("Message.Error.SecurityAccountRemove", node.toString(),
+                                    acc.getName()));
                             result = false;
                         }
                     }
@@ -2324,7 +2375,8 @@ public class Engine {
                 for (SecurityNode node : list) {
                     if (!oldList.contains(node)) {
                         if (!addAccountSecurity(acc, node)) {
-                            logWarning(rb.getString("Message.Error.SecurityAccountRemove", node.toString(), acc.getName()));
+                            logWarning(ResourceUtils.getString("Message.Error.SecurityAccountRemove", node.toString(),
+                                    acc.getName()));
                             result = false;
                         }
                     }

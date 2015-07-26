@@ -70,7 +70,7 @@ See the integrated help for command line options.
 
 To build jGnash you'll need the following software installed on your system:
 
-1. [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/index.html) or later.
+1. [JDK 8u45](http://www.oracle.com/technetwork/java/javase/downloads/index.html) or later.
 1. [Apache Ant](http://ant.apache.org) 1.7.0 or later
 1. [Apache Maven](http://maven.apache.org) 3.0 or later
 
@@ -86,3 +86,9 @@ To create the distribution zip file, return to the main directory (```cd ..```) 
 
 The distribution zip file will be produced at ```jgnash-swing/target/jgnash-```_version_```-bin.zip```.
 
+## Building the jgnash-fx module:
+
+[JDK 8u60ea](https://jdk8.java.net/download.html) or later is needed.  The 8u60ea release address several
+JavaFX bugs and the jgnash-fx module uses recent u60 API changes as well.
+
+The jgnash-fx module will break on Java 9 development releases.

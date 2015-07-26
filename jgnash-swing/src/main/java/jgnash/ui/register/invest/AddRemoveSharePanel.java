@@ -17,9 +17,6 @@
  */
 package jgnash.ui.register.invest;
 
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -29,11 +26,13 @@ import javax.swing.JPanel;
 
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.ui.util.ValidationFactory;
+
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Form for creating Add/Remove share transactions.
@@ -95,7 +94,7 @@ public final class AddRemoveSharePanel extends AbstractPriceQtyInvTransactionPan
 
         add("Label.Memo", cc.xy(1, 5));
         add(memoField, cc.xy(3, 5));
-        add(reconciledButton, cc.xyw(5, 5, 3));
+        add(getReconcileCheckBox(), cc.xyw(5, 5, 3));
     }
 
     @Override
@@ -124,7 +123,7 @@ public final class AddRemoveSharePanel extends AbstractPriceQtyInvTransactionPan
         quantityField.setDecimal(_tran.getQuantity());
         securityCombo.setSelectedNode(_tran.getSecurityNode());
 
-        reconciledButton.setSelected(tran.getReconciled(getAccount()) != ReconciledState.NOT_RECONCILED);
+        setReconciledState(tran.getReconciled(getAccount()));
 
         updateTotalField();
     }

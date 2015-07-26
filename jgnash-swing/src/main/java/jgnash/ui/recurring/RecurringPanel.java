@@ -29,6 +29,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,7 +63,8 @@ import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.components.RollOverButton;
 import jgnash.ui.components.YesNoDialog;
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.Resource;
+import jgnash.ui.util.IconUtils;
+import jgnash.util.ResourceUtils;
 
 /**
  * A Panel that displays a list of reminders. This panel will listen for recurring events fired by the engine as well.
@@ -76,7 +78,7 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
 
     private static final int START_UP_DELAY = 2 * 60 * 1000;
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private JButton deleteButton;
 
@@ -147,8 +149,10 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
     public static void showDialog(final Frame parent) {
 
         EventQueue.invokeLater(() -> {
-            Resource rb1 = Resource.get();
-            GenericCloseDialog d = new GenericCloseDialog(parent, new RecurringPanel(), rb1.getString("Title.Reminders"));
+
+            final GenericCloseDialog d = new GenericCloseDialog(parent, new RecurringPanel(),
+                    ResourceUtils.getString("Title.Reminders"));
+
             d.pack();
             d.setMinimumSize(d.getSize());
             DialogUtils.addBoundsListener(d, "panelbounds");
@@ -164,11 +168,11 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
         toolBar.setFloatable(false);
         toolBar.setRollover(true);
 
-        newButton = new RollOverButton(rb.getString("Button.New"), Resource.getIcon("/jgnash/resource/document-new.png"));
-        modifyButton = new RollOverButton(rb.getString("Button.Modify"), Resource.getIcon("/jgnash/resource/document-properties.png"));
-        deleteButton = new RollOverButton(rb.getString("Button.Delete"), Resource.getIcon("/jgnash/resource/edit-delete.png"));
+        newButton = new RollOverButton(rb.getString("Button.New"), IconUtils.getIcon("/jgnash/resource/document-new.png"));
+        modifyButton = new RollOverButton(rb.getString("Button.Modify"), IconUtils.getIcon("/jgnash/resource/document-properties.png"));
+        deleteButton = new RollOverButton(rb.getString("Button.Delete"), IconUtils.getIcon("/jgnash/resource/edit-delete.png"));
 
-        remindersButton = new RollOverButton(rb.getString("Button.CheckReminders"), Resource.getIcon("/jgnash/resource/view-refresh.png"));
+        remindersButton = new RollOverButton(rb.getString("Button.CheckReminders"), IconUtils.getIcon("/jgnash/resource/view-refresh.png"));
 
         reminderTable = new FormattedJTable();
         reminderTable.setAutoCreateRowSorter(true);
@@ -277,7 +281,7 @@ public class RecurringPanel extends JPanel implements ActionListener, MessageLis
             Objects.requireNonNull(engine);
 
             if (!engine.addReminder(r)) {
-                final Resource rb = Resource.get();
+                final ResourceBundle rb = ResourceUtils.getBundle();
 
                 StaticUIMethods.displayError(rb.getString("Message.Error.ReminderAdd"));
             }

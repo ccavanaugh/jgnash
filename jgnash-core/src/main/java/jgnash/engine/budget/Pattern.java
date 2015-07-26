@@ -18,7 +18,7 @@
 
 package jgnash.engine.budget;
 
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Pattern Enum
@@ -27,12 +27,12 @@ import jgnash.util.Resource;
  */
 @SuppressWarnings("unused")
 public enum Pattern {
-    EveryRow(Resource.get().getString("Sequence.EveryRow")),
-    EveryOtherRow(Resource.get().getString("Sequence.EveryOtherRow")),
-    EverySecondRow(Resource.get().getString("Sequence.EverySecondRow")),
-    EveryThirdRow(Resource.get().getString("Sequence.EveryThirdRow")),
-    EveryForthRow(Resource.get().getString("Sequence.EveryForthRow")),
-    EveryFifthRow(Resource.get().getString("Sequence.EveryFifthRow"));
+    EveryRow(ResourceUtils.getString("Sequence.EveryRow")),
+    EveryOtherRow(ResourceUtils.getString("Sequence.EveryOtherRow")),
+    EverySecondRow(ResourceUtils.getString("Sequence.EverySecondRow")),
+    EveryThirdRow(ResourceUtils.getString("Sequence.EveryThirdRow")),
+    EveryForthRow(ResourceUtils.getString("Sequence.EveryForthRow")),
+    EveryFifthRow(ResourceUtils.getString("Sequence.EveryFifthRow"));
 
     private final transient String description;
 

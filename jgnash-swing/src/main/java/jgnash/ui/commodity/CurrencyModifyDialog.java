@@ -23,6 +23,7 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -50,7 +51,7 @@ import jgnash.ui.components.JIntegerField;
 import jgnash.ui.components.JTextFieldEx;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -64,7 +65,7 @@ import com.jgoodies.forms.layout.RowSpec;
  */
 public class CurrencyModifyDialog extends JDialog implements MessageListener, ListSelectionListener, ActionListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private SortedListModel<CurrencyNode> model;
 
@@ -222,7 +223,7 @@ public class CurrencyModifyDialog extends JDialog implements MessageListener, Li
         }
     }
 
-    void clearForm() {
+    private void clearForm() {
         sourceList.clearSelection();
         symbolField.setText(null);
         symbolField.setEnabled(true);
@@ -262,7 +263,7 @@ public class CurrencyModifyDialog extends JDialog implements MessageListener, Li
             CurrencyNode newNode = buildCommodityNode();
             if (getEngine().getCurrency(newNode.getSymbol()) != null && oldNode != null) {
                 if (!getEngine().updateCommodity(oldNode, newNode)) {
-                    StaticUIMethods.displayError(rb.getString("Message.Error.CurrencyUpdate", newNode.getSymbol()));
+                    StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.CurrencyUpdate", newNode.getSymbol()));
                 }
             } else {
                 getEngine().addCurrency(newNode);

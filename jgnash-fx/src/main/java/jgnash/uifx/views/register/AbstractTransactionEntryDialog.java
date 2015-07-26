@@ -45,7 +45,7 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-public abstract class AbstractTransactionEntryDialog extends Stage {
+abstract class AbstractTransactionEntryDialog extends Stage {
 
     private static final double[] PREF_COLUMN_WEIGHTS = {50, 50, 0, 0, 0, 0};
 

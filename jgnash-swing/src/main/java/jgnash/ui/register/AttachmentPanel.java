@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -47,7 +48,8 @@ import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.ImageDialog;
 import jgnash.ui.components.YesNoDialog;
-import jgnash.util.Resource;
+import jgnash.ui.util.IconUtils;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -63,14 +65,14 @@ class AttachmentPanel extends JPanel implements ActionListener {
     private final JButton viewAttachmentButton;
     private final JButton attachmentButton;
     private final JButton deleteButton;
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
     private Path attachment = null;
     private boolean moveAttachment = false;
 
     AttachmentPanel() {
-        attachmentButton = new JButton(Resource.getIcon("/jgnash/resource/mail-attachment.png"));
-        deleteButton = new JButton(Resource.getIcon("/jgnash/resource/edit-delete.png"));
-        viewAttachmentButton = new JButton(Resource.getIcon("/jgnash/resource/zoom-fit-best.png"));
+        attachmentButton = new JButton(IconUtils.getIcon("/jgnash/resource/mail-attachment.png"));
+        deleteButton = new JButton(IconUtils.getIcon("/jgnash/resource/edit-delete.png"));
+        viewAttachmentButton = new JButton(IconUtils.getIcon("/jgnash/resource/zoom-fit-best.png"));
 
         attachmentButton.setToolTipText(rb.getString("ToolTip.AddAttachment"));
         deleteButton.setToolTipText(rb.getString("ToolTip.DeleteAttachment"));
@@ -143,7 +145,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
                 } else {
                     transaction.setAttachment(null);
 
-                    final String message = rb.getString("Message.Error.TransferAttachment",
+                    final String message = ResourceUtils.getString("Message.Error.TransferAttachment",
                             attachment.getFileName().toString());
 
                     StaticUIMethods.displayError(message);
@@ -165,7 +167,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
         return engine.addAttachment(attachment, false);
     }
 
-    void attachmentAction() {
+    private void attachmentAction() {
         final Preferences pref = Preferences.userNodeForPackage(AbstractBankTransactionPanel.class);
         final String baseFile = EngineFactory.getActiveDatabase();
 
@@ -212,7 +214,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
                     moveAttachment = true;
                 } else if (attachmentDirectory != null && !attachmentDirectory.toString().equals(selectedFile.getParent())) {
 
-                    String message = rb.getString("Message.Warn.MoveFile", selectedFile.toString(),
+                    String message = ResourceUtils.getString("Message.Warn.MoveFile", selectedFile.toString(),
                             attachmentDirectory.toString());
 
                     result = YesNoDialog.showYesNoDialog(UIApplication.getFrame(), new JLabel(message), rb.getString("Title.MoveFile"));
@@ -224,7 +226,7 @@ class AttachmentPanel extends JPanel implements ActionListener {
                                 File.separator + selectedFile.getName()).toPath();
 
                         if (newPath.toFile().exists()) {
-                            message = rb.getString("Message.Warn.SameFile", selectedFile.toString(),
+                            message = ResourceUtils.getString("Message.Warn.SameFile", selectedFile.toString(),
                                     attachmentDirectory.toString());
 
                             StaticUIMethods.displayWarning(message);
@@ -241,17 +243,18 @@ class AttachmentPanel extends JPanel implements ActionListener {
         }
     }
 
-    void showImageAction() {
+    private void showImageAction() {
         if (attachment != null) {
             if (Files.exists(attachment)) {
                 ImageDialog.showImage(attachment.toFile());
             } else {
-                StaticUIMethods.displayError(rb.getString("Message.Error.MissingAttachment", attachment.toString()));
+                StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.MissingAttachment",
+                        attachment.toString()));
             }
         }
     }
 
-    final void updateControlStates() {
+    private void updateControlStates() {
         attachmentButton.setEnabled(attachment == null);
         deleteButton.setEnabled(attachment != null);
         viewAttachmentButton.setEnabled(attachment != null);

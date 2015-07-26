@@ -17,7 +17,7 @@
  */
 package jgnash.engine;
 
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Account Group class. Helps to categorize account types to make reporting easier and consistent.
@@ -26,14 +26,14 @@ import jgnash.util.Resource;
  */
 public enum AccountGroup {
 
-    ASSET(Resource.get().getString("AccountType.Asset")),
-    EQUITY(Resource.get().getString("AccountType.Equity")),
-    EXPENSE(Resource.get().getString("AccountType.Expense")),
-    INCOME(Resource.get().getString("AccountType.Income")),
-    INVEST(Resource.get().getString("AccountType.Investment")),
-    LIABILITY(Resource.get().getString("AccountType.Liability")),
-    ROOT(Resource.get().getString("AccountType.Root")),
-    SIMPLEINVEST(Resource.get().getString("AccountType.SimpleInvestment")); // CD's, Treasuries, Etc.
+    ASSET(ResourceUtils.getString("AccountType.Asset")),
+    EQUITY(ResourceUtils.getString("AccountType.Equity")),
+    EXPENSE(ResourceUtils.getString("AccountType.Expense")),
+    INCOME(ResourceUtils.getString("AccountType.Income")),
+    INVEST(ResourceUtils.getString("AccountType.Investment")),
+    LIABILITY(ResourceUtils.getString("AccountType.Liability")),
+    ROOT(ResourceUtils.getString("AccountType.Root")),
+    SIMPLEINVEST(ResourceUtils.getString("AccountType.SimpleInvestment")); // CD's, Treasuries, Etc.
 
     private final transient String description;
 

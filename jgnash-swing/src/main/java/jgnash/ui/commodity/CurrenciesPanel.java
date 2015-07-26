@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.swing.JButton;
@@ -41,9 +42,10 @@ import jgnash.engine.EngineFactory;
 import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.util.DialogUtils;
+import jgnash.ui.util.IconUtils;
 import jgnash.ui.util.ValidationFactory;
 import jgnash.util.NotNull;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -55,7 +57,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class CurrenciesPanel extends JPanel implements ActionListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private SortedListModel<CurrencyNode> aList;
 
@@ -76,7 +78,7 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
     private final Engine engine;
 
     public static void showDialog(final JFrame parent) {
-        final Resource rb = Resource.get();
+        final ResourceBundle rb = ResourceUtils.getBundle();
 
         EventQueue.invokeLater(() -> {
             GenericCloseDialog d = new GenericCloseDialog(parent, new CurrenciesPanel(), rb.getString("Title.AddRemCurr"));
@@ -97,11 +99,11 @@ public class CurrenciesPanel extends JPanel implements ActionListener {
 
     private void initComponents() {
         addButton = new JButton(rb.getString("Button.Add"));
-        addButton.setIcon(Resource.getIcon("/jgnash/resource/list-add.png"));
+        addButton.setIcon(IconUtils.getIcon("/jgnash/resource/list-add.png"));
         addButton.setHorizontalTextPosition(SwingConstants.LEADING);
 
         removeButton = new JButton(rb.getString("Button.Remove"));
-        removeButton.setIcon(Resource.getIcon("/jgnash/resource/list-remove.png"));
+        removeButton.setIcon(IconUtils.getIcon("/jgnash/resource/list-remove.png"));
 
         customButton = new JButton(rb.getString("Button.Add"));
         customField = new JTextField();
