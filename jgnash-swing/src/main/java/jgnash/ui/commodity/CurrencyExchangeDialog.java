@@ -468,8 +468,8 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
             decimalFormat = NumberFormat.getInstance();
 
             if (decimalFormat instanceof DecimalFormat) {
-                decimalFormat.setMinimumFractionDigits(6);
-                decimalFormat.setMaximumFractionDigits(6);
+                decimalFormat.setMinimumFractionDigits(MathConstants.EXCHANGE_RATE_ACCURACY);
+                decimalFormat.setMaximumFractionDigits(MathConstants.EXCHANGE_RATE_ACCURACY);
             }
         }
 
