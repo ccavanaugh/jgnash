@@ -66,6 +66,7 @@ import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.control.LocalDateAxis;
+import jgnash.uifx.control.NumberFormatTableCell;
 import jgnash.uifx.control.SecurityComboBox;
 import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.util.InjectFXML;
@@ -163,17 +164,17 @@ public class SecurityHistoryController implements MessageListener {
 
         final TableColumn<SecurityHistoryNode, BigDecimal> closeColumn = new TableColumn<>(resources.getString("Column.Close"));
         closeColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getPrice()));
-        closeColumn.setCellFactory(cell -> new BigDecimalFormatTableCell());
+        closeColumn.setCellFactory(cell -> new NumberFormatTableCell<>(numberFormatProperty));
         tableView.getColumns().add(closeColumn);
 
         final TableColumn<SecurityHistoryNode, BigDecimal> lowColumn = new TableColumn<>(resources.getString("Column.Low"));
         lowColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLow()));
-        lowColumn.setCellFactory(cell -> new BigDecimalFormatTableCell());
+        lowColumn.setCellFactory(cell -> new NumberFormatTableCell<>(numberFormatProperty));
         tableView.getColumns().add(lowColumn);
 
         final TableColumn<SecurityHistoryNode, BigDecimal> highColumn = new TableColumn<>(resources.getString("Column.High"));
         highColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getHigh()));
-        highColumn.setCellFactory(cell -> new BigDecimalFormatTableCell());
+        highColumn.setCellFactory(cell -> new NumberFormatTableCell<>(numberFormatProperty));
         tableView.getColumns().add(highColumn);
 
         final TableColumn<SecurityHistoryNode, Long> volumeColumn = new TableColumn<>(resources.getString("Column.Volume"));
@@ -323,24 +324,6 @@ public class SecurityHistoryController implements MessageListener {
                     Platform.runLater(this::loadChart);
                     break;
                 default:
-            }
-        }
-    }
-
-    private class BigDecimalFormatTableCell extends TableCell<SecurityHistoryNode, BigDecimal> {
-
-        public BigDecimalFormatTableCell() {
-            setStyle("-fx-alignment: center-right;");  // Right align
-        }
-
-        @Override
-        protected void updateItem(final BigDecimal amount, final boolean empty) {
-            super.updateItem(amount, empty);  // required
-
-            if (!empty && amount != null) {
-                setText(numberFormatProperty.get().format(amount));
-            } else {
-                setText(null);
             }
         }
     }
