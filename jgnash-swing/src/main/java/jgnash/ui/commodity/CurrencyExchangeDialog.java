@@ -219,7 +219,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
         builder.nextLine();
         builder.appendUnrelatedComponentsGapRow();
         builder.nextLine();
-        builder.append(new ButtonBarBuilder().addGlue().addButton(clearButton).build());
+        builder.append(new ButtonBarBuilder().addGlue().addButton(closeButton).build());
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
 
