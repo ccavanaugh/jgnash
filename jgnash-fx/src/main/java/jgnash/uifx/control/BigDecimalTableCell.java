@@ -29,16 +29,16 @@ import javafx.scene.control.TableCell;
  *
  * @author Craig Cavanaugh
  */
-public class NumberFormatTableCell<S> extends TableCell<S, BigDecimal> {
+public class BigDecimalTableCell<S> extends TableCell<S, BigDecimal> {
 
     private final SimpleObjectProperty<NumberFormat> numberFormatProperty = new SimpleObjectProperty<>();
 
-    public NumberFormatTableCell(final ObjectProperty<NumberFormat> numberFormatProperty) {
+    public BigDecimalTableCell(final ObjectProperty<NumberFormat> numberFormatProperty) {
         setStyle("-fx-alignment: center-right;");  // Right align
         numberFormatProperty().bind(numberFormatProperty);
     }
 
-    public NumberFormatTableCell(final NumberFormat numberFormat) {
+    public BigDecimalTableCell(final NumberFormat numberFormat) {
         setStyle("-fx-alignment: center-right;");  // Right align
         numberFormatProperty().setValue(numberFormat);
     }

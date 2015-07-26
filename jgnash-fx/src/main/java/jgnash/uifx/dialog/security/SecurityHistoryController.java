@@ -62,11 +62,11 @@ import jgnash.engine.message.MessageProperty;
 import jgnash.net.security.UpdateFactory;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.control.LocalDateAxis;
-import jgnash.uifx.control.NumberFormatTableCell;
 import jgnash.uifx.control.SecurityComboBox;
 import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.util.InjectFXML;
@@ -164,17 +164,17 @@ public class SecurityHistoryController implements MessageListener {
 
         final TableColumn<SecurityHistoryNode, BigDecimal> closeColumn = new TableColumn<>(resources.getString("Column.Close"));
         closeColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getPrice()));
-        closeColumn.setCellFactory(cell -> new NumberFormatTableCell<>(numberFormatProperty));
+        closeColumn.setCellFactory(cell -> new BigDecimalTableCell<>(numberFormatProperty));
         tableView.getColumns().add(closeColumn);
 
         final TableColumn<SecurityHistoryNode, BigDecimal> lowColumn = new TableColumn<>(resources.getString("Column.Low"));
         lowColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLow()));
-        lowColumn.setCellFactory(cell -> new NumberFormatTableCell<>(numberFormatProperty));
+        lowColumn.setCellFactory(cell -> new BigDecimalTableCell<>(numberFormatProperty));
         tableView.getColumns().add(lowColumn);
 
         final TableColumn<SecurityHistoryNode, BigDecimal> highColumn = new TableColumn<>(resources.getString("Column.High"));
         highColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getHigh()));
-        highColumn.setCellFactory(cell -> new NumberFormatTableCell<>(numberFormatProperty));
+        highColumn.setCellFactory(cell -> new BigDecimalTableCell<>(numberFormatProperty));
         tableView.getColumns().add(highColumn);
 
         final TableColumn<SecurityHistoryNode, Long> volumeColumn = new TableColumn<>(resources.getString("Column.Volume"));
