@@ -62,13 +62,13 @@
                         <Button fx:id="startButton" onAction="#handleStartAction" text="%Button.Start"
                                 ButtonBar.buttonData="LEFT">
                             <graphic>
-                                <FontAwesomeImageView glyphName="PLAY"/>
+                                <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
                             </graphic>
                         </Button>
                         <Button fx:id="stopButton" onAction="#handleStopAction" text="%Button.Stop"
                                 ButtonBar.buttonData="RIGHT">
                             <graphic>
-                                <FontAwesomeImageView glyphName="STOP"/>
+                                <FontAwesomeImageView glyphName="TIMES"/>
                             </graphic>
                         </Button>
                     </buttons>
