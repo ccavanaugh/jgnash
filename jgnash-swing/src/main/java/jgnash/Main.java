@@ -34,15 +34,15 @@ import javax.swing.JOptionPane;
 import jgnash.engine.Engine;
 import jgnash.engine.jpa.JpaNetworkServer;
 import jgnash.engine.message.MessageBus;
-import jgnash.net.NetworkAuthenticator;
 import jgnash.net.security.YahooParser;
 import jgnash.ui.MainFrame;
 import jgnash.ui.UIApplication;
 import jgnash.ui.actions.OpenAction;
+import jgnash.ui.net.NetworkAuthenticator;
 import jgnash.util.EncryptionManager;
 import jgnash.util.FileUtils;
 import jgnash.util.OS;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 import jgnash.util.Version;
 
 import org.kohsuke.args4j.CmdLineException;
@@ -127,11 +127,11 @@ public final class Main {
         System.out.println(version);
 
         if (version < 1.8f) {
-            System.out.println(Resource.get().getString("Message.JVM7"));
-            System.out.println(Resource.get().getString("Message.Version") + " " + System.getProperty("java.version") + "\n");
+            System.out.println(ResourceUtils.getString("Message.JVM7"));
+            System.out.println(ResourceUtils.getString("Message.Version") + " " + System.getProperty("java.version") + "\n");
 
             // try and show a dialog
-            JOptionPane.showMessageDialog(null, Resource.get().getString("Message.JVM7"), Resource.get().getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, ResourceUtils.getString("Message.JVM7"), ResourceUtils.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
 
             result = false;
         }
@@ -156,7 +156,7 @@ public final class Main {
     }
 
     private static void enableAntialiasing() {
-        System.out.println(Resource.get().getString("Message.AntiAlias"));
+        System.out.println(ResourceUtils.getString("Message.AntiAlias"));
         System.setProperty("swing.aatext", "true");
     }
 
@@ -188,9 +188,9 @@ public final class Main {
             System.getProperties().put("http.proxyPort", proxyPort);
 
             // this will deal with any authentication requests properly
-            java.net.Authenticator.setDefault(new jgnash.net.NetworkAuthenticator());
+            java.net.Authenticator.setDefault(new NetworkAuthenticator());
 
-            System.out.println(Resource.get().getString("Message.Proxy") + proxyHost + ":" + proxyPort);
+            System.out.println(ResourceUtils.getString("Message.Proxy") + proxyHost + ":" + proxyPort);
         }
     }
 
@@ -202,11 +202,11 @@ public final class Main {
                 jgnash.removeNode();
                 prefs.flush();
             } else {
-                System.err.println(Resource.get().getString("Message.PrefFail"));
+                System.err.println(ResourceUtils.getString("Message.PrefFail"));
             }
         } catch (BackingStoreException bse) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, bse.toString(), bse);
-            System.err.println(Resource.get().getString("Message.UninstallBad"));
+            System.err.println(ResourceUtils.getString("Message.UninstallBad"));
         }
     }
 
@@ -260,7 +260,7 @@ public final class Main {
                         JpaNetworkServer networkServer = new JpaNetworkServer();
                         networkServer.startServer(serverFile.getAbsolutePath(), port, password.toCharArray());
                     } else {
-                        System.err.println(Resource.get().getString("Message.FileIsLocked"));
+                        System.err.println(ResourceUtils.getString("Message.FileIsLocked"));
                     }
                 } catch (FileNotFoundException e) {
                     Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.toString(), e);

@@ -24,7 +24,7 @@ import java.util.TimerTask;
 
 import javax.swing.JProgressBar;
 
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Simple memory monitor.
@@ -49,7 +49,7 @@ public class MemoryMonitor extends JProgressBar {
         setMinimum(0);
         setStringPainted(true);
 
-        setToolTipText(Resource.get().getString("ToolTip.MemoryUsage"));
+        setToolTipText(ResourceUtils.getString("ToolTip.MemoryUsage"));
 
         setString(used + "/" + total + " MB");
 

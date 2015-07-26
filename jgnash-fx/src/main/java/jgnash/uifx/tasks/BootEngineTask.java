@@ -4,15 +4,14 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.util.FileUtils;
-import jgnash.util.Resource;
 import jgnash.util.ResourceUtils;
-
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 
 /**
  * Boots the engine with a local file or connection to a remote server
@@ -105,12 +104,9 @@ public class BootEngineTask extends Task<String> {
                 if (version < Engine.CURRENT_VERSION) {
                     FileUtils.copyFile(new File(fileName), new File(fileName + "." + version));
 
-                    Platform.runLater(() -> {
-                        final Resource rb = Resource.get();
-                        final String message = rb.getString("Message.Info.Upgrade", fileName + "." + version);
-
-                        StaticUIMethods.displayMessage(message);
-                    });
+                    Platform.runLater(() ->
+                            StaticUIMethods.displayMessage(ResourceUtils.getString("Message.Info.Upgrade",
+                                    fileName + "." + version)));
                 }
             }
         }

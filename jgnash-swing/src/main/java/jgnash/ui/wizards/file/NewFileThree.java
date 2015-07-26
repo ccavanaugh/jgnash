@@ -17,15 +17,12 @@
  */
 package jgnash.ui.wizards.file;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -40,8 +37,13 @@ import javax.swing.text.StyledEditorKit;
 import jgnash.engine.CurrencyNode;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.components.wizard.WizardPage;
-import jgnash.ui.util.TextResource;
-import jgnash.util.Resource;
+import jgnash.ui.util.IconUtils;
+import jgnash.util.ResourceUtils;
+import jgnash.util.TextResource;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 /**
  * New file wizard panel.
@@ -51,7 +53,7 @@ import jgnash.util.Resource;
  */
 public class NewFileThree extends JPanel implements WizardPage, ActionListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
     private JEditorPane helpPane;
     private JList<CurrencyNode> aJList;
     private JButton addButton;
@@ -66,11 +68,11 @@ public class NewFileThree extends JPanel implements WizardPage, ActionListener {
 
     private void initComponents() {
         addButton = new JButton(rb.getString("Button.Add"));
-        addButton.setIcon(Resource.getIcon("/jgnash/resource/list-add.png"));
+        addButton.setIcon(IconUtils.getIcon("/jgnash/resource/list-add.png"));
         addButton.setHorizontalTextPosition(SwingConstants.LEADING);
 
         removeButton = new JButton(rb.getString("Button.Remove"));
-        removeButton.setIcon(Resource.getIcon("/jgnash/resource/list-remove.png"));
+        removeButton.setIcon(IconUtils.getIcon("/jgnash/resource/list-remove.png"));
 
         aJList = new JList<>();
         cJList = new JList<>();

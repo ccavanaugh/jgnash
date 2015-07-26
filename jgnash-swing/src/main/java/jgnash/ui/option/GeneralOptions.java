@@ -19,6 +19,7 @@ package jgnash.ui.option;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -32,7 +33,7 @@ import jgnash.ui.ThemeManager;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.JTextFieldEx;
 import jgnash.ui.register.TransactionNumberDialog;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -45,7 +46,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 class GeneralOptions extends JPanel implements ActionListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private JCheckBox animationsEnabled;
 

@@ -17,17 +17,19 @@
  */
 package jgnash.ui.util;
 
+import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import java.util.regex.Pattern;
 
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.KeyStroke;
-
-import jgnash.util.EncodeDecode;
 
 /**
  * Static Dialog Utilities
@@ -36,6 +38,10 @@ import jgnash.util.EncodeDecode;
  *
  */
 public class DialogUtils {
+
+    private static final Pattern COMMA_DELIMITER_PATTERN = Pattern.compile(",");
+
+    private static final char COMMA_DELIMITER = ',';
 
     /**
      * Listens to a JDialog to save and restore windows bounds automatically.
@@ -62,12 +68,12 @@ public class DialogUtils {
 
             if (w instanceof JDialog) {
                 if (((JDialog) w).isResizable()) {
-                    w.setBounds(EncodeDecode.decodeRectangle(bounds));
+                    w.setBounds(decodeRectangle(bounds));
                 } else {
-                    w.setLocation(EncodeDecode.decodeRectangle(bounds).getLocation());
+                    w.setLocation(decodeRectangle(bounds).getLocation());
                 }
             } else {
-                w.setBounds(EncodeDecode.decodeRectangle(bounds));
+                w.setBounds(decodeRectangle(bounds));
             }
 
             Window owner = w.getOwner();
@@ -86,7 +92,7 @@ public class DialogUtils {
                 // save position and size
                 Preferences p = Preferences.userRoot().node(prefNode);
 
-                p.put(key, EncodeDecode.encodeRectangle(w.getBounds()));
+                p.put(key, encodeRectangle(w.getBounds()));
                 w.removeWindowListener(this); // make GC easy
             }
         });
@@ -109,8 +115,35 @@ public class DialogUtils {
         KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
 
         dialog.getRootPane().registerKeyboardAction(e ->
-                dialog.dispatchEvent(new WindowEvent(dialog, WindowEvent.WINDOW_CLOSING)), stroke,
+                        dialog.dispatchEvent(new WindowEvent(dialog, WindowEvent.WINDOW_CLOSING)), stroke,
                 JComponent.WHEN_IN_FOCUSED_WINDOW);
+    }
+
+    public static String encodeRectangle(final Rectangle bounds) {
+        return String.valueOf(bounds.x) + COMMA_DELIMITER + bounds.y + COMMA_DELIMITER + bounds.width
+                + COMMA_DELIMITER + bounds.height;
+    }
+
+    public static Rectangle decodeRectangle(final String bounds) {
+        if (bounds == null) {
+            return null;
+        }
+
+        Rectangle rectangle = null;
+        String[] array = COMMA_DELIMITER_PATTERN.split(bounds);
+        if (array.length == 4) {
+            try {
+                rectangle = new Rectangle();
+                rectangle.x = Integer.parseInt(array[0]);
+                rectangle.y = Integer.parseInt(array[1]);
+                rectangle.width = Integer.parseInt(array[2]);
+                rectangle.height = Integer.parseInt(array[3]);
+            } catch (final NumberFormatException nfe) {
+                Logger.getLogger(DialogUtils.class.getName()).log(Level.SEVERE, null, nfe);
+                rectangle = null;
+            }
+        }
+        return rectangle;
     }
 
     private DialogUtils() {

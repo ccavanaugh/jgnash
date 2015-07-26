@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,7 +47,7 @@ import jgnash.text.CommodityFormat;
 import jgnash.ui.components.JDateField;
 import jgnash.ui.register.AccountBalanceDisplayManager;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -70,7 +71,7 @@ public class ProfitLossTXT {
 
     private Date[] dates;
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     public void run() {
         createReport();

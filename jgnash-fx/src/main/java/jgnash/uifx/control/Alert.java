@@ -31,12 +31,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
+import jgnash.resource.font.FontAwesomeImageView;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
@@ -47,7 +48,7 @@ import jgnash.util.ResourceUtils;
  */
 public class Alert {
 
-    static final String ICON_SIZE = "3.5em";
+    static final double ICON_SIZE = 36;
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
@@ -76,19 +77,19 @@ public class Alert {
 
         switch (alertType) {
             case ERROR:
-                setGraphic(JavaFXUtils.createGlyph(FontAwesomeIcon.EXCLAMATION_TRIANGLE, ICON_SIZE, "darkred"));
+                setGraphic(new FontAwesomeImageView(FontAwesomeIcon.EXCLAMATION_TRIANGLE, ICON_SIZE, Color.DARKRED));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case WARNING:
-                setGraphic(JavaFXUtils.createGlyph(FontAwesomeIcon.EXCLAMATION_CIRCLE, ICON_SIZE, "darkgoldenrod"));
+                setGraphic(new FontAwesomeImageView(FontAwesomeIcon.EXCLAMATION_CIRCLE, ICON_SIZE, Color.DARKGOLDENROD));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case INFORMATION:
-                setGraphic(JavaFXUtils.createGlyph(FontAwesomeIcon.INFO_CIRCLE, ICON_SIZE, "darkgoldenrod"));
+                setGraphic(new FontAwesomeImageView(FontAwesomeIcon.INFO_CIRCLE, ICON_SIZE, Color.DARKGOLDENROD));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case YES_NO:
-                setGraphic(JavaFXUtils.createGlyph(FontAwesomeIcon.QUESTION_CIRCLE, ICON_SIZE));
+                setGraphic(new FontAwesomeImageView(FontAwesomeIcon.QUESTION_CIRCLE, ICON_SIZE));
                 ButtonType buttonTypeYes = new ButtonType(resources.getString("Button.Yes"), ButtonBar.ButtonData.YES);
                 ButtonType buttonTypeNo = new ButtonType(resources.getString("Button.No"), ButtonBar.ButtonData.NO);
                 setButtons(buttonTypeYes, buttonTypeNo);

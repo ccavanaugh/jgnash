@@ -34,6 +34,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import javax.swing.JButton;
@@ -61,14 +62,16 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.net.security.UpdateFactory;
 import jgnash.text.CommodityFormat;
+import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.FormattedJTable;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.components.JIntegerField;
 import jgnash.ui.components.SecurityComboBox;
 import jgnash.ui.util.DialogUtils;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -121,7 +124,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
 
     private ChartPanel chartPanel;
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     public static void showDialog(final JFrame parent) {
 
@@ -160,7 +163,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
         securityCombo = new SecurityComboBox();
         volumeField = new JIntegerField();
 
-        updateButton = new JButton(rb.getString("Button.UpdateOnline"), Resource.getIcon("/jgnash/resource/applications-internet.png"));
+        updateButton = new JButton(rb.getString("Button.UpdateOnline"), IconUtils.getIcon("/jgnash/resource/applications-internet.png"));
 
         deleteButton = new JButton(rb.getString("Button.Delete"));
         clearButton = new JButton(rb.getString("Button.Clear"));
@@ -262,10 +265,12 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
     }
 
     private void netAddNode() {
-        SecurityNode node = securityCombo.getSelectedSecurityNode();
+        final SecurityNode node = securityCombo.getSelectedSecurityNode();
 
         if (node != null) {
-            UpdateFactory.updateOne(node);
+            if (!UpdateFactory.updateOne(node)) {
+                StaticUIMethods.displayWarning(ResourceUtils.getString("Message.Error.SecurityUpdate", node.getSymbol()));
+            }
         }
     }
 

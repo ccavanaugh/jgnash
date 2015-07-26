@@ -18,7 +18,10 @@
 package jgnash.uifx.control;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import javafx.application.Platform;
@@ -83,6 +86,12 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
         MessageBus.getInstance().registerListener(this, MessageChannel.ACCOUNT, MessageChannel.COMMODITY, MessageChannel.SYSTEM);
     }
 
+    public void setSecurityNode(final SecurityNode securityNode) {
+
+        // Selection is not always consistent unless pushed to the EDT
+        Platform.runLater(() -> setValue(securityNode));
+    }
+
     private void loadModel() {
         final Collection<SecurityNode> securityNodes;
 
@@ -96,7 +105,10 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
         }
 
         if (!securityNodes.isEmpty()) {
-            items.addAll(securityNodes);
+            final List<SecurityNode> sortedNodeList = new ArrayList<>(securityNodes);
+            Collections.sort(sortedNodeList);
+
+            items.addAll(sortedNodeList);
             getSelectionModel().select(0);
         }
     }
@@ -112,7 +124,11 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
                 switch (event.getEvent()) {
                     case ACCOUNT_SECURITY_ADD:
                         if (account != null && account.equals(accountProperty.get())) {
-                            items.add(node);
+                            final int index = Collections.binarySearch(items, node);
+
+                            if (index < 0) {
+                                items.add(-index -1, node);
+                            }
                         }
                         break;
                     case ACCOUNT_SECURITY_REMOVE:
@@ -124,11 +140,20 @@ public class SecurityComboBox extends ComboBox<SecurityNode> implements MessageL
                         items.removeAll(node);
                         break;
                     case SECURITY_ADD:
-                        items.add(node);
+                        final int index = Collections.binarySearch(items, node);
+
+                        if (index < 0) {
+                            items.add(-index -1, node);
+                        }
                         break;
                     case SECURITY_MODIFY:
                         items.removeAll(node);
-                        items.add(node);
+
+                        final int i = Collections.binarySearch(items, node);
+
+                        if (i < 0) {
+                            items.add(-i - 1, node);
+                        }
                         break;
                     case FILE_CLOSING:
                         items.clear();

@@ -27,6 +27,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.WindowEvent;
 import java.awt.print.PageFormat;
 import java.text.DecimalFormat;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import javax.swing.DefaultComboBoxModel;
@@ -56,7 +57,8 @@ import jgnash.engine.checks.CheckObject.CheckObjectType;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.components.JTextFieldEx;
 import jgnash.ui.components.RollOverButton;
-import jgnash.util.Resource;
+import jgnash.ui.util.IconUtils;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -116,7 +118,7 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
 
     private final Preferences pref = Preferences.userNodeForPackage(CheckDesignDialog.class);
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     public CheckDesignDialog(final Frame parent) {
         super(parent, true);
@@ -139,11 +141,11 @@ public class CheckDesignDialog extends JDialog implements ActionListener, ListSe
         toolBar = new JToolBar();
         toolBar.setRollover(true);
 
-        openButton = new RollOverButton(rb.getString("Menu.Open.Name"), Resource.getIcon("/jgnash/resource/document-open.png"));
-        openButton.setMnemonic(rb.getMnemonic("Menu.Open.Mnemonic"));
+        openButton = new RollOverButton(rb.getString("Menu.Open.Name"), IconUtils.getIcon("/jgnash/resource/document-open.png"));
+        openButton.setMnemonic(jgnash.ui.util.Resource.getMnemonic("Menu.Open.Mnemonic"));
 
-        saveButton = new RollOverButton(rb.getString("Menu.Save.Name"), Resource.getIcon("/jgnash/resource/document-save.png"));
-        saveButton.setMnemonic(rb.getMnemonic("Menu.Save.Mnemonic"));
+        saveButton = new RollOverButton(rb.getString("Menu.Save.Name"), IconUtils.getIcon("/jgnash/resource/document-save.png"));
+        saveButton.setMnemonic(jgnash.ui.util.Resource.getMnemonic("Menu.Save.Mnemonic"));
 
         toolBar.add(openButton);
         toolBar.add(saveButton);

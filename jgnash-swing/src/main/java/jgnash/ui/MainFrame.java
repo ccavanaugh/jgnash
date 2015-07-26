@@ -35,6 +35,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -82,8 +83,9 @@ import jgnash.ui.register.MainRegisterPanel;
 import jgnash.ui.register.RegisterEvent;
 import jgnash.ui.register.RegisterFrame;
 import jgnash.ui.util.DialogUtils;
+import jgnash.ui.util.IconUtils;
 import jgnash.ui.util.builder.ActionParser;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import org.jdesktop.swingx.JXBusyLabel;
 import org.jdesktop.swingx.JXStatusBar;
@@ -110,7 +112,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
     private MainViewPanel mainView;
 
-    private final transient Resource rb = Resource.get();
+    private final transient ResourceBundle rb = ResourceUtils.getBundle();
 
     private WaitMessagePanel waitPanel;
 
@@ -149,7 +151,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
         applyComponentOrientation(ComponentOrientation.getOrientation(Locale.getDefault()));
 
-        setIconImage(Resource.getImage("/jgnash/resource/gnome-money.png"));
+        setIconImage(IconUtils.getImage("/jgnash/resource/gnome-money.png"));
 
         buildUI();
 
@@ -210,7 +212,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
         if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
 
-            displayWaitMessage(Resource.get().getString("Message.StoreWait"));
+            displayWaitMessage(ResourceUtils.getString("Message.StoreWait"));
 
             try {
                 Thread.sleep(1000); // lets the UI start and get the users attention
@@ -331,7 +333,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
             } else if (components[i] instanceof JMenuItem) {
                 JMenuItem item = (JMenuItem) components[i];
 
-                if (precedingMenuIdref.equals(item.getClientProperty(ActionParser.IDREF_ATTRIBUTE))) {
+                if (precedingMenuIdref.equals(item.getClientProperty(ActionParser.ID_REF_ATTRIBUTE))) {
                     menu.add(newMenuItem, i + 1);
                     return;
                 }
@@ -350,7 +352,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
     }
 
     private void buildUI() {
-        ActionParser actionParser = new ActionParser(this, Resource.get());
+        ActionParser actionParser = new ActionParser(this);
 
         actionParser.preLoadActions("jgnash.ui.actions");
 
@@ -467,7 +469,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         });
     }
 
-    final void displayStatus(final String message) {
+    private void displayStatus(final String message) {
         EventQueue.invokeLater(() -> {
             statusField.setForeground(infoColor);
             statusField.setText(message);
@@ -624,7 +626,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         });
     }
 
-    public void setNetworkBusy(final boolean busy) {
+    private void setNetworkBusy(final boolean busy) {
         backgroundOperationLabel.setBusy(busy);
     }
 

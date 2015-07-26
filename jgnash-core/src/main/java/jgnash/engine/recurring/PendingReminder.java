@@ -17,8 +17,10 @@
  */
 package jgnash.engine.recurring;
 
+import java.time.LocalDate;
 import java.util.Date;
 
+import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
 
 /**
@@ -31,24 +33,18 @@ public class PendingReminder implements Comparable<PendingReminder> {
     private Reminder reminder = null;
 
     /**
-     * The date the event should occur
-     */
-    private final Date eventDate;
-
-    /**
      * The date for the register if a transaction is generated
      */
-    private Date commitDate = null;
+    private LocalDate commitDate = null;
 
     /**
-     * Marked state of the reminder
+     * Approved state of the reminder
      */
-    private boolean selected;
+    private boolean approved;
 
-    public PendingReminder(Reminder reminder, Date date) {
+    public PendingReminder(final @NotNull Reminder reminder, final @NotNull Date date) {
         this.reminder = reminder;
-        eventDate = (Date) date.clone();
-        commitDate = (Date) date.clone();
+        commitDate = DateUtils.asLocalDate(date);
     }
 
     /**
@@ -56,52 +52,52 @@ public class PendingReminder implements Comparable<PendingReminder> {
      */
     @Override
     public int compareTo(final @NotNull PendingReminder o) {
-        if (o.reminder == reminder && o.eventDate.equals(eventDate)) {
+        if (o.reminder == reminder && o.commitDate.equals(commitDate)) {
             return 0;
         }
 
         if (o.reminder == reminder) {
-            return eventDate.compareTo(o.eventDate);
+            return commitDate.compareTo(o.commitDate);
         }
 
         return reminder.compareTo(o.reminder);
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         
-        return o instanceof PendingReminder && ((PendingReminder) o).reminder == reminder && ((PendingReminder) o).eventDate.equals(eventDate);
+        return o instanceof PendingReminder && ((PendingReminder) o).reminder == reminder && ((PendingReminder) o).commitDate.equals(commitDate);
     }
 
     @Override
     public int hashCode() {
         int hash = 5;
         hash = 79 * hash + (reminder != null ? reminder.hashCode() : 0);
-        return 79 * hash + (eventDate != null ? eventDate.hashCode() : 0);
+        return 79 * hash + (commitDate != null ? commitDate.hashCode() : 0);
     }
 
     /**
-     * @return Returns the selected.
+     * @return Returns the approved.
      */
-    public synchronized final boolean isSelected() {
-        return selected;
+    public synchronized final boolean isApproved() {
+        return approved;
     }
 
     /**
-     * @param selected The selected to set.
+     * @param approved The approved to set.
      */
-    public synchronized final void setSelected(boolean selected) {
-        this.selected = selected;
+    public synchronized final void setApproved(final boolean approved) {
+        this.approved = approved;
     }
 
     /**
      * @return Returns the commitDate.
      */
-    public synchronized final Date getCommitDate() {
-        return (Date) commitDate.clone();
+    public synchronized final LocalDate getCommitDate() {
+        return commitDate;
     }
 
     /**
@@ -113,6 +109,6 @@ public class PendingReminder implements Comparable<PendingReminder> {
 
     @Override
     public String toString() {
-        return reminder.getDescription() + " " + eventDate;
+        return reminder.getDescription() + " " + commitDate;
     }
 }

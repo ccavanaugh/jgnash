@@ -17,7 +17,7 @@
  */
 package jgnash.engine;
 
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Tagging enumeration for special transaction types
@@ -27,15 +27,15 @@ import jgnash.util.Resource;
 @SuppressWarnings("UnusedDeclaration")
 public enum TransactionTag {
 
-    BANK(Resource.get().getString("Tag.Bank")),
-    DIVIDEND(Resource.get().getString("Tag.Dividend")),
-    FEES_OFFSET(Resource.get().getString("Tag.FeesOffset")),
-    GAIN_LOSS(Resource.get().getString("Tag.GainLoss")),
-    GAINS_OFFSET(Resource.get().getString("Tag.GainsOffset")),
-    INVESTMENT(Resource.get().getString("Tag.Investment")),
-    INVESTMENT_FEE(Resource.get().getString("Tag.InvestmentFee")),
-    INVESTMENT_CASH_TRANSFER(Resource.get().getString("Tag.InvestmentCashTransfer")),
-    VAT(Resource.get().getString("Tag.Vat"));
+    BANK(ResourceUtils.getString("Tag.Bank")),
+    DIVIDEND(ResourceUtils.getString("Tag.Dividend")),
+    FEES_OFFSET(ResourceUtils.getString("Tag.FeesOffset")),
+    GAIN_LOSS(ResourceUtils.getString("Tag.GainLoss")),
+    GAINS_OFFSET(ResourceUtils.getString("Tag.GainsOffset")),
+    INVESTMENT(ResourceUtils.getString("Tag.Investment")),
+    INVESTMENT_FEE(ResourceUtils.getString("Tag.InvestmentFee")),
+    INVESTMENT_CASH_TRANSFER(ResourceUtils.getString("Tag.InvestmentCashTransfer")),
+    VAT(ResourceUtils.getString("Tag.Vat"));
 
     private final transient String description;
 

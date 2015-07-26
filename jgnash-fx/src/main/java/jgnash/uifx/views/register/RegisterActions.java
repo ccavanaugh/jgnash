@@ -56,7 +56,7 @@ class RegisterActions {
     }
 
     static void deleteTransactionAction(final Transaction... transactions) {
-        if (Options.getConfirmTransactionDeleteEnabled().get()) {
+        if (Options.confirmOnTransactionDeleteProperty().get()) {
             if (confirmTransactionRemoval(transactions.length).getButtonData().isCancelButton()) {
                 return;
             }

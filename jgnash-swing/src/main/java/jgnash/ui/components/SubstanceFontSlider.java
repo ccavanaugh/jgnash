@@ -28,7 +28,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.FontUIResource;
 
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -73,7 +73,7 @@ public class SubstanceFontSlider extends JPanel {
         slider.setMinorTickSpacing(1);
         slider.setSnapToTicks(true);
 
-        slider.setToolTipText(Resource.get().getString("ToolTip.FontSize"));
+        slider.setToolTipText(ResourceUtils.getString("ToolTip.FontSize"));
 
         slider.addChangeListener(new ChangeListener() {
 

@@ -346,7 +346,7 @@ public class InvestmentPerformanceSummary {
         this.startDate = startDate;
     }
 
-    final Date getStartDate() {
+    private Date getStartDate() {
         return startDate;
     }
 
@@ -354,7 +354,7 @@ public class InvestmentPerformanceSummary {
         this.endDate = endDate;
     }
 
-    final Date getEndDate() {
+    private Date getEndDate() {
         return endDate;
     }
 

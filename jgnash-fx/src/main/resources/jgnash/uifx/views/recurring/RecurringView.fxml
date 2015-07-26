@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import jgnash.resource.font.FontAwesomeImageView?>
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.recurring.RecurringViewController">
+    <top>
+        <ToolBar>
+            <items>
+                <Button mnemonicParsing="false" text="%Button.New" onAction="#handleNewAction">
+                    <graphic>
+                        <FontAwesomeImageView glyphName="CALENDAR"/>
+                    </graphic>
+                </Button>
+                <Button fx:id="modifyButton" mnemonicParsing="false" text="%Button.Modify" onAction="#handleModifyAction">
+                    <graphic>
+                        <FontAwesomeImageView glyphName="EDIT"/>
+                    </graphic>
+                </Button>
+                <Button fx:id="deleteButton" mnemonicParsing="false" text="%Button.Delete" onAction="#handleDeleteAction">
+                    <graphic>
+                        <FontAwesomeImageView glyphName="TRASH_ALT"/>
+                    </graphic>
+                </Button>
+                <Separator orientation="VERTICAL"/>
+                <Button mnemonicParsing="false" text="%Button.CheckReminders" onAction="#handleRefreshAction">
+                    <graphic>
+                        <FontAwesomeImageView glyphName="REFRESH"/>
+                    </graphic>
+                </Button>
+            </items>
+        </ToolBar>
+    </top>
+    <center>
+        <TableView fx:id="tableView"/>
+    </center>
+</BorderPane>

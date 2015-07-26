@@ -17,7 +17,6 @@
  */
 package jgnash.uifx.util;
 
-import java.awt.geom.Rectangle2D;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -27,10 +26,9 @@ import java.util.prefs.Preferences;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-
-import jgnash.util.EncodeDecode;
 
 /**
  * Saves and restores Stage sizes
@@ -41,21 +39,31 @@ public class StageUtils {
 
     private static final String DEFAULT_KEY = "bounds";
 
+    private static final char COMMA_DELIMITER = ',';
+
+    private static final int X = 0;
+
+    private static final int Y = 1;
+
+    private static final int WIDTH = 2;
+
+    private static final int HEIGHT = 3;
+
     /**
      * Restores and saves the size and location of a stage
      *
-     * @param stage The stage to save and restore size and position
+     * @param stage    The stage to save and restore size and position
      * @param prefNode This should typically be the calling controller
      */
     public static void addBoundsListener(final Stage stage, final Class<?> prefNode) {
         addBoundsListener(stage, prefNode.getName().replace('.', '/'));
     }
 
-    private static void addBoundsListener(final Stage stage, final String prefNode) {
+    public static void addBoundsListener(final Stage stage, final String prefNode) {
         final String bounds = Preferences.userRoot().node(prefNode).get(DEFAULT_KEY, null);
 
         if (bounds != null) { // restore to previous size and position
-            final Rectangle2D.Double rectangle = EncodeDecode.decodeRectangle2D(bounds);
+            final Rectangle rectangle = decodeRectangle(bounds);
 
             boolean resizable = stage.isResizable();
 
@@ -100,7 +108,7 @@ public class StageUtils {
         @Override
         public void changed(final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue) {
             executor.execute(() -> {
-                p.put(DEFAULT_KEY, EncodeDecode.encodeRectangle2D(window.getX(), window.getY(),
+                p.put(DEFAULT_KEY, encodeRectangle(window.getX(), window.getY(),
                         window.getWidth(), window.getHeight()));
                 try {
                     Thread.sleep(FORCED_DELAY); // forcibly limits amount of saves
@@ -109,5 +117,32 @@ public class StageUtils {
                 }
             });
         }
+    }
+
+    private static String encodeRectangle(final double x, final double y, final double width, final double height) {
+        return Double.toString(x) + COMMA_DELIMITER + Double.toString(y) + COMMA_DELIMITER + Double.toString(width)
+                + COMMA_DELIMITER + Double.toString(height);
+    }
+
+    private static Rectangle decodeRectangle(final String bounds) {
+        if (bounds == null) {
+            return null;
+        }
+
+        Rectangle rectangle = null;
+
+        final String[] array = bounds.split(String.valueOf(COMMA_DELIMITER));
+
+        if (array.length == 4) {
+            try {
+                rectangle = new Rectangle(Double.parseDouble(array[X]), Double.parseDouble(array[Y]),
+                        Double.parseDouble(array[WIDTH]), Double.parseDouble(array[HEIGHT]));
+            } catch (final NumberFormatException nfe) {
+                Logger.getLogger(StageUtils.class.getName()).log(Level.SEVERE, null, nfe);
+                rectangle = null;
+            }
+        }
+
+        return rectangle;
     }
 }

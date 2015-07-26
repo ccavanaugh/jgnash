@@ -17,8 +17,12 @@
  */
 package jgnash.uifx.views.register;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
+
 import jgnash.engine.AbstractInvestmentTransactionEntry;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
@@ -27,9 +31,6 @@ import jgnash.engine.TransactionEntryBuyX;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.util.NotNull;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * Transaction Entry Controller for Credits and Debits
@@ -92,7 +93,7 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
             memoTextField.setText(e.getMemo());
             priceField.setDecimal(entry.getPrice());
             quantityField.setDecimal(entry.getQuantity());
-            securityComboBox.setValue(entry.getSecurityNode());
+            securityComboBox.setSecurityNode(entry.getSecurityNode());
 
             /* TODO by default investment account is assigned to debit account.  Should only have to look at the
              * credit side of the entry for information

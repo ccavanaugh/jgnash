@@ -33,6 +33,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -55,7 +56,8 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import jgnash.ui.components.RollOverButton;
-import jgnash.util.Resource;
+import jgnash.ui.util.IconUtils;
+import jgnash.util.ResourceUtils;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -85,13 +87,13 @@ public final class ActionParser extends DefaultHandler {
 
     private final static String ID_ATTRIBUTE = "id";
 
-    public final static String IDREF_ATTRIBUTE = "idref";
+    public final static String ID_REF_ATTRIBUTE = "idref";
 
     private final static String MNEMONIC_ATTRIBUTE = "mnemonic";
 
     private final static String NAME_ATTRIBUTE = "name";
 
-    private final static String SMICON_ATTRIBUTE = "smicon";
+    private final static String SMALL_ICON_ATTRIBUTE = "smicon";
 
     private final static String TYPE_ATTRIBUTE = "type";
 
@@ -141,13 +143,12 @@ public final class ActionParser extends DefaultHandler {
      */
     private final Object target;
 
-    private final Resource rb;
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private static final Logger log = Logger.getLogger(ActionParser.class.getName());
 
-    public ActionParser(final Object target, final Resource rb) {
+    public ActionParser(final Object target) {
         this.target = target;
-        this.rb = rb;
     }
 
     /**
@@ -182,7 +183,7 @@ public final class ActionParser extends DefaultHandler {
      *
      * @param stream InputStream containing an actionSet document
      */
-    void loadFile(final InputStream stream) {
+    private void loadFile(final InputStream stream) {
         SAXParserFactory parserFactory = SAXParserFactory.newInstance();
         parserFactory.setValidating(false);
 
@@ -312,7 +313,7 @@ public final class ActionParser extends DefaultHandler {
         menuItemMap.put(node.idref, menu);
 
         // store the idref in the JMenuItem
-        menu.putClientProperty(IDREF_ATTRIBUTE, node.idref);
+        menu.putClientProperty(ID_REF_ATTRIBUTE, node.idref);
 
         return menu;
     }
@@ -320,7 +321,7 @@ public final class ActionParser extends DefaultHandler {
     /**
      * Generates ReflectiveActions
      */
-    void createActions() {
+    private void createActions() {
 
         for (ActionAttributes aa : actionList) {
             // look for a preloaded action
@@ -337,7 +338,7 @@ public final class ActionParser extends DefaultHandler {
             String accel = aa.getValue(ACCEL_INDEX);
 
             if (accel != null && !accel.trim().isEmpty()) {
-                KeyStroke stroke = rb.getKeyStroke(accel);
+                KeyStroke stroke = jgnash.ui.util.Resource.getKeyStroke(accel);
                 if (stroke != null) {
                     action.putValue(Action.ACCELERATOR_KEY, stroke);
                 } else {
@@ -347,7 +348,7 @@ public final class ActionParser extends DefaultHandler {
 
             if (aa.getValue(ICON_INDEX) != null) {
                 try {
-                    Icon icon = Resource.getIcon(aa.getValue(ICON_INDEX));
+                    Icon icon = IconUtils.getIcon(aa.getValue(ICON_INDEX));
                     action.putValue(Action.SMALL_ICON, icon);
                 } catch (Exception e) {
                     log.log(Level.WARNING, aa.getValue(ICON_INDEX) + " not found", e);
@@ -360,7 +361,7 @@ public final class ActionParser extends DefaultHandler {
 
             // validate length of mnemonic before trying
             if (aa.getValue(MNEMONIC_INDEX) != null && rb.getString(aa.getValue(MNEMONIC_INDEX)).trim().length() == 1) {
-                action.putValue(Action.MNEMONIC_KEY, (int) rb.getMnemonic(aa.getValue(MNEMONIC_INDEX)));
+                action.putValue(Action.MNEMONIC_KEY, (int) jgnash.ui.util.Resource.getMnemonic(aa.getValue(MNEMONIC_INDEX)));
             }
 
             // load the ID into the action so it can be recalled later
@@ -430,7 +431,7 @@ public final class ActionParser extends DefaultHandler {
             array[ID_INDEX] = attrs.getValue(ID_ATTRIBUTE);
             array[MNEMONIC_INDEX] = attrs.getValue(MNEMONIC_ATTRIBUTE);
             array[NAME_INDEX] = attrs.getValue(NAME_ATTRIBUTE);
-            array[SMICON_INDEX] = attrs.getValue(SMICON_ATTRIBUTE);
+            array[SMICON_INDEX] = attrs.getValue(SMALL_ICON_ATTRIBUTE);
             array[TYPE_INDEX] = attrs.getValue(TYPE_ATTRIBUTE);
             array[METHOD_INDEX] = attrs.getValue(METHOD_ATTRIBUTE);
         }
@@ -464,7 +465,7 @@ public final class ActionParser extends DefaultHandler {
         } // an empty node... use as a separator
 
         public ActionNode(final Attributes attrs) {
-            idref = attrs.getValue(IDREF_ATTRIBUTE); // reference to action id
+            idref = attrs.getValue(ID_REF_ATTRIBUTE); // reference to action id
             id = attrs.getValue(ID_ATTRIBUTE); // can be null if not root node
             group = attrs.getValue(GROUP_ATTRIBUTE); // may be null
             type = attrs.getValue(TYPE_ATTRIBUTE); // type attribute

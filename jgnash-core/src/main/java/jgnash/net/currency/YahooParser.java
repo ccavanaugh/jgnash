@@ -56,7 +56,7 @@ public class YahooParser implements CurrencyParser {
         BufferedReader in = null;
 
         try {
-            URLConnection connection = ConnectionFactory.getConnection(url.toString());
+            URLConnection connection = ConnectionFactory.openConnection(url.toString());
 
             if (connection != null) {
 

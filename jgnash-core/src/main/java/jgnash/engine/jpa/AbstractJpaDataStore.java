@@ -17,6 +17,8 @@
  */
 package jgnash.engine.jpa;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -44,8 +46,6 @@ import jgnash.engine.concurrent.DistributedLockManager;
 import jgnash.engine.concurrent.LocalLockManager;
 import jgnash.util.FileUtils;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 /**
  * Abstract JPA DataStore
  *
@@ -71,7 +71,7 @@ public abstract class AbstractJpaDataStore implements DataStore {
 
     static final Logger logger = Logger.getLogger(AbstractJpaDataStore.class.getName());
 
-    void waitForLockFileRelease(final String fileName, final char[] password) {
+    private void waitForLockFileRelease(final String fileName, final char[] password) {
 
         // Explicitly force the database closed, Required for hsqldb and h2
         SqlUtils.waitForLockFileRelease(getType(), fileName, getLockFileExtension(), password);

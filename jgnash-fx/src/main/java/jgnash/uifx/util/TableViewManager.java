@@ -86,6 +86,9 @@ public class TableViewManager<S> {
         this.tableView = tableView;
         this.preferencesUserRoot = preferencesUserRoot;
 
+        // Set a default format factory
+        setColumnFormatFactory(param -> null);
+
          /* At least 2 updates need to be allowed.  The update in process and any potential updates requested
          * that occur when an update is already in process.  Limited to 1 thread
          *

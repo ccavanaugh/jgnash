@@ -17,17 +17,10 @@
  */
 package jgnash.ui.components;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-import jgnash.engine.jpa.JpaNetworkServer;
-import jgnash.ui.StaticUIMethods;
-import jgnash.ui.util.DialogUtils;
-import jgnash.util.Resource;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import javax.swing.JButton;
@@ -36,6 +29,15 @@ import javax.swing.JFrame;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import jgnash.engine.jpa.JpaNetworkServer;
+import jgnash.ui.StaticUIMethods;
+import jgnash.ui.util.DialogUtils;
+import jgnash.util.ResourceUtils;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
+
 /**
  * Remote Connection Dialog
  *
@@ -43,7 +45,7 @@ import javax.swing.JTextField;
  */
 public class RemoteConnectionDialog extends JDialog implements ActionListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final JPasswordField passwordField = new JPasswordField();
 

@@ -56,12 +56,14 @@
             <property name="hibernate.hbm2ddl.auto" value="update"/>
 
             <property name="hibernate.connection.provider_class" value="org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider" />
-            <property name="hibernate.c3p0.max_size" value="10" />
-            <property name="hibernate.c3p0.min_size" value="1" />
+            <property name="hibernate.c3p0.max_size" value="50" />
+            <property name="hibernate.c3p0.min_size" value="5" />
             <property name="hibernate.c3p0.acquire_increment" value="1" />
             <property name="hibernate.c3p0.idle_test_period" value="120" />
             <property name="hibernate.c3p0.max_statements" value="0" />
             <property name="hibernate.c3p0.timeout" value="100" />
+            <property name="hibernate.c3p0.numHelperThreads" value="5" />
+            <property name="hibernate.c3p0.max_Statements" value="50" />
 
             <!-- Hibernate was generating table names not compliant with the JPA spec.  This enables the fix and breaks existing files -->
             <!-- Change was implemented for jGnash file version 2.15, Hibernate HHH-9389 -->

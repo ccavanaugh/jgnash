@@ -19,7 +19,10 @@ package jgnash.uifx.views.register;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -41,14 +44,20 @@ import javafx.scene.control.TableView;
 import javafx.util.Callback;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
+import jgnash.engine.TransactionType;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
+import jgnash.engine.recurring.Reminder;
 import jgnash.uifx.util.TableViewManager;
+import jgnash.uifx.views.recurring.RecurringEntryDialog;
 
 /**
  * Abstract Register Table with stats controller
@@ -143,8 +152,32 @@ public abstract class RegisterTableController {
         return accountPropertyWrapper;
     }
 
+    /**
+     * Scrolls the view to ensure selection visibility.  If possible, the next index is shown for improved
+     * visual appearance.
+     *
+     * @param transaction transaction to show in table
+     */
     private void scrollToTransaction(final Transaction transaction) {
-        tableView.scrollTo(transaction);
+        final int index = tableView.getItems().indexOf(transaction);
+
+        if (index < tableView.getItems().size()) {
+            tableView.scrollTo(index + 1);
+        } else {
+            tableView.scrollTo(transaction);
+        }
+    }
+
+    /**
+     * Ensures the transaction is visible and selects it
+     * @param transaction Transaction that needs to be visible in the view
+     */
+    void selectTransaction(final Transaction transaction) {
+        scrollToTransaction(transaction);
+        tableView.getSelectionModel().select(transaction);
+
+        // The table needs to be focused for the row selection to highlight
+        Platform.runLater(tableView::requestFocus);
     }
 
     abstract protected void buildTable();
@@ -178,6 +211,42 @@ public abstract class RegisterTableController {
         RegisterActions.duplicateTransaction(accountProperty.get(), transactionList);
     }
 
+    private void handleCreateNewReminder() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        final Reminder reminder = engine.createDefaultReminder(selectedTransactionProperty.get(), accountProperty.get());
+
+        final Optional<Reminder> optional = RecurringEntryDialog.showAndWait(reminder);
+
+        if (optional.isPresent()) {
+            engine.addReminder(optional.get());
+        }
+    }
+
+    void handleJumpAction() {
+        Transaction t = selectedTransactionProperty.get();
+
+        if (t != null) {
+            if (t.getTransactionType() == TransactionType.DOUBLEENTRY) {
+                final Set<Account> set = t.getAccounts();
+                set.stream().filter(a -> !accountProperty.get().equals(a)).forEach(a -> RegisterStage.getRegisterStage(a).show(t));
+            } else if (t.getTransactionType() == TransactionType.SPLITENTRY) {
+                final Account common = t.getCommonAccount();
+
+                if (!accountProperty.get().equals(common)) {
+                    RegisterStage.getRegisterStage(common).show(t);
+                }
+            } else if (t instanceof InvestmentTransaction) {
+                final Account invest = ((InvestmentTransaction) t).getInvestmentAccount();
+
+                if (!accountProperty.get().equals(invest)) {
+                    RegisterStage.getRegisterStage(invest).show(t);
+                }
+            }
+        }
+    }
+
     private class TransactionRowFactory implements Callback<TableView<Transaction>, TableRow<Transaction>> {
 
         @Override
@@ -201,13 +270,16 @@ public abstract class RegisterTableController {
             final MenuItem duplicateItem = new MenuItem(resources.getString("Menu.Duplicate.Name"));
             duplicateItem.setOnAction(event -> duplicateTransactions());
 
-            // TODO Create an account Window
             final MenuItem jumpItem = new MenuItem(resources.getString("Menu.Jump.Name"));
+            jumpItem.setOnAction(event -> handleJumpAction());
 
             final MenuItem deleteItem = new MenuItem(resources.getString("Menu.Delete.Name"));
             deleteItem.setOnAction(event -> deleteTransactions());
 
-            rowMenu.getItems().addAll(markedAs, new SeparatorMenuItem(), duplicateItem, jumpItem, new SeparatorMenuItem(), deleteItem);
+            final MenuItem reminderItem = new MenuItem(resources.getString("Menu.NewReminder.Name"));
+            reminderItem.setOnAction(event -> handleCreateNewReminder());
+
+            rowMenu.getItems().addAll(markedAs, new SeparatorMenuItem(), duplicateItem, jumpItem, new SeparatorMenuItem(), deleteItem, new SeparatorMenuItem(), reminderItem);
 
             // only display context menu for non-null items:
             row.contextMenuProperty().bind(

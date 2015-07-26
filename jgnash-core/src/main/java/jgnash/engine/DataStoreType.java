@@ -17,16 +17,16 @@
  */
 package jgnash.engine;
 
-import jgnash.engine.jpa.JpaH2DataStore;
-import jgnash.engine.jpa.JpaHsqlDataStore;
-import jgnash.engine.xstream.BinaryXStreamDataStore;
-import jgnash.engine.xstream.XMLDataStore;
-import jgnash.util.Resource;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import jgnash.engine.jpa.JpaH2DataStore;
+import jgnash.engine.jpa.JpaHsqlDataStore;
+import jgnash.engine.xstream.BinaryXStreamDataStore;
+import jgnash.engine.xstream.XMLDataStore;
+import jgnash.util.ResourceUtils;
 
 /**
  * Storage type enumeration
@@ -36,22 +36,22 @@ import java.util.logging.Logger;
 public enum DataStoreType {
 
     BINARY_XSTREAM(
-            Resource.get().getString("DataStoreType.Bxds"),
+            ResourceUtils.getString("DataStoreType.Bxds"),
             true,
             false,
             BinaryXStreamDataStore.class),
     H2_DATABASE (
-            Resource.get().getString("DataStoreType.H2"),
+            ResourceUtils.getString("DataStoreType.H2"),
             true,
             true,
             JpaH2DataStore.class),
     HSQL_DATABASE (
-            Resource.get().getString("DataStoreType.HSQL"),
+            ResourceUtils.getString("DataStoreType.HSQL"),
             true,
             true,
             JpaHsqlDataStore.class),
     XML(
-            Resource.get().getString("DataStoreType.XML"),
+            ResourceUtils.getString("DataStoreType.XML"),
             true,
             false,
             XMLDataStore.class);

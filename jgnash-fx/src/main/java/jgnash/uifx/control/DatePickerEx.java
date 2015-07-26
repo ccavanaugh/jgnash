@@ -17,14 +17,8 @@
  */
 package jgnash.uifx.control;
 
-import javafx.application.Platform;
-import javafx.scene.control.DatePicker;
-import javafx.scene.input.KeyEvent;
-import javafx.util.StringConverter;
-
 import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.chrono.ChronoLocalDate;
 import java.time.chrono.Chronology;
 import java.time.format.DateTimeFormatter;
@@ -33,6 +27,13 @@ import java.time.format.DecimalStyle;
 import java.time.format.FormatStyle;
 import java.util.Date;
 import java.util.Locale;
+
+import javafx.application.Platform;
+import javafx.scene.control.DatePicker;
+import javafx.scene.input.KeyEvent;
+import javafx.util.StringConverter;
+
+import jgnash.util.DateUtils;
 
 /**
  * Enhanced DatePicker.  Adds short cuts for date entry with better input character filters
@@ -144,7 +145,7 @@ public class DatePickerEx extends DatePicker {
      * @return {@code LocalDate} converted to {@code Date}
      */
     public Date getDate() {
-        return Date.from(getValue().atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+        return DateUtils.asDate(getValue());
     }
 
     /**
@@ -152,9 +153,7 @@ public class DatePickerEx extends DatePicker {
      * @param date {@code Date} to assign to the picker
      */
     public void setDate(final Date date) {
-        // JPA may slip in a java.sql.Date which throws an exception when .toInstance is called.
-        // Wrap in a new java.util.Date instance first
-        setValue(new Date(date.getTime()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        setValue(DateUtils.asLocalDate(date));
     }
 
     private class DateConverter extends StringConverter<LocalDate> {

@@ -20,7 +20,6 @@ package jgnash.ui.register.invest;
 import java.awt.Insets;
 import java.util.Objects;
 
-import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
 
 import jgnash.engine.Account;
@@ -28,8 +27,8 @@ import jgnash.engine.AccountGroup;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.ReconcileManager;
-import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
+import jgnash.ui.components.IndeterminateCheckBox;
 import jgnash.ui.register.AbstractTransactionPanel;
 
 /**
@@ -39,7 +38,7 @@ import jgnash.ui.register.AbstractTransactionPanel;
  */
 public abstract class AbstractInvTransactionPanel extends AbstractTransactionPanel {
 
-    JCheckBox reconciledButton;
+    private IndeterminateCheckBox reconciledButton;
 
     Transaction modTrans = null;
 
@@ -53,9 +52,14 @@ public abstract class AbstractInvTransactionPanel extends AbstractTransactionPan
 
         this.account = account;
 
-        reconciledButton = new JCheckBox(rb.getString("Button.Cleared"));
+        reconciledButton = new IndeterminateCheckBox(rb.getString("Button.Cleared"));
         reconciledButton.setHorizontalTextPosition(SwingConstants.LEADING);
         reconciledButton.setMargin(new Insets(0, 0, 0, 0));
+    }
+
+    @Override
+    protected IndeterminateCheckBox getReconcileCheckBox() {
+        return reconciledButton;
     }
 
     Account getAccount() {
@@ -76,7 +80,7 @@ public abstract class AbstractInvTransactionPanel extends AbstractTransactionPan
                 final Transaction newTrans = buildTransaction();
 
                 // Need to set the reconciled state
-                ReconcileManager.reconcileTransaction(getAccount(), newTrans, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+                ReconcileManager.reconcileTransaction(getAccount(), newTrans, getReconciledState());
 
                 engine.addTransaction(newTrans);
             } else {
@@ -87,7 +91,7 @@ public abstract class AbstractInvTransactionPanel extends AbstractTransactionPan
                 /* Need to preserve the reconciled state of the opposite side
                  * if both sides are not automatically reconciled
                  */
-                ReconcileManager.reconcileTransaction(getAccount(), newTrans, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+                ReconcileManager.reconcileTransaction(getAccount(), newTrans, getReconciledState());
 
                 if (engine.isTransactionValid(newTrans)) {
                     if (engine.removeTransaction(modTrans)) {

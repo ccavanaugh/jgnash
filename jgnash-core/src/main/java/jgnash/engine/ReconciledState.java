@@ -17,7 +17,7 @@
  */
 package jgnash.engine;
 
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Reconciled State of a transaction
@@ -25,9 +25,9 @@ import jgnash.util.Resource;
  * @author Craig Cavanaugh
  */
 public enum ReconciledState {
-    CLEARED(Resource.get().getString("State.Cleared")),
-    NOT_RECONCILED(Resource.get().getString("State.NotReconciled")),
-    RECONCILED(Resource.get().getString("State.Reconciled"));
+    CLEARED(ResourceUtils.getString("State.Cleared")),
+    NOT_RECONCILED(ResourceUtils.getString("State.NotReconciled")),
+    RECONCILED(ResourceUtils.getString("State.Reconciled"));
 
     private final transient String symbol;
 

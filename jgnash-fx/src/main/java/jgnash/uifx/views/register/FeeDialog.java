@@ -82,8 +82,9 @@ class FeeDialog extends AbstractTransactionEntryDialog {
         feeController = FXMLUtils.loadFXML(o -> formPane.getChildren().addAll((Node) o),
                 "FeeTransactionEntrySlip.fxml", resources);
 
-        feeController.getAccountProperty().bind(accountProperty());
-        feeController.getTransactionEntryListProperty().setValue(getTransactionEntries());
+        feeController.accountProperty().bind(accountProperty());
+        feeController.transactionEntryListProperty().setValue(getTransactionEntries());
+        feeController.comparatorProperty().bind(tableView.comparatorProperty());
 
         feeController.setSlipType(SlipType.DECREASE);
     }

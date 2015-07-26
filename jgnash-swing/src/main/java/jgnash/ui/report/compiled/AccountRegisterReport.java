@@ -17,16 +17,12 @@
  */
 package jgnash.ui.report.compiled;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
 import java.util.Date;
-
 import java.util.logging.Level;
+
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -47,7 +43,11 @@ import jgnash.ui.report.AbstractReportTableModel;
 import jgnash.ui.report.ColumnHeaderStyle;
 import jgnash.ui.report.ColumnStyle;
 import jgnash.ui.report.jasper.DynamicJasperReport;
-import jgnash.util.Resource;
+import jgnash.ui.util.IconUtils;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
 
 import net.sf.jasperreports.engine.JasperPrint;
 
@@ -91,7 +91,7 @@ public class AccountRegisterReport extends DynamicJasperReport {
         Account a = accountCombo.getSelectedAccount();
 
         refreshButton = new JButton(rb.getString("Button.Refresh"));
-        refreshButton.setIcon(Resource.getIcon("/jgnash/resource/view-refresh.png"));
+        refreshButton.setIcon(IconUtils.getIcon("/jgnash/resource/view-refresh.png"));
 
         startDateField = new DatePanel();
         if (a.getTransactionCount() > 0) {

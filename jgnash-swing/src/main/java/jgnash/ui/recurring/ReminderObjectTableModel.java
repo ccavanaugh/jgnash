@@ -17,30 +17,31 @@
  */
 package jgnash.ui.recurring;
 
-import javax.swing.table.AbstractTableModel;
-import java.text.DateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.ResourceBundle;
+
+import javax.swing.table.AbstractTableModel;
 
 import jgnash.engine.recurring.PendingReminder;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * TableModel for ReminderObjects
  * 
  * @author Craig Cavanaugh
- *
  */
 public class ReminderObjectTableModel extends AbstractTableModel {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final String[] cNames = { rb.getString("Column.Approve"), rb.getString("Column.Description"),
                     rb.getString("Column.Date") };
 
     private List<PendingReminder> reminders = null;
 
-    private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
+    private final DateTimeFormatter formatter = DateUtils.getShortDateTimeFormat();
 
     private char enabledSymbol = '\u2713';
 
@@ -81,21 +82,21 @@ public class ReminderObjectTableModel extends AbstractTableModel {
     public Object getValueAt(final int rowIndex, final int columnIndex) {
         switch (columnIndex) {
             case 0:
-                if (reminders.get(rowIndex).isSelected()) {
+                if (reminders.get(rowIndex).isApproved()) {
                     return enabledSymbol;
                 }
                 return null;
             case 1:
                 return reminders.get(rowIndex).getReminder().getDescription();
             case 2:
-                return dateFormatter.format(reminders.get(rowIndex).getCommitDate());
+                return formatter.format(reminders.get(rowIndex).getCommitDate());
             default:
                 return null;
         }
     }
 
     void toggleSelectedState(final int index) {
-        reminders.get(index).setSelected(!reminders.get(index).isSelected());
+        reminders.get(index).setApproved(!reminders.get(index).isApproved());
         fireTableRowsUpdated(index, index);
     }
 

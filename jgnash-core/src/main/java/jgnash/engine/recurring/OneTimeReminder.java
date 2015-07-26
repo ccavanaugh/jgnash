@@ -17,8 +17,9 @@
  */
 package jgnash.engine.recurring;
 
-import javax.persistence.Entity;
 import java.util.Date;
+
+import javax.persistence.Entity;
 
 /**
  * A one time only reminder
@@ -56,9 +57,11 @@ public class OneTimeReminder extends Reminder {
          */
         @Override
         public Date next() {
-            if (getLastDate() == null && !end) {
-                end = true;
-                return getStartDate();
+            if (isEnabled()) {
+                if (getLastDate() == null && !end) {
+                    end = true;
+                    return getStartDate();
+                }
             }
             return null;
         }

@@ -85,7 +85,7 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
      *
      * @param isDirty whether this {@code AbstractLayerUI} is dirty or not.
      */
-    void setDirty(boolean isDirty) {
+    private void setDirty(boolean isDirty) {
         boolean oldDirty = this.isDirty;
         this.isDirty = isDirty;
         firePropertyChange("dirty", oldDirty, isDirty);
@@ -134,7 +134,7 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
      *
      * @see JLayer#setLayerEventMask(long)
      */
-    long getLayerEventMask() {
+    private long getLayerEventMask() {
         return AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK
                 | AWTEvent.MOUSE_WHEEL_EVENT_MASK | AWTEvent.KEY_EVENT_MASK
                 | AWTEvent.FOCUS_EVENT_MASK;

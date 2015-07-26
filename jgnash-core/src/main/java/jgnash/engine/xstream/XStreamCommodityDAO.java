@@ -29,6 +29,7 @@ import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.engine.StoredObject;
 import jgnash.engine.dao.CommodityDAO;
+import jgnash.util.NotNull;
 
 /**
  * Hides all the db4o commodity code
@@ -114,7 +115,7 @@ public class XStreamCommodityDAO extends AbstractXStreamDAO implements Commodity
     }
 
     @Override
-    public List<SecurityNode> getSecurities() {
+    @NotNull public List<SecurityNode> getSecurities() {
         return stripMarkedForRemoval(container.query(SecurityNode.class));
     }
 

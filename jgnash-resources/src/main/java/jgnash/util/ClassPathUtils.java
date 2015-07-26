@@ -24,7 +24,6 @@ import java.util.Locale;
  * Classpath utilities
  *
  * @author Craig Cavanaugh
- *
  */
 public class ClassPathUtils {
 
@@ -70,9 +69,9 @@ public class ClassPathUtils {
      * @param rootPath root path to start search
      * @return the path for reading the resource, or null if the resource could not be found
      */
-    public static String getLocalizedPath(String rootPath) {
+    public static String getLocalizedPath(final String rootPath) {
 
-        Locale locale = Locale.getDefault();
+        final Locale locale = Locale.getDefault();
 
         // Try the language, country, and variant first
         String lang = locale.getLanguage() + "_" + locale.getCountry() + "_" + locale.getVariant();
@@ -109,5 +108,6 @@ public class ClassPathUtils {
     }
 
     private ClassPathUtils() {
+        // Utility class
     }
 }

@@ -10,15 +10,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import static jgnash.engine.TransactionFactory.generateBuyXTransaction;
-import static jgnash.engine.TransactionFactory.generateDividendXTransaction;
-import static jgnash.engine.TransactionFactory.generateMergeXTransaction;
-import static jgnash.engine.TransactionFactory.generateReinvestDividendXTransaction;
-import static jgnash.engine.TransactionFactory.generateSellXTransaction;
-import static jgnash.engine.TransactionFactory.generateSplitXTransaction;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static jgnash.engine.TransactionFactory.*;
+import static org.junit.Assert.*;
 
 /**
  * Unit tests for investment account transactions
@@ -32,7 +25,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
     }
 
     @Override
-    protected Engine createEngine() throws Exception {
+    protected Engine createEngine() {
         database = EngineFactory.getDefaultDatabase() + "-investTransaction-test.xml";
         EngineFactory.deleteDatabase(database);
 

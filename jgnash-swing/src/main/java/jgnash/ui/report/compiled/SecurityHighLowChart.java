@@ -21,6 +21,7 @@ import java.awt.EventQueue;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import javax.swing.JPanel;
@@ -29,7 +30,7 @@ import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.components.SecurityComboBox;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -55,20 +56,17 @@ public class SecurityHighLowChart {
 
     private SecurityComboBox combo;
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private ChartPanel chartPanel;
 
     public static void show() {
 
         EventQueue.invokeLater(() -> {
-
-            Resource rb1 = Resource.get();
-
             SecurityHighLowChart chart = new SecurityHighLowChart();
             JPanel p = chart.createPanel();
 
-            GenericCloseDialog d = new GenericCloseDialog(p, rb1.getString("Title.AccountBalance"));
+            GenericCloseDialog d = new GenericCloseDialog(p, ResourceUtils.getString("Title.AccountBalance"));
             d.pack();
             d.setModal(false);
             d.setVisible(true);

@@ -17,13 +17,11 @@
  */
 package jgnash.ui.account;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -43,7 +41,10 @@ import jgnash.engine.SecurityNode;
 import jgnash.ui.components.CurrencyComboBox;
 import jgnash.ui.components.JIntegerField;
 import jgnash.ui.components.JTextFieldEx;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Panel for entering / modifying account information.
@@ -52,7 +53,7 @@ import jgnash.util.Resource;
  */
 final class AccountPanel extends JPanel implements ActionListener {
 
-    private final transient Resource rb = Resource.get();
+    private final transient ResourceBundle rb = ResourceUtils.getBundle();
 
     private Account parentAccount;
 

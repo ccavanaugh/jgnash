@@ -32,7 +32,6 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.ReconcileManager;
-import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionFactory;
@@ -125,7 +124,7 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
                     // add it to the clone
                     t.addTransactionEntry(e);
 
-                    ReconcileManager.reconcileTransaction(getAccount(), t, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+                    ReconcileManager.reconcileTransaction(getAccount(), t, getReconciledState());
 
                     engine.removeTransaction(modTrans);
                     engine.addTransaction(t);
@@ -191,7 +190,7 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
             }
         }
 
-        entry.setReconciled(account, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+        entry.setReconciled(account, getReconciledState());
 
         return entry;
     }
@@ -235,7 +234,7 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
             }
         }
 
-        ReconcileManager.reconcileTransaction(getAccount(), transaction, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+        ReconcileManager.reconcileTransaction(getAccount(), transaction, getReconciledState());
 
         return transaction;
     }
@@ -286,7 +285,7 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
         payeeField.setText(t.getPayee());
         numberField.setText(t.getNumber());
         datePanel.setDate(t.getDate());
-        reconciledButton.setSelected(t.getReconciled(getAccount()) != ReconciledState.NOT_RECONCILED);
+        setReconciledState(t.getReconciled(getAccount()));
 
         if (t.getTransactionType() == TransactionType.SPLITENTRY) {
 
@@ -409,7 +408,7 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
         datePanel.setEditable(true);
 
         numberField.setEnabled(true);
-        reconciledButton.setEnabled(true);
+        getReconcileCheckBox().setEnabled(true);
         payeeField.setEditable(true);
 
         super.clearForm();

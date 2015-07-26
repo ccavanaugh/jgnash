@@ -20,9 +20,9 @@ package jgnash.engine.recurring;
 import java.util.Calendar;
 import java.util.Date;
 
-import jgnash.util.DateUtils;
-
 import javax.persistence.Entity;
+
+import jgnash.util.DateUtils;
 
 /**
  * A weekly reminder
@@ -76,13 +76,15 @@ public class WeeklyReminder extends Reminder {
          */
         @Override
         public Date next() {
-            calendar.add(Calendar.WEEK_OF_MONTH, getIncrement());
-            Date date = calendar.getTime();
+            if (isEnabled()) {
+                calendar.add(Calendar.WEEK_OF_MONTH, getIncrement());
+                final Date date = calendar.getTime();
 
-            if (getEndDate() == null) {
-                return date;
-            } else if (DateUtils.before(date, getEndDate())) {
-                return date;
+                if (getEndDate() == null) {
+                    return date;
+                } else if (DateUtils.before(date, getEndDate())) {
+                    return date;
+                }
             }
             return null;
         }

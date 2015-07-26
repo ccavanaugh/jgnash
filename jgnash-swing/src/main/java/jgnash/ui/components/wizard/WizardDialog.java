@@ -26,6 +26,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -41,7 +42,8 @@ import javax.swing.WindowConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.ListSelectionEvent;
 
-import jgnash.util.Resource;
+import jgnash.ui.util.IconUtils;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -76,7 +78,7 @@ public class WizardDialog extends JDialog implements ActionListener {
 
     private JList<WizardPage> taskList;
 
-    protected final Resource rb = Resource.get();
+    protected final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final Map<Enum<?>, Object> settings = new HashMap<>();
 
@@ -139,10 +141,10 @@ public class WizardDialog extends JDialog implements ActionListener {
         pagePanel = new JPanel(new CardLayout());
 
         backButton = new JButton(rb.getString("Button.Back"));
-        backButton.setIcon(Resource.getIcon("/jgnash/resource/go-previous.png"));
+        backButton.setIcon(IconUtils.getIcon("/jgnash/resource/go-previous.png"));
 
         nextButton = new JButton(rb.getString("Button.Next"));
-        nextButton.setIcon(Resource.getIcon("/jgnash/resource/go-next.png"));
+        nextButton.setIcon(IconUtils.getIcon("/jgnash/resource/go-next.png"));
         nextButton.setHorizontalTextPosition(SwingConstants.LEADING);
 
         finishButton = new JButton(rb.getString("Button.Finish"));

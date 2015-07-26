@@ -17,10 +17,21 @@
  */
 package jgnash.uifx.views.main;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.stage.Stage;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -29,7 +40,17 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.about.AboutDialog;
+import jgnash.uifx.actions.DefaultCurrencyAction;
+import jgnash.uifx.actions.DefaultLocaleAction;
+import jgnash.uifx.dialog.currency.AddRemoveCurrencyController;
+import jgnash.uifx.dialog.currency.ModifyCurrencyController;
+import jgnash.uifx.dialog.security.CreateModifySecuritiesController;
+import jgnash.uifx.dialog.security.SecurityHistoryController;
 import jgnash.uifx.tasks.CloseFileTask;
+import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.views.register.RegisterStage;
+import jgnash.uifx.wizard.file.NewFileWizard;
 
 /**
  * Primary Menu Controller
@@ -38,19 +59,70 @@ import jgnash.uifx.tasks.CloseFileTask;
  */
 public class MenuBarController implements MessageListener {
 
-    @FXML private MenuBar menuBar;
+    @FXML
+    private Menu currenciesMenu;
 
-    @FXML private MenuItem openMenuItem;
+    @FXML
+    private Menu securitiesMenu;
 
-    @FXML private MenuItem closeMenuItem;
+    @FXML
+    private Menu windowMenu;
 
-    @FXML private MenuItem exitMenuItem;
+    @FXML
+    private MenuBar menuBar;
+
+    @FXML
+    private MenuItem openMenuItem;
+
+    @FXML
+    private MenuItem closeMenuItem;
+
+    @FXML
+    private MenuItem exitMenuItem;
+
+    private final BooleanProperty disabled = new SimpleBooleanProperty(true);
+
+    @FXML
+    private ResourceBundle resources;
 
     @FXML
     private void initialize() {
-        closeMenuItem.setDisable(true);
+        securitiesMenu.disableProperty().bind(disabled);
+        currenciesMenu.disableProperty().bind(disabled);
+        closeMenuItem.disableProperty().bind(disabled);
+
+        windowMenu.disableProperty().bind(Bindings.or(disabled, RegisterStage.registerStageListProperty().emptyProperty()));
+
+        RegisterStage.registerStageListProperty().addListener((ListChangeListener<RegisterStage>) c -> {
+            while (c.next()) {
+                if (c.wasAdded()) {
+                    c.getAddedSubList().forEach(MenuBarController.this::addWindowMenuItem);
+                } else if (c.wasRemoved()) {
+                    c.getAddedSubList().forEach(MenuBarController.this::removeWindowMenuItem);
+                }
+            }
+        });
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
+    }
+
+    private void addWindowMenuItem(final RegisterStage registerStage) {
+        final MenuItem menuItem = new MenuItem(registerStage.accountProperty().get().getName());
+        menuItem.setUserData(registerStage);
+
+        menuItem.setOnAction(event -> {
+            final RegisterStage stage = (RegisterStage) menuItem.getUserData();
+            stage.requestFocus();
+        });
+
+        registerStage.setOnHiding(event -> windowMenu.getItems().removeAll(menuItem));
+
+        windowMenu.getItems().add(0, menuItem);
+    }
+
+    private void removeWindowMenuItem(final RegisterStage registerStage) {
+        windowMenu.getItems().stream().filter(item -> item.getUserData() == registerStage).
+                forEach(item -> windowMenu.getItems().remove(item));
     }
 
     @FXML
@@ -65,7 +137,7 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleCloseAction() {
         if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
-            CloseFileTask.initiateClose();
+            CloseFileTask.initiateFileClose();
         }
     }
 
@@ -77,17 +149,29 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void updateSecurities() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-        if (engine != null) {
-            engine.startSecuritiesUpdate(0);
-        }
+
+        Objects.requireNonNull(engine);
+
+        engine.startSecuritiesUpdate(0);
     }
 
     @FXML
     private void updateCurrencies() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-        if (engine != null) {
-            engine.startExchangeRateUpdate(0);
-        }
+
+        Objects.requireNonNull(engine);
+
+        engine.startExchangeRateUpdate(0);
+    }
+
+    @FXML
+    private void handleNewAction() {
+        NewFileWizard.show();
+    }
+
+    @FXML
+    private void handleAboutAction() {
+        AboutDialog.showAndWait();
     }
 
     @Override
@@ -96,18 +180,77 @@ public class MenuBarController implements MessageListener {
             switch (event.getEvent()) {
                 case FILE_LOAD_SUCCESS:
                 case FILE_NEW_SUCCESS:
-                    closeMenuItem.setDisable(false);
+                    disabled.setValue(false);
                     break;
                 case FILE_CLOSING:
-                    closeMenuItem.setDisable(true);
+                    disabled.setValue(true);
                     break;
-                case FILE_IO_ERROR:
-                case FILE_LOAD_FAILED:
-                case FILE_NOT_FOUND:
-                    StaticUIMethods.displayError("File system error TBD");  // TODO: need a description
                 default:
                     break;
             }
         });
+    }
+
+    @FXML
+    private void changeDefaultLocale() {
+        DefaultLocaleAction.showAndWait();
+    }
+
+    @FXML
+    private void closeAllWindows() {
+        // create a copy to avoid concurrent modification issues
+        final ArrayList<RegisterStage> registerStages = new ArrayList<>(RegisterStage.registerStageListProperty().get());
+
+        registerStages.forEach(RegisterStage::close);
+    }
+
+    @FXML
+    private void handleCreateModifySecuritiesAction() {
+        final URL fxmlUrl = CreateModifySecuritiesController.class.getResource("CreateModifySecurities.fxml");
+        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
+        stage.setTitle(resources.getString("Title.CreateModifyCommodities"));
+
+        stage.showAndWait();
+    }
+
+    @FXML
+    private void handleSecuritiesHistoryAction() {
+        final URL fxmlUrl = SecurityHistoryController.class.getResource("SecurityHistory.fxml");
+        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
+        stage.setTitle(resources.getString("Title.ModifySecHistory"));
+
+        stage.showAndWait();
+    }
+
+    @FXML
+    private void handleSecurityHistoryImportAction() {
+        final URL fxmlUrl = SecurityHistoryController.class.getResource("HistoricalImport.fxml");
+        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
+        stage.setTitle(resources.getString("Title.HistoryImport"));
+
+        stage.showAndWait();
+    }
+
+    @FXML
+    private void handleAddRemoveCurrenciesAction() {
+        final URL fxmlUrl = AddRemoveCurrencyController.class.getResource("AddRemoveCurrency.fxml");
+        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
+        stage.setTitle(resources.getString("Title.AddRemCurr"));
+
+        stage.showAndWait();
+    }
+
+    @FXML
+    private void handleSetDefaultCurrencyAction() {
+        DefaultCurrencyAction.showAndWait();
+    }
+
+    @FXML
+    private void handleModifyCurrenciesAction() {
+        final URL fxmlUrl = ModifyCurrencyController.class.getResource("ModifyCurrency.fxml");
+        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
+        stage.setTitle(resources.getString("Title.ModifyCurrencies"));
+
+        stage.showAndWait();
     }
 }

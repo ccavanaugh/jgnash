@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -58,6 +59,8 @@ public class FXMLUtils {
         stage.initStyle(StageStyle.DECORATED);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.getIcons().add(StaticUIMethods.getApplicationIcon());
+
+        stage.sizeToScene();    // force a resize, some stages need a push
 
         StageUtils.addBoundsListener(stage, stage.getClass());
     }
@@ -154,6 +157,8 @@ public class FXMLUtils {
             stage.setScene(scene);
             stage.getIcons().add(StaticUIMethods.getApplicationIcon());
 
+            stage.sizeToScene();    // force a resize, some stages need a push
+
             // Inject the scene into the controller
             injectParent(controller, scene);
         } catch (final IOException ioe) { // log and throw an unchecked exception
@@ -183,8 +188,56 @@ public class FXMLUtils {
             final Scene scene = new Scene(fxmlLoader.load());
             scene.getStylesheets().addAll(MainApplication.DEFAULT_CSS);
 
+            injectParent(fxmlLoader.getController(), scene);
+
             stage.setScene(scene);
             stage.getIcons().add(StaticUIMethods.getApplicationIcon());
+
+            stage.sizeToScene();    // force a resize, some stages need a push
+        } catch (final IOException ioe) { // log and throw an unchecked exception
+            Logger.getLogger(FXMLUtils.class.getName()).log(Level.SEVERE, ioe.getMessage(), ioe);
+            throw new UncheckedIOException(ioe);
+        }
+
+        Platform.runLater(() -> {
+            stage.setMinWidth(stage.getWidth());
+            stage.setMinHeight(stage.getHeight());
+        });
+
+        return stage;
+    }
+
+    /**
+     * Creates a new Stage with application defaults {@code StageStyle.DECORATED}, {@code Modality.APPLICATION_MODAL}
+     * with the specified fxml {@code URL} as the {@code Scene}.  The controller is returned via a {@code Consumer}
+     *
+     * @param fxmlUrl        the fxml {@code URL}
+     * @param resourceBundle {@code ResourceBundle} to pass to the {@code FXMLLoader}
+     * @param consumer       {@code ObjectProperty} to store the controller in
+     * @param <C>            the fxml controller
+     * @return new {@code Stage}
+     */
+    public static<C> Stage loadFXML(final URL fxmlUrl, final ObjectProperty<C> consumer, final ResourceBundle resourceBundle) {
+        final FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl, resourceBundle);
+
+        final Stage stage = new Stage(StageStyle.DECORATED);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initOwner(MainApplication.getInstance().getPrimaryStage());
+
+        try {
+            final Scene scene = new Scene(fxmlLoader.load());
+            scene.getStylesheets().addAll(MainApplication.DEFAULT_CSS);
+
+            C controller = fxmlLoader.getController();
+            consumer.setValue(controller);
+
+            stage.setScene(scene);
+            stage.getIcons().add(StaticUIMethods.getApplicationIcon());
+
+            stage.sizeToScene();    // force a resize, some stages need a push
+
+            // Inject the scene into the controller
+            injectParent(controller, scene);
         } catch (final IOException ioe) { // log and throw an unchecked exception
             Logger.getLogger(FXMLUtils.class.getName()).log(Level.SEVERE, ioe.getMessage(), ioe);
             throw new UncheckedIOException(ioe);

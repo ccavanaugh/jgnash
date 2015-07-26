@@ -17,12 +17,12 @@
  */
 package jgnash.engine;
 
-import jgnash.util.NotNull;
-import jgnash.util.Resource;
-
 import java.math.BigDecimal;
 
 import javax.persistence.Entity;
+
+import jgnash.util.NotNull;
+import jgnash.util.ResourceUtils;
 
 /**
  * Remove shares without impacting the cash balance. This is a single entry transaction
@@ -44,7 +44,7 @@ public final class TransactionEntryMergeX extends AbstractInvestmentTransactionE
     public TransactionEntryMergeX(final Account investmentAccount, final SecurityNode securityNode, final BigDecimal price, final BigDecimal quantity) {
 
         if (investmentAccount.getAccountType().getAccountGroup() != AccountGroup.INVEST) {
-            throw new RuntimeException(Resource.get().getString("Message.Error.InvalidAccountGroup"));
+            throw new RuntimeException(ResourceUtils.getString("Message.Error.InvalidAccountGroup"));
         }
 
         setCreditAccount(investmentAccount);

@@ -22,29 +22,31 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.swing.table.AbstractTableModel;
 
 import jgnash.engine.Account;
 import jgnash.engine.TransactionEntry;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Table model for displaying TransactionEntry objects
  *
  * @author Craig Cavanaugh
- *
  */
 public class SplitsRegisterTableModel extends AbstractTableModel implements AccountTableModel {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     /**
      * Names of the columns
      */
-    private String[] cNames = { rb.getString("Column.Account"), rb.getString("Column.Clr"), rb.getString("Column.Memo"), rb.getString("Column.Credit"), rb.getString("Column.Debit"), rb.getString("Column.Balance") };
+    private String[] cNames = { rb.getString("Column.Account"), rb.getString("Column.Clr"), rb.getString("Column.Memo"),
+            rb.getString("Column.Credit"), rb.getString("Column.Debit"), rb.getString("Column.Balance") };
 
-    private final Class<?>[] cClass = { String.class, String.class, String.class, ShortCommodityStyle.class, ShortCommodityStyle.class, FullCommodityStyle.class };
+    private final Class<?>[] cClass = { String.class, String.class, String.class, ShortCommodityStyle.class,
+            ShortCommodityStyle.class, FullCommodityStyle.class };
 
     private final Account account;
 

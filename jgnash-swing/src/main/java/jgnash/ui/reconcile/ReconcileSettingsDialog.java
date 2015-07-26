@@ -17,15 +17,12 @@
  */
 package jgnash.ui.reconcile;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.factories.Borders;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -41,7 +38,11 @@ import jgnash.ui.register.AccountBalanceDisplayManager;
 import jgnash.ui.util.DialogUtils;
 import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.factories.Borders;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Account reconcile settings dialog.
@@ -52,7 +53,7 @@ public class ReconcileSettingsDialog extends JDialog implements ActionListener {
 
     private static final int FUZZY_DATE_RANGE = 2;
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final JButton okButton;
 

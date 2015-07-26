@@ -30,16 +30,19 @@ import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ToolBar;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -52,13 +55,15 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.net.security.UpdateFactory;
 import jgnash.net.security.YahooParser;
+import jgnash.resource.font.FontAwesomeImageView;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.BusyPane;
 import jgnash.uifx.control.TabViewPane;
 import jgnash.uifx.tasks.CloseFileTask;
-import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.accounts.AccountsViewController;
+import jgnash.uifx.views.recurring.RecurringViewController;
+import jgnash.uifx.views.register.RegisterStage;
 import jgnash.uifx.views.register.RegisterViewController;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
@@ -66,8 +71,6 @@ import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
 
 import com.sun.javafx.css.StyleManager;
-
-import org.controlsfx.control.StatusBar;
 
 /**
  * JavaFX version of jGnash.
@@ -95,6 +98,8 @@ public class MainApplication extends Application implements MessageListener {
     private TabViewPane tabViewPane;
 
     private BusyPane busyPane;
+
+    private final ListProperty<RegisterStage> registerStageListProperty = new SimpleListProperty<>();
 
     /**
      * Application Singleton
@@ -129,8 +134,16 @@ public class MainApplication extends Application implements MessageListener {
 
         busyPane = new BusyPane();
 
-        final MenuBar menuBar = FXMLLoader.load(MenuBarController.class.getResource("MainMenuBar.fxml"), rb);
+        final FXMLLoader fxmlLoader = new FXMLLoader(MenuBarController.class.getResource("MainMenuBar.fxml"), rb);
+
+        final MenuBar menuBar = fxmlLoader.load();
+        //final MenuBarController controller = fxmlLoader.getController();
+
+        // bind the register stage lists together
+        registerStageListProperty.bindBidirectional(RegisterStage.registerStageListProperty());
+
         final ToolBar mainToolBar = FXMLLoader.load(MainToolBarController.class.getResource("MainToolBar.fxml"), rb);
+
         tabViewPane = new TabViewPane();
 
         final VBox top = new VBox();
@@ -175,12 +188,13 @@ public class MainApplication extends Application implements MessageListener {
 
     private void addViews() {
         try {
-            Pane accountsPane = FXMLLoader.load(AccountsViewController.class.getResource("AccountsView.fxml"), ResourceUtils.getBundle());
-            Pane registerPane = FXMLLoader.load(RegisterViewController.class.getResource("RegisterView.fxml"), ResourceUtils.getBundle());
+            final Pane accountsPane = FXMLLoader.load(AccountsViewController.class.getResource("AccountsView.fxml"), ResourceUtils.getBundle());
+            final Pane registerPane = FXMLLoader.load(RegisterViewController.class.getResource("RegisterView.fxml"), ResourceUtils.getBundle());
+            final Pane recurringPane = FXMLLoader.load(RecurringViewController.class.getResource("RecurringView.fxml"), ResourceUtils.getBundle());
 
             tabViewPane.addTab(accountsPane, rb.getString("Tab.Accounts"));
             tabViewPane.addTab(registerPane, rb.getString("Tab.Register"));
-            tabViewPane.addTab(null, rb.getString("Tab.Reminders"));
+            tabViewPane.addTab(recurringPane, rb.getString("Tab.Reminders"));
             tabViewPane.addTab(null, rb.getString("Tab.Budgeting"));
         } catch (final IOException e) {
             StaticUIMethods.displayException(e);
@@ -256,13 +270,15 @@ public class MainApplication extends Application implements MessageListener {
                 });
                 break;
             case FILE_IO_ERROR:
-                logger.severe("IO error");
+                logger.warning(rb.getString("Message.Error.IOError"));
+                StaticUIMethods.displayError(rb.getString("Message.Error.IOError"));
                 break;
             case FILE_LOAD_FAILED:
-                logger.warning("Error occurred loading the file");
+                logger.warning(rb.getString("Message.Error.LoadingFile"));
+                StaticUIMethods.displayError(rb.getString("Message.Error.LoadingFile"));
                 break;
             case FILE_NOT_FOUND:
-                logger.warning("File was not found");
+                logger.warning(rb.getString("Message.Error.FileNotFound"));
                 break;
             case ACCOUNT_REMOVE_FAILED:
                 StaticUIMethods.displayError(rb.getString("Message.Error.AccountRemove"));
@@ -282,9 +298,9 @@ public class MainApplication extends Application implements MessageListener {
     private void setBusyBackground(final boolean busy) {
         Platform.runLater(() -> {
             if (busy) {
-                statusBar.setProgress(-1);
+                statusBar.progressProperty().set(-1);
             } else {
-                statusBar.setProgress(0);
+                statusBar.progressProperty().set(0);
             }
         });
     }
@@ -309,19 +325,19 @@ public class MainApplication extends Application implements MessageListener {
 
     private class StatusBarLogHandler extends Handler {
 
-        private static final String GRAPHIC_SIZE = "0.8em";
+        private static final double GRAPHIC_SIZE = 11;
 
-        final Text INFO;
+        final ImageView INFO;
 
-        final Text WARNING;
+        final ImageView WARNING;
 
-        final Text SEVERE;
+        final ImageView SEVERE;
 
         public StatusBarLogHandler() {
 
-            INFO = JavaFXUtils.createGlyph(FontAwesomeIcon.INFO, GRAPHIC_SIZE);
-            WARNING = JavaFXUtils.createGlyph(FontAwesomeIcon.FLAG, GRAPHIC_SIZE);
-            SEVERE = JavaFXUtils.createGlyph(FontAwesomeIcon.BUG, GRAPHIC_SIZE, "darkred");
+            INFO = new FontAwesomeImageView(FontAwesomeIcon.INFO, GRAPHIC_SIZE);
+            WARNING = new FontAwesomeImageView(FontAwesomeIcon.FLAG, GRAPHIC_SIZE);
+            SEVERE = new FontAwesomeImageView(FontAwesomeIcon.BUG, GRAPHIC_SIZE, Color.DARKRED);
         }
 
         @Override
@@ -343,10 +359,10 @@ public class MainApplication extends Application implements MessageListener {
             }
         }
 
-        private void updateStatus(final String status, final Text glyph) {
+        private void updateStatus(final String status, final ImageView glyph) {
             Platform.runLater(() -> {
-                statusBar.setText(status);
-                statusBar.setGraphic(glyph);
+                statusBar.textProperty().setValue(status);
+                statusBar.graphicProperty().setValue(glyph);
             });
         }
     }

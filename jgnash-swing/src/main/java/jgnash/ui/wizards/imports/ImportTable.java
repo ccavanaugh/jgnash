@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.util.Collections;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultRowSorter;
@@ -42,17 +43,18 @@ import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.Account;
 import jgnash.ui.components.AccountListComboBox;
 import jgnash.ui.components.FormattedJTable;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * @author Craig Cavanaugh
  */
 class ImportTable extends FormattedJTable {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final Model model;
 
@@ -191,16 +193,16 @@ class ImportTable extends FormattedJTable {
         private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
 
         public Model() {
-            notEqualIcon = Resource.getIcon("/jgnash/resource/not-equal.png");
+            notEqualIcon = IconUtils.getIcon("/jgnash/resource/not-equal.png");
             notEqualIcon.setDescription("not");
 
-            equalIcon = Resource.getIcon("/jgnash/resource/equal.png");
+            equalIcon = IconUtils.getIcon("/jgnash/resource/equal.png");
             equalIcon.setDescription("equals");
 
-            addIcon = Resource.getIcon("/jgnash/resource/add.png");
+            addIcon = IconUtils.getIcon("/jgnash/resource/add.png");
             addIcon.setDescription("add");
 
-            removeIcon = Resource.getIcon("/jgnash/resource/remove.png");
+            removeIcon = IconUtils.getIcon("/jgnash/resource/remove.png");
             removeIcon.setDescription("remove");
         }
 

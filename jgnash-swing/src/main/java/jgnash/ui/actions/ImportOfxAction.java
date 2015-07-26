@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +43,7 @@ import jgnash.ui.StaticUIMethods;
 import jgnash.ui.util.builder.Action;
 import jgnash.ui.wizards.imports.ImportDialog;
 import jgnash.util.FileMagic;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Import OFX file action
@@ -56,7 +57,7 @@ public class ImportOfxAction extends AbstractEnabledAction {
     private static final String OFX_DIR = "OfxDirectory";
 
     private static void importOfx() {
-        final Resource rb = Resource.get();
+        final ResourceBundle rb = ResourceUtils.getBundle();
 
         final Preferences pref = Preferences.userNodeForPackage(ImportOfxAction.class);
 

@@ -17,11 +17,9 @@
  */
 package jgnash.ui.wizards.file;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.Color;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.swing.JList;
@@ -33,16 +31,18 @@ import javax.swing.border.LineBorder;
 import jgnash.engine.CurrencyNode;
 import jgnash.ui.components.SortedListModel;
 import jgnash.ui.components.wizard.WizardPage;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * New file wizard panel.
  *
  * @author Craig Cavanaugh
- *
  */
 public class NewFileSummary extends javax.swing.JPanel implements WizardPage {
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private JTextField fileField;
 

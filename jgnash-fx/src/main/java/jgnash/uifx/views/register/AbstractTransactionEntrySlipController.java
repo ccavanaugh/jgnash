@@ -18,6 +18,8 @@
 package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -31,6 +33,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyEvent;
 
 import jgnash.engine.Account;
+import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.uifx.control.AutoCompleteTextField;
@@ -60,7 +63,7 @@ abstract class AbstractTransactionEntrySlipController {
     AccountExchangePane accountExchangePane;
 
     @FXML
-    CheckBox reconciledButton;
+    private CheckBox reconciledButton;
 
     @FXML
     AttachmentPane attachmentPane;
@@ -70,14 +73,18 @@ abstract class AbstractTransactionEntrySlipController {
 
     final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
-    private final SimpleObjectProperty<List<TransactionEntry>> transactionEntryListProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<List<TransactionEntry>> transactionEntryListProperty = new SimpleObjectProperty<>();
+
+    private final ObjectProperty<Comparator<TransactionEntry>> comparatorProperty = new SimpleObjectProperty<>();
 
     TransactionEntry oldEntry;
 
     @FXML
     private void initialize() {
+        reconciledButton.setAllowIndeterminate(true);
+
         // Bind necessary properties to the exchange panel
-        accountExchangePane.baseAccountProperty().bind(getAccountProperty());
+        accountExchangePane.baseAccountProperty().bind(accountProperty());
         accountExchangePane.amountProperty().bindBidirectional(amountField.decimalProperty());
         accountExchangePane.amountEditableProperty().bind(amountField.editableProperty());
 
@@ -104,14 +111,42 @@ abstract class AbstractTransactionEntrySlipController {
         });
     }
 
+    void setReconciledState(final ReconciledState reconciledState) {
+        switch (reconciledState) {
+            case NOT_RECONCILED:
+                reconciledButton.setIndeterminate(false);
+                reconciledButton.setSelected(false);
+                break;
+            case RECONCILED:
+                reconciledButton.setIndeterminate(false);
+                reconciledButton.setSelected(true);
+                break;
+            case CLEARED:
+                reconciledButton.setIndeterminate(true);
+        }
+    }
+
+    ReconciledState getReconciledState() {
+        if (reconciledButton.isIndeterminate()) {
+            return ReconciledState.CLEARED;
+        } else if (reconciledButton.isSelected()) {
+            return ReconciledState.RECONCILED;
+        }
+        return ReconciledState.NOT_RECONCILED;
+    }
+
     abstract TransactionEntry buildTransactionEntry();
 
-    ObjectProperty<Account> getAccountProperty() {
+    ObjectProperty<Account> accountProperty() {
         return accountProperty;
     }
 
-    ObjectProperty<List<TransactionEntry>> getTransactionEntryListProperty() {
+    ObjectProperty<List<TransactionEntry>> transactionEntryListProperty() {
         return transactionEntryListProperty;
+    }
+
+    ObjectProperty<Comparator<TransactionEntry>> comparatorProperty() {
+        return comparatorProperty;
     }
 
     boolean hasEqualCurrencies() {
@@ -130,9 +165,12 @@ abstract class AbstractTransactionEntrySlipController {
     void clearForm() {
         oldEntry = null;
 
+        reconciledButton.setDisable(false);
+        reconciledButton.setSelected(false);
+        reconciledButton.setIndeterminate(false);
+
         memoField.setText(null);
         amountField.setDecimal(BigDecimal.ZERO);
-        reconciledButton.setSelected(false);
         accountExchangePane.setExchangedAmount(null);
     }
 
@@ -141,11 +179,17 @@ abstract class AbstractTransactionEntrySlipController {
         if (validateForm()) {
             final TransactionEntry entry = buildTransactionEntry();
 
+            final List<TransactionEntry> entries = transactionEntryListProperty.get();
+
             if (oldEntry != null) {
-                transactionEntryListProperty.get().remove(oldEntry);
+                entries.remove(oldEntry);
             }
 
-            transactionEntryListProperty.get().add(entry);
+            final int index = Collections.binarySearch(entries, entry, comparatorProperty.get());
+
+            if (index < 0) {
+                entries.add(-index - 1, entry);
+            }
 
             clearForm();
             memoField.requestFocus();

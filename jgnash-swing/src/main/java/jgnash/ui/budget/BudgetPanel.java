@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -66,8 +67,9 @@ import jgnash.engine.message.MessageProperty;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.RollOverButton;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -124,19 +126,19 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
 
         initBudgetCombo();
 
-        Resource rb = Resource.get();
+        ResourceBundle rb = ResourceUtils.getBundle();
 
         budgetExportButton = new RollOverButton(rb.getString("Button.ExportSpreadsheet"),
-                Resource.getIcon("/jgnash/resource/x-office-spreadsheet.png"));
+                IconUtils.getIcon("/jgnash/resource/x-office-spreadsheet.png"));
         budgetExportButton.addActionListener(this);
 
         budgetManagerButton = new RollOverButton(rb.getString("Button.BudgetMgr"),
-                Resource.getIcon("/jgnash/resource/document-new.png"));
+                IconUtils.getIcon("/jgnash/resource/document-new.png"));
         budgetManagerButton.setToolTipText(rb.getString("ToolTip.BudgetMgr"));
         budgetManagerButton.addActionListener(this);
 
         budgetPropertiesButton = new RollOverButton(rb.getString("Button.Properties"),
-                Resource.getIcon("/jgnash/resource/document-properties.png"));
+                IconUtils.getIcon("/jgnash/resource/document-properties.png"));
         budgetPropertiesButton.addActionListener(this);
 
         summaryRowVisibleCheckBox = new JCheckBox(rb.getString("Button.SumRowVis"));
@@ -236,7 +238,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
         worker.execute();
     }
 
-    void refreshDisplay() {
+    private void refreshDisplay() {
         logger.entering(BudgetPanel.class.getName(), "refreshDisplay");
 
         SwingWorker<Integer, Void> worker = new SwingWorker<Integer, Void>() {
@@ -655,7 +657,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
     private void exportBudgetAction() {
         final Preferences pref = Preferences.userNodeForPackage(BudgetPanel.class);
 
-        final Resource rb = Resource.get();
+        final ResourceBundle rb = ResourceUtils.getBundle();
 
         JFileChooser chooser = new JFileChooser(pref.get(CURRENT_DIR, null));
         chooser.setMultiSelectionEnabled(false);

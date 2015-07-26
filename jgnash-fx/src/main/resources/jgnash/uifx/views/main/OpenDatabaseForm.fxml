@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import jgnash.uifx.control.IntegerTextField?>
+<?import jgnash.resource.font.FontAwesomeImageView?>
 <GridPane maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-1.0"
           minWidth="-Infinity" prefHeight="-1.0" xmlns:fx="http://javafx.com/fxml/1"
           xmlns="http://javafx.com/javafx/8" fx:controller="jgnash.uifx.views.main.OpenDatabaseController" styleClass="form, dialog">
@@ -22,8 +23,11 @@
             </labelFor>
         </Label>
         <fx:reference source="localDatabaseField"/>
-        <Button mnemonicParsing="false" onAction="#handleSelectFileAction" text="…" GridPane.columnIndex="2"
-                GridPane.rowIndex="0"/>
+        <Button mnemonicParsing="false" onAction="#handleSelectFileAction" GridPane.columnIndex="2" GridPane.rowIndex="0">
+            <graphic>
+                <FontAwesomeImageView glyphName="ELLIPSIS_H"/>
+            </graphic>
+        </Button>
         <CheckBox fx:id="remoteServerCheckBox" mnemonicParsing="false" onAction="#handleRemoteAction"
                   text="%Button.RemoteServer" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="1"/>
         <Label text="%Label.DatabaseServer" GridPane.columnIndex="0" GridPane.rowIndex="2">

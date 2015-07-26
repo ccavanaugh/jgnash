@@ -35,7 +35,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.ui.components.SortedComboBoxModel;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * ComboBox for displaying a list of Budgets. Automatically refreshes itself when necessary
@@ -57,11 +57,8 @@ public final class BudgetComboBox extends JComboBox<Budget> {
 
             @Override
             public void run() {
-
-                Resource rb = Resource.get();
-
                 Budget prototype = new Budget();
-                prototype.setName(rb.getString("Word.NewBudget") + " " + 1);
+                prototype.setName(ResourceUtils.getString("Word.NewBudget") + " " + 1);
 
                 setPrototypeDisplayValue(prototype);
             }

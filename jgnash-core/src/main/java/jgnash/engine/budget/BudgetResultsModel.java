@@ -131,7 +131,7 @@ public class BudgetResultsModel implements MessageListener {
         return depth;
     }
 
-    public boolean areParentsIncluded(final Account account) {
+    private boolean areParentsIncluded(final Account account) {
         boolean result = true;
 
         Account parent = account.getParent();
@@ -253,7 +253,7 @@ public class BudgetResultsModel implements MessageListener {
         }
     }
 
-    final Set<Account> getAccounts(final AccountGroup group) {
+    private Set<Account> getAccounts(final AccountGroup group) {
         accountLock.readLock().lock();
 
         try {
@@ -524,7 +524,7 @@ public class BudgetResultsModel implements MessageListener {
         return results;
     }
 
-    BudgetPeriodResults buildResults(final Account account) {
+    private BudgetPeriodResults buildResults(final Account account) {
         BigDecimal change = BigDecimal.ZERO;
         BigDecimal budgeted = BigDecimal.ZERO;
         BigDecimal remaining = BigDecimal.ZERO;
@@ -552,7 +552,7 @@ public class BudgetResultsModel implements MessageListener {
         return results;
     }
 
-    BudgetPeriodResults buildResults(final AccountGroup group) {
+    private BudgetPeriodResults buildResults(final AccountGroup group) {
         BigDecimal totalChange = BigDecimal.ZERO;
         BigDecimal totalBudgeted = BigDecimal.ZERO;
         BigDecimal totalRemaining = BigDecimal.ZERO;

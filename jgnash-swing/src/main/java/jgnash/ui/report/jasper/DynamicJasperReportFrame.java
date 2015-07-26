@@ -34,7 +34,7 @@ import javax.swing.WindowConstants;
 
 import jgnash.ui.components.WaitMessagePanel;
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.Resource;
+import jgnash.ui.util.IconUtils;
 
 import org.jdesktop.swingx.JXStatusBar;
 
@@ -95,7 +95,7 @@ final class DynamicJasperReportFrame extends JFrame {
         statusBar.add(statusField, c1);
         statusBar.setResizeHandleEnabled(true);
 
-        setIconImage(Resource.getImage("/jgnash/resource/gnome-money.png"));
+        setIconImage(IconUtils.getImage("/jgnash/resource/gnome-money.png"));
 
         waitPanel = new WaitMessagePanel();
 

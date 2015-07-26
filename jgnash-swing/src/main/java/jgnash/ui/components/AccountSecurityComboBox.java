@@ -27,7 +27,7 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageProperty;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * JComboBox to list Securities available to the account
@@ -43,7 +43,7 @@ public class AccountSecurityComboBox extends AbstractCommodityComboBox<SecurityN
         super();
 
         if (acc == null || acc.getAccountType().getAccountGroup() != AccountGroup.INVEST) {
-            throw new IllegalArgumentException(Resource.get().getString("Message.Error.InvalidAccountGroup"));
+            throw new IllegalArgumentException(ResourceUtils.getString("Message.Error.InvalidAccountGroup"));
         }
 
         this.account = acc;

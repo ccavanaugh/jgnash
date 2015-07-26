@@ -35,7 +35,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.engine.message.MessageProxy;
 import jgnash.ui.components.expandingtable.AbstractExpandingTableModel;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * TableModel that can expand and contract the displayed rows
@@ -44,7 +44,7 @@ import jgnash.util.Resource;
  */
 public class ExpandingBudgetTableModel extends AbstractExpandingTableModel<Account> implements MessageListener {
 
-    private static final String COLUMN_NAME = Resource.get().getString("Column.Account");
+    private static final String COLUMN_NAME = ResourceUtils.getString("Column.Account");
 
     private final MessageProxy proxy = new MessageProxy();
 

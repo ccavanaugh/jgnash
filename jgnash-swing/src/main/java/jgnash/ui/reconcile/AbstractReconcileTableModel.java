@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
@@ -47,7 +48,7 @@ import jgnash.ui.register.AccountBalanceDisplayManager;
 import jgnash.ui.register.table.PackableTableModel;
 import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Model initializes itself by grabbing all of the transactions from the account and then filters for transactions that
@@ -64,7 +65,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
 
     private final List<RecTransaction> list = new ArrayList<>();
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final String[] cNames = {rb.getString("Column.Clr"), rb.getString("Column.Date"), rb.getString("Column.Num"),
             rb.getString("Column.Payee"), rb.getString("Column.Amount")};

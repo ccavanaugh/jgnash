@@ -73,7 +73,7 @@ public abstract class AbstractExchangeTransactionPanel extends AbstractBankTrans
 
         DefaultFormBuilder builder = new DefaultFormBuilder(layout);
 
-        builder.append(reconciledButton, attachmentPanel, StaticUIMethods.buildOKCancelBar(enterButton, cancelButton));
+        builder.append(getReconcileCheckBox(), attachmentPanel, StaticUIMethods.buildOKCancelBar(enterButton, cancelButton));
         return builder.getPanel();
     }
 }

@@ -23,6 +23,8 @@ import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -32,14 +34,11 @@ import jgnash.engine.TransactionEntry;
 import jgnash.ui.ThemeManager;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.plaf.NimbusUtils;
-import jgnash.util.Resource;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * UI Panel for handling investment gains and loss.
@@ -66,7 +65,7 @@ class GainsPanel extends JPanel implements ActionListener {
         gainsField = new JFloatField(account.getCurrencyNode());
         gainsField.setEditable(false);
 
-        gainsButton = new JButton(Resource.getIcon("/jgnash/resource/document-properties.png"));
+        gainsButton = new JButton(IconUtils.getIcon("/jgnash/resource/document-properties.png"));
         gainsButton.setMargin(new Insets(0, 0, 0, 0));
 
         gainsButton.addActionListener(this);
@@ -75,7 +74,7 @@ class GainsPanel extends JPanel implements ActionListener {
 
         if (ThemeManager.isLookAndFeelNimbus()) {
             NimbusUtils.reduceNimbusButtonMargin(gainsButton);
-            gainsButton.setIcon(NimbusUtils.scaleIcon(Resource.getIcon("/jgnash/resource/document-properties.png")));
+            gainsButton.setIcon(NimbusUtils.scaleIcon(IconUtils.getIcon("/jgnash/resource/document-properties.png")));
         }
 
         layoutPanel();

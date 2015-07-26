@@ -27,6 +27,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.prefs.Preferences;
 
@@ -52,14 +53,16 @@ import jgnash.engine.message.ChannelEvent;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
+import jgnash.engine.recurring.Reminder;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.YesNoDialog;
+import jgnash.ui.recurring.RecurringEntryDialog;
 import jgnash.ui.register.table.AbstractRegisterTableModel;
 import jgnash.ui.register.table.RegisterTable;
 import jgnash.ui.util.JTableUtils;
 import jgnash.util.EncodeDecode;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Account register panels should extend this class
@@ -69,9 +72,13 @@ import jgnash.util.Resource;
 public abstract class AbstractRegisterPanel extends JPanel implements MessageListener, KeyListener {
 
     private static final String NODE_REG_POS = "/jgnash/ui/register/positions";
+
     private static final String NODE_REG_WIDTH = "/jgnash/ui/register/widths";
+
     private static final String NODE_REG_VIS = "/jgnash/ui/register/visibility";
-    protected final Resource rb = Resource.get();
+
+    protected final ResourceBundle rb = ResourceUtils.getBundle();
+
     private final TransactionPopup popup = new TransactionPopup();
 
     protected abstract Account getAccount();
@@ -220,7 +227,8 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
                             new JLabel(rb.getString("Question.DeleteAttachment")),
                             rb.getString("Title.DeleteAttachment"))) {
                         if (!engine.removeAttachment(tran.getAttachment())) {
-                            StaticUIMethods.displayError(rb.getString("Message.Error.DeleteAttachment", tran.getAttachment()));
+                            StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.DeleteAttachment",
+                                    tran.getAttachment()));
                         }
                     }
                 }
@@ -278,7 +286,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         }
     }
 
-    void reconcileAction(final ReconciledState reconciled) {
+    private void reconcileAction(final ReconciledState reconciled) {
         final Transaction t = getSelectedTransaction();
         if (t != null) {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
@@ -320,11 +328,23 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         return trans;
     }
 
-    void setSelectedRow(final int row) {
+    private void setSelectedRow(final int row) {
         if (row >= 0) {
             JTable table = getTable();
             table.scrollRectToVisible(table.getCellRect(row, 0, true));
             table.getSelectionModel().setSelectionInterval(row, row);
+        }
+    }
+
+    private void handleCreateNewReminder() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        Reminder reminder = engine.createDefaultReminder(getSelectedTransaction(), getAccount());
+        reminder = RecurringEntryDialog.showDialog(reminder);
+
+        if (reminder != null) {
+            engine.addReminder(reminder);
         }
     }
 
@@ -460,6 +480,7 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
         private final JRadioButtonMenuItem cleared;
         private final JRadioButtonMenuItem reconciled;
         private final JRadioButtonMenuItem unreconciled;
+        private final JMenuItem newReminder;
         private final JMenuItem jump;
 
         public TransactionPopup() {
@@ -501,6 +522,12 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
             delete = new JMenuItem(rb.getString("Menu.Delete.Name"));
             delete.addActionListener(this);
             add(delete);
+
+            addSeparator();
+
+            newReminder = new JMenuItem(rb.getString("Menu.NewReminder.Name"));
+            newReminder.addActionListener(this);
+            add(newReminder);
         }
 
         @Override
@@ -517,6 +544,8 @@ public abstract class AbstractRegisterPanel extends JPanel implements MessageLis
                 reconcileAction(ReconciledState.NOT_RECONCILED);
             } else if (e.getSource() == cleared) {
                 reconcileAction(ReconciledState.CLEARED);
+            } else if (e.getSource() == newReminder) {
+                handleCreateNewReminder();
             }
         }
 

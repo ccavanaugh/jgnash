@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,8 +42,9 @@ import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.FilteredAccountListComboBox;
 import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.register.AccountBalanceDisplayManager;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -73,7 +75,7 @@ public class MonthlyAccountBalanceChart {
 
     private final FilteredAccountListComboBox combo = new FilteredAccountListComboBox(false, false);
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final DatePanel startDateField = new DatePanel();
 
@@ -88,12 +90,10 @@ public class MonthlyAccountBalanceChart {
     public static void show() {
 
         EventQueue.invokeLater(() -> {
-            Resource rb1 = Resource.get();
-
             MonthlyAccountBalanceChart chart = new MonthlyAccountBalanceChart();
 
             JPanel p = chart.createPanel();
-            GenericCloseDialog d = new GenericCloseDialog(p, rb1.getString("Title.AccountBalance"));
+            GenericCloseDialog d = new GenericCloseDialog(p, ResourceUtils.getString("Title.AccountBalance"));
             d.pack();
             d.setModal(false);
 
@@ -107,7 +107,7 @@ public class MonthlyAccountBalanceChart {
         startDateField.setDate(start);
 
         JButton refreshButton = new JButton(rb.getString("Button.Refresh"));
-        refreshButton.setIcon(Resource.getIcon("/jgnash/resource/view-refresh.png"));
+        refreshButton.setIcon(IconUtils.getIcon("/jgnash/resource/view-refresh.png"));
 
         subAccountCheckBox = new JCheckBox(rb.getString("Button.IncludeSubAccounts"));
         subAccountCheckBox.setSelected(true);

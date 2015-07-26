@@ -17,9 +17,6 @@
  */
 package jgnash.ui.register.invest;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,8 +37,11 @@ import jgnash.engine.TransactionTag;
 import jgnash.ui.ThemeManager;
 import jgnash.ui.components.JFloatField;
 import jgnash.ui.plaf.NimbusUtils;
-import jgnash.util.Resource;
+import jgnash.ui.util.IconUtils;
 import jgnash.util.ResourceUtils;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * UI Panel for handling investment transaction fees
@@ -75,7 +75,7 @@ class FeePanel extends JPanel implements ActionListener {
     private void initComponents() {
         feeField = new JFloatField(account.getCurrencyNode());
 
-        feeButton = new JButton(Resource.getIcon("/jgnash/resource/document-properties.png"));
+        feeButton = new JButton(IconUtils.getIcon("/jgnash/resource/document-properties.png"));
         feeButton.setMargin(new Insets(0, 0, 0, 0));
 
         feeButton.addActionListener(this);
@@ -84,7 +84,7 @@ class FeePanel extends JPanel implements ActionListener {
 
         if (ThemeManager.isLookAndFeelNimbus()) {
             NimbusUtils.reduceNimbusButtonMargin(feeButton);
-            feeButton.setIcon(NimbusUtils.scaleIcon(Resource.getIcon("/jgnash/resource/document-properties.png")));
+            feeButton.setIcon(NimbusUtils.scaleIcon(IconUtils.getIcon("/jgnash/resource/document-properties.png")));
         }
     }
 

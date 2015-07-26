@@ -28,6 +28,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.net.URL;
 import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,8 +44,8 @@ import javax.swing.WindowConstants;
 import javax.swing.text.html.HTMLDocument;
 
 import jgnash.ui.StaticUIMethods;
-import jgnash.ui.util.HTMLResource;
-import jgnash.util.Resource;
+import jgnash.util.HTMLResource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -61,7 +62,7 @@ import org.jfree.ui.about.SystemPropertiesPanel;
  */
 public class AboutDialog extends JDialog implements ActionListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private JTabbedPane tabbedPane;
 

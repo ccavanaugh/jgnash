@@ -17,21 +17,22 @@
  */
 package jgnash.ui.wizards.imports;
 
-import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.layout.FormLayout;
-
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import jgnash.engine.Account;
 import jgnash.convert.imports.ImportTransaction;
+import jgnash.engine.Account;
 import jgnash.ui.components.wizard.WizardPage;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Wizard Page for a OFX import.
@@ -41,7 +42,7 @@ import jgnash.util.Resource;
  */
 public class ImportSummary extends JPanel implements WizardPage {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private JLabel destLabel;
 

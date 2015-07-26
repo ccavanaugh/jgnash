@@ -17,7 +17,7 @@
  */
 package jgnash.engine.recurring;
 
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Reminder type class.
@@ -27,11 +27,11 @@ import jgnash.util.Resource;
  */
 public enum ReminderType {
 
-    ONETIME(Resource.get().getString("Period.OnlyOnce")),
-    DAILY(Resource.get().getString("Period.Daily")),
-    WEEKLY(Resource.get().getString("Period.Weekly")),
-    MONTHLY(Resource.get().getString("Period.Monthly")),
-    YEARLY(Resource.get().getString("Period.Yearly"));
+    ONETIME(ResourceUtils.getString("Period.OnlyOnce")),
+    DAILY(ResourceUtils.getString("Period.Daily")),
+    WEEKLY(ResourceUtils.getString("Period.Weekly")),
+    MONTHLY(ResourceUtils.getString("Period.Monthly")),
+    YEARLY(ResourceUtils.getString("Period.Yearly"));
 
     private final transient String typeName;
 

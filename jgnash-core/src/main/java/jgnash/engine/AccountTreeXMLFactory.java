@@ -17,6 +17,7 @@
  */
 package jgnash.engine;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -29,18 +30,32 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jgnash.util.Resource;
+import jgnash.engine.xstream.LocalDateConverter;
+import jgnash.engine.xstream.LocalDateTimeConverter;
+import jgnash.util.ClassPathUtils;
+import jgnash.util.ResourceUtils;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
+import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentCollectionConverter;
+import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentMapConverter;
+import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentSortedMapConverter;
+import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentSortedSetConverter;
+import com.thoughtworks.xstream.hibernate.converter.HibernateProxyConverter;
+import com.thoughtworks.xstream.hibernate.mapper.HibernateMapper;
+import com.thoughtworks.xstream.io.xml.KXml2Driver;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
+import com.thoughtworks.xstream.mapper.MapperWrapper;
 
 /**
  * Import and export a tree of accounts
@@ -50,8 +65,20 @@ import com.thoughtworks.xstream.io.xml.StaxDriver;
 public class AccountTreeXMLFactory {
     private static final Charset ENCODING = StandardCharsets.UTF_8;
 
+    private static final String RESOURCE_ROOT_PATH = "/jgnash/resource/account";
+
     private static XStream getStream() {
-        XStream xstream = new XStream(new PureJavaReflectionProvider(), new StaxDriver());
+
+        final XStream xstream = new XStream(new PureJavaReflectionProvider(), new KXml2Driver()) {
+
+            @Override
+            protected MapperWrapper wrapMapper(final MapperWrapper next) {
+                return new HibernateMapper(next);
+            }
+        };
+
+        xstream.ignoreUnknownElements();    // gracefully ignore fields in the file that do not have object members
+
         xstream.setMode(XStream.ID_REFERENCES);
 
         xstream.alias("Account", Account.class);
@@ -74,11 +101,26 @@ public class AccountTreeXMLFactory {
         xstream.omitField(StoredObject.class, "uuid");
         xstream.omitField(StoredObject.class, "markedForRemoval");
 
+        // Ignore fields required for JPA
+        xstream.omitField(StoredObject.class, "version");
+
         xstream.omitField(Account.class, "transactions");
         xstream.omitField(Account.class, "accountBalance");
         xstream.omitField(Account.class, "reconciledBalance");
+        xstream.omitField(Account.class, "attributes");
 
         xstream.omitField(SecurityNode.class, "historyNodes");
+
+        // Filters out the hibernate
+        xstream.registerConverter(new HibernateProxyConverter());
+        xstream.registerConverter(new HibernatePersistentCollectionConverter(xstream.getMapper()));
+        xstream.registerConverter(new HibernatePersistentMapConverter(xstream.getMapper()));
+        xstream.registerConverter(new HibernatePersistentSortedMapConverter(xstream.getMapper()));
+        xstream.registerConverter(new HibernatePersistentSortedSetConverter(xstream.getMapper()));
+
+        // Converters for new Java time API
+        xstream.registerConverter(new LocalDateConverter());
+        xstream.registerConverter(new LocalDateTimeConverter());
 
         return xstream;
     }
@@ -88,8 +130,8 @@ public class AccountTreeXMLFactory {
 
         XStream xstream = getStream();
 
-        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), ENCODING);
-             ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(writer))) {
+        try (final OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), ENCODING);
+             final ObjectOutputStream out = xstream.createObjectOutputStream(new PrettyPrintWriter(writer))) {
             out.writeObject(account);
         } catch (IOException e) {
             Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
@@ -107,8 +149,8 @@ public class AccountTreeXMLFactory {
 
         XStream xstream = getStream();
 
-        try (ObjectInputStream in = xstream.createObjectInputStream(reader)) {
-            Object o = in.readObject();
+        try (final ObjectInputStream in = xstream.createObjectInputStream(reader)) {
+            final Object o = in.readObject();
 
             if (o instanceof RootAccount) {
                 account = (RootAccount) o;
@@ -144,7 +186,7 @@ public class AccountTreeXMLFactory {
      * @param stream InputStream to use
      * @return RootAccount if stream is valid
      */
-    public static RootAccount loadAccountTree(final InputStream stream) {
+    private static RootAccount loadAccountTree(final InputStream stream) {
         try (Reader reader = new InputStreamReader(stream, ENCODING)) {
             return loadAccountTree(reader);
         } catch (IOException ex) {
@@ -213,25 +255,25 @@ public class AccountTreeXMLFactory {
 
             // match SecurityNodes to prevent duplicates
             if (account.memberOf(AccountGroup.INVEST)) {
-                Set<SecurityNode> nodes = account.getSecurities();
+                final Set<SecurityNode> nodes = account.getSecurities();
 
-                for (SecurityNode node : nodes) {
+                for (final SecurityNode node : nodes) {
                     SecurityNode sNode = engine.getSecurity(node.getSymbol());
 
                     if (sNode == null) { // no match found
                         try {
                             sNode = (SecurityNode) node.clone();
 
-                            for (CurrencyNode currencyNode : engine.getCurrencies()) {
+                            for (final CurrencyNode currencyNode : engine.getCurrencies()) {
                                 if (sNode.getReportedCurrencyNode().matches(currencyNode)) {
                                     sNode.setReportedCurrencyNode(currencyNode);
                                 }
                             }
                             if (!engine.addSecurity(sNode)) {
-                                final Resource rb = Resource.get();
+                                final ResourceBundle rb = ResourceUtils.getBundle();
                                 Logger.getLogger(AccountImport.class.getName()).log(Level.SEVERE, rb.getString("Message.Error.SecurityAdd"), sNode.getSymbol());
                             }
-                        } catch (CloneNotSupportedException e) {
+                        } catch (final CloneNotSupportedException e) {
                             Logger.getLogger(AccountImport.class.getName()).log(Level.SEVERE,
                                     e.getLocalizedMessage(), e);
                         }
@@ -260,9 +302,9 @@ public class AccountTreeXMLFactory {
 
             // match SecurityNodes to prevent duplicates
             if (account.memberOf(AccountGroup.INVEST)) {
-                Set<SecurityNode> nodes = account.getSecurities();
+                final Set<SecurityNode> nodes = account.getSecurities();
 
-                for (SecurityNode node : nodes) {
+                for (final SecurityNode node : nodes) {
                     SecurityNode sNode = engine.getSecurity(node.getSymbol());
 
                     if (sNode == null) { // no match found
@@ -272,10 +314,10 @@ public class AccountTreeXMLFactory {
                             sNode.setReportedCurrencyNode(engine.getDefaultCurrency());
 
                             if (!engine.addSecurity(sNode)) {
-                                final Resource rb = Resource.get();
+                                final ResourceBundle rb = ResourceUtils.getBundle();
                                 Logger.getLogger(AccountImport.class.getName()).log(Level.SEVERE, rb.getString("Message.Error.SecurityAdd"), sNode.getSymbol());
                             }
-                        } catch (CloneNotSupportedException e) {
+                        } catch (final CloneNotSupportedException e) {
                             Logger.getLogger(AccountImport.class.getName()).log(Level.SEVERE, e.toString(), e);
                         }
                     }
@@ -319,6 +361,44 @@ public class AccountTreeXMLFactory {
                 importChildren(engine, child);
             }
         }
+    }
+
+    public static Collection<RootAccount> getLocalizedAccountSet() {
+        final List<RootAccount> files = new ArrayList<>();
+
+        for (final String string : getAccountSetList()) {
+
+            try (final InputStream stream = Object.class.getResourceAsStream(string)) {
+                final RootAccount account = AccountTreeXMLFactory.loadAccountTree(stream);
+                files.add(account);
+            } catch (final IOException e) {
+                Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+
+        return files;
+    }
+
+    private static List<String> getAccountSetList() {
+        final String path = ClassPathUtils.getLocalizedPath(RESOURCE_ROOT_PATH);
+
+        final List<String> set = new ArrayList<>();
+
+        if (path != null) {
+            try (final InputStream stream = Object.class.getResourceAsStream(path + "/set.txt");
+                 final BufferedReader r = new BufferedReader(new InputStreamReader(stream, ENCODING))) {
+
+                String line = r.readLine();
+
+                while (line != null) {
+                    set.add(path + "/" + line);
+                    line = r.readLine();
+                }
+            } catch (final IOException ex) {
+                Logger.getLogger(AccountTreeXMLFactory.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return set;
     }
 
     private AccountTreeXMLFactory() {

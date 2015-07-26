@@ -47,7 +47,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.ui.components.ExceptionDialog;
 import jgnash.ui.splash.AboutDialog;
 import jgnash.ui.util.DialogUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * GUI version of the jGnash program. This Class creates and provides access to the MainFrame.
@@ -126,7 +126,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
             if (AboutDialog.showAcceptLicenseDialog()) {
                 pref.putBoolean(ACCEPT_LICENSE, true);
             } else {
-                System.err.println(Resource.get().getString("Message.Error.License"));
+                System.err.println(ResourceUtils.getString("Message.Error.License"));
             }
         }
 
@@ -197,7 +197,7 @@ public class UIApplication implements Thread.UncaughtExceptionHandler {
 
             if (helpDialog == null) {
 
-                helpDialog = new JDialog((Frame) null, Resource.get().getString("Title.Help"), false);
+                helpDialog = new JDialog((Frame) null, ResourceUtils.getString("Title.Help"), false);
 
                 helpDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
                 helpDialog.getContentPane().add(jHelp, SwingConstants.CENTER);

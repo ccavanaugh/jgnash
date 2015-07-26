@@ -30,7 +30,7 @@ import jgnash.engine.StoredObject;
 import jgnash.engine.attachment.LocalAttachmentManager;
 import jgnash.engine.concurrent.LocalLockManager;
 import jgnash.util.NotNull;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * XML specific code for data storage and creating an engine
@@ -140,7 +140,7 @@ public class XMLDataStore implements DataStore {
      */
     @Override
     public String toString() {
-        return Resource.get().getString("DataStoreType.XML");
+        return ResourceUtils.getString("DataStoreType.XML");
     }
 
     /**

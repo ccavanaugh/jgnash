@@ -27,7 +27,7 @@ import jgnash.net.security.SecurityParser;
 import jgnash.net.security.YahooAUParser;
 import jgnash.net.security.YahooUKParser;
 import jgnash.net.security.YahooUSParser;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Enumeration for quote download source
@@ -37,10 +37,10 @@ import jgnash.util.Resource;
 @SuppressWarnings({"UnusedDeclaration"})
 public enum QuoteSource {
 
-    NONE(Resource.get().getString("QuoteSource.None"), NullParser.class),
-    YAHOO(Resource.get().getString("QuoteSource.Yahoo"), YahooUSParser.class),
-    YAHOO_UK(Resource.get().getString("QuoteSource.YahooUK"), YahooUKParser.class),
-    YAHOO_AUS(Resource.get().getString("QuoteSource.YahooAus"), YahooAUParser.class);
+    NONE(ResourceUtils.getString("QuoteSource.None"), NullParser.class),
+    YAHOO(ResourceUtils.getString("QuoteSource.Yahoo"), YahooUSParser.class),
+    YAHOO_UK(ResourceUtils.getString("QuoteSource.YahooUK"), YahooUKParser.class),
+    YAHOO_AUS(ResourceUtils.getString("QuoteSource.YahooAus"), YahooAUParser.class);
 
     private final transient String description;
 

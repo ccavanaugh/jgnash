@@ -17,24 +17,17 @@
  */
 package jgnash.uifx.views.register;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
-import jgnash.engine.TransactionType;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.views.accounts.SelectAccountSecuritiesDialog;
@@ -53,12 +46,12 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
     @FXML
     private StackPane transactionSlips;
 
+    private InvestmentSlipManager investmentSlipManager;
+
     @FXML
     @Override
     public void initialize() {
         super.initialize();
-
-        actionComboBox.setEditable(false);
 
         // Load the register table
         registerTableControllerProperty.setValue(FXMLUtils.loadFXML(new Consumer<Node>() {
@@ -68,176 +61,8 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
             }
         }, "InvestmentRegisterTable.fxml", resources));
 
-        accountProperty().addListener((observable, oldValue, newValue) -> {
-            buildTabs();
-        });
-
-        actionComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (oldValue != null) {
-                oldValue.getController().clearForm();
-            }
-            transactionSlips.getChildren().clear();
-            transactionSlips.getChildren().addAll(newValue.getPane());
-        });
-    }
-
-    private void buildTabs() {
-        final String[] actions = new String[]{resources.getString("Transaction.BuyShare"),
-                resources.getString("Transaction.SellShare"), resources.getString("Transaction.TransferIn"),
-                resources.getString("Transaction.TransferOut"), resources.getString("Transaction.AddShare"),
-                resources.getString("Transaction.RemoveShare"), resources.getString("Transaction.ReinvestDiv"),
-                resources.getString("Transaction.Dividend"), resources.getString("Transaction.SplitShare"),
-                resources.getString("Transaction.MergeShare"), resources.getString("Transaction.ReturnOfCapital")};
-
-        final List<SlipControllerContainer> transactionPanes = new ArrayList<>();
-
-        // TODO: more investment slips
-        transactionPanes.add(buildBuyShareTab(actions[0]));
-        transactionPanes.add(buildSellShareTab(actions[1]));
-        transactionPanes.add(buildCashTransferTab(actions[2], SlipType.INCREASE));
-        transactionPanes.add(buildCashTransferTab(actions[3], SlipType.DECREASE));
-        transactionPanes.add(buildAdjustShareTab(actions[4], TransactionType.ADDSHARE));
-        transactionPanes.add(buildAdjustShareTab(actions[5], TransactionType.REMOVESHARE));
-        transactionPanes.add(buildReinvestDividendTab(actions[6]));
-        transactionPanes.add(buildDividendTab(actions[7]));
-        transactionPanes.add(buildSplitMergeTab(actions[8], TransactionType.SPLITSHARE));
-        transactionPanes.add(buildSplitMergeTab(actions[9], TransactionType.MERGESHARE));
-        transactionPanes.add(buildReturnOfCapitalTab(actions[10]));
-
-        actionComboBox.getItems().addAll(transactionPanes);
-
-        actionComboBox.getSelectionModel().select(0);    // force selection
-    }
-
-    private SlipControllerContainer buildCashTransferTab(final String name, final SlipType slipType) {
-
-        try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("InvestmentTransactionPane.fxml"), resources);
-            final Pane pane = fxmlLoader.load();
-
-            final SlipController slipController = fxmlLoader.getController();
-
-            slipController.setSlipType(slipType);
-            slipController.accountProperty().bind(accountProperty());
-
-            return new SlipControllerContainer(name, slipController, pane);
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private SlipControllerContainer buildAdjustShareTab(final String name, final TransactionType transactionType) {
-
-        try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AdjustSharesSlip.fxml"), resources);
-            final Pane pane = fxmlLoader.load();
-
-            final AdjustSharesSlipController slipController = fxmlLoader.getController();
-
-            slipController.setTransactionType(transactionType);
-            slipController.accountProperty().bind(accountProperty());
-
-            return new SlipControllerContainer(name, slipController, pane);
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private SlipControllerContainer buildBuyShareTab(final String name) {
-
-        try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BuyShareSlip.fxml"), resources);
-            final Pane pane = fxmlLoader.load();
-
-            final BuyShareSlipController slipController = fxmlLoader.getController();
-
-            slipController.accountProperty().bind(accountProperty());
-
-            return new SlipControllerContainer(name, slipController, pane);
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private SlipControllerContainer buildSellShareTab(final String name) {
-
-        try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("SellShareSlip.fxml"), resources);
-            final Pane pane = fxmlLoader.load();
-
-            final SellShareSlipController slipController = fxmlLoader.getController();
-
-            slipController.accountProperty().bind(accountProperty());
-
-            return new SlipControllerContainer(name, slipController, pane);
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private SlipControllerContainer buildReinvestDividendTab(final String name) {
-
-        try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ReinvestDividendSlip.fxml"), resources);
-            final Pane pane = fxmlLoader.load();
-
-            final ReinvestDividendSlipController slipController = fxmlLoader.getController();
-
-            slipController.accountProperty().bind(accountProperty());
-
-            return new SlipControllerContainer(name, slipController, pane);
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private SlipControllerContainer buildDividendTab(final String name) {
-
-        try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("DividendSlip.fxml"), resources);
-            final Pane pane = fxmlLoader.load();
-
-            final DividendSlipController slipController = fxmlLoader.getController();
-
-            slipController.accountProperty().bind(accountProperty());
-
-            return new SlipControllerContainer(name, slipController, pane);
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private SlipControllerContainer buildSplitMergeTab(final String name, final TransactionType transactionType) {
-
-        try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("SplitMergeSharesSlip.fxml"), resources);
-            final Pane pane = fxmlLoader.load();
-
-            final SplitMergeSharesSlipController slipController = fxmlLoader.getController();
-
-            slipController.setTransactionType(transactionType);
-            slipController.accountProperty().bind(accountProperty());
-
-            return new SlipControllerContainer(name, slipController, pane);
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private SlipControllerContainer buildReturnOfCapitalTab(final String name) {
-
-        try {
-            final FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ReturnOfCapitalSlip.fxml"), resources);
-            final Pane pane = fxmlLoader.load();
-
-            final ReturnOfCapitalSlipController slipController = fxmlLoader.getController();
-
-            slipController.accountProperty().bind(accountProperty());
-
-            return new SlipControllerContainer(name, slipController, pane);
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
+        investmentSlipManager = new InvestmentSlipManager(transactionSlips, actionComboBox);
+        investmentSlipManager.accountProperty().bind(accountProperty());
     }
 
     @FXML
@@ -270,46 +95,6 @@ public class InvestmentRegisterPaneController extends RegisterPaneController {
             return;
         }
 
-        if (transaction instanceof InvestmentTransaction) {
-            switch (transaction.getTransactionType()) {
-                case BUYSHARE:
-                    actionComboBox.getSelectionModel().select(0);
-                    break;
-                case SELLSHARE:
-                    actionComboBox.getSelectionModel().select(1);
-                    break;
-                case ADDSHARE:
-                    actionComboBox.getSelectionModel().select(4);
-                    break;
-                case REMOVESHARE:
-                    actionComboBox.getSelectionModel().select(5);
-                    break;
-                case REINVESTDIV:
-                    actionComboBox.getSelectionModel().select(6);
-                    break;
-                case DIVIDEND:
-                    actionComboBox.getSelectionModel().select(7);
-                    break;
-                case SPLITSHARE:
-                    actionComboBox.getSelectionModel().select(8);
-                    break;
-                case MERGESHARE:
-                    actionComboBox.getSelectionModel().select(9);
-                    break;
-                case RETURNOFCAPITAL:
-                    actionComboBox.getSelectionModel().select(10);
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            if (transaction.getAmount(accountProperty().get()).signum() >= 0) {
-                actionComboBox.getSelectionModel().select(2);  // transferIn
-            } else {
-                actionComboBox.getSelectionModel().select(3);  // transferOut
-            }
-        }
-
-        actionComboBox.getSelectionModel().getSelectedItem().getController().modifyTransaction(transaction);
+        investmentSlipManager.modifyTransaction(transaction);
     }
 }

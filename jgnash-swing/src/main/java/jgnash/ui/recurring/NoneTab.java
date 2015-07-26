@@ -17,16 +17,17 @@
  */
 package jgnash.ui.recurring;
 
-import com.jgoodies.forms.factories.Borders;
-
 import java.awt.BorderLayout;
+import java.util.ResourceBundle;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import jgnash.engine.recurring.OneTimeReminder;
 import jgnash.engine.recurring.Reminder;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
+
+import com.jgoodies.forms.factories.Borders;
 
 /**
  * None repeating reminder panel
@@ -40,7 +41,7 @@ public class NoneTab extends JPanel implements RecurringTab {
     public NoneTab() {
         setLayout(new BorderLayout());
 
-        Resource rb = Resource.get();
+        ResourceBundle rb = ResourceUtils.getBundle();
 
         setBorder(Borders.DIALOG);
         add(new JLabel(rb.getString("Message.NoRepeat")), BorderLayout.CENTER);

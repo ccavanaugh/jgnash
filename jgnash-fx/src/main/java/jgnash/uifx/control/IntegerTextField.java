@@ -43,9 +43,9 @@ public class IntegerTextField extends TextField {
     }
 
     /**
-     * Sets the integer value of the field
+     * Sets the {@code Integer} value of the field
      *
-     * @param value integer value, if null, the field will be cleared
+     * @param value {@code Integer} value, if null, the field will be cleared
      */
     public void setInteger(final Integer value) {
         if (value != null) {
@@ -56,9 +56,22 @@ public class IntegerTextField extends TextField {
     }
 
     /**
-     * Returns the integer value of the field
+     * Sets the {@code Long} value of the field
      *
-     * @return the integer, zero if the field is empty
+     * @param value {@code Long} value, if null, the field will be cleared
+     */
+    public void setLong(final Long value) {
+        if (value != null) {
+            setText(value.toString());
+        } else {
+            setText("");
+        }
+    }
+
+    /**
+     * Returns the {@code Integer} value of the field
+     *
+     * @return the {@code Integer}, zero if the field is empty
      */
     public Integer getInteger() {
         if (getText() != null && getText().length() > 0) {
@@ -66,6 +79,19 @@ public class IntegerTextField extends TextField {
         }
 
         return 0;
+    }
+
+    /**
+     * Returns the {@code Long} value of the field
+     *
+     * @return the {@code Long}, zero if the field is empty
+     */
+    public Long getLong() {
+        if (getText() != null && getText().length() > 0) {
+            return Long.parseLong(getText());
+        }
+
+        return 0L;
     }
 
     @Override

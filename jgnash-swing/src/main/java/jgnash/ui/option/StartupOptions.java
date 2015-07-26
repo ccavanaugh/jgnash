@@ -19,6 +19,7 @@ package jgnash.ui.option;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -29,7 +30,7 @@ import javax.swing.SpinnerNumberModel;
 import jgnash.engine.EngineFactory;
 import jgnash.net.currency.CurrencyUpdateFactory;
 import jgnash.net.security.UpdateFactory;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.factories.Borders;
@@ -42,7 +43,7 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 class StartupOptions extends JPanel implements ActionListener {
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private JCheckBox updateCurrenciesButton;
 

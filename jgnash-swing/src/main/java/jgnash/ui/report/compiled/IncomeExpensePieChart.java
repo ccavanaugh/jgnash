@@ -27,6 +27,7 @@ import java.text.NumberFormat;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.Objects;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
@@ -48,7 +49,7 @@ import jgnash.ui.components.DatePanel;
 import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.util.CursorUtils;
 import jgnash.util.DateUtils;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -77,9 +78,9 @@ import org.jfree.data.general.PieDataset;
  */
 public class IncomeExpensePieChart {
 
-    private static final String STARTDATE = "startDate";
+    private static final String START_DATE = "startDate";
 
-    private final Resource rb = Resource.get();
+    private final ResourceBundle rb = ResourceUtils.getBundle();
 
     private final Preferences pref = Preferences.userNodeForPackage(IncomeExpensePieChart.class);
 
@@ -111,13 +112,10 @@ public class IncomeExpensePieChart {
     public static void show() {
 
         EventQueue.invokeLater(() -> {
+            final IncomeExpensePieChart chart = new IncomeExpensePieChart();
 
-            Resource rb1 = Resource.get();
-
-            IncomeExpensePieChart chart = new IncomeExpensePieChart();
-
-            JPanel p = chart.createPanel();
-            GenericCloseDialog d = new GenericCloseDialog(p, rb1.getString("Title.AccountBalance"));
+            final JPanel p = chart.createPanel();
+            final GenericCloseDialog d = new GenericCloseDialog(p, ResourceUtils.getString("Title.AccountBalance"));
             d.pack();
             d.setModal(false);
 
@@ -145,7 +143,7 @@ public class IncomeExpensePieChart {
 
         Date dStart = DateUtils.subtractYear(DateUtils.getFirstDayOfTheMonth(new Date()));
 
-        long start = pref.getLong(STARTDATE, dStart.getTime());
+        long start = pref.getLong(START_DATE, dStart.getTime());
 
         startField.setDate(new Date(start));
 
@@ -178,12 +176,12 @@ public class IncomeExpensePieChart {
 
         combo.addActionListener(e -> {
             setCurrentAccount(combo.getSelectedAccount());
-            pref.putLong(STARTDATE, startField.getDate().getTime());
+            pref.putLong(START_DATE, startField.getDate().getTime());
         });
 
         refreshButton.addActionListener(e -> {
             setCurrentAccount(currentAccount);
-            pref.putLong(STARTDATE, startField.getDate().getTime());
+            pref.putLong(START_DATE, startField.getDate().getTime());
         });
 
         showEmptyCheck.addActionListener(e -> setCurrentAccount(currentAccount));

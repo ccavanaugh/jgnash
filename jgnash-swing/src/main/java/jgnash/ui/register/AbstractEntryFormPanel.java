@@ -22,6 +22,7 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ResourceBundle;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -29,9 +30,11 @@ import javax.swing.JPanel;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
+import jgnash.ui.components.IndeterminateCheckBox;
 import jgnash.ui.util.ValidationFactory;
-import jgnash.util.Resource;
+import jgnash.util.ResourceUtils;
 
 /**
  * Abstract transaction entry form class
@@ -44,7 +47,7 @@ public abstract class AbstractEntryFormPanel extends JPanel {
     /**
      * Resource bundle
      */
-    protected final Resource rb = Resource.get();
+    protected final ResourceBundle rb = ResourceUtils.getBundle();
 
     /**
      * Validating key listener instance. Form components should install this instance for intelligent handling of the
@@ -173,5 +176,31 @@ public abstract class AbstractEntryFormPanel extends JPanel {
 
     static Engine getEngine() {
         return EngineFactory.getEngine(EngineFactory.DEFAULT);
+    }
+
+    abstract protected IndeterminateCheckBox getReconcileCheckBox();
+
+    protected void setReconciledState(final ReconciledState reconciledState) {
+        switch (reconciledState) {
+            case NOT_RECONCILED:
+                getReconcileCheckBox().setIndeterminate(false);
+                getReconcileCheckBox().setSelected(false);
+                break;
+            case RECONCILED:
+                getReconcileCheckBox().setIndeterminate(false);
+                getReconcileCheckBox().setSelected(true);
+                break;
+            case CLEARED:
+                getReconcileCheckBox().setIndeterminate(true);
+        }
+    }
+
+    protected ReconciledState getReconciledState() {
+        if (getReconcileCheckBox().isIndeterminate()) {
+            return ReconciledState.CLEARED;
+        } else if (getReconcileCheckBox().isSelected()) {
+            return ReconciledState.RECONCILED;
+        }
+        return ReconciledState.NOT_RECONCILED;
     }
 }

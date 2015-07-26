@@ -49,6 +49,7 @@ import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.DetailedDecimalTextField;
 import jgnash.uifx.control.SecurityComboBox;
+import jgnash.uifx.control.TimePeriodComboBox;
 import jgnash.uifx.control.TransactionNumberComboBox;
 import jgnash.uifx.views.main.MainApplication;
 
@@ -135,7 +136,7 @@ public class ControlsTest extends Application {
         DetailedDecimalTextField feesField = new DetailedDecimalTextField();
 
         VBox vBox = new VBox();
-        vBox.getChildren().addAll(decimalTextField, decimalTextField2, datePicker, new AccountComboBox(), numberComboBox, btn, exceptionButton, securityComboBox, feesField);
+        vBox.getChildren().addAll(decimalTextField, decimalTextField2, datePicker, new AccountComboBox(), numberComboBox, btn, exceptionButton, securityComboBox, feesField, new TimePeriodComboBox());
 
         primaryStage.setScene(new Scene(vBox, 300, 350));
 

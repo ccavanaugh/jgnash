@@ -17,7 +17,6 @@
  */
 package jgnash.ui.register.invest;
 
-import jgnash.engine.ReconciledState;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionTag;
 import jgnash.ui.register.AbstractTransactionEntryPanel;
@@ -53,7 +52,7 @@ public class FeeTransactionEntryPanel extends AbstractTransactionEntryPanel {
 
         entry.setTransactionTag(TransactionTag.INVESTMENT_FEE);
 
-        entry.setReconciled(account, reconciledButton.isSelected() ? ReconciledState.CLEARED : ReconciledState.NOT_RECONCILED);
+        entry.setReconciled(account, getReconciledState());
 
         return entry;
     }
@@ -68,6 +67,6 @@ public class FeeTransactionEntryPanel extends AbstractTransactionEntryPanel {
 
         accountPanel.setExchangedAmount(entry.getCreditAmount());
 
-        reconciledButton.setSelected(entry.getReconciled(getAccount()) != ReconciledState.NOT_RECONCILED);
+        setReconciledState(entry.getReconciled(getAccount()));
     }
 }

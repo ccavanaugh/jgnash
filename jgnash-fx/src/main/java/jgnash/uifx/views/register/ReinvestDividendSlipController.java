@@ -17,8 +17,12 @@
  */
 package jgnash.uifx.views.register;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
+
 import jgnash.engine.AbstractInvestmentTransactionEntry;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
@@ -27,9 +31,6 @@ import jgnash.engine.TransactionEntryReinvestDivX;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionType;
 import jgnash.util.NotNull;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * Transaction Entry Controller for Reinvested dividends
@@ -87,7 +88,7 @@ public class ReinvestDividendSlipController extends AbstractPriceQtyInvSlipContr
             memoTextField.setText(e.getMemo());
             priceField.setDecimal(entry.getPrice());
             quantityField.setDecimal(entry.getQuantity());
-            securityComboBox.setValue(entry.getSecurityNode());
+            securityComboBox.setSecurityNode(entry.getSecurityNode());
         });
 
         modTrans = transaction;

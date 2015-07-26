@@ -21,8 +21,7 @@ package jgnash.engine.message;
  * Classes must implement this interface to register and lister the message events
  *
  * @author Craig Cavanaugh
- *
  */
 public interface MessageListener {
-    void messagePosted(Message event);
+    void messagePosted(Message message);
 }

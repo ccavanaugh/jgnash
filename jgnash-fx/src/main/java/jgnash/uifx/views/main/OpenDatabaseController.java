@@ -18,8 +18,6 @@
 package jgnash.uifx.views.main;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -29,11 +27,10 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import jgnash.engine.DataStoreType;
 import jgnash.engine.EngineFactory;
+import jgnash.uifx.actions.DatabasePathAction;
 import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.tasks.BootEngineTask;
 
@@ -101,11 +98,7 @@ public class OpenDatabaseController {
 
     @FXML
     protected void handleSelectFileAction(final ActionEvent event) {
-
-        FileChooser fileChooser = new FileChooser();
-        configureFileChooser(fileChooser);
-
-        File file = fileChooser.showOpenDialog(MainApplication.getInstance().getPrimaryStage());
+        final File file = DatabasePathAction.getFileToOpen();
 
         if (file != null) {
             Preferences pref = Preferences.userNodeForPackage(OpenDatabaseController.class);
@@ -119,33 +112,5 @@ public class OpenDatabaseController {
         localDatabaseField.setDisable(remoteServerCheckBox.isSelected());
         portField.setDisable(!remoteServerCheckBox.isSelected());
         databaseServerField.setDisable(!remoteServerCheckBox.isSelected());
-    }
-
-    private void configureFileChooser(final FileChooser fileChooser) {
-        Preferences pref = Preferences.userNodeForPackage(OpenDatabaseController.class);
-
-        fileChooser.setTitle(resources.getString("Title.Open"));
-
-        fileChooser.setInitialDirectory(new File(pref.get(LAST_DIR, System.getProperty("user.home"))));
-
-        List<String> types = new ArrayList<>();
-
-        for (final DataStoreType type : DataStoreType.values()) {
-            types.add("*." + type.getDataStore().getFileExt());
-        }
-
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter(resources.getString("Label.jGnashFiles"), types)
-        );
-
-        for (final DataStoreType type : DataStoreType.values()) {
-            fileChooser.getExtensionFilters().addAll(
-                    new FileChooser.ExtensionFilter(type.toString(), "*." + type.getDataStore().getFileExt())
-            );
-        }
-
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("All Files", "*.*")
-        );
     }
 }

@@ -17,6 +17,16 @@
  */
 package jgnash.uifx.views.register;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -25,6 +35,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckBox;
 import javafx.scene.input.KeyEvent;
+
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -41,14 +52,6 @@ import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.util.ValidationFactory;
 import jgnash.util.NotNull;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Abstract bank transaction entry slip controller
@@ -107,15 +110,19 @@ abstract class AbstractSlipController implements Slip {
             amountField.scaleProperty().set(newValue.getCurrencyNode().getScale());
 
             // Enabled auto completion for the payee field
-            AutoCompleteFactory.setPayeeModel(payeeTextField, newValue);
+            if (payeeTextField != null) {   // transfer slips do not use the payee field
+                AutoCompleteFactory.setPayeeModel(payeeTextField, newValue);
+            }
         });
 
         // If focus is lost, check and load the form with an existing transaction
-        payeeTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                handlePayeeFocusChange();
-            }
-        });
+        if (payeeTextField != null) {   // transfer slips do not use the payee field
+            payeeTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue) {
+                    handlePayeeFocusChange();
+                }
+            });
+        }
 
         // Install an event handler when the parent has been set via injection
         parentProperty.addListener((observable, oldValue, newValue) -> {
@@ -164,11 +171,13 @@ abstract class AbstractSlipController implements Slip {
         reconciledButton.setSelected(false);
         reconciledButton.setIndeterminate(false);
 
-        payeeTextField.setEditable(true);
-        payeeTextField.setText(null);
+        if (payeeTextField != null) {    // transfer slips do not use the payee field
+            payeeTextField.setEditable(true);
+            payeeTextField.setText(null);
+        }
 
         datePicker.setEditable(true);
-        if (!Options.getRememberLastDate().get()) {
+        if (!Options.rememberLastDateProperty().get()) {
             datePicker.setValue(LocalDate.now());
         }
 
@@ -188,7 +197,11 @@ abstract class AbstractSlipController implements Slip {
     @Override
     public void handleCancelAction() {
         clearForm();
-        payeeTextField.requestFocus();
+        if (payeeTextField != null) {
+            payeeTextField.requestFocus();
+        } else {
+            memoTextField.requestFocus();
+        }
     }
 
     @FXML
@@ -234,17 +247,24 @@ abstract class AbstractSlipController implements Slip {
                 }
             }
             clearForm();
-            payeeTextField.requestFocus();
+
+            if (payeeTextField != null) {
+                payeeTextField.requestFocus();
+            } else {
+                memoTextField.requestFocus();
+            }
         }
     }
 
     private void handlePayeeFocusChange() {
-        if (modTrans == null && Options.getAutoCompleteEnabled().get() && payeeTextField.getLength() > 0) {
+        if (modTrans == null && Options.useAutoCompleteProperty().get() && payeeTextField.getLength() > 0) {
             if (payeeTextField.autoCompleteModelObjectProperty().get() != null) {
 
                 // The autocomplete model may return multiple solutions.  Choose the first solution that works
-                final List<Transaction> transactions = payeeTextField.autoCompleteModelObjectProperty()
-                        .get().getAllExtraInfo(payeeTextField.getText());
+                final List<Transaction> transactions = new ArrayList<>(payeeTextField.autoCompleteModelObjectProperty()
+                        .get().getAllExtraInfo(payeeTextField.getText()));
+
+                Collections.reverse(transactions);  // reverse the transactions, most recent first
 
                 for (final Transaction transaction : transactions) {
                     if (canModifyTransaction(transaction)) {
@@ -276,7 +296,7 @@ abstract class AbstractSlipController implements Slip {
         t.setReconciled(ReconciledState.NOT_RECONCILED); // clear both sides
 
         // set the last date as required
-        if (!Options.getRememberLastDate().get()) {
+        if (!Options.rememberLastDateProperty().get()) {
             t.setDate(new Date());
         } else {
             t.setDate(datePicker.getDate());
@@ -302,6 +322,11 @@ abstract class AbstractSlipController implements Slip {
 
     @Override
     public boolean validateForm() {
+        if (payeeTextField != null) {   // transfer slips do not use the payee field
+            if (payeeTextField.getText() == null || payeeTextField.getText().isEmpty()) {
+                ValidationFactory.showValidationWarning(payeeTextField, resources.getString("Message.Warn.EmptyPayee"));
+            }
+        }
 
         if (amountField.getDecimal().compareTo(BigDecimal.ZERO) == 0) {
             ValidationFactory.showValidationError(amountField, resources.getString("Message.Error.Value"));

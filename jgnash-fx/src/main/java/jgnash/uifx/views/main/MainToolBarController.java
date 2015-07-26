@@ -18,6 +18,8 @@
 package jgnash.uifx.views.main;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
@@ -31,6 +33,8 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.tasks.CloseFileTask;
 
 /**
+ * Primary ToolBar Controller
+ *
  * @author Craig Cavanaugh
  */
 public class MainToolBarController implements MessageListener {
@@ -44,8 +48,15 @@ public class MainToolBarController implements MessageListener {
     @FXML
     private Button updateSecurities;
 
+    final private BooleanProperty disabled = new SimpleBooleanProperty(true);
+
     @FXML
     private void initialize() {
+
+        closeButton.disableProperty().bind(disabled);
+        updateCurrencies.disableProperty().bind(disabled);
+        updateSecurities.disableProperty().bind(disabled);
+
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
     }
 
@@ -57,7 +68,7 @@ public class MainToolBarController implements MessageListener {
     @FXML
     private void handleCloseAction() {
         if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
-            CloseFileTask.initiateShutdown();
+            CloseFileTask.initiateFileClose();
         }
     }
 
@@ -68,15 +79,11 @@ public class MainToolBarController implements MessageListener {
             switch (event.getEvent()) {
                 case FILE_NEW_SUCCESS:
                 case FILE_LOAD_SUCCESS:
-                    updateSecurities.setDisable(false);
-                    updateCurrencies.setDisable(false);
-                    closeButton.setDisable(false);
+                    disabled.setValue(false);
                     break;
                 case FILE_CLOSING:
                 case FILE_LOAD_FAILED:
-                    updateSecurities.setDisable(true);
-                    updateCurrencies.setDisable(true);
-                    closeButton.setDisable(true);
+                    disabled.setValue(true);
                     break;
                 default:
                     break;

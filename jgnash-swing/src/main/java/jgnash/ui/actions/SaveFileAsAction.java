@@ -17,6 +17,18 @@
  */
 package jgnash.ui.actions;
 
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.nio.file.Files;
+import java.util.Collection;
+import java.util.ResourceBundle;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
+
+import javax.swing.JFileChooser;
+import javax.swing.SwingWorker;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import jgnash.engine.DataStoreType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -25,17 +37,7 @@ import jgnash.engine.xstream.BinaryXStreamDataStore;
 import jgnash.ui.UIApplication;
 import jgnash.ui.util.builder.Action;
 import jgnash.util.FileUtils;
-import jgnash.util.Resource;
-
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.nio.file.Files;
-import java.util.Collection;
-import java.util.logging.Logger;
-import java.util.prefs.Preferences;
+import jgnash.util.ResourceUtils;
 
 /**
  * UI Action to save the current database as a new name and reopen
@@ -53,7 +55,7 @@ public class SaveFileAsAction extends AbstractEnabledAction {
      */
     private static void saveFileAs() {
 
-        final Resource rb = Resource.get();
+        final ResourceBundle rb = ResourceUtils.getBundle();
 
         final Preferences pref = Preferences.userNodeForPackage(SaveFileAsAction.class);
 

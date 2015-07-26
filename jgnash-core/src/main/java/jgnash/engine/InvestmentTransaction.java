@@ -158,7 +158,7 @@ public class InvestmentTransaction extends Transaction {
      * @return the quantity of securities for this transaction
      * @see #getSignedQuantity()
      */
-    BigDecimal getSignedQuantity() {
+    private BigDecimal getSignedQuantity() {
         BigDecimal quantity = BigDecimal.ZERO;
 
         getLock().readLock().lock();
@@ -209,7 +209,7 @@ public class InvestmentTransaction extends Transaction {
      * @param account account to calculate fees against
      * @return transaction fees
      */
-    BigDecimal getFees(final Account account) {
+    private BigDecimal getFees(final Account account) {
         BigDecimal fees = BigDecimal.ZERO;
 
         getLock().readLock().lock();

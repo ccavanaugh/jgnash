@@ -87,7 +87,7 @@ public class AccountListTreePane extends JScrollPane implements TreeSelectionLis
      *
      * @return return tree
      */
-    JComponent createModelAndView() {
+    private JComponent createModelAndView() {
         model = new AccountTreeModel();
 
         tree = new JTree(model);
@@ -135,7 +135,7 @@ public class AccountListTreePane extends JScrollPane implements TreeSelectionLis
         }
     }
 
-    void _expand() {
+    private void _expand() {
         // expand the tree so that all nodes are visible
         for (int i = 0; i < tree.getRowCount(); i++) {
             tree.expandRow(i);
@@ -160,7 +160,7 @@ public class AccountListTreePane extends JScrollPane implements TreeSelectionLis
         }
     }
 
-    void scrollToTop() {
+    private void scrollToTop() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
