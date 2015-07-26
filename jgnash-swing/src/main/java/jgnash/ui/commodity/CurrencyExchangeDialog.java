@@ -97,7 +97,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
 
     private Future<Void> updateFuture;
 
-    private final JFloatField rateField = new JFloatField(0, 6, 2);
+    private final JFloatField rateField = new JFloatField(0, MathConstants.EXCHANGE_RATE_ACCURACY, MathConstants.EXCHANGE_RATE_ACCURACY);
 
     private JButton updateButton;
 
