@@ -18,7 +18,6 @@
 package jgnash.uifx.dialog.security;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -68,6 +67,7 @@ import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.control.LocalDateAxis;
 import jgnash.uifx.control.SecurityComboBox;
+import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.util.DateUtils;
 import jgnash.util.ResourceUtils;
@@ -158,7 +158,7 @@ public class SecurityHistoryController implements MessageListener {
 
         final TableColumn<SecurityHistoryNode, Date> dateColumn = new TableColumn<>(resources.getString("Column.Date"));
         dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getDate()));
-        dateColumn.setCellFactory(cell -> new DateTableCell());
+        dateColumn.setCellFactory(cell -> new ShortDateTableCell());
         tableView.getColumns().add(dateColumn);
 
         final TableColumn<SecurityHistoryNode, BigDecimal> closeColumn = new TableColumn<>(resources.getString("Column.Close"));
@@ -323,22 +323,6 @@ public class SecurityHistoryController implements MessageListener {
                     Platform.runLater(this::loadChart);
                     break;
                 default:
-            }
-        }
-    }
-
-    private static class DateTableCell extends TableCell<SecurityHistoryNode, Date> {
-
-        private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
-
-        @Override
-        protected void updateItem(final Date date, final boolean empty) {
-            super.updateItem(date, empty);  // required
-
-            if (!empty && date != null) {
-                setText(dateFormatter.format(date));
-            } else {
-                setText(null);
             }
         }
     }
