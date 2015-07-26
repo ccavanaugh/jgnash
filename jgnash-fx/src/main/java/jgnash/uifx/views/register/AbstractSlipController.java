@@ -173,7 +173,7 @@ abstract class AbstractSlipController implements Slip {
 
         if (payeeTextField != null) {    // transfer slips do not use the payee field
             payeeTextField.setEditable(true);
-            payeeTextField.setText(null);
+            payeeTextField.clear();
         }
 
         datePicker.setEditable(true);
@@ -181,7 +181,7 @@ abstract class AbstractSlipController implements Slip {
             datePicker.setValue(LocalDate.now());
         }
 
-        memoTextField.setText(null);
+        memoTextField.clear();
 
         numberComboBox.setValue(null);
         numberComboBox.setDisable(false);
