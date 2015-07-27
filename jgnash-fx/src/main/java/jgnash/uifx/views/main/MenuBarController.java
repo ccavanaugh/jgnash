@@ -44,6 +44,7 @@ import jgnash.uifx.about.AboutDialog;
 import jgnash.uifx.actions.DefaultCurrencyAction;
 import jgnash.uifx.actions.DefaultLocaleAction;
 import jgnash.uifx.dialog.currency.AddRemoveCurrencyController;
+import jgnash.uifx.dialog.currency.EditExchangeRatesController;
 import jgnash.uifx.dialog.currency.ModifyCurrencyController;
 import jgnash.uifx.dialog.security.CreateModifySecuritiesController;
 import jgnash.uifx.dialog.security.SecurityHistoryController;
@@ -252,5 +253,10 @@ public class MenuBarController implements MessageListener {
         stage.setTitle(resources.getString("Title.ModifyCurrencies"));
 
         stage.showAndWait();
+    }
+
+    @FXML
+    private void handleEditExchangeRatesAction() {
+        EditExchangeRatesController.showAndWait();
     }
 }

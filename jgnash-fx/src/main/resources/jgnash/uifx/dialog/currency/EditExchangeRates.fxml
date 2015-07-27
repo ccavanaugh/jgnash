@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import jgnash.resource.font.FontAwesomeImageView?>
+<?import jgnash.uifx.control.CurrencyComboBox?>
+<?import jgnash.uifx.control.DatePickerEx?>
+<?import jgnash.uifx.control.DecimalTextField?>
+<GridPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+          fx:controller="jgnash.uifx.dialog.currency.EditExchangeRatesController" styleClass="dialog, form">
+    <columnConstraints>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="ALWAYS"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+    <children>
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="SOMETIMES"/>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="SOMETIMES"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+            <children>
+                <Label text="%Word.Exchange"/>
+                <CurrencyComboBox fx:id="baseCurrencyComboBox" maxWidth="Infinity" prefWidth="150.0"
+                                  GridPane.columnIndex="1"/>
+                <Label GridPane.columnIndex="2">
+                    <graphic>
+                        <FontAwesomeImageView glyphName="LONG_ARROW_RIGHT"/>
+                    </graphic>
+                </Label>
+                <CurrencyComboBox fx:id="targetCurrencyComboBox" maxWidth="Infinity" prefWidth="150.0"
+                                  GridPane.columnIndex="3"/>
+            </children>
+        </GridPane>
+        <Separator GridPane.rowIndex="1"/>
+        <GridPane GridPane.rowIndex="2" styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="SOMETIMES"/>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="ALWAYS"/>
+            </rowConstraints>
+            <children>
+                <Label text="%Label.Date"/>
+                <DatePickerEx fx:id="datePicker" GridPane.columnIndex="1"/>
+                <Label text="%Label.ExchangeRate" GridPane.columnIndex="2"/>
+                <DecimalTextField fx:id="exchangeRateField" GridPane.columnIndex="3" maxWidth="Infinity"/>
+                <ButtonBar GridPane.columnSpan="4" GridPane.rowIndex="1" GridPane.fillWidth="true">
+                    <buttons>
+                        <Button fx:id="addButton" onAction="#handleAddAction" text="%Button.Add"
+                                ButtonBar.buttonUniformSize="true"/>
+                        <Button fx:id="deleteButton" onAction="#handleDeleteAction" text="%Button.Delete"
+                                ButtonBar.buttonUniformSize="true"/>
+                        <Button fx:id="clearButton" onAction="#handleClearAction" text="%Button.Clear"
+                                ButtonBar.buttonUniformSize="true"/>
+                    </buttons>
+                </ButtonBar>
+                <TableView fx:id="exchangeRateTable" minHeight="150.0" minWidth="100.0" prefHeight="150.0"
+                           prefWidth="200.0" GridPane.columnSpan="4" GridPane.rowIndex="2">
+                </TableView>
+            </children>
+        </GridPane>
+        <Separator GridPane.rowIndex="3"/>
+        <GridPane GridPane.rowIndex="4" styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="SOMETIMES"/>
+                <ColumnConstraints hgrow="NEVER"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+            <children>
+                <Button fx:id="updateOnlineButton" onAction="#handleUpdateAction" text="%Button.UpdateOnline">
+                    <graphic>
+                        <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
+                    </graphic>
+                </Button>
+                <ProgressBar fx:id="progressBar" maxWidth="Infinity" progress="0.0" GridPane.columnIndex="1"/>
+                <Button fx:id="stopButton" onAction="#handleStopAction" text="%Button.Stop" GridPane.columnIndex="2">
+                    <graphic>
+                        <FontAwesomeImageView glyphName="TIMES"/>
+                    </graphic>
+                </Button>
+            </children>
+        </GridPane>
+        <ButtonBar GridPane.rowIndex="5">
+            <buttons>
+                <Button cancelButton="true" onAction="#handleCloseAction" text="%Button.Close"/>
+            </buttons>
+        </ButtonBar>
+    </children>
+</GridPane>
