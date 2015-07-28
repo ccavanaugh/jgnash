@@ -158,7 +158,7 @@ public class EditExchangeRatesController implements MessageListener {
             }
 
             return new SimpleObjectProperty<>(BigDecimal.ONE.divide(param.getValue().getRate(),
-                    MathConstants.roundingMode));
+                    MathConstants.mathContext));
         });
         rateColumn.setCellFactory(cell -> new BigDecimalTableCell<>(decimalFormat));
         exchangeRateTable.getColumns().add(rateColumn);
@@ -213,8 +213,6 @@ public class EditExchangeRatesController implements MessageListener {
     }
 
     private void loadExchangeRateHistory() {
-        System.out.println("loadExchangeRateHistory");
-
         if (selectedExchangeRate.get() == null) {
             exchangeRateTable.getItems().clear();
         } else {
