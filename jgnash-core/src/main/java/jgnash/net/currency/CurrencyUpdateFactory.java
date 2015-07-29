@@ -19,6 +19,7 @@ package jgnash.net.currency;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 import jgnash.engine.CurrencyNode;
@@ -57,6 +58,22 @@ public class CurrencyUpdateFactory {
         return result;
     }
 
+    public static Optional<BigDecimal> getExchangeRate(final CurrencyNode source, final CurrencyNode target) {
+        Optional<BigDecimal> optional = Optional.empty();
+
+        final CurrencyParser parser = new YahooParser();
+
+        if (parser.parse(source.getSymbol(), target.getSymbol())) {
+            final BigDecimal exchangeRate = parser.getConversion();
+
+            if (exchangeRate != null && exchangeRate.compareTo(BigDecimal.ZERO) != 0) {
+                optional = Optional.of(exchangeRate);
+            }
+        }
+
+        return optional;
+    }
+
     public static class UpdateExchangeRatesCallable implements Callable<Void> {
 
         @Override
@@ -66,27 +83,14 @@ public class CurrencyUpdateFactory {
             if (engine != null) {
                 final List<CurrencyNode> list = engine.getCurrencies();
 
-                for (final CurrencyNode sourceCurrency : list) {
-                    final String source = sourceCurrency.getSymbol();
-                    for (final CurrencyNode targetCurrency : list) {
-                        final String target = targetCurrency.getSymbol();
+                for (final CurrencyNode source : list) {
+                    list.stream().filter(target -> !Thread.currentThread().isInterrupted()).forEach(target -> {
+                        final Optional<BigDecimal> exchangeRate = getExchangeRate(source, target);
 
-                        if (Thread.currentThread().isInterrupted()) {
-                            return null;
+                        if (exchangeRate.isPresent()) {
+                            engine.setExchangeRate(source, target, exchangeRate.get());
                         }
-
-                        if (!source.equals(target) && source.compareToIgnoreCase(target) > 0) {
-                            CurrencyParser parser = new YahooParser();
-
-                            if (parser.parse(source, target)) {
-                                BigDecimal exchangeRate = parser.getConversion();
-
-                                if (exchangeRate != null && exchangeRate.compareTo(BigDecimal.ZERO) != 0) {
-                                    engine.setExchangeRate(sourceCurrency, targetCurrency, exchangeRate);
-                                }
-                            }
-                        }
-                    }
+                    });
                 }
             }
 
