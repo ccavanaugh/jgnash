@@ -26,11 +26,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,6 +37,8 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -49,6 +49,7 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.ExchangeRate;
@@ -59,6 +60,7 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
+import jgnash.net.currency.CurrencyUpdateFactory;
 import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.CurrencyComboBox;
 import jgnash.uifx.control.DatePickerEx;
@@ -118,7 +120,9 @@ public class EditExchangeRatesController implements MessageListener {
 
     private final SimpleObjectProperty<ExchangeRate> selectedExchangeRate = new SimpleObjectProperty<>();
 
-    private Future<Void> updateFuture;
+    private Task<Void> updateTask = null;
+
+    private volatile boolean requestCancel = false;
 
     public static void showAndWait() {
         final URL fxmlUrl = EditExchangeRatesController.class.getResource("EditExchangeRates.fxml");
@@ -209,6 +213,8 @@ public class EditExchangeRatesController implements MessageListener {
         if (selectedHistoryNode.get() != null) {
             datePicker.setDate(selectedHistoryNode.get().getDate());
             exchangeRateField.setDecimal(selectedHistoryNode.get().getRate());
+        } else {
+            handleClearAction();
         }
     }
 
@@ -273,24 +279,68 @@ public class EditExchangeRatesController implements MessageListener {
 
         updateOnlineButton.disableProperty().setValue(true);
 
-        progressBar.progressProperty().setValue(-1);
+        updateTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
 
-        updateFuture = engine.startExchangeRateUpdate(1);
+                final List<CurrencyNode> list = engine.getCurrencies();
 
-        try {
-            updateFuture.get(5, TimeUnit.MINUTES);
-        } catch (final InterruptedException | ExecutionException | TimeoutException e) { // intentionally interrupted
-            Logger.getLogger(EditExchangeRatesController.class.getName()).log(Level.FINEST, e.getLocalizedMessage(), e);
-        } finally {
-            updateOnlineButton.disableProperty().setValue(false);
-            progressBar.progressProperty().setValue(0);
-        }
+                // need to track the total processed count
+                long processedHistory = 0;
+
+                for (final CurrencyNode source : list) {
+                    for (final CurrencyNode target : list) {
+                        if (!source.equals(target) && source.getSymbol().compareToIgnoreCase(target.getSymbol()) > 0
+                                && !requestCancel) {
+
+                            final Optional<BigDecimal> rate = CurrencyUpdateFactory.getExchangeRate(source, target);
+
+                            if (rate.isPresent()) {
+                                engine.setExchangeRate(source, target, rate.get());
+
+                                updateProgress(++processedHistory, list.size() - 1);
+                            }
+                        }
+                    }
+                }
+
+                return null;
+            }
+        };
+
+        updateTask.addEventHandler(WorkerStateEvent.WORKER_STATE_SUCCEEDED, event -> taskComplete());
+        updateTask.addEventHandler(WorkerStateEvent.WORKER_STATE_CANCELLED, event -> taskComplete());
+        updateTask.addEventHandler(WorkerStateEvent.WORKER_STATE_FAILED, event -> taskComplete());
+
+        progressBar.progressProperty().bind(updateTask.progressProperty());
+
+        final Thread thread = new Thread(updateTask);
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    private void taskComplete() {
+        requestCancel = false;
+
+        progressBar.progressProperty().unbind();
+        progressBar.progressProperty().set(0);
+
+        updateOnlineButton.disableProperty().setValue(false);
+
+        updateTask = null;
     }
 
     @FXML
     private void handleStopAction() {
-        if (updateFuture != null) {
-            updateFuture.cancel(true);
+        if (updateTask != null) {
+            requestCancel = true;
+
+            try {
+                updateTask.get();    // wait for a graceful exit
+            } catch (final ExecutionException | InterruptedException e) {
+                Logger.getLogger(EditExchangeRatesController.class.getName()).log(Level.SEVERE,
+                        e.getLocalizedMessage(), e);
+            }
         }
     }
 
