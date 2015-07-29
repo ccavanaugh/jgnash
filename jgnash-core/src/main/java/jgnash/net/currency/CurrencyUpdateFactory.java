@@ -84,11 +84,13 @@ public class CurrencyUpdateFactory {
                 final List<CurrencyNode> list = engine.getCurrencies();
 
                 for (final CurrencyNode source : list) {
-                    list.stream().filter(target -> !Thread.currentThread().isInterrupted()).forEach(target -> {
-                        final Optional<BigDecimal> exchangeRate = getExchangeRate(source, target);
+                    list.stream().filter(target -> !source.equals(target)
+                            && source.getSymbol().compareToIgnoreCase(target.getSymbol()) > 0).forEach(target -> {
 
-                        if (exchangeRate.isPresent()) {
-                            engine.setExchangeRate(source, target, exchangeRate.get());
+                        final Optional<BigDecimal> rate = CurrencyUpdateFactory.getExchangeRate(source, target);
+
+                        if (rate.isPresent()) {
+                            engine.setExchangeRate(source, target, rate.get());
                         }
                     });
                 }
