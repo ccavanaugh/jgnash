@@ -17,13 +17,11 @@
  */
 package jgnash.engine.attachment;
 
+import jgnash.util.OS;
+
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
@@ -44,7 +42,7 @@ import java.util.logging.Logger;
  */
 public class DistributedAttachmentManager implements AttachmentManager {
 
-    private static final String TEMP_ATTACHMENT_PATH = "jgnashTemp-";
+    private static final String TEMP_ATTACHMENT_PATH = "jGnashTemp-";
 
     private static final int TRANSFER_TIMEOUT = 5000;
 
@@ -66,12 +64,16 @@ public class DistributedAttachmentManager implements AttachmentManager {
         this.port = port;
 
         try {
-            EnumSet<PosixFilePermission> permissions = EnumSet.of(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE,
-                    PosixFilePermission.OWNER_EXECUTE, PosixFilePermission.GROUP_READ, PosixFilePermission.GROUP_WRITE);
+            if (!OS.isSystemWindows()) {
+                EnumSet<PosixFilePermission> permissions = EnumSet.of(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE,
+                        PosixFilePermission.OWNER_EXECUTE, PosixFilePermission.GROUP_READ, PosixFilePermission.GROUP_WRITE);
 
-            FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(permissions);
+                FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(permissions);
 
-            tempAttachmentPath = Files.createTempDirectory(TEMP_ATTACHMENT_PATH, attr);
+                tempAttachmentPath = Files.createTempDirectory(TEMP_ATTACHMENT_PATH, attr);
+            } else {    // windows cannot handle posix permissions
+                tempAttachmentPath = Files.createTempDirectory(TEMP_ATTACHMENT_PATH);
+            }
 
             fileClient = new AttachmentTransferClient(tempAttachmentPath);
         } catch (final IOException e) {
@@ -90,7 +92,7 @@ public class DistributedAttachmentManager implements AttachmentManager {
      * @throws IOException
      */
     @Override
-    public boolean addAttachment(final Path path, boolean copy) throws IOException {
+    public boolean addAttachment(final Path path, final boolean copy) throws IOException {
 
         boolean result = false;
 
@@ -136,7 +138,7 @@ public class DistributedAttachmentManager implements AttachmentManager {
             if (Files.notExists(path)) {
                 fileClient.requestFile(Paths.get(attachment));  // Request the file and place in a a temp location
 
-                long now = new Date().getTime();
+                final long now = new Date().getTime();
 
                 while ((new Date().getTime() - now) < TRANSFER_TIMEOUT) {
                     if (Files.exists(path)) {
@@ -161,13 +163,13 @@ public class DistributedAttachmentManager implements AttachmentManager {
         fileClient.disconnectFromServer();
 
         // Cleanup before exit
-        try (DirectoryStream<Path> ds = Files.newDirectoryStream(tempAttachmentPath)) {
-            for (Path p : ds) {
+        try (final DirectoryStream<Path> ds = Files.newDirectoryStream(tempAttachmentPath)) {
+            for (final Path p : ds) {
                 Files.delete(p);
             }
 
             Files.delete(tempAttachmentPath);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             Logger.getLogger(DistributedAttachmentManager.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
     }
