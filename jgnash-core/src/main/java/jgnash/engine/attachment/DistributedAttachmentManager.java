@@ -25,7 +25,8 @@ import java.nio.file.*;
 import java.nio.file.attribute.FileAttribute;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
-import java.util.Date;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
@@ -138,9 +139,9 @@ public class DistributedAttachmentManager implements AttachmentManager {
             if (Files.notExists(path)) {
                 fileClient.requestFile(Paths.get(attachment));  // Request the file and place in a a temp location
 
-                final long now = new Date().getTime();
+                final LocalDateTime start = LocalDateTime.now();
 
-                while ((new Date().getTime() - now) < TRANSFER_TIMEOUT) {
+                while (Duration.between(start, LocalDateTime.now()).toMillis() < TRANSFER_TIMEOUT) {
                     if (Files.exists(path)) {
                         break;
                     }
