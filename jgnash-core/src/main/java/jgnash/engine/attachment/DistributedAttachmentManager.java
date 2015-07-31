@@ -66,10 +66,11 @@ public class DistributedAttachmentManager implements AttachmentManager {
 
         try {
             if (!OS.isSystemWindows()) {
-                EnumSet<PosixFilePermission> permissions = EnumSet.of(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE,
-                        PosixFilePermission.OWNER_EXECUTE, PosixFilePermission.GROUP_READ, PosixFilePermission.GROUP_WRITE);
+                final EnumSet<PosixFilePermission> permissions = EnumSet.of(PosixFilePermission.OWNER_READ,
+                        PosixFilePermission.OWNER_WRITE, PosixFilePermission.OWNER_EXECUTE,
+                        PosixFilePermission.GROUP_READ, PosixFilePermission.GROUP_WRITE);
 
-                FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(permissions);
+                final FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(permissions);
 
                 tempAttachmentPath = Files.createTempDirectory(TEMP_ATTACHMENT_PATH, attr);
             } else {    // windows cannot handle posix permissions
@@ -106,7 +107,7 @@ public class DistributedAttachmentManager implements AttachmentManager {
         if (future != null) {   // if null, path was not valid
             try {
                 future.get();  // wait for the transfer to complete
-            } catch (InterruptedException | ExecutionException e) {
+            } catch (final InterruptedException | ExecutionException e) {
                 Logger.getLogger(DistributedAttachmentManager.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
             }
 
