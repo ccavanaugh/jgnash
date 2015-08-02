@@ -18,12 +18,6 @@
 package jgnash.engine.attachment;
 
 
-import java.nio.file.Path;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import jgnash.util.EncryptionManager;
-
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -45,6 +39,12 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.GlobalEventExecutor;
+
+import java.nio.file.Path;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import jgnash.util.EncryptionManager;
 
 import static jgnash.engine.attachment.NettyTransferHandler.PATH_MAX;
 import static jgnash.engine.attachment.NettyTransferHandler.TRANSFER_BUFFER_SIZE;
@@ -76,10 +76,8 @@ public class AttachmentTransferServer {
     public boolean startServer(final char[] password) {
         boolean result = false;
 
-        boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty(EncryptionManager.ENCRYPTION_FLAG));
-
-        // If a user and password has been specified, enable an encryption encryptionManager
-        if (useSSL && password != null && password.length > 0) {
+        // If a password has been specified, create an EncryptionManager
+        if (password != null && password.length > 0) {
             encryptionManager = new EncryptionManager(password);
         }
 

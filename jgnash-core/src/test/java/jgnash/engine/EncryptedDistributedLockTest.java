@@ -18,11 +18,11 @@
 package jgnash.engine;
 
 
+import io.netty.util.ResourceLeakDetector;
+
 import jgnash.engine.concurrent.DistributedLockManager;
 import jgnash.engine.concurrent.DistributedLockServer;
-import jgnash.util.EncryptionManager;
 
-import io.netty.util.ResourceLeakDetector;
 import org.junit.Before;
 
 import static org.junit.Assert.assertTrue;
@@ -41,8 +41,8 @@ public class EncryptedDistributedLockTest extends DistributedLockTest {
 
         ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
 
-        System.setProperty(EncryptionManager.ENCRYPTION_FLAG, "true");
-        System.setProperty("ssl", "true");
+        //System.setProperty(EncryptionManager.ENCRYPTION_FLAG, "true");
+        //System.setProperty("ssl", "true");
 
         server = new DistributedLockServer(PORT);
         assertTrue(server.startServer(password));

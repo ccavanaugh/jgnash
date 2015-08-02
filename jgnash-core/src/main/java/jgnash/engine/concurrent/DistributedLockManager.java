@@ -121,10 +121,8 @@ public class DistributedLockManager implements LockManager {
     public boolean connectToServer(final char[] password) {
         boolean result = false;
 
-        boolean useEncryption = Boolean.parseBoolean(System.getProperties().getProperty(EncryptionManager.ENCRYPTION_FLAG));
-
-        // If a user and password has been specified, enable an encryption encryptionManager
-        if (useEncryption && password != null && password.length > 0) {
+        // If a password has been specified, create an EncryptionManager
+        if (password != null && password.length > 0) {
             encryptionManager = new EncryptionManager(password);
         }
 
@@ -186,7 +184,7 @@ public class DistributedLockManager implements LockManager {
         return lock;
     }
 
-    CountDownLatch getLatch(final String lockMessage) {
+    private CountDownLatch getLatch(final String lockMessage) {
         latchLock.lock();
 
         try {
@@ -203,16 +201,16 @@ public class DistributedLockManager implements LockManager {
         }
     }
 
-    void lock(final String lockId, final String type) {
+    private void lock(final String lockId, final String type) {
         changeLockState(lockId, type, DistributedLockServer.LOCK);
     }
 
-    void unlock(final String lockId, final String type) {
+    private void unlock(final String lockId, final String type) {
         changeLockState(lockId, type, DistributedLockServer.UNLOCK);
     }
 
     @SuppressFBWarnings({"JLM_JSR166_UTILCONCURRENT_MONITORENTER"})
-    void changeLockState(final String lockId, final String type, final String lockState) {
+    private void changeLockState(final String lockId, final String type, final String lockState) {
         final String threadId = uuid + '-' + Thread.currentThread().getId();
         final String lockMessage = MessageFormat.format(PATTERN, lockState, lockId, threadId, type);
 
@@ -256,7 +254,7 @@ public class DistributedLockManager implements LockManager {
         }
     }
 
-    void processMessage(final String lockMessage) {
+    private void processMessage(final String lockMessage) {
 
         final String plainMessage;
 

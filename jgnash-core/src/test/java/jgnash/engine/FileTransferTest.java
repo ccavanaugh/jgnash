@@ -33,7 +33,6 @@ import java.util.logging.Logger;
 import jgnash.engine.jpa.JpaH2DataStore;
 import jgnash.engine.jpa.JpaHsqlDataStore;
 import jgnash.engine.jpa.JpaNetworkServer;
-import jgnash.util.EncryptionManager;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -53,8 +52,8 @@ public class FileTransferTest {
         final char[] password = new char[]{'p','a','s','s','w','o','r','d'};
         final int port = 5300;
 
-        System.setProperty(EncryptionManager.ENCRYPTION_FLAG, "true");
-        System.setProperty("ssl", "true");
+        //System.setProperty(EncryptionManager.ENCRYPTION_FLAG, "true");
+        //System.setProperty("ssl", "true");
 
         ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
 
@@ -136,8 +135,8 @@ public class FileTransferTest {
         final char[] password = new char[]{};
         final int port = 5400;
 
-        System.setProperty(EncryptionManager.ENCRYPTION_FLAG, "false");
-        System.setProperty("ssl", "false");
+        //System.setProperty(EncryptionManager.ENCRYPTION_FLAG, "false");
+        //System.setProperty("ssl", "false");
 
         ResourceLeakDetector.setLevel(ResourceLeakDetector.Level.PARANOID);
 

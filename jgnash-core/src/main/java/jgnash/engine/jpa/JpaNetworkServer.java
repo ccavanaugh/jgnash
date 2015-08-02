@@ -47,7 +47,6 @@ import jgnash.engine.concurrent.DistributedLockServer;
 import jgnash.engine.message.LocalServerListener;
 import jgnash.engine.message.MessageBusServer;
 import jgnash.util.DefaultDaemonThreadFactory;
-import jgnash.util.EncryptionManager;
 import jgnash.util.FileMagic;
 import jgnash.util.FileUtils;
 
@@ -207,17 +206,17 @@ public class JpaNetworkServer {
         stop = false;
 
         try {
-            boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty(EncryptionManager.ENCRYPTION_FLAG));
-
-            List<String> serverArgs = new ArrayList<>();
+            final List<String> serverArgs = new ArrayList<>();
 
             serverArgs.add("-tcpPort");
             serverArgs.add(String.valueOf(port));
             serverArgs.add("-tcpAllowOthers");
 
+            /*boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty(EncryptionManager.ENCRYPTION_FLAG));
+
             if (useSSL) {
                 serverArgs.add("-tcpSSL");
-            }
+            }*/
 
             server = org.h2.tools.Server.createTcpServer(serverArgs.toArray(new String[serverArgs.size()]));
             server.start();
@@ -260,7 +259,7 @@ public class JpaNetworkServer {
     /**
      * stops this server.
      */
-    synchronized void stopServer() {
+    synchronized private void stopServer() {
         stop = true;
         this.notify();
     }

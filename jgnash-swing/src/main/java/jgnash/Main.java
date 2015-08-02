@@ -39,7 +39,6 @@ import jgnash.ui.MainFrame;
 import jgnash.ui.UIApplication;
 import jgnash.ui.actions.OpenAction;
 import jgnash.ui.net.NetworkAuthenticator;
-import jgnash.util.EncryptionManager;
 import jgnash.util.FileUtils;
 import jgnash.util.OS;
 import jgnash.util.ResourceUtils;
@@ -232,8 +231,8 @@ public final class Main {
             }
 
             // Set encrypt as a system property
-            System.getProperties().put(EncryptionManager.ENCRYPTION_FLAG, Boolean.toString(encrypt));
-            System.getProperties().put("ssl", Boolean.toString(encrypt));
+            //System.getProperties().put(EncryptionManager.ENCRYPTION_FLAG, Boolean.toString(encrypt));
+            //System.getProperties().put("ssl", Boolean.toString(encrypt));
 
             if (port <= 0) {
                 port = JpaNetworkServer.DEFAULT_PORT;

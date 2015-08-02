@@ -17,16 +17,6 @@
  */
 package jgnash.engine.attachment;
 
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import jgnash.net.ConnectionFactory;
-import jgnash.util.EncryptionManager;
-
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -42,11 +32,17 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.util.CharsetUtil;
 
-import static jgnash.engine.attachment.NettyTransferHandler.DELETE;
-import static jgnash.engine.attachment.NettyTransferHandler.EOL_DELIMITER;
-import static jgnash.engine.attachment.NettyTransferHandler.FILE_REQUEST;
-import static jgnash.engine.attachment.NettyTransferHandler.PATH_MAX;
-import static jgnash.engine.attachment.NettyTransferHandler.TRANSFER_BUFFER_SIZE;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import jgnash.net.ConnectionFactory;
+import jgnash.util.EncryptionManager;
+
+import static jgnash.engine.attachment.NettyTransferHandler.*;
 
 /**
  * Client for sending and receiving files
@@ -78,10 +74,8 @@ class AttachmentTransferClient {
     public boolean connectToServer(final String host, final int port, final char[] password) {
         boolean result = false;
 
-        boolean useSSL = Boolean.parseBoolean(System.getProperties().getProperty(EncryptionManager.ENCRYPTION_FLAG));
-
-        // If a user and password has been specified, enable an encryption encryptionManager
-        if (useSSL && password != null && password.length > 0) {
+        // If a password has been specified, create an EncryptionManager
+        if (password != null && password.length > 0) {
             encryptionManager = new EncryptionManager(password);
         }
 

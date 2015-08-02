@@ -28,6 +28,8 @@ Improved handling of memo's in split transactions.  The split entry memo should 
 
 Release 2.17.0
 ----------------------
+08/02/15 Temporally disable SSL jdbc connections until some bugs are sorted out.
+08/02/15 Encrypt client/server communications if a password is specified without explicitly enabling encryption.
 07/31/15 Fixed a bug that would cause transfers of attachments in client/server mode to fail under Windows OS
 07/26/15 The exchange rate dialog was not showing the close button and the clear button was in the wrong location.
 07/22/15 Fixed a rare concurrency issue when updating securities history
