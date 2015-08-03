@@ -444,7 +444,7 @@ public class Engine {
 
         try {
             /* Check for more than one config object */
-            List<Config> list = eDAO.getStoredObjects(Config.class);
+            final List<Config> list = eDAO.getStoredObjects(Config.class);
             if (list.size() > 1) {
                 // Delete all but the first found config object
                 for (int i = 1; i < list.size(); i++) {
@@ -495,7 +495,7 @@ public class Engine {
 
             // check for multiple root accounts
             if (getConfig().getFileVersion() < 2.04f) {
-                List<RootAccount> roots = getStoredObjects().stream()
+                final List<RootAccount> roots = getStoredObjects().stream()
                         .filter(o -> o instanceof RootAccount).map(o -> (RootAccount) o).collect(Collectors.toList());
 
                 if (roots.size() > 1) {
@@ -572,11 +572,7 @@ public class Engine {
      * @return {@code true} if the values are equal or very close
      */
     private static boolean nearlyEquals(final double a, final double b, final double epsilon) {
-        if (a == b) { // quick check for equality
-            return true;
-        } else { // use relative error
-            return Math.abs(a - b) <= epsilon;
-        }
+        return a == b || Math.abs(a - b) <= epsilon;
     }
 
     /**
@@ -584,15 +580,15 @@ public class Engine {
      */
     private void removeDuplicateCurrencies() {
 
-        Map<String, CurrencyNode> keepMap = new HashMap<>();
-        List<CurrencyNode> discard = new ArrayList<>();
+        final Map<String, CurrencyNode> keepMap = new HashMap<>();
+        final List<CurrencyNode> discard = new ArrayList<>();
 
-        CurrencyNode defaultCurrency = getDefaultCurrency();
+        final CurrencyNode defaultCurrency = getDefaultCurrency();
 
         // pre-load the default so the root does not have to be changed
         keepMap.put(defaultCurrency.getSymbol(), defaultCurrency);
 
-        for (CurrencyNode node : getCurrencies()) {
+        for (final CurrencyNode node : getCurrencies()) {
             if (!keepMap.containsKey(node.getSymbol())) {
                 keepMap.put(node.getSymbol(), node);
             } else if (node != defaultCurrency) {
@@ -600,7 +596,7 @@ public class Engine {
             }
         }
 
-        for (CurrencyNode node : discard) {
+        for (final CurrencyNode node : discard) {
             getAccountList().stream().filter(account -> account.getCurrencyNode() == node).forEach(account -> {
                 account.setCurrencyNode(keepMap.get(node.getSymbol()));
                 getAccountDAO().updateAccount(account);
@@ -679,7 +675,7 @@ public class Engine {
         commodityLock.writeLock().lock();
 
         try {
-            for (ExchangeRateHistoryNode node : rate.getHistory()) {
+            for (final ExchangeRateHistoryNode node : rate.getHistory()) {
                 removeExchangeRateHistory(rate, node);
             }
             moveObjectToTrash(rate);
