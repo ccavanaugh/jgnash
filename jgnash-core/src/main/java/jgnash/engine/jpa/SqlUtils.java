@@ -27,7 +27,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
@@ -54,6 +55,10 @@ public class SqlUtils {
     private static final long MAX_LOCK_RELEASE_TIME = 30 * 1000;
 
     private static final int LOCK_WAIT_SLEEP = 750;
+
+    private static final int TABLE_NAME = 3;
+
+    private static final int COLUMN_NAME = 4;
 
     private SqlUtils() {
     }
@@ -140,7 +145,7 @@ public class SqlUtils {
                     while (resultSet.next()) {
                         // table name is TRANSACT_TRANSACTIONENTRY
                         // need to rename the column TRANSACT_UUID to TRANSACTION_UUID
-                        if (resultSet.getString(4).equals("TRANSACT_UUID") && resultSet.getString(3).equals("TRANSACT_TRANSACTIONENTRY")) {
+                        if (resultSet.getString(COLUMN_NAME).equals("TRANSACT_UUID") && resultSet.getString(TABLE_NAME).equals("TRANSACT_TRANSACTIONENTRY")) {
                             try (final PreparedStatement statement = connection.prepareStatement("ALTER TABLE TRANSACT_TRANSACTIONENTRY ALTER COLUMN TRANSACT_UUID RENAME TO TRANSACTION_UUID")) {
                                 statement.execute();
                                 logger.info("Correcting column name for Hibernate HHH-9389");
@@ -190,7 +195,7 @@ public class SqlUtils {
                     final ResultSet resultSet = metaData.getColumns(null, null, "%", "%");
 
                     while (resultSet.next()) {
-                        tableNames.add(resultSet.getString(3).toUpperCase() + "," + resultSet.getString(4).toUpperCase());
+                        tableNames.add(resultSet.getString(TABLE_NAME).toUpperCase() + "," + resultSet.getString(COLUMN_NAME).toUpperCase());
                     }
 
                     // must issue a shutdown for correct file closure
@@ -241,13 +246,13 @@ public class SqlUtils {
 
             logger.info("SQL SHUTDOWN was issued");
 
-            // It may take awhile for the lock to be released.  Wait for removal so any later attempts to open the file won't see the lock file and fail.
-            final long then = new Date().getTime();
+            // It may take awhile for the lock to be released.  Wait for removal so any later attempts to open the
+            // file won't see the lock file and fail.
+            final LocalDateTime start = LocalDateTime.now();
 
             while (Files.exists(Paths.get(lockFile))) {
-                long now = new Date().getTime();
 
-                if ((now - then) > MAX_LOCK_RELEASE_TIME) {
+                if (Duration.between(start, LocalDateTime.now()).toMillis() > MAX_LOCK_RELEASE_TIME){
                     logger.warning("Exceeded the maximum wait time for the file lock release");
                     break;
                 }
