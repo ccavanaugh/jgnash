@@ -17,9 +17,11 @@
  */
 package jgnash.engine;
 
-import jgnash.util.DateUtils;
-import jgnash.util.NotNull;
-import jgnash.util.Nullable;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,12 +31,9 @@ import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Objects;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import jgnash.util.DateUtils;
+import jgnash.util.NotNull;
+import jgnash.util.Nullable;
 
 /**
  * Historical data for a {@code SecurityNode}.
@@ -62,6 +61,8 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
 
     private long volume = 0;
 
+    private transient LocalDate cachedLocalDate = null;
+
     /**
      * public no-argument constructor for reflection
      */
@@ -76,7 +77,7 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
      * @param high high price for the day
      * @param low low price for the day
      */
-    public SecurityHistoryNode(@Nullable final Date date, @Nullable final BigDecimal price, final long volume,
+    public SecurityHistoryNode(@Nullable final LocalDate date, @Nullable final BigDecimal price, final long volume,
                                @Nullable final BigDecimal high, @Nullable final BigDecimal low) {
         setDate(date);
         setPrice(price);
@@ -113,15 +114,17 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
         return volume;
     }
 
-    protected void setDate(final Date date) {
-        Objects.requireNonNull(date);
+    protected void setDate(final LocalDate localDate) {
+        Objects.requireNonNull(localDate);
 
-        this.date = DateUtils.trimDate(date);
+        this.date = DateUtils.asDate(localDate);
     }
 
-    @SuppressFBWarnings({"EI_EXPOSE_REP"})
-    public Date getDate() {
-        return date;
+    public LocalDate getLocalDate() {
+        if (cachedLocalDate == null) {
+            cachedLocalDate = DateUtils.asLocalDate(date);
+        }
+        return cachedLocalDate;
     }
 
     protected void setPrice(final BigDecimal price) {
@@ -142,12 +145,13 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
      */
     @Override
     public int compareTo(@NotNull final SecurityHistoryNode node) {
-        return getDate().compareTo(node.getDate());
+        return getLocalDate().compareTo(node.getLocalDate());
     }
 
     @Override
     public boolean equals(final Object o) {
-        return this == o || o instanceof SecurityHistoryNode && getDate().compareTo(((SecurityHistoryNode) o).getDate()) == 0;
+        return this == o || o instanceof SecurityHistoryNode && getLocalDate()
+                .compareTo(((SecurityHistoryNode) o).getLocalDate()) == 0;
     }
 
    @Override

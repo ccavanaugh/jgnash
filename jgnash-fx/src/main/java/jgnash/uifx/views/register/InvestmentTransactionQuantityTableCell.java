@@ -19,7 +19,7 @@ package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.Date;
+import java.time.LocalDate;
 
 import javafx.scene.control.TableCell;
 
@@ -46,17 +46,20 @@ class InvestmentTransactionQuantityTableCell extends TableCell<Transaction, BigD
 
         if (!empty && amount != null && getTableRow() != null) {
 
-            Transaction transaction = (Transaction) getTableRow().getItem();
+            final Transaction transaction = (Transaction) getTableRow().getItem();
 
             if (transaction instanceof InvestmentTransaction) {
 
-                final NumberFormat numberFormat = CommodityFormat.getShortNumberFormat(((InvestmentTransaction) transaction).getSecurityNode());
+                final NumberFormat numberFormat
+                        = CommodityFormat.getShortNumberFormat(((InvestmentTransaction) transaction).getSecurityNode());
 
                 setText(numberFormat.format(amount));
 
                 // Not empty and amount is not null, but tableRow can be null... JavaFx Bug?
                 if (getTableRow() != null && getTableRow().getItem() != null) {
-                    final boolean future = ((Transaction) getTableRow().getItem()).getDate().after(new Date());
+                    final boolean future = ((Transaction) getTableRow().getItem()).getLocalDate()
+                            .isAfter(LocalDate.now());
+
                     final boolean negative = amount.signum() < 0;
 
                     // Set font style

@@ -82,22 +82,22 @@ public class TransferPanel extends AbstractExchangeTransactionPanel {
         if (panelType == PanelType.DECREASE && signum >= 0 || signum == -1) {
             if (hasEqualCurrencies()) {
                 transaction = TransactionFactory.generateDoubleEntryTransaction(accountPanel.getSelectedAccount(),
-                        getAccount(), amountField.getDecimal().abs(), datePanel.getDate(), memoField.getText(), payee,
-                        number);
+                        getAccount(), amountField.getDecimal().abs(), datePanel.getLocalDate(), memoField.getText(),
+                        payee, number);
             } else {
                 transaction = TransactionFactory.generateDoubleEntryTransaction(accountPanel.getSelectedAccount(),
                         getAccount(), accountPanel.getExchangedAmount().abs(), amountField.getDecimal().abs().negate(),
-                        datePanel.getDate(), memoField.getText(), payee, number);
+                        datePanel.getLocalDate(), memoField.getText(), payee, number);
             }
         } else {
             if (hasEqualCurrencies()) {
                 transaction = TransactionFactory.generateDoubleEntryTransaction(getAccount(),
-                        accountPanel.getSelectedAccount(), amountField.getDecimal().abs(), datePanel.getDate(),
+                        accountPanel.getSelectedAccount(), amountField.getDecimal().abs(), datePanel.getLocalDate(),
                         memoField.getText(), payee, number);
             } else {
                 transaction = TransactionFactory.generateDoubleEntryTransaction(getAccount(),
                         accountPanel.getSelectedAccount(), amountField.getDecimal().abs(),
-                        accountPanel.getExchangedAmount().abs().negate(), datePanel.getDate(), memoField.getText(),
+                        accountPanel.getExchangedAmount().abs().negate(), datePanel.getLocalDate(), memoField.getText(),
                         payee, number);
             }
         }

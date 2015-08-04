@@ -76,7 +76,7 @@ public class ReinvestDividendSlipController extends AbstractPriceQtyInvSlipContr
 
         clearForm();
 
-        datePicker.setDate(transaction.getDate());
+        datePicker.setValue(transaction.getLocalDate());
         numberComboBox.setValue(transaction.getNumber());
 
         feePane.setTransactionEntries(((InvestmentTransaction) transaction).getInvestmentFeeEntries());
@@ -108,7 +108,7 @@ public class ReinvestDividendSlipController extends AbstractPriceQtyInvSlipContr
         final List<TransactionEntry> fees = feePane.getTransactions();
 
         final Transaction transaction = TransactionFactory.generateReinvestDividendXTransaction(accountProperty().get(),
-                securityComboBox.getValue(), priceField.getDecimal(), quantityField.getDecimal(), datePicker.getDate(),
+                securityComboBox.getValue(), priceField.getDecimal(), quantityField.getDecimal(), datePicker.getValue(),
                 memoTextField.getText(), fees, gains);
 
         transaction.setNumber(numberComboBox.getValue());

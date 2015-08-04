@@ -18,8 +18,8 @@
 
 package jgnash.uifx.control;
 
-import java.text.DateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javafx.scene.control.TableCell;
 
@@ -30,16 +30,16 @@ import jgnash.util.DateUtils;
  *
  * @author Craig Cavanaugh
  */
-public class ShortDateTableCell<S> extends TableCell<S, Date> {
+public class ShortDateTableCell<S> extends TableCell<S, LocalDate> {
 
-    private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
+    private final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateTimeFormat();
 
     @Override
-    protected void updateItem(final Date date, final boolean empty) {
+    protected void updateItem(final LocalDate date, final boolean empty) {
         super.updateItem(date, empty);  // required
 
         if (!empty && date != null) {
-            setText(dateFormatter.format(date));
+            setText(dateTimeFormatter.format(date));
         } else {
             setText(null);
         }

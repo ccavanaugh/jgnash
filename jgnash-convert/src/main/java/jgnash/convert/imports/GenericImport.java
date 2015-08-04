@@ -52,15 +52,17 @@ public class GenericImport {
                 Transaction t;
 
                 if (baseAccount.equals(tran.account)) { // single entry oTran
-                    t = TransactionFactory.generateSingleEntryTransaction(baseAccount, tran.amount, tran.datePosted,
-                            tran.memo, tran.payee, tran.checkNumber);
+                    t = TransactionFactory.generateSingleEntryTransaction(baseAccount, tran.amount,
+                            DateUtils.asLocalDate(tran.datePosted), tran.memo, tran.payee, tran.checkNumber);
                 } else { // double entry
                     if (tran.amount.signum() >= 0) {
                         t = TransactionFactory.generateDoubleEntryTransaction(baseAccount, tran.account,
-                                tran.amount.abs(), tran.datePosted, tran.memo, tran.payee, tran.checkNumber);
+                                tran.amount.abs(), DateUtils.asLocalDate(tran.datePosted), tran.memo, tran.payee,
+                                tran.checkNumber);
                     } else {
                         t = TransactionFactory.generateDoubleEntryTransaction(tran.account, baseAccount,
-                                tran.amount.abs(), tran.datePosted, tran.memo, tran.payee, tran.checkNumber);
+                                tran.amount.abs(), DateUtils.asLocalDate(tran.datePosted), tran.memo, tran.payee,
+                                tran.checkNumber);
                     }
                 }
 

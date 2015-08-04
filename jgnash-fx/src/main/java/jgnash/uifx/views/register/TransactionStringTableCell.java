@@ -17,11 +17,11 @@
  */
 package jgnash.uifx.views.register;
 
-import java.util.Date;
-
-import jgnash.engine.Transaction;
+import java.time.LocalDate;
 
 import javafx.scene.control.TableCell;
+
+import jgnash.engine.Transaction;
 
 /**
  * @author Craig Cavanaugh
@@ -37,7 +37,8 @@ class TransactionStringTableCell extends TableCell<Transaction, String> {
 
             if (getTableRow() != null) { // null can occur if UI is very busy... JavaFX bug?
                 if (getTableRow().getItem() != null) {
-                    final boolean future = ((Transaction) getTableRow().getItem()).getDate().after(new Date());
+                    final boolean future = ((Transaction) getTableRow().getItem()).getLocalDate()
+                            .isAfter(LocalDate.now());
 
                     if (future) {
                         setId("italic-label");

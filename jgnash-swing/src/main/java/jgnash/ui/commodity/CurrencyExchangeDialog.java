@@ -279,7 +279,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
             ExchangeRateHistoryNode node = getSelectedExchangeRate().getHistory().get(row);
 
             rateField.setDecimal(node.getRate());
-            dateField.setDate(node.getDate());
+            dateField.setDate(node.getLocalDate());
         }
     }
 
@@ -289,7 +289,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
             CurrencyNode src = baseCurrencyCombo.getSelectedNode();
             CurrencyNode dst = exchangeCurrencyCombo.getSelectedNode();
 
-            getEngine().setExchangeRate(src, dst, rateField.getDecimal(), dateField.getDate());
+            getEngine().setExchangeRate(src, dst, rateField.getDecimal(), dateField.getLocalDate());
 
             clearForm();
         }
@@ -523,7 +523,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
             if (history != null) {
                 switch (col) {
                     case 0:
-                        return history.get(row).getDate();
+                        return DateUtils.asDate(history.get(row).getLocalDate());
                     case 1:
                         BigDecimal rate = history.get(row).getRate();
 

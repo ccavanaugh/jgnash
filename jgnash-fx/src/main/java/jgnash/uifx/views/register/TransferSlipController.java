@@ -70,24 +70,24 @@ public class TransferSlipController extends AbstractSlipController {
             if (hasEqualCurrencies()) {
                 transaction =
                         TransactionFactory.generateDoubleEntryTransaction(accountExchangePane.getSelectedAccount(),
-                        accountProperty().get(), amountField.getDecimal().abs(), datePicker.getDate(),
+                        accountProperty().get(), amountField.getDecimal().abs(), datePicker.getValue(),
                                 memoTextField.getText(), payee, number);
             } else {
                 transaction =
                         TransactionFactory.generateDoubleEntryTransaction(accountExchangePane.getSelectedAccount(),
                         accountProperty().get(), accountExchangePane.exchangeAmountProperty().get().abs(),
-                        amountField.getDecimal().abs().negate(), datePicker.getDate(), memoTextField.getText(), payee,
+                        amountField.getDecimal().abs().negate(), datePicker.getValue(), memoTextField.getText(), payee,
                         number);
             }
         } else {
             if (hasEqualCurrencies()) {
                 transaction = TransactionFactory.generateDoubleEntryTransaction(accountProperty().get(),
-                        accountExchangePane.getSelectedAccount(), amountField.getDecimal().abs(), datePicker.getDate(),
+                        accountExchangePane.getSelectedAccount(), amountField.getDecimal().abs(), datePicker.getValue(),
                         memoTextField.getText(), payee, number);
             } else {
                 transaction = TransactionFactory.generateDoubleEntryTransaction(accountProperty().get(),
                         accountExchangePane.getSelectedAccount(), amountField.getDecimal().abs(),
-                        accountExchangePane.exchangeAmountProperty().get().abs().negate(), datePicker.getDate(),
+                        accountExchangePane.exchangeAmountProperty().get().abs().negate(), datePicker.getValue(),
                         memoTextField.getText(), payee, number);
             }
         }

@@ -17,29 +17,29 @@
  */
 package jgnash.uifx.views.register;
 
-import java.text.DateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+import javafx.scene.control.TableCell;
 
 import jgnash.engine.Transaction;
 import jgnash.util.DateUtils;
 
-import javafx.scene.control.TableCell;
-
 /**
  * @author Craig Cavanaugh
  */
-class TransactionDateTableCell extends TableCell<Transaction, Date> {
+class TransactionDateTableCell extends TableCell<Transaction, LocalDate> {
 
-    private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
+    private final DateTimeFormatter dateFormatter = DateUtils.getShortDateTimeFormat();
 
     @Override
-    protected void updateItem(final Date date, final boolean empty) {
+    protected void updateItem(final LocalDate date, final boolean empty) {
         super.updateItem(date, empty);  // required
 
         if (!empty && date != null) {
             setText(dateFormatter.format(date));
 
-            if (date.after(new Date())) {
+            if (date.isAfter(LocalDate.now())) {
                 setId("italic-label");
             } else {
                 setId("normal-label");

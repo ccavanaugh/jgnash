@@ -23,7 +23,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -139,8 +138,8 @@ public class EditExchangeRatesController implements MessageListener {
         exchangeRateTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         exchangeRateTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        final TableColumn<ExchangeRateHistoryNode, Date> dateColumn = new TableColumn<>(resources.getString("Column.Date"));
-        dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getDate()));
+        final TableColumn<ExchangeRateHistoryNode, LocalDate> dateColumn = new TableColumn<>(resources.getString("Column.Date"));
+        dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLocalDate()));
         dateColumn.setCellFactory(cell -> new ShortDateTableCell());
         exchangeRateTable.getColumns().add(dateColumn);
 
@@ -211,7 +210,7 @@ public class EditExchangeRatesController implements MessageListener {
 
     private void updateForm() {
         if (selectedHistoryNode.get() != null) {
-            datePicker.setDate(selectedHistoryNode.get().getDate());
+            datePicker.setValue(selectedHistoryNode.get().getLocalDate());
             exchangeRateField.setDecimal(selectedHistoryNode.get().getRate());
         } else {
             handleClearAction();
@@ -247,7 +246,7 @@ public class EditExchangeRatesController implements MessageListener {
         Objects.requireNonNull(engine);
 
         engine.setExchangeRate(baseCurrencyComboBox.getValue(), targetCurrencyComboBox.getValue(),
-                exchangeRateField.getDecimal(), datePicker.getDate());
+                exchangeRateField.getDecimal(), datePicker.getValue());
 
         handleClearAction();
     }

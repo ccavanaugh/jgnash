@@ -80,7 +80,7 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
         }
         clearForm();
 
-        datePicker.setDate(transaction.getDate());
+        datePicker.setValue(transaction.getLocalDate());
         numberComboBox.setValue(transaction.getNumber());
 
         List<TransactionEntry> entries = transaction.getTransactionEntries();
@@ -125,7 +125,7 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
 
         final Transaction transaction =  TransactionFactory.generateBuyXTransaction(accountExchangePane.getSelectedAccount(),
                 accountProperty().get(), securityComboBox.getValue(), priceField.getDecimal(),
-                quantityField.getDecimal(), exchangeRate, datePicker.getDate(), memoTextField.getText(), fees);
+                quantityField.getDecimal(), exchangeRate, datePicker.getValue(), memoTextField.getText(), fees);
 
         transaction.setNumber(numberComboBox.getValue());
 

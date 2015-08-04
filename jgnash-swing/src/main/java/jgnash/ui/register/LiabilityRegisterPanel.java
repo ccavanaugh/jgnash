@@ -22,7 +22,7 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -119,12 +119,12 @@ public class LiabilityRegisterPanel extends RegisterPanel {
             double interest;
 
             if (ao.getUseDailyRate()) {
-                Date today = d.getDate();
+                LocalDate today = d.getDate();
 
-                Date last;
+                LocalDate last;
 
                 if (account.getTransactionCount() > 0) {
-                    last = account.getTransactionAt(account.getTransactionCount() - 1).getDate();
+                    last = account.getTransactionAt(account.getTransactionCount() - 1).getLocalDate();
                 } else {
                     last = today;
                 }

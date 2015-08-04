@@ -60,7 +60,7 @@ public class AdjustmentSlipController extends AbstractSlipController {
     @Override
     public Transaction buildTransaction() {
         return TransactionFactory.generateSingleEntryTransaction(accountProperty.get(), amountField.getDecimal(),
-                datePicker.getDate(), memoTextField.getText(), payeeTextField.getText(), numberComboBox.getValue());
+                datePicker.getValue(), memoTextField.getText(), payeeTextField.getText(), numberComboBox.getValue());
     }
 
     @Override
@@ -95,7 +95,7 @@ public class AdjustmentSlipController extends AbstractSlipController {
         payeeTextField.setText(t.getPayee());
         numberComboBox.setValue(t.getNumber());
 
-        datePicker.setDate(t.getDate());
+        datePicker.setValue(t.getLocalDate());
         setReconciledState(t.getReconciled(accountProperty().get()));
     }
 
@@ -114,7 +114,7 @@ public class AdjustmentSlipController extends AbstractSlipController {
 
             final Transaction t = new Transaction();
 
-            t.setDate(datePicker.getDate());
+            t.setDate(datePicker.getValue());
             t.setNumber(numberComboBox.getValue());
             t.setPayee(payeeTextField.getText());
 

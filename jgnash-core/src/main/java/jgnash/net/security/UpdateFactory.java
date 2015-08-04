@@ -26,6 +26,7 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -199,7 +200,7 @@ public class UpdateFactory {
 
                                 final String[] fields = COMMA_DELIMITER_PATTERN.split(line);
 
-                                final Date date = df.parse(fields[0]);
+                                final LocalDate date = DateUtils.asLocalDate(df.parse(fields[0]));
                                 final BigDecimal high = new BigDecimal(fields[2]);
                                 final BigDecimal low = new BigDecimal(fields[3]);
                                 final BigDecimal close = new BigDecimal(fields[4]);
@@ -290,8 +291,8 @@ public class UpdateFactory {
                 if (parser != null && !Thread.currentThread().isInterrupted()) {  // check for thread interruption
                     if (parser.parse(securityNode)) {
 
-                        final SecurityHistoryNode node = new SecurityHistoryNode(parser.getDate(), parser.getPrice(),
-                                parser.getVolume(), parser.getHigh(), parser.getLow());
+                        final SecurityHistoryNode node = new SecurityHistoryNode(DateUtils.asLocalDate(parser.getDate()),
+                                parser.getPrice(), parser.getVolume(), parser.getHigh(), parser.getLow());
 
                         if (!Thread.currentThread().isInterrupted()) { // check for thread interruption
                             result = e.addSecurityHistory(securityNode, node);

@@ -17,6 +17,7 @@
  */
 package jgnash.ui.register;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -102,9 +103,9 @@ class DuplicateTransactionDialog extends DateChkNumberDialog {
             Date today = DateUtils.today(); // get today's date
 
             if (today.equals(datePanel.getDate())) {
-                clone.setDate(new Date()); // maintain entry order
+                clone.setDate(LocalDate.now()); // maintain entry order
             } else {
-                clone.setDate(datePanel.getDate()); // set the new date
+                clone.setDate(datePanel.getLocalDate()); // set the new date
             }
 
             clone.setNumber(numberCombo.getText()); // set the transaction number

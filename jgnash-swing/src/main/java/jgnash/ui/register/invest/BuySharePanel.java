@@ -140,7 +140,7 @@ public final class BuySharePanel extends AbstractPriceQtyInvTransactionPanel {
         }
         clearForm();
 
-        datePanel.setDate(tran.getDate());
+        datePanel.setDate(tran.getLocalDate());
 
         List<TransactionEntry> entries = tran.getTransactionEntries();
 
@@ -181,7 +181,7 @@ public final class BuySharePanel extends AbstractPriceQtyInvTransactionPanel {
 
         return TransactionFactory.generateBuyXTransaction(accountExchangePanel.getSelectedAccount(), getAccount(),
                 securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), exchangeRate,
-                datePanel.getDate(), memoField.getText(), fees);
+                datePanel.getLocalDate(), memoField.getText(), fees);
     }
 
     @Override

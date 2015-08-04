@@ -22,7 +22,6 @@ import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -70,7 +69,6 @@ import jgnash.uifx.control.LocalDateAxis;
 import jgnash.uifx.control.SecurityComboBox;
 import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.util.DateUtils;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -157,8 +155,8 @@ public class SecurityHistoryController implements MessageListener {
         tableView.setTableMenuButtonVisible(true);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        final TableColumn<SecurityHistoryNode, Date> dateColumn = new TableColumn<>(resources.getString("Column.Date"));
-        dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getDate()));
+        final TableColumn<SecurityHistoryNode, LocalDate> dateColumn = new TableColumn<>(resources.getString("Column.Date"));
+        dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLocalDate()));
         dateColumn.setCellFactory(cell -> new ShortDateTableCell());
         tableView.getColumns().add(dateColumn);
 
@@ -232,7 +230,7 @@ public class SecurityHistoryController implements MessageListener {
     }
 
     private void loadForm() {
-        datePicker.setDate(selectedSecurityHistoryNode.get().getDate());
+        datePicker.setValue(selectedSecurityHistoryNode.get().getLocalDate());
         closeTextField.setDecimal(selectedSecurityHistoryNode.get().getPrice());
         lowTextField.setDecimal(selectedSecurityHistoryNode.get().getLow());
         highTextField.setDecimal(selectedSecurityHistoryNode.get().getHigh());
@@ -257,7 +255,7 @@ public class SecurityHistoryController implements MessageListener {
         Collections.reverse(historyNodes);  // work backwards through the deletion list
 
         for (final SecurityHistoryNode historyNode : historyNodes) {
-            engine.removeSecurityHistory(selectedSecurityNode.get(), historyNode.getDate());
+            engine.removeSecurityHistory(selectedSecurityNode.get(), historyNode.getLocalDate());
         }
     }
 
@@ -272,7 +270,7 @@ public class SecurityHistoryController implements MessageListener {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        final SecurityHistoryNode history = new SecurityHistoryNode(datePicker.getDate(), closeTextField.getDecimal(),
+        final SecurityHistoryNode history = new SecurityHistoryNode(datePicker.getValue(), closeTextField.getDecimal(),
                 volumeTextField.getLong(), highTextField.getDecimal(), lowTextField.getDecimal());
 
         engine.addSecurityHistory(selectedSecurityNode.get(), history);
@@ -305,7 +303,7 @@ public class SecurityHistoryController implements MessageListener {
             series.setName(selectedSecurityNode.get().getSymbol());
 
             for (final SecurityHistoryNode node : selectedSecurityNode.get().getHistoryNodes()) {
-                series.getData().add(new AreaChart.Data<>(DateUtils.asLocalDate(node.getDate()), node.getPrice()));
+                series.getData().add(new AreaChart.Data<>(node.getLocalDate(), node.getPrice()));
             }
 
             Platform.runLater(() -> chart.getData().setAll(series));

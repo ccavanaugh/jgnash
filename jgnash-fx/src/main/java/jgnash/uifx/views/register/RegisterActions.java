@@ -17,6 +17,7 @@
  */
 package jgnash.uifx.views.register;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -34,7 +35,6 @@ import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
-import jgnash.util.DateUtils;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -87,7 +87,7 @@ class RegisterActions {
 
             try {
                 final Transaction clone = (Transaction) transaction.clone();
-                clone.setDate(DateUtils.today());
+                clone.setDate(LocalDate.now());
 
                 if (!clone.getNumber().isEmpty() && !clone.getNumber().equals(eftNumber)) {
                     final String nextTransactionNumber = account.getNextTransactionNumber();    // may return an empty string

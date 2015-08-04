@@ -26,6 +26,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionFactory;
+import jgnash.util.DateUtils;
 
 /**
  * OfxImport utility methods
@@ -41,19 +42,24 @@ public class OfxImport {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        for (OfxTransaction tran : transactions) {
+        for (final OfxTransaction tran : transactions) {
             assert tran.account != null;
 
             if (tran.getState() == OfxTransaction.ImportState.NEW || tran.getState() == OfxTransaction.ImportState.NOT_EQUAL) { // do not import matched transactions
                 Transaction t;
 
                 if (baseAccount.equals(tran.account)) { // single entry oTran
-                    t = TransactionFactory.generateSingleEntryTransaction(baseAccount, tran.amount, tran.datePosted, tran.memo, tran.getName(), tran.checkNumber);
+                    t = TransactionFactory.generateSingleEntryTransaction(baseAccount, tran.amount,
+                            DateUtils.asLocalDate(tran.datePosted), tran.memo, tran.getName(), tran.checkNumber);
                 } else { // double entry
                     if (tran.amount.signum() >= 0) {
-                        t = TransactionFactory.generateDoubleEntryTransaction(baseAccount, tran.account, tran.amount.abs(), tran.datePosted, tran.memo, tran.getName(), tran.checkNumber);
+                        t = TransactionFactory.generateDoubleEntryTransaction(baseAccount, tran.account,
+                                tran.amount.abs(), DateUtils.asLocalDate(tran.datePosted), tran.memo, tran.getName(),
+                                tran.checkNumber);
                     } else {
-                        t = TransactionFactory.generateDoubleEntryTransaction(tran.account, baseAccount, tran.amount.abs(), tran.datePosted, tran.memo, tran.getName(), tran.checkNumber);
+                        t = TransactionFactory.generateDoubleEntryTransaction(tran.account, baseAccount,
+                                tran.amount.abs(), DateUtils.asLocalDate(tran.datePosted), tran.memo, tran.getName(),
+                                tran.checkNumber);
                     }
                 }
 

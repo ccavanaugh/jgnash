@@ -20,6 +20,7 @@ package jgnash.engine;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -275,31 +276,31 @@ public class Engine {
      * @param transactions Collection of transactions utilizing the requested investment
      * @param node         {@code SecurityNode} we want a price for
      * @param baseCurrency {@code CurrencyNode} reporting currency
-     * @param date         {@code Date} we want a market price for
+     * @param localDate    {@code LocalDate} we want a market price for
      * @return The best market price or a value of 0 if no history or transactions exist
      */
-    public static BigDecimal getMarketPrice(final Collection<Transaction> transactions, final SecurityNode node, final CurrencyNode baseCurrency, final Date date) {
-
-        final Date marketDate = DateUtils.trimDate(date);
+    public static BigDecimal getMarketPrice(final Collection<Transaction> transactions, final SecurityNode node,
+                                            final CurrencyNode baseCurrency, final LocalDate localDate) {
 
         // Search for the exact history node record
         //SecurityHistoryNode hNode = node.getHistoryNode(marketDate);
-        Optional<SecurityHistoryNode> optional = node.getHistoryNode(marketDate);
+        Optional<SecurityHistoryNode> optional = node.getHistoryNode(localDate);
 
         // not null, must be an exact match, return the value because it has precedence
         if (optional.isPresent()) {
-            return node.getMarketPrice(marketDate, baseCurrency);
+            return node.getMarketPrice(localDate, baseCurrency);
         }
 
         // Nothing found yet, continue searching for something better
-        Date priceDate = new Date(0);
+        //Date priceDate = new Date(0);
+        LocalDate priceDate = LocalDate.ofEpochDay(0);
         BigDecimal price = BigDecimal.ZERO;
 
-        optional = node.getClosestHistoryNode(marketDate);
+        optional = node.getClosestHistoryNode(localDate);
 
         if (optional.isPresent()) {    // Closest option so far
             price = optional.get().getPrice();
-            priceDate = optional.get().getDate();
+            priceDate = optional.get().getLocalDate();
         }
 
         // Compare against transactions
@@ -307,14 +308,14 @@ public class Engine {
             if (t instanceof InvestmentTransaction && ((InvestmentTransaction) t).getSecurityNode() == node) {
 
                 // The transaction date must be closer than the history node, but not newer than the request date
-                if ((t.getDate().after(priceDate) && t.getDate().before(marketDate)) || t.getDate().equals(marketDate)) {
+                if ((t.getLocalDate().isAfter(priceDate) && t.getLocalDate().isBefore(localDate)) || t.getLocalDate().equals(localDate)) {
 
                     // Check for a dividend, etc that may have returned a price of zero
                     final BigDecimal p = ((InvestmentTransaction) t).getPrice();
 
                     if (p != null && p.compareTo(BigDecimal.ZERO) == 1) {
                         price = p;
-                        priceDate = t.getDate();
+                        priceDate = t.getLocalDate();
                     }
                 }
             }
@@ -803,7 +804,7 @@ public class Engine {
                 logger.info("No trash was found");
             }
 
-            final long now = new Date().getTime();
+            final long now = System.currentTimeMillis();
 
             trash.stream().filter(o -> now - o.getDate().getTime() >= MAXIMUM_TRASH_AGE)
                     .forEach(o -> getTrashDAO().remove(o));
@@ -820,8 +821,9 @@ public class Engine {
 
     /**
      * Creates a default reminder given a transaction and the primary account.  The Reminder will need to persisted.
+     *
      * @param transaction Transaction for the reminder.  The transaction wil be cloned
-     * @param account primary account
+     * @param account     primary account
      * @return new default {@code MonthlyReminder}
      */
     public Reminder createDefaultReminder(final Transaction transaction, final Account account) {
@@ -833,7 +835,7 @@ public class Engine {
             reminder.setTransaction((Transaction) transaction.clone());
             reminder.setDescription(transaction.getPayee());
             reminder.setNotes(transaction.getMemo());
-        }  catch (final CloneNotSupportedException e) {
+        } catch (final CloneNotSupportedException e) {
             logSevere(e.getLocalizedMessage());
         }
         return reminder;
@@ -898,7 +900,7 @@ public class Engine {
         final Calendar c = Calendar.getInstance();
         final Date now = new Date(); // today's date
 
-        for (Reminder r : list) {
+        for (final Reminder r : list) {
             if (r.isEnabled()) {
                 final RecurringIterator ri = r.getIterator();
                 Date next = ri.next();
@@ -928,7 +930,7 @@ public class Engine {
                 final Transaction t = reminder.getTransaction();
 
                 // Update to the commit date (commit date can be modified)
-                t.setDate(DateUtils.asDate(pending.getCommitDate()));
+                t.setDate(pending.getCommitDate());
                 addTransaction(t);
             }
             // update the last fired date... date returned from the iterator
@@ -1124,9 +1126,9 @@ public class Engine {
 
         try {
             // Remove old history of the same date if it exists
-            if (node.contains(hNode.getDate())) {
-                if (!removeSecurityHistory(node, hNode.getDate())) {
-                    logSevere(ResourceUtils.getString("Message.Error.HistRemoval", hNode.getDate(), node.getSymbol()));
+            if (node.contains(hNode.getLocalDate())) {
+                if (!removeSecurityHistory(node, hNode.getLocalDate())) {
+                    logSevere(ResourceUtils.getString("Message.Error.HistRemoval", hNode.getLocalDate(), node.getSymbol()));
                     return false;
                 }
             }
@@ -1303,7 +1305,8 @@ public class Engine {
         return getCommodityDAO().getExchangeRateByUuid(uuid);
     }
 
-    @NotNull public List<SecurityNode> getSecurities() {
+    @NotNull
+    public List<SecurityNode> getSecurities() {
 
         commodityLock.readLock().lock();
 
@@ -1427,9 +1430,9 @@ public class Engine {
                 final List<SecurityHistoryNode> hNodes = new ArrayList<>(node.getHistoryNodes());
 
                 hNodes.stream()
-                        .filter(hNode -> !removeSecurityHistory(node, hNode.getDate()))
+                        .filter(hNode -> !removeSecurityHistory(node, hNode.getLocalDate()))
                         .forEach(hNode -> logSevere(ResourceUtils.getString("Message.Error.HistRemoval",
-                                hNode.getDate(), node.getSymbol())));
+                                hNode.getLocalDate(), node.getSymbol())));
                 moveObjectToTrash(node);
             }
 
@@ -1456,7 +1459,7 @@ public class Engine {
      * @param date the search {@code Date}
      * @return {@code true} if a {@code SecurityHistoryNode} was found and removed
      */
-    public boolean removeSecurityHistory(@NotNull final SecurityNode node, @NotNull final Date date) {
+    public boolean removeSecurityHistory(@NotNull final SecurityNode node, @NotNull final LocalDate date) {
 
         commodityLock.writeLock().lock();
 
@@ -1564,12 +1567,13 @@ public class Engine {
         }
     }
 
-    public void setExchangeRate(final CurrencyNode baseCurrency, final CurrencyNode exchangeCurrency, final BigDecimal rate) {
-
-        setExchangeRate(baseCurrency, exchangeCurrency, rate, new Date());
+    public void setExchangeRate(final CurrencyNode baseCurrency, final CurrencyNode exchangeCurrency,
+                                final BigDecimal rate) {
+        setExchangeRate(baseCurrency, exchangeCurrency, rate, LocalDate.now());
     }
 
-    public void setExchangeRate(final CurrencyNode baseCurrency, final CurrencyNode exchangeCurrency, final BigDecimal rate, final Date date) {
+    public void setExchangeRate(final CurrencyNode baseCurrency, final CurrencyNode exchangeCurrency,
+                                final BigDecimal rate, final LocalDate localDate) {
         Objects.requireNonNull(rate);
 
         assert rate.compareTo(BigDecimal.ZERO) > 0;
@@ -1587,8 +1591,8 @@ public class Engine {
         }
 
         // Remove old history of the same date if it exists
-        if (exchangeRate.contains(date)) {
-            removeExchangeRateHistory(exchangeRate, exchangeRate.getHistory(date));
+        if (exchangeRate.contains(localDate)) {
+            removeExchangeRateHistory(exchangeRate, exchangeRate.getHistory(localDate));
         }
 
         commodityLock.writeLock().lock();
@@ -1598,9 +1602,9 @@ public class Engine {
             ExchangeRateHistoryNode historyNode;
 
             if (baseCurrency.getSymbol().compareToIgnoreCase(exchangeCurrency.getSymbol()) > 0) {
-                historyNode = new ExchangeRateHistoryNode(date, rate);
+                historyNode = new ExchangeRateHistoryNode(localDate, rate);
             } else {
-                historyNode = new ExchangeRateHistoryNode(date, BigDecimal.ONE.divide(rate, MathConstants.mathContext));
+                historyNode = new ExchangeRateHistoryNode(localDate, BigDecimal.ONE.divide(rate, MathConstants.mathContext));
             }
 
             Message message;
@@ -2624,12 +2628,15 @@ public class Engine {
                     transaction.getTransactionEntries().stream()
                             .filter(TransactionEntry::isMultiCurrency)
                             .forEach(entry -> {
-                                final ExchangeRate rate = getExchangeRate(entry.getDebitAccount().getCurrencyNode(), entry.getCreditAccount().getCurrencyNode());
+                                final ExchangeRate rate = getExchangeRate(entry.getDebitAccount().getCurrencyNode(),
+                                        entry.getCreditAccount().getCurrencyNode());
 
-                                if (rate.getRate(transaction.getDate()).equals(BigDecimal.ZERO)) { // no rate for the date has been set
-                                    final BigDecimal exchangeRate = entry.getDebitAmount().abs().divide(entry.getCreditAmount().abs(), MathConstants.mathContext);
+                                if (rate.getRate(transaction.getLocalDate()).equals(BigDecimal.ZERO)) { // no rate for the date has been set
+                                    final BigDecimal exchangeRate = entry.getDebitAmount().abs()
+                                            .divide(entry.getCreditAmount().abs(), MathConstants.mathContext);
 
-                                    setExchangeRate(entry.getCreditAccount().getCurrencyNode(), entry.getDebitAccount().getCurrencyNode(), exchangeRate, transaction.getDate());
+                                    setExchangeRate(entry.getCreditAccount().getCurrencyNode(), entry.getDebitAccount()
+                                            .getCurrencyNode(), exchangeRate, transaction.getLocalDate());
                                 }
                             });
                 }

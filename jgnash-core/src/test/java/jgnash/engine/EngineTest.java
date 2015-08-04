@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -33,7 +33,6 @@ import jgnash.engine.budget.BudgetGoal;
 import jgnash.engine.budget.BudgetPeriod;
 import jgnash.engine.recurring.DailyReminder;
 import jgnash.engine.recurring.Reminder;
-import jgnash.util.DateUtils;
 import jgnash.util.FileUtils;
 
 import org.junit.After;
@@ -345,14 +344,14 @@ public abstract class EngineTest {
     @Test
     public void testGetExchangeRate() throws Exception {
 
-        Date today = DateUtils.today();
-        Date yesterday = DateUtils.subtractDay(today);
+        final LocalDate today = LocalDate.now();
+        final LocalDate yesterday = today.minusDays(1);
 
         CurrencyNode usd = e.getCurrency("USD");
         CurrencyNode cad = e.getCurrency("CAD");
 
-        e.setExchangeRate(usd, cad, new BigDecimal("1.02"), today);
-        e.setExchangeRate(usd, cad, new BigDecimal("1.01"), yesterday);
+        e.setExchangeRate(usd, cad, new BigDecimal("1.02"), LocalDate.now());
+        e.setExchangeRate(usd, cad, new BigDecimal("1.01"), LocalDate.now().minusDays(1));
 
         closeEngine();
 
@@ -799,9 +798,9 @@ public abstract class EngineTest {
 
         e.addAccount(e.getRootAccount(), a);
 
-        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), "memo", "payee", "1"));
-        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), "memo", "payee", "2"));
-        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), "memo", "payee", "3"));
+        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, LocalDate.now(), "memo", "payee", "1"));
+        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, LocalDate.now(), "memo", "payee", "2"));
+        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, LocalDate.now(), "memo", "payee", "3"));
 
         assertEquals(3, a.getTransactionCount());
 
@@ -826,9 +825,11 @@ public abstract class EngineTest {
 
         e.addAccount(e.getRootAccount(), a);
 
-        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), "memo", "payee", "1"));
+        e.addTransaction(TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, LocalDate.now(), "memo",
+                "payee", "1"));
 
-        Transaction link = TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, new Date(), "memo", "payee", "1");
+        Transaction link = TransactionFactory.generateSingleEntryTransaction(a, BigDecimal.TEN, LocalDate.now(), "memo",
+                "payee", "1");
         link.setAttachment("external link");
 
         e.addTransaction(link);

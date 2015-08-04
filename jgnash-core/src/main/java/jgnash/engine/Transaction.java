@@ -18,6 +18,7 @@
 package jgnash.engine;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -106,6 +107,8 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     @JoinTable
     @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     Set<TransactionEntry> transactionEntries = new HashSet<>();
+
+    private transient LocalDate cachedLocalDate = null;
 
     /**
      * ReadWrite lock
@@ -278,15 +281,21 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         }
     }
 
-    public void setDate(@NotNull final Date date) {
-        Objects.requireNonNull(date);
-
-        // ensure the date is always leveled
-        this.date = DateUtils.trimDate(date);
+    public void setDate(@NotNull final LocalDate localDate) {
+        this.date = DateUtils.asDate(localDate);
+        cachedLocalDate = null;
     }
 
     public Date getDate() {
         return date;
+    }
+
+    public LocalDate getLocalDate() {
+        if (cachedLocalDate == null) {
+            cachedLocalDate = DateUtils.asLocalDate(date);
+        }
+
+        return cachedLocalDate;
     }
 
     /**

@@ -19,9 +19,9 @@ package jgnash.engine;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -50,7 +50,7 @@ public class TransactionFactory {
      */
     public static InvestmentTransaction generateAddXTransaction(final Account investmentAccount,
                                                                 final SecurityNode node, final BigDecimal price,
-                                                                final BigDecimal quantity, final Date date,
+                                                                final BigDecimal quantity, final LocalDate date,
                                                                 final String memo) {
         Objects.requireNonNull(investmentAccount);
         Objects.requireNonNull(node);
@@ -90,7 +90,7 @@ public class TransactionFactory {
     public static InvestmentTransaction import1xBuyXTransaction(final Account account, final Account investmentAccount,
                                                                 final SecurityNode node, final BigDecimal price,
                                                                 final BigDecimal quantity, final BigDecimal exchangeRate,
-                                                                final BigDecimal fee, final Date date, final String memo) {
+                                                                final BigDecimal fee, final LocalDate date, final String memo) {
 
         assert account != null && investmentAccount != null && node != null && price != null && quantity != null;
         assert exchangeRate != null && fee != null && date != null && memo != null;
@@ -126,7 +126,7 @@ public class TransactionFactory {
     public static InvestmentTransaction generateBuyXTransaction(final Account account, final Account investmentAccount,
                                                                 final SecurityNode node, final BigDecimal price,
                                                                 final BigDecimal quantity, final BigDecimal exchangeRate,
-                                                                final Date date, final String memo,
+                                                                final LocalDate date, final String memo,
                                                                 final Collection<TransactionEntry> fees) {
         Objects.requireNonNull(account);
         Objects.requireNonNull(investmentAccount);
@@ -213,7 +213,7 @@ public class TransactionFactory {
                                                                      final BigDecimal dividend,
                                                                      final BigDecimal incomeExchangedAmount,
                                                                      final BigDecimal cashExchangedAmount,
-                                                                     final Date date, final String memo) {
+                                                                     final LocalDate date, final String memo) {
         Objects.requireNonNull(incomeAccount);
         Objects.requireNonNull(cashAccount);
         Objects.requireNonNull(investmentAccount);
@@ -275,7 +275,7 @@ public class TransactionFactory {
                                                                 final BigDecimal dividend,
                                                                 final BigDecimal incomeExchangedAmount,
                                                                 final BigDecimal cashExchangedAmount,
-                                                                final Date date, final String memo) {
+                                                                final LocalDate date, final String memo) {
         Objects.requireNonNull(incomeAccount);
         Objects.requireNonNull(cashAccount);
         Objects.requireNonNull(investmentAccount);
@@ -334,7 +334,7 @@ public class TransactionFactory {
      */
     public static Transaction generateDoubleEntryTransaction(final Account creditAccount, final Account debitAccount,
                                                              final BigDecimal creditAmount, final BigDecimal debitAmount,
-                                                             final Date date, final String memo, final String payee,
+                                                             final LocalDate date, final String memo, final String payee,
                                                              final String number) {
         Objects.requireNonNull(creditAccount);
         Objects.requireNonNull(debitAccount);
@@ -371,7 +371,7 @@ public class TransactionFactory {
      * @return new Transaction
      */
     public static Transaction generateDoubleEntryTransaction(final Account creditAccount, final Account debitAccount,
-                                                             final BigDecimal amount, final Date date, final String memo,
+                                                             final BigDecimal amount, final LocalDate date, final String memo,
                                                              final String payee, final String number) {
         Objects.requireNonNull(creditAccount);
         Objects.requireNonNull(debitAccount);
@@ -408,7 +408,7 @@ public class TransactionFactory {
      */
     public static InvestmentTransaction generateMergeXTransaction(final Account investmentAccount,
                                                                   final SecurityNode node, final BigDecimal price,
-                                                                  final BigDecimal quantity, final Date date,
+                                                                  final BigDecimal quantity, final LocalDate date,
                                                                   final String memo) {
         Objects.requireNonNull(investmentAccount);
         Objects.requireNonNull(node);
@@ -447,8 +447,8 @@ public class TransactionFactory {
     public static InvestmentTransaction generateReinvestDividendXTransaction(final Account investmentAccount,
                                                                              final SecurityNode node,
                                                                              final BigDecimal price,
-                                                                             final BigDecimal quantity, final Date date,
-                                                                             final String memo,
+                                                                             final BigDecimal quantity,
+                                                                             final LocalDate date, final String memo,
                                                                              final Collection<TransactionEntry> fees,
                                                                              final Collection<TransactionEntry> gains) {
         Objects.requireNonNull(investmentAccount);
@@ -542,7 +542,7 @@ public class TransactionFactory {
      */
     public static InvestmentTransaction generateRemoveXTransaction(final Account investmentAccount,
                                                                    final SecurityNode node, final BigDecimal price,
-                                                                   final BigDecimal quantity, final Date date,
+                                                                   final BigDecimal quantity, final LocalDate date,
                                                                    final String memo) {
         Objects.requireNonNull(investmentAccount);
         Objects.requireNonNull(node);
@@ -582,7 +582,7 @@ public class TransactionFactory {
     public static InvestmentTransaction import1xSellXTransaction(final Account account, final Account investmentAccount,
                                                                  final SecurityNode node, final BigDecimal price,
                                                                  final BigDecimal quantity, final BigDecimal exchange,
-                                                                 final BigDecimal fee, final Date date, final String memo) {
+                                                                 final BigDecimal fee, final LocalDate date, final String memo) {
         Objects.requireNonNull(account);
         Objects.requireNonNull(investmentAccount);
         Objects.requireNonNull(node);
@@ -626,7 +626,7 @@ public class TransactionFactory {
     public static InvestmentTransaction generateSellXTransaction(final Account account, final Account investmentAccount,
                                                                  final SecurityNode node, final BigDecimal price,
                                                                  final BigDecimal quantity, final BigDecimal exchangeRate,
-                                                                 final Date date, final String memo, final Collection<TransactionEntry> fees,
+                                                                 final LocalDate date, final String memo, final Collection<TransactionEntry> fees,
                                                                  final Collection<TransactionEntry> gains) {
         Objects.requireNonNull(account);
         Objects.requireNonNull(investmentAccount);
@@ -730,7 +730,7 @@ public class TransactionFactory {
      * @return new Transaction
      */
     public static Transaction generateSingleEntryTransaction(final Account account, final BigDecimal amount,
-                                                             final Date date, final String memo, final String payee,
+                                                             final LocalDate date, final String memo, final String payee,
                                                              final String number) {
         Objects.requireNonNull(account);
         Objects.requireNonNull(amount);
@@ -766,7 +766,7 @@ public class TransactionFactory {
      */
     public static InvestmentTransaction generateSplitXTransaction(final Account investmentAccount,
                                                                   final SecurityNode node, final BigDecimal price,
-                                                                  final BigDecimal quantity, final Date date,
+                                                                  final BigDecimal quantity, final LocalDate date,
                                                                   final String memo) {
 
         Objects.requireNonNull(investmentAccount);

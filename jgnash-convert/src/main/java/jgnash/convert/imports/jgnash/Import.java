@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -71,6 +72,7 @@ import jgnash.engine.TransactionEntryRemoveX;
 import jgnash.engine.TransactionEntrySplitX;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionTag;
+import jgnash.util.DateUtils;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -276,7 +278,7 @@ public class Import {
 
             Transaction transaction = new Transaction();
 
-            transaction.setDate(decodeDate(map.get("voucherDate")));
+            transaction.setDate(DateUtils.asLocalDate(decodeDate(map.get("voucherDate"))));
             transaction.setDateEntered(decodeDate(map.get("actTransDate")));
             transaction.setNumber(map.get("number"));
             transaction.setPayee(map.get("payee"));
@@ -592,7 +594,7 @@ public class Import {
         Transaction transaction = null;
 
         Date actDate = decodeDate(elementMap.get("actTransDate"));
-        Date date = decodeDate(elementMap.get("voucherDate"));
+        LocalDate date = DateUtils.asLocalDate(decodeDate(elementMap.get("voucherDate")));
         String memo = elementMap.get("memo");
         String payee = elementMap.get("payee");
         String number = elementMap.get("number");
@@ -1296,7 +1298,7 @@ public class Import {
                     case XMLStreamConstants.END_ELEMENT:
                         if (reader.getName().equals(parsingElement)) {
                             // build the security history node;
-                            final SecurityHistoryNode hNode = new SecurityHistoryNode(decodeDate(elementMap.get("date")),
+                            final SecurityHistoryNode hNode = new SecurityHistoryNode(DateUtils.asLocalDate(decodeDate(elementMap.get("date"))),
                                     new BigDecimal(elementMap.get("price")), Long.parseLong(elementMap.get("volume")),
                                     new BigDecimal(elementMap.get("high")), new BigDecimal(elementMap.get("low")));
 

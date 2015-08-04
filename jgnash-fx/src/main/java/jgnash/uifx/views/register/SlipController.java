@@ -17,7 +17,7 @@
  */
 package jgnash.uifx.views.register;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -138,7 +138,7 @@ public class SlipController extends AbstractSlipController {
 
         Transaction transaction;
 
-        final Date date = datePicker.getDate();
+        final LocalDate date = datePicker.getValue();
 
         if (splitsDialog.getTransactionEntries().size() > 0) { // build a split transaction
             transaction = new Transaction();
@@ -212,7 +212,7 @@ public class SlipController extends AbstractSlipController {
         payeeTextField.setText(t.getPayee());
         numberComboBox.setValue(t.getNumber());
 
-        datePicker.setDate(t.getDate());
+        datePicker.setValue(t.getLocalDate());
 
         setReconciledState(t.getReconciled(accountProperty().get()));
 

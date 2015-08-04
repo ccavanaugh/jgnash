@@ -20,6 +20,7 @@ package jgnash.engine;
 import java.math.BigDecimal;
 import java.text.Format;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -28,6 +29,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
+
+import jgnash.util.DateUtils;
 
 /**
  * Investment Performance Summary Class
@@ -288,10 +291,10 @@ public class InvestmentPerformanceSummary {
             collectSubAccountSecurities(account, nodes);
         }
 
-        for (SecurityNode node : nodes) {
+        for (final SecurityNode node : nodes) {
             SecurityPerformanceData data = new SecurityPerformanceData(node);
 
-            data.setPrice(getMarketPrice(node, getEndDate()));
+            data.setPrice(getMarketPrice(node, DateUtils.asLocalDate(getEndDate())));
 
             performanceData.put(node, data);
 
@@ -307,7 +310,7 @@ public class InvestmentPerformanceSummary {
         calculatePercentPortfolio();
     }
 
-    private BigDecimal getMarketPrice(final SecurityNode node, final Date date) {
+    private BigDecimal getMarketPrice(final SecurityNode node, final LocalDate date) {
         return Engine.getMarketPrice(transactions, node, baseCurrency, date);
     }
 

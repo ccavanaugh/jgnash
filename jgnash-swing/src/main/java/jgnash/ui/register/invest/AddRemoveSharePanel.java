@@ -117,7 +117,7 @@ public final class AddRemoveSharePanel extends AbstractPriceQtyInvTransactionPan
 
         modTrans = tran;
 
-        datePanel.setDate(tran.getDate());
+        datePanel.setDate(tran.getLocalDate());
         memoField.setText(tran.getMemo());
         priceField.setDecimal(_tran.getPrice());
         quantityField.setDecimal(_tran.getQuantity());
@@ -131,9 +131,11 @@ public final class AddRemoveSharePanel extends AbstractPriceQtyInvTransactionPan
     @Override
     public Transaction buildTransaction() {
         if (tranType == TransactionType.ADDSHARE) {
-            return TransactionFactory.generateAddXTransaction(account, securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText());
+            return TransactionFactory.generateAddXTransaction(account, securityCombo.getSelectedNode(),
+                    priceField.getDecimal(), quantityField.getDecimal(), datePanel.getLocalDate(), memoField.getText());
         }
-        return TransactionFactory.generateRemoveXTransaction(account, securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText());
+        return TransactionFactory.generateRemoveXTransaction(account, securityCombo.getSelectedNode(),
+                priceField.getDecimal(), quantityField.getDecimal(), datePanel.getLocalDate(), memoField.getText());
     }
 
     void updateTotalField() {

@@ -2,10 +2,9 @@ package jgnash.engine;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -35,8 +34,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
     @Test
     public void NoErrorIfSecurityHistoryEmpty() {
         // Transferring some money to usdBankAccount
-        Date transactionDate0;
-        transactionDate0 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-25", new ParsePosition(0));
+        final LocalDate transactionDate0 = LocalDate.of(2009, Month.DECEMBER, 25);
 
         TransactionEntry entry = new TransactionEntry();
 
@@ -55,10 +53,9 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         assertTrue(e.addTransaction(transaction));
 
         // Adding securityPrice to the security price history
-        Date transactionDate1;
+        final LocalDate transactionDate1 = LocalDate.of(2009, Month.DECEMBER, 26);
         BigDecimal securityPrice1;
 
-        transactionDate1 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-26", new ParsePosition(0));
         securityPrice1 = new BigDecimal("2.00");
 
         // There is not any History added to the security
@@ -81,8 +78,8 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
     @Test
     public void BuyShares() {
         // Transferring some money to usdBankAccount
-        Date transactionDate0;
-        transactionDate0 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-25", new ParsePosition(0));
+        final LocalDate transactionDate0 = LocalDate.of(2009, Month.DECEMBER, 25);
+
         TransactionEntry entry = new TransactionEntry();
 
         entry.setDebitAccount(equityAccount);
@@ -100,10 +97,10 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         assertTrue(e.addTransaction(transaction));
 
         // Adding securityPrice to the security price history
-        Date transactionDate1;
         BigDecimal securityPrice1;
 
-        transactionDate1 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-26", new ParsePosition(0));
+        final LocalDate transactionDate1 = LocalDate.of(2009, Month.DECEMBER, 26);
+
         securityPrice1 = new BigDecimal("2.00");
 
         SecurityHistoryNode history = new SecurityHistoryNode();
@@ -135,8 +132,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
     @Test
     public void SellShares() {
         // Transferring some money to usdBankAccount
-        Date transactionDate0;
-        transactionDate0 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-25", new ParsePosition(0));
+        final LocalDate transactionDate0 = LocalDate.of(2009, Month.DECEMBER, 25);
         TransactionEntry entry = new TransactionEntry();
 
         entry.setDebitAccount(equityAccount);
@@ -154,10 +150,11 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         e.addTransaction(transaction);
 
         // Adding securityPrice to the security price history
-        Date transactionDate1;
+        //Date transactionDate1;
         BigDecimal securityPrice1;
 
-        transactionDate1 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-26", new ParsePosition(0));
+        final LocalDate transactionDate1 = LocalDate.of(2009, Month.DECEMBER, 26);
+
         securityPrice1 = new BigDecimal("2.00");
 
         SecurityHistoryNode history = new SecurityHistoryNode();
@@ -178,10 +175,8 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", buyingFees);
         e.addTransaction(it);
 
-        Date transactionDate2;
-        BigDecimal securityPrice2;
-        transactionDate2 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-27", new ParsePosition(0));
-        securityPrice2 = new BigDecimal("3.00");
+        final LocalDate transactionDate2 = LocalDate.of(2009, Month.DECEMBER, 27);
+        final BigDecimal securityPrice2 = new BigDecimal("3.00");
 
         history = new SecurityHistoryNode();
         history.setDate(transactionDate2);
@@ -217,14 +212,12 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
     @Test
     public void TransferCashIn() throws ParseException {
         // Transferring some money to usdBankAccount
-        Date transactionDate0;
-        transactionDate0 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-25");
+        final LocalDate transactionDate0 = LocalDate.of(2009, Month.DECEMBER, 25);
 
         e.addTransaction(TransactionFactory.generateDoubleEntryTransaction(usdBankAccount, equityAccount, new BigDecimal("500.00"), transactionDate0, "Equity transaction", "", "" ));
 
         // Adding cash in transaction
-        Date transactionDate1;
-        transactionDate1 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-26");
+        final LocalDate transactionDate1 = LocalDate.of(2009, Month.DECEMBER, 26);
 
         e.addTransaction(TransactionFactory.generateDoubleEntryTransaction(investAccount, usdBankAccount, new BigDecimal("250.00"), transactionDate1, "Cash in transaction", "", ""));
 
@@ -241,8 +234,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
     @Test
     public void TransferCashOut() {
         // Transferring some money to usdBankAccount
-        Date transactionDate0;
-        transactionDate0 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-25", new ParsePosition(0));
+        final LocalDate transactionDate0 = LocalDate.of(2009, Month.DECEMBER, 25);
         TransactionEntry entry = new TransactionEntry();
 
         entry.setDebitAccount(equityAccount);
@@ -260,8 +252,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         e.addTransaction(transaction);
 
         // Adding cash in transaction
-        Date transactionDate1;
-        transactionDate1 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-26", new ParsePosition(0));
+        final LocalDate transactionDate1 = LocalDate.of(2009, Month.DECEMBER, 26);
 
         entry = new TransactionEntry();
 
@@ -280,8 +271,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         e.addTransaction(transaction);
 
         // Adding cash out transaction
-        Date transactionDate2;
-        transactionDate2 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-27", new ParsePosition(0));
+        final LocalDate transactionDate2 = LocalDate.of(2009, Month.DECEMBER, 27);
 
         entry = new TransactionEntry();
 
@@ -310,8 +300,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
     @Test
     public void Dividend() {
         // Transferring some money to usdBankAccount
-        Date transactionDate0;
-        transactionDate0 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-25", new ParsePosition(0));
+        final LocalDate transactionDate0 = LocalDate.of(2009, Month.DECEMBER, 25);
         TransactionEntry entry = new TransactionEntry();
 
         entry.setDebitAccount(equityAccount);
@@ -329,10 +318,10 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         e.addTransaction(transaction);
 
         // Adding securityPrice to the security price history
-        Date transactionDate1;
+        final LocalDate transactionDate1 = LocalDate.of(2009, Month.DECEMBER, 26);
+
         BigDecimal securityPrice1;
 
-        transactionDate1 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-26", new ParsePosition(0));
         securityPrice1 = new BigDecimal("2.00");
 
         SecurityHistoryNode history = new SecurityHistoryNode();
@@ -353,8 +342,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", buyingFees);
         e.addTransaction(it);
 
-        Date transactionDate2;
-        transactionDate2 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-27", new ParsePosition(0));
+        final LocalDate transactionDate2 = LocalDate.of(2009, Month.DECEMBER, 27);
 
         it = generateDividendXTransaction(incomeAccount, investAccount, usdBankAccount, securityNode1, new BigDecimal("50.00"), new BigDecimal("-50.00"), new BigDecimal("50.00"), transactionDate2, "Dividend");
         e.addTransaction(it);
@@ -370,8 +358,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
     @Test
     public void ReinvestDividend() {
         // Transferring some money to usdBankAccount
-        Date transactionDate0;
-        transactionDate0 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-25", new ParsePosition(0));
+        final LocalDate transactionDate0 = LocalDate.of(2009, Month.DECEMBER, 25);
         TransactionEntry entry = new TransactionEntry();
 
         entry.setDebitAccount(equityAccount);
@@ -389,10 +376,9 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         e.addTransaction(transaction);
 
         // Adding securityPrice to the security price history
-        Date transactionDate1;
+        final LocalDate transactionDate1 = LocalDate.of(2009, Month.DECEMBER, 26);
         BigDecimal securityPrice1;
 
-        transactionDate1 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-26", new ParsePosition(0));
         securityPrice1 = new BigDecimal("2.00");
 
         SecurityHistoryNode history = new SecurityHistoryNode();
@@ -413,8 +399,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", buyingFees);
         e.addTransaction(it);
 
-        Date transactionDate2;
-        transactionDate2 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-27", new ParsePosition(0));
+        final LocalDate transactionDate2 = LocalDate.of(2009, Month.DECEMBER, 27);
 
         // Creating the list of selling fees
         List<TransactionEntry> reinvestDividendFees = new ArrayList<>();
@@ -444,8 +429,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
     @Test
     public void StockSplit() {
         // Transferring some money to usdBankAccount
-        Date transactionDate0;
-        transactionDate0 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-25", new ParsePosition(0));
+        final LocalDate transactionDate0 = LocalDate.of(2009, Month.DECEMBER, 25);
         TransactionEntry entry = new TransactionEntry();
 
         entry.setDebitAccount(equityAccount);
@@ -463,11 +447,8 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         e.addTransaction(transaction);
 
         // Adding securityPrice to the security price history
-        Date transactionDate1;
-        BigDecimal securityPrice1;
-
-        transactionDate1 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-26", new ParsePosition(0));
-        securityPrice1 = new BigDecimal("2.00");
+        final LocalDate transactionDate1 = LocalDate.of(2009, Month.DECEMBER, 26);
+        final BigDecimal securityPrice1 = new BigDecimal("2.00");
 
         SecurityHistoryNode history = new SecurityHistoryNode();
         history.setDate(transactionDate1);
@@ -487,8 +468,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", buyingFees);
         e.addTransaction(it);
 
-        Date transactionDate2;
-        transactionDate2 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-27", new ParsePosition(0));
+        final LocalDate transactionDate2 = LocalDate.of(2009, Month.DECEMBER, 27);
 
         it = generateSplitXTransaction(investAccount, securityNode1, securityPrice1, new BigDecimal("125"), transactionDate2, "Selling shares");
         e.addTransaction(it);
@@ -506,8 +486,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
     @Test
     public void StockMerge() {
         // Transferring some money to usdBankAccount
-        Date transactionDate0;
-        transactionDate0 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-25", new ParsePosition(0));
+        final LocalDate transactionDate0 = LocalDate.of(2009, Month.DECEMBER, 25);
         TransactionEntry entry = new TransactionEntry();
 
         entry.setDebitAccount(equityAccount);
@@ -525,11 +504,8 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         e.addTransaction(transaction);
 
         // Adding securityPrice to the security price history
-        Date transactionDate1;
-        BigDecimal securityPrice1;
-
-        transactionDate1 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-26", new ParsePosition(0));
-        securityPrice1 = new BigDecimal("2.00");
+        final LocalDate transactionDate1 = LocalDate.of(2009, Month.DECEMBER, 26);
+        final BigDecimal securityPrice1 = new BigDecimal("2.00");
 
         SecurityHistoryNode history = new SecurityHistoryNode();
         history.setDate(transactionDate1);
@@ -549,8 +525,7 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
         it = generateBuyXTransaction(usdBankAccount, investAccount, securityNode1, securityPrice1, new BigDecimal("125"), BigDecimal.ONE, transactionDate1, "Buy shares", buyingFees);
         e.addTransaction(it);
 
-        Date transactionDate2;
-        transactionDate2 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-27", new ParsePosition(0));
+        final LocalDate transactionDate2 = LocalDate.of(2009, Month.DECEMBER, 27);
 
         it = generateMergeXTransaction(investAccount, securityNode1, securityPrice1, new BigDecimal("25"), transactionDate2, "Stock merge");
         e.addTransaction(it);

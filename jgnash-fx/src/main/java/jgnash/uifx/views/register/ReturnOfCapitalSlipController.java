@@ -117,7 +117,7 @@ public class ReturnOfCapitalSlipController extends AbstractInvSlipController {
 
         final Transaction transaction = TransactionFactory.generateRocXTransaction(incomeExchangePane.getSelectedAccount(),
                 accountProperty().get(), accountExchangePane.getSelectedAccount(), securityComboBox.getValue(),
-                returnOfCapitalField.getDecimal(), incomeExchangedAmount, accountExchangedAmount, datePicker.getDate(),
+                returnOfCapitalField.getDecimal(), incomeExchangedAmount, accountExchangedAmount, datePicker.getValue(),
                 memoTextField.getText());
 
         transaction.setNumber(numberComboBox.getValue());
@@ -133,7 +133,7 @@ public class ReturnOfCapitalSlipController extends AbstractInvSlipController {
 
         clearForm();
 
-        datePicker.setDate(transaction.getDate());
+        datePicker.setValue(transaction.getLocalDate());
         numberComboBox.setValue(transaction.getNumber());
 
         final List<TransactionEntry> entries = transaction.getTransactionEntries();

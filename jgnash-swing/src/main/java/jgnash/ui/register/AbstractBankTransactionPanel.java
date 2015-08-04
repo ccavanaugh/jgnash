@@ -25,6 +25,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -318,9 +319,9 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
 
         // set the last date as required
         if (!getRememberLastDate()) {
-            t.setDate(new Date());
+            t.setDate(LocalDate.now());
         } else {
-            t.setDate(datePanel.getDate());
+            t.setDate(datePanel.getLocalDate());
         }
 
         // preserve any transaction entries that may have been entered first

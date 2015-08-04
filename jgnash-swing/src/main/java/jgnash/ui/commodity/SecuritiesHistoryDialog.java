@@ -27,8 +27,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -275,7 +277,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
     }
 
     private void addNode() {
-        final SecurityHistoryNode history = new SecurityHistoryNode(dateField.getDate(), closeField.getDecimal(),
+        final SecurityHistoryNode history = new SecurityHistoryNode(dateField.getLocalDate(), closeField.getDecimal(),
                 volumeField.longValue(), highField.getDecimal(), lowField.getDecimal());
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
@@ -300,9 +302,9 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
         List<SecurityHistoryNode> history = node.getHistoryNodes();
 
         /* Capture a list of references */
-        Date[] temp = new Date[selection.length];
+        LocalDate[] temp = new LocalDate[selection.length];
         for (int i = 0; i < selection.length; i++) {
-            temp[i] = history.get(selection[i]).getDate();
+            temp[i] = history.get(selection[i]).getLocalDate();
         }
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
@@ -330,9 +332,9 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
         double[] volume = new double[count];
 
         for (int i = 0; i < count; i++) {
-            SecurityHistoryNode hNode = hNodes.get(i);
+            final SecurityHistoryNode hNode = hNodes.get(i);
 
-            date[i] = hNode.getDate();
+            date[i] = DateUtils.asDate(hNode.getLocalDate());
             high[i] = hNode.getHigh().doubleValue();
             low[i] = hNode.getLow().doubleValue();
             open[i] = hNode.getPrice().doubleValue();
@@ -400,7 +402,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
     }
 
     private static class HistoryTable extends FormattedJTable {
-        private final DateFormat dateFormat = DateUtils.getShortDateFormat();
+        private final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateTimeFormat();
 
         private final NumberFormat volumeFormat = NumberFormat.getIntegerInstance();
 
@@ -418,9 +420,9 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
             // column and row may have been reordered
             final Object value = model.getValueAt(convertRowIndexToModel(row), convertColumnIndexToModel(column));
 
-            if (Date.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
-                if (value != null && value instanceof Date) {
-                    ((JLabel) c).setText(dateFormat.format(value));
+            if (LocalDate.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
+                if (value != null && value instanceof LocalDate) {
+                    ((JLabel) c).setText( dateTimeFormatter.format((TemporalAccessor) value));
                 }
             } else if (Long.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
                 ((JLabel) c).setText(volumeFormat.format(value));
@@ -443,7 +445,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
         private final String[] cNames = { rb.getString("Column.Date"), rb.getString("Column.Close"),
                         rb.getString("Column.Low"), rb.getString("Column.High"), rb.getString("Column.Volume") };
 
-        private final Class<?>[] cClass = { Date.class, BigDecimal.class, BigDecimal.class, BigDecimal.class,
+        private final Class<?>[] cClass = { LocalDate.class, BigDecimal.class, BigDecimal.class, BigDecimal.class,
                         Long.class };
 
         public HistoryModel() {
@@ -487,7 +489,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
             if (node != null) {
                 switch (col) {
                     case 0:
-                        return history.get(row).getDate();
+                        return history.get(row).getLocalDate();
                     case 1:
                         return history.get(row).getPrice();
                     case 2:

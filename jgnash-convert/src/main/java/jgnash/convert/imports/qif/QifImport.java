@@ -39,6 +39,7 @@ import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.TransactionEntry;
 import jgnash.engine.TransactionFactory;
+import jgnash.util.DateUtils;
 
 /**
  * QifImport takes a couple of simple steps to prevent importing a duplicate account. Other than that, duplicate
@@ -503,15 +504,18 @@ public class QifImport {
             ReconcileManager.reconcileTransaction(acc, tran, reconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
         } else if (acc == cAcc && !qTran.hasSplits() || cAcc == null) {
             // create single entry transaction without splits
-            tran = TransactionFactory.generateSingleEntryTransaction(acc, qTran.amount, qTran.date, qTran.memo, qTran.payee, qTran.number);
+            tran = TransactionFactory.generateSingleEntryTransaction(acc, qTran.amount,
+                    DateUtils.asLocalDate(qTran.date), qTran.memo, qTran.payee, qTran.number);
 
             ReconcileManager.reconcileTransaction(acc, tran, reconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
         } else if (!qTran.hasSplits()) { // && cAcc != null
             // create a double entry transaction without splits
             if (qTran.amount.signum() == -1) {
-                tran = TransactionFactory.generateDoubleEntryTransaction(cAcc, acc, qTran.amount, qTran.date, qTran.memo, qTran.payee, qTran.number);
+                tran = TransactionFactory.generateDoubleEntryTransaction(cAcc, acc, qTran.amount,
+                        DateUtils.asLocalDate(qTran.date), qTran.memo, qTran.payee, qTran.number);
             } else {
-                tran = TransactionFactory.generateDoubleEntryTransaction(acc, cAcc, qTran.amount, qTran.date, qTran.memo, qTran.payee, qTran.number);
+                tran = TransactionFactory.generateDoubleEntryTransaction(acc, cAcc, qTran.amount,
+                        DateUtils.asLocalDate(qTran.date), qTran.memo, qTran.payee, qTran.number);
             }
 
             ReconcileManager.reconcileTransaction(cAcc, tran, reconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
@@ -525,7 +529,7 @@ public class QifImport {
             logger.log(Level.WARNING, "Could not create following transaction:" + "\n{0}", qTran.toString());
             return null;
         }
-        tran.setDate(qTran.date);
+        tran.setDate(DateUtils.asLocalDate(qTran.date));
         tran.setPayee(qTran.payee);
         tran.setNumber(qTran.number);
 

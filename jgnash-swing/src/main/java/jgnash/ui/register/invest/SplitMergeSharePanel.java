@@ -124,7 +124,7 @@ public final class SplitMergeSharePanel extends AbstractPriceQtyInvTransactionPa
 
         modTrans = tran;
 
-        datePanel.setDate(tran.getDate());
+        datePanel.setDate(tran.getLocalDate());
         memoField.setText(tran.getMemo());
         priceField.setDecimal(_tran.getPrice());
         quantityField.setDecimal(_tran.getQuantity());
@@ -139,10 +139,10 @@ public final class SplitMergeSharePanel extends AbstractPriceQtyInvTransactionPa
     public Transaction buildTransaction() {
         if (tranType == TransactionType.SPLITSHARE) {
             return TransactionFactory.generateSplitXTransaction(account, securityCombo.getSelectedNode(),
-                    priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText());
+                    priceField.getDecimal(), quantityField.getDecimal(), datePanel.getLocalDate(), memoField.getText());
         }
         return TransactionFactory.generateMergeXTransaction(account, securityCombo.getSelectedNode(),
-                priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText());
+                priceField.getDecimal(), quantityField.getDecimal(), datePanel.getLocalDate(), memoField.getText());
     }
 
     void updateTotalField() {

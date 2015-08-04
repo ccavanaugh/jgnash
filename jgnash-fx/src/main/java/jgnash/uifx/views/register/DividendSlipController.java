@@ -117,7 +117,7 @@ public class DividendSlipController extends AbstractInvSlipController {
 
         final Transaction transaction = TransactionFactory.generateDividendXTransaction(incomeExchangePane.getSelectedAccount(),
                 accountProperty().get(), accountExchangePane.getSelectedAccount(), securityComboBox.getValue(),
-                dividendField.getDecimal(), incomeExchangedAmount, accountExchangedAmount, datePicker.getDate(),
+                dividendField.getDecimal(), incomeExchangedAmount, accountExchangedAmount, datePicker.getValue(),
                 memoTextField.getText());
 
         transaction.setNumber(numberComboBox.getValue());
@@ -133,7 +133,7 @@ public class DividendSlipController extends AbstractInvSlipController {
 
         clearForm();
 
-        datePicker.setDate(transaction.getDate());
+        datePicker.setValue(transaction.getLocalDate());
         numberComboBox.setValue(transaction.getNumber());
 
         final List<TransactionEntry> entries = transaction.getTransactionEntries();

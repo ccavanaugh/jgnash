@@ -18,9 +18,9 @@
 package jgnash.engine;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -38,8 +38,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.PostLoad;
-
-import jgnash.util.DateUtils;
 
 /**
  * Security Node
@@ -167,19 +165,17 @@ public class SecurityNode extends CommodityNode {
         }
     }
 
-    boolean removeHistoryNode(final Date date) {
+    boolean removeHistoryNode(final LocalDate date) {
 
         boolean result = false;
 
         SecurityHistoryNode nodeToRemove = null;
 
-        final Date testDate = DateUtils.trimDate(date);
-
         lock.writeLock().lock();
 
         try {
             for (final SecurityHistoryNode node : historyNodes) {
-                if (node.getDate().compareTo(testDate) == 0) {
+                if (node.getLocalDate().compareTo(date) == 0) {
                     nodeToRemove = node;
                     break;
                 }
@@ -200,19 +196,17 @@ public class SecurityNode extends CommodityNode {
     /**
      * Returns <tt>true</tt> if this SecurityNode contains the specified element.
      *
-     * @param date Date whose presence in this SecurityNode is to be tested
+     * @param date LocalDate whose presence in this SecurityNode is to be tested
      * @return <tt>true</tt> if this SecurityNode contains a SecurityHistoryNode with the specified date
      */
-    public boolean contains(final Date date) {
+    public boolean contains(final LocalDate date) {
         boolean result = false;
-
-        final Date testDate = DateUtils.trimDate(date);
 
         lock.readLock().lock();
 
         try {
             for (final SecurityHistoryNode node : historyNodes) {
-                if (node.getDate().compareTo(testDate) == 0) {
+                if (node.getLocalDate().compareTo(date) == 0) {
                     result = true;
                     break;
                 }
@@ -239,9 +233,7 @@ public class SecurityNode extends CommodityNode {
      * @param date Date to match
      * @return {@code Optional} contain a matching node
      */
-    public Optional<SecurityHistoryNode> getHistoryNode(final Date date) {
-        final Date testDate = DateUtils.trimDate(date);
-
+    public Optional<SecurityHistoryNode> getHistoryNode(final LocalDate date) {
         lock.readLock().lock();
 
         try {
@@ -251,7 +243,7 @@ public class SecurityNode extends CommodityNode {
             for (int i = sortedHistoryNodeCache.size() - 1; i >= 0; i--) {
                 final SecurityHistoryNode node = sortedHistoryNodeCache.get(i);
 
-                if (testDate.compareTo(node.getDate()) == 0) {
+                if (date.compareTo(node.getLocalDate()) == 0) {
                     hNode = node;
                     break;
                 }
@@ -269,8 +261,8 @@ public class SecurityNode extends CommodityNode {
      * @param date {@code Date} to match
      * @return {@code Optional} containing a {@code SecurityHistoryNode} if a match is found
      */
-    public Optional<SecurityHistoryNode> getClosestHistoryNode(final Date date) {
-        final Date testDate = DateUtils.trimDate(date);
+    public Optional<SecurityHistoryNode> getClosestHistoryNode(final LocalDate date) {
+        final long epochDay = date.toEpochDay();
 
         lock.readLock().lock();
 
@@ -281,7 +273,7 @@ public class SecurityNode extends CommodityNode {
             for (int i = sortedHistoryNodeCache.size() - 1; i >= 0; i--) {
                 final SecurityHistoryNode node = sortedHistoryNodeCache.get(i);
 
-                if (node.getDate().getTime() <= testDate.getTime()) {
+                if (node.getLocalDate().toEpochDay() <= epochDay) {
                     hNode = node;
                     break;
                 }
@@ -293,7 +285,7 @@ public class SecurityNode extends CommodityNode {
         }
     }
 
-    private BigDecimal getMarketPrice(final Date date) {
+    private BigDecimal getMarketPrice(final LocalDate date) {
         BigDecimal marketPrice = BigDecimal.ZERO;
 
         final Optional<SecurityHistoryNode> optional = getClosestHistoryNode(date);
@@ -312,7 +304,7 @@ public class SecurityNode extends CommodityNode {
      * @param node currency to exchange to
      * @return latest market price
      */
-    public BigDecimal getMarketPrice(final Date date, final CurrencyNode node) {
+    public BigDecimal getMarketPrice(final LocalDate date, final CurrencyNode node) {
         return getMarketPrice(date).multiply(getReportedCurrencyNode().getExchangeRate(node));
     }
 

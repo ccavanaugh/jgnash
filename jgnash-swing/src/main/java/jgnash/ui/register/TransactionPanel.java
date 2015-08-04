@@ -202,7 +202,7 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
         if (splits != null) { // build a split transaction
             transaction = new Transaction();
 
-            transaction.setDate(datePanel.getDate());
+            transaction.setDate(datePanel.getLocalDate());
             transaction.setNumber(numberField.getText());
             transaction.setMemo(memoField.getText());
             transaction.setPayee(payeeField.getText());
@@ -221,15 +221,23 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
 
             if (panelType == PanelType.DECREASE && signum >= 0 || panelType == PanelType.INCREASE && signum == -1) {
                 if (hasEqualCurrencies()) {
-                    transaction = TransactionFactory.generateDoubleEntryTransaction(selectedAccount, getAccount(), amountField.getDecimal().abs(), datePanel.getDate(), memoField.getText(), payeeField.getText(), numberField.getText());
+                    transaction = TransactionFactory.generateDoubleEntryTransaction(selectedAccount, getAccount(),
+                            amountField.getDecimal().abs(), datePanel.getLocalDate(), memoField.getText(),
+                            payeeField.getText(), numberField.getText());
                 } else {
-                    transaction = TransactionFactory.generateDoubleEntryTransaction(selectedAccount, getAccount(), accountPanel.getExchangedAmount().abs(), amountField.getDecimal().abs().negate(), datePanel.getDate(), memoField.getText(), payeeField.getText(), numberField.getText());
+                    transaction = TransactionFactory.generateDoubleEntryTransaction(selectedAccount, getAccount(),
+                            accountPanel.getExchangedAmount().abs(), amountField.getDecimal().abs().negate(),
+                            datePanel.getLocalDate(), memoField.getText(), payeeField.getText(), numberField.getText());
                 }
             } else {
                 if (hasEqualCurrencies()) {
-                    transaction = TransactionFactory.generateDoubleEntryTransaction(getAccount(), selectedAccount, amountField.getDecimal().abs(), datePanel.getDate(), memoField.getText(), payeeField.getText(), numberField.getText());
+                    transaction = TransactionFactory.generateDoubleEntryTransaction(getAccount(), selectedAccount,
+                            amountField.getDecimal().abs(), datePanel.getLocalDate(), memoField.getText(),
+                            payeeField.getText(), numberField.getText());
                 } else {
-                    transaction = TransactionFactory.generateDoubleEntryTransaction(getAccount(), selectedAccount, amountField.getDecimal().abs(), accountPanel.getExchangedAmount().abs().negate(), datePanel.getDate(), memoField.getText(), payeeField.getText(), numberField.getText());
+                    transaction = TransactionFactory.generateDoubleEntryTransaction(getAccount(), selectedAccount,
+                            amountField.getDecimal().abs(), accountPanel.getExchangedAmount().abs().negate(),
+                            datePanel.getLocalDate(), memoField.getText(), payeeField.getText(), numberField.getText());
                 }
             }
         }
@@ -284,7 +292,7 @@ public class TransactionPanel extends AbstractExchangeTransactionPanel {
         memoField.setText(t.getMemo());
         payeeField.setText(t.getPayee());
         numberField.setText(t.getNumber());
-        datePanel.setDate(t.getDate());
+        datePanel.setDate(t.getLocalDate());
         setReconciledState(t.getReconciled(getAccount()));
 
         if (t.getTransactionType() == TransactionType.SPLITENTRY) {

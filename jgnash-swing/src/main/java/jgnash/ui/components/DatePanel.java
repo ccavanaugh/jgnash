@@ -21,6 +21,7 @@ import java.awt.Insets;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -30,6 +31,7 @@ import javax.swing.SwingUtilities;
 import jgnash.ui.ThemeManager;
 import jgnash.ui.plaf.NimbusUtils;
 import jgnash.ui.util.IconUtils;
+import jgnash.util.DateUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -82,8 +84,16 @@ public class DatePanel extends JPanel implements ActionListener {
         return (Date) dateField.getValue();
     }
 
+    public LocalDate getLocalDate() {
+        return DateUtils.asLocalDate(getDate());
+    }
+
     public void setDate(Date date) {
         dateField.setValue(date);
+    }
+
+    public void setDate(LocalDate date) {
+        dateField.setValue(DateUtils.asDate(date));
     }
 
     public JDateField getDateField() {

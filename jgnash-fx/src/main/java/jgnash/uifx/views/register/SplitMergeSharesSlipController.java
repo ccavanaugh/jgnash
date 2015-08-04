@@ -67,7 +67,7 @@ public class SplitMergeSharesSlipController extends AbstractPriceQtyInvSlipContr
 
         clearForm();
 
-        datePicker.setDate(transaction.getDate());
+        datePicker.setValue(transaction.getLocalDate());
         memoTextField.setText(transaction.getMemo());
         numberComboBox.setValue(transaction.getNumber());
         priceField.setDecimal(((InvestmentTransaction)transaction).getPrice());
@@ -92,10 +92,10 @@ public class SplitMergeSharesSlipController extends AbstractPriceQtyInvSlipContr
 
         if (tranType == TransactionType.SPLITSHARE) {
             transaction = TransactionFactory.generateSplitXTransaction(accountProperty().get(), securityComboBox.getValue(),
-                    priceField.getDecimal(), quantityField.getDecimal(), datePicker.getDate(), memoTextField.getText());
+                    priceField.getDecimal(), quantityField.getDecimal(), datePicker.getValue(), memoTextField.getText());
         } else {
             transaction = TransactionFactory.generateMergeXTransaction(accountProperty().get(), securityComboBox.getValue(),
-                    priceField.getDecimal(), quantityField.getDecimal(), datePicker.getDate(), memoTextField.getText());
+                    priceField.getDecimal(), quantityField.getDecimal(), datePicker.getValue(), memoTextField.getText());
         }
 
         transaction.setNumber(numberComboBox.getValue());

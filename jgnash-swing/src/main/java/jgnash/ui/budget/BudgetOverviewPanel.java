@@ -143,9 +143,8 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
             int minYear = DateUtils.getCurrentYear();
             int maxYear = DateUtils.getCurrentYear() + 1;
 
-            for (Transaction transaction : engine.getTransactions()) {
-
-                int year = DateUtils.getYear(transaction.getDate());
+            for (final Transaction transaction : engine.getTransactions()) {
+                int year = transaction.getLocalDate().getYear();
 
                 minYear = Math.min(minYear, year);
                 maxYear = Math.max(maxYear, year);

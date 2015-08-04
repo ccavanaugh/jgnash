@@ -152,7 +152,7 @@ public final class SellSharePanel extends AbstractPriceQtyInvTransactionPanel im
         }
         clearForm();
 
-        datePanel.setDate(tran.getDate());
+        datePanel.setDate(tran.getLocalDate());
 
         List<TransactionEntry> entries = tran.getTransactionEntries();
 
@@ -189,7 +189,7 @@ public final class SellSharePanel extends AbstractPriceQtyInvTransactionPanel im
 
         return TransactionFactory.generateSellXTransaction(accountExchangePanel.getSelectedAccount(),
                 getAccount(), securityCombo.getSelectedNode(), priceField.getDecimal(), quantityField.getDecimal(),
-                exchangeRate, datePanel.getDate(), memoField.getText(), fees, gains);
+                exchangeRate, datePanel.getLocalDate(), memoField.getText(), fees, gains);
     }
 
     @Override

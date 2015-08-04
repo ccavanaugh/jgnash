@@ -21,7 +21,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import javax.swing.JButton;
@@ -46,9 +46,7 @@ import com.jgoodies.forms.layout.FormLayout;
  * A Dialog for getting a date and transaction number.
  * 
  * @author Craig Cavanaugh
- *
  */
-
 class DateChkNumberDialog extends JDialog implements ActionListener {
 
     private final ResourceBundle rb = ResourceUtils.getBundle();
@@ -142,8 +140,8 @@ class DateChkNumberDialog extends JDialog implements ActionListener {
      * 
      * @return The date entered in the form
      */
-    public Date getDate() {
-        return datePanel.getDate();
+    public LocalDate getDate() {
+        return datePanel.getLocalDate();
     }
 
     /**

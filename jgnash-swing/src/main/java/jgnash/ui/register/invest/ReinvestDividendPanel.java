@@ -131,7 +131,7 @@ public final class ReinvestDividendPanel extends AbstractPriceQtyInvTransactionP
         }
         clearForm();
 
-        datePanel.setDate(tran.getDate());
+        datePanel.setDate(tran.getLocalDate());
 
         List<TransactionEntry> entries = tran.getTransactionEntries();
 
@@ -164,7 +164,7 @@ public final class ReinvestDividendPanel extends AbstractPriceQtyInvTransactionP
         Collection<TransactionEntry> gains = gainsPanel.getTransactions();
 
         return TransactionFactory.generateReinvestDividendXTransaction(account, securityCombo.getSelectedNode(),
-                priceField.getDecimal(), quantityField.getDecimal(), datePanel.getDate(), memoField.getText(), fees,
+                priceField.getDecimal(), quantityField.getDecimal(), datePanel.getLocalDate(), memoField.getText(), fees,
                 gains);
     }
 

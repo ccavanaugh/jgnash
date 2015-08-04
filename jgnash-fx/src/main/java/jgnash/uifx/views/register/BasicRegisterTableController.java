@@ -18,7 +18,7 @@
 package jgnash.uifx.views.register;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -66,8 +66,8 @@ public class BasicRegisterTableController extends RegisterTableController {
     protected void buildTable() {
         final String[] columnNames = RegisterFactory.getColumnNames(getAccountProperty().get().getAccountType());
 
-        final TableColumn<Transaction, Date> dateColumn = new TableColumn<>(columnNames[0]);
-        dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getDate()));
+        final TableColumn<Transaction, LocalDate> dateColumn = new TableColumn<>(columnNames[0]);
+        dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLocalDate()));
         dateColumn.setCellFactory(cell -> new TransactionDateTableCell());
 
         final TableColumn<Transaction, String> numberColumn = new TableColumn<>(columnNames[1]);
@@ -112,7 +112,7 @@ public class BasicRegisterTableController extends RegisterTableController {
             } else if (param == increaseColumn || param == decreaseColumn) {
                 return CommodityFormat.getShortNumberFormat(getAccountProperty().getValue().getCurrencyNode());
             } else if (param == dateColumn) {
-                return DateUtils.getShortDateFormat();
+                return DateUtils.getShortDateTimeFormat().toFormat();
             }
 
             return null;

@@ -17,8 +17,8 @@
  */
 package jgnash.uifx.dialog.security;
 
-import java.text.DateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -157,7 +157,7 @@ public class HistoricalImportController {
     private void handleStartAction() {
         disableUIProperty.setValue(true);
 
-        final DateFormat dateFormat = DateUtils.getShortDateFormat();
+        final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateTimeFormat();
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
@@ -202,7 +202,7 @@ public class HistoricalImportController {
                                 updateProgress(++processedHistory, historyCount);
 
                                 updateMessage(ResourceUtils.getString("Message.UpdatedPriceDate", securityNode.getSymbol(),
-                                        dateFormat.format(historyNode.getDate())));
+                                        dateTimeFormatter.format(historyNode.getLocalDate())));
                             }
                         }
                     }

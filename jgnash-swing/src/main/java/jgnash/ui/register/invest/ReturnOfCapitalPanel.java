@@ -123,7 +123,7 @@ public final class ReturnOfCapitalPanel extends AbstractInvTransactionPanel {
         }
         clearForm();
 
-        datePanel.setDate(tran.getDate());
+        datePanel.setDate(tran.getLocalDate());
 
         List<TransactionEntry> entries = tran.getTransactionEntries();
 
@@ -167,7 +167,9 @@ public final class ReturnOfCapitalPanel extends AbstractInvTransactionPanel {
             accountExchangedAmount = accountExchangePanel.getExchangedAmount();
         }
 
-        return TransactionFactory.generateRocXTransaction(incomeExchangePanel.getSelectedAccount(), getAccount(), accountExchangePanel.getSelectedAccount(), securityCombo.getSelectedNode(), dividendField.getDecimal(), incomeExchangedAmount, accountExchangedAmount, datePanel.getDate(), memoField.getText());
+        return TransactionFactory.generateRocXTransaction(incomeExchangePanel.getSelectedAccount(), getAccount(),
+                accountExchangePanel.getSelectedAccount(), securityCombo.getSelectedNode(), dividendField.getDecimal(),
+                incomeExchangedAmount, accountExchangedAmount, datePanel.getLocalDate(), memoField.getText());
     }
 
     @Override

@@ -30,10 +30,9 @@ import javax.persistence.TemporalType;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Exchange rate history node for a {@code ExchangeRate}.
@@ -54,6 +53,8 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
     @Column(precision = 20, scale = 8)
     private BigDecimal rate = BigDecimal.ZERO;
 
+    private transient LocalDate cachedLocalDate = null;
+
     /**
      * No argument constructor for reflection purposes.
      * <b>Do not use to create a new instance</b>
@@ -65,35 +66,38 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
     /**
      * public constructor
      *
-     * @param date date for this history node.  The date will be trimmed
+     * @param localDate date for this history node.  The date will be trimmed
      * @param rate exchange rate for the given date
      */
-    ExchangeRateHistoryNode(final Date date, final BigDecimal rate) {
+    ExchangeRateHistoryNode(final LocalDate localDate, final BigDecimal rate) {
         Objects.requireNonNull(date);
         Objects.requireNonNull(rate);
 
-        this.date = DateUtils.trimDate(date);
+        this.date = DateUtils.asDate(localDate);
         this.rate = rate;
+    }
+
+    public LocalDate getLocalDate() {
+        if (cachedLocalDate == null) {
+            cachedLocalDate = DateUtils.asLocalDate(date);
+        }
+        return cachedLocalDate;
     }
 
     @Override
     public int compareTo(@NotNull final ExchangeRateHistoryNode node) {
-        return getDate().compareTo(node.getDate());
+        return getLocalDate().compareTo(node.getLocalDate());
     }
 
     @Override
     public boolean equals(final Object o) {
-        return this == o || o instanceof ExchangeRateHistoryNode && getDate().equals(((ExchangeRateHistoryNode) o).getDate());
+        return this == o || o instanceof ExchangeRateHistoryNode
+                && getLocalDate().equals(((ExchangeRateHistoryNode) o).getLocalDate());
     }
 
     @Override
     public int hashCode() {
         return date.hashCode();
-    }
-
-    @SuppressFBWarnings({"EI_EXPOSE_REP"})
-    public Date getDate() {
-        return date;
     }
 
     public BigDecimal getRate() {

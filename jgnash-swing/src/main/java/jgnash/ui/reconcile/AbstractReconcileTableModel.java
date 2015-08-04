@@ -369,7 +369,8 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
 
         BigDecimal getAmount(final Account a) {
             if (transaction instanceof InvestmentTransaction && a.memberOf(AccountGroup.INVEST)) {
-                return ((InvestmentTransaction) transaction).getMarketValue(transaction.getDate()).add(transaction.getAmount(a));
+                return ((InvestmentTransaction) transaction).getMarketValue(transaction.getLocalDate())
+                        .add(transaction.getAmount(a));
             }
 
             return transaction.getAmount(a);

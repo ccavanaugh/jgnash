@@ -17,12 +17,10 @@
  */
 package jgnash.engine;
 
-import jgnash.util.DateUtils;
-
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -100,17 +98,15 @@ public class ExchangeRate extends StoredObject {
         return result;
     }
 
-    public boolean contains(final Date date) {
+    public boolean contains(final LocalDate localDate) {
 
         lock.readLock().lock();
 
         boolean result = false;
 
-        final Date testDate = DateUtils.trimDate(date);
-
         try {
-            for (ExchangeRateHistoryNode node : historyNodes) {
-                if (testDate.compareTo(node.getDate()) == 0) {
+            for (final ExchangeRateHistoryNode node : historyNodes) {
+                if (localDate.compareTo(node.getLocalDate()) == 0) {
                     result = true;
                     break;
                 }
@@ -150,16 +146,14 @@ public class ExchangeRate extends StoredObject {
         return result;
     }
 
-    ExchangeRateHistoryNode getHistory(final Date date) {
+    ExchangeRateHistoryNode getHistory(final LocalDate localDate) {
         ExchangeRateHistoryNode node = null;
-
-        final Date testDate = DateUtils.trimDate(date);
 
         lock.readLock().lock();
 
         try {
-            for (ExchangeRateHistoryNode historyNode : historyNodes) {
-                if (testDate.compareTo(historyNode.getDate()) == 0) {
+            for (final ExchangeRateHistoryNode historyNode : historyNodes) {
+                if (localDate.compareTo(historyNode.getLocalDate()) == 0) {
                     node = historyNode;
                     break;
                 }
@@ -218,23 +212,21 @@ public class ExchangeRate extends StoredObject {
     }
 
     /**
-     * Returns the exchange rate for a given date.
+     * Returns the exchange rate for a given {@code LocalDate}.
      * <p/>
      * If a rate has not be set, {@code BigDecimal.ZERO} is returned
      *
-     * @param date Date for exchange
+     * @param localDate {@code LocalDate} for exchange
      * @return the exchange rate if known, otherwise {@code BigDecimal.ZERO}
      */
-    public BigDecimal getRate(final Date date) {
+    public BigDecimal getRate(final LocalDate localDate) {
         getLock().readLock().lock();
 
         BigDecimal rate = BigDecimal.ZERO;
 
-        Date exchangeDate = DateUtils.trimDate(date);
-
         try {
             for (ExchangeRateHistoryNode historyNode : historyNodes) {
-                if (exchangeDate.equals(historyNode.getDate())) {
+                if (localDate.equals(historyNode.getLocalDate())) {
                     rate = historyNode.getRate();
                     break;
                 }

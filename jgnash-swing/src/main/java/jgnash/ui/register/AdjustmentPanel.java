@@ -86,7 +86,8 @@ public final class AdjustmentPanel extends AbstractBankTransactionPanel {
 
     @Override
     protected Transaction buildTransaction() {
-        return TransactionFactory.generateSingleEntryTransaction(account, amountField.getDecimal(), datePanel.getDate(), memoField.getText(), payeeField.getText(), numberField.getText());
+        return TransactionFactory.generateSingleEntryTransaction(account, amountField.getDecimal(),
+                datePanel.getLocalDate(), memoField.getText(), payeeField.getText(), numberField.getText());
     }
 
     @Override
@@ -102,7 +103,7 @@ public final class AdjustmentPanel extends AbstractBankTransactionPanel {
         memoField.setText(entry.getMemo());
         amountField.setDecimal(entry.getCreditAmount());
 
-        datePanel.setDate(t.getDate());
+        datePanel.setDate(t.getLocalDate());
         numberField.setText(t.getNumber());
         payeeField.setText(t.getPayee());
 
@@ -142,7 +143,7 @@ public final class AdjustmentPanel extends AbstractBankTransactionPanel {
         Account opp = d.getAccount();
         Transaction t = new Transaction();
 
-        t.setDate(datePanel.getDate());
+        t.setDate(datePanel.getLocalDate());
         t.setNumber(numberField.getText());
         t.setPayee(payeeField.getText());
 

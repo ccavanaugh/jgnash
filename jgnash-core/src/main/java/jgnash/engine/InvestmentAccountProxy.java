@@ -18,10 +18,13 @@
 package jgnash.engine;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
+
+import jgnash.util.DateUtils;
 
 /**
  * Investment Account Proxy class
@@ -36,7 +39,7 @@ public class InvestmentAccountProxy extends AccountProxy {
 
     @Override
     public BigDecimal getBalance(final Date start, final Date end) {
-        return getCashBalance(start, end).add(getMarketValue(start, end));
+        return getCashBalance(start, end).add(getMarketValue(DateUtils.asLocalDate(start), DateUtils.asLocalDate(end)));
     }
 
     /**
@@ -51,7 +54,7 @@ public class InvestmentAccountProxy extends AccountProxy {
 
     @Override
     public BigDecimal getBalance(final Date date) {
-        return getCashBalance(date).add(getMarketValue(date));
+        return getCashBalance(date).add(getMarketValue(DateUtils.asLocalDate(date)));
     }
 
     /**
@@ -113,7 +116,7 @@ public class InvestmentAccountProxy extends AccountProxy {
      * @param date date to search against
      * @return market price
      */
-    public BigDecimal getMarketPrice(final SecurityNode node, final Date date) {
+    public BigDecimal getMarketPrice(final SecurityNode node, final LocalDate date) {
         account.getTransactionLock().readLock().lock();
 
         try {
@@ -140,7 +143,7 @@ public class InvestmentAccountProxy extends AccountProxy {
             int count = account.getTransactionCount();
 
             if (count > 0) {
-                Date lastDate = account.getSortedTransactionList().get(count - 1).getDate();
+                LocalDate lastDate = account.getSortedTransactionList().get(count - 1).getLocalDate();
 
                 /*
                  * If the user was to enter a date value greater than the current date, then
@@ -149,12 +152,12 @@ public class InvestmentAccountProxy extends AccountProxy {
                  * security price.
                  */
 
-                final Date startDate = account.getSortedTransactionList().get(0).getDate();
+                final LocalDate startDate = account.getSortedTransactionList().get(0).getLocalDate();
 
-                if (lastDate.compareTo(new Date()) >= 0) {
+                if (lastDate.compareTo(LocalDate.now()) >= 0) {
                     marketValue = getMarketValue(startDate, lastDate);
                 } else {
-                    marketValue = getMarketValue(startDate, new Date());
+                    marketValue = getMarketValue(startDate, LocalDate.now());
                 }
             }
 
@@ -171,7 +174,7 @@ public class InvestmentAccountProxy extends AccountProxy {
      * @param date the end date to calculate the market value
      * @return the ending balance
      */
-    public BigDecimal getMarketValue(final Date date) {
+    public BigDecimal getMarketValue(final LocalDate date) {
         final Lock l = account.getTransactionLock().readLock();
         l.lock();
 
@@ -179,7 +182,7 @@ public class InvestmentAccountProxy extends AccountProxy {
             BigDecimal marketValue = BigDecimal.ZERO;
 
             if (account.getTransactionCount() > 0) {
-                marketValue = getMarketValue(account.getSortedTransactionList().get(0).getDate(), date);
+                marketValue = getMarketValue(account.getSortedTransactionList().get(0).getLocalDate(), date);
             }
 
             return marketValue;
@@ -195,7 +198,7 @@ public class InvestmentAccountProxy extends AccountProxy {
      * @param end   inclusive end date
      * @return market value
      */
-    public BigDecimal getMarketValue(final Date start, final Date end) {
+    public BigDecimal getMarketValue(final LocalDate start, final LocalDate end) {
         final Lock l = account.getTransactionLock().readLock();
         l.lock();
 
@@ -212,8 +215,8 @@ public class InvestmentAccountProxy extends AccountProxy {
             // Get a defensive copy, JPA lazy updates can have side effects
             List<Transaction> transactions = account.getSortedTransactionList();
 
-            for (Transaction t : transactions) {
-                if (t.getDate().compareTo(start) >= 0 && t.getDate().compareTo(end) <= 0) {
+            for (final Transaction t : transactions) {
+                if (t.getLocalDate().compareTo(start) >= 0 && t.getLocalDate().compareTo(end) <= 0) {
                     if (t instanceof InvestmentTransaction) {
                         balance = balance.add(((InvestmentTransaction) t).getMarketValue(priceMap.get(((InvestmentTransaction) t).getSecurityNode())));
                     }
@@ -239,7 +242,7 @@ public class InvestmentAccountProxy extends AccountProxy {
         try {
             final HashMap<SecurityNode, BigDecimal> priceMap = new HashMap<>();
 
-            Date today = new Date();
+            LocalDate today = LocalDate.now();
 
             // build lookup map for market prices
             for (SecurityNode node : account.getSecurities()) {
@@ -271,7 +274,7 @@ public class InvestmentAccountProxy extends AccountProxy {
 
             // build lookup map for market prices
             for (SecurityNode node :account.getSecurities()) {
-                priceMap.put(node, getMarketPrice(node, new Date()));
+                priceMap.put(node, getMarketPrice(node, LocalDate.now()));
             }
 
             BigDecimal balance = BigDecimal.ZERO;

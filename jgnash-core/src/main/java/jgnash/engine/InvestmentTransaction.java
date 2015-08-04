@@ -18,7 +18,7 @@
 package jgnash.engine;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -265,7 +265,7 @@ public class InvestmentTransaction extends Transaction {
      * @param date Date to base market value against
      * @return the value of this transaction
      */
-    public BigDecimal getMarketValue(final Date date) {
+    public BigDecimal getMarketValue(final LocalDate date) {
         return getSignedQuantity().multiply(
                 getSecurityNode().getMarketPrice(date, getInvestmentAccount().getCurrencyNode()));
     }

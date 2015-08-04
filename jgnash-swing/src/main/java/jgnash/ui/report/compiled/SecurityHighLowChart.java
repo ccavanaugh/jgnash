@@ -30,6 +30,7 @@ import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.ui.components.GenericCloseDialog;
 import jgnash.ui.components.SecurityComboBox;
+import jgnash.util.DateUtils;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -102,9 +103,9 @@ public class SecurityHighLowChart {
         double[] volume = new double[count];
 
         for (int i = 0; i < count; i++) {
-            SecurityHistoryNode hNode = hNodes.get(i);
+            final SecurityHistoryNode hNode = hNodes.get(i);
 
-            date[i] = hNode.getDate();
+            date[i] = DateUtils.asDate(hNode.getLocalDate());
             high[i] = hNode.getHigh().doubleValue();
             low[i] = hNode.getLow().doubleValue();
             open[i] = hNode.getPrice().doubleValue();

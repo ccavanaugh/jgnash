@@ -21,7 +21,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -297,9 +296,9 @@ abstract class AbstractSlipController implements Slip {
 
         // set the last date as required
         if (!Options.rememberLastDateProperty().get()) {
-            t.setDate(new Date());
+            t.setDate(LocalDate.now());
         } else {
-            t.setDate(datePicker.getDate());
+            t.setDate(datePicker.getValue());
         }
 
         // preserve any transaction entries that may have been entered first

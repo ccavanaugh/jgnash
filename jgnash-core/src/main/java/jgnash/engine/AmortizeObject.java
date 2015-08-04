@@ -19,7 +19,7 @@ package jgnash.engine;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Calendar;
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -401,14 +401,11 @@ public class AmortizeObject implements Serializable {
      * @param end     end date
      * @return interest
      */
-    public double getIPayment(final BigDecimal balance, final Date start, final Date end) {
+    public double getIPayment(final BigDecimal balance, final LocalDate start, final LocalDate end) {
         if (balance != null) {
 
-            Calendar c = Calendar.getInstance();
-            c.setTime(end);
-            int dayEnd = c.get(Calendar.DAY_OF_YEAR);
-            c.setTime(start);
-            int dayStart = c.get(Calendar.DAY_OF_YEAR);
+            int dayEnd = end.getDayOfYear();
+            int dayStart = start.getDayOfYear();
 
             int days = Math.abs(dayEnd - dayStart);
 

@@ -18,9 +18,8 @@
 package jgnash.engine;
 
 import java.math.BigDecimal;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.Month;
 
 import org.junit.Test;
 
@@ -42,8 +41,9 @@ public class SecurityNodeTest extends AbstractEngineTest {
 
     @Test
     public void TestHistory() {
-        final Date transactionDate1= new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-26", new ParsePosition(0));
         BigDecimal securityPrice1 = new BigDecimal("2.00");
+
+        final LocalDate transactionDate1 = LocalDate.of(2009, Month.DECEMBER, 26);
 
         SecurityHistoryNode history = new SecurityHistoryNode();
         history.setDate(transactionDate1);
@@ -69,7 +69,7 @@ public class SecurityNodeTest extends AbstractEngineTest {
         assertTrue(e.addSecurityHistory(securityNode1, history));  // should replace
         assertEquals(1, securityNode1.getHistoryNodes().size());
 
-        final Date transactionDate2 = new SimpleDateFormat("yyyy-MM-dd").parse("2009-12-27", new ParsePosition(0));
+        final LocalDate transactionDate2 = LocalDate.of(2009, Month.DECEMBER, 27);
 
         // force a failure by corrupting the date
        /* history.setDate(transactionDate2);
