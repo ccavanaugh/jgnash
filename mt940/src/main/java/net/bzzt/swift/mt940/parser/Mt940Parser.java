@@ -20,7 +20,8 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -233,9 +234,11 @@ public class Mt940Parser {
      * @return the rest of the string to be parsed
      */
     private static String parseDatumJJMMTT(final Mt940Entry currentEntry, final String string) throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("yyMMdd");
-        String date = string.substring(0, 6);
-        currentEntry.setValutaDatum(format.parse(date));
+        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyMMdd");
+
+        final String date = string.substring(0, 6);
+
+        currentEntry.setValutaDatum(LocalDate.from(dateTimeFormatter.parse(date)));
 
         return string.substring(6);
     }

@@ -148,8 +148,6 @@ public class DateUtils {
         return null;
     }
 
-
-
     private static void updateMonthNames() {
         if (lastLocale != Locale.getDefault()) {
 
@@ -220,6 +218,18 @@ public class DateUtils {
     }
 
     /**
+     * Determines is {@code LocalDate} d1 occurs after {@code LocalDate} d2. The specified dates are
+     * inclusive.
+     *
+     * @param d1 date 1
+     * @param d2 date 2
+     * @return true if d1 is after d2
+     */
+    public static boolean after(final LocalDate d1, final LocalDate d2) {
+        return before(d2, d1, true);
+    }
+
+    /**
      * Determines if Date d1 occurs after Date d2.
      *
      * @param d1        date 1
@@ -244,6 +254,18 @@ public class DateUtils {
     }
 
     /**
+     * Determines if {@code LocalDate} d1 occurs before {@code LocalDate} d2. The specified dates are
+     * inclusive
+     *
+     * @param d1 date 1
+     * @param d2 date 2
+     * @return true if d1 is before d2 or the same date
+     */
+    public static boolean before(final LocalDate d1, final LocalDate d2) {
+        return before(d1, d2, true);
+    }
+
+    /**
      * Determines if Date d1 occurs before Date d2.
      *
      * @param d1        date 1
@@ -257,6 +279,22 @@ public class DateUtils {
         }
 
         return d1.getTime() < d2.getTime();
+    }
+
+    /**
+     * Determines if {@code LocalDate} d1 occurs before {@code LocalDate} d2.
+     *
+     * @param d1        {@code LocalDate} 1
+     * @param d2        {@code LocalDate} 2
+     * @param inclusive {@code true} is comparison is inclusive
+     * @return {@code true} if d1 occurs before d2
+     */
+    public static boolean before(final LocalDate d1, final LocalDate d2, final boolean inclusive) {
+        if (inclusive) {
+            return d1.isEqual(d2) || d1.isBefore(d2);
+        }
+
+        return d1.isBefore(d2);
     }
 
     /**

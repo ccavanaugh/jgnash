@@ -1,7 +1,6 @@
-package net.bzzt.swift.mt940;
 /*
  * Copyright (C) 2008 Arnout Engelen
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -15,10 +14,10 @@ package net.bzzt.swift.mt940;
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+package net.bzzt.swift.mt940;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Mt940Entry {
     // 'Credit', in mt940, means money was transferred 
@@ -30,7 +29,7 @@ public class Mt940Entry {
         STORNO_CREDIT
     }
 
-    private Date valutaDatum;
+    private LocalDate valutaDatum;
 
     private SollHabenKennung sollHabenKennung;
 
@@ -38,12 +37,12 @@ public class Mt940Entry {
 
     private String mehrzweckfeld;
 
-    public Date getValutaDatum() {
-        return (Date) valutaDatum.clone();
+    public LocalDate getValutaDatum() {
+        return valutaDatum;
     }
 
-    public void setValutaDatum(Date valutaDatum) {
-        this.valutaDatum = (Date) valutaDatum.clone();
+    public void setValutaDatum(final LocalDate valutaDatum) {
+        this.valutaDatum = valutaDatum;
     }
 
     @Override

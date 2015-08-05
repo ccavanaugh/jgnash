@@ -17,13 +17,13 @@
  */
 package jgnash.convert.imports.qif;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
 import jgnash.engine.Account;
-
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
  * Transaction object for a QIF transaction
@@ -36,7 +36,7 @@ public class QifTransaction {
     /**
      * Converted date
      */
-    public Date date = new Date();
+    public LocalDate date = LocalDate.now();
     /**
      * Original date before conversion
      */

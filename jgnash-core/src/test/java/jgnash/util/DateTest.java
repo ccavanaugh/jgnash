@@ -20,6 +20,9 @@ package jgnash.util;
 import com.thoughtworks.xstream.converters.basic.DateConverter;
 import org.junit.Test;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
@@ -52,6 +55,19 @@ public class DateTest {
         final LocalDateTime rewind = LocalDateTime.from(dateTimeFormatter.parse(dateTimeFormatter.format(localDateTime)));
 
         assertEquals(localDateTime, rewind);
+
+        assertEquals(LocalDate.now(), DateUtils.asLocalDate(DateUtils.today()));
+    }
+
+    @Test
+    public void formatTest() throws ParseException {
+        final SimpleDateFormat format = new SimpleDateFormat("yyMMdd");
+        final Date date = format.parse("121206");
+
+        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyMMdd");
+        final LocalDate localDate = LocalDate.from(dateTimeFormatter.parse("121206"));
+
+        assertEquals(localDate, DateUtils.asLocalDate(date));
     }
 
     @Test

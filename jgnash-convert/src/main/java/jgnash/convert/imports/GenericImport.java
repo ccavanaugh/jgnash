@@ -17,7 +17,7 @@
  */
 package jgnash.convert.imports;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -53,15 +53,15 @@ public class GenericImport {
 
                 if (baseAccount.equals(tran.account)) { // single entry oTran
                     t = TransactionFactory.generateSingleEntryTransaction(baseAccount, tran.amount,
-                            DateUtils.asLocalDate(tran.datePosted), tran.memo, tran.payee, tran.checkNumber);
+                            tran.datePosted, tran.memo, tran.payee, tran.checkNumber);
                 } else { // double entry
                     if (tran.amount.signum() >= 0) {
                         t = TransactionFactory.generateDoubleEntryTransaction(baseAccount, tran.account,
-                                tran.amount.abs(), DateUtils.asLocalDate(tran.datePosted), tran.memo, tran.payee,
+                                tran.amount.abs(), tran.datePosted, tran.memo, tran.payee,
                                 tran.checkNumber);
                     } else {
                         t = TransactionFactory.generateDoubleEntryTransaction(tran.account, baseAccount,
-                                tran.amount.abs(), DateUtils.asLocalDate(tran.datePosted), tran.memo, tran.payee,
+                                tran.amount.abs(), tran.datePosted, tran.memo, tran.payee,
                                 tran.checkNumber);
                     }
                 }
@@ -94,19 +94,21 @@ public class GenericImport {
                 if (tran.getAmount(baseAccount).equals(oTran.amount)) { // amounts must always match
 
                     { // check for date match
-                        Date startDate;
-                        Date endDate;
+                        LocalDate startDate;
+                        LocalDate endDate;
+
+                        Objects.requireNonNull(oTran.dateUser);
 
                         // we have a user initiated date, use a smaller window
                         if ((oTran.dateUser != null)) {
-                            startDate = DateUtils.addDays(oTran.dateUser, -1);
-                            endDate = DateUtils.addDays(oTran.dateUser, 1);
+                            startDate = oTran.dateUser.minusDays(1);
+                            endDate = oTran.dateUser.plusDays(1);
                         } else { // use the posted date with a larger window
-                            startDate = DateUtils.addDays(oTran.datePosted, -3);
-                            endDate = DateUtils.addDays(oTran.datePosted, 3);
+                            startDate = oTran.dateUser.minusDays(3);
+                            endDate = oTran.dateUser.plusDays(3);
                         }
 
-                        if (DateUtils.after(tran.getDate(), startDate) && DateUtils.before(tran.getDate(), endDate)) {
+                        if (DateUtils.after(tran.getLocalDate(), startDate) && DateUtils.before(tran.getLocalDate(), endDate)) {
                             oTran.setState(OfxTransaction.ImportState.EQUAL);
                             break;
                         }

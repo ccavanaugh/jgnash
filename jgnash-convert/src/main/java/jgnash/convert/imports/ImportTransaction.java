@@ -18,7 +18,7 @@
 package jgnash.convert.imports;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 import jgnash.engine.Account;
 
@@ -47,12 +47,12 @@ public class ImportTransaction {
      */
     public BigDecimal amount;
 
-    public Date datePosted;
+    public LocalDate datePosted;
 
     /**
      * Date user initiated the transaction, optional, may be null
      */
-    public Date dateUser = null;
+    public LocalDate dateUser = null;
 
     public String memo = ""; // memo
 

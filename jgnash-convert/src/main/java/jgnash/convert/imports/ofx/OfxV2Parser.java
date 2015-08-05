@@ -29,6 +29,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -333,10 +334,10 @@ public class OfxV2Parser implements OfxTags {
                             tran.transactionType = reader.getElementText();
                             break;
                         case DTPOSTED:
-                            tran.datePosted = parseDate(reader.getElementText());
+                            tran.datePosted = parseLocalDate(reader.getElementText());
                             break;
                         case DTUSER:
-                            tran.dateUser = parseDate(reader.getElementText());
+                            tran.dateUser = parseLocalDate(reader.getElementText());
                             break;
                         case TRNAMT:
                             tran.amount = parseAmount(reader.getElementText());
@@ -684,6 +685,23 @@ public class OfxV2Parser implements OfxTags {
         calendar.set(year, month - 1, day, 0, 0, 0);
 
         return calendar.getTime();
+    }
+
+    /**
+     * Parse a date. Time zone and seconds are ignored
+     * <p/>
+     * YYYYMMDDHHMMSS.XXX [gmt offset:tz name]
+     *
+     * @param date String form of the date
+     * @return parsed date
+     */
+    @SuppressWarnings("MagicConstant")
+    private static LocalDate parseLocalDate(final String date) {
+        int year = Integer.parseInt(date.substring(0, 4)); // year
+        int month = Integer.parseInt(date.substring(4, 6)); // month
+        int day = Integer.parseInt(date.substring(6, 8)); // day
+
+        return LocalDate.of(year, month -1, day);
     }
 
     private static BigDecimal parseAmount(final String amount) {

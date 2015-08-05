@@ -26,8 +26,7 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -36,7 +35,7 @@ import jgnash.engine.MathConstants;
 
 /**
  * Various helper methods for importing QIF files
- * 
+ *
  * @author Craig Cavanaugh
  * @author Navneet Karnani
  */
@@ -64,52 +63,50 @@ public class QifUtils {
     /**
      * Converts a string into a data object
      * <p>
-     * <p/>
+     * <p>
      * format "6/21' 1" -> 6/21/2001 format "6/21'01" -> 6/21/2001 format
      * "9/18'2001 -> 9/18/2001 format "06/21/2001" format "06/21/01" format
      * "3.26.03" -> German version of quicken format "03-26-2005" -> MSMoney
      * format format "1.1.2005" -> kmymoney2 20.1.94 European dd/mm/yyyy has
      * been confirmed
-     * <p/>
+     * <p>
      * 21/2/07 -> 02/21/2007 UK, Quicken 2007 D15/2/07
-     * 
-     * @param sDate
-     *            String QIF date to parse
-     * @param format
-     *            String identifier of format to parse
+     *
+     * @param sDate  String QIF date to parse
+     * @param format String identifier of format to parse
      * @return Returns parsed date and current date if an error occurs
      */
     @SuppressWarnings("MagicConstant")
-    public static Date parseDate(String sDate, String format) {
-        Calendar cal = Calendar.getInstance();
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        int year = cal.get(Calendar.YEAR);
+    public static LocalDate parseDate(final String sDate, final String format) {
 
-        String[] chunks = DATE_DELIMITER_PATTERN.split(sDate);
+        int month = 0;
+        int day = 0;
+        int year = 0;
+
+        final String[] chunks = DATE_DELIMITER_PATTERN.split(sDate);
 
         switch (format) {
-        case US_FORMAT:
-            try {
-                month = Integer.parseInt(chunks[0].trim());
-                day = Integer.parseInt(chunks[1].trim());
-                year = Integer.parseInt(chunks[2].trim());
-            } catch (Exception e) {
-                Logger.getLogger(QifUtils.class.getName()).severe(e.toString());
-            }
-            break;
-        case EU_FORMAT:
-            try {
-                day = Integer.parseInt(chunks[0].trim());
-                month = Integer.parseInt(chunks[1].trim());
-                year = Integer.parseInt(chunks[2].trim());
-            } catch (Exception e) {
-                Logger.getLogger(QifUtils.class.getName()).severe(e.toString());
-            }
-            break;
-        default:
-            Logger.getLogger(QifUtils.class.getName()).severe("Invalid date format specified");
-            return new Date();
+            case US_FORMAT:
+                try {
+                    month = Integer.parseInt(chunks[0].trim());
+                    day = Integer.parseInt(chunks[1].trim());
+                    year = Integer.parseInt(chunks[2].trim());
+                } catch (Exception e) {
+                    Logger.getLogger(QifUtils.class.getName()).severe(e.toString());
+                }
+                break;
+            case EU_FORMAT:
+                try {
+                    day = Integer.parseInt(chunks[0].trim());
+                    month = Integer.parseInt(chunks[1].trim());
+                    year = Integer.parseInt(chunks[2].trim());
+                } catch (Exception e) {
+                    Logger.getLogger(QifUtils.class.getName()).severe(e.toString());
+                }
+                break;
+            default:
+                Logger.getLogger(QifUtils.class.getName()).severe("Invalid date format specified");
+                return LocalDate.now();
         }
 
         if (year < 100) {
@@ -119,9 +116,8 @@ public class QifUtils {
                 year += 1900;
             }
         }
-        cal.set(year, month - 1, day, 0, 0, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal.getTime();
+
+        return LocalDate.of(year, month - 1, day);
     }
 
     public static BigDecimal parseMoney(final String money) {
@@ -244,11 +240,9 @@ public class QifUtils {
     /**
      * Tests if the source string starts with the prefix string. Case is
      * ignored.
-     * 
-     * @param source
-     *            the source String.
-     * @param prefix
-     *            the prefix String.
+     *
+     * @param source the source String.
+     * @param prefix the prefix String.
      * @return true, if the source starts with the prefix string.
      */
     private static boolean startsWith(final String source, final String prefix) {
@@ -258,9 +252,8 @@ public class QifUtils {
     /**
      * Strip any category tags from the category name... found when parsing
      * transactions
-     * 
-     * @param category
-     *            string to strip
+     *
+     * @param category string to strip
      * @return the stripped string
      */
     public static String stripCategoryTags(final String category) {

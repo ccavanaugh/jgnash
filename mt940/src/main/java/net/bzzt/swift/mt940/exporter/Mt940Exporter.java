@@ -18,7 +18,6 @@ package net.bzzt.swift.mt940.exporter;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,10 +67,7 @@ public class Mt940Exporter {
      * @return new import transaction
      */
     private static ImportTransaction convert(Mt940Entry entry) {
-
         BigDecimal amount;
-        String memo = entry.getMehrzweckfeld();
-        Date date = entry.getValutaDatum();
 
         if (entry.getSollHabenKennung() == SollHabenKennung.CREDIT) {
             // The bank account is credited, so we gained income
@@ -86,8 +82,8 @@ public class Mt940Exporter {
         
         ImportTransaction tran = new ImportTransaction();
         tran.amount = amount;
-        tran.datePosted = date;
-        tran.memo = memo;
+        tran.datePosted = entry.getValutaDatum();
+        tran.memo = entry.getMehrzweckfeld();
         tran.account = null;
 
         return tran;
