@@ -25,6 +25,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PostLoad;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -74,13 +75,11 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
         Objects.requireNonNull(rate);
 
         this.date = DateUtils.asDate(localDate);
+        this.cachedLocalDate = localDate;
         this.rate = rate;
     }
 
     public LocalDate getLocalDate() {
-        if (cachedLocalDate == null) {
-            cachedLocalDate = DateUtils.asLocalDate(date);
-        }
         return cachedLocalDate;
     }
 
@@ -92,7 +91,7 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
     @Override
     public boolean equals(final Object o) {
         return this == o || o instanceof ExchangeRateHistoryNode
-                && getLocalDate().equals(((ExchangeRateHistoryNode) o).getLocalDate());
+                && date.equals(((ExchangeRateHistoryNode) o).date);
     }
 
     @Override
@@ -102,5 +101,15 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
 
     public BigDecimal getRate() {
         return rate;
+    }
+
+    protected Object readResolve() {
+        postLoad();
+        return this;
+    }
+
+    @PostLoad
+    private void postLoad() {
+        cachedLocalDate = DateUtils.asLocalDate(date);
     }
 }

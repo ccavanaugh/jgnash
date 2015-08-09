@@ -28,6 +28,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PostLoad;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -116,14 +117,11 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
 
     protected void setDate(final LocalDate localDate) {
         Objects.requireNonNull(localDate);
-
         this.date = DateUtils.asDate(localDate);
+        this.cachedLocalDate = localDate;
     }
 
     public LocalDate getLocalDate() {
-        if (cachedLocalDate == null) {
-            cachedLocalDate = DateUtils.asLocalDate(date);
-        }
         return cachedLocalDate;
     }
 
@@ -150,12 +148,22 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
 
     @Override
     public boolean equals(final Object o) {
-        return this == o || o instanceof SecurityHistoryNode && getLocalDate()
-                .compareTo(((SecurityHistoryNode) o).getLocalDate()) == 0;
+        return this == o || o instanceof SecurityHistoryNode && date
+                .compareTo(((SecurityHistoryNode) o).date) == 0;
     }
 
    @Override
     public int hashCode() {
        return date.hashCode();
+    }
+
+    protected Object readResolve() {
+        postLoad();
+        return this;
+    }
+
+    @PostLoad
+    private void postLoad() {
+        cachedLocalDate = DateUtils.asLocalDate(date);
     }
 }

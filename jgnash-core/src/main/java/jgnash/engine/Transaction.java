@@ -283,7 +283,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
 
     public void setDate(@NotNull final LocalDate localDate) {
         this.date = DateUtils.asDate(localDate);
-        cachedLocalDate = null;
+        cachedLocalDate = localDate;
     }
 
     public Date getDate() {
@@ -291,10 +291,6 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     public LocalDate getLocalDate() {
-        if (cachedLocalDate == null) {
-            cachedLocalDate = DateUtils.asLocalDate(date);
-        }
-
         return cachedLocalDate;
     }
 
@@ -650,6 +646,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     @PostLoad
     private void postLoad() {
         lock = new ReentrantReadWriteLock(true);
+        cachedLocalDate = DateUtils.asLocalDate(date);
     }
 
     @Override
