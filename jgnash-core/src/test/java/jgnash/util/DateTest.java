@@ -60,7 +60,7 @@ public class DateTest {
     }
 
     @Test
-    public void formatTest() throws ParseException {
+    public void formatTestOne() throws ParseException {
         final SimpleDateFormat format = new SimpleDateFormat("yyMMdd");
         final Date date = format.parse("121206");
 
@@ -68,6 +68,17 @@ public class DateTest {
         final LocalDate localDate = LocalDate.from(dateTimeFormatter.parse("121206"));
 
         assertEquals(localDate, DateUtils.asLocalDate(date));
+    }
+
+    @Test
+    public void formatTestTwo() throws ParseException {
+        final SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
+        final LocalDateTime localDateTime = LocalDateTime.now();
+        final Date now = DateUtils.asDate(localDateTime);
+
+        assertEquals(format.format(now), dateTimeFormatter.format(localDateTime));
     }
 
     @Test

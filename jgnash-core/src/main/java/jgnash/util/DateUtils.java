@@ -123,6 +123,15 @@ public class DateUtils {
     }
 
     /**
+     * Converts a {@code LocalDateTime} into a {@code Date} using the default timezone
+     * @param localDate {@code LocalDateTime} to convert
+     * @return an equivalent {@code Date}
+     */
+    public static Date asDate(final LocalDateTime localDate) {
+        return Date.from(localDate.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    /**
      * Converts a {@code Date} into a {@code LocalDate} using the default timezone.
      * @param date {@code Date} to convert
      * @return an equivalent {@code LocalDate} or {@code null} if the supplied date was {@code null}
