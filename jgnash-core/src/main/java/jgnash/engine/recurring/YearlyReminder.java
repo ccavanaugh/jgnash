@@ -17,8 +17,7 @@
  */
 package jgnash.engine.recurring;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 
@@ -54,17 +53,20 @@ public class YearlyReminder extends Reminder {
     }
 
     private class YearlyIterator implements RecurringIterator {
-        private final Calendar calendar = Calendar.getInstance();
+        private LocalDate base;
 
         public YearlyIterator() {
             if (getLastDate() != null) {
-                calendar.setTime(getLastDate());
+                base = getLastDate();
 
-                // adjust for actual target date, it could have been modified since the last date                
-                calendar.set(Calendar.DAY_OF_YEAR, DateUtils.getDayOfTheYear(getStartDate()));
+                if (getStartDate().lengthOfYear() == getStartDate().getDayOfYear()) {
+                    base = base.withDayOfYear(base.lengthOfYear());
+                } else {
+                    // adjust for actual target date, it could have been modified since the last date
+                    base = base.withDayOfYear(getStartDate().getDayOfYear());
+                }
             } else {
-                calendar.setTime(getStartDate());
-                calendar.add(Calendar.YEAR, getIncrement() * -1);
+                base = getStartDate().minusYears(getIncrement());
             }
         }
 
@@ -72,19 +74,22 @@ public class YearlyReminder extends Reminder {
          * @see jgnash.engine.recurring.RecurringIterator#next()
          */
         @Override
-        public Date next() {
+        public LocalDate next() {
             if (isEnabled()) {
-                calendar.add(Calendar.YEAR, getIncrement());
-                final Date date = calendar.getTime();
+                base = base.plusYears(getIncrement());
 
-                if (getEndDate() == null) {
-                    return date;
-                } else if (DateUtils.before(date, getEndDate())) {
-                    return date;
+                if (getStartDate().lengthOfYear() == getStartDate().getDayOfYear()) {
+                    base = base.withDayOfYear(base.lengthOfYear());
+                } else {
+                    // adjust for actual target date, it could have been modified since the last date
+                    base = base.withDayOfYear(getStartDate().getDayOfYear());
+                }
+
+                if (getEndDate() == null || DateUtils.before(base, getEndDate())) {
+                    return base;
                 }
             }
             return null;
         }
     }
-
 }

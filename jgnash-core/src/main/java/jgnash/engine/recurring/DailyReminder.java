@@ -17,8 +17,7 @@
  */
 package jgnash.engine.recurring;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 
@@ -53,14 +52,13 @@ public class DailyReminder extends Reminder {
     }
 
     private class DailyIterator implements RecurringIterator {
-        private final Calendar calendar = Calendar.getInstance();
+        private LocalDate base;
 
         public DailyIterator() {
             if (getLastDate() != null) {
-                calendar.setTime(getLastDate());
+                base = getLastDate();
             } else {
-                calendar.setTime(getStartDate());
-                calendar.add(Calendar.DATE, getIncrement() * -1);
+                base = getStartDate().minusDays(getIncrement());
             }
         }
 
@@ -68,16 +66,12 @@ public class DailyReminder extends Reminder {
          * @see jgnash.engine.recurring.RecurringIterator#next()
          */
         @Override
-        public Date next() {
+        public LocalDate next() {
             if (isEnabled()) {
-                calendar.add(Calendar.DATE, getIncrement());
+                base = base.plusDays(getIncrement());
 
-                final Date date = calendar.getTime();
-
-                if (getEndDate() == null) {
-                    return date;
-                } else if (DateUtils.before(date, getEndDate())) {
-                    return date;
+                if (getEndDate() == null || DateUtils.before(base, getEndDate())) {
+                    return base;
                 }
             }
             return null;

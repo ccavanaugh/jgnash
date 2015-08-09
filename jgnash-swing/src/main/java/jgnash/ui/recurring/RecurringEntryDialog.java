@@ -123,7 +123,7 @@ public class RecurringEntryDialog extends JDialog implements ActionListener {
     public static Reminder showDialog(final Reminder reminder) {
         RecurringEntryDialog d = new RecurringEntryDialog(reminder);
         d.setMinimumSize(d.getSize());
-        DialogUtils.addBoundsListener(d, "dialogbounds");
+        DialogUtils.addBoundsListener(d, "dialogBounds");
         d.setVisible(true);
 
         if (d.result) {
@@ -263,7 +263,7 @@ public class RecurringEntryDialog extends JDialog implements ActionListener {
 
         r.setDescription(descriptionField.getText());
         r.setEnabled(enabledCheckBox.isSelected());
-        r.setStartDate(startDateField.getDate());
+        r.setStartDate(startDateField.getLocalDate());
         r.setNotes(notesArea.getText());
 
         r.setAutoCreate(autoEnterCheckBox.isSelected());

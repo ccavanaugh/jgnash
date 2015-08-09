@@ -29,6 +29,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -149,9 +151,9 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * @return Returns the last date the reminder should execute.
      */
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         if (endDate != null) {
-            return (Date) endDate.clone();
+            return DateUtils.asLocalDate(endDate);
         }
         return null;
     }
@@ -164,9 +166,10 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * @return Returns a clone of the lastDate.
      */
-    public Date getLastDate() {
+    public LocalDate getLastDate() {
         if (lastDate != null) {
-            return (Date) lastDate.clone();
+            return DateUtils.asLocalDate(lastDate);
+
         }
         return null;
     }
@@ -174,9 +177,9 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * @return Returns a clone of the startDate.
      */
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         if (startDate != null) {
-            return (Date) startDate.clone();
+            return DateUtils.asLocalDate(startDate);
         }
         return null;
     }
@@ -283,9 +286,9 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * @param endDate The last date the reminder should execute.
      */
-    public void setEndDate(final Date endDate) {
+    public void setEndDate(final LocalDate endDate) {
         if (endDate != null) {
-            this.endDate = (Date) endDate.clone();
+            this.endDate = DateUtils.asDate(endDate);
         } else {
             this.endDate = null;
         }
@@ -294,8 +297,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * @param lastDate The lastDate to set.
      */
-    private void setLastDate(final Date lastDate) {
-        this.lastDate = (Date) lastDate.clone();
+    private void setLastDate(final LocalDate lastDate) {
+        this.lastDate = DateUtils.asDate(lastDate);
     }
 
     /**
@@ -308,8 +311,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * @param startDate The startDate to set.
      */
-    public void setStartDate(final Date startDate) {
-        this.startDate = DateUtils.trimDate(startDate);
+    public void setStartDate(final LocalDate startDate) {
+        this.startDate = DateUtils.asDate(startDate);
     }
 
     /**

@@ -18,7 +18,7 @@
 package jgnash.ui.recurring;
 
 import java.awt.EventQueue;
-import java.text.DateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -57,7 +57,7 @@ public class RecurringTableModel extends AbstractTableModel implements MessageLi
 
     private char enabledSymbol = '\u2713';
 
-    private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
+    private final DateTimeFormatter dateFormatter = DateUtils.getShortDateTimeFormat();
 
     /**
      * Creates a new instance of RecurringTableModel

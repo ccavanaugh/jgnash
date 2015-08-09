@@ -17,8 +17,11 @@
  */
 package jgnash.engine.recurring;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
+import java.util.Locale;
 
 import javax.persistence.Entity;
 
@@ -39,9 +42,9 @@ public class MonthlyReminder extends Reminder {
      */
     private int type = DATE;
 
-    private static final int DATE = 0;
+    public static final int DATE = 0;
 
-    private static final int DAY = 1;
+    public static final int DAY = 1;
 
     public MonthlyReminder() {
     }
@@ -80,26 +83,34 @@ public class MonthlyReminder extends Reminder {
     }
 
     private class MonthlyIterator implements RecurringIterator {
-        private final Calendar calendar = Calendar.getInstance();
+        private LocalDate base;
 
         public MonthlyIterator() {
             if (getLastDate() != null) {
-                calendar.setTime(getLastDate()); // set the last execute date
 
-                // adjust for actual target date, it could have been modified since the last date                
-                calendar.set(Calendar.DAY_OF_MONTH,  DateUtils.getDayOfTheMonth(getStartDate()));
+                base = getLastDate();
+
+                final TemporalField weekOfMonth = WeekFields.of(Locale.getDefault()).weekOfMonth();
+
+                final int week = base.get(weekOfMonth);     // extract the current week
+                final DayOfWeek day = base.getDayOfWeek();  // extract the current day of the week
+
+                base = base.with(weekOfMonth, week);        // force the week of the month
+                base = base.with(day);                      // force the day of the week
             } else {
                 if (type == DATE) {
-                    calendar.setTime(getStartDate());
-                    calendar.add(Calendar.MONTH, getIncrement() * -1);
+                    base = getStartDate().minusMonths(getIncrement());
                 } else if (type == DAY) {
-                    calendar.setTime(getStartDate());
-                    int week = calendar.get(Calendar.WEEK_OF_MONTH);
-                    int day = calendar.get(Calendar.DAY_OF_WEEK);
+                    base = getStartDate();
 
-                    calendar.add(Calendar.MONTH, getIncrement() * -1);
-                    calendar.set(Calendar.WEEK_OF_MONTH, week);
-                    calendar.set(Calendar.DAY_OF_WEEK, day);
+                    final TemporalField weekOfMonth = WeekFields.of(Locale.getDefault()).weekOfMonth();
+
+                    final int week = base.get(weekOfMonth);             // extract the current week
+                    final DayOfWeek day = base.getDayOfWeek();          // extract the current day of the week
+
+                    base = getStartDate().minusMonths(getIncrement());  // decrement the month
+                    base = base.with(weekOfMonth, week);                // force the week of the month
+                    base = base.with(day);                              // force the day of the week
                 }
             }
         }
@@ -108,24 +119,30 @@ public class MonthlyReminder extends Reminder {
          * @see jgnash.engine.recurring.RecurringIterator#next()
          */
         @Override
-        public Date next() {
+        public LocalDate next() {
             if (isEnabled()) {
                 if (type == DATE) {
-                    calendar.add(Calendar.MONTH, getIncrement());
+                    base = base.plusMonths(getIncrement());
                 } else {
-                    int week = calendar.get(Calendar.WEEK_OF_MONTH);
-                    int day = calendar.get(Calendar.DAY_OF_WEEK);
+                    final TemporalField weekOfMonth = WeekFields.of(Locale.getDefault()).weekOfMonth();
 
-                    calendar.add(Calendar.MONTH, getIncrement());
-                    calendar.set(Calendar.WEEK_OF_MONTH, week);
-                    calendar.set(Calendar.DAY_OF_WEEK, day);
+                    final int week = base.get(weekOfMonth);     // extract the current week
+                    final DayOfWeek day = base.getDayOfWeek();  // extract the current day of the week
+
+                    base = base.plusMonths(getIncrement());     // increment the month
+                    base = base.with(weekOfMonth, week);        // force the week of the month
+                    base = base.with(day);                      // force the day of the week
+
+                    // if plusMonths resulted in an invalid date and adjusted to the prior week, bump it a week
+                    if (base.get(weekOfMonth) > week) {
+                        base = base.plusWeeks(1);
+                        base = base.with(weekOfMonth, week);        // force the week of the month
+                        base = base.with(day);                      // force the day of the week
+                    }
                 }
-                final Date date = calendar.getTime();
 
-                if (getEndDate() == null) {
-                    return date;
-                } else if (DateUtils.before(date, getEndDate())) {
-                    return date;
+                if (getEndDate() == null || DateUtils.before(base, getEndDate())) {
+                    return base;
                 }
             }
             return null;

@@ -17,13 +17,12 @@
  */
 package jgnash.engine.recurring;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Interface for recurring iterators
  *
  * @author Craig Cavanaugh
- *
  */
 public interface RecurringIterator {
 
@@ -32,6 +31,5 @@ public interface RecurringIterator {
      *
      * @return The next date in the sequence or null if the sequence is no longer valid.
      */
-    Date next();
-
+    LocalDate next();
 }

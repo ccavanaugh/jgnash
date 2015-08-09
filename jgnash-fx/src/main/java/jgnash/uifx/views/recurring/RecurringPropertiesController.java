@@ -145,14 +145,14 @@ public class RecurringPropertiesController {
 
         descriptionTextField.setText(reminder.getDescription());
         enabledCheckBox.setSelected(reminder.isEnabled());
-        startDatePicker.setDate(reminder.getStartDate());
+        startDatePicker.setValue(reminder.getStartDate());
         notesTextArea.setText(reminder.getNotes());
 
         tabs.getSelectionModel().select(tabMap.get(reminder.getClass()));
         ((RecurringTabController)tabs.getSelectionModel().getSelectedItem().getUserData()).setReminder(reminder);
 
         if (reminder.getLastDate() != null) {
-            final LocalDate lastOccurrence = DateUtils.asLocalDate(reminder.getLastDate());
+            final LocalDate lastOccurrence = reminder.getLastDate();
             lastOccurrenceTextField.setText(dateFormatter.format(lastOccurrence));
         }
 
@@ -167,7 +167,7 @@ public class RecurringPropertiesController {
 
         reminder.setDescription(descriptionTextField.getText());
         reminder.setEnabled(enabledCheckBox.isSelected());
-        reminder.setStartDate(startDatePicker.getDate());
+        reminder.setStartDate(startDatePicker.getValue());
         reminder.setNotes(notesTextArea.getText());
 
         reminder.setAutoCreate(autoEnterCheckBox.isSelected());

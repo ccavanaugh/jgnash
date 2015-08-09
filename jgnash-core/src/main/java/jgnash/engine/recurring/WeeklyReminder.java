@@ -17,8 +17,8 @@
  */
 package jgnash.engine.recurring;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 
@@ -26,7 +26,7 @@ import jgnash.util.DateUtils;
 
 /**
  * A weekly reminder
- * 
+ *
  * @author Craig Cavanaugh
  */
 @Entity
@@ -54,20 +54,18 @@ public class WeeklyReminder extends Reminder {
     }
 
     private class WeeklyIterator implements RecurringIterator {
-        private final Calendar calendar = Calendar.getInstance();
+        private LocalDate base;
 
         public WeeklyIterator() {
             if (getLastDate() != null) {
-                calendar.setTime(getLastDate());
+                final DayOfWeek dayOfWeek = DayOfWeek.from(getStartDate());
 
-                // adjust for actual target date, it could have been modified since the last date               
-                calendar.set(Calendar.DAY_OF_MONTH, DateUtils.getDayOfTheMonth(getStartDate()));
+                base = getLastDate().plusDays(1);   // plus one day to force next iteration
 
-                // adjust for actual target date, it could have been modified since the last date               
-                calendar.set(Calendar.DAY_OF_WEEK, DateUtils.getDayOfTheWeek(getStartDate()));
+                // adjust for actual target date, it could have been modified since the last date
+                base = (LocalDate) dayOfWeek.adjustInto(base);
             } else {
-                calendar.setTime(getStartDate());
-                calendar.add(Calendar.WEEK_OF_MONTH, getIncrement() * -1);
+                base = getStartDate().minusWeeks(getIncrement());
             }
         }
 
@@ -75,15 +73,15 @@ public class WeeklyReminder extends Reminder {
          * @see jgnash.engine.recurring.RecurringIterator#next()
          */
         @Override
-        public Date next() {
+        public LocalDate next() {
             if (isEnabled()) {
-                calendar.add(Calendar.WEEK_OF_MONTH, getIncrement());
-                final Date date = calendar.getTime();
+                final DayOfWeek dayOfWeek = DayOfWeek.from(getStartDate());
 
-                if (getEndDate() == null) {
-                    return date;
-                } else if (DateUtils.before(date, getEndDate())) {
-                    return date;
+                base = base.plusWeeks(getIncrement());
+                base = (LocalDate) dayOfWeek.adjustInto(base);
+
+                if (getEndDate() == null || DateUtils.before(base, getEndDate())) {
+                    return base;
                 }
             }
             return null;

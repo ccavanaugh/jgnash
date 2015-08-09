@@ -17,7 +17,7 @@
  */
 package jgnash.uifx.views.recurring;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
@@ -74,10 +74,10 @@ public class MonthTabController implements RecurringTabController {
 
     @Override
     public Reminder getReminder() {
-        Date endDate = null;
+        LocalDate endDate = null;
 
         if (dateToggleButton.isSelected()) {
-            endDate = endDatePicker.getDate();
+            endDate = endDatePicker.getValue();
         }
 
         reminder.setIncrement(((Number) numberSpinner.getValue()).intValue());
@@ -101,7 +101,7 @@ public class MonthTabController implements RecurringTabController {
         typeComboBox.getSelectionModel().select(((MonthlyReminder) reminder).getType());
 
         if (reminder.getEndDate() != null) {
-            endDatePicker.setDate(reminder.getEndDate());
+            endDatePicker.setValue(reminder.getEndDate());
             dateToggleButton.setSelected(true);
         }
     }

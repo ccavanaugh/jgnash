@@ -17,9 +17,9 @@
  */
 package jgnash.uifx.views.recurring;
 
-import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -106,11 +106,11 @@ public class RecurringViewController implements MessageListener {
         enabledColumn.setCellValueFactory(param -> new SimpleBooleanProperty(param.getValue().isEnabled()));
         enabledColumn.setCellFactory(CheckBoxTableCell.forTableColumn(enabledColumn));
 
-        final TableColumn<Reminder, Date> lastPosted = new TableColumn<>(resources.getString("Column.LastPosted"));
+        final TableColumn<Reminder, LocalDate> lastPosted = new TableColumn<>(resources.getString("Column.LastPosted"));
         lastPosted.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLastDate()));
         lastPosted.setCellFactory(cell -> new DateTableCell());
 
-        final TableColumn<Reminder, Date> due = new TableColumn<>(resources.getString("Column.Due"));
+        final TableColumn<Reminder, LocalDate> due = new TableColumn<>(resources.getString("Column.Due"));
         due.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getIterator().next()));
         due.setCellFactory(cell -> new DateTableCell());
 
@@ -269,12 +269,12 @@ public class RecurringViewController implements MessageListener {
         }
     }
 
-    private static class DateTableCell extends TableCell<Reminder, Date> {
+    private static class DateTableCell extends TableCell<Reminder, LocalDate> {
 
-        private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
+        private final DateTimeFormatter dateFormatter = DateUtils.getShortDateTimeFormat();
 
         @Override
-        protected void updateItem(final Date date, final boolean empty) {
+        protected void updateItem(final LocalDate date, final boolean empty) {
             super.updateItem(date, empty);  // required
 
             if (!empty && date != null) {

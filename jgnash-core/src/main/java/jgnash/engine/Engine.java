@@ -22,10 +22,8 @@ import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -831,7 +829,7 @@ public class Engine {
 
         try {
             reminder.setAccount(account);
-            reminder.setStartDate(DateUtils.addMonth(transaction.getDate()));
+            reminder.setStartDate(transaction.getLocalDate().plusMonths(1));
             reminder.setTransaction((Transaction) transaction.clone());
             reminder.setDescription(transaction.getPayee());
             reminder.setNotes(transaction.getMemo());
@@ -897,20 +895,22 @@ public class Engine {
 
         final ArrayList<PendingReminder> pendingList = new ArrayList<>();
         final List<Reminder> list = getReminders();
-        final Calendar c = Calendar.getInstance();
-        final Date now = new Date(); // today's date
+        final LocalDate now = LocalDate.now(); // today's date
 
         for (final Reminder r : list) {
             if (r.isEnabled()) {
                 final RecurringIterator ri = r.getIterator();
-                Date next = ri.next();
+                LocalDate next = ri.next();
 
                 while (next != null) {
-                    c.setTime(next);
-                    c.add(Calendar.DATE, r.getDaysAdvance() * -1); // handle days in advance
+                    LocalDate date = next;
 
-                    if (DateUtils.before(c.getTime(), now)) { // need to fire this reminder
-                        pendingList.add(new PendingReminder(r, DateUtils.trimDate(next)));
+                    if (r.isAutoCreate()) {
+                        date = date.minusDays(r.getDaysAdvance());
+                    }
+
+                    if (DateUtils.before(date, now)) { // need to fire this reminder
+                        pendingList.add(new PendingReminder(r, next));
                         next = ri.next();
                     } else {
                         next = null;

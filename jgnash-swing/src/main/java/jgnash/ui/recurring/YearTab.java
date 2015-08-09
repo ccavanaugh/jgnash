@@ -19,7 +19,7 @@ package jgnash.ui.recurring;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import javax.swing.ButtonGroup;
@@ -43,7 +43,7 @@ import com.jgoodies.forms.layout.FormLayout;
  *
  * @author Craig Cavanaugh
  */
-public class YearTab extends JPanel implements RecurringTab, ActionListener {
+class YearTab extends JPanel implements RecurringTab, ActionListener {
 
     private JRadioButton noEndButton;
 
@@ -121,10 +121,10 @@ public class YearTab extends JPanel implements RecurringTab, ActionListener {
     @Override
     public Reminder getReminder() {
         int inc = ((Number) numberSpinner.getValue()).intValue();
-        Date endDate = null;
+        LocalDate endDate = null;
 
         if (endButton.isSelected()) {
-            endDate = endDateField.getDate();
+            endDate = endDateField.getLocalDate();
         }
 
         reminder.setIncrement(inc);

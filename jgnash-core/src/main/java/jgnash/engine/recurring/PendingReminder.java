@@ -18,9 +18,7 @@
 package jgnash.engine.recurring;
 
 import java.time.LocalDate;
-import java.util.Date;
 
-import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
 
 /**
@@ -42,9 +40,9 @@ public class PendingReminder implements Comparable<PendingReminder> {
      */
     private boolean approved;
 
-    public PendingReminder(final @NotNull Reminder reminder, final @NotNull Date date) {
+    public PendingReminder(final @NotNull Reminder reminder, final @NotNull LocalDate date) {
         this.reminder = reminder;
-        commitDate = DateUtils.asLocalDate(date);
+        commitDate = date;
     }
 
     /**

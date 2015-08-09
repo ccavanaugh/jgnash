@@ -17,7 +17,7 @@
  */
 package jgnash.uifx.views.recurring;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
@@ -63,10 +63,10 @@ public class WeekTabController implements RecurringTabController {
 
     @Override
     public Reminder getReminder() {
-        Date endDate = null;
+        LocalDate endDate = null;
 
         if (dateToggleButton.isSelected()) {
-            endDate = endDatePicker.getDate();
+            endDate = endDatePicker.getValue();
         }
 
         reminder.setIncrement(((Number) numberSpinner.getValue()).intValue());
@@ -87,7 +87,7 @@ public class WeekTabController implements RecurringTabController {
         numberSpinner.getValueFactory().setValue(reminder.getIncrement());
 
         if (reminder.getEndDate() != null) {
-            endDatePicker.setDate(reminder.getEndDate());
+            endDatePicker.setValue(reminder.getEndDate());
             dateToggleButton.setSelected(true);
         }
     }

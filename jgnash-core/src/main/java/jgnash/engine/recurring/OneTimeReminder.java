@@ -17,7 +17,7 @@
  */
 package jgnash.engine.recurring;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Entity;
 
@@ -56,7 +56,7 @@ public class OneTimeReminder extends Reminder {
          * @see jgnash.engine.recurring.RecurringIterator#next()
          */
         @Override
-        public Date next() {
+        public LocalDate next() {
             if (isEnabled()) {
                 if (getLastDate() == null && !end) {
                     end = true;
