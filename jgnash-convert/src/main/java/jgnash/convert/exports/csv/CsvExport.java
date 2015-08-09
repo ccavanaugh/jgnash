@@ -17,22 +17,27 @@
  */
 package jgnash.convert.exports.csv;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import jgnash.engine.Account;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.util.FileUtils;
 
-import java.io.*;
-import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import static java.time.temporal.ChronoField.*;
 
 /**
  * Primary class for CSV export
@@ -53,30 +58,35 @@ public class CsvExport {
         // force a correct file extension
         final String fileName = FileUtils.stripFileExtension(file.getAbsolutePath()) + ".csv";
 
-        try (AutoCloseableCSVWriter writer = new AutoCloseableCSVWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), StandardCharsets.UTF_8)))) {
+        try (AutoCloseableCSVWriter writer = new AutoCloseableCSVWriter(new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream(fileName), StandardCharsets.UTF_8)))) {
+
             writer.writeNextRow("Account","Number","Debit","Credit","Balance","Date","Memo","Payee","Reconciled");
 
             // write the transactions
             final List<Transaction> transactions = account.getTransactions(startDate, endDate);
 
-            // request locale specific date format and force to a 4 digit year format
-            final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+            final DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder()
+                    .appendValue(YEAR, 4)
+                    .appendValue(MONTH_OF_YEAR, 2)
+                    .appendValue(DAY_OF_MONTH, 2)
+                    .toFormatter();
 
-            if (dateFormat instanceof SimpleDateFormat) {
-                String datePattern = ((SimpleDateFormat) dateFormat).toPattern().replaceAll("y+", "yyyy");
-                ((SimpleDateFormat) dateFormat).applyPattern(datePattern);
-            }
+            for (final Transaction transaction : transactions) {
 
-            for (Transaction transaction : transactions) {
+                final String date = dateTimeFormatter.format(transaction.getLocalDate());
+                final String credit = transaction.getAmount(account).compareTo(BigDecimal.ZERO) == -1 ? ""
+                        : transaction.getAmount(account).abs().toPlainString();
 
-                String date = dateFormat.format(transaction.getDate());
-                String credit = transaction.getAmount(account).compareTo(BigDecimal.ZERO) == -1 ? "" : transaction.getAmount(account).abs().toPlainString();
-                String debit = transaction.getAmount(account).compareTo(BigDecimal.ZERO) == 1 ? "" : transaction.getAmount(account).abs().toPlainString();
+                final String debit = transaction.getAmount(account).compareTo(BigDecimal.ZERO) == 1 ? ""
+                        : transaction.getAmount(account).abs().toPlainString();
 
-                String balance = account.getBalanceAt(transaction).toPlainString();
-                String reconciled = transaction.getReconciled(account) == ReconciledState.NOT_RECONCILED ? Boolean.FALSE.toString() : Boolean.TRUE.toString();
+                final String balance = account.getBalanceAt(transaction).toPlainString();
+                final String reconciled = transaction.getReconciled(account) == ReconciledState.NOT_RECONCILED
+                        ? Boolean.FALSE.toString() : Boolean.TRUE.toString();
 
-                writer.writeNextRow(account.getName(), transaction.getNumber(), debit, credit, balance, date, transaction.getMemo(), transaction.getPayee(), reconciled);
+                writer.writeNextRow(account.getName(), transaction.getNumber(), debit, credit, balance, date,
+                        transaction.getMemo(), transaction.getPayee(), reconciled);
             }
         } catch (IOException e) {
             Logger.getLogger(CsvExport.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
