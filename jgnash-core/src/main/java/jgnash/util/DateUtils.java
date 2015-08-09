@@ -340,26 +340,6 @@ public class DateUtils {
     }
 
     /**
-     * Returns the numerical day of the week given a date
-     *
-     * @param date the base date to work from
-     * @return the day of the week
-     */
-    public static int getDayOfTheWeek(final Date date) {
-        return getDayOfX(date, Calendar.DAY_OF_WEEK);
-    }
-
-    /**
-     * Returns the numerical day of the month given a date
-     *
-     * @param date the base date to work from
-     * @return the day of the month
-     */
-    public static int getDayOfTheMonth(final Date date) {
-        return getDayOfX(date, Calendar.DAY_OF_MONTH);
-    }
-
-    /**
      * Returns the numerical day of the year given a date
      *
      * @param date the base date to work from
