@@ -164,7 +164,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     public abstract RecurringIterator getIterator();
 
     /**
-     * @return Returns a clone of the lastDate.
+     * @return Returns the last recorded date
      */
     public LocalDate getLastDate() {
         if (lastDate != null) {
@@ -175,7 +175,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     }
 
     /**
-     * @return Returns a clone of the startDate.
+     * @return Returns the start date.
      */
     public LocalDate getStartDate() {
         if (startDate != null) {
