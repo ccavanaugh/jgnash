@@ -24,9 +24,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -49,7 +49,7 @@ public class CsvExport {
     private CsvExport() {
     }
 
-    public static void exportAccount(final Account account, final Date startDate, final Date endDate, final File file) {
+    public static void exportAccount(final Account account, final LocalDate startDate, final LocalDate endDate, final File file) {
         Objects.requireNonNull(account);
         Objects.requireNonNull(startDate);
         Objects.requireNonNull(endDate);

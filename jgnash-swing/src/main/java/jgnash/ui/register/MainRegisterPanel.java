@@ -23,7 +23,7 @@ import java.awt.EventQueue;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
@@ -316,14 +316,14 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
             final Account account = registerTree.getSelectedAccount();
 
             if (account != null && account.getTransactionCount() > 1) {
-                Date startDate = account.getTransactionAt(0).getDate();
-                Date endDate = account.getTransactionAt(account.getTransactionCount() - 1).getDate();
+                LocalDate startDate = account.getTransactionAt(0).getLocalDate();
+                LocalDate endDate = account.getTransactionAt(account.getTransactionCount() - 1).getLocalDate();
 
                 final int[] rows = getActiveTable().getSelectedRows(); // fetch selected rows
 
                 if (rows.length > 1) {
-                    startDate = account.getTransactionAt(rows[0]).getDate();
-                    endDate = account.getTransactionAt(rows[rows.length - 1]).getDate();
+                    startDate = account.getTransactionAt(rows[0]).getLocalDate();
+                    endDate = account.getTransactionAt(rows[rows.length - 1]).getLocalDate();
                 }
 
                 ExportTransactionsAction.exportTransactions(account, startDate, endDate);

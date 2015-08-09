@@ -19,6 +19,7 @@ package jgnash.engine;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -1062,6 +1063,22 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
+     * Returns the account balance up to and inclusive of the supplied localDate
+     *
+     * @param localDate The inclusive ending localDate
+     * @return The ending balance
+     */
+    public BigDecimal getBalance(final LocalDate localDate) {
+        transactionLock.readLock().lock();
+
+        try {
+            return getProxy().getBalance(DateUtils.asDate(localDate));
+        } finally {
+            transactionLock.readLock().unlock();
+        }
+    }
+
+    /**
      * Returns the account balance up to and inclusive of the supplied date. The
      * returned balance is converted to the specified commodity.
      *
@@ -1094,6 +1111,26 @@ public class Account extends StoredObject implements Comparable<Account> {
             return transactions.parallelStream().filter(transaction
                     -> DateUtils.after(transaction.getDate(), startDate, true)
                     && DateUtils.before(transaction.getDate(), endDate, true)).sorted().collect(Collectors.toList());
+        } finally {
+            transactionLock.readLock().unlock();
+        }
+    }
+
+    /**
+     * Returns an array of transactions that occur after account specified cut
+     * off date. The returned array is inclusive of the specified dates.
+     *
+     * @param startDate starting cut off date
+     * @param endDate   ending cut off date
+     * @return the array of transactions that occurred between the specified dates
+     */
+    public List<Transaction> getTransactions(final LocalDate startDate, final LocalDate endDate) {
+        transactionLock.readLock().lock();
+
+        try {
+            return transactions.parallelStream().filter(transaction
+                    -> DateUtils.after(transaction.getLocalDate(), startDate)
+                    && DateUtils.before(transaction.getLocalDate(), endDate)).sorted().collect(Collectors.toList());
         } finally {
             transactionLock.readLock().unlock();
         }

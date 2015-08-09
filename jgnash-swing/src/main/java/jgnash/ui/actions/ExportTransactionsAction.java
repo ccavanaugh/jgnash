@@ -18,6 +18,7 @@
 package jgnash.ui.actions;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
@@ -45,7 +46,7 @@ public class ExportTransactionsAction {
 
     private ExportTransactionsAction() {}
 
-    public static void exportTransactions(final Account account, final Date startDate, final Date endDate) {
+    public static void exportTransactions(final Account account, final LocalDate startDate, final LocalDate endDate) {
 
         final ResourceBundle rb = ResourceUtils.getBundle();
 

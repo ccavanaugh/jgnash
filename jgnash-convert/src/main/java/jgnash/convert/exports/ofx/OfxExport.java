@@ -26,8 +26,8 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,13 +52,13 @@ public class OfxExport implements OfxTags {
             "SECURITY:NONE", "ENCODING:USASCII", "CHARSET:1252", "COMPRESSION:NONE", "OLDFILEUID:NONE",
             "NEWFILEUID:NONE"};
 
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
     private final Account account;
 
-    private final Date startDate;
+    private final LocalDate startDate;
 
-    private final Date endDate;
+    private final LocalDate endDate;
 
     private final File file;
 
@@ -66,7 +66,7 @@ public class OfxExport implements OfxTags {
 
     private int indentLevel = 0;
 
-    public OfxExport(final Account account, final Date startDate, final Date endDate, final File file) {
+    public OfxExport(final Account account, final LocalDate startDate, final LocalDate endDate, final File file) {
         this.account = account;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -79,7 +79,7 @@ public class OfxExport implements OfxTags {
         Objects.requireNonNull(endDate);
         Objects.requireNonNull(file);
 
-        final Date exportDate = new Date();
+        final LocalDate exportDate = LocalDate.now();
 
         // force a correct file extension
         final String fileName = FileUtils.stripFileExtension(file.getAbsolutePath()) + ".ofx";
@@ -245,7 +245,7 @@ public class OfxExport implements OfxTags {
         indentedWriter.println(wrapOpen(TRNTYPE)
                 + (transaction.getAmount(account).compareTo(BigDecimal.ZERO) == 1 ? CREDIT : DEBIT), indentLevel);
 
-        indentedWriter.println(wrapOpen(DTPOSTED) + encodeDate(transaction.getDate()), indentLevel);
+        indentedWriter.println(wrapOpen(DTPOSTED) + encodeDate(transaction.getLocalDate()), indentLevel);
         indentedWriter.println(wrapOpen(TRNAMT) + transaction.getAmount(account).toPlainString(), indentLevel);
         indentedWriter.println(wrapOpen(REFNUM) + transaction.getUuid(), indentLevel);
         indentedWriter.println(wrapOpen(NAME) + transaction.getPayee(), indentLevel);
@@ -295,8 +295,8 @@ public class OfxExport implements OfxTags {
         // write the FITID
         writeFitID(transaction);
 
-        indentedWriter.println(wrap(DTTRADE, encodeDate(transaction.getDate())), indentLevel);
-        indentedWriter.println(wrap(DTSETTLE, encodeDate(transaction.getDate())), indentLevel);
+        indentedWriter.println(wrap(DTTRADE, encodeDate(transaction.getLocalDate())), indentLevel);
+        indentedWriter.println(wrap(DTSETTLE, encodeDate(transaction.getLocalDate())), indentLevel);
 
         indentedWriter.println(wrapClose(INVTRAN), --indentLevel);
 
@@ -324,8 +324,8 @@ public class OfxExport implements OfxTags {
         // write the FITID
         writeFitID(transaction);
 
-        indentedWriter.println(wrap(DTTRADE, encodeDate(transaction.getDate())), indentLevel);
-        indentedWriter.println(wrap(DTSETTLE, encodeDate(transaction.getDate())), indentLevel);
+        indentedWriter.println(wrap(DTTRADE, encodeDate(transaction.getLocalDate())), indentLevel);
+        indentedWriter.println(wrap(DTSETTLE, encodeDate(transaction.getLocalDate())), indentLevel);
         indentedWriter.println(wrapClose(INVTRAN), --indentLevel);
 
         // write security information
@@ -362,8 +362,8 @@ public class OfxExport implements OfxTags {
         // write the FITID
         writeFitID(transaction);
 
-        indentedWriter.println(wrap(DTTRADE, encodeDate(transaction.getDate())), indentLevel);
-        indentedWriter.println(wrap(DTSETTLE, encodeDate(transaction.getDate())), indentLevel);
+        indentedWriter.println(wrap(DTTRADE, encodeDate(transaction.getLocalDate())), indentLevel);
+        indentedWriter.println(wrap(DTSETTLE, encodeDate(transaction.getLocalDate())), indentLevel);
         indentedWriter.println(wrap(MEMO, "Distribution reinvestment: " + transaction.getSecurityNode().getSymbol()), indentLevel);
         indentedWriter.println(wrapClose(INVTRAN), --indentLevel);
 
@@ -385,8 +385,8 @@ public class OfxExport implements OfxTags {
         indentedWriter.println(wrapOpen(INVTRAN), indentLevel++);
         writeFitID(transaction);  // write the FITID
 
-        indentedWriter.println(wrap(DTTRADE, encodeDate(transaction.getDate())), indentLevel);
-        indentedWriter.println(wrap(DTSETTLE, encodeDate(transaction.getDate())), indentLevel);
+        indentedWriter.println(wrap(DTTRADE, encodeDate(transaction.getLocalDate())), indentLevel);
+        indentedWriter.println(wrap(DTSETTLE, encodeDate(transaction.getLocalDate())), indentLevel);
         indentedWriter.println(wrap(MEMO, "Dividend: " + transaction.getSecurityNode().getSymbol()), indentLevel);
         indentedWriter.println(wrapClose(INVTRAN), --indentLevel);
 
@@ -400,10 +400,8 @@ public class OfxExport implements OfxTags {
         indentedWriter.println(wrapClose(INCOME), --indentLevel);
     }
 
-    private String encodeDate(final Date date) {
-        synchronized (dateFormat) {
-            return dateFormat.format(date);
-        }
+    private String encodeDate(final LocalDate date) {
+        return dateTimeFormatter.format(date);
     }
 
     private static String wrapOpen(final String element) {
