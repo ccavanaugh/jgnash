@@ -9,6 +9,7 @@ USEDPASSWORD
 yyyy
 MMMMM
 YYYYMMDDHHMMSS
+yyyyMMddHHmmss
 filesep
 USASCII
 CSUNICODE
@@ -260,3 +261,4 @@ darkgoldenrod
 thoughtworks
 FILEVERSION
 fileversion
+
