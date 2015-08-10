@@ -17,6 +17,7 @@
  */
 package jgnash.engine.budget;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -128,12 +129,12 @@ public class BudgetPeriodDescriptor {
         return endPeriod;
     }
 
-    public Date getStartDate() {
-        return startDate;
+    public LocalDate getStartDate() {
+        return DateUtils.asLocalDate(startDate);
     }
 
-    public Date getEndDate() {
-        return endDate;
+    public LocalDate getEndDate() {
+        return DateUtils.asLocalDate(endDate);
     }
 
     public String getPeriodDescription() {

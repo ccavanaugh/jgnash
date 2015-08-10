@@ -54,7 +54,7 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
     @Column(precision = 20, scale = 8)
     private BigDecimal rate = BigDecimal.ZERO;
 
-    private transient LocalDate cachedLocalDate = null;
+    private transient LocalDate cachedLocalDate = DateUtils.asLocalDate(date);
 
     /**
      * No argument constructor for reflection purposes.

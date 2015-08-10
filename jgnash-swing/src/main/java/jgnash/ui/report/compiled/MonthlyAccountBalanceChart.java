@@ -23,6 +23,8 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -252,26 +254,24 @@ public class MonthlyAccountBalanceChart {
     }
 
     private TimeSeriesCollection createTimeSeriesCollection(final Account account) {
-        List<Date> dates = Collections.emptyList();
+        List<LocalDate> dates = Collections.emptyList();
 
         if (subAccountCheckBox.isSelected()) {
             // Getting the dates to calculate
-            Date start = DateUtils.getFirstDayOfTheMonth(startDateField.getDate());
-            Date stop = DateUtils.getLastDayOfTheMonth(endDateField.getDate());
+            final LocalDate start = startDateField.getLocalDate().with(TemporalAdjusters.firstDayOfMonth());
+            final LocalDate stop = endDateField.getLocalDate().with(TemporalAdjusters.lastDayOfMonth());
+
             dates = DateUtils.getLastDayOfTheMonths(start, stop);
             TimeSeries t = new TimeSeries(rb.getString("Column.Month"), rb.getString("Column.Month"), rb.getString("Column.Balance"));
 
             // For every month, calculate the total amount
-            for (Date date : dates) {
-                Date d = DateUtils.getLastDayOfTheMonth(date);
-                Date s = DateUtils.getFirstDayOfTheMonth(date);
+            for (LocalDate date : dates) {
+                final LocalDate d = date.with(TemporalAdjusters.lastDayOfMonth());
+                final LocalDate s = date.with(TemporalAdjusters.firstDayOfMonth());
 
-                // Get the total amount for the account and every sub accounts
-                // for the specified date
-                BigDecimal bd_TotalAmount = calculateTotal(s, d, account, account.getCurrencyNode());
-
-                // Include it in the graph
-                t.add(new Month(date), bd_TotalAmount);
+                // Get the total amount for the account and every sub accounts for the specified date
+                // and include it in the chart
+                t.add(new Month(DateUtils.asDate(date)), calculateTotal(s, d, account, account.getCurrencyNode()));
             }
 
             return new TimeSeriesCollection(t);
@@ -280,8 +280,8 @@ public class MonthlyAccountBalanceChart {
         int count = account.getTransactionCount();
 
         if (count > 0) {
-            Date start = account.getTransactionAt(0).getDate();
-            Date stop = account.getTransactionAt(count - 1).getDate();
+            LocalDate start = account.getTransactionAt(0).getLocalDate();
+            LocalDate stop = account.getTransactionAt(count - 1).getLocalDate();
             dates = DateUtils.getLastDayOfTheMonths(start, stop);
         }
 
@@ -289,19 +289,19 @@ public class MonthlyAccountBalanceChart {
 
         AccountType type = account.getAccountType();
 
-        for (Date aList : dates) {
+        for (LocalDate localDate : dates) {
             // get balance for the whole month
-            Date d = DateUtils.getLastDayOfTheMonth(aList);
-            Date s = DateUtils.getFirstDayOfTheMonth(aList);
+            LocalDate d = localDate.with(TemporalAdjusters.lastDayOfMonth());
+            LocalDate s = localDate.with(TemporalAdjusters.firstDayOfMonth());
 
             BigDecimal balance = AccountBalanceDisplayManager.convertToSelectedBalanceMode(type, account.getBalance(s, d));
-            t.add(new Month(aList), balance);
+            t.add(new Month(DateUtils.asDate(localDate)), balance);
         }
 
         return new TimeSeriesCollection(t);
     }
 
-    private static BigDecimal calculateTotal(final Date start, final Date end, final Account account, final CurrencyNode baseCurrency) {
+    private static BigDecimal calculateTotal(final LocalDate start, final LocalDate end, final Account account, final CurrencyNode baseCurrency) {
         BigDecimal amount;
         AccountType type = account.getAccountType();
 

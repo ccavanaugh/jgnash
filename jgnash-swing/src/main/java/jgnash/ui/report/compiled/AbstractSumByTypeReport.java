@@ -19,11 +19,11 @@ package jgnash.ui.report.compiled;
 
 import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
-import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -81,19 +81,11 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
     boolean runningTotal = true;
 
-    List<Date> dates = Collections.emptyList();
+    List<LocalDate> dates = Collections.emptyList();
 
     AbstractSumByTypeReport() {
 
         Preferences p = getPreferences();
-
-        int months = p.getInt(MONTHS, 5);
-
-        Date startDate = new Date();
-
-        for (int i = 0; i < months - 1; i++) {
-            startDate = DateUtils.subtractMonth(startDate);
-        }
 
         startDateField = new DatePanel();
         endDateField = new DatePanel();
@@ -101,7 +93,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
         hideZeroBalanceAccounts = new JCheckBox(ResourceUtils.getString("Button.HideZeroBalance"));
         hideZeroBalanceAccounts.setSelected(p.getBoolean(HIDE_ZERO_BALANCE, true));
 
-        startDateField.setDate(startDate);
+        startDateField.setDate(LocalDate.now().minusMonths(p.getInt(MONTHS, 4)));
 
         refreshButton = new JButton(rb.getString("Button.Refresh"),
                 IconUtils.getIcon("/jgnash/resource/view-refresh.png"));
@@ -127,7 +119,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
     protected abstract List<AccountGroup> getAccountGroups();
 
-    ReportModel createReportModel(final Date startDate, final Date endDate) {
+    ReportModel createReportModel(final LocalDate startDate, final LocalDate endDate) {
 
         logger.info(rb.getString("Message.CollectingReportData"));
 
@@ -163,7 +155,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
                 boolean remove = true;
 
                 if (runningTotal) {                    
-                    for (Date date : dates) {
+                    for (LocalDate date : dates) {
                         if (account.getBalance(date).compareTo(BigDecimal.ZERO) != 0) {
                             remove = false;
                             break;
@@ -171,8 +163,8 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
                     }
                 } else {
                     for (int j = 0; j < dates.size() - 1; j++) {
-                        Date sDate = dates.get(j);
-                        Date eDate = DateUtils.subtractDay(dates.get(j+1));
+                        final LocalDate sDate = dates.get(j);
+                        final LocalDate eDate = dates.get(j+1).minusDays(1);
                         
                         if (account.getBalance(sDate, eDate).compareTo(BigDecimal.ZERO) != 0) {
                             remove = false;
@@ -209,8 +201,8 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
      */
     @Override
     public JasperPrint createJasperPrint(final boolean formatForCSV) {
-        Date endDate = endDateField.getDate();
-        Date startDate = startDateField.getDate();
+        LocalDate endDate = endDateField.getLocalDate();
+        LocalDate startDate = startDateField.getLocalDate();
 
         ReportModel model = createReportModel(startDate, endDate);
 
@@ -260,7 +252,7 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
 
         private final CurrencyNode baseCurrency;
 
-        private final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
+        private final DateTimeFormatter dateFormat = DateUtils.getShortDateTimeFormat();
 
         private final ResourceBundle rb = ResourceUtils.getBundle();
 
@@ -335,8 +327,8 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
             if (runningTotal) {
                 return dateFormat.format(dates.get(columnIndex - 1));
             } else {
-                Date startDate = dates.get(columnIndex - 1);
-                Date endDate = DateUtils.subtractDay(dates.get(columnIndex));
+                LocalDate startDate = dates.get(columnIndex - 1);
+                LocalDate endDate = dates.get(columnIndex).minusDays(1);
 
                 return dateFormat.format(startDate) + " - " + dateFormat.format(endDate);
             }
@@ -381,8 +373,8 @@ abstract class AbstractSumByTypeReport extends DynamicJasperReport {
                     if (runningTotal) {
                         return account.getBalance(dates.get(columnIndex - 1), getCurrency());
                     } else {
-                        Date startDate = dates.get(columnIndex - 1);
-                        Date endDate = DateUtils.subtractDay(dates.get(columnIndex));
+                        final LocalDate startDate = dates.get(columnIndex - 1);
+                        final LocalDate endDate = dates.get(columnIndex).minusDays(1);
 
                         return account.getBalance(startDate, endDate, getCurrency()).negate();
                     }

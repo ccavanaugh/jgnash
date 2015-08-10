@@ -20,6 +20,7 @@ package jgnash.ui.reconcile;
 import java.awt.EventQueue;
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -57,11 +58,11 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
-public abstract class AbstractReconcileTableModel extends AbstractTableModel implements MessageListener, PackableTableModel {
+abstract class AbstractReconcileTableModel extends AbstractTableModel implements MessageListener, PackableTableModel {
 
     final Account account;
 
-    private final Date closingDate;
+    private final LocalDate closingDate;
 
     private final List<RecTransaction> list = new ArrayList<>();
 
@@ -78,12 +79,12 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
 
     private final ReadWriteLock rwl = new ReentrantReadWriteLock(true);
 
-    AbstractReconcileTableModel(final Account account, final Date closingDate) {
+    AbstractReconcileTableModel(final Account account, final LocalDate closingDate) {
         Objects.requireNonNull(account);
         assert cNames.length == cClass.length;
 
         this.account = account;
-        this.closingDate = (Date) closingDate.clone();
+        this.closingDate = closingDate;
 
         loadModel();
 
@@ -106,10 +107,10 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
     }
 
     private boolean reconcilable(final Transaction t) {
-        return DateUtils.before(t.getDate(), closingDate) && t.getReconciled(account) != ReconciledState.RECONCILED && isShowable(t);
+        return DateUtils.before(t.getLocalDate(), closingDate) && t.getReconciled(account) != ReconciledState.RECONCILED && isVisible(t);
     }
 
-    abstract boolean isShowable(Transaction t);
+    abstract boolean isVisible(Transaction t);
 
     /**
      * Returns the number of columns in the model. A {@code JTable} uses this method to determine how many columns
@@ -205,7 +206,7 @@ public abstract class AbstractReconcileTableModel extends AbstractTableModel imp
                             }
                             break;
                         case TRANSACTION_ADD:
-                            if (isShowable(transaction)) {
+                            if (isVisible(transaction)) {
                                 RecTransaction newTran = new RecTransaction(transaction);
                                 int index = Collections.binarySearch(list, newTran);
                                 if (index < 0) {

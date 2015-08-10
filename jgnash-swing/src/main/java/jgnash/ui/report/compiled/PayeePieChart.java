@@ -161,7 +161,7 @@ public class PayeePieChart {
         startField.setDate(new Date(start));
 
         currentAccount = combo.getSelectedAccount();
-        PieDataset[] data = createPieDataset(currentAccount);
+        PieDataset[] data = createPieDataSet(currentAccount);
         JFreeChart chartCredit = createPieChart(currentAccount, data, 0);
         chartPanelCredit = new ChartPanel(chartCredit, true, true, true, false, true);
         //                         (chart, properties, save, print, zoom, tooltips)
@@ -305,7 +305,7 @@ public class PayeePieChart {
             }
             currentAccount = a;
 
-            PieDataset[] data = createPieDataset(a);
+            PieDataset[] data = createPieDataSet(a);
             chartPanelCredit.setChart(createPieChart(a, data, 0));
             chartPanelCredit.validate();
             chartPanelDebit.setChart(createPieChart(a, data, 1));
@@ -333,7 +333,7 @@ public class PayeePieChart {
         for(int i=0; i<data[index].getItemCount(); i++ ) {
             thisTotal = thisTotal.add( (BigDecimal)(data[index].getValue(i)) );
         }
-        BigDecimal acTotal = a.getTreeBalance(startField.getDate(), endField.getDate()).abs();
+        BigDecimal acTotal = a.getTreeBalance(startField.getLocalDate(), endField.getLocalDate()).abs();
 
         String title = "";
         String subtitle = "";
@@ -371,8 +371,8 @@ public class PayeePieChart {
     private List<TranTuple> getTransactions(final Account account, final List<TranTuple> transactions, final Date startDate, final Date endDate) {
 
         for (Transaction t : account.getTransactions(startDate, endDate)) {
-            TranTuple touple = new TranTuple(account, t);
-            transactions.add(touple);
+            TranTuple tuple = new TranTuple(account, t);
+            transactions.add(tuple);
         }
 
         for (final Account child : account.getChildren(Comparators.getAccountByCode())) {
@@ -382,7 +382,7 @@ public class PayeePieChart {
         return transactions;
     }
 
-    private PieDataset[] createPieDataset(final Account a) {
+    private PieDataset[] createPieDataSet(final Account a) {
         DefaultPieDataset[] returnValue = new DefaultPieDataset[2];
         returnValue[0] = new DefaultPieDataset();
         returnValue[1] = new DefaultPieDataset();

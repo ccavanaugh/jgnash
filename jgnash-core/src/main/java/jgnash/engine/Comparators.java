@@ -18,8 +18,8 @@
 package jgnash.engine;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Comparator;
-import java.util.Date;
 
 /**
  * Utility class consisting of {@code Comparators} useful for sorting lists of {@code StoredObject}
@@ -49,7 +49,7 @@ public class Comparators {
         return new AccountByPathName();
     }
 
-    public static Comparator<Account> getAccountByBalance(Date startDate, Date endDate, CurrencyNode currency, boolean ascending) {
+    public static Comparator<Account> getAccountByBalance(LocalDate startDate, LocalDate endDate, CurrencyNode currency, boolean ascending) {
         return new AccountByBalance(startDate, endDate, currency, ascending);
     }
 
@@ -108,15 +108,15 @@ public class Comparators {
 
     private static class AccountByBalance implements Comparator<Account>, Serializable {
 
-        private final Date startDate;
+        private final LocalDate startDate;
 
-        private final Date endDate;
+        private final LocalDate endDate;
 
         private final boolean ascending;
 
         private final CurrencyNode currency;
 
-        public AccountByBalance(Date startDate, Date endDate, CurrencyNode currency, boolean ascending) {
+        public AccountByBalance(final LocalDate startDate, final LocalDate endDate, CurrencyNode currency, boolean ascending) {
             this.startDate = startDate;
             this.endDate = endDate;
             this.currency = currency;
@@ -125,7 +125,8 @@ public class Comparators {
 
         @Override
         public int compare(Account a1, Account a2) {
-            int result = a1.getBalance(startDate, endDate, currency).compareTo(a2.getBalance(startDate, endDate, currency));
+            int result = a1.getBalance(startDate, endDate, currency)
+                    .compareTo(a2.getBalance(startDate, endDate, currency));
             if (!ascending) {
                 result *= -1;
             }

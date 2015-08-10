@@ -20,10 +20,10 @@ package jgnash.ui.report.compiled;
 import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -108,9 +108,9 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
     /**
      * Report Data **
      */
-    private final ArrayList<Date> startDates = new ArrayList<>();
+    private final ArrayList<LocalDate> startDates = new ArrayList<>();
 
-    private final ArrayList<Date> endDates = new ArrayList<>();
+    private final ArrayList<LocalDate> endDates = new ArrayList<>();
 
     private final ArrayList<String> dateLabels = new ArrayList<>();
 
@@ -122,14 +122,11 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
     public AbstractCrosstabReport() {
 
-        Preferences p = getPreferences();
-
-        Date startDate = new Date();
-        startDate = DateUtils.subtractYear(startDate);
+        final Preferences p = getPreferences();
 
         startDateField = new DatePanel();
         endDateField = new DatePanel();
-        startDateField.setDate(startDate);
+        startDateField.setDate(LocalDate.now().minusYears(1));
 
         hideZeroBalanceAccounts = new JCheckBox(ResourceUtils.getString("Button.HideZeroBalance"));
         hideZeroBalanceAccounts.setSelected(p.getBoolean(HIDE_ZERO_BALANCE, true));
@@ -163,14 +160,14 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
     @Override
     public String getSubTitle() {
         MessageFormat format = new MessageFormat(rb.getString("Pattern.DateRange"));
-        Object[] args = new Object[]{startDates.get(0), endDates.get(endDates.size() - 1)};
+        Object[] args = new Object[]{DateUtils.asDate(startDates.get(0)), DateUtils.asDate(endDates.get(endDates.size() - 1))};
 
         return format.format(args);
     }
 
     @Override
     protected void refreshReport() {
-        Preferences p = getPreferences();
+        final Preferences p = getPreferences();
 
         p.putBoolean(HIDE_ZERO_BALANCE, hideZeroBalanceAccounts.isSelected());
         p.putBoolean(USE_LONG_NAMES, showLongNamesCheckBox.isSelected());
@@ -186,50 +183,40 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
         endDates.clear();
         dateLabels.clear();
 
-        String currentResolution = (String) resolutionList.getSelectedItem();
+        final String currentResolution = (String) resolutionList.getSelectedItem();
 
-        Calendar cal = Calendar.getInstance();
+        final LocalDate globalStart = startDateField.getLocalDate();
+        final LocalDate globalEnd = endDateField.getLocalDate();
 
-        final Date globalStart = startDateField.getDate();
-        final Date globalEnd = endDateField.getDate();
-
-        Calendar globalStartCal = Calendar.getInstance();
-        globalStartCal.setTime(globalStart);
-
-        Calendar globalEndCal = Calendar.getInstance();
-        globalEndCal.setTime(globalEnd);
-
-        Date start = new Date(globalStart.getTime());
-        Date end = new Date(globalStart.getTime());
+        LocalDate start = globalStart;
+        LocalDate end = globalStart;
 
         if (RES_YEAR.equals(currentResolution)) {
-            while (end.before(globalEnd)) {
+            while (end.isBefore(globalEnd)) {
                 startDates.add(start);
-                end = DateUtils.getLastDayOfTheYear(start);
+                end = end.with(TemporalAdjusters.lastDayOfYear());
                 endDates.add(end);
-                cal.setTime(start);
-                dateLabels.add("    " + cal.get(Calendar.YEAR));
-                start = DateUtils.addDay(end);
+                dateLabels.add("    " + start.getYear());
+
+                start = end.plusDays(1);
             }
         } else if (RES_QUARTER.equals(currentResolution)) {
             int i = DateUtils.getQuarterNumber(start) - 1;
-            while (end.before(globalEnd)) {
+            while (end.isBefore(globalEnd)) {
                 startDates.add(start);
                 end = DateUtils.getLastDayOfTheQuarter(start);
                 endDates.add(end);
-                cal.setTime(start);
-                dateLabels.add(" " + cal.get(Calendar.YEAR) + "-Q" + (1 + i++ % 4));
-                start = DateUtils.addDay(end);
+                dateLabels.add(" " + start.getYear() + "-Q" + (1 + i++ % 4));
+                start = end.plusDays(1);
             }
         } else if (RES_MONTH.equals(currentResolution)) {
-            while (end.before(globalEnd)) {
+            while (end.isBefore(globalEnd)) {
                 startDates.add(start);
                 end = DateUtils.getLastDayOfTheMonth(start);
                 endDates.add(end);
-                cal.setTime(start);
-                int month = cal.get(Calendar.MONTH);
-                dateLabels.add(" " + cal.get(Calendar.YEAR) + (month < 9 ? "/0" + (month + 1) : "/" + (month + 1)));
-                start = DateUtils.addDay(end);
+                int month = start.getMonthValue();
+                dateLabels.add(" " + start.getYear() + (month < 9 ? "/0" + (month + 1) : "/" + (month + 1)));
+                start = end.plusDays(1);
             }
         }
 
@@ -269,17 +256,18 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
                     Collections.sort(list, Comparators.getAccountByPathName());
                 }
             } else if (SORT_ORDER_BALANCE_DESC.equals(sortOrder) || SORT_ORDER_BALANCE_DESC_WITH_PERCENTILE.equals(sortOrder)) {
-                Collections.sort(list, Comparators.getAccountByBalance(startDateField.getDate(), endDateField.getDate(), baseCurrency, ascendingSortOrder));
+                Collections.sort(list, Comparators.getAccountByBalance(startDateField.getLocalDate(),
+                        endDateField.getLocalDate(), baseCurrency, ascendingSortOrder));
             }
 
             if (needPercentiles) {
                 BigDecimal groupTotal = BigDecimal.ZERO;
                 for (Account a : list) {
-                    groupTotal = groupTotal.add(a.getBalance(startDateField.getDate(), endDateField.getDate(), baseCurrency));
+                    groupTotal = groupTotal.add(a.getBalance(startDateField.getLocalDate(), endDateField.getLocalDate(), baseCurrency));
                 }
                 BigDecimal sumSoFar = BigDecimal.ZERO;
                 for (Account a : list) {
-                    sumSoFar = sumSoFar.add(a.getBalance(startDateField.getDate(), endDateField.getDate(), baseCurrency));
+                    sumSoFar = sumSoFar.add(a.getBalance(startDateField.getLocalDate(), endDateField.getLocalDate(), baseCurrency));
                     percentileMap.put(a, sumSoFar.doubleValue() / groupTotal.doubleValue());
                 }
             }
@@ -546,10 +534,10 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
         @Override
         public Object getValue(int rowIndex) {
-            Account a = accountList.get(rowIndex);
+            final Account a = accountList.get(rowIndex);
 
-            Date startDate = startDates.get(0);
-            Date endDate = endDates.get(endDates.size() - 1);
+            final LocalDate startDate = startDates.get(0);
+            final LocalDate endDate = endDates.get(endDates.size() - 1);
 
             return a.getBalance(startDate, endDate, currency).negate();
         }
@@ -574,13 +562,13 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
         private final List<Account> accountList;
 
-        private final Date startDate;
+        private final LocalDate startDate;
 
-        private final Date endDate;
+        private final LocalDate endDate;
 
         private final CurrencyNode currency;
 
-        public DateRangeBalanceColumnInfo(List<Account> accountList, Date startDate, Date endDate, CurrencyNode currency) {
+        public DateRangeBalanceColumnInfo(List<Account> accountList, LocalDate startDate, LocalDate endDate, CurrencyNode currency) {
             this.accountList = accountList;
             this.startDate = startDate;
             this.endDate = endDate;

@@ -797,21 +797,21 @@ public class Account extends StoredObject implements Comparable<Account> {
      *
      * @return Date of first unreconciled transaction
      */
-    public Date getFirstUnreconciledTransactionDate() {
+    public LocalDate getFirstUnreconciledTransactionDate() {
         transactionLock.readLock().lock();
 
         try {
-            Date date = null;
+            LocalDate date = null;
 
             for (final Transaction transaction : getSortedTransactionList()) {
                 if (transaction.getReconciled(this) != ReconciledState.RECONCILED) {
-                    date = transaction.getDate();
+                    date = transaction.getLocalDate();
                     break;
                 }
             }
 
             if (date == null) {
-                date = getCachedSortedTransactionList().get(getTransactionCount() - 1).getDate();
+                date = getCachedSortedTransactionList().get(getTransactionCount() - 1).getLocalDate();
             }
 
             return date;
@@ -937,7 +937,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @param end   The inclusive end date
      * @return The ending balance
      */
-    public BigDecimal getBalance(final Date start, final Date end) {
+    public BigDecimal getBalance(final LocalDate start, final LocalDate end) {
         Objects.requireNonNull(start);
         Objects.requireNonNull(end);
 
@@ -959,7 +959,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @param node      The commodity to convert balance to
      * @return the account balance
      */
-    public BigDecimal getBalance(final Date startDate, final Date endDate, final CurrencyNode node) {
+    public BigDecimal getBalance(final LocalDate startDate, final LocalDate endDate, final CurrencyNode node) {
         transactionLock.readLock().lock();
 
         try {
@@ -977,7 +977,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @param end   End date inclusive
      * @return recursive account balance
      */
-    public BigDecimal getTreeBalance(final Date start, final Date end) {
+    public BigDecimal getTreeBalance(final LocalDate start, final LocalDate end) {
         Objects.requireNonNull(start);
         Objects.requireNonNull(end);
 
@@ -1026,7 +1026,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @param node  CurrencyNode to use for balance
      * @return account balance
      */
-    public BigDecimal getTreeBalance(final Date start, final Date end, final CurrencyNode node) {
+    public BigDecimal getTreeBalance(final LocalDate start, final LocalDate end, final CurrencyNode node) {
         Objects.requireNonNull(start);
         Objects.requireNonNull(end);
 
@@ -1047,22 +1047,6 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * Returns the account balance up to and inclusive of the supplied date
-     *
-     * @param date The inclusive ending date
-     * @return The ending balance
-     */
-    public BigDecimal getBalance(final Date date) {
-        transactionLock.readLock().lock();
-
-        try {
-            return getProxy().getBalance(date);
-        } finally {
-            transactionLock.readLock().unlock();
-        }
-    }
-
-    /**
      * Returns the account balance up to and inclusive of the supplied localDate
      *
      * @param localDate The inclusive ending localDate
@@ -1072,7 +1056,7 @@ public class Account extends StoredObject implements Comparable<Account> {
         transactionLock.readLock().lock();
 
         try {
-            return getProxy().getBalance(DateUtils.asDate(localDate));
+            return getProxy().getBalance(localDate);
         } finally {
             transactionLock.readLock().unlock();
         }
@@ -1086,7 +1070,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * @param date The inclusive ending date
      * @return The ending balance
      */
-    public BigDecimal getBalance(final Date date, final CurrencyNode node) {
+    public BigDecimal getBalance(final LocalDate date, final CurrencyNode node) {
         transactionLock.readLock().lock();
 
         try {

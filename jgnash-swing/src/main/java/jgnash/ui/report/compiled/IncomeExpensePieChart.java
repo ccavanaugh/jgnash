@@ -323,7 +323,7 @@ public class IncomeExpensePieChart {
 
         JFreeChart chart = new JFreeChart(title, JFreeChart.DEFAULT_TITLE_FONT, plot, false);
 
-        BigDecimal total = a.getTreeBalance(startField.getDate(), endField.getDate()).abs();
+        BigDecimal total = a.getTreeBalance(startField.getLocalDate(), endField.getLocalDate()).abs();
 
         String subtitle = valueFormat.format(total);
         if (!defaultCurrency.equals(a.getCurrencyNode()))
@@ -342,21 +342,21 @@ public class IncomeExpensePieChart {
         DefaultPieDataset returnValue = new DefaultPieDataset();
         if (a != null) {
 
-            BigDecimal total = a.getTreeBalance(startField.getDate(), endField.getDate(), a.getCurrencyNode());
+            BigDecimal total = a.getTreeBalance(startField.getLocalDate(), endField.getLocalDate(), a.getCurrencyNode());
 
             // abs() on all values won't work if children aren't of uniform sign,
             // then again, this chart is not right to display those trees
             boolean negate = total != null && total.floatValue() < 0;
 
             // accounts may have balances independent of their children
-            BigDecimal value = a.getBalance(startField.getDate(), endField.getDate());
+            BigDecimal value = a.getBalance(startField.getLocalDate(), endField.getLocalDate());
 
             if (value.compareTo(BigDecimal.ZERO) != 0) {
                 returnValue.setValue(a, negate ? value.negate() : value);
             }
 
             for (final Account child : a.getChildren(Comparators.getAccountByCode())) {
-                value = child.getTreeBalance(startField.getDate(), endField.getDate(), a.getCurrencyNode());
+                value = child.getTreeBalance(startField.getLocalDate(), endField.getLocalDate(), a.getCurrencyNode());
 
                 if (showEmptyCheck.isSelected() || value.compareTo(BigDecimal.ZERO) != 0) {
                     returnValue.setValue(child, negate ? value.negate() : value);

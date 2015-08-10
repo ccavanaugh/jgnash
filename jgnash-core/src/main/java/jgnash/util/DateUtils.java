@@ -23,9 +23,12 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -45,9 +48,11 @@ import java.util.regex.Pattern;
 @SuppressWarnings("MagicConstant")
 public class DateUtils {
 
+    private static final int MILLISECONDS_PER_SECOND = 1000;
+
     private static final int DAYS_PER_YEAR = 365;
 
-    private static final long MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
+    private static final long MILLISECONDS_PER_DAY = 24 * 60 * 60 * MILLISECONDS_PER_SECOND;
 
     private static final long AVERAGE_MILLISECONDS_PER_MONTH = (long) (365f * 24f * 60f * 60f * 1000f / 12f);
 
@@ -138,10 +143,28 @@ public class DateUtils {
      */
     public static LocalDate asLocalDate(final Date date) {
         if (date != null) {
-            return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate();
+            return asLocalDate(date.getTime());
         }
 
         return null;
+    }
+
+    /**
+     * Converts milliseconds from the epoch of 1970-01-01T00:00:00Z into a {@code LocalDate} using the default timezone.
+     * @param milli milliseconds from the epoch of 1970-01-01T00:00:00Z.
+     * @return an equivalent {@code LocalDate} or {@code null} if the supplied date was {@code null}
+     */
+    public static LocalDate asLocalDate(final long milli) {
+        return Instant.ofEpochMilli(milli).atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    /**
+     * Converts a LocaleDate into milliseconds from the epoch of 1970-01-01T00:00:00Z
+     * @param localDate {@code LocalDate} to convert
+     * @return and equivalent milliseconds from the epoch of 1970-01-01T00:00:00Z
+     */
+    public static long asEpochMilli(final LocalDate localDate) {
+        return localDate.atStartOfDay(ZoneId.systemDefault()).toEpochSecond() * MILLISECONDS_PER_SECOND;
     }
 
     /**
@@ -321,7 +344,7 @@ public class DateUtils {
      * @param date date
      * @return the year
      */
-    public static int getYear(final Date date) {
+    private static int getYear(final Date date) {
         final GregorianCalendar c = gregorianCalendarThreadLocal.get();
 
         c.setTime(date);
@@ -420,6 +443,17 @@ public class DateUtils {
     }
 
     /**
+     * Determines the difference in days of two dates
+     *
+     * @param startDate start date
+     * @param endDate   end date
+     * @return number of days
+     */
+    public static long getDifferenceInDays(final LocalDate startDate, final LocalDate endDate) {
+        return ChronoUnit.DAYS.between(startDate, endDate);
+    }
+
+    /**
      * Determines the difference in months of two dates
      *
      * @param startDate start date
@@ -483,6 +517,17 @@ public class DateUtils {
         c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.getActualMinimum(Calendar.DAY_OF_MONTH));
 
         return trimDate(c.getTime());
+    }
+
+    /**
+     * Returns a leveled date representing the first day of the month based on a
+     * specified date.
+     *
+     * @param date the base date to work from
+     * @return The last day of the month and year specified
+     */
+    public static LocalDate getFirstDayOfTheMonth(final LocalDate date) {
+       return date.with(TemporalAdjusters.firstDayOfMonth());
     }
 
     /**
@@ -609,21 +654,15 @@ public class DateUtils {
     }
 
     /**
-     * Returns a leveled date representing the last day of the month
+     * Returns date representing the last day of the month given a specified date.
      *
-     * @param month The month (index starts at 0)
-     * @param year  The year (index starts at 1)
-     * @return The last day of the month and year specified
+     * @param date the base date to work from
+     * @return The last day of the month of the supplied date
      */
-    public static Date getLastDayOfTheMonth(final int month, final int year) {
-        assert month >= 0 && month <= 11;
+    public static LocalDate getLastDayOfTheMonth(@NotNull final LocalDate date) {
+        Objects.requireNonNull(date);
 
-        final GregorianCalendar c = gregorianCalendarThreadLocal.get();
-
-        c.set(year, month, 15);
-        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.getActualMaximum(Calendar.DAY_OF_MONTH));
-
-        return trimDate(c.getTime());
+        return date.with(TemporalAdjusters.lastDayOfMonth());
     }
 
     /**
@@ -652,18 +691,18 @@ public class DateUtils {
     }
 
     /**
-     * Generates an array of dates starting on the first day of every month
-     * between the start and stop dates.
+     * Generates an array of dates ending on the last day of every month between
+     * the start and stop dates.
      *
      * @param startDate The date to start at
      * @param endDate   The data to stop at
      * @return The array of dates
      */
-    public static List<Date> getFirstDayOfTheMonths(final Date startDate, final Date endDate) {
-        final ArrayList<Date> list = new ArrayList<>();
+    public static List<LocalDate> getLastDayOfTheMonths(final LocalDate startDate, final LocalDate endDate) {
+        final ArrayList<LocalDate> list = new ArrayList<>();
 
-        final Date end = DateUtils.getFirstDayOfTheMonth(endDate);
-        Date t = DateUtils.getFirstDayOfTheMonth(startDate);
+        final LocalDate end = DateUtils.getLastDayOfTheMonth(endDate);
+        LocalDate t = DateUtils.getLastDayOfTheMonth(startDate);
 
         /*
          * add a month at a time to the previous date until all of the months
@@ -671,7 +710,34 @@ public class DateUtils {
          */
         while (before(t, end)) {
             list.add(t);
-            t = DateUtils.getFirstDayOfTheMonth(DateUtils.addMonth(t));
+
+            t = t.plusMonths(1);
+            t = t.with(TemporalAdjusters.lastDayOfMonth());
+        }
+        return list;
+    }
+
+    /**
+     * Generates an array of dates starting on the first day of every month
+     * between the start and stop dates.
+     *
+     * @param startDate The date to start at
+     * @param endDate   The data to stop at
+     * @return The array of dates
+     */
+    public static List<LocalDate> getFirstDayOfTheMonths(final LocalDate startDate, final LocalDate endDate) {
+        final ArrayList<LocalDate> list = new ArrayList<>();
+
+        final LocalDate end = DateUtils.getFirstDayOfTheMonth(endDate);
+        LocalDate t = DateUtils.getFirstDayOfTheMonth(startDate);
+
+        /*
+         * add a month at a time to the previous date until all of the months
+         * have been captured
+         */
+        while (before(t, end)) {
+            list.add(t);
+            t = t.with(TemporalAdjusters.firstDayOfNextMonth());
         }
         return list;
     }
@@ -703,6 +769,33 @@ public class DateUtils {
         }
 
         return trimDate(result);
+    }
+
+    /**
+     * Returns a {@code LocalDate} date representing the last day of the quarter based on
+     * a specified date.
+     *
+     * @param date the base date to work from
+     * @return The last day of the quarter specified
+     */
+    public static LocalDate getLastDayOfTheQuarter(final LocalDate date) {
+        Objects.requireNonNull(date);
+
+        LocalDate result;
+
+        LocalDate[] bounds = getQuarterBounds(date);
+
+        if (date.compareTo(bounds[2]) < 0) {
+            result = bounds[1];
+        } else if (date.compareTo(bounds[4]) < 0) {
+            result = bounds[3];
+        } else if (date.compareTo(bounds[6]) < 0) {
+            result = bounds[5];
+        } else {
+            result = bounds[7];
+        }
+
+        return result;
     }
 
     /**
@@ -769,6 +862,30 @@ public class DateUtils {
     }
 
     /**
+     * Returns an array of quarter bound dates of the year based on a specified
+     * date. The order is q1s, q1e, q2s, q2e, q3s, q3e, q4s, q4e.
+     *
+     * @param date the base date to work from
+     * @return The array of quarter bound dates
+     */
+    private static LocalDate[] getQuarterBounds(final LocalDate date) {
+        Objects.requireNonNull(date);
+
+        final LocalDate[] bounds = new LocalDate[8];
+
+        bounds[0] = date.with(TemporalAdjusters.firstDayOfYear());
+        bounds[1] = date.withMonth(Month.MARCH.getValue()).with(TemporalAdjusters.lastDayOfMonth());
+        bounds[2] = date.withMonth(Month.APRIL.getValue()).with(TemporalAdjusters.firstDayOfMonth());
+        bounds[3] = date.withMonth(Month.JUNE.getValue()).with(TemporalAdjusters.lastDayOfMonth());
+        bounds[4] = date.withMonth(Month.JULY.getValue()).with(TemporalAdjusters.firstDayOfMonth());
+        bounds[5] = date.withMonth(Month.SEPTEMBER.getValue()).with(TemporalAdjusters.lastDayOfMonth());
+        bounds[6] = date.withMonth(Month.OCTOBER.getValue()).with(TemporalAdjusters.firstDayOfMonth());
+        bounds[7] = date.with(TemporalAdjusters.lastDayOfYear());
+
+        return bounds;
+    }
+
+    /**
      * Returns the number of the quarter (i.e. 1, 2, 3 or 4) based on a
      * specified date.
      *
@@ -781,6 +898,33 @@ public class DateUtils {
         int result;
 
         Date[] bounds = getQuarterBounds(date);
+
+        if (date.compareTo(bounds[2]) < 0) {
+            result = 1;
+        } else if (date.compareTo(bounds[4]) < 0) {
+            result = 2;
+        } else if (date.compareTo(bounds[6]) < 0) {
+            result = 3;
+        } else {
+            result = 4;
+        }
+
+        return result;
+    }
+
+    /**
+     * Returns the number of the quarter (i.e. 1, 2, 3 or 4) based on a
+     * specified date.
+     *
+     * @param date the base date to work from
+     * @return The number of the quarter specified
+     */
+    public static int getQuarterNumber(final LocalDate date) {
+        Objects.requireNonNull(date);
+
+        int result;
+
+        LocalDate[] bounds = getQuarterBounds(date);
 
         if (date.compareTo(bounds[2]) < 0) {
             result = 1;

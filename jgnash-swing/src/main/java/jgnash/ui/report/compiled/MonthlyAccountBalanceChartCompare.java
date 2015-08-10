@@ -23,6 +23,8 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -308,16 +310,18 @@ public class MonthlyAccountBalanceChartCompare {
         //always use this method
         //if (subAccountCheckBox.isApproved()) {
         // Getting the dates to calculate
-        Date start = DateUtils.getFirstDayOfTheMonth(startDateField.getDate());
-        Date stop = DateUtils.getLastDayOfTheMonth(endDateField.getDate());
-        List<Date> list = DateUtils.getLastDayOfTheMonths(start, stop);
+        LocalDate start = startDateField.getLocalDate().with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate stop = endDateField.getLocalDate().with(TemporalAdjusters.lastDayOfMonth());
+
+        List<LocalDate> list = DateUtils.getLastDayOfTheMonths(start, stop);
+
         TimeSeries t = new TimeSeries(rb.getString("Column.Month"), rb.getString("Column.Month"), rb.getString("Column.Balance"));
         TimeSeries t2 = new TimeSeries(rb.getString("Column.Month"), rb.getString("Column.Month"), rb.getString("Column.Balance"));
 
         // For every month, calculate the total amount
-        for (Date aList : list) {
-            Date d = DateUtils.getLastDayOfTheMonth(aList);
-            Date s = DateUtils.getFirstDayOfTheMonth(aList);
+        for (final LocalDate localDate : list) {
+            final LocalDate d = localDate.with(TemporalAdjusters.lastDayOfMonth());
+            final LocalDate s = localDate.with(TemporalAdjusters.firstDayOfMonth());
 
             // Get the total amount for the account and every sub accounts
             // for the specified date
@@ -325,10 +329,10 @@ public class MonthlyAccountBalanceChartCompare {
             BigDecimal bd_TotalAmount = calculateTotal(s, d, account, subAccountCheckBox.isSelected(), account.getCurrencyNode());
 
             // Include it in the graph
-            t.add(new Month(aList), totalModulus(bd_TotalAmount, account.getAccountType()));
+            t.add(new Month(DateUtils.asDate(localDate)), totalModulus(bd_TotalAmount, account.getAccountType()));
             if (jcb_compare.isSelected()) {
                 bd_TotalAmount = calculateTotal(s, d, a2, subAccountCheckBox.isSelected(), account.getCurrencyNode());
-                t2.add(new Month(aList), totalModulus(bd_TotalAmount, a2.getAccountType()));
+                t2.add(new Month(DateUtils.asDate(localDate)), totalModulus(bd_TotalAmount, a2.getAccountType()));
             }
         }
 
@@ -368,7 +372,7 @@ public class MonthlyAccountBalanceChartCompare {
         */
     }
 
-    private static BigDecimal calculateTotal(final Date start, final Date end, final Account account, boolean recursive, final CurrencyNode baseCurrency) {
+    private static BigDecimal calculateTotal(final LocalDate start, final LocalDate end, final Account account, boolean recursive, final CurrencyNode baseCurrency) {
         BigDecimal amount;
         AccountType type = account.getAccountType();
 

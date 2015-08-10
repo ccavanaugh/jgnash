@@ -21,6 +21,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -87,7 +88,7 @@ public final class JDateField extends JTextFieldEx {
         return dateValue();
     }
 
-    public Date dateValue() {
+    private Date dateValue() {
         Date tDate = new Date();
         try {
             tDate.setTime(formatter.parse(getText()).getTime());
@@ -95,6 +96,10 @@ public final class JDateField extends JTextFieldEx {
             LOG.log(Level.INFO, e.getLocalizedMessage(), e);
         }
         return tDate;
+    }
+
+    public LocalDate localDateValue() {
+        return DateUtils.asLocalDate(dateValue());
     }
 
     @Override

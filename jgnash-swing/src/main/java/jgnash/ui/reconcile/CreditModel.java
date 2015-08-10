@@ -17,23 +17,22 @@
  */
 package jgnash.ui.reconcile;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import jgnash.engine.Account;
 import jgnash.engine.Transaction;
 
 /**
  * @author Craig Cavanaugh
- *
  */
 class CreditModel extends AbstractReconcileTableModel {
 
-    CreditModel(final Account account, final Date openingDate) {
+    CreditModel(final Account account, final LocalDate openingDate) {
         super(account, openingDate);
     }
 
     @Override
-    boolean isShowable(final Transaction t) {
+    boolean isVisible(final Transaction t) {
         return t.getAmount(account).signum() >= 0;
     }
 }

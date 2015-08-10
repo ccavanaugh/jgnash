@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
@@ -69,7 +70,7 @@ public class ProfitLossTXT {
 
     private CurrencyNode baseCommodity;
 
-    private Date[] dates;
+    private LocalDate[] dates;
 
     private final ResourceBundle rb = ResourceUtils.getBundle();
 
@@ -138,7 +139,7 @@ public class ProfitLossTXT {
 
     }
 
-    void writePLFile(final String fileName) {
+    private void writePLFile(final String fileName) {
         if (fileName == null || dates == null) {
             return;
         }
@@ -155,17 +156,11 @@ public class ProfitLossTXT {
         }         
     }
 
-    private static Date[] getLastDays(final Date start, final Date stop) {
-        ArrayList<Date> list = new ArrayList<>();
-
-        Date s = DateUtils.trimDate(start);
-        Date t = DateUtils.trimDate(stop);
-        list.add(s);
-        list.add(t);
-        return list.toArray(new Date[list.size()]);
+    private static LocalDate[] getLastDays(final LocalDate start, final LocalDate stop) {
+        return new LocalDate[] {start, stop};
     }
 
-    Date[] getDates() {
+    private LocalDate[] getDates() {
 
         Date start = new Date();
         start = DateUtils.subtractYear(start);
@@ -190,13 +185,13 @@ public class ProfitLossTXT {
         int option = JOptionPane.showConfirmDialog(null, new Object[] { panel }, rb.getString("Message.StartEndDate"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (option == JOptionPane.OK_OPTION) {
-            return getLastDays(startField.dateValue(), endField.dateValue());
+            return getLastDays(startField.localDateValue(), endField.localDateValue());
         }
 
         return null;
     }
 
-    String getFileName() {
+    private String getFileName() {
         JFileChooser chooser = new JFileChooser();
         chooser.setMultiSelectionEnabled(false);
         chooser.addChoosableFileFilter(new FileNameExtensionFilter(rb.getString("Message.TXTFile"), "txt"));
@@ -260,7 +255,7 @@ public class ProfitLossTXT {
         return sb.toString();
     }
 
-    void getBalances(final Account a, final Date[] dates1, final AccountType type) {
+    private void getBalances(final Account a, final LocalDate[] dates1, final AccountType type) {
 
         for (final Account child : a.getChildren(Comparators.getAccountByCode())) {
             if ((child.getTransactionCount() > 0) && type == child.getAccountType()) {

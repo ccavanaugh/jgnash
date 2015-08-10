@@ -27,7 +27,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import javax.swing.JButton;
@@ -81,7 +81,7 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
 
     private final Account account;
 
-    private final Date closingDate;
+    private final LocalDate closingDate;
 
     private final BigDecimal openingBalance;
 
@@ -125,7 +125,7 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
 
     private final ResourceBundle rb = ResourceUtils.getBundle();
 
-    public ReconcileDialog(final Account reconcileAccount, final Date closingDate, final BigDecimal openingBalance, final BigDecimal endingBalance) {
+    public ReconcileDialog(final Account reconcileAccount, final LocalDate closingDate, final BigDecimal openingBalance, final BigDecimal endingBalance) {
         super(UIApplication.getFrame(), false);
 
         account = reconcileAccount;
@@ -370,7 +370,8 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
             // save the closing date of the last successful reconciliation
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             if (engine != null) {
-                engine.setAccountAttribute(account, Account.RECONCILE_LAST_SUCCESS_DATE, Long.toString(DateUtils.trimDate(closingDate).getTime()));
+                engine.setAccountAttribute(account, Account.RECONCILE_LAST_SUCCESS_DATE,
+                        Long.toString(DateUtils.asEpochMilli(closingDate)));
             }
 
             commitChanges(ReconciledState.RECONCILED);

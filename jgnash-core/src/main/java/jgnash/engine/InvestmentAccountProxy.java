@@ -19,12 +19,9 @@ package jgnash.engine;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
-
-import jgnash.util.DateUtils;
 
 /**
  * Investment Account Proxy class
@@ -38,8 +35,8 @@ public class InvestmentAccountProxy extends AccountProxy {
     }
 
     @Override
-    public BigDecimal getBalance(final Date start, final Date end) {
-        return getCashBalance(start, end).add(getMarketValue(DateUtils.asLocalDate(start), DateUtils.asLocalDate(end)));
+    public BigDecimal getBalance(final LocalDate start, final LocalDate end) {
+        return getCashBalance(start, end).add(getMarketValue(start, end));
     }
 
     /**
@@ -53,8 +50,8 @@ public class InvestmentAccountProxy extends AccountProxy {
     }
 
     @Override
-    public BigDecimal getBalance(final Date date) {
-        return getCashBalance(date).add(getMarketValue(DateUtils.asLocalDate(date)));
+    public BigDecimal getBalance(final LocalDate date) {
+        return getCashBalance(date).add(getMarketValue(date));
     }
 
     /**
@@ -86,7 +83,7 @@ public class InvestmentAccountProxy extends AccountProxy {
      * @param end   The inclusive end date
      * @return The ending balance
      */
-    public BigDecimal getCashBalance(final Date start, final Date end) {
+    private BigDecimal getCashBalance(final LocalDate start, final LocalDate end) {
         return super.getBalance(start, end);
     }
 
@@ -96,12 +93,13 @@ public class InvestmentAccountProxy extends AccountProxy {
      * @param end The inclusive ending date
      * @return The ending cash balance
      */
-    public BigDecimal getCashBalance(final Date end) {
+    private BigDecimal getCashBalance(final LocalDate end) {
         final Lock l = account.getTransactionLock().readLock();
         l.lock();
 
         try {
-            return !account.transactions.isEmpty() ? getCashBalance(account.getSortedTransactionList().get(0).getDate(), end) : BigDecimal.ZERO;
+            return !account.transactions.isEmpty()
+                    ? getCashBalance(account.getSortedTransactionList().get(0).getLocalDate(), end) : BigDecimal.ZERO;
         } finally {
             l.unlock();
         }
@@ -116,7 +114,7 @@ public class InvestmentAccountProxy extends AccountProxy {
      * @param date date to search against
      * @return market price
      */
-    public BigDecimal getMarketPrice(final SecurityNode node, final LocalDate date) {
+    private BigDecimal getMarketPrice(final SecurityNode node, final LocalDate date) {
         account.getTransactionLock().readLock().lock();
 
         try {
@@ -174,7 +172,7 @@ public class InvestmentAccountProxy extends AccountProxy {
      * @param date the end date to calculate the market value
      * @return the ending balance
      */
-    public BigDecimal getMarketValue(final LocalDate date) {
+    private BigDecimal getMarketValue(final LocalDate date) {
         final Lock l = account.getTransactionLock().readLock();
         l.lock();
 
@@ -198,7 +196,7 @@ public class InvestmentAccountProxy extends AccountProxy {
      * @param end   inclusive end date
      * @return market value
      */
-    public BigDecimal getMarketValue(final LocalDate start, final LocalDate end) {
+    private BigDecimal getMarketValue(final LocalDate start, final LocalDate end) {
         final Lock l = account.getTransactionLock().readLock();
         l.lock();
 
@@ -316,14 +314,14 @@ public class InvestmentAccountProxy extends AccountProxy {
         l.lock();
 
         try {
-            final Date date = account.getFirstUnreconciledTransactionDate();
+            final LocalDate date = account.getFirstUnreconciledTransactionDate();
 
             BigDecimal balance = BigDecimal.ZERO;
 
             final List<Transaction> transactions = account.getSortedTransactionList();
 
             for (int i = 0; i < transactions.size(); i++) {
-                if (transactions.get(i).getDate().equals(date)) {
+                if (transactions.get(i).getLocalDate().equals(date)) {
                     if (i > 0) {
                         balance = getCashBalanceAt(i - 1).add(getMarketValueAt(i - 1));
                     }

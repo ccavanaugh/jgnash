@@ -18,8 +18,8 @@
 package jgnash.ui.report.compiled;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,7 +28,6 @@ import jgnash.engine.AccountGroup;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.util.DateUtils;
 
 /**
  * Balance Sheet Report
@@ -42,7 +41,7 @@ public class BalanceSheetReport extends AbstractSumByTypeReport {
     }
 
     @Override
-    protected ReportModel createReportModel(final Date startDate, final Date endDate) {
+    protected ReportModel createReportModel(final LocalDate startDate, final LocalDate endDate) {
         ReportModel model = super.createReportModel(startDate, endDate);
 
         // load retained profit and loss row        
@@ -104,8 +103,8 @@ public class BalanceSheetReport extends AbstractSumByTypeReport {
             } else if (columnIndex == getColumnCount() - 1) { // group column              
                 return AccountGroup.EQUITY.toString();
             } else if (columnIndex > 0 && columnIndex <= dates.size()) {
-                Date startDate = dates.get(columnIndex - 1);
-                Date endDate = DateUtils.subtractDay(dates.get(columnIndex));
+                final LocalDate startDate = dates.get(columnIndex - 1);
+                final LocalDate endDate = dates.get(columnIndex).minusDays(1);
 
                 return getRetainedProfitLoss(startDate, endDate);
             }
@@ -127,7 +126,7 @@ public class BalanceSheetReport extends AbstractSumByTypeReport {
          * @param endDate End date for the period
          * @return the profit or loss for the period
          */
-        private BigDecimal getRetainedProfitLoss(final Date startDate, final Date endDate) {
+        private BigDecimal getRetainedProfitLoss(final LocalDate startDate, final LocalDate endDate) {
             BigDecimal profitLoss = BigDecimal.ZERO;
 
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);

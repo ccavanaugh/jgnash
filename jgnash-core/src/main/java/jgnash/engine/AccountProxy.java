@@ -18,7 +18,7 @@
 package jgnash.engine;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 
@@ -44,7 +44,7 @@ class AccountProxy {
      * @return the balance of this account
      */
     public BigDecimal getBalance() {
-        Lock l = account.getTransactionLock().readLock();
+        final Lock l = account.getTransactionLock().readLock();
         l.lock();
 
         try {
@@ -67,7 +67,7 @@ class AccountProxy {
      * @return the balance of this account at the specified index.
      */
     public BigDecimal getBalanceAt(final int index) {
-        Lock l = account.getTransactionLock().readLock();
+        final Lock l = account.getTransactionLock().readLock();
         l.lock();
 
         try {
@@ -91,15 +91,15 @@ class AccountProxy {
      * @param end   The inclusive end date
      * @return The ending balance
      */
-    public BigDecimal getBalance(final Date start, final Date end) {
-        Lock l = account.getTransactionLock().readLock();
+    public BigDecimal getBalance(final LocalDate start, final LocalDate end) {
+        final Lock l = account.getTransactionLock().readLock();
         l.lock();
 
         try {
             BigDecimal balance = BigDecimal.ZERO;
 
             for (final Transaction t : account.getSortedTransactionList()) {
-                final Date d = t.getDate();
+                final LocalDate d = t.getLocalDate();
 
                 if (DateUtils.after(d, start) && DateUtils.before(d, end)) {
                     balance = balance.add(t.getAmount(account));
@@ -118,15 +118,15 @@ class AccountProxy {
      * @param date The inclusive ending date
      * @return The ending balance
      */
-    public BigDecimal getBalance(final Date date) {
-        Lock l = account.getTransactionLock().readLock();
+    public BigDecimal getBalance(final LocalDate date) {
+        final Lock l = account.getTransactionLock().readLock();
         l.lock();
 
         try {
             BigDecimal balance = BigDecimal.ZERO;
 
             if (!account.transactions.isEmpty()) {
-                balance = getBalance(account.getSortedTransactionList().get(0).getDate(), date);
+                balance = getBalance(account.getSortedTransactionList().get(0).getLocalDate(), date);
             }
 
             return balance;
@@ -159,7 +159,7 @@ class AccountProxy {
      * @return the reconciled balance of this account
      */
     public BigDecimal getReconciledBalance() {
-        Lock l = account.getTransactionLock().readLock();
+        final Lock l = account.getTransactionLock().readLock();
         l.lock();
 
         try {
@@ -184,18 +184,18 @@ class AccountProxy {
      * @return Opening balance for reconciling the account
      */
     public BigDecimal getOpeningBalanceForReconcile() {
-        Lock l = account.getTransactionLock().readLock();
+        final Lock l = account.getTransactionLock().readLock();
         l.lock();
 
         try {
-            final Date date = account.getFirstUnreconciledTransactionDate();
+            final LocalDate date = account.getFirstUnreconciledTransactionDate();
 
             final List<Transaction> transactions = account.getSortedTransactionList();
 
             BigDecimal balance = BigDecimal.ZERO;
 
             for (int i = 0; i < transactions.size(); i++) {
-                if (transactions.get(i).getDate().equals(date)) {
+                if (transactions.get(i).getLocalDate().equals(date)) {
                     if (i > 0) {
                         balance = getBalanceAt(i - 1);
                     }

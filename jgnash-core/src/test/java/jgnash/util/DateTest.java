@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -79,6 +80,25 @@ public class DateTest {
         final Date now = DateUtils.asDate(localDateTime);
 
         assertEquals(format.format(now), dateTimeFormatter.format(localDateTime));
+    }
+
+    @Test
+    public void formatTestThree() throws ParseException {
+        final SimpleDateFormat format = new SimpleDateFormat("MMMMM");
+        //final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.o
+
+        final LocalDate localDateTime = LocalDate.now();
+        final Date now = DateUtils.asDate(localDateTime);
+
+        assertEquals(format.format(now), localDateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()));
+    }
+
+    @Test
+    public void epochTest() {
+        final LocalDate now = LocalDate.now();
+
+        // round trip
+        assertEquals(now, DateUtils.asLocalDate(DateUtils.asEpochMilli(now)));
     }
 
     @Test
@@ -248,6 +268,21 @@ public class DateTest {
 
         end = DateUtils.getDateOfTheYear(2012, 2);
         assertEquals(366, DateUtils.getDifferenceInDays(start, end));
+    }
+
+    @Test
+    public void getDifferenceInLocalDaysTest() {
+        final LocalDate start = LocalDate.ofYearDay(2011, 1);
+
+        assertEquals(0, DateUtils.getDifferenceInDays(start, LocalDate.ofYearDay(2011, 1)));
+
+        assertEquals(1, DateUtils.getDifferenceInDays(start, LocalDate.ofYearDay(2011, 2)));
+
+        assertEquals(2, DateUtils.getDifferenceInDays(start, LocalDate.ofYearDay(2011, 3)));
+
+        assertEquals(365, DateUtils.getDifferenceInDays(start, LocalDate.ofYearDay(2012, 1)));
+
+        assertEquals(366, DateUtils.getDifferenceInDays(start, LocalDate.ofYearDay(2012, 2)));
     }
 
     @Test
