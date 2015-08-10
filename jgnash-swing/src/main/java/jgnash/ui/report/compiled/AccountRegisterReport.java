@@ -72,7 +72,7 @@ public class AccountRegisterReport extends DynamicJasperReport {
 
     private final JCheckBox filterCheckBox;
 
-    private static final String FILTERTAG = "filter:";
+    private static final String FILTER_TAG = "filter:";
 
     private TextField txtFilter;
 
@@ -95,13 +95,13 @@ public class AccountRegisterReport extends DynamicJasperReport {
 
         startDateField = new DatePanel();
         if (a.getTransactionCount() > 0) {
-            startDateField.setDate(a.getTransactionAt(0).getDate());
+            startDateField.setDate(a.getTransactionAt(0).getLocalDate());
         }
 
         endDateField = new DatePanel();
 
         filterCheckBox = new JCheckBox(rb.getString("Button.Filter"));
-        filterCheckBox.setSelected(getPreferences().getBoolean(FILTERTAG, false));
+        filterCheckBox.setSelected(getPreferences().getBoolean(FILTER_TAG, false));
         filterCheckBox.addActionListener(new AbstractAction() {
 
             @Override
@@ -140,8 +140,8 @@ public class AccountRegisterReport extends DynamicJasperReport {
         this.endIndex = endIndex;
 
         try {
-            startDateField.setDate(account.getTransactionAt(startIndex).getDate());
-            endDateField.setDate(account.getTransactionAt(endIndex).getDate());
+            startDateField.setDate(account.getTransactionAt(startIndex).getLocalDate());
+            endDateField.setDate(account.getTransactionAt(endIndex).getLocalDate());
         } catch (Exception e) {
             logger.log(Level.WARNING, e.getLocalizedMessage(), e);
         }

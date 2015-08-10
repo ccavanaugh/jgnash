@@ -32,8 +32,8 @@ import java.awt.print.PrinterException;
 import java.awt.print.PrinterGraphics;
 import java.awt.print.PrinterJob;
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -51,6 +51,7 @@ import jgnash.engine.Transaction;
 import jgnash.engine.checks.CheckLayout;
 import jgnash.engine.checks.CheckObject;
 import jgnash.text.BigDecimalToWords;
+import jgnash.util.DateUtils;
 
 /**
  * Check layout object
@@ -193,7 +194,7 @@ class PrintableCheckLayout implements Printable {
         this.testPrint = testPrint;
     }
 
-    private void drawCheck(final Graphics2D g2, final Rectangle2D bounds, final BigDecimal amount, final Date date, final String memo, final String payee) {
+    private void drawCheck(final Graphics2D g2, final Rectangle2D bounds, final BigDecimal amount, final LocalDate date, final String memo, final String payee) {
 
         font = new Font("Serif", Font.PLAIN, 10);
         testPrintFont = new Font("Serif", Font.BOLD, 9);
@@ -256,7 +257,7 @@ class PrintableCheckLayout implements Printable {
                     String payee = list[i].getPayee();
                     String memo = list[i].getMemo();
                     BigDecimal amount = list[i].getAmount(list[i].getCommonAccount()).abs();
-                    Date date = list[i].getDate();
+                    LocalDate date = list[i].getLocalDate();
 
                     drawCheck(g2, bounds, amount, date, memo, payee);
                 }
@@ -265,20 +266,20 @@ class PrintableCheckLayout implements Printable {
                 String payee = "Expensive bank USA";
                 String memo = "I spent too much on the widget";
                 BigDecimal amount = new BigDecimal("12345.67");
-                Date date = new Date();
+                LocalDate date = LocalDate.now();
 
                 drawCheck(g2, bounds, amount, date, memo, payee);
             }
         }
     }
 
-    private void drawDate(final Graphics2D g2, final CheckObject object, final float offset, final Date date) {
-        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+    private void drawDate(final Graphics2D g2, final CheckObject object, final float offset, final LocalDate date) {
+        final DateTimeFormatter df = DateUtils.getShortDateTimeFormat();
 
         float dateX = object.getX();
         float dateY = object.getY() + offset;
-        TextLayout tdate = new TextLayout(df.format(date), font, frc);
-        tdate.draw(g2, dateX, dateY);
+        TextLayout textLayout = new TextLayout(df.format(date), font, frc);
+        textLayout.draw(g2, dateX, dateY);
 
         if (testPrint) {
             TextLayout dateText = new TextLayout("DATE", testPrintFont, frc);
@@ -332,8 +333,8 @@ class PrintableCheckLayout implements Printable {
         float payeeY = object.getY() + offset;
 
         if (payee != null && !payee.isEmpty()) {
-            TextLayout tpayee = new TextLayout(payee, font, frc);
-            tpayee.draw(g2, payeeX, payeeY);
+            TextLayout textLayout = new TextLayout(payee, font, frc);
+            textLayout.draw(g2, payeeX, payeeY);
         }
 
         if (testPrint) {

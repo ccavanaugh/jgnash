@@ -22,8 +22,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.NumberFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -217,7 +217,7 @@ class TransactionListDialog extends JDialog implements ActionListener, ListSelec
         private final String[] columnNames = { rb.getString("Column.Print"), rb.getString("Column.Date"),
                         rb.getString("Column.Payee"), rb.getString("Column.Account"), rb.getString("Column.Amount") };
 
-        private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
+        private final DateTimeFormatter dateFormatter = DateUtils.getShortDateTimeFormat();
 
         Model(final List<Transaction> list) {
             wrapperList.addAll(list.stream().map(Wrapper::new).collect(Collectors.toList()));
@@ -287,7 +287,7 @@ class TransactionListDialog extends JDialog implements ActionListener, ListSelec
                     }
                     return null;
                 case 1:
-                    return dateFormatter.format(w.transaction.getDate());
+                    return dateFormatter.format(w.transaction.getLocalDate());
                 case 2:
                     return w.transaction.getPayee();
                 case 3:
