@@ -286,10 +286,6 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         cachedLocalDate = localDate;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
     public LocalDate getLocalDate() {
         return cachedLocalDate;
     }

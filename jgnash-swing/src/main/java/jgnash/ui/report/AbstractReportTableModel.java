@@ -18,9 +18,9 @@
 package jgnash.ui.report;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,7 +35,6 @@ import jgnash.util.DateUtils;
  * Report model interface
  *
  * @author Craig Cavanaugh
- *
  */
 public abstract class AbstractReportTableModel extends AbstractTableModel {
 
@@ -153,14 +152,14 @@ public abstract class AbstractReportTableModel extends AbstractTableModel {
                 }
             }
         } else if (getColumnStyle(columnIndex) == ColumnStyle.SHORT_DATE) {
-            DateFormat format = DateUtils.getShortDateFormat();
+            final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateTimeFormat();
 
             for (int i = 0; i < getRowCount(); i++) {
                 try {
-                    Date date = (Date) getValueAt(i, columnIndex);
+                    LocalDate date = (LocalDate) getValueAt(i, columnIndex);
 
                     if (date != null) {
-                        String val = format.format(date);
+                        String val = dateTimeFormatter.format(date);
                         if (val.length() > longest.length()) {
                             longest = val;
                         }

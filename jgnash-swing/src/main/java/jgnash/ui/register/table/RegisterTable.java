@@ -29,9 +29,10 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 
 import jgnash.engine.Account;
 import jgnash.engine.CommodityNode;
@@ -56,7 +57,7 @@ public class RegisterTable extends FormattedJTable {
 
     private NumberFormat shortFormat;
 
-    private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
+    private final DateTimeFormatter dateFormatter = DateUtils.getShortDateTimeFormat();
 
     public RegisterTable(final AccountTableModel dm) {
         super(dm);
@@ -96,7 +97,7 @@ public class RegisterTable extends FormattedJTable {
         if (getModel() instanceof AbstractRegisterTableModel) {
             Transaction t = ((AbstractRegisterTableModel) getModel()).getTransactionAt(row);
 
-            if (t.getDate().after(new Date())) {
+            if (t.getLocalDate().isAfter(LocalDate.now())) {
                 c.setFont(c.getFont().deriveFont(Font.ITALIC));
             }
 
@@ -112,9 +113,9 @@ public class RegisterTable extends FormattedJTable {
             }
         }
 
-        if (Date.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
-            if (value != null && value instanceof Date) {
-                ((JLabel) c).setText(dateFormatter.format(value));
+        if (LocalDate.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
+            if (value != null && value instanceof LocalDate) {
+                ((JLabel) c).setText(dateFormatter.format((TemporalAccessor) value));
             }
         } else if (FullCommodityStyle.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
 

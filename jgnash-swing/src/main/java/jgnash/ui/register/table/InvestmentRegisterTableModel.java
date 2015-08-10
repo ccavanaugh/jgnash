@@ -18,7 +18,7 @@
 package jgnash.ui.register.table;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 import jgnash.engine.Account;
 import jgnash.engine.InvestmentTransaction;
@@ -39,7 +39,7 @@ public class InvestmentRegisterTableModel extends AbstractRegisterTableModel {
 
     private static final int[] PREF_COLUMN_WEIGHTS = { 0, 0, 20, 0, 0, 0, 0 };
 
-    private static final Class<?>[] clazz = { Date.class, String.class, String.class, String.class, QuantityStyle.class,
+    private static final Class<?>[] clazz = { LocalDate.class, String.class, String.class, String.class, QuantityStyle.class,
                     ShortCommodityStyle.class, ShortCommodityStyle.class };
 
     public InvestmentRegisterTableModel(Account account) {
@@ -58,7 +58,7 @@ public class InvestmentRegisterTableModel extends AbstractRegisterTableModel {
 
         switch (col) {
             case 0:
-                return t.getDate();
+                return t.getLocalDate();
             case 1:
                 if (_t != null) {
                     return _t.getTransactionType().toString();

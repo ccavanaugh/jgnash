@@ -43,11 +43,10 @@ import ar.com.fdvs.dj.domain.entities.columns.PropertyColumn;
 import java.awt.Color;
 import java.awt.print.PageFormat;
 import java.awt.print.Paper;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -195,8 +194,7 @@ public abstract class DynamicJasperReport {
      * @return subtitle
      */
     protected String getSubTitle() {
-        DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
-        return df.format(new Date());
+        return DateTimeFormatter.ISO_DATE.format(LocalDate.now());
     }
 
     /**
@@ -385,8 +383,7 @@ public abstract class DynamicJasperReport {
                         String pattern = ((DecimalFormat) nf).toPattern();
                         builder.setPattern(pattern);
                     } else if (model.getColumnStyle(i) == ColumnStyle.SHORT_DATE) {
-                        String pattern = ((SimpleDateFormat) DateUtils.getShortDateFormat()).toPattern();
-                        builder.setPattern(pattern);
+                        builder.setTextFormatter(DateUtils.getShortDateTimeFormat().toFormat());
                     } else if (model.getColumnStyle(i) == ColumnStyle.SHORT_AMOUNT) {
                         String pattern = CommodityFormat.getShortNumberPattern(model.getCurrency());
                         builder.setPattern(pattern);

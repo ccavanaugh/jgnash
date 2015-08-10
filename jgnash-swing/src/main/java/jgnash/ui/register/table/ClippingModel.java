@@ -17,7 +17,7 @@
  */
 package jgnash.ui.register.table;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * Interface for a clipping register table model.  The top and bottom of the data will be
@@ -29,12 +29,12 @@ public interface ClippingModel extends RegisterModel {
     /**
      * @param startDate The startDate to set.
      */
-    void setStartDate(Date startDate);
+    void setStartDate(LocalDate startDate);
 
     /**
      * @param stopDate The stopDate to set.
      */
-    void setEndDate(Date stopDate);
+    void setEndDate(LocalDate stopDate);
 
     void setEndIndex(int end);
 

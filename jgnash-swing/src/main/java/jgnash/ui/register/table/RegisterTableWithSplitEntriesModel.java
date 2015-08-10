@@ -73,7 +73,7 @@ public class RegisterTableWithSplitEntriesModel extends RegisterTableModel {
                 if (showDetail) {
                     return null;
                 }
-                return wrapper.transaction.getDate();
+                return wrapper.transaction.getLocalDate();
             case 1:
                 if (showDetail) {
                     return null;

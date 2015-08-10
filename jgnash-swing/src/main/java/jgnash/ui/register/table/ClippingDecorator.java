@@ -17,7 +17,7 @@
  */
 package jgnash.ui.register.table;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.swing.event.TableModelListener;
 
@@ -35,9 +35,9 @@ public final class ClippingDecorator implements ClippingModel {
 
     private final AbstractRegisterTableModel model;
 
-    private Date endDate = new Date();
+    private LocalDate endDate = LocalDate.now();
 
-    private Date startDate = new Date();
+    private LocalDate startDate = LocalDate.now();
 
     private int startIndex = 0;
 
@@ -48,7 +48,7 @@ public final class ClippingDecorator implements ClippingModel {
 
         if (model.getRowCount() > 0) {
 
-            startDate = model.getTransactionAt(0).getDate();
+            startDate = model.getTransactionAt(0).getLocalDate();
 
             endIndex = model.getRowCount() - 1;
 
@@ -57,10 +57,10 @@ public final class ClippingDecorator implements ClippingModel {
     }
 
     /**
-     * @see jgnash.ui.register.table.ClippingModel#setStartDate(java.util.Date)
+     * @see jgnash.ui.register.table.ClippingModel#setStartDate(java.time.LocalDate)
      */
     @Override
-    public void setStartDate(final Date startDate) {
+    public void setStartDate(final LocalDate startDate) {
         findStartIndex(startDate);
     }
 
@@ -84,10 +84,10 @@ public final class ClippingDecorator implements ClippingModel {
 //    }
 
     /**
-     * @see jgnash.ui.register.table.ClippingModel#setEndDate(java.util.Date)
+     * @see jgnash.ui.register.table.ClippingModel#setEndDate(java.time.LocalDate)
      */
     @Override
-    public void setEndDate(final Date stopDate) {
+    public void setEndDate(final LocalDate stopDate) {
         findStopIndex(stopDate);
     }
 
@@ -97,12 +97,12 @@ public final class ClippingDecorator implements ClippingModel {
     }
 
 
-    private Date getEndDate() {
-        Date date = new Date();
+    private LocalDate getEndDate() {
+        LocalDate date = LocalDate.now();
 
         /* Do not assume the model/account has any transactions */
         if (model.getRowCount() > 0) {
-            date = model.getTransactionAt(endIndex).getDate();
+            date = model.getTransactionAt(endIndex).getLocalDate();
         }
         return date;
     }
@@ -137,12 +137,12 @@ public final class ClippingDecorator implements ClippingModel {
         if (endIndex == startIndex) {
 
             Transaction t = getAccount().getTransactionAt(getAccount().getTransactionCount() - 1);
-            if (DateUtils.before(t.getDate(), startDate, false)) {
+            if (DateUtils.before(t.getLocalDate(), startDate, false)) {
                 return 0;
             }
 
             t = model.getTransactionAt(startIndex);
-            if (DateUtils.after(t.getDate(), startDate, true) && DateUtils.before(t.getDate(), endDate, true)) {
+            if (DateUtils.after(t.getLocalDate(), startDate) && DateUtils.before(t.getLocalDate(), endDate, true)) {
                 return 1;
             }
             return 0;
@@ -217,12 +217,12 @@ public final class ClippingDecorator implements ClippingModel {
         model.removeTableModelListener(arg0);
     }
 
-    private void findStartIndex(final Date date) {
+    private void findStartIndex(final LocalDate date) {
         startDate = date;
 
         for (int i = 0; i < model.getRowCount(); i++) {
             Transaction t = model.getTransactionAt(i);
-            if (DateUtils.after(t.getDate(), date, true)) {
+            if (DateUtils.after(t.getLocalDate(), date)) {
                 startIndex = i;
                 return;
             }
@@ -230,12 +230,12 @@ public final class ClippingDecorator implements ClippingModel {
         startIndex = model.getRowCount() - 1;
     }
 
-    private void findStopIndex(final Date date) {
+    private void findStopIndex(final LocalDate date) {
         endDate = date;
 
         for (int i = model.getRowCount() - 1; i >= 0; i--) {
             Transaction t = model.getTransactionAt(i);
-            if (DateUtils.before(t.getDate(), date, true)) {
+            if (DateUtils.before(t.getLocalDate(), date)) {
                 endIndex = i;
                 return;
             }

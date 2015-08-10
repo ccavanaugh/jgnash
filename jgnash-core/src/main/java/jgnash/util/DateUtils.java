@@ -263,18 +263,6 @@ public class DateUtils {
     }
 
     /**
-     * Determines if Date d1 occurs after Date d2.
-     *
-     * @param d1        date 1
-     * @param d2        date 2
-     * @param inclusive {@code true} is comparison is inclusive
-     * @return {@code true} if d1 occurs after d2
-     */
-    public static boolean after(final Date d1, final Date d2, final boolean inclusive) {
-        return before(d2, d1, inclusive);
-    }
-
-    /**
      * Determines if Date d1 occurs before Date d2. The specified dates are
      * inclusive
      *

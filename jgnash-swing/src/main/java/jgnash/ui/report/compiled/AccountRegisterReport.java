@@ -20,7 +20,7 @@ package jgnash.ui.report.compiled;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.logging.Level;
 
 import javax.swing.AbstractAction;
@@ -176,8 +176,8 @@ public class AccountRegisterReport extends DynamicJasperReport {
             endIndex = 0;
             startIndex = 0;
         } else {
-            model.setStartDate(startDateField.getDate());
-            model.setEndDate(endDateField.getDate());
+            model.setStartDate(startDateField.getLocalDate());
+            model.setEndDate(endDateField.getLocalDate());
         }
 
         return createJasperPrint(new ReportTableModel(model, false), formatForCSV);
@@ -290,7 +290,7 @@ public class AccountRegisterReport extends DynamicJasperReport {
                 return ColumnStyle.GROUP_NO_HEADER;
             }
 
-            if (model.getColumnClass(columnIndex).isAssignableFrom(Date.class)) {
+            if (model.getColumnClass(columnIndex).isAssignableFrom(LocalDate.class)) {
                 return ColumnStyle.SHORT_DATE;
             } else if (model.getColumnClass(columnIndex).isAssignableFrom(FullCommodityStyle.class)) {
                 return ColumnStyle.BALANCE;
@@ -316,7 +316,7 @@ public class AccountRegisterReport extends DynamicJasperReport {
                 return ColumnHeaderStyle.LEFT;
             }
 
-            if (model.getColumnClass(columnIndex).isAssignableFrom(Date.class)) {
+            if (model.getColumnClass(columnIndex).isAssignableFrom(LocalDate.class)) {
                 return ColumnHeaderStyle.LEFT;
             } else if (model.getColumnClass(columnIndex).isAssignableFrom(ShortCommodityStyle.class)) {
                 return ColumnHeaderStyle.RIGHT;

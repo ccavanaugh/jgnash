@@ -874,6 +874,8 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
                 exporter.reset();
             }
 
+            //exporter.
+
             exporter.setParameter(JRExporterParameter.JASPER_PRINT, jPrint);
             exporter.setParameter(JRGraphics2DExporterParameter.GRAPHICS_2D, g.create());
             exporter.setParameter(JRExporterParameter.PAGE_INDEX, Integer.valueOf(pageIndex));
