@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.Test;
@@ -102,7 +102,7 @@ public class TransactionTest {
 
             assertTrue(transactions.isEmpty());
 
-            transactions = usdBankAccount.getTransactions(new Date(1), new Date());
+            transactions = usdBankAccount.getTransactions(LocalDate.now().minusDays(1), LocalDate.now());
 
             assertTrue(transactions.isEmpty());
         } catch (final Exception e) {

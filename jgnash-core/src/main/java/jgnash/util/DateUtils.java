@@ -29,6 +29,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -743,35 +744,6 @@ public class DateUtils {
     }
 
     /**
-     * Returns a leveled date representing the last day of the quarter based on
-     * a specified date.
-     *
-     * @param date the base date to work from
-     * @return The last day of the quarter specified
-     */
-    public static Date getLastDayOfTheQuarter(final Date date) {
-        Objects.requireNonNull(date);
-
-        Date result;
-
-        Date leveledDate = trimDate(date);
-
-        Date[] bounds = getQuarterBounds(leveledDate);
-
-        if (leveledDate.compareTo(bounds[2]) < 0) {
-            result = bounds[1];
-        } else if (leveledDate.compareTo(bounds[4]) < 0) {
-            result = bounds[3];
-        } else if (leveledDate.compareTo(bounds[6]) < 0) {
-            result = bounds[5];
-        } else {
-            result = bounds[7];
-        }
-
-        return trimDate(result);
-    }
-
-    /**
      * Returns a {@code LocalDate} date representing the last day of the quarter based on
      * a specified date.
      *
@@ -799,66 +771,16 @@ public class DateUtils {
     }
 
     /**
-     * Returns a leveled date representing the last day of the year based on a
+     * Returns a {@code LocalDate} representing the last day of the year based on a
      * specified date.
      *
      * @param date the base date to work from
      * @return The last day of the year specified
      */
-    public static Date getLastDayOfTheYear(final Date date) {
+    public static LocalDate getLastDayOfTheYear(@NotNull final LocalDate date) {
         Objects.requireNonNull(date);
 
-        final GregorianCalendar c = gregorianCalendarThreadLocal.get();
-
-        c.setTime(date);
-        c.set(c.get(Calendar.YEAR), c.getActualMaximum(Calendar.MONTH), c.getMaximum(Calendar.DAY_OF_MONTH));
-
-        return trimDate(c.getTime());
-    }
-
-    /**
-     * Returns an array of quarter bound dates of the year based on a specified
-     * date. The order is q1s, q1e, q2s, q2e, q3s, q3e, q4s, q4e.
-     *
-     * @param date the base date to work from
-     * @return The array of quarter bound dates
-     */
-    private static Date[] getQuarterBounds(final Date date) {
-        Objects.requireNonNull(date);
-
-        final GregorianCalendar c = gregorianCalendarThreadLocal.get();
-
-        c.setTime(date);
-
-        final int year = c.get(Calendar.YEAR);
-
-        Date[] bounds = new Date[8];
-
-        c.set(year, Calendar.JANUARY, 1, 0, 0, 0);
-        bounds[0] = c.getTime();
-
-        c.set(year, Calendar.MARCH, 31, 0, 0, 0);
-        bounds[1] = c.getTime();
-
-        c.set(year, Calendar.APRIL, 1, 0, 0, 0);
-        bounds[2] = c.getTime();
-
-        c.set(year, Calendar.JUNE, 30, 0, 0, 0);
-        bounds[3] = c.getTime();
-
-        c.set(year, Calendar.JULY, 1, 0, 0, 0);
-        bounds[4] = c.getTime();
-
-        c.set(year, Calendar.SEPTEMBER, 30, 0, 0, 0);
-        bounds[5] = c.getTime();
-
-        c.set(year, Calendar.OCTOBER, 1, 0, 0, 0);
-        bounds[6] = c.getTime();
-
-        c.set(year, Calendar.DECEMBER, 31, 0, 0, 0);
-        bounds[7] = c.getTime();
-
-        return bounds;
+        return date.with(TemporalAdjusters.lastDayOfYear());
     }
 
     /**
@@ -883,33 +805,6 @@ public class DateUtils {
         bounds[7] = date.with(TemporalAdjusters.lastDayOfYear());
 
         return bounds;
-    }
-
-    /**
-     * Returns the number of the quarter (i.e. 1, 2, 3 or 4) based on a
-     * specified date.
-     *
-     * @param date the base date to work from
-     * @return The number of the quarter specified
-     */
-    public static int getQuarterNumber(final Date date) {
-        Objects.requireNonNull(date);
-
-        int result;
-
-        Date[] bounds = getQuarterBounds(date);
-
-        if (date.compareTo(bounds[2]) < 0) {
-            result = 1;
-        } else if (date.compareTo(bounds[4]) < 0) {
-            result = 2;
-        } else if (date.compareTo(bounds[6]) < 0) {
-            result = 3;
-        } else {
-            result = 4;
-        }
-
-        return result;
     }
 
     /**
@@ -972,19 +867,8 @@ public class DateUtils {
      * @param dateOfYear the base date to work from
      * @return the week of the year
      */
-    public static int getWeekOfTheYear(final Date dateOfYear) {
-        final GregorianCalendar c = gregorianCalendarThreadLocal.get();
-
-        int minimal = c.getMinimalDaysInFirstWeek();
-
-        c.setTime(dateOfYear);
-        c.setMinimalDaysInFirstWeek(4);
-
-        int returnVal = c.get(Calendar.WEEK_OF_YEAR);
-
-        c.setMinimalDaysInFirstWeek(minimal); // restore original minimal
-
-        return returnVal;
+    public static int getWeekOfTheYear(final LocalDate dateOfYear) {
+        return dateOfYear.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
     }
 
     /**

@@ -652,7 +652,7 @@ public class BudgetResultsModel implements MessageListener {
     private void processTransactionEvent(final Message message) {
         final Transaction transaction = message.getObject(MessageProperty.TRANSACTION);
 
-        descriptorList.stream().filter(descriptor -> descriptor.isBetween(transaction.getDate()))
+        descriptorList.stream().filter(descriptor -> descriptor.isBetween(transaction.getLocalDate()))
                 .forEach(descriptor -> {
                     final Set<Account> accountSet = new HashSet<>();
 

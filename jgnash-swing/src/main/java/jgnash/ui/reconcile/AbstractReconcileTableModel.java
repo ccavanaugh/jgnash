@@ -19,11 +19,10 @@ package jgnash.ui.reconcile;
 
 import java.awt.EventQueue;
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -75,7 +74,7 @@ abstract class AbstractReconcileTableModel extends AbstractTableModel implements
 
     private final int[] columnWidths = {0, 0, 0, 99, 0};
 
-    private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
+    private final DateTimeFormatter dateFormatter = DateUtils.getShortDateTimeFormat();
 
     private final ReadWriteLock rwl = new ReentrantReadWriteLock(true);
 
@@ -348,8 +347,8 @@ abstract class AbstractReconcileTableModel extends AbstractTableModel implements
             reconciled = transaction.getReconciled(account);
         }
 
-        public Date getDate() {
-            return transaction.getDate();
+        public LocalDate getDate() {
+            return transaction.getLocalDate();
         }
 
         public String getNumber() {

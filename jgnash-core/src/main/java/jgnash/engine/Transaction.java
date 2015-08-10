@@ -64,7 +64,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * Date of entry from form entry, used for sort order
      */
     @Temporal(TemporalType.DATE)
-    private Date date = new Date();
+    Date date = new Date();
 
     /**
      * Date transaction was created

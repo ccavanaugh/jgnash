@@ -20,7 +20,7 @@ package jgnash.ui.budget;
 import java.awt.EventQueue;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -74,15 +74,15 @@ final class BudgetPeriodPanel extends JPanel {
      *
      * @param date check date
      * @return true if the date lies within this budgetPeriod
-     * @see BudgetPeriodDescriptor#isBetween(java.util.Date)
-     * @see BudgetPeriodModel#isBetween(java.util.Date)
+     * @see BudgetPeriodDescriptor#isBetween(java.time.LocalDate)
+     * @see BudgetPeriodModel#isBetween(java.time.LocalDate)
      */
-    boolean isBetween(final Date date) {
+    boolean isBetween(final LocalDate date) {
         return model.isBetween(date);
     }
 
     /**
-     * Sets the height, in pixels, of all cells to rowHeight, revalidates, and repaints. The height of the cells will be
+     * Sets the height, in pixels, of all cells to rowHeight, revalidate, and repaints. The height of the cells will be
      * equal to the row height minus the row margin.
      *
      * @param rowHeight new row height

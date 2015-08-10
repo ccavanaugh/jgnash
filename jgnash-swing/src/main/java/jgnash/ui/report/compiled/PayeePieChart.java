@@ -22,6 +22,7 @@ import java.awt.TextField;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -368,9 +369,9 @@ public class PayeePieChart {
         }
     }
 
-    private List<TranTuple> getTransactions(final Account account, final List<TranTuple> transactions, final Date startDate, final Date endDate) {
+    private List<TranTuple> getTransactions(final Account account, final List<TranTuple> transactions, final LocalDate startDate, final LocalDate endDate) {
 
-        for (Transaction t : account.getTransactions(startDate, endDate)) {
+        for (final Transaction t : account.getTransactions(startDate, endDate)) {
             TranTuple tuple = new TranTuple(account, t);
             transactions.add(tuple);
         }
@@ -391,7 +392,7 @@ public class PayeePieChart {
             //System.out.print("Account = "); System.out.println(a);
             Map<String, BigDecimal> names = new HashMap<>();
 
-            List<TranTuple> list = getTransactions(a, new ArrayList<>(), startField.getDate(), endField.getDate());
+            List<TranTuple> list = getTransactions(a, new ArrayList<>(), startField.getLocalDate(), endField.getLocalDate());
 
             CurrencyNode currency = a.getCurrencyNode();
 

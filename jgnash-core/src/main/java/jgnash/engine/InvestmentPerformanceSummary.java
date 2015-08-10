@@ -23,14 +23,11 @@ import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
-
-import jgnash.util.DateUtils;
 
 /**
  * Investment Performance Summary Class
@@ -41,9 +38,9 @@ public class InvestmentPerformanceSummary {
 
     private Account account;
 
-    private Date startDate;
+    private LocalDate startDate;
 
-    private Date endDate;
+    private LocalDate endDate;
 
     private final Map<SecurityNode, SecurityPerformanceData> performanceData = new TreeMap<>();
 
@@ -55,7 +52,8 @@ public class InvestmentPerformanceSummary {
         this(account, null, null, recursive);
     }
 
-    private InvestmentPerformanceSummary(final Account account, final Date startDate, final Date endDate, final boolean recursive) {
+    private InvestmentPerformanceSummary(final Account account, final LocalDate startDate, final LocalDate endDate,
+                                         final boolean recursive) {
         Objects.requireNonNull(account, "Account may not be null");
 
         if (!account.memberOf(AccountGroup.INVEST)) {
@@ -66,8 +64,8 @@ public class InvestmentPerformanceSummary {
         this.account = account;
 
         if (startDate == null || endDate == null) {
-            setStartDate(new Date(1));
-            setEndDate(new Date());
+            setStartDate(LocalDate.now().minusDays(1));
+            setEndDate(LocalDate.now());
         } else {
             setStartDate(startDate);
             setEndDate(endDate);
@@ -294,7 +292,7 @@ public class InvestmentPerformanceSummary {
         for (final SecurityNode node : nodes) {
             SecurityPerformanceData data = new SecurityPerformanceData(node);
 
-            data.setPrice(getMarketPrice(node, DateUtils.asLocalDate(getEndDate())));
+            data.setPrice(getMarketPrice(node, getEndDate()));
 
             performanceData.put(node, data);
 
@@ -345,19 +343,19 @@ public class InvestmentPerformanceSummary {
         return b.toString();
     }
 
-    private void setStartDate(Date startDate) {
+    private void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    private Date getStartDate() {
+    private LocalDate getStartDate() {
         return startDate;
     }
 
-    private void setEndDate(Date endDate) {
+    private void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
-    private Date getEndDate() {
+    private LocalDate getEndDate() {
         return endDate;
     }
 

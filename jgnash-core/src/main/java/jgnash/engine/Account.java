@@ -23,7 +23,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1075,26 +1074,6 @@ public class Account extends StoredObject implements Comparable<Account> {
 
         try {
             return adjustForExchangeRate(getBalance(date), node);
-        } finally {
-            transactionLock.readLock().unlock();
-        }
-    }
-
-    /**
-     * Returns an array of transactions that occur after account specified cut
-     * off date. The returned array is inclusive of the specified dates.
-     *
-     * @param startDate starting cut off date
-     * @param endDate   ending cut off date
-     * @return the array of transactions that occurred between the specified dates
-     */
-    public List<Transaction> getTransactions(final Date startDate, final Date endDate) {
-        transactionLock.readLock().lock();
-
-        try {
-            return transactions.parallelStream().filter(transaction
-                    -> DateUtils.after(transaction.getDate(), startDate, true)
-                    && DateUtils.before(transaction.getDate(), endDate, true)).sorted().collect(Collectors.toList());
         } finally {
             transactionLock.readLock().unlock();
         }

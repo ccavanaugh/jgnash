@@ -18,7 +18,6 @@
 package jgnash.engine.budget;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Objects;
 
 import jgnash.util.DateUtils;
@@ -46,9 +45,9 @@ public class BudgetPeriodDescriptor {
 
     private int endPeriod;
 
-    final private Date startDate;
+    final private LocalDate startDate;
 
-    private Date endDate;
+    private LocalDate endDate;
 
     final private String periodDescription;
 
@@ -64,53 +63,56 @@ public class BudgetPeriodDescriptor {
         this.startPeriod = startPeriod;
 
         /* Calendar day 1 is 1.  Need to add 1 to get correct dates */
-        startDate = DateUtils.getDateOfTheYear(budgetYear, startPeriod + 1);
+        startDate = LocalDate.ofYearDay(budgetYear, startPeriod + 1);
 
         switch (budgetPeriod) {
             case DAILY:
                 endDate = startDate;
                 endPeriod = startPeriod;
 
-                periodDescription = ResourceUtils.getString("Pattern.NumericDate", startDate);
+                periodDescription = ResourceUtils.getString("Pattern.NumericDate", DateUtils.asDate(startDate));
                 break;
             case WEEKLY:
-                endDate = DateUtils.addDays(startDate, ONE_WEEK_INCREMENT);
+                endDate = startDate.plusDays(ONE_WEEK_INCREMENT);
                 endPeriod = startPeriod + ONE_WEEK_INCREMENT;
 
-                periodDescription = ResourceUtils.getString("Pattern.WeekOfYear", DateUtils.getWeekOfTheYear(startDate), budgetYear);
+                periodDescription = ResourceUtils.getString("Pattern.WeekOfYear",
+                        DateUtils.getWeekOfTheYear(startDate), budgetYear);
                 break;
             case BI_WEEKLY:
                 if (DateUtils.getWeekOfTheYear(startDate) != LEAP_WEEK) {
-                    endDate = DateUtils.addDays(startDate, TWO_WEEK_INCREMENT);
+                    endDate = startDate.plusDays(TWO_WEEK_INCREMENT);
                     endPeriod = startPeriod + TWO_WEEK_INCREMENT;
                 } else {
-                    endDate = DateUtils.addDays(startDate, ONE_WEEK_INCREMENT);
+                    endDate = startDate.plusDays(ONE_WEEK_INCREMENT);
                     endPeriod = startPeriod + ONE_WEEK_INCREMENT;
                 }
-                periodDescription = ResourceUtils.getString("Pattern.DateRangeShort", startDate, endDate);
+                periodDescription = ResourceUtils.getString("Pattern.DateRangeShort", DateUtils.asDate(startDate),
+                        DateUtils.asDate(endDate));
                 break;
             case MONTHLY:
-                int days = DateUtils.getDaysInMonth(startDate);
+                final int days = startDate.lengthOfMonth();
                 endDate = DateUtils.getLastDayOfTheMonth(startDate);
                 endPeriod = startPeriod + days - 1;
 
-                periodDescription = ResourceUtils.getString("Pattern.MonthOfYear", startDate);
+                periodDescription = ResourceUtils.getString("Pattern.MonthOfYear", DateUtils.asDate(startDate));
                 break;
             case QUARTERLY:
                 endDate = DateUtils.getLastDayOfTheQuarter(startDate);
-                endPeriod = startPeriod + DateUtils.getDifferenceInDays(startDate, endDate);
+                endPeriod = startPeriod + (int)DateUtils.getDifferenceInDays(startDate, endDate);
 
-                periodDescription = ResourceUtils.getString("Pattern.QuarterOfYear", DateUtils.getQuarterNumber(startDate), budgetYear);
+                periodDescription = ResourceUtils.getString("Pattern.QuarterOfYear",
+                        DateUtils.getQuarterNumber(startDate), budgetYear);
                 break;
             case YEARLY:
                 endDate = DateUtils.getLastDayOfTheYear(startDate);
-                endPeriod = startPeriod + DateUtils.getDifferenceInDays(startDate, endDate);
+                endPeriod = startPeriod + (int)DateUtils.getDifferenceInDays(startDate, endDate);
 
                 periodDescription = Integer.toString(budgetYear);                             
                 break;    
             default:
                 endPeriod = startPeriod;
-                endDate = new Date();
+                endDate = LocalDate.now();
                 periodDescription = "";
         }
 
@@ -130,11 +132,11 @@ public class BudgetPeriodDescriptor {
     }
 
     public LocalDate getStartDate() {
-        return DateUtils.asLocalDate(startDate);
+        return startDate;
     }
 
     public LocalDate getEndDate() {
-        return DateUtils.asLocalDate(endDate);
+        return endDate;
     }
 
     public String getPeriodDescription() {
@@ -151,7 +153,7 @@ public class BudgetPeriodDescriptor {
      * @param date date to check
      * @return true if between or inclusive
      */
-    public boolean isBetween(final Date date) {
+    public boolean isBetween(final LocalDate date) {
         boolean result = false;
 
         if (DateUtils.after(date, startDate) && DateUtils.before(date, endDate)) {
@@ -163,7 +165,8 @@ public class BudgetPeriodDescriptor {
 
     @Override
     public String toString() {
-        return String.format("BudgetPeriodDescriptor [startDate=%tD, endDate=%tD, periodDescription=%s, budgetPeriod=%s]", startDate, endDate, periodDescription, budgetPeriod);
+        return String.format("BudgetPeriodDescriptor [startDate=%tD, endDate=%tD, periodDescription=%s, budgetPeriod=%s]",
+                DateUtils.asDate(startDate), DateUtils.asDate(endDate), periodDescription, budgetPeriod);
     }
 
     @Override

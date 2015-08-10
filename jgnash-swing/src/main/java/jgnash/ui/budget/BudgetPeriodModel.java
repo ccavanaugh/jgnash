@@ -19,8 +19,8 @@ package jgnash.ui.budget;
 
 import java.awt.EventQueue;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -247,7 +247,7 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
     private void processTransactionEvent(final Message message) {
         final Transaction transaction = message.getObject(MessageProperty.TRANSACTION);
 
-        if (isBetween(transaction.getDate())) { // don't update unless needed
+        if (isBetween(transaction.getLocalDate())) { // don't update unless needed
 
             // build a list of accounts include ancestors that will be impacted by the transaction changes
             final Set<Account> accounts = new HashSet<>();
@@ -296,9 +296,9 @@ public final class BudgetPeriodModel implements TableModel, MessageListener {
     /**
      * @param date check date
      * @return true is date lies within this period
-     * @see BudgetPeriodDescriptor#isBetween(java.util.Date)
+     * @see BudgetPeriodDescriptor#isBetween(java.time.LocalDate)
      */
-    public boolean isBetween(final Date date) {
+    public boolean isBetween(final LocalDate date) {
         return descriptor.isBetween(date);
     }
 

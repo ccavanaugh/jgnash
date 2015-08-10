@@ -348,7 +348,7 @@ public class InvestmentTransaction extends Transaction {
             return 0;
         }
 
-        int result = getDate().compareTo(tran.getDate());
+        int result = date.compareTo(tran.date);
         if (result != 0) {
             return result;
         }

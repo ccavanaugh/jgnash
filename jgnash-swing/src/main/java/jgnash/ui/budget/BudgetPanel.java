@@ -23,8 +23,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -531,7 +531,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
 
         Runnable r = () -> {
 
-            final Date today = new Date();
+            final LocalDate today = LocalDate.now();
 
             for (int i = 0; i < panels.size(); i++) {
                 if (panels.get(i).isBetween(today)) {
