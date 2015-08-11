@@ -55,6 +55,12 @@
 
     <repositories>
         <repository>
+            <id>dynamicjasper</id>
+            <name>Dynamic Jasper</name>
+            <url>http://nexus.fdvs.com.ar/content/groups/public/</url>
+        </repository>
+
+        <repository>
             <id>jgnash-local</id>
             <name>Local repository in project tree</name>
             <url>file:${basedir}/../repository</url>
@@ -87,12 +93,6 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
-        </repository>
-
-        <repository>
-            <id>dynamicjasper</id>
-            <name>Dynamic Jasper</name>
-            <url>http://nexus.fdvs.com.ar/content/groups/public/</url>
         </repository>
     </repositories>
 
