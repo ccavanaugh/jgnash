@@ -64,7 +64,7 @@ public class InvestmentPerformanceSummary {
         this.account = account;
 
         if (startDate == null || endDate == null) {
-            setStartDate(LocalDate.now().minusDays(1));
+            setStartDate(LocalDate.ofEpochDay(0));
             setEndDate(LocalDate.now());
         } else {
             setStartDate(startDate);
