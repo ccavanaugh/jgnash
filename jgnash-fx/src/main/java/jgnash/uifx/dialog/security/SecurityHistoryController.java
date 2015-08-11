@@ -157,7 +157,7 @@ public class SecurityHistoryController implements MessageListener {
 
         final TableColumn<SecurityHistoryNode, LocalDate> dateColumn = new TableColumn<>(resources.getString("Column.Date"));
         dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLocalDate()));
-        dateColumn.setCellFactory(cell -> new ShortDateTableCell());
+        dateColumn.setCellFactory(cell -> new ShortDateTableCell<>());
         tableView.getColumns().add(dateColumn);
 
         final TableColumn<SecurityHistoryNode, BigDecimal> closeColumn = new TableColumn<>(resources.getString("Column.Close"));
@@ -295,10 +295,9 @@ public class SecurityHistoryController implements MessageListener {
         observableHistoryNodes.setAll(securityComboBox.getValue().getHistoryNodes());
     }
 
-    @SuppressWarnings("unchecked")
     private void loadChart() {
         new Thread(() -> {
-            final AreaChart.Series series = new AreaChart.Series();
+            final AreaChart.Series<LocalDate, Number> series = new AreaChart.Series<>();
 
             series.setName(selectedSecurityNode.get().getSymbol());
 
@@ -306,7 +305,10 @@ public class SecurityHistoryController implements MessageListener {
                 series.getData().add(new AreaChart.Data<>(node.getLocalDate(), node.getPrice()));
             }
 
-            Platform.runLater(() -> chart.getData().setAll(series));
+            Platform.runLater(() -> {
+                chart.getData().clear();
+                chart.getData().add(series);
+            });
         }).start();
     }
 

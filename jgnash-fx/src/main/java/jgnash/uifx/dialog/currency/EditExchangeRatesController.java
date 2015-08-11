@@ -140,7 +140,7 @@ public class EditExchangeRatesController implements MessageListener {
 
         final TableColumn<ExchangeRateHistoryNode, LocalDate> dateColumn = new TableColumn<>(resources.getString("Column.Date"));
         dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLocalDate()));
-        dateColumn.setCellFactory(cell -> new ShortDateTableCell());
+        dateColumn.setCellFactory(cell -> new ShortDateTableCell<>());
         exchangeRateTable.getColumns().add(dateColumn);
 
         final NumberFormat decimalFormat = NumberFormat.getInstance();
