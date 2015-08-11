@@ -123,6 +123,36 @@
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
             <version>${jasperreports.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.zxing</groupId>
+                    <artifactId>core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.lucene</groupId>
+                    <artifactId>lucene-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.lucene</groupId>
+                    <artifactId>lucene-analyzers-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.lucene</groupId>
+                    <artifactId>lucene-queryparser</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.castor</groupId>
+                    <artifactId>castor-xml</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jfreechart</artifactId>
+                    <groupId>jfree</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>jcommon</artifactId>
+                    <groupId>jfree</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>ar.com.fdvs</groupId>
