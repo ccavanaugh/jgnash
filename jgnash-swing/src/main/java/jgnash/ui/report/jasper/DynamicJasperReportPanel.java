@@ -71,11 +71,12 @@ import jgnash.ui.UIApplication;
 import jgnash.util.ResourceUtils;
 
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperPrintManager;
 import net.sf.jasperreports.engine.export.JRGraphics2DExporter;
-import net.sf.jasperreports.engine.export.JRGraphics2DExporterParameter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleGraphics2DExporterOutput;
+import net.sf.jasperreports.export.SimpleGraphics2DReportConfiguration;
 import net.sf.jasperreports.view.JRSaveContributor;
 import net.sf.jasperreports.view.save.JRCsvSaveContributor;
 import net.sf.jasperreports.view.save.JROdtSaveContributor;
@@ -110,7 +111,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
 
     private static final String LAST_CONTRIBUTOR = "lastContributor";
 
-    private JasperPrint jPrint = null;
+    private JasperPrint jasperPrint = null;
 
     private int pageIndex = 0;
 
@@ -202,11 +203,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
 
     void clear() {
         emptyContainer(this);
-        jPrint = null;
-    }
-
-    private String getBundleString(String key) {
-        return resourceBundle.getString(key);
+        jasperPrint = null;
     }
 
     private void initSaveContributors() {
@@ -268,13 +265,13 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
         toolBar.setRollover(true);
 
         saveButton = new JButton(new ImageIcon(getClass().getResource("/jgnash/resource/document-save-as.png")));
-        saveButton.setToolTipText(getBundleString("save"));
+        saveButton.setToolTipText(resourceBundle.getString("save"));
         saveButton.setFocusable(false);
         saveButton.addActionListener(this);
         toolBar.add(saveButton);
 
         printButton = new JButton(new ImageIcon(getClass().getResource("/jgnash/resource/document-print.png")));
-        printButton.setToolTipText(getBundleString("print"));
+        printButton.setToolTipText(resourceBundle.getString("print"));
         printButton.setFocusable(false);
         printButton.addActionListener(this);
         toolBar.add(printButton);
@@ -295,28 +292,28 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
         toolBar.add(new JToolBar.Separator());
 
         firstButton.setIcon(new ImageIcon(getClass().getResource("/jgnash/resource/go-first.png")));
-        firstButton.setToolTipText(getBundleString("first.page"));
+        firstButton.setToolTipText(resourceBundle.getString("first.page"));
         firstButton.setFocusable(false);
         firstButton.setEnabled(false);
         firstButton.addActionListener(this);
         toolBar.add(firstButton);
 
         previousButton.setIcon(new ImageIcon(getClass().getResource("/jgnash/resource/go-previous.png")));
-        previousButton.setToolTipText(getBundleString("previous.page"));
+        previousButton.setToolTipText(resourceBundle.getString("previous.page"));
         previousButton.setFocusable(false);
         previousButton.setEnabled(false);
         previousButton.addActionListener(this);
         toolBar.add(previousButton);
 
         nextButton.setIcon(new ImageIcon(getClass().getResource("/jgnash/resource/go-next.png")));
-        nextButton.setToolTipText(getBundleString("next.page"));
+        nextButton.setToolTipText(resourceBundle.getString("next.page"));
         nextButton.setFocusable(false);
         nextButton.setEnabled(false);
         nextButton.addActionListener(this);
         toolBar.add(nextButton);
 
         lastButton.setIcon(new ImageIcon(getClass().getResource("/jgnash/resource/go-last.png")));
-        lastButton.setToolTipText(getBundleString("last.page"));
+        lastButton.setToolTipText(resourceBundle.getString("last.page"));
         lastButton.setFocusable(false);
         lastButton.setEnabled(false);
         lastButton.addActionListener(this);
@@ -325,19 +322,19 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
         toolBar.add(new JToolBar.Separator());
 
         actualSizeButton.setIcon(new ImageIcon(getClass().getResource("/net/sf/jasperreports/view/images/actualsize.GIF")));
-        actualSizeButton.setToolTipText(getBundleString("actual.size"));
+        actualSizeButton.setToolTipText(resourceBundle.getString("actual.size"));
         actualSizeButton.setFocusable(false);
         actualSizeButton.addActionListener(this);
         toolBar.add(actualSizeButton);
 
         fitPageButton.setIcon(new ImageIcon(getClass().getResource("/net/sf/jasperreports/view/images/fitpage.GIF")));
-        fitPageButton.setToolTipText(getBundleString("fit.page"));
+        fitPageButton.setToolTipText(resourceBundle.getString("fit.page"));
         fitPageButton.setFocusable(false);
         fitPageButton.addActionListener(this);
         toolBar.add(fitPageButton);
 
         fitWidthButton.setIcon(new ImageIcon(getClass().getResource("/net/sf/jasperreports/view/images/fitwidth.GIF")));
-        fitWidthButton.setToolTipText(getBundleString("fit.width"));
+        fitWidthButton.setToolTipText(resourceBundle.getString("fit.width"));
         fitWidthButton.setFocusable(false);
         fitWidthButton.addActionListener(this);
         toolBar.add(fitWidthButton);
@@ -345,13 +342,13 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
         toolBar.add(new JToolBar.Separator());
 
         zoomInButton.setIcon(new ImageIcon(getClass().getResource("/jgnash/resource/zoom-in.png")));
-        zoomInButton.setToolTipText(getBundleString("zoom.in"));
+        zoomInButton.setToolTipText(resourceBundle.getString("zoom.in"));
         zoomInButton.setFocusable(false);
         zoomInButton.addActionListener(this);
         toolBar.add(zoomInButton);
 
         zoomComboBox.setEditable(true);
-        zoomComboBox.setToolTipText(getBundleString("zoom.ratio"));
+        zoomComboBox.setToolTipText(resourceBundle.getString("zoom.ratio"));
         zoomComboBox.setMaximumSize(new Dimension(90, zoomInButton.getMinimumSize().height));
         zoomComboBox.setMinimumSize(new Dimension(90, zoomInButton.getMinimumSize().height));
         zoomComboBox.setPreferredSize(new Dimension(90, zoomInButton.getPreferredSize().height));
@@ -360,7 +357,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
         toolBar.add(zoomComboBox);
 
         zoomOutButton.setIcon(new ImageIcon(getClass().getResource("/jgnash/resource/zoom-out.png")));
-        zoomOutButton.setToolTipText(getBundleString("zoom.out"));
+        zoomOutButton.setToolTipText(resourceBundle.getString("zoom.out"));
         zoomOutButton.setFocusable(false);
         zoomOutButton.addActionListener(this);
         toolBar.add(zoomOutButton);
@@ -497,7 +494,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
             fitPage();
             fitPageButton.setSelected(true);
         } else if (fitWidthButton.isSelected()) {
-            setRealZoomRatio(((float) scrollPanePanel.getVisibleRect().getWidth() - 20f) / jPrint.getPageWidth());
+            setRealZoomRatio(((float) scrollPanePanel.getVisibleRect().getWidth() - 20f) / jasperPrint.getPageWidth());
             fitWidthButton.setSelected(true);
         }
     }
@@ -518,7 +515,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
             actualSizeButton.setSelected(false);
             fitPageButton.setSelected(false);
             zoomComboBox.setSelectedIndex(-1);
-            setRealZoomRatio(((float) scrollPanePanel.getVisibleRect().getWidth() - 20f) / jPrint.getPageWidth());
+            setRealZoomRatio(((float) scrollPanePanel.getVisibleRect().getWidth() - 20f) / jasperPrint.getPageWidth());
             fitWidthButton.setSelected(true);
         }
     }
@@ -580,7 +577,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
                 }
 
                 if (contributor == null) {
-                    JOptionPane.showMessageDialog(this, getBundleString("error.saving"));
+                    JOptionPane.showMessageDialog(this, resourceBundle.getString("error.saving"));
                 }
             }
 
@@ -598,12 +595,12 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
                         JasperPrint print = report.createJasperPrint(true);
                         contributor.save(print, file);
                     } else {
-                        contributor.save(jPrint, file);
+                        contributor.save(jasperPrint, file);
                     }
 
-                } catch (JRException ex) {
+                } catch (final JRException ex) {
                     LOG.log(Level.SEVERE, ex.getMessage(), ex);
-                    JOptionPane.showMessageDialog(this, getBundleString("error.saving"));
+                    JOptionPane.showMessageDialog(this, resourceBundle.getString("error.saving"));
                 }
             }
         }
@@ -618,7 +615,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
 
                 EventQueue.invokeLater(() -> {
                     try {
-                        JasperPrintManager.printReport(jPrint, true);
+                        JasperPrintManager.printReport(jasperPrint, true);
                     } catch (JRException ex) {
                         LOG.log(Level.SEVERE, ex.getMessage(), ex);
                     }
@@ -647,7 +644,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
     }
 
     private void lastPageAction() {
-        setPageIndex(jPrint.getPages().size() - 1);
+        setPageIndex(jasperPrint.getPages().size() - 1);
         refreshPage();
     }
 
@@ -667,7 +664,7 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
     }
 
     private void forceRefresh() {
-        if (jPrint != null) {
+        if (jasperPrint != null) {
             refreshPage();
             frame.setReportName(report.getReportName());
             return;
@@ -737,15 +734,16 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
         new ReportWorker().execute();
     }
 
-    private void setPageIndex(int index) {
-        if (jPrint != null && jPrint.getPages() != null && !jPrint.getPages().isEmpty()) {
-            if (index >= 0 && index < jPrint.getPages().size()) {
+    private void setPageIndex(final int index) {
+        if (jasperPrint != null && jasperPrint.getPages() != null && !jasperPrint.getPages().isEmpty()) {
+            if (index >= 0 && index < jasperPrint.getPages().size()) {
                 pageIndex = index;
                 firstButton.setEnabled((pageIndex > 0));
                 previousButton.setEnabled((pageIndex > 0));
-                nextButton.setEnabled((pageIndex < jPrint.getPages().size() - 1));
-                lastButton.setEnabled((pageIndex < jPrint.getPages().size() - 1));
-                frame.setStatus(MessageFormat.format(getBundleString("page"), pageIndex + 1, jPrint.getPages().size()));
+                nextButton.setEnabled((pageIndex < jasperPrint.getPages().size() - 1));
+                lastButton.setEnabled((pageIndex < jasperPrint.getPages().size() - 1));
+                frame.setStatus(MessageFormat.format(resourceBundle.getString("page"), pageIndex + 1,
+                        jasperPrint.getPages().size()));
             }
         } else {
             firstButton.setEnabled(false);
@@ -758,12 +756,12 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
     }
 
     private void loadReport(final JasperPrint jasperPrint) {
-        jPrint = jasperPrint;
+        this.jasperPrint = jasperPrint;
         setPageIndex(0);
     }
 
     private void refreshPage() {
-        if (jPrint == null || jPrint.getPages() == null || jPrint.getPages().isEmpty()) {
+        if (jasperPrint == null || jasperPrint.getPages() == null || jasperPrint.getPages().isEmpty()) {
             pageGluePanel.setVisible(false);
             saveButton.setEnabled(false);
             printButton.setEnabled(false);
@@ -774,8 +772,8 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
             zoomOutButton.setEnabled(false);
             zoomComboBox.setEnabled(false);
 
-            if (jPrint != null) {
-                JOptionPane.showMessageDialog(this, getBundleString("no.pages"));
+            if (jasperPrint != null) {
+                JOptionPane.showMessageDialog(this, resourceBundle.getString("no.pages"));
             }
 
             return;
@@ -791,8 +789,8 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
         zoomOutButton.setEnabled(zoom > MIN_ZOOM);
         zoomComboBox.setEnabled(true);
 
-        Dimension dim = new Dimension((int) (jPrint.getPageWidth() * realZoom) + 8, // 2 from border, 5 from shadow and 1 extra pixel for image
-        (int) (jPrint.getPageHeight() * realZoom) + 8);
+        Dimension dim = new Dimension((int) (jasperPrint.getPageWidth() * realZoom) + 8, // 2 from border, 5 from shadow and 1 extra pixel for image
+        (int) (jasperPrint.getPageHeight() * realZoom) + 8);
 
         pageGluePanel.setMaximumSize(dim);
         pageGluePanel.setMinimumSize(dim);
@@ -857,44 +855,46 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
         }
     }
 
-    private static JRGraphics2DExporter getGraphics2DExporter() throws JRException {
-        return new JRGraphics2DExporter();
-    }
+    private void paintPage(final Graphics2D graphics2D) {
 
-    private void paintPage(final Graphics2D g) {
-
-        if (jPrint == null) { // don't paint unless jPrint is not null
+        if (jasperPrint == null) { // don't paint unless jasperPrint is not null
             return;
         }
 
         try {
             if (exporter == null) {
-                exporter = getGraphics2DExporter();
+                exporter =  new JRGraphics2DExporter();
             } else {
                 exporter.reset();
             }
 
-            //exporter.
+            exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
 
-            exporter.setParameter(JRExporterParameter.JASPER_PRINT, jPrint);
-            exporter.setParameter(JRGraphics2DExporterParameter.GRAPHICS_2D, g.create());
-            exporter.setParameter(JRExporterParameter.PAGE_INDEX, Integer.valueOf(pageIndex));
-            exporter.setParameter(JRGraphics2DExporterParameter.ZOOM_RATIO, Float.valueOf(realZoom));
-            exporter.setParameter(JRExporterParameter.OFFSET_X, 1); //pageRenderer border
-            exporter.setParameter(JRExporterParameter.OFFSET_Y, 1);
+            final SimpleGraphics2DExporterOutput output = new SimpleGraphics2DExporterOutput();
+            output.setGraphics2D((Graphics2D) graphics2D.create());
+            exporter.setExporterOutput(output);
+
+            final SimpleGraphics2DReportConfiguration configuration = new SimpleGraphics2DReportConfiguration();
+            configuration.setPageIndex(pageIndex);
+            configuration.setZoomRatio(realZoom);
+            configuration.setOffsetX(1); //renderer border
+            configuration.setOffsetY(1);
+            exporter.setConfiguration(configuration);
+
             exporter.exportReport();
         } catch (Exception ex) {
 
             LOG.log(Level.SEVERE, ex.getMessage(), ex);
 
-            EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(DynamicJasperReportPanel.this, getBundleString("error.displaying")));
+            EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(DynamicJasperReportPanel.this,
+                    resourceBundle.getString("error.displaying")));
         }
 
     }
 
     private void fitPage() {
-        float heightRatio = ((float) scrollPanePanel.getVisibleRect().getHeight() - 20f) / jPrint.getPageHeight();
-        float widthRatio = ((float) scrollPanePanel.getVisibleRect().getWidth() - 20f) / jPrint.getPageWidth();
+        final float heightRatio = ((float) scrollPanePanel.getVisibleRect().getHeight() - 20f) / jasperPrint.getPageHeight();
+        final float widthRatio = ((float) scrollPanePanel.getVisibleRect().getWidth() - 20f) / jasperPrint.getPageWidth();
         setRealZoomRatio(heightRatio < widthRatio ? heightRatio : widthRatio);
     }
 
