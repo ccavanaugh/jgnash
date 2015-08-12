@@ -212,7 +212,7 @@ public class AmortizeDialog extends JDialog implements ActionListener {
     public AmortizeObject getAmortizeObject() {
         AmortizeObject o = new AmortizeObject();
 
-        o.setDate(dateField.getDate());
+        o.setDate(dateField.getLocalDate());
         o.setFees(feesField.getDecimal());
         o.setInterestPeriods(intPeriodsField.intValue());
         o.setPaymentPeriods(payPeriodsField.intValue());

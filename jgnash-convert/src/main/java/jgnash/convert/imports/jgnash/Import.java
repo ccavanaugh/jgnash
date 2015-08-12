@@ -72,7 +72,6 @@ import jgnash.engine.TransactionEntryRemoveX;
 import jgnash.engine.TransactionEntrySplitX;
 import jgnash.engine.TransactionFactory;
 import jgnash.engine.TransactionTag;
-import jgnash.util.DateUtils;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -932,7 +931,7 @@ public class Import {
             AmortizeObject ao = new AmortizeObject();
 
             ao.setBankAccount(accountMap.get(elementMap.get("bankAccount")));
-            ao.setDate(DateUtils.asDate(decodeDate(elementMap.get("date"))));
+            ao.setDate(decodeDate(elementMap.get("date")));
 
             if (elementMap.get("daysPerYear") != null) {
                 ao.setDaysPerYear(new BigDecimal(elementMap.get("daysPerYear")));

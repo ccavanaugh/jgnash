@@ -27,8 +27,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.PostLoad;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import jgnash.util.DateUtils;
 
 /**
  * This class is used to calculate loan payments.
@@ -114,18 +117,21 @@ public class AmortizeObject implements Serializable {
      */
     private BigDecimal daysPerYear;
 
+    private transient LocalDate cachedLocalDate = DateUtils.asLocalDate(date);
+
     /**
      * Empty constructor to keep reflection happy
      */
     public AmortizeObject() {
     }
 
-    public void setDate(final Date date) {
-        this.date = (Date) date.clone();
+    public void setDate(final LocalDate localDate) {
+        cachedLocalDate = localDate;
+        date = DateUtils.asDate(localDate);
     }
 
-    public Date getDate() {
-        return date;
+    public LocalDate getDate() {
+        return cachedLocalDate;
     }
 
     public void setPaymentPeriods(final int periods) {
@@ -425,4 +431,15 @@ public class AmortizeObject implements Serializable {
     //	public double getPPayment(BigDecimal balance) {
     //		return getPIPayment() - getIPayment(balance);
     //	}
+
+
+    protected Object readResolve() {
+        postLoad();
+        return this;
+    }
+
+    @PostLoad
+    private void postLoad() {
+        cachedLocalDate = DateUtils.asLocalDate(date);
+    }
 }
