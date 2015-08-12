@@ -370,7 +370,7 @@ public class InvestmentTransaction extends Transaction {
             }
         }
 
-        result = getDateEntered().compareTo(tran.getDateEntered());
+        result = dateEntered.compareTo(tran.dateEntered);
         if (result != 0) {
             return result;
         }

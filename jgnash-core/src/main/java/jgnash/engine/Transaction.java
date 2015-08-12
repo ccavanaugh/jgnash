@@ -19,6 +19,7 @@ package jgnash.engine;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -70,7 +71,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * Date transaction was created
      */
     @Temporal(TemporalType.DATE)
-    private Date dateEntered = new Date();
+    Date dateEntered = new Date();
 
     /**
      * Transaction number
@@ -109,6 +110,8 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     Set<TransactionEntry> transactionEntries = new HashSet<>();
 
     private transient LocalDate cachedLocalDate = null;
+
+    private transient LocalDateTime cachedDateEntered = null;
 
     /**
      * ReadWrite lock
@@ -487,14 +490,15 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         transactionEntries.clear();
     }
 
-    public Date getDateEntered() {
-        return dateEntered;
+    public LocalDateTime getDateEntered() {
+        return cachedDateEntered;
     }
 
-    public void setDateEntered(final Date dateEntered) {
-        Objects.requireNonNull(dateEntered);
+    public void setDateEntered(@NotNull final LocalDateTime localDateTime) {
+        Objects.requireNonNull(localDateTime);
 
-        this.dateEntered = (Date) dateEntered.clone();
+        cachedDateEntered = localDateTime;
+        dateEntered = DateUtils.asDate(localDateTime);
     }
 
     @NotNull
@@ -643,6 +647,7 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     private void postLoad() {
         lock = new ReentrantReadWriteLock(true);
         cachedLocalDate = DateUtils.asLocalDate(date);
+        cachedDateEntered = DateUtils.asLocalDateTime(dateEntered);
     }
 
     @Override

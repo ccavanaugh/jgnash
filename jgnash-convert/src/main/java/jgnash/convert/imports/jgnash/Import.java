@@ -25,9 +25,9 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -276,25 +276,25 @@ public class Import {
 
             String id = map.get(ID);
 
-            Transaction transaction = new Transaction();
+            final Transaction transaction = new Transaction();
 
-            transaction.setDate(DateUtils.asLocalDate(decodeDate(map.get("voucherDate"))));
-            transaction.setDateEntered(decodeDate(map.get("actTransDate")));
+            transaction.setDate(decodeDate(map.get("voucherDate")));
+            transaction.setDateEntered(decodeLocalDateTime(map.get("actTransDate")));
             transaction.setNumber(map.get("number"));
             transaction.setPayee(map.get("payee"));
             transaction.setMemo(map.get("memo"));
 
-            for (Iterator<Map<String, String>> j = this.splitEntryList.iterator(); j.hasNext(); ) {
+            for (final Iterator<Map<String, String>> j = this.splitEntryList.iterator(); j.hasNext(); ) {
                 Map<String, String> entryMap = j.next();
 
                 if (entryMap.get("parent").equals(id)) {
 
-                    TransactionEntry entry = new TransactionEntry();
+                    final TransactionEntry entry = new TransactionEntry();
 
                     entry.setMemo(entryMap.get("memo"));
 
-                    Account creditAccount = accountMap.get(entryMap.get("creditAccount"));
-                    Account debitAccount = accountMap.get(entryMap.get("debitAccount"));
+                    final Account creditAccount = accountMap.get(entryMap.get("creditAccount"));
+                    final Account debitAccount = accountMap.get(entryMap.get("debitAccount"));
 
                     boolean creditReconciled = Boolean.parseBoolean(entryMap.get("creditReconciled"));
                     boolean debitReconciled = Boolean.parseBoolean(entryMap.get("debitReconciled"));
@@ -593,8 +593,8 @@ public class Import {
 
         Transaction transaction = null;
 
-        Date actDate = decodeDate(elementMap.get("actTransDate"));
-        LocalDate date = DateUtils.asLocalDate(decodeDate(elementMap.get("voucherDate")));
+        LocalDateTime actDate = decodeLocalDateTime(elementMap.get("actTransDate"));
+        LocalDate date = decodeDate(elementMap.get("voucherDate"));
         String memo = elementMap.get("memo");
         String payee = elementMap.get("payee");
         String number = elementMap.get("number");
@@ -932,7 +932,7 @@ public class Import {
             AmortizeObject ao = new AmortizeObject();
 
             ao.setBankAccount(accountMap.get(elementMap.get("bankAccount")));
-            ao.setDate(decodeDate(elementMap.get("date")));
+            ao.setDate(DateUtils.asDate(decodeDate(elementMap.get("date"))));
 
             if (elementMap.get("daysPerYear") != null) {
                 ao.setDaysPerYear(new BigDecimal(elementMap.get("daysPerYear")));
@@ -1298,7 +1298,7 @@ public class Import {
                     case XMLStreamConstants.END_ELEMENT:
                         if (reader.getName().equals(parsingElement)) {
                             // build the security history node;
-                            final SecurityHistoryNode hNode = new SecurityHistoryNode(DateUtils.asLocalDate(decodeDate(elementMap.get("date"))),
+                            final SecurityHistoryNode hNode = new SecurityHistoryNode(decodeDate(elementMap.get("date")),
                                     new BigDecimal(elementMap.get("price")), Long.parseLong(elementMap.get("volume")),
                                     new BigDecimal(elementMap.get("high")), new BigDecimal(elementMap.get("low")));
 
@@ -1429,10 +1429,20 @@ public class Import {
         return node;
     }
 
-    private final Calendar calendar = Calendar.getInstance(); // reused for date decode
+    @SuppressWarnings("MagicConstant")
+    private LocalDate decodeDate(final String date) {
+        if (date != null) {
+            int year = Integer.parseInt(date.substring(0, 4));
+            int month = Integer.parseInt(date.substring(5, 7));
+            int day = Integer.parseInt(date.substring(8, 10));
+
+            return LocalDate.of(year, month - 1, day);
+        }
+        return LocalDate.now();
+    }
 
     @SuppressWarnings("MagicConstant")
-    private Date decodeDate(final String date) {
+    private LocalDateTime decodeLocalDateTime(final String date) {
         if (date != null) {
             int year = Integer.parseInt(date.substring(0, 4));
             int month = Integer.parseInt(date.substring(5, 7));
@@ -1441,11 +1451,11 @@ public class Import {
             int minute = Integer.parseInt(date.substring(14, 16));
             int second = Integer.parseInt(date.substring(17, 19));
             int milliSecond = Integer.parseInt(date.substring(20));
-            calendar.set(year, month - 1, day, hour, minute, second);
-            calendar.set(Calendar.MILLISECOND, milliSecond);
-            return calendar.getTime();
+
+            LocalDateTime localDateTime =  LocalDateTime.of(year, month - 1, day, hour, minute, second);
+            return localDateTime.with(ChronoField.MILLI_OF_SECOND, milliSecond);
         }
-        return new Date();
+        return LocalDateTime.now();
     }
 
     /* Hold commodity data to be converted to currency or security */
