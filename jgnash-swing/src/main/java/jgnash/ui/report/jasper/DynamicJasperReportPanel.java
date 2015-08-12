@@ -79,8 +79,10 @@ import net.sf.jasperreports.export.SimpleGraphics2DExporterOutput;
 import net.sf.jasperreports.export.SimpleGraphics2DReportConfiguration;
 import net.sf.jasperreports.view.JRSaveContributor;
 import net.sf.jasperreports.view.save.JRCsvSaveContributor;
+import net.sf.jasperreports.view.save.JRDocxSaveContributor;
 import net.sf.jasperreports.view.save.JROdtSaveContributor;
 import net.sf.jasperreports.view.save.JRPdfSaveContributor;
+import net.sf.jasperreports.view.save.JRRtfSaveContributor;
 import net.sf.jasperreports.view.save.JRSingleSheetXlsSaveContributor;
 
 /**
@@ -209,8 +211,10 @@ class DynamicJasperReportPanel extends JPanel implements ActionListener {
     private void initSaveContributors() {
         saveContributors.add(new JRPdfSaveContributor(Locale.getDefault(), resourceBundle));
         saveContributors.add(new JROdtSaveContributor(Locale.getDefault(), resourceBundle));
+        saveContributors.add(new JRDocxSaveContributor(Locale.getDefault(), resourceBundle));
+        saveContributors.add(new JRRtfSaveContributor(Locale.getDefault(), resourceBundle));
         saveContributors.add(new JRCsvSaveContributor(Locale.getDefault(), resourceBundle));
-        saveContributors.add(new JRSingleSheetXlsSaveContributor(Locale.getDefault(), resourceBundle));           
+        saveContributors.add(new JRSingleSheetXlsSaveContributor(Locale.getDefault(), resourceBundle));
     }
 
     private void initializeUI() {

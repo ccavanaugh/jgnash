@@ -41,7 +41,7 @@
         <jfree.version>1.0.19</jfree.version>
         <insubstantial.version>7.3</insubstantial.version>
         <swingx.version>1.6.5-1</swingx.version>
-        <dynamic-jasper.version>5.0.2</dynamic-jasper.version>
+        <dynamic-jasper.version>5.0.3</dynamic-jasper.version>
         <docbook-xml.version>5.1b4-all</docbook-xml.version>
         <docbook-xsl.version>1.78.1</docbook-xsl.version>
         <plexus-utils.version>3.0.10</plexus-utils.version>
