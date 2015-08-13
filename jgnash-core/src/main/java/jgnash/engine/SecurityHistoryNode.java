@@ -48,8 +48,10 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
     @Id @GeneratedValue(strategy= GenerationType.TABLE)
     public long id;
 
+    private transient LocalDate cachedLocalDate = LocalDate.now();
+
     @Temporal(TemporalType.DATE)
-    private Date date = DateUtils.today();
+    private Date date = DateUtils.asDate(cachedLocalDate);
 
     @Column(precision = 19, scale = 4)
     private BigDecimal price = BigDecimal.ZERO;
@@ -62,7 +64,6 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
 
     private long volume = 0;
 
-    private transient LocalDate cachedLocalDate = null;
 
     /**
      * public no-argument constructor for reflection

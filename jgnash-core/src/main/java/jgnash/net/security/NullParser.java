@@ -19,10 +19,9 @@
 package jgnash.net.security;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 import jgnash.engine.SecurityNode;
-import jgnash.util.DateUtils;
 
 /**
  * Null security history parser
@@ -62,8 +61,8 @@ public class NullParser implements SecurityParser {
     }
 
     @Override
-    public Date getDate() {
-       return DateUtils.today();
+    public LocalDate getDate() {
+       return LocalDate.now();
     }
 
 }

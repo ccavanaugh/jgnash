@@ -23,7 +23,6 @@ import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 import javax.swing.JButton;
@@ -213,7 +212,7 @@ public class ReconcileSettingsDialog extends JDialog implements ActionListener {
                     final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
                     if (engine != null) {
-                        engine.setAccountAttribute(account, Account.RECONCILE_LAST_ATTEMPT_DATE, Long.toString(DateUtils.trimDate(new Date()).getTime()));
+                        engine.setAccountAttribute(account, Account.RECONCILE_LAST_ATTEMPT_DATE, Long.toString(DateUtils.asEpochMilli(LocalDate.now())));
                         engine.setAccountAttribute(account, Account.RECONCILE_LAST_STATEMENT_DATE, Long.toString(DateUtils.asEpochMilli(getStatementDate())));
                         engine.setAccountAttribute(account, Account.RECONCILE_LAST_OPENING_BALANCE, getOpeningBalance().toString());
                         engine.setAccountAttribute(account, Account.RECONCILE_LAST_CLOSING_BALANCE, getClosingBalance().toString());

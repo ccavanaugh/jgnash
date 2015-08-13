@@ -48,13 +48,13 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
     @Id @GeneratedValue(strategy = GenerationType.TABLE)
     public long id;
 
-    @Temporal(TemporalType.DATE)
-    private Date date = DateUtils.today();
-
     @Column(precision = 20, scale = 8)
     private BigDecimal rate = BigDecimal.ZERO;
 
-    private transient LocalDate cachedLocalDate = DateUtils.asLocalDate(date);
+    private transient LocalDate cachedLocalDate = LocalDate.now();
+
+    @Temporal(TemporalType.DATE)
+    private Date date = DateUtils.asDate(cachedLocalDate);
 
     /**
      * No argument constructor for reflection purposes.

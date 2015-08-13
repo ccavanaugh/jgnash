@@ -291,7 +291,7 @@ public class UpdateFactory {
                 if (parser != null && !Thread.currentThread().isInterrupted()) {  // check for thread interruption
                     if (parser.parse(securityNode)) {
 
-                        final SecurityHistoryNode node = new SecurityHistoryNode(DateUtils.asLocalDate(parser.getDate()),
+                        final SecurityHistoryNode node = new SecurityHistoryNode(parser.getDate(),
                                 parser.getPrice(), parser.getVolume(), parser.getHigh(), parser.getLow());
 
                         if (!Thread.currentThread().isInterrupted()) { // check for thread interruption

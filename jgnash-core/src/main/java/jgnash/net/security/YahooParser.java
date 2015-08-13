@@ -24,10 +24,9 @@ import java.net.SocketTimeoutException;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -35,7 +34,6 @@ import java.util.regex.Pattern;
 
 import jgnash.engine.SecurityNode;
 import jgnash.net.ConnectionFactory;
-import jgnash.util.DateUtils;
 
 /**
  * An abstract CommodityParser for the Yahoo! financial web sites.
@@ -56,7 +54,7 @@ public abstract class YahooParser implements SecurityParser {
 
     private BigDecimal low;
 
-    private Date date = DateUtils.today();
+    private LocalDate date = LocalDate.now();
 
     /**
      * Registers a {@code Handler} with the class logger.
@@ -107,14 +105,14 @@ public abstract class YahooParser implements SecurityParser {
      * @return the date
      */
     @Override
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
     /**
      * @param date the date to set
      */
-    void setDate(Date date) {
+    void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -174,10 +172,10 @@ public abstract class YahooParser implements SecurityParser {
                         // the date from Yahoo is the last close date.  It may not reflect the date the parse is performed
                         if (!fields[2].isEmpty()) {
                             try {
-                                DateFormat df = new SimpleDateFormat("\"MM/dd/yyyy\"");
-                                Date date = df.parse(fields[2]);
-                                setDate(date);
-                            } catch (ParseException e) {
+                                final String date =fields[2].replace("\"", "");
+                                final DateTimeFormatter df = DateTimeFormatter.ofPattern("M/d/y");
+                                setDate(LocalDate.from(df.parse(date)));
+                            } catch (final DateTimeParseException e) {
                                 logger.log(Level.SEVERE, null, e);
                             }
                         }

@@ -18,7 +18,7 @@
 package jgnash.net.security;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 import jgnash.engine.SecurityNode;
 
@@ -37,7 +37,7 @@ public interface SecurityParser {
 
     long getVolume();
         
-    Date getDate();
+    LocalDate getDate();
       
     boolean parse(SecurityNode node);
 

@@ -56,8 +56,6 @@ public class DateTest {
         final LocalDateTime rewind = LocalDateTime.from(dateTimeFormatter.parse(dateTimeFormatter.format(localDateTime)));
 
         assertEquals(localDateTime, rewind);
-
-        assertEquals(LocalDate.now(), DateUtils.asLocalDate(DateUtils.today()));
     }
 
     @Test
@@ -98,29 +96,6 @@ public class DateTest {
 
         // round trip
         assertEquals(now, DateUtils.asLocalDate(DateUtils.asEpochMilli(now)));
-    }
-
-    @Test
-    public void trimTest() {
-
-        // first one initializes the queue
-        DateUtils.today();
-
-        Date date = new Date();
-
-        // micro benchmark
-        long start = System.nanoTime();
-
-        int TESTS = 1000;
-
-        for (int i = 0; i < TESTS; i++) {
-            DateUtils.trimDate(date);
-        }
-
-        System.out.println(" " + (System.nanoTime() - start) / TESTS + " nano seconds per trim");
-
-        assertTrue(true);
-
     }
 
     @Test
