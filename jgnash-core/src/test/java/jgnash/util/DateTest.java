@@ -85,7 +85,6 @@ public class DateTest {
     @Test
     public void formatTestThree() throws ParseException {
         final SimpleDateFormat format = new SimpleDateFormat("MMMMM");
-        //final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.o
 
         final LocalDate localDateTime = LocalDate.now();
         final Date now = DateUtils.asDate(localDateTime);
@@ -99,22 +98,6 @@ public class DateTest {
 
         // round trip
         assertEquals(now, DateUtils.asLocalDate(DateUtils.asEpochMilli(now)));
-    }
-
-    @Test
-    public void getNameOfMonthTest() {
-        Locale.setDefault(Locale.US);
-
-        Date date = DateUtils.getDateOfTheYear(2011, 1);
-
-        String month = DateUtils.getNameOfMonth(date);
-
-        assertEquals("January", month);
-
-        date = DateUtils.getDateOfTheYear(2011, 70);
-        month = DateUtils.getNameOfMonth(date);
-
-        assertEquals("March", month);
     }
 
     @Test

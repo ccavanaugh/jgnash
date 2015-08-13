@@ -18,7 +18,6 @@
 package jgnash.util;
 
 import java.text.DateFormat;
-import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -56,10 +55,6 @@ public class DateUtils {
     private static final long MILLISECONDS_PER_DAY = 24 * 60 * 60 * MILLISECONDS_PER_SECOND;
 
     private static final long AVERAGE_MILLISECONDS_PER_MONTH = (long) (365f * 24f * 60f * 60f * 1000f / 12f);
-
-    private static String[] localizedMonthNames;
-
-    private static Locale lastLocale;
 
     private static final Pattern MONTH_PATTERN = Pattern.compile("M{1,2}");
 
@@ -179,25 +174,6 @@ public class DateUtils {
         }
 
         return null;
-    }
-
-    private static void updateMonthNames() {
-        if (lastLocale != Locale.getDefault()) {
-
-            DateFormatSymbols symbols = new DateFormatSymbols();
-            localizedMonthNames = symbols.getMonths();
-
-            lastLocale = Locale.getDefault();
-        }
-    }
-
-    public static String getNameOfMonth(final Date date) {
-        updateMonthNames();
-
-        final GregorianCalendar c = gregorianCalendarThreadLocal.get();
-
-        c.setTime(date);
-        return localizedMonthNames[c.get(Calendar.MONTH)];
     }
 
     public static Date addDay(final Date date) {
