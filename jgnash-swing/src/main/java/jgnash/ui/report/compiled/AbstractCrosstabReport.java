@@ -171,7 +171,7 @@ abstract class AbstractCrosstabReport extends DynamicJasperReport {
 
         p.putBoolean(HIDE_ZERO_BALANCE, hideZeroBalanceAccounts.isSelected());
         p.putBoolean(USE_LONG_NAMES, showLongNamesCheckBox.isSelected());
-        p.putInt(MONTHS, DateUtils.getLastDayOfTheMonths(startDateField.getDate(), endDateField.getDate()).size());
+        p.putInt(MONTHS, DateUtils.getLastDayOfTheMonths(startDateField.getLocalDate(), endDateField.getLocalDate()).size());
 
         super.refreshReport();
     }

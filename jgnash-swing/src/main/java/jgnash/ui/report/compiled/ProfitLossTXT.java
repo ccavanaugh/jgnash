@@ -27,7 +27,6 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -47,7 +46,6 @@ import jgnash.engine.EngineFactory;
 import jgnash.text.CommodityFormat;
 import jgnash.ui.components.JDateField;
 import jgnash.ui.register.AccountBalanceDisplayManager;
-import jgnash.util.DateUtils;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -162,8 +160,7 @@ public class ProfitLossTXT {
 
     private LocalDate[] getDates() {
 
-        Date start = new Date();
-        start = DateUtils.subtractYear(start);
+        LocalDate start = LocalDate.now().minusYears(1);
 
         JDateField startField = new JDateField();
         JDateField endField = new JDateField();

@@ -28,8 +28,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -119,7 +117,7 @@ public class UpdateFactory {
         return result;
     }
 
-    public static boolean importHistory(final SecurityNode securityNode, final Date startDate, final Date endDate) {
+    public static boolean importHistory(final SecurityNode securityNode, final LocalDate startDate, final LocalDate endDate) {
         boolean result = false;
 
         final ExecutorService service = Executors.newSingleThreadExecutor();
@@ -138,24 +136,20 @@ public class UpdateFactory {
         return result;
     }
 
-    public static List<SecurityHistoryNode> downloadHistory(final SecurityNode securityNode, final Date startDate,
-                                                            final Date endDate) {
+    public static List<SecurityHistoryNode> downloadHistory(final SecurityNode securityNode, final LocalDate startDate,
+                                                            final LocalDate endDate) {
 
         final List<SecurityHistoryNode> newSecurityNodes = new ArrayList<>();
 
-        final Calendar cal = Calendar.getInstance();
-
         final String s = securityNode.getSymbol().toLowerCase();
 
-        cal.setTime(startDate);
-        final String a = Integer.toString(cal.get(Calendar.MONTH));
-        final String b = Integer.toString(cal.get(Calendar.DATE));
-        final String c = Integer.toString(cal.get(Calendar.YEAR));
+        final String a = Integer.toString(startDate.getMonthValue() - 1);
+        final String b = Integer.toString(startDate.getDayOfMonth());
+        final String c = Integer.toString(startDate.getYear());
 
-        cal.setTime(endDate);
-        final String d = Integer.toString(cal.get(Calendar.MONTH));
-        final String e = Integer.toString(cal.get(Calendar.DATE));
-        final String f = Integer.toString(cal.get(Calendar.YEAR));
+        final String d = Integer.toString(endDate.getMonthValue() - 1);
+        final String e = Integer.toString(endDate.getDayOfMonth());
+        final String f = Integer.toString(endDate.getYear());
 
         // http://ichart.finance.yahoo.com/table.csv?s=AMD&d=1&e=14&f=2007&g=d&a=2&b=21&c=1983&ignore=.csv << new URL 2.14.07
 
@@ -231,13 +225,14 @@ public class UpdateFactory {
 
     public static class HistoricalImportCallable implements Callable<Boolean> {
 
-        private final Date startDate;
+        private final LocalDate startDate;
 
-        private final Date endDate;
+        private final LocalDate endDate;
 
         private final SecurityNode securityNode;
 
-        public HistoricalImportCallable(@NotNull final SecurityNode securityNode, @NotNull final Date startDate, @NotNull final Date endDate) {
+        public HistoricalImportCallable(@NotNull final SecurityNode securityNode, @NotNull final LocalDate startDate,
+                                        @NotNull final LocalDate endDate) {
             this.securityNode = securityNode;
 
             if (DateUtils.before(startDate, endDate)) {

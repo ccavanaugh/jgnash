@@ -21,7 +21,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -165,8 +164,8 @@ public class HistoricalImportController {
         updateTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                final Date startDate = startDatePicker.getDate();
-                final Date endDate = endDatePicker.getDate();
+                final LocalDate startDate = startDatePicker.getValue();
+                final LocalDate endDate = endDatePicker.getValue();
 
                 final Map<SecurityNode, List<SecurityHistoryNode>> historyMap = new HashMap<>();
 

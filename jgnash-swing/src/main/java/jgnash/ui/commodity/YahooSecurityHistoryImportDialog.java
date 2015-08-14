@@ -20,6 +20,7 @@ package jgnash.ui.commodity;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -178,8 +179,8 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
         bar.setIndeterminate(true);
         okButton.setEnabled(false); // do not allow another start
 
-        final Date start = startField.getDate();
-        final Date end = endField.getDate();
+        final LocalDate start = startField.getLocalDate();
+        final LocalDate end = endField.getLocalDate();
 
         int[] list = securityList.getSelectedIndices();
         SecurityNode[] nodes = new SecurityNode[list.length];
@@ -239,13 +240,13 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
 
         private volatile boolean run = true;
 
-        private final Date start;
+        private final LocalDate start;
 
-        private final Date end;
+        private final LocalDate end;
 
         private final SecurityNode[] sNodes;
 
-        ImportRun(final SecurityNode[] sNodes, final Date start, final Date end) {
+        ImportRun(final SecurityNode[] sNodes, final LocalDate start, final LocalDate end) {
             this.start = start;
             this.end = end;
             this.sNodes = sNodes;

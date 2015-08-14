@@ -175,56 +175,6 @@ public class DateUtils {
         return null;
     }
 
-    public static Date addDay(final Date date) {
-        return addDays(date, 1);
-    }
-
-    /**
-     * Returns a date a given number of days after the requested date
-     *
-     * @param date start date
-     * @param days the number of days to add
-     * @return new date
-     */
-    public static Date addDays(final Date date, final int days) {
-        final GregorianCalendar c = gregorianCalendarThreadLocal.get();
-
-        c.setTime(date);
-        c.add(Calendar.DATE, days);
-        return c.getTime();
-    }
-
-    public static Date addMonth(final Date date) {
-        return addMonths(date, 1);
-    }
-
-    /**
-     * Adds months to the supplied date
-     *
-     * @param date   beginning date
-     * @param months number of months to add, may be negative to subtract months
-     * @return prior month
-     */
-    private static Date addMonths(final Date date, final int months) {
-        final GregorianCalendar c = gregorianCalendarThreadLocal.get();
-
-        c.setTime(date);
-        c.add(Calendar.MONTH, months);
-        return c.getTime();
-    }
-
-    /**
-     * Determines is Date d1 occurs after Date d2. The specified dates are
-     * inclusive.
-     *
-     * @param d1 date 1
-     * @param d2 date 2
-     * @return true if d1 is after d2
-     */
-    public static boolean after(final Date d1, final Date d2) {
-        return before(d2, d1, true);
-    }
-
     /**
      * Determines is {@code LocalDate} d1 occurs after {@code LocalDate} d2. The specified dates are
      * inclusive.
@@ -238,18 +188,6 @@ public class DateUtils {
     }
 
     /**
-     * Determines if Date d1 occurs before Date d2. The specified dates are
-     * inclusive
-     *
-     * @param d1 date 1
-     * @param d2 date 2
-     * @return true if d1 is before d2 or the same date
-     */
-    public static boolean before(final Date d1, final Date d2) {
-        return before(d1, d2, true);
-    }
-
-    /**
      * Determines if {@code LocalDate} d1 occurs before {@code LocalDate} d2. The specified dates are
      * inclusive
      *
@@ -259,22 +197,6 @@ public class DateUtils {
      */
     public static boolean before(final LocalDate d1, final LocalDate d2) {
         return before(d1, d2, true);
-    }
-
-    /**
-     * Determines if Date d1 occurs before Date d2.
-     *
-     * @param d1        date 1
-     * @param d2        date 2
-     * @param inclusive {@code true} is comparison is inclusive
-     * @return {@code true} if d1 occurs before d2
-     */
-    public static boolean before(final Date d1, final Date d2, final boolean inclusive) {
-        if (inclusive) {
-            return d1.getTime() <= d2.getTime();
-        }
-
-        return d1.getTime() < d2.getTime();
     }
 
     /**
@@ -434,24 +356,6 @@ public class DateUtils {
     }
 
     /**
-     * Returns a leveled date representing the last day of the month based on a
-     * specified date.
-     *
-     * @param date the base date to work from
-     * @return The last day of the month of the supplied date
-     */
-    public static Date getLastDayOfTheMonth(final Date date) {
-        Objects.requireNonNull(date);
-
-        final GregorianCalendar c = gregorianCalendarThreadLocal.get();
-
-        c.setTime(date);
-        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.getActualMaximum(Calendar.DAY_OF_MONTH));
-
-        return trimDate(c.getTime());
-    }
-
-    /**
      * Returns date representing the last day of the month given a specified date.
      *
      * @param date the base date to work from
@@ -461,31 +365,6 @@ public class DateUtils {
         Objects.requireNonNull(date);
 
         return date.with(TemporalAdjusters.lastDayOfMonth());
-    }
-
-    /**
-     * Generates an array of dates ending on the last day of every month between
-     * the start and stop dates.
-     *
-     * @param startDate The date to start at
-     * @param endDate   The data to stop at
-     * @return The array of dates
-     */
-    public static List<Date> getLastDayOfTheMonths(final Date startDate, final Date endDate) {
-        final ArrayList<Date> list = new ArrayList<>();
-
-        final Date end = DateUtils.getLastDayOfTheMonth(endDate);
-        Date t = DateUtils.getLastDayOfTheMonth(startDate);
-
-        /*
-         * add a month at a time to the previous date until all of the months
-         * have been captured
-         */
-        while (before(t, end)) {
-            list.add(t);
-            t = DateUtils.getLastDayOfTheMonth(DateUtils.addMonth(t));
-        }
-        return list;
     }
 
     /**
@@ -655,51 +534,6 @@ public class DateUtils {
      */
     public static int getWeekOfTheYear(final LocalDate dateOfYear) {
         return dateOfYear.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
-    }
-
-    /**
-     * Subtract one day from the supplied date
-     *
-     * @param date start date
-     * @return one day less
-     */
-    public static Date subtractDay(final Date date) {
-        return addDays(date, -1);
-    }
-
-    /**
-     * Subtracts one month from the supplied date
-     *
-     * @param date beginning date
-     * @return prior month
-     */
-    public static Date subtractMonth(final Date date) {
-        return addMonths(date, -1);
-    }
-
-    /**
-     * Returns a date one year earlier than the provided date
-     *
-     * @param date start date
-     * @return date of the previous year
-     */
-    public static Date subtractYear(final Date date) {
-        return addYears(date, -1);
-    }
-
-    /**
-     * Returns a date incremented or decremented by a number of years
-     *
-     * @param date  start date
-     * @param years number of years
-     * @return date of the new year
-     */
-    private static Date addYears(final Date date, final int years) {
-        final GregorianCalendar c = gregorianCalendarThreadLocal.get();
-
-        c.setTime(date);
-        c.add(Calendar.YEAR, years);
-        return c.getTime();
     }
 
     /**

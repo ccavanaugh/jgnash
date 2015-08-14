@@ -104,8 +104,8 @@ public class MonthlyAccountBalanceChart {
     }
 
     private JPanel createPanel() {
-        Date end = DateUtils.getLastDayOfTheMonth(endDateField.getDate());
-        Date start = DateUtils.subtractYear(end);
+        LocalDate end = DateUtils.getLastDayOfTheMonth(endDateField.getLocalDate());
+        LocalDate start = end.minusYears(1);
         startDateField.setDate(start);
 
         JButton refreshButton = new JButton(rb.getString("Button.Refresh"));
@@ -235,7 +235,7 @@ public class MonthlyAccountBalanceChart {
 
         // if (a.getTransactionCount() > 0) {
         Date start = DateUtils.asDate(DateUtils.getFirstDayOfTheMonth(startDateField.getLocalDate()));
-        Date end = DateUtils.getLastDayOfTheMonth(endDateField.getDate());
+        Date end = DateUtils.asDate(DateUtils.getLastDayOfTheMonth(endDateField.getLocalDate()));
         dateAxis.setRange(start, end);
         // }
 

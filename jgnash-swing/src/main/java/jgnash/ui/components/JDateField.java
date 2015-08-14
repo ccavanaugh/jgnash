@@ -77,7 +77,9 @@ public final class JDateField extends JTextFieldEx {
     }
 
     public void setValue(final Object value) {
-        if (value instanceof Date) {
+        if (value instanceof LocalDate) {
+            setText(formatter.format(DateUtils.asDate((LocalDate) value)));
+        } else if (value instanceof Date) {
             setText(formatter.format((Date) value));
         } else {
             setText("");
@@ -160,20 +162,20 @@ public final class JDateField extends JTextFieldEx {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_UP:
                 case KeyEvent.VK_KP_UP:
-                    setValue(DateUtils.addDay(dateValue()));
+                    setValue(localDateValue().plusDays(1));
                     break;
                 case KeyEvent.VK_DOWN:
                 case KeyEvent.VK_KP_DOWN:
-                    setValue(DateUtils.subtractDay(dateValue()));
+                    setValue(localDateValue().minusDays(1));
                     break;
                 case KeyEvent.VK_PAGE_UP:
-                    setValue(DateUtils.addMonth(dateValue()));
+                    setValue(localDateValue().plusMonths(1));
                     break;
                 case KeyEvent.VK_PAGE_DOWN:
-                    setValue(DateUtils.subtractMonth(dateValue()));
+                    setValue(localDateValue().minusMonths(1));
                     break;
                 case KeyEvent.VK_T:
-                    setValue(new Date());
+                    setValue(LocalDate.now());
                     break;
                 default:
                     return;
@@ -196,10 +198,10 @@ public final class JDateField extends JTextFieldEx {
             int pos = getCaretPosition();
             switch (e.getKeyChar()) {
                 case '+':
-                    setValue(DateUtils.addDay(dateValue()));
+                    setValue(localDateValue().plusDays(1));
                     break;
                 case '-':
-                    setValue(DateUtils.subtractDay(dateValue()));
+                    setValue(localDateValue().minusDays(1));
                     break;
                 default:
                     return;
