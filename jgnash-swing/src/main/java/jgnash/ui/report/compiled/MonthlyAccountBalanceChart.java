@@ -234,7 +234,7 @@ public class MonthlyAccountBalanceChart {
         dateAxis.setTickMarkPosition(DateTickMarkPosition.MIDDLE);
 
         // if (a.getTransactionCount() > 0) {
-        Date start = DateUtils.getFirstDayOfTheMonth(startDateField.getDate());
+        Date start = DateUtils.asDate(DateUtils.getFirstDayOfTheMonth(startDateField.getLocalDate()));
         Date end = DateUtils.getLastDayOfTheMonth(endDateField.getDate());
         dateAxis.setRange(start, end);
         // }

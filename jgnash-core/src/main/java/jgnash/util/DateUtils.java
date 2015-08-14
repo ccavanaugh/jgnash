@@ -26,7 +26,6 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
@@ -50,12 +49,6 @@ public class DateUtils {
 
     private static final int MILLISECONDS_PER_SECOND = 1000;
 
-    private static final int DAYS_PER_YEAR = 365;
-
-    private static final long MILLISECONDS_PER_DAY = 24 * 60 * 60 * MILLISECONDS_PER_SECOND;
-
-    private static final long AVERAGE_MILLISECONDS_PER_MONTH = (long) (365f * 24f * 60f * 60f * 1000f / 12f);
-
     private static final Pattern MONTH_PATTERN = Pattern.compile("M{1,2}");
 
     private static final Pattern DAY_PATTERN = Pattern.compile("d{1,2}");
@@ -65,7 +58,7 @@ public class DateUtils {
     /**
      * Pattern for a {@code java.time.format.DateTimeFormatter} to parse and format to the default.  DateTimeFormatter
      * does not like use of the 'z' literal, so force the UTC zone which is the XStream default.
-     *
+     * <p>
      * {@code com.thoughtworks.xstream.converters.basic.DateConverter} format.
      */
     public static final String DEFAULT_XSTREAM_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS 'UTC'";
@@ -77,7 +70,7 @@ public class DateUtils {
             String pattern = ((SimpleDateFormat) df).toPattern();
             pattern = DAY_PATTERN.matcher(MONTH_PATTERN.matcher(pattern).replaceAll("MM")).replaceAll("dd");
 
-            shortDateTimeFormatter =  DateTimeFormatter.ofPattern(pattern);
+            shortDateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
         } else {
             shortDateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
         }
@@ -116,6 +109,7 @@ public class DateUtils {
 
     /**
      * Converts a {@code LocalDate} into a {@code Date} using the default timezone
+     *
      * @param localDate {@code LocalDate} to convert
      * @return an equivalent {@code Date}
      */
@@ -125,6 +119,7 @@ public class DateUtils {
 
     /**
      * Converts a {@code LocalDateTime} into a {@code Date} using the default timezone
+     *
      * @param localDate {@code LocalDateTime} to convert
      * @return an equivalent {@code Date}
      */
@@ -134,6 +129,7 @@ public class DateUtils {
 
     /**
      * Converts a {@code Date} into a {@code LocalDate} using the default timezone.
+     *
      * @param date {@code Date} to convert
      * @return an equivalent {@code LocalDate} or {@code null} if the supplied date was {@code null}
      */
@@ -147,6 +143,7 @@ public class DateUtils {
 
     /**
      * Converts milliseconds from the epoch of 1970-01-01T00:00:00Z into a {@code LocalDate} using the default timezone.
+     *
      * @param milli milliseconds from the epoch of 1970-01-01T00:00:00Z.
      * @return an equivalent {@code LocalDate} or {@code null} if the supplied date was {@code null}
      */
@@ -156,6 +153,7 @@ public class DateUtils {
 
     /**
      * Converts a LocaleDate into milliseconds from the epoch of 1970-01-01T00:00:00Z
+     *
      * @param localDate {@code LocalDate} to convert
      * @return and equivalent milliseconds from the epoch of 1970-01-01T00:00:00Z
      */
@@ -165,6 +163,7 @@ public class DateUtils {
 
     /**
      * Converts a {@code Date} into a {@code LocalDateTime} using the UTC timezone.
+     *
      * @param date {@code Date} to convert
      * @return an equivalent {@code LocalDateTime} or {@code null} if the supplied date was {@code null}
      */
@@ -295,162 +294,29 @@ public class DateUtils {
     }
 
     /**
-     * Returns the current calendar year
-     *
-     * @return the year
-     */
-    public static int getCurrentYear() {
-        return getYear(new Date());
-    }
-
-    /**
-     * Returns the calendar year given a date
-     *
-     * @param date date
-     * @return the year
-     */
-    private static int getYear(final Date date) {
-        final GregorianCalendar c = gregorianCalendarThreadLocal.get();
-
-        c.setTime(date);
-
-        return c.get(Calendar.YEAR);
-    }
-
-    /**
-     * Returns the date given a year and a day of the year.
-     * <p/>
-     * The first day of the year has value 1.
-     *
-     * @param year      the year
-     * @param dayOfYear day of the year
-     * @return the date
-     */
-    public static Date getDateOfTheYear(final int year, final int dayOfYear) {
-        final GregorianCalendar c = gregorianCalendarThreadLocal.get();
-
-        c.setTime(trimDate(c.getTime()));
-        c.set(Calendar.YEAR, year);
-        c.set(Calendar.DAY_OF_YEAR, dayOfYear);
-
-        return c.getTime();
-    }
-
-    /**
-     * Returns the numerical day of the year given a date
-     *
-     * @param date the base date to work from
-     * @return the week of the year
-     */
-    public static int getDayOfTheYear(final Date date) {
-        return getDayOfX(date, Calendar.DAY_OF_YEAR);
-    }
-
-    /**
-     * Returns a numerical value given a date and Calendar field
-     *
-     * @param date  the base date to work from
-     * @param field Calendar field
-     * @return numerical value
-     */
-    private static int getDayOfX(final Date date, final int field) {
-        final GregorianCalendar c = gregorianCalendarThreadLocal.get();
-
-        c.setTime(date);
-        return c.get(field);
-    }
-
-    /**
-     * Returns the number of days in the month given a date
-     *
-     * @param date date (Month)
-     * @return the number of days in the month
-     */
-    public static int getDaysInMonth(final Date date) {
-        final GregorianCalendar c = gregorianCalendarThreadLocal.get();
-
-        c.setTime(date);
-        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.getActualMaximum(Calendar.DAY_OF_MONTH));
-
-        return c.get(Calendar.DAY_OF_MONTH);
-    }
-
-    /**
      * Returns the number of days in the year
      *
      * @param year calendar year
      * @return the number of days in the year
      */
     private static int getDaysInYear(final int year) {
-        if (isLeapYear(year)) {
-            return DAYS_PER_YEAR + 1;
-        }
-        return DAYS_PER_YEAR;
-    }
-
-    /**
-     * Determines the difference in days of two dates
-     *
-     * @param startDate start date
-     * @param endDate   end date
-     * @return number of days
-     */
-    public static int getDifferenceInDays(final Date startDate, final Date endDate) {
-        final GregorianCalendar c = gregorianCalendarThreadLocal.get();
-
-        c.setTime(trimDate(startDate));
-        final long startMilli = c.getTimeInMillis() + c.getTimeZone().getOffset(c.getTimeInMillis());
-
-        c.setTime(trimDate(endDate));
-        final long endMilli = c.getTimeInMillis() + c.getTimeZone().getOffset(c.getTimeInMillis());
-
-        return (int) ((endMilli - startMilli) / MILLISECONDS_PER_DAY);
-    }
-
-    /**
-     * Determines the difference in days of two dates
-     *
-     * @param startDate start date
-     * @param endDate   end date
-     * @return number of days
-     */
-    public static long getDifferenceInDays(final LocalDate startDate, final LocalDate endDate) {
-        return ChronoUnit.DAYS.between(startDate, endDate);
-    }
-
-    /**
-     * Determines the difference in months of two dates
-     *
-     * @param startDate start date
-     * @param endDate   end date
-     * @return number of days
-     */
-    public static float getDifferenceInMonths(final Date startDate, final Date endDate) {
-        final GregorianCalendar c = gregorianCalendarThreadLocal.get();
-
-        c.setTime(trimDate(startDate));
-        final long startMilli = c.getTimeInMillis() + c.getTimeZone().getOffset(c.getTimeInMillis());
-
-        c.setTime(trimDate(endDate));
-        final long endMilli = c.getTimeInMillis() + c.getTimeZone().getOffset(c.getTimeInMillis());
-
-        return ((float) endMilli - (float) startMilli) / AVERAGE_MILLISECONDS_PER_MONTH;
+        return LocalDate.ofYearDay(year, 1).lengthOfYear();
     }
 
     /**
      * @param year The year to generate the array for
      * @return The array of dates
      */
-    public static Date[] getFirstDayBiWeekly(final int year) {
-        List<Date> dates = new ArrayList<>();
+    public static LocalDate[] getFirstDayBiWeekly(final int year) {
+        List<LocalDate> dates = new ArrayList<>();
 
-        Date[] allWeeks = getFirstDayWeekly(year);
+        LocalDate[] allWeeks = getFirstDayWeekly(year);
 
         for (int i = 0; i < allWeeks.length; i += 2) {
             dates.add(allWeeks[i]);
         }
 
-        return dates.toArray(new Date[dates.size()]);
+        return dates.toArray(new LocalDate[dates.size()]);
     }
 
     /**
@@ -460,8 +326,8 @@ public class DateUtils {
      * @param year The year to generate the array for
      * @return The array of dates
      */
-    public static Date[] getFirstDayMonthly(final int year) {
-        Date[] list = new Date[12];
+    public static LocalDate[] getFirstDayMonthly(final int year) {
+        LocalDate[] list = new LocalDate[12];
         for (int i = 0; i < 12; i++) {
             list[i] = getFirstDayOfTheMonth(i, year);
         }
@@ -475,24 +341,8 @@ public class DateUtils {
      * @param date the base date to work from
      * @return The last day of the month and year specified
      */
-    public static Date getFirstDayOfTheMonth(final Date date) {
-        final GregorianCalendar c = gregorianCalendarThreadLocal.get();
-
-        c.setTime(date);
-        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.getActualMinimum(Calendar.DAY_OF_MONTH));
-
-        return trimDate(c.getTime());
-    }
-
-    /**
-     * Returns a leveled date representing the first day of the month based on a
-     * specified date.
-     *
-     * @param date the base date to work from
-     * @return The last day of the month and year specified
-     */
     public static LocalDate getFirstDayOfTheMonth(final LocalDate date) {
-       return date.with(TemporalAdjusters.firstDayOfMonth());
+        return date.with(TemporalAdjusters.firstDayOfMonth());
     }
 
     /**
@@ -502,7 +352,7 @@ public class DateUtils {
      * @param year  The year (index starts at 1)
      * @return The last day of the month and year specified
      */
-    private static Date getFirstDayOfTheMonth(final int month, final int year) {
+    private static LocalDate getFirstDayOfTheMonth(final int month, final int year) {
         assert month >= 0 && month <= 11;
 
         final GregorianCalendar c = gregorianCalendarThreadLocal.get();
@@ -510,7 +360,7 @@ public class DateUtils {
         c.set(year, month, 15);
         c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.getActualMinimum(Calendar.DAY_OF_MONTH));
 
-        return trimDate(c.getTime());
+        return asLocalDate(c.getTime());
     }
 
     /**
@@ -519,22 +369,13 @@ public class DateUtils {
      * @param year The year to generate the array for
      * @return The array of quarter bound dates
      */
-    public static Date[] getFirstDayQuarterly(final int year) {
-        final GregorianCalendar c = gregorianCalendarThreadLocal.get();
+    public static LocalDate[] getFirstDayQuarterly(final int year) {
+        LocalDate[] bounds = new LocalDate[4];
 
-        Date[] bounds = new Date[4];
-
-        c.set(year, Calendar.JANUARY, 1, 0, 0, 0);
-        bounds[0] = c.getTime();
-
-        c.set(year, Calendar.APRIL, 1, 0, 0, 0);
-        bounds[1] = c.getTime();
-
-        c.set(year, Calendar.JULY, 1, 0, 0, 0);
-        bounds[2] = c.getTime();
-
-        c.set(year, Calendar.OCTOBER, 1, 0, 0, 0);
-        bounds[3] = c.getTime();
+        bounds[0] = LocalDate.of(year, Month.JANUARY, 1);
+        bounds[1] = LocalDate.of(year, Month.APRIL, 1);
+        bounds[2] = LocalDate.of(year, Month.JULY, 1);
+        bounds[3] = LocalDate.of(year, Month.OCTOBER, 1);
 
         return bounds;
     }
@@ -547,11 +388,11 @@ public class DateUtils {
      * @return The array of dates
      * @see <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO_8601</a>
      */
-    public static Date[] getFirstDayWeekly(final int year) {
+    public static LocalDate[] getFirstDayWeekly(final int year) {
         final GregorianCalendar cal = gregorianCalendarThreadLocal.get();
         final GregorianCalendar testCal = new GregorianCalendar();
 
-        List<Date> dates = new ArrayList<>();
+        List<LocalDate> dates = new ArrayList<>();
 
         // level the date
         cal.setTime(trimDate(cal.getTime()));
@@ -566,13 +407,13 @@ public class DateUtils {
             testCal.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
 
             if (testCal.get(Calendar.YEAR) == year) {
-                dates.add(cal.getTime());
+                dates.add(asLocalDate(cal.getTime()));
             }
 
             cal.add(Calendar.DATE, 7); // add 7 days
         }
 
-        return dates.toArray(new Date[dates.size()]);
+        return dates.toArray(new LocalDate[dates.size()]);
     }
 
     /**
@@ -581,23 +422,15 @@ public class DateUtils {
      * @param year The year to generate the array for
      * @return The array of dates
      */
-    public static Date[] getAllDays(final int year) {
+    public static LocalDate[] getAllDays(final int year) {
 
-        final GregorianCalendar cal = gregorianCalendarThreadLocal.get();
+        final List<LocalDate> dates = new ArrayList<>();
 
-        List<Date> dates = new ArrayList<>();
-
-        cal.setTime(trimDate(cal.getTime()));
-        cal.set(Calendar.YEAR, year);
-        cal.set(cal.get(Calendar.YEAR), cal.getActualMinimum(Calendar.MONTH), cal.getMinimum(Calendar.DAY_OF_MONTH));
-
-        final Date startDate = cal.getTime();
-
-        for (int i = 0; i < getDaysInYear(year); i++) {
-            dates.add(addDays(startDate, i));
+        for (int i = 1; i <= getDaysInYear(year); i++) {
+            dates.add(LocalDate.ofYearDay(year, i));
         }
 
-        return dates.toArray(new Date[dates.size()]);
+        return dates.toArray(new LocalDate[dates.size()]);
     }
 
     /**
@@ -798,17 +631,6 @@ public class DateUtils {
         return result;
     }
 
-    //  public static int getMonthByDayOfYear(int year, int dayOfYear) {
-    //
-    //      Calendar c = getGCal();
-    //
-    //      c.setTime(trimDate(c.getTime()));
-    //      c.set(Calendar.YEAR, year);
-    //      c.set(Calendar.DAY_OF_YEAR, dayOfYear);
-    //
-    //      return c.get(Calendar.MONTH);
-    //   }
-
     /**
      * Generates a customized DateFormat with constant width for all dates. A new
      * instance is created each time
@@ -825,7 +647,7 @@ public class DateUtils {
 
     /**
      * Returns the numerical week of the year given a date.
-     * <p/>
+     * <p>
      * Minimal days of week is set to 4 to comply with ISO 8601
      *
      * @param dateOfYear the base date to work from
@@ -833,22 +655,6 @@ public class DateUtils {
      */
     public static int getWeekOfTheYear(final LocalDate dateOfYear) {
         return dateOfYear.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
-    }
-
-    /**
-     * Determines if the supplied year is a leap year
-     *
-     * @param year integer based year (ex. 2000, 2011)
-     * @return {@code true} if the given year is a leap year
-     */
-    public static boolean isLeapYear(final int year) {
-        boolean isLeapYear;
-
-        isLeapYear = year % 4 == 0;
-
-        isLeapYear = isLeapYear && year % 100 != 0;
-
-        return isLeapYear || year % 400 == 0;
     }
 
     /**
@@ -894,15 +700,6 @@ public class DateUtils {
         c.setTime(date);
         c.add(Calendar.YEAR, years);
         return c.getTime();
-    }
-
-    /**
-     * Returns a trimmed version of today's date
-     *
-     * @return trimmed date
-     */
-    public static Date today() {
-        return trimDate(new Date());
     }
 
     /**

@@ -19,6 +19,7 @@ package jgnash.engine.budget;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,7 +30,6 @@ import jgnash.engine.Account;
 import jgnash.engine.AccountType;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.util.DateUtils;
 
 /**
  * Budget Factory for automatic generation of Budgets
@@ -52,7 +52,7 @@ public class BudgetFactory {
         budget.setName(name);
         budget.setBudgetPeriod(budgetPeriod);
 
-        int year = DateUtils.getCurrentYear() - 1;
+        int year = LocalDate.now().getYear() - 1;
 
         List<BudgetPeriodDescriptor> descriptors = BudgetPeriodDescriptorFactory.getDescriptors(year, budgetPeriod);
 

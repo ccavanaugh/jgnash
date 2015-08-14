@@ -155,7 +155,7 @@ public class PayeePieChart {
 
         combo = AccountListComboBox.getFullInstance();
 
-        Date dStart = DateUtils.subtractYear(DateUtils.getFirstDayOfTheMonth(new Date()));
+        Date dStart = DateUtils.asDate(DateUtils.getFirstDayOfTheMonth(LocalDate.now().minusYears(1)));
 
         long start = pref.getLong(START_DATE, dStart.getTime());
 

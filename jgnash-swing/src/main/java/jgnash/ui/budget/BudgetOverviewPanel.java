@@ -18,6 +18,7 @@
 package jgnash.ui.budget;
 
 import java.awt.EventQueue;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -42,7 +43,6 @@ import jgnash.engine.AccountGroup;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.Transaction;
-import jgnash.util.DateUtils;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -104,7 +104,7 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
 
         model = new SpinnerNumberModel();
 
-        model.setValue(DateUtils.getCurrentYear());
+        model.setValue(LocalDate.now().getYear());
         model.setStepSize(1);
 
         yearSpinner = new JSpinner(model);
@@ -140,8 +140,8 @@ class BudgetOverviewPanel extends JPanel implements ChangeListener {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             Objects.requireNonNull(engine);
 
-            int minYear = DateUtils.getCurrentYear();
-            int maxYear = DateUtils.getCurrentYear() + 1;
+            int minYear = LocalDate.now().getYear();
+            int maxYear = minYear + 1;
 
             for (final Transaction transaction : engine.getTransactions()) {
                 int year = transaction.getLocalDate().getYear();

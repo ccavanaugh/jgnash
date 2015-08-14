@@ -24,6 +24,7 @@ import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.Objects;
@@ -141,7 +142,7 @@ public class IncomeExpensePieChart {
 
         combo = AccountListComboBox.getParentTypeInstance(engine.getRootAccount(), set);
 
-        Date dStart = DateUtils.subtractYear(DateUtils.getFirstDayOfTheMonth(new Date()));
+        Date dStart = DateUtils.asDate(DateUtils.getFirstDayOfTheMonth(LocalDate.now()).minusYears(1));
 
         long start = pref.getLong(START_DATE, dStart.getTime());
 

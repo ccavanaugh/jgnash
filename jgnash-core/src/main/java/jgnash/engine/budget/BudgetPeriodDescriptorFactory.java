@@ -17,8 +17,8 @@
  */
 package jgnash.engine.budget;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +56,7 @@ public final class BudgetPeriodDescriptorFactory {
 
         // build the descriptor List if not cached
         if (descriptors == null) {
-            Date[] dates = new Date[0];
+            LocalDate[] dates = new LocalDate[0];
 
             switch (budgetPeriod) {
                 case DAILY:
@@ -74,17 +74,16 @@ public final class BudgetPeriodDescriptorFactory {
                 case QUARTERLY:
                     dates = DateUtils.getFirstDayQuarterly(budgetYear);
                     break;
-                case YEARLY:                    
-                    Date date = DateUtils.getDateOfTheYear(budgetYear, 1);
-                    dates = new Date[] {date};
+                case YEARLY:
+                    dates = new LocalDate[] {LocalDate.ofYearDay(budgetYear, 1)};
                     break;
             }
 
             descriptors = new ArrayList<>(dates.length);
 
-            for (Date date : dates) {
+            for (final LocalDate date : dates) {
                 // Calendar day 1 is 1.  Must subtract 1 to get correct index
-                int day = DateUtils.getDayOfTheYear(date) - 1;
+                int day = date.getDayOfYear() - 1;
                 descriptors.add(new BudgetPeriodDescriptor(budgetYear, budgetPeriod, day));
             }
 

@@ -17,27 +17,24 @@
  */
 package jgnash.util;
 
-import com.thoughtworks.xstream.converters.basic.DateConverter;
-import org.junit.Test;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
+
+import com.thoughtworks.xstream.converters.basic.DateConverter;
+
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * @author Craig Cavanaugh
- *
  */
 public class DateTest {
 
@@ -100,10 +97,8 @@ public class DateTest {
 
     @Test
     public void getFirstDayWeeklyTest() {
-        GregorianCalendar cal = (GregorianCalendar) Calendar.getInstance();
-
         // test days for year 2011
-        Date[] days = DateUtils.getFirstDayWeekly(2011);
+        LocalDate[] days = DateUtils.getFirstDayWeekly(2011);
 
         //        for (Date day : days) {
         //            System.out.println(day.toString());
@@ -111,25 +106,20 @@ public class DateTest {
 
         assertEquals(52, days.length);
 
-        cal.setTime(days[0]);
-        assertEquals(2, cal.get(Calendar.DAY_OF_MONTH));
+        assertEquals(2, days[0].getDayOfMonth());
 
-        cal.setTime(days[51]);
-        assertEquals(25, cal.get(Calendar.DAY_OF_MONTH));
+        assertEquals(25, days[51].getDayOfMonth());
 
         // test days for year 2004
         days = DateUtils.getFirstDayWeekly(2004);
 
         assertEquals(53, days.length);
 
-        cal.setTime(days[0]);
-        assertEquals(28, cal.get(Calendar.DAY_OF_MONTH));
+        assertEquals(28, days[0].getDayOfMonth());
 
-        cal.setTime(days[51]);
-        assertEquals(19, cal.get(Calendar.DAY_OF_MONTH));
+        assertEquals(19, days[51].getDayOfMonth());
 
-        cal.setTime(days[52]);
-        assertEquals(26, cal.get(Calendar.DAY_OF_MONTH));
+        assertEquals(26, days[52].getDayOfMonth());
 
         // test days for year 2015
         days = DateUtils.getFirstDayWeekly(2015);
@@ -140,145 +130,52 @@ public class DateTest {
 
         assertEquals(53, days.length);
 
-        cal.setTime(days[0]);
-        assertEquals(28, cal.get(Calendar.DAY_OF_MONTH));
+        assertEquals(28, days[0].getDayOfMonth());
 
-        cal.setTime(days[1]);
-        assertEquals(4, cal.get(Calendar.DAY_OF_MONTH));
+        assertEquals(4, days[1].getDayOfMonth());
 
-        cal.setTime(days[51]);
-        assertEquals(20, cal.get(Calendar.DAY_OF_MONTH));
+        assertEquals(20, days[51].getDayOfMonth());
 
-        cal.setTime(days[52]);
-        assertEquals(27, cal.get(Calendar.DAY_OF_MONTH));
+        assertEquals(27, days[52].getDayOfMonth());
     }
 
     @Test
     public void getFirstDayBiWeeklyTest() {
-        GregorianCalendar cal = (GregorianCalendar) Calendar.getInstance();
-
         // test days for year 2011
-        Date[] days = DateUtils.getFirstDayBiWeekly(2011);
+        LocalDate[] days = DateUtils.getFirstDayBiWeekly(2011);
 
         assertEquals(26, days.length);
 
         days = DateUtils.getFirstDayBiWeekly(2015);
         assertEquals(27, days.length);
 
-        cal.setTime(days[0]);
-        assertEquals(28, cal.get(Calendar.DAY_OF_MONTH));
+        assertEquals(28, days[0].getDayOfMonth());
 
-        cal.setTime(days[1]);
-        assertEquals(11, cal.get(Calendar.DAY_OF_MONTH));
+        assertEquals(11, days[1].getDayOfMonth());
 
-        cal.setTime(days[26]);
-        assertEquals(27, cal.get(Calendar.DAY_OF_MONTH));
-    }
-
-    @Test
-    public void isLeapYearTest() {
-        assertEquals(Boolean.FALSE, DateUtils.isLeapYear(2011));
-
-        assertEquals(Boolean.TRUE, DateUtils.isLeapYear(2000));
-    }
-
-    @Test
-    public void getDateOfTheYearTest() {
-
-        Date today = DateUtils.today();
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(today);
-
-        int year = calendar.get(Calendar.YEAR);
-        int dayOfYear = calendar.get(Calendar.DAY_OF_YEAR);
-
-        assertEquals(today, DateUtils.getDateOfTheYear(year, dayOfYear));
-    }
-
-    @Test
-    public void getDaysInMonthTest() {
-        assertEquals(31, DateUtils.getDaysInMonth(DateUtils.getDateOfTheYear(2011, 1)));
-        assertEquals(31, DateUtils.getDaysInMonth(DateUtils.getDateOfTheYear(2011, 31)));
-
-        assertEquals(28, DateUtils.getDaysInMonth(DateUtils.getDateOfTheYear(2011, 40)));
-
-        // February leap year
-        assertEquals(29, DateUtils.getDaysInMonth(DateUtils.getDateOfTheYear(2000, 40)));
-    }
-
-    @Test
-    public void getDifferenceInDaysTest() {
-
-        Date start = DateUtils.getDateOfTheYear(2011, 1);
-
-        Date end = DateUtils.getDateOfTheYear(2011, 1);
-        assertEquals(0, DateUtils.getDifferenceInDays(start, end));
-
-        end = DateUtils.getDateOfTheYear(2011, 2);
-        assertEquals(1, DateUtils.getDifferenceInDays(start, end));
-
-        end = DateUtils.getDateOfTheYear(2011, 3);
-        assertEquals(2, DateUtils.getDifferenceInDays(start, end));
-
-        end = DateUtils.getDateOfTheYear(2012, 1);
-        assertEquals(365, DateUtils.getDifferenceInDays(start, end));
-
-        end = DateUtils.getDateOfTheYear(2012, 2);
-        assertEquals(366, DateUtils.getDifferenceInDays(start, end));
-    }
-
-    @Test
-    public void getDifferenceInLocalDaysTest() {
-        final LocalDate start = LocalDate.ofYearDay(2011, 1);
-
-        assertEquals(0, DateUtils.getDifferenceInDays(start, LocalDate.ofYearDay(2011, 1)));
-
-        assertEquals(1, DateUtils.getDifferenceInDays(start, LocalDate.ofYearDay(2011, 2)));
-
-        assertEquals(2, DateUtils.getDifferenceInDays(start, LocalDate.ofYearDay(2011, 3)));
-
-        assertEquals(365, DateUtils.getDifferenceInDays(start, LocalDate.ofYearDay(2012, 1)));
-
-        assertEquals(366, DateUtils.getDifferenceInDays(start, LocalDate.ofYearDay(2012, 2)));
-    }
-
-    @Test
-    public void getDifferenceInMonthsTest() {
-
-        Date start = DateUtils.getDateOfTheYear(2011, 1);
-
-        Date end = DateUtils.getDateOfTheYear(2011, 1);
-        assertEquals(0, DateUtils.getDifferenceInMonths(start, end), 0.01);
-
-        end = DateUtils.getDateOfTheYear(2011, 31);
-        assertEquals(1, DateUtils.getDifferenceInMonths(start, end), 0.02);
-
-        end = DateUtils.getDateOfTheYear(2012, 1);
-        assertEquals(12, DateUtils.getDifferenceInMonths(start, end), 0.01);
+        assertEquals(27, days[26].getDayOfMonth());
     }
 
     @Test
     public void getFirstDaysInMonthTest() {
-        Date[] days = DateUtils.getFirstDayMonthly(2011);
+        LocalDate[] days = DateUtils.getFirstDayMonthly(2011);
 
-        assertEquals(1, DateUtils.getDayOfTheYear(days[0]));
-        assertEquals(1 + 31, DateUtils.getDayOfTheYear(days[1]));
-        assertEquals(1 + 31 + 28, DateUtils.getDayOfTheYear(days[2]));
-        assertEquals(1 + 31 + 28 + 31, DateUtils.getDayOfTheYear(days[3]));
+        assertEquals(1, days[0].getDayOfYear());
+        assertEquals(1 + 31, days[1].getDayOfYear());
+        assertEquals(1 + 31 + 28, days[2].getDayOfYear());
+        assertEquals(1 + 31 + 28 + 31, days[3].getDayOfYear());
 
-        assertEquals(365 - 31 - 30 + 1, DateUtils.getDayOfTheYear(days[10]));
-        assertEquals(365 - 31 + 1, DateUtils.getDayOfTheYear(days[11]));
-
+        assertEquals(365 - 31 - 30 + 1, days[10].getDayOfYear());
+        assertEquals(365 - 31 + 1, days[11].getDayOfYear());
     }
 
     @Test
     public void getAllDaysTest() {
-        Date[] days = DateUtils.getAllDays(2011);
+        LocalDate[] days = DateUtils.getAllDays(2011);
         assertEquals(365, days.length);
 
-        assertEquals(DateUtils.getDateOfTheYear(2011, 1), days[0]);
-        assertEquals(DateUtils.getDateOfTheYear(2011, 365), days[364]);
+        assertEquals(LocalDate.ofYearDay(2011, 1), days[0]);
+        assertEquals(LocalDate.ofYearDay(2011, 365), days[364]);
 
         assertEquals(366, DateUtils.getAllDays(2000).length);
     }

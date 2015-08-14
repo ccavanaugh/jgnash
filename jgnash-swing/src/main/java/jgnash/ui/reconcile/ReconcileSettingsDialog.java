@@ -22,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ResourceBundle;
 
@@ -146,7 +147,7 @@ public class ReconcileSettingsDialog extends JDialog implements ActionListener {
             }
 
             // an recent attempt has been made before, override defaults
-            if (lastAttemptDate != null && Math.abs(DateUtils.getDifferenceInDays(lastAttemptDate, LocalDate.now())) <= FUZZY_DATE_RANGE) {
+            if (lastAttemptDate != null && Math.abs(ChronoUnit.DAYS.between(lastAttemptDate, LocalDate.now())) <= FUZZY_DATE_RANGE) {
                 if (lastStatementDate != null) {
                     statementDate = lastStatementDate; // set the new statement date + 1 month
                 }

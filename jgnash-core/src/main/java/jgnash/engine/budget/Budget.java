@@ -17,6 +17,7 @@
  */
 package jgnash.engine.budget;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -32,7 +33,6 @@ import javax.persistence.PostLoad;
 
 import jgnash.engine.Account;
 import jgnash.engine.StoredObject;
-import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
@@ -78,7 +78,7 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
     /**
      * Transient property for the working budget year
      */
-    private transient int workingYear = DateUtils.getCurrentYear();
+    private transient int workingYear = LocalDate.now().getYear();
 
     public String getName() {
         return name;
@@ -294,6 +294,6 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
 
     @PostLoad
     protected void postLoad() {
-        workingYear = DateUtils.getCurrentYear();
+        workingYear = LocalDate.now().getYear();
     }
 }

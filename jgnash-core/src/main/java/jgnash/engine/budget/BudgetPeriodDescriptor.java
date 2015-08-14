@@ -18,6 +18,7 @@
 package jgnash.engine.budget;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 import jgnash.util.DateUtils;
@@ -25,7 +26,7 @@ import jgnash.util.ResourceUtils;
 
 /**
  * Immutable descriptor for a budget period
- * 
+ *
  * @author Craig Cavanaugh
  */
 public class BudgetPeriodDescriptor {
@@ -99,17 +100,17 @@ public class BudgetPeriodDescriptor {
                 break;
             case QUARTERLY:
                 endDate = DateUtils.getLastDayOfTheQuarter(startDate);
-                endPeriod = startPeriod + (int)DateUtils.getDifferenceInDays(startDate, endDate);
+                endPeriod = startPeriod + (int) ChronoUnit.DAYS.between(startDate, endDate);
 
                 periodDescription = ResourceUtils.getString("Pattern.QuarterOfYear",
                         DateUtils.getQuarterNumber(startDate), budgetYear);
                 break;
             case YEARLY:
                 endDate = DateUtils.getLastDayOfTheYear(startDate);
-                endPeriod = startPeriod + (int)DateUtils.getDifferenceInDays(startDate, endDate);
+                endPeriod = startPeriod + (int) ChronoUnit.DAYS.between(startDate, endDate);
 
-                periodDescription = Integer.toString(budgetYear);                             
-                break;    
+                periodDescription = Integer.toString(budgetYear);
+                break;
             default:
                 endPeriod = startPeriod;
                 endDate = LocalDate.now();
@@ -149,7 +150,7 @@ public class BudgetPeriodDescriptor {
 
     /**
      * Determines if the specified date lies within or inclusive of this descriptor period
-     * 
+     *
      * @param date date to check
      * @return true if between or inclusive
      */
@@ -189,15 +190,15 @@ public class BudgetPeriodDescriptor {
         if (this == obj) {
             return true;
         }
-        
+
         if (obj == null) {
             return false;
         }
-        
+
         if (!(obj instanceof BudgetPeriodDescriptor)) {
             return false;
         }
-        
+
         BudgetPeriodDescriptor other = (BudgetPeriodDescriptor) obj;
 
         return budgetPeriod == other.budgetPeriod && budgetYear == other.budgetYear && startPeriod == other.startPeriod;

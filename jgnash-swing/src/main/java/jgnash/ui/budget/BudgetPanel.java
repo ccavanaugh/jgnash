@@ -68,7 +68,6 @@ import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.RollOverButton;
 import jgnash.ui.util.IconUtils;
-import jgnash.util.DateUtils;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -117,7 +116,7 @@ public final class BudgetPanel extends JPanel implements ActionListener, Message
             logger.setLevel(Level.OFF);
         }
 
-        budgetYear = DateUtils.getCurrentYear();
+        budgetYear = LocalDate.now().getYear();
 
         layoutMainPanel();
     }
