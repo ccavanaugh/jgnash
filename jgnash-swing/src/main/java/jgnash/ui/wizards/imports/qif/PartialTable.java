@@ -18,7 +18,7 @@
 package jgnash.ui.wizards.imports.qif;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 import javax.swing.DefaultCellEditor;
@@ -35,7 +35,6 @@ import jgnash.util.ResourceUtils;
 
 /**
  * @author Craig Cavanaugh
- *
  */
 class PartialTable extends FormattedJTable {
 
@@ -79,7 +78,7 @@ class PartialTable extends FormattedJTable {
 
         private final Class<?>[] cClass = { String.class, String.class, String.class, BigDecimal.class };
 
-        private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
+        private final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateTimeFormat();
 
         @Override
         public String getColumnName(final int column) {
@@ -132,7 +131,7 @@ class PartialTable extends FormattedJTable {
             QifTransaction qt = qAccount.get(rowIndex);
             switch (columnIndex) {
                 case 0:
-                    return dateFormatter.format(qt.date);
+                    return dateTimeFormatter.format(qt.date);
                 case 1:
                     return qt.payee;
                 case 2:

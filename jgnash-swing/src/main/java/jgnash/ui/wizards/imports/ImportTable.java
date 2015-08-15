@@ -22,7 +22,7 @@ import java.awt.EventQueue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
-import java.text.DateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -190,7 +190,7 @@ class ImportTable extends FormattedJTable {
         private final Class<?>[] cClass = {String.class, String.class, String.class, String.class, String.class,
                 String.class, BigDecimal.class};
 
-        private final DateFormat dateFormatter = DateUtils.getShortDateFormat();
+        private final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateTimeFormat();
 
         public Model() {
             notEqualIcon = IconUtils.getIcon("/jgnash/resource/not-equal.png");
@@ -269,7 +269,7 @@ class ImportTable extends FormattedJTable {
 
                     return addIcon;
                 case 1:
-                    return dateFormatter.format(transaction.datePosted);
+                    return dateTimeFormatter.format(transaction.datePosted);
                 case 2:
                     return transaction.checkNumber;
                 case 3:

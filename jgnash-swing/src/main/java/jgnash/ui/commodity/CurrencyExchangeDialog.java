@@ -24,11 +24,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
@@ -409,7 +410,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
     }
 
     private static class HistoryTable extends FormattedJTable {
-        private final DateFormat dateFormat = DateUtils.getShortDateFormat();
+        private final DateTimeFormatter dateTimeFormatter = DateUtils.getShortDateTimeFormat();
 
         private final NumberFormat decimalFormat;
 
@@ -436,9 +437,9 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
             // column and row may have been reordered
             final Object value = model.getValueAt(convertRowIndexToModel(row), convertColumnIndexToModel(column));
 
-            if (Date.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
-                if (value != null && value instanceof Date) {
-                    ((JLabel) c).setText(dateFormat.format(value));
+            if (LocalDate.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
+                if (value != null && value instanceof LocalDate) {
+                    ((JLabel) c).setText(dateTimeFormatter.format((TemporalAccessor) value));
                 }
             } else if (BigDecimal.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
                 if (value != null && value instanceof BigDecimal) {
@@ -456,7 +457,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
 
         private final String[] cNames = {rb.getString("Column.Date"), rb.getString("Column.ExchangeRate")};
 
-        private final Class<?>[] cClass = {Date.class, BigDecimal.class};
+        private final Class<?>[] cClass = {LocalDate.class, BigDecimal.class};
 
         private final NumberFormat decimalFormat;
 
@@ -481,7 +482,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
             } else {
                 history = this.exchangeRate.getHistory();
 
-                CurrencyNode base = baseCurrencyCombo.getSelectedNode();
+                final CurrencyNode base = baseCurrencyCombo.getSelectedNode();
 
                 // do reported exchange values need inverted
                 invert = !exchangeRate.getRateId().startsWith(base.getSymbol());
@@ -523,7 +524,7 @@ public class CurrencyExchangeDialog extends JDialog implements MessageListener, 
             if (history != null) {
                 switch (col) {
                     case 0:
-                        return DateUtils.asDate(history.get(row).getLocalDate());
+                        return history.get(row).getLocalDate();
                     case 1:
                         BigDecimal rate = history.get(row).getRate();
 

@@ -86,24 +86,6 @@ public class DateUtils {
         }
     };
 
-    /**
-     * ThreadLocal for a short {@code DateFormat}
-     */
-    private static final ThreadLocal<DateFormat> shortDateFormatHolder = new ThreadLocal<DateFormat>() {
-        @Override
-        protected DateFormat initialValue() {
-            final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
-
-            if (df instanceof SimpleDateFormat) {
-                String pattern = ((SimpleDateFormat) df).toPattern();
-
-                pattern = DAY_PATTERN.matcher(MONTH_PATTERN.matcher(pattern).replaceAll("MM")).replaceAll("dd");
-                ((SimpleDateFormat) df).applyPattern(pattern);
-            }
-            return df;
-        }
-    };
-
     private DateUtils() {
     }
 
@@ -250,8 +232,8 @@ public class DateUtils {
      */
     public static LocalDate[] getFirstDayMonthly(final int year) {
         LocalDate[] list = new LocalDate[12];
-        for (int i = 0; i < 12; i++) {
-            list[i] = getFirstDayOfTheMonth(i, year);
+        for (int i = 1; i <= 12; i++) {
+            list[i - 1] = getFirstDayOfTheMonth(i, year);
         }
         return list;
     }
@@ -268,21 +250,14 @@ public class DateUtils {
     }
 
     /**
-     * Returns a leveled date representing the first day of the month
+     * Returns a date representing the first day of the month
      *
-     * @param month The month (index starts at 0)
+     * @param month The month (index starts at 1)
      * @param year  The year (index starts at 1)
      * @return The last day of the month and year specified
      */
     private static LocalDate getFirstDayOfTheMonth(final int month, final int year) {
-        assert month >= 0 && month <= 11;
-
-        final GregorianCalendar c = gregorianCalendarThreadLocal.get();
-
-        c.set(year, month, 15);
-        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.getActualMinimum(Calendar.DAY_OF_MONTH));
-
-        return asLocalDate(c.getTime());
+        return LocalDate.of(year, month, 1);
     }
 
     /**
@@ -508,16 +483,6 @@ public class DateUtils {
         }
 
         return result;
-    }
-
-    /**
-     * Generates a customized DateFormat with constant width for all dates. A new
-     * instance is created each time
-     *
-     * @return a short DateFormat
-     */
-    public static DateFormat getShortDateFormat() {
-        return shortDateFormatHolder.get();
     }
 
     public static DateTimeFormatter getShortDateTimeFormat() {
