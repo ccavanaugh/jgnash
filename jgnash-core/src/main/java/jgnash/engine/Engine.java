@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -89,7 +91,7 @@ public class Engine {
     /**
      * Current version for the file format
      */
-    public static final float CURRENT_VERSION = 2.15f;
+    public static final float CURRENT_VERSION = 2.17f;
 
     // Lock names
     private static final String ACCOUNT_LOCK = "account";
@@ -802,9 +804,9 @@ public class Engine {
                 logger.info("No trash was found");
             }
 
-            final long now = System.currentTimeMillis();
+            final LocalDateTime now = LocalDateTime.now();
 
-            trash.stream().filter(o -> now - o.getDate().getTime() >= MAXIMUM_TRASH_AGE)
+            trash.stream().filter(o -> ChronoUnit.MILLIS.between(now, o.getDate()) >= MAXIMUM_TRASH_AGE)
                     .forEach(o -> getTrashDAO().remove(o));
         } finally {
 

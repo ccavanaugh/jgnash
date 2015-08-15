@@ -20,18 +20,12 @@ package jgnash.engine;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.PostLoad;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import jgnash.util.DateUtils;
 
 /**
  * This class is used to calculate loan payments.
@@ -104,8 +98,7 @@ public class AmortizeObject implements Serializable {
     /**
      * origination date
      */
-    @Temporal(TemporalType.DATE)
-    private Date date = new Date();
+    private LocalDate date = LocalDate.now();
 
     /**
      * calculate interest based on daily periodic rate
@@ -117,8 +110,6 @@ public class AmortizeObject implements Serializable {
      */
     private BigDecimal daysPerYear;
 
-    private transient LocalDate cachedLocalDate = DateUtils.asLocalDate(date);
-
     /**
      * Empty constructor to keep reflection happy
      */
@@ -126,12 +117,11 @@ public class AmortizeObject implements Serializable {
     }
 
     public void setDate(final LocalDate localDate) {
-        cachedLocalDate = localDate;
-        date = DateUtils.asDate(localDate);
+        date = localDate;
     }
 
     public LocalDate getDate() {
-        return cachedLocalDate;
+        return date;
     }
 
     public void setPaymentPeriods(final int periods) {
@@ -431,15 +421,4 @@ public class AmortizeObject implements Serializable {
     //	public double getPPayment(BigDecimal balance) {
     //		return getPIPayment() - getIPayment(balance);
     //	}
-
-
-    protected Object readResolve() {
-        postLoad();
-        return this;
-    }
-
-    @PostLoad
-    private void postLoad() {
-        cachedLocalDate = DateUtils.asLocalDate(date);
-    }
 }

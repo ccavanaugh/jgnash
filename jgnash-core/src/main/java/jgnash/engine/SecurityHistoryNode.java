@@ -20,7 +20,6 @@ package jgnash.engine;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -28,11 +27,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PostLoad;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 
@@ -48,10 +43,7 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
     @Id @GeneratedValue(strategy= GenerationType.TABLE)
     public long id;
 
-    private transient LocalDate cachedLocalDate = LocalDate.now();
-
-    @Temporal(TemporalType.DATE)
-    private Date date = DateUtils.asDate(cachedLocalDate);
+    private LocalDate date = LocalDate.now();
 
     @Column(precision = 19, scale = 4)
     private BigDecimal price = BigDecimal.ZERO;
@@ -63,7 +55,6 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
     private BigDecimal low = BigDecimal.ZERO;
 
     private long volume = 0;
-
 
     /**
      * public no-argument constructor for reflection
@@ -79,7 +70,7 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
      * @param high high price for the day
      * @param low low price for the day
      */
-    public SecurityHistoryNode(@Nullable final LocalDate date, @Nullable final BigDecimal price, final long volume,
+    public SecurityHistoryNode(@NotNull final LocalDate date, @Nullable final BigDecimal price, final long volume,
                                @Nullable final BigDecimal high, @Nullable final BigDecimal low) {
         setDate(date);
         setPrice(price);
@@ -116,14 +107,13 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
         return volume;
     }
 
-    protected void setDate(final LocalDate localDate) {
+    protected void setDate(final @NotNull LocalDate localDate) {
         Objects.requireNonNull(localDate);
-        this.date = DateUtils.asDate(localDate);
-        this.cachedLocalDate = localDate;
+        this.date = localDate;
     }
 
     public LocalDate getLocalDate() {
-        return cachedLocalDate;
+        return date;
     }
 
     protected void setPrice(final BigDecimal price) {
@@ -156,15 +146,5 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
    @Override
     public int hashCode() {
        return date.hashCode();
-    }
-
-    protected Object readResolve() {
-        postLoad();
-        return this;
-    }
-
-    @PostLoad
-    private void postLoad() {
-        cachedLocalDate = DateUtils.asLocalDate(date);
     }
 }

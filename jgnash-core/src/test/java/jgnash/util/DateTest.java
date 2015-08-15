@@ -40,7 +40,7 @@ public class DateTest {
 
     @Test
     public void localDateTest() {
-        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateUtils.DEFAULT_XSTREAM_PATTERN);
+        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateUtils.DEFAULT_XSTREAM_LOCAL_DATE_TIME_PATTERN);
         final DateConverter dateConverter = new DateConverter();    // xstream converter
 
         final Date now = new Date();

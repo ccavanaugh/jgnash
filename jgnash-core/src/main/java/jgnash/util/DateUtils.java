@@ -60,7 +60,9 @@ public class DateUtils {
      * <p>
      * {@code com.thoughtworks.xstream.converters.basic.DateConverter} format.
      */
-    public static final String DEFAULT_XSTREAM_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS 'UTC'";
+    public static final String DEFAULT_XSTREAM_LOCAL_DATE_PATTERN = "yyyy-MM-dd";
+
+    public static final String DEFAULT_XSTREAM_LOCAL_DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS 'UTC'";
 
     static {
         final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);

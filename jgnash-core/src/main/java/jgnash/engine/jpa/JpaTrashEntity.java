@@ -18,7 +18,7 @@
 package jgnash.engine.jpa;
 
 import java.lang.reflect.Field;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,8 +26,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  * A Trash entity for generic cleanup of typed entities that need to be cleanup up
@@ -47,8 +45,7 @@ public class JpaTrashEntity {
     /**
      * Date object was added
      */
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date = new Date();
+    private LocalDateTime date = LocalDateTime.now();
 
     private String className;
 
@@ -66,7 +63,7 @@ public class JpaTrashEntity {
         entityId = getBasicEntityId(entity);
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 

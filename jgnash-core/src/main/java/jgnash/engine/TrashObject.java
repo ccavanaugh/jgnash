@@ -17,14 +17,14 @@
  */
 package jgnash.engine;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
+import jgnash.engine.jpa.LocalDateTimeAttributeConverter;
 import jgnash.util.NotNull;
 
 /**
@@ -38,8 +38,8 @@ public class TrashObject extends StoredObject implements Comparable<TrashObject>
     /**
      * Date object was added
      */
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date date = new Date();
+    @Convert(converter = LocalDateTimeAttributeConverter.class)
+    private LocalDateTime date = LocalDateTime.now();
 
     /**
      * The stored object
@@ -64,7 +64,7 @@ public class TrashObject extends StoredObject implements Comparable<TrashObject>
         return object;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 

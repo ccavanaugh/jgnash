@@ -17,23 +17,22 @@
  */
 package jgnash.engine.recurring;
 
-import jgnash.engine.Account;
-import jgnash.engine.StoredObject;
-import jgnash.engine.Transaction;
-import jgnash.util.DateUtils;
-import jgnash.util.NotNull;
+import java.time.LocalDate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import jgnash.engine.Account;
+import jgnash.engine.StoredObject;
+import jgnash.engine.Transaction;
+import jgnash.engine.jpa.LocalDateAttributeConverter;
+import jgnash.util.NotNull;
+import jgnash.util.Nullable;
 
 /**
  * This is an abstract class for scheduled reminders.
@@ -73,8 +72,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * The last date the reminder will stop executing, may be null (Bug #2860259)
      */
-    @Temporal(TemporalType.DATE)
-    private Date endDate = null;
+    private LocalDate endDate = null;
 
     /**
      * Number of periods to increment between events
@@ -86,8 +84,7 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
      * It should remain an increment of the iterator
      * for correct operation
      */
-    @Temporal(TemporalType.DATE)
-    private Date lastDate = null;
+    private LocalDate lastDate = null;
 
     /**
      * Notes for this reminder
@@ -104,8 +101,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * The start date of this reminder
      */
-    @Temporal(TemporalType.DATE)
-    private Date startDate = new Date();
+    @Convert(converter = LocalDateAttributeConverter.class)
+    private LocalDate startDate = LocalDate.now();
 
     @ManyToOne
     private Account account;
@@ -151,11 +148,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * @return Returns the last date the reminder should execute.
      */
-    public LocalDate getEndDate() {
-        if (endDate != null) {
-            return DateUtils.asLocalDate(endDate);
-        }
-        return null;
+    public @Nullable LocalDate getEndDate() {
+        return endDate;
     }
 
     /**
@@ -166,22 +160,15 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * @return Returns the last recorded date
      */
-    public LocalDate getLastDate() {
-        if (lastDate != null) {
-            return DateUtils.asLocalDate(lastDate);
-
-        }
-        return null;
+    public @Nullable LocalDate getLastDate() {
+        return lastDate;
     }
 
     /**
      * @return Returns the start date.
      */
-    public LocalDate getStartDate() {
-        if (startDate != null) {
-            return DateUtils.asLocalDate(startDate);
-        }
-        return null;
+    public @NotNull LocalDate getStartDate() {
+        return startDate;
     }
 
     /**
@@ -286,19 +273,15 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * @param endDate The last date the reminder should execute.
      */
-    public void setEndDate(final LocalDate endDate) {
-        if (endDate != null) {
-            this.endDate = DateUtils.asDate(endDate);
-        } else {
-            this.endDate = null;
-        }
+    public void setEndDate(final @Nullable LocalDate endDate) {
+        this.endDate = endDate;
     }
 
     /**
      * @param lastDate The lastDate to set.
      */
-    private void setLastDate(final LocalDate lastDate) {
-        this.lastDate = DateUtils.asDate(lastDate);
+    private void setLastDate(final @NotNull LocalDate lastDate) {
+        this.lastDate = lastDate;
     }
 
     /**
@@ -311,8 +294,8 @@ public abstract class Reminder extends StoredObject implements Comparable<Remind
     /**
      * @param startDate The startDate to set.
      */
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = DateUtils.asDate(startDate);
+    public void setStartDate(final @NotNull LocalDate startDate) {
+        this.startDate = startDate;
     }
 
     /**

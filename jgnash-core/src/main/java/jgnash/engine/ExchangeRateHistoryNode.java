@@ -17,23 +17,18 @@
  */
 package jgnash.engine;
 
-import jgnash.util.DateUtils;
-import jgnash.util.NotNull;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.PostLoad;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.Objects;
+import jgnash.util.NotNull;
 
 /**
  * Exchange rate history node for a {@code ExchangeRate}.
@@ -51,10 +46,7 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
     @Column(precision = 20, scale = 8)
     private BigDecimal rate = BigDecimal.ZERO;
 
-    private transient LocalDate cachedLocalDate = LocalDate.now();
-
-    @Temporal(TemporalType.DATE)
-    private Date date = DateUtils.asDate(cachedLocalDate);
+    private LocalDate date = LocalDate.now();
 
     /**
      * No argument constructor for reflection purposes.
@@ -74,13 +66,12 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
         Objects.requireNonNull(date);
         Objects.requireNonNull(rate);
 
-        this.date = DateUtils.asDate(localDate);
-        this.cachedLocalDate = localDate;
+        this.date = localDate;
         this.rate = rate;
     }
 
     public LocalDate getLocalDate() {
-        return cachedLocalDate;
+        return date;
     }
 
     @Override
@@ -101,15 +92,5 @@ public class ExchangeRateHistoryNode implements Comparable<ExchangeRateHistoryNo
 
     public BigDecimal getRate() {
         return rate;
-    }
-
-    protected Object readResolve() {
-        postLoad();
-        return this;
-    }
-
-    @PostLoad
-    private void postLoad() {
-        cachedLocalDate = DateUtils.asLocalDate(date);
     }
 }

@@ -19,11 +19,9 @@ package jgnash.engine;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -43,10 +41,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.PostLoad;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 
@@ -64,14 +59,14 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     /**
      * Date of entry from form entry, used for sort order
      */
-    @Temporal(TemporalType.DATE)
-    Date date = new Date();
+    LocalDate date = LocalDate.now();
 
     /**
      * Date transaction was created
+     *
+     * TODO: Replace with LocalDateTime
      */
-    @Temporal(TemporalType.DATE)
-    Date dateEntered = new Date();
+    LocalDate dateEntered = LocalDate.now();
 
     /**
      * Transaction number
@@ -108,10 +103,6 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     @JoinTable
     @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     Set<TransactionEntry> transactionEntries = new HashSet<>();
-
-    private transient LocalDate cachedLocalDate = null;
-
-    private transient LocalDateTime cachedDateEntered = null;
 
     /**
      * ReadWrite lock
@@ -285,12 +276,11 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     }
 
     public void setDate(@NotNull final LocalDate localDate) {
-        this.date = DateUtils.asDate(localDate);
-        cachedLocalDate = localDate;
+        this.date = localDate;
     }
 
     public LocalDate getLocalDate() {
-        return cachedLocalDate;
+        return date;
     }
 
     /**
@@ -490,15 +480,14 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         transactionEntries.clear();
     }
 
-    public LocalDateTime getDateEntered() {
-        return cachedDateEntered;
+    public LocalDate getDateEntered() {
+        return dateEntered;
     }
 
-    public void setDateEntered(@NotNull final LocalDateTime localDateTime) {
-        Objects.requireNonNull(localDateTime);
+    public void setDateEntered(@NotNull final LocalDate localDate) {
+        Objects.requireNonNull(localDate);
 
-        cachedDateEntered = localDateTime;
-        dateEntered = DateUtils.asDate(localDateTime);
+        dateEntered = localDate;
     }
 
     @NotNull
@@ -646,8 +635,6 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     @PostLoad
     private void postLoad() {
         lock = new ReentrantReadWriteLock(true);
-        cachedLocalDate = DateUtils.asLocalDate(date);
-        cachedDateEntered = DateUtils.asLocalDateTime(dateEntered);
     }
 
     @Override

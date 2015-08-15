@@ -17,10 +17,10 @@
  */
 package jgnash.engine.jpa;
 
-
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -191,9 +191,10 @@ class JpaTrashDAO extends AbstractJpaDAO implements TrashDAO {
                 TypedQuery<JpaTrashEntity> q = em.createQuery(cq);
 
                 for (JpaTrashEntity trashEntity : q.getResultList()) {
-                    final long now = new Date().getTime();
+                    //final long now = new Date().getTime();
+                    final LocalDateTime now = LocalDateTime.now();
 
-                    if (now - trashEntity.getDate().getTime() >= MAXIMUM_ENTITY_TRASH_AGE) {
+                    if (ChronoUnit.MILLIS.between(now, trashEntity.getDate()) >= MAXIMUM_ENTITY_TRASH_AGE) {
                         Class<?> clazz = Class.forName(trashEntity.getClassName());
                         Object entity = em.find(clazz, trashEntity.getEntityId());
 

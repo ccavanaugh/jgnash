@@ -27,6 +27,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileLock;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -154,10 +155,14 @@ class BinaryContainer extends AbstractXStreamContainer {
 
             readWriteLock.writeLock().lock();
 
-            XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects),
+            final XStream xstream = configureXStream(new XStream(new StoredObjectReflectionProvider(objects),
                     new BinaryStreamDriver()));
 
-            try (ObjectInputStream in = xstream.createObjectInputStream(inputStream);
+            // Filters out any java.sql.Dates that sneaked in when saving from a relational database
+            // and forces to a LocalDate
+            xstream.alias("sql-date", LocalDate.class);
+
+            try (final ObjectInputStream in = xstream.createObjectInputStream(inputStream);
                  FileLock readLock = fis.getChannel().tryLock(0, Long.MAX_VALUE, true)) {
                 if (readLock != null) {
                     in.readObject();

@@ -25,15 +25,12 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DecimalStyle;
 import java.time.format.FormatStyle;
-import java.util.Date;
 import java.util.Locale;
 
 import javafx.application.Platform;
 import javafx.scene.control.DatePicker;
 import javafx.scene.input.KeyEvent;
 import javafx.util.StringConverter;
-
-import jgnash.util.DateUtils;
 
 /**
  * Enhanced DatePicker.  Adds short cuts for date entry with better input character filters
@@ -138,22 +135,6 @@ public class DatePickerEx extends DatePicker {
         final Locale locale = Locale.getDefault(Locale.Category.FORMAT);
 
         return DateTimeFormatter.ofPattern(getPattern()).withDecimalStyle(DecimalStyle.of(locale));
-    }
-
-    /**
-     * Helper method to return a legacy Date value
-     * @return {@code LocalDate} converted to {@code Date}
-     */
-    public Date getDate() {
-        return DateUtils.asDate(getValue());
-    }
-
-    /**
-     * Helper method to set a legacy {@code Date} value
-     * @param date {@code Date} to assign to the picker
-     */
-    public void setDate(final Date date) {
-        setValue(DateUtils.asLocalDate(date));
     }
 
     private class DateConverter extends StringConverter<LocalDate> {

@@ -34,8 +34,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  * @see com.thoughtworks.xstream.converters.basic.DateConverter
  */
 public class LocalDateConverter extends AbstractSingleValueConverter {
-
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateUtils.DEFAULT_XSTREAM_PATTERN);
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateUtils.DEFAULT_XSTREAM_LOCAL_DATE_PATTERN);
 
     @Override
     public boolean canConvert(final Class type) {
@@ -44,7 +43,11 @@ public class LocalDateConverter extends AbstractSingleValueConverter {
 
     @Override
     public Object fromString(final String str) {
-        return LocalDate.from(dateTimeFormatter.parse(str));
+        if (!str.isEmpty()) {
+            // Time data may be present in an older file, so we only take the date information
+            return LocalDate.from(dateTimeFormatter.parse(str.substring(0, 10)));
+        }
+        return null;
     }
 
     @Override

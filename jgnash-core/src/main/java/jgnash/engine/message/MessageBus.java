@@ -18,7 +18,8 @@
 package jgnash.engine.message;
 
 import java.lang.ref.WeakReference;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -160,12 +161,12 @@ public class MessageBus {
         boolean result = messageBusClient.connectToServer(password);
 
         if (result) {
-            long then = new Date().getTime();
+            final LocalDateTime start = LocalDateTime.now();
 
             // wait for the server response to the remote database path for a max delay before timing out
             // this is the handshake that a good connection was made
             while (getRemoteDataBasePath() == null || getRemoteDataStoreType() == null) {
-                if ((new Date().getTime() - then) > MAX_LATENCY) {
+                if (ChronoUnit.MILLIS.between(start, LocalDateTime.now()) > MAX_LATENCY) {
                     disconnectFromServer();
                     logger.warning("Did not receive a valid response from the server");
                     result = false;

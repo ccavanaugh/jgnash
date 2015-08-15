@@ -35,7 +35,7 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
  */
 public class LocalDateTimeConverter extends AbstractSingleValueConverter {
 
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateUtils.DEFAULT_XSTREAM_PATTERN);
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateUtils.DEFAULT_XSTREAM_LOCAL_DATE_TIME_PATTERN);
 
     @Override
     public boolean canConvert(final Class type) {
@@ -44,7 +44,10 @@ public class LocalDateTimeConverter extends AbstractSingleValueConverter {
 
     @Override
     public Object fromString(final String str) {
-        return LocalDateTime.from(dateTimeFormatter.parse(str));
+        if (!str.isEmpty()) {
+            return LocalDateTime.from(dateTimeFormatter.parse(str));
+        }
+        return null;
     }
 
     @Override
