@@ -19,6 +19,7 @@ package jgnash.util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -29,9 +30,7 @@ import java.time.format.FormatStyle;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -75,16 +74,6 @@ public class DateUtils {
             shortDateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
         }
     }
-
-    /**
-     * ThreadLocal for a {@code GregorianCalendar}
-     */
-    private static final ThreadLocal<GregorianCalendar> gregorianCalendarThreadLocal = new ThreadLocal<GregorianCalendar>() {
-        @Override
-        protected GregorianCalendar initialValue() {
-            return new GregorianCalendar();
-        }
-    };
 
     private DateUtils() {
     }
@@ -286,28 +275,22 @@ public class DateUtils {
      * @see <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO_8601</a>
      */
     public static LocalDate[] getFirstDayWeekly(final int year) {
-        final GregorianCalendar cal = gregorianCalendarThreadLocal.get();
-        final GregorianCalendar testCal = new GregorianCalendar();
 
-        List<LocalDate> dates = new ArrayList<>();
+        final List<LocalDate> dates = new ArrayList<>();
 
-        // level the date
-        cal.setTime(trimDate(cal.getTime()));
+        LocalDate localDate = LocalDate.ofYearDay(year, 1).with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
 
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.MONTH, 0);
-        cal.set(Calendar.WEEK_OF_YEAR, 1);
-        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+        final LocalDate testDate = LocalDate.ofYearDay(year, 1);
+        if (testDate.getDayOfWeek() == DayOfWeek.THURSDAY) {
+            dates.add(testDate.minusDays(4));
+        }
 
-        for (int i = 0; i < 53; i++) {
-            testCal.setTime(cal.getTime());
-            testCal.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
-
-            if (testCal.get(Calendar.YEAR) == year) {
-                dates.add(asLocalDate(cal.getTime()));
+        for (int i = 0; i <= 53; i++) {
+            if (localDate.getYear() == year) {
+                dates.add(localDate);
             }
 
-            cal.add(Calendar.DATE, 7); // add 7 days
+            localDate = localDate.plusWeeks(1);
         }
 
         return dates.toArray(new LocalDate[dates.size()]);
@@ -499,24 +482,5 @@ public class DateUtils {
      */
     public static int getWeekOfTheYear(final LocalDate dateOfYear) {
         return dateOfYear.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
-    }
-
-    /**
-     * Trims the date so that only the day, month, and year are significant.
-     *
-     * @param date date to trim
-     * @return leveled date
-     */
-    public static Date trimDate(final Date date) {
-        final GregorianCalendar c = gregorianCalendarThreadLocal.get();
-
-        c.setTime(date);
-
-        c.set(Calendar.MILLISECOND, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.HOUR_OF_DAY, 0);
-
-        return c.getTime();
     }
 }
