@@ -66,6 +66,11 @@ public class SecurityNode extends CommodityNode {
     @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private Set<SecurityHistoryNode> historyNodes = new HashSet<>();
 
+    @JoinTable
+    @OrderBy("date")    //applying a sort order prevents refresh issues
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    private Set<SecurityHistoryEvent> securityHistoryEvents = new HashSet<>();
+
     private transient ReadWriteLock lock;
 
     private transient List<SecurityHistoryNode> sortedHistoryNodeCache = new ArrayList<>();
@@ -193,6 +198,35 @@ public class SecurityNode extends CommodityNode {
         return result;
     }
 
+    boolean addSecurityHistoryEvent(final SecurityHistoryEvent securityHistoryEvent) {
+        boolean result = false;
+
+        lock.writeLock().lock();
+
+        try {
+            result = securityHistoryEvents.add(securityHistoryEvent);
+        } finally {
+            lock.writeLock().unlock();
+        }
+
+        return result;
+    }
+
+    boolean removeSecurityHistoryEvent(final SecurityHistoryEvent securityHistoryEvent) {
+        boolean result = false;
+
+        lock.writeLock().lock();
+
+        try {
+            result = securityHistoryEvents.remove(securityHistoryEvent);
+        } finally {
+            lock.writeLock().unlock();
+        }
+
+        return result;
+    }
+
+
     /**
      * Returns <tt>true</tt> if this SecurityNode contains the specified element.
      *
@@ -225,6 +259,15 @@ public class SecurityNode extends CommodityNode {
      */
     public List<SecurityHistoryNode> getHistoryNodes() {
         return Collections.unmodifiableList(sortedHistoryNodeCache);
+    }
+
+    /**
+     * Get an unmodifiable copy of the SecurityHistoryEvents for this security
+     *
+     * @return returns a shallow copy of the SecurityHistoryEvents to protect against modification
+     */
+    public Set<SecurityHistoryEvent> getHistoryEvents() {
+        return Collections.unmodifiableSet(securityHistoryEvents);
     }
 
     /**

@@ -23,6 +23,7 @@ import java.util.Set;
 import jgnash.engine.CommodityNode;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.ExchangeRate;
+import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.util.NotNull;
@@ -48,12 +49,22 @@ public interface CommodityDAO {
     /**
      * Call after a {@code SecurityHistoryNode} has been added.  This pushes the update
      * to the underlying database
-     * @param node SecurityHistory to update
+     * @param node {@code SecurityNode} to update
      * @param historyNode {@code SecurityHistoryNode to add}
      *
      * @return true if successful
      */
     boolean addSecurityHistory(final SecurityNode node, final SecurityHistoryNode historyNode);
+
+    /**
+     * Call after a {@code SecurityHistoryEvent} has been added.  This pushes the update
+     * to the underlying database
+     * @param node {@code SecurityNode} to update
+     * @param historyEvent {@code SecurityHistoryEvent to add}
+     *
+     * @return true if successful
+     */
+    boolean addSecurityHistoryEvent(final SecurityNode node, final SecurityHistoryEvent historyEvent);
 
     /**
      * Returns the active currencies
@@ -86,12 +97,22 @@ public interface CommodityDAO {
     /**
      * Call after a {@code SecurityHistoryNode} has been removed.  This pushes the update
      * to the underlying database
-     * @param node SecurityHistory to update
+     * @param node {@code SecurityNode} to update
      * @param historyNode {@code SecurityHistoryNode} to remove
      *
      * @return true if successful
      */
     boolean removeSecurityHistory(final SecurityNode node, final SecurityHistoryNode historyNode);
+
+    /**
+     * Call after a {@code SecurityHistoryEvent} has been removed.  This pushes the update
+     * to the underlying database
+     * @param node {@code SecurityNode} to update
+     * @param historyEvent {@code SecurityHistoryEvent} to remove
+     *
+     * @return true if successful
+     */
+    boolean removeSecurityHistoryEvent(final SecurityNode node, final SecurityHistoryEvent historyEvent);
 
     void addExchangeRate(ExchangeRate eRate);
 

@@ -1160,6 +1160,43 @@ public class Engine {
     }
 
     /**
+     * Add a SecurityHistoryNode node to a SecurityNode.  If the SecurityNode already contains
+     * an equivalent SecurityHistoryNode, the old SecurityHistoryNode is removed first.
+     *
+     * @param node  SecurityNode to add to
+     * @param historyEvent SecurityHistoryNode to add
+     * @return <tt>true</tt> if successful
+     */
+    public boolean addSecurityHistoryEvent(@NotNull final SecurityNode node, @NotNull final SecurityHistoryEvent historyEvent) {
+        commodityLock.writeLock().lock();
+
+        try {
+            // Remove old history event if it exists
+            boolean status = node.addSecurityHistoryEvent(historyEvent);
+
+            if (status) {
+                status = getCommodityDAO().addSecurityHistoryEvent(node, historyEvent);
+            }
+
+            Message message;
+
+            if (status) {
+                clearCachedAccountBalance(node);
+                message = new Message(MessageChannel.COMMODITY, ChannelEvent.SECURITY_HISTORY_EVENT_ADD, this);
+            } else {
+                message = new Message(MessageChannel.COMMODITY, ChannelEvent.SECURITY_HISTORY_EVENT_ADD_FAILED, this);
+            }
+
+            message.setObject(MessageProperty.COMMODITY, node);
+            messageBus.fireEvent(message);
+
+            return status;
+        } finally {
+            commodityLock.writeLock().unlock();
+        }
+    }
+
+    /**
      * Returns a list of investment accounts that use the given security node
      *
      * @param node security node
@@ -1486,6 +1523,44 @@ public class Engine {
                 message = new Message(MessageChannel.COMMODITY, ChannelEvent.SECURITY_HISTORY_REMOVE, this);
             } else {
                 message = new Message(MessageChannel.COMMODITY, ChannelEvent.SECURITY_HISTORY_REMOVE_FAILED, this);
+            }
+
+            message.setObject(MessageProperty.COMMODITY, node);
+            messageBus.fireEvent(message);
+
+            return status;
+        } finally {
+            commodityLock.writeLock().unlock();
+        }
+    }
+
+    /**
+     * Remove a {@code SecurityHistoryEvent} from a {@code SecurityNode
+     *
+     * @param node {@code SecurityNode} to remove history from
+     * @param historyEvent the {@code SecurityHistoryEvent} to remove
+     * @return {@code true} if the {@code SecurityHistoryEvent} was found and removed
+     */
+    public boolean removeSecurityHistoryEvent(@NotNull final SecurityNode node, @NotNull final SecurityHistoryEvent historyEvent) {
+        commodityLock.writeLock().lock();
+
+        boolean status;
+
+        try {
+            status = node.removeSecurityHistoryEvent(historyEvent);
+
+            if (status) {   // removal was a success, make sure we cleanup properly
+                moveObjectToTrash(historyEvent);
+                status = getCommodityDAO().removeSecurityHistoryEvent(node, historyEvent);
+            }
+
+            Message message;
+
+            if (status) {
+                clearCachedAccountBalance(node);
+                message = new Message(MessageChannel.COMMODITY, ChannelEvent.SECURITY_HISTORY_EVENT_REMOVE, this);
+            } else {
+                message = new Message(MessageChannel.COMMODITY, ChannelEvent.SECURITY_HISTORY_EVENT_REMOVE_FAILED, this);
             }
 
             message.setObject(MessageProperty.COMMODITY, node);

@@ -25,6 +25,7 @@ import jgnash.engine.Account;
 import jgnash.engine.CommodityNode;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.ExchangeRate;
+import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.engine.StoredObject;
@@ -57,6 +58,12 @@ public class XStreamCommodityDAO extends AbstractXStreamDAO implements Commodity
 
     @Override
     public boolean addSecurityHistory(final SecurityNode node, final SecurityHistoryNode historyNode) {
+        commit();
+        return true;
+    }
+
+    @Override
+    public boolean addSecurityHistoryEvent(final SecurityNode node, final SecurityHistoryEvent historyEvent) {
         commit();
         return true;
     }
@@ -132,6 +139,12 @@ public class XStreamCommodityDAO extends AbstractXStreamDAO implements Commodity
 
     @Override
     public boolean removeSecurityHistory(final SecurityNode node, final SecurityHistoryNode historyNode) {
+        commit();
+        return true;
+    }
+
+    @Override
+    public boolean removeSecurityHistoryEvent(final SecurityNode node, final SecurityHistoryEvent historyEvent) {
         commit();
         return true;
     }

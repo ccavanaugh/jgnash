@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -190,11 +191,64 @@ public abstract class EngineTest {
         assertEquals(BigDecimal.TEN, new BigDecimal(e.getPreference("myNumber")));
     }
 
-    @Ignore
     @Test
-    public void testAddSecurityHistory() {
-        fail("Not yet implemented");
+    public void testSecurityNodeStorage() {
+
+        final String SECURITY_SYMBOL =" GOOG";
+
+        SecurityNode securityNode = new SecurityNode(e.getDefaultCurrency());
+
+        securityNode.setSymbol(SECURITY_SYMBOL);
+        securityNode.setScale((byte) 2);
+
+        assertTrue(e.addSecurity(securityNode));
+
+        SecurityHistoryNode historyNode = new SecurityHistoryNode(LocalDate.now(), BigDecimal.valueOf(125), 10000,
+                BigDecimal.valueOf(126), BigDecimal.valueOf(124));
+
+        e.addSecurityHistory(securityNode, historyNode);
+
+
+        final SecurityHistoryEvent dividendEvent = new SecurityHistoryEvent(SecurityHistoryEventType.DIVIDEND, LocalDate.now(), BigDecimal.ONE);
+        assertTrue(e.addSecurityHistoryEvent(securityNode, dividendEvent));
+
+
+        final SecurityHistoryEvent splitEvent = new SecurityHistoryEvent(SecurityHistoryEventType.SPLIT, LocalDate.now(), BigDecimal.TEN);
+        assertTrue(e.addSecurityHistoryEvent(securityNode, splitEvent));
+
+        assertTrue(securityNode.getHistoryEvents().contains(dividendEvent));
+        assertTrue(securityNode.getHistoryEvents().contains(splitEvent));
+
+        assertEquals(2, securityNode.getHistoryEvents().size());
+
+        // close and reopen to force check for persistence
+        closeEngine();
+
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD);
+
+        securityNode = e.getSecurity(SECURITY_SYMBOL);
+
+        assertNotNull(securityNode);
+
+        assertEquals(2, securityNode.getHistoryEvents().size());
+
+        List<SecurityHistoryEvent> events = new ArrayList<>(securityNode.getHistoryEvents());
+
+        assertTrue(e.removeSecurityHistoryEvent(securityNode, events.get(0)));
+        assertTrue(e.removeSecurityHistoryEvent(securityNode, events.get(1)));
+
+        // close and reopen to force check for persistence
+        closeEngine();
+
+        e = EngineFactory.bootLocalEngine(testFile, EngineFactory.DEFAULT, PASSWORD);
+
+        securityNode = e.getSecurity(SECURITY_SYMBOL);
+
+        assertNotNull(securityNode);
+
+        assertEquals(0, securityNode.getHistoryEvents().size());
     }
+
 
     @Ignore
     @Test
@@ -367,12 +421,6 @@ public abstract class EngineTest {
     @Ignore
     @Test
     public void testGetSecurities() {
-        fail("Not yet implemented");
-    }
-
-    @Ignore
-    @Test
-    public void testGetSecurity() {
         fail("Not yet implemented");
     }
 

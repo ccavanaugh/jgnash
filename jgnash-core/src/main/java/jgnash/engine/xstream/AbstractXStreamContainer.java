@@ -42,6 +42,7 @@ import jgnash.engine.ExchangeRate;
 import jgnash.engine.ExchangeRateHistoryNode;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.RootAccount;
+import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.engine.StoredObject;
@@ -120,6 +121,7 @@ abstract class AbstractXStreamContainer {
         xstream.alias("BudgetPeriod", BudgetPeriod.class);
         xstream.alias("SecurityNode", SecurityNode.class);
         xstream.alias("SecurityHistoryNode", SecurityHistoryNode.class);
+        xstream.alias("SecurityHistoryEvent", SecurityHistoryEvent.class);
         xstream.alias("Transaction", Transaction.class);
         xstream.alias("TransactionEntry", TransactionEntry.class);
         xstream.alias("TransactionEntryAddX", TransactionEntryAddX.class);
@@ -164,6 +166,7 @@ abstract class AbstractXStreamContainer {
         xstream.omitField(TransactionEntry.class, "id");
         xstream.omitField(ExchangeRateHistoryNode.class, "id");
         xstream.omitField(SecurityHistoryNode.class, "id");
+        xstream.omitField(SecurityHistoryEvent.class, "id");
 
         // Filters out the hibernate
         xstream.registerConverter(new HibernateProxyConverter());

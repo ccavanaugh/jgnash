@@ -71,15 +71,28 @@ public class SecurityNodeTest extends AbstractEngineTest {
 
         final LocalDate transactionDate2 = LocalDate.of(2009, Month.DECEMBER, 27);
 
-        // force a failure by corrupting the date
-       /* history.setDate(transactionDate2);
-        assertFalse(e.addSecurityHistory(securityNode1, history));  // should fail
-        assertEquals(1, securityNode1.getHistoryNodes().size());*/
-
         history = new SecurityHistoryNode();
         history.setDate(transactionDate2);
         history.setPrice(new BigDecimal("2.02"));
         assertTrue(e.addSecurityHistory(securityNode1, history));  // should be okay
         assertEquals(2, securityNode1.getHistoryNodes().size());
+
+        final SecurityHistoryEvent dividendEvent = new SecurityHistoryEvent(SecurityHistoryEventType.DIVIDEND, LocalDate.now(), BigDecimal.ONE);
+        securityNode1.addSecurityHistoryEvent(dividendEvent);
+
+
+        final SecurityHistoryEvent splitEvent = new SecurityHistoryEvent(SecurityHistoryEventType.SPLIT, LocalDate.now(), BigDecimal.TEN);
+        securityNode1.addSecurityHistoryEvent(splitEvent);
+
+        assertTrue(securityNode1.getHistoryEvents().contains(dividendEvent));
+        assertTrue(securityNode1.getHistoryEvents().contains(splitEvent));
+
+        assertEquals(2, securityNode1.getHistoryEvents().size());
+
+        securityNode1.removeSecurityHistoryEvent(dividendEvent);
+        assertEquals(1, securityNode1.getHistoryEvents().size());
+
+        securityNode1.removeSecurityHistoryEvent(splitEvent);
+        assertEquals(0, securityNode1.getHistoryEvents().size());
     }
 }
