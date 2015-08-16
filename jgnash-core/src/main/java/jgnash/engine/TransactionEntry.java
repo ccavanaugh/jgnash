@@ -38,24 +38,28 @@ import java.util.logging.Logger;
 
 /**
  * Transaction Entry
- * <p/>
+ * <p>
  * Each Transaction entry has an amount for the credit and debit side of the transaction. When the debit and credit
  * account has the same currency, one amount will be the negated value of the other. If the credit and debit accounts do
  * not have the same currency then the amounts will be different to represent the exchanged value at the time of the
  * transaction.
- * <p/>
+ * <p>
  * If the entry is to be used as an "single entry / adjustment" transaction, then the credit and debit account must be
  * set to the same account and the credit and debit amounts must be set to the same value.
- * 
+ *
  * @author Craig Cavanaugh
  */
 @Entity
 public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable, Serializable {
 
-    private transient int hash = 0;
+    /**
+     * Cached hashcode
+     */
+    private volatile transient int hashCode = 0;
 
     @SuppressWarnings("unused")
-    @Id @GeneratedValue(strategy= GenerationType.TABLE)
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private long id;
 
     @Enumerated(EnumType.STRING)
@@ -111,9 +115,9 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
 
     /**
      * Simple constructor for a single entry transaction
-     * 
+     *
      * @param account account for the transaction
-     * @param amount amount for the transaction
+     * @param amount  amount for the transaction
      */
     public TransactionEntry(final Account account, final BigDecimal amount) {
         Objects.requireNonNull(account);
@@ -128,10 +132,10 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
 
     /**
      * Simple constructor for a double entry transaction
-     * 
+     *
      * @param creditAccount credit account for the transaction
-     * @param debitAccount debit account for the transaction
-     * @param amount amount for the transaction
+     * @param debitAccount  debit account for the transaction
+     * @param amount        amount for the transaction
      */
     TransactionEntry(final Account creditAccount, final Account debitAccount, final BigDecimal amount) {
         Objects.requireNonNull(creditAccount);
@@ -146,11 +150,11 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
 
     /**
      * Simple constructor for a double entry transaction with exchange rate
-     * 
+     *
      * @param creditAccount credit account for the transaction
-     * @param debitAccount debit account for the transaction
-     * @param creditAmount amount for the transaction
-     * @param debitAmount amount for the transaction
+     * @param debitAccount  debit account for the transaction
+     * @param creditAmount  amount for the transaction
+     * @param debitAmount   amount for the transaction
      */
     TransactionEntry(final Account creditAccount, final Account debitAccount, final BigDecimal creditAmount, final BigDecimal debitAmount) {
         Objects.requireNonNull(creditAccount);
@@ -185,7 +189,7 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
 
     /**
      * Shortcut method to set credit and debit amounts
-     * 
+     *
      * @param amount credit amount of the transaction
      */
     public final void setAmount(final BigDecimal amount) {
@@ -228,8 +232,10 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
         return ReconciledState.NOT_RECONCILED;
     }
 
-    public void setCreditAmount(final BigDecimal amount) {
-        this.creditAmount = amount;
+    public void setCreditAmount(final BigDecimal creditAmount) {
+        Objects.requireNonNull(creditAmount);
+
+        this.creditAmount = creditAmount;
     }
 
     public void setCreditAccount(final Account creditAccount) {
@@ -237,6 +243,8 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     }
 
     void setCreditReconciled(final ReconciledState creditReconciled) {
+        Objects.requireNonNull(creditReconciled);
+
         this.creditReconciled = creditReconciled;
     }
 
@@ -245,12 +253,14 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     }
 
     void setDebitReconciled(final ReconciledState debitReconciled) {
+        Objects.requireNonNull(debitReconciled);
+
         this.debitReconciled = debitReconciled;
     }
 
     /**
      * Sets the memo for the entry
-     * 
+     *
      * @param memo new memo
      */
     public void setMemo(final String memo) {
@@ -272,6 +282,8 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     }
 
     public void setDebitAmount(final BigDecimal debitAmount) {
+        Objects.requireNonNull(debitAmount);
+
         this.debitAmount = debitAmount;
     }
 
@@ -301,72 +313,8 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     }
 
     /**
-     * Reconciled state is ignored
-     */
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        
-        if (obj == null) {
-            return false;
-        }
-        
-        if (!(obj instanceof TransactionEntry)) {
-            return false;
-        }
-        
-        TransactionEntry entry = (TransactionEntry) obj;        
-
-        if (!creditAccount.equals(entry.getCreditAccount())) {
-            return false;
-        }
-
-        if (!debitAccount.equals(entry.getDebitAccount())) {
-            return false;
-        }
-
-        if (!creditAmount.equals(entry.getCreditAmount())) {
-            return false;
-        }
-
-        if (!debitAmount.equals(entry.getDebitAmount())) {
-            return false;
-        }
-
-        if (creditReconciled != entry.creditReconciled) {
-            return false;
-        }
-
-        if (debitReconciled != entry.debitReconciled) {
-            return false;
-        }
-
-        return memo.equals(entry.getMemo());
-    }
-
-    @Override
-    public int hashCode() {
-        int h = hash;
-        if (h == 0) {
-            h = 5;
-            h = 17 * h + (transactionTag != null ? transactionTag.hashCode() : 0);
-            h = 17 * h + (debitAccount != null ? debitAccount.hashCode() : 0);
-            h = 17 * h + (creditAccount != null ? creditAccount.hashCode() : 0);
-            h = 17 * h + (creditAmount != null ? this.creditAmount.hashCode() : 0);
-            h = 17 * h + (debitAmount != null ? debitAmount.hashCode() : 0);
-            h = 17 * h + (creditReconciled != null ? creditReconciled.hashCode() : 0);
-            h = 17 * h + (debitReconciled != null ? debitReconciled.hashCode() : 0);
-            h = 17 * h + (memo != null ? memo.hashCode() : 0);
-            hash = h;
-        }
-        return h;
-    }    
-
-    /**
      * Check to determine is this is a single entry transaction
-     * 
+     *
      * @return {@code true} if this is a single entry TransactionEntry
      */
     public boolean isSingleEntry() {
@@ -386,11 +334,13 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     }
 
     public void setTransactionTag(final TransactionTag transactionTag) {
+        Objects.requireNonNull(transactionTag);
+
         this.transactionTag = transactionTag;
 
     }
 
-    public TransactionTag getTransactionTag() {       
+    public TransactionTag getTransactionTag() {
         return transactionTag;
     }
 
@@ -424,11 +374,38 @@ public class TransactionEntry implements Comparable<TransactionEntry>, Cloneable
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TransactionEntry that = (TransactionEntry) o;
+        return Objects.equals(transactionTag, that.transactionTag) &&
+                Objects.equals(debitAccount, that.debitAccount) &&
+                Objects.equals(creditAccount, that.creditAccount) &&
+                Objects.equals(creditAmount, that.creditAmount) &&
+                Objects.equals(debitAmount, that.debitAmount) &&
+                Objects.equals(creditReconciled, that.creditReconciled) &&
+                Objects.equals(debitReconciled, that.debitReconciled) &&
+                Objects.equals(memo, that.memo) &&
+                Objects.equals(customTags, that.customTags);
+    }
+
+    @Override
+    public int hashCode() {
+        int hashResult = hashCode;
+        if (hashResult == 0) {
+            hashResult = Objects.hash(transactionTag, debitAccount, creditAccount, creditAmount, debitAmount,
+                    creditReconciled, debitReconciled, memo, customTags);
+            hashCode = hashResult;
+        }
+        return hashResult;
+    }
+
+    @Override
     public String toString() {
         StringBuilder b = new StringBuilder();
-        
+
         final String lineSep = System.lineSeparator();
-        
+
         b.append("TransactionEntry hashCode: ").append(hashCode()).append(lineSep);
         b.append("Tag:            ").append(getTransactionTag().name()).append(lineSep);
         b.append("Memo:           ").append(getMemo()).append(lineSep);
