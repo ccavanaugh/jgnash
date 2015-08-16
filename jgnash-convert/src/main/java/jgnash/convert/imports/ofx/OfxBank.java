@@ -18,11 +18,10 @@
 package jgnash.convert.imports.ofx;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 import jgnash.convert.imports.ImportBank;
 import jgnash.convert.imports.ImportTransaction;
-import jgnash.util.Nullable;
 
 /**
  * OFX Bank Object
@@ -45,23 +44,23 @@ public class OfxBank extends ImportBank {
 
     public String accountType;
 
-    public Date dateStart;
+    public LocalDate dateStart;
 
-    public Date dateEnd;
+    public LocalDate dateEnd;
 
     public BigDecimal ledgerBalance;
 
-    public Date ledgerBalanceDate;
+    public LocalDate ledgerBalanceDate;
 
     public BigDecimal availBalance;
 
-    public Date availBalanceDate;
+    public LocalDate availBalanceDate;
 
     public int statusCode;
 
     public String statusSeverity;
 
-    @Nullable public String statusMessage;
+    @jgnash.util.Nullable public String statusMessage;
 
     @Override
     public String toString() {

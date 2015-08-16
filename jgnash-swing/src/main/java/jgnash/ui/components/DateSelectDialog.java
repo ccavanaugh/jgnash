@@ -19,12 +19,14 @@ package jgnash.ui.components;
 
 import java.awt.Window;
 import java.awt.event.WindowEvent;
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import jgnash.ui.util.DialogUtils;
+import jgnash.util.DateUtils;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -43,7 +45,7 @@ class DateSelectDialog extends GenericCloseDialog {
 
     private JXMonthView view;
 
-    public static Date showDialog(final Window parent, final Date date) {
+    public static LocalDate showDialog(final Window parent, final LocalDate date) {
         DateSelectDialog d = new DateSelectDialog(parent, date);
 
         d.pack();
@@ -56,7 +58,7 @@ class DateSelectDialog extends GenericCloseDialog {
 
         d.setVisible(true);
 
-        Date selectedDate = d.getDate();
+        final LocalDate selectedDate = d.getDate();
 
         if (selectedDate != null) {
             return selectedDate;
@@ -65,19 +67,22 @@ class DateSelectDialog extends GenericCloseDialog {
         return date;
     }
 
-    private DateSelectDialog(final Window parent, final Date date) {
+    private DateSelectDialog(final Window parent, final LocalDate date) {
         super(parent, new JPanel(), ResourceUtils.getString("Title.SelDate"));
         createPanel((JPanel) getComponent());
         setDate(date);
     }
 
-    final void setDate(final Date date) {
+    private void setDate(final LocalDate localDate) {
+
+        final Date date = DateUtils.asDate(localDate);
+
         view.setFirstDisplayedDay(date);
         view.setSelectionDate(date);
     }
 
-    Date getDate() {
-        return view.getFirstSelectionDate();
+    private LocalDate getDate() {
+        return DateUtils.asLocalDate(view.getFirstSelectionDate());
     }
 
     private void createPanel(final JPanel panel) {

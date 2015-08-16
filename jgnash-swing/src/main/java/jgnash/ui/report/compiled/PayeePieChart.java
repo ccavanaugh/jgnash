@@ -24,7 +24,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -155,11 +154,11 @@ public class PayeePieChart {
 
         combo = AccountListComboBox.getFullInstance();
 
-        Date dStart = DateUtils.asDate(DateUtils.getFirstDayOfTheMonth(LocalDate.now().minusYears(1)));
+        final LocalDate dStart = DateUtils.getFirstDayOfTheMonth(LocalDate.now().minusYears(1));
 
-        long start = pref.getLong(START_DATE, dStart.getTime());
+        long start = pref.getLong(START_DATE, DateUtils.asEpochMilli(dStart));
 
-        startField.setDate(new Date(start));
+        startField.setDate(DateUtils.asLocalDate(start));
 
         currentAccount = combo.getSelectedAccount();
         PieDataset[] data = createPieDataSet(currentAccount);
@@ -233,12 +232,12 @@ public class PayeePieChart {
             refreshFilters();
 
             setCurrentAccount(newAccount);
-            pref.putLong(START_DATE, startField.getDate().getTime());
+            pref.putLong(START_DATE, DateUtils.asEpochMilli(startField.getLocalDate()));
         });
 
         refreshButton.addActionListener(e -> {
             setCurrentAccount(currentAccount);
-            pref.putLong(START_DATE, startField.getDate().getTime());
+            pref.putLong(START_DATE, DateUtils.asEpochMilli(startField.getLocalDate()));
         });
 
         clearPrefButton.addActionListener(e -> {

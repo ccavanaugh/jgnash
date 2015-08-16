@@ -17,6 +17,21 @@
  */
 package jgnash.engine;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
+
 import jgnash.engine.jpa.SqlUtils;
 import jgnash.engine.message.ChannelEvent;
 import jgnash.engine.message.Message;
@@ -29,21 +44,6 @@ import jgnash.util.FileMagic.FileType;
 import jgnash.util.FileUtils;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 
 /**
  * Factory class for obtaining an engine instance
@@ -150,24 +150,25 @@ public class EngineFactory {
     }
 
     private static void exportCompressedXML(final String engineName) {
-        Engine oldEngine = engineMap.get(engineName);
-        DataStore oldDataStore = dataStoreMap.get(engineName);
+        final Engine oldEngine = engineMap.get(engineName);
+        final DataStore oldDataStore = dataStoreMap.get(engineName);
 
         exportCompressedXML(oldDataStore.getFileName(), oldEngine.getStoredObjects());
     }
 
     public static void exportCompressedXML(final String fileName, final Collection<StoredObject> objects) {
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmm");
+        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmm");
 
-        DataStore xmlDataStore = new XMLDataStore();
+        final DataStore xmlDataStore = new XMLDataStore();
 
-        File xmlFile = new File(FileUtils.stripFileExtension(fileName) + "-" + dateFormat.format(new Date())
+        File xmlFile = new File(FileUtils.stripFileExtension(fileName) + "-" + dateTimeFormatter.format(LocalDateTime.now())
                 + "." + xmlDataStore.getFileExt());
 
         // push the intermediary file to the temporary directory
         xmlFile = new File(System.getProperty("java.io.tmpdir"), xmlFile.getName());
 
-        File zipFile = new File(FileUtils.stripFileExtension(fileName) + "-" + dateFormat.format(new Date()) + ".zip");
+        File zipFile = new File(FileUtils.stripFileExtension(fileName) + "-" + dateTimeFormatter.format(LocalDateTime.now())
+                + ".zip");
 
         xmlDataStore.saveAs(xmlFile, objects);
 

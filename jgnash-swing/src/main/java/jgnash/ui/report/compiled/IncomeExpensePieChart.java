@@ -25,7 +25,6 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.EnumSet;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -142,11 +141,11 @@ public class IncomeExpensePieChart {
 
         combo = AccountListComboBox.getParentTypeInstance(engine.getRootAccount(), set);
 
-        Date dStart = DateUtils.asDate(DateUtils.getFirstDayOfTheMonth(LocalDate.now()).minusYears(1));
+        final LocalDate dStart = DateUtils.getFirstDayOfTheMonth(LocalDate.now()).minusYears(1);
 
-        long start = pref.getLong(START_DATE, dStart.getTime());
+        long start = pref.getLong(START_DATE, DateUtils.asEpochMilli(dStart));
 
-        startField.setDate(new Date(start));
+        startField.setDate(DateUtils.asLocalDate(start));
 
         currentAccount = combo.getSelectedAccount();
         JFreeChart chart = createPieChart(currentAccount);
@@ -177,12 +176,12 @@ public class IncomeExpensePieChart {
 
         combo.addActionListener(e -> {
             setCurrentAccount(combo.getSelectedAccount());
-            pref.putLong(START_DATE, startField.getDate().getTime());
+            pref.putLong(START_DATE, DateUtils.asEpochMilli(startField.getLocalDate()));
         });
 
         refreshButton.addActionListener(e -> {
             setCurrentAccount(currentAccount);
-            pref.putLong(START_DATE, startField.getDate().getTime());
+            pref.putLong(START_DATE, DateUtils.asEpochMilli(startField.getLocalDate()));
         });
 
         showEmptyCheck.addActionListener(e -> setCurrentAccount(currentAccount));

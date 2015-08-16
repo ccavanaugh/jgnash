@@ -17,7 +17,7 @@
  */
 package jgnash.ui.register.invest;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.logging.Logger;
 
 import javax.swing.JTextField;
@@ -75,7 +75,7 @@ public abstract class AbstractPriceQtyInvTransactionPanel extends AbstractInvTra
         modTrans = null;
 
         if (!getRememberLastDate()) {
-            datePanel.setDate(new Date());
+            datePanel.setDate(LocalDate.now());
         }
 
         memoField.setText(null);

@@ -28,7 +28,6 @@ import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -174,7 +173,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
         amountField.setDecimal(null);
 
         if (!getRememberLastDate()) {
-            datePanel.setDate(new Date());
+            datePanel.setDate(LocalDate.now());
         }
 
         memoField.setText(null);

@@ -28,8 +28,9 @@ Improved handling of memo's in split transactions.  The split entry memo should 
 
 Release 2.17.0
 ----------------------
+08/16/15 File formats have changed and will not be backwards compatible with the prior release.
 08/15/15 Migrated to use of the new Java 8 LocalDate classes.  This will reduce the size of bxds files and
-         improves overall application performance.
+         improves the overall application performance.
 08/12/15 Added RTF, and DOCX export capability for tabular reports.
 08/12/15 Updated to the latest DynamicJasper.
 08/11/15 Removed unused dependencies from the distribution files and build system.

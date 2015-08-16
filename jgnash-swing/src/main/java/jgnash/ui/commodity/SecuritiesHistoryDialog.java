@@ -242,7 +242,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
     }
 
     private void clearForm() {
-        dateField.setDate(new Date());
+        dateField.setDate(LocalDate.now());
         closeField.setDecimal(null);
         volumeField.setText(null);
         lowField.setDecimal(null);

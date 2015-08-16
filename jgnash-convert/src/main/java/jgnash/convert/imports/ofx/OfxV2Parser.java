@@ -30,8 +30,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
@@ -99,7 +97,7 @@ public class OfxV2Parser implements OfxTags {
      * @param stream   InputStream to parse
      * @param encoding encoding to use
      */
-    void parse(final InputStream stream, final String encoding) {
+    private void parse(final InputStream stream, final String encoding) {
         logger.entering(OfxV2Parser.class.getName(), "parse");
 
         bank = new OfxBank();
@@ -334,10 +332,10 @@ public class OfxV2Parser implements OfxTags {
                             tran.transactionType = reader.getElementText();
                             break;
                         case DTPOSTED:
-                            tran.datePosted = parseLocalDate(reader.getElementText());
+                            tran.datePosted = parseDate(reader.getElementText());
                             break;
                         case DTUSER:
-                            tran.dateUser = parseLocalDate(reader.getElementText());
+                            tran.dateUser = parseDate(reader.getElementText());
                             break;
                         case TRNAMT:
                             tran.amount = parseAmount(reader.getElementText());
@@ -583,7 +581,7 @@ public class OfxV2Parser implements OfxTags {
                         case CODE:
                             try {
                                 statusCode = Integer.parseInt(reader.getElementText());
-                            } catch (final NumberFormatException ex){
+                            } catch (final NumberFormatException ex) {
                                 logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
                             }
                             break;
@@ -629,7 +627,7 @@ public class OfxV2Parser implements OfxTags {
                         case CODE:
                             try {
                                 bank.statusCode = Integer.parseInt(reader.getElementText());
-                            } catch (final NumberFormatException ex){
+                            } catch (final NumberFormatException ex) {
                                 logger.log(Level.SEVERE, ex.getLocalizedMessage(), ex);
                             }
                             break;
@@ -658,7 +656,6 @@ public class OfxV2Parser implements OfxTags {
     }
 
 
-
     public OfxBank getBank() {
         logger.info("OFX Status was: " + statusCode);
         logger.info("Status Level was: " + statusSeverity);
@@ -669,39 +666,19 @@ public class OfxV2Parser implements OfxTags {
 
     /**
      * Parse a date. Time zone and seconds are ignored
-     * <p/>
+     * <p>
      * YYYYMMDDHHMMSS.XXX [gmt offset:tz name]
      *
      * @param date String form of the date
      * @return parsed date
      */
     @SuppressWarnings("MagicConstant")
-    private static Date parseDate(final String date) {
+    private static LocalDate parseDate(final String date) {
         int year = Integer.parseInt(date.substring(0, 4)); // year
         int month = Integer.parseInt(date.substring(4, 6)); // month
         int day = Integer.parseInt(date.substring(6, 8)); // day
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month - 1, day, 0, 0, 0);
-
-        return calendar.getTime();
-    }
-
-    /**
-     * Parse a date. Time zone and seconds are ignored
-     * <p/>
-     * YYYYMMDDHHMMSS.XXX [gmt offset:tz name]
-     *
-     * @param date String form of the date
-     * @return parsed date
-     */
-    @SuppressWarnings("MagicConstant")
-    private static LocalDate parseLocalDate(final String date) {
-        int year = Integer.parseInt(date.substring(0, 4)); // year
-        int month = Integer.parseInt(date.substring(4, 6)); // month
-        int day = Integer.parseInt(date.substring(6, 8)); // day
-
-        return LocalDate.of(year, month -1, day);
+        return LocalDate.of(year, month, day);
     }
 
     private static BigDecimal parseAmount(final String amount) {

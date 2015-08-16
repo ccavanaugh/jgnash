@@ -2,16 +2,12 @@ package jgnash.engine;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
-import jgnash.util.DateUtils;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,7 +24,7 @@ import static org.junit.Assert.*;
   */
  public class InvestmentHistoryExchangeTest {
 
-     private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+     private static final DateTimeFormatter SIMPLE_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
      private String database;
 
@@ -56,12 +52,8 @@ import static org.junit.Assert.*;
      }
 
      private LocalDate getLocalDate(final String date) {
-         return DateUtils.asLocalDate(getDate(date));
+         return LocalDate.parse(date, SIMPLE_DATE_FORMAT);
      }
-
-    private Date getDate(final String date) {
-        return SIMPLE_DATE_FORMAT.parse(date, new ParsePosition(0));
-    }
 
      @Test
      public void testHistorySearch() {

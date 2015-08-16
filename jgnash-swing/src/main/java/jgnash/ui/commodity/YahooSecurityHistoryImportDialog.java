@@ -23,8 +23,6 @@ import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -94,11 +92,7 @@ public class YahooSecurityHistoryImportDialog extends JDialog implements ActionL
 
         setIconImage(IconUtils.getImage("/jgnash/resource/gnome-money.png"));
 
-        final Calendar cal = Calendar.getInstance();
-
-        cal.setTime(new Date());
-        cal.add(Calendar.MONTH, -1);
-        startField.setDate(cal.getTime());
+        startField.setDate(LocalDate.now().minusMonths(1));
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 

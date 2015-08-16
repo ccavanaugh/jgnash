@@ -18,7 +18,7 @@
 package jgnash.ui.register.invest;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -177,7 +177,7 @@ public final class ReturnOfCapitalPanel extends AbstractInvTransactionPanel {
         modTrans = null;
 
         if (!getRememberLastDate()) {
-            datePanel.setDate(new Date());
+            datePanel.setDate(LocalDate.now());
         }
 
         memoField.setText(null);
