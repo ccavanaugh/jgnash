@@ -72,8 +72,9 @@
 }
 
 .view-title {
-    -fx-font-size: 0.916667em;
+    -fx-font-size: 0.9583335em;
     -fx-font-weight: bold;
+    -fx-padding: 6 6 6 6;
 }
 
 .list-title {
