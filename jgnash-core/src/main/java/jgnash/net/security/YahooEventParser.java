@@ -17,27 +17,25 @@
  */
 package jgnash.net.security;
 
+import jgnash.engine.SecurityHistoryEvent;
+import jgnash.engine.SecurityHistoryEventType;
+import jgnash.engine.SecurityHistoryNode;
+import jgnash.engine.SecurityNode;
+import jgnash.net.ConnectionFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.net.HttpURLConnection;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-
-import jgnash.engine.SecurityHistoryEvent;
-import jgnash.engine.SecurityHistoryNode;
-import jgnash.engine.SecurityNode;
-import jgnash.net.ConnectionFactory;
 
 /**
  * Retrieves historical stock dividend and split information from Yahoo
@@ -54,11 +52,11 @@ public class YahooEventParser {
         // Utility class
     }
 
-    public Set<SecurityHistoryEvent> retrieveNew(final SecurityNode securityNode) {
+    public static Set<SecurityHistoryEvent> retrieveNew(final SecurityNode securityNode) {
         final Set<SecurityHistoryEvent> events = new HashSet<>();
 
-        LocalDate startDate = LocalDate.now();
-        LocalDate endDate = startDate;
+        LocalDate startDate = LocalDate.now().minusDays(1);
+        LocalDate endDate = LocalDate.now();
 
         List<SecurityHistoryNode> historyNodeList = securityNode.getHistoryNodes();
 
@@ -97,9 +95,13 @@ public class YahooEventParser {
         SPLIT, 19970528,2:1
         DIVIDEND, 19970206,0.087500
         DIVIDEND, 19961106,0.087500
+        STARTDATE, 19620102
+        ENDDATE, 20110525
+        TOTALSIZE, 195
+        STATUS, 0
          */
 
-        final String s = securityNode.getSymbol().toLowerCase();
+        final String s = securityNode.getSymbol();
 
         final String a = Integer.toString(startDate.getMonthValue() - 1);
         final String b = Integer.toString(startDate.getDayOfMonth());
@@ -108,6 +110,8 @@ public class YahooEventParser {
         final String d = Integer.toString(endDate.getMonthValue() - 1);
         final String e = Integer.toString(endDate.getDayOfMonth());
         final String f = Integer.toString(endDate.getYear());
+
+        //http://ichart.finance.yahoo.com/x?s=IBM&a=00&b=2&c=1962&d=04&e=25&f=2011&g=v&y=0&z=30000
 
         final StringBuilder url = new StringBuilder("http://ichart.finance.yahoo.com/x?s=").append(s);
         url.append("&a=").append(a).append("&b=").append(b).append("&c=").append(c);
@@ -135,8 +139,30 @@ public class YahooEventParser {
 
                             final String[] fields = COMMA_DELIMITER_PATTERN.split(line);
 
-                            BigDecimal value = new BigDecimal(fields[0]);
+                            if (fields.length == 3) {   // if fields are != 3, then it's not valid data
 
+                                //DIVIDEND, 19970807,0.100000
+                                final LocalDate date = LocalDate.of(Integer.parseInt(fields[1].substring(0, 3)),
+                                        Integer.parseInt(fields[1].substring(4, 5)) - 1,
+                                        Integer.parseInt(fields[1].substring(6, 7)));
+
+                                switch (fields[0]) {
+                                    case "DIVIDEND":
+                                        BigDecimal dividend = new BigDecimal(fields[2]);
+                                        events.add(new SecurityHistoryEvent(SecurityHistoryEventType.DIVIDEND, date, dividend));
+                                        break;
+                                    case "SPLIT":
+                                        final String[] fraction = fields[2].split(":");
+
+                                        final BigDecimal value = new BigDecimal(fraction[0]).divide(new BigDecimal(fraction[1]),
+                                                MathContext.DECIMAL32);
+                                        events.add(new SecurityHistoryEvent(SecurityHistoryEventType.SPLIT, date, value));
+                                    default:
+                                        Logger.getLogger(YahooEventParser.class.getName()).log(Level.SEVERE,
+                                                "Unknown event: " + fields[0]);
+                                        break;
+                                }
+                            }
 
                             line = in.readLine();
                         }
@@ -156,5 +182,4 @@ public class YahooEventParser {
 
         return events;
     }
-
 }
