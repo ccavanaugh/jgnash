@@ -31,6 +31,7 @@ import java.math.MathContext;
 import java.net.HttpURLConnection;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.logging.Level;
@@ -53,16 +54,18 @@ public class YahooEventParser {
     }
 
     public static Set<SecurityHistoryEvent> retrieveNew(final SecurityNode securityNode) {
+        return retrieveNew(securityNode, LocalDate.now());
+    }
+
+    public static Set<SecurityHistoryEvent> retrieveNew(final SecurityNode securityNode, final LocalDate endDate) {
         final Set<SecurityHistoryEvent> events = new HashSet<>();
 
         LocalDate startDate = LocalDate.now().minusDays(1);
-        LocalDate endDate = LocalDate.now();
 
         List<SecurityHistoryNode> historyNodeList = securityNode.getHistoryNodes();
 
         if (historyNodeList.size() > 0) {
             startDate = historyNodeList.get(0).getLocalDate();
-            endDate = historyNodeList.get(historyNodeList.size() - 1).getLocalDate();
         }
 
         final List<SecurityHistoryEvent> historyEvents = new ArrayList<>(securityNode.getHistoryEvents());
@@ -99,15 +102,15 @@ public class YahooEventParser {
         ENDDATE, 20110525
         TOTALSIZE, 195
         STATUS, 0
-         */
+        */
 
         final String s = securityNode.getSymbol();
 
-        final String a = Integer.toString(startDate.getMonthValue() - 1);
+        final String a = Integer.toString(startDate.getMonthValue());
         final String b = Integer.toString(startDate.getDayOfMonth());
         final String c = Integer.toString(startDate.getYear());
 
-        final String d = Integer.toString(endDate.getMonthValue() - 1);
+        final String d = Integer.toString(endDate.getMonthValue());
         final String e = Integer.toString(endDate.getDayOfMonth());
         final String f = Integer.toString(endDate.getYear());
 
@@ -141,37 +144,43 @@ public class YahooEventParser {
 
                             if (fields.length == 3) {   // if fields are != 3, then it's not valid data
 
-                                //DIVIDEND, 19970807,0.100000
-                                final LocalDate date = LocalDate.of(Integer.parseInt(fields[1].substring(0, 3)),
-                                        Integer.parseInt(fields[1].substring(4, 5)) - 1,
-                                        Integer.parseInt(fields[1].substring(6, 7)));
+                                try {
 
-                                switch (fields[0]) {
-                                    case "DIVIDEND":
-                                        BigDecimal dividend = new BigDecimal(fields[2]);
-                                        events.add(new SecurityHistoryEvent(SecurityHistoryEventType.DIVIDEND, date, dividend));
-                                        break;
-                                    case "SPLIT":
-                                        final String[] fraction = fields[2].split(":");
+                                    final LocalDate date = LocalDate.of(Integer.parseInt(fields[1].trim().substring(0, 4)),
+                                            Integer.parseInt(fields[1].trim().substring(4, 6)),
+                                            Integer.parseInt(fields[1].trim().substring(6, 8)));
 
-                                        final BigDecimal value = new BigDecimal(fraction[0]).divide(new BigDecimal(fraction[1]),
-                                                MathContext.DECIMAL32);
-                                        events.add(new SecurityHistoryEvent(SecurityHistoryEventType.SPLIT, date, value));
-                                    default:
-                                        Logger.getLogger(YahooEventParser.class.getName()).log(Level.SEVERE,
-                                                "Unknown event: " + fields[0]);
-                                        break;
+                                    switch (fields[0]) {
+                                        case "DIVIDEND":
+                                            final BigDecimal dividend = new BigDecimal(fields[2]);
+                                            events.add(new SecurityHistoryEvent(SecurityHistoryEventType.DIVIDEND, date,
+                                                    dividend));
+                                            break;
+                                        case "SPLIT":
+                                            final String[] fraction = fields[2].split(":");
+                                            final BigDecimal value = new BigDecimal(fraction[0])
+                                                    .divide(new BigDecimal(fraction[1]), MathContext.DECIMAL32);
+
+                                            events.add(new SecurityHistoryEvent(SecurityHistoryEventType.SPLIT, date, value));
+                                            break;
+                                        default:
+                                            Logger.getLogger(YahooEventParser.class.getName()).log(Level.SEVERE,
+                                                    "Unknown event: " + fields[0]);
+                                            break;
+                                    }
+                                } catch (final DateTimeException | NumberFormatException ex) {
+                                    Logger.getLogger(YahooEventParser.class.getName()).log(Level.INFO, line);
+                                    Logger.getLogger(YahooEventParser.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
                                 }
                             }
 
                             line = in.readLine();
                         }
-
                     }
                 }
             }
-        } catch (NullPointerException | IOException | NumberFormatException ex) {
-            Logger.getLogger(YahooEventParser.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (final NullPointerException | IOException  ex) {
+            Logger.getLogger(YahooEventParser.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
         } finally {
             if (connection != null) {
                 if (connection instanceof HttpURLConnection) {

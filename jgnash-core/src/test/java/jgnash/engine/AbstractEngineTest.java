@@ -34,9 +34,9 @@ import static org.junit.Assert.assertTrue;
  */
 public abstract class AbstractEngineTest {
 
-    String database;
+    protected String database;
 
-    Engine e;
+    protected Engine e;
 
     Account incomeAccount;
 
@@ -50,7 +50,7 @@ public abstract class AbstractEngineTest {
 
     SecurityNode securityNode1;
 
-    static final char[] PASSWORD = new char[]{};
+    public static final char[] PASSWORD = new char[]{};
 
     private final boolean oldExportState = EngineFactory.exportXMLOnClose();
 

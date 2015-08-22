@@ -17,39 +17,65 @@
  */
 package jgnash.engine.net.security;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import jgnash.engine.AbstractEngineTest;
+import jgnash.engine.DataStoreType;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.net.security.YahooEventParser;
+
 import org.junit.Test;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.Set;
-
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Craig Cavanaugh
  */
-public class YahooEventParserTest {
+public class YahooEventParserTest extends AbstractEngineTest {
+
+    @Override
+    protected Engine createEngine() {
+
+        try {
+            database = Files.createTempFile("jgnash-", "." + DataStoreType.BINARY_XSTREAM.getDataStore().getFileExt()).toFile().getAbsolutePath();
+        } catch (IOException e1) {
+            Logger.getLogger(YahooEventParserTest.class.getName()).log(Level.SEVERE, e1.getLocalizedMessage(), e1);
+        }
+
+        EngineFactory.deleteDatabase(database);
+
+        return EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.BINARY_XSTREAM);
+    }
 
     @Test
     public void testParser() {
 
-        final SecurityNode ibm = new SecurityNode();
+        final SecurityNode ibm = new SecurityNode(e.getDefaultCurrency());
         ibm.setSymbol("IBM");
         ibm.setScale((byte) 2);
 
-        SecurityHistoryNode historyNode = new SecurityHistoryNode(LocalDate.of(1962, Month.JANUARY, 1),
+        final SecurityHistoryNode historyNode = new SecurityHistoryNode(LocalDate.of(1962, Month.JANUARY, 1),
                 BigDecimal.TEN, 1000, BigDecimal.TEN, BigDecimal.TEN);
 
-        //ibm.
+        e.addSecurity(ibm);
+        e.addSecurityHistory(ibm, historyNode);
 
-        Set<SecurityHistoryEvent> events = YahooEventParser.retrieveNew(ibm);
+        final Set<SecurityHistoryEvent> events = YahooEventParser.retrieveNew(ibm, LocalDate.of(2015, Month.AUGUST, 22));
 
         assertNotNull(events);
 
+        assertEquals(219, events.size());
     }
 }
