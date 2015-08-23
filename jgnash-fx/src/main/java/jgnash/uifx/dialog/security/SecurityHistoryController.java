@@ -188,6 +188,7 @@ public class SecurityHistoryController implements MessageListener {
 
         chart = new AreaChart<>(new LocalDateAxis(), new NumberAxis());
         chart.setCreateSymbols(false);
+        chart.setLegendVisible(false);
 
         chartPane.getChildren().addAll(chart);
 
