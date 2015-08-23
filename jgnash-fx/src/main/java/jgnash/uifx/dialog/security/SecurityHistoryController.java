@@ -294,6 +294,7 @@ public class SecurityHistoryController implements MessageListener {
 
     private void loadTable() {
         observableHistoryNodes.setAll(securityComboBox.getValue().getHistoryNodes());
+        tableView.scrollTo(observableHistoryNodes.size() - 1);
     }
 
     private void loadChart() {
