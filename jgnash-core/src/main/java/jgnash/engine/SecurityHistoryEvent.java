@@ -33,7 +33,9 @@ import javax.persistence.Id;
 import jgnash.util.NotNull;
 
 /**
- * Represents security history events such as splits and dividends
+ * Represents security history events such as splits and dividends.
+ *
+ * Equality is assumed if the date and type match
  *
  * @author Craig Cavanaugh
  */
@@ -83,9 +85,7 @@ public class SecurityHistoryEvent implements Comparable<SecurityHistoryEvent>, S
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SecurityHistoryEvent event = (SecurityHistoryEvent) o;
-        return Objects.equals(type, event.type) &&
-                Objects.equals(value, event.value) &&
-                Objects.equals(date, event.date);
+        return Objects.equals(type, event.type) && date.compareTo(((SecurityHistoryEvent) o).getDate()) == 0;
     }
 
     @Override
@@ -104,11 +104,6 @@ public class SecurityHistoryEvent implements Comparable<SecurityHistoryEvent>, S
             return result;
         }
 
-        result = type.compareTo(historyEvent.getType());
-        if (result != 0) {
-            return result;
-        }
-
-       return value.compareTo(historyEvent.getValue());
+        return type.compareTo(historyEvent.getType());
     }
 }
