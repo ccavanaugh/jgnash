@@ -18,6 +18,7 @@
 package jgnash.uifx.dialog.security;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -50,7 +51,9 @@ import javafx.stage.WindowEvent;
 import jgnash.engine.CommodityNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.MathConstants;
 import jgnash.engine.QuoteSource;
+import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.engine.message.Message;
@@ -67,6 +70,7 @@ import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.IntegerTextField;
 import jgnash.uifx.control.LocalDateAxis;
 import jgnash.uifx.control.SecurityComboBox;
+import jgnash.uifx.control.SecurityHistoryEventTypeComboBox;
 import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.util.ResourceUtils;
@@ -82,22 +86,43 @@ public class SecurityHistoryController implements MessageListener {
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
 
     @FXML
+    private SecurityHistoryEventTypeComboBox securityEventTypeComboBox;
+
+    @FXML
+    private DatePickerEx eventDatePicker;
+
+    @FXML
+    private DecimalTextField eventValueTextField;
+
+    @FXML
+    private Button deleteEventButton;
+
+    @FXML
+    private Button addEventButton;
+
+    @FXML
     private StackPane chartPane;
 
     @FXML
-    private Button addButton;
+    private Button addPriceButton;
 
     @FXML
-    private Button updateButton;
+    private Button updatePriceButton;
 
     @FXML
-    private TableView<SecurityHistoryNode> tableView;
+    private Button updateEventButton;
+
+    @FXML
+    private TableView<SecurityHistoryNode> priceTableView;
+
+    @FXML
+    private TableView<SecurityHistoryEvent> eventTableView;
 
     @FXML
     private SecurityComboBox securityComboBox;
 
     @FXML
-    private DatePickerEx datePicker;
+    private DatePickerEx historyDatePicker;
 
     @FXML
     private DecimalTextField closeTextField;
@@ -112,7 +137,7 @@ public class SecurityHistoryController implements MessageListener {
     private DecimalTextField lowTextField;
 
     @FXML
-    private Button deleteButton;
+    private Button deletePriceButton;
 
     @FXML
     private ResourceBundle resources;
@@ -120,6 +145,8 @@ public class SecurityHistoryController implements MessageListener {
     private AreaChart<LocalDate, Number> chart;
 
     private final SimpleObjectProperty<SecurityHistoryNode> selectedSecurityHistoryNode = new SimpleObjectProperty<>();
+
+    private final SimpleObjectProperty<SecurityHistoryEvent> selectedSecurityHistoryEvent = new SimpleObjectProperty<>();
 
     private final SimpleObjectProperty<SecurityNode> selectedSecurityNode = new SimpleObjectProperty<>();
 
@@ -129,7 +156,11 @@ public class SecurityHistoryController implements MessageListener {
 
     private final ObservableList<SecurityHistoryNode> observableHistoryNodes = FXCollections.observableArrayList();
 
-    private final SortedList<SecurityHistoryNode> sortedList = new SortedList<>(observableHistoryNodes);
+    private final SortedList<SecurityHistoryNode> sortedHistoryList = new SortedList<>(observableHistoryNodes);
+
+    private final ObservableList<SecurityHistoryEvent> observableHistoryEventList = FXCollections.observableArrayList();
+
+    private final SortedList<SecurityHistoryEvent> sortedHistoryEventList = new SortedList<>(observableHistoryEventList);
 
     @FXML
     void initialize() {
@@ -140,51 +171,94 @@ public class SecurityHistoryController implements MessageListener {
 
         numberFormatProperty.setValue(CommodityFormat.getShortNumberFormat(engine.getDefaultCurrency()));
 
-        selectedSecurityHistoryNode.bind(tableView.getSelectionModel().selectedItemProperty());
+        selectedSecurityHistoryNode.bind(priceTableView.getSelectionModel().selectedItemProperty());
         selectedSecurityNode.bind(securityComboBox.getSelectionModel().selectedItemProperty());
 
-        deleteButton.disableProperty().bind(Bindings.isNull(selectedSecurityHistoryNode));
+        deletePriceButton.disableProperty().bind(Bindings.isNull(selectedSecurityHistoryNode));
+
+        selectedSecurityHistoryEvent.bind(eventTableView.getSelectionModel().selectedItemProperty());
+        deleteEventButton.disableProperty().bind(Bindings.isNull(selectedSecurityHistoryEvent));
 
         // Disabled the update button if a security is not selected, or it does not have a quote source
-        updateButton.disableProperty().bind(Bindings.or(Bindings.isNull(selectedSecurityNode),
+        updatePriceButton.disableProperty().bind(Bindings.or(Bindings.isNull(selectedSecurityNode),
+                Bindings.equal(QuoteSource.NONE, quoteSourceProperty)));
+
+        // Disabled the update button if a security is not selected, or it does not have a quote source
+        updateEventButton.disableProperty().bind(Bindings.or(Bindings.isNull(selectedSecurityNode),
                 Bindings.equal(QuoteSource.NONE, quoteSourceProperty)));
 
         // Can't add if a security is not selected
-        addButton.disableProperty().bind(Bindings.isNull(selectedSecurityNode));
+        addPriceButton.disableProperty().bind(Bindings.isNull(selectedSecurityNode));
 
-        tableView.setTableMenuButtonVisible(true);
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        // Can't add if a security is not selected and a value is not set
+        addEventButton.disableProperty().bind(Bindings.isNull(selectedSecurityNode)
+                .or(Bindings.isEmpty(eventValueTextField.textProperty())));
 
-        final TableColumn<SecurityHistoryNode, LocalDate> dateColumn = new TableColumn<>(resources.getString("Column.Date"));
-        dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLocalDate()));
-        dateColumn.setCellFactory(cell -> new ShortDateTableCell<>());
-        tableView.getColumns().add(dateColumn);
 
-        final TableColumn<SecurityHistoryNode, BigDecimal> closeColumn = new TableColumn<>(resources.getString("Column.Close"));
-        closeColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getPrice()));
-        closeColumn.setCellFactory(cell -> new BigDecimalTableCell<>(numberFormatProperty));
-        tableView.getColumns().add(closeColumn);
+        priceTableView.setTableMenuButtonVisible(false);
+        priceTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        final TableColumn<SecurityHistoryNode, BigDecimal> lowColumn = new TableColumn<>(resources.getString("Column.Low"));
-        lowColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLow()));
-        lowColumn.setCellFactory(cell -> new BigDecimalTableCell<>(numberFormatProperty));
-        tableView.getColumns().add(lowColumn);
+        final TableColumn<SecurityHistoryNode, LocalDate> priceDateColumn = new TableColumn<>(resources.getString("Column.Date"));
+        priceDateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLocalDate()));
+        priceDateColumn.setCellFactory(cell -> new ShortDateTableCell<>());
+        priceTableView.getColumns().add(priceDateColumn);
 
-        final TableColumn<SecurityHistoryNode, BigDecimal> highColumn = new TableColumn<>(resources.getString("Column.High"));
-        highColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getHigh()));
-        highColumn.setCellFactory(cell -> new BigDecimalTableCell<>(numberFormatProperty));
-        tableView.getColumns().add(highColumn);
+        final TableColumn<SecurityHistoryNode, BigDecimal> priceCloseColumn = new TableColumn<>(resources.getString("Column.Close"));
+        priceCloseColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getPrice()));
+        priceCloseColumn.setCellFactory(cell -> new BigDecimalTableCell<>(numberFormatProperty));
+        priceTableView.getColumns().add(priceCloseColumn);
 
-        final TableColumn<SecurityHistoryNode, Long> volumeColumn = new TableColumn<>(resources.getString("Column.Volume"));
-        volumeColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getVolume()));
-        volumeColumn.setCellFactory(cell -> new LongFormatTableCell());
-        tableView.getColumns().add(volumeColumn);
+        final TableColumn<SecurityHistoryNode, BigDecimal> priceLowColumn = new TableColumn<>(resources.getString("Column.Low"));
+        priceLowColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLow()));
+        priceLowColumn.setCellFactory(cell -> new BigDecimalTableCell<>(numberFormatProperty));
+        priceTableView.getColumns().add(priceLowColumn);
 
-        tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        final TableColumn<SecurityHistoryNode, BigDecimal> priceHighColumn = new TableColumn<>(resources.getString("Column.High"));
+        priceHighColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getHigh()));
+        priceHighColumn.setCellFactory(cell -> new BigDecimalTableCell<>(numberFormatProperty));
+        priceTableView.getColumns().add(priceHighColumn);
 
-        sortedList.comparatorProperty().bind(tableView.comparatorProperty());
+        final TableColumn<SecurityHistoryNode, Long> priceVolumeColumn = new TableColumn<>(resources.getString("Column.Volume"));
+        priceVolumeColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getVolume()));
+        priceVolumeColumn.setCellFactory(cell -> new LongFormatTableCell());
+        priceTableView.getColumns().add(priceVolumeColumn);
 
-        tableView.setItems(sortedList);
+        priceTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        sortedHistoryList.comparatorProperty().bind(priceTableView.comparatorProperty());
+
+        priceTableView.setItems(sortedHistoryList);
+
+        final TableColumn<SecurityHistoryEvent, LocalDate> eventDateColumn = new TableColumn<>(resources.getString("Column.Date"));
+        eventDateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getDate()));
+        eventDateColumn.setCellFactory(cell -> new ShortDateTableCell<>());
+        eventTableView.getColumns().add(eventDateColumn);
+
+        final TableColumn<SecurityHistoryEvent, String> eventActionColumn = new TableColumn<>(resources.getString("Column.Event"));
+        eventActionColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getType().toString()));
+        eventTableView.getColumns().add(eventActionColumn);
+
+        final NumberFormat decimalFormat = NumberFormat.getInstance();
+        if (decimalFormat instanceof DecimalFormat) {
+            decimalFormat.setMinimumFractionDigits(MathConstants.SECURITY_PRICE_ACCURACY);
+            decimalFormat.setMaximumFractionDigits(MathConstants.SECURITY_PRICE_ACCURACY);
+        }
+
+        final TableColumn<SecurityHistoryEvent, BigDecimal> eventValueColumn = new TableColumn<>(resources.getString("Column.Value"));
+        eventValueColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getValue()));
+        eventValueColumn.setCellFactory(cell -> new BigDecimalTableCell<>(decimalFormat));
+        eventTableView.getColumns().add(eventValueColumn);
+
+        eventTableView.setTableMenuButtonVisible(false);
+        eventTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        eventTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        sortedHistoryEventList.comparatorProperty().bind(eventTableView.comparatorProperty());
+
+        eventTableView.setItems(sortedHistoryEventList);
+
+        eventValueTextField.scaleProperty().setValue(MathConstants.SECURITY_PRICE_ACCURACY);
 
         chart = new AreaChart<>(new LocalDateAxis(), new NumberAxis());
         chart.setCreateSymbols(false);
@@ -203,7 +277,7 @@ public class SecurityHistoryController implements MessageListener {
                 quoteSourceProperty.setValue(newValue.getQuoteSource());
 
                 Platform.runLater(() -> {
-                    loadTable();
+                    loadTables();
                     loadChart();
                 });
             }
@@ -211,9 +285,17 @@ public class SecurityHistoryController implements MessageListener {
 
         selectedSecurityHistoryNode.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                loadForm();
+                loadPriceForm();
             } else {
-                clearForm();
+                clearPriceForm();
+            }
+        });
+
+        selectedSecurityHistoryEvent.addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                loadEventForm();
+            } else {
+                clearEventForm();
             }
         });
 
@@ -230,28 +312,44 @@ public class SecurityHistoryController implements MessageListener {
         });
     }
 
-    private void loadForm() {
-        datePicker.setValue(selectedSecurityHistoryNode.get().getLocalDate());
+    private void loadPriceForm() {
+        historyDatePicker.setValue(selectedSecurityHistoryNode.get().getLocalDate());
         closeTextField.setDecimal(selectedSecurityHistoryNode.get().getPrice());
         lowTextField.setDecimal(selectedSecurityHistoryNode.get().getLow());
         highTextField.setDecimal(selectedSecurityHistoryNode.get().getHigh());
         volumeTextField.setLong(selectedSecurityHistoryNode.get().getVolume());
     }
 
-    private void clearForm() {
-        datePicker.setValue(LocalDate.now());
+    private void loadEventForm() {
+        Platform.runLater(() -> {
+            eventDatePicker.setValue(selectedSecurityHistoryEvent.get().getDate());
+            eventValueTextField.setDecimal(selectedSecurityHistoryEvent.get().getValue());
+            securityEventTypeComboBox.setValue(selectedSecurityHistoryEvent.get().getType());
+        });
+
+    }
+
+    private void clearPriceForm() {
+        historyDatePicker.setValue(LocalDate.now());
         closeTextField.setDecimal(BigDecimal.ZERO);
         volumeTextField.setText(null);
         lowTextField.setDecimal(BigDecimal.ZERO);
         highTextField.setDecimal(BigDecimal.ZERO);
     }
 
+    private void clearEventForm() {
+        Platform.runLater(() -> {
+            eventDatePicker.setValue(LocalDate.now());
+            eventValueTextField.setDecimal(BigDecimal.ZERO);
+        });
+    }
+
     @FXML
-    private void handleDeleteAction() {
+    private void handleDeletePriceAction() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        final List<SecurityHistoryNode> historyNodes = new ArrayList<>(tableView.getSelectionModel().getSelectedItems());
+        final List<SecurityHistoryNode> historyNodes = new ArrayList<>(priceTableView.getSelectionModel().getSelectedItems());
 
         Collections.reverse(historyNodes);  // work backwards through the deletion list
 
@@ -261,27 +359,27 @@ public class SecurityHistoryController implements MessageListener {
     }
 
     @FXML
-    private void handleClearAction() {
-        tableView.getSelectionModel().clearSelection();
-        clearForm();
+    private void handleClearPriceAction() {
+        priceTableView.getSelectionModel().clearSelection();
+        clearPriceForm();
     }
 
     @FXML
-    private void handleAddAction() {
+    private void handleAddPriceAction() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        final SecurityHistoryNode history = new SecurityHistoryNode(datePicker.getValue(), closeTextField.getDecimal(),
+        final SecurityHistoryNode history = new SecurityHistoryNode(historyDatePicker.getValue(), closeTextField.getDecimal(),
                 volumeTextField.getLong(), highTextField.getDecimal(), lowTextField.getDecimal());
 
         engine.addSecurityHistory(selectedSecurityNode.get(), history);
 
-        clearForm();
+        clearPriceForm();
     }
 
     @FXML
-    private void handelCloseAction() {
-        ((Stage)parentProperty.get().getWindow()).close();
+    private void handleCloseAction() {
+        ((Stage) parentProperty.get().getWindow()).close();
     }
 
     @FXML
@@ -292,9 +390,52 @@ public class SecurityHistoryController implements MessageListener {
         }
     }
 
-    private void loadTable() {
+    @FXML
+    private void handleDeleteEventAction() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        final List<SecurityHistoryEvent> events = new ArrayList<>(eventTableView.getSelectionModel().getSelectedItems());
+
+        Collections.reverse(events);  // work backwards through the deletion list
+
+        for (final SecurityHistoryEvent securityHistoryEvent : events) {
+            engine.removeSecurityHistoryEvent(selectedSecurityNode.get(), securityHistoryEvent);
+        }
+    }
+
+    @FXML
+    private void handleAddEventAction() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        final SecurityHistoryEvent event = new SecurityHistoryEvent(securityEventTypeComboBox.getValue(),
+                eventDatePicker.getValue(), eventValueTextField.getDecimal());
+
+        engine.addSecurityHistoryEvent(selectedSecurityNode.get(), event);
+
+        clearEventForm();
+    }
+
+    @FXML
+    private void handleOnlineEventUpdate() {
+        // TODO, perform download and import
+    }
+
+    @FXML
+    private void handleClearEventAction() {
+        eventTableView.getSelectionModel().clearSelection();
+        clearEventForm();
+    }
+
+    private void loadTables() {
+        priceTableView.getSelectionModel().clearSelection();
         observableHistoryNodes.setAll(securityComboBox.getValue().getHistoryNodes());
-        tableView.scrollTo(observableHistoryNodes.size() - 1);
+        priceTableView.scrollTo(observableHistoryNodes.size() - 1);
+
+        eventTableView.getSelectionModel().clearSelection();
+        observableHistoryEventList.setAll(securityComboBox.getValue().getHistoryEvents());
+        eventTableView.scrollTo(observableHistoryEventList.size() - 1);
     }
 
     private void loadChart() {
@@ -320,9 +461,11 @@ public class SecurityHistoryController implements MessageListener {
 
         if (eventNode.equals(selectedSecurityNode.get())) {
             switch (message.getEvent()) {
-                case SECURITY_HISTORY_REMOVE:
                 case SECURITY_HISTORY_ADD:
-                    Platform.runLater(this::loadTable);
+                case SECURITY_HISTORY_REMOVE:
+                case SECURITY_HISTORY_EVENT_ADD:
+                case SECURITY_HISTORY_EVENT_REMOVE:
+                    Platform.runLater(this::loadTables);
                     Platform.runLater(this::loadChart);
                     break;
                 default:

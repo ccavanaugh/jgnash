@@ -15,9 +15,11 @@
 <?import jgnash.uifx.control.SecurityComboBox?>
 <?import javafx.scene.control.TitledPane?>
 
-<GridPane prefHeight="400.0" prefWidth="500.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+<?import jgnash.uifx.control.SecurityHistoryEventTypeComboBox?>
+<GridPane prefHeight="400.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
           fx:controller="jgnash.uifx.dialog.security.SecurityHistoryController" styleClass="form, dialog">
     <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS"/>
         <ColumnConstraints hgrow="ALWAYS"/>
     </columnConstraints>
     <rowConstraints>
@@ -27,7 +29,7 @@
         <RowConstraints vgrow="NEVER"/>
     </rowConstraints>
 
-    <GridPane styleClass="form">
+    <GridPane styleClass="form" GridPane.columnSpan="2">
         <columnConstraints>
             <ColumnConstraints hgrow="NEVER"/>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
@@ -41,31 +43,30 @@
                           GridPane.hgrow="ALWAYS"/>
     </GridPane>
 
-    <StackPane fx:id="chartPane" GridPane.rowIndex="1" minHeight="120"/>
+    <StackPane fx:id="chartPane" GridPane.rowIndex="1" GridPane.columnSpan="2" minHeight="120"/>
 
     <TitledPane text="%Title.PriceHistory" collapsible="false" GridPane.rowIndex="2" >
         <GridPane styleClass="form">
             <columnConstraints>
-                <ColumnConstraints hgrow="NEVER"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                <ColumnConstraints hgrow="NEVER"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                <ColumnConstraints hgrow="NEVER"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="95.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="95.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="95.0" prefWidth="100.0"/>
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints vgrow="SOMETIMES"/>
                 <RowConstraints vgrow="NEVER"/>
                 <RowConstraints vgrow="NEVER"/>
                 <RowConstraints vgrow="NEVER"/>
-                <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
 
-            <TableView fx:id="tableView" minHeight="150.0" prefWidth="180.0" GridPane.rowIndex="0"
+            <TableView fx:id="priceTableView" minHeight="150.0" prefWidth="180.0" GridPane.rowIndex="0"
                        GridPane.columnSpan="6"/>
 
             <Label text="%Label.Date" GridPane.rowIndex="1"/>
-            <DatePickerEx fx:id="datePicker" GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="Infinity"/>
+            <DatePickerEx fx:id="historyDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="Infinity"/>
 
             <Label text="%Label.Close" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
             <DecimalTextField fx:id="closeTextField" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
@@ -79,28 +80,71 @@
             <Label text="%Label.Low"  GridPane.rowIndex="2" GridPane.columnIndex="2"/>
             <DecimalTextField fx:id="lowTextField" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
 
-            <Button fx:id="updateButton" onAction="#handleOnlineUpdate" text="%Button.UpdateOnline"
-                    maxWidth="Infinity" GridPane.rowIndex="2" GridPane.columnIndex="4" GridPane.columnSpan="2">
-                <graphic>
-                    <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
-                </graphic>
-            </Button>
-
             <ButtonBar GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="6">
                 <buttons>
-                    <Button fx:id="deleteButton" onAction="#handleDeleteAction" text="%Button.Delete"
+                    <Button fx:id="deletePriceButton" onAction="#handleDeletePriceAction" text="%Button.Delete"
                             ButtonBar.buttonData="LEFT"/>
-                    <Button onAction="#handleClearAction" text="%Button.Clear" ButtonBar.buttonData="LEFT"/>
-                    <Button fx:id="addButton" onAction="#handleAddAction" text="%Button.Add" ButtonBar.buttonData="LEFT"/>
-                    <Button visible="false" ButtonBar.buttonData="BIG_GAP"/>
+                    <Button onAction="#handleClearPriceAction" text="%Button.Clear" ButtonBar.buttonData="LEFT"/>
+                    <Button fx:id="addPriceButton" onAction="#handleAddPriceAction" text="%Button.Add" ButtonBar.buttonData="LEFT"/>
+                    <Button fx:id="updatePriceButton" onAction="#handleOnlineUpdate" text="%Button.UpdateOnline"
+                            ButtonBar.buttonData="LEFT" ButtonBar.buttonUniformSize="false">
+                        <graphic>
+                            <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
+                        </graphic>
+                    </Button>
                 </buttons>
             </ButtonBar>
         </GridPane>
     </TitledPane>
 
-    <ButtonBar GridPane.rowIndex="3">
+    <TitledPane text="%Title.EventHistory" collapsible="false" GridPane.rowIndex="2" GridPane.columnIndex="1">
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="95.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="95.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="95.0" prefWidth="100.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+
+            <TableView fx:id="eventTableView" minHeight="150.0" prefWidth="180.0" GridPane.rowIndex="0"
+                       GridPane.columnSpan="6"/>
+
+            <Label text="%Label.Date" GridPane.rowIndex="1"/>
+            <DatePickerEx fx:id="eventDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="Infinity"/>
+
+            <Label text="%Label.Event" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+            <SecurityHistoryEventTypeComboBox fx:id="securityEventTypeComboBox" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+
+            <Label text="%Label.Value" GridPane.rowIndex="1" GridPane.columnIndex="4"/>
+            <DecimalTextField fx:id="eventValueTextField" GridPane.rowIndex="1" GridPane.columnIndex="5"/>
+
+            <ButtonBar GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="6">
+                <buttons>
+                    <Button fx:id="deleteEventButton" onAction="#handleDeleteEventAction" text="%Button.Delete"
+                            ButtonBar.buttonData="LEFT"/>
+                    <Button onAction="#handleClearEventAction" text="%Button.Clear" ButtonBar.buttonData="LEFT"/>
+                    <Button fx:id="addEventButton" onAction="#handleAddEventAction" text="%Button.Add" ButtonBar.buttonData="LEFT"/>
+                    <Button fx:id="updateEventButton" onAction="#handleOnlineEventUpdate" text="%Button.UpdateOnline"
+                            ButtonBar.buttonData="LEFT" ButtonBar.buttonUniformSize="false">
+                        <graphic>
+                            <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
+                        </graphic>
+                    </Button>
+                </buttons>
+            </ButtonBar>
+        </GridPane>
+    </TitledPane>
+
+    <ButtonBar GridPane.rowIndex="3" GridPane.columnSpan="2">
         <buttons>
-            <Button onAction="#handelCloseAction" text="%Button.Close" ButtonBar.buttonData="CANCEL_CLOSE"/>
+            <Button onAction="#handleCloseAction" text="%Button.Close" ButtonBar.buttonData="CANCEL_CLOSE"/>
         </buttons>
     </ButtonBar>
 </GridPane>
