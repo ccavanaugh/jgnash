@@ -1171,7 +1171,11 @@ public class Engine {
         commodityLock.writeLock().lock();
 
         try {
-            // Remove old history event if it exists
+
+            // Remove old history event if it exists, equality is used to work around hibernate optimizations
+            node.getHistoryEvents().stream().filter(event -> event.equals(historyEvent))
+                    .forEach(event -> removeSecurityHistoryEvent(node, historyEvent));
+
             boolean status = node.addSecurityHistoryEvent(historyEvent);
 
             if (status) {
