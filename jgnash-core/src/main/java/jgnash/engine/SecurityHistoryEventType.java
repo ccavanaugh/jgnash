@@ -17,12 +17,25 @@
  */
 package jgnash.engine;
 
+import jgnash.util.ResourceUtils;
+
 /**
  * Historical event descriptor for securities
  *
  * @author Craig Cavanaugh
  */
 public enum SecurityHistoryEventType {
-    SPLIT,
-    DIVIDEND
+    SPLIT(ResourceUtils.getString("SecurityEvent.Split")),
+    DIVIDEND(ResourceUtils.getString("SecurityEvent.Dividend"));
+
+    private final transient String description;
+
+    SecurityHistoryEventType(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return description;
+    }
 }
