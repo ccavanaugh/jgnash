@@ -218,7 +218,12 @@ public class SecurityNode extends CommodityNode {
         lock.writeLock().lock();
 
         try {
-            result = securityHistoryEvents.remove(securityHistoryEvent);
+            // Use equality check for remove
+            for (final SecurityHistoryEvent historyEvent : securityHistoryEvents) {
+                if (historyEvent.equals(securityHistoryEvent)) {
+                    result = securityHistoryEvents.remove(historyEvent);
+                }
+            }
         } finally {
             lock.writeLock().unlock();
         }
