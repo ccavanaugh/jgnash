@@ -13,6 +13,7 @@
 <?import jgnash.uifx.control.DecimalTextField?>
 <?import jgnash.uifx.control.IntegerTextField?>
 <?import jgnash.uifx.control.SecurityComboBox?>
+<?import javafx.scene.control.TitledPane?>
 
 <GridPane prefHeight="400.0" prefWidth="500.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
           fx:controller="jgnash.uifx.dialog.security.SecurityHistoryController" styleClass="form, dialog">
@@ -21,7 +22,6 @@
     </columnConstraints>
     <rowConstraints>
         <RowConstraints vgrow="NEVER"/>
-        <RowConstraints vgrow="SOMETIMES"/>
         <RowConstraints vgrow="SOMETIMES"/>
         <RowConstraints vgrow="SOMETIMES"/>
         <RowConstraints vgrow="NEVER"/>
@@ -41,59 +41,64 @@
                           GridPane.hgrow="ALWAYS"/>
     </GridPane>
 
-    <StackPane fx:id="chartPane" GridPane.rowIndex="1"/>
+    <StackPane fx:id="chartPane" GridPane.rowIndex="1" minHeight="120"/>
 
-    <TableView fx:id="tableView" minHeight="180.0" prefWidth="180.0" GridPane.rowIndex="2"/>
+    <TitledPane text="%Title.PriceHistory" collapsible="false" GridPane.rowIndex="2" >
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="SOMETIMES"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
 
-    <GridPane GridPane.rowIndex="3" styleClass="form">
-        <columnConstraints>
-            <ColumnConstraints hgrow="NEVER"/>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-            <ColumnConstraints hgrow="NEVER"/>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-            <ColumnConstraints hgrow="NEVER"/>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints vgrow="SOMETIMES"/>
-            <RowConstraints vgrow="SOMETIMES"/>
-            <RowConstraints vgrow="SOMETIMES"/>
-            <RowConstraints vgrow="SOMETIMES"/>
-        </rowConstraints>
+            <TableView fx:id="tableView" minHeight="150.0" prefWidth="180.0" GridPane.rowIndex="0"
+                       GridPane.columnSpan="6"/>
 
-        <Label text="%Label.Date" GridPane.rowIndex="0"/>
-        <DatePickerEx fx:id="datePicker" GridPane.columnIndex="1" GridPane.rowIndex="0" maxWidth="Infinity"/>
+            <Label text="%Label.Date" GridPane.rowIndex="1"/>
+            <DatePickerEx fx:id="datePicker" GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="Infinity"/>
 
-        <Label text="%Label.Close" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
-        <DecimalTextField fx:id="closeTextField" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+            <Label text="%Label.Close" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+            <DecimalTextField fx:id="closeTextField" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
 
-        <Label text="%Label.Volume" GridPane.rowIndex="0" GridPane.columnIndex="4"/>
-        <IntegerTextField fx:id="volumeTextField" GridPane.rowIndex="0" GridPane.columnIndex="5"/>
+            <Label text="%Label.Volume" GridPane.rowIndex="1" GridPane.columnIndex="4"/>
+            <IntegerTextField fx:id="volumeTextField" GridPane.rowIndex="1" GridPane.columnIndex="5"/>
 
-        <Label text="%Label.High" GridPane.rowIndex="1"/>
-        <DecimalTextField fx:id="highTextField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Label text="%Label.High" GridPane.rowIndex="2"/>
+            <DecimalTextField fx:id="highTextField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-        <Label text="%Label.Low"  GridPane.rowIndex="1" GridPane.columnIndex="2"/>
-        <DecimalTextField fx:id="lowTextField" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+            <Label text="%Label.Low"  GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+            <DecimalTextField fx:id="lowTextField" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
 
-        <Button fx:id="updateButton" onAction="#handleOnlineUpdate" text="%Button.UpdateOnline"
-                maxWidth="Infinity" GridPane.rowIndex="1" GridPane.columnIndex="4" GridPane.columnSpan="2">
-            <graphic>
-                <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
-            </graphic>
-        </Button>
+            <Button fx:id="updateButton" onAction="#handleOnlineUpdate" text="%Button.UpdateOnline"
+                    maxWidth="Infinity" GridPane.rowIndex="2" GridPane.columnIndex="4" GridPane.columnSpan="2">
+                <graphic>
+                    <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
+                </graphic>
+            </Button>
 
-        <ButtonBar GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="6">
-            <buttons>
-                <Button fx:id="deleteButton" onAction="#handleDeleteAction" text="%Button.Delete"
-                        ButtonBar.buttonData="LEFT"/>
-                <Button onAction="#handleClearAction" text="%Button.Clear" ButtonBar.buttonData="LEFT"/>
-                <Button fx:id="addButton" onAction="#handleAddAction" text="%Button.Add" ButtonBar.buttonData="LEFT"/>
-                <Button visible="false" ButtonBar.buttonData="BIG_GAP"/>
-            </buttons>
-        </ButtonBar>
-    </GridPane>
-    <ButtonBar GridPane.rowIndex="4">
+            <ButtonBar GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="6">
+                <buttons>
+                    <Button fx:id="deleteButton" onAction="#handleDeleteAction" text="%Button.Delete"
+                            ButtonBar.buttonData="LEFT"/>
+                    <Button onAction="#handleClearAction" text="%Button.Clear" ButtonBar.buttonData="LEFT"/>
+                    <Button fx:id="addButton" onAction="#handleAddAction" text="%Button.Add" ButtonBar.buttonData="LEFT"/>
+                    <Button visible="false" ButtonBar.buttonData="BIG_GAP"/>
+                </buttons>
+            </ButtonBar>
+        </GridPane>
+    </TitledPane>
+
+    <ButtonBar GridPane.rowIndex="3">
         <buttons>
             <Button onAction="#handelCloseAction" text="%Button.Close" ButtonBar.buttonData="CANCEL_CLOSE"/>
         </buttons>
