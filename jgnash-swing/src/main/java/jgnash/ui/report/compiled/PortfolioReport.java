@@ -270,7 +270,7 @@ public class PortfolioReport extends DynamicJasperReport {
                 case 4:
                     return rb.getString("Column.Price");
                 case 5:
-                    return rb.getString("Column.Value");
+                    return rb.getString("Column.MktValue");
                 case 6:
                     return rb.getString("Column.Short.UnrealizedGain");
                 case 7:
