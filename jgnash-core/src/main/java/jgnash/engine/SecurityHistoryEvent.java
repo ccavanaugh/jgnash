@@ -90,7 +90,7 @@ public class SecurityHistoryEvent implements Comparable<SecurityHistoryEvent>, S
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, value, date);
+        return Objects.hash(type, date);
     }
 
     @Override

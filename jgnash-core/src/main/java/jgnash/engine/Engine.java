@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -261,9 +262,12 @@ public class Engine {
                 securityNode.getQuoteSource() != QuoteSource.NONE).forEach(securityNode -> { // failure will occur if source is not defined
             futures.add(backgroundExecutorService.schedule(new BackgroundCallable<>(
                     new UpdateFactory.UpdateSecurityNodeCallable(securityNode)), delay, TimeUnit.SECONDS));
+
+            futures.add(backgroundExecutorService.schedule(new BackgroundCallable<>(
+                    new UpdateFactory.UpdateSecurityNodeEventsCallable(securityNode)), delay, TimeUnit.SECONDS));
         });
 
-        // Cleanup thread that monitor for excess network connection failures
+        // Cleanup thread that monitors for excess network connection failures
         new SecuritiesUpdateThread(futures).start();
     }
 
@@ -1163,7 +1167,7 @@ public class Engine {
      * Add a SecurityHistoryNode node to a SecurityNode.  If the SecurityNode already contains
      * an equivalent SecurityHistoryNode, the old SecurityHistoryNode is removed first.
      *
-     * @param node  SecurityNode to add to
+     * @param node         SecurityNode to add to
      * @param historyEvent SecurityHistoryNode to add
      * @return <tt>true</tt> if successful
      */
@@ -1173,7 +1177,8 @@ public class Engine {
         try {
 
             // Remove old history event if it exists, equality is used to work around hibernate optimizations
-            node.getHistoryEvents().stream().filter(event -> event.equals(historyEvent))
+            // A defensive copy of the old events is used to prevent concurrent modification errors
+            new HashSet<>(node.getHistoryEvents()).stream().filter(event -> event.equals(historyEvent))
                     .forEach(event -> removeSecurityHistoryEvent(node, historyEvent));
 
             boolean status = node.addSecurityHistoryEvent(historyEvent);
@@ -1541,7 +1546,7 @@ public class Engine {
     /**
      * Remove a {@code SecurityHistoryEvent} from a {@code SecurityNode
      *
-     * @param node {@code SecurityNode} to remove history from
+     * @param node         {@code SecurityNode} to remove history from
      * @param historyEvent the {@code SecurityHistoryEvent} to remove
      * @return {@code true} if the {@code SecurityHistoryEvent} was found and removed
      */

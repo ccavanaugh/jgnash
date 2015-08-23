@@ -28,9 +28,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -46,6 +48,7 @@ import java.util.regex.Pattern;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.QuoteSource;
+import jgnash.engine.SecurityHistoryEvent;
 import jgnash.engine.SecurityHistoryNode;
 import jgnash.engine.SecurityNode;
 import jgnash.net.ConnectionFactory;
@@ -73,6 +76,7 @@ public class UpdateFactory {
 
     /**
      * Registers a {@code Handler} with the class logger
+     *
      * @param handler {@code Handler} to register
      */
     public static void addLogHandler(final Handler handler) {
@@ -115,6 +119,21 @@ public class UpdateFactory {
         }
 
         return result;
+    }
+
+    public static void updateSecurityEvents(final SecurityNode node) {
+
+        final ExecutorService service = Executors.newSingleThreadExecutor();
+        final Future<Boolean> future = service.submit(new UpdateSecurityNodeEventsCallable(node));
+
+        try {
+            future.get(TIMEOUT, TimeUnit.MINUTES);
+            service.shutdown();
+        } catch (final InterruptedException | ExecutionException e) { // intentionally interrupted
+            logger.log(Level.FINEST, e.getLocalizedMessage(), e);
+        } catch (final TimeoutException e) {
+            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+        }
     }
 
     public static boolean importHistory(final SecurityNode securityNode, final LocalDate startDate, final LocalDate endDate) {
@@ -296,6 +315,47 @@ public class UpdateFactory {
                                 logger.info(ResourceUtils.getString("Message.UpdatedPrice", securityNode.getSymbol()));
                             }
                         }
+                    }
+                }
+            }
+
+            return result;
+        }
+    }
+
+    public static class UpdateSecurityNodeEventsCallable implements Callable<Boolean> {
+
+        private final SecurityNode securityNode;
+
+        public UpdateSecurityNodeEventsCallable(@NotNull final SecurityNode securityNode) {
+            this.securityNode = securityNode;
+        }
+
+        @Override
+        public Boolean call() throws Exception {
+
+            boolean result = true;
+
+            final Engine e = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+            final LocalDate oldest = securityNode.getHistoryNodes().get(0).getLocalDate();
+
+            if (e != null && securityNode.getQuoteSource() != QuoteSource.NONE) {
+
+                final Set<SecurityHistoryEvent> oldHistoryEvents = new HashSet<>(securityNode.getHistoryEvents());
+
+                for (final SecurityHistoryEvent securityHistoryEvent : YahooEventParser.retrieveNew(securityNode)) {
+                    if (!Thread.currentThread().isInterrupted()) { // check for thread interruption
+
+                        if (securityHistoryEvent.getDate().isAfter(oldest) || securityHistoryEvent.getDate().isEqual(oldest)) {
+                            if (!oldHistoryEvents.contains(securityHistoryEvent)) {
+                                result = e.addSecurityHistoryEvent(securityNode, securityHistoryEvent);
+
+                                if (result) {
+                                    logger.info(ResourceUtils.getString("Message.UpdatedSecurityEvent", securityNode.getSymbol()));
+                                }
+                            }
+                       }
                     }
                 }
             }

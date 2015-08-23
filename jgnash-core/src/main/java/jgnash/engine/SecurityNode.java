@@ -222,6 +222,7 @@ public class SecurityNode extends CommodityNode {
             for (final SecurityHistoryEvent historyEvent : securityHistoryEvents) {
                 if (historyEvent.equals(securityHistoryEvent)) {
                     result = securityHistoryEvents.remove(historyEvent);
+                    break;  // break to prevent concurrent modification error
                 }
             }
         } finally {

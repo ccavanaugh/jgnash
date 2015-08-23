@@ -419,7 +419,7 @@ public class SecurityHistoryController implements MessageListener {
 
     @FXML
     private void handleOnlineEventUpdate() {
-        // TODO, perform download and import
+        UpdateFactory.updateSecurityEvents(selectedSecurityNode.get());
     }
 
     @FXML
@@ -433,8 +433,12 @@ public class SecurityHistoryController implements MessageListener {
         observableHistoryNodes.setAll(securityComboBox.getValue().getHistoryNodes());
         priceTableView.scrollTo(observableHistoryNodes.size() - 1);
 
+
+        final List<SecurityHistoryEvent> events = new ArrayList<>(securityComboBox.getValue().getHistoryEvents());
+        Collections.sort(events);
+
         eventTableView.getSelectionModel().clearSelection();
-        observableHistoryEventList.setAll(securityComboBox.getValue().getHistoryEvents());
+        observableHistoryEventList.setAll(events);
         eventTableView.scrollTo(observableHistoryEventList.size() - 1);
     }
 

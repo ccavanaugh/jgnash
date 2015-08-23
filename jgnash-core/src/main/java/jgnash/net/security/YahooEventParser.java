@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
 
 /**
  * Retrieves historical stock dividend and split information from Yahoo
- *
+ * <p>
  * Craig Cavanaugh
  */
 public class YahooEventParser {
@@ -62,18 +62,18 @@ public class YahooEventParser {
 
         LocalDate startDate = LocalDate.now().minusDays(1);
 
-        List<SecurityHistoryNode> historyNodeList = securityNode.getHistoryNodes();
+        final List<SecurityHistoryNode> historyNodeList = securityNode.getHistoryNodes();
 
         if (historyNodeList.size() > 0) {
             startDate = historyNodeList.get(0).getLocalDate();
         }
 
-        final List<SecurityHistoryEvent> historyEvents = new ArrayList<>(securityNode.getHistoryEvents());
+        /*final List<SecurityHistoryEvent> historyEvents = new ArrayList<>(securityNode.getHistoryEvents());
         if (historyEvents.size() > 0) {
             Collections.sort(historyEvents);
 
             startDate = historyEvents.get(historyEvents.size() - 1).getDate().plusDays(1);
-        }
+        }*/
 
         // s = symbol
         // a = start month -1
@@ -118,7 +118,8 @@ public class YahooEventParser {
 
         final StringBuilder url = new StringBuilder("http://ichart.finance.yahoo.com/x?s=").append(s);
         url.append("&a=").append(a).append("&b=").append(b).append("&c=").append(c);
-        url.append("&d=").append(d).append("&e=").append(e);url.append("&f=").append(f);
+        url.append("&d=").append(d).append("&e=").append(e);
+        url.append("&f=").append(f);
         url.append("&g=v&y=0&z=30000");
 
         URLConnection connection = null;
@@ -179,7 +180,7 @@ public class YahooEventParser {
                     }
                 }
             }
-        } catch (final NullPointerException | IOException  ex) {
+        } catch (final NullPointerException | IOException ex) {
             Logger.getLogger(YahooEventParser.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
         } finally {
             if (connection != null) {
