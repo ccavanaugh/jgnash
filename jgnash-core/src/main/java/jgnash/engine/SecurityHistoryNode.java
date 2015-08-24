@@ -56,6 +56,8 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
 
     private long volume = 0;
 
+    private transient BigDecimal adjustedPrice = null;
+
     /**
      * public no-argument constructor for reflection
      */
@@ -124,6 +126,21 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
 
     public BigDecimal getPrice() {
         return price;
+    }
+
+    /**
+     * The price adjusted for any splits or reverse splits
+     * @return the adjusted price
+     */
+    public @NotNull BigDecimal getAdjustedPrice() {
+        if (adjustedPrice != null) {
+            return adjustedPrice;
+        }
+        return price;
+    }
+
+    void setAdjustedPrice(@NotNull BigDecimal adjustedPrice) {
+        this.adjustedPrice = adjustedPrice;
     }
 
     /**

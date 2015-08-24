@@ -23,10 +23,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -38,6 +40,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.PostLoad;
+
+import jgnash.util.DateUtils;
 
 /**
  * Security Node
@@ -259,12 +263,48 @@ public class SecurityNode extends CommodityNode {
     }
 
     /**
-     * Get a copy of SecurityHistoryNodes for this security
+     * Gets the SecurityHistoryNodes for this security.  At time of retrieval the adjusted price of the
+     * SecurityHistoryNodes will be updated to reflect any spits or reverse splits
      *
      * @return Returns a shallow copy of the history nodes to protect against modification
+     * @see SecurityHistoryNode#getAdjustedPrice()
      */
     public List<SecurityHistoryNode> getHistoryNodes() {
-        return Collections.unmodifiableList(sortedHistoryNodeCache);
+
+        lock.writeLock().lock();
+
+        try {
+            final List<SecurityHistoryEvent> splits = getSplitEvents();
+
+            if (splits.size() > 0) {
+                BigDecimal scalar = BigDecimal.ONE;
+
+                final ListIterator<SecurityHistoryEvent> historyEventIterator = splits.listIterator(splits.size());
+
+                LocalDate eventDate = historyEventIterator.previous().getDate();
+                historyEventIterator.next();    // reset back to the tail
+
+                // work backwards
+                for (int i = sortedHistoryNodeCache.size() - 1; i >= 0; i--) {
+                    if (DateUtils.after(eventDate, sortedHistoryNodeCache.get(i).getLocalDate())) {
+                        if (historyEventIterator.hasPrevious()) {
+                            final SecurityHistoryEvent historyEvent = historyEventIterator.previous();
+                            eventDate = historyEvent.getDate();
+                            scalar = scalar.divide(historyEvent.getValue(), MathConstants.mathContext);
+                        }
+                    }
+
+                    sortedHistoryNodeCache.get(i)
+                            .setAdjustedPrice(sortedHistoryNodeCache.get(i).getPrice().multiply(scalar));
+
+                    // TODO, adjust prices for high and low prices also
+                }
+            }
+
+            return Collections.unmodifiableList(sortedHistoryNodeCache);
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 
     /**
@@ -274,6 +314,21 @@ public class SecurityNode extends CommodityNode {
      */
     public Set<SecurityHistoryEvent> getHistoryEvents() {
         return Collections.unmodifiableSet(securityHistoryEvents);
+    }
+
+    private List<SecurityHistoryEvent> getSplitEvents() {
+        lock.readLock().lock();
+
+        try {
+            final List<SecurityHistoryEvent> splits = securityHistoryEvents.stream().filter(historyEvent
+                    -> historyEvent.getType() == SecurityHistoryEventType.SPLIT).collect(Collectors.toList());
+
+            Collections.sort(splits);
+
+            return splits;
+        } finally {
+            lock.readLock().unlock();
+        }
     }
 
     /**

@@ -337,8 +337,8 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
             date[i] = DateUtils.asDate(hNode.getLocalDate());
             high[i] = hNode.getHigh().doubleValue();
             low[i] = hNode.getLow().doubleValue();
-            open[i] = hNode.getPrice().doubleValue();
-            close[i] = hNode.getPrice().doubleValue();
+            open[i] = hNode.getAdjustedPrice().doubleValue();
+            close[i] = hNode.getAdjustedPrice().doubleValue();
             volume[i] = hNode.getVolume();
         }
 

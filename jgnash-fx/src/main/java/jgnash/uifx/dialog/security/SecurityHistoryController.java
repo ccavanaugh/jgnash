@@ -449,7 +449,7 @@ public class SecurityHistoryController implements MessageListener {
             series.setName(selectedSecurityNode.get().getSymbol());
 
             for (final SecurityHistoryNode node : selectedSecurityNode.get().getHistoryNodes()) {
-                series.getData().add(new AreaChart.Data<>(node.getLocalDate(), node.getPrice()));
+                series.getData().add(new AreaChart.Data<>(node.getLocalDate(), node.getAdjustedPrice()));
             }
 
             Platform.runLater(() -> {
