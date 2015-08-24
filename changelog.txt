@@ -28,6 +28,8 @@ Improved handling of memo's in split transactions.  The split entry memo should 
 
 Release 2.17.0
 ----------------------
+08/24/15 Securities historical charts now factor in stock splits and reverse splits.
+08/23/15 The JavaFx UI for Securities history allows manual edits of split and dividend history.
 08/16/15 File formats have changed and will not be backwards compatible with prior releases.
 08/16/15 Added framework for handling historical information for stock splits and dividends. (File format change)
 08/15/15 Migrated to use of the new Java 8 LocalDate classes.  This improves the overall application performance. (File format change)

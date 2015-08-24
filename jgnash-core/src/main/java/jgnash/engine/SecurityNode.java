@@ -294,10 +294,7 @@ public class SecurityNode extends CommodityNode {
                         }
                     }
 
-                    sortedHistoryNodeCache.get(i)
-                            .setAdjustedPrice(sortedHistoryNodeCache.get(i).getPrice().multiply(scalar));
-
-                    // TODO, adjust prices for high and low prices also
+                    sortedHistoryNodeCache.get(i).setAdjustmentMultiplier(scalar);
                 }
             }
 

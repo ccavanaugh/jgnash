@@ -88,7 +88,7 @@ public class SecurityHighLowChart {
         return new JFreeChart(title, JFreeChart.DEFAULT_TITLE_FONT, plot, legend);
     }
 
-    private static AbstractXYDataset createHighLowDataset(final SecurityNode node) {
+    private static AbstractXYDataset createHighLowDataSet(final SecurityNode node) {
         Objects.requireNonNull(node);
 
         List<SecurityHistoryNode> hNodes = node.getHistoryNodes();
@@ -106,8 +106,8 @@ public class SecurityHighLowChart {
             final SecurityHistoryNode hNode = hNodes.get(i);
 
             date[i] = DateUtils.asDate(hNode.getLocalDate());
-            high[i] = hNode.getHigh().doubleValue();
-            low[i] = hNode.getLow().doubleValue();
+            high[i] = hNode.getAdjustedHigh().doubleValue();
+            low[i] = hNode.getAdjustedLow().doubleValue();
             open[i] = hNode.getAdjustedPrice().doubleValue();
             close[i] = hNode.getAdjustedPrice().doubleValue();
             volume[i] = hNode.getVolume();
@@ -121,9 +121,9 @@ public class SecurityHighLowChart {
             SecurityNode sNode = combo.getSelectedSecurityNode();
 
             if (sNode != null) {
-                AbstractXYDataset dataset = createHighLowDataset(sNode);
+                final AbstractXYDataset dataSet = createHighLowDataSet(sNode);
 
-                JFreeChart chart = createHighLowChart(sNode.getDescription(), rb.getString("Column.Date"), rb.getString("Column.Price"), dataset, false);
+                JFreeChart chart = createHighLowChart(sNode.getDescription(), rb.getString("Column.Date"), rb.getString("Column.Price"), dataSet, false);
 
                 chart.setBackgroundPaint(null);
 

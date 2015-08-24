@@ -58,6 +58,10 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
 
     private transient BigDecimal adjustedPrice = null;
 
+    private transient BigDecimal adjustedHigh = null;
+
+    private transient BigDecimal adjustedLow = null;
+
     /**
      * public no-argument constructor for reflection
      */
@@ -139,8 +143,45 @@ public class SecurityHistoryNode implements Comparable<SecurityHistoryNode>, Ser
         return price;
     }
 
-    void setAdjustedPrice(@NotNull BigDecimal adjustedPrice) {
-        this.adjustedPrice = adjustedPrice;
+    /**
+     * The high price adjusted for any splits or reverse splits
+     * @return the adjusted price
+     */
+    public @NotNull BigDecimal getAdjustedHigh() {
+        if (adjustedHigh != null) {
+            return adjustedHigh;
+        }
+        return high;
+    }
+
+    /**
+     * The low price adjusted for any splits or reverse splits
+     * @return the adjusted price
+     */
+    public @NotNull BigDecimal getAdjustedLow() {
+        if (adjustedLow != null) {
+            return adjustedLow;
+        }
+        return low;
+    }
+
+    /**
+     * Adjusts the historical values given a multiplier.  To be used for handling
+     * security splits and reverse splits
+     * @param multiplier multiplier to be used for adjusting prices
+     */
+    void setAdjustmentMultiplier(@NotNull BigDecimal multiplier) {
+        if (price != null) {
+            adjustedPrice = price.multiply(multiplier, MathConstants.mathContext);
+        }
+
+        if (high != null) {
+            adjustedHigh = high.multiply(multiplier, MathConstants.mathContext);
+        }
+
+        if (low != null) {
+            adjustedLow = low.multiply(multiplier, MathConstants.mathContext);
+        }
     }
 
     /**
