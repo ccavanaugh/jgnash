@@ -86,7 +86,7 @@ The distribution zip file will be produced at ```jgnash-swing/target/jgnash-```_
 
 ## Building the jgnash-fx module:
 
-[JDK 8u60ea](https://jdk8.java.net/download.html) or later is needed.  The 8u60ea release address several
-JavaFX bugs and the jgnash-fx module uses recent u60 API changes as well.
+[JDK 8u60](https://jdk8.java.net/download.html) or later is needed.  The 8u60 release fixes several JavaFX bugs 
+and the jgnash-fx module uses recent u60 API changes as well.
 
 The jgnash-fx module will break on Java 9 development releases.
