@@ -154,6 +154,10 @@ abstract class AbstractXStreamContainer {
         xstream.useAttributeFor(SecurityHistoryNode.class, "low");
         xstream.useAttributeFor(SecurityHistoryNode.class, "volume");
 
+        xstream.useAttributeFor(SecurityHistoryEvent.class, "date");
+        xstream.useAttributeFor(SecurityHistoryEvent.class, "type");
+        xstream.useAttributeFor(SecurityHistoryEvent.class, "value");
+
         xstream.useAttributeFor(StoredObject.class, "uuid");
 
         xstream.omitField(StoredObject.class, "markedForRemoval");
