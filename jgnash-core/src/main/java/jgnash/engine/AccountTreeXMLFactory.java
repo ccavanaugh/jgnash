@@ -110,6 +110,7 @@ public class AccountTreeXMLFactory {
         xstream.omitField(Account.class, "attributes");
 
         xstream.omitField(SecurityNode.class, "historyNodes");
+        xstream.omitField(SecurityNode.class, "securityHistoryEvents");
 
         // Filters out the hibernate
         xstream.registerConverter(new HibernateProxyConverter());
