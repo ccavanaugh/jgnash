@@ -17,6 +17,9 @@
  */
 package jgnash.uifx.views.register;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -26,11 +29,14 @@ import java.util.Set;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
@@ -41,6 +47,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.util.Callback;
 
 import jgnash.engine.Account;
@@ -56,6 +63,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.engine.recurring.Reminder;
+import jgnash.text.CommodityFormat;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.uifx.views.recurring.RecurringEntryDialog;
 
@@ -97,6 +105,15 @@ public abstract class RegisterTableController {
 
     final private AccountPropertyWrapper accountPropertyWrapper = new AccountPropertyWrapper();
 
+    // Used for selection summary tooltip
+    final private IntegerProperty selectionSize = new SimpleIntegerProperty(0);
+
+    // Used for selection summary tooltip
+    final Tooltip selectionSummaryTooltip = new Tooltip();
+
+    // Used for formatting of the selection summary tooltip
+    private NumberFormat numberFormat = NumberFormat.getNumberInstance();
+
     @FXML
     void initialize() {
         // Bind the account property
@@ -115,9 +132,31 @@ public abstract class RegisterTableController {
             if (!newValue.isLocked()) {
                 tableView.setRowFactory(new TransactionRowFactory());
             }
+
+            numberFormat = CommodityFormat.getFullNumberFormat(newValue.getCurrencyNode());
         });
 
         selectedTransactionProperty.bind(tableView.getSelectionModel().selectedItemProperty());
+
+        // Update the selection size property when the selection list changes
+        tableView.getSelectionModel().getSelectedItems().addListener((ListChangeListener<Transaction>) c ->
+                selectionSize.set(tableView.getSelectionModel().getSelectedIndices().size()));
+
+        selectionSize.addListener((observable, oldValue, newValue) -> {
+            if ((Integer) newValue > 1) {
+                final List<Transaction> transactions = new ArrayList<>(tableView.getSelectionModel().getSelectedItems());
+                BigDecimal total = BigDecimal.ZERO;
+
+                for (final Transaction transaction : transactions) {
+                    if (transaction != null) {
+                        total = total.add(transaction.getAmount(accountProperty.get()));
+                    }
+                }
+                selectionSummaryTooltip.setText(numberFormat.format(total));
+            } else {
+                selectionSummaryTooltip.setText(null);
+            }
+        });
 
         // Listen for engine events
         MessageBus.getInstance().registerListener(messageBusHandler, MessageChannel.TRANSACTION);
@@ -170,6 +209,7 @@ public abstract class RegisterTableController {
 
     /**
      * Ensures the transaction is visible and selects it
+     *
      * @param transaction Transaction that needs to be visible in the view
      */
     void selectTransaction(final Transaction transaction) {
@@ -286,6 +326,12 @@ public abstract class RegisterTableController {
                     Bindings.when(Bindings.isNotNull(row.itemProperty()))
                             .then(rowMenu)
                             .otherwise((ContextMenu) null));
+
+            // only display the tooltip if the selection size is greater than one
+            row.tooltipProperty().bind(
+                    Bindings.when(Bindings.greaterThan(selectionSize, 1))
+                            .then(selectionSummaryTooltip)
+                            .otherwise((Tooltip) null));
 
             return row;
         }
