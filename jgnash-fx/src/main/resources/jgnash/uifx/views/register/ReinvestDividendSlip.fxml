@@ -13,75 +13,76 @@
 <?import jgnash.uifx.views.register.AttachmentPane?>
 <?import jgnash.uifx.views.register.FeePane?>
 <?import jgnash.uifx.views.register.GainLossPane?>
+
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="jgnash.uifx.views.register.ReinvestDividendSlipController" styleClass="form, dialog">
-  <columnConstraints>
-      <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="95" />
-      <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="95" maxWidth="95" />
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints vgrow="NEVER" />
-    <RowConstraints vgrow="NEVER" />
-    <RowConstraints vgrow="NEVER" />
-    <RowConstraints vgrow="NEVER" />
-  </rowConstraints>
-  <children>
+          fx:controller="jgnash.uifx.views.register.ReinvestDividendSlipController" styleClass="form">
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="95"/>
+        <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="95" maxWidth="95"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+
     <!-- Row 0 -->
-    <Label text="%Label.Security" />
-    <SecurityComboBox fx:id="securityComboBox" maxWidth="Infinity" GridPane.fillWidth="true" GridPane.columnIndex="1" />
-    <Label text="%Label.Number" GridPane.columnIndex="2" />
-    <TransactionNumberComboBox  fx:id="numberComboBox" editable="true" GridPane.columnIndex="3" />
+    <Label text="%Label.Security"/>
+    <SecurityComboBox fx:id="securityComboBox" maxWidth="Infinity" GridPane.fillWidth="true" GridPane.columnIndex="1"/>
+    <Label text="%Label.Number" GridPane.columnIndex="2"/>
+    <TransactionNumberComboBox fx:id="numberComboBox" editable="true" GridPane.columnIndex="3"/>
 
     <!-- Row 1 -->
-    <Label text="%Label.Price" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+    <Label text="%Label.Price" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
     <GridPane styleClass="form" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.fillWidth="true">
-      <columnConstraints>
-        <ColumnConstraints hgrow="ALWAYS" minWidth="80" />
-        <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-        <ColumnConstraints hgrow="ALWAYS" minWidth="80" />
-        <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-        <ColumnConstraints hgrow="ALWAYS" minWidth="80" />
-        <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-        <ColumnConstraints hgrow="ALWAYS" minWidth="80" />
-      </columnConstraints>
-      <rowConstraints>
-        <RowConstraints vgrow="NEVER" />
-      </rowConstraints>
-      <children>
-        <DecimalTextField fx:id="priceField" GridPane.columnIndex="0" />
-        <Label text="%Label.Quantity" GridPane.columnIndex="1" />
-        <DecimalTextField fx:id="quantityField" GridPane.columnIndex="2" />
-        <Label text="%Label.Gains" GridPane.columnIndex="3" />
-        <GainLossPane fx:id="gainLossPane" GridPane.columnIndex="4" />
-        <Label text="%Label.Fees" GridPane.columnIndex="5" />
-        <FeePane fx:id="feePane" GridPane.columnIndex="6" />
-      </children>
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="80"/>
+            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="80"/>
+            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="80"/>
+            <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="80"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints vgrow="NEVER"/>
+        </rowConstraints>
+
+        <DecimalTextField fx:id="priceField" GridPane.columnIndex="0"/>
+        <Label text="%Label.Quantity" GridPane.columnIndex="1"/>
+        <DecimalTextField fx:id="quantityField" GridPane.columnIndex="2"/>
+        <Label text="%Label.Gains" GridPane.columnIndex="3"/>
+        <GainLossPane fx:id="gainLossPane" GridPane.columnIndex="4"/>
+        <Label text="%Label.Fees" GridPane.columnIndex="5"/>
+        <FeePane fx:id="feePane" GridPane.columnIndex="6"/>
+
     </GridPane>
-    <Label text="%Label.Date" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-    <DatePickerEx fx:id="datePicker" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+    <Label text="%Label.Date" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+    <DatePickerEx fx:id="datePicker" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
 
     <!-- Row 2 -->
-    <Label text="%Label.Memo" GridPane.rowIndex="2" />
-    <AutoCompleteTextField fx:id="memoTextField"  GridPane.fillWidth="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-    <Label text="%Label.Total" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-    <DecimalTextField fx:id="totalField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+    <Label text="%Label.Memo" GridPane.rowIndex="2"/>
+    <AutoCompleteTextField fx:id="memoTextField" GridPane.fillWidth="true" GridPane.columnIndex="1"
+                           GridPane.rowIndex="2"/>
+    <Label text="%Label.Total" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+    <DecimalTextField fx:id="totalField" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
 
     <!-- Row 3 -->
-    <GridPane styleClass="form" GridPane.halignment="LEFT" GridPane.vgrow="NEVER" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true" GridPane.columnSpan="3" GridPane.columnIndex="0" GridPane.rowIndex="3" >
-      <columnConstraints>
-        <ColumnConstraints hgrow="NEVER" />
-        <ColumnConstraints minWidth="8" maxWidth="8"/>
-        <ColumnConstraints hgrow="NEVER" />
-      </columnConstraints>
-      <rowConstraints>
-        <RowConstraints vgrow="NEVER" />
-      </rowConstraints>
-      <children>
+    <GridPane styleClass="form" GridPane.halignment="LEFT" GridPane.vgrow="NEVER" GridPane.hgrow="ALWAYS"
+              GridPane.fillWidth="true" GridPane.columnSpan="3" GridPane.columnIndex="0" GridPane.rowIndex="3">
+        <columnConstraints>
+            <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints minWidth="8" maxWidth="8"/>
+            <ColumnConstraints hgrow="NEVER"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints vgrow="NEVER"/>
+        </rowConstraints>
+
         <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared" GridPane.columnIndex="0"/>
-        <AttachmentPane fx:id="attachmentPane"  GridPane.columnIndex="2"/>
-      </children>
+        <AttachmentPane fx:id="attachmentPane" GridPane.columnIndex="2"/>
     </GridPane>
-  </children>
 </GridPane>

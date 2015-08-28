@@ -24,6 +24,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.StackPane;
 
 import jgnash.engine.Account;
@@ -55,6 +56,9 @@ public abstract class RegisterPaneController {
 
     @FXML
     protected ResourceBundle resources;
+
+    @FXML
+    protected TitledPane titledPane;
 
     /**
      * Active account for the pane
@@ -91,6 +95,9 @@ public abstract class RegisterPaneController {
         // Clear the table selection
         if (newButton != null) {
             newButton.setOnAction(event -> registerTableControllerProperty.get().clearTableSelection());
+
+            // disable if the titledPane is collapsed
+            newButton.disableProperty().bind(titledPane.expandedProperty().not());
         }
 
         // When changed, bind the selected transaction and account properties

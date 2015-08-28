@@ -4,7 +4,6 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -12,66 +11,81 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import jgnash.resource.font.FontAwesomeImageView?>
+<?import javafx.scene.control.TitledPane?>
+
+<?import javafx.scene.control.Separator?>
+<?import javafx.geometry.Insets?>
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="jgnash.uifx.views.register.InvestmentRegisterPaneController">
     <center>
-        <VBox>
-            <children>
-                <StackPane fx:id="registerTablePane" VBox.vgrow="ALWAYS"/>
-                <ToolBar VBox.vgrow="NEVER">
-                    <items>
-                        <Button fx:id="newButton" mnemonicParsing="false" text="%Button.New">
+        <StackPane fx:id="registerTablePane" VBox.vgrow="ALWAYS"/>
+    </center>
+    <bottom>
+        <TitledPane fx:id="titledPane" collapsible="true" contentDisplay="GRAPHIC_ONLY">
+            <graphic>
+                <ButtonBar>
+                    <buttons>
+                        <Button fx:id="newButton" mnemonicParsing="false" text="%Button.New"
+                                ButtonBar.buttonUniformSize="false">
                             <graphic>
                                 <FontAwesomeImageView glyphName="MONEY"/>
                             </graphic>
                         </Button>
-                        <Button fx:id="duplicateButton" mnemonicParsing="false" onAction="#handleDuplicateAction" text="%Button.Duplicate">
+                        <Button fx:id="duplicateButton" mnemonicParsing="false" onAction="#handleDuplicateAction"
+                                text="%Button.Duplicate" ButtonBar.buttonUniformSize="false">
                             <graphic>
                                 <FontAwesomeImageView glyphName="COPY"/>
                             </graphic>
                         </Button>
-                        <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction" text="%Button.Delete">
-                            <graphic>
-                                <FontAwesomeImageView glyphName="TRASH_ALT"/>
-                            </graphic>
-                        </Button>
-                        <Button mnemonicParsing="false" onAction="#handleSecuritiesAction" text="%Button.AvailSecurities">
+                        <Button mnemonicParsing="false" onAction="#handleSecuritiesAction"
+                                text="%Button.AvailSecurities" ButtonBar.buttonUniformSize="false">
                             <graphic>
                                 <FontAwesomeImageView glyphName="BOOKMARK"/>
                             </graphic>
                         </Button>
-                    </items>
-                </ToolBar>
-            </children>
-        </VBox>
-    </center>
-    <bottom>
-        <BorderPane>
-            <center>
-                <StackPane fx:id="transactionSlips"/>
-            </center>
-            <bottom>
-                <GridPane styleClass="dialog, form">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="NEVER"/>
-                        <ColumnConstraints hgrow="ALWAYS"/>
-                        <ColumnConstraints hgrow="NEVER"/>
-                    </columnConstraints>
-                    <rowConstraints>
-                         <RowConstraints vgrow="NEVER"/>
-                    </rowConstraints>
-                    <children>
-                        <Label text="%Label.Action"/>
-                        <ComboBox fx:id="actionComboBox" GridPane.columnIndex="1" maxWidth="Infinity" minWidth="50" prefWidth="100"/>
-                        <ButtonBar GridPane.columnIndex="2">
+                        <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction"
+                                text="%Button.Delete" ButtonBar.buttonUniformSize="false">
+                            <graphic>
+                                <FontAwesomeImageView glyphName="TRASH_ALT"/>
+                            </graphic>
+                        </Button>
+                    </buttons>
+                </ButtonBar>
+            </graphic>
+            <BorderPane>
+                <center>
+                    <StackPane fx:id="transactionSlips"/>
+                </center>
+                <bottom>
+                    <GridPane styleClass="form">
+                        <padding>
+                            <Insets bottom="0.0" left="0.0" right ="0.0" top="10.0"/>
+                        </padding>
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="NEVER"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                            <ColumnConstraints hgrow="NEVER"/>
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints vgrow="NEVER"/>
+                            <RowConstraints vgrow="NEVER"/>
+                        </rowConstraints>
+
+                        <Separator GridPane.columnSpan="3"/>
+                        <Label text="%Label.Action" GridPane.rowIndex="1"/>
+                        <ComboBox fx:id="actionComboBox" maxWidth="Infinity" minWidth="50"
+                                  prefWidth="100" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                        <ButtonBar GridPane.rowIndex="1" GridPane.columnIndex="2">
                             <buttons>
-                                <Button text="%Button.Enter" ButtonBar.buttonData="OK_DONE" onAction="#handleEnterAction"/>
-                                <Button text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#handleCancelAction"/>
+                                <Button text="%Button.Enter" ButtonBar.buttonData="OK_DONE"
+                                        onAction="#handleEnterAction"/>
+                                <Button text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE"
+                                        onAction="#handleCancelAction"/>
                             </buttons>
                         </ButtonBar>
-                    </children>
-                </GridPane>
-            </bottom>
-        </BorderPane>
+                    </GridPane>
+                </bottom>
+            </BorderPane>
+        </TitledPane>
     </bottom>
 </BorderPane>

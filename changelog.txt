@@ -16,7 +16,6 @@ Hyperlink option from the results in the Reports and Graphs to the concerned Tra
 Drill down of split entries in Split Transactions by right clicking on ledger view.
 Class/Tag option to Transaction entries. ( to categorize the Expense & Income further in more categorized way )
 - Flag budget exceptions?
-Hiding option of Transaction form which can help to see more transactions in Register view.
 Direct Transaction entry option in the Ledger to avoid Transaction form.
 Formal Trial Balance report
 Budgeting

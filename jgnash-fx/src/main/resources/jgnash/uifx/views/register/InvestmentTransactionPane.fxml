@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><?import javafx.scene.control.Button?>
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -13,48 +14,49 @@
 <?import jgnash.uifx.views.register.AttachmentPane?>
 
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="jgnash.uifx.views.register.SlipController" styleClass="form, dialog">
-  <columnConstraints>
-      <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-      <ColumnConstraints hgrow="SOMETIMES" />
-      <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-      <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-      <ColumnConstraints hgrow="NEVER" minWidth="95" maxWidth="95"/>
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints vgrow="NEVER" />
-    <RowConstraints vgrow="NEVER" />
-    <RowConstraints vgrow="NEVER" />
-    <RowConstraints vgrow="NEVER" />
-  </rowConstraints>
-   <children>
-      <Label text="%Label.Payee" />
-      <AutoCompleteTextField fx:id="payeeTextField" GridPane.columnIndex="1" GridPane.columnSpan="2" />
-      <Label text="%Label.Number" GridPane.columnIndex="3" />
-      <TransactionNumberComboBox  fx:id="numberComboBox" editable="true" GridPane.columnIndex="4" />
-      <Label text="%Label.Account" GridPane.rowIndex="1" />
-      <AccountExchangePane fx:id="accountExchangePane" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true"/>
-      <Button fx:id="splitsButton" onAction="#splitsAction" mnemonicParsing="false" text="%Button.Splits" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-      <Label text="%Label.Date" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-      <DatePickerEx fx:id="datePicker" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-      <Label text="%Label.Memo" GridPane.rowIndex="2" />
-      <AutoCompleteTextField fx:id="memoTextField" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-      <Label text="%Label.Amount" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-      <DecimalTextField fx:id="amountField" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-      <GridPane GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="3"
-                GridPane.vgrow="NEVER" styleClass="form">
+          fx:controller="jgnash.uifx.views.register.SlipController" styleClass="form">
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+        <ColumnConstraints hgrow="SOMETIMES"/>
+        <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+        <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+        <ColumnConstraints hgrow="NEVER" minWidth="95" maxWidth="95"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+
+    <Label text="%Label.Payee"/>
+    <AutoCompleteTextField fx:id="payeeTextField" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+    <Label text="%Label.Number" GridPane.columnIndex="3"/>
+    <TransactionNumberComboBox fx:id="numberComboBox" editable="true" GridPane.columnIndex="4"/>
+    <Label text="%Label.Account" GridPane.rowIndex="1"/>
+    <AccountExchangePane fx:id="accountExchangePane" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                         GridPane.hgrow="ALWAYS" GridPane.fillWidth="true"/>
+    <Button fx:id="splitsButton" onAction="#splitsAction" mnemonicParsing="false" text="%Button.Splits"
+            GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+    <Label text="%Label.Date" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+    <DatePickerEx fx:id="datePicker" GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+    <Label text="%Label.Memo" GridPane.rowIndex="2"/>
+    <AutoCompleteTextField fx:id="memoTextField" GridPane.columnIndex="1" GridPane.columnSpan="2"
+                           GridPane.rowIndex="2"/>
+    <Label text="%Label.Amount" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+    <DecimalTextField fx:id="amountField" GridPane.columnIndex="4" GridPane.rowIndex="2"/>
+    <GridPane GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="3"
+              GridPane.vgrow="NEVER" styleClass="form">
         <columnConstraints>
-            <ColumnConstraints hgrow="NEVER" />
+            <ColumnConstraints hgrow="NEVER"/>
             <ColumnConstraints minWidth="8" maxWidth="8"/>
-            <ColumnConstraints hgrow="NEVER" />
+            <ColumnConstraints hgrow="NEVER"/>
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints vgrow="NEVER" />
+            <RowConstraints vgrow="NEVER"/>
         </rowConstraints>
-         <children>
-            <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared" />
-            <AttachmentPane fx:id="attachmentPane" GridPane.columnIndex="2" />
-         </children>
-      </GridPane>
-   </children>
+
+        <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared"/>
+        <AttachmentPane fx:id="attachmentPane" GridPane.columnIndex="2"/>
+    </GridPane>
 </GridPane>

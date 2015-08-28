@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -10,38 +11,41 @@
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="jgnash.uifx.views.register.BankRegisterPaneController">
     <center>
-        <VBox>
-            <children>
-                <StackPane fx:id="registerTablePane" VBox.vgrow="ALWAYS"/>
-                <ToolBar VBox.vgrow="NEVER">
-                    <items>
-                        <Button fx:id="newButton" mnemonicParsing="false" text="%Button.New">
+        <StackPane fx:id="registerTablePane" VBox.vgrow="ALWAYS"/>
+    </center>
+    <bottom>
+        <TitledPane fx:id="titledPane" collapsible="true" contentDisplay="GRAPHIC_ONLY" focusTraversable="false">
+            <graphic>
+                <ButtonBar>
+                    <buttons>
+                        <Button fx:id="newButton" mnemonicParsing="false" text="%Button.New"
+                                ButtonBar.buttonUniformSize="false">
                             <graphic>
                                 <FontAwesomeImageView glyphName="MONEY"/>
                             </graphic>
                         </Button>
-                        <Button fx:id="duplicateButton" mnemonicParsing="false" onAction="#handleDuplicateAction" text="%Button.Duplicate">
+                        <Button fx:id="duplicateButton" mnemonicParsing="false" onAction="#handleDuplicateAction"
+                                text="%Button.Duplicate" ButtonBar.buttonUniformSize="false">
                             <graphic>
                                 <FontAwesomeImageView glyphName="COPY"/>
                             </graphic>
                         </Button>
-                        <Button fx:id="jumpButton" mnemonicParsing="false" onAction="#handleJumpAction" text="%Button.Jump">
+                        <Button fx:id="jumpButton" mnemonicParsing="false" onAction="#handleJumpAction"
+                                text="%Button.Jump" ButtonBar.buttonUniformSize="false">
                             <graphic>
                                 <FontAwesomeImageView glyphName="EXTERNAL_LINK"/>
                             </graphic>
                         </Button>
-                        <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction" text="%Button.Delete">
+                        <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction"
+                                text="%Button.Delete" ButtonBar.buttonUniformSize="false">
                             <graphic>
                                 <FontAwesomeImageView glyphName="TRASH_ALT"/>
                             </graphic>
                         </Button>
-                    </items>
-                </ToolBar>
-            </children>
-        </VBox>
-    </center>
-
-    <bottom>
-        <TabPane fx:id="transactionForms"/>
+                    </buttons>
+                </ButtonBar>
+            </graphic>
+            <TabPane fx:id="transactionForms"/>
+        </TitledPane>
     </bottom>
 </BorderPane>
