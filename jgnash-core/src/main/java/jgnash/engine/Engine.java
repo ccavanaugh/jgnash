@@ -2895,7 +2895,7 @@ public class Engine {
             config = null;  // clear stale cached reference
 
             Message message = new Message(MessageChannel.CONFIG, ChannelEvent.CONFIG_MODIFY, this);
-            message.setObject(MessageProperty.CONFIG, config);
+            message.setObject(MessageProperty.CONFIG, getConfig());
             messageBus.fireEvent(message);
         } finally {
             configLock.writeLock().unlock();
