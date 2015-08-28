@@ -46,6 +46,14 @@ import jgnash.util.ResourceUtils;
 @Entity
 public class Config extends StoredObject {
 
+    private static final String CREATE_BACKUPS = "CreateBackups";
+
+    private static final String MAX_BACKUPS = "MaxBackups";
+
+    private static final String REMOVE_BACKUPS = "RemoveBackups";
+
+    private static final int MAX_BACKUPS_DEFAULT = 5;
+
     @ManyToOne(cascade = CascadeType.PERSIST)
     private CurrencyNode defaultCurrency;
 
@@ -164,6 +172,48 @@ public class Config extends StoredObject {
         }
     }
 
+    boolean createBackups() {
+        final String result = getPreference(CREATE_BACKUPS);
+
+        if (result != null) {
+            return Boolean.parseBoolean(result);
+        }
+
+        return true;
+    }
+
+    void setCreateBackups(final boolean createBackups) {
+        setPreference(CREATE_BACKUPS, Boolean.toString(createBackups));
+    }
+
+    int getRetainedBackupLimit() {
+        final String result = getPreference(MAX_BACKUPS);
+
+        if (result != null) {
+            return Integer.parseInt(result);
+        }
+
+        return MAX_BACKUPS_DEFAULT;
+    }
+
+    void setRetainedBackupLimit(final int retainedBackupLimit) {
+        setPreference(MAX_BACKUPS, Integer.toString(retainedBackupLimit));
+    }
+
+    boolean removeOldBackups() {
+        final String result = getPreference(REMOVE_BACKUPS);
+
+        if (result != null) {
+            return Boolean.parseBoolean(result);
+        }
+
+        return true;
+    }
+
+    void setRemoveOldBackups(final boolean removeOldBackups) {
+        setPreference(REMOVE_BACKUPS, Boolean.toString(removeOldBackups));
+    }
+
     /**
      * Needed by XStream for proper initialization
      *
@@ -178,5 +228,4 @@ public class Config extends StoredObject {
     private void postLoad() {
         preferencesLock = new ReentrantReadWriteLock(true);
     }
-
 }

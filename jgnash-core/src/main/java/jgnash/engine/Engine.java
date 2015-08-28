@@ -522,6 +522,7 @@ public class Engine {
 
             // cleanup currencies
             if (getConfig().getFileVersion() < 2.1f) {
+                System.out.println(getConfig().getFileVersion());
                 removeDuplicateCurrencies();
             }
 
@@ -2891,6 +2892,8 @@ public class Engine {
             getConfig().setPreference(key, value);
             getConfigDAO().update(getConfig());
 
+            config = null;  // clear stale cached reference
+
             Message message = new Message(MessageChannel.CONFIG, ChannelEvent.CONFIG_MODIFY, this);
             message.setObject(MessageProperty.CONFIG, config);
             messageBus.fireEvent(message);
@@ -2924,6 +2927,75 @@ public class Engine {
 
     public void putBoolean(@NotNull final String key, final boolean value) {
         setPreference(key, Boolean.toString(value));
+    }
+
+    public boolean createBackups() {
+        return getConfig().createBackups();
+    }
+
+    public void setCreateBackups(final boolean createBackups) {
+        configLock.writeLock().lock();
+
+        try {
+            final Config backupConfig = getConfig();
+
+            backupConfig.setCreateBackups(createBackups);
+            getConfigDAO().update(backupConfig);
+
+            config = null;  // clear stale cached reference
+
+            Message message = new Message(MessageChannel.CONFIG, ChannelEvent.CONFIG_MODIFY, this);
+            message.setObject(MessageProperty.CONFIG, backupConfig);
+            messageBus.fireEvent(message);
+        } finally {
+            configLock.writeLock().unlock();
+        }
+    }
+
+    public int getRetainedBackupLimit() {
+        return getConfig().getRetainedBackupLimit();
+    }
+
+    public void setRetainedBackupLimit(final int retainedBackupLimit) {
+        configLock.writeLock().lock();
+
+        try {
+            final Config backupConfig = getConfig();
+
+            backupConfig.setRetainedBackupLimit(retainedBackupLimit);
+            getConfigDAO().update(backupConfig);
+
+            config = null;  // clear stale cached reference
+
+            Message message = new Message(MessageChannel.CONFIG, ChannelEvent.CONFIG_MODIFY, this);
+            message.setObject(MessageProperty.CONFIG, backupConfig);
+            messageBus.fireEvent(message);
+        } finally {
+            configLock.writeLock().unlock();
+        }
+    }
+
+    public boolean removeOldBackups() {
+        return getConfig().removeOldBackups();
+    }
+
+    public void setRemoveOldBackups(final boolean removeOldBackups) {
+        configLock.writeLock().lock();
+
+        try {
+            final Config backupConfig = getConfig();
+
+            backupConfig.setRemoveOldBackups(removeOldBackups);
+            getConfigDAO().update(backupConfig);
+
+            config = null;  // clear stale cached reference
+
+            Message message = new Message(MessageChannel.CONFIG, ChannelEvent.CONFIG_MODIFY, this);
+            message.setObject(MessageProperty.CONFIG, backupConfig);
+            messageBus.fireEvent(message);
+        } finally {
+            configLock.writeLock().unlock();
+        }
     }
 
     /**

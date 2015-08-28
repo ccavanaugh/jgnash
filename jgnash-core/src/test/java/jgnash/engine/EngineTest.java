@@ -52,8 +52,6 @@ public abstract class EngineTest {
 
     String testFile;
 
-    private final boolean oldExportState = EngineFactory.exportXMLOnClose();
-
     protected abstract Engine createEngine() throws Exception;
 
     static final char[] PASSWORD = new char[]{};
@@ -64,10 +62,8 @@ public abstract class EngineTest {
 
     @Before
     public void setUp() throws Exception {
-
-        EngineFactory.setExportXMLOnClose(false);
-
         e = createEngine();
+        e.setCreateBackups(false);
 
         assertNotNull(e);
 
@@ -96,7 +92,6 @@ public abstract class EngineTest {
     @After
     public void tearDown() throws IOException {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
-        EngineFactory.setExportXMLOnClose(oldExportState);
 
         Files.deleteIfExists(Paths.get(testFile));
 

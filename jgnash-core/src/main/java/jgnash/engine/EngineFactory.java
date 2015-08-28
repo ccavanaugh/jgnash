@@ -65,12 +65,6 @@ public class EngineFactory {
 
     private static final String LAST_REMOTE = "LastRemote";
 
-    private static final String EXPORT_XML_ON_CLOSE = "ExportXMLOnClose";
-
-    private static final String MAX_BACKUPS = "MaxBackups";
-
-    private static final String REMOVE_BACKUPS = "RemoveBackups";
-
     private static final String OPEN_LAST = "OpenLast";
 
     /**
@@ -179,7 +173,7 @@ public class EngineFactory {
         }
     }
 
-    public static void removeOldCompressedXML(final String fileName) {
+    public static void removeOldCompressedXML(final String fileName, final int limit) {
 
         File file = new File(fileName);
 
@@ -187,10 +181,8 @@ public class EngineFactory {
 
         List<File> fileList = FileUtils.getDirectoryListing(file.getParentFile(), baseFile + "-*.zip");
 
-        int maxFiles = maximumBackups();
-
-        if (fileList.size() > maxFiles) {
-            for (int i = 0; i < fileList.size() - maxFiles; i++) {
+        if (fileList.size() > limit) {
+            for (int i = 0; i < fileList.size() - limit; i++) {
                 if (!fileList.get(i).delete()) {
                     logger.log(Level.WARNING, "Unable to delete the file: {0}", fileList.get(i).getAbsolutePath());
                 }
@@ -212,13 +204,13 @@ public class EngineFactory {
             MessageBus.getInstance(engineName).fireEvent(message);
 
             // Dump an XML backup
-            if (exportXMLOnClose() && !oldDataStore.isRemote()) {
+            if (oldEngine.createBackups() && !oldDataStore.isRemote()) {
                 exportCompressedXML(engineName);
             }
 
             // Purge old backups
-            if (removeOldBackups() && !oldDataStore.isRemote()) {
-                removeOldCompressedXML(oldDataStore.getFileName());
+            if (oldEngine.removeOldBackups() && !oldDataStore.isRemote()) {
+                removeOldCompressedXML(oldDataStore.getFileName(), oldEngine.getRetainedBackupLimit());
             }
 
             // Initiate a complete shutdown
@@ -483,12 +475,6 @@ public class EngineFactory {
         return pref.getBoolean(USED_PASSWORD, false);
     }
 
-    public static synchronized void setExportXMLOnClose(final boolean export) {
-        Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
-
-        pref.putBoolean(EXPORT_XML_ON_CLOSE, export);
-    }
-
     public static synchronized void setOpenLastOnStartup(final boolean last) {
         Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
 
@@ -499,35 +485,5 @@ public class EngineFactory {
         Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
 
         return pref.getBoolean(OPEN_LAST, true);
-    }
-
-    public static synchronized boolean exportXMLOnClose() {
-        Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
-
-        return pref.getBoolean(EXPORT_XML_ON_CLOSE, true);
-    }
-
-    public static synchronized int maximumBackups() {
-        Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
-
-        return pref.getInt(MAX_BACKUPS, 10);
-    }
-
-    public static synchronized void setMaximumBackups(final int max) {
-        Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
-
-        pref.putInt(MAX_BACKUPS, max);
-    }
-
-    public static synchronized boolean removeOldBackups() {
-        Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
-
-        return pref.getBoolean(REMOVE_BACKUPS, true);
-    }
-
-    public static synchronized void setRemoveOldBackups(final boolean backup) {
-        Preferences pref = Preferences.userNodeForPackage(EngineFactory.class);
-
-        pref.putBoolean(REMOVE_BACKUPS, backup);
     }
 }

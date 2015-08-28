@@ -139,7 +139,7 @@ public class JpaNetworkServer {
                     backupExecutor.scheduleWithFixedDelay(() -> {
                         if (dirty) {
                             exportXML(engine, fileName);
-                            EngineFactory.removeOldCompressedXML(fileName);
+                            EngineFactory.removeOldCompressedXML(fileName, engine.getRetainedBackupLimit());
                             dirty = false;
                         }
                     }, BACKUP_PERIOD, BACKUP_PERIOD, TimeUnit.HOURS);
@@ -175,6 +175,8 @@ public class JpaNetworkServer {
                     messageBusServer.stopServer();
 
                     EngineFactory.closeEngine(SERVER_ENGINE);
+
+                    EngineFactory.removeOldCompressedXML(fileName, engine.getRetainedBackupLimit());
 
                     distributedLockManager.disconnectFromServer();
                     distributedAttachmentManager.disconnectFromServer();
@@ -233,8 +235,6 @@ public class JpaNetworkServer {
         if (server != null) {
             server.stop();
         }
-
-        EngineFactory.removeOldCompressedXML(fileName);
     }
 
     private void runHsqldbServer(final String fileName, final int port, final char[] password) {
@@ -252,8 +252,6 @@ public class JpaNetworkServer {
         }
 
         hsqlServer.stop();
-
-        EngineFactory.removeOldCompressedXML(fileName);
     }
 
     /**

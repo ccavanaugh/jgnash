@@ -55,23 +55,23 @@ class JpaConfigDAO extends AbstractJpaDAO implements ConfigDAO {
 
         try {
             Future<Config> future = executorService.submit(() -> {
-                Config defaultConfig1;
+                Config newConfig;
                 try {
-                    CriteriaBuilder cb = em.getCriteriaBuilder();
-                    CriteriaQuery<Config> cq = cb.createQuery(Config.class);
-                    Root<Config> root = cq.from(Config.class);
+                    final CriteriaBuilder cb = em.getCriteriaBuilder();
+                    final CriteriaQuery<Config> cq = cb.createQuery(Config.class);
+                    final Root<Config> root = cq.from(Config.class);
                     cq.select(root);
 
-                    TypedQuery<Config> q = em.createQuery(cq);
+                    final TypedQuery<Config> q = em.createQuery(cq);
 
-                    defaultConfig1 = q.getSingleResult();
+                    newConfig = q.getSingleResult();
 
-                } catch (Exception e) {
-                    defaultConfig1 = new Config();
-                    em.persist(defaultConfig1);
+                } catch (final Exception e) {
+                    newConfig = new Config();
+                    em.persist(newConfig);
                     logger.info("Generating new default config");
                 }
-                return defaultConfig1;
+                return newConfig;
             });
 
             defaultConfig = future.get();
@@ -86,27 +86,6 @@ class JpaConfigDAO extends AbstractJpaDAO implements ConfigDAO {
 
     @Override
     public void update(final Config config) {
-
-        merge(config);
-
-        /*emLock.lock();
-
-        try {
-            Future<Void> future = executorService.submit(new Callable<Void>() {
-                @Override
-                public Void call() throws Exception {
-                    em.getTransaction().begin();
-                    em.persist(config);
-                    em.getTransaction().commit();
-                    return null;
-                }
-            });
-
-            future.get(); // block
-        } catch (final InterruptedException | ExecutionException e) {
-            logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
-        } finally {
-            emLock.unlock();
-        }*/
+        persist(config);
     }
 }

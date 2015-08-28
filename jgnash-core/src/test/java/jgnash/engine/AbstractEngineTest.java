@@ -52,15 +52,13 @@ public abstract class AbstractEngineTest {
 
     public static final char[] PASSWORD = new char[]{};
 
-    private final boolean oldExportState = EngineFactory.exportXMLOnClose();
-
     protected abstract Engine createEngine();
 
     @Before
     public void setUp() throws Exception {
-        EngineFactory.setExportXMLOnClose(false);
-
         e = createEngine();
+        e.setCreateBackups(false);
+
         assertNotNull(e);
 
         // Creating currencies
@@ -115,8 +113,6 @@ public abstract class AbstractEngineTest {
 
     @After
     public void tearDown() throws IOException {
-        EngineFactory.setExportXMLOnClose(oldExportState);
-
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
         EngineFactory.deleteDatabase(database);
 

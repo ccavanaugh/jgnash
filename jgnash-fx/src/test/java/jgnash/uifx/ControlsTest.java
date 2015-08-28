@@ -68,8 +68,6 @@ public class ControlsTest extends Application {
 
     private String tempFile;
 
-    private final boolean oldExportState = EngineFactory.exportXMLOnClose();
-
     private static final char[] PASSWORD = new char[]{};
 
     public static void main(final String[] args) {
@@ -150,7 +148,6 @@ public class ControlsTest extends Application {
     @Override
     public void stop() throws IOException {
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
-        EngineFactory.setExportXMLOnClose(oldExportState);
 
         Files.deleteIfExists(Paths.get(testFile));
 

@@ -32,14 +32,9 @@ import org.junit.AfterClass;
 public class BinaryXStreamEngineTest extends EngineTest {
 
     private static String tempFile;
-    private static boolean export;
 
     @Override
     public Engine createEngine() throws Exception {
-        export = EngineFactory.exportXMLOnClose();
-
-        EngineFactory.setExportXMLOnClose(false);
-
         try {
             testFile = Files.createTempFile("jgnash-", "." + DataStoreType.BINARY_XSTREAM.getDataStore().getFileExt()).toFile().getAbsolutePath();
             tempFile = testFile;
@@ -57,7 +52,5 @@ public class BinaryXStreamEngineTest extends EngineTest {
     @AfterClass
     public static void cleanup() throws IOException {
         Files.deleteIfExists(Paths.get(tempFile));
-
-        EngineFactory.setExportXMLOnClose(export);
     }
 }

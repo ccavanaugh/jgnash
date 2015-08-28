@@ -98,6 +98,33 @@ abstract class AbstractJpaDAO extends AbstractDAO {
         }
     }
 
+    /**
+     * Persists an object
+     *
+     * @param object Object to merge
+     */
+    <T extends StoredObject> void persist(final T object) {
+        emLock.lock();
+
+        try {
+            final Future<Void> future = executorService.submit(() -> {
+
+                em.getTransaction().begin();
+                em.persist(object);
+                em.getTransaction().commit();
+
+                return null;
+            });
+
+            future.get();
+
+        } catch (final InterruptedException | ExecutionException e) {
+            Logger.getLogger(AbstractJpaDAO.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+        } finally {
+            emLock.unlock();
+        }
+    }
+
 
     public <T> T getObjectByUuid(final Class<T> tClass, final String uuid) {
         T object = null;

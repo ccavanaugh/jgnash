@@ -27,6 +27,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 
+import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.net.currency.CurrencyUpdateFactory;
 import jgnash.net.security.UpdateFactory;
@@ -57,12 +58,15 @@ class StartupOptions extends JPanel implements ActionListener {
 
     private JSpinner removeBackupCountSpinner;
 
+    private final Engine engine;
+
     public StartupOptions() {
+        engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
         layoutMainPanel();
     }
 
     private void initComponents() {
-
         updateCurrenciesButton = new JCheckBox(rb.getString("Button.UpdateCurrenciesStartup"));
         updateSecuritiesButton = new JCheckBox(rb.getString("Button.UpdateSecuritiesStartup"));
         openLastOnStartup = new JCheckBox(rb.getString("Button.OpenLastOnStartup"));
@@ -71,13 +75,20 @@ class StartupOptions extends JPanel implements ActionListener {
 
         removeBackupCountSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
 
+        if (engine != null) {
+            saveBackupButton.setSelected(engine.createBackups());
+            removeBackupButton.setSelected(engine.removeOldBackups());
+            removeBackupCountSpinner.setValue(engine.getRetainedBackupLimit());
+        } else {
+            saveBackupButton.setEnabled(false);
+            removeBackupButton.setEnabled(false);
+            removeBackupCountSpinner.setEnabled(false);
+        }
+
         updateCurrenciesButton.setSelected(CurrencyUpdateFactory.getUpdateOnStartup());
         updateSecuritiesButton.setSelected(UpdateFactory.getUpdateOnStartup());
-        saveBackupButton.setSelected(EngineFactory.exportXMLOnClose());
-        removeBackupButton.setSelected(EngineFactory.removeOldBackups());
-        openLastOnStartup.setSelected(EngineFactory.openLastOnStartup());
 
-        removeBackupCountSpinner.setValue(EngineFactory.maximumBackups());
+        openLastOnStartup.setSelected(EngineFactory.openLastOnStartup());
 
         updateCurrenciesButton.addActionListener(this);
         updateSecuritiesButton.addActionListener(this);
@@ -88,9 +99,11 @@ class StartupOptions extends JPanel implements ActionListener {
         removeBackupCountSpinner.addChangeListener(e -> {
             SpinnerModel dateModel = removeBackupCountSpinner.getModel();
             if (dateModel instanceof SpinnerNumberModel) {
-                Number count = ((SpinnerNumberModel) dateModel).getNumber();
+                final Number count = ((SpinnerNumberModel) dateModel).getNumber();
 
-                EngineFactory.setMaximumBackups((Integer) count);
+                if (engine != null) {
+                    engine.setRetainedBackupLimit((Integer) count);
+                }
             }
         });
     }
@@ -126,11 +139,11 @@ class StartupOptions extends JPanel implements ActionListener {
             CurrencyUpdateFactory.setUpdateOnStartup(updateCurrenciesButton.isSelected());
         } else if (e.getSource() == updateSecuritiesButton) {
             UpdateFactory.setUpdateOnStartup(updateSecuritiesButton.isSelected());
-        } else if (e.getSource() == saveBackupButton) {
-            EngineFactory.setExportXMLOnClose(saveBackupButton.isSelected());
-        } else if (e.getSource() == removeBackupButton) {
+        } else if (e.getSource() == saveBackupButton && engine != null) {
+            engine.setCreateBackups(saveBackupButton.isSelected());
+        } else if (e.getSource() == removeBackupButton && engine != null) {
             removeBackupCountSpinner.setEnabled(removeBackupButton.isSelected());
-            EngineFactory.setRemoveOldBackups(removeBackupButton.isSelected());
+            engine.setRemoveOldBackups(removeBackupButton.isSelected());
         } else if (e.getSource() == openLastOnStartup) {
             EngineFactory.setOpenLastOnStartup(openLastOnStartup.isSelected());
         }

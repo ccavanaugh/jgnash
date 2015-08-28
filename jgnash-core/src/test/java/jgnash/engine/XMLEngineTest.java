@@ -33,13 +33,9 @@ import org.junit.AfterClass;
 public class XMLEngineTest extends EngineTest {
 
     private static String tempFile;
-    private static boolean export;
 
     @Override
     public Engine createEngine() throws Exception {
-        export = EngineFactory.exportXMLOnClose();
-        EngineFactory.setExportXMLOnClose(false);
-
         try {
             testFile = Files.createTempFile("test", "." + DataStoreType.XML.getDataStore().getFileExt()).toFile().getAbsolutePath();
             tempFile = testFile;
@@ -57,7 +53,5 @@ public class XMLEngineTest extends EngineTest {
     @AfterClass
     public static void cleanup() throws IOException {
         Files.deleteIfExists(Paths.get(tempFile));
-
-        EngineFactory.setExportXMLOnClose(export);
     }
 }

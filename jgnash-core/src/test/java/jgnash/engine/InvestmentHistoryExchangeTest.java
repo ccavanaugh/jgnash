@@ -44,7 +44,6 @@ import static org.junit.Assert.*;
 
      private static final char[] PASSWORD = new char[]{};
 
-
      @Test
      public void testExchangeRate() {
          assertEquals(new BigDecimal("0.5"), usdCurrency.getExchangeRate(cadCurrency));
@@ -202,6 +201,7 @@ import static org.junit.Assert.*;
              EngineFactory.deleteDatabase(database);
 
              e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.BINARY_XSTREAM);
+             e.setCreateBackups(false);
 
              // Creating currencies
              usdCurrency = DefaultCurrencies.buildCustomNode("USD");
@@ -262,14 +262,7 @@ import static org.junit.Assert.*;
 
      @After
      public void tearDown() {
-         // Don't dump a backup
-         boolean export = EngineFactory.exportXMLOnClose();
-         EngineFactory.setExportXMLOnClose(false);
-
          EngineFactory.closeEngine(EngineFactory.DEFAULT);
          EngineFactory.deleteDatabase(database);
-
-         // Restore the old state
-         EngineFactory.setExportXMLOnClose(export);
      }
  }
