@@ -305,6 +305,54 @@ public class SecurityNode extends CommodityNode {
     }
 
     /**
+     * Returns the history node events split into groups by historical splits or reverse splits
+     *
+     * @return a List of Lists of SecurityHistoryNodes
+     */
+    public List<List<SecurityHistoryNode>> getHistoryNodeGroupsBySplits() {
+
+            final List<List<SecurityHistoryNode>> groups = new ArrayList<>();
+            final List<SecurityHistoryEvent> splitEvents = getSplitEvents();
+
+            if (splitEvents.size() == 0) {
+                groups.add(getHistoryNodes());
+            } else {    // count should be split events + 1 when complete
+                lock.readLock().lock();
+
+                try {
+                    final ListIterator<SecurityHistoryEvent> historyEventIterator = splitEvents.listIterator();
+
+                    LocalDate eventDate = historyEventIterator.next().getDate();
+
+                    List<SecurityHistoryNode> group = new ArrayList<>();
+
+                    for (int i = 0; i < sortedHistoryNodeCache.size(); i++) {
+                        if (eventDate == null || sortedHistoryNodeCache.get(i).getLocalDate().isBefore(eventDate)) {
+                            group.add(sortedHistoryNodeCache.get(i));
+                        } else {
+                            groups.add(group);                              // save the current group
+                            group = new ArrayList<>();                      // start a new group
+                            group.add(sortedHistoryNodeCache.get(i - 1));   // create continuity with the previous group
+                            group.add(sortedHistoryNodeCache.get(i));
+
+                            if (historyEventIterator.hasNext()) {
+                                eventDate = historyEventIterator.next().getDate();
+                            } else {
+                                eventDate = null;
+                            }
+                        }
+                    }
+
+                    groups.add(group);  // add last group
+                } finally {
+                    lock.readLock().unlock();
+                }
+            }
+
+            return groups;
+    }
+
+    /**
      * Get an unmodifiable copy of the SecurityHistoryEvents for this security
      *
      * @return returns a shallow copy of the SecurityHistoryEvents to protect against modification
@@ -313,7 +361,7 @@ public class SecurityNode extends CommodityNode {
         return Collections.unmodifiableSet(securityHistoryEvents);
     }
 
-    private List<SecurityHistoryEvent> getSplitEvents() {
+    public List<SecurityHistoryEvent> getSplitEvents() {
         lock.readLock().lock();
 
         try {

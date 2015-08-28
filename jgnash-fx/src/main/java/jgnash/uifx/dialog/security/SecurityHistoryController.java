@@ -444,18 +444,21 @@ public class SecurityHistoryController implements MessageListener {
 
     private void loadChart() {
         new Thread(() -> {
-            final AreaChart.Series<LocalDate, Number> series = new AreaChart.Series<>();
+            final SecurityNode securityNode = selectedSecurityNode.get();
+            final List<List<SecurityHistoryNode>> groups = securityNode.getHistoryNodeGroupsBySplits();
 
-            series.setName(selectedSecurityNode.get().getSymbol());
+            Platform.runLater(() -> chart.getData().clear());
 
-            for (final SecurityHistoryNode node : selectedSecurityNode.get().getHistoryNodes()) {
-                series.getData().add(new AreaChart.Data<>(node.getLocalDate(), node.getAdjustedPrice()));
+            for (int i = 0; i < groups.size(); i++) {
+                final AreaChart.Series<LocalDate, Number> series = new AreaChart.Series<>();
+                series.setName(securityNode.getSymbol() + i);
+
+                for (final SecurityHistoryNode node : groups.get(i)) {
+                    series.getData().add(new AreaChart.Data<>(node.getLocalDate(), node.getAdjustedPrice()));
+                }
+
+                Platform.runLater(() -> chart.getData().add(series));
             }
-
-            Platform.runLater(() -> {
-                chart.getData().clear();
-                chart.getData().add(series);
-            });
         }).start();
     }
 
