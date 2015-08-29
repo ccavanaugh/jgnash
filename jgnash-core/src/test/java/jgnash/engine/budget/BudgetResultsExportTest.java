@@ -17,18 +17,12 @@
  */
 package jgnash.engine.budget;
 
+import jgnash.engine.*;
+import org.junit.Test;
+
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
-import jgnash.engine.Account;
-import jgnash.engine.AccountType;
-import jgnash.engine.CurrencyNode;
-import jgnash.engine.DataStoreType;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-
-import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
@@ -44,11 +38,12 @@ public class BudgetResultsExportTest {
     @Test
     public void testExportBudgetResultsModel() throws Exception {
 
-        File file = Files.createTempFile("budget-", "." + DataStoreType.XML.getDataStore().getFileExt()).toFile();
+        final String file = Files.createTempFile("budget-", "."
+                + DataStoreType.XML.getDataStore().getFileExt()).toFile().getAbsolutePath();
 
-        file.deleteOnExit();
+        EngineFactory.deleteDatabase(file);
 
-        Engine e = EngineFactory.bootLocalEngine(file.getName(), EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
+        Engine e = EngineFactory.bootLocalEngine(file, EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
         e.setCreateBackups(false);
 
         CurrencyNode node = e.getDefaultCurrency();
@@ -78,10 +73,8 @@ public class BudgetResultsExportTest {
 
         assertTrue(exportFile.delete());
 
-        assertTrue(file.delete());
-
         EngineFactory.closeEngine(EngineFactory.DEFAULT);
 
-        Files.deleteIfExists(Paths.get(file.getAbsolutePath()));
+        Files.deleteIfExists(Paths.get(file));
     }
 }
