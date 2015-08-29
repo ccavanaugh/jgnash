@@ -25,7 +25,6 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 
-import jgnash.engine.QuoteSource;
 import jgnash.engine.SecurityHistoryEventType;
 
 /**
