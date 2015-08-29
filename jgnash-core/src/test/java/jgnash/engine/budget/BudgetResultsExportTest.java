@@ -19,6 +19,7 @@ package jgnash.engine.budget;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
@@ -43,11 +44,13 @@ public class BudgetResultsExportTest {
     @Test
     public void testExportBudgetResultsModel() throws Exception {
 
-        File file = Files.createTempFile("budget-", DataStoreType.XML.getDataStore().getFileExt()).toFile();
+        File file = Files.createTempFile("budget-", "." + DataStoreType.XML.getDataStore().getFileExt()).toFile();
 
         file.deleteOnExit();
 
         Engine e = EngineFactory.bootLocalEngine(file.getName(), EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
+        e.setCreateBackups(false);
+
         CurrencyNode node = e.getDefaultCurrency();
 
         Account account1 = new Account(AccountType.EXPENSE, node);
@@ -76,5 +79,9 @@ public class BudgetResultsExportTest {
         assertTrue(exportFile.delete());
 
         assertTrue(file.delete());
+
+        EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+        Files.deleteIfExists(Paths.get(file.getAbsolutePath()));
     }
 }
