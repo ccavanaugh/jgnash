@@ -241,28 +241,6 @@
                     <finalName>jgnash2</finalName>
                 </configuration>
             </plugin>
-            
-            <!--<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.8</version>
-                <executions>
-                    <execution>
-                        <id>exe</id>
-                        <phase>package</phase>
-                        <configuration>
-                            <target>                                
-                                <ant antfile="${basedir}/launch4j-ant.xml">
-                                    <target name="win-exe" />
-                                </ant>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>-->
 
             <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
@@ -276,7 +254,7 @@
                         <configuration>
                             <dontWrapJar>true</dontWrapJar>
                             <headerType>gui</headerType>
-                            <jar>target/jGnash2.jar</jar>
+                            <jar>jGnash2.jar</jar>
                             <outfile>target/jGnash2.exe</outfile>
                             <errTitle/>
                             <cmdLine/>
