@@ -1,0 +1,23 @@
+<launch4jConfig>
+  <dontWrapJar>true</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>./jGnashFx.jar</jar>
+  <outfile>./target/jGnashFx.exe</outfile>
+  <errTitle/>
+  <cmdLine/>
+  <chdir/>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl/>
+  <customProcName>false</customProcName>
+  <stayAlive>false</stayAlive>
+  <icon>../jgnash-swing/gnome-money.ico</icon>
+  <jre>
+    <path/>
+    <minVersion>1.8.0</minVersion>
+    <maxVersion/>
+    <dontUsePrivateJres>false</dontUsePrivateJres>
+    <initialHeapSize>32</initialHeapSize>
+    <maxHeapSize>500</maxHeapSize>
+  </jre>
+</launch4jConfig>
