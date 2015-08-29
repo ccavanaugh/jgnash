@@ -31,8 +31,6 @@ import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -319,52 +317,57 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
     private static JFreeChart createChart(final SecurityNode node) {
         Objects.requireNonNull(node);
 
-        // build the data set for the chart
-        List<SecurityHistoryNode> hNodes = node.getHistoryNodes();
+        final List<SecurityHistoryNode> hNodes = node.getHistoryNodes();
+        final Date max = DateUtils.asDate(hNodes.get(hNodes.size() - 1).getLocalDate());
+        final Date min = DateUtils.asDate(hNodes.get(0).getLocalDate());
 
-        int count = hNodes.size();
-
-        Date[] date = new Date[count];
-        double[] high = new double[count];
-        double[] low = new double[count];
-        double[] open = new double[count];
-        double[] close = new double[count];
-        double[] volume = new double[count];
-
-        for (int i = 0; i < count; i++) {
-            final SecurityHistoryNode hNode = hNodes.get(i);
-
-            date[i] = DateUtils.asDate(hNode.getLocalDate());
-            high[i] = hNode.getAdjustedHigh().doubleValue();
-            low[i] = hNode.getAdjustedLow().doubleValue();
-            open[i] = hNode.getAdjustedPrice().doubleValue();
-            close[i] = hNode.getAdjustedPrice().doubleValue();
-            volume[i] = hNode.getVolume();
-        }
-
-        Date max = Collections.max(Arrays.asList(date));
-        Date min = Collections.min(Arrays.asList(date));
-
-        AbstractXYDataset data = new DefaultHighLowDataset(node.getDescription(), date, high, low, open, close, volume);
-
-        DateAxis timeAxis = new DateAxis(null);
+        final DateAxis timeAxis = new DateAxis(null);
         timeAxis.setVisible(false);
         timeAxis.setAutoRange(false);
         timeAxis.setRange(min, max);
 
-        NumberAxis valueAxis = new NumberAxis(null);
+        final NumberAxis valueAxis = new NumberAxis(null);
         valueAxis.setAutoRangeIncludesZero(false);
         valueAxis.setVisible(false);
 
-        XYAreaRenderer renderer = new XYAreaRenderer();
+        final XYAreaRenderer renderer = new XYAreaRenderer();
         renderer.setBaseToolTipGenerator(new SecurityItemLabelGenerator(node));
         renderer.setOutline(true);
         renderer.setSeriesPaint(0, new Color(225, 247, 223));
 
-        XYPlot plot = new XYPlot(data, timeAxis, valueAxis, renderer);
+        final XYPlot plot = new XYPlot(null, timeAxis, valueAxis, renderer);
+
+        final List<List<SecurityHistoryNode>> groups = node.getHistoryNodeGroupsBySplits();
+
+        for (int i = 0; i < groups.size(); i++) {
+            int size = groups.get(i).size();
+
+            Date[] date = new Date[size];
+            double[] high = new double[size];
+            double[] low = new double[size];
+            double[] open = new double[size];
+            double[] close = new double[size];
+            double[] volume = new double[size];
+
+            for (int j = 0; j < size; j++) {
+                final SecurityHistoryNode hNode = groups.get(i).get(j);
+
+                date[j] = DateUtils.asDate(hNode.getLocalDate());
+                high[j] = hNode.getAdjustedHigh().doubleValue();
+                low[j] = hNode.getAdjustedLow().doubleValue();
+                open[j] = hNode.getAdjustedPrice().doubleValue();
+                close[j] = hNode.getAdjustedPrice().doubleValue();
+                volume[j] = hNode.getVolume();
+            }
+
+            final AbstractXYDataset data = new DefaultHighLowDataset(node.getDescription() + i, date, high, low, open,
+                    close, volume);
+            plot.setDataset(i, data);
+        }
+
         plot.setInsets(new RectangleInsets(1, 1, 1, 1));
 
-        JFreeChart chart = new JFreeChart(null, JFreeChart.DEFAULT_TITLE_FONT, plot, false);
+        final JFreeChart chart = new JFreeChart(null, JFreeChart.DEFAULT_TITLE_FONT, plot, false);
         chart.setBackgroundPaint(null);
 
         return chart;
