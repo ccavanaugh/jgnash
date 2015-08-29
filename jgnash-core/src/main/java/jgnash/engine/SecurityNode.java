@@ -311,45 +311,41 @@ public class SecurityNode extends CommodityNode {
      */
     public List<List<SecurityHistoryNode>> getHistoryNodeGroupsBySplits() {
 
-            final List<List<SecurityHistoryNode>> groups = new ArrayList<>();
-            final List<SecurityHistoryEvent> splitEvents = getSplitEvents();
+        final List<List<SecurityHistoryNode>> groups = new ArrayList<>();
+        final List<SecurityHistoryEvent> splitEvents = getSplitEvents();
 
-            if (splitEvents.size() == 0) {
-                groups.add(getHistoryNodes());
-            } else {    // count should be split events + 1 when complete
-                lock.readLock().lock();
+        if (splitEvents.size() == 0) {
+            groups.add(getHistoryNodes());
+        } else {    // count should be split events + 1 when complete
 
-                try {
-                    final ListIterator<SecurityHistoryEvent> historyEventIterator = splitEvents.listIterator();
+            // Create a defensive copy that has the adjustment multiplier set
+            final List<SecurityHistoryNode> securityHistoryNodes = getHistoryNodes();
+            final ListIterator<SecurityHistoryEvent> historyEventIterator = splitEvents.listIterator();
 
-                    LocalDate eventDate = historyEventIterator.next().getDate();
+            LocalDate eventDate = historyEventIterator.next().getDate();
 
-                    List<SecurityHistoryNode> group = new ArrayList<>();
+            List<SecurityHistoryNode> group = new ArrayList<>();
 
-                    for (int i = 0; i < sortedHistoryNodeCache.size(); i++) {
-                        if (eventDate == null || sortedHistoryNodeCache.get(i).getLocalDate().isBefore(eventDate)) {
-                            group.add(sortedHistoryNodeCache.get(i));
-                        } else {
-                            groups.add(group);                              // save the current group
-                            group = new ArrayList<>();                      // start a new group
-                            group.add(sortedHistoryNodeCache.get(i - 1));   // create continuity with the previous group
-                            group.add(sortedHistoryNodeCache.get(i));
+            for (int i = 0; i < securityHistoryNodes.size(); i++) {
+                if (eventDate == null || securityHistoryNodes.get(i).getLocalDate().isBefore(eventDate)) {
+                    group.add(securityHistoryNodes.get(i));
+                } else {
+                    groups.add(group);                              // save the current group
+                    group = new ArrayList<>();                      // start a new group
+                    group.add(securityHistoryNodes.get(i - 1));      // create continuity with the previous group
+                    group.add(securityHistoryNodes.get(i));          // add the current node
 
-                            if (historyEventIterator.hasNext()) {
-                                eventDate = historyEventIterator.next().getDate();
-                            } else {
-                                eventDate = null;
-                            }
-                        }
+                    if (historyEventIterator.hasNext()) {
+                        eventDate = historyEventIterator.next().getDate();
+                    } else {
+                        eventDate = null;
                     }
-
-                    groups.add(group);  // add last group
-                } finally {
-                    lock.readLock().unlock();
                 }
             }
+            groups.add(group);  // add last group
+        }
 
-            return groups;
+        return groups;
     }
 
     /**
