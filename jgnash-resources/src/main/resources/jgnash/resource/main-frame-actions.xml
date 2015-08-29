@@ -87,11 +87,7 @@
 
     <action id="accountsimport-command"
             name="Menu.ImportAccounts.Name"
-            desc="Menu.ImportAccounts.Tooltip"/>  
-
-    <action id="jgnashimport-command"
-            name="Menu.ImportJgnash.Name"
-            desc="Menu.ImportJgnash.Tooltip"/>
+            desc="Menu.ImportAccounts.Tooltip"/>
 
     <action id="ofximport-command"
             name="Menu.ImportOfx.Name"
@@ -318,7 +314,6 @@
                 <action-node idref="ofximport-command"/>             
                 <action-node idref="qifimport-command"/>
                 <empty/>
-                <action-node idref="jgnashimport-command"/>
                 <action-node idref="accountsimport-command"/>
             </action-node>
             <action-node id="export-menu" idref="export-menu-command">
