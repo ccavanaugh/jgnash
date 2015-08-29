@@ -242,7 +242,7 @@
                 </configuration>
             </plugin>
             
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.8</version>
@@ -260,6 +260,38 @@
                         <goals>
                             <goal>run</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>-->
+
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>1.7.7</version>
+                <executions>
+                    <execution>
+                        <id>l4j-gui</id>
+                        <phase>package</phase>
+                        <goals><goal>launch4j</goal></goals>
+                        <configuration>
+                            <dontWrapJar>true</dontWrapJar>
+                            <headerType>gui</headerType>
+                            <jar>target/jGnash2.jar</jar>
+                            <outfile>target/jGnash2.exe</outfile>
+                            <errTitle/>
+                            <cmdLine/>
+                            <chdir/>
+                            <priority>normal</priority>
+                            <downloadUrl>http://java.com/download</downloadUrl>
+                            <supportUrl/>
+                            <stayAlive>false</stayAlive>
+                            <icon>../jgnash-swing/gnome-money.ico</icon>
+                            <jre>
+                                <minVersion>1.8.0</minVersion>
+                                <initialHeapSize>32</initialHeapSize>
+                                <maxHeapSize>500</maxHeapSize>
+                            </jre>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
