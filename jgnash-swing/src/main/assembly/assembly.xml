@@ -9,7 +9,7 @@
 	<fileSets>
 		<fileSet>
 			<directory>../${project.basedir}</directory>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory/>
 			<includes>
 				<include>changelog*</include>
 				<include>README*</include>
@@ -20,7 +20,7 @@
 		</fileSet>
 		<fileSet>
 			<directory>../${project.basedir}/jgnash-help/target/docbkx/pdf</directory>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory/>
 			<includes>
 				  <include>*.pdf</include>
 			</includes>
@@ -37,7 +37,7 @@
 		</fileSet>
 		<fileSet>
 			<directory>target</directory>
-			<outputDirectory>/</outputDirectory>
+			<outputDirectory/>
 			<includes>
 				<include>*.jar</include>
 				<include>*.exe</include>
