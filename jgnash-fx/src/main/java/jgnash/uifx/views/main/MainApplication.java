@@ -127,8 +127,10 @@ public class MainApplication extends Application implements MessageListener {
     public void start(final Stage stage) throws Exception {
 
         // Force application wide style sheet. Use is StyleManager is a private API and may break later
-        Application.setUserAgentStylesheet(null);
-        StyleManager.getInstance().addUserAgentStylesheet(MainApplication.DEFAULT_CSS);
+        //Application.setUserAgentStylesheet(null);
+        //StyleManager.getInstance().addUserAgentStylesheet(MainApplication.DEFAULT_CSS);
+
+        //Application.setUserAgentStylesheet(MainApplication.DEFAULT_CSS);
 
         primaryStage = stage;
 
