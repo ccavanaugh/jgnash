@@ -15,10 +15,15 @@
       10px  = 0.833333em
       11px  = 0.916667em
       12px  = 1em
+
+      -fx-control-inner-background-alt is not defined for caspian
  */
 .root{
-    -fx-font-size: 0.833333em;
-    -fx-control-inner-background-alt: derive(lightgray,25%);
+    /*-fx-font-size: 0.833333em;
+    -fx-control-inner-background-alt: derive(lightgray,25%);*/
+
+    /* Hushes up Caspian without effecting Modena */
+    -fx-control-inner-background-alt: derive(-fx-control-inner-background,-2%);
 }
 
 .decimal-details > .arrow-button > .arrow {

@@ -59,6 +59,7 @@ import jgnash.resource.font.FontAwesomeImageView;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.BusyPane;
 import jgnash.uifx.control.TabViewPane;
+import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.accounts.AccountsViewController;
@@ -69,8 +70,6 @@ import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
-
-import com.sun.javafx.css.StyleManager;
 
 /**
  * JavaFX version of jGnash.
@@ -125,12 +124,7 @@ public class MainApplication extends Application implements MessageListener {
     @Override
     @SuppressWarnings("restriction")
     public void start(final Stage stage) throws Exception {
-
-        // Force application wide style sheet. Use is StyleManager is a private API and may break later
-        //Application.setUserAgentStylesheet(null);
-        //StyleManager.getInstance().addUserAgentStylesheet(MainApplication.DEFAULT_CSS);
-
-        //Application.setUserAgentStylesheet(MainApplication.DEFAULT_CSS);
+        ThemeManager.restoreLastUsedTheme();
 
         primaryStage = stage;
 
@@ -139,7 +133,6 @@ public class MainApplication extends Application implements MessageListener {
         final FXMLLoader fxmlLoader = new FXMLLoader(MenuBarController.class.getResource("MainMenuBar.fxml"), rb);
 
         final MenuBar menuBar = fxmlLoader.load();
-        //final MenuBarController controller = fxmlLoader.getController();
 
         // bind the register stage lists together
         registerStageListProperty.bindBidirectional(RegisterStage.registerStageListProperty());

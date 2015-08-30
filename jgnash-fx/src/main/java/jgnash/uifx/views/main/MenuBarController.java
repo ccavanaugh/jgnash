@@ -48,6 +48,7 @@ import jgnash.uifx.dialog.currency.EditExchangeRatesController;
 import jgnash.uifx.dialog.currency.ModifyCurrencyController;
 import jgnash.uifx.dialog.security.CreateModifySecuritiesController;
 import jgnash.uifx.dialog.security.SecurityHistoryController;
+import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.views.register.RegisterStage;
@@ -59,6 +60,9 @@ import jgnash.uifx.wizard.file.NewFileWizard;
  * @author Craig Cavanaugh
  */
 public class MenuBarController implements MessageListener {
+
+    @FXML
+    private Menu themesMenu;
 
     @FXML
     private Menu currenciesMenu;
@@ -103,6 +107,8 @@ public class MenuBarController implements MessageListener {
                 }
             }
         });
+
+        ThemeManager.addKnownThemes(themesMenu);
 
         MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM);
     }
