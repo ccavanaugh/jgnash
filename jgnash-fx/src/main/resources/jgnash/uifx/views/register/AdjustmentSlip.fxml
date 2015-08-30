@@ -14,61 +14,62 @@
 <?import jgnash.uifx.control.DecimalTextField?>
 <?import jgnash.uifx.control.TransactionNumberComboBox?>
 <?import jgnash.uifx.views.register.AttachmentPane?>
+
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="jgnash.uifx.views.register.AdjustmentSlipController" styleClass="form, dialog">
-  <columnConstraints>
-      <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-      <ColumnConstraints hgrow="SOMETIMES" />
-      <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-      <ColumnConstraints hgrow="NEVER" minWidth="95" maxWidth="95"/>
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints vgrow="NEVER" />
-    <RowConstraints vgrow="NEVER" />
-    <RowConstraints vgrow="NEVER" />
-    <RowConstraints vgrow="NEVER" />
-  </rowConstraints>
-   <children>
-       <Label text="%Label.Payee" GridPane.rowIndex="0" />
-       <AutoCompleteTextField fx:id="payeeTextField" GridPane.columnIndex="1" />
-       <Label text="%Label.Number" GridPane.columnIndex="2" />
-       <TransactionNumberComboBox  fx:id="numberComboBox" editable="true" GridPane.columnIndex="3" />
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+        <ColumnConstraints hgrow="SOMETIMES"/>
+        <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
+        <ColumnConstraints hgrow="NEVER" minWidth="105" maxWidth="105"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
 
-       <Label text="%Label.Memo" GridPane.rowIndex="1" />
-       <AutoCompleteTextField fx:id="memoTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <Label text="%Label.Date" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-      <DatePickerEx fx:id="datePicker" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+    <Label text="%Label.Payee" GridPane.rowIndex="0"/>
+    <AutoCompleteTextField fx:id="payeeTextField" GridPane.columnIndex="1"/>
+    <Label text="%Label.Number" GridPane.columnIndex="2"/>
+    <TransactionNumberComboBox fx:id="numberComboBox" editable="true" GridPane.columnIndex="3"/>
 
-      <GridPane GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="2"
-                GridPane.vgrow="NEVER" styleClass="form">
+    <Label text="%Label.Memo" GridPane.rowIndex="1"/>
+    <AutoCompleteTextField fx:id="memoTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <Label text="%Label.Date" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+    <DatePickerEx fx:id="datePicker" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+    <GridPane GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.rowIndex="2"
+              GridPane.vgrow="NEVER" styleClass="form">
         <columnConstraints>
-            <ColumnConstraints hgrow="NEVER" />
+            <ColumnConstraints hgrow="NEVER"/>
             <ColumnConstraints minWidth="8" maxWidth="8"/>
-            <ColumnConstraints hgrow="NEVER" />
+            <ColumnConstraints hgrow="NEVER"/>
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints vgrow="NEVER" />
+            <RowConstraints vgrow="NEVER"/>
         </rowConstraints>
-         <children>
-            <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared" />
-            <AttachmentPane fx:id="attachmentPane" GridPane.columnIndex="2" />
-         </children>
-      </GridPane>
-       <Label text="%Label.Amount" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-       <DecimalTextField fx:id="amountField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-     <ButtonBar GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="3">
-       <buttons>
-           <Button fx:id="convertButton" ButtonBar.buttonData="LEFT" onAction="#convertAction">
-               <graphic>
-                   <FontAwesomeImageView glyphName="ADJUST"/>
-               </graphic>
-               <tooltip>
-                   <Tooltip text="%ToolTip.ConvertSEntry"/>
-               </tooltip>
-           </Button>
-         <Button fx:id="enterButton" text="%Button.Enter" ButtonBar.buttonData="OK_DONE" onAction="#handleEnterAction"/>
-         <Button text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#handleCancelAction"/>
-       </buttons>
-     </ButtonBar>
-   </children>
+
+        <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared"/>
+        <AttachmentPane fx:id="attachmentPane" GridPane.columnIndex="2"/>
+    </GridPane>
+    <Label text="%Label.Amount" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+    <DecimalTextField fx:id="amountField" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+    <ButtonBar GridPane.columnIndex="0" GridPane.columnSpan="4" GridPane.rowIndex="3">
+        <buttons>
+            <Button fx:id="convertButton" ButtonBar.buttonData="LEFT" onAction="#convertAction">
+                <graphic>
+                    <FontAwesomeImageView glyphName="ADJUST"/>
+                </graphic>
+                <tooltip>
+                    <Tooltip text="%ToolTip.ConvertSEntry"/>
+                </tooltip>
+            </Button>
+            <Button fx:id="enterButton" text="%Button.Enter" ButtonBar.buttonData="OK_DONE"
+                    onAction="#handleEnterAction"/>
+            <Button text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#handleCancelAction"/>
+        </buttons>
+    </ButtonBar>
+
 </GridPane>

@@ -20,7 +20,7 @@
         <ColumnConstraints hgrow="SOMETIMES"/>
         <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
         <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
-        <ColumnConstraints hgrow="NEVER" minWidth="95" maxWidth="95"/>
+        <ColumnConstraints hgrow="NEVER" minWidth="105" maxWidth="105"/>
     </columnConstraints>
     <rowConstraints>
         <RowConstraints vgrow="NEVER"/>
