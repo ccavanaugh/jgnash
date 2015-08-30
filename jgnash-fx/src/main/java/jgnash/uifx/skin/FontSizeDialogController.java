@@ -41,7 +41,7 @@ public class FontSizeDialogController {
     @FXML
     void initialize() {
         // Match the current value so it's not reset
-        slider.setValue(ThemeManager.getFontSizeProperty().get() * 100);
+        slider.setValue(ThemeManager.getFontScaleProperty().get() * 100);
 
         slider.labelFormatterProperty().setValue(new StringConverter<Double>() {
             @Override
@@ -56,14 +56,14 @@ public class FontSizeDialogController {
         });
 
         // Bind the font size to the slider
-        ThemeManager.getFontSizeProperty().bind(slider.valueProperty().divide(100));
+        ThemeManager.getFontScaleProperty().bind(slider.valueProperty().divide(100));
 
         // Unbind the font size when the dialog closes
         parentProperty.addListener((observable, oldValue, scene) -> {
             if (scene != null) {
                 scene.windowProperty().addListener((observable1, oldValue1, window) -> {
                     window.addEventHandler(WindowEvent.WINDOW_HIDING, event ->
-                            ThemeManager.getFontSizeProperty().unbind());
+                            ThemeManager.getFontScaleProperty().unbind());
                 });
             }
         });

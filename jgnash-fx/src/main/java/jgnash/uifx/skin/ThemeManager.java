@@ -60,7 +60,7 @@ public class ThemeManager {
             {"Caspian", Application.STYLESHEET_CASPIAN},
     };
 
-    private static DoubleProperty fontSizeProperty = new SimpleDoubleProperty(1);
+    private static DoubleProperty fontScaleProperty = new SimpleDoubleProperty(1);
 
     private static StringExpression styleProperty;
 
@@ -68,17 +68,17 @@ public class ThemeManager {
         preferences = Preferences.userNodeForPackage(ThemeManager.class);
 
         // restore the old value
-        fontSizeProperty.set(preferences.getDouble(FONT_SIZE, 1));
+        fontScaleProperty.set(preferences.getDouble(FONT_SIZE, 1));
 
         // Save the value when it changes
-        fontSizeProperty.addListener((observable, oldValue, newValue) -> {
+        fontScaleProperty.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 preferences.putDouble(FONT_SIZE, newValue.doubleValue());
             }
         });
 
         // Create the binding format for the style / font size
-        styleProperty = Bindings.format("-fx-font-size: %1$.6fem", fontSizeProperty);
+        styleProperty = Bindings.format("-fx-font-size: %1$.6fem", fontScaleProperty);
     }
 
     private ThemeManager() {
@@ -124,8 +124,8 @@ public class ThemeManager {
         return styleProperty;
     }
 
-    public static DoubleProperty getFontSizeProperty() {
-        return fontSizeProperty;
+    public static DoubleProperty getFontScaleProperty() {
+        return fontScaleProperty;
     }
 
     private static class ThemeHandler implements EventHandler<ActionEvent> {
