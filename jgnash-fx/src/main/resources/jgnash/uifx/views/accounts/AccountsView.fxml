@@ -35,7 +35,7 @@
                         <FontAwesomeImageView glyphName="FILTER"/>
                     </graphic>
                 </Button>
-                <Button fx:id="zoomButton" mnemonicParsing="false" text="%Button.Zoom">
+                <Button fx:id="zoomButton" mnemonicParsing="false" onAction="#handleZoomAccountAction" text="%Button.Zoom">
                     <graphic>
                         <FontAwesomeImageView glyphName="EXTERNAL_LINK_SQUARE"/>
                     </graphic>

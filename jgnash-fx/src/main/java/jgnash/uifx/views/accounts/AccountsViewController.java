@@ -29,6 +29,7 @@ import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
@@ -46,6 +47,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.AccountTypeFilter;
+import jgnash.uifx.views.register.RegisterStage;
 import jgnash.util.EncodeDecode;
 
 /**
@@ -60,6 +62,8 @@ public class AccountsViewController implements MessageListener {
     private final Preferences preferences = Preferences.userNodeForPackage(AccountsViewController.class);
 
     private final AccountTypeFilter typeFilter = new AccountTypeFilter(preferences);
+
+    private final SimpleObjectProperty<Account> selectedAccountProperty = new SimpleObjectProperty<>();
 
     @FXML
     private ResourceBundle resources;
@@ -87,11 +91,8 @@ public class AccountsViewController implements MessageListener {
 
     @FXML
     private void initialize() {
-
-        modifyButton.setDisable(true);
         deleteButton.setDisable(true);
         reconcileButton.setDisable(true);
-        zoomButton.setDisable(true);
 
         initializeTreeTableView();
 
@@ -101,6 +102,12 @@ public class AccountsViewController implements MessageListener {
 
         // Register invalidation listeners to force a reload
         typeFilter.addListener(observable -> reload());
+
+        selectedAccountProperty.addListener((observable, oldValue, newValue) -> {
+            updateButtonStates();
+        });
+
+        modifyButton.disableProperty().bind(selectedAccountProperty.isNull());
     }
 
     @SuppressWarnings("unchecked")
@@ -148,9 +155,9 @@ public class AccountsViewController implements MessageListener {
     private void installListeners() {
         treeTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                updateButtonStates(newValue.getValue());
+                selectedAccountProperty.setValue(newValue.getValue());
             } else {
-                updateButtonStates(null);
+                selectedAccountProperty.setValue(null);
             }
         });
 
@@ -159,20 +166,21 @@ public class AccountsViewController implements MessageListener {
         }
     }
 
-    private void updateButtonStates(final Account account) {
+    private void updateButtonStates() {
         Platform.runLater(() -> {
+            final Account account = selectedAccountProperty.get();
+
             if (account != null) {
                 final int count = account.getTransactionCount();
 
                 deleteButton.setDisable(count > 0 || account.getChildCount() > 0);
                 reconcileButton.setDisable(count <= 0);
+                zoomButton.setDisable(account.isPlaceHolder());
             } else {
                 deleteButton.setDisable(true);
                 reconcileButton.setDisable(true);
+                zoomButton.setDisable(true);
             }
-
-            modifyButton.setDisable(account == null);
-            zoomButton.setDisable(account == null);
         });
     }
 
@@ -237,6 +245,11 @@ public class AccountsViewController implements MessageListener {
                 StaticUIMethods.displayError(resources.getString("Message.Error.AccountRemove"));
             }
         }
+    }
+
+    @FXML
+    private void handleZoomAccountAction() {
+        RegisterStage.getRegisterStage(selectedAccountProperty.get()).show();
     }
 
     private void updateAccountCode(final Account account, final Integer code) {
@@ -308,5 +321,4 @@ public class AccountsViewController implements MessageListener {
                 break;
         }
     }
-
 }
