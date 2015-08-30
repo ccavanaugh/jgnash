@@ -17,15 +17,17 @@
  */
 package jgnash.uifx.about;
 
-import javafx.application.Platform;
+import java.net.URL;
+import java.util.Properties;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
+import javafx.fxml.FXML;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Tab;
@@ -35,15 +37,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.web.WebView;
-import jgnash.uifx.util.TableViewManager;
+import javafx.stage.Stage;
+
+import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.HTMLResource;
 import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
-
-import java.util.Properties;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 /**
  * About Dialog
@@ -54,45 +54,29 @@ public class AboutDialog {
 
     private static final double FONT_SCALE = 0.8333;
 
-    private static final String PREF_NODE_USER_ROOT = "/jgnash/uifx/about";
-
     private static final int MAX_HEIGHT = 600;
 
-    private AboutDialog() {
-        // utility class
-    }
+    @FXML
+    private ResourceBundle resources;
 
-    public static void showAndWait() {
-        final ResourceBundle rb = ResourceUtils.getBundle();
+    @FXML
+    private TabPane tabbedPane;
 
-        final Dialog<Void> dialog = new Dialog<>();
-
-        dialog.getDialogPane().getStylesheets().addAll(MainApplication.DEFAULT_CSS);
-        dialog.getDialogPane().getStyleClass().addAll("form", "dialog");
-
-        dialog.setTitle(rb.getString("Title.About"));
-        dialog.getDialogPane().getButtonTypes().addAll(new ButtonType(rb.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
-
-        final TabPane tabPane = new TabPane();
-        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-
-        dialog.getDialogPane().setContent(tabPane);
-
-        tabPane.getTabs().addAll(addHTMLTab(rb.getString("Menu.About.Name"), "notice.html"),
-                addHTMLTab(rb.getString("Tab.Credits"), "credits.html"),
-                addHTMLTab(rb.getString("Tab.AppLicense"), "jgnash-license.html"),
-                addHTMLTab(rb.getString("Tab.GPLLicense"), "gpl-license.html"),
-                addHTMLTab(rb.getString("Tab.LGPLLicense"), "lgpl.html"),
+    @FXML
+    void initialize() {
+        tabbedPane.getTabs().addAll(
+                addHTMLTab(resources.getString("Menu.About.Name"), "notice.html"),
+                addHTMLTab(resources.getString("Tab.Credits"), "credits.html"),
+                addHTMLTab(resources.getString("Tab.AppLicense"), "jgnash-license.html"),
+                addHTMLTab(resources.getString("Tab.GPLLicense"), "gpl-license.html"),
+                addHTMLTab(resources.getString("Tab.LGPLLicense"), "lgpl.html"),
                 addHTMLTab("Apache License", "apache-license.html"),
                 addHTMLTab("XStream License", "xstream-license.html"),
                 getSystemPropertiesTab());
 
-        dialog.getDialogPane().setMaxHeight(MAX_HEIGHT);
-
-        dialog.showAndWait();
     }
 
-    private static Tab addHTMLTab(final String name, final String resource) {
+    private Tab addHTMLTab(final String name, final String resource) {
         final WebView webView = new WebView();
         webView.getEngine().load(HTMLResource.getURL(resource).toExternalForm());
         webView.setFontScale(FONT_SCALE);
@@ -100,9 +84,7 @@ public class AboutDialog {
         return new Tab(name, webView);
     }
 
-    private static Tab getSystemPropertiesTab() {
-
-        final ResourceBundle rb = ResourceUtils.getBundle();
+    private Tab getSystemPropertiesTab() {
 
         final ObservableList<SystemProperty> propertiesList = FXCollections.observableArrayList();
 
@@ -113,10 +95,10 @@ public class AboutDialog {
 
         FXCollections.sort(propertiesList);
 
-        final TableColumn<SystemProperty, String> keyCol = new TableColumn<>(rb.getString("Column.PropName"));
+        final TableColumn<SystemProperty, String> keyCol = new TableColumn<>(resources.getString("Column.PropName"));
         keyCol.setCellValueFactory(param -> param.getValue().keyProperty());
 
-        final TableColumn<SystemProperty, String> valueCol = new TableColumn<>(rb.getString("Column.PropVal"));
+        final TableColumn<SystemProperty, String> valueCol = new TableColumn<>(resources.getString("Column.PropVal"));
         valueCol.setCellValueFactory(param -> param.getValue().valueProperty());
 
         final TableView<SystemProperty> tableView = new TableView<>(propertiesList);
@@ -128,33 +110,20 @@ public class AboutDialog {
         tableViewColumns.add(keyCol);
         tableViewColumns.add(valueCol);
 
-        final TableViewManager<SystemProperty> tableViewManager= new TableViewManager<>(tableView, PREF_NODE_USER_ROOT);
-
-        tableViewManager.setColumnWeightFactory(param -> {
-            switch (param) {
-                case 0:
-                    return 0d;
-                default:
-                    return 1d;
-            }
-        });
-
         tableView.getStylesheets().addAll(MainApplication.DEFAULT_CSS);
 
         final ContextMenu menu = new ContextMenu();
-        final MenuItem copyMenuItem = new MenuItem(rb.getString("Menu.Copy.Name"));
+        final MenuItem copyMenuItem = new MenuItem(resources.getString("Menu.Copy.Name"));
 
         copyMenuItem.setOnAction(event -> dumpPropertiesToClipboard(tableView));
 
         menu.getItems().add(copyMenuItem);
         tableView.setContextMenu(menu);
 
-        Platform.runLater(tableViewManager::packTable);
-
         return new Tab(ResourceUtils.getString("Tab.SysInfo"), tableView);
     }
 
-    private static void dumpPropertiesToClipboard(final TableView<SystemProperty> tableView) {
+    private void dumpPropertiesToClipboard(final TableView<SystemProperty> tableView) {
         final StringBuilder buffer = new StringBuilder();
 
         tableView.getSelectionModel().getSelectedItems().stream().filter(systemProperty ->
@@ -171,6 +140,20 @@ public class AboutDialog {
         content.putString(buffer.toString());
 
         Clipboard.getSystemClipboard().setContent(content);
+    }
+
+    public static void showAndWait() {
+        final URL fxmlUrl = AboutDialog.class.getResource("AboutDialog.fxml");
+        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, ResourceUtils.getBundle());
+        stage.setTitle(ResourceUtils.getString("Title.About"));
+        stage.setMaxHeight(MAX_HEIGHT);
+
+        stage.showAndWait();
+    }
+
+    @FXML
+    private void handleCloseAction() {
+        ((Stage) tabbedPane.getScene().getWindow()).close();
     }
 
     private static class SystemProperty implements Comparable<SystemProperty> {
