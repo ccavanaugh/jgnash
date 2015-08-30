@@ -7,7 +7,7 @@
             fx:controller="jgnash.uifx.skin.FontSizeDialogController" prefHeight="100.0" prefWidth="350.0"
             styleClass="form, dialog">
    <center>
-      <Slider fx:id="slider" max="150.0" min="60.0" showTickLabels="true" showTickMarks="true" value="100.0"
-              blockIncrement="10.0" BorderPane.alignment="CENTER" />
+      <Slider fx:id="slider" max="150.0" min="75.0" showTickLabels="true" showTickMarks="true" value="100.0"
+              majorTickUnit="25" minorTickCount="9" snapToTicks="false" blockIncrement="2.5" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>
