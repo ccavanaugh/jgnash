@@ -40,7 +40,7 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
-import jgnash.uifx.about.AboutDialog;
+import jgnash.uifx.about.AboutDialogController;
 import jgnash.uifx.actions.DefaultCurrencyAction;
 import jgnash.uifx.actions.DefaultLocaleAction;
 import jgnash.uifx.dialog.currency.AddRemoveCurrencyController;
@@ -172,7 +172,7 @@ public class MenuBarController implements MessageListener {
 
     @FXML
     private void handleAboutAction() {
-        AboutDialog.showAndWait();
+        AboutDialogController.showAndWait();
     }
 
     @Override

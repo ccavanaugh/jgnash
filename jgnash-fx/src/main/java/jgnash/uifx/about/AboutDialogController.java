@@ -50,7 +50,7 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
-public class AboutDialog {
+public class AboutDialogController {
 
     private static final double FONT_SCALE = 0.8333;
 
@@ -144,7 +144,7 @@ public class AboutDialog {
     }
 
     public static void showAndWait() {
-        final URL fxmlUrl = AboutDialog.class.getResource("AboutDialog.fxml");
+        final URL fxmlUrl = AboutDialogController.class.getResource("AboutDialog.fxml");
         final Stage stage = FXMLUtils.loadFXML(fxmlUrl, ResourceUtils.getBundle());
         stage.setTitle(ResourceUtils.getString("Title.About"));
         stage.setResizable(false);
