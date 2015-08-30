@@ -30,6 +30,7 @@ import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.ResourceUtils;
 
@@ -71,6 +72,7 @@ public class DefaultCurrencyAction {
                     dialog.setTitle(resources.getString("Title.SelDefCurr"));
 
                     dialog.getDialogPane().getStylesheets().addAll(MainApplication.DEFAULT_CSS);
+                    dialog.getDialogPane().getScene().getRoot().styleProperty().bind(ThemeManager.getStyleProperty());
                     dialog.getDialogPane().getStyleClass().addAll("form", "dialog");
                     dialog.setHeaderText(resources.getString("Title.SelDefCurr"));
 

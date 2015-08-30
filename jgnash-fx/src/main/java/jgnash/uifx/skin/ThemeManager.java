@@ -22,6 +22,11 @@ import java.util.prefs.Preferences;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringExpression;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Menu;
@@ -38,18 +43,43 @@ import jgnash.util.NotNull;
  */
 public class ThemeManager {
 
+    private static final Preferences preferences;
+
     private static final String LAST = "last";
+
+    private static final String FONT_SIZE = "fontSize";
 
     private static Menu themesMenu;
 
     private static ToggleGroup toggleGroup = new ToggleGroup();
 
-    private static Handler handler = new Handler();
+    private static ThemeHandler themeHandler = new ThemeHandler();
 
     private static String[][] KNOWN_THEMES = {
             {"Modena", Application.STYLESHEET_MODENA},
-            {"Caspian", Application.STYLESHEET_CASPIAN}
+            {"Caspian", Application.STYLESHEET_CASPIAN},
     };
+
+    private static DoubleProperty fontSizeProperty = new SimpleDoubleProperty(1);
+
+    private static StringExpression styleProperty;
+
+    static {
+        preferences = Preferences.userNodeForPackage(ThemeManager.class);
+
+        // restore the old value
+        fontSizeProperty.set(preferences.getDouble(FONT_SIZE, 1));
+
+        // Save the value when it changes
+        fontSizeProperty.addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                preferences.putDouble(FONT_SIZE, newValue.doubleValue());
+            }
+        });
+
+        // Create the binding format for the style / font size
+        styleProperty = Bindings.format("-fx-font-size: %1$.6fem", fontSizeProperty);
+    }
 
     private ThemeManager() {
         // Utility class
@@ -63,7 +93,7 @@ public class ThemeManager {
         for (final String[] theme : KNOWN_THEMES) {
             final RadioMenuItem radioMenuItem = new RadioMenuItem(theme[0]);
             radioMenuItem.setUserData(theme[1]);
-            radioMenuItem.setOnAction(handler);
+            radioMenuItem.setOnAction(themeHandler);
             radioMenuItem.setToggleGroup(toggleGroup);
 
             themesMenu.getItems().add(radioMenuItem);
@@ -90,11 +120,18 @@ public class ThemeManager {
         Application.setUserAgentStylesheet(preferences.get(LAST, Application.STYLESHEET_MODENA));
     }
 
-    private static class Handler implements EventHandler<ActionEvent> {
+    public static ObservableValue<String> getStyleProperty() {
+        return styleProperty;
+    }
+
+    public static DoubleProperty getFontSizeProperty() {
+        return fontSizeProperty;
+    }
+
+    private static class ThemeHandler implements EventHandler<ActionEvent> {
         @Override
         public void handle(final ActionEvent event) {
             final MenuItem menuItem = (MenuItem) event.getSource();
-            final Preferences preferences = Preferences.userNodeForPackage(ThemeManager.class);
 
             Application.setUserAgentStylesheet(menuItem.getUserData().toString());
 

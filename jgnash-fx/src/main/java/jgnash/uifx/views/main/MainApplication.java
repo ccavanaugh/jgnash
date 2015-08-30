@@ -100,6 +100,8 @@ public class MainApplication extends Application implements MessageListener {
 
     private final ListProperty<RegisterStage> registerStageListProperty = new SimpleListProperty<>();
 
+
+
     /**
      * Application Singleton
      */
@@ -157,6 +159,9 @@ public class MainApplication extends Application implements MessageListener {
 
         final Scene scene = new Scene(stackPane, 600, 400);
         scene.getStylesheets().add(DEFAULT_CSS);
+
+        scene.getRoot().styleProperty().bind(ThemeManager.getStyleProperty());
+        //scene.getRoot().styleProperty().setValue("-fx-font-size: 0.833333em");
 
         stage.setTitle(MainFX.VERSION);
         stage.getIcons().add(StaticUIMethods.getApplicationIcon());

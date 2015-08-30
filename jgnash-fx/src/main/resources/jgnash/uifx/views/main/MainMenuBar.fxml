@@ -29,6 +29,8 @@
 
     <Menu mnemonicParsing="false" text="%Menu.View.Name">
         <Menu fx:id="themesMenu" mnemonicParsing="false" text="%Menu.Themes.Name" />
+        <SeparatorMenuItem mnemonicParsing="false"/>
+        <MenuItem mnemonicParsing="false" text="%Menu.FontSize.Name" onAction="#handleFontSizeAction"/>
     </Menu>
 
     <Menu mnemonicParsing="false" text="%Menu.Tools.Name">

@@ -48,6 +48,7 @@ import jgnash.uifx.dialog.currency.EditExchangeRatesController;
 import jgnash.uifx.dialog.currency.ModifyCurrencyController;
 import jgnash.uifx.dialog.security.CreateModifySecuritiesController;
 import jgnash.uifx.dialog.security.SecurityHistoryController;
+import jgnash.uifx.skin.FontSizeDialogController;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.util.FXMLUtils;
@@ -264,5 +265,16 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleEditExchangeRatesAction() {
         EditExchangeRatesController.showAndWait();
+    }
+
+    @FXML
+    private void handleFontSizeAction() {
+        final URL fxmlUrl = FontSizeDialogController.class.getResource("FontSizeDialog.fxml");
+        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
+        stage.setTitle(resources.getString("Title.FontSize"));
+
+        stage.setResizable(false);
+
+        stage.showAndWait();
     }
 }

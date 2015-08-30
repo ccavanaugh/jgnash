@@ -50,6 +50,7 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
 import jgnash.uifx.skin.StyleClass;
+import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.NotNull;
@@ -136,6 +137,7 @@ public class SelectAccountSecuritiesDialog {
 
         dialog.setScene(new Scene(gridPane));
         dialog.getScene().getStylesheets().add(MainApplication.DEFAULT_CSS);
+        dialog.getScene().getRoot().styleProperty().bind(ThemeManager.getStyleProperty());
         dialog.getScene().getRoot().getStyleClass().addAll("form", "dialog");
 
         StageUtils.addBoundsListener(dialog, this.getClass());
