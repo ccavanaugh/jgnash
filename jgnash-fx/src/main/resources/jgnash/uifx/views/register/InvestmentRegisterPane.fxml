@@ -52,7 +52,7 @@
                     </buttons>
                 </ButtonBar>
             </graphic>
-            <BorderPane>
+            <BorderPane styleClass="form, dialog">
                 <center>
                     <StackPane fx:id="transactionSlips"/>
                 </center>
