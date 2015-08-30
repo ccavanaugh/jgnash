@@ -54,6 +54,8 @@ import jgnash.util.EncodeDecode;
  * Accounts view controller
  *
  * @author Craig Cavanaugh
+ *
+ * TODO Double click action, context menu, icons for placeholders, etc.
  */
 public class AccountsViewController implements MessageListener {
 
