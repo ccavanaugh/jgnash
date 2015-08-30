@@ -21,7 +21,7 @@
     <children>
         <TitledPane text="%Title.AccountInfo" VBox.vgrow="ALWAYS" collapsible="false">
             <content>
-                <GridPane styleClass="form">
+                <GridPane styleClass="form, dialog">
                     <columnConstraints>
                         <ColumnConstraints hgrow="ALWAYS"/>
                         <ColumnConstraints hgrow="NEVER"/>

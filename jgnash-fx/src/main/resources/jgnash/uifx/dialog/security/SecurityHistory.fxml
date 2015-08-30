@@ -46,7 +46,7 @@
     <StackPane fx:id="chartPane" GridPane.rowIndex="1" GridPane.columnSpan="2" minHeight="120"/>
 
     <TitledPane text="%Title.PriceHistory" collapsible="false" GridPane.rowIndex="2" >
-        <GridPane styleClass="form">
+        <GridPane styleClass="form, dialog">
             <columnConstraints>
                 <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="95.0" prefWidth="100.0"/>
@@ -98,7 +98,7 @@
     </TitledPane>
 
     <TitledPane text="%Title.EventHistory" collapsible="false" GridPane.rowIndex="2" GridPane.columnIndex="1">
-        <GridPane styleClass="form">
+        <GridPane styleClass="form, dialog">
             <columnConstraints>
                 <ColumnConstraints hgrow="NEVER" minWidth="-Infinity"/>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="95.0" prefWidth="100.0"/>
