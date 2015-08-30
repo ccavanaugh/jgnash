@@ -54,7 +54,7 @@ public class AboutDialog {
 
     private static final double FONT_SCALE = 0.8333;
 
-    private static final int MAX_HEIGHT = 600;
+    private static final int MAX_HEIGHT = 490;
 
     @FXML
     private ResourceBundle resources;
@@ -80,6 +80,7 @@ public class AboutDialog {
         final WebView webView = new WebView();
         webView.getEngine().load(HTMLResource.getURL(resource).toExternalForm());
         webView.setFontScale(FONT_SCALE);
+        webView.setMaxHeight(MAX_HEIGHT);
 
         return new Tab(name, webView);
     }
@@ -146,7 +147,7 @@ public class AboutDialog {
         final URL fxmlUrl = AboutDialog.class.getResource("AboutDialog.fxml");
         final Stage stage = FXMLUtils.loadFXML(fxmlUrl, ResourceUtils.getBundle());
         stage.setTitle(ResourceUtils.getString("Title.About"));
-        stage.setMaxHeight(MAX_HEIGHT);
+        stage.setResizable(false);
 
         stage.showAndWait();
     }
