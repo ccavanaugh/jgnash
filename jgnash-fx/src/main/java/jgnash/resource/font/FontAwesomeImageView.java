@@ -38,6 +38,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
+import jgnash.uifx.skin.ThemeManager;
+
 /**
  * Utility class to convert font glyphs into ImageViews
  * @author Craig Cavanaugh
@@ -46,7 +48,7 @@ public class FontAwesomeImageView extends ImageView {
 
     private static final String FONT_NAME = "FontAwesome"; //$NON-NLS-1$
 
-    private static final double DEFAULT_SIZE = 11.0;
+    private static final double DEFAULT_SIZE = 13.0;
 
     private final ObjectProperty<Object> glyphName = new SimpleObjectProperty<>();
 
@@ -57,12 +59,13 @@ public class FontAwesomeImageView extends ImageView {
     private final static HashMap<Long, Image> imageCache = new HashMap<>();
 
     static {
-        Font.loadFont(FontAwesomeImageView.class.getResource(FontAwesomeIconView.TTF_PATH).toExternalForm(), DEFAULT_SIZE);
+        Font.loadFont(FontAwesomeImageView.class.getResource(FontAwesomeIconView.TTF_PATH).toExternalForm(),
+                ThemeManager.getFontScaleProperty().get() * DEFAULT_SIZE);
     }
 
     @SuppressWarnings("unused")
     public FontAwesomeImageView() {
-        this(FontAwesomeIcon.BUG, DEFAULT_SIZE);
+        this(FontAwesomeIcon.BUG, ThemeManager.getFontScaleProperty().get() * DEFAULT_SIZE);
     }
 
     public FontAwesomeImageView(final FontAwesomeIcon glyphValue, final Double sizeValue) {
