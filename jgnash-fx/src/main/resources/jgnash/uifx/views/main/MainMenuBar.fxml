@@ -31,6 +31,7 @@
         <Menu fx:id="themesMenu" mnemonicParsing="false" text="%Menu.Themes.Name" />
         <SeparatorMenuItem mnemonicParsing="false"/>
         <MenuItem mnemonicParsing="false" text="%Menu.FontSize.Name" onAction="#handleFontSizeAction"/>
+        <MenuItem mnemonicParsing="false" text="%Menu.BaseColor.Name" onAction="#handleBaseColorAction"/>
     </Menu>
 
     <Menu mnemonicParsing="false" text="%Menu.Tools.Name">

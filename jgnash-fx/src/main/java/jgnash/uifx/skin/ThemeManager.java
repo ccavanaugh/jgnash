@@ -26,6 +26,9 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -33,6 +36,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.paint.Color;
 
 import jgnash.util.NotNull;
 
@@ -49,23 +53,33 @@ public class ThemeManager {
 
     private static final String FONT_SIZE = "fontSize";
 
+    private static final String BASE_COLOR = "baseColor";
+
     private static Menu themesMenu;
 
-    private static ToggleGroup toggleGroup = new ToggleGroup();
+    private static final ToggleGroup toggleGroup = new ToggleGroup();
 
-    private static ThemeHandler themeHandler = new ThemeHandler();
+    private static final ThemeHandler themeHandler = new ThemeHandler();
 
-    private static String[][] KNOWN_THEMES = {
+    private static final String[][] KNOWN_THEMES = {
             {"Modena", Application.STYLESHEET_MODENA},
             {"Caspian", Application.STYLESHEET_CASPIAN},
     };
 
-    private static DoubleProperty fontScaleProperty = new SimpleDoubleProperty(1);
+    private static final DoubleProperty fontScaleProperty = new SimpleDoubleProperty(1);
 
-    private static StringExpression styleProperty;
+    private static final SimpleObjectProperty<Color> baseColorProperty = new SimpleObjectProperty<>();
+
+    private static final StringExpression styleProperty;
+
+    private static final String DEFAULT_CASPIAN_BASE_COLOR = "#d0d0d0";
+
+    private static final String DEFAULT_MODENA_BASE_COLOR = "#ececec";
 
     static {
         preferences = Preferences.userNodeForPackage(ThemeManager.class);
+
+        final StringProperty _baseColorProperty = new SimpleStringProperty();
 
         // restore the old value
         fontScaleProperty.set(preferences.getDouble(FONT_SIZE, 1));
@@ -77,12 +91,48 @@ public class ThemeManager {
             }
         });
 
+        baseColorProperty.setValue(Color.web(preferences.get(BASE_COLOR, DEFAULT_MODENA_BASE_COLOR)));
+
+        // restore the old base color value
+        switch (preferences.get(LAST, Application.STYLESHEET_MODENA)) {
+            case Application.STYLESHEET_CASPIAN:
+                baseColorProperty.setValue(Color.web(preferences.get(BASE_COLOR, DEFAULT_CASPIAN_BASE_COLOR)));
+                break;
+            case Application.STYLESHEET_MODENA:
+                baseColorProperty.setValue(Color.web(preferences.get(BASE_COLOR, DEFAULT_MODENA_BASE_COLOR)));
+                break;
+            default:
+                baseColorProperty.setValue(Color.web(preferences.get(BASE_COLOR, DEFAULT_MODENA_BASE_COLOR)));
+        }
+
+        _baseColorProperty.setValue(colorToHex(baseColorProperty.getValue()));
+
+        // Save the value when it changes
+        baseColorProperty.addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                preferences.put(BASE_COLOR, colorToHex(newValue));
+                _baseColorProperty.setValue(colorToHex(newValue));
+            }
+        });
+
         // Create the binding format for the style / font size
-        styleProperty = Bindings.format("-fx-font-size: %1$.6fem", fontScaleProperty);
+        styleProperty = Bindings.format("-fx-font-size: %1$.6fem; -fx-base:%2$s",
+                fontScaleProperty, _baseColorProperty);
     }
 
     private ThemeManager() {
         // Utility class
+    }
+
+    public static Color getDefaultBaseColor(final String theme) {
+        switch (theme) {
+            case Application.STYLESHEET_CASPIAN:
+                return Color.web(DEFAULT_CASPIAN_BASE_COLOR);
+            case Application.STYLESHEET_MODENA:
+                return  Color.web(DEFAULT_MODENA_BASE_COLOR);
+            default:
+                return Color.web(DEFAULT_MODENA_BASE_COLOR);
+        }
     }
 
     public static void addKnownThemes(@NotNull final Menu menu) {
@@ -102,8 +152,7 @@ public class ThemeManager {
         Platform.runLater(ThemeManager::syncToggle);
     }
 
-    public static void syncToggle() {
-        final Preferences preferences = Preferences.userNodeForPackage(ThemeManager.class);
+    private static void syncToggle() {
         final String last = preferences.get(LAST, Application.STYLESHEET_MODENA);
 
         for (final MenuItem menuItem : themesMenu.getItems()) {
@@ -115,8 +164,6 @@ public class ThemeManager {
     }
 
     public static void restoreLastUsedTheme() {
-        final Preferences preferences = Preferences.userNodeForPackage(ThemeManager.class);
-
         Application.setUserAgentStylesheet(preferences.get(LAST, Application.STYLESHEET_MODENA));
     }
 
@@ -126,6 +173,14 @@ public class ThemeManager {
 
     public static DoubleProperty getFontScaleProperty() {
         return fontScaleProperty;
+    }
+
+    public static SimpleObjectProperty<Color> getBaseColorProperty() {
+        return baseColorProperty;
+    }
+
+    public static String getCurrentTheme() {
+        return preferences.get(LAST, Application.STYLESHEET_MODENA);
     }
 
     private static class ThemeHandler implements EventHandler<ActionEvent> {
@@ -143,5 +198,9 @@ public class ThemeManager {
                 Application.setUserAgentStylesheet(menuItem.getUserData().toString());
             }
         }
+    }
+
+    private static String colorToHex(final Color value) {
+        return "#" + Integer.toHexString(value.hashCode());
     }
 }

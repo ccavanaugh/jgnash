@@ -48,6 +48,7 @@ import jgnash.uifx.dialog.currency.EditExchangeRatesController;
 import jgnash.uifx.dialog.currency.ModifyCurrencyController;
 import jgnash.uifx.dialog.security.CreateModifySecuritiesController;
 import jgnash.uifx.dialog.security.SecurityHistoryController;
+import jgnash.uifx.skin.BaseColorDialogController;
 import jgnash.uifx.skin.FontSizeDialogController;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.tasks.CloseFileTask;
@@ -272,6 +273,17 @@ public class MenuBarController implements MessageListener {
         final URL fxmlUrl = FontSizeDialogController.class.getResource("FontSizeDialog.fxml");
         final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
         stage.setTitle(resources.getString("Title.FontSize"));
+
+        stage.setResizable(false);
+
+        stage.showAndWait();
+    }
+
+    @FXML
+    private void handleBaseColorAction() {
+        final URL fxmlUrl = BaseColorDialogController.class.getResource("BaseColorDialog.fxml");
+        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
+        stage.setTitle(resources.getString("Title.BaseColor"));
 
         stage.setResizable(false);
 
