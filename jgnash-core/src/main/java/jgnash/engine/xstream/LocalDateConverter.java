@@ -19,10 +19,12 @@ package jgnash.engine.xstream;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 import jgnash.util.DateUtils;
 
 import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
+import com.thoughtworks.xstream.converters.basic.DateConverter;
 
 /**
  * XStream converter for {@code LocalDateTime} objects.
@@ -36,6 +38,9 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 public class LocalDateConverter extends AbstractSingleValueConverter {
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateUtils.DEFAULT_XSTREAM_LOCAL_DATE_PATTERN);
 
+    // Delegate to the xstream converter if an old file is being read
+    private final DateConverter dateConverter = new DateConverter();
+
     @Override
     public boolean canConvert(final Class type) {
         return type.equals(LocalDate.class);
@@ -44,8 +49,11 @@ public class LocalDateConverter extends AbstractSingleValueConverter {
     @Override
     public Object fromString(final String str) {
         if (!str.isEmpty()) {
-            // Time data may be present in an older file, so we only take the date information
-            return LocalDate.from(dateTimeFormatter.parse(str.substring(0, 10)));
+            if (str.length() == 10) {   // newer file
+                return LocalDate.from(dateTimeFormatter.parse(str));
+            } else {    // older file, delegate to the default XStream converter
+                return DateUtils.asLocalDate((Date)dateConverter.fromString(str));
+            }
         }
         return null;
     }
