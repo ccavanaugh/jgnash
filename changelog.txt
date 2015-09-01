@@ -27,6 +27,7 @@ Improved handling of memo's in split transactions.  The split entry memo should 
 
 Release 2.18.0
 ----------------------
+09/01/15 (FX) DatePicker now increments and decrements with use of vertical and horizontal scroll input
 09/01/15 Improved date handling when loading 2.15.0 and older xml and bxds file formats.
 08/29/15 Remove support for importing jGnash 1.x files
 

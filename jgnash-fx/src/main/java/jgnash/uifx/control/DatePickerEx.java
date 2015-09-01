@@ -61,6 +61,36 @@ public class DatePickerEx extends DatePicker {
 
         setConverter(new DateConverter());
 
+        // Handle horizontal and vertical scroll wheel events
+        getEditor().setOnScroll(event -> {
+            final int caretPosition = getEditor().getCaretPosition();
+            final LocalDate date = getValue();
+
+            if (event.getDeltaY() > 0) {
+                Platform.runLater(() -> {
+                    setValue(date.plusDays(1));
+                    getEditor().positionCaret(caretPosition);
+                });
+            } else if (event.getDeltaY() < 0) {
+                Platform.runLater(() -> {
+                    setValue(date.minusDays(1));
+                    getEditor().positionCaret(caretPosition);
+                });
+            }
+
+            if (event.getDeltaX() > 0) {
+                Platform.runLater(() -> {
+                    setValue(date.plusMonths(1));
+                    getEditor().positionCaret(caretPosition);
+                });
+            } else if (event.getDeltaX() < 0) {
+                Platform.runLater(() -> {
+                    setValue(date.minusMonths(1));
+                    getEditor().positionCaret(caretPosition);
+                });
+            }
+        });
+
         getEditor().addEventFilter(KeyEvent.KEY_TYPED, event -> {
             if (ALLOWED_DATE_CHARACTERS.indexOf(event.getCharacter().charAt(0)) < 0) {
                 event.consume();
