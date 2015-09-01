@@ -25,6 +25,10 @@ Budgeting
 Reinstate archive capability.
 Improved handling of memo's in split transactions.  The split entry memo should show up in the applicable account
 
+Release 2.17.1
+----------------------
+09/01/15 Fix for conversion of Date to LocalDate for XML and BXDS file formats.
+
 Release 2.17.0 (File format change)
 ----------------------
 08/28/15 Automatic backup preferences are now stored within the data file.  This is better for users working off of
