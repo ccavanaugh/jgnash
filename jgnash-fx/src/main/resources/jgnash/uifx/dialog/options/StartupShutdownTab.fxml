@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:controller="jgnash.uifx.dialog.options.StartupShutdownTabController"
+      xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" styleClass="dialog, form">
+
+    <TitledPane text="%Title.Startup" collapsible="false">
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+
+            <CheckBox text="%Button.OpenLastOnStartup" fx:id="openLastCheckBox"/>
+        </GridPane>
+    </TitledPane>
+
+    <TitledPane text="%Title.Shutdown" collapsible="false">
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="NEVER"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+            <CheckBox mnemonicParsing="false" text="CheckBox"/>
+            <CheckBox mnemonicParsing="false" text="CheckBox" GridPane.rowIndex="1"/>
+            <Label text="Maximum number of backup files to keep:" GridPane.rowIndex="2"/>
+            <Spinner GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        </GridPane>
+
+    </TitledPane>
+
+    <TitledPane text="%Title.BackgroundUpdate" collapsible="false">
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+            <CheckBox mnemonicParsing="false" text="Update currency exchange rates on startup"/>
+            <CheckBox mnemonicParsing="false" text="Update securities on startup" GridPane.rowIndex="1"/>
+        </GridPane>
+    </TitledPane>
+</VBox>

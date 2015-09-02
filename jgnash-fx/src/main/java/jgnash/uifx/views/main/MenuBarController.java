@@ -46,6 +46,7 @@ import jgnash.uifx.actions.DefaultLocaleAction;
 import jgnash.uifx.dialog.currency.AddRemoveCurrencyController;
 import jgnash.uifx.dialog.currency.EditExchangeRatesController;
 import jgnash.uifx.dialog.currency.ModifyCurrencyController;
+import jgnash.uifx.dialog.options.OptionDialogController;
 import jgnash.uifx.dialog.security.CreateModifySecuritiesController;
 import jgnash.uifx.dialog.security.SecurityHistoryController;
 import jgnash.uifx.skin.BaseColorDialogController;
@@ -53,6 +54,7 @@ import jgnash.uifx.skin.FontSizeDialogController;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.register.RegisterStage;
 import jgnash.uifx.wizard.file.NewFileWizard;
 
@@ -62,6 +64,9 @@ import jgnash.uifx.wizard.file.NewFileWizard;
  * @author Craig Cavanaugh
  */
 public class MenuBarController implements MessageListener {
+
+    @FXML
+    private MenuItem optionsMenuItem;
 
     @FXML
     private Menu themesMenu;
@@ -97,6 +102,7 @@ public class MenuBarController implements MessageListener {
         securitiesMenu.disableProperty().bind(disabled);
         currenciesMenu.disableProperty().bind(disabled);
         closeMenuItem.disableProperty().bind(disabled);
+        optionsMenuItem.disableProperty().bind(disabled);
 
         windowMenu.disableProperty().bind(Bindings.or(disabled, RegisterStage.registerStageListProperty().emptyProperty()));
 
@@ -286,6 +292,22 @@ public class MenuBarController implements MessageListener {
         stage.setTitle(resources.getString("Title.BaseColor"));
 
         stage.setResizable(false);
+
+        stage.showAndWait();
+    }
+
+    @FXML
+    private void handleShowOptionDialog() {
+        final Stage stage = FXMLUtils.loadFXML(OptionDialogController.class.getResource("OptionDialog.fxml"),
+               resources);
+        stage.setTitle(resources.getString("Title.Options"));
+
+        Platform.runLater(() -> {
+            stage.setMinHeight(stage.getHeight());
+            stage.setMinWidth(stage.getWidth());
+
+            StageUtils.addBoundsListener(stage, OptionDialogController.class);
+        });
 
         stage.showAndWait();
     }

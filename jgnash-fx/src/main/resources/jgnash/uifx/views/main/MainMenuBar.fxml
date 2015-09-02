@@ -8,7 +8,8 @@
 
 <MenuBar fx:id="menuBar" useSystemMenuBar="true" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
          fx:controller="jgnash.uifx.views.main.MenuBarController">
-    <Menu mnemonicParsing="false" text="%Menu.File.Name">
+
+    <Menu text="%Menu.File.Name" mnemonicParsing="false">
         <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#handleOpenAction"
                   text="%Menu.Open.Name">
             <graphic>
@@ -28,13 +29,13 @@
     </Menu>
 
     <Menu mnemonicParsing="false" text="%Menu.View.Name">
-        <Menu fx:id="themesMenu" mnemonicParsing="false" text="%Menu.Themes.Name" />
+        <Menu fx:id="themesMenu" mnemonicParsing="false" text="%Menu.Themes.Name"/>
         <SeparatorMenuItem mnemonicParsing="false"/>
         <MenuItem mnemonicParsing="false" text="%Menu.FontSize.Name" onAction="#handleFontSizeAction"/>
         <MenuItem mnemonicParsing="false" text="%Menu.BaseColor.Name" onAction="#handleBaseColorAction"/>
     </Menu>
 
-    <Menu mnemonicParsing="false" text="%Menu.Tools.Name">
+    <Menu text="%Menu.Tools.Name" mnemonicParsing="false">
         <Menu fx:id="securitiesMenu" mnemonicParsing="false" text="%Menu.Securities.Name">
             <MenuItem text="%Menu.ModifyCommodity.Name" mnemonicParsing="false"
                       onAction="#handleCreateModifySecuritiesAction"/>
@@ -65,13 +66,17 @@
 
         </Menu>
         <SeparatorMenuItem mnemonicParsing="false"/>
+        <MenuItem text="%Menu.Option.Name" fx:id="optionsMenuItem" onAction="#handleShowOptionDialog"/>
+        <SeparatorMenuItem mnemonicParsing="false"/>
         <MenuItem text="%Menu.Locale.Name" onAction="#changeDefaultLocale"/>
     </Menu>
+
     <Menu fx:id="windowMenu" mnemonicParsing="false" text="%Menu.Window.Name">
         <SeparatorMenuItem mnemonicParsing="false"/>
         <MenuItem text="%Menu.CloseAllWindows.Name" onAction="#closeAllWindows"/>
     </Menu>
-    <Menu mnemonicParsing="false" text="%Menu.Help.Name">
+
+    <Menu text="%Menu.Help.Name" mnemonicParsing="false">
         <MenuItem mnemonicParsing="false" text="%Menu.About.Name" onAction="#handleAboutAction"/>
     </Menu>
 
