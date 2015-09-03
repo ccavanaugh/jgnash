@@ -54,12 +54,11 @@ public class MonthTabController implements RecurringTabController {
     private DatePickerEx endDatePicker;
 
     @FXML
-    private Spinner numberSpinner;
+    private Spinner<Integer> numberSpinner;
 
     private Reminder reminder = new MonthlyReminder();
 
     @FXML
-    @SuppressWarnings("unchecked")
     private void initialize() {
         numberSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 24, 1, 1));
 
@@ -80,7 +79,7 @@ public class MonthTabController implements RecurringTabController {
             endDate = endDatePicker.getValue();
         }
 
-        reminder.setIncrement(((Number) numberSpinner.getValue()).intValue());
+        reminder.setIncrement(numberSpinner.getValue());
         reminder.setEndDate(endDate);
 
         ((MonthlyReminder) reminder).setType(typeComboBox.getSelectionModel().getSelectedIndex());
@@ -89,7 +88,6 @@ public class MonthTabController implements RecurringTabController {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void setReminder(@NotNull final Reminder reminder) {
         if (!(reminder instanceof MonthlyReminder)) {
             throw new RuntimeException("Incorrect Reminder type");

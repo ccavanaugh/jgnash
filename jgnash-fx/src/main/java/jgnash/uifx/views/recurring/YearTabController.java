@@ -46,12 +46,11 @@ public class YearTabController implements RecurringTabController {
     private DatePickerEx endDatePicker;
 
     @FXML
-    private Spinner numberSpinner;
+    private Spinner<Integer> numberSpinner;
 
     private Reminder reminder = new YearlyReminder();
 
     @FXML
-    @SuppressWarnings("unchecked")
     private void initialize() {
         numberSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1, 1));
 
@@ -69,14 +68,13 @@ public class YearTabController implements RecurringTabController {
             endDate = endDatePicker.getValue();
         }
 
-        reminder.setIncrement(((Number) numberSpinner.getValue()).intValue());
+        reminder.setIncrement((numberSpinner.getValue()));
         reminder.setEndDate(endDate);
 
         return reminder;
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void setReminder(@NotNull final Reminder reminder) {
         if (!(reminder instanceof YearlyReminder)) {
             throw new RuntimeException("Incorrect Reminder type");
