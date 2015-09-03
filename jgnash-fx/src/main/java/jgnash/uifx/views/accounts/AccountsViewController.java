@@ -17,14 +17,6 @@
  */
 package jgnash.uifx.views.accounts;
 
-import java.math.BigDecimal;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.prefs.Preferences;
-
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -35,20 +27,24 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
-
-import jgnash.engine.Account;
-import jgnash.engine.Comparators;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.RootAccount;
+import jgnash.engine.*;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.AccountTypeFilter;
+import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.register.RegisterStage;
 import jgnash.util.EncodeDecode;
+
+import java.math.BigDecimal;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 
 /**
  * Accounts view controller
@@ -110,6 +106,10 @@ public class AccountsViewController implements MessageListener {
         });
 
         modifyButton.disableProperty().bind(selectedAccountProperty.isNull());
+
+        AccountBalanceDisplayManager.getAccountBalanceDisplayModeProperty().addListener((observable, oldValue, newValue) -> {
+            treeTableView.refresh();
+        });
     }
 
     @SuppressWarnings("unchecked")
@@ -128,11 +128,15 @@ public class AccountsViewController implements MessageListener {
         entriesColumn.setCellValueFactory(param -> new SimpleIntegerProperty(param.getValue().getValue().getTransactionCount()).asObject());
 
         final TreeTableColumn<Account, BigDecimal> balanceColumn = new TreeTableColumn<>(resources.getString("Column.Balance"));
-        balanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().getValue().getTreeBalance()));
+        balanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(AccountBalanceDisplayManager.
+                convertToSelectedBalanceMode(param.getValue().getValue().getAccountType(),
+                        param.getValue().getValue().getTreeBalance())));
         balanceColumn.setCellFactory(cell -> new AccountCommodityFormatTreeTableCell());
 
         final TreeTableColumn<Account, BigDecimal> reconciledBalanceColumn = new TreeTableColumn<>(resources.getString("Column.ReconciledBalance"));
-        reconciledBalanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue().getValue().getReconciledTreeBalance()));
+        reconciledBalanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(AccountBalanceDisplayManager.
+                convertToSelectedBalanceMode(param.getValue().getValue().getAccountType(),
+                        param.getValue().getValue().getReconciledTreeBalance())));
         reconciledBalanceColumn.setCellFactory(cell -> new AccountCommodityFormatTreeTableCell());
 
         final TreeTableColumn<Account, String> currencyColumn = new TreeTableColumn<>(resources.getString("Column.Currency"));

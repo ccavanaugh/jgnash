@@ -39,6 +39,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.text.CommodityFormat;
+import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.util.DefaultDaemonThreadFactory;
 
 /**
@@ -112,7 +113,12 @@ class AccountPropertyWrapper implements MessageListener {
             protected Void call() throws Exception {
                 synchronized (numberFormatLock) {
                     if (accountProperty.get() != null) {
-                        Platform.runLater(() -> accountBalanceProperty.setValue(numberFormat.format(accountProperty.get().getBalance())));
+                        final Account account = accountProperty.get();
+                        final BigDecimal balance =
+                                AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(),
+                                        account.getBalance());
+
+                        Platform.runLater(() -> accountBalanceProperty.setValue(numberFormat.format(balance)));
                     } else {
                         Platform.runLater(() -> accountBalanceProperty.setValue(numberFormat.format(BigDecimal.ZERO)));
                     }
@@ -126,7 +132,12 @@ class AccountPropertyWrapper implements MessageListener {
             protected Void call() throws Exception {
                 synchronized (numberFormatLock) {
                     if (accountProperty.get() != null) {
-                        Platform.runLater(() -> reconciledAmountProperty.setValue(numberFormat.format(accountProperty.get().getReconciledBalance())));
+                        final Account account = accountProperty.get();
+                        final BigDecimal balance =
+                                AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(),
+                                        account.getReconciledBalance());
+
+                        Platform.runLater(() -> reconciledAmountProperty.setValue(numberFormat.format(balance)));
                     } else {
                         Platform.runLater(() -> reconciledAmountProperty.setValue(numberFormat.format(BigDecimal.ZERO)));
                     }
@@ -141,7 +152,12 @@ class AccountPropertyWrapper implements MessageListener {
                 protected Void call() throws Exception {
                     synchronized (numberFormatLock) {
                         if (accountProperty.get() != null) {
-                            Platform.runLater(() -> cashBalanceProperty.setValue(numberFormat.format(accountProperty.get().getCashBalance())));
+                            final Account account = accountProperty.get();
+                            final BigDecimal balance =
+                                    AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(),
+                                            account.getCashBalance());
+
+                            Platform.runLater(() -> cashBalanceProperty.setValue(numberFormat.format(balance)));
                         } else {
                             Platform.runLater(() -> cashBalanceProperty.setValue(numberFormat.format(BigDecimal.ZERO)));
                         }
