@@ -27,12 +27,12 @@ import java.util.prefs.Preferences;
 
 /**
  * AccountBalanceDisplayManager converts the account balances according to the selected displaying mode.
- * 
+ * <p>
  * If accounting balances mode is active, then there will not be done any conversion.
- * 
+ * <p>
  * If the normally positive balances mode is active, then the balances of account groups income, equity and liability
  * will be negated.
- * 
+ *
  * @author Peter Vida
  * @author Craig Cavanaugh
  */
@@ -66,12 +66,15 @@ public class AccountBalanceDisplayManager {
     }
 
     public static BigDecimal convertToSelectedBalanceMode(final AccountType accountType, final BigDecimal balance) {
-        if (getDisplayMode() == AccountBalanceDisplayMode.NONE) {
-            return balance;
-        } else if (getDisplayMode() == AccountBalanceDisplayMode.REVERSE_INCOME_EXPENSE) {
-            return reverseIncomeAndExpense(accountType, balance);
+        switch (getDisplayMode()) {
+            case REVERSE_INCOME_EXPENSE:
+                return reverseIncomeAndExpense(accountType, balance);
+            case REVERSE_CREDIT:
+                return reverseCredit(accountType, balance);
+            case NONE:
+            default:
+                return balance;
         }
-        return reverseCredit(accountType, balance);
     }
 
     public static void setDisplayMode(final AccountBalanceDisplayMode newMode) {
