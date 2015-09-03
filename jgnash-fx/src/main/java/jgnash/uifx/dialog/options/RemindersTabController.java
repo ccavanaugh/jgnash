@@ -29,7 +29,8 @@ import jgnash.uifx.Options;
  */
 public class RemindersTabController {
 
-    public CheckBox confirmOnDeleteCheckBox;
+    @FXML
+    private CheckBox confirmOnDeleteCheckBox;
 
     @FXML
     private void initialize() {
