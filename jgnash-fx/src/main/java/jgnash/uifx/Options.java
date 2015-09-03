@@ -44,7 +44,7 @@ public class Options {
 
     private static final String AUTO_COMPLETE = "autoCompleteEnabled";
 
-    private static final String IGNORE_CASE = "autoCompleteIgnoreCaseEnabled";
+    private static final String CASE_SENSITIVE = "autoCompleteIsCaseEnabled";
 
     private static final String FUZZY_MATCH = "autoCompleteFuzzyMatchEnabled";
 
@@ -64,7 +64,7 @@ public class Options {
 
     private static final SimpleBooleanProperty autoCompleteEnabled;
 
-    private static final SimpleBooleanProperty autoCompleteIgnoreCaseEnabled;
+    private static final SimpleBooleanProperty autoCompleteCaseSensitiveEnabled;
 
     private static final SimpleBooleanProperty autoCompleteFuzzyMatchEnabled;
 
@@ -88,7 +88,7 @@ public class Options {
         confirmDeleteReminder = createBooleanProperty(CONFIRM_DELETE_REMINDER, true);
         rememberDate = createBooleanProperty(REMEMBER_DATE, true);
         autoCompleteEnabled = createBooleanProperty(AUTO_COMPLETE, true);
-        autoCompleteIgnoreCaseEnabled = createBooleanProperty(IGNORE_CASE, false);
+        autoCompleteCaseSensitiveEnabled = createBooleanProperty(CASE_SENSITIVE, false);
         autoCompleteFuzzyMatchEnabled = createBooleanProperty(FUZZY_MATCH, false);
         openLastEnabled = createBooleanProperty(OPEN_LAST, false);
 
@@ -159,8 +159,8 @@ public class Options {
      *
      * @return {@code BooleanProperty} controlling case sensitivity
      */
-    public static BooleanProperty ignoreCaseForAutoCompleteProperty() {
-        return autoCompleteIgnoreCaseEnabled;
+    public static BooleanProperty autoCompleteIsCaseSensitiveProperty() {
+        return autoCompleteCaseSensitiveEnabled;
     }
 
     /** Provides access to the property controlling if fuzzy match is used for auto completion
