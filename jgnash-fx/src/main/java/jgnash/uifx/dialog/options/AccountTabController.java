@@ -21,10 +21,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
-
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.uifx.Options;
+import jgnash.uifx.views.AccountBalanceDisplayManager;
+import jgnash.uifx.views.AccountBalanceDisplayMode;
 
 /**
  * Controller for Account options
@@ -64,9 +65,36 @@ public class AccountTabController {
             accountSeparatorTextField.setDisable(true);
         }
 
-
         useAccountingTermsCheckBox.selectedProperty().bindBidirectional(Options.useAccountingTermsProperty());
 
-        // TODO account display terms
+        switch (AccountBalanceDisplayManager.getDisplayMode()) {
+            case NONE:
+                noAccountsRadioButton.setSelected(true);
+                break;
+            case REVERSE_CREDIT:
+                creditAccountsRadioButton.setSelected(true);
+                break;
+            case REVERSE_INCOME_EXPENSE:
+                incomeExpenseAccountsRadioButton.setSelected(true);
+                break;
+        }
+
+        noAccountsRadioButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                AccountBalanceDisplayManager.setDisplayMode(AccountBalanceDisplayMode.NONE);
+            }
+        });
+
+        creditAccountsRadioButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                AccountBalanceDisplayManager.setDisplayMode(AccountBalanceDisplayMode.REVERSE_CREDIT);
+            }
+        });
+
+        incomeExpenseAccountsRadioButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                AccountBalanceDisplayManager.setDisplayMode(AccountBalanceDisplayMode.REVERSE_INCOME_EXPENSE);
+            }
+        });
     }
 }
