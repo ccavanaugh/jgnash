@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<VBox fx:controller="jgnash.uifx.dialog.options.RegisterTabController" minHeight="-Infinity"
+      xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="dialog, form">
+
+    <fx:define>
+        <ToggleGroup fx:id="toggleGroup"/>
+    </fx:define>
+
+    <TitledPane text="%Title.DefaultBehavior" collapsible="false">
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+
+            <CheckBox text="%Button.RegDate" fx:id="rememberLastTranDateCheckBox"/>
+            <CheckBox text="%Button.ConfirmTransDelete" fx:id="confirmDeleteCheckBox" GridPane.rowIndex="1"/>
+        </GridPane>
+    </TitledPane>
+
+    <TitledPane text="%Title.AutoComplete" collapsible="false">
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" maxWidth="10" minWidth="10"/>
+                <ColumnConstraints hgrow="NEVER"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+
+            <CheckBox text="%Button.EnableAutoComplete" fx:id="enableAutoCompleteCheckBox" GridPane.columnSpan="2"/>
+            <CheckBox text="%Button.MatchCaseSensitive" fx:id="caseSensitiveCheckBox" GridPane.rowIndex="1"
+                      GridPane.columnIndex="1"/>
+            <CheckBox text="%Button.UseFuzzyMatch" fx:id="fuzzyMatchCheckBox" GridPane.rowIndex="2"
+                      GridPane.columnIndex="1"/>
+        </GridPane>
+    </TitledPane>
+
+    <TitledPane text="%Title.ReconcileSettings" collapsible="false">
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+            <RadioButton text="%Button.ReconcileDisable" fx:id="disableReconcileCheckBox" toggleGroup="$toggleGroup"/>
+            <RadioButton text="%Button.ReconcileBoth" fx:id="reconcileBothCheckBox" toggleGroup="$toggleGroup"
+                         GridPane.rowIndex="1"/>
+            <RadioButton text="%Button.ReconcileIncomeExpense" fx:id="reconcileIncomeExpenseCheckBox"
+                         toggleGroup="$toggleGroup" GridPane.rowIndex="2"/>
+        </GridPane>
+    </TitledPane>
+</VBox>
