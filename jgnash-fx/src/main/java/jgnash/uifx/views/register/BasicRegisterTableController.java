@@ -29,9 +29,11 @@ import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
 import jgnash.engine.Account;
+import jgnash.engine.AccountType;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
 import jgnash.text.CommodityFormat;
+import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.util.DateUtils;
 
 /**
@@ -99,7 +101,13 @@ public class BasicRegisterTableController extends RegisterTableController {
         decreaseColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getShortNumberFormat(accountProperty.get().getCurrencyNode())));
 
         final TableColumn<Transaction, BigDecimal> balanceColumn = new TableColumn<>(columnNames[8]);
-        balanceColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(getBalanceAt(param.getValue())));
+        balanceColumn.setCellValueFactory(param -> {
+            final AccountType accountType = getAccountProperty().getValue().getAccountType();
+
+            return new SimpleObjectProperty<>(AccountBalanceDisplayManager.
+                    convertToSelectedBalanceMode(accountType, getBalanceAt(param.getValue())));
+        });
+
         balanceColumn.setCellFactory(cell -> new TransactionCommodityFormatTableCell(CommodityFormat.getFullNumberFormat(accountProperty.get().getCurrencyNode())));
         balanceColumn.setSortable(false);   // do not allow a sort on the balance
 

@@ -65,6 +65,7 @@ import jgnash.engine.message.MessageProperty;
 import jgnash.engine.recurring.Reminder;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.util.TableViewManager;
+import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.recurring.RecurringEntryDialog;
 
 /**
@@ -152,10 +153,16 @@ public abstract class RegisterTableController {
                         total = total.add(transaction.getAmount(accountProperty.get()));
                     }
                 }
-                selectionSummaryTooltip.setText(numberFormat.format(total));
+                selectionSummaryTooltip.setText(numberFormat.format(AccountBalanceDisplayManager.
+                        convertToSelectedBalanceMode(accountProperty.get().getAccountType(), total)));
             } else {
                 selectionSummaryTooltip.setText(null);
             }
+        });
+
+        // For the table view to refresh itself if the mode changes
+        AccountBalanceDisplayManager.getAccountBalanceDisplayModeProperty().addListener((observable, oldValue, newValue) -> {
+            tableView.refresh();
         });
 
         // Listen for engine events
