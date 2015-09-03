@@ -4,25 +4,33 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.ColumnConstraints?>
 
-<BorderPane fx:controller="jgnash.uifx.dialog.options.OptionDialogController" prefHeight="400.0" prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" styleClass="dialog">
-    <center>
-        <TabPane tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" styleClass="floating, dialog">
-            <Tab text="%Tab.StartupShutdown" >
-                <fx:include source="StartupShutdownTab.fxml"/>
-            </Tab>
-            <Tab text="Untitled Tab 2"/>
-        </TabPane>
-    </center>
+<GridPane fx:controller="jgnash.uifx.dialog.options.OptionDialogController" minHeight="-Infinity"
+          xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="form, dialog">
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="ALWAYS"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
 
-    <bottom>
-        <ButtonBar BorderPane.alignment="CENTER">
-            <buttons>
-                <Button mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Close"
-                        ButtonBar.buttonData="CANCEL_CLOSE"/>
-            </buttons>
-        </ButtonBar>
-    </bottom>
-</BorderPane>
+    <TabPane tabClosingPolicy="UNAVAILABLE" styleClass="floating">
+        <Tab text="%Tab.StartupShutdown">
+            <fx:include source="StartupShutdownTab.fxml"/>
+        </Tab>
+        <Tab text="%Tab.Accounts">
+            <fx:include source="AccountTab.fxml"/>
+        </Tab>
+    </TabPane>
+
+    <ButtonBar GridPane.rowIndex="1">
+        <buttons>
+            <Button mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Close"
+                    ButtonBar.buttonData="CANCEL_CLOSE"/>
+        </buttons>
+    </ButtonBar>
+</GridPane>

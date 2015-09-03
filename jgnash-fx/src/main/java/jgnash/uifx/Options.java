@@ -50,6 +50,8 @@ public class Options {
 
     private final static String REMINDER_SNOOZE = "reminderSnoozePeriod";
 
+    private final static String OPEN_LAST = "openLastEnabled";
+
     private static final int DEFAULT_SNOOZE = 15 * 60 * 1000;
 
     private static final SimpleBooleanProperty useAccountingTerms;
@@ -65,6 +67,8 @@ public class Options {
     private static final SimpleBooleanProperty autoCompleteIgnoreCaseEnabled;
 
     private static final SimpleBooleanProperty autoCompleteFuzzyMatchEnabled;
+
+    private static final SimpleBooleanProperty openLastEnabled;
 
     private static final SimpleIntegerProperty reminderSnoozePeriod;
 
@@ -86,6 +90,7 @@ public class Options {
         autoCompleteEnabled = createBooleanProperty(AUTO_COMPLETE, true);
         autoCompleteIgnoreCaseEnabled = createBooleanProperty(IGNORE_CASE, false);
         autoCompleteFuzzyMatchEnabled = createBooleanProperty(FUZZY_MATCH, false);
+        openLastEnabled = createBooleanProperty(OPEN_LAST, false);
 
         reminderSnoozePeriod = createIntegerProperty(REMINDER_SNOOZE, DEFAULT_SNOOZE);
     }
@@ -173,5 +178,14 @@ public class Options {
      */
     public static IntegerProperty reminderSnoozePeriodProperty() {
         return reminderSnoozePeriod;
+    }
+
+    /**
+     * Provides access to the open last file at startup property
+     *
+     * @return {@code BooleanProperty} controlling open last file
+     */
+    public static BooleanProperty openLastProperty() {
+        return openLastEnabled;
     }
 }

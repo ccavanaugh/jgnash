@@ -3,49 +3,50 @@
 
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:controller="jgnash.uifx.dialog.options.StartupShutdownTabController" minHeight="-Infinity"
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.RadioButton?>
+<VBox fx:controller="jgnash.uifx.dialog.options.AccountTabController" minHeight="-Infinity"
       xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="dialog, form">
 
-    <TitledPane text="%Title.Startup" collapsible="false">
+    <fx:define>
+        <ToggleGroup fx:id="toggleGroup"/>
+    </fx:define>
+
+    <TitledPane text="%Title.Display" collapsible="false">
         <GridPane styleClass="form">
             <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
                 <ColumnConstraints hgrow="SOMETIMES"/>
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
-
-            <CheckBox text="%Button.OpenLastOnStartup" fx:id="openLastCheckBox"/>
+            <Label text="%Label.AccountSeparator"/>
+            <TextField fx:id="accountSeparatorTextField" GridPane.columnIndex="1"/>
         </GridPane>
     </TitledPane>
 
-    <TitledPane text="%Title.Shutdown" collapsible="false">
+    <TitledPane text="%Title.Terms" collapsible="false">
         <GridPane styleClass="form">
             <columnConstraints>
-                <ColumnConstraints hgrow="NEVER"/>
                 <ColumnConstraints hgrow="NEVER"/>
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints vgrow="NEVER"/>
-                <RowConstraints vgrow="NEVER"/>
-                <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
-            <CheckBox text="%Button.CreateTimeFile" fx:id="createBackupsCheckBox"/>
-            <CheckBox text="%Button.RemoveOldBackups" fx:id="removeOldBackupsCheckBox" GridPane.rowIndex="1"/>
-            <Label text="%Label.MaxBackupCount" GridPane.rowIndex="2"/>
-            <Spinner fx:id="backupCountSpinner" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <CheckBox text="%Button.AccTerms" fx:id="useAccountingTermsCheckBox"/>
         </GridPane>
 
     </TitledPane>
 
-    <TitledPane text="%Title.BackgroundUpdate" collapsible="false">
+    <TitledPane text="%Title.ReverseAccountBalances" collapsible="false">
         <GridPane styleClass="form">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" />
@@ -53,9 +54,11 @@
             <rowConstraints>
                 <RowConstraints vgrow="NEVER"/>
                 <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
-            <CheckBox text="%Button.UpdateCurrenciesStartup" fx:id="updateCurrencies"/>
-            <CheckBox text="%Button.UpdateSecuritiesStartup" fx:id="updateSecurities" GridPane.rowIndex="1"/>
+            <RadioButton text="%Button.None" fx:id="noAccountsRadioButton" toggleGroup="$toggleGroup"/>
+            <RadioButton text="%Button.CreditAccounts" fx:id="creditAccountsRadioButton" toggleGroup="$toggleGroup" GridPane.rowIndex="1"/>
+            <RadioButton text="%Button.IncomeAndExpense" fx:id="incomeExpenseAccountsRadioButton" toggleGroup="$toggleGroup" GridPane.rowIndex="2"/>
         </GridPane>
     </TitledPane>
 </VBox>

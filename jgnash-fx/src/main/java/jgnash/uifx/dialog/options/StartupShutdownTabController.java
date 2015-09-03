@@ -19,6 +19,14 @@ package jgnash.uifx.dialog.options;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
+
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.net.currency.CurrencyUpdateFactory;
+import jgnash.net.security.UpdateFactory;
+import jgnash.uifx.Options;
 
 /**
  * Controller for Startup and Shutdown options
@@ -28,10 +36,63 @@ import javafx.scene.control.CheckBox;
 public class StartupShutdownTabController {
 
     @FXML
+    private CheckBox createBackupsCheckBox;
+
+    @FXML
+    private CheckBox removeOldBackupsCheckBox;
+
+    @FXML
+    private Spinner<Integer> backupCountSpinner;
+
+    @FXML
+    private CheckBox updateCurrencies;
+
+    @FXML
+    private CheckBox updateSecurities;
+
+    @FXML
     private CheckBox openLastCheckBox;
 
     @FXML
     private void initialize() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
+        backupCountSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 1000, 1, 1));
+
+        if (engine != null) {
+            backupCountSpinner.getValueFactory().setValue(engine.getRetainedBackupLimit());
+            createBackupsCheckBox.setSelected(engine.createBackups());
+            removeOldBackupsCheckBox.setSelected(engine.removeOldBackups());
+
+            backupCountSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+                engine.setRetainedBackupLimit(newValue);
+            });
+
+            createBackupsCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                engine.setCreateBackups(newValue);
+            });
+
+            removeOldBackupsCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+                engine.setRemoveOldBackups(newValue);
+            });
+        } else {
+            backupCountSpinner.setDisable(true);
+            createBackupsCheckBox.setDisable(true);
+            removeOldBackupsCheckBox.setDisable(true);
+        }
+
+        updateSecurities.setSelected(UpdateFactory.getUpdateOnStartup());
+        updateCurrencies.setSelected(CurrencyUpdateFactory.getUpdateOnStartup());
+
+        updateSecurities.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            UpdateFactory.setUpdateOnStartup(newValue);
+        });
+
+        updateCurrencies.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            CurrencyUpdateFactory.setUpdateOnStartup(newValue);
+        });
+
+
+        openLastCheckBox.selectedProperty().bindBidirectional(Options.openLastProperty());
     }
 }
