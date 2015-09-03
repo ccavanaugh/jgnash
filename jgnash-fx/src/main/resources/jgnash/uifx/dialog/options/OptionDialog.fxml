@@ -25,6 +25,9 @@
         <Tab text="%Tab.Accounts">
             <fx:include source="AccountTab.fxml"/>
         </Tab>
+        <Tab text="%Tab.Reminders">
+            <fx:include source="RemindersTab.fxml"/>
+        </Tab>
     </TabPane>
 
     <ButtonBar GridPane.rowIndex="1">
