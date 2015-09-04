@@ -100,8 +100,6 @@ public class MainApplication extends Application implements MessageListener {
 
     private final ListProperty<RegisterStage> registerStageListProperty = new SimpleListProperty<>();
 
-
-
     /**
      * Application Singleton
      */
@@ -157,16 +155,19 @@ public class MainApplication extends Application implements MessageListener {
         final StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(borderPane, busyPane);
 
-        final Scene scene = new Scene(stackPane, 600, 400);
+        final Scene scene = new Scene(stackPane, 640, 480);
         scene.getStylesheets().add(DEFAULT_CSS);
 
         scene.getRoot().styleProperty().bind(ThemeManager.getStyleProperty());
-        //scene.getRoot().styleProperty().setValue("-fx-font-size: 0.833333em");
 
         stage.setTitle(MainFX.VERSION);
         stage.getIcons().add(StaticUIMethods.getApplicationIcon());
         stage.setScene(scene);
         stage.setResizable(true);
+
+        // enforce a min width to prevent it from disappearing with a bad click and drag
+        stage.setMinWidth(640);
+        stage.setMinHeight(480);
 
         installHandlers();
 
