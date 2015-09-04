@@ -31,6 +31,9 @@
         <Tab text="%Tab.Reminders">
             <fx:include source="RemindersTab.fxml"/>
         </Tab>
+        <Tab text="%Tab.Network">
+            <fx:include source="NetworkTab.fxml"/>
+        </Tab>
     </TabPane>
 
     <ButtonBar GridPane.rowIndex="1">

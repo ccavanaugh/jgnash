@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import jgnash.uifx.control.IntegerTextField?>
+<?import javafx.scene.control.PasswordField?>
+<VBox fx:controller="jgnash.uifx.dialog.options.NetworkTabController" minHeight="-Infinity"
+      xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="dialog, form">
+
+    <TitledPane text="%Title.HTTPProxy" collapsible="false">
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" maxWidth="10" minWidth="10"/>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="NEVER"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+
+            <CheckBox text="%Button.UseProxy"  fx:id="useProxyCheckBox" GridPane.columnSpan="3"/>
+            <Label text="%Label.Host" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <TextField fx:id="hostTextField" GridPane.rowIndex="1"  GridPane.columnIndex="2"/>
+            <Label text="%Label.Port" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <IntegerTextField fx:id="portTextField" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+
+            <CheckBox text="%Button.HTTPAuth"  fx:id="requireAuthCheckBox" GridPane.columnSpan="3" GridPane.rowIndex="3"/>
+            <Label text="%Label.UserName" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            <TextField fx:id="userNameTextField" GridPane.rowIndex="4" GridPane.columnIndex="2"/>
+            <Label text="%Label.Password" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+            <PasswordField fx:id="passwordField" GridPane.rowIndex="5" GridPane.columnIndex="2"/>
+        </GridPane>
+    </TitledPane>
+
+    <TitledPane text="%Title.Connection" collapsible="false">
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+            <Label text="%Label.ConnTimeout"/>
+            <Spinner fx:id="timeoutSpinner" GridPane.columnIndex="1"/>
+            <Label text="%Word.Seconds" GridPane.columnIndex="2"/>
+        </GridPane>
+    </TitledPane>
+</VBox>
