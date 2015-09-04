@@ -93,7 +93,8 @@ class NetworkOptions extends JPanel implements ActionListener, FocusListener {
         nameField = new JTextFieldEx();
         passwordField = new JPasswordField();
 
-        SpinnerNumberModel model = new SpinnerNumberModel(ConnectionFactory.getConnectionTimeout(), 10, 120, 1);
+        SpinnerNumberModel model = new SpinnerNumberModel(ConnectionFactory.getConnectionTimeout(),
+                ConnectionFactory.MIN_TIMEOUT, ConnectionFactory.MAX_TIMEOUT, 1);
         connectionTimeout = new JSpinner(model);
     }
 
