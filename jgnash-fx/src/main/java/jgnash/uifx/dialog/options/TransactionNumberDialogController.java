@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -122,7 +123,10 @@ public class TransactionNumberDialogController {
         final Stage stage = FXMLUtils.loadFXML(fxmlUrl, controllerObjectProperty, ResourceUtils.getBundle());
         stage.setTitle(ResourceUtils.getString("Title.DefTranNum"));
 
-        stage.setMinHeight(stage.getHeight());
+        Platform.runLater(() -> {
+            stage.setMinHeight(stage.getHeight());
+            stage.setMinWidth(stage.getWidth());
+        });
 
         stage.showAndWait();
 
