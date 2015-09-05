@@ -67,6 +67,8 @@
         </Menu>
         <SeparatorMenuItem mnemonicParsing="false"/>
         <MenuItem text="%Menu.Option.Name" fx:id="optionsMenuItem" onAction="#handleShowOptionDialog"/>
+        <MenuItem text="%Menu.EditTranNumList.Name" fx:id="transNumberListMenuItem"
+                  onAction="#handleShowTranNumberListDialog"/>
         <SeparatorMenuItem mnemonicParsing="false"/>
         <MenuItem text="%Menu.Locale.Name" onAction="#changeDefaultLocale"/>
     </Menu>

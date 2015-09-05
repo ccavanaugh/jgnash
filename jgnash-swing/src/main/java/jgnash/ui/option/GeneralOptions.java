@@ -81,7 +81,7 @@ class GeneralOptions extends JPanel implements ActionListener {
     private void initComponents() {
 
         animationsEnabled = new JCheckBox(rb.getString("Button.SubstanceAnimations"));
-        numButton = new JButton(rb.getString("Button.EditDefTranNums"));
+        numButton = new JButton(rb.getString("Menu.EditTranNumList.Name"));
         selectOnFocusCheckBox = new JCheckBox(rb.getString("Button.SelectText"));
 
         SpinnerModel model = new SpinnerNumberModel(ThemeManager.getNimbusFontSize(), 9, 15, 1);

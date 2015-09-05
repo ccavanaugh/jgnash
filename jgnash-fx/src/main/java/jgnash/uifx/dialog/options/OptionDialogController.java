@@ -17,8 +17,6 @@
  */
 package jgnash.uifx.dialog.options;
 
-import java.util.ResourceBundle;
-
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -36,15 +34,6 @@ public class OptionDialogController {
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
-
-    @FXML
-    private ResourceBundle resources;
-
-
-    @FXML
-    private void initialize() {
-
-    }
 
     @FXML
     private void handleCloseAction() {

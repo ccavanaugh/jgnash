@@ -104,4 +104,9 @@ public class RegisterTabController {
             disableReconcileCheckBox.setDisable(true);
         }
     }
+
+    @FXML
+    private void handleTransNumberButton() {
+        TransactionNumberDialogController.showAndWait();
+    }
 }

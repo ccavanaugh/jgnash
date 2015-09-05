@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
 <VBox fx:controller="jgnash.uifx.dialog.options.RegisterTabController" minHeight="-Infinity"
       xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="dialog, form">
 
@@ -23,10 +24,12 @@
             <rowConstraints>
                 <RowConstraints vgrow="NEVER"/>
                 <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
 
             <CheckBox text="%Button.RegDate" fx:id="rememberLastTranDateCheckBox"/>
             <CheckBox text="%Button.ConfirmTransDelete" fx:id="confirmDeleteCheckBox" GridPane.rowIndex="1"/>
+            <Button text="%Menu.EditTranNumList.Name" onAction="#handleTransNumberButton" GridPane.rowIndex="2"/>
         </GridPane>
     </TitledPane>
 

@@ -47,6 +47,7 @@ import jgnash.uifx.dialog.currency.AddRemoveCurrencyController;
 import jgnash.uifx.dialog.currency.EditExchangeRatesController;
 import jgnash.uifx.dialog.currency.ModifyCurrencyController;
 import jgnash.uifx.dialog.options.OptionDialogController;
+import jgnash.uifx.dialog.options.TransactionNumberDialogController;
 import jgnash.uifx.dialog.security.CreateModifySecuritiesController;
 import jgnash.uifx.dialog.security.SecurityHistoryController;
 import jgnash.uifx.skin.BaseColorDialogController;
@@ -64,6 +65,9 @@ import jgnash.uifx.wizard.file.NewFileWizard;
  * @author Craig Cavanaugh
  */
 public class MenuBarController implements MessageListener {
+
+    @FXML
+    private MenuItem transNumberListMenuItem;
 
     @FXML
     private MenuItem optionsMenuItem;
@@ -103,6 +107,7 @@ public class MenuBarController implements MessageListener {
         currenciesMenu.disableProperty().bind(disabled);
         closeMenuItem.disableProperty().bind(disabled);
         optionsMenuItem.disableProperty().bind(disabled);
+        transNumberListMenuItem.disableProperty().bind(disabled);
 
         windowMenu.disableProperty().bind(Bindings.or(disabled, RegisterStage.registerStageListProperty().emptyProperty()));
 
@@ -310,5 +315,10 @@ public class MenuBarController implements MessageListener {
         });
 
         stage.showAndWait();
+    }
+
+    @FXML
+    private void handleShowTranNumberListDialog() {
+        TransactionNumberDialogController.showAndWait();
     }
 }

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<?import javafx.scene.layout.VBox?>
+<?import jgnash.resource.font.FontAwesomeImageView?>
+<GridPane fx:controller="jgnash.uifx.dialog.options.TransactionNumberDialogController" minHeight="-Infinity"
+          xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="form, dialog">
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS"/>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="ALWAYS"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+
+    <ListView fx:id="listView" minHeight="90" prefHeight="180"/>
+
+    <VBox GridPane.columnIndex="1" styleClass="form">
+        <Button onAction="#handleUpAction" contentDisplay="GRAPHIC_ONLY" maxWidth="Infinity">
+            <graphic>
+                <FontAwesomeImageView glyphName="CHEVRON_UP"/>
+            </graphic>
+        </Button>
+        <Button onAction="#handleDownAction" contentDisplay="GRAPHIC_ONLY" maxWidth="Infinity">
+            <graphic>
+                <FontAwesomeImageView glyphName="CHEVRON_DOWN"/>
+            </graphic>
+        </Button>
+    </VBox>
+
+    <ButtonBar GridPane.rowIndex="1" GridPane.columnSpan="2">
+        <buttons>
+            <Button mnemonicParsing="false" onAction="#handleOkayAction" text="%Button.Ok"
+                    ButtonBar.buttonData="OK_DONE" maxWidth="Infinity"/>
+            <Button mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Cancel"
+                    ButtonBar.buttonData="CANCEL_CLOSE" maxWidth="Infinity"/>
+        </buttons>
+    </ButtonBar>
+</GridPane>
