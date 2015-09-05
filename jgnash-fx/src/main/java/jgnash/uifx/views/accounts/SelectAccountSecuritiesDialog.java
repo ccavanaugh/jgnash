@@ -17,6 +17,8 @@
  */
 package jgnash.uifx.views.accounts;
 
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -49,6 +51,7 @@ import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.SecurityNode;
+import jgnash.resource.font.FontAwesomeImageView;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.StageUtils;
@@ -56,8 +59,6 @@ import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
 import jgnash.util.ResourceUtils;
-
-import org.controlsfx.glyphfont.FontAwesome;
 
 /**
  * Dialog for selecting allowed account securities from a list.  If a security is used within the account, selection
@@ -173,16 +174,14 @@ public class SelectAccountSecuritiesDialog {
     }
 
     private VBox createButtonBox() {
-        final FontAwesome fontAwesome = new FontAwesome();
-
         final VBox vBox = new VBox();
         vBox.setFillWidth(true);
         vBox.getStyleClass().add("form");
 
-        moveToTarget = new Button("", fontAwesome.create(FontAwesome.Glyph.ANGLE_RIGHT));
+        moveToTarget = new Button("", new FontAwesomeImageView(FontAwesomeIcon.CHEVRON_RIGHT));
         moveToTarget.getStyleClass().add(StyleClass.LIST_BUTTON_STYLE);
 
-        moveToSource = new Button("", fontAwesome.create(FontAwesome.Glyph.ANGLE_LEFT));
+        moveToSource = new Button("", new FontAwesomeImageView(FontAwesomeIcon.CHEVRON_LEFT));
         moveToSource.getStyleClass().add(StyleClass.LIST_BUTTON_STYLE);
 
         moveToTarget.setMaxWidth(Double.MAX_VALUE);

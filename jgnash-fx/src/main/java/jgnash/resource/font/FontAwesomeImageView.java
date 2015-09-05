@@ -68,6 +68,10 @@ public class FontAwesomeImageView extends ImageView {
         this(FontAwesomeIcon.BUG, ThemeManager.getFontScaleProperty().get() * DEFAULT_SIZE);
     }
 
+    public FontAwesomeImageView(final FontAwesomeIcon glyphValue) {
+        this(glyphValue, ThemeManager.getFontScaleProperty().get() * DEFAULT_SIZE);
+    }
+
     public FontAwesomeImageView(final FontAwesomeIcon glyphValue, final Double sizeValue) {
         this(glyphValue, sizeValue, Color.BLACK);
     }
