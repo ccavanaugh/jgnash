@@ -37,7 +37,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
@@ -49,7 +48,7 @@ import jgnash.util.NotNull;
  *
  * @author Craig Cavanaugh
  */
-public class DecimalTextField extends TextField {
+public class DecimalTextField extends TextFieldEx {
 
     private static final int DEFAULT_SCALE = 2;
 

@@ -20,14 +20,13 @@ package jgnash.uifx.control;
 import java.io.IOException;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.TextField;
 
 /**
  * Text field for entering integer values
  *
  * @author Craig Cavanaugh
  */
-public class IntegerTextField extends TextField {
+public class IntegerTextField extends TextFieldEx {
 
     public IntegerTextField() {
 

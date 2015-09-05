@@ -15,99 +15,94 @@
 <?import jgnash.uifx.control.AccountComboBox?>
 <?import jgnash.uifx.control.DatePickerEx?>
 <?import jgnash.uifx.control.IntegerTextField?>
+<?import jgnash.uifx.control.TextFieldEx?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="jgnash.uifx.views.recurring.RecurringPropertiesController" styleClass="dialog, form">
-    <children>
-        <TitledPane text="%Title.Transaction" VBox.vgrow="ALWAYS" collapsible="false">
-            <content>
-                <GridPane styleClass="form">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="NEVER"/>
-                        <ColumnConstraints hgrow="ALWAYS"/>
-                        <ColumnConstraints hgrow="NEVER"/>
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints vgrow="NEVER"/>
-                        <RowConstraints vgrow="NEVER"/>
-                        <RowConstraints vgrow="NEVER"/>
-                        <RowConstraints vgrow="NEVER"/>
-                    </rowConstraints>
-                    <children>
-                        <Label text="%Label.Account" GridPane.rowIndex="0"/>
-                        <AccountComboBox fx:id="accountComboBox" GridPane.columnIndex="1" GridPane.rowIndex="0"
-                                         GridPane.columnSpan="2"/>
 
-                        <Label text="%Label.Description" GridPane.rowIndex="1"/>
-                        <TextField fx:id="descriptionTextField" GridPane.rowIndex="1" GridPane.columnIndex="1"
-                                   GridPane.columnSpan="2"/>
+    <TitledPane text="%Title.Transaction" VBox.vgrow="ALWAYS" collapsible="false">
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+                <ColumnConstraints hgrow="NEVER"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
 
-                        <Label text="%Label.Transaction" GridPane.rowIndex="2"/>
-                        <TextField fx:id="payeeTextField" editable="false" GridPane.rowIndex="2"
-                                   GridPane.columnIndex="1"/>
-                        <ButtonBar GridPane.rowIndex="2" GridPane.columnIndex="2">
-                            <buttons>
-                                <Button text="%Button.Edit" onAction="#handleEditTransaction"
-                                        ButtonBar.buttonData="LEFT" />
-                                <Button text="%Button.Delete" ButtonBar.buttonData="LEFT" />
-                            </buttons>
-                        </ButtonBar>
+            <Label text="%Label.Account" GridPane.rowIndex="0"/>
+            <AccountComboBox fx:id="accountComboBox" GridPane.columnIndex="1" GridPane.rowIndex="0"
+                             GridPane.columnSpan="2"/>
 
-                        <Label text="%Label.Notes" GridPane.rowIndex="3"/>
-                        <TextArea fx:id="notesTextArea" minWidth="280.0" prefHeight="50.0" prefWidth="280.0"
-                                  GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
-                    </children>
-                </GridPane>
-            </content>
-        </TitledPane>
-        <TitledPane animated="false" text="%Title.Frequency" VBox.vgrow="ALWAYS" collapsible="false">
-            <content>
-                <GridPane styleClass="form">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="NEVER"/>
-                        <ColumnConstraints hgrow="ALWAYS"/>
-                        <ColumnConstraints hgrow="NEVER"/>
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints vgrow="NEVER"/>
-                        <RowConstraints vgrow="NEVER"/>
-                    </rowConstraints>
-                    <children>
-                        <Label text="%Label.FirstPayDate"/>
-                        <DatePickerEx fx:id="startDatePicker" GridPane.columnIndex="1" prefWidth="110"/>
-                        <CheckBox fx:id="enabledCheckBox" text="%Button.Enabled" GridPane.columnIndex="2"/>
-                        <TabPane fx:id="tabs" GridPane.rowIndex="1" GridPane.columnSpan="3"
-                                 tabClosingPolicy="UNAVAILABLE"/>
-                    </children>
-                </GridPane>
-            </content>
-        </TitledPane>
-        <TitledPane animated="false" text="%Title.Entry" VBox.vgrow="ALWAYS" collapsible="false">
-            <content>
-                <GridPane styleClass="form">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="NEVER"/>
-                        <ColumnConstraints hgrow="ALWAYS"/>
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints vgrow="NEVER"/>
-                        <RowConstraints vgrow="NEVER"/>
-                    </rowConstraints>
-                    <children>
-                        <CheckBox fx:id="autoEnterCheckBox" text="%Button.EnterDaysBefore"/>
-                        <IntegerTextField fx:id="daysBeforeTextField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <Label text="%Label.Description" GridPane.rowIndex="1"/>
+            <TextFieldEx fx:id="descriptionTextField" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                         GridPane.columnSpan="2"/>
 
-                        <Label text="%Label.LastOccurrence" GridPane.rowIndex="1"/>
-                        <TextField editable="false" fx:id="lastOccurrenceTextField" GridPane.rowIndex="1"
-                                   GridPane.columnIndex="1" />
-                    </children>
-                </GridPane>
-            </content>
-        </TitledPane>
-        <ButtonBar VBox.vgrow="NEVER">
-            <buttons>
-                <Button text="%Button.Ok" ButtonBar.buttonData="OK_DONE" onAction="#okAction"/>
-                <Button text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#cancelAction" />
-            </buttons>
-        </ButtonBar>
-    </children>
+            <Label text="%Label.Transaction" GridPane.rowIndex="2"/>
+            <TextFieldEx fx:id="payeeTextField" editable="false" GridPane.rowIndex="2"
+                         GridPane.columnIndex="1"/>
+            <ButtonBar GridPane.rowIndex="2" GridPane.columnIndex="2">
+                <buttons>
+                    <Button text="%Button.Edit" onAction="#handleEditTransaction"
+                            ButtonBar.buttonData="LEFT"/>
+                    <Button text="%Button.Delete" ButtonBar.buttonData="LEFT"/>
+                </buttons>
+            </ButtonBar>
+
+            <Label text="%Label.Notes" GridPane.rowIndex="3"/>
+            <TextArea fx:id="notesTextArea" minWidth="280.0" prefHeight="50.0" prefWidth="280.0"
+                      GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+        </GridPane>
+    </TitledPane>
+
+    <TitledPane animated="false" text="%Title.Frequency" VBox.vgrow="ALWAYS" collapsible="false">
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+                <ColumnConstraints hgrow="NEVER"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+
+            <Label text="%Label.FirstPayDate"/>
+            <DatePickerEx fx:id="startDatePicker" GridPane.columnIndex="1" prefWidth="110"/>
+            <CheckBox fx:id="enabledCheckBox" text="%Button.Enabled" GridPane.columnIndex="2"/>
+            <TabPane fx:id="tabs" GridPane.rowIndex="1" GridPane.columnSpan="3"
+                     tabClosingPolicy="UNAVAILABLE"/>
+        </GridPane>
+    </TitledPane>
+
+    <TitledPane animated="false" text="%Title.Entry" VBox.vgrow="ALWAYS" collapsible="false">
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+
+            <CheckBox fx:id="autoEnterCheckBox" text="%Button.EnterDaysBefore"/>
+            <IntegerTextField fx:id="daysBeforeTextField" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+            <Label text="%Label.LastOccurrence" GridPane.rowIndex="1"/>
+            <TextField editable="false" fx:id="lastOccurrenceTextField" GridPane.rowIndex="1"
+                       GridPane.columnIndex="1"/>
+        </GridPane>
+
+    </TitledPane>
+
+    <ButtonBar VBox.vgrow="NEVER">
+        <buttons>
+            <Button text="%Button.Ok" ButtonBar.buttonData="OK_DONE" onAction="#okAction"/>
+            <Button text="%Button.Cancel" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#cancelAction"/>
+        </buttons>
+    </ButtonBar>
 </VBox>

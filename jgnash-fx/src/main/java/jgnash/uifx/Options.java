@@ -52,6 +52,8 @@ public class Options {
 
     private final static String OPEN_LAST = "openLastEnabled";
 
+    private final static String SELECT_ON_FOCUS = "selectOnFocus";
+
     private static final int DEFAULT_SNOOZE = 15 * 60 * 1000;
 
     private static final SimpleBooleanProperty useAccountingTerms;
@@ -67,6 +69,8 @@ public class Options {
     private static final SimpleBooleanProperty autoCompleteCaseSensitiveEnabled;
 
     private static final SimpleBooleanProperty autoCompleteFuzzyMatchEnabled;
+
+    private static final SimpleBooleanProperty selectOnFocusEnabled;
 
     private static final SimpleBooleanProperty openLastEnabled;
 
@@ -91,6 +95,7 @@ public class Options {
         autoCompleteCaseSensitiveEnabled = createBooleanProperty(CASE_SENSITIVE, false);
         autoCompleteFuzzyMatchEnabled = createBooleanProperty(FUZZY_MATCH, false);
         openLastEnabled = createBooleanProperty(OPEN_LAST, false);
+        selectOnFocusEnabled = createBooleanProperty(SELECT_ON_FOCUS, false);
 
         reminderSnoozePeriod = createIntegerProperty(REMINDER_SNOOZE, DEFAULT_SNOOZE);
     }
@@ -178,6 +183,14 @@ public class Options {
      */
     public static IntegerProperty reminderSnoozePeriodProperty() {
         return reminderSnoozePeriod;
+    }
+
+    /** Provides access to the property controlling if a text field automatically selects all text when it receives the focus
+     *
+     * @return {@code BooleanProperty} controlling fuzzy match
+     */
+    public static BooleanProperty selectOnFocusProperty() {
+        return selectOnFocusEnabled;
     }
 
     /**

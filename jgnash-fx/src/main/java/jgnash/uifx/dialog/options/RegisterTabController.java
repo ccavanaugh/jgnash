@@ -34,6 +34,9 @@ import jgnash.uifx.Options;
 public class RegisterTabController {
 
     @FXML
+    private CheckBox selectOnFocusCheckBox;
+
+    @FXML
     private CheckBox rememberLastTranDateCheckBox;
 
     @FXML
@@ -70,6 +73,8 @@ public class RegisterTabController {
         fuzzyMatchCheckBox.selectedProperty().bindBidirectional(Options.useFuzzyMatchForAutoCompleteProperty());
         caseSensitiveCheckBox.selectedProperty().bindBidirectional(Options.autoCompleteIsCaseSensitiveProperty());
 
+        selectOnFocusCheckBox.selectedProperty().bindBidirectional(Options.selectOnFocusProperty());
+
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         if (engine != null) {
             if (ReconcileManager.isAutoReconcileDisabled()) {
@@ -103,10 +108,5 @@ public class RegisterTabController {
             reconcileIncomeExpenseCheckBox.setDisable(true);
             disableReconcileCheckBox.setDisable(true);
         }
-    }
-
-    @FXML
-    private void handleTransNumberButton() {
-        TransactionNumberDialogController.showAndWait();
     }
 }

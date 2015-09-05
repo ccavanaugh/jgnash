@@ -23,7 +23,6 @@ import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 
 import jgnash.uifx.control.autocomplete.AutoCompleteModel;
@@ -34,7 +33,7 @@ import jgnash.uifx.util.JavaFXUtils;
  *
  * @author Craig Cavanaugh
  */
-public class AutoCompleteTextField<E> extends TextField {
+public class AutoCompleteTextField<E> extends TextFieldEx {
 
     private final ObjectProperty<AutoCompleteModel<E>> autoCompleteModelObjectProperty = new SimpleObjectProperty<>();
 

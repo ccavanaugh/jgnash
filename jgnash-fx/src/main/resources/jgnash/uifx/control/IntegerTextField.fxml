@@ -1,2 +1,2 @@
-<fx:root type="javafx.scene.control.TextField" xmlns:fx="http://javafx.com/fxml">
+<fx:root type="jgnash.uifx.control.TextFieldEx" xmlns:fx="http://javafx.com/fxml">
 </fx:root>
