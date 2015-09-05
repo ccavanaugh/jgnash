@@ -305,15 +305,9 @@ public class MenuBarController implements MessageListener {
     private void handleShowOptionDialog() {
         final Stage stage = FXMLUtils.loadFXML(OptionDialogController.class.getResource("OptionDialog.fxml"),
                resources);
+
         stage.setTitle(resources.getString("Title.Options"));
-
-        Platform.runLater(() -> {
-            stage.setMinHeight(stage.getHeight());
-            stage.setMinWidth(stage.getWidth());
-
-            StageUtils.addBoundsListener(stage, OptionDialogController.class);
-        });
-
+        stage.setResizable(false);
         stage.showAndWait();
     }
 

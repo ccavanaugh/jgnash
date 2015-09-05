@@ -40,7 +40,7 @@
             <CheckBox text="%Button.CreateTimeFile" fx:id="createBackupsCheckBox"/>
             <CheckBox text="%Button.RemoveOldBackups" fx:id="removeOldBackupsCheckBox" GridPane.rowIndex="1"/>
             <Label text="%Label.MaxBackupCount" GridPane.rowIndex="2"/>
-            <Spinner fx:id="backupCountSpinner" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <Spinner fx:id="backupCountSpinner" prefWidth="80" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
         </GridPane>
 
     </TitledPane>

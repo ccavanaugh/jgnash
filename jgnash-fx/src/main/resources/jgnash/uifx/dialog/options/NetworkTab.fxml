@@ -55,7 +55,7 @@
                 <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
             <Label text="%Label.ConnTimeout"/>
-            <Spinner fx:id="timeoutSpinner" GridPane.columnIndex="1"/>
+            <Spinner fx:id="timeoutSpinner" prefWidth="80" GridPane.columnIndex="1"/>
             <Label text="%Word.Seconds" GridPane.columnIndex="2"/>
         </GridPane>
     </TitledPane>
