@@ -22,6 +22,9 @@
         <Tab text="%Tab.StartupShutdown">
             <fx:include source="StartupShutdownTab.fxml"/>
         </Tab>
+        <Tab text="%Tab.General">
+            <fx:include source="GeneralTab.fxml"/>
+        </Tab>
         <Tab text="%Tab.Accounts">
             <fx:include source="AccountTab.fxml"/>
         </Tab>
