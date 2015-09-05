@@ -30,10 +30,14 @@ import jgnash.uifx.Options;
 public class GeneralTabController {
 
     @FXML
+    private CheckBox animationsEnabledCheckBox;
+
+    @FXML
     private CheckBox selectOnFocusCheckBox;
 
     @FXML
     private void initialize() {
         selectOnFocusCheckBox.selectedProperty().bindBidirectional(Options.selectOnFocusProperty());
+        animationsEnabledCheckBox.selectedProperty().bindBidirectional(Options.animationsEnabledProperty());
     }
 }

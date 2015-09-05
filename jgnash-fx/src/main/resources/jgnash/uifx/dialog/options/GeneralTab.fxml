@@ -10,14 +10,15 @@
 <VBox fx:controller="jgnash.uifx.dialog.options.GeneralTabController" minHeight="-Infinity"
       xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="dialog, form">
 
-    <GridPane>
+    <GridPane styleClass="form">
         <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS"/>
         </columnConstraints>
         <rowConstraints>
             <RowConstraints vgrow="ALWAYS"/>
+            <RowConstraints vgrow="ALWAYS"/>
         </rowConstraints>
         <CheckBox text="%Button.SelectText" fx:id="selectOnFocusCheckBox" />
-
+        <CheckBox text="%Button.AnimationsEnabled" fx:id="animationsEnabledCheckBox" GridPane.rowIndex="1"/>
     </GridPane>
 </VBox>

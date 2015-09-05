@@ -29,6 +29,7 @@ import javafx.scene.layout.StackPane;
 
 import jgnash.engine.Account;
 import jgnash.engine.Transaction;
+import jgnash.uifx.Options;
 import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.NotNull;
 
@@ -124,6 +125,8 @@ public abstract class RegisterPaneController {
                 }
             });
         });
+
+        titledPane.animatedProperty().bind(Options.animationsEnabledProperty());
     }
 
     @FXML

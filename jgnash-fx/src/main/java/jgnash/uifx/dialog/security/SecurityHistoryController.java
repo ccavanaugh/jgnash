@@ -63,6 +63,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.net.security.UpdateFactory;
 import jgnash.text.CommodityFormat;
+import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.DatePickerEx;
@@ -263,6 +264,7 @@ public class SecurityHistoryController implements MessageListener {
         chart = new AreaChart<>(new LocalDateAxis(), new NumberAxis());
         chart.setCreateSymbols(false);
         chart.setLegendVisible(false);
+        chart.animatedProperty().bind(Options.animationsEnabledProperty());
 
         chartPane.getChildren().addAll(chart);
 

@@ -54,6 +54,8 @@ public class Options {
 
     private final static String SELECT_ON_FOCUS = "selectOnFocus";
 
+    private final static String ANIMATIONS_ENABLED = "animationsEnabled";
+
     private static final int DEFAULT_SNOOZE = 15 * 60 * 1000;
 
     private static final SimpleBooleanProperty useAccountingTerms;
@@ -73,6 +75,8 @@ public class Options {
     private static final SimpleBooleanProperty selectOnFocusEnabled;
 
     private static final SimpleBooleanProperty openLastEnabled;
+
+    private static final SimpleBooleanProperty animationsEnabled;
 
     private static final SimpleIntegerProperty reminderSnoozePeriod;
 
@@ -96,6 +100,7 @@ public class Options {
         autoCompleteFuzzyMatchEnabled = createBooleanProperty(FUZZY_MATCH, false);
         openLastEnabled = createBooleanProperty(OPEN_LAST, false);
         selectOnFocusEnabled = createBooleanProperty(SELECT_ON_FOCUS, false);
+        animationsEnabled = createBooleanProperty(ANIMATIONS_ENABLED, true);
 
         reminderSnoozePeriod = createIntegerProperty(REMINDER_SNOOZE, DEFAULT_SNOOZE);
     }
@@ -200,5 +205,14 @@ public class Options {
      */
     public static BooleanProperty openLastProperty() {
         return openLastEnabled;
+    }
+
+    /**
+     * Provides access to the enabled state for animations
+     *
+     * @return {@code BooleanProperty} controlling open last file
+     */
+    public static BooleanProperty animationsEnabledProperty() {
+        return animationsEnabled;
     }
 }
