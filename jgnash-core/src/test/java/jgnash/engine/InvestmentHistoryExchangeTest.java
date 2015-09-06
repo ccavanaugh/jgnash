@@ -50,7 +50,7 @@ import static org.junit.Assert.*;
          assertEquals(new BigDecimal("2"), cadCurrency.getExchangeRate(usdCurrency));
      }
 
-     private LocalDate getLocalDate(final String date) {
+     private static LocalDate getLocalDate(final String date) {
          return LocalDate.parse(date, SIMPLE_DATE_FORMAT);
      }
 

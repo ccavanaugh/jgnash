@@ -701,7 +701,7 @@ public class Engine {
         eDAO.shutdown();
     }
 
-    private void shutDownAndWait(final ExecutorService executorService) {
+    private static void shutDownAndWait(final ExecutorService executorService) {
         executorService.shutdown();
 
         try {
