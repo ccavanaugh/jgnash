@@ -133,7 +133,7 @@ public class ImageDialog extends JDialog {
             }
         }
 
-        private BufferedImage resizeImage(final BufferedImage originalImage, final int targetWidth, final int targetHeight) {
+        private static BufferedImage resizeImage(final BufferedImage originalImage, final int targetWidth, final int targetHeight) {
 
             if (targetHeight == 0 || targetWidth == 0) {
                 return originalImage;
