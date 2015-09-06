@@ -157,14 +157,13 @@ public class FileMagic {
         boolean result = false;
 
         if (file.exists()) {
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
+            try (final BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
                 String line = reader.readLine();
 
                 while (line != null) {
-                    line = line.trim();
-
                     if (!line.isEmpty()) { // allow empty lines at the beginning of the file
-                        if (line.startsWith("OFXHEADER:")) {
+
+                        if (line.contains("OFXHEADER:")) {
                             result = true;
                         }
                         break;
