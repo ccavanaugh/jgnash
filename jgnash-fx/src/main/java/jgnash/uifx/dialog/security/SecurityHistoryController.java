@@ -37,8 +37,6 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.chart.AreaChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
@@ -63,13 +61,12 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.net.security.UpdateFactory;
 import jgnash.text.CommodityFormat;
-import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.control.IntegerTextField;
-import jgnash.uifx.control.LocalDateAxis;
+import jgnash.uifx.control.SecurityNodeAreaChart;
 import jgnash.uifx.control.SecurityComboBox;
 import jgnash.uifx.control.SecurityHistoryEventTypeComboBox;
 import jgnash.uifx.control.ShortDateTableCell;
@@ -143,7 +140,7 @@ public class SecurityHistoryController implements MessageListener {
     @FXML
     private ResourceBundle resources;
 
-    private AreaChart<LocalDate, Number> chart;
+    private SecurityNodeAreaChart chart;
 
     private final SimpleObjectProperty<SecurityHistoryNode> selectedSecurityHistoryNode = new SimpleObjectProperty<>();
 
@@ -261,10 +258,8 @@ public class SecurityHistoryController implements MessageListener {
 
         eventValueTextField.scaleProperty().setValue(MathConstants.SECURITY_PRICE_ACCURACY);
 
-        chart = new AreaChart<>(new LocalDateAxis(), new NumberAxis());
-        chart.setCreateSymbols(false);
-        chart.setLegendVisible(false);
-        chart.animatedProperty().bind(Options.animationsEnabledProperty());
+        chart = new SecurityNodeAreaChart();
+        chart.securityNodeProperty().bind(selectedSecurityNode);
 
         chartPane.getChildren().addAll(chart);
 
@@ -278,10 +273,7 @@ public class SecurityHistoryController implements MessageListener {
 
                 quoteSourceProperty.setValue(newValue.getQuoteSource());
 
-                Platform.runLater(() -> {
-                    loadTables();
-                    loadChart();
-                });
+                Platform.runLater(this::loadTables);
             }
         });
 
@@ -444,26 +436,6 @@ public class SecurityHistoryController implements MessageListener {
         eventTableView.scrollTo(observableHistoryEventList.size() - 1);
     }
 
-    private void loadChart() {
-        new Thread(() -> {
-            final SecurityNode securityNode = selectedSecurityNode.get();
-            final List<List<SecurityHistoryNode>> groups = securityNode.getHistoryNodeGroupsBySplits();
-
-            Platform.runLater(() -> chart.getData().clear());
-
-            for (int i = 0; i < groups.size(); i++) {
-                final AreaChart.Series<LocalDate, Number> series = new AreaChart.Series<>();
-                series.setName(securityNode.getSymbol() + i);
-
-                for (final SecurityHistoryNode node : groups.get(i)) {
-                    series.getData().add(new AreaChart.Data<>(node.getLocalDate(), node.getAdjustedPrice()));
-                }
-
-                Platform.runLater(() -> chart.getData().add(series));
-            }
-        }).start();
-    }
-
     @Override
     public void messagePosted(final Message message) {
         final CommodityNode eventNode = message.getObject(MessageProperty.COMMODITY);
@@ -475,7 +447,7 @@ public class SecurityHistoryController implements MessageListener {
                 case SECURITY_HISTORY_EVENT_ADD:
                 case SECURITY_HISTORY_EVENT_REMOVE:
                     Platform.runLater(this::loadTables);
-                    Platform.runLater(this::loadChart);
+                    Platform.runLater(chart::update);
                     break;
                 default:
             }
