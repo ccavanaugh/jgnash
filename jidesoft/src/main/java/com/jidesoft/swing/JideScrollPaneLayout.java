@@ -895,7 +895,7 @@ class JideScrollPaneLayout extends ScrollPaneLayout implements JideScrollPaneCon
 
         if (lowerRight != null && lowerRight.isVisible()) {
             int height = Math.min(lowerRight.getPreferredSize().height, colFootR.height);
-            lowerRight.setBounds(adjustBounds(parent, new Rectangle(rowFootR.x, colFootR.y != 0 ? colFootR.y : hsbR.y, rowFootR.width + (false || rowFootR.width != 0 ? 0 : vsbR.width), height), ltr));
+            lowerRight.setBounds(adjustBounds(parent, new Rectangle(rowFootR.x, colFootR.y != 0 ? colFootR.y : hsbR.y, rowFootR.width + (rowFootR.width != 0 ? 0 : vsbR.width), height), ltr));
         }
 
         if (upperLeft != null && upperLeft.isVisible()) {
@@ -905,7 +905,7 @@ class JideScrollPaneLayout extends ScrollPaneLayout implements JideScrollPaneCon
 
         if (upperRight != null && upperRight.isVisible()) {
             int height = isColumnHeadersHeightUnified(scrollPane) ? columnHeaderHeight : Math.min(upperRight.getPreferredSize().height, colHeadR.height);
-            upperRight.setBounds(adjustBounds(parent, new Rectangle(rowFootR.x, colHeadR.y + colHeadR.height - height, rowFootR.width + (false || rowFootR.width != 0 ? 0 : vsbR.width), height), ltr));
+            upperRight.setBounds(adjustBounds(parent, new Rectangle(rowFootR.x, colHeadR.y + colHeadR.height - height, rowFootR.width + (rowFootR.width != 0 ? 0 : vsbR.width), height), ltr));
         }
 
         if (_subUpperLeft != null && _subUpperLeft.isVisible()) {
@@ -915,7 +915,7 @@ class JideScrollPaneLayout extends ScrollPaneLayout implements JideScrollPaneCon
 
         if (_subUpperRight != null && _subUpperRight.isVisible()) {
             int height = Math.min(_subUpperRight.getPreferredSize().height, getSubUpperHeight());
-            _subUpperRight.setBounds(adjustBounds(parent, new Rectangle(rowFootR.x, subColHeadR.y + subColHeadR.height - height, rowFootR.width + (false || rowFootR.width != 0 ? 0 : vsbR.width), height), ltr));
+            _subUpperRight.setBounds(adjustBounds(parent, new Rectangle(rowFootR.x, subColHeadR.y + subColHeadR.height - height, rowFootR.width + (rowFootR.width != 0 ? 0 : vsbR.width), height), ltr));
         }
     }
 
