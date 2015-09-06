@@ -139,20 +139,22 @@ public class SqlUtils {
                 final String url = properties.getProperty(JpaConfiguration.JAVAX_PERSISTENCE_JDBC_URL);
 
                 try (final Connection connection = DriverManager.getConnection(url)) {
-                    final DatabaseMetaData metaData = connection.getMetaData();
-                    final ResultSet resultSet = metaData.getColumns(null, null, "%", "%");
-
-                    while (resultSet.next()) {
-                        // table name is TRANSACT_TRANSACTIONENTRY
-                        // need to rename the column TRANSACT_UUID to TRANSACTION_UUID
-                        if (resultSet.getString(COLUMN_NAME).equals("TRANSACT_UUID") && resultSet.getString(TABLE_NAME).equals("TRANSACT_TRANSACTIONENTRY")) {
-                            try (final PreparedStatement statement = connection.prepareStatement("ALTER TABLE TRANSACT_TRANSACTIONENTRY ALTER COLUMN TRANSACT_UUID RENAME TO TRANSACTION_UUID")) {
-                                statement.execute();
-                                logger.info("Correcting column name for Hibernate HHH-9389");
+                    final DatabaseMetaData metaData = connection.getMetaData();                   
+                    
+                    try (final ResultSet resultSet = metaData.getColumns(null, null, "%", "%")) {
+                    	while (resultSet.next()) {
+                            // table name is TRANSACT_TRANSACTIONENTRY
+                            // need to rename the column TRANSACT_UUID to TRANSACTION_UUID
+                            if (resultSet.getString(COLUMN_NAME).equals("TRANSACT_UUID") && resultSet.getString(TABLE_NAME).equals("TRANSACT_TRANSACTIONENTRY")) {
+                                try (final PreparedStatement statement = connection.prepareStatement("ALTER TABLE TRANSACT_TRANSACTIONENTRY ALTER COLUMN TRANSACT_UUID RENAME TO TRANSACTION_UUID")) {
+                                    statement.execute();
+                                    logger.info("Correcting column name for Hibernate HHH-9389");
+                                }
                             }
                         }
+                    	
                     }
-
+                
                     // must issue a shutdown for correct file closure
                     try (final PreparedStatement statement =  connection.prepareStatement("SHUTDOWN")) {
                         statement.execute();
@@ -192,12 +194,13 @@ public class SqlUtils {
 
                 try (final Connection connection = DriverManager.getConnection(url)) {
                     final DatabaseMetaData metaData = connection.getMetaData();
-                    final ResultSet resultSet = metaData.getColumns(null, null, "%", "%");
-
-                    while (resultSet.next()) {
-                        tableNames.add(resultSet.getString(TABLE_NAME).toUpperCase() + "," + resultSet.getString(COLUMN_NAME).toUpperCase());
-                    }
-
+                    
+                     try (final ResultSet resultSet = metaData.getColumns(null, null, "%", "%")) {
+                    	 while (resultSet.next()) {
+                             tableNames.add(resultSet.getString(TABLE_NAME).toUpperCase() + "," + resultSet.getString(COLUMN_NAME).toUpperCase());
+                         }                    	 
+                     }
+                                                                            
                     // must issue a shutdown for correct file closure
                     try (final PreparedStatement statement =  connection.prepareStatement("SHUTDOWN")) {
                         statement.execute();
