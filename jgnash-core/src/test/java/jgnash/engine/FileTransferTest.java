@@ -189,10 +189,11 @@ public class FileTransferTest {
 
             // Test that move is working
             Path moveFile = Files.createTempFile("jgnash", "test");
-            BufferedWriter bw = Files.newBufferedWriter(moveFile, Charset.defaultCharset());
-            bw.write("This is the temporary file content 3.");
-            bw.close();
-
+            
+            try (final BufferedWriter bw = Files.newBufferedWriter(moveFile, Charset.defaultCharset())) {
+            	 bw.write("This is the temporary file content 3.");
+            }
+                                 
             assertTrue(e.addAttachment(moveFile, false));
             assertFalse(Files.exists(moveFile));
 
@@ -202,11 +203,10 @@ public class FileTransferTest {
             // Create a new temp file in the directory
             tempAttachment = Files.createTempFile(attachmentPath, "tempfile2-", ".txt");
             tempAttachment.toFile().deleteOnExit();
-
-            //write it
-            bw = Files.newBufferedWriter(tempAttachment, Charset.defaultCharset());
-            bw.write("This is the temporary file content 2.");
-            bw.close();
+            
+            try (final BufferedWriter bw = Files.newBufferedWriter(tempAttachment, Charset.defaultCharset())) {
+            	 bw.write("This is the temporary file content 2.");
+            }         
 
             Future<Path> pathFuture = e.getAttachment(tempAttachment.getFileName().toString());
 
