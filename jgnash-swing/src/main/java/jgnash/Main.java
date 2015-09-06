@@ -209,7 +209,7 @@ public final class Main {
         }
     }
 
-    @SuppressWarnings("ResultOfObjectAllocationIgnored")
+    @SuppressWarnings({ "ResultOfObjectAllocationIgnored", "unused" })
     private void init(final String args[]) {
         configureLogging();
 
