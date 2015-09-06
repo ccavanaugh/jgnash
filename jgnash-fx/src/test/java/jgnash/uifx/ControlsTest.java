@@ -51,9 +51,8 @@ import jgnash.uifx.control.DetailedDecimalTextField;
 import jgnash.uifx.control.SecurityComboBox;
 import jgnash.uifx.control.TimePeriodComboBox;
 import jgnash.uifx.control.TransactionNumberComboBox;
+import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.views.main.MainApplication;
-
-import com.sun.javafx.css.StyleManager;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -82,9 +81,7 @@ public class ControlsTest extends Application {
         Engine engine = createEngine();
         Objects.requireNonNull(engine);
 
-        // Force application wide style sheet. Use is StyleManager is a private API and may break later
-        Application.setUserAgentStylesheet(null);
-        StyleManager.getInstance().addUserAgentStylesheet(MainApplication.DEFAULT_CSS);
+        ThemeManager.restoreLastUsedTheme();
 
         DecimalTextField decimalTextField = new DecimalTextField();
         DecimalTextField decimalTextField2 = new DecimalTextField();
