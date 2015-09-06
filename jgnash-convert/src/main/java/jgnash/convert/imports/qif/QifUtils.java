@@ -117,7 +117,7 @@ public class QifUtils {
             }
         }
 
-        return LocalDate.of(year, month - 1, day);
+        return LocalDate.of(year, month, day);
     }
 
     public static BigDecimal parseMoney(final String money) {
