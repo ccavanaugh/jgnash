@@ -6,47 +6,46 @@
 <?import javafx.scene.control.Tooltip?>
 <?import jgnash.resource.font.FontAwesomeImageView?>
 <ToolBar
-    xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
-    fx:controller="jgnash.uifx.views.main.MainToolBarController">
-    <items>
-        <Button mnemonicParsing="false" onAction="#handleOpenAction" text="%Menu.Open.Name">
-            <graphic>
-              <FontAwesomeImageView glyphName="FOLDER_OPEN" />
-            </graphic>
-            <tooltip>
-              <Tooltip text="%Menu.Open.Tooltip"/>
-            </tooltip>
-        </Button>
+        xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+        fx:controller="jgnash.uifx.views.main.MainToolBarController">
+    <Button mnemonicParsing="false" onAction="#handleOpenAction" text="%Menu.Open.Name">
+        <graphic>
+            <FontAwesomeImageView glyphName="FOLDER_OPEN"/>
+        </graphic>
+        <tooltip>
+            <Tooltip text="%Menu.Open.Tooltip"/>
+        </tooltip>
+    </Button>
 
-        <Button fx:id="closeButton" mnemonicParsing="false" onAction="#handleCloseAction" text="%Menu.Close.Name" disable="true">
-            <graphic>
-                <FontAwesomeImageView glyphName="TIMES" />
-            </graphic>
-            <tooltip>
-              <Tooltip text="%Menu.Close.Tooltip"/>
-            </tooltip>
-        </Button>
+    <Button fx:id="closeButton" mnemonicParsing="false" onAction="#handleCloseAction" text="%Menu.Close.Name"
+            disable="true">
+        <graphic>
+            <FontAwesomeImageView glyphName="TIMES"/>
+        </graphic>
+        <tooltip>
+            <Tooltip text="%Menu.Close.Tooltip"/>
+        </tooltip>
+    </Button>
 
-        <Separator/>
+    <Separator/>
 
-        <Button fx:id="updateSecurities" mnemonicParsing="false" onAction="#handleSecuritiesUpdateAction"
-                text="%Menu.BackgroundSecurityUpdate.Name" disable="true">
-            <graphic>
-                <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
-            </graphic>
-            <tooltip>
-              <Tooltip text="%Menu.BackgroundSecurityUpdate.Tooltip"/>
-            </tooltip>
-        </Button>
+    <Button fx:id="updateSecurities" mnemonicParsing="false" onAction="#handleSecuritiesUpdateAction"
+            text="%Menu.BackgroundSecurityUpdate.Name" disable="true">
+        <graphic>
+            <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
+        </graphic>
+        <tooltip>
+            <Tooltip text="%Menu.BackgroundSecurityUpdate.Tooltip"/>
+        </tooltip>
+    </Button>
 
-        <Button fx:id="updateCurrencies" mnemonicParsing="false" onAction="#handleCurrenciesUpdateAction"
-                text="%Menu.BackgroundCurrencyUpdate.Name" disable="true">
-            <graphic>
-                <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
-            </graphic>
-            <tooltip>
-              <Tooltip text="%Menu.BackgroundCurrencyUpdate.Tooltip"/>
-            </tooltip>
-        </Button>
-    </items>
+    <Button fx:id="updateCurrencies" mnemonicParsing="false" onAction="#handleCurrenciesUpdateAction"
+            text="%Menu.BackgroundCurrencyUpdate.Name" disable="true">
+        <graphic>
+            <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
+        </graphic>
+        <tooltip>
+            <Tooltip text="%Menu.BackgroundCurrencyUpdate.Tooltip"/>
+        </tooltip>
+    </Button>
 </ToolBar>

@@ -12,42 +12,40 @@
 
 <GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="jgnash.uifx.views.register.FeeTransactionEntrySlipController" styleClass="form, dialog">
-  <columnConstraints>
-      <ColumnConstraints hgrow="NEVER"/>
-      <ColumnConstraints hgrow="SOMETIMES" />
-      <ColumnConstraints hgrow="NEVER"/>
-      <ColumnConstraints hgrow="NEVER" minWidth="95" maxWidth="95"/>
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints vgrow="NEVER" />
-    <RowConstraints vgrow="NEVER" />
-    <RowConstraints vgrow="NEVER" />
-  </rowConstraints>
-   <children>
-      <Label text="%Label.Account"/>
-      <AccountExchangePane fx:id="accountExchangePane" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true"/>
-      <Label text="%Label.Amount" GridPane.columnIndex="2"/>
-      <DecimalTextField fx:id="amountField" GridPane.columnIndex="3"/>
-      <Label text="%Label.Memo" GridPane.rowIndex="1" />
-      <AutoCompleteTextField fx:id="memoField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER"/>
+        <ColumnConstraints hgrow="SOMETIMES"/>
+        <ColumnConstraints hgrow="NEVER"/>
+        <ColumnConstraints hgrow="NEVER" minWidth="95" maxWidth="95"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+    <Label text="%Label.Account"/>
+    <AccountExchangePane fx:id="accountExchangePane" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
+                         GridPane.fillWidth="true"/>
+    <Label text="%Label.Amount" GridPane.columnIndex="2"/>
+    <DecimalTextField fx:id="amountField" GridPane.columnIndex="3"/>
+    <Label text="%Label.Memo" GridPane.rowIndex="1"/>
+    <AutoCompleteTextField fx:id="memoField" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1"/>
 
-      <GridPane GridPane.rowIndex="2" GridPane.columnSpan="4" GridPane.fillWidth="true"  GridPane.vgrow="NEVER" styleClass="form">
+    <GridPane GridPane.rowIndex="2" GridPane.columnSpan="4" GridPane.fillWidth="true" GridPane.vgrow="NEVER"
+              styleClass="form">
         <columnConstraints>
-            <ColumnConstraints hgrow="NEVER" />
-            <ColumnConstraints hgrow="ALWAYS" />
+            <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints vgrow="NEVER" />
+            <RowConstraints vgrow="NEVER"/>
         </rowConstraints>
-         <children>
-            <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared" />
-            <ButtonBar GridPane.columnIndex="1" >
-               <buttons>
-                 <Button text="%Button.Enter" ButtonBar.buttonData="OK_DONE" onAction="#handleEnterAction"/>
-                 <Button text="%Button.Clear" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#handleCancelAction"/>
-               </buttons>
-             </ButtonBar>
-         </children>
-      </GridPane>
-   </children>
+        <CheckBox fx:id="reconciledButton" mnemonicParsing="false" text="%Button.Cleared"/>
+        <ButtonBar GridPane.columnIndex="1">
+            <buttons>
+                <Button text="%Button.Enter" ButtonBar.buttonData="OK_DONE" onAction="#handleEnterAction"/>
+                <Button text="%Button.Clear" ButtonBar.buttonData="CANCEL_CLOSE" onAction="#handleCancelAction"/>
+            </buttons>
+        </ButtonBar>
+    </GridPane>
 </GridPane>

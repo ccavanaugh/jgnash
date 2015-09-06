@@ -22,25 +22,23 @@
         <RowConstraints vgrow="NEVER"/>
         <RowConstraints vgrow="NEVER"/>
     </rowConstraints>
-    <children>
-        <Label text="%Title.VisibleAccountTypes"/>
-        <Separator GridPane.columnIndex="1"/>
-        <CheckBox fx:id="bankAccountCheckBox" mnemonicParsing="false" text="%Button.BankAccounts"
-                  GridPane.columnSpan="2" GridPane.rowIndex="1">
-        </CheckBox>
-        <CheckBox fx:id="expenseAccountCheckBox" mnemonicParsing="false" text="%Button.ExpenseAccounts"
-                  GridPane.columnSpan="2" GridPane.rowIndex="2">
-        </CheckBox>
-        <CheckBox fx:id="incomeAccountCheckBox" mnemonicParsing="false" text="%Button.IncomeAccounts"
-                  GridPane.columnSpan="2" GridPane.rowIndex="3">
-        </CheckBox>
-        <CheckBox fx:id="hiddenAccountCheckBox" mnemonicParsing="false" text="%Button.Hidden"
-                  GridPane.columnSpan="2" GridPane.rowIndex="4">
-        </CheckBox>
-        <ButtonBar GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
-            <buttons>
-                <Button text="%Button.Close" onAction="#closeAction" ButtonBar.buttonData="CANCEL_CLOSE"/>
-            </buttons>
-        </ButtonBar>
-    </children>
+    <Label text="%Title.VisibleAccountTypes"/>
+    <Separator GridPane.columnIndex="1"/>
+    <CheckBox fx:id="bankAccountCheckBox" mnemonicParsing="false" text="%Button.BankAccounts"
+              GridPane.columnSpan="2" GridPane.rowIndex="1">
+    </CheckBox>
+    <CheckBox fx:id="expenseAccountCheckBox" mnemonicParsing="false" text="%Button.ExpenseAccounts"
+              GridPane.columnSpan="2" GridPane.rowIndex="2">
+    </CheckBox>
+    <CheckBox fx:id="incomeAccountCheckBox" mnemonicParsing="false" text="%Button.IncomeAccounts"
+              GridPane.columnSpan="2" GridPane.rowIndex="3">
+    </CheckBox>
+    <CheckBox fx:id="hiddenAccountCheckBox" mnemonicParsing="false" text="%Button.Hidden"
+              GridPane.columnSpan="2" GridPane.rowIndex="4">
+    </CheckBox>
+    <ButtonBar GridPane.columnSpan="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+        <buttons>
+            <Button text="%Button.Close" onAction="#closeAction" ButtonBar.buttonData="CANCEL_CLOSE"/>
+        </buttons>
+    </ButtonBar>
 </GridPane>

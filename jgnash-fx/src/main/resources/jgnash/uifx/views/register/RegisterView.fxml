@@ -11,40 +11,37 @@
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.register.RegisterViewController">
     <top>
         <ToolBar>
-            <items>
-                <Button fx:id="reconcileButton" mnemonicParsing="false" text="%Button.Reconcile">
-                    <graphic>
-                        <FontAwesomeImageView glyphName="ADJUST"/>
-                    </graphic>
-                    <tooltip>
-                        <Tooltip text="%ToolTip.ReconcileAccount"/>
-                    </tooltip>
-                </Button>
-                <Button fx:id="filterButton" mnemonicParsing="false" onAction="#handleFilterAccountAction" text="%Button.Filter">
-                    <graphic>
-                        <FontAwesomeImageView glyphName="FILTER"/>
-                    </graphic>
-                    <tooltip>
-                        <Tooltip text="%ToolTip.FilterAccounts"/>
-                    </tooltip>
-                </Button>
-                <Button fx:id="zoomButton" mnemonicParsing="false" text="%Button.Zoom" onAction="#handleZoomAction">
-                    <graphic>
-                        <FontAwesomeImageView glyphName="EXTERNAL_LINK_SQUARE"/>
-                    </graphic>
-                    <tooltip>
-                        <Tooltip text="%ToolTip.ZoomRegister"/>
-                    </tooltip>
-                </Button>
-            </items>
+            <Button fx:id="reconcileButton" mnemonicParsing="false" text="%Button.Reconcile">
+                <graphic>
+                    <FontAwesomeImageView glyphName="ADJUST"/>
+                </graphic>
+                <tooltip>
+                    <Tooltip text="%ToolTip.ReconcileAccount"/>
+                </tooltip>
+            </Button>
+            <Button fx:id="filterButton" mnemonicParsing="false" onAction="#handleFilterAccountAction"
+                    text="%Button.Filter">
+                <graphic>
+                    <FontAwesomeImageView glyphName="FILTER"/>
+                </graphic>
+                <tooltip>
+                    <Tooltip text="%ToolTip.FilterAccounts"/>
+                </tooltip>
+            </Button>
+            <Button fx:id="zoomButton" mnemonicParsing="false" text="%Button.Zoom" onAction="#handleZoomAction">
+                <graphic>
+                    <FontAwesomeImageView glyphName="EXTERNAL_LINK_SQUARE"/>
+                </graphic>
+                <tooltip>
+                    <Tooltip text="%ToolTip.ZoomRegister"/>
+                </tooltip>
+            </Button>
         </ToolBar>
     </top>
     <center>
         <SplitPane fx:id="splitPane" orientation="HORIZONTAL">
-            <items>
-                <TreeView fx:id="treeView" BorderPane.alignment="CENTER" minWidth="120"/>
-                <StackPane fx:id="registerPane"/>
-            </items>
+            <TreeView fx:id="treeView" BorderPane.alignment="CENTER" minWidth="120"/>
+            <StackPane fx:id="registerPane"/>
         </SplitPane>
     </center>
 </BorderPane>

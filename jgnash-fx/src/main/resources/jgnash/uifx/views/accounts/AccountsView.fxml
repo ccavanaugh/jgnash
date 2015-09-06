@@ -9,38 +9,39 @@
             fx:controller="jgnash.uifx.views.accounts.AccountsViewController">
     <top>
         <ToolBar>
-            <items>
-                <Button fx:id="newButton" mnemonicParsing="false" onAction="#handleNewAccountAction" text="%Button.New" >
-                    <graphic>
-                        <FontAwesomeImageView glyphName="PLUS"/>
-                    </graphic>
-                </Button>
-                <Button fx:id="modifyButton" mnemonicParsing="false" onAction="#handleModifyAccountAction" text="%Button.Modify">
-                    <graphic>
-                        <FontAwesomeImageView glyphName="EDIT"/>
-                    </graphic>
-                </Button>
-                <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAccountAction" text="%Button.Delete">
-                    <graphic>
-                        <FontAwesomeImageView glyphName="TRASH_ALT"/>
-                    </graphic>
-                </Button>
-                <Button fx:id="reconcileButton" mnemonicParsing="false" text="%Button.Reconcile">
-                    <graphic>
-                        <FontAwesomeImageView glyphName="ADJUST"/>
-                    </graphic>
-                </Button>
-                <Button fx:id="filterButton" mnemonicParsing="false" onAction="#handleFilterAccountAction" text="%Button.Filter">
-                    <graphic>
-                        <FontAwesomeImageView glyphName="FILTER"/>
-                    </graphic>
-                </Button>
-                <Button fx:id="zoomButton" mnemonicParsing="false" onAction="#handleZoomAccountAction" text="%Button.Zoom">
-                    <graphic>
-                        <FontAwesomeImageView glyphName="EXTERNAL_LINK_SQUARE"/>
-                    </graphic>
-                </Button>
-            </items>
+            <Button fx:id="newButton" mnemonicParsing="false" onAction="#handleNewAccountAction" text="%Button.New">
+                <graphic>
+                    <FontAwesomeImageView glyphName="PLUS"/>
+                </graphic>
+            </Button>
+            <Button fx:id="modifyButton" mnemonicParsing="false" onAction="#handleModifyAccountAction"
+                    text="%Button.Modify">
+                <graphic>
+                    <FontAwesomeImageView glyphName="EDIT"/>
+                </graphic>
+            </Button>
+            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAccountAction"
+                    text="%Button.Delete">
+                <graphic>
+                    <FontAwesomeImageView glyphName="TRASH_ALT"/>
+                </graphic>
+            </Button>
+            <Button fx:id="reconcileButton" mnemonicParsing="false" text="%Button.Reconcile">
+                <graphic>
+                    <FontAwesomeImageView glyphName="ADJUST"/>
+                </graphic>
+            </Button>
+            <Button fx:id="filterButton" mnemonicParsing="false" onAction="#handleFilterAccountAction"
+                    text="%Button.Filter">
+                <graphic>
+                    <FontAwesomeImageView glyphName="FILTER"/>
+                </graphic>
+            </Button>
+            <Button fx:id="zoomButton" mnemonicParsing="false" onAction="#handleZoomAccountAction" text="%Button.Zoom">
+                <graphic>
+                    <FontAwesomeImageView glyphName="EXTERNAL_LINK_SQUARE"/>
+                </graphic>
+            </Button>
         </ToolBar>
     </top>
     <center>

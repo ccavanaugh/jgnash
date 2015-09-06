@@ -5,29 +5,28 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.register.InvestmentRegisterTableController">
    <top>
-      <GridPane BorderPane.alignment="CENTER" styleClass="info-bar">
-        <columnConstraints>
-          <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" />
-          <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
-          <ColumnConstraints halignment="LEFT" hgrow="NEVER" />
-          <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" minWidth="15.0" prefWidth="15.0" />
-          <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
-          <ColumnConstraints halignment="LEFT" hgrow="NEVER" />
-          <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" minWidth="15.0" prefWidth="15.0" />
-          <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
-          <ColumnConstraints halignment="LEFT" hgrow="NEVER" />
-        </columnConstraints>
-        <children>
-          <Label fx:id="accountNameLabel" GridPane.hgrow="ALWAYS" />
-          <Label text="%Label.Balance" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER" />
-          <Label fx:id="balanceLabel" GridPane.columnIndex="3" GridPane.hgrow="NEVER" />
-          <Label text="%Label.MarketValue" GridPane.columnIndex="5"/>
-          <Label fx:id="marketValueLabel" GridPane.columnIndex="6" />
-          <Label text="%Label.CashBalance" GridPane.columnIndex="8"/>
-          <Label fx:id="cashBalanceLabel" GridPane.columnIndex="9" />
-        </children>
-      </GridPane>
+       <GridPane BorderPane.alignment="CENTER" styleClass="info-bar">
+           <columnConstraints>
+               <ColumnConstraints halignment="LEFT" hgrow="ALWAYS"/>
+               <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" maxWidth="-Infinity" minWidth="10.0"
+                                  prefWidth="100.0"/>
+               <ColumnConstraints halignment="RIGHT" hgrow="NEVER"/>
+               <ColumnConstraints halignment="LEFT" hgrow="NEVER"/>
+               <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" minWidth="15.0" prefWidth="15.0"/>
+               <ColumnConstraints halignment="RIGHT" hgrow="NEVER"/>
+               <ColumnConstraints halignment="LEFT" hgrow="NEVER"/>
+               <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" minWidth="15.0" prefWidth="15.0"/>
+               <ColumnConstraints halignment="RIGHT" hgrow="NEVER"/>
+               <ColumnConstraints halignment="LEFT" hgrow="NEVER"/>
+           </columnConstraints>
+           <Label fx:id="accountNameLabel" GridPane.hgrow="ALWAYS"/>
+           <Label text="%Label.Balance" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.hgrow="NEVER"/>
+           <Label fx:id="balanceLabel" GridPane.columnIndex="3" GridPane.hgrow="NEVER"/>
+           <Label text="%Label.MarketValue" GridPane.columnIndex="5"/>
+           <Label fx:id="marketValueLabel" GridPane.columnIndex="6"/>
+           <Label text="%Label.CashBalance" GridPane.columnIndex="8"/>
+           <Label fx:id="cashBalanceLabel" GridPane.columnIndex="9"/>
+       </GridPane>
    </top>
    <center>
       <TableView fx:id="tableView"  BorderPane.alignment="CENTER" />

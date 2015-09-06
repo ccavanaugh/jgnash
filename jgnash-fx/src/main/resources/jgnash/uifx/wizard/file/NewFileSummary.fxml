@@ -6,23 +6,24 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.45" maxHeight="Infinity" maxWidth="Infinity"
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.45" maxHeight="Infinity"
+          maxWidth="Infinity"
           fx:controller="jgnash.uifx.wizard.file.NewFileSummaryController" styleClass="form">
-  <columnConstraints>
-      <ColumnConstraints hgrow="NEVER" minWidth="10.0"/>
-      <ColumnConstraints hgrow="ALWAYS" maxWidth="Infinity"/>
-  </columnConstraints>
-  <rowConstraints>
-      <RowConstraints minHeight="10.0" vgrow="NEVER" fillHeight="true"/>
-      <RowConstraints minHeight="10.0" vgrow="NEVER" fillHeight="true"/>
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" fillHeight="true"/>
-  </rowConstraints>
-   <children>
-       <Label text="%Label.FileName" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-       <TextField fx:id="fileNameField" editable="false" GridPane.columnIndex="1"  GridPane.rowIndex="0" maxWidth="Infinity"/>
-       <Label text="%Label.DefaultCurrency" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-       <TextField fx:id="defaultCurrencyField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="Infinity"/>
-       <Label text="%Label.Currencies" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP"/>
-       <ListView fx:id="currenciesList" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" prefHeight="100" />
-   </children>
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" minWidth="10.0"/>
+        <ColumnConstraints hgrow="ALWAYS" maxWidth="Infinity"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" vgrow="NEVER" fillHeight="true"/>
+        <RowConstraints minHeight="10.0" vgrow="NEVER" fillHeight="true"/>
+        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" fillHeight="true"/>
+    </rowConstraints>
+    <Label text="%Label.FileName" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+    <TextField fx:id="fileNameField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="0"
+               maxWidth="Infinity"/>
+    <Label text="%Label.DefaultCurrency" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <TextField fx:id="defaultCurrencyField" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1"
+               maxWidth="Infinity"/>
+    <Label text="%Label.Currencies" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP"/>
+    <ListView fx:id="currenciesList" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" prefHeight="100"/>
 </GridPane>

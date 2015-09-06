@@ -16,29 +16,25 @@
             <BorderPane>
                 <center>
                     <VBox styleClass="dialog, form">
-                        <children>
-                            <TableView fx:id="tableView" VBox.vgrow="ALWAYS"/>
-                            <ButtonBar VBox.vgrow="NEVER">
-                                <buttons>
-                                    <Button fx:id="newButton" text="%Button.New" ButtonBar.buttonData="LEFT"/>
-                                    <Button fx:id="deleteButton" text="%Button.Delete" ButtonBar.buttonData="LEFT"/>
-                                    <Button visible="false" ButtonBar.buttonData="BIG_GAP" />
-                                    <Button fx:id="deleteAllButton" text="%Button.DeleteAll" ButtonBar.buttonData="RIGHT"/>
-                                </buttons>
-                            </ButtonBar>
-                        </children>
+                        <TableView fx:id="tableView" VBox.vgrow="ALWAYS"/>
+                        <ButtonBar VBox.vgrow="NEVER">
+                            <buttons>
+                                <Button fx:id="newButton" text="%Button.New" ButtonBar.buttonData="LEFT"/>
+                                <Button fx:id="deleteButton" text="%Button.Delete" ButtonBar.buttonData="LEFT"/>
+                                <Button visible="false" ButtonBar.buttonData="BIG_GAP"/>
+                                <Button fx:id="deleteAllButton" text="%Button.DeleteAll" ButtonBar.buttonData="RIGHT"/>
+                            </buttons>
+                        </ButtonBar>
                     </VBox>
                 </center>
                 <bottom>
                     <VBox styleClass="dialog, form">
-                        <children>
-                            <TabPane tabClosingPolicy="UNAVAILABLE" fx:id="tabPane" VBox.vgrow="NEVER" styleClass="border"/>
-                            <ButtonBar VBox.vgrow="NEVER">
-                                <buttons>
-                                    <Button fx:id="closeButton" text="%Button.Close" ButtonBar.buttonData="CANCEL_CLOSE"/>
-                                </buttons>
-                            </ButtonBar>
-                        </children>
+                        <TabPane tabClosingPolicy="UNAVAILABLE" fx:id="tabPane" VBox.vgrow="NEVER" styleClass="border"/>
+                        <ButtonBar VBox.vgrow="NEVER">
+                            <buttons>
+                                <Button fx:id="closeButton" text="%Button.Close" ButtonBar.buttonData="CANCEL_CLOSE"/>
+                            </buttons>
+                        </ButtonBar>
                     </VBox>
                 </bottom>
             </BorderPane>

@@ -6,23 +6,23 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.45" maxHeight="Infinity" maxWidth="Infinity"
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.45" maxHeight="Infinity"
+          maxWidth="Infinity"
           fx:controller="jgnash.uifx.wizard.file.NewFileTwoController" styleClass="form">
-  <columnConstraints>
-      <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
-      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER" />
-  </rowConstraints>
-   <children>
-       <TextArea fx:id="textArea" editable="false"  wrapText="true" GridPane.columnSpan="2" GridPane.fillHeight="true"
-                 GridPane.vgrow="ALWAYS" maxWidth="Infinity"/>
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" minWidth="10.0"/>
+        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+    </rowConstraints>
+    <TextArea fx:id="textArea" editable="false" wrapText="true" GridPane.columnSpan="2" GridPane.fillHeight="true"
+              GridPane.vgrow="ALWAYS" maxWidth="Infinity"/>
 
-       <Label text="%Label.DefaultCurrency" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-       <ComboBox fx:id="defaultCurrencyComboBox" prefWidth="150.0"
-                 GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true"  />
+    <Label text="%Label.DefaultCurrency" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <ComboBox fx:id="defaultCurrencyComboBox" prefWidth="150.0"
+              GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="Infinity" GridPane.hgrow="ALWAYS"
+              GridPane.fillWidth="true"/>
 
-   </children>
 </GridPane>
