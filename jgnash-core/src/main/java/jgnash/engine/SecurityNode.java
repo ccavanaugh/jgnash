@@ -305,6 +305,27 @@ public class SecurityNode extends CommodityNode {
     }
 
     /**
+     * Convience function to return the upper and lower date bounds.  If
+     *
+     * @return an array of LocalDate with {@code [0]} being the lower bound and {@code [1]} being the upper bound
+     */
+    public Optional<LocalDate[]> getLocalDateBounds() {
+        lock.readLock().lock();
+
+        try {
+            if (sortedHistoryNodeCache.size() > 1) {
+                return Optional.of(new LocalDate[]{
+                        sortedHistoryNodeCache.get(0).getLocalDate(),
+                        sortedHistoryNodeCache.get(sortedHistoryNodeCache.size() - 1).getLocalDate()
+                });
+            }
+            return Optional.empty();
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    /**
      * Returns the history node events split into groups by historical splits or reverse splits
      *
      * @return a List of Lists of SecurityHistoryNodes
