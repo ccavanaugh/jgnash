@@ -20,7 +20,6 @@ package jgnash.convert.imports.ofx;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -164,14 +163,14 @@ public class OfxV1ToV2 {
         return concat(strings);
     }
 
-    private static String readFile(final File file, final String characterSet) {
-        try {
-            return readFile(new FileInputStream(file), characterSet);
-        } catch (FileNotFoundException e) {
-            Logger logger = Logger.getLogger(OfxV1ToV2.class.getName());
+    private static String readFile(final File file, final String characterSet) {    	
+    	try (InputStream stream = new FileInputStream(file)) {
+    		return readFile(file, characterSet);
+    	} catch (IOException e) {
+    		Logger logger = Logger.getLogger(OfxV1ToV2.class.getName());
             logger.log(Level.SEVERE, e.toString(), e);
             return "";
-        }
+		}     	    	     
     }
 
     private OfxV1ToV2() {
