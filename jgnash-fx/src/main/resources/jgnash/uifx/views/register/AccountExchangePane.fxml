@@ -24,7 +24,7 @@
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0"/>
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                        <RowConstraints vgrow="NEVER"/>
                     </rowConstraints>
 
                     <Label fx:id="exchangeLabel" text="Label"/>
@@ -44,14 +44,14 @@
     <rowConstraints>
         <RowConstraints vgrow="NEVER"/>
     </rowConstraints>
-    <children>
-        <AccountComboBox fx:id="accountCombo" maxWidth="Infinity" minWidth="50" prefWidth="100"/>
-        <Label fx:id="label" text="%Label.ExchangeAmount" GridPane.columnIndex="1"/>
-        <DecimalTextField fx:id="exchangeAmountField" GridPane.columnIndex="2" minWidth="80" maxWidth="80"/>
-        <Button fx:id="expandButton" GridPane.columnIndex="3">
-            <graphic>
-                <FontAwesomeImageView glyphName="EXCHANGE"/>
-            </graphic>
-        </Button>
-    </children>
+
+    <AccountComboBox fx:id="accountCombo" maxWidth="Infinity" minWidth="50" prefWidth="100"/>
+    <Label fx:id="label" text="%Label.ExchangeAmount" GridPane.columnIndex="1"/>
+    <DecimalTextField fx:id="exchangeAmountField" GridPane.columnIndex="2" minWidth="80" maxWidth="80"/>
+    <Button fx:id="expandButton" GridPane.columnIndex="3">
+        <graphic>
+            <FontAwesomeImageView glyphName="EXCHANGE"/>
+        </graphic>
+    </Button>
+
 </fx:root>
