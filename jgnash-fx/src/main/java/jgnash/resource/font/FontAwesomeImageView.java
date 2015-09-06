@@ -48,7 +48,7 @@ public class FontAwesomeImageView extends ImageView {
 
     private static final String FONT_NAME = "FontAwesome"; //$NON-NLS-1$
 
-    private static final double DEFAULT_SIZE = 13.0;
+    private static final double DEFAULT_SIZE = 14.0;
 
     private final ObjectProperty<Object> glyphName = new SimpleObjectProperty<>();
 
