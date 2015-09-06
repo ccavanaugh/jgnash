@@ -52,7 +52,7 @@ import jgnash.uifx.util.InjectFXML;
  *
  * @author Craig Cavanaugh
  */
-public class WizardDialogController<K extends Enum> {
+public class WizardDialogController<K extends Enum<?>> {
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();

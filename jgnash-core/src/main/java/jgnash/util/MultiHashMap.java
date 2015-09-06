@@ -100,7 +100,7 @@ public class MultiHashMap<K, V> extends HashMap<K, Object> {
         try {
             Object v = super.get(key);
             if (v instanceof ArrayList) {
-                return Collections.unmodifiableList((ArrayList) v);
+                return Collections.unmodifiableList((ArrayList<V>) v);
             } else if (v == null) {
                 return Collections.emptyList();
             } else {

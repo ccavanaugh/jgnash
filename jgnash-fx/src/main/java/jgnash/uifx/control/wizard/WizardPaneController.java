@@ -27,7 +27,7 @@ import javafx.util.Pair;
  *
  * @author Craig Cavanaugh
  */
-public interface WizardPaneController<K extends Enum> {
+public interface WizardPaneController<K extends Enum<?>> {
 
     default boolean isPaneValid() {
         return true;

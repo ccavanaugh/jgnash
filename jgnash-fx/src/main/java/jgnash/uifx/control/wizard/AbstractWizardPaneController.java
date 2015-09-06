@@ -27,7 +27,7 @@ import javafx.util.Pair;
  *
  * @author Craig Cavanaugh
  */
-public abstract class AbstractWizardPaneController<K extends Enum> implements WizardPaneController<K> {
+public abstract class AbstractWizardPaneController<K extends Enum<?>> implements WizardPaneController<K> {
 
     private final SimpleObjectProperty<Pair<String, Boolean>> descriptorProperty =
             new SimpleObjectProperty<>(new Pair<>("", false));

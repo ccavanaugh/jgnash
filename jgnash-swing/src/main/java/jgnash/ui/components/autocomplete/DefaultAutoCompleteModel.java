@@ -115,7 +115,7 @@ public class DefaultAutoCompleteModel implements AutoCompleteModel {
     }
 
     @Override
-    public List getAllExtraInfo(final String key) {
+    public List<?> getAllExtraInfo(final String key) {
         return Collections.EMPTY_LIST;
     }
 

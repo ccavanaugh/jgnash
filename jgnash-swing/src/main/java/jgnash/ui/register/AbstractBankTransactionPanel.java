@@ -358,7 +358,7 @@ public abstract class AbstractBankTransactionPanel extends AbstractTransactionPa
                 AutoCompleteTextField f = (AutoCompleteTextField) payeeField;
 
                 if (f.getText() != null && !f.getText().isEmpty()) {
-                    final List transactions = new ArrayList<>(f.getModel().getAllExtraInfo(f.getText()));
+                    final List<Object> transactions = new ArrayList<>(f.getModel().getAllExtraInfo(f.getText()));
 
                     Collections.reverse(transactions);
 

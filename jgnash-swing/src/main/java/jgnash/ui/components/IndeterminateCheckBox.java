@@ -32,7 +32,7 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 import jgnash.ui.ThemeManager;
 
 /**
- * Mash-up of various bits and pieces found describing construction of an indeterminate checkbox.
+ * Mash-up of various bits and pieces found describing construction of an indeterminate check box.
  *
  * No license or copyright is claimed for this control
  *
@@ -220,9 +220,9 @@ public final class IndeterminateCheckBox extends JCheckBox {
             super.setPressed(state == SelectionState.INDETERMINATE);
         }
 
-        public SelectionState getState() {
+        /*public SelectionState getState() {
             return state;
-        }
+        }*/
     }
 
     private static class CheckBoxIcon implements Icon, UIResource {

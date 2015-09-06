@@ -118,7 +118,7 @@ public class FXMLUtils {
         }
     }
 
-    private static Field[] getDeclaredFields(final Class clazz) {
+    private static Field[] getDeclaredFields(final Class<?> clazz) {
         final List<Field> fields = new ArrayList<>();
         fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
 
@@ -143,7 +143,7 @@ public class FXMLUtils {
             if (field.isAnnotationPresent(InjectFXML.class) && field.getName().equals("parentProperty")) {
                 field.setAccessible(true);
                 try {
-                    final ObjectProperty property = (ObjectProperty) field.get(object);
+                    final ObjectProperty<Object> property = (ObjectProperty<Object>) field.get(object);
                     property.setValue(value);
                 } catch (IllegalAccessException e) {
                     Logger.getLogger(FXMLUtils.class.getName()).log(Level.SEVERE, e.getMessage(), e);

@@ -47,5 +47,5 @@ public interface AutoCompleteModel {
      * @param key The string key most likely returned from doLookAhead()
      * @return A list of objects that would give extra information about the key
      */
-    List getAllExtraInfo(String key);
+    List<?> getAllExtraInfo(String key);
 }

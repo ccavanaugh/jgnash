@@ -55,7 +55,6 @@ import jgnash.uifx.skin.FontSizeDialogController;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.tasks.CloseFileTask;
 import jgnash.uifx.util.FXMLUtils;
-import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.register.RegisterStage;
 import jgnash.uifx.wizard.file.NewFileWizard;
 

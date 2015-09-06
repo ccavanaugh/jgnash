@@ -90,7 +90,7 @@ public class NewFileFourController extends AbstractWizardPaneController<NewFileW
     @Override
     @SuppressWarnings("unchecked")
     public void putSettings(final Map<NewFileWizard.Settings, Object> map) {
-        map.put(NewFileWizard.Settings.ACCOUNT_SET,  new ArrayList(accountSetsList.getCheckModel().getCheckedItems()));
+        map.put(NewFileWizard.Settings.ACCOUNT_SET,  new ArrayList<Account>(accountSetsList.getCheckModel().getCheckedItems()));
     }
 
     @Override

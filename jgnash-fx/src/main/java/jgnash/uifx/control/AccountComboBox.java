@@ -67,7 +67,7 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
         // TODO: Hokey hack to ensure selection is visible when the list is shown.
         setOnMouseClicked(event -> {
-            final ListView listView = ((ComboBoxListViewSkin) getSkin()).getListView();
+            final ListView<?> listView = ((ComboBoxListViewSkin<?>) getSkin()).getListView();
             listView.scrollTo(getSelectionModel().getSelectedIndex());
         });
     }
