@@ -396,15 +396,7 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
         else {
             super.setLayout(layout);
         }
-    }
-
-    public boolean isVerticalScrollBarCoversWholeHeight() {
-        return false;
-    }
-
-    public boolean isHorizontalScrollBarCoversWholeWidth() {
-        return false;
-    }
+    }    
 
     /**
      * If true, the top-right, top-left corners the column header will have the same height. If false, three of them
@@ -431,17 +423,7 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
             doLayout();
         }
     }
-
-    /**
-     * If true, the bottom-right, bottom-left corners the column footer will have the same height. If false, three of
-     * them will keep their own preferred height.
-     *
-     * @return true or false.
-     */
-    public boolean isColumnFootersHeightUnified() {
-        return false;
-    }
-
+    
     /**
      * Get the flag indicating if JideScrollPane should keep the corner visible when it has corner components defined
      * even when the scroll bar is not visible.
@@ -453,7 +435,7 @@ public final class JideScrollPane extends JScrollPane implements JideScrollPaneC
      *
      * @return the flag.
      */
-    public boolean isKeepCornerVisible() {
+    /*public boolean isKeepCornerVisible() {
         return false;
-    }
+    }*/
 }
