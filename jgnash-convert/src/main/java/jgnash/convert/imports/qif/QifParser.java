@@ -542,12 +542,11 @@ public final class QifParser {
     }
 
     /**
-     * Just eats the data, it's not useful right now
+     * Just eats the memorized transaction data.  Will not try to convert to jGnash entities
      * 
-     * @param in
-     *            {@code QifReader}
+     * @param in {@code QifReader}
      */
-    private void parseMemorizedTransactions(final QifReader in) {
+    private static void parseMemorizedTransactions(final QifReader in) {
         logger.finest("*** Start: parseMemorizedTransactions ***");
 
         String line;
