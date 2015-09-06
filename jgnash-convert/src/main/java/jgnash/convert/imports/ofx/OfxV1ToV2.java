@@ -164,8 +164,8 @@ public class OfxV1ToV2 {
     }
 
     private static String readFile(final File file, final String characterSet) {    	
-    	try (InputStream stream = new FileInputStream(file)) {
-    		return readFile(file, characterSet);
+    	try (final InputStream stream = new FileInputStream(file)) {
+    		return readFile(stream, characterSet);
     	} catch (IOException e) {
     		Logger logger = Logger.getLogger(OfxV1ToV2.class.getName());
             logger.log(Level.SEVERE, e.toString(), e);
