@@ -319,6 +319,8 @@ public class Ofx2Test {
         try {
             encoding = FileMagic.getOfxV1Encoding(new File(url.toURI()));
 
+            assertTrue(FileMagic.isOfxV1(new File(url.toURI())));
+
             try (InputStream stream = Object.class.getResourceAsStream(testFile)) {
                 parser.parse(OfxV1ToV2.convertToXML(stream), encoding);
 
