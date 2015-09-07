@@ -211,7 +211,7 @@ public class ConsoleDialog {
 
             dialog = new JDialog(UIApplication.getFrame(), Dialog.ModalityType.MODELESS);
 
-            dialog.setTitle(rb.getString("Title.ConsoleWindow"));
+            dialog.setTitle(rb.getString("Title.Console"));
 
             dialog.addWindowListener(new WindowAdapter() {
                 @Override

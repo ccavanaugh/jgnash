@@ -81,7 +81,7 @@
     <Menu text="%Menu.Help.Name" mnemonicParsing="false">
         <MenuItem mnemonicParsing="false" text="%Menu.About.Name" onAction="#handleAboutAction"/>
         <SeparatorMenuItem mnemonicParsing="false"/>
-        <MenuItem mnemonicParsing="false" text="%Menu.ConsoleWindow.Name" onAction="#handleShowConsoleDialog"/>
+        <MenuItem mnemonicParsing="false" text="%Menu.Console.Name" onAction="#handleShowConsoleDialog"/>
     </Menu>
 
 </MenuBar>

@@ -296,7 +296,7 @@
             desc="Menu.HelpTopics.Tooltip"/>
 
     <action id="console-command"
-            name="Menu.ConsoleWindow.Name"
+            name="Menu.Console.Name"
             smicon="/jgnash/resource/utilities-system-monitor.png"
             icon="/jgnash/resource/utilities-system-monitor.png"/>
 

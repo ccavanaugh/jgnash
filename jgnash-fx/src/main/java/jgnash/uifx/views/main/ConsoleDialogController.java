@@ -201,7 +201,7 @@ public class ConsoleDialogController {
 
             final URL fxmlUrl = ConsoleDialogController.class.getResource("ConsoleDialog.fxml");
             final Stage stage = FXMLUtils.loadFXML(fxmlUrl, ResourceUtils.getBundle());
-            stage.setTitle(ResourceUtils.getString("Title.ConsoleWindow"));
+            stage.setTitle(ResourceUtils.getString("Title.Console"));
 
             // Override the defaults set by FXMLUtils
             stage.initModality(Modality.NONE);
