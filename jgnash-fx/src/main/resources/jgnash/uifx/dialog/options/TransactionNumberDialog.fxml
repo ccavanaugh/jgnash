@@ -25,12 +25,12 @@
     <VBox GridPane.columnIndex="1" styleClass="form">
         <Button onAction="#handleUpAction" contentDisplay="GRAPHIC_ONLY" maxWidth="Infinity">
             <graphic>
-                <FontAwesomeImageView glyphName="CHEVRON_UP"/>
+                <FontAwesomeImageView glyphName="LEVEL-UP"/>
             </graphic>
         </Button>
         <Button onAction="#handleDownAction" contentDisplay="GRAPHIC_ONLY" maxWidth="Infinity">
             <graphic>
-                <FontAwesomeImageView glyphName="CHEVRON_DOWN"/>
+                <FontAwesomeImageView glyphName="LEVEL-DOWN"/>
             </graphic>
         </Button>
     </VBox>

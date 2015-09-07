@@ -31,7 +31,11 @@
     <Menu mnemonicParsing="false" text="%Menu.View.Name">
         <Menu fx:id="themesMenu" mnemonicParsing="false" text="%Menu.Themes.Name"/>
         <SeparatorMenuItem mnemonicParsing="false"/>
-        <MenuItem mnemonicParsing="false" text="%Menu.FontSize.Name" onAction="#handleFontSizeAction"/>
+        <MenuItem mnemonicParsing="false" text="%Menu.FontSize.Name" onAction="#handleFontSizeAction">
+            <graphic>
+                <FontAwesomeImageView glyphName="TEXT_HEIGHT"/>
+            </graphic>
+        </MenuItem>
         <MenuItem mnemonicParsing="false" text="%Menu.BaseColor.Name" onAction="#handleBaseColorAction"/>
     </Menu>
 
@@ -66,15 +70,27 @@
 
         </Menu>
         <SeparatorMenuItem mnemonicParsing="false"/>
-        <MenuItem text="%Menu.Option.Name" fx:id="optionsMenuItem" onAction="#handleShowOptionDialog"/>
+        <MenuItem text="%Menu.Option.Name" fx:id="optionsMenuItem" onAction="#handleShowOptionDialog">
+            <graphic>
+                <FontAwesomeImageView glyphName="WRENCH"/>
+            </graphic>
+        </MenuItem>
         <MenuItem text="%Menu.EditTranNumList.Name" fx:id="transNumberListMenuItem"
-                  onAction="#handleShowTranNumberListDialog"/>
+                  onAction="#handleShowTranNumberListDialog">
+            <graphic>
+                <FontAwesomeImageView glyphName="LIST"/>
+            </graphic>
+        </MenuItem>
         <SeparatorMenuItem />
-        <MenuItem text="%Menu.Locale.Name" onAction="#changeDefaultLocale"/>
+        <MenuItem text="%Menu.Locale.Name" onAction="#changeDefaultLocale">
+            <graphic>
+                <FontAwesomeImageView glyphName="LANGUAGE"/>
+            </graphic>
+        </MenuItem>
         <SeparatorMenuItem />
         <MenuItem text="%Menu.RunJavaScript.Name" onAction="#handleExecuteJavaScriptFile">
             <graphic>
-                <FontAwesomeImageView glyphName="FILE_CODE_ALT"/>
+                <FontAwesomeImageView glyphName="CODE"/>
             </graphic>
         </MenuItem>
     </Menu>
@@ -85,9 +101,17 @@
     </Menu>
 
     <Menu text="%Menu.Help.Name" mnemonicParsing="false">
-        <MenuItem mnemonicParsing="false" text="%Menu.About.Name" onAction="#handleAboutAction"/>
+        <MenuItem mnemonicParsing="false" text="%Menu.About.Name" onAction="#handleAboutAction">
+            <graphic>
+                <FontAwesomeImageView glyphName="INFO"/>
+            </graphic>
+        </MenuItem>
         <SeparatorMenuItem />
-        <MenuItem mnemonicParsing="false" text="%Menu.Console.Name" onAction="#handleShowConsoleDialog"/>
+        <MenuItem mnemonicParsing="false" text="%Menu.Console.Name" onAction="#handleShowConsoleDialog">
+            <graphic>
+                <FontAwesomeImageView glyphName="TERMINAL"/>
+            </graphic>
+        </MenuItem>
     </Menu>
 
 </MenuBar>

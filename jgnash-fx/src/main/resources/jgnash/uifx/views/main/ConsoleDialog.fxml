@@ -4,6 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.text.Text?>
+<?import jgnash.resource.font.FontAwesomeImageView?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" minHeight="-Infinity"
           fx:controller="jgnash.uifx.views.main.ConsoleDialogController"
           minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="dialog, form">
@@ -27,7 +28,12 @@
     <ButtonBar GridPane.rowIndex="2">
         <buttons>
             <Button text="%Button.ForceGC" onAction="#handleForceGarbageCollection" ButtonBar.buttonData="LEFT"/>
-            <Button text="%Button.CopyToClip" onAction="#handleCopyToClipboard" ButtonBar.buttonData="LEFT"/>
+            <Button text="%Button.CopyToClip" onAction="#handleCopyToClipboard" ButtonBar.buttonData="LEFT">
+                <graphic>
+                    <FontAwesomeImageView glyphName="CLIPBOARD"/>
+                </graphic>
+            </Button>
+
             <Button text="%Button.Close" onAction="#handleCloseAction" ButtonBar.buttonData="CANCEL_CLOSE"/>
         </buttons>
     </ButtonBar>
