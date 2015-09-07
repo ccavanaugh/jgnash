@@ -52,7 +52,6 @@ import javafx.util.Duration;
 import jgnash.engine.Engine;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
-import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -106,12 +105,8 @@ public class ConsoleDialogController {
             outStream = new PrintStream(new OutputStream() {
                 @Override
                 public void write(int b) {
-                }
-
-                @Override
-                public void write(final @NotNull byte[] b, final int off, final int len) {
-                    oldOutStream.write(b, off, len);
-                    Platform.runLater(() -> consoleArea.appendText(new String(b, off, len, Charset.defaultCharset())));
+                    oldOutStream.write(b);
+                    Platform.runLater(() -> consoleArea.appendText(String.valueOf((char) b)));
                 }
             }, false, Charset.defaultCharset().name());
         } catch (final UnsupportedEncodingException ex) {
@@ -122,12 +117,8 @@ public class ConsoleDialogController {
             errStream = new PrintStream(new OutputStream() {
                 @Override
                 public void write(int b) {
-                }
-
-                @Override
-                public void write(final @NotNull byte[] b, final int off, final int len) {
-                    oldErrStream.write(b, off, len);
-                    Platform.runLater(() -> consoleArea.appendText(new String(b, off, len, Charset.defaultCharset())));
+                    oldErrStream.write(b);
+                    Platform.runLater(() -> consoleArea.appendText(String.valueOf((char) b)));
                 }
             }, false, Charset.defaultCharset().name());
         } catch (final UnsupportedEncodingException ex) {
@@ -214,7 +205,7 @@ public class ConsoleDialogController {
     private class LogHandler extends Handler {
         @Override
         public void publish(LogRecord record) {
-            Platform.runLater(() -> consoleArea.appendText(record.getMessage() + "\n"));
+            Platform.runLater(() -> consoleArea.appendText(record.getMessage() + System.lineSeparator()));
         }
 
         @Override
