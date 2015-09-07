@@ -91,7 +91,7 @@ import org.jfree.ui.RectangleInsets;
 
 /**
  * A Dialog for manipulation security histories.
- * 
+ *
  * @author Craig Cavanaugh
  */
 public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
@@ -425,7 +425,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
 
             if (LocalDate.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
                 if (value != null && value instanceof LocalDate) {
-                    ((JLabel) c).setText( dateTimeFormatter.format((TemporalAccessor) value));
+                    ((JLabel) c).setText(dateTimeFormatter.format((TemporalAccessor) value));
                 }
             } else if (Long.class.isAssignableFrom(getColumnClass(column)) && c instanceof JLabel) {
                 ((JLabel) c).setText(volumeFormat.format(value));
@@ -445,11 +445,11 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
 
         List<SecurityHistoryNode> history;
 
-        private final String[] cNames = { rb.getString("Column.Date"), rb.getString("Column.Close"),
-                        rb.getString("Column.Low"), rb.getString("Column.High"), rb.getString("Column.Volume") };
+        private final String[] cNames = {rb.getString("Column.Date"), rb.getString("Column.Close"),
+                rb.getString("Column.Low"), rb.getString("Column.High"), rb.getString("Column.Volume")};
 
-        private final Class<?>[] cClass = { LocalDate.class, BigDecimal.class, BigDecimal.class, BigDecimal.class,
-                        Long.class };
+        private final Class<?>[] cClass = {LocalDate.class, BigDecimal.class, BigDecimal.class, BigDecimal.class,
+                Long.class};
 
         public HistoryModel() {
             MessageBus.getInstance().registerListener(this, MessageChannel.COMMODITY);
@@ -463,11 +463,7 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
         public void setSecurity(final SecurityNode node) {
             this.node = node;
 
-            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-
-            if (engine != null) {
-                history = engine.getSecurityHistory(node);
-            }
+            history = node.getHistoryNodes();
 
             fireTableDataChanged();
         }
@@ -531,11 +527,8 @@ public class SecuritiesHistoryDialog extends JDialog implements ActionListener {
                         switch (event.getEvent()) {
                             case SECURITY_HISTORY_ADD:
                             case SECURITY_HISTORY_REMOVE:
-                                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                                history = node.getHistoryNodes();
 
-                                if (engine != null) {
-                                    history = engine.getSecurityHistory(node);
-                                }
                                 fireTableDataChanged();
                                 updateChart();
                                 return;

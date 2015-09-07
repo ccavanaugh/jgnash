@@ -1328,17 +1328,6 @@ public class Engine {
         return getCommodityDAO().getCurrencyByUuid(uuid);
     }
 
-    public List<SecurityHistoryNode> getSecurityHistory(final SecurityNode node) {
-
-        commodityLock.readLock().lock();
-
-        try {
-            return node.getHistoryNodes();
-        } finally {
-            commodityLock.readLock().unlock();
-        }
-    }
-
     public ExchangeRate getExchangeRate(final CurrencyNode baseCurrency, final CurrencyNode exchangeCurrency) {
 
         commodityLock.readLock().lock();
