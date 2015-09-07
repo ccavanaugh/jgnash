@@ -47,7 +47,7 @@
         <plexus-utils.version>3.0.10</plexus-utils.version>
         <opencsv.version>2.3</opencsv.version>
         <netty.version>4.0.31.Final</netty.version>
-        <controlsfx.version>8.40.9</controlsfx.version>
+        <controlsfx.version>8.40.10-SNAPSHOT</controlsfx.version>
         <findbugs-annotations.version>3.0.0</findbugs-annotations.version>
         <fontawesomefx.version>8.4</fontawesomefx.version>
 
@@ -79,7 +79,7 @@
                 <enabled>true</enabled>
             </releases>
             <snapshots>
-                <enabled>false</enabled>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
 
