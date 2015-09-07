@@ -27,12 +27,13 @@ Improved handling of memo's in split transactions.  The split entry memo should 
 
 Release 2.18.0
 ----------------------
+09/06/15 Fixed QIF date parsing import bug introduced by 2.17.0
 09/01/15 (FX) DatePicker now increments and decrements with use of vertical and horizontal scroll input
 08/29/15 Remove support for importing jGnash 1.x files
 
 Release 2.17.1
 ----------------------
-09/01/15 Fix for conversion of Date to LocalDate for XML and BXDS file formats.
+09/01/15 Fix for a one day shift when converting Dates to LocalDates for XML and BXDS file formats.
 
 Release 2.17.0 (File format change)
 ----------------------
