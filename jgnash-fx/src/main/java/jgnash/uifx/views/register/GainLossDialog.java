@@ -52,6 +52,11 @@ class GainLossDialog extends AbstractTransactionEntryDialog {
     }
 
     @Override
+    String[] getSplitColumnName() {
+        return RegisterFactory.getGainLossSplitColumnName();
+    }
+
+    @Override
     String getPrefNode() {
         return PREF_NODE_USER_ROOT;
     }

@@ -30,8 +30,7 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
-class RegisterFactory {
-
+public class RegisterFactory {
     private static final ResourceBundle rb = ResourceUtils.getBundle();
 
     private static final String[] BANK_NAMES = { rb.getString("Column.Date"), rb.getString("Column.Num"),
@@ -111,9 +110,9 @@ class RegisterFactory {
             rb.getString("Column.Memo"), rb.getString("Column.Deposit"), rb.getString("Column.Withdrawal"),
             rb.getString("Column.Balance") };
 
-    /*private static final String[] SPLIT_GAIN_LOSS_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
+    private static final String[] SPLIT_GAIN_LOSS_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
             rb.getString("Column.Memo"), rb.getString("Column.Gain"), rb.getString("Column.Loss"),
-            rb.getString("Column.Balance") };*/
+            rb.getString("Column.Balance") };
 
     private static final String[] SPLIT_GENERIC_NAMES = { rb.getString("Column.Account"), rb.getString("Column.Clr"),
             rb.getString("Column.Memo"), rb.getString("Column.Deposit"), rb.getString("Column.Withdrawal"),
@@ -121,6 +120,18 @@ class RegisterFactory {
 
     private RegisterFactory() {
         // Utility class
+    }
+
+    public static String[] getGainLossSplitColumnName() {
+        String[] names; // reference to the correct column names
+
+        if (Options.useAccountingTermsProperty().get()) {
+            names = SPLIT_ACCOUNTING_NAMES;
+        } else {
+            names = SPLIT_GAIN_LOSS_NAMES;
+        }
+
+        return names;
     }
 
     public static String[] getSplitColumnNames(@NotNull final AccountType accountType) {
