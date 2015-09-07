@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Text?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" minHeight="-Infinity"
+          fx:controller="jgnash.uifx.views.main.ConsoleDialogController"
+          minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="dialog, form">
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="100.0" prefHeight="200.0" vgrow="ALWAYS"/>
+        <RowConstraints vgrow="SOMETIMES"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+
+    <TextArea fx:id="consoleArea" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="false"/>
+
+    <StackPane GridPane.rowIndex="1">
+        <ProgressBar fx:id="memoryUsageProgressBar" progress="0.0" maxWidth="Infinity"/>
+        <Text fx:id="memoryUsageText" text="0 MB / 0 MB"/>
+    </StackPane>
+
+    <ButtonBar GridPane.rowIndex="2">
+        <buttons>
+            <Button text="%Button.ForceGC" onAction="#handleForceGarbageCollection" ButtonBar.buttonData="LEFT"/>
+            <Button text="%Button.CopyToClip" onAction="#handleCopyToClipboard" ButtonBar.buttonData="LEFT"/>
+            <Button text="%Button.Close" onAction="#handleCloseAction" ButtonBar.buttonData="CANCEL_CLOSE"/>
+        </buttons>
+    </ButtonBar>
+</GridPane>

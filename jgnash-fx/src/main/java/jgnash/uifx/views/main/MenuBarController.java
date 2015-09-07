@@ -314,4 +314,9 @@ public class MenuBarController implements MessageListener {
     private void handleShowTranNumberListDialog() {
         TransactionNumberDialogController.showAndWait();
     }
+
+    @FXML
+    private void handleShowConsoleDialog() {
+        ConsoleDialogController.show();
+    }
 }
