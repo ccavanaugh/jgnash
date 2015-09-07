@@ -69,8 +69,14 @@
         <MenuItem text="%Menu.Option.Name" fx:id="optionsMenuItem" onAction="#handleShowOptionDialog"/>
         <MenuItem text="%Menu.EditTranNumList.Name" fx:id="transNumberListMenuItem"
                   onAction="#handleShowTranNumberListDialog"/>
-        <SeparatorMenuItem mnemonicParsing="false"/>
+        <SeparatorMenuItem />
         <MenuItem text="%Menu.Locale.Name" onAction="#changeDefaultLocale"/>
+        <SeparatorMenuItem />
+        <MenuItem text="%Menu.RunJavaScript.Name" onAction="#handleExecuteJavaScriptFile">
+            <graphic>
+                <FontAwesomeImageView glyphName="FILE_CODE_ALT"/>
+            </graphic>
+        </MenuItem>
     </Menu>
 
     <Menu fx:id="windowMenu" mnemonicParsing="false" text="%Menu.Window.Name">
@@ -80,7 +86,7 @@
 
     <Menu text="%Menu.Help.Name" mnemonicParsing="false">
         <MenuItem mnemonicParsing="false" text="%Menu.About.Name" onAction="#handleAboutAction"/>
-        <SeparatorMenuItem mnemonicParsing="false"/>
+        <SeparatorMenuItem />
         <MenuItem mnemonicParsing="false" text="%Menu.Console.Name" onAction="#handleShowConsoleDialog"/>
     </Menu>
 

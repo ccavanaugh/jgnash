@@ -43,6 +43,7 @@ import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.about.AboutDialogController;
 import jgnash.uifx.actions.DefaultCurrencyAction;
 import jgnash.uifx.actions.DefaultLocaleAction;
+import jgnash.uifx.actions.ExecuteJavaScriptAction;
 import jgnash.uifx.dialog.currency.AddRemoveCurrencyController;
 import jgnash.uifx.dialog.currency.EditExchangeRatesController;
 import jgnash.uifx.dialog.currency.ModifyCurrencyController;
@@ -318,5 +319,10 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleShowConsoleDialog() {
         ConsoleDialogController.show();
+    }
+
+    @FXML
+    private void handleExecuteJavaScriptFile() {
+        ExecuteJavaScriptAction.showAndWait();
     }
 }
