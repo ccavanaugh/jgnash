@@ -12,57 +12,42 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import jgnash.uifx.control.IntegerTextField?>
 <?import jgnash.resource.font.FontAwesomeImageView?>
-<GridPane maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-1.0"
-          minWidth="-Infinity" prefHeight="-1.0" xmlns:fx="http://javafx.com/fxml/1"
-          xmlns="http://javafx.com/javafx/8" fx:controller="jgnash.uifx.views.main.OpenDatabaseController"
-          styleClass="form, dialog">
+
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" minHeight="-Infinity"
+          fx:controller="jgnash.uifx.views.main.OpenDatabaseController" styleClass="form, dialog">
     <columnConstraints>
         <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity"/>
         <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity"/>
         <ColumnConstraints hgrow="NEVER" maxWidth="-Infinity" minWidth="-Infinity"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="-1.0" valignment="CENTER"
-                        vgrow="NEVER"/>
-        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="-1.0" valignment="CENTER"
-                        vgrow="NEVER"/>
-        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="-1.0" valignment="CENTER"
-                        vgrow="NEVER"/>
-        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="-1.0" valignment="CENTER"
-                        vgrow="NEVER"/>
-        <RowConstraints maxHeight="+Infinity" minHeight="-Infinity" prefHeight="-1.0" valignment="CENTER"
-                        vgrow="NEVER"/>
-        <RowConstraints maxHeight="+Infinity" minHeight="-Infinity" prefHeight="-1.0" vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
     </rowConstraints>
-    <Label text="%Label.DatabaseName" GridPane.columnIndex="0" GridPane.rowIndex="0">
-        <labelFor>
-            <TextField id="databaseLocation" fx:id="localDatabaseField" editable="false" prefWidth="200.0" text=""
-                       GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-        </labelFor>
-    </Label>
-    <fx:reference source="localDatabaseField"/>
-    <Button mnemonicParsing="false" onAction="#handleSelectFileAction" GridPane.columnIndex="2" GridPane.rowIndex="0">
+
+    <Label text="%Label.DatabaseName" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+    <TextField fx:id="localDatabaseField" editable="false" prefWidth="200.0" GridPane.columnIndex="1"
+               GridPane.rowIndex="0"/>
+    <Button onAction="#handleSelectFileAction" GridPane.columnIndex="2" GridPane.rowIndex="0">
         <graphic>
             <FontAwesomeImageView glyphName="ELLIPSIS_H"/>
         </graphic>
     </Button>
-    <CheckBox fx:id="remoteServerCheckBox" mnemonicParsing="false" onAction="#handleRemoteAction"
+
+    <CheckBox fx:id="remoteServerCheckBox" onAction="#handleRemoteAction"
               text="%Button.RemoteServer" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="1"/>
-    <Label text="%Label.DatabaseServer" GridPane.columnIndex="0" GridPane.rowIndex="2">
-        <labelFor>
-            <TextField fx:id="databaseServerField" prefWidth="200.0" GridPane.columnIndex="1"
-                       GridPane.columnSpan="2" GridPane.rowIndex="2"/>
-        </labelFor>
-    </Label>
-    <fx:reference source="databaseServerField"/>
-    <Label text="%Label.Port" GridPane.columnIndex="0" GridPane.rowIndex="3">
-        <labelFor>
-            <IntegerTextField fx:id="portField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2"
-                              GridPane.rowIndex="3"/>
-        </labelFor>
-    </Label>
-    <fx:reference source="portField"/>
-    <TitledPane animated="false" collapsible="false" text="%Title.FileLoginCredentials" GridPane.columnIndex="0"
+    <Label text="%Label.DatabaseServer" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+    <TextField fx:id="databaseServerField" prefWidth="200.0" GridPane.columnIndex="1"
+               GridPane.columnSpan="2" GridPane.rowIndex="2"/>
+
+    <Label text="%Label.Port" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+    <IntegerTextField fx:id="portField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2"
+                      GridPane.rowIndex="3"/>
+    <TitledPane collapsible="false" text="%Title.FileLoginCredentials" GridPane.columnIndex="0"
                 GridPane.columnSpan="3" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4">
         <GridPane>
             <columnConstraints>
@@ -70,16 +55,11 @@
                 <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0"/>
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
 
-            <Label text="%Label.Password" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                <labelFor>
-                    <PasswordField fx:id="passwordField" prefWidth="200.0" GridPane.columnIndex="1"
-                                   GridPane.rowIndex="0"/>
-                </labelFor>
-            </Label>
-            <fx:reference source="passwordField"/>
+            <Label text="%Label.Password" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <PasswordField fx:id="passwordField" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
         </GridPane>
     </TitledPane>
     <ButtonBar GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="5">
