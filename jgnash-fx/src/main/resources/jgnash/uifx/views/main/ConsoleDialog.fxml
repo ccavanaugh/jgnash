@@ -21,20 +21,23 @@
     <TextArea fx:id="consoleArea" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="false"/>
 
     <StackPane GridPane.rowIndex="1">
-        <ProgressBar fx:id="memoryUsageProgressBar" progress="0.0" maxWidth="Infinity"/>
-        <Text fx:id="memoryUsageText" text="0 MB / 0 MB"/>
+        <ProgressBar fx:id="memoryUsageProgressBar" maxWidth="Infinity"/>
+        <Text fx:id="memoryUsageText"/>
     </StackPane>
 
     <ButtonBar GridPane.rowIndex="2">
         <buttons>
-            <Button text="%Button.ForceGC" onAction="#handleForceGarbageCollection" ButtonBar.buttonData="LEFT"/>
-            <Button text="%Button.CopyToClip" onAction="#handleCopyToClipboard" ButtonBar.buttonData="LEFT">
+            <Button text="%Button.ForceGC" onAction="#handleForceGarbageCollection" ButtonBar.buttonUniformSize="false"
+                    ButtonBar.buttonData="LEFT"/>
+            <Button text="%Button.CopyToClip" onAction="#handleCopyToClipboard" ButtonBar.buttonUniformSize="false"
+                    ButtonBar.buttonData="LEFT">
                 <graphic>
                     <FontAwesomeImageView glyphName="CLIPBOARD"/>
                 </graphic>
             </Button>
 
-            <Button text="%Button.Close" onAction="#handleCloseAction" ButtonBar.buttonData="CANCEL_CLOSE"/>
+            <Button text="%Button.Close" onAction="#handleCloseAction" ButtonBar.buttonUniformSize="false"
+                    ButtonBar.buttonData="CANCEL_CLOSE"/>
         </buttons>
     </ButtonBar>
 </GridPane>
