@@ -8,7 +8,7 @@
 <ToolBar
         xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
         fx:controller="jgnash.uifx.views.main.MainToolBarController">
-    <Button mnemonicParsing="false" onAction="#handleOpenAction" text="%Menu.Open.Name">
+    <Button mnemonicParsing="false" onAction="#handleOpenAction" text="%Button.Open">
         <graphic>
             <FontAwesomeImageView glyphName="FOLDER_OPEN"/>
         </graphic>
