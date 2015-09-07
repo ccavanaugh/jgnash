@@ -17,6 +17,7 @@
  */
 package jgnash.uifx.views.register;
 
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +26,10 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.ButtonType;
+import javafx.stage.Stage;
 
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
@@ -35,6 +39,8 @@ import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.views.register.reconcile.ReconcileSettingsDialogController;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -114,6 +120,21 @@ class RegisterActions {
                 Logger.getLogger(RegisterActions.class.getName()).log(Level.SEVERE, e.getMessage(), e);
             }
         }
+    }
+
+    static void reconcileAccountAction(final Account account) {
+        final ObjectProperty<ReconcileSettingsDialogController> controllerObjectProperty = new SimpleObjectProperty<>();
+
+        final URL fxmlUrl = ReconcileSettingsDialogController.class.getResource("ReconcileSettingsDialog.fxml");
+        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, controllerObjectProperty, ResourceUtils.getBundle());
+        stage.setTitle(ResourceUtils.getString("Title.ReconcileSettings"));
+
+        Objects.requireNonNull(controllerObjectProperty.get());
+
+        controllerObjectProperty.get().accountProperty().setValue(account);
+
+        stage.setResizable(false);
+        stage.showAndWait();
     }
 
     private static ButtonType confirmTransactionRemoval(final int count) {

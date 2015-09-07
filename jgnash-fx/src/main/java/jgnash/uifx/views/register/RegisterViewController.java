@@ -189,6 +189,11 @@ public class RegisterViewController {
         }
     }
 
+    @FXML
+    private void handleReconcileAction() {
+        RegisterActions.reconcileAccountAction(accountTreeController.getSelectedAccountProperty().get());
+    }
+
     private static final class DisabledTreeCell extends TreeCell<Account> {
         @Override
         public void updateItem(final Account account, final boolean empty) {
