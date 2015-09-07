@@ -183,25 +183,17 @@ public final class ActionParser extends DefaultHandler {
      *
      * @param stream InputStream containing an actionSet document
      */
-    private void loadFile(final InputStream stream) {
-        SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+    public void loadFile(final InputStream stream) {
+        final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
         parserFactory.setValidating(false);
 
         try {
-            SAXParser parser = parserFactory.newSAXParser();
+            final SAXParser parser = parserFactory.newSAXParser();
             parser.parse(stream, this);
 
             createActions(); // create reflective actions
         } catch (SAXException | ParserConfigurationException | IOException se) {
             log.severe(se.toString());
-        }
-    }
-
-    public void loadFile(final String fileName) {
-        try (InputStream s = getClass().getResourceAsStream(fileName)) {
-            loadFile(s);
-        } catch (IOException e) {
-            log.log(Level.SEVERE, null, e);
         }
     }
 

@@ -387,7 +387,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
         actionParser.preLoadAction("security-background-update-command", new UpdateSecuritiesAction());
 
-        actionParser.loadFile("/jgnash/resource/main-frame-actions.xml");
+        actionParser.loadFile(MainFrame.class.getResourceAsStream("/jgnash/resource/main-frame-actions.xml"));
 
         menuBar = actionParser.createMenuBar("main-menu");
         JToolBar toolBar = actionParser.createToolBar("main-toolbar");
