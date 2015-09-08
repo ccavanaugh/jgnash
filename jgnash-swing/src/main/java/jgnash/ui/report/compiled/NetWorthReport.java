@@ -36,6 +36,7 @@ public class NetWorthReport extends AbstractSumByTypeReport {
 
         groups.add(AccountGroup.ASSET);
         groups.add(AccountGroup.INVEST);
+        groups.add(AccountGroup.SIMPLEINVEST);
         groups.add(AccountGroup.LIABILITY);
 
         return groups;

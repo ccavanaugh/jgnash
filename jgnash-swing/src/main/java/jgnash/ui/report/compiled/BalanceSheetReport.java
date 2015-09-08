@@ -56,6 +56,7 @@ public class BalanceSheetReport extends AbstractSumByTypeReport {
 
         groups.add(AccountGroup.ASSET);
         groups.add(AccountGroup.INVEST);
+        groups.add(AccountGroup.SIMPLEINVEST);
         groups.add(AccountGroup.LIABILITY);
         groups.add(AccountGroup.EQUITY);
 
