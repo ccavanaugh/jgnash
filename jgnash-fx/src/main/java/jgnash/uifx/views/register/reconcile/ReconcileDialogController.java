@@ -21,10 +21,14 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -34,14 +38,18 @@ import javafx.scene.control.TitledPane;
 import javafx.stage.Stage;
 
 import jgnash.engine.Account;
+import jgnash.engine.ReconciledState;
+import jgnash.engine.Transaction;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.util.InjectFXML;
+import jgnash.uifx.util.TableViewManager;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.register.RegisterFactory;
+import jgnash.util.DateUtils;
 
 /**
  * Account reconcile dialog.
@@ -86,7 +94,21 @@ public class ReconcileDialogController implements MessageListener {
     @FXML
     private Label differenceLabel;
 
+    private static final double[] PREF_COLUMN_WEIGHTS = {0, 0, 0, 100, 0};
+
     private Account account;
+
+    private LocalDate closingDate;
+
+    private final ObservableList<RecTransaction> transactions = FXCollections.observableArrayList();
+
+    private final FilteredList<RecTransaction> increaseList = new FilteredList<>(transactions);
+
+    private final FilteredList<RecTransaction> decreaseList = new FilteredList<>(transactions);
+
+    private TableViewManager increaseTableViewManager;
+
+    private TableViewManager decreaseTableViewManager;
 
     @FXML
     private void initialize() {
@@ -94,6 +116,9 @@ public class ReconcileDialogController implements MessageListener {
 
         configureTableView(increaseTableView);
         configureTableView(decreaseTableView);
+
+        increaseTableView.setItems(increaseList);
+        decreaseTableView.setItems(decreaseList);
     }
 
     void initialize(final Account account, final LocalDate closingDate, final BigDecimal openingBalance,
@@ -105,11 +130,23 @@ public class ReconcileDialogController implements MessageListener {
         Objects.requireNonNull(endingBalance);
 
         this.account = account;
+        this.closingDate = closingDate;
 
         final String[] columnNames = RegisterFactory.getCreditDebitTabNames(this.account.getAccountType());
 
         increaseTitledPane.setText(columnNames[0]);
         decreaseTitledPane.setText(columnNames[1]);
+
+        increaseList.setPredicate(recTransaction -> recTransaction.getAmount(account).signum() >= 0);
+        decreaseList.setPredicate(recTransaction -> recTransaction.getAmount(account).signum() < 0);
+
+        loadModel();
+    }
+
+    private void loadModel() {
+        transactions.addAll(account.getSortedTransactionList().stream().filter(this::reconcilable)
+                .map(transaction -> new RecTransaction(transaction, transaction.getReconciled(account)))
+                .collect(Collectors.toList()));
     }
 
     @FXML
@@ -149,9 +186,12 @@ public class ReconcileDialogController implements MessageListener {
     }
 
     private void configureTableView(final TableView<RecTransaction> tableView) {
-
         tableView.setTableMenuButtonVisible(false);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        /*tableViewManager = new TableViewManager<>(tableView, getPrefNode());
+        tableViewManager.setColumnWeightFactory(getColumnWeightFactory());
+        tableViewManager.setPreferenceKeyFactory(() -> accountProperty().get().getUuid());*/
 
         final TableColumn<RecTransaction, String> reconciledColumn = new TableColumn<>(resources.getString("Column.Clr"));
         reconciledColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getReconciledState().toString()));
@@ -162,25 +202,34 @@ public class ReconcileDialogController implements MessageListener {
         dateColumn.setCellFactory(param -> new RecTransactionDateTableCell());
         tableView.getColumns().add(dateColumn);
 
-        //Num
         final TableColumn<RecTransaction, String> numberColumn = new TableColumn<>(resources.getString("Column.Num"));
         numberColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getNumber()));
         tableView.getColumns().add(numberColumn);
 
-        //Payee
         final TableColumn<RecTransaction, String> payeeColumn = new TableColumn<>(resources.getString("Column.Payee"));
         payeeColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getPayee()));
         tableView.getColumns().add(payeeColumn);
 
-        //Amount
         final TableColumn<RecTransaction, BigDecimal> amountColumn =
                 new TableColumn<>(resources.getString("Column.Amount"));
         amountColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(AccountBalanceDisplayManager.
                 convertToSelectedBalanceMode(account.getAccountType(), param.getValue().getAmount(account))));
         amountColumn.setCellFactory(param -> new RecTransactionCommodityFormatTableCell(
                 CommodityFormat.getShortNumberFormat(account.getCurrencyNode())));
-
         tableView.getColumns().add(amountColumn);
+
+
+        /*tableViewManager.setColumnFormatFactory(param -> {
+            if (param == amountColumn) {
+                return CommodityFormat.getShortNumberFormat(account.getCurrencyNode());
+            }
+
+            return null;
+        });*/
+    }
+
+    private boolean reconcilable(final Transaction t) {
+        return DateUtils.before(t.getLocalDate(), closingDate) && t.getReconciled(account) != ReconciledState.RECONCILED;
     }
 
     @Override
