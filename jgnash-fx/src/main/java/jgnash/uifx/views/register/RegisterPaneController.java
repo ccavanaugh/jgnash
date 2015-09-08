@@ -126,7 +126,9 @@ public abstract class RegisterPaneController {
             });
         });
 
-        titledPane.animatedProperty().bind(Options.animationsEnabledProperty());
+        if (titledPane != null) {   // make sure we don't have a locked instance
+            titledPane.animatedProperty().bind(Options.animationsEnabledProperty());
+        }
     }
 
     @FXML
