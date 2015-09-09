@@ -32,6 +32,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import jgnash.engine.Account;
@@ -117,7 +118,7 @@ abstract class AbstractTransactionEntryDialog extends Stage {
         deleteAllButton.setOnAction(event -> deleteAllAction());
         newButton.setOnAction(event -> newAction());
 
-        setOnShowing(event -> {
+        addEventHandler(WindowEvent.WINDOW_SHOWN, event -> {
             tableViewManager.restoreLayout();   // restore layout and pack after the table is visible
         });
     }
