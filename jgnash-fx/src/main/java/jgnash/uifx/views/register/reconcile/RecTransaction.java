@@ -17,16 +17,12 @@
  */
 package jgnash.uifx.views.register.reconcile;
 
+import jgnash.engine.*;
+import jgnash.util.NotNull;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
-
-import jgnash.engine.Account;
-import jgnash.engine.AccountGroup;
-import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.ReconciledState;
-import jgnash.engine.Transaction;
-import jgnash.util.NotNull;
 
 /**
  * Decorator around a Transaction to maintain the original reconciledState state
