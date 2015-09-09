@@ -36,7 +36,7 @@ import jgnash.util.NotNull;
 class RecTransaction implements Comparable<RecTransaction> {
     private ReconciledState reconciledState;
 
-    private final Transaction transaction;
+   private final Transaction transaction;
 
     RecTransaction(@NotNull final Transaction transaction, @NotNull final ReconciledState reconciledState) {
         Objects.requireNonNull(transaction);
@@ -47,15 +47,15 @@ class RecTransaction implements Comparable<RecTransaction> {
     }
 
     public LocalDate getDate() {
-        return transaction.getLocalDate();
+        return getTransaction().getLocalDate();
     }
 
     public String getNumber() {
-        return transaction.getNumber();
+        return getTransaction().getNumber();
     }
 
     public String getPayee() {
-        return transaction.getPayee();
+        return getTransaction().getPayee();
     }
 
     public ReconciledState getReconciledState() {
@@ -67,17 +67,17 @@ class RecTransaction implements Comparable<RecTransaction> {
     }
 
     BigDecimal getAmount(final Account a) {
-        if (transaction instanceof InvestmentTransaction && a.memberOf(AccountGroup.INVEST)) {
-            return ((InvestmentTransaction) transaction).getMarketValue(transaction.getLocalDate())
-                    .add(transaction.getAmount(a));
+        if (getTransaction() instanceof InvestmentTransaction && a.memberOf(AccountGroup.INVEST)) {
+            return ((InvestmentTransaction) getTransaction()).getMarketValue(getTransaction().getLocalDate())
+                    .add(getTransaction().getAmount(a));
         }
 
-        return transaction.getAmount(a);
+        return getTransaction().getAmount(a);
     }
 
     @Override
     public int hashCode() {
-        return transaction.hashCode();
+        return getTransaction().hashCode();
     }
 
     @Override
@@ -87,7 +87,7 @@ class RecTransaction implements Comparable<RecTransaction> {
         if (obj != null && obj instanceof RecTransaction) {
             final RecTransaction other = (RecTransaction) obj;
 
-            if (transaction.equals(other.transaction) && reconciledState == other.reconciledState) {
+            if (getTransaction().equals(other.getTransaction()) && reconciledState == other.reconciledState) {
                 result = true;
             }
         }
@@ -96,6 +96,10 @@ class RecTransaction implements Comparable<RecTransaction> {
 
     @Override
     public int compareTo(@NotNull final RecTransaction t) {
-        return transaction.compareTo(t.transaction);
+        return getTransaction().compareTo(t.getTransaction());
+    }
+
+    public Transaction getTransaction() {
+        return transaction;
     }
 }
