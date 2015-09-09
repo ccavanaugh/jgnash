@@ -17,6 +17,12 @@
  */
 package jgnash.uifx.views.register.reconcile;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.stream.Collectors;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -30,23 +36,23 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TitledPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+
 import jgnash.engine.Account;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
-import jgnash.engine.message.*;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageListener;
+import jgnash.engine.message.MessageProperty;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.register.RegisterFactory;
 import jgnash.util.DateUtils;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 /**
  * Account reconcile dialog.
@@ -118,6 +124,19 @@ public class ReconcileDialogController implements MessageListener {
 
         increaseTableView.setItems(increaseList);
         decreaseTableView.setItems(decreaseList);
+
+        parentProperty.addListener((observable, oldValue, newScene) -> {
+            if (newScene != null) {
+                newScene.windowProperty().addListener((observable1, oldValue1, newWindow) -> {
+                    if (newWindow != null) {
+                        newScene.addEventHandler(WindowEvent.WINDOW_SHOWN, event -> {
+                            increaseTableViewManager.restoreLayout();
+                            decreaseTableViewManager.restoreLayout();
+                        });
+                    }
+                });
+            }
+        });
     }
 
     private Callback<Integer, Double> getColumnWeightFactory() {
@@ -150,6 +169,14 @@ public class ReconcileDialogController implements MessageListener {
         transactions.addAll(account.getSortedTransactionList().stream().filter(this::reconcilable)
                 .map(transaction -> new RecTransaction(transaction, transaction.getReconciled(account)))
                 .collect(Collectors.toList()));
+
+        increaseTableViewManager = new TableViewManager<>(increaseTableView, PREF_NODE);
+        increaseTableViewManager.setColumnWeightFactory(getColumnWeightFactory());
+        increaseTableViewManager.setPreferenceKeyFactory(() -> "increase");
+
+        decreaseTableViewManager = new TableViewManager<>(increaseTableView, PREF_NODE);
+        decreaseTableViewManager.setColumnWeightFactory(getColumnWeightFactory());
+        decreaseTableViewManager.setPreferenceKeyFactory(() -> "decrease");
     }
 
     @FXML
