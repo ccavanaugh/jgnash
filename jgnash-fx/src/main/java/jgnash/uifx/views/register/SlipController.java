@@ -57,6 +57,7 @@ public class SlipController extends AbstractSlipController {
 
     private SlipType slipType;
 
+    // TODO, don't reuse dialog as reuse creates issues with visible bounds
     private SplitTransactionDialog splitsDialog;
 
     private TransactionEntry modEntry = null;
