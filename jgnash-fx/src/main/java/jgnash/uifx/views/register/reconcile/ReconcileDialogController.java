@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -97,7 +98,7 @@ public class ReconcileDialogController implements MessageListener {
     @FXML
     private Label differenceLabel;
 
-    private static final double[] PREF_COLUMN_WEIGHTS = {0, 0, 0, 100, 0};
+    private static final double[] PREF_COLUMN_WEIGHTS = {0, 0, 0, 50, 0};
 
     private Account account;
 
@@ -117,24 +118,15 @@ public class ReconcileDialogController implements MessageListener {
 
     @FXML
     private void initialize() {
-        MessageBus.getInstance().registerListener(this, MessageChannel.ACCOUNT, MessageChannel.SYSTEM);
-
-        configureTableView(increaseTableView);
-        configureTableView(decreaseTableView);
-
-        increaseTableView.setItems(increaseList);
-        decreaseTableView.setItems(decreaseList);
+        MessageBus.getInstance().registerListener(this, MessageChannel.TRANSACTION);
 
         parentProperty.addListener((observable, oldValue, newScene) -> {
             if (newScene != null) {
-                newScene.windowProperty().addListener((observable1, oldValue1, newWindow) -> {
-                    if (newWindow != null) {
-                        newScene.addEventHandler(WindowEvent.WINDOW_SHOWN, event -> {
+                newScene.windowProperty().get().addEventHandler(WindowEvent.WINDOW_SHOWN,
+                        event -> Platform.runLater(() -> {
                             increaseTableViewManager.restoreLayout();
                             decreaseTableViewManager.restoreLayout();
-                        });
-                    }
-                });
+                        }));
             }
         });
     }
@@ -162,26 +154,32 @@ public class ReconcileDialogController implements MessageListener {
         increaseList.setPredicate(recTransaction -> recTransaction.getAmount(account).signum() >= 0);
         decreaseList.setPredicate(recTransaction -> recTransaction.getAmount(account).signum() < 0);
 
-        loadModel();
+        loadTables();
     }
 
-    private void loadModel() {
-        transactions.addAll(account.getSortedTransactionList().stream().filter(this::reconcilable)
-                .map(transaction -> new RecTransaction(transaction, transaction.getReconciled(account)))
-                .collect(Collectors.toList()));
-
+    private void loadTables() {
         increaseTableViewManager = new TableViewManager<>(increaseTableView, PREF_NODE);
         increaseTableViewManager.setColumnWeightFactory(getColumnWeightFactory());
         increaseTableViewManager.setPreferenceKeyFactory(() -> "increase");
 
-        decreaseTableViewManager = new TableViewManager<>(increaseTableView, PREF_NODE);
+        decreaseTableViewManager = new TableViewManager<>(decreaseTableView, PREF_NODE);
         decreaseTableViewManager.setColumnWeightFactory(getColumnWeightFactory());
         decreaseTableViewManager.setPreferenceKeyFactory(() -> "decrease");
+
+        transactions.addAll(account.getSortedTransactionList().stream().filter(this::reconcilable)
+                .map(transaction -> new RecTransaction(transaction, transaction.getReconciled(account)))
+                .collect(Collectors.toList()));
+
+        configureTableView(increaseTableView, increaseTableViewManager);
+        configureTableView(decreaseTableView, decreaseTableViewManager);
+
+        increaseTableView.setItems(increaseList);
+        decreaseTableView.setItems(decreaseList);
     }
 
     @FXML
     private void handleCloseAction() {
-        MessageBus.getInstance().unregisterListener(this, MessageChannel.TRANSACTION, MessageChannel.SYSTEM);
+        MessageBus.getInstance().unregisterListener(this, MessageChannel.TRANSACTION);
 
         ((Stage) parentProperty.get().getWindow()).close();
     }
@@ -217,7 +215,7 @@ public class ReconcileDialogController implements MessageListener {
         handleCloseAction();
     }
 
-    private void configureTableView(final TableView<RecTransaction> tableView) {
+    private void configureTableView(final TableView<RecTransaction> tableView, final TableViewManager<RecTransaction> tableViewManager) {
         tableView.setTableMenuButtonVisible(false);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -246,12 +244,12 @@ public class ReconcileDialogController implements MessageListener {
                 CommodityFormat.getShortNumberFormat(account.getCurrencyNode())));
         tableView.getColumns().add(amountColumn);
 
-        /*tableViewManager.setColumnFormatFactory(param -> {
+        tableViewManager.setColumnFormatFactory(param -> {
             if (param == amountColumn && account != null) {
                 return CommodityFormat.getShortNumberFormat(account.getCurrencyNode());
             }
             return null;
-        });*/
+        });
     }
 
     private boolean reconcilable(final Transaction t) {
@@ -271,7 +269,7 @@ public class ReconcileDialogController implements MessageListener {
 
     @Override
     public void messagePosted(final Message message) {
-        if (account != null && message.getObject(MessageProperty.ACCOUNT).equals(account)) {
+        if (account != null && account.equals(message.getObject(MessageProperty.ACCOUNT))) {
             final Transaction transaction = message.getObject(MessageProperty.TRANSACTION);
 
             switch (message.getEvent()) {

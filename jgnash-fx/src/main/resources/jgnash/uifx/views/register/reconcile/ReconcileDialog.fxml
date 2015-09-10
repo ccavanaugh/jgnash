@@ -11,11 +11,12 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 
+<?import javafx.scene.layout.BorderPane?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" minHeight="-Infinity" minWidth="600"
           fx:controller="jgnash.uifx.views.register.reconcile.ReconcileDialogController" styleClass="dialog, form">
     <columnConstraints>
-        <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0"/>
-        <ColumnConstraints hgrow="ALWAYS" percentWidth="50.0"/>
+        <ColumnConstraints hgrow="ALWAYS" fillWidth="true" percentWidth="50.0"/>
+        <ColumnConstraints hgrow="ALWAYS" fillWidth="true" percentWidth="50.0"/>
     </columnConstraints>
     <rowConstraints>
         <RowConstraints vgrow="ALWAYS"/>
@@ -24,49 +25,61 @@
     </rowConstraints>
     <TitledPane fx:id="decreaseTitledPane" collapsible="false" maxHeight="Infinity" text="Decrease"
                 GridPane.rowSpan="2">
-        <GridPane styleClass="form">
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="150.0"/>
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints maxHeight="Infinity" vgrow="ALWAYS"/>
-                <RowConstraints vgrow="NEVER"/>
-                <RowConstraints vgrow="NEVER"/>
-            </rowConstraints>
-            <TableView fx:id="decreaseTableView" prefHeight="200.0" minWidth="300.0"/>
-            <StackPane GridPane.rowIndex="1" styleClass="summary-bar">
-                <Label fx:id="decreaseTotalLabel" text="0.00" StackPane.alignment="CENTER_RIGHT"/>
-            </StackPane>
-            <ButtonBar GridPane.rowIndex="2">
-                <buttons>
-                    <Button text="%Button.SelectAll" onAction="#handleDecreaseSelectAllAction"/>
-                    <Button text="%Button.ClearAll" onAction="#handleDecreaseClearAllAction"/>
-                </buttons>
-            </ButtonBar>
-        </GridPane>
+        <BorderPane styleClass="form">
+            <center>
+                <TableView fx:id="decreaseTableView" prefHeight="200.0" minWidth="300.0"/>
+            </center>
+            <bottom>
+                <GridPane  styleClass="form">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" fillWidth="true" minWidth="300.0"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                    </rowConstraints>
+
+                    <StackPane GridPane.rowIndex="0" styleClass="summary-bar">
+                        <Label fx:id="decreaseTotalLabel" text="0.00" StackPane.alignment="CENTER_RIGHT"/>
+                    </StackPane>
+                    <ButtonBar GridPane.rowIndex="1">
+                        <buttons>
+                            <Button text="%Button.SelectAll" onAction="#handleDecreaseSelectAllAction"/>
+                            <Button text="%Button.ClearAll" onAction="#handleDecreaseClearAllAction"/>
+                        </buttons>
+                    </ButtonBar>
+                </GridPane>
+            </bottom>
+        </BorderPane>
     </TitledPane>
     <TitledPane fx:id="increaseTitledPane" collapsible="false" maxHeight="Infinity" text="Increase"
                 GridPane.columnIndex="1">
-        <GridPane styleClass="form">
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="150.0"/>
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints vgrow="ALWAYS"/>
-                <RowConstraints vgrow="NEVER"/>
-                <RowConstraints vgrow="NEVER"/>
-            </rowConstraints>
-            <TableView fx:id="increaseTableView" prefHeight="200.0" minWidth="300.0"/>
-            <StackPane GridPane.rowIndex="1" styleClass="summary-bar">
-                <Label fx:id="increaseTotalLabel" text="0.00" StackPane.alignment="CENTER_RIGHT"/>
-            </StackPane>
-            <ButtonBar GridPane.rowIndex="2">
-                <buttons>
-                    <Button text="%Button.SelectAll" onAction="#handleIncreaseSelectAllAction"/>
-                    <Button text="%Button.ClearAll" onAction="#handleIncreaseClearAllAction"/>
-                </buttons>
-            </ButtonBar>
-        </GridPane>
+        <BorderPane styleClass="form">
+            <center>
+                <TableView fx:id="increaseTableView" prefHeight="200.0" minWidth="300.0"/>
+            </center>
+            <bottom>
+                <GridPane  styleClass="form">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" fillWidth="true" minWidth="300.0"/>
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints vgrow="NEVER"/>
+                        <RowConstraints vgrow="NEVER"/>
+                    </rowConstraints>
+
+                    <StackPane GridPane.rowIndex="0" styleClass="summary-bar">
+                        <Label fx:id="increaseTotalLabel" text="0.00" StackPane.alignment="CENTER_RIGHT"/>
+                    </StackPane>
+                    <ButtonBar GridPane.rowIndex="1">
+                        <buttons>
+                            <Button text="%Button.SelectAll" onAction="#handleIncreaseSelectAllAction"/>
+                            <Button text="%Button.ClearAll" onAction="#handleIncreaseClearAllAction"/>
+                        </buttons>
+                    </ButtonBar>
+                </GridPane>
+            </bottom>
+        </BorderPane>
     </TitledPane>
     <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1" styleClass="form">
         <columnConstraints>
