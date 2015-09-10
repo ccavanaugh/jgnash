@@ -22,6 +22,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
@@ -55,10 +57,10 @@ public class SlipController extends AbstractSlipController {
     @FXML
     private AccountExchangePane accountExchangePane;
 
-    private SlipType slipType;
+    private final SimpleListProperty<TransactionEntry> transactionEntriesProperty =
+            new SimpleListProperty<>(FXCollections.observableArrayList());
 
-    // TODO, don't reuse dialog as reuse creates issues with visible bounds
-    private SplitTransactionDialog splitsDialog;
+    private SlipType slipType;
 
     private TransactionEntry modEntry = null;
 
@@ -72,21 +74,14 @@ public class SlipController extends AbstractSlipController {
         accountExchangePane.amountProperty().bindBidirectional(amountField.decimalProperty());
         accountExchangePane.amountEditableProperty().bind(amountField.editableProperty());
 
-        // Lazy init when account property is set
-        accountProperty.addListener((observable, oldValue, newValue) -> {
-            initializeSplitsDialog(); // initialize the splits dialog
-        });
-
         // Bind the enter button, effectively negates the need for validation
         if (enterButton != null) {  // enter button may not have been initialized if used for an investment slip
             enterButton.disableProperty().bind(Bindings.or(amountField.textProperty().isEmpty(),
                     accountExchangePane.selectedAccountProperty().isNull()));
         }
-    }
 
-    private void initializeSplitsDialog() {
-        splitsDialog = new SplitTransactionDialog();
-        splitsDialog.accountProperty().setValue(accountProperty().get());
+        amountField.editableProperty().bind(transactionEntriesProperty.emptyProperty());
+        accountExchangePane.disableProperty().bind(transactionEntriesProperty.emptyProperty().not());
     }
 
     void setSlipType(final SlipType slipType) {
@@ -141,7 +136,7 @@ public class SlipController extends AbstractSlipController {
 
         final LocalDate date = datePicker.getValue();
 
-        if (splitsDialog.getTransactionEntries().size() > 0) { // build a split transaction
+        if (transactionEntriesProperty.size() > 0) { // build a split transaction
             transaction = new Transaction();
 
             transaction.setDate(date);
@@ -149,7 +144,7 @@ public class SlipController extends AbstractSlipController {
             transaction.setMemo(memoTextField.getText());
             transaction.setPayee(payeeTextField.getText());
 
-            transaction.addTransactionEntries(splitsDialog.getTransactionEntries());
+            transaction.addTransactionEntries(transactionEntriesProperty);
         } else {
             final int signum = amountField.getDecimal().signum();
 
@@ -219,21 +214,20 @@ public class SlipController extends AbstractSlipController {
 
         if (t.getTransactionType() == TransactionType.SPLITENTRY) {
             accountExchangePane.setSelectedAccount(t.getCommonAccount()); // display common account
-            accountExchangePane.setEnabled(false); // disable it
 
             if (canModifyTransaction(t)) { // split common account is the same as the base account
 
                 //  clone the splits for modification
-                splitsDialog.getTransactionEntries().clear();
+                transactionEntriesProperty.clear();
 
                 for (final TransactionEntry entry : t.getTransactionEntries()) {
                     try {
-                        splitsDialog.getTransactionEntries().add((TransactionEntry) entry.clone());
+                        transactionEntriesProperty.add((TransactionEntry) entry.clone());
                     } catch (CloneNotSupportedException e) {
                         Logger.getLogger(SlipController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
                     }
                 }
-                amountField.setEditable(false);
+
                 amountField.setDecimal(t.getAmount(accountProperty().get()).abs());
             } else { // not the same common account, can only modify the entry
                 splitsButton.setDisable(true);
@@ -241,7 +235,6 @@ public class SlipController extends AbstractSlipController {
                 numberComboBox.setDisable(true);
                 datePicker.setEditable(false);
 
-                amountField.setEditable(true);
                 amountField.setDecimal(t.getAmount(accountProperty().get()).abs());
 
                 for (final TransactionEntry entry : t.getTransactionEntries()) {
@@ -258,9 +251,6 @@ public class SlipController extends AbstractSlipController {
             Logger logger = Logger.getLogger(SlipController.class.getName());
             logger.warning("unsupported transaction type");
         } else { // DoubleEntryTransaction
-            accountExchangePane.setEnabled(!t.areAccountsHidden());
-
-            amountField.setDisable(false);
             datePicker.setEditable(true);
         }
 
@@ -282,11 +272,10 @@ public class SlipController extends AbstractSlipController {
     public void clearForm() {
         super.clearForm();
 
-        splitsDialog.getTransactionEntries().clear();   // clear an old transaction entries
+        transactionEntriesProperty.clear();   // clear an old transaction entries
 
         modEntry = null;
 
-        accountExchangePane.setEnabled(true);
         accountExchangePane.setExchangedAmount(null);
 
         splitsButton.setDisable(false);
@@ -327,11 +316,13 @@ public class SlipController extends AbstractSlipController {
 
     @FXML
     private void splitsAction() {
+        final SplitTransactionDialog splitsDialog = new SplitTransactionDialog();
+        splitsDialog.accountProperty().setValue(accountProperty().get());
+        splitsDialog.getTransactionEntries().setAll(transactionEntriesProperty);
+
         splitsDialog.showAndWait(slipType);
 
-        amountField.setEditable(splitsDialog.getTransactionEntries().size() == 0);
+        transactionEntriesProperty.setAll(splitsDialog.getTransactionEntries());
         amountField.setDecimal(splitsDialog.getBalance().abs());
-
-        accountExchangePane.setEnabled(splitsDialog.getTransactionEntries().size() == 0);
     }
 }

@@ -163,7 +163,6 @@ abstract class AbstractSlipController implements Slip {
 
         modTrans = null;
 
-        amountField.setEditable(true);
         amountField.setDecimal(BigDecimal.ZERO);
 
         reconciledButton.setDisable(false);
@@ -259,7 +258,7 @@ abstract class AbstractSlipController implements Slip {
         if (modTrans == null && Options.useAutoCompleteProperty().get() && payeeTextField.getLength() > 0) {
             if (payeeTextField.autoCompleteModelObjectProperty().get() != null) {
 
-                // The autocomplete model may return multiple solutions.  Choose the first solution that works
+                // The auto complete model may return multiple solutions.  Choose the first solution that works
                 final List<Transaction> transactions = new ArrayList<>(payeeTextField.autoCompleteModelObjectProperty()
                         .get().getAllExtraInfo(payeeTextField.getText()));
 

@@ -139,7 +139,6 @@ public class BuyShareSlipController extends AbstractPriceQtyInvSlipController {
         feePane.clearForm();
 
         attachmentPane.clear();
-        accountExchangePane.setEnabled(true);
         accountExchangePane.setExchangedAmount(null);
         accountExchangePane.setSelectedAccount(accountProperty().get());
     }

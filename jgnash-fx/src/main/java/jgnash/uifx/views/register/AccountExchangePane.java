@@ -88,8 +88,6 @@ public class AccountExchangePane extends GridPane {
      */
     final private SimpleBooleanProperty filterBaseAccountProperty = new SimpleBooleanProperty(true);
 
-    final private SimpleBooleanProperty disableProperty = new SimpleBooleanProperty(false);
-
     public AccountExchangePane() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AccountExchangePane.fxml"),
                 ResourceUtils.getBundle());
@@ -106,12 +104,11 @@ public class AccountExchangePane extends GridPane {
 
     @FXML
     private void initialize() {
-
         popOver.detachableProperty().setValue(false);
 
-        accountCombo.disableProperty().bind(disableProperty);
-        expandButton.disableProperty().bind(disableProperty);
-        exchangeRateField.disableProperty().bind(disableProperty);
+        accountCombo.disableProperty().bind(disableProperty());
+        expandButton.disableProperty().bind(disableProperty());
+        exchangeRateField.disableProperty().bind(disableProperty());
 
         exchangeRateField.scaleProperty().set(MathConstants.EXCHANGE_RATE_ACCURACY);
 
@@ -291,10 +288,6 @@ public class AccountExchangePane extends GridPane {
 
     void setExchangedAmount(final BigDecimal value) {
         exchangeAmountProperty.setValue(value);
-    }
-
-    void setEnabled(final boolean enabled) {
-        disableProperty().setValue(!enabled);
     }
 
     public SimpleBooleanProperty filterBaseAccountProperty() {
