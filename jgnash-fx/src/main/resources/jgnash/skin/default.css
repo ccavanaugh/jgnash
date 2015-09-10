@@ -34,13 +34,12 @@
 /*
  * Hide the focus around tables
  */
-.table-view {
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
-}
-.tree-table-view {
-    -fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
+.table-view:focused,
+.tree-table-view:focused {
+    -fx-background-color: -fx-box-border, -fx-control-inner-background;
+    -fx-background-insets: 0, 1;
+    -fx-padding: 1;
+    -fx-background-radius: 0, 0;
 }
 
 .table-row-cell {
