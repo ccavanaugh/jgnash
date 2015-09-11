@@ -103,16 +103,16 @@
         <Label fx:id="reconciledBalanceLabel" text="0.00" GridPane.columnIndex="1" GridPane.halignment="RIGHT"
                GridPane.rowIndex="2"/>
         <Separator GridPane.columnSpan="2" GridPane.rowIndex="3"/>
-        <Label fx:id="differenceLabel" text="%Label.Difference" GridPane.rowIndex="4"/>
-        <Label text="0.00" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4"/>
+        <Label text="%Label.Difference" GridPane.rowIndex="4"/>
+        <Label fx:id="differenceLabel" text="0.00" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4"/>
     </GridPane>
     <ButtonBar GridPane.columnSpan="2" GridPane.rowIndex="2">
         <buttons>
-            <Button text="Override" onAction="#handleOverrideAction" ButtonBar.buttonData="LEFT"/>
+            <Button fx:id="overrideButton" text="Override" onAction="#handleOverrideAction" ButtonBar.buttonData="LEFT"/>
             <Button visible="false" ButtonBar.buttonData="BIG_GAP"/>
             <Button text="%Button.Cancel" onAction="#handleCloseAction" ButtonBar.buttonData="RIGHT"/>
             <Button text="%Button.FinishLater" onAction="#handleFinishLaterAction" ButtonBar.buttonData="RIGHT"/>
-            <Button text="%Button.Finish" onAction="#handleFinishAction" ButtonBar.buttonData="RIGHT"/>
+            <Button fx:id="finishButton" text="%Button.Finish" onAction="#handleFinishAction" ButtonBar.buttonData="RIGHT"/>
         </buttons>
     </ButtonBar>
 </GridPane>

@@ -18,13 +18,18 @@
 package jgnash.uifx.views.register.reconcile;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -32,6 +37,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -41,6 +47,7 @@ import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 import jgnash.engine.Account;
+import jgnash.engine.MathConstants;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.message.Message;
@@ -54,6 +61,8 @@ import jgnash.uifx.util.TableViewManager;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.register.RegisterFactory;
 import jgnash.util.DateUtils;
+import jgnash.util.NotNull;
+import jgnash.util.Nullable;
 
 /**
  * Account reconcile dialog.
@@ -64,6 +73,12 @@ public class ReconcileDialogController implements MessageListener {
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
+
+    @FXML
+    private Button overrideButton;
+
+    @FXML
+    private Button finishButton;
 
     @FXML
     private ResourceBundle resources;
@@ -104,6 +119,10 @@ public class ReconcileDialogController implements MessageListener {
 
     private LocalDate closingDate;
 
+    private BigDecimal openingBalance;
+
+    private BigDecimal endingBalance;
+
     private final ObservableList<RecTransaction> transactions = FXCollections.observableArrayList();
 
     private final FilteredList<RecTransaction> increaseList = new FilteredList<>(transactions);
@@ -113,6 +132,12 @@ public class ReconcileDialogController implements MessageListener {
     private TableViewManager<RecTransaction> increaseTableViewManager;
 
     private TableViewManager<RecTransaction> decreaseTableViewManager;
+
+    private NumberFormat numberFormat;
+
+    private final SimpleBooleanProperty reconciled = new SimpleBooleanProperty(false);
+
+    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock(true);
 
     private static final String PREF_NODE = "/jgnash/uifx/views/register/reconcile";
 
@@ -129,6 +154,37 @@ public class ReconcileDialogController implements MessageListener {
                         }));
             }
         });
+
+        // toggle the selection state
+        increaseTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                if (newValue.getReconciledState() == ReconciledState.RECONCILED) {
+                    newValue.setReconciledState(ReconciledState.NOT_RECONCILED);
+                } else {
+                    newValue.setReconciledState(ReconciledState.RECONCILED);
+                }
+                increaseTableView.refresh();
+                Platform.runLater(() -> increaseTableView.getSelectionModel().clearSelection());
+                updateCalculatedValues();
+            }
+        });
+
+        // toggle the selection state
+        decreaseTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                if (newValue.getReconciledState() == ReconciledState.RECONCILED) {
+                    newValue.setReconciledState(ReconciledState.NOT_RECONCILED);
+                } else {
+                    newValue.setReconciledState(ReconciledState.RECONCILED);
+                }
+                decreaseTableView.refresh();
+                Platform.runLater(() -> decreaseTableView.getSelectionModel().clearSelection());
+                updateCalculatedValues();
+            }
+        });
+
+        overrideButton.disableProperty().bind(reconciled);
+        finishButton.disableProperty().bind(reconciled.not());
     }
 
     private Callback<Integer, Double> getColumnWeightFactory() {
@@ -145,14 +201,21 @@ public class ReconcileDialogController implements MessageListener {
 
         this.account = account;
         this.closingDate = closingDate;
+        this.endingBalance = endingBalance;
+        this.openingBalance = openingBalance;
 
-        final String[] columnNames = RegisterFactory.getCreditDebitTabNames(this.account.getAccountType());
+        numberFormat = CommodityFormat.getShortNumberFormat(account.getCurrencyNode());
+
+        final String[] columnNames = RegisterFactory.getCreditDebitTabNames(account.getAccountType());
 
         increaseTitledPane.setText(columnNames[0]);
         decreaseTitledPane.setText(columnNames[1]);
 
         increaseList.setPredicate(recTransaction -> recTransaction.getAmount(account).signum() >= 0);
         decreaseList.setPredicate(recTransaction -> recTransaction.getAmount(account).signum() < 0);
+
+        openingBalanceLabel.setText(numberFormat.format(openingBalance));
+        targetBalanceLabel.setText(numberFormat.format(endingBalance));
 
         loadTables();
     }
@@ -175,29 +238,34 @@ public class ReconcileDialogController implements MessageListener {
 
         increaseTableView.setItems(increaseList);
         decreaseTableView.setItems(decreaseList);
+
+        updateCalculatedValues();
     }
 
     @FXML
     private void handleCloseAction() {
         MessageBus.getInstance().unregisterListener(this, MessageChannel.TRANSACTION);
-
         ((Stage) parentProperty.get().getWindow()).close();
     }
 
     @FXML
     private void handleDecreaseSelectAllAction() {
+        setReconciledState(decreaseList, ReconciledState.RECONCILED, decreaseTableView);
     }
 
     @FXML
     private void handleDecreaseClearAllAction() {
+        setReconciledState(decreaseList, ReconciledState.NOT_RECONCILED, decreaseTableView);
     }
 
     @FXML
     private void handleIncreaseSelectAllAction() {
+        setReconciledState(increaseList, ReconciledState.RECONCILED, increaseTableView);
     }
 
     @FXML
     private void handleIncreaseClearAllAction() {
+        setReconciledState(increaseList, ReconciledState.NOT_RECONCILED, increaseTableView);
     }
 
     @FXML
@@ -213,6 +281,70 @@ public class ReconcileDialogController implements MessageListener {
     @FXML
     private void handleFinishAction() {
         handleCloseAction();
+    }
+
+    private void setReconciledState(final List<RecTransaction> transactionList, final ReconciledState reconciledState,
+                                    final TableView<RecTransaction> tableView) {
+        readWriteLock.readLock().lock();
+        try {
+            for (final RecTransaction recTransaction : transactionList) {
+                recTransaction.setReconciledState(reconciledState);
+            }
+            tableView.refresh();
+            updateCalculatedValues();
+        } finally {
+            readWriteLock.readLock().unlock();
+        }
+    }
+
+    private void updateCalculatedValues() {
+        new Thread() {
+            public void run() {
+
+                final BigDecimal increaseAmount = getReconciledTotal(increaseList);
+                final BigDecimal decreaseAmount = getReconciledTotal(decreaseList);
+
+                Platform.runLater(() -> increaseTotalLabel
+                        .setText(numberFormat.format(increaseAmount)));
+
+                Platform.runLater(() -> decreaseTotalLabel
+                        .setText(numberFormat.format(decreaseAmount)));
+
+                final BigDecimal reconciledBalance = increaseAmount.add(decreaseAmount).add(openingBalance);
+
+                Platform.runLater(() -> reconciledBalanceLabel
+                        .setText(numberFormat.format(reconciledBalance)));
+
+                // need to round of the values for difference to work (investment accounts)
+                final int scale = account.getCurrencyNode().getScale();
+
+                final BigDecimal difference = endingBalance.subtract(reconciledBalance).abs()
+                        .setScale(scale, MathConstants.roundingMode);
+
+                Platform.runLater(() -> differenceLabel
+                        .setText(numberFormat.format(difference)));
+
+                reconciled.setValue(difference.compareTo(BigDecimal.ZERO) == 0);
+            }
+        }.start();
+    }
+
+    private BigDecimal getReconciledTotal(final List<RecTransaction> list) {
+        BigDecimal sum = BigDecimal.ZERO;
+
+        readWriteLock.readLock().lock();
+
+        try {
+            for (final RecTransaction t : list) {
+                if (t.getReconciledState() != ReconciledState.NOT_RECONCILED) {
+                    sum = sum.add(t.getAmount(account));
+                }
+            }
+        } finally {
+            readWriteLock.readLock().unlock();
+        }
+
+        return AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(), sum);
     }
 
     private void configureTableView(final TableView<RecTransaction> tableView, final TableViewManager<RecTransaction> tableViewManager) {
@@ -256,15 +388,20 @@ public class ReconcileDialogController implements MessageListener {
         return DateUtils.before(t.getLocalDate(), closingDate) && t.getReconciled(account) != ReconciledState.RECONCILED;
     }
 
-    private synchronized RecTransaction findTransaction(final Transaction t) {
-        if (t != null) {
+    @Nullable
+    private synchronized RecTransaction findTransaction(@NotNull final Transaction t) {
+        readWriteLock.readLock().lock();
+
+        try {
             for (final RecTransaction tran : transactions) {
                 if (tran.getTransaction() == t) {
                     return tran;
                 }
             }
+            return null;
+        } finally {
+            readWriteLock.readLock().unlock();
         }
-        return null;
     }
 
     @Override
@@ -272,21 +409,36 @@ public class ReconcileDialogController implements MessageListener {
         if (account != null && account.equals(message.getObject(MessageProperty.ACCOUNT))) {
             final Transaction transaction = message.getObject(MessageProperty.TRANSACTION);
 
-            switch (message.getEvent()) {
-                case TRANSACTION_REMOVE:
-                    final RecTransaction trans = findTransaction(transaction);
+            if (transaction != null) {
+                switch (message.getEvent()) {
+                    case TRANSACTION_REMOVE:
+                        final RecTransaction trans = findTransaction(transaction);
 
-                    if (trans != null) {
-                        transactions.removeAll(trans);
-                    }
-                    break;
-                case TRANSACTION_ADD:
-                    if (reconcilable(transaction)) {
-                        transactions.add(new RecTransaction(transaction, transaction.getReconciled(account)));
-                    }
-                    break;
-                default:
-                    break;
+                        if (trans != null) {
+                            readWriteLock.writeLock().lock();
+                            try {
+                                transactions.removeAll(trans);
+                                updateCalculatedValues();
+                            } finally {
+                                readWriteLock.writeLock().unlock();
+                            }
+                        }
+                        break;
+                    case TRANSACTION_ADD:
+                        if (reconcilable(transaction)) {
+                            readWriteLock.writeLock().lock();
+                            try {
+                                transactions.add(new RecTransaction(transaction, transaction.getReconciled(account)));
+                                FXCollections.sort(transactions);
+                                updateCalculatedValues();
+                            } finally {
+                                readWriteLock.writeLock().unlock();
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }

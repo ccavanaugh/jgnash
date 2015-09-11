@@ -42,18 +42,6 @@ class RecTransactionCommodityFormatTableCell extends TableCell<RecTransaction, B
 
         if (!empty && amount != null) {
             setText(format.format(amount));
-
-            // Not empty and amount is not null, but tableRow can be null... JavaFx Bug?
-            if (getTableRow() != null && getTableRow().getItem() != null) {
-                final boolean negative = amount.signum() < 0;
-
-                // Set font style
-                if (negative) {
-                    setId("normal-negative-label");
-                } else {
-                    setId("normal-label");
-                }
-            }
         } else {
             setText(null);
         }
