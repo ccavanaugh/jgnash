@@ -17,7 +17,9 @@
  */
 package jgnash.engine;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Manages the reconciliation options.
@@ -152,5 +154,26 @@ public class ReconcileManager {
                 }
             }
         }
+    }
+
+    public static void reconcileTransactions(final Account account, final List<RecTransaction> list,
+                                             final ReconciledState reconciledState) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        // create a copy of the list to prevent concurrent modification errors
+        final List<RecTransaction> transactions = new ArrayList<>(list);
+
+        // Set to the requested reconcile state, ignore if no change is detected
+        transactions.parallelStream().filter(transaction -> transaction.getReconciledState()
+                != transaction.getTransaction().getReconciled(account)).forEach(recTransaction -> {
+
+            // Set to the requested reconcile state
+            if (recTransaction.getReconciledState() != ReconciledState.NOT_RECONCILED) {
+                engine.setTransactionReconciled(recTransaction.getTransaction(), account, reconciledState);
+            } else { // must have been reconciled or cleared
+                engine.setTransactionReconciled(recTransaction.getTransaction(), account, recTransaction.getReconciledState());
+            }
+        });
     }
 }

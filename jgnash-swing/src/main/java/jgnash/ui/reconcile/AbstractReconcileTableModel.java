@@ -18,9 +18,8 @@
 package jgnash.ui.reconcile;
 
 import jgnash.engine.Account;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
 import jgnash.engine.RecTransaction;
+import jgnash.engine.ReconcileManager;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.message.Message;
@@ -304,32 +303,6 @@ abstract class AbstractReconcileTableModel extends AbstractTableModel implements
     }
 
     void commitChanges(final ReconciledState reconciledState) {
-        List<RecTransaction> transactions = null;
-
-        // create a copy of the list to prevent concurrent modification errors
-        rwl.readLock().lock();
-        try {
-            transactions = new ArrayList<>(list);
-        } finally {
-            rwl.readLock().unlock();
-        }
-
-        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-
-        Objects.requireNonNull(engine);
-
-        // Set to the requested reconcile state
-        // must not be reconciled or cleared
-        transactions.parallelStream().filter(transaction -> transaction.getReconciledState()
-                != transaction.getTransaction().getReconciled(account)).forEach(transaction -> {
-
-            // Set to the requested reconcile state
-            if (transaction.getReconciledState() != ReconciledState.NOT_RECONCILED) {
-                engine.setTransactionReconciled(transaction.getTransaction(), account, reconciledState);
-            } else { // must not be reconciled or cleared
-                engine.setTransactionReconciled(transaction.getTransaction(), account, transaction.getReconciledState());
-            }
-        });
+        ReconcileManager.reconcileTransactions(account, list, reconciledState);
     }
-
 }
