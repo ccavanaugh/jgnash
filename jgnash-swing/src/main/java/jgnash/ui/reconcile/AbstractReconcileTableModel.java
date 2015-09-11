@@ -17,6 +17,23 @@
  */
 package jgnash.ui.reconcile;
 
+import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.RecTransaction;
+import jgnash.engine.ReconciledState;
+import jgnash.engine.Transaction;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageBus;
+import jgnash.engine.message.MessageChannel;
+import jgnash.engine.message.MessageListener;
+import jgnash.engine.message.MessageProperty;
+import jgnash.ui.register.AccountBalanceDisplayManager;
+import jgnash.ui.register.table.PackableTableModel;
+import jgnash.util.DateUtils;
+import jgnash.util.ResourceUtils;
+
+import javax.swing.table.AbstractTableModel;
 import java.awt.EventQueue;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -29,26 +46,6 @@ import java.util.ResourceBundle;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
-
-import javax.swing.table.AbstractTableModel;
-
-import jgnash.engine.Account;
-import jgnash.engine.AccountGroup;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
-import jgnash.engine.InvestmentTransaction;
-import jgnash.engine.ReconciledState;
-import jgnash.engine.Transaction;
-import jgnash.engine.message.Message;
-import jgnash.engine.message.MessageBus;
-import jgnash.engine.message.MessageChannel;
-import jgnash.engine.message.MessageListener;
-import jgnash.engine.message.MessageProperty;
-import jgnash.ui.register.AccountBalanceDisplayManager;
-import jgnash.ui.register.table.PackableTableModel;
-import jgnash.util.DateUtils;
-import jgnash.util.NotNull;
-import jgnash.util.ResourceUtils;
 
 /**
  * Model initializes itself by grabbing all of the transactions from the account and then filters for transactions that
@@ -99,7 +96,9 @@ abstract class AbstractReconcileTableModel extends AbstractTableModel implements
         rwl.writeLock().lock();
 
         try {
-            list.addAll(account.getSortedTransactionList().parallelStream().filter(this::reconcilable).map(RecTransaction::new).collect(Collectors.toList()));
+            list.addAll(account.getSortedTransactionList().parallelStream().filter(this::reconcilable)
+                    .map(transaction -> new RecTransaction(transaction, transaction.getReconciled(account)))
+                    .collect(Collectors.toList()));
         } finally {
             rwl.writeLock().unlock();
         }
@@ -167,7 +166,7 @@ abstract class AbstractReconcileTableModel extends AbstractTableModel implements
 
             switch (columnIndex) {
                 case 0:
-                    return t.getReconciled().toString();
+                    return t.getReconciledState().toString();
                 case 1:
                     return dateFormatter.format(t.getDate());
                 case 2:
@@ -206,7 +205,7 @@ abstract class AbstractReconcileTableModel extends AbstractTableModel implements
                             break;
                         case TRANSACTION_ADD:
                             if (isVisible(transaction)) {
-                                RecTransaction newTran = new RecTransaction(transaction);
+                                RecTransaction newTran = new RecTransaction(transaction, transaction.getReconciled(account));
                                 int index = Collections.binarySearch(list, newTran);
                                 if (index < 0) {
                                     index = -index - 1;
@@ -233,7 +232,7 @@ abstract class AbstractReconcileTableModel extends AbstractTableModel implements
 
         try {
             for (final RecTransaction t : list) {
-                if (t.getReconciled() == ReconciledState.RECONCILED) {
+                if (t.getReconciledState() == ReconciledState.RECONCILED) {
                     sum = sum.add(t.getAmount(account));
                 }
             }
@@ -250,7 +249,7 @@ abstract class AbstractReconcileTableModel extends AbstractTableModel implements
         try {
             if (t != null) {
                 for (final RecTransaction tran : list) {
-                    if (tran.transaction == t) {
+                    if (tran.getTransaction() == t) {
                         return tran;
                     }
                 }
@@ -267,10 +266,10 @@ abstract class AbstractReconcileTableModel extends AbstractTableModel implements
         try {
             RecTransaction t = list.get(index);
 
-            if (t.getReconciled() == ReconciledState.RECONCILED) {
-                t.setReconciled(ReconciledState.NOT_RECONCILED);
+            if (t.getReconciledState() == ReconciledState.RECONCILED) {
+                t.setReconciledState(ReconciledState.NOT_RECONCILED);
             } else {
-                t.setReconciled(ReconciledState.RECONCILED);
+                t.setReconciledState(ReconciledState.RECONCILED);
             }
             fireTableRowsUpdated(index, index);
         } finally {
@@ -283,7 +282,7 @@ abstract class AbstractReconcileTableModel extends AbstractTableModel implements
 
         try {
             for (final RecTransaction tran : list) {
-                tran.setReconciled(ReconciledState.RECONCILED);
+                tran.setReconciledState(ReconciledState.RECONCILED);
             }
             fireTableDataChanged();
         } finally {
@@ -296,7 +295,7 @@ abstract class AbstractReconcileTableModel extends AbstractTableModel implements
 
         try {
             for (final RecTransaction tran : list) {
-                tran.setReconciled(ReconciledState.NOT_RECONCILED);
+                tran.setReconciledState(ReconciledState.NOT_RECONCILED);
             }
             fireTableDataChanged();
         } finally {
@@ -320,86 +319,17 @@ abstract class AbstractReconcileTableModel extends AbstractTableModel implements
         Objects.requireNonNull(engine);
 
         // Set to the requested reconcile state
-// must not be reconciled or cleared
-        transactions.parallelStream().filter(transaction -> transaction.getReconciled() != transaction.transaction.getReconciled(account)).forEach(transaction -> {
+        // must not be reconciled or cleared
+        transactions.parallelStream().filter(transaction -> transaction.getReconciledState()
+                != transaction.getTransaction().getReconciled(account)).forEach(transaction -> {
 
             // Set to the requested reconcile state
-            if (transaction.getReconciled() != ReconciledState.NOT_RECONCILED) {
-                engine.setTransactionReconciled(transaction.transaction, account, reconciledState);
+            if (transaction.getReconciledState() != ReconciledState.NOT_RECONCILED) {
+                engine.setTransactionReconciled(transaction.getTransaction(), account, reconciledState);
             } else { // must not be reconciled or cleared
-                engine.setTransactionReconciled(transaction.transaction, account, transaction.getReconciled());
+                engine.setTransactionReconciled(transaction.getTransaction(), account, transaction.getReconciledState());
             }
         });
     }
 
-    /**
-     * Decorator around a Transaction to maintain the original reconciled state
-     */
-    private class RecTransaction implements Comparable<RecTransaction> {
-
-        private ReconciledState reconciled;
-
-        Transaction transaction;
-
-        RecTransaction(final Transaction transaction) {
-            assert transaction != null;
-            this.transaction = transaction;
-            reconciled = transaction.getReconciled(account);
-        }
-
-        public LocalDate getDate() {
-            return transaction.getLocalDate();
-        }
-
-        public String getNumber() {
-            return transaction.getNumber();
-        }
-
-        public String getPayee() {
-            return transaction.getPayee();
-        }
-
-        public ReconciledState getReconciled() {
-            return reconciled;
-        }
-
-        public void setReconciled(final ReconciledState reconciled) {
-            this.reconciled = reconciled;
-        }
-
-        BigDecimal getAmount(final Account a) {
-            if (transaction instanceof InvestmentTransaction && a.memberOf(AccountGroup.INVEST)) {
-                return ((InvestmentTransaction) transaction).getMarketValue(transaction.getLocalDate())
-                        .add(transaction.getAmount(a));
-            }
-
-            return transaction.getAmount(a);
-        }
-
-        @Override
-        public int hashCode() {
-            return transaction.hashCode();
-        }
-
-        @Override
-        public boolean equals(final Object obj) {
-
-            boolean result = false;
-
-            if (obj != null && obj instanceof RecTransaction) {
-                RecTransaction other = (RecTransaction) obj;
-
-                if (transaction != null && other.transaction != null && transaction.equals(other.transaction) && reconciled == other.reconciled) {
-                    result = true;
-                }
-            }
-
-            return result;
-        }
-
-        @Override
-        public int compareTo(@NotNull final RecTransaction t) {
-            return transaction.compareTo(t.transaction);
-        }
-    }
 }

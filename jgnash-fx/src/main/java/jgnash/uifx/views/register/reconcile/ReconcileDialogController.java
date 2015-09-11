@@ -17,16 +17,6 @@
  */
 package jgnash.uifx.views.register.reconcile;
 
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.stream.Collectors;
-
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -45,9 +35,9 @@ import javafx.scene.control.TitledPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
-
 import jgnash.engine.Account;
 import jgnash.engine.MathConstants;
+import jgnash.engine.RecTransaction;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.message.Message;
@@ -63,6 +53,16 @@ import jgnash.uifx.views.register.RegisterFactory;
 import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
+
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
 
 /**
  * Account reconcile dialog.
@@ -143,8 +143,6 @@ public class ReconcileDialogController implements MessageListener {
 
     @FXML
     private void initialize() {
-        MessageBus.getInstance().registerListener(this, MessageChannel.TRANSACTION);
-
         parentProperty.addListener((observable, oldValue, newScene) -> {
             if (newScene != null) {
                 newScene.windowProperty().get().addEventHandler(WindowEvent.WINDOW_SHOWN,
@@ -193,7 +191,6 @@ public class ReconcileDialogController implements MessageListener {
 
     void initialize(final Account account, final LocalDate closingDate, final BigDecimal openingBalance,
                     final BigDecimal endingBalance) {
-
         Objects.requireNonNull(account);
         Objects.requireNonNull(closingDate);
         Objects.requireNonNull(openingBalance);
@@ -218,6 +215,8 @@ public class ReconcileDialogController implements MessageListener {
         targetBalanceLabel.setText(numberFormat.format(endingBalance));
 
         loadTables();
+
+        MessageBus.getInstance().registerListener(this, MessageChannel.TRANSACTION);
     }
 
     private void loadTables() {

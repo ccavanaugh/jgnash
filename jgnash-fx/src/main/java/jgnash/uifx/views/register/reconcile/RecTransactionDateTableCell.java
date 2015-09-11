@@ -22,6 +22,7 @@ import java.time.format.DateTimeFormatter;
 
 import javafx.scene.control.TableCell;
 
+import jgnash.engine.RecTransaction;
 import jgnash.util.DateUtils;
 
 /**

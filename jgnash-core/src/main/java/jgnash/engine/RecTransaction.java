@@ -15,9 +15,8 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package jgnash.uifx.views.register.reconcile;
+package jgnash.engine;
 
-import jgnash.engine.*;
 import jgnash.util.NotNull;
 
 import java.math.BigDecimal;
@@ -25,16 +24,17 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 /**
- * Decorator around a Transaction to maintain the original reconciledState state
+ * Utility Decorator around a Transaction to maintain the original reconciledState state. This class is not intended
+ * to be serialized.
  *
  * @author Craig Cavanaugh
  */
-class RecTransaction implements Comparable<RecTransaction> {
+public class RecTransaction implements Comparable<RecTransaction> {
     private ReconciledState reconciledState;
 
-   private final Transaction transaction;
+    private final Transaction transaction;
 
-    RecTransaction(@NotNull final Transaction transaction, @NotNull final ReconciledState reconciledState) {
+    public RecTransaction(@NotNull final Transaction transaction, @NotNull final ReconciledState reconciledState) {
         Objects.requireNonNull(transaction);
         Objects.requireNonNull(reconciledState);
 
@@ -62,7 +62,7 @@ class RecTransaction implements Comparable<RecTransaction> {
         this.reconciledState = reconciledState;
     }
 
-    BigDecimal getAmount(final Account a) {
+    public BigDecimal getAmount(final Account a) {
         if (getTransaction() instanceof InvestmentTransaction && a.memberOf(AccountGroup.INVEST)) {
             return ((InvestmentTransaction) getTransaction()).getMarketValue(getTransaction().getLocalDate())
                     .add(getTransaction().getAmount(a));

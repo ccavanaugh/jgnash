@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 
 import javafx.scene.control.TableCell;
+import jgnash.engine.RecTransaction;
 
 /**
  * @author Craig Cavanaugh
