@@ -17,15 +17,20 @@
  */
 package jgnash.engine;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+
+import jgnash.util.DateUtils;
+import jgnash.util.NotNull;
 
 /**
- * Manages the reconciliation options.
- * <p/>
- * Both reconcileIncomeExpense and reconcileBothSides can be false, but
- * only one can be true
+ * Manages the reconciliation options and provides utility functions for preserving account reconciliation attributes
+ * <p>
+ * Both reconcileIncomeExpense and reconcileBothSides can be false, but only one can be true
  *
  * @author Craig Cavanaugh
  */
@@ -75,7 +80,7 @@ public class ReconcileManager {
      * be automatically reconciled
      *
      * @return true if income and expense accounts should automatically be
-     *         reconciled.
+     * reconciled.
      */
     public static boolean getAutoReconcileIncomeExpense() {
         return reconcileIncomeExpense;
@@ -105,7 +110,7 @@ public class ReconcileManager {
      * Determines if both sides of a transaction should be automatically reconciled
      *
      * @return true if income and expense accounts should automatically be
-     *         reconciled.
+     * reconciled.
      */
     public static boolean getAutoReconcileBothSides() {
         return reconcileBothSides;
@@ -175,5 +180,59 @@ public class ReconcileManager {
                 engine.setTransactionReconciled(recTransaction.getTransaction(), account, recTransaction.getReconciledState());
             }
         });
+    }
+
+    /**
+     * Sets a date attribute for an account
+     * @param account account that is being updated
+     * @param date date value
+     */
+    public static void setAccountDateAttribute(@NotNull final Account account, @NotNull final String attribute,
+                                               @NotNull final LocalDate date) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        engine.setAccountAttribute(account, attribute, Long.toString(DateUtils.asEpochMilli(date)));
+    }
+
+    /**
+     * Returns a date attribute for an account
+     * @param account {@code Account} that is being queried
+     * @return an {@code Optional} containing the date if previously set
+     */
+    public static Optional<LocalDate> getAccountDateAttribute(@NotNull final Account account,
+                                                              @NotNull final String attribute) {
+        final String value = account.getAttribute(attribute);
+        if (value != null) {
+            return Optional.ofNullable(DateUtils.asLocalDate(Long.parseLong(value)));
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Sets a {@code BigDecimal} attribute for an account
+     * @param account account that is being updated
+     * @param decimal decimal value
+     */
+    public static void setAccountBigDecimalAttribute(@NotNull final Account account, @NotNull final String attribute,
+                                                     @NotNull final BigDecimal decimal) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        engine.setAccountAttribute(account, attribute, decimal.toString());
+    }
+
+    /**
+     * Returns a {@code BigDecimal} attribute for an account
+     * @param account {@code Account} that is being queried
+     * @return an {@code Optional} containing the {@code BigDecimal} if previously set
+     */
+    public static Optional<BigDecimal> getAccountBigDecimalAttribute(@NotNull final Account account,
+                                                                     @NotNull final String attribute) {
+        final String value = account.getAttribute(attribute);
+        if (value != null) {
+            return Optional.ofNullable(new BigDecimal(value));
+        }
+        return Optional.empty();
     }
 }

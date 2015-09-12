@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javax.swing.JButton;
@@ -32,6 +33,7 @@ import javax.swing.JDialog;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.ReconcileManager;
 import jgnash.ui.StaticUIMethods;
 import jgnash.ui.UIApplication;
 import jgnash.ui.components.DatePanel;
@@ -94,73 +96,58 @@ public class ReconcileSettingsDialog extends JDialog implements ActionListener {
         LocalDate statementDate = account.getFirstUnreconciledTransactionDate().with(TemporalAdjusters.lastDayOfMonth());
 
         // Balance at the 1st unreconciled transaction
-        BigDecimal openingBalance = AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(), account.getOpeningBalanceForReconcile());
+        BigDecimal openingBalance = AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(),
+                account.getOpeningBalanceForReconcile());
 
         // Balance at the statement date
-        BigDecimal closingBalance = AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(), account.getBalance(statementDate));
+        BigDecimal closingBalance = AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(),
+                account.getBalance(statementDate));
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
 
-        // Determine the best reconcile values to use
-        if (engine != null) {
-            LocalDate lastSuccessDate = null;
-            LocalDate lastAttemptDate = null;
-            LocalDate lastStatementDate = LocalDate.now();
+        final LocalDate lastSuccessDate = ReconcileManager.getAccountDateAttribute(account,
+                Account.RECONCILE_LAST_SUCCESS_DATE).orElse(null);
 
-            BigDecimal lastOpeningBalance = null;
-            BigDecimal lastClosingBalance = null;
+        final LocalDate lastAttemptDate = ReconcileManager.getAccountDateAttribute(account,
+                Account.RECONCILE_LAST_ATTEMPT_DATE).orElse(null);
 
-            String value = account.getAttribute(Account.RECONCILE_LAST_SUCCESS_DATE);
-            if (value != null) {
-                lastSuccessDate = DateUtils.asLocalDate(Long.parseLong(value));
-            }
+        final LocalDate lastStatementDate = ReconcileManager.getAccountDateAttribute(account,
+                Account.RECONCILE_LAST_STATEMENT_DATE).orElse(LocalDate.now());
 
-            value = account.getAttribute(Account.RECONCILE_LAST_ATTEMPT_DATE);
-            if (value != null) {
-                lastAttemptDate = DateUtils.asLocalDate(Long.parseLong(value));
-            }
+        final BigDecimal lastClosingBalance = ReconcileManager.getAccountBigDecimalAttribute(account,
+                Account.RECONCILE_LAST_CLOSING_BALANCE).orElse(null);
 
-            value = account.getAttribute(Account.RECONCILE_LAST_STATEMENT_DATE);
-            if (value != null) {
-                lastStatementDate = DateUtils.asLocalDate(Long.parseLong(value));
-            }
+        final BigDecimal lastOpeningBalance = ReconcileManager.getAccountBigDecimalAttribute(account,
+                Account.RECONCILE_LAST_OPENING_BALANCE).orElse(null);
 
-            value = account.getAttribute(Account.RECONCILE_LAST_CLOSING_BALANCE);
-            if (value != null) {
-                lastClosingBalance = new BigDecimal(value);
-            }
+        if (lastSuccessDate != null) { // we had prior success, use a new date one month out if the date is earlier than today
+            if (DateUtils.before(lastStatementDate, LocalDate.now())) {
 
-            value = account.getAttribute(Account.RECONCILE_LAST_OPENING_BALANCE);
-            if (value != null) {
-                lastOpeningBalance = new BigDecimal(value);
-            }
+                // set the new statement date
+                statementDate = lastStatementDate.plusMonths(1);
 
-            if (lastSuccessDate != null) { // we had prior success, use a new date one month out if the date is earlier than today
-                if (DateUtils.before(lastStatementDate, LocalDate.now())) {
-
-                    // set the new statement date
-                    statementDate = lastStatementDate.plusMonths(1);
-
-                    // use the account balance of the estimated statement date
-                    closingBalance = AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(), account.getBalance(statementDate));
-                }
-            }
-
-            // an recent attempt has been made before, override defaults
-            if (lastAttemptDate != null && Math.abs(ChronoUnit.DAYS.between(lastAttemptDate, LocalDate.now())) <= FUZZY_DATE_RANGE) {
-                if (lastStatementDate != null) {
-                    statementDate = lastStatementDate; // set the new statement date + 1 month
-                }
-
-                if (lastOpeningBalance != null) {
-                    openingBalance = lastOpeningBalance;
-                }
-
-                if (lastClosingBalance != null) {
-                    closingBalance = lastClosingBalance;
-                }
+                // use the account balance of the estimated statement date
+                closingBalance = AccountBalanceDisplayManager.convertToSelectedBalanceMode(account.getAccountType(),
+                        account.getBalance(statementDate));
             }
         }
+
+        // an recent attempt has been made before, override defaults
+        if (lastAttemptDate != null && Math.abs(ChronoUnit.DAYS.between(lastAttemptDate, LocalDate.now())) <= FUZZY_DATE_RANGE) {
+            if (lastStatementDate != null) {
+                statementDate = lastStatementDate; // set the new statement date + 1 month
+            }
+
+            if (lastOpeningBalance != null) {
+                openingBalance = lastOpeningBalance;
+            }
+
+            if (lastClosingBalance != null) {
+                closingBalance = lastClosingBalance;
+            }
+        }
+
 
         datePanel.setDate(statementDate);
         openField.setDecimal(openingBalance);
@@ -210,14 +197,17 @@ public class ReconcileSettingsDialog extends JDialog implements ActionListener {
             new Thread() {  // save the value in a background thread as this could take a little bit
                 @Override
                 public void run() {
-                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                    ReconcileManager.setAccountDateAttribute(account, Account.RECONCILE_LAST_ATTEMPT_DATE,
+                            LocalDate.now());
 
-                    if (engine != null) {
-                        engine.setAccountAttribute(account, Account.RECONCILE_LAST_ATTEMPT_DATE, Long.toString(DateUtils.asEpochMilli(LocalDate.now())));
-                        engine.setAccountAttribute(account, Account.RECONCILE_LAST_STATEMENT_DATE, Long.toString(DateUtils.asEpochMilli(getStatementDate())));
-                        engine.setAccountAttribute(account, Account.RECONCILE_LAST_OPENING_BALANCE, getOpeningBalance().toString());
-                        engine.setAccountAttribute(account, Account.RECONCILE_LAST_CLOSING_BALANCE, getClosingBalance().toString());
-                    }
+                    ReconcileManager.setAccountDateAttribute(account, Account.RECONCILE_LAST_STATEMENT_DATE,
+                            getStatementDate());
+
+                    ReconcileManager.setAccountBigDecimalAttribute(account, Account.RECONCILE_LAST_OPENING_BALANCE,
+                            getOpeningBalance());
+
+                    ReconcileManager.setAccountBigDecimalAttribute(account, Account.RECONCILE_LAST_CLOSING_BALANCE,
+                            getClosingBalance());
                 }
             }.start();
         }

@@ -46,9 +46,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 
 import jgnash.engine.Account;
-import jgnash.engine.Engine;
-import jgnash.engine.EngineFactory;
 import jgnash.engine.MathConstants;
+import jgnash.engine.ReconcileManager;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
@@ -62,7 +61,6 @@ import jgnash.ui.components.FormattedJTable;
 import jgnash.ui.register.RegisterFactory;
 import jgnash.ui.util.DialogUtils;
 import jgnash.ui.util.JTableUtils;
-import jgnash.util.DateUtils;
 import jgnash.util.ResourceUtils;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
@@ -367,14 +365,8 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
         } else if (e.getSource() == finishButton) {
             closeDialog();
 
-            // save the closing date of the last successful reconciliation
-            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-            if (engine != null) {
-                engine.setAccountAttribute(account, Account.RECONCILE_LAST_SUCCESS_DATE,
-                        Long.toString(DateUtils.asEpochMilli(closingDate)));
-            }
-
             commitChanges(ReconciledState.RECONCILED);
+            ReconcileManager.setAccountDateAttribute(account, Account.RECONCILE_LAST_SUCCESS_DATE, closingDate);
         } else if (e.getSource() == cancelButton) {
             closeDialog();
         } else if (e.getSource() == creditSelectAllButton) {
