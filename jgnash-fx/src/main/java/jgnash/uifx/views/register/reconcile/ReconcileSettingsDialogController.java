@@ -35,6 +35,7 @@ import javafx.stage.Stage;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.ReconcileManager;
 import jgnash.uifx.control.DatePickerEx;
 import jgnash.uifx.control.DecimalTextField;
 import jgnash.uifx.util.FXMLUtils;
@@ -94,40 +95,22 @@ public class ReconcileSettingsDialogController {
                 account.getBalance(statementDate));
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-
         Objects.requireNonNull(engine);
 
-        LocalDate lastSuccessDate = null;
-        LocalDate lastAttemptDate = null;
-        LocalDate lastStatementDate = LocalDate.now();
+        final LocalDate lastSuccessDate = ReconcileManager.getAccountDateAttribute(account,
+                Account.RECONCILE_LAST_SUCCESS_DATE).orElse(null);
 
-        BigDecimal lastOpeningBalance = null;
-        BigDecimal lastClosingBalance = null;
+        final LocalDate lastAttemptDate = ReconcileManager.getAccountDateAttribute(account,
+                Account.RECONCILE_LAST_ATTEMPT_DATE).orElse(null);
 
-        String value = account.getAttribute(Account.RECONCILE_LAST_SUCCESS_DATE);
-        if (value != null) {
-            lastSuccessDate = DateUtils.asLocalDate(Long.parseLong(value));
-        }
+        final LocalDate  lastStatementDate = ReconcileManager.getAccountDateAttribute(account,
+                Account.RECONCILE_LAST_STATEMENT_DATE).orElse(LocalDate.now());
 
-        value = account.getAttribute(Account.RECONCILE_LAST_ATTEMPT_DATE);
-        if (value != null) {
-            lastAttemptDate = DateUtils.asLocalDate(Long.parseLong(value));
-        }
+        final BigDecimal lastClosingBalance = ReconcileManager.getAccountBigDecimalAttribute(account,
+                Account.RECONCILE_LAST_CLOSING_BALANCE).orElse(null);
 
-        value = account.getAttribute(Account.RECONCILE_LAST_STATEMENT_DATE);
-        if (value != null) {
-            lastStatementDate = DateUtils.asLocalDate(Long.parseLong(value));
-        }
-
-        value = account.getAttribute(Account.RECONCILE_LAST_CLOSING_BALANCE);
-        if (value != null) {
-            lastClosingBalance = new BigDecimal(value);
-        }
-
-        value = account.getAttribute(Account.RECONCILE_LAST_OPENING_BALANCE);
-        if (value != null) {
-            lastOpeningBalance = new BigDecimal(value);
-        }
+        final BigDecimal lastOpeningBalance = ReconcileManager.getAccountBigDecimalAttribute(account,
+                Account.RECONCILE_LAST_OPENING_BALANCE).orElse(null);
 
         if (lastSuccessDate != null) { // we had prior success, use a new date one month out if the date is earlier than today
             if (DateUtils.before(lastStatementDate, LocalDate.now())) {
@@ -167,6 +150,10 @@ public class ReconcileSettingsDialogController {
 
     @FXML
     private void handleOkayAction() {
+        final LocalDate statementDate = datePicker.getValue();
+        final BigDecimal openingBalance = openingBalanceTextField.getDecimal();
+        final BigDecimal closingBalance = closingBalanceTextField.getDecimal();
+
         final ObjectProperty<ReconcileDialogController> controllerObjectProperty = new SimpleObjectProperty<>();
 
         final URL fxmlUrl = ReconcileDialogController.class.getResource("ReconcileDialog.fxml");
@@ -175,8 +162,7 @@ public class ReconcileSettingsDialogController {
 
         Objects.requireNonNull(controllerObjectProperty.get());
 
-        controllerObjectProperty.get().initialize(accountProperty.get(), datePicker.getValue(),
-                openingBalanceTextField.getDecimal(), closingBalanceTextField.getDecimal());
+        controllerObjectProperty.get().initialize(accountProperty.get(), statementDate, openingBalance, closingBalance);
 
         // Override the defaults set by FXMLUtils
         stage.initModality(Modality.NONE);
@@ -187,6 +173,22 @@ public class ReconcileSettingsDialogController {
             stage.setMinWidth(stage.getWidth());
             stage.setMinHeight(stage.getHeight());
         });
+
+        new Thread() { // push account updates outside the UI thread to improve performance
+            public void run() {
+                ReconcileManager.setAccountDateAttribute(accountProperty().get(),
+                        Account.RECONCILE_LAST_ATTEMPT_DATE, LocalDate.now());
+
+                ReconcileManager.setAccountDateAttribute(accountProperty().get(),
+                        Account.RECONCILE_LAST_STATEMENT_DATE, statementDate);
+
+                ReconcileManager.setAccountBigDecimalAttribute(accountProperty().get(),
+                        Account.RECONCILE_LAST_OPENING_BALANCE, openingBalance);
+
+                ReconcileManager.setAccountBigDecimalAttribute(accountProperty().get(),
+                        Account.RECONCILE_LAST_CLOSING_BALANCE, closingBalance);
+            }
+        }.start();
 
         handleCloseAction(); // close the dialog
     }

@@ -25,6 +25,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -38,6 +39,7 @@ import javafx.util.Callback;
 import jgnash.engine.Account;
 import jgnash.engine.MathConstants;
 import jgnash.engine.RecTransaction;
+import jgnash.engine.ReconcileManager;
 import jgnash.engine.ReconciledState;
 import jgnash.engine.Transaction;
 import jgnash.engine.message.Message;
@@ -46,6 +48,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.text.CommodityFormat;
+import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
@@ -71,11 +74,12 @@ import java.util.stream.Collectors;
  */
 public class ReconcileDialogController implements MessageListener {
 
+    private static final String INCREASE_KEY = "increase";
+
+    private static final String DECREASE_KEY = "decrease";
+
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
-
-    @FXML
-    private Button overrideButton;
 
     @FXML
     private Button finishButton;
@@ -181,7 +185,6 @@ public class ReconcileDialogController implements MessageListener {
             }
         });
 
-        overrideButton.disableProperty().bind(reconciled);
         finishButton.disableProperty().bind(reconciled.not());
     }
 
@@ -222,11 +225,11 @@ public class ReconcileDialogController implements MessageListener {
     private void loadTables() {
         increaseTableViewManager = new TableViewManager<>(increaseTableView, PREF_NODE);
         increaseTableViewManager.setColumnWeightFactory(getColumnWeightFactory());
-        increaseTableViewManager.setPreferenceKeyFactory(() -> "increase");
+        increaseTableViewManager.setPreferenceKeyFactory(() -> INCREASE_KEY);
 
         decreaseTableViewManager = new TableViewManager<>(decreaseTableView, PREF_NODE);
         decreaseTableViewManager.setColumnWeightFactory(getColumnWeightFactory());
-        decreaseTableViewManager.setPreferenceKeyFactory(() -> "decrease");
+        decreaseTableViewManager.setPreferenceKeyFactory(() -> DECREASE_KEY);
 
         transactions.addAll(account.getSortedTransactionList().stream().filter(this::reconcilable)
                 .map(transaction -> new RecTransaction(transaction, transaction.getReconciled(account)))
@@ -268,17 +271,44 @@ public class ReconcileDialogController implements MessageListener {
     }
 
     @FXML
-    private void handleOverrideAction() {
-        handleCloseAction();
-    }
-
-    @FXML
     private void handleFinishLaterAction() {
+        final Task<Void> commitTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                updateMessage(resources.getString("Message.PleaseWait"));
+                updateProgress(-1, Long.MAX_VALUE);
+
+                ReconcileManager.reconcileTransactions(account, transactions, ReconciledState.CLEARED);
+                return null;
+            }
+        };
+
+        new Thread(commitTask).start();
+
+        StaticUIMethods.displayTaskProgress(commitTask);
+
         handleCloseAction();
     }
 
     @FXML
     private void handleFinishAction() {
+
+        final Task<Void> commitTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                updateMessage(resources.getString("Message.PleaseWait"));
+                updateProgress(-1, Long.MAX_VALUE);
+
+                ReconcileManager.reconcileTransactions(account, transactions, ReconciledState.RECONCILED);
+                ReconcileManager.setAccountDateAttribute(account, Account.RECONCILE_LAST_SUCCESS_DATE, closingDate);
+                return null;
+            }
+        };
+
+        new Thread(commitTask).start();
+
+        StaticUIMethods.displayTaskProgress(commitTask);
+
         handleCloseAction();
     }
 

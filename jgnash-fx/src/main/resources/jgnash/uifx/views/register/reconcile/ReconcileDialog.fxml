@@ -108,8 +108,6 @@
     </GridPane>
     <ButtonBar GridPane.columnSpan="2" GridPane.rowIndex="2">
         <buttons>
-            <Button fx:id="overrideButton" text="Override" onAction="#handleOverrideAction" ButtonBar.buttonData="LEFT"/>
-            <Button visible="false" ButtonBar.buttonData="BIG_GAP"/>
             <Button text="%Button.Cancel" onAction="#handleCloseAction" ButtonBar.buttonData="RIGHT"/>
             <Button text="%Button.FinishLater" onAction="#handleFinishLaterAction" ButtonBar.buttonData="RIGHT"/>
             <Button fx:id="finishButton" text="%Button.Finish" onAction="#handleFinishAction" ButtonBar.buttonData="RIGHT"/>
