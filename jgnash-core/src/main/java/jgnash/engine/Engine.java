@@ -2768,6 +2768,8 @@ public class Engine {
      * @param state       new reconciled state
      */
     public void setTransactionReconciled(final Transaction transaction, final Account account, final ReconciledState state) {
+        accountLock.writeLock().lock(); // hold a write lock to ensure nothing slips in between the remove and add
+
         try {
             final Transaction newTransaction = (Transaction) transaction.clone();
 
@@ -2778,6 +2780,8 @@ public class Engine {
             }
         } catch (final CloneNotSupportedException e) {
             logger.log(Level.SEVERE, "Failed to reconcile the Transaction", e);
+        } finally {
+            accountLock.writeLock().unlock();
         }
     }
 
