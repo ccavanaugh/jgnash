@@ -287,8 +287,6 @@
                             <icon>../jgnash-swing/gnome-money.ico</icon>
                             <jre>
                                 <minVersion>1.8.0</minVersion>
-                                <initialHeapSize>32</initialHeapSize>
-                                <maxHeapSize>500</maxHeapSize>
                             </jre>
                         </configuration>
                     </execution>
