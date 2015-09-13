@@ -1,73 +1,61 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
-<meta name="generator" content="ReText 4.0.1">
-<title>README</title>
-</head>
-<body>
-<p><img alt="jGnash Logo" src="http://jgnash.github.io/img/jgnash-logo.png"></p>
-<h1>jGnash README</h1>
+<div class="figure">
+<img src="http://jgnash.github.io/img/jgnash-logo.png" alt="jGnash Logo" />
+<p class="caption">jGnash Logo</p>
+</div>
+<h1 id="jgnash-readme">jGnash README</h1>
 <p><a href="https://sourceforge.net/projects/jgnash/">jGnash</a> is a free (no strings attached!) personal finance manager with many of the same features as commercially-available software. It was created in order to make tracking your personal finances easy, but also provides the functionality required by advanced users. jGnash is cross-platform: jGnash 2 will run on any operating system that has a working Java 7 Runtime Environment (e.g., Linux, Mac OS X, and Microsoft Windows)</p>
-<p>jGnash 2.x requires that the Java Platform version 8 or newer be installed.
-jGnash has been tested with the Oracle JVM as well as the open source OpenJDK Platform.</p>
-<h2>Getting Java</h2>
+<p>jGnash 2.x requires that the Java Platform version 8 or newer be installed. jGnash has been tested with the Oracle JVM as well as the open source OpenJDK Platform.</p>
+<h2 id="getting-java">Getting Java</h2>
 <p>Most users of jGnash will want the latest version of <a href="http://www.java.com/en/download/">Oracle Java Runtime Environment</a>.</p>
 <p>Developers will want the Java Development Kit (see build instructions below.)</p>
-<h2>Learn about jGnash</h2>
+<h2 id="learn-about-jgnash">Learn about jGnash</h2>
 <p>To learn about the features of jGnash, visit the <a href="https://sourceforge.net/projects/jgnash/">jGnash Website</a>.</p>
-<h2>Download jGnash</h2>
+<h2 id="download-jgnash">Download jGnash</h2>
 <p>You can download jGnash from the <a href="https://sourceforge.net/projects/jgnash/files/Active%20Stable%202.x/">jGnash Download Page</a>.</p>
-<h2>To Install jGnash:</h2>
-<ol>
+<h2 id="to-install-jgnash">To Install jGnash:</h2>
+<ol style="list-style-type: decimal">
 <li>Unzip all files into a directory of your choice leaving the directory structure unchanged.</li>
 </ol>
-<h2>To Run:</h2>
-<p>Simply type the following below at a command line
-or double click on the jar or exe file in Windows.</p>
-<pre><code>java -jar jGnash2.jar
-</code></pre>
-<h3>OpenJDK Tips:</h3>
-<p>If you are using the OpenJDK, enabling OpenGL acceleration can significantly improve
-graphics performance.  See the integrated help for use of the <code>-opengl</code> option.</p>
-<h3>Linux Tips:</h3>
-<p>jGnash is not compatible with the GCJ Java installation pre-installed on older Linux distributions.
-You will need to install the OpenJDK or Oracle Java Platform and correctly set the default for jGnash
-to operate correctly.</p>
-<h3>Mac OS X Installation:</h3>
+<h2 id="to-run">To Run:</h2>
+<p>Simply type the following below at a command line or double click on the jar or exe file in Windows.</p>
+<pre><code>java -jar jGnash2.jar</code></pre>
+<h3 id="openjdk-tips">OpenJDK Tips:</h3>
+<p>If you are using the OpenJDK, enabling OpenGL acceleration can significantly improve graphics performance. See the integrated help for use of the <code>-opengl</code> option.</p>
+<h3 id="linux-tips">Linux Tips:</h3>
+<p>jGnash is not compatible with the GCJ Java installation pre-installed on older Linux distributions. You will need to install the OpenJDK or Oracle Java Platform and correctly set the default for jGnash to operate correctly.</p>
+<h3 id="mac-os-x-installation">Mac OS X Installation:</h3>
 <p>For Mac OS X users, a minimum of Mac OS X 10.7 is required unless you want to experiment with the SoyLatte Java distribution.</p>
-<ol>
+<ol style="list-style-type: decimal">
 <li>Copy the jGnash folder to <code>/Applications</code>.</li>
 <li>Open AppleScript Editor.</li>
-<li>
-<p>Create the following script:</p>
+<li><p>Create the following script:</p>
 <pre><code>try
-    do shell script "/System/Library/Frameworks/JavaVM.framework/Versions/ 1.7.0/Home/bin/java -classpath /Applications/jGnash/lib -jar /Applications/jGnash/jgnash2.jar"
-end try
-</code></pre>
-</li>
-<li>
-<p>Save it as an Application called <code>jGnash.app</code> in <code>/Applications/jGnash</code></p>
-</li>
+    do shell script &quot;/System/Library/Frameworks/JavaVM.framework/Versions/ 1.7.0/Home/bin/java -classpath /Applications/jGnash/lib -jar /Applications/jGnash/jgnash2.jar&quot;
+end try</code></pre></li>
+<li><p>Save it as an Application called <code>jGnash.app</code> in <code>/Applications/jGnash</code></p></li>
 </ol>
-<h3>NOTES:</h3>
+<h3 id="notes">NOTES:</h3>
 <p>When upgrading from 1.x to 2.x, you will have to recreate your reminders.</p>
 <p>See the integrated help for command line options.</p>
-<h2>Building jGnash:</h2>
+<h2 id="building-jgnash">Building jGnash:</h2>
 <p>To build jGnash you'll need the following software installed on your system:</p>
-<ol>
-<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">JDK 8</a> or later.</li>
+<ol style="list-style-type: decimal">
+<li><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">JDK 8u45</a> or later.</li>
 <li><a href="http://ant.apache.org">Apache Ant</a> 1.7.0 or later</li>
 <li><a href="http://maven.apache.org">Apache Maven</a> 3.0 or later</li>
 </ol>
-<p>Before running the main build, the Maven-based <code>jgnash-help</code> project
-must be built and installed into your local Maven repository:</p>
+<p>Before running the main build, the Maven-based <code>jgnash-help</code> project must be built and installed into your local Maven repository:</p>
 <pre><code>cd jgnash-help
-mvn install
-</code></pre>
+mvn install</code></pre>
 <p>To create the distribution zip file, return to the main directory (<code>cd ..</code>) and then run:</p>
-<pre><code>mvn package
-</code></pre>
+<pre><code>mvn package</code></pre>
 <p>The distribution zip file will be produced at <code>jgnash-swing/target/jgnash-</code><em>version</em><code>-bin.zip</code>.</p>
-</body>
-</html>
+<h1 id="jgnashfx-early-access-version">jGnashFx Early Access Version</h1>
+<p>The distribution now contains an early access version of jGnash that utilizes JavaFX for the user interface. When feature complete and stable, this version will eventually replace the Java Swing based version that jGnash was first based on. The advantages of JavaFX over Swing are an improved appearance with better utilization of the systems graphics hardware including Hi-DPI systems.</p>
+<p>The core/engine of jGnash remains the same and is shared by both the Swing and JavaFx versions. This means stability and protection of your valuable data remains the same. This also allows you to switch between versions without issue.</p>
+<p>The advantages for jGnash is a smaller code base for the user interface, access to better components such as improved table support, HTML pages, functional animations, modern controls, etc. Experienced jGnash users will notice subtle interface improvements. For example, try using the vertical and horizontal scroll wheels in a date picker and the collapsible transaction forms.</p>
+<p>Features and capabilities will be added with each major release. Missing features primarily consist of Budgeting, Reports, Imports, and Help. The transaction register and account management is feature complete and fully functional.</p>
+<h2 id="java-8-requirements">Java 8 Requirements</h2>
+<p><a href="https://jdk8.java.net/download.html">JDK 8u60</a> or later is required for the jGnashFx early release. The 8u60 release fixed several JavaFX bugs and jGnashFx is dependent of several recent API changes.</p>
+<h2 id="linux-users">Linux Users</h2>
+<p>Linux users may use the jGnashFx Early Access version if you have the Oracle release of Java installed or if you are using OpenJDK with OpenJFX 8u60 or later installed. OpenJFX 8u40 and u45 packages are generally available for most mainstream distributions, but will not work. You will need the 8u60 packages.</p>
