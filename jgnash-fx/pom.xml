@@ -79,6 +79,8 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
+                            <!-- Workaround for Maven bug #MJAR-156 (https://jira.codehaus.org/browse/MJAR-156) -->
+                            <useUniqueVersions>false</useUniqueVersions>
                             <classpathPrefix>lib/</classpathPrefix>
                             <mainClass>jgnash.MainFX</mainClass>
                         </manifest>
