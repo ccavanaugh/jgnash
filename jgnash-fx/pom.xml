@@ -86,7 +86,7 @@
                             <Application-Name>jGnash</Application-Name>
                         </manifestEntries>
                     </archive>
-                    <finalName>jgnashFx</finalName>
+                    <finalName>jgnashFx-ea</finalName>
                 </configuration>
             </plugin>
 
@@ -102,8 +102,8 @@
                         <configuration>
                             <dontWrapJar>true</dontWrapJar>
                             <headerType>gui</headerType>
-                            <jar>jGnashFx.jar</jar>
-                            <outfile>target/jGnashFx.exe</outfile>
+                            <jar>jGnashFx-ea.jar</jar>
+                            <outfile>target/jGnashFx-ea.exe</outfile>
                             <errTitle/>
                             <cmdLine/>
                             <chdir/>
@@ -114,8 +114,6 @@
                             <icon>../jgnash-swing/gnome-money.ico</icon>
                             <jre>
                                 <minVersion>1.8.0</minVersion>
-                                <initialHeapSize>32</initialHeapSize>
-                                <maxHeapSize>500</maxHeapSize>
                             </jre>
                         </configuration>
                     </execution>
