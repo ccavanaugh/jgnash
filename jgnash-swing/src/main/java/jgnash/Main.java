@@ -126,11 +126,11 @@ public final class Main {
         System.out.println(version);
 
         if (version < 1.8f) {
-            System.out.println(ResourceUtils.getString("Message.JVM7"));
+            System.out.println(ResourceUtils.getString("Message.JVM8"));
             System.out.println(ResourceUtils.getString("Message.Version") + " " + System.getProperty("java.version") + "\n");
 
             // try and show a dialog
-            JOptionPane.showMessageDialog(null, ResourceUtils.getString("Message.JVM7"), ResourceUtils.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, ResourceUtils.getString("Message.JVM8"), ResourceUtils.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
 
             result = false;
         }
