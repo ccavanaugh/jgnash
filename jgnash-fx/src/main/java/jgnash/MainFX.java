@@ -20,6 +20,8 @@ package jgnash;
 import java.net.Authenticator;
 import java.util.prefs.Preferences;
 
+import javax.swing.JOptionPane;
+
 import javafx.application.Application;
 
 import jgnash.uifx.StaticUIMethods;
@@ -42,6 +44,27 @@ public class MainFX {
     }
 
     public static void main(final String[] args) {
+
+        final float version = Float.parseFloat(System.getProperty("java.version").substring(0, 3));
+
+        if (version < 1.8f) {
+            System.out.println(ResourceUtils.getString("Message.JVM8"));
+            System.out.println(ResourceUtils.getString("Message.Version") + " "
+                    + System.getProperty("java.version") + "\n");
+
+            // try and show a dialog
+            JOptionPane.showMessageDialog(null, ResourceUtils.getString("Message.JVM8"),
+                    ResourceUtils.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        final int release = Integer.parseInt(System.getProperty("java.version").substring(6));
+        if (release < 60) {
+            JOptionPane.showMessageDialog(null, ResourceUtils.getString("Message.JFX"),
+                    ResourceUtils.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         // Register the default exception handler
         Thread.setDefaultUncaughtExceptionHandler(new StaticUIMethods.ExceptionHandler());
 
