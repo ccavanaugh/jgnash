@@ -1,0 +1,22 @@
+<project name="jGnash Release File" default="dist" basedir=".">
+  <description>
+      Creates a release file.  To be used after a successful Maven build
+  </description>
+
+  <target name="dist" description="Creates a merged release file">
+
+      <loadproperties srcFile="${basedir}/jgnash-resources/target/classes/jgnash/resource/constants.properties"/>
+
+      <delete>
+          <fileset dir="${basedir}" includes="*.zip"/>
+      </delete>
+
+      <jlink outfile="${basedir}/jgnash-${version}-bin.zip" compress="true">
+          <mergefiles>
+              <pathelement path="${basedir}/jgnash-swing/target/jgnash-${version}-bin.zip"/>
+              <pathelement path="${basedir}/jgnash-fx/target/jgnash-${version}-fx-bin.zip"/>
+          </mergefiles>
+      </jlink>
+  </target>
+
+</project>
