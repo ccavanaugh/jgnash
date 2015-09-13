@@ -23,6 +23,7 @@ import java.time.chrono.ChronoLocalDate;
 import java.time.chrono.Chronology;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
 import java.time.format.DecimalStyle;
 import java.time.format.FormatStyle;
 import java.util.Locale;
@@ -41,13 +42,20 @@ public class DatePickerEx extends DatePicker {
 
     private final String ALLOWED_DATE_CHARACTERS;
 
+    private final int validLength;
+
+    private final DateTimeFormatter dateFormatter;
+
     public DatePickerEx() {
         super(LocalDate.now()); // initialize with a valid date
 
         final StringBuilder buf = new StringBuilder("0123456789");
-        final DateTimeFormatter dateFormatter = getDateFormatter();
+
+        dateFormatter = getDateFormatter();
 
         final char[] chars = dateFormatter.format(LocalDate.now()).toCharArray();
+
+        validLength = chars.length;
 
         for (final char aChar : chars) {
             if (!Character.isDigit(aChar)) {
@@ -64,7 +72,7 @@ public class DatePickerEx extends DatePicker {
         // Handle horizontal and vertical scroll wheel events
         getEditor().setOnScroll(event -> {
             final int caretPosition = getEditor().getCaretPosition();
-            final LocalDate date = getValue();
+            final LocalDate date = _getValue();
 
             if (event.getDeltaY() > 0) {
                 Platform.runLater(() -> {
@@ -97,9 +105,15 @@ public class DatePickerEx extends DatePicker {
             }
         });
 
+       getEditor().focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                _getValue();    // forces the internal value to be recalculated
+            }
+        });
+
         getEditor().addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             final int caretPosition = getEditor().getCaretPosition();
-            final LocalDate date = getValue();
+            final LocalDate date = _getValue();
 
             switch (event.getCode()) {
                 case ADD:
@@ -139,6 +153,19 @@ public class DatePickerEx extends DatePicker {
                 default:
             }
         });
+    }
+
+    private LocalDate _getValue() {
+        if (getEditor().getText().length() == validLength) {
+            try {
+                final LocalDate date = LocalDate.parse(getEditor().getText(), dateFormatter);
+                Platform.runLater(() -> setValue(date));
+                return date;
+            } catch (final DateTimeParseException ignored) {
+                return getValue();  // return the current value
+            }
+        }
+        return getValue();
     }
 
     private String getPattern() {
