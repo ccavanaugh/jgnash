@@ -39,6 +39,8 @@ public class MainFX {
 
     public static final String VERSION;
 
+    private static final int JAVA_RELEASE = 60;
+
     static {
         VERSION = Version.getAppName() + " - " + Version.getAppVersion();
     }
@@ -59,7 +61,7 @@ public class MainFX {
         }
 
         final int release = Integer.parseInt(System.getProperty("java.version").substring(6));
-        if (release < 60) {
+        if (release < JAVA_RELEASE) {
             JOptionPane.showMessageDialog(null, ResourceUtils.getString("Message.JFX"),
                     ResourceUtils.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
             return;
