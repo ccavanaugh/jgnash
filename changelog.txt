@@ -25,8 +25,13 @@ Budgeting
 Reinstate archive capability.
 Improved handling of memo's in split transactions.  The split entry memo should show up in the applicable account
 
+Release 2.18.1
+----------------------
+09/14/15 Fixed ellipse mark that made it into the Open toolbar button(Swing)
+
 Release 2.18.0
 ----------------------
+09/13/15 jGnashFx Early Access is now included with the distribution.
 09/08/15 The NetWorth and BalanceSheet reports were not including Simple Investment account types.
 09/06/15 Fixed QIF date parsing import bug introduced by 2.17.0
 09/01/15 (FX) DatePicker now increments and decrements with use of vertical and horizontal scroll input

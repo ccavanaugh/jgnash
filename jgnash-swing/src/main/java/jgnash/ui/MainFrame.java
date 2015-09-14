@@ -368,6 +368,7 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
         });
 
         actionParser.preLoadAction("open-command", new OpenFileAction());
+        actionParser.preLoadAction("open-command-tb", new OpenFileAction());
 
         actionParser.preLoadAction("account-filter-command", new AbstractEnabledAction() {
             @Override

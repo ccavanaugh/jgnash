@@ -63,6 +63,13 @@
             accel="Menu.Open.KeyStroke"
             desc="Menu.Open.Tooltip"/>
 
+    <action id="open-command-tb"
+            name="Button.Open"
+            smicon="/jgnash/resource/document-open.png"
+            icon="/jgnash/resource/document-open.png"
+            accel="Menu.Open.KeyStroke"
+            desc="Menu.Open.Tooltip"/>
+
     <action id="saveas-command"
             name="Menu.SaveAs.Name"
             mnemonic="Menu.SaveAs.Mnemonic"
@@ -414,7 +421,7 @@
     <!-- Define the main toolbar -->
 
     <action-node id="main-toolbar">
-        <action-node idref="open-command"/>
+        <action-node idref="open-command-tb"/>
         <action-node idref="cut-command"/>
         <action-node idref="copy-command"/>
         <action-node idref="paste-command"/>
