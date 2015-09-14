@@ -25,6 +25,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import jgnash.convert.exports.csv.CsvExport;
 import jgnash.convert.exports.ofx.OfxExport;
+import jgnash.convert.exports.xssf.AccountExport;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -58,6 +59,8 @@ class RegisterActions {
     private static final String EXPORT_DIR = "exportDir";
 
     private static final String OFX = "ofx";
+
+    private static final String XLSX = "xlsx";
 
     private RegisterActions() {
         // Utility class
@@ -165,6 +168,10 @@ class RegisterActions {
                 new FileChooser.ExtensionFilter(resources.getString("Label.OfxFiles"), "*.ofx")
         );
 
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter(resources.getString("Label.SpreadsheetFiles"), "*.xlsx")
+        );
+
         final File file = fileChooser.showSaveDialog(MainApplication.getInstance().getPrimaryStage());
 
         if (file != null) {
@@ -179,6 +186,9 @@ class RegisterActions {
                     if (OFX.equals(FileUtils.getFileExtension(file.getName()))) {
                         OfxExport export = new OfxExport(account, startDate, endDate, file);
                         export.exportAccount();
+                    } else if (XLSX.equals(FileUtils.getFileExtension(file.getName()))) {
+                        AccountExport.exportAccount(account, RegisterFactory.getColumnNames(account.getAccountType()),
+                                startDate, endDate, file);
                     } else {
                         CsvExport.exportAccount(account, startDate, endDate, file);
                     }
