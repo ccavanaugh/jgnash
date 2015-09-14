@@ -17,6 +17,7 @@
  */
 package jgnash.uifx.views.register;
 
+import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
@@ -25,12 +26,16 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.ButtonType;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import jgnash.convert.exports.csv.CsvExport;
+import jgnash.convert.exports.ofx.OfxExport;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -40,13 +45,19 @@ import jgnash.engine.Transaction;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.views.main.MainApplication;
 import jgnash.uifx.views.register.reconcile.ReconcileSettingsDialogController;
+import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 
 /**
  * @author Craig Cavanaugh
  */
 class RegisterActions {
+
+    private static final String EXPORT_DIR = "exportDir";
+
+    private static final String OFX = "ofx";
 
     private RegisterActions() {
         // Utility class
@@ -135,6 +146,39 @@ class RegisterActions {
 
         stage.setResizable(false);
         stage.showAndWait();
+    }
+
+    static void exportTransactions(final Account account, final LocalDate startDate, final LocalDate endDate) {
+
+        final ResourceBundle rb = ResourceUtils.getBundle();
+
+        final Preferences pref = Preferences.userNodeForPackage(RegisterActions.class);
+        final FileChooser fileChooser = new FileChooser();
+
+        fileChooser.setInitialDirectory(new File(pref.get(EXPORT_DIR, System.getProperty("user.home"))));
+
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter(rb.getString("Label.CsvFiles"), "*.csv")
+        );
+
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter(rb.getString("Label.OfxFiles"), "*.ofx")
+        );
+
+        final File file = fileChooser.showSaveDialog(MainApplication.getInstance().getPrimaryStage());
+
+        if (file != null) {
+            pref.put(EXPORT_DIR, file.getParentFile().getAbsolutePath());
+
+            // TODO background and block UI
+
+            if (OFX.equals(FileUtils.getFileExtension(file.getName()))) {
+                OfxExport export = new OfxExport(account, startDate, endDate, file);
+                export.exportAccount();
+            } else {
+                CsvExport.exportAccount(account, startDate, endDate, file);
+            }
+        }
     }
 
     private static ButtonType confirmTransactionRemoval(final int count) {
