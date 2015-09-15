@@ -37,6 +37,14 @@
                     <Tooltip text="%ToolTip.ZoomRegister"/>
                 </tooltip>
             </Button>
+            <Button text="%Button.Export" onAction="#handleAccountExport">
+                <graphic>
+                    <FontAwesomeImageView glyphName="FILE_EXCEL_ALT"/>
+                </graphic>
+                <tooltip>
+                    <Tooltip text="%ToolTip.ExportTransactions"/>
+                </tooltip>
+            </Button>
         </ToolBar>
     </top>
     <center>

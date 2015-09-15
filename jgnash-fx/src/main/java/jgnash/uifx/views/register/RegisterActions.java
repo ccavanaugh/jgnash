@@ -60,7 +60,7 @@ class RegisterActions {
 
     private static final String OFX = "ofx";
 
-    private static final String XLSX = "xlsx";
+    private static final String XLS = "xls";
 
     private RegisterActions() {
         // Utility class
@@ -161,15 +161,10 @@ class RegisterActions {
         fileChooser.setInitialDirectory(new File(pref.get(EXPORT_DIR, System.getProperty("user.home"))));
 
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter(resources.getString("Label.CsvFiles"), "*.csv")
-        );
-
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter(resources.getString("Label.OfxFiles"), "*.ofx")
-        );
-
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter(resources.getString("Label.SpreadsheetFiles"), "*.xlsx")
+                new FileChooser.ExtensionFilter(resources.getString("Label.CsvFiles") + " (*.csv)", "*.csv"),
+                new FileChooser.ExtensionFilter(resources.getString("Label.OfxFiles") + " (*.ofx)", "*.ofx"),
+                new FileChooser.ExtensionFilter(resources.getString("Label.SpreadsheetFiles") + " (*.xls, *.xlsx)",
+                        "*.xls", "*.xlsx")
         );
 
         final File file = fileChooser.showSaveDialog(MainApplication.getInstance().getPrimaryStage());
@@ -186,7 +181,7 @@ class RegisterActions {
                     if (OFX.equals(FileUtils.getFileExtension(file.getName()))) {
                         OfxExport export = new OfxExport(account, startDate, endDate, file);
                         export.exportAccount();
-                    } else if (XLSX.equals(FileUtils.getFileExtension(file.getName()))) {
+                    } else if (FileUtils.getFileExtension(file.getName()).contains(XLS)) {
                         AccountExport.exportAccount(account, RegisterFactory.getColumnNames(account.getAccountType()),
                                 startDate, endDate, file);
                     } else {

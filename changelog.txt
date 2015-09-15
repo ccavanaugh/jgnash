@@ -25,9 +25,10 @@ Budgeting
 Reinstate archive capability.
 Improved handling of memo's in split transactions.  The split entry memo should show up in the applicable account
 
-Release 2.18.1
+Release 2.19.0
 ----------------------
-09/14/15 Fixed ellipse mark that made it into the Open toolbar button(Swing)
+09/15/15 Added CSV, OFX, XLS, and XLSX file export capability to the transaction register (Fx)
+09/14/15 Fixed ellipse mark that made it into the Open toolbar button (Swing)
 
 Release 2.18.0
 ----------------------

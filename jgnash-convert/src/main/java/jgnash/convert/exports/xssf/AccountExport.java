@@ -17,8 +17,24 @@
  */
 package jgnash.convert.exports.xssf;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import jgnash.engine.Account;
+import jgnash.engine.InvestmentTransaction;
+import jgnash.engine.Transaction;
+import jgnash.text.CommodityFormat;
+import jgnash.util.DateUtils;
 import jgnash.util.FileUtils;
+import jgnash.util.ResourceUtils;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -30,14 +46,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Craig Cavanaugh
@@ -63,19 +71,19 @@ public class AccountExport {
             // create a new sheet
             final Sheet s = wb.createSheet(account.getName());
 
-            // create header cell styles
-            final CellStyle headerStyle = wb.createCellStyle();
-
             // create 2 fonts objects
-            final Font amountFont = wb.createFont();
+            final Font defaultFont = wb.createFont();
             final Font headerFont = wb.createFont();
 
-            amountFont.setFontHeightInPoints((short) 10);
-            amountFont.setColor(IndexedColors.BLACK.getIndex());
+            defaultFont.setFontHeightInPoints((short) 10);
+            defaultFont.setColor(IndexedColors.BLACK.getIndex());
 
             headerFont.setFontHeightInPoints((short) 11);
             headerFont.setColor(IndexedColors.BLACK.getIndex());
             headerFont.setBoldweight(Font.BOLDWEIGHT_BOLD);
+
+            // create header cell styles
+            final CellStyle headerStyle = wb.createCellStyle();
 
             // Set the other cell style and formatting
             headerStyle.setBorderBottom(CellStyle.BORDER_THIN);
@@ -91,6 +99,22 @@ public class AccountExport {
             headerStyle.setFont(headerFont);
             headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
 
+            final CellStyle dateStyle = wb.createCellStyle();
+            dateStyle.setDataFormat(createHelper.createDataFormat().getFormat("mm/dd/yy"));
+            dateStyle.setFont(defaultFont);
+
+            final CellStyle textStyle = wb.createCellStyle();
+            textStyle.setFont(defaultFont);
+
+            final CellStyle amountStyle = wb.createCellStyle();
+            amountStyle.setFont(defaultFont);
+            amountStyle.setAlignment(CellStyle.ALIGN_RIGHT);
+
+            final DecimalFormat format = (DecimalFormat) CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
+            final String pattern = format.toLocalizedPattern().replace("¤", account.getCurrencyNode().getPrefix());
+            final DataFormat df = wb.createDataFormat();
+            amountStyle.setDataFormat(df.getFormat(pattern));
+
             // Create headers
             int row = 0;
             Row r = s.createRow(row);
@@ -100,6 +124,81 @@ public class AccountExport {
                 c.setCellStyle(headerStyle);
             }
 
+            // Dump the transactions
+            for (final Transaction transaction : account.getTransactions(startDate, endDate)) {
+                r = s.createRow(++row);
+
+                int col = 0;
+
+                // date
+                Cell c = r.createCell(col);
+                c.setCellType(Cell.CELL_TYPE_STRING);
+                c.setCellValue(DateUtils.asDate(transaction.getLocalDate()));
+                c.setCellStyle(dateStyle);
+
+                // number
+                c = r.createCell(++col);
+                c.setCellType(Cell.CELL_TYPE_STRING);
+                c.setCellValue(transaction.getNumber());
+                c.setCellStyle(textStyle);
+
+                // payee
+                c = r.createCell(++col);
+                c.setCellType(Cell.CELL_TYPE_STRING);
+                c.setCellValue(transaction.getPayee());
+                c.setCellStyle(textStyle);
+
+                // memo
+                c = r.createCell(++col);
+                c.setCellType(Cell.CELL_TYPE_STRING);
+                c.setCellValue(transaction.getMemo());
+                c.setCellStyle(textStyle);
+
+                // account
+                c = r.createCell(++col);
+                c.setCellType(Cell.CELL_TYPE_STRING);
+                c.setCellValue(getAccountColumnValue(transaction, account));
+                c.setCellStyle(textStyle);
+
+                // clr
+                c = r.createCell(++col);
+                c.setCellType(Cell.CELL_TYPE_STRING);
+                c.setCellValue(transaction.getReconciled(account).toString());
+                c.setCellStyle(textStyle);
+
+                final BigDecimal amount = transaction.getAmount(account);
+
+                // increase
+                c = r.createCell(++col);
+                c.setCellType(Cell.CELL_TYPE_NUMERIC);
+                if (amount.signum() >= 0) {
+                    c.setCellValue(amount.doubleValue());
+                }
+                c.setCellStyle(amountStyle);
+
+                // decrease
+                c = r.createCell(++col);
+                c.setCellType(Cell.CELL_TYPE_NUMERIC);
+                if (amount.signum() < 0) {
+                    c.setCellValue(amount.abs().doubleValue());
+                }
+                c.setCellStyle(amountStyle);
+
+                // balance
+                c = r.createCell(++col);
+                c.setCellType(Cell.CELL_TYPE_NUMERIC);
+                c.setCellValue(account.getBalanceAt(transaction).doubleValue());
+                c.setCellStyle(amountStyle);
+            }
+
+            // autosize the column widths
+            final short columnCount = s.getRow(1).getLastCellNum();
+
+            // autosize all of the columns + 10 pixels
+            for (int i = 0; i <= columnCount; i++) {
+                s.autoSizeColumn(i);
+                s.setColumnWidth(i, s.getColumnWidth(i) + 10);
+            }
 
             Logger.getLogger(AccountExport.class.getName()).log(Level.INFO, "{0} cell styles were used", wb.getNumCellStyles());
 
@@ -121,5 +220,25 @@ public class AccountExport {
         }  catch (IOException e) {
             Logger.getLogger(AccountExport.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
+    }
+
+    private static String getAccountColumnValue(final Transaction transaction, final Account account) {
+        if (transaction instanceof InvestmentTransaction) {
+            return ((InvestmentTransaction) transaction).getInvestmentAccount().getName();
+        } else {
+            int count = transaction.size();
+            if (count > 1) {
+                return "[ " + count + " " + ResourceUtils.getString("Button.Splits") + " ]";
+
+            } else {
+                Account creditAccount = transaction.getTransactionEntries().get(0).getCreditAccount();
+                if (creditAccount != account) {
+                   return creditAccount.getName();
+                } else {
+                    return transaction.getTransactionEntries().get(0).getDebitAccount().getName();
+                }
+            }
+        }
+
     }
 }

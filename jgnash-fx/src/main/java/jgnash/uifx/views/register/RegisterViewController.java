@@ -17,6 +17,10 @@
  */
 package jgnash.uifx.views.register;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -35,6 +39,7 @@ import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.engine.Transaction;
 import jgnash.uifx.control.AbstractAccountTreeController;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.util.AccountTypeFilter;
@@ -192,6 +197,28 @@ public class RegisterViewController {
     @FXML
     private void handleReconcileAction() {
         RegisterActions.reconcileAccountAction(accountTreeController.getSelectedAccountProperty().get());
+    }
+
+    @FXML
+    private void handleAccountExport() {
+        RegisterTableController registerTableController = registerPaneController.registerTableControllerProperty.get();
+
+        final Account account = registerPaneController.accountProperty().get();
+
+        if (account != null && account.getTransactionCount() > 1) {
+            LocalDate startDate = account.getTransactionAt(0).getLocalDate();
+            LocalDate endDate = account.getTransactionAt(account.getTransactionCount() - 1).getLocalDate();
+
+            final List<Transaction> selected = new ArrayList<>(registerTableController.getSelectedTransactions());
+
+            if (selected.size() > 1) {
+                Collections.sort(selected);
+                startDate = selected.get(0).getLocalDate();
+                endDate = selected.get(selected.size() - 1).getLocalDate();
+            }
+
+            RegisterActions.exportTransactions(account, startDate, endDate);
+        }
     }
 
     private static final class DisabledTreeCell extends TreeCell<Account> {
