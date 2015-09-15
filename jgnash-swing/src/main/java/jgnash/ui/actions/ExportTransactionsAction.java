@@ -28,8 +28,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import jgnash.convert.exports.csv.CsvExport;
 import jgnash.convert.exports.ofx.OfxExport;
+import jgnash.convert.exports.xssf.AccountExport;
 import jgnash.engine.Account;
 import jgnash.ui.UIApplication;
+import jgnash.ui.register.RegisterFactory;
 import jgnash.util.FileUtils;
 import jgnash.util.ResourceUtils;
 
@@ -43,6 +45,8 @@ public class ExportTransactionsAction {
 
     private static final String OFX = "ofx";
 
+    private static final String XLS = "xls";
+
     private ExportTransactionsAction() {}
 
     public static void exportTransactions(final Account account, final LocalDate startDate, final LocalDate endDate) {
@@ -55,8 +59,10 @@ public class ExportTransactionsAction {
 
         FileNameExtensionFilter csvFilter = new FileNameExtensionFilter(rb.getString("Label.CsvFiles") + " (*.csv)", "csv");
         FileNameExtensionFilter ofxFilter = new FileNameExtensionFilter(rb.getString("Label.OfxFiles") + " (*.ofx)", OFX);
+        FileNameExtensionFilter ssFilter = new FileNameExtensionFilter(rb.getString("Label.SpreadsheetFiles") + " (*.xls, *.xlsx)", "xls", "xlsx");
         chooser.addChoosableFileFilter(csvFilter);
         chooser.addChoosableFileFilter(ofxFilter);
+        chooser.addChoosableFileFilter(ssFilter);
         chooser.setAcceptAllFileFilterUsed(false);
         chooser.setMultiSelectionEnabled(false);
         chooser.setFileFilter(csvFilter);
@@ -75,6 +81,9 @@ public class ExportTransactionsAction {
                     if (OFX.equals(FileUtils.getFileExtension(file.getName()))) {
                         OfxExport export = new OfxExport(account, startDate, endDate, file);
                         export.exportAccount();
+                    } else if (FileUtils.getFileExtension(file.getName()).contains(XLS)) {
+                        AccountExport.exportAccount(account, RegisterFactory.getColumnNames(account), startDate,
+                                endDate, file);
                     } else {
                         CsvExport.exportAccount(account, startDate, endDate, file);
                     }

@@ -278,7 +278,7 @@ public class RegisterFactory {
         return new FilterDecorator(getTableModel(false, account, detailSplits));
     }
 
-    private static String[] getColumnNames(final Account account) {
+    public static String[] getColumnNames(final Account account) {
         String[] names; // reference to the correct column names
 
         if (useAccountingTerms) {

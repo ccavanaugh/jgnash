@@ -27,6 +27,7 @@ Improved handling of memo's in split transactions.  The split entry memo should 
 
 Release 2.19.0
 ----------------------
+09/15/15 Added XLS, and XLSX files to the existing export capability of the transaction register (Swing)
 09/15/15 Added CSV, OFX, XLS, and XLSX file export capability to the transaction register (Fx)
 09/14/15 Fixed ellipse mark that made it into the Open toolbar button (Swing)
 
