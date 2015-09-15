@@ -119,7 +119,7 @@ public class NewFileWizard {
         }
     }
 
-    public static void show() {
+    public static void showAndWait() {
         new NewFileWizard();
     }
 }

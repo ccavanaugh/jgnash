@@ -186,7 +186,7 @@ public class MenuBarController implements MessageListener {
 
     @FXML
     private void handleNewAction() {
-        NewFileWizard.show();
+        NewFileWizard.showAndWait();
     }
 
     @FXML
