@@ -25,7 +25,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import jgnash.convert.exports.csv.CsvExport;
 import jgnash.convert.exports.ofx.OfxExport;
-import jgnash.convert.exports.xssf.AccountExport;
+import jgnash.convert.exports.ssf.AccountExport;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;

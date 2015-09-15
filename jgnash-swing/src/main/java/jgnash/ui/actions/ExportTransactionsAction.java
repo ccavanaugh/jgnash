@@ -28,7 +28,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import jgnash.convert.exports.csv.CsvExport;
 import jgnash.convert.exports.ofx.OfxExport;
-import jgnash.convert.exports.xssf.AccountExport;
+import jgnash.convert.exports.ssf.AccountExport;
 import jgnash.engine.Account;
 import jgnash.ui.UIApplication;
 import jgnash.ui.register.RegisterFactory;
