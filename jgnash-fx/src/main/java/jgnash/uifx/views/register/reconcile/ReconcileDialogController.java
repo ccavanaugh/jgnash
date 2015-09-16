@@ -49,6 +49,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
@@ -386,7 +387,7 @@ public class ReconcileDialogController implements MessageListener {
 
         final TableColumn<RecTransaction, LocalDate> dateColumn = new TableColumn<>(resources.getString("Column.Date"));
         dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getDate()));
-        dateColumn.setCellFactory(param -> new RecTransactionDateTableCell());
+        dateColumn.setCellFactory(param -> new ShortDateTableCell<>());
         tableView.getColumns().add(dateColumn);
 
         final TableColumn<RecTransaction, String> numberColumn = new TableColumn<>(resources.getString("Column.Num"));
