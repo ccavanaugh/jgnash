@@ -64,11 +64,15 @@ public class ImportWizard {
             Pane pane = fxmlLoader.load();
             wizardController.addTaskPane(fxmlLoader.getController(), pane);
 
+            fxmlLoader = new FXMLLoader(getClass().getResource("ImportPageTwo.fxml"), resources);
+            pane = fxmlLoader.load();
+            wizardController.addTaskPane(fxmlLoader.getController(), pane);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        stage.setResizable(false);
+        //stage.setResizable(false);
     }
 
     public ObjectProperty<WizardDialogController<Settings>> wizardControllerProperty() {

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Button?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" maxHeight="Infinity"
+          maxWidth="Infinity" fx:controller="jgnash.uifx.wizard.imports.ImportPageTwoController" styleClass="form">
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" fillHeight="true"/>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
+    </rowConstraints>
+
+    <BorderPane GridPane.rowIndex="0" styleClass="form">
+        <top>
+            <TextArea fx:id="textArea" editable="false" wrapText="true"/>
+        </top>
+        <center>
+            <TableView fx:id="tableView"/>
+        </center>
+    </BorderPane>
+
+   <ButtonBar GridPane.rowIndex="1">
+       <buttons>
+           <Button text="%Button.Delete" fx:id="deleteButton" onAction="#handleDeleteAction" ButtonBar.buttonData="LEFT"/>
+       </buttons>
+   </ButtonBar>
+</GridPane>
