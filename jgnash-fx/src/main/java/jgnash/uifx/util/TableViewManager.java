@@ -255,10 +255,10 @@ public class TableViewManager<S> {
     public void packTable() {
 
         // Prevent packing if the containing window is not showing
-        if (!tableView.getScene().getWindow().isShowing()) {
+        /*if (!tableView.getScene().getWindow().isShowing()) {
             logger.log(Level.WARNING, "tried to pack a table that is not visible", new Throwable());
             return;
-        }
+        }*/
 
         new Thread(() -> {
 
