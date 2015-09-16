@@ -44,6 +44,7 @@ import jgnash.uifx.about.AboutDialogController;
 import jgnash.uifx.actions.DefaultCurrencyAction;
 import jgnash.uifx.actions.DefaultLocaleAction;
 import jgnash.uifx.actions.ExecuteJavaScriptAction;
+import jgnash.uifx.actions.ImportOfxAction;
 import jgnash.uifx.dialog.currency.AddRemoveCurrencyController;
 import jgnash.uifx.dialog.currency.EditExchangeRatesController;
 import jgnash.uifx.dialog.currency.ModifyCurrencyController;
@@ -65,6 +66,9 @@ import jgnash.uifx.wizard.file.NewFileWizard;
  * @author Craig Cavanaugh
  */
 public class MenuBarController implements MessageListener {
+
+    @FXML
+    private MenuItem importOfxMenuItem;
 
     @FXML
     private MenuItem transNumberListMenuItem;
@@ -108,6 +112,7 @@ public class MenuBarController implements MessageListener {
         closeMenuItem.disableProperty().bind(disabled);
         optionsMenuItem.disableProperty().bind(disabled);
         transNumberListMenuItem.disableProperty().bind(disabled);
+        importOfxMenuItem.disableProperty().bind(disabled);
 
         windowMenu.disableProperty().bind(Bindings.or(disabled, RegisterStage.registerStageListProperty().emptyProperty()));
 
@@ -324,5 +329,15 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleExecuteJavaScriptFile() {
         ExecuteJavaScriptAction.showAndWait();
+    }
+
+    @FXML
+    private void handleImportOFXAction() {
+        ImportOfxAction.showAndWait();
+    }
+
+    @FXML
+    private void handleImportQIFAction() {
+        // TODO Implement for QIF
     }
 }

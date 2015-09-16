@@ -8,19 +8,24 @@
 
 <MenuBar fx:id="menuBar" useSystemMenuBar="true" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
          fx:controller="jgnash.uifx.views.main.MenuBarController">
-
     <Menu text="%Menu.File.Name" mnemonicParsing="false">
+
+        <MenuItem mnemonicParsing="false" onAction="#handleNewAction" text="%Menu.New.Name">
+            <graphic>
+                <FontAwesomeImageView glyphName="FILE"/>
+            </graphic>
+        </MenuItem>
         <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#handleOpenAction"
                   text="%Menu.Open.Name">
             <graphic>
                 <FontAwesomeImageView glyphName="FOLDER_OPEN"/>
             </graphic>
         </MenuItem>
-        <MenuItem mnemonicParsing="false" onAction="#handleNewAction" text="%Menu.New.Name">
-            <graphic>
-                <FontAwesomeImageView glyphName="FILE"/>
-            </graphic>
-        </MenuItem>
+        <SeparatorMenuItem mnemonicParsing="false"/>
+        <Menu text="%Menu.Import.Name">
+            <MenuItem text="%Menu.ImportOfx.Name" fx:id="importOfxMenuItem" onAction="#handleImportOFXAction"/>
+            <MenuItem text="%Menu.ImportQif.Name" onAction="#handleImportQIFAction"/>
+        </Menu>
         <SeparatorMenuItem mnemonicParsing="false"/>
         <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#handleCloseAction"
                   text="%Menu.Close.Name"/>
