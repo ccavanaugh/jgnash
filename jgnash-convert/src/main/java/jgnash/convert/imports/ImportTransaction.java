@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import jgnash.engine.Account;
+import jgnash.util.NotNull;
 
 /**
  * Common interface for imported transactions from OFX and mt940
@@ -29,7 +30,8 @@ import jgnash.engine.Account;
  * @author Arnout Engelen
  * @author Nicolas Bouillon
  */
-public class ImportTransaction {
+public class ImportTransaction implements Comparable<ImportTransaction> {
+
     public enum ImportState {
         NEW,
         EQUAL,
@@ -47,7 +49,7 @@ public class ImportTransaction {
      */
     public BigDecimal amount;
 
-    public LocalDate datePosted;
+    @NotNull public LocalDate datePosted = LocalDate.now();
 
     /**
      * Date user initiated the transaction, optional, may be null
@@ -56,7 +58,7 @@ public class ImportTransaction {
 
     public String memo = ""; // memo
 
-    public String payee = ""; // previously: 'name'
+    @NotNull public String payee = ""; // previously: 'name'
 
     public String checkNumber = ""; // check number (?)
 
@@ -68,5 +70,24 @@ public class ImportTransaction {
 
     public void setState(ImportState state) {
         this.state = state;
+    }
+
+    @Override
+    public int compareTo(@NotNull final ImportTransaction importTransaction) {
+        if (importTransaction == this) {
+            return 0;
+        }
+
+        int result = datePosted.compareTo(importTransaction.datePosted);
+        if (result != 0) {
+            return result;
+        }
+
+        result = payee.compareTo(importTransaction.payee);
+        if (result != 0) {
+            return result;
+        }
+
+        return Integer.compare(hashCode(), importTransaction.hashCode());
     }
 }
