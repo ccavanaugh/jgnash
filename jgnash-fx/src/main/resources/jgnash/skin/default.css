@@ -42,13 +42,13 @@
     -fx-background-radius: 0, 0;
 }
 
-.table-row-cell {
+/*.table-row-cell {
     -fx-cell-size: 1.75em;
 }
 
 .tree-table-row-cell {
     -fx-cell-size: 1.75em;
-}
+}*/
 
 /*
  * Ensure we have odd/even background changes
