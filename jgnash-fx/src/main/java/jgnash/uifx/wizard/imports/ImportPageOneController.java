@@ -23,6 +23,8 @@ import java.util.ResourceBundle;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import jgnash.engine.Account;
 import jgnash.uifx.control.AccountComboBox;
@@ -37,6 +39,9 @@ import jgnash.util.TextResource;
 public class ImportPageOneController extends AbstractWizardPaneController<ImportWizard.Settings> {
 
     @FXML
+    private TextFlow textFlow;
+
+    @FXML
     private ResourceBundle resources;
 
     @FXML
@@ -49,7 +54,7 @@ public class ImportPageOneController extends AbstractWizardPaneController<Import
 
     @FXML
     private void initialize() {
-        textArea.setText(TextResource.getString("ImportOne.txt"));
+        textFlow.getChildren().addAll(new Text(TextResource.getString("ImportOne.txt")));
 
         valid.bind(accountComboBox.valueProperty().isNotNull());
 

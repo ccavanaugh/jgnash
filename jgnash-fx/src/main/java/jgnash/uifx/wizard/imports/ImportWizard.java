@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
@@ -72,7 +73,10 @@ public class ImportWizard {
             e.printStackTrace();
         }
 
-        //stage.setResizable(false);
+        Platform.runLater(() -> {
+            stage.setMinWidth(stage.getWidth());
+            stage.setMinHeight(stage.getHeight());
+        });
     }
 
     public ObjectProperty<WizardDialogController<Settings>> wizardControllerProperty() {

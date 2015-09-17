@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import jgnash.uifx.control.AccountComboBox?>
 
+<?import javafx.scene.text.TextFlow?>
 <GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" maxHeight="Infinity"
           maxWidth="Infinity" fx:controller="jgnash.uifx.wizard.imports.ImportPageOneController" styleClass="form">
     <columnConstraints>
@@ -14,11 +14,10 @@
         <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS"/>
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="NEVER"/>
     </rowConstraints>
-    <TextArea fx:id="textArea" editable="false" wrapText="true" GridPane.columnSpan="2" GridPane.fillHeight="true"
+    <TextFlow fx:id="textFlow"  GridPane.columnSpan="2" GridPane.fillHeight="true"
               GridPane.vgrow="ALWAYS" maxWidth="Infinity"/>
 
     <Label text="%Label.DestAccount" GridPane.rowIndex="1"/>

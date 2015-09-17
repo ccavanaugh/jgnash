@@ -17,23 +17,35 @@
  */
 package jgnash.uifx.wizard.imports;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+
 import jgnash.convert.imports.BayesImportClassifier;
 import jgnash.convert.imports.GenericImport;
 import jgnash.convert.imports.ImportBank;
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.Account;
+import jgnash.uifx.control.BigDecimalTableCell;
+import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
+import jgnash.uifx.util.TableViewManager;
 import jgnash.util.TextResource;
-
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
 
 /**
  * Import Wizard, imported transaction wizard
@@ -41,6 +53,9 @@ import java.util.ResourceBundle;
  * @author Craig Cavanaugh
  */
 public class ImportPageTwoController extends AbstractWizardPaneController<ImportWizard.Settings> {
+
+    @FXML
+    private TextFlow textFlow;
 
     @FXML
     private TableView<ImportTransaction> tableView;
@@ -51,19 +66,75 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
     @FXML
     private ResourceBundle resources;
 
-    @FXML
-    private TextArea textArea;
-
     private final SimpleBooleanProperty valid = new SimpleBooleanProperty(false);
+
+    private TableViewManager<ImportTransaction> tableViewManager;
+
+    private static final String PREF_NODE = "/jgnash/uifx/wizard/imports";
+
+    private static final double[] PREF_COLUMN_WEIGHTS = {0, 0, 0, 50, 50, 0, 0};
 
     @FXML
     private void initialize() {
-        textArea.setText(TextResource.getString("ImportTwo.txt"));
+        textFlow.getChildren().addAll(new Text(TextResource.getString("ImportTwo.txt")));
 
         deleteButton.disableProperty().bind(tableView.getSelectionModel().selectedItemProperty().isNull());
 
+        tableView.setTableMenuButtonVisible(false);
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
         tableView.getItems().addListener((ListChangeListener<ImportTransaction>) c ->
                 valid.setValue(tableView.getItems().size() > 0));
+
+        final TableColumn<ImportTransaction, String> stateColumn = new TableColumn<>();
+        stateColumn.setCellValueFactory(param -> {
+            switch (param.getValue().getState()) {
+                case NOT_EQUAL:
+                    return new SimpleStringProperty("\u2260");
+                case EQUAL:
+                    return new SimpleStringProperty("=");
+                case NEW:
+                    return new SimpleStringProperty("+");
+                case IGNORE:
+                    return new SimpleStringProperty("-");
+            }
+            return null;
+        });
+        tableView.getColumns().add(stateColumn);
+
+        final TableColumn<ImportTransaction, LocalDate> dateColumn = new TableColumn<>(resources.getString("Column.Date"));
+        dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().datePosted));
+        dateColumn.setCellFactory(param -> new ShortDateTableCell<>());
+        tableView.getColumns().add(dateColumn);
+
+        final TableColumn<ImportTransaction, String> numberColumn = new TableColumn<>(resources.getString("Column.Num"));
+        numberColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().checkNumber));
+        tableView.getColumns().add(numberColumn);
+
+        final TableColumn<ImportTransaction, String> payeeColumn = new TableColumn<>(resources.getString("Column.Payee"));
+        payeeColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().payee));
+        tableView.getColumns().add(payeeColumn);
+
+        final TableColumn<ImportTransaction, String> memoColumn = new TableColumn<>(resources.getString("Column.Memo"));
+        memoColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().memo));
+        tableView.getColumns().add(memoColumn);
+
+        final TableColumn<ImportTransaction, String> accountColumn = new TableColumn<>(resources.getString("Column.Account"));
+        accountColumn.setCellValueFactory(param -> {
+            if (param.getValue().account != null) {
+                return new SimpleStringProperty(param.getValue().account.toString());
+            }
+            return null;
+        });
+        tableView.getColumns().add(accountColumn);
+
+        final TableColumn<ImportTransaction, BigDecimal> amountColumn = new TableColumn<>(resources.getString("Column.Amount"));
+        amountColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().amount));
+        amountColumn.setCellFactory(param -> new BigDecimalTableCell<>(NumberFormat.getNumberInstance()));
+        tableView.getColumns().add(amountColumn);
+
+        tableViewManager = new TableViewManager<>(tableView, PREF_NODE);
+        tableViewManager.setColumnWeightFactory(column-> PREF_COLUMN_WEIGHTS[column]);
 
         updateDescriptor();
     }
@@ -95,6 +166,9 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
             BayesImportClassifier.classifyTransactions(list, account);
 
             tableView.getItems().addAll(list);
+            FXCollections.sort(tableView.getItems());
+
+            tableViewManager.restoreLayout();
         }
 
         updateDescriptor();
