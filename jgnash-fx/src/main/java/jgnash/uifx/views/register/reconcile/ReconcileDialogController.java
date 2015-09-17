@@ -17,6 +17,16 @@
  */
 package jgnash.uifx.views.register.reconcile;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
+
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -36,6 +46,7 @@ import javafx.scene.control.TitledPane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
+
 import jgnash.engine.Account;
 import jgnash.engine.MathConstants;
 import jgnash.engine.RecTransaction;
@@ -49,6 +60,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.uifx.util.TableViewManager;
@@ -57,16 +69,6 @@ import jgnash.uifx.views.register.RegisterFactory;
 import jgnash.util.DateUtils;
 import jgnash.util.NotNull;
 import jgnash.util.Nullable;
-
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.stream.Collectors;
 
 /**
  * Account reconcile dialog.
@@ -402,8 +404,9 @@ public class ReconcileDialogController implements MessageListener {
                 new TableColumn<>(resources.getString("Column.Amount"));
         amountColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(AccountBalanceDisplayManager.
                 convertToSelectedBalanceMode(account.getAccountType(), param.getValue().getAmount(account))));
-        amountColumn.setCellFactory(param -> new RecTransactionCommodityFormatTableCell(
+        amountColumn.setCellFactory(param -> new BigDecimalTableCell<>(
                 CommodityFormat.getShortNumberFormat(account.getCurrencyNode())));
+
         tableView.getColumns().add(amountColumn);
 
         tableViewManager.setColumnFormatFactory(param -> {
