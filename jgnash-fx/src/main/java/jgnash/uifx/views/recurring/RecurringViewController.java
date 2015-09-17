@@ -18,7 +18,6 @@
 package jgnash.uifx.views.recurring;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
@@ -41,7 +40,6 @@ import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -57,7 +55,7 @@ import jgnash.engine.recurring.PendingReminder;
 import jgnash.engine.recurring.Reminder;
 import jgnash.uifx.Options;
 import jgnash.uifx.StaticUIMethods;
-import jgnash.util.DateUtils;
+import jgnash.uifx.control.ShortDateTableCell;
 
 /**
  * Controller for recurring events
@@ -108,11 +106,11 @@ public class RecurringViewController implements MessageListener {
 
         final TableColumn<Reminder, LocalDate> lastPosted = new TableColumn<>(resources.getString("Column.LastPosted"));
         lastPosted.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLastDate()));
-        lastPosted.setCellFactory(cell -> new DateTableCell());
+        lastPosted.setCellFactory(cell -> new ShortDateTableCell());
 
         final TableColumn<Reminder, LocalDate> due = new TableColumn<>(resources.getString("Column.Due"));
         due.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getIterator().next()));
-        due.setCellFactory(cell -> new DateTableCell());
+        due.setCellFactory(cell -> new ShortDateTableCell());
 
         tableView.getColumns().addAll(descriptionColumn, frequencyColumn, enabledColumn, lastPosted, due);
 
@@ -266,22 +264,6 @@ public class RecurringViewController implements MessageListener {
             }
         } catch (CloneNotSupportedException e) {
             Logger.getLogger(RecurringViewController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-        }
-    }
-
-    private static class DateTableCell extends TableCell<Reminder, LocalDate> {
-
-        private final DateTimeFormatter dateFormatter = DateUtils.getShortDateTimeFormat();
-
-        @Override
-        protected void updateItem(final LocalDate date, final boolean empty) {
-            super.updateItem(date, empty);  // required
-
-            if (!empty && date != null) {
-                setText(dateFormatter.format(date));
-            } else {
-                setText(null);
-            }
         }
     }
 }
