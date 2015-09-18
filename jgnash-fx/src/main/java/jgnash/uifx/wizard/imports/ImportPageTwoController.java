@@ -17,13 +17,7 @@
  */
 package jgnash.uifx.wizard.imports;
 
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -35,7 +29,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-
 import jgnash.convert.imports.BayesImportClassifier;
 import jgnash.convert.imports.GenericImport;
 import jgnash.convert.imports.ImportBank;
@@ -47,6 +40,13 @@ import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
 import jgnash.uifx.util.TableViewManager;
 import jgnash.util.TextResource;
+
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * Import Wizard, imported transaction wizard
@@ -73,7 +73,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
     private static final String PREF_NODE = "/jgnash/uifx/wizard/imports";
 
-    private static final double[] PREF_COLUMN_WEIGHTS = {0, 0, 0, 33, 33, 33, 0};
+    private static final double[] PREF_COLUMN_WEIGHTS = {0, 0, 0, 50, 50, 0, 0};
 
     @FXML
     private void initialize() {
@@ -130,8 +130,11 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         });
         accountColumn.setCellFactory(param -> new AccountComboBoxTableCell<>());
         accountColumn.setEditable(true);
-        accountColumn.setOnEditCommit(event ->
-                event.getTableView().getItems().get(event.getTablePosition().getRow()).account = event.getNewValue());
+
+        accountColumn.setOnEditCommit(event -> {
+            event.getTableView().getItems().get(event.getTablePosition().getRow()).account = event.getNewValue();
+            Platform.runLater(tableViewManager::packTable);
+        });
 
         tableView.getColumns().add(accountColumn);
 
@@ -155,12 +158,12 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
     public void getSettings(final Map<ImportWizard.Settings, Object> map) {
 
         if (tableView.getItems().isEmpty()) {   // don't flush old settings
-            ImportBank bank = (ImportBank) map.get(ImportWizard.Settings.BANK);
+            final ImportBank bank = (ImportBank) map.get(ImportWizard.Settings.BANK);
 
             if (bank != null) {
-                List<ImportTransaction> list = bank.getTransactions();
+                final List<ImportTransaction> list = bank.getTransactions();
 
-                Account account = (Account) map.get(ImportWizard.Settings.ACCOUNT);
+                final Account account = (Account) map.get(ImportWizard.Settings.ACCOUNT);
 
                 // set to sane account assuming it's going to be a single entry
                 for (final ImportTransaction t : list) {
@@ -181,6 +184,8 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
             }
         }
 
+        Platform.runLater(tableViewManager::packTable);
+
         updateDescriptor();
     }
 
@@ -196,6 +201,6 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
     @FXML
     private void handleDeleteAction() {
-
+        tableView.getItems().removeAll(tableView.getSelectionModel().getSelectedItems());
     }
 }
