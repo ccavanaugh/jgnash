@@ -25,10 +25,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.util.Callback;
 import jgnash.convert.imports.BayesImportClassifier;
 import jgnash.convert.imports.GenericImport;
 import jgnash.convert.imports.ImportBank;
@@ -102,6 +105,42 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
             }
             return null;
         });
+
+        stateColumn.setCellFactory(new Callback<TableColumn<ImportTransaction, String>, TableCell<ImportTransaction, String>>() {
+            @Override
+            public TableCell<ImportTransaction, String> call(TableColumn<ImportTransaction, String> param) {
+                TableCell<ImportTransaction, String> cell = new TableCell<ImportTransaction, String>() {
+                    @Override
+                    public void updateItem(final String item, final boolean empty) {
+                        super.updateItem(item, empty);
+                        setText(empty ? null : getItem() == null ? "" : getItem());
+                        setGraphic(null);
+                    }
+                };
+
+                cell.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+                    if (event.getClickCount() > 1) {
+                        TableCell c = (TableCell) event.getSource();
+
+                        final ImportTransaction t = tableView.getItems().get(c.getTableRow().getIndex());
+
+                        if (t.getState() == ImportTransaction.ImportState.EQUAL) {
+                            t.setState(ImportTransaction.ImportState.NOT_EQUAL);
+                        } else if (t.getState() == ImportTransaction.ImportState.NOT_EQUAL) {
+                            t.setState(ImportTransaction.ImportState.EQUAL);
+                        } else if (t.getState() == ImportTransaction.ImportState.NEW) {
+                            t.setState(ImportTransaction.ImportState.IGNORE);
+                        } else if (t.getState() == ImportTransaction.ImportState.IGNORE) {
+                            t.setState(ImportTransaction.ImportState.NEW);
+                        }
+
+                        Platform.runLater(tableView::refresh);
+                    }
+                });
+                return cell;
+            }
+        });
+
         tableView.getColumns().add(stateColumn);
 
         final TableColumn<ImportTransaction, LocalDate> dateColumn = new TableColumn<>(resources.getString("Column.Date"));
