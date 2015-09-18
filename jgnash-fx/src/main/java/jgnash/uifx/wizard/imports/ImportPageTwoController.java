@@ -41,6 +41,7 @@ import jgnash.convert.imports.GenericImport;
 import jgnash.convert.imports.ImportBank;
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.Account;
+import jgnash.uifx.control.AccountComboBoxTableCell;
 import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
@@ -72,7 +73,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
     private static final String PREF_NODE = "/jgnash/uifx/wizard/imports";
 
-    private static final double[] PREF_COLUMN_WEIGHTS = {0, 0, 0, 50, 50, 0, 0};
+    private static final double[] PREF_COLUMN_WEIGHTS = {0, 0, 0, 33, 33, 33, 0};
 
     @FXML
     private void initialize() {
@@ -82,6 +83,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
         tableView.setTableMenuButtonVisible(false);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tableView.setEditable(true);
 
         tableView.getItems().addListener((ListChangeListener<ImportTransaction>) c ->
                 valid.setValue(tableView.getItems().size() > 0));
@@ -119,13 +121,18 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         memoColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().memo));
         tableView.getColumns().add(memoColumn);
 
-        final TableColumn<ImportTransaction, String> accountColumn = new TableColumn<>(resources.getString("Column.Account"));
+        final TableColumn<ImportTransaction, Account> accountColumn = new TableColumn<>(resources.getString("Column.Account"));
         accountColumn.setCellValueFactory(param -> {
-            if (param.getValue().account != null) {
-                return new SimpleStringProperty(param.getValue().account.toString());
+            if (param.getValue() != null && param.getValue().account != null) {
+                return new SimpleObjectProperty<>(param.getValue().account);
             }
             return null;
         });
+        accountColumn.setCellFactory(param -> new AccountComboBoxTableCell<>());
+        accountColumn.setEditable(true);
+        accountColumn.setOnEditCommit(event ->
+                event.getTableView().getItems().get(event.getTablePosition().getRow()).account = event.getNewValue());
+
         tableView.getColumns().add(accountColumn);
 
         final TableColumn<ImportTransaction, BigDecimal> amountColumn = new TableColumn<>(resources.getString("Column.Amount"));
@@ -146,29 +153,32 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
     @Override
     public void getSettings(final Map<ImportWizard.Settings, Object> map) {
-        ImportBank bank = (ImportBank) map.get(ImportWizard.Settings.BANK);
 
-        if (bank != null) {
-            List<ImportTransaction> list = bank.getTransactions();
+        if (tableView.getItems().isEmpty()) {   // don't flush old settings
+            ImportBank bank = (ImportBank) map.get(ImportWizard.Settings.BANK);
 
-            Account account = (Account) map.get(ImportWizard.Settings.ACCOUNT);
+            if (bank != null) {
+                List<ImportTransaction> list = bank.getTransactions();
 
-            // set to sane account assuming it's going to be a single entry
-            for (final ImportTransaction t : list) {
-                t.account = account;
-                t.setState(ImportTransaction.ImportState.NEW);
+                Account account = (Account) map.get(ImportWizard.Settings.ACCOUNT);
+
+                // set to sane account assuming it's going to be a single entry
+                for (final ImportTransaction t : list) {
+                    t.account = account;
+                    t.setState(ImportTransaction.ImportState.NEW);
+                }
+
+                // match up any pre-existing transactions
+                GenericImport.matchTransactions(list, account);
+
+                // classify the transactions
+                BayesImportClassifier.classifyTransactions(list, account);
+
+                tableView.getItems().setAll(list);
+                FXCollections.sort(tableView.getItems());
+
+                tableViewManager.restoreLayout();
             }
-
-            // match up any pre-existing transactions
-            GenericImport.matchTransactions(list, account);
-
-            // classify the transactions
-            BayesImportClassifier.classifyTransactions(list, account);
-
-            tableView.getItems().addAll(list);
-            FXCollections.sort(tableView.getItems());
-
-            tableViewManager.restoreLayout();
         }
 
         updateDescriptor();
