@@ -18,8 +18,8 @@
 package jgnash.resource.font;
 
 import de.jensd.fx.glyphs.GlyphIcons;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
+import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -31,29 +31,31 @@ import jgnash.uifx.skin.ThemeManager;
  *
  * @author Craig Cavanaugh
  */
-public class FontAwesomeImageView extends GlyphImageView {
+public class MaterialDesignIconImageView extends GlyphImageView {
 
-    private static final String FONT_NAME = "FontAwesome"; //$NON-NLS-1$
+    private static final String FONT_NAME = "MaterialDesignIcons"; //$NON-NLS-1$
 
     static {
-        Font.loadFont(FontAwesomeImageView.class.getResource(FontAwesomeIconView.TTF_PATH).toExternalForm(),
+        Font.loadFont(MaterialDesignIconImageView.class.getResource(MaterialDesignIconView.TTF_PATH).toExternalForm(),
                 ThemeManager.getFontScaleProperty().get() * DEFAULT_SIZE);
     }
 
     @SuppressWarnings("unused")
-    public FontAwesomeImageView() {
-        super(FontAwesomeIcon.BUG, ThemeManager.getFontScaleProperty().get() * DEFAULT_SIZE, Color.BLACK);
+    public MaterialDesignIconImageView() {
+        super(MaterialDesignIcon.BUG, ThemeManager.getFontScaleProperty().get() * DEFAULT_SIZE, Color.BLACK);
     }
 
-    public FontAwesomeImageView(final GlyphIcons glyphValue) {
+    @SuppressWarnings("unused")
+    public MaterialDesignIconImageView(final GlyphIcons glyphValue) {
         super(glyphValue, ThemeManager.getFontScaleProperty().get() * DEFAULT_SIZE, Color.BLACK);
     }
 
-    public FontAwesomeImageView(final GlyphIcons glyphValue, final Double sizeValue) {
+    @SuppressWarnings("unused")
+    public MaterialDesignIconImageView(final GlyphIcons glyphValue, final Double sizeValue) {
         super(glyphValue, sizeValue, Color.BLACK);
     }
 
-    public FontAwesomeImageView(final GlyphIcons glyphValue, final Double sizeValue, final Color colorValue) {
+    public MaterialDesignIconImageView(final GlyphIcons glyphValue, final Double sizeValue, final Color colorValue) {
         super(glyphValue, sizeValue, colorValue);
     }
 
@@ -64,6 +66,6 @@ public class FontAwesomeImageView extends GlyphImageView {
 
     @Override
     Character getGlyphChar(final String string) {
-        return FontAwesomeIcon.valueOf(string).getChar();
+        return MaterialDesignIcon.valueOf(string).getChar();
     }
 }
