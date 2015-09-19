@@ -207,8 +207,8 @@ public abstract class RegisterTableController {
     private void scrollToTransaction(final Transaction transaction) {
         final int index = tableView.getItems().indexOf(transaction);
 
-        if (index < tableView.getItems().size()) {
-            tableView.scrollTo(index + 1);
+        if (index > 0) {
+            tableView.scrollTo(index - 1);
         } else {
             tableView.scrollTo(transaction);
         }
