@@ -17,13 +17,12 @@
  */
 package jgnash.uifx.views.accounts;
 
-import java.io.IOException;
+import java.net.URL;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import javafx.fxml.FXMLLoader;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -141,34 +140,21 @@ public final class StaticAccountsMethods {
     }
 
     public static Optional<Account> selectAccount(@Nullable final Account parentAccount, @Nullable final Account... excluded) {
-        try {
-            final Stage dialog = new Stage(StageStyle.DECORATED);
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.initOwner(MainApplication.getInstance().getPrimaryStage());
-            dialog.setTitle(ResourceUtils.getBundle().getString("Title.ParentAccount"));
+        final ObjectProperty<SelectAccountController> controllerObjectProperty = new SimpleObjectProperty<>();
 
-            final FXMLLoader loader = new FXMLLoader(SelectAccountController.class.getResource("SelectAccountForm.fxml"), ResourceUtils.getBundle());
-            dialog.setScene(new Scene(loader.load()));
-            dialog.getScene().getStylesheets().addAll(MainApplication.DEFAULT_CSS);
+        final URL fxmlUrl = SelectAccountController.class.getResource("SelectAccountForm.fxml");
+        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, controllerObjectProperty, ResourceUtils.getBundle());
+        stage.setTitle(ResourceUtils.getString("Title.ParentAccount"));
 
-            final SelectAccountController controller = loader.getController();
-            dialog.setResizable(false);
-
-            StageUtils.addBoundsListener(dialog, AccountPropertiesController.class);
-
-            if (parentAccount != null) {
-                controller.setSelectedAccount(parentAccount);
-            }
-
-            // add excluded accounts if any
-            controller.addExcludeAccounts(excluded);
-
-            dialog.showAndWait();
-
-            return controller.getSelectedAccount();
-        } catch (final IOException ex) {
-            Logger.getLogger(StaticAccountsMethods.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage(), ex);
-            return Optional.empty();
+        if (parentAccount != null) {
+            controllerObjectProperty.get().setSelectedAccount(parentAccount);
         }
+
+        // add excluded accounts if any
+        controllerObjectProperty.get().addExcludeAccounts(excluded);
+
+        stage.showAndWait();
+
+        return controllerObjectProperty.get().getSelectedAccount();
     }
 }

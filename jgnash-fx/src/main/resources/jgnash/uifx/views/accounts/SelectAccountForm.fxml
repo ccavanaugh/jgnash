@@ -5,7 +5,8 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="jgnash.uifx.views.accounts.SelectAccountController" styleClass="dialog, form">
+      fx:controller="jgnash.uifx.views.accounts.SelectAccountController" styleClass="dialog, form"
+        minWidth="350">
     <TreeView fx:id="treeView" VBox.vgrow="ALWAYS"/>
     <ButtonBar fx:id="buttonBar" VBox.vgrow="NEVER"/>
 </VBox>
