@@ -18,7 +18,6 @@
 package jgnash.uifx.wizard.imports;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -37,12 +36,12 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Callback;
@@ -52,8 +51,7 @@ import jgnash.convert.imports.GenericImport;
 import jgnash.convert.imports.ImportBank;
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.Account;
-import jgnash.resource.font.FontAwesomeImageView;
-import jgnash.resource.font.MaterialDesignIconImageView;
+import jgnash.resource.font.FontAwesomeLabel;
 import jgnash.uifx.control.AccountComboBoxTableCell;
 import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.ShortDateTableCell;
@@ -124,23 +122,16 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
                             switch (item) {
                                 case IGNORE:
-                                    setGraphic(new StackPane(new FontAwesomeImageView(FontAwesomeIcon.MINUS_CIRCLE,
-                                            16.0, Color.DARKRED)));
+                                    setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeIcon.MINUS_CIRCLE)));
                                     break;
                                 case NEW:
-                                    setGraphic(new StackPane(new FontAwesomeImageView(FontAwesomeIcon.PLUS_CIRCLE,
-                                            16.0, Color.DARKGREEN)));
+                                    setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeIcon.PLUS_CIRCLE)));
                                     break;
                                 case EQUAL:
-                                    setGraphic(new StackPane(new MaterialDesignIconImageView(MaterialDesignIcon.EQUAL,
-                                            16.0, Color.BLACK)));
+                                    setGraphic(new StackPane(new Label("=")));
                                     break;
                                 case NOT_EQUAL:
-                                    setGraphic(new StackPane(
-                                            new MaterialDesignIconImageView(MaterialDesignIcon.BLOCK_HELPER,
-                                                    16.0, Color.GOLDENROD),
-                                            new MaterialDesignIconImageView(MaterialDesignIcon.EQUAL,
-                                                    14.0, Color.BLACK)));
+                                    setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeIcon.PLUS_CIRCLE)));
                                     break;
                             }
                         }
@@ -230,7 +221,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
     @Override
     public void getSettings(final Map<ImportWizard.Settings, Object> map) {
 
-        if (tableView.getItems().isEmpty()) {   // don't flush old settings
+        //if (tableView.getItems().isEmpty()) {   // don't flush old settings
             final ImportBank bank = (ImportBank) map.get(ImportWizard.Settings.BANK);
 
             if (bank != null) {
@@ -241,6 +232,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
                 // set to sane account assuming it's going to be a single entry
                 for (final ImportTransaction t : list) {
                     t.account = account;
+                    t.setState(ImportTransaction.ImportState.NEW);  // reset
                 }
 
                 // match up any pre-existing transactions
@@ -254,7 +246,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
                 tableViewManager.restoreLayout();
             }
-        }
+        //}
 
         Platform.runLater(tableViewManager::packTable);
 
