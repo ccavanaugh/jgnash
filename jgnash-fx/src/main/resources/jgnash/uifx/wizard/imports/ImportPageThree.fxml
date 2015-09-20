@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" maxHeight="Infinity"
+          maxWidth="Infinity" fx:controller="jgnash.uifx.wizard.imports.ImportPageThreeController" styleClass="form">
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" minWidth="10.0"/>
+        <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints  vgrow="NEVER"/>
+        <RowConstraints  vgrow="NEVER"/>
+    </rowConstraints>
+
+    <Label text="%Label.DestAccount" />
+    <Label fx:id="destLabel" GridPane.columnIndex="1"/>
+
+    <Label text="%Label.NumTrans" GridPane.rowIndex="1"/>
+    <Label fx:id="transCountLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+</GridPane>

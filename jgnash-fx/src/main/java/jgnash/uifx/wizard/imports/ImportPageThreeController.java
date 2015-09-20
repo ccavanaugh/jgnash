@@ -17,71 +17,71 @@
  */
 package jgnash.uifx.wizard.imports;
 
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
+import javafx.scene.control.Label;
 
+import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.Account;
-import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
-import jgnash.util.TextResource;
 
 /**
  * Import Wizard, base account selection
  *
  * @author Craig Cavanaugh
  */
-public class ImportPageOneController extends AbstractWizardPaneController<ImportWizard.Settings> {
+public class ImportPageThreeController extends AbstractWizardPaneController<ImportWizard.Settings> {
 
     @FXML
-    private TextFlow textFlow;
+    private Label destLabel;
+
+    @FXML
+    private Label transCountLabel;
 
     @FXML
     private ResourceBundle resources;
 
     @FXML
-    private AccountComboBox accountComboBox;
-
-    private final SimpleBooleanProperty valid = new SimpleBooleanProperty(false);
-
-    @FXML
     private void initialize() {
-        textFlow.getChildren().addAll(new Text(TextResource.getString("ImportOne.txt")));
-
-        valid.bind(accountComboBox.valueProperty().isNotNull());
-
         updateDescriptor();
-
-        accountComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            updateDescriptor();
-        });
     }
 
     @Override
     public void putSettings(final Map<ImportWizard.Settings, Object> map) {
-        map.put(ImportWizard.Settings.ACCOUNT, accountComboBox.getValue());
+        // intentionally empty
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void getSettings(final Map<ImportWizard.Settings, Object> map) {
-        if (map.get(ImportWizard.Settings.ACCOUNT) != null) {
-            accountComboBox.setValue((Account) map.get(ImportWizard.Settings.ACCOUNT));
-        }
+        final Account account = (Account) map.get(ImportWizard.Settings.ACCOUNT);
+        final List<ImportTransaction> transactions = (List<ImportTransaction>) map.get(ImportWizard.Settings.TRANSACTIONS);
+
+        Platform.runLater(() -> destLabel.setText(account.getName()));
+
+        final AtomicInteger count = new AtomicInteger();
+
+        transactions.stream().filter(tran -> tran.getState() == ImportTransaction.ImportState.NEW
+                || tran.getState() == ImportTransaction.ImportState.NOT_EQUAL)
+                .forEach(tran -> count.incrementAndGet());
+
+        Platform.runLater(() -> transCountLabel.setText(Integer.toString(count.get())));
 
         updateDescriptor();
     }
 
     @Override
     public boolean isPaneValid() {
-        return valid.getValue();
+        return true;
     }
 
     @Override
     public String toString() {
-        return "1. " + resources.getString("Title.SelDestAccount");
+        return "3. " + resources.getString("Title.ImpSum");
     }
 }

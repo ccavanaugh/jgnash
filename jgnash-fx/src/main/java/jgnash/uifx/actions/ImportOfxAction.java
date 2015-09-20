@@ -35,6 +35,7 @@ import jgnash.convert.imports.ofx.OfxV2Parser;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.wizard.WizardDialogController;
 import jgnash.uifx.views.main.MainApplication;
 import jgnash.uifx.wizard.imports.ImportWizard;
@@ -151,25 +152,32 @@ public class ImportOfxAction {
                 final List<OfxTransaction> transactions = (List<OfxTransaction>) wizardDialogController.getSetting(ImportWizard.Settings.TRANSACTIONS);
 
                 // import threads in the background
-                new ImportThread(bank, account, transactions).start();
+                ImportTransactionsTask importTransactionsTask = new ImportTransactionsTask(bank, account, transactions);
+
+                new Thread(importTransactionsTask).start();
+
+                StaticUIMethods.displayTaskProgress(importTransactionsTask);
             }
         }
     }
 
-    private static class ImportThread extends Thread {
+    private static class ImportTransactionsTask extends Task<Void> {
 
         private final OfxBank bank;
         private final Account account;
         private final List<OfxTransaction> transactions;
 
-        public ImportThread(final OfxBank bank, final Account account, final List<OfxTransaction> transactions) {
+        public ImportTransactionsTask(final OfxBank bank, final Account account, final List<OfxTransaction> transactions) {
             this.bank = bank;
             this.account = account;
             this.transactions = transactions;
         }
 
         @Override
-        public void run() {
+        public Void call() {
+            updateMessage(ResourceUtils.getString("Message.PleaseWait"));
+            updateProgress(-1, Long.MAX_VALUE);
+
             String accountNumber = bank.accountId;
 
                 /* set the account number if not a match */
@@ -182,6 +190,8 @@ public class ImportOfxAction {
 
                 /* Import the transactions */
             OfxImport.importTransactions(transactions, account);
+
+            return null;
         }
     }
 }

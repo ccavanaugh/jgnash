@@ -20,6 +20,8 @@ package jgnash.uifx.wizard.imports;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -69,8 +71,12 @@ public class ImportWizard {
             pane = fxmlLoader.load();
             wizardController.addTaskPane(fxmlLoader.getController(), pane);
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            fxmlLoader = new FXMLLoader(getClass().getResource("ImportPageThree.fxml"), resources);
+            pane = fxmlLoader.load();
+            wizardController.addTaskPane(fxmlLoader.getController(), pane);
+
+        } catch (final IOException ioe) {
+            Logger.getLogger(ImportWizard.class.getName()).log(Level.SEVERE, ioe.getLocalizedMessage(), ioe);
         }
 
         Platform.runLater(() -> {

@@ -23,6 +23,7 @@ import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -120,6 +121,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
                         } else if (item != null) {
                             setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
                             setText(null);
+
                             switch (item) {
                                 case IGNORE:
                                     setGraphic(new StackPane(new FontAwesomeImageView(FontAwesomeIcon.MINUS_CIRCLE,
@@ -131,14 +133,14 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
                                     break;
                                 case EQUAL:
                                     setGraphic(new StackPane(new MaterialDesignIconImageView(MaterialDesignIcon.EQUAL,
-                                            16.0, Color.LIGHTYELLOW)));
+                                            16.0, Color.BLACK)));
                                     break;
                                 case NOT_EQUAL:
                                     setGraphic(new StackPane(
                                             new MaterialDesignIconImageView(MaterialDesignIcon.BLOCK_HELPER,
                                                     16.0, Color.GOLDENROD),
                                             new MaterialDesignIconImageView(MaterialDesignIcon.EQUAL,
-                                                    13.0, Color.GOLDENROD)));
+                                                    14.0, Color.BLACK)));
                                     break;
                             }
                         }
@@ -206,7 +208,6 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
             event.getTableView().getItems().get(event.getTablePosition().getRow()).account = event.getNewValue();
             Platform.runLater(tableViewManager::packTable);
         });
-
         tableView.getColumns().add(accountColumn);
 
         final TableColumn<ImportTransaction, BigDecimal> amountColumn =
@@ -223,7 +224,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
     @Override
     public void putSettings(final Map<ImportWizard.Settings, Object> map) {
-       // map.put(ImportWizard.Settings.ACCOUNT, accountComboBox.getValue());
+        map.put(ImportWizard.Settings.TRANSACTIONS, new ArrayList<>(tableView.getItems()));
     }
 
     @Override
@@ -240,7 +241,6 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
                 // set to sane account assuming it's going to be a single entry
                 for (final ImportTransaction t : list) {
                     t.account = account;
-                    t.setState(ImportTransaction.ImportState.NEW);
                 }
 
                 // match up any pre-existing transactions

@@ -29,6 +29,7 @@ Release 2.19.0
 ----------------------
 09/20/15 Fixed an OFX and QIF bug that was preventing matches of previous and manually entered transactions. (Swing, Fx)
 09/20/15 Fixed an exception if an attempt was made to import an OFX or QIF file with a previously imported transaction. (Swing, Fx)
+09/20/15 Implemented OFX import for the jGnashFx UI.
 09/15/15 Fixed an exception when opening the Transaction Number configuration Dialog (Fx)
 09/15/15 Added XLS, and XLSX files to the existing export capability of the transaction register (Swing)
 09/15/15 Added CSV, OFX, XLS, and XLSX file export capability to the transaction register (Fx)
