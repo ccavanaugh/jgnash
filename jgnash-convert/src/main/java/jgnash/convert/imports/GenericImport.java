@@ -86,12 +86,13 @@ public class GenericImport {
      *            account to perform match against
      */
     public static void matchTransactions(final List<? extends ImportTransaction> list, final Account baseAccount) {
-        for (ImportTransaction oTran : list) {
+        for (final ImportTransaction oTran : list) {
 
             // amount must always match
             for (final Transaction tran : baseAccount.getSortedTransactionList()) {
 
-                if (tran.getAmount(baseAccount).equals(oTran.amount)) { // amounts must always match
+                // amounts must be comparably the same, do not use an equality check
+                if (tran.getAmount(baseAccount).compareTo(oTran.amount) == 0) {
 
                     { // check for date match
                         LocalDate startDate;
@@ -134,8 +135,6 @@ public class GenericImport {
                             }
                         }
                     }
-
-                    //oTran.setState(OfxTransaction.ImportState.NEW);
                 }
             }
         }
