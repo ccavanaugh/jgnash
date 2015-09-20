@@ -270,6 +270,11 @@ public class FXMLUtils {
             throw new UncheckedIOException(ioe);
         }
 
+        Platform.runLater(() -> {
+            stage.setMinWidth(stage.getWidth());
+            stage.setMinHeight(stage.getHeight());
+        });
+
         return stage;
     }
 }

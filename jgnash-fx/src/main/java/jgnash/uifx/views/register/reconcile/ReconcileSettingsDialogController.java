@@ -168,11 +168,7 @@ public class ReconcileSettingsDialogController {
         stage.initModality(Modality.NONE);
         stage.initOwner(null);
 
-        Platform.runLater(() -> {
-            stage.show();
-            stage.setMinWidth(stage.getWidth());
-            stage.setMinHeight(stage.getHeight());
-        });
+        Platform.runLater(stage::show);
 
         new Thread() { // push account updates outside the UI thread to improve performance
             public void run() {
