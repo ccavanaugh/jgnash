@@ -97,15 +97,13 @@ public class GenericImport {
                         LocalDate startDate;
                         LocalDate endDate;
 
-                        Objects.requireNonNull(oTran.dateUser);
-
                         // we have a user initiated date, use a smaller window
                         if ((oTran.dateUser != null)) {
                             startDate = oTran.dateUser.minusDays(1);
                             endDate = oTran.dateUser.plusDays(1);
                         } else { // use the posted date with a larger window
-                            startDate = oTran.dateUser.minusDays(3);
-                            endDate = oTran.dateUser.plusDays(3);
+                            startDate = oTran.datePosted.minusDays(3);
+                            endDate = oTran.datePosted.plusDays(3);
                         }
 
                         if (DateUtils.after(tran.getLocalDate(), startDate) && DateUtils.before(tran.getLocalDate(), endDate)) {

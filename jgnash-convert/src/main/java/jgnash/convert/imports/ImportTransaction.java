@@ -22,6 +22,7 @@ import java.time.LocalDate;
 
 import jgnash.engine.Account;
 import jgnash.util.NotNull;
+import jgnash.util.Nullable;
 
 /**
  * Common interface for imported transactions from OFX and mt940
@@ -54,7 +55,7 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
     /**
      * Date user initiated the transaction, optional, may be null
      */
-    public LocalDate dateUser = null;
+    @Nullable public LocalDate dateUser = null;
 
     public String memo = ""; // memo
 
