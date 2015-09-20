@@ -33,6 +33,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -48,13 +49,13 @@ public abstract class GlyphImageView extends ImageView {
 
     private final ObjectProperty<Object> glyphName = new SimpleObjectProperty<>();
 
-    private final ObjectProperty<Color> color = new SimpleObjectProperty<>();
+    private final ObjectProperty<Paint> color = new SimpleObjectProperty<>();
 
     private final ObjectProperty<Double> size = new SimpleObjectProperty<>();
 
     private final static HashMap<Long, Image> imageCache = new HashMap<>();
 
-    public GlyphImageView(final GlyphIcons glyphValue, final Double sizeValue, final Color colorValue) {
+    public GlyphImageView(final GlyphIcons glyphValue, final Double sizeValue, final Paint colorValue) {
         color.setValue(colorValue);
         size.setValue(sizeValue);
         glyphName.setValue(glyphValue);
@@ -91,7 +92,7 @@ public abstract class GlyphImageView extends ImageView {
     }
 
     @FXML
-    public Color getColor() {
+    public Paint getColor() {
         return color.get();
     }
 
@@ -120,7 +121,7 @@ public abstract class GlyphImageView extends ImageView {
         }
     }
 
-    private Image getImage(final Character character, final Color color, final Double size) {
+    private Image getImage(final Character character, final Paint color, final Double size) {
         final long key = getFontName().hashCode() + color.hashCode() + size.hashCode() + character.hashCode();
 
         if (imageCache.containsKey(key)) {

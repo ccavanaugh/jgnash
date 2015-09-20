@@ -32,11 +32,15 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 import jgnash.util.NotNull;
 
@@ -75,6 +79,8 @@ public class ThemeManager {
     private static final String DEFAULT_CASPIAN_BASE_COLOR = "#d0d0d0";
 
     private static final String DEFAULT_MODENA_BASE_COLOR = "#ececec";
+
+    //-fx-text-base-color
 
     static {
         preferences = Preferences.userNodeForPackage(ThemeManager.class);
@@ -181,6 +187,19 @@ public class ThemeManager {
 
     public static String getCurrentTheme() {
         return preferences.get(LAST, Application.STYLESHEET_MODENA);
+    }
+
+    /**
+     * Utility method to discover the {@code Paint} used by {@code Label}
+     *
+     * @return Base Paint use of Labels
+     */
+    public static Paint getBaseTextColor() {
+        final Label label = new Label(BASE_COLOR);
+        final Scene scene = new Scene(new Group(label));
+        scene.getRoot().styleProperty().setValue(getStyleProperty().getValue());
+        label.applyCss();
+        return label.getTextFill();
     }
 
     private static class ThemeHandler implements EventHandler<ActionEvent> {

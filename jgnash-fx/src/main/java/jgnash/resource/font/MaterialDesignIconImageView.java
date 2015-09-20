@@ -21,7 +21,7 @@ import de.jensd.fx.glyphs.GlyphIcons;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIcon;
 import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView;
 
-import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
 import jgnash.uifx.skin.ThemeManager;
@@ -42,20 +42,20 @@ public class MaterialDesignIconImageView extends GlyphImageView {
 
     @SuppressWarnings("unused")
     public MaterialDesignIconImageView() {
-        super(MaterialDesignIcon.BUG, ThemeManager.getFontScaleProperty().get() * DEFAULT_SIZE, Color.BLACK);
+        super(MaterialDesignIcon.BUG, ThemeManager.getFontScaleProperty().get() * DEFAULT_SIZE, ThemeManager.getBaseTextColor());
     }
 
     @SuppressWarnings("unused")
     public MaterialDesignIconImageView(final GlyphIcons glyphValue) {
-        super(glyphValue, ThemeManager.getFontScaleProperty().get() * DEFAULT_SIZE, Color.BLACK);
+        super(glyphValue, ThemeManager.getFontScaleProperty().get() * DEFAULT_SIZE, ThemeManager.getBaseTextColor());
     }
 
     @SuppressWarnings("unused")
     public MaterialDesignIconImageView(final GlyphIcons glyphValue, final Double sizeValue) {
-        super(glyphValue, sizeValue, Color.BLACK);
+        super(glyphValue, sizeValue, ThemeManager.getBaseTextColor());
     }
 
-    public MaterialDesignIconImageView(final GlyphIcons glyphValue, final Double sizeValue, final Color colorValue) {
+    public MaterialDesignIconImageView(final GlyphIcons glyphValue, final Double sizeValue, final Paint colorValue) {
         super(glyphValue, sizeValue, colorValue);
     }
 

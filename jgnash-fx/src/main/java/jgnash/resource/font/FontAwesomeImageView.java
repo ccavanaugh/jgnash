@@ -21,7 +21,7 @@ import de.jensd.fx.glyphs.GlyphIcons;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 
-import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 
 import jgnash.uifx.skin.ThemeManager;
@@ -42,18 +42,18 @@ public class FontAwesomeImageView extends GlyphImageView {
 
     @SuppressWarnings("unused")
     public FontAwesomeImageView() {
-        super(FontAwesomeIcon.BUG, ThemeManager.getFontScaleProperty().get() * DEFAULT_SIZE, Color.BLACK);
+        super(FontAwesomeIcon.BUG, ThemeManager.getFontScaleProperty().get() * DEFAULT_SIZE, ThemeManager.getBaseTextColor());
     }
 
     public FontAwesomeImageView(final GlyphIcons glyphValue) {
-        super(glyphValue, ThemeManager.getFontScaleProperty().get() * DEFAULT_SIZE, Color.BLACK);
+        super(glyphValue, ThemeManager.getFontScaleProperty().get() * DEFAULT_SIZE, ThemeManager.getBaseTextColor());
     }
 
     public FontAwesomeImageView(final GlyphIcons glyphValue, final Double sizeValue) {
-        super(glyphValue, sizeValue, Color.BLACK);
+        super(glyphValue, sizeValue, ThemeManager.getBaseTextColor());
     }
 
-    public FontAwesomeImageView(final GlyphIcons glyphValue, final Double sizeValue, final Color colorValue) {
+    public FontAwesomeImageView(final GlyphIcons glyphValue, final Double sizeValue, final Paint colorValue) {
         super(glyphValue, sizeValue, colorValue);
     }
 
