@@ -46,6 +46,8 @@ import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
  * ComboBox of available accounts
  *
  * @author Craig Cavanaugh
+ *
+ * @see <a href="https://bugs.openjdk.java.net/browse/JDK-8129123</a>
  */
 public class AccountComboBox extends ComboBox<Account> implements MessageListener {
 
@@ -61,7 +63,7 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
         loadAccounts();
         registerListeners();
 
-        // TODO: Hokey hack to ensure selection is visible when the list is shown.
+        // TODO: JDK Bug JDK-8129123 https://bugs.openjdk.java.net/browse/JDK-8129123
         setOnMouseClicked(event -> {
             final ListView<?> listView = ((ComboBoxListViewSkin<?>) getSkin()).getListView();
             listView.scrollTo(getSelectionModel().getSelectedIndex());
@@ -134,7 +136,7 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
         // Set a default account
         if (getItems().size() > 0) {
-            setValue(getItems().get(0));
+            Platform.runLater(() -> setValue(getItems().get(0)));
         }
     }
 
@@ -159,10 +161,11 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
     }
 
     @Override
-    public void messagePosted(Message event) {
+    public void messagePosted(final Message event) {
         Platform.runLater(() -> {
             switch (event.getEvent()) {
                 case FILE_CLOSING:
+                    MessageBus.getInstance().unregisterListener(this, MessageChannel.ACCOUNT, MessageChannel.SYSTEM);
                     getItems().clear();
                     break;
                 case ACCOUNT_REMOVE:
