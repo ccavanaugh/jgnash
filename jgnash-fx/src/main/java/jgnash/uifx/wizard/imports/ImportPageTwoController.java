@@ -109,34 +109,34 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
                     ImportTransaction.ImportState> param) {
                 TableCell<ImportTransaction, ImportTransaction.ImportState> cell =
                         new TableCell<ImportTransaction, ImportTransaction.ImportState>() {
-                    @Override
-                    public void updateItem(final ImportTransaction.ImportState item, final boolean empty) {
-                        super.updateItem(item, empty);
+                            @Override
+                            public void updateItem(final ImportTransaction.ImportState item, final boolean empty) {
+                                super.updateItem(item, empty);
 
-                        if (empty) {
-                            setText(null);
-                            setGraphic(null);
-                        } else if (item != null) {
-                            setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
-                            setText(null);
+                                if (empty) {
+                                    setText(null);
+                                    setGraphic(null);
+                                } else if (item != null) {
+                                    setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+                                    setText(null);
 
-                            switch (item) {
-                                case IGNORE:
-                                    setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeIcon.MINUS_CIRCLE)));
-                                    break;
-                                case NEW:
-                                    setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeIcon.PLUS_CIRCLE)));
-                                    break;
-                                case EQUAL:
-                                    setGraphic(new StackPane(new Label("=")));
-                                    break;
-                                case NOT_EQUAL:
-                                    setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeIcon.PLUS_CIRCLE)));
-                                    break;
+                                    switch (item) {
+                                        case IGNORE:
+                                            setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeIcon.MINUS_CIRCLE)));
+                                            break;
+                                        case NEW:
+                                            setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeIcon.PLUS_CIRCLE)));
+                                            break;
+                                        case EQUAL:
+                                            setGraphic(new StackPane(new Label("=")));
+                                            break;
+                                        case NOT_EQUAL:
+                                            setGraphic(new StackPane(new FontAwesomeLabel(FontAwesomeIcon.PLUS_CIRCLE)));
+                                            break;
+                                    }
+                                }
                             }
-                        }
-                    }
-                };
+                        };
 
                 cell.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
                     if (event.getClickCount() > 1) {
@@ -208,7 +208,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         tableView.getColumns().add(amountColumn);
 
         tableViewManager = new TableViewManager<>(tableView, PREF_NODE);
-        tableViewManager.setColumnWeightFactory(column-> PREF_COLUMN_WEIGHTS[column]);
+        tableViewManager.setColumnWeightFactory(column -> PREF_COLUMN_WEIGHTS[column]);
 
         updateDescriptor();
     }
@@ -221,32 +221,30 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
     @Override
     public void getSettings(final Map<ImportWizard.Settings, Object> map) {
 
-        //if (tableView.getItems().isEmpty()) {   // don't flush old settings
-            final ImportBank bank = (ImportBank) map.get(ImportWizard.Settings.BANK);
+        final ImportBank bank = (ImportBank) map.get(ImportWizard.Settings.BANK);
 
-            if (bank != null) {
-                final List<ImportTransaction> list = bank.getTransactions();
+        if (bank != null) {
+            final List<ImportTransaction> list = bank.getTransactions();
 
-                final Account account = (Account) map.get(ImportWizard.Settings.ACCOUNT);
+            final Account account = (Account) map.get(ImportWizard.Settings.ACCOUNT);
 
-                // set to sane account assuming it's going to be a single entry
-                for (final ImportTransaction t : list) {
-                    t.account = account;
-                    t.setState(ImportTransaction.ImportState.NEW);  // reset
-                }
-
-                // match up any pre-existing transactions
-                GenericImport.matchTransactions(list, account);
-
-                // classify the transactions
-                BayesImportClassifier.classifyTransactions(list, account);
-
-                tableView.getItems().setAll(list);
-                FXCollections.sort(tableView.getItems());
-
-                tableViewManager.restoreLayout();
+            // set to sane account assuming it's going to be a single entry
+            for (final ImportTransaction t : list) {
+                t.account = account;
+                t.setState(ImportTransaction.ImportState.NEW);  // force reset
             }
-        //}
+
+            // match up any pre-existing transactions
+            GenericImport.matchTransactions(list, account);
+
+            // classify the transactions
+            BayesImportClassifier.classifyTransactions(list, account);
+
+            tableView.getItems().setAll(list);
+            FXCollections.sort(tableView.getItems());
+
+            tableViewManager.restoreLayout();
+        }
 
         Platform.runLater(tableViewManager::packTable);
 
