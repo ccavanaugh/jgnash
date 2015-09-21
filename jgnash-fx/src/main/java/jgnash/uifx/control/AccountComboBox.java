@@ -26,8 +26,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.util.StringConverter;
 
 import jgnash.engine.Account;
 import jgnash.engine.Comparators;
@@ -58,10 +58,6 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
     final private SimpleBooleanProperty showPlaceHoldersProperty = new SimpleBooleanProperty(false);
 
     public AccountComboBox() {
-
-        setButtonCell(new AccountPathListCell());
-        setCellFactory(param -> new AccountPathListCell());
-
         loadAccounts();
         registerListeners();
 
@@ -69,6 +65,24 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
         setOnMouseClicked(event -> {
             final ListView<?> listView = ((ComboBoxListViewSkin<?>) getSkin()).getListView();
             listView.scrollTo(getSelectionModel().getSelectedIndex());
+        });
+
+        // display the full account path instead of the name
+        setConverter(new StringConverter<Account>() {
+            @Override
+            public String toString(final Account account) {
+                return account == null ? null : account.getPathName();
+            }
+
+            @Override
+            public Account fromString(final String string) {
+                for (final Account account : getItems()) {
+                    if (account.getPathName().equals(string)) {
+                        return account;
+                    }
+                }
+                return null;
+            }
         });
     }
 
@@ -163,22 +177,5 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
                     break;
             }
         });
-    }
-
-    /**
-     * Display the full pathname of the account and not just the name
-     */
-    private static class AccountPathListCell extends ListCell<Account> {
-        @Override
-        protected void updateItem(final Account item, final boolean empty) {
-            super.updateItem(item, empty);
-
-            if (empty || item == null) {
-                setText(null);
-                setGraphic(null);
-            } else {
-                setText(item.getPathName());
-            }
-        }
     }
 }
