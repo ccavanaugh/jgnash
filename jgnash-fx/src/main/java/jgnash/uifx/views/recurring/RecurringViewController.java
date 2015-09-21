@@ -106,11 +106,11 @@ public class RecurringViewController implements MessageListener {
 
         final TableColumn<Reminder, LocalDate> lastPosted = new TableColumn<>(resources.getString("Column.LastPosted"));
         lastPosted.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getLastDate()));
-        lastPosted.setCellFactory(cell -> new ShortDateTableCell());
+        lastPosted.setCellFactory(cell -> new ShortDateTableCell<>());        
 
         final TableColumn<Reminder, LocalDate> due = new TableColumn<>(resources.getString("Column.Due"));
         due.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getIterator().next()));
-        due.setCellFactory(cell -> new ShortDateTableCell());
+        due.setCellFactory(cell -> new ShortDateTableCell<>());
 
         tableView.getColumns().addAll(descriptionColumn, frequencyColumn, enabledColumn, lastPosted, due);
 
