@@ -116,7 +116,7 @@ public class ImportTwo extends JPanel implements WizardPage, ActionListener {
         builder.append(deleteButton);
     }
 
-    void refreshInfo() {
+    private void refreshInfo() {
         table.fireTableDataChanged();
     }
 
@@ -147,6 +147,7 @@ public class ImportTwo extends JPanel implements WizardPage, ActionListener {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void getSettings(final Map<Enum<?>, Object> map) {
         ImportBank bank = (ImportBank) map.get(ImportDialog.Settings.BANK);
 

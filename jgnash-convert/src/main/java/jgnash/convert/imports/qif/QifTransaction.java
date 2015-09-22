@@ -19,12 +19,9 @@ package jgnash.convert.imports.qif;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
-import jgnash.engine.Account;
-import jgnash.util.NotNull;
+import jgnash.convert.imports.ImportTransaction;
 
 /**
  * Transaction object for a QIF transaction
@@ -32,24 +29,16 @@ import jgnash.util.NotNull;
  * @author Craig Cavanaugh
  */
 @SuppressFBWarnings({"URF_UNREAD_FIELD"})
-public class QifTransaction {
+public class QifTransaction extends ImportTransaction {
 
-    /**
-     * Converted date
-     */
-    @NotNull
-    public LocalDate datePosted = LocalDate.now();
     /**
      * Original date before conversion
      */
     public String oDate;
-    public BigDecimal amount = BigDecimal.ZERO;
+
     String status = null;
-    String checkNumber;
-    @NotNull public String payee = "";
-    public String memo = "";
+
     public String category = null;
-    public Account account = null;
 
     String security;
     String price;

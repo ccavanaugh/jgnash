@@ -29,7 +29,7 @@ import jgnash.convert.imports.ImportTransaction;
  * @author Craig Cavanaugh
  * @author Nicolas Bouillon
  */
-public class OfxBank extends ImportBank {
+public class OfxBank extends ImportBank<OfxTransaction> {
 
     public String currency;
 

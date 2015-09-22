@@ -17,13 +17,12 @@
  */
 package jgnash.convert.imports.qif;
 
-import java.util.ArrayList;
-import java.util.List;
+import jgnash.convert.imports.ImportBank;
 
 /**
  * @author Craig Cavanaugh
  */
-public class QifAccount {
+public class QifAccount extends ImportBank<QifTransaction> {
 
     public String name;
 
@@ -31,22 +30,8 @@ public class QifAccount {
 
     public String description = "";
 
-    private List<QifTransaction> transactions = new ArrayList<>();
-
-    public void addTransaction(QifTransaction item) {
-        getTransactions().add(item);
-    }
-
     public QifTransaction get(int index) {
         return getTransactions().get(index);
-    }
-
-    public List<QifTransaction> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(List<QifTransaction> transactions) {
-        this.transactions = transactions;
     }
 
     @Override

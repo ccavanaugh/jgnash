@@ -48,7 +48,7 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
     /**
      * Deposits get positive 'amounts', withdrawals negative
      */
-    public BigDecimal amount;
+    public BigDecimal amount = BigDecimal.ZERO;
 
     @NotNull public LocalDate datePosted = LocalDate.now();
 

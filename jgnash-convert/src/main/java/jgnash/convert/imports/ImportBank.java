@@ -26,18 +26,18 @@ import java.util.List;
  * @author Craig Cavanaugh
  * @author Arnout Engelen
  */
-public class ImportBank {
-    private List<ImportTransaction> transactions = new ArrayList<>();
+public class ImportBank<E extends ImportTransaction> {
+    private List<E> transactions = new ArrayList<>();
 
-    public void setTransactions(List<ImportTransaction> transactions) {
+    public void setTransactions(List<E> transactions) {
         this.transactions = transactions;
     }
 
-    public List<ImportTransaction> getTransactions() {
+    public List<E> getTransactions() {
         return transactions;
     }
 
-    public void addTransaction(ImportTransaction transaction) {
+    public void addTransaction(E transaction) {
         transactions.add(transaction);
     }
 }

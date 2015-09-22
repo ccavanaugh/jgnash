@@ -219,6 +219,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void getSettings(final Map<ImportWizard.Settings, Object> map) {
 
         final ImportBank bank = (ImportBank) map.get(ImportWizard.Settings.BANK);

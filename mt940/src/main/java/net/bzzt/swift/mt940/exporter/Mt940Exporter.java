@@ -34,16 +34,18 @@ import net.bzzt.swift.mt940.Mt940Record;
  * Double-entry Transaction objects.
  *
  * @author arnouten
- * @version $Id: Mt940Exporter.java 3242 2012-07-17 16:34:29Z ccavanaugh $
  */
 public class Mt940Exporter {
     private Mt940Exporter() {
     }
 
+    @SuppressWarnings("unchecked")
     public static ImportBank convert(Mt940File file) {
-        ImportBank retval = new ImportBank();
-        retval.setTransactions(convertTransactions(file));
-        return retval;
+        final ImportBank importBank = new ImportBank();
+
+        importBank.setTransactions(convertTransactions(file));
+
+        return importBank;
     }
 
     /**
