@@ -28,6 +28,7 @@ import java.io.LineNumberReader;
 import java.text.ParseException;
 
 import jgnash.convert.imports.ImportBank;
+import jgnash.convert.imports.ImportTransaction;
 
 /**
  * Tests for SWIFT Mt940 importing
@@ -59,7 +60,7 @@ public class Mt940Test {
 
             assertEquals(nTransactions, file.getEntries().size());
 
-            ImportBank bank = Mt940Exporter.convert(file);
+            ImportBank<ImportTransaction> bank = Mt940Exporter.convert(file);
             assertEquals(nTransactions, bank.getTransactions().size());
         }
     }
@@ -83,7 +84,7 @@ public class Mt940Test {
             Mt940File file = parser.parse(reader);
             assertEquals(nTransactions, file.getEntries().size());
 
-            ImportBank bank = Mt940Exporter.convert(file);
+            ImportBank<ImportTransaction> bank = Mt940Exporter.convert(file);
             assertEquals(nTransactions, bank.getTransactions().size());            
         }        
     }

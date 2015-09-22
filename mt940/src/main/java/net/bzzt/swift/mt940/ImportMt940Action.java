@@ -85,7 +85,7 @@ public class ImportMt940Action extends AbstractEnabledAction {
         }
     }
 
-    final static class ImportMt940 extends SwingWorker<ImportBank, Void> {
+    final static class ImportMt940 extends SwingWorker<ImportBank<ImportTransaction>, Void> {
         private final String fileName;
 
         ImportMt940(String fileName) {
@@ -93,7 +93,7 @@ public class ImportMt940Action extends AbstractEnabledAction {
         }
 
         @Override
-        protected ImportBank doInBackground() throws Exception {
+        protected ImportBank<ImportTransaction> doInBackground() throws Exception {
             Mt940Parser parser = new Mt940Parser();
             
             try (LineNumberReader reader = new LineNumberReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.ISO_8859_1))) {
@@ -108,7 +108,7 @@ public class ImportMt940Action extends AbstractEnabledAction {
             try {
                 ImportDialog d = new ImportDialog();
 
-                ImportBank bank = get();
+                ImportBank<ImportTransaction> bank = get();
 
                 d.setSetting(ImportDialog.Settings.BANK, bank);
                 d.setVisible(true);

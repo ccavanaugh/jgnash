@@ -40,8 +40,8 @@ public class Mt940Exporter {
     }
 
     @SuppressWarnings("unchecked")
-    public static ImportBank convert(Mt940File file) {
-        final ImportBank importBank = new ImportBank();
+    public static ImportBank<ImportTransaction> convert(Mt940File file) {
+        final ImportBank<ImportTransaction> importBank = new ImportBank<>();
 
         importBank.setTransactions(convertTransactions(file));
 

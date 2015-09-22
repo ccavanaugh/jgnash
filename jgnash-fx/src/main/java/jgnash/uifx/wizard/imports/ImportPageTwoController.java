@@ -139,10 +139,8 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
                         };
 
                 cell.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-                    if (event.getClickCount() > 1) {
-                        TableCell c = (TableCell) event.getSource();
-
-                        final ImportTransaction t = tableView.getItems().get(c.getTableRow().getIndex());
+                    if (event.getClickCount() > 1) {                       
+                        final ImportTransaction t = tableView.getItems().get(((TableCell)event.getSource()).getTableRow().getIndex());
 
                         if (t.getState() == ImportTransaction.ImportState.EQUAL) {
                             t.setState(ImportTransaction.ImportState.NOT_EQUAL);
@@ -222,7 +220,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
     @SuppressWarnings("unchecked")
     public void getSettings(final Map<ImportWizard.Settings, Object> map) {
 
-        final ImportBank bank = (ImportBank) map.get(ImportWizard.Settings.BANK);
+        final ImportBank<ImportTransaction> bank = (ImportBank<ImportTransaction>) map.get(ImportWizard.Settings.BANK);
 
         if (bank != null) {
             final List<ImportTransaction> list = bank.getTransactions();

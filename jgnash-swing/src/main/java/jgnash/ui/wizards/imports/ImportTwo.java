@@ -149,7 +149,7 @@ public class ImportTwo extends JPanel implements WizardPage, ActionListener {
     @Override
     @SuppressWarnings("unchecked")
     public void getSettings(final Map<Enum<?>, Object> map) {
-        ImportBank bank = (ImportBank) map.get(ImportDialog.Settings.BANK);
+        ImportBank<ImportTransaction> bank = (ImportBank<ImportTransaction>) map.get(ImportDialog.Settings.BANK);
 
         if (bank != null) {
             List<ImportTransaction> list = bank.getTransactions();
