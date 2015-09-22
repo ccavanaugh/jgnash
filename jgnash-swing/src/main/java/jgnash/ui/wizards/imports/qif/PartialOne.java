@@ -165,12 +165,10 @@ public class PartialOne extends JPanel implements WizardPage, ActionListener {
      * Reparse the dates based on the date format in the combo
      */
     private void reparseDates() {
-        String df = getDateFormat();
-        int count = qAcc.numItems();
+        final String df = getDateFormat();
 
-        for (int i = 0; i < count; i++) {
-            QifTransaction qt = qAcc.get(i);
-            qt.date = QifUtils.parseDate(qt.oDate, df);
+        for (final QifTransaction transaction: qAcc.getTransactions()) {
+            transaction.datePosted = QifUtils.parseDate(transaction.oDate, df);
         }
 
         System.out.println("reparse");

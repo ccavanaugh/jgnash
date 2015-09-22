@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import jgnash.engine.Account;
+import jgnash.util.NotNull;
 
 /**
  * Transaction object for a QIF transaction
@@ -36,34 +37,30 @@ public class QifTransaction {
     /**
      * Converted date
      */
-    public LocalDate date = LocalDate.now();
+    @NotNull
+    public LocalDate datePosted = LocalDate.now();
     /**
      * Original date before conversion
      */
     public String oDate;
     public BigDecimal amount = BigDecimal.ZERO;
     String status = null;
-    String number;
-    public String payee = null;
+    String checkNumber;
+    @NotNull public String payee = "";
     public String memo = "";
     public String category = null;
-    public Account _category = null;
-    //String U;
+    public Account account = null;
+
     String security;
     String price;
     String quantity;
     String type;
     String amountTrans;
+
     public final ArrayList<QifSplitTransaction> splits = new ArrayList<>();
-    @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection"})
-    private final ArrayList<String> address = new ArrayList<>();
 
     public void addSplit(QifSplitTransaction split) {
         splits.add(split);
-    }
-
-    public void addAddressLine(String line) {
-        address.add(line);
     }
 
     public boolean hasSplits() {
@@ -80,7 +77,7 @@ public class QifTransaction {
             buf.append("Amount:").append(amount).append('\n');
         }
 
-        buf.append("Date: ").append(date).append('\n');
+        buf.append("Date: ").append(datePosted).append('\n');
         return buf.toString();
     }
 }

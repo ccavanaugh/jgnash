@@ -353,7 +353,7 @@ public final class QifParser {
                     /* Preserve the original unparsed date so that it may be
                      * reevaluated at a later time. */
                     tran.oDate = line.substring(1);
-                    tran.date = QifUtils.parseDate(tran.oDate, dateFormat);
+                    tran.datePosted = QifUtils.parseDate(tran.oDate, dateFormat);
                 } else if (line.startsWith("U")) {
                     logger.finest("Ignoring U");
                 } else if (line.startsWith("T")) {
@@ -365,11 +365,11 @@ public final class QifParser {
                 } else if (line.startsWith("L")) {
                     tran.category = line.substring(1);
                 } else if (line.startsWith("N")) {
-                    tran.number = line.substring(1);
+                    tran.checkNumber = line.substring(1);
                 } else if (line.startsWith("M")) {
                     tran.memo = line.substring(1);
                 } else if (line.startsWith("A")) {
-                    tran.addAddressLine(line.substring(1));
+                    logger.info("Ignored address line: " + line.substring(1));
                 } else if (line.startsWith("I")) {
                     tran.price = line.substring(1);
                 } else if (line.startsWith("^")) {
@@ -430,7 +430,7 @@ public final class QifParser {
                     /* Preserve the original unparsed date so that it may be
                      * reevaluated at a later time. */
                     tran.oDate = line.substring(1);
-                    tran.date = QifUtils.parseDate(tran.oDate, dateFormat);
+                    tran.datePosted = QifUtils.parseDate(tran.oDate, dateFormat);
                 } else if (line.startsWith("U")) {
                     //tran.U = line.substring(1);
                     logger.finest("Ignoring U");
@@ -443,11 +443,11 @@ public final class QifParser {
                 } else if (line.startsWith("L")) {
                     tran.category = line.substring(1);
                 } else if (line.startsWith("N")) { // trans type for inv accounts
-                    tran.number = line.substring(1);
+                    tran.checkNumber = line.substring(1);
                 } else if (line.startsWith("M")) {
                     tran.memo = line.substring(1);
                 } else if (line.startsWith("A")) {
-                    tran.addAddressLine(line.substring(1));
+                    logger.info("Ignored address line: " + line.substring(1));
                 } else if (line.startsWith("Y")) {
                     tran.security = line.substring(1);
                 } else if (line.startsWith("I")) {
@@ -727,10 +727,10 @@ public final class QifParser {
         for (int i = 0; i < count; i++) {
             QifAccount acc = accountList.get(i);
             System.out.println("Account " + (i + 1) + " " + acc.name);
-            int size = acc.items.size();
+            int size = acc.getTransactions().size();
             System.out.println("    Num Transactions :" + size);
             for (int j = 0; j < size; j++) {
-                QifTransaction tran = acc.items.get(j);
+                QifTransaction tran = acc.getTransactions().get(j);
                 System.out.println("        Transaction " + (j + 1) + " " + tran.payee);
                 System.out.println("            Num Splits :" + tran.splits.size());
                 for (int k = 0; k < tran.splits.size(); k++) {

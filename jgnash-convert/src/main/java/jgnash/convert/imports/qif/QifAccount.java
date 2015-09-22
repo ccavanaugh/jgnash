@@ -18,6 +18,7 @@
 package jgnash.convert.imports.qif;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Craig Cavanaugh
@@ -30,18 +31,22 @@ public class QifAccount {
 
     public String description = "";
 
-    public final ArrayList<QifTransaction> items = new ArrayList<>();
+    private List<QifTransaction> transactions = new ArrayList<>();
 
     public void addTransaction(QifTransaction item) {
-        items.add(item);
-    }
-
-    public int numItems() {
-        return items.size();
+        getTransactions().add(item);
     }
 
     public QifTransaction get(int index) {
-        return items.get(index);
+        return getTransactions().get(index);
+    }
+
+    public List<QifTransaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<QifTransaction> transactions) {
+        this.transactions = transactions;
     }
 
     @Override

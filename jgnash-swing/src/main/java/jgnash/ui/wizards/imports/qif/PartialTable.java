@@ -55,7 +55,7 @@ class PartialTable extends FormattedJTable {
 
     public void deleteSelected() {
         int row = getSelectedRow();
-        qAccount.items.remove(row);
+        qAccount.getTransactions().remove(row);
         model.fireTableRowsDeleted(row, row);
     }
 
@@ -116,7 +116,7 @@ class PartialTable extends FormattedJTable {
          */
         @Override
         public int getRowCount() {
-            return qAccount.numItems();
+            return qAccount.getTransactions().size();
         }
 
         /**
@@ -131,7 +131,7 @@ class PartialTable extends FormattedJTable {
             QifTransaction qt = qAccount.get(rowIndex);
             switch (columnIndex) {
                 case 0:
-                    return dateTimeFormatter.format(qt.date);
+                    return dateTimeFormatter.format(qt.datePosted);
                 case 1:
                     return qt.payee;
                 case 2:
@@ -148,7 +148,7 @@ class PartialTable extends FormattedJTable {
             if (columnIndex == 2 && value != null) {
                 QifTransaction qt = qAccount.get(rowIndex);
                 qt.category = ((Account) value).getPathName();
-                qt._category = (Account) value;
+                qt.account = (Account) value;
                 fireTableCellUpdated(rowIndex, columnIndex);
             }
         }
