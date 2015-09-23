@@ -46,6 +46,12 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
     public Account account;
 
     /**
+     * Depending on the implementation a unique ID may be provided that can be used to detect
+     * duplication of prior imported transactions.
+     */
+    public String transactionID;
+
+    /**
      * Deposits get positive 'amounts', withdrawals negative
      */
     public BigDecimal amount = BigDecimal.ZERO;
@@ -71,6 +77,10 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     public void setState(ImportState state) {
         this.state = state;
+    }
+
+    public String getName() {
+        return payee;
     }
 
     @Override

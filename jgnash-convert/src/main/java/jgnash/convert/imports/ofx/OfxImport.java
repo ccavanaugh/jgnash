@@ -20,12 +20,12 @@ package jgnash.convert.imports.ofx;
 import java.util.List;
 import java.util.Objects;
 
+import jgnash.convert.imports.GenericImport;
+import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.Account;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
-import jgnash.engine.Transaction;
-import jgnash.engine.TransactionFactory;
 
 /**
  * OfxImport utility methods
@@ -34,17 +34,20 @@ import jgnash.engine.TransactionFactory;
  */
 public class OfxImport {
 
-    public static void importTransactions(final List<OfxTransaction> transactions, final Account baseAccount) {
-        Objects.requireNonNull(transactions);
+    public static void importTransactions(final List<ImportTransaction> transactions, final Account baseAccount) {
+
+        GenericImport.importTransactions(transactions, baseAccount);
+        /*Objects.requireNonNull(transactions);
         Objects.requireNonNull(baseAccount);
 
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        for (final OfxTransaction tran : transactions) {
+        for (final ImportTransaction tran : transactions) {
             assert tran.account != null;
 
-            if (tran.getState() == OfxTransaction.ImportState.NEW || tran.getState() == OfxTransaction.ImportState.NOT_EQUAL) { // do not import matched transactions
+            if (tran.getState() == OfxTransaction.ImportState.NEW
+                    || tran.getState() == OfxTransaction.ImportState.NOT_EQUAL) { // do not import matched transactions
                 Transaction t;
 
                 if (baseAccount.equals(tran.account)) { // single entry oTran
@@ -68,7 +71,7 @@ public class OfxImport {
                     engine.addTransaction(t);
                 }
             }
-        }
+        }*/
     }
 
     public static Account matchAccount(final OfxBank bank) {

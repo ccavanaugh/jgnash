@@ -30,6 +30,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import jgnash.convert.imports.GenericImport;
 import jgnash.uifx.control.wizard.WizardDialogController;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.util.ResourceUtils;
@@ -61,6 +62,9 @@ public class ImportWizard {
         stage.setTitle(resources.getString("Title.ImportTransactions"));
 
         final WizardDialogController<Settings> wizardController = wizardControllerProperty().get();
+
+        // force a default account before loading tasks to prevent NPE.  The ordered pages should sort out better choices
+        wizardController.setSetting(Settings.ACCOUNT, GenericImport.matchAccount(null));
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ImportPageOne.fxml"), resources);

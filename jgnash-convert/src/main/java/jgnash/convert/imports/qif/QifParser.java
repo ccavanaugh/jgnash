@@ -30,6 +30,8 @@ import java.util.logging.Logger;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+import jgnash.convert.imports.ofx.OfxBank;
+
 /**
  * The QIF format seems to be very broken. Various applications and services
  * export it differently, some have even extended an already broken format to
@@ -67,6 +69,10 @@ public final class QifParser {
 
     public QifParser(String dateFormat) {
         setDateFormat(dateFormat);
+    }
+
+    public QifAccount getBank() {
+        return accountList.get(0);
     }
 
     /**

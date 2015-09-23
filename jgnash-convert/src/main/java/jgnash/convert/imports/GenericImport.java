@@ -28,6 +28,7 @@ import jgnash.engine.Transaction;
 import jgnash.engine.TransactionFactory;
 import jgnash.convert.imports.ofx.OfxTransaction;
 import jgnash.util.DateUtils;
+import jgnash.util.NotNull;
 
 /**
  * Generic import utility methods
@@ -37,7 +38,8 @@ import jgnash.util.DateUtils;
  */
 public class GenericImport {
 
-    public static void importTransactions(final List<? extends ImportTransaction> transactions, final Account baseAccount) {
+    public static void importTransactions(@NotNull final List<? extends ImportTransaction> transactions,
+                                          @NotNull final Account baseAccount) {
         Objects.requireNonNull(transactions);
         Objects.requireNonNull(baseAccount);
 
@@ -85,7 +87,9 @@ public class GenericImport {
      * @param baseAccount
      *            account to perform match against
      */
-    public static void matchTransactions(final List<? extends ImportTransaction> list, final Account baseAccount) {
+    public static void matchTransactions(final List<? extends ImportTransaction> list, @NotNull final Account baseAccount) {
+        Objects.requireNonNull(baseAccount);
+
         for (final ImportTransaction oTran : list) {
 
             // amount must always match
@@ -138,6 +142,37 @@ public class GenericImport {
                 }
             }
         }
+    }
+
+    public static Account matchAccount(final String id) {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        List<Account> accountList = engine.getAccountList();
+
+        if (id != null) {
+            for (final Account account : accountList) {
+                if (account.getUuid().equals(id)) {
+                    return account;
+                }
+
+                if (account.getBankId() != null && account.getBankId().equals(id)) {
+                    return account;
+                }
+
+                if (account.getAccountNumber() != null && account.getAccountNumber().equals(id)) {
+                    return account;
+                }
+            }
+        } else {
+            for (final Account account : accountList) {
+                if (!account.isPlaceHolder() && !account.isLocked()) {
+                    return account;
+                }
+            }
+        }
+
+        return null;
     }
 
     private GenericImport() {

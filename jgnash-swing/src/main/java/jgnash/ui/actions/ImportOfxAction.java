@@ -31,9 +31,9 @@ import javax.swing.JFileChooser;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import jgnash.convert.imports.ImportTransaction;
 import jgnash.convert.imports.ofx.OfxBank;
 import jgnash.convert.imports.ofx.OfxImport;
-import jgnash.convert.imports.ofx.OfxTransaction;
 import jgnash.convert.imports.ofx.OfxV1ToV2;
 import jgnash.convert.imports.ofx.OfxV2Parser;
 import jgnash.engine.Account;
@@ -128,10 +128,9 @@ public class ImportOfxAction extends AbstractEnabledAction {
         @Override
         protected void done() {
             try {
+                final OfxV2Parser parser = get();
 
-                OfxV2Parser parser = get();
-
-                ImportDialog d = new ImportDialog();
+                final ImportDialog d = new ImportDialog();
 
                 d.setSetting(ImportDialog.Settings.BANK, parser.getBank());
 
@@ -145,7 +144,7 @@ public class ImportOfxAction extends AbstractEnabledAction {
                     final Account account = (Account) d.getSetting(ImportDialog.Settings.ACCOUNT);
                     final OfxBank bank = parser.getBank();
                     @SuppressWarnings("unchecked")
-                    final List<OfxTransaction> transactions = (List<OfxTransaction>) d.getSetting(ImportDialog.Settings.TRANSACTIONS);
+                    final List<ImportTransaction> transactions = (List<ImportTransaction>) d.getSetting(ImportDialog.Settings.TRANSACTIONS);
 
                     // import threads in the background
                     new ImportThread(bank, account, transactions).start();
@@ -159,9 +158,9 @@ public class ImportOfxAction extends AbstractEnabledAction {
 
             private final OfxBank bank;
             private final Account account;
-            private final List<OfxTransaction> transactions;
+            private final List<ImportTransaction> transactions;
 
-            public ImportThread(final OfxBank bank, final Account account, final List<OfxTransaction> transactions) {
+            public ImportThread(final OfxBank bank, final Account account, final List<ImportTransaction> transactions) {
                 this.bank = bank;
                 this.account = account;
                 this.transactions = transactions;

@@ -29,8 +29,6 @@ public class OfxTransaction extends ImportTransaction {
 
     public String transactionType;
 
-    public String transactionID;
-
     public String sic; // automatic category assignment
 
     public String refNum;
@@ -74,9 +72,5 @@ public class OfxTransaction extends ImportTransaction {
                 refNum + ", " +
                 payeeId + ", " +
                 currency;
-    }
-
-    public String getName() {
-        return payee;
     }
 }

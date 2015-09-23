@@ -27,9 +27,9 @@ import java.util.prefs.Preferences;
 import javafx.concurrent.Task;
 import javafx.stage.FileChooser;
 
+import jgnash.convert.imports.ImportTransaction;
 import jgnash.convert.imports.ofx.OfxBank;
 import jgnash.convert.imports.ofx.OfxImport;
-import jgnash.convert.imports.ofx.OfxTransaction;
 import jgnash.convert.imports.ofx.OfxV1ToV2;
 import jgnash.convert.imports.ofx.OfxV2Parser;
 import jgnash.engine.Account;
@@ -136,11 +136,12 @@ public class ImportOfxAction {
             WizardDialogController<ImportWizard.Settings> wizardDialogController
                     = importWizard.wizardControllerProperty().get();
 
-            wizardDialogController.setSetting(ImportWizard.Settings.BANK, parser.getBank());
-
+            // Set the bank match first for a better work flow
             if (match != null) {
                 wizardDialogController.setSetting(ImportWizard.Settings.ACCOUNT, match);
             }
+
+            wizardDialogController.setSetting(ImportWizard.Settings.BANK, parser.getBank());
 
             importWizard.showAndWait();
 
@@ -149,7 +150,7 @@ public class ImportOfxAction {
                 final OfxBank bank = parser.getBank();
 
                 @SuppressWarnings("unchecked")
-                final List<OfxTransaction> transactions = (List<OfxTransaction>) wizardDialogController.getSetting(ImportWizard.Settings.TRANSACTIONS);
+                final List<ImportTransaction> transactions = (List<ImportTransaction>) wizardDialogController.getSetting(ImportWizard.Settings.TRANSACTIONS);
 
                 // import threads in the background
                 ImportTransactionsTask importTransactionsTask = new ImportTransactionsTask(bank, account, transactions);
@@ -165,9 +166,9 @@ public class ImportOfxAction {
 
         private final OfxBank bank;
         private final Account account;
-        private final List<OfxTransaction> transactions;
+        private final List<ImportTransaction> transactions;
 
-        public ImportTransactionsTask(final OfxBank bank, final Account account, final List<OfxTransaction> transactions) {
+        public ImportTransactionsTask(final OfxBank bank, final Account account, final List<ImportTransaction> transactions) {
             this.bank = bank;
             this.account = account;
             this.transactions = transactions;
@@ -180,7 +181,9 @@ public class ImportOfxAction {
 
             String accountNumber = bank.accountId;
 
-                /* set the account number if not a match */
+            //TODO: Should this be bankId
+
+            /* set the account number if not a match */
             if (accountNumber != null && !accountNumber.equals(account.getAccountNumber())) {
                 final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
                 Objects.requireNonNull(engine);
