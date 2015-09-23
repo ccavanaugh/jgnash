@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
@@ -45,10 +46,13 @@ public class ImportWizard {
     public enum Settings {
         BANK,
         ACCOUNT,
-        TRANSACTIONS
+        TRANSACTIONS,
+        DATE_FORMAT
     }
 
     private final ObjectProperty<WizardDialogController<Settings>> wizardControllerProperty = new SimpleObjectProperty<>();
+
+    private final SimpleBooleanProperty dateFormatSelectionEnabled = new SimpleBooleanProperty(false);
 
     private final Stage stage;
 
@@ -69,7 +73,9 @@ public class ImportWizard {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ImportPageOne.fxml"), resources);
             Pane pane = fxmlLoader.load();
-            wizardController.addTaskPane(fxmlLoader.getController(), pane);
+            ImportPageOneController importPageOneController = fxmlLoader.getController();
+            wizardController.addTaskPane(importPageOneController, pane);
+            importPageOneController.dateFormatSelectionEnabled().bind(dateFormatSelectionEnabled());
 
             fxmlLoader = new FXMLLoader(getClass().getResource("ImportPageTwo.fxml"), resources);
             pane = fxmlLoader.load();
@@ -91,6 +97,10 @@ public class ImportWizard {
 
     public ObjectProperty<WizardDialogController<Settings>> wizardControllerProperty() {
         return wizardControllerProperty;
+    }
+
+    public SimpleBooleanProperty dateFormatSelectionEnabled() {
+        return dateFormatSelectionEnabled;
     }
 
     public void showAndWait() {
