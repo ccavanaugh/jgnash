@@ -30,32 +30,32 @@ import java.util.logging.Logger;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-import jgnash.convert.imports.ofx.OfxBank;
+import jgnash.util.NotNull;
 
 /**
  * The QIF format seems to be very broken. Various applications and services
  * export it differently, some have even extended an already broken format to
  * add even more confusion. To make matters worse, the format has changed over
  * time with no indication of what "version" the QIF file is.
- * <p/>
+ * <p>
  * This parses through the QIF file using brute force, no fancy parser or
  * tricks. The QIF file is broken enough that it's easier to find problems with
  * the parser when it's easy to step through the code.
- * <p/>
+ * <p>
  * The !Option:AutoSwitch and !Clear:AutoSwitch headers do not appear to be used
  * correctly, even by the "creator" of the QIF file format. There seems to be
  * confusion as to it's purpose. The best thing to do is ignore AutoSwitch
  * completely and make an educated guess about the data.
- * <p/>
+ * <p>
  * I'm not very happy with this code, but I'm not sure there is a clean solution
  * to parsing QIF files
- * 
+ *
  * @author Craig Cavanaugh
  */
 @SuppressFBWarnings({"URF_UNREAD_FIELD"})
 public final class QifParser {
 
-    private String dateFormat = QifUtils.US_FORMAT;
+    private QifTransaction.DateFormat dateFormat = QifTransaction.DateFormat.US;
 
     public final ArrayList<QifCategory> categories = new ArrayList<>();
 
@@ -67,7 +67,7 @@ public final class QifParser {
 
     private static final Logger logger = Logger.getLogger(QifParser.class.getName());
 
-    public QifParser(String dateFormat) {
+    public QifParser(final QifTransaction.DateFormat dateFormat) {
         setDateFormat(dateFormat);
     }
 
@@ -78,23 +78,18 @@ public final class QifParser {
     /**
      * Tests if the source string starts with the prefix string. Case is
      * ignored.
-     * 
-     * @param source
-     *            the source String.
-     * @param prefix
-     *            the prefix String.
+     *
+     * @param source the source String.
+     * @param prefix the prefix String.
      * @return true, if the source starts with the prefix string.
      */
     private static boolean startsWith(final String source, final String prefix) {
         return prefix.length() <= source.length() && source.regionMatches(true, 0, prefix, 0, prefix.length());
     }
 
-    void setDateFormat(final String dateFormat) {
-        if (dateFormat != null) {
-            if (dateFormat.equals(QifUtils.US_FORMAT) || dateFormat.equals(QifUtils.EU_FORMAT)) {
-                this.dateFormat = dateFormat;
-            }
-        }
+    void setDateFormat(@NotNull final QifTransaction.DateFormat dateFormat) {
+        Objects.requireNonNull(dateFormat);
+        this.dateFormat = dateFormat;
     }
 
     void parseFullFile(final File file) throws NoAccountException {
@@ -106,14 +101,14 @@ public final class QifParser {
     }
 
     private void parseFullFile(final String fileName) throws NoAccountException {
-        
+
         boolean accountFound = true;
 
         try (QifReader in = new QifReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.UTF_8))) {
 
             String line = in.readLine();
-            
-            while (line != null) {                                                                               
+
+            while (line != null) {
                 if (startsWith(line, "!Type:Class")) {
                     parseClassList(in);
                 } else if (startsWith(line, "!Type:Cat")) {
@@ -128,16 +123,16 @@ public final class QifParser {
                     parsePrice(in);
                 } else if (startsWith(line, "!Type:Bank")) { // QIF from an online bank statement... assumes the account is known                  
                     accountFound = false;
-                    break;                  
+                    break;
                 } else if (startsWith(line, "!Type:CCard")) { // QIF from an online credit card statement
                     accountFound = false;
-                    break;                    
+                    break;
                 } else if (startsWith(line, "!Type:Oth")) { // QIF from an online credit card statement
                     accountFound = false;
-                    break;                  
+                    break;
                 } else if (startsWith(line, "!Type:Cash")) { // Partial QIF export
                     accountFound = false;
-                    break;                    
+                    break;
                 } else if (startsWith(line, "!Option:AutoSwitch")) {
                     logger.info("Consuming !Option:AutoSwitch");
                 } else if (startsWith(line, "!Clear:AutoSwitch")) {
@@ -146,35 +141,44 @@ public final class QifParser {
                     System.out.println("Error: " + line);
                 }
                 line = in.readLine();
-            }          
+            }
         } catch (final FileNotFoundException e) {
             logger.log(Level.WARNING, "Could not find file: {0}", fileName);
         } catch (final IOException e) {
             logger.log(Level.SEVERE, null, e);
         }
-        
+
         if (!accountFound) {
             throw new NoAccountException("The account was not found");
+        }
+
+        // reparse the dates
+        for (final QifAccount account : accountList) {
+            final QifTransaction.DateFormat dateFormat = QifTransaction.determineDateFormat(account.getTransactions());
+            account.reparseDates(dateFormat);
         }
     }
 
     private boolean parsePartialFile(final String fileName) {
 
         try (QifReader in = new QifReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.UTF_8))) {
-
             String peek = in.peekLine();
             if (startsWith(peek, "!Type:")) {
-                QifAccount acc = new QifAccount(); // "unknown" holding account
+                final QifAccount acc = new QifAccount(); // "unknown" holding account
                 if (parseAccountTransactions(in, acc)) {
                     accountList.add(acc);
 
                     logger.finest("*** Added account ***");
-                   
+
+                    // reparse the dates
+                    final QifTransaction.DateFormat dateFormat = QifTransaction.determineDateFormat(acc.getTransactions());
+                    acc.reparseDates(dateFormat);
+
                     return true; // only look for transactions for one account
                 }
                 System.err.println("parseAccountTransactions: error");
             }
-          
+
         } catch (final FileNotFoundException fne) {
             logger.log(Level.WARNING, "Could not find file: {0}", fileName);
         } catch (final IOException ioe) {
@@ -208,7 +212,7 @@ public final class QifParser {
                     logger.finest("Ignoring statement balance");
                 } else if (line.startsWith("X")) {
                     // must be GnuCashToQIF... not sure what it is??? ignore it.
-                    logger.warning("Ignoring 'X' attribute" );
+                    logger.warning("Ignoring 'X' attribute");
                 } else if (line.startsWith("^")) {
                     String peek = in.peekLine();
                     if (peek == null) { // end of the file in empty account list
@@ -359,7 +363,7 @@ public final class QifParser {
                     /* Preserve the original unparsed date so that it may be
                      * reevaluated at a later time. */
                     tran.oDate = line.substring(1);
-                    tran.datePosted = QifUtils.parseDate(tran.oDate, dateFormat);
+                    //tran.datePosted = QifTransaction.parseDate(tran.oDate, dateFormat);
                 } else if (line.startsWith("U")) {
                     logger.finest("Ignoring U");
                 } else if (line.startsWith("T")) {
@@ -436,7 +440,7 @@ public final class QifParser {
                     /* Preserve the original unparsed date so that it may be
                      * reevaluated at a later time. */
                     tran.oDate = line.substring(1);
-                    tran.datePosted = QifUtils.parseDate(tran.oDate, dateFormat);
+                    tran.datePosted = QifTransaction.parseDate(tran.oDate, dateFormat);
                 } else if (line.startsWith("U")) {
                     //tran.U = line.substring(1);
                     logger.finest("Ignoring U");
@@ -549,7 +553,7 @@ public final class QifParser {
 
     /**
      * Just eats the memorized transaction data.  Will not try to convert to jGnash entities
-     * 
+     *
      * @param in {@code QifReader}
      */
     private static void parseMemorizedTransactions(final QifReader in) {
@@ -654,9 +658,8 @@ public final class QifParser {
     /**
      * So far, I haven't see a security as part of a list, but it is supported
      * just in case there is another "variation" of the format
-     * 
-     * @param in
-     *            {@code QifReader}
+     *
+     * @param in {@code QifReader}
      * @return true if successful
      */
     private boolean parseSecurity(final QifReader in) {
@@ -695,9 +698,8 @@ public final class QifParser {
 
     /**
      * Price data in QIF file is not very informative.... ignore it for now
-     * 
-     * @param in
-     *            {@code QifReader}
+     *
+     * @param in {@code QifReader}
      * @return true if successful
      */
     private boolean parsePrice(final QifReader in) {

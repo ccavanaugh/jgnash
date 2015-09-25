@@ -36,6 +36,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import jgnash.convert.imports.qif.NoAccountException;
 import jgnash.convert.imports.qif.QifImport;
+import jgnash.convert.imports.qif.QifTransaction;
 import jgnash.convert.imports.qif.QifUtils;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -52,7 +53,6 @@ import jgnash.util.TextResource;
 
 /**
  * @author Craig Cavanaugh
- *
  */
 @Action("qifimport-command")
 public class ImportQifAction extends AbstractEnabledAction {
@@ -102,11 +102,7 @@ public class ImportQifAction extends AbstractEnabledAction {
             if (fullFile) {
 
                 // prompt for date format
-                final String dateFormat = getQIFDateFormat();
-
-                if (dateFormat == null) {
-                    return;
-                }
+                final QifTransaction.DateFormat dateFormat = getQIFDateFormat();
 
                 class ImportFile extends SwingWorker<Void, Void> {
 
@@ -163,18 +159,17 @@ public class ImportQifAction extends AbstractEnabledAction {
         }
     }
 
-    private static String getQIFDateFormat() {
+    private static QifTransaction.DateFormat getQIFDateFormat() {
 
         String DATE_FORMAT = "dateFormat";
 
-        String dateFormat = null;
+        QifTransaction.DateFormat dateFormat = QifTransaction.DateFormat.US;
 
         ResourceBundle rb = ResourceUtils.getBundle();
         Preferences pref = Preferences.userNodeForPackage(ImportQifAction.class);
 
         /* Create the combo for date format selection */
-        String[] formats = { QifUtils.US_FORMAT, QifUtils.EU_FORMAT };
-        JComboBox<String> combo = new JComboBox<>(formats);
+        JComboBox<QifTransaction.DateFormat> combo = new JComboBox<>(QifTransaction.DateFormat.values());
 
         combo.setSelectedIndex(pref.getInt(DATE_FORMAT, 0));
 
@@ -182,7 +177,7 @@ public class ImportQifAction extends AbstractEnabledAction {
         int result = JOptionPane.showOptionDialog(UIApplication.getFrame(), combo, rb.getString("Title.SelQifDateFormat"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
 
         if (result == JOptionPane.YES_OPTION) {
-            dateFormat = (String) combo.getSelectedItem();
+            dateFormat = (QifTransaction.DateFormat) combo.getSelectedItem();
         }
 
         pref.putInt(DATE_FORMAT, combo.getSelectedIndex());

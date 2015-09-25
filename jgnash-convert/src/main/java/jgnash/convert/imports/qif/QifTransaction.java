@@ -19,7 +19,11 @@ package jgnash.convert.imports.qif;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import jgnash.convert.imports.ImportTransaction;
 
@@ -30,6 +34,24 @@ import jgnash.convert.imports.ImportTransaction;
  */
 @SuppressFBWarnings({"URF_UNREAD_FIELD"})
 public class QifTransaction extends ImportTransaction {
+
+    public static final Pattern DATE_DELIMITER_PATTERN = Pattern.compile("/|'|\\.|-");
+
+    public enum DateFormat {
+        US("mm/dd/yyyy"),
+        EU("dd/mm/yyyy");
+
+        private final String format;
+
+        DateFormat(String format) {
+            this.format = format;
+        }
+
+        @Override
+        public String toString() {
+            return format;
+        }
+    }
 
     /**
      * Original date before conversion
@@ -68,5 +90,91 @@ public class QifTransaction extends ImportTransaction {
 
         buf.append("Date: ").append(datePosted).append('\n');
         return buf.toString();
+    }
+
+    public static DateFormat determineDateFormat(final Collection<QifTransaction> transactions) {
+        DateFormat dateFormat = DateFormat.US;   // US date is assumed
+
+        for (final QifTransaction transaction : transactions) {
+            int zero;
+            int one;
+            //int two;
+
+            final String[] chunks = QifTransaction.DATE_DELIMITER_PATTERN.split(transaction.oDate);
+            zero = Integer.parseInt(chunks[0].trim());
+            one = Integer.parseInt(chunks[1].trim());
+            //two = Integer.parseInt(chunks[2].trim());
+
+            if (zero > 12 && one <= 12) {   // must have a EU date format
+                dateFormat = DateFormat.EU;
+                break;
+            }
+        }
+
+        return dateFormat;
+    }
+
+    /**
+     * Converts a string into a data object
+     * <p>
+     * "6/21' 1" -> 6/21/2001
+     * "6/21'01" -> 6/21/2001
+     * "9/18'2001 -> 9/18/2001
+     * "06/21/2001" -> "06/21/01"
+     * "3.26.03" -> German version of quicken format "03-26-2003"
+     * MSMoney format "1.1.2005"
+     * kmymoney2 20.1.94
+     * European dd/mm/yyyy
+     * 21/2/07 -> 02/21/2007 UK
+     * Quicken 2007 D15/2/07
+     *
+     * @param sDate  String QIF date to parse
+     * @param format String identifier of format to parse
+     * @return Returns parsed date and current date if an error occurs
+     */
+    @SuppressWarnings("MagicConstant")
+    public static LocalDate parseDate(final String sDate, final DateFormat format) throws java.time.DateTimeException {
+
+        int month = 0;
+        int day = 0;
+        int year = 0;
+
+        final String[] chunks = DATE_DELIMITER_PATTERN.split(sDate);
+
+        switch (format) {
+            case US:
+                try {
+                    month = Integer.parseInt(chunks[0].trim());
+                    day = Integer.parseInt(chunks[1].trim());
+                    year = Integer.parseInt(chunks[2].trim());
+                } catch (Exception e) {
+                    Logger.getLogger(QifUtils.class.getName()).severe(e.toString());
+                }
+                break;
+            case EU:
+                try {
+                    day = Integer.parseInt(chunks[0].trim());
+                    month = Integer.parseInt(chunks[1].trim());
+                    year = Integer.parseInt(chunks[2].trim());
+                } catch (Exception e) {
+                    Logger.getLogger(QifUtils.class.getName()).severe(e.toString());
+                }
+                break;
+        }
+
+        if (year < 100) {
+            if (year < 29) {
+                year += 2000;
+            } else {
+                year += 1900;
+            }
+        }
+
+        try {
+            return LocalDate.of(year, month, day);
+        } catch (Exception e) {
+            Logger.getLogger(QifUtils.class.getName()).severe("Invalid date format specified");
+            return LocalDate.now();
+        }
     }
 }

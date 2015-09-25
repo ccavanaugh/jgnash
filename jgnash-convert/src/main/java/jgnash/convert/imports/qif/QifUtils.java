@@ -26,7 +26,6 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -41,83 +40,11 @@ import jgnash.engine.MathConstants;
  */
 public class QifUtils {
 
-    /**
-     * US date format
-     */
-    public static final String US_FORMAT = "mm/dd/yyyy";
-
-    /**
-     * European date format
-     */
-    public static final String EU_FORMAT = "dd/mm/yyyy";
-
-    private static final Pattern DATE_DELIMITER_PATTERN = Pattern.compile("/|'|\\.|-");
-
     private static final Pattern MONEY_PREFIX_PATTERN = Pattern.compile("\\D");
 
     private static final Pattern CATEGORY_DELIMITER_PATTERN = Pattern.compile("/");
 
     private QifUtils() {
-    }
-
-    /**
-     * Converts a string into a data object
-     * <p>
-     * <p>
-     * format "6/21' 1" -> 6/21/2001 format "6/21'01" -> 6/21/2001 format
-     * "9/18'2001 -> 9/18/2001 format "06/21/2001" format "06/21/01" format
-     * "3.26.03" -> German version of quicken format "03-26-2005" -> MSMoney
-     * format format "1.1.2005" -> kmymoney2 20.1.94 European dd/mm/yyyy has
-     * been confirmed
-     * <p>
-     * 21/2/07 -> 02/21/2007 UK, Quicken 2007 D15/2/07
-     *
-     * @param sDate  String QIF date to parse
-     * @param format String identifier of format to parse
-     * @return Returns parsed date and current date if an error occurs
-     */
-    @SuppressWarnings("MagicConstant")
-    public static LocalDate parseDate(final String sDate, final String format) {
-
-        int month = 0;
-        int day = 0;
-        int year = 0;
-
-        final String[] chunks = DATE_DELIMITER_PATTERN.split(sDate);
-
-        switch (format) {
-            case US_FORMAT:
-                try {
-                    month = Integer.parseInt(chunks[0].trim());
-                    day = Integer.parseInt(chunks[1].trim());
-                    year = Integer.parseInt(chunks[2].trim());
-                } catch (Exception e) {
-                    Logger.getLogger(QifUtils.class.getName()).severe(e.toString());
-                }
-                break;
-            case EU_FORMAT:
-                try {
-                    day = Integer.parseInt(chunks[0].trim());
-                    month = Integer.parseInt(chunks[1].trim());
-                    year = Integer.parseInt(chunks[2].trim());
-                } catch (Exception e) {
-                    Logger.getLogger(QifUtils.class.getName()).severe(e.toString());
-                }
-                break;
-            default:
-                Logger.getLogger(QifUtils.class.getName()).severe("Invalid date format specified");
-                return LocalDate.now();
-        }
-
-        if (year < 100) {
-            if (year < 29) {
-                year += 2000;
-            } else {
-                year += 1900;
-            }
-        }
-
-        return LocalDate.of(year, month, day);
     }
 
     public static BigDecimal parseMoney(final String money) {

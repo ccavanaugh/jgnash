@@ -27,6 +27,8 @@ Improved handling of memo's in split transactions.  The split entry memo should 
 
 Release 2.19.0
 ----------------------
+09/25/15 The QIF import utility has been improved to make a better determination of the date format automatically.
+09/25/15 Some QIF imports would fail because of a date parsing regression in 2.17.0.
 09/20/15 Fixed an OFX and QIF bug that was preventing matches of previous and manually entered transactions. (Swing, Fx)
 09/20/15 Fixed an exception if an attempt was made to import an OFX or QIF file with a previously imported transaction. (Swing, Fx)
 09/20/15 Implemented OFX import for the jGnashFx UI.

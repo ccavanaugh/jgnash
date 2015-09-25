@@ -31,7 +31,6 @@ import javax.swing.text.StyledEditorKit;
 
 import jgnash.convert.imports.qif.QifAccount;
 import jgnash.convert.imports.qif.QifTransaction;
-import jgnash.convert.imports.qif.QifUtils;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -57,7 +56,7 @@ public class PartialOne extends JPanel implements WizardPage, ActionListener {
 
     private JTextPane helpPane;
 
-    private JComboBox<String> dateFormatCombo;
+    private JComboBox<QifTransaction.DateFormat> dateFormatCombo;
 
     private final QifAccount qAcc;
 
@@ -84,8 +83,7 @@ public class PartialOne extends JPanel implements WizardPage, ActionListener {
         helpPane.setText(TextResource.getString("QifOne.txt"));
 
         /* Create the combo for date format selection */
-        String[] formats = {QifUtils.US_FORMAT, QifUtils.EU_FORMAT};
-        dateFormatCombo = new JComboBox<>(formats);
+        dateFormatCombo = new JComboBox<>(QifTransaction.DateFormat.values());
 
         dateFormatCombo.addActionListener(this);
         dateFormatCombo.setSelectedIndex(pref.getInt(DATE_FORMAT, 0));
@@ -157,20 +155,15 @@ public class PartialOne extends JPanel implements WizardPage, ActionListener {
         accountCombo.setSelectedAccount(destinationAccount);
     }
 
-    String getDateFormat() {
-        return (String) dateFormatCombo.getSelectedItem();
+    QifTransaction.DateFormat getDateFormat() {
+        return (QifTransaction.DateFormat) dateFormatCombo.getSelectedItem();
     }
 
     /**
      * Reparse the dates based on the date format in the combo
      */
     private void reparseDates() {
-        final String df = getDateFormat();
-
-        for (final QifTransaction transaction: qAcc.getTransactions()) {
-            transaction.datePosted = QifUtils.parseDate(transaction.oDate, df);
-        }
-
+        qAcc.reparseDates(getDateFormat());
         System.out.println("reparse");
     }
 

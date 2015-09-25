@@ -81,7 +81,7 @@ public class QifImport {
         return parser;
     }
 
-    public void doFullParse(final File file, final String dateFormat) throws NoAccountException {
+    public void doFullParse(final File file, final QifTransaction.DateFormat dateFormat) throws NoAccountException {
         if (file != null) {
             parser = new QifParser(dateFormat);
             parser.parseFullFile(file);
@@ -101,7 +101,7 @@ public class QifImport {
 
     public void doPartialParse(final File file) {
         if (file != null) {
-            parser = new QifParser(QifUtils.US_FORMAT);
+            parser = new QifParser(QifTransaction.DateFormat.US);
             parser.parsePartialFile(file);
         }
     }

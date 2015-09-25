@@ -38,4 +38,10 @@ public class QifAccount extends ImportBank<QifTransaction> {
     public String toString() {
         return "Name: " + name + '\n' + "Type: " + type + '\n' + "Description: " + description + '\n';
     }
+
+    public void reparseDates(final QifTransaction.DateFormat dateFormat) {
+        for (final QifTransaction transaction: getTransactions()) {
+            transaction.datePosted = QifTransaction.parseDate(transaction.oDate, dateFormat);
+        }
+    }
 }
