@@ -24,7 +24,7 @@
         <SeparatorMenuItem mnemonicParsing="false"/>
         <Menu text="%Menu.Import.Name">
             <MenuItem text="%Menu.ImportOfx.Name" fx:id="importOfxMenuItem" onAction="#handleImportOFXAction"/>
-            <MenuItem text="%Menu.ImportQif.Name" onAction="#handleImportQIFAction"/>
+            <MenuItem text="%Menu.ImportQif.Name" fx:id="importQifMenuItem" onAction="#handleImportQIFAction"/>
         </Menu>
         <SeparatorMenuItem mnemonicParsing="false"/>
         <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#handleCloseAction"
