@@ -26,7 +26,7 @@
     <AccountComboBox fx:id="accountComboBox" prefWidth="150.0" GridPane.columnIndex="1"
                      maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true" GridPane.rowIndex="1"/>
 
-    <Label text="%Label.DateFormat" GridPane.rowIndex="2"/>
+    <Label text="%Label.DateFormat" fx:id="dateFormatLabel" GridPane.rowIndex="2"/>
     <ChoiceBox disable="true" fx:id="dateFormatChoiceBox" prefWidth="150.0" GridPane.rowIndex="2" GridPane.columnIndex="1"
                maxWidth="Infinity" GridPane.hgrow="ALWAYS" GridPane.fillWidth="true"/>
 </GridPane>

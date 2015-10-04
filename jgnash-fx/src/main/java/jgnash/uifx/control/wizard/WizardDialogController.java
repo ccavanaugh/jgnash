@@ -134,6 +134,8 @@ public class WizardDialogController<K extends Enum<?>> {
         // force selection if this is the first pane
         if (taskList.getItems().size() == 1) {
             taskList.getSelectionModel().select(0);
+
+            taskPane.minWidthProperty().bind(pane.minWidthProperty());
         }
 
         // update the preferred task list width

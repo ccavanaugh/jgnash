@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import jgnash.convert.imports.DateFormat;
 import jgnash.convert.imports.ImportUtils;
 import jgnash.engine.Account;
 import jgnash.engine.AccountType;
@@ -81,7 +82,7 @@ public class QifImport {
         return parser;
     }
 
-    public void doFullParse(final File file, final QifTransaction.DateFormat dateFormat) throws NoAccountException {
+    public void doFullParse(final File file, final DateFormat dateFormat) throws NoAccountException {
         if (file != null) {
             parser = new QifParser(dateFormat);
             parser.parseFullFile(file);
@@ -101,7 +102,7 @@ public class QifImport {
 
     public void doPartialParse(final File file) {
         if (file != null) {
-            parser = new QifParser(QifTransaction.DateFormat.US);
+            parser = new QifParser(DateFormat.US);
             parser.parsePartialFile(file);
         }
     }

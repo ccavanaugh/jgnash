@@ -22,9 +22,11 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import jgnash.convert.imports.DateFormat;
 import jgnash.convert.imports.ImportTransaction;
 
 /**
@@ -36,22 +38,6 @@ import jgnash.convert.imports.ImportTransaction;
 public class QifTransaction extends ImportTransaction {
 
     public static final Pattern DATE_DELIMITER_PATTERN = Pattern.compile("/|'|\\.|-");
-
-    public enum DateFormat {
-        US("mm/dd/yyyy"),
-        EU("dd/mm/yyyy");
-
-        private final String format;
-
-        DateFormat(String format) {
-            this.format = format;
-        }
-
-        @Override
-        public String toString() {
-            return format;
-        }
-    }
 
     /**
      * Original date before conversion
@@ -93,6 +79,8 @@ public class QifTransaction extends ImportTransaction {
     }
 
     public static DateFormat determineDateFormat(final Collection<QifTransaction> transactions) {
+        Objects.requireNonNull(transactions);
+
         DateFormat dateFormat = DateFormat.US;   // US date is assumed
 
         for (final QifTransaction transaction : transactions) {
@@ -101,6 +89,7 @@ public class QifTransaction extends ImportTransaction {
             //int two;
 
             final String[] chunks = QifTransaction.DATE_DELIMITER_PATTERN.split(transaction.oDate);
+
             zero = Integer.parseInt(chunks[0].trim());
             one = Integer.parseInt(chunks[1].trim());
             //two = Integer.parseInt(chunks[2].trim());

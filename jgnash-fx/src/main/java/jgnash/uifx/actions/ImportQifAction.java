@@ -30,6 +30,7 @@ import jgnash.convert.imports.ImportTransaction;
 import jgnash.convert.imports.qif.QifAccount;
 import jgnash.convert.imports.qif.QifImport;
 import jgnash.convert.imports.qif.QifParser;
+import jgnash.convert.imports.qif.QifTransaction;
 import jgnash.convert.imports.qif.QifUtils;
 import jgnash.engine.Account;
 import jgnash.uifx.StaticUIMethods;
@@ -84,24 +85,14 @@ public class ImportQifAction {
 
         private final File file;
 
-        private Account match = null;
-
         ImportTask(final File file) {
             this.file = file;
-
             setOnSucceeded(event -> onSuccess());
         }
 
         @Override
         protected QifImport call() throws Exception {
-
-            System.out.println("ImportTask: call");
-
-            final boolean fullFile = QifUtils.isFullFile(file);
-
-            if (fullFile) {
-                System.out.println("Full file");
-
+            if (QifUtils.isFullFile(file)) {
                 StaticUIMethods.displayError("Only bank statement based QIF file are supported at this time");
                 cancel();
                 return null;
@@ -109,67 +100,43 @@ public class ImportQifAction {
 
             final QifImport qifImport = new QifImport();
 
-            System.out.println("Parsing file");
             qifImport.doPartialParse(file);
-            //qifImport
-
-            System.out.println("Parsing complete");
-
             qifImport.dumpStats();
 
             if (qifImport.getParser().accountList.isEmpty()) {
-                System.out.println("Empty file");
-
                 StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.ParseTransactions"));
                 cancel();
                 return null;
             }
 
-
-            /* Preset the best match for the downloaded account */
-            //TODO Save last account selection id to preferences or perform a name lookup
-            /*final String accountNumber = parser.getBank().accountId;
-
-            if (accountNumber != null && !accountNumber.isEmpty()) {
-                match = OfxImport.matchAccount(parser.getBank());
-            }*/
-
-            System.out.println("Returning import");
-
             return qifImport;
         }
 
         private void onSuccess() {
-
-            System.out.println("onSuccess");
-
             final QifImport qifImport = getValue();
             final QifParser parser = qifImport.getParser();
 
-            ImportWizard importWizard = new ImportWizard();
+            final ImportWizard importWizard = new ImportWizard();
 
-            WizardDialogController<ImportWizard.Settings> wizardDialogController
+            final WizardDialogController<ImportWizard.Settings> wizardDialogController
                     = importWizard.wizardControllerProperty().get();
 
             importWizard.dateFormatSelectionEnabled().set(true);
 
-            wizardDialogController.setSetting(ImportWizard.Settings.BANK, parser.getBank());
+            final QifAccount qAccount = parser.getBank();
 
-            if (match != null) {
-                wizardDialogController.setSetting(ImportWizard.Settings.ACCOUNT, match);
-            }
+            wizardDialogController.setSetting(ImportWizard.Settings.BANK, qAccount);
 
             importWizard.showAndWait();
 
             if (wizardDialogController.validProperty().get()) {
                 final Account account = (Account) wizardDialogController.getSetting(ImportWizard.Settings.ACCOUNT);
-                final QifAccount bank = parser.getBank();
 
                 @SuppressWarnings("unchecked")
                 final List<ImportTransaction> transactions = (List<ImportTransaction>) wizardDialogController.getSetting(ImportWizard.Settings.TRANSACTIONS);
 
                 // import threads in the background
-                ImportTransactionsTask importTransactionsTask = new ImportTransactionsTask(bank, account, transactions);
+                ImportTransactionsTask importTransactionsTask = new ImportTransactionsTask(account, transactions);
 
                 new Thread(importTransactionsTask).start();
 
@@ -180,12 +147,10 @@ public class ImportQifAction {
 
     private static class ImportTransactionsTask extends Task<Void> {
 
-        private final QifAccount bank;
         private final Account account;
         private final List<ImportTransaction> transactions;
 
-        public ImportTransactionsTask(final QifAccount bank, final Account account, final List<ImportTransaction> transactions) {
-            this.bank = bank;
+        public ImportTransactionsTask(final Account account, final List<ImportTransaction> transactions) {
             this.account = account;
             this.transactions = transactions;
         }
@@ -194,16 +159,6 @@ public class ImportQifAction {
         public Void call() {
             updateMessage(ResourceUtils.getString("Message.PleaseWait"));
             updateProgress(-1, Long.MAX_VALUE);
-
-           /* String accountNumber = bank.accountId;
-
-                *//* set the account number if not a match *//*
-            if (accountNumber != null && !accountNumber.equals(account.getAccountNumber())) {
-                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-                Objects.requireNonNull(engine);
-
-                engine.setAccountNumber(account, accountNumber);
-            }*/
 
                 /* Import the transactions */
             GenericImport.importTransactions(transactions, account);

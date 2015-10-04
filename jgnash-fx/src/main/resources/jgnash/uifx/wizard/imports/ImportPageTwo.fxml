@@ -23,7 +23,7 @@
         <top>
             <TextFlow fx:id="textFlow">
                 <BorderPane.margin>
-                    <Insets bottom="10.0" />
+                    <Insets bottom="10.0"/>
                 </BorderPane.margin>
             </TextFlow>
         </top>

@@ -17,6 +17,10 @@
  */
 package jgnash.convert.imports.qif;
 
+import java.util.List;
+import java.util.Objects;
+
+import jgnash.convert.imports.DateFormat;
 import jgnash.convert.imports.ImportBank;
 
 /**
@@ -30,8 +34,22 @@ public class QifAccount extends ImportBank<QifTransaction> {
 
     public String description = "";
 
-    public QifTransaction get(int index) {
-        return getTransactions().get(index);
+    private DateFormat dateFormat = null;
+
+    @Override
+    public List<QifTransaction> getTransactions() {
+
+        if (dateFormat == null) {
+            setDateFormat(QifTransaction.determineDateFormat(super.getTransactions()));
+        }
+
+        reparseDates(getDateFormat());  // reparse the dates before returning
+
+        return super.getTransactions();
+    }
+
+    public QifTransaction get(final int index) {
+        return super.getTransactions().get(index);
     }
 
     @Override
@@ -39,9 +57,27 @@ public class QifAccount extends ImportBank<QifTransaction> {
         return "Name: " + name + '\n' + "Type: " + type + '\n' + "Description: " + description + '\n';
     }
 
-    public void reparseDates(final QifTransaction.DateFormat dateFormat) {
-        for (final QifTransaction transaction: getTransactions()) {
+    public void reparseDates(final DateFormat dateFormat) {
+        Objects.requireNonNull(dateFormat);
+
+        setDateFormat(dateFormat);
+
+        for (final QifTransaction transaction: super.getTransactions()) {
             transaction.datePosted = QifTransaction.parseDate(transaction.oDate, dateFormat);
         }
+    }
+
+    public DateFormat getDateFormat() {
+        if (dateFormat == null) {
+            return DateFormat.US;
+        }
+
+        return dateFormat;
+    }
+
+    public void setDateFormat(final DateFormat dateFormat) {
+        Objects.requireNonNull(dateFormat);
+
+        this.dateFormat = dateFormat;
     }
 }

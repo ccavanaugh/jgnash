@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+import jgnash.convert.imports.DateFormat;
 import jgnash.util.NotNull;
 
 /**
@@ -55,7 +56,7 @@ import jgnash.util.NotNull;
 @SuppressFBWarnings({"URF_UNREAD_FIELD"})
 public final class QifParser {
 
-    private QifTransaction.DateFormat dateFormat = QifTransaction.DateFormat.US;
+    private DateFormat dateFormat = DateFormat.US;
 
     public final ArrayList<QifCategory> categories = new ArrayList<>();
 
@@ -67,7 +68,7 @@ public final class QifParser {
 
     private static final Logger logger = Logger.getLogger(QifParser.class.getName());
 
-    public QifParser(final QifTransaction.DateFormat dateFormat) {
+    public QifParser(final DateFormat dateFormat) {
         setDateFormat(dateFormat);
     }
 
@@ -87,7 +88,7 @@ public final class QifParser {
         return prefix.length() <= source.length() && source.regionMatches(true, 0, prefix, 0, prefix.length());
     }
 
-    void setDateFormat(@NotNull final QifTransaction.DateFormat dateFormat) {
+    void setDateFormat(@NotNull final DateFormat dateFormat) {
         Objects.requireNonNull(dateFormat);
         this.dateFormat = dateFormat;
     }
@@ -154,8 +155,7 @@ public final class QifParser {
 
         // reparse the dates
         for (final QifAccount account : accountList) {
-            final QifTransaction.DateFormat dateFormat = QifTransaction.determineDateFormat(account.getTransactions());
-            account.reparseDates(dateFormat);
+            account.reparseDates(QifTransaction.determineDateFormat(account.getTransactions()));
         }
     }
 
@@ -171,8 +171,7 @@ public final class QifParser {
                     logger.finest("*** Added account ***");
 
                     // reparse the dates
-                    final QifTransaction.DateFormat dateFormat = QifTransaction.determineDateFormat(acc.getTransactions());
-                    acc.reparseDates(dateFormat);
+                    acc.reparseDates(QifTransaction.determineDateFormat(acc.getTransactions()));
 
                     return true; // only look for transactions for one account
                 }

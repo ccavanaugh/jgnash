@@ -34,9 +34,9 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import jgnash.convert.imports.DateFormat;
 import jgnash.convert.imports.qif.NoAccountException;
 import jgnash.convert.imports.qif.QifImport;
-import jgnash.convert.imports.qif.QifTransaction;
 import jgnash.convert.imports.qif.QifUtils;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -102,7 +102,7 @@ public class ImportQifAction extends AbstractEnabledAction {
             if (fullFile) {
 
                 // prompt for date format
-                final QifTransaction.DateFormat dateFormat = getQIFDateFormat();
+                final DateFormat dateFormat = getQIFDateFormat();
 
                 class ImportFile extends SwingWorker<Void, Void> {
 
@@ -159,17 +159,17 @@ public class ImportQifAction extends AbstractEnabledAction {
         }
     }
 
-    private static QifTransaction.DateFormat getQIFDateFormat() {
+    private static DateFormat getQIFDateFormat() {
 
         String DATE_FORMAT = "dateFormat";
 
-        QifTransaction.DateFormat dateFormat = QifTransaction.DateFormat.US;
+        DateFormat dateFormat = DateFormat.US;
 
         ResourceBundle rb = ResourceUtils.getBundle();
         Preferences pref = Preferences.userNodeForPackage(ImportQifAction.class);
 
         /* Create the combo for date format selection */
-        JComboBox<QifTransaction.DateFormat> combo = new JComboBox<>(QifTransaction.DateFormat.values());
+        JComboBox<DateFormat> combo = new JComboBox<>(DateFormat.values());
 
         combo.setSelectedIndex(pref.getInt(DATE_FORMAT, 0));
 
@@ -177,7 +177,7 @@ public class ImportQifAction extends AbstractEnabledAction {
         int result = JOptionPane.showOptionDialog(UIApplication.getFrame(), combo, rb.getString("Title.SelQifDateFormat"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[1]);
 
         if (result == JOptionPane.YES_OPTION) {
-            dateFormat = (QifTransaction.DateFormat) combo.getSelectedItem();
+            dateFormat = (DateFormat) combo.getSelectedItem();
         }
 
         pref.putInt(DATE_FORMAT, combo.getSelectedIndex());

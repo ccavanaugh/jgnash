@@ -90,6 +90,9 @@ public class ImportWizard {
         }
 
         Platform.runLater(() -> {
+
+            stage.sizeToScene();
+
             stage.setMinWidth(stage.getWidth());
             stage.setMinHeight(stage.getHeight());
         });

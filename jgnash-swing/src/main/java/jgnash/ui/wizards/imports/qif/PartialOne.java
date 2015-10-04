@@ -29,8 +29,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.text.StyledEditorKit;
 
+import jgnash.convert.imports.DateFormat;
 import jgnash.convert.imports.qif.QifAccount;
-import jgnash.convert.imports.qif.QifTransaction;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -56,7 +56,7 @@ public class PartialOne extends JPanel implements WizardPage, ActionListener {
 
     private JTextPane helpPane;
 
-    private JComboBox<QifTransaction.DateFormat> dateFormatCombo;
+    private JComboBox<DateFormat> dateFormatCombo;
 
     private final QifAccount qAcc;
 
@@ -83,7 +83,7 @@ public class PartialOne extends JPanel implements WizardPage, ActionListener {
         helpPane.setText(TextResource.getString("QifOne.txt"));
 
         /* Create the combo for date format selection */
-        dateFormatCombo = new JComboBox<>(QifTransaction.DateFormat.values());
+        dateFormatCombo = new JComboBox<>(DateFormat.values());
 
         dateFormatCombo.addActionListener(this);
         dateFormatCombo.setSelectedIndex(pref.getInt(DATE_FORMAT, 0));
@@ -155,8 +155,8 @@ public class PartialOne extends JPanel implements WizardPage, ActionListener {
         accountCombo.setSelectedAccount(destinationAccount);
     }
 
-    QifTransaction.DateFormat getDateFormat() {
-        return (QifTransaction.DateFormat) dateFormatCombo.getSelectedItem();
+    DateFormat getDateFormat() {
+        return (DateFormat) dateFormatCombo.getSelectedItem();
     }
 
     /**

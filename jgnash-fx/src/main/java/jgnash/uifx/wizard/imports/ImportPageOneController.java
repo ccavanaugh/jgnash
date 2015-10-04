@@ -24,9 +24,13 @@ import java.util.prefs.Preferences;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+import jgnash.convert.imports.DateFormat;
+import jgnash.convert.imports.ImportBank;
+import jgnash.convert.imports.qif.QifAccount;
 import jgnash.engine.Account;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
@@ -42,7 +46,10 @@ public class ImportPageOneController extends AbstractWizardPaneController<Import
     private static final String DATE_FORMAT = "dateFormat";
 
     @FXML
-    private ChoiceBox<String> dateFormatChoiceBox;
+    private Label dateFormatLabel;
+
+    @FXML
+    private ChoiceBox<DateFormat> dateFormatChoiceBox;
 
     @FXML
     private TextFlow textFlow;
@@ -71,17 +78,30 @@ public class ImportPageOneController extends AbstractWizardPaneController<Import
             updateDescriptor();
         });
 
-        dateFormatChoiceBox.getItems().addAll("mm/dd/yyyy", "dd/mm/yyyy");
-        dateFormatChoiceBox.getSelectionModel().select(preferences.get(DATE_FORMAT, "mm/dd/yyyy"));
+        dateFormatChoiceBox.getItems().addAll(DateFormat.values());
+        dateFormatChoiceBox.getSelectionModel().select(preferences.getInt(DATE_FORMAT, 0));
 
+        // hide the controls if date format selection is not permitted
         dateFormatChoiceBox.disableProperty().bind(dateFormatSelectionEnabled.not());
+        dateFormatLabel.visibleProperty().bind(dateFormatSelectionEnabled);
+        dateFormatChoiceBox.visibleProperty().bind(dateFormatSelectionEnabled);
     }
 
     @Override
     public void putSettings(final Map<ImportWizard.Settings, Object> map) {
         map.put(ImportWizard.Settings.ACCOUNT, accountComboBox.getValue());
-        map.put(ImportWizard.Settings.DATE_FORMAT, dateFormatChoiceBox.getValue());
-        preferences.put(DATE_FORMAT, dateFormatChoiceBox.getValue());
+
+        if (!dateFormatChoiceBox.isDisabled()) {
+            map.put(ImportWizard.Settings.DATE_FORMAT, dateFormatChoiceBox.getValue());
+
+            preferences.putInt(DATE_FORMAT, dateFormatChoiceBox.getSelectionModel().getSelectedIndex());
+
+            final ImportBank bank = (ImportBank) map.get(ImportWizard.Settings.BANK);
+
+            if (bank != null && bank instanceof QifAccount) {
+                ((QifAccount) bank).setDateFormat(dateFormatChoiceBox.getValue());
+            }
+        }
     }
 
     @Override
@@ -90,8 +110,12 @@ public class ImportPageOneController extends AbstractWizardPaneController<Import
             accountComboBox.setValue((Account) map.get(ImportWizard.Settings.ACCOUNT));
         }
 
-        if (map.get(ImportWizard.Settings.DATE_FORMAT) != null) {
-            dateFormatChoiceBox.setValue( (String)map.get(ImportWizard.Settings.DATE_FORMAT));
+        if (!dateFormatChoiceBox.isDisabled()) {
+            final ImportBank bank = (ImportBank) map.get(ImportWizard.Settings.BANK);
+
+            if (bank != null && bank instanceof QifAccount) {
+                dateFormatChoiceBox.setValue(((QifAccount) bank).getDateFormat());
+            }
         }
 
         updateDescriptor();
