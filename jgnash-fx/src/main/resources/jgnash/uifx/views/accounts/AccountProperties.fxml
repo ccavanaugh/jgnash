@@ -78,7 +78,7 @@
             </GridPane>
             <Label text="%Title.ParentAccount" GridPane.rowIndex="9"/>
             <Button fx:id="parentAccountButton" mnemonicParsing="false" text="Root" GridPane.columnIndex="1"
-                    GridPane.rowIndex="9" minWidth="200" onAction="#handleParentAccountAction"/>
+                    GridPane.rowIndex="9" minWidth="200" maxWidth="Infinity" GridPane.fillWidth="true" onAction="#handleParentAccountAction"/>
         </GridPane>
     </TitledPane>
 
