@@ -30,7 +30,6 @@ import jgnash.convert.imports.ImportTransaction;
 import jgnash.convert.imports.qif.QifAccount;
 import jgnash.convert.imports.qif.QifImport;
 import jgnash.convert.imports.qif.QifParser;
-import jgnash.convert.imports.qif.QifTransaction;
 import jgnash.convert.imports.qif.QifUtils;
 import jgnash.engine.Account;
 import jgnash.uifx.StaticUIMethods;

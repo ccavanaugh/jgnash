@@ -140,7 +140,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
                 cell.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
                     if (event.getClickCount() > 1) {                       
-                        final ImportTransaction t = tableView.getItems().get(((TableCell)event.getSource()).getTableRow().getIndex());
+                        final ImportTransaction t = tableView.getItems().get(((TableCell<?,?>)event.getSource()).getTableRow().getIndex());
 
                         if (t.getState() == ImportTransaction.ImportState.EQUAL) {
                             t.setState(ImportTransaction.ImportState.NOT_EQUAL);

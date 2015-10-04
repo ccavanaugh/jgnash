@@ -96,7 +96,7 @@ public class ImportPageOneController extends AbstractWizardPaneController<Import
 
             preferences.putInt(DATE_FORMAT, dateFormatChoiceBox.getSelectionModel().getSelectedIndex());
 
-            final ImportBank bank = (ImportBank) map.get(ImportWizard.Settings.BANK);
+            final ImportBank<?> bank = (ImportBank<?>) map.get(ImportWizard.Settings.BANK);
 
             if (bank != null && bank instanceof QifAccount) {
                 ((QifAccount) bank).setDateFormat(dateFormatChoiceBox.getValue());
@@ -111,7 +111,7 @@ public class ImportPageOneController extends AbstractWizardPaneController<Import
         }
 
         if (!dateFormatChoiceBox.isDisabled()) {
-            final ImportBank bank = (ImportBank) map.get(ImportWizard.Settings.BANK);
+            final ImportBank<?> bank = (ImportBank<?>) map.get(ImportWizard.Settings.BANK);
 
             if (bank != null && bank instanceof QifAccount) {
                 dateFormatChoiceBox.setValue(((QifAccount) bank).getDateFormat());

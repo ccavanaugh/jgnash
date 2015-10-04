@@ -340,7 +340,7 @@ public final class QifParser {
     }
 
     // TODO strip out investment account transaction checks
-    private boolean parseAccountTransactions(final QifReader in, final QifAccount acc) {
+    private static boolean parseAccountTransactions(final QifReader in, final QifAccount acc) {
 
         String line;
         QifTransaction tran = new QifTransaction();
