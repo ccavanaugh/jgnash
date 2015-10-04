@@ -17,7 +17,7 @@
  */
 package jgnash.uifx.control;
 
-import java.util.Collections;
+import java.util.Objects;
 import java.util.TreeSet;
 
 import javafx.application.Platform;
@@ -70,8 +70,12 @@ public abstract class AbstractAccountTreeController implements MessageListener {
      *                             of {@code isAccountVisible()}
      */
     public void addExcludeAccounts(@Nullable final Account... filteredAccountsList) {
-        if (filteredAccountsList != null) {
-            Collections.addAll(filteredAccounts, filteredAccountsList);
+        Objects.requireNonNull(filteredAccounts);
+
+        for (final Account account: filteredAccountsList != null ? filteredAccountsList : new Account[0]) {
+            if (account != null) {
+                filteredAccounts.add(account);
+            }
         }
     }
 
