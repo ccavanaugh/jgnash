@@ -132,6 +132,13 @@
     -fx-text-fill: -fx-selection-bar-text;
 }
 
+.popover > .border {
+	-fx-stroke: linear-gradient(to bottom, rgba(0,0,0, .3), rgba(0, 0, 0, .7)) ;
+	-fx-stroke-width: 0.5;
+	-fx-fill: -fx-background;
+	-fx-effect: dropshadow(gaussian, rgba(0,0,0,.2), 10.0, 0.5, 2.0, 2.0);
+}
+
 #disabled-cell {
     -fx-opacity: 0.4;
     -fx-font-weight: bold;
