@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import jgnash.resource.font.FontAwesomeImageView?>
+<?import jgnash.resource.font.FontAwesomeLabel?>
 <?import jgnash.uifx.control.AutoCompleteTextField?>
 <?import jgnash.uifx.control.DatePickerEx?>
 <?import jgnash.uifx.control.DecimalTextField?>
@@ -60,7 +60,7 @@
         <buttons>
             <Button fx:id="convertButton" ButtonBar.buttonData="LEFT" onAction="#convertAction">
                 <graphic>
-                    <FontAwesomeImageView glyphName="ADJUST"/>
+                    <FontAwesomeLabel glyphName="ADJUST"/>
                 </graphic>
                 <tooltip>
                     <Tooltip text="%ToolTip.ConvertSEntry"/>

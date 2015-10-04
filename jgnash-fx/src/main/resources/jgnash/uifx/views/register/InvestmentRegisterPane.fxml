@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import jgnash.resource.font.FontAwesomeImageView?>
-<?import javafx.scene.control.TitledPane?>
+<?import jgnash.resource.font.FontAwesomeLabel?>
 
-<?import javafx.scene.control.Separator?>
-<?import javafx.geometry.Insets?>
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="jgnash.uifx.views.register.InvestmentRegisterPaneController">
     <center>
@@ -28,25 +28,25 @@
                         <Button fx:id="newButton" mnemonicParsing="false" text="%Button.New"
                                 ButtonBar.buttonUniformSize="false">
                             <graphic>
-                                <FontAwesomeImageView glyphName="MONEY"/>
+                                <FontAwesomeLabel glyphName="MONEY"/>
                             </graphic>
                         </Button>
                         <Button fx:id="duplicateButton" mnemonicParsing="false" onAction="#handleDuplicateAction"
                                 text="%Button.Duplicate" ButtonBar.buttonUniformSize="false">
                             <graphic>
-                                <FontAwesomeImageView glyphName="COPY"/>
+                                <FontAwesomeLabel glyphName="COPY"/>
                             </graphic>
                         </Button>
                         <Button mnemonicParsing="false" onAction="#handleSecuritiesAction"
                                 text="%Button.AvailSecurities" ButtonBar.buttonUniformSize="false">
                             <graphic>
-                                <FontAwesomeImageView glyphName="BOOKMARK"/>
+                                <FontAwesomeLabel glyphName="BOOKMARK"/>
                             </graphic>
                         </Button>
                         <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAction"
                                 text="%Button.Delete" ButtonBar.buttonUniformSize="false">
                             <graphic>
-                                <FontAwesomeImageView glyphName="TRASH_ALT"/>
+                                <FontAwesomeLabel glyphName="TRASH_ALT"/>
                             </graphic>
                         </Button>
                     </buttons>

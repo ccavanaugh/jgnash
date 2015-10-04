@@ -4,13 +4,13 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.Tooltip?>
-<?import jgnash.resource.font.FontAwesomeImageView?>
+<?import jgnash.resource.font.FontAwesomeLabel?>
 <ToolBar
         xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
         fx:controller="jgnash.uifx.views.main.MainToolBarController">
     <Button mnemonicParsing="false" onAction="#handleOpenAction" text="%Button.Open">
         <graphic>
-            <FontAwesomeImageView glyphName="FOLDER_OPEN"/>
+            <FontAwesomeLabel glyphName="FOLDER_OPEN"/>
         </graphic>
         <tooltip>
             <Tooltip text="%Menu.Open.Tooltip"/>
@@ -20,7 +20,7 @@
     <Button fx:id="closeButton" mnemonicParsing="false" onAction="#handleCloseAction" text="%Menu.Close.Name"
             disable="true">
         <graphic>
-            <FontAwesomeImageView glyphName="TIMES"/>
+            <FontAwesomeLabel glyphName="TIMES"/>
         </graphic>
         <tooltip>
             <Tooltip text="%Menu.Close.Tooltip"/>
@@ -32,7 +32,7 @@
     <Button fx:id="updateSecurities" mnemonicParsing="false" onAction="#handleSecuritiesUpdateAction"
             text="%Menu.BackgroundSecurityUpdate.Name" disable="true">
         <graphic>
-            <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
+            <FontAwesomeLabel glyphName="CLOUD_DOWNLOAD"/>
         </graphic>
         <tooltip>
             <Tooltip text="%Menu.BackgroundSecurityUpdate.Tooltip"/>
@@ -42,7 +42,7 @@
     <Button fx:id="updateCurrencies" mnemonicParsing="false" onAction="#handleCurrenciesUpdateAction"
             text="%Menu.BackgroundCurrencyUpdate.Name" disable="true">
         <graphic>
-            <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
+            <FontAwesomeLabel glyphName="CLOUD_DOWNLOAD"/>
         </graphic>
         <tooltip>
             <Tooltip text="%Menu.BackgroundCurrencyUpdate.Tooltip"/>

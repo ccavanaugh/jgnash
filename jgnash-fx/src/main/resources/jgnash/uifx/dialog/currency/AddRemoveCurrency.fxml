@@ -10,7 +10,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import jgnash.resource.font.FontAwesomeImageView?>
+<?import jgnash.resource.font.FontAwesomeLabel?>
+
 <GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" minHeight="-Infinity"
           fx:controller="jgnash.uifx.dialog.currency.AddRemoveCurrencyController" styleClass="dialog, form">
 
@@ -41,13 +42,13 @@
         <VBox GridPane.columnIndex="1" fillWidth="true" styleClass="form" GridPane.fillHeight="true">
             <Button text="%Button.Add" onAction="#handleAddAction" contentDisplay="RIGHT" maxWidth="Infinity">
                 <graphic>
-                    <FontAwesomeImageView glyphName="CHEVRON_RIGHT"/>
+                    <FontAwesomeLabel glyphName="CHEVRON_RIGHT"/>
                 </graphic>
             </Button>
             <Button text="%Button.Remove" onAction="#handleRemoveAction" contentDisplay="LEFT"
                     maxWidth="Infinity">
                 <graphic>
-                    <FontAwesomeImageView glyphName="CHEVRON_LEFT"/>
+                    <FontAwesomeLabel glyphName="CHEVRON_LEFT"/>
                 </graphic>
             </Button>
         </VBox>

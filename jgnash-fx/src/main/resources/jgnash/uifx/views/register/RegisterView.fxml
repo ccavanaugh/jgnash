@@ -7,14 +7,16 @@
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
-<?import jgnash.resource.font.FontAwesomeImageView?>
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.register.RegisterViewController">
+<?import jgnash.resource.font.FontAwesomeLabel?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="jgnash.uifx.views.register.RegisterViewController">
     <top>
         <ToolBar>
             <Button fx:id="reconcileButton" mnemonicParsing="false" text="%Button.Reconcile"
                     onAction="#handleReconcileAction">
                 <graphic>
-                    <FontAwesomeImageView glyphName="ADJUST"/>
+                    <FontAwesomeLabel glyphName="ADJUST"/>
                 </graphic>
                 <tooltip>
                     <Tooltip text="%ToolTip.ReconcileAccount"/>
@@ -23,7 +25,7 @@
             <Button fx:id="filterButton" mnemonicParsing="false" onAction="#handleFilterAccountAction"
                     text="%Button.Filter">
                 <graphic>
-                    <FontAwesomeImageView glyphName="FILTER"/>
+                    <FontAwesomeLabel glyphName="FILTER"/>
                 </graphic>
                 <tooltip>
                     <Tooltip text="%ToolTip.FilterAccounts"/>
@@ -31,7 +33,7 @@
             </Button>
             <Button fx:id="zoomButton" mnemonicParsing="false" text="%Button.Zoom" onAction="#handleZoomAction">
                 <graphic>
-                    <FontAwesomeImageView glyphName="EXTERNAL_LINK_SQUARE"/>
+                    <FontAwesomeLabel glyphName="EXTERNAL_LINK_SQUARE"/>
                 </graphic>
                 <tooltip>
                     <Tooltip text="%ToolTip.ZoomRegister"/>
@@ -39,7 +41,7 @@
             </Button>
             <Button text="%Button.Export" onAction="#handleAccountExport">
                 <graphic>
-                    <FontAwesomeImageView glyphName="FILE_EXCEL_ALT"/>
+                    <FontAwesomeLabel glyphName="FILE_EXCEL_ALT"/>
                 </graphic>
                 <tooltip>
                     <Tooltip text="%ToolTip.ExportTransactions"/>

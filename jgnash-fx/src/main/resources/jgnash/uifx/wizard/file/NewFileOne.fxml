@@ -7,9 +7,10 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import jgnash.resource.font.FontAwesomeImageView?>
+<?import jgnash.resource.font.FontAwesomeLabel?>
 <?import jgnash.uifx.control.DataStoreTypeComboBox?>
-<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.45" maxHeight="Infinity"
+
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" maxHeight="Infinity"
           maxWidth="Infinity"
           fx:controller="jgnash.uifx.wizard.file.NewFileOneController" styleClass="form">
     <columnConstraints>
@@ -34,7 +35,7 @@
     <TextField fx:id="fileNameField" GridPane.columnIndex="1" GridPane.rowIndex="2" minWidth="75"/>
     <Button onAction="#handleFileButtonAction" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="2">
         <graphic>
-            <FontAwesomeImageView glyphName="ELLIPSIS_H"/>
+            <FontAwesomeLabel glyphName="ELLIPSIS_H"/>
         </graphic>
     </Button>
 </GridPane>

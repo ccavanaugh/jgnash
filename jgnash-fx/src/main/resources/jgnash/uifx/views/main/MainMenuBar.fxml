@@ -4,7 +4,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import jgnash.resource.font.FontAwesomeImageView?>
+<?import jgnash.resource.font.FontAwesomeLabel?>
 
 <MenuBar fx:id="menuBar" useSystemMenuBar="true" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
          fx:controller="jgnash.uifx.views.main.MenuBarController">
@@ -12,13 +12,13 @@
 
         <MenuItem mnemonicParsing="false" onAction="#handleNewAction" text="%Menu.New.Name">
             <graphic>
-                <FontAwesomeImageView glyphName="FILE"/>
+                <FontAwesomeLabel glyphName="FILE"/>
             </graphic>
         </MenuItem>
         <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#handleOpenAction"
                   text="%Menu.Open.Name">
             <graphic>
-                <FontAwesomeImageView glyphName="FOLDER_OPEN"/>
+                <FontAwesomeLabel glyphName="FOLDER_OPEN"/>
             </graphic>
         </MenuItem>
         <SeparatorMenuItem mnemonicParsing="false"/>
@@ -38,7 +38,7 @@
         <SeparatorMenuItem mnemonicParsing="false"/>
         <MenuItem mnemonicParsing="false" text="%Menu.FontSize.Name" onAction="#handleFontSizeAction">
             <graphic>
-                <FontAwesomeImageView glyphName="TEXT_HEIGHT"/>
+                <FontAwesomeLabel glyphName="TEXT_HEIGHT"/>
             </graphic>
         </MenuItem>
         <MenuItem mnemonicParsing="false" text="%Menu.BaseColor.Name" onAction="#handleBaseColorAction"/>
@@ -56,7 +56,7 @@
             <MenuItem mnemonicParsing="false" text="%Menu.BackgroundSecurityUpdate.Name"
                       onAction="#updateSecurities">
                 <graphic>
-                    <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
+                    <FontAwesomeLabel glyphName="CLOUD_DOWNLOAD"/>
                 </graphic>
             </MenuItem>
         </Menu>
@@ -69,7 +69,7 @@
             <MenuItem mnemonicParsing="false" text="%Menu.BackgroundCurrencyUpdate.Name"
                       onAction="#updateCurrencies">
                 <graphic>
-                    <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
+                    <FontAwesomeLabel glyphName="CLOUD_DOWNLOAD"/>
                 </graphic>
             </MenuItem>
 
@@ -77,25 +77,25 @@
         <SeparatorMenuItem mnemonicParsing="false"/>
         <MenuItem text="%Menu.Option.Name" fx:id="optionsMenuItem" onAction="#handleShowOptionDialog">
             <graphic>
-                <FontAwesomeImageView glyphName="WRENCH"/>
+                <FontAwesomeLabel glyphName="WRENCH"/>
             </graphic>
         </MenuItem>
         <MenuItem text="%Menu.EditTranNumList.Name" fx:id="transNumberListMenuItem"
                   onAction="#handleShowTranNumberListDialog">
             <graphic>
-                <FontAwesomeImageView glyphName="LIST"/>
+                <FontAwesomeLabel glyphName="LIST"/>
             </graphic>
         </MenuItem>
         <SeparatorMenuItem />
         <MenuItem text="%Menu.Locale.Name" onAction="#changeDefaultLocale">
             <graphic>
-                <FontAwesomeImageView glyphName="LANGUAGE"/>
+                <FontAwesomeLabel glyphName="LANGUAGE"/>
             </graphic>
         </MenuItem>
         <SeparatorMenuItem />
         <MenuItem text="%Menu.RunJavaScript.Name" onAction="#handleExecuteJavaScriptFile">
             <graphic>
-                <FontAwesomeImageView glyphName="CODE"/>
+                <FontAwesomeLabel glyphName="CODE"/>
             </graphic>
         </MenuItem>
     </Menu>
@@ -108,13 +108,13 @@
     <Menu text="%Menu.Help.Name" mnemonicParsing="false">
         <MenuItem mnemonicParsing="false" text="%Menu.About.Name" onAction="#handleAboutAction">
             <graphic>
-                <FontAwesomeImageView glyphName="INFO"/>
+                <FontAwesomeLabel glyphName="INFO"/>
             </graphic>
         </MenuItem>
         <SeparatorMenuItem />
         <MenuItem mnemonicParsing="false" text="%Menu.Console.Name" onAction="#handleShowConsoleDialog">
             <graphic>
-                <FontAwesomeImageView glyphName="TERMINAL"/>
+                <FontAwesomeLabel glyphName="TERMINAL"/>
             </graphic>
         </MenuItem>
     </Menu>

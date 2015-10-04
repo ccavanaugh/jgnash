@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import jgnash.resource.font.FontAwesomeImageView?>
+<?import jgnash.resource.font.FontAwesomeLabel?>
 <?import jgnash.uifx.control.AccountComboBox?>
 <?import jgnash.uifx.control.DecimalTextField?>
 <?import org.controlsfx.control.PopOver?>
@@ -50,7 +50,7 @@
     <DecimalTextField fx:id="exchangeAmountField" GridPane.columnIndex="2" minWidth="80" maxWidth="80"/>
     <Button fx:id="expandButton" GridPane.columnIndex="3">
         <graphic>
-            <FontAwesomeImageView glyphName="EXCHANGE"/>
+            <FontAwesomeLabel glyphName="EXCHANGE"/>
         </graphic>
     </Button>
 

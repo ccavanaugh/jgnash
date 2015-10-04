@@ -9,10 +9,11 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import jgnash.resource.font.FontAwesomeImageView?>
+<?import jgnash.resource.font.FontAwesomeLabel?>
 <?import jgnash.uifx.control.CurrencyComboBox?>
 <?import jgnash.uifx.control.DatePickerEx?>
 <?import jgnash.uifx.control.DecimalTextField?>
+
 <GridPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
           fx:controller="jgnash.uifx.dialog.currency.EditExchangeRatesController" styleClass="dialog, form">
     <columnConstraints>
@@ -41,7 +42,7 @@
                           GridPane.columnIndex="1"/>
         <Label GridPane.columnIndex="2">
             <graphic>
-                <FontAwesomeImageView glyphName="LONG_ARROW_RIGHT"/>
+                <FontAwesomeLabel glyphName="LONG_ARROW_RIGHT"/>
             </graphic>
         </Label>
         <CurrencyComboBox fx:id="targetCurrencyComboBox" maxWidth="Infinity" prefWidth="150.0"
@@ -90,13 +91,13 @@
         </rowConstraints>
         <Button fx:id="updateOnlineButton" onAction="#handleUpdateAction" text="%Button.UpdateOnline">
             <graphic>
-                <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
+                <FontAwesomeLabel glyphName="CLOUD_DOWNLOAD"/>
             </graphic>
         </Button>
         <ProgressBar fx:id="progressBar" maxWidth="Infinity" progress="0.0" GridPane.columnIndex="1"/>
         <Button fx:id="stopButton" onAction="#handleStopAction" text="%Button.Stop" GridPane.columnIndex="2">
             <graphic>
-                <FontAwesomeImageView glyphName="TIMES"/>
+                <FontAwesomeLabel glyphName="TIMES"/>
             </graphic>
         </Button>
     </GridPane>

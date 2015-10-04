@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-
 <?import javafx.scene.layout.VBox?>
-<?import jgnash.resource.font.FontAwesomeImageView?>
+<?import jgnash.resource.font.FontAwesomeLabel?>
+
 <GridPane fx:controller="jgnash.uifx.dialog.options.TransactionNumberDialogController" minHeight="-Infinity"
           xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="form, dialog">
     <columnConstraints>
@@ -25,12 +25,12 @@
     <VBox GridPane.columnIndex="1" styleClass="form">
         <Button onAction="#handleUpAction" contentDisplay="GRAPHIC_ONLY" maxWidth="Infinity">
             <graphic>
-                <FontAwesomeImageView glyphName="LEVEL_UP"/>
+                <FontAwesomeLabel glyphName="LEVEL_UP"/>
             </graphic>
         </Button>
         <Button onAction="#handleDownAction" contentDisplay="GRAPHIC_ONLY" maxWidth="Infinity">
             <graphic>
-                <FontAwesomeImageView glyphName="LEVEL_DOWN"/>
+                <FontAwesomeLabel glyphName="LEVEL_DOWN"/>
             </graphic>
         </Button>
     </VBox>

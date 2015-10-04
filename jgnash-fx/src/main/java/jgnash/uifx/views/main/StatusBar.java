@@ -30,6 +30,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 
+import jgnash.uifx.skin.ThemeManager;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -53,6 +54,7 @@ class StatusBar extends StackPane {
         label.textProperty().bind(textProperty());
         label.graphicProperty().bind(graphicProperty());
         label.getStyleClass().add("status-label");
+        label.textFillProperty().bind(ThemeManager.controlTextFillProperty());
 
         textProperty().setValue(ResourceUtils.getString("Button.Ok"));
 

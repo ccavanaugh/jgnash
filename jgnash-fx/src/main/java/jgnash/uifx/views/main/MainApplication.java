@@ -34,10 +34,10 @@ import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.ToolBar;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -55,7 +55,7 @@ import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.net.security.UpdateFactory;
 import jgnash.net.security.YahooParser;
-import jgnash.resource.font.FontAwesomeImageView;
+import jgnash.resource.font.FontAwesomeLabel;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.BusyPane;
 import jgnash.uifx.control.TabViewPane;
@@ -328,17 +328,17 @@ public class MainApplication extends Application implements MessageListener {
 
         private static final double GRAPHIC_SIZE = 11;
 
-        final ImageView INFO;
+        final Node INFO;
 
-        final ImageView WARNING;
+        final Node WARNING;
 
-        final ImageView SEVERE;
+        final Node SEVERE;
 
         public StatusBarLogHandler() {
 
-            INFO = new FontAwesomeImageView(FontAwesomeIcon.INFO, GRAPHIC_SIZE);
-            WARNING = new FontAwesomeImageView(FontAwesomeIcon.FLAG, GRAPHIC_SIZE);
-            SEVERE = new FontAwesomeImageView(FontAwesomeIcon.BUG, GRAPHIC_SIZE, Color.DARKRED);
+            INFO = new FontAwesomeLabel(FontAwesomeIcon.INFO, GRAPHIC_SIZE);
+            WARNING = new FontAwesomeLabel(FontAwesomeIcon.FLAG, GRAPHIC_SIZE);
+            SEVERE = new FontAwesomeLabel(FontAwesomeIcon.BUG, GRAPHIC_SIZE, Color.DARKRED);
         }
 
         @Override
@@ -360,7 +360,7 @@ public class MainApplication extends Application implements MessageListener {
             }
         }
 
-        private void updateStatus(final String status, final ImageView glyph) {
+        private void updateStatus(final String status, final Node glyph) {
             Platform.runLater(() -> {
                 statusBar.textProperty().setValue(status);
                 statusBar.graphicProperty().setValue(glyph);

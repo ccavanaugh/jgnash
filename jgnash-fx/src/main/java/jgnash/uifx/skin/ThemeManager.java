@@ -34,7 +34,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
@@ -74,13 +74,13 @@ public class ThemeManager {
 
     private static final SimpleObjectProperty<Color> baseColorProperty = new SimpleObjectProperty<>();
 
+    private static final SimpleObjectProperty<Paint> controlTextFillProperty = new SimpleObjectProperty<>(Color.BLACK);
+
     private static final StringExpression styleProperty;
 
     private static final String DEFAULT_CASPIAN_BASE_COLOR = "#d0d0d0";
 
     private static final String DEFAULT_MODENA_BASE_COLOR = "#ececec";
-
-    //-fx-text-base-color
 
     static {
         preferences = Preferences.userNodeForPackage(ThemeManager.class);
@@ -118,6 +118,8 @@ public class ThemeManager {
             if (newValue != null) {
                 preferences.put(BASE_COLOR, colorToHex(newValue));
                 _baseColorProperty.setValue(colorToHex(newValue));
+
+                controlTextFillProperty.setValue(getBaseTextColor());
             }
         });
 
@@ -171,6 +173,8 @@ public class ThemeManager {
 
     public static void restoreLastUsedTheme() {
         Application.setUserAgentStylesheet(preferences.get(LAST, Application.STYLESHEET_MODENA));
+
+        controlTextFillProperty.setValue(getBaseTextColor());   // force an update after the stylesheet has been applied
     }
 
     public static ObservableValue<String> getStyleProperty() {
@@ -185,21 +189,25 @@ public class ThemeManager {
         return baseColorProperty;
     }
 
+    public static SimpleObjectProperty<Paint> controlTextFillProperty() {
+        return controlTextFillProperty;
+    }
+
     public static String getCurrentTheme() {
         return preferences.get(LAST, Application.STYLESHEET_MODENA);
     }
 
     /**
-     * Utility method to discover the {@code Paint} used by {@code Label}
+     * Utility method to discover the {@code Paint} used for {@code Button} text
      *
-     * @return Base Paint use of Labels
+     * @return Base Paint used for Buttons
      */
     public static Paint getBaseTextColor() {
-        final Label label = new Label(BASE_COLOR);
-        final Scene scene = new Scene(new Group(label));
+        final Button button = new Button(BASE_COLOR);
+        final Scene scene = new Scene(new Group(button));
         scene.getRoot().styleProperty().setValue(getStyleProperty().getValue());
-        label.applyCss();
-        return label.getTextFill();
+        button.applyCss();
+        return button.getTextFill();
     }
 
     private static class ThemeHandler implements EventHandler<ActionEvent> {

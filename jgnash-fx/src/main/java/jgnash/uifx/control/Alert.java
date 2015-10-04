@@ -35,7 +35,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
-import jgnash.resource.font.FontAwesomeImageView;
+import jgnash.resource.font.FontAwesomeLabel;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.util.NotNull;
@@ -77,19 +77,19 @@ public class Alert {
 
         switch (alertType) {
             case ERROR:
-                setGraphic(new FontAwesomeImageView(FontAwesomeIcon.EXCLAMATION_TRIANGLE, ICON_SIZE, Color.DARKRED));
+                setGraphic(new FontAwesomeLabel(FontAwesomeIcon.EXCLAMATION_TRIANGLE, ICON_SIZE, Color.DARKRED));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case WARNING:
-                setGraphic(new FontAwesomeImageView(FontAwesomeIcon.EXCLAMATION_CIRCLE, ICON_SIZE, Color.DARKGOLDENROD));
+                setGraphic(new FontAwesomeLabel(FontAwesomeIcon.EXCLAMATION_CIRCLE, ICON_SIZE, Color.DARKGOLDENROD));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case INFORMATION:
-                setGraphic(new FontAwesomeImageView(FontAwesomeIcon.INFO_CIRCLE, ICON_SIZE, Color.DARKGOLDENROD));
+                setGraphic(new FontAwesomeLabel(FontAwesomeIcon.INFO_CIRCLE, ICON_SIZE, Color.DARKGOLDENROD));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case YES_NO:
-                setGraphic(new FontAwesomeImageView(FontAwesomeIcon.QUESTION_CIRCLE, ICON_SIZE));
+                setGraphic(new FontAwesomeLabel(FontAwesomeIcon.QUESTION_CIRCLE, ICON_SIZE));
                 ButtonType buttonTypeYes = new ButtonType(resources.getString("Button.Yes"), ButtonBar.ButtonData.YES);
                 ButtonType buttonTypeNo = new ButtonType(resources.getString("Button.No"), ButtonBar.ButtonData.NO);
                 setButtons(buttonTypeYes, buttonTypeNo);

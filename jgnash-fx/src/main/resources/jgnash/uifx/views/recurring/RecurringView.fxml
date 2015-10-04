@@ -5,29 +5,30 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
-<?import jgnash.resource.font.FontAwesomeImageView?>
+<?import jgnash.resource.font.FontAwesomeLabel?>
+
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jgnash.uifx.views.recurring.RecurringViewController">
     <top>
         <ToolBar>
             <Button mnemonicParsing="false" text="%Button.New" onAction="#handleNewAction">
                 <graphic>
-                    <FontAwesomeImageView glyphName="CALENDAR"/>
+                    <FontAwesomeLabel glyphName="CALENDAR"/>
                 </graphic>
             </Button>
             <Button fx:id="modifyButton" mnemonicParsing="false" text="%Button.Modify" onAction="#handleModifyAction">
                 <graphic>
-                    <FontAwesomeImageView glyphName="EDIT"/>
+                    <FontAwesomeLabel glyphName="EDIT"/>
                 </graphic>
             </Button>
             <Button fx:id="deleteButton" mnemonicParsing="false" text="%Button.Delete" onAction="#handleDeleteAction">
                 <graphic>
-                    <FontAwesomeImageView glyphName="TRASH_ALT"/>
+                    <FontAwesomeLabel glyphName="TRASH_ALT"/>
                 </graphic>
             </Button>
             <Separator orientation="VERTICAL"/>
             <Button mnemonicParsing="false" text="%Button.CheckReminders" onAction="#handleRefreshAction">
                 <graphic>
-                    <FontAwesomeImageView glyphName="REFRESH"/>
+                    <FontAwesomeLabel glyphName="REFRESH"/>
                 </graphic>
             </Button>
         </ToolBar>

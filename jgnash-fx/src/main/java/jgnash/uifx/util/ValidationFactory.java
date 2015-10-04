@@ -29,7 +29,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
-import jgnash.resource.font.FontAwesomeImageView;
+import jgnash.resource.font.FontAwesomeLabel;
 
 import org.controlsfx.control.decoration.Decoration;
 import org.controlsfx.control.decoration.Decorator;
@@ -49,14 +49,14 @@ public class ValidationFactory {
     }
 
     private static Decoration createErrorDecoration() {
-        final FontAwesomeImageView glyphIcon = new FontAwesomeImageView(FontAwesomeIcon.EXCLAMATION_TRIANGLE,
+        final FontAwesomeLabel glyphIcon = new FontAwesomeLabel(FontAwesomeIcon.EXCLAMATION_TRIANGLE,
                 ALERT_SIZE, Color.DARKRED);
 
         return new GraphicDecoration(glyphIcon, Pos.BOTTOM_LEFT, 0, 0);
     }
 
     private static Decoration createWarningDecoration() {
-        final FontAwesomeImageView glyphIcon = new FontAwesomeImageView(FontAwesomeIcon.INFO_CIRCLE,
+        final FontAwesomeLabel glyphIcon = new FontAwesomeLabel(FontAwesomeIcon.INFO_CIRCLE,
                 ALERT_SIZE, Color.DARKGOLDENROD);
 
         return new GraphicDecoration(glyphIcon, Pos.BOTTOM_LEFT, 0, 0);

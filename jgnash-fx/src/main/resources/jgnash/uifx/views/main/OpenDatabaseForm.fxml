@@ -10,8 +10,8 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import jgnash.resource.font.FontAwesomeLabel?>
 <?import jgnash.uifx.control.IntegerTextField?>
-<?import jgnash.resource.font.FontAwesomeImageView?>
 
 <GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" minHeight="-Infinity"
           fx:controller="jgnash.uifx.views.main.OpenDatabaseController" styleClass="form, dialog">
@@ -34,7 +34,7 @@
                GridPane.rowIndex="0"/>
     <Button onAction="#handleSelectFileAction" GridPane.columnIndex="2" GridPane.rowIndex="0">
         <graphic>
-            <FontAwesomeImageView glyphName="ELLIPSIS_H"/>
+            <FontAwesomeLabel glyphName="ELLIPSIS_H"/>
         </graphic>
     </Button>
 

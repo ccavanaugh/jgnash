@@ -4,18 +4,18 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
-<?import jgnash.resource.font.FontAwesomeImageView?>
+<?import jgnash.resource.font.FontAwesomeLabel?>
 <?import jgnash.uifx.control.DatePickerEx?>
 <?import jgnash.uifx.control.DecimalTextField?>
 <?import jgnash.uifx.control.IntegerTextField?>
 <?import jgnash.uifx.control.SecurityComboBox?>
-<?import javafx.scene.control.TitledPane?>
-
 <?import jgnash.uifx.control.SecurityHistoryEventTypeComboBox?>
+
 <GridPane prefHeight="400.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
           fx:controller="jgnash.uifx.dialog.security.SecurityHistoryController" styleClass="form, dialog">
     <columnConstraints>
@@ -89,7 +89,7 @@
                     <Button fx:id="updatePriceButton" onAction="#handleOnlineUpdate" text="%Button.UpdateOnline"
                             ButtonBar.buttonData="LEFT" ButtonBar.buttonUniformSize="false">
                         <graphic>
-                            <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
+                            <FontAwesomeLabel glyphName="CLOUD_DOWNLOAD"/>
                         </graphic>
                     </Button>
                 </buttons>
@@ -134,7 +134,7 @@
                     <Button fx:id="updateEventButton" onAction="#handleOnlineEventUpdate" text="%Button.UpdateOnline"
                             ButtonBar.buttonData="LEFT" ButtonBar.buttonUniformSize="false">
                         <graphic>
-                            <FontAwesomeImageView glyphName="CLOUD_DOWNLOAD"/>
+                            <FontAwesomeLabel glyphName="CLOUD_DOWNLOAD"/>
                         </graphic>
                     </Button>
                 </buttons>
