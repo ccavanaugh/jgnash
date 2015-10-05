@@ -27,6 +27,7 @@ Improved handling of memo's in split transactions.  The split entry memo should 
 
 Release 2.19.0
 ----------------------
+10/05/15 Improved register layout. (Fx)
 10/05/15 The reconcile button in the accounts list was not working. (Fx)
 10/04/15 Fixed an NPE that could occur when creating a new account. (Fx)
 10/04/15 Icons behave better then the based color and font size is changed. (Fx)

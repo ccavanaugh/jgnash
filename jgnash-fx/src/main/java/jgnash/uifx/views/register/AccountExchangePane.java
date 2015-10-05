@@ -238,8 +238,10 @@ public class AccountExchangePane extends GridPane {
         if (getSelectedAccount() != null && baseCurrencyProperty() != null) {
             if (getSelectedAccount().getCurrencyNode() == baseCurrencyProperty().get()) {
                 getChildren().removeAll(label, exchangeAmountField, expandButton);
+                GridPane.setColumnSpan(accountCombo, 4);    // span the empty columns
             } else {
                 if (!getChildren().contains(label)) {
+                    GridPane.setColumnSpan(accountCombo, 1);    // reduce the column span before adding the nodes back
                     getChildren().addAll(label, exchangeAmountField, expandButton);
                 }
             }
