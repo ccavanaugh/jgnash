@@ -10,35 +10,32 @@
             fx:controller="jgnash.uifx.views.accounts.AccountsViewController">
     <top>
         <ToolBar>
-            <Button fx:id="newButton" mnemonicParsing="false" onAction="#handleNewAccountAction" text="%Button.New">
+            <Button fx:id="newButton" text="%Button.New" onAction="#handleNewAccountAction">
                 <graphic>
                     <FontAwesomeLabel glyphName="PLUS"/>
                 </graphic>
             </Button>
-            <Button fx:id="modifyButton" mnemonicParsing="false" onAction="#handleModifyAccountAction"
-                    text="%Button.Modify">
+            <Button fx:id="modifyButton" text="%Button.Modify" onAction="#handleModifyAccountAction">
                 <graphic>
                     <FontAwesomeLabel glyphName="EDIT"/>
                 </graphic>
             </Button>
-            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDeleteAccountAction"
-                    text="%Button.Delete">
+            <Button fx:id="deleteButton" text="%Button.Delete" onAction="#handleDeleteAccountAction">
                 <graphic>
                     <FontAwesomeLabel glyphName="TRASH_ALT"/>
                 </graphic>
             </Button>
-            <Button fx:id="reconcileButton" mnemonicParsing="false" text="%Button.Reconcile">
+            <Button fx:id="reconcileButton" text="%Button.Reconcile" onAction="#handleReconcileAction">
                 <graphic>
                     <FontAwesomeLabel glyphName="ADJUST"/>
                 </graphic>
             </Button>
-            <Button fx:id="filterButton" mnemonicParsing="false" onAction="#handleFilterAccountAction"
-                    text="%Button.Filter">
+            <Button fx:id="filterButton" text="%Button.Filter" onAction="#handleFilterAccountAction">
                 <graphic>
                     <FontAwesomeLabel glyphName="FILTER"/>
                 </graphic>
             </Button>
-            <Button fx:id="zoomButton" mnemonicParsing="false" onAction="#handleZoomAccountAction" text="%Button.Zoom">
+            <Button fx:id="zoomButton" text="%Button.Zoom" onAction="#handleZoomAccountAction">
                 <graphic>
                     <FontAwesomeLabel glyphName="EXTERNAL_LINK_SQUARE"/>
                 </graphic>

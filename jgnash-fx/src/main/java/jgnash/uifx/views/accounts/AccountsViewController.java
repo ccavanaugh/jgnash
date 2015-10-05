@@ -17,6 +17,14 @@
  */
 package jgnash.uifx.views.accounts;
 
+import java.math.BigDecimal;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.prefs.Preferences;
+
 import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
@@ -27,7 +35,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
-import jgnash.engine.*;
+
+import jgnash.engine.Account;
+import jgnash.engine.Comparators;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
+import jgnash.engine.RootAccount;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
@@ -35,16 +48,9 @@ import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
+import jgnash.uifx.views.register.RegisterActions;
 import jgnash.uifx.views.register.RegisterStage;
 import jgnash.util.EncodeDecode;
-
-import java.math.BigDecimal;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 
 /**
  * Accounts view controller
@@ -326,5 +332,10 @@ public class AccountsViewController implements MessageListener {
             default:
                 break;
         }
+    }
+
+    @FXML
+    private void handleReconcileAction() {
+        RegisterActions.reconcileAccountAction(selectedAccountProperty.get());
     }
 }

@@ -54,7 +54,7 @@ import java.util.prefs.Preferences;
 /**
  * @author Craig Cavanaugh
  */
-class RegisterActions {
+public class RegisterActions {
 
     private static final String EXPORT_DIR = "exportDir";
 
@@ -136,7 +136,7 @@ class RegisterActions {
         }
     }
 
-    static void reconcileAccountAction(final Account account) {
+    public static void reconcileAccountAction(final Account account) {
         final ObjectProperty<ReconcileSettingsDialogController> controllerObjectProperty = new SimpleObjectProperty<>();
 
         final URL fxmlUrl = ReconcileSettingsDialogController.class.getResource("ReconcileSettingsDialog.fxml");
