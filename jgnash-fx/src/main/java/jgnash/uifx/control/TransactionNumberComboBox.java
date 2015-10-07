@@ -64,8 +64,7 @@ public class TransactionNumberComboBox extends ComboBox<String> {
                 final Account account = accountProperty().getValue();
 
                 if (account != null) {
-                    final String next = account.getNextTransactionNumber();
-                    Platform.runLater(() -> getEditor().setText(next));
+                    Platform.runLater(() -> setValue(account.getNextTransactionNumber()));
                 }
             }
         }).start());
