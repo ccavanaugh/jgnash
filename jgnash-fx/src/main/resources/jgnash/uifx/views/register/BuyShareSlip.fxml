@@ -49,11 +49,11 @@
             <RowConstraints vgrow="NEVER"/>
         </rowConstraints>
 
-        <DecimalTextField fx:id="priceField" GridPane.columnIndex="0"/>
+        <DecimalTextField fx:id="priceField" GridPane.columnIndex="0" maxWidth="Infinity" GridPane.fillWidth="true"/>
         <Label text="%Label.Quantity" GridPane.columnIndex="1"/>
-        <DecimalTextField fx:id="quantityField" GridPane.columnIndex="2"/>
+        <DecimalTextField fx:id="quantityField" GridPane.columnIndex="2" maxWidth="Infinity" GridPane.fillWidth="true"/>
         <Label text="%Label.Fees" GridPane.columnIndex="3"/>
-        <FeePane fx:id="feePane" GridPane.columnIndex="4"/>
+        <FeePane fx:id="feePane" GridPane.columnIndex="4" maxWidth="Infinity" GridPane.fillWidth="true"/>
 
     </GridPane>
     <Label text="%Label.Date" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
