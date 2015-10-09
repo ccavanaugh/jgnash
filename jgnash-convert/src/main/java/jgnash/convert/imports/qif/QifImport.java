@@ -100,11 +100,13 @@ public class QifImport {
         }
     }
 
-    public void doPartialParse(final File file) {
+    public boolean doPartialParse(final File file) {
         if (file != null) {
             parser = new QifParser(DateFormat.US);
-            parser.parsePartialFile(file);
+            return parser.parsePartialFile(file);
         }
+
+        return false;
     }
 
     public void doPartialImport(final Account account) {

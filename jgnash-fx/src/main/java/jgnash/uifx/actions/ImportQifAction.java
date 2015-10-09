@@ -99,7 +99,12 @@ public class ImportQifAction {
 
             final QifImport qifImport = new QifImport();
 
-            qifImport.doPartialParse(file);
+            if (!qifImport.doPartialParse(file)) {
+                StaticUIMethods.displayError(ResourceUtils.getString("Message.Error.ParseTransactions"));
+                cancel();
+                return null;
+            }
+
             qifImport.dumpStats();
 
             if (qifImport.getParser().accountList.isEmpty()) {

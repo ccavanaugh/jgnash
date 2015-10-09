@@ -97,8 +97,8 @@ public final class QifParser {
         parseFullFile(file.getAbsolutePath());
     }
 
-    void parsePartialFile(final File file) {
-        parsePartialFile(file.getAbsolutePath());
+    boolean parsePartialFile(final File file) {
+        return parsePartialFile(file.getAbsolutePath());
     }
 
     private void parseFullFile(final String fileName) throws NoAccountException {

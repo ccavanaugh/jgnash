@@ -17,23 +17,6 @@
  */
 package jgnash.ui.actions;
 
-import java.awt.event.ActionEvent;
-import java.io.IOException;
-import java.util.Objects;
-import java.util.ResourceBundle;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-import java.util.prefs.Preferences;
-
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.SwingWorker;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import jgnash.convert.imports.DateFormat;
 import jgnash.convert.imports.qif.NoAccountException;
 import jgnash.convert.imports.qif.QifImport;
@@ -50,6 +33,22 @@ import jgnash.ui.util.builder.Action;
 import jgnash.ui.wizards.imports.qif.PartialDialog;
 import jgnash.util.ResourceUtils;
 import jgnash.util.TextResource;
+
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.SwingWorker;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.util.Objects;
+import java.util.ResourceBundle;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import java.util.prefs.Preferences;
 
 /**
  * @author Craig Cavanaugh
@@ -133,9 +132,15 @@ public class ImportQifAction extends AbstractEnabledAction {
 
                 new ImportFile().execute();
             } else {
-                QifImport imp = new QifImport();
-                imp.doPartialParse(chooser.getSelectedFile());
+                final QifImport imp = new QifImport();
+
+                if (!imp.doPartialParse(chooser.getSelectedFile())) {
+                    StaticUIMethods.displayError(rb.getString("Message.Error.ParseTransactions"));
+                    return;
+                }
+
                 imp.dumpStats();
+
                 if (imp.getParser().accountList.isEmpty()) {
                     StaticUIMethods.displayError(rb.getString("Message.Error.ParseTransactions"));
                     return;
