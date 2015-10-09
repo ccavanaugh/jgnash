@@ -27,6 +27,7 @@ Improved handling of memo's in split transactions.  The split entry memo should 
 
 Release 2.19.0
 ----------------------
+10/09/15 Updated to latest Netty release
 10/08/15 Improved layout behavior for investment transaction forms. (Fx)
 10/07/15 Fixed a transaction entry bug when selecting the next available check number. (Fx)
 10/05/15 Improved register layout. (Fx)
