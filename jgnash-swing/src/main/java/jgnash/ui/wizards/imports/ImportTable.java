@@ -271,9 +271,9 @@ class ImportTable extends FormattedJTable {
                 case 1:
                     return dateTimeFormatter.format(transaction.datePosted);
                 case 2:
-                    return transaction.checkNumber;
+                    return transaction.getCheckNumber();
                 case 3:
-                    return transaction.payee;
+                    return transaction.getPayee();
                 case 4:
                     return transaction.memo;
                 case 5:

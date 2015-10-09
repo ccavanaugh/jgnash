@@ -344,11 +344,11 @@ public class OfxV2Parser implements OfxTags {
                             tran.transactionID = reader.getElementText();
                             break;
                         case CHECKNUM:
-                            tran.checkNumber = reader.getElementText();
+                            tran.setCheckNumber(reader.getElementText());
                             break;
                         case NAME:
                         case PAYEE: // either PAYEE or NAME will be used
-                            tran.payee = reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim();
+                            tran.setPayee(reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim());
                             break;
                         case MEMO:
                             tran.memo = reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim();

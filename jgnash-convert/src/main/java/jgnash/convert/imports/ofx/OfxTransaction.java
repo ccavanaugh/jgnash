@@ -66,9 +66,9 @@ public class OfxTransaction extends ImportTransaction {
                 amount + ", " +
                 transactionID + ", " +
                 sic + ", " +
-                getName() + ", " +
+                getPayee() + ", " +
                 memo + ", " +
-                checkNumber + ", " +
+                getCheckNumber() + ", " +
                 refNum + ", " +
                 payeeId + ", " +
                 currency;

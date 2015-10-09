@@ -43,9 +43,7 @@ public class BayesImportClassifier {
         for (final ImportTransaction transaction : list) {
             final StringBuilder builder = new StringBuilder();
 
-            if (transaction.payee != null) {
-                builder.append(transaction.payee).append(" ");
-            }
+            builder.append(transaction.getPayee()).append(" ");
 
             if (transaction.memo != null) {
                 builder.append(transaction.memo);

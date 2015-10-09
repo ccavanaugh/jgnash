@@ -133,7 +133,7 @@ class PartialTable extends FormattedJTable {
                 case 0:
                     return dateTimeFormatter.format(qt.datePosted);
                 case 1:
-                    return qt.payee;
+                    return qt.getPayee();
                 case 2:
                     return qt.category;
                 case 3:

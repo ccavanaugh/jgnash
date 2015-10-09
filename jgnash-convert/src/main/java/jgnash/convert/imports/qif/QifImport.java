@@ -507,17 +507,17 @@ public class QifImport {
         } else if (acc == cAcc && !qTran.hasSplits() || cAcc == null) {
             // create single entry transaction without splits
             tran = TransactionFactory.generateSingleEntryTransaction(acc, qTran.amount, qTran.datePosted, qTran.memo,
-                    qTran.payee, qTran.checkNumber);
+                    qTran.getPayee(), qTran.getCheckNumber());
 
             ReconcileManager.reconcileTransaction(acc, tran, reconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
         } else if (!qTran.hasSplits()) { // && cAcc != null
             // create a double entry transaction without splits
             if (qTran.amount.signum() == -1) {
                 tran = TransactionFactory.generateDoubleEntryTransaction(cAcc, acc, qTran.amount, qTran.datePosted,
-                        qTran.memo, qTran.payee, qTran.checkNumber);
+                        qTran.memo, qTran.getPayee(), qTran.getCheckNumber());
             } else {
                 tran = TransactionFactory.generateDoubleEntryTransaction(acc, cAcc, qTran.amount, qTran.datePosted,
-                        qTran.memo, qTran.payee, qTran.checkNumber);
+                        qTran.memo, qTran.getPayee(), qTran.getCheckNumber());
             }
 
             ReconcileManager.reconcileTransaction(cAcc, tran, reconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
@@ -532,8 +532,8 @@ public class QifImport {
             return null;
         }
         tran.setDate(qTran.datePosted);
-        tran.setPayee(qTran.payee);
-        tran.setNumber(qTran.checkNumber);
+        tran.setPayee(qTran.getPayee());
+        tran.setNumber(qTran.getCheckNumber());
 
         return tran;
     }

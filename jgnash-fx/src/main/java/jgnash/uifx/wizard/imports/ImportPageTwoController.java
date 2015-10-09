@@ -169,12 +169,12 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
         final TableColumn<ImportTransaction, String> numberColumn =
                 new TableColumn<>(resources.getString("Column.Num"));
-        numberColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().checkNumber));
+        numberColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getCheckNumber()));
         tableView.getColumns().add(numberColumn);
 
         final TableColumn<ImportTransaction, String> payeeColumn =
                 new TableColumn<>(resources.getString("Column.Payee"));
-        payeeColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().payee));
+        payeeColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getPayee()));
         tableView.getColumns().add(payeeColumn);
 
         final TableColumn<ImportTransaction, String> memoColumn =

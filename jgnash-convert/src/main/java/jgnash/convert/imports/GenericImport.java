@@ -55,16 +55,16 @@ public class GenericImport {
 
                 if (baseAccount.equals(tran.account)) { // single entry oTran
                     t = TransactionFactory.generateSingleEntryTransaction(baseAccount, tran.amount,
-                            tran.datePosted, tran.memo, tran.payee, tran.checkNumber);
+                            tran.datePosted, tran.memo, tran.getPayee(), tran.getCheckNumber());
                 } else { // double entry
                     if (tran.amount.signum() >= 0) {
                         t = TransactionFactory.generateDoubleEntryTransaction(baseAccount, tran.account,
-                                tran.amount.abs(), tran.datePosted, tran.memo, tran.payee,
-                                tran.checkNumber);
+                                tran.amount.abs(), tran.datePosted, tran.memo, tran.getPayee(),
+                                tran.getCheckNumber());
                     } else {
                         t = TransactionFactory.generateDoubleEntryTransaction(tran.account, baseAccount,
-                                tran.amount.abs(), tran.datePosted, tran.memo, tran.payee,
-                                tran.checkNumber);
+                                tran.amount.abs(), tran.datePosted, tran.memo, tran.getPayee(),
+                                tran.getCheckNumber());
                     }
                 }
 
@@ -118,7 +118,7 @@ public class GenericImport {
                     }
 
                     { // check for matching check number
-                        String checkNumber = oTran.checkNumber;
+                        String checkNumber = oTran.getCheckNumber();
                         if (checkNumber != null && !checkNumber.isEmpty()) {
                             if (tran.getNumber().equals(checkNumber)) {
                                 oTran.setState(OfxTransaction.ImportState.EQUAL);

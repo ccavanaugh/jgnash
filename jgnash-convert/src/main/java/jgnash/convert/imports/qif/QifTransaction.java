@@ -67,7 +67,7 @@ public class QifTransaction extends ImportTransaction {
     @Override
     public String toString() {
         StringBuilder buf = new StringBuilder();
-        buf.append("Payee: ").append(payee).append('\n');
+        buf.append("Payee: ").append(getPayee()).append('\n');
         buf.append("Memo: ").append(memo).append('\n');
         buf.append("Category: ").append(category).append('\n');
         if (amount != null) {

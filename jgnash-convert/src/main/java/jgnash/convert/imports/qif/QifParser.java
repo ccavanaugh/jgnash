@@ -370,11 +370,11 @@ public final class QifParser {
                 } else if (line.startsWith("C")) {
                     tran.status = line.substring(1);
                 } else if (line.startsWith("P")) {
-                    tran.payee = line.substring(1);
+                    tran.setPayee(line.substring(1));
                 } else if (line.startsWith("L")) {
                     tran.category = line.substring(1);
                 } else if (line.startsWith("N")) {
-                    tran.checkNumber = line.substring(1);
+                    tran.setCheckNumber(line.substring(1));
                 } else if (line.startsWith("M")) {
                     tran.memo = line.substring(1);
                 } else if (line.startsWith("A")) {
@@ -448,11 +448,11 @@ public final class QifParser {
                 } else if (line.startsWith("C")) {
                     tran.status = line.substring(1);
                 } else if (line.startsWith("P")) {
-                    tran.payee = line.substring(1);
+                    tran.setPayee(line.substring(1));
                 } else if (line.startsWith("L")) {
                     tran.category = line.substring(1);
                 } else if (line.startsWith("N")) { // trans type for inv accounts
-                    tran.checkNumber = line.substring(1);
+                    tran.setCheckNumber(line.substring(1));
                 } else if (line.startsWith("M")) {
                     tran.memo = line.substring(1);
                 } else if (line.startsWith("A")) {
@@ -738,7 +738,7 @@ public final class QifParser {
             System.out.println("    Num Transactions :" + size);
             for (int j = 0; j < size; j++) {
                 QifTransaction tran = acc.getTransactions().get(j);
-                System.out.println("        Transaction " + (j + 1) + " " + tran.payee);
+                System.out.println("        Transaction " + (j + 1) + " " + tran.getPayee());
                 System.out.println("            Num Splits :" + tran.splits.size());
                 for (int k = 0; k < tran.splits.size(); k++) {
                     System.out.println("                Split " + (k + 1) + " " + tran.splits.get(k).memo);

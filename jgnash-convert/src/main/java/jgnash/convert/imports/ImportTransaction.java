@@ -19,6 +19,7 @@ package jgnash.convert.imports;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 import jgnash.engine.Account;
 import jgnash.util.NotNull;
@@ -65,11 +66,20 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     public String memo = ""; // memo
 
-    @NotNull public String payee = ""; // previously: 'name'
+    @NotNull
+    private String payee = ""; // previously: 'name'
 
-    public String checkNumber = ""; // check number (?)
+    private String checkNumber = ""; // check number (?)
 
     private ImportState state = ImportState.NEW;
+
+    public String getCheckNumber() {
+        return checkNumber;
+    }
+
+    public void setCheckNumber(final String checkNumber) {
+        this.checkNumber = checkNumber;
+    }
 
     public ImportState getState() {
         return state;
@@ -79,8 +89,15 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
         this.state = state;
     }
 
-    public String getName() {
+    @NotNull
+    public String getPayee() {
         return payee;
+    }
+
+    public void setPayee(@NotNull String payee) {
+        Objects.requireNonNull(payee);
+
+        this.payee = payee;
     }
 
     @Override
