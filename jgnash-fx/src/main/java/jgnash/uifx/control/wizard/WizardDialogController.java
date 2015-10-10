@@ -42,7 +42,6 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.util.InjectFXML;
@@ -64,7 +63,7 @@ public class WizardDialogController<K extends Enum<?>> {
     protected ResourceBundle resources;
 
     @FXML
-    private ListView<ObjectProperty<Pair<String, Boolean>>> taskList;
+    private ListView<WizardDescriptor> taskList;
 
     @FXML
     private StackPane taskPane;
@@ -124,11 +123,11 @@ public class WizardDialogController<K extends Enum<?>> {
         wizardPaneController.putSettings(settings);
 
         // Listen for changes to the controller descriptor
-        wizardPaneController.getDescriptor().addListener(observable -> {
+        wizardPaneController.descriptorProperty().addListener(observable -> {
             taskList.refresh();
         });
 
-        taskList.getItems().add(wizardPaneController.getDescriptor());
+        taskList.getItems().add(wizardPaneController.descriptorProperty().get());
         paneMap.put(wizardPaneController, pane);
 
         // force selection if this is the first pane
@@ -159,19 +158,19 @@ public class WizardDialogController<K extends Enum<?>> {
         updateButtonState();
     }
 
-    private void handleTaskChange(final ObjectProperty<Pair<String, Boolean>> descriptor) {
-        taskTitlePane.textProperty().setValue(descriptor.get().getKey());
+    private void handleTaskChange(final WizardDescriptor descriptor) {
+        taskTitlePane.textProperty().setValue(descriptor.getDescription());
         updateButtonState();
 
-        paneMap.keySet().stream().filter(controller -> controller.getDescriptor().equals(descriptor)).forEach(controller -> {
+        paneMap.keySet().stream().filter(controller -> controller.descriptorProperty().get().equals(descriptor)).forEach(controller -> {
             taskPane.getChildren().clear();
             taskPane.getChildren().addAll(paneMap.get(controller));
         });
     }
 
-    private WizardPaneController<K> getController(final ObjectProperty<Pair<String, Boolean>> descriptor) {
+    private WizardPaneController<K> getController(final WizardDescriptor descriptor) {
         for (final WizardPaneController<K> wizardPaneController : paneMap.keySet()) {
-            if (wizardPaneController.getDescriptor().equals(descriptor)) {
+            if (wizardPaneController.descriptorProperty().get().equals(descriptor)) {
                 return wizardPaneController;
             }
         }
@@ -262,7 +261,7 @@ public class WizardDialogController<K extends Enum<?>> {
      */
     private double getControllerDescriptionWidth(final WizardPaneController<K> item) {
         final ControllerListCell cell = new ControllerListCell();
-        cell.updateItem(item.getDescriptor(), false);
+        cell.updateItem(item.descriptorProperty().get(), false);
 
         return cell.prefWidth(-1);
     }
@@ -270,7 +269,7 @@ public class WizardDialogController<K extends Enum<?>> {
     /**
      * Custom list cell.  Marks any bad pages with a font change
      */
-    private class ControllerListCell extends ListCell<ObjectProperty<Pair<String, Boolean>>> {
+    private class ControllerListCell extends ListCell<WizardDescriptor> {
 
         public ControllerListCell() {
             super();
@@ -279,12 +278,12 @@ public class WizardDialogController<K extends Enum<?>> {
         }
 
         @Override
-        protected void updateItem(final ObjectProperty<Pair<String, Boolean>> item, final boolean empty) {
+        protected void updateItem(final WizardDescriptor item, final boolean empty) {
             super.updateItem(item, empty);
             if (!empty) {
-                setText(item.getValue().getKey());
+                setText(item.getDescription());
 
-                if (!item.getValue().getValue()) {
+                if (!item.isValid()) {
                     setId(StyleClass.NORMAL_NEGATIVE_CELL_ID);
                 } else {
                     setId(StyleClass.NORMAL_CELL_ID);

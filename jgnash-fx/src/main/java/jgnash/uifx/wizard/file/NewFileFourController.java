@@ -31,6 +31,7 @@ import jgnash.engine.AccountTreeXMLFactory;
 import jgnash.engine.Comparators;
 import jgnash.engine.RootAccount;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
+import jgnash.util.ResourceUtils;
 import jgnash.util.TextResource;
 
 import org.controlsfx.control.CheckListView;
@@ -95,6 +96,6 @@ public class NewFileFourController extends AbstractWizardPaneController<NewFileW
 
     @Override
     public String toString() {
-        return "4. " + resources.getString("Title.ChooseAccounts");
+        return "4. " + ResourceUtils.getString("Title.ChooseAccounts");
     }
 }

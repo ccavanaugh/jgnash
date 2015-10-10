@@ -20,7 +20,6 @@ package jgnash.uifx.control.wizard;
 import java.util.Map;
 
 import javafx.beans.property.ObjectProperty;
-import javafx.util.Pair;
 
 /**
  * Interface for a task pane in a {@code WizardPane}
@@ -53,5 +52,5 @@ public interface WizardPaneController<K extends Enum<?>> {
 
    }
 
-    ObjectProperty<Pair<String, Boolean>> getDescriptor();
+    ObjectProperty<WizardDescriptor> descriptorProperty();
 }

@@ -32,6 +32,7 @@ import javafx.scene.control.TextArea;
 
 import jgnash.engine.CurrencyNode;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
+import jgnash.util.ResourceUtils;
 import jgnash.util.TextResource;
 
 /**
@@ -83,7 +84,7 @@ public class NewFileThreeController extends AbstractWizardPaneController<NewFile
 
     @Override
     public String toString() {
-        return "3. " + resources.getString("Title.SelAvailCurr");
+        return "3. " + ResourceUtils.getString("Title.SelAvailCurr");
     }
 
     @FXML

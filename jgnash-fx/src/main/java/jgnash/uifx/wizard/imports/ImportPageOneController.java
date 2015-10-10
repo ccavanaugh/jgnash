@@ -34,6 +34,7 @@ import jgnash.convert.imports.qif.QifAccount;
 import jgnash.engine.Account;
 import jgnash.uifx.control.AccountComboBox;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
+import jgnash.util.ResourceUtils;
 import jgnash.util.TextResource;
 
 /**
@@ -128,7 +129,7 @@ public class ImportPageOneController extends AbstractWizardPaneController<Import
 
     @Override
     public String toString() {
-        return "1. " + resources.getString("Title.SelDestAccount");
+        return "1. " + ResourceUtils.getString("Title.SelDestAccount");
     }
 
     SimpleBooleanProperty dateFormatSelectionEnabled() {

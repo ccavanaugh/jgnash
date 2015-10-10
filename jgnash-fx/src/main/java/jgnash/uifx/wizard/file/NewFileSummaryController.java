@@ -29,6 +29,7 @@ import javafx.scene.control.TextField;
 
 import jgnash.engine.CurrencyNode;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
+import jgnash.util.ResourceUtils;
 
 /**
  * New file wizard pane, shows summary
@@ -70,6 +71,6 @@ public class NewFileSummaryController extends AbstractWizardPaneController<NewFi
 
     @Override
     public String toString() {
-        return "5. " + resources.getString("Title.Summary");
+        return "5. " + ResourceUtils.getString("Title.Summary");
     }
 }

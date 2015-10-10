@@ -58,6 +58,7 @@ import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.ShortDateTableCell;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
 import jgnash.uifx.util.TableViewManager;
+import jgnash.util.ResourceUtils;
 import jgnash.util.TextResource;
 
 /**
@@ -258,7 +259,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
     @Override
     public String toString() {
-        return "2. " + resources.getString("Title.ModImportTrans");
+        return "2. " + ResourceUtils.getString("Title.ModImportTrans");
     }
 
     @FXML

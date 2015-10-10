@@ -30,6 +30,7 @@ import jgnash.convert.imports.ImportState;
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.Account;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
+import jgnash.util.ResourceUtils;
 
 /**
  * Import Wizard, base account selection
@@ -83,6 +84,6 @@ public class ImportPageThreeController extends AbstractWizardPaneController<Impo
 
     @Override
     public String toString() {
-        return "3. " + resources.getString("Title.ImpSum");
+        return "3. " + ResourceUtils.getString("Title.ImpSum");
     }
 }

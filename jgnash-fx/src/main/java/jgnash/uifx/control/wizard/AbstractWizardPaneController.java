@@ -19,21 +19,21 @@ package jgnash.uifx.control.wizard;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.util.Pair;
 
 /**
  * Support class to make implementation of {@code WizardPaneController} less repetitive.  Subclasses are required
- * to overwrite {@code toString()} and return a meaningful description.
+ * to overwrite {@code toString()} and return a meaningful description.  {@code toString()} will be called during
+ * class initialization.
  *
  * @author Craig Cavanaugh
  */
 public abstract class AbstractWizardPaneController<K extends Enum<?>> implements WizardPaneController<K> {
 
-    private final SimpleObjectProperty<Pair<String, Boolean>> descriptorProperty =
-            new SimpleObjectProperty<>(new Pair<>("", false));
+    private final SimpleObjectProperty<WizardDescriptor> descriptorProperty =
+            new SimpleObjectProperty<>(new WizardDescriptor(toString()));
 
     @Override
-    public ObjectProperty<Pair<String, Boolean>> getDescriptor() {
+    public ObjectProperty<WizardDescriptor> descriptorProperty() {
         return descriptorProperty;
     }
 
@@ -41,6 +41,6 @@ public abstract class AbstractWizardPaneController<K extends Enum<?>> implements
      * Should be called when a change to validity occurs
      */
     protected void updateDescriptor() {
-        descriptorProperty.setValue(new Pair<>(toString(), isPaneValid()));
+        descriptorProperty().get().setIsValid(isPaneValid());
     }
 }

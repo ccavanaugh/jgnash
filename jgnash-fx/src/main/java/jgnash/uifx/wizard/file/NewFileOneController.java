@@ -34,6 +34,7 @@ import jgnash.uifx.control.DataStoreTypeComboBox;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
 import jgnash.uifx.util.ValidationFactory;
 import jgnash.util.FileUtils;
+import jgnash.util.ResourceUtils;
 import jgnash.util.TextResource;
 
 /**
@@ -106,7 +107,7 @@ public class NewFileOneController extends AbstractWizardPaneController<NewFileWi
 
     @Override
     public String toString() {
-        return "1. " + resources.getString("Title.DatabaseCfg");
+        return "1. " + ResourceUtils.getString("Title.DatabaseCfg");
     }
 
     @FXML
