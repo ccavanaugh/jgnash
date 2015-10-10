@@ -366,7 +366,7 @@ public final class QifParser {
                 } else if (line.startsWith("U")) {
                     logger.finest("Ignoring U");
                 } else if (line.startsWith("T")) {
-                    tran.amount = QifUtils.parseMoney(line.substring(1));
+                    tran.setAmount(QifUtils.parseMoney(line.substring(1)));
                 } else if (line.startsWith("C")) {
                     tran.status = line.substring(1);
                 } else if (line.startsWith("P")) {
@@ -376,7 +376,7 @@ public final class QifParser {
                 } else if (line.startsWith("N")) {
                     tran.setCheckNumber(line.substring(1));
                 } else if (line.startsWith("M")) {
-                    tran.memo = line.substring(1);
+                    tran.setMemo(line.substring(1));
                 } else if (line.startsWith("A")) {
                     logger.info("Ignored address line: " + line.substring(1));
                 } else if (line.startsWith("I")) {
@@ -439,12 +439,12 @@ public final class QifParser {
                     /* Preserve the original unparsed date so that it may be
                      * reevaluated at a later time. */
                     tran.oDate = line.substring(1);
-                    tran.datePosted = QifTransaction.parseDate(tran.oDate, dateFormat);
+                    tran.setDatePosted(QifTransaction.parseDate(tran.oDate, dateFormat));
                 } else if (line.startsWith("U")) {
                     //tran.U = line.substring(1);
                     logger.finest("Ignoring U");
                 } else if (line.startsWith("T")) {
-                    tran.amount = QifUtils.parseMoney(line.substring(1));
+                    tran.setAmount(QifUtils.parseMoney(line.substring(1)));
                 } else if (line.startsWith("C")) {
                     tran.status = line.substring(1);
                 } else if (line.startsWith("P")) {
@@ -454,7 +454,7 @@ public final class QifParser {
                 } else if (line.startsWith("N")) { // trans type for inv accounts
                     tran.setCheckNumber(line.substring(1));
                 } else if (line.startsWith("M")) {
-                    tran.memo = line.substring(1);
+                    tran.setMemo(line.substring(1));
                 } else if (line.startsWith("A")) {
                     logger.info("Ignored address line: " + line.substring(1));
                 } else if (line.startsWith("Y")) {

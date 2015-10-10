@@ -34,6 +34,7 @@ import javax.swing.text.StyledEditorKit;
 import jgnash.convert.imports.BayesImportClassifier;
 import jgnash.convert.imports.GenericImport;
 import jgnash.convert.imports.ImportBank;
+import jgnash.convert.imports.ImportState;
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.Account;
 import jgnash.ui.components.wizard.WizardPage;
@@ -158,8 +159,8 @@ public class ImportTwo extends JPanel implements WizardPage, ActionListener {
 
             // set to sane account assuming it's going to be a single entry
             for (ImportTransaction t : list) {
-                t.account = account;
-                t.setState(ImportTransaction.ImportState.NEW);
+                t.setAccount(account);
+                t.setState(ImportState.NEW);
             }
 
             // match up any pre-existing transactions

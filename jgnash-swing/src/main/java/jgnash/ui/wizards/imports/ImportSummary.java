@@ -26,6 +26,7 @@ import java.util.ResourceBundle;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import jgnash.convert.imports.ImportState;
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.Account;
 import jgnash.ui.components.wizard.WizardPage;
@@ -94,7 +95,7 @@ public class ImportSummary extends JPanel implements WizardPage {
         int count = 0;
 
         for (ImportTransaction tran : transactions) {
-            if (tran.getState() == ImportTransaction.ImportState.NEW || tran.getState() == ImportTransaction.ImportState.NOT_EQUAL) { //
+            if (tran.getState() == ImportState.NEW || tran.getState() == ImportState.NOT_EQUAL) { //
                 count++;
             }
         }

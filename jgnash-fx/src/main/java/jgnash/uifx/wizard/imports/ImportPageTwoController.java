@@ -49,6 +49,7 @@ import javafx.util.Callback;
 import jgnash.convert.imports.BayesImportClassifier;
 import jgnash.convert.imports.GenericImport;
 import jgnash.convert.imports.ImportBank;
+import jgnash.convert.imports.ImportState;
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.Account;
 import jgnash.resource.font.FontAwesomeLabel;
@@ -99,18 +100,18 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         tableView.getItems().addListener((ListChangeListener<ImportTransaction>) c ->
                 valid.setValue(tableView.getItems().size() > 0));
 
-        final TableColumn<ImportTransaction, ImportTransaction.ImportState> stateColumn = new TableColumn<>();
+        final TableColumn<ImportTransaction, ImportState> stateColumn = new TableColumn<>();
         stateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getState()));
 
-        stateColumn.setCellFactory(new Callback<TableColumn<ImportTransaction, ImportTransaction.ImportState>,
-                TableCell<ImportTransaction, ImportTransaction.ImportState>>() {
+        stateColumn.setCellFactory(new Callback<TableColumn<ImportTransaction, ImportState>,
+                TableCell<ImportTransaction, ImportState>>() {
             @Override
-            public TableCell<ImportTransaction, ImportTransaction.ImportState> call(TableColumn<ImportTransaction,
-                    ImportTransaction.ImportState> param) {
-                TableCell<ImportTransaction, ImportTransaction.ImportState> cell =
-                        new TableCell<ImportTransaction, ImportTransaction.ImportState>() {
+            public TableCell<ImportTransaction, ImportState> call(TableColumn<ImportTransaction,
+                    ImportState> param) {
+                TableCell<ImportTransaction, ImportState> cell =
+                        new TableCell<ImportTransaction, ImportState>() {
                             @Override
-                            public void updateItem(final ImportTransaction.ImportState item, final boolean empty) {
+                            public void updateItem(final ImportState item, final boolean empty) {
                                 super.updateItem(item, empty);
 
                                 if (empty) {
@@ -142,14 +143,14 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
                     if (event.getClickCount() > 1) {                       
                         final ImportTransaction t = tableView.getItems().get(((TableCell<?,?>)event.getSource()).getTableRow().getIndex());
 
-                        if (t.getState() == ImportTransaction.ImportState.EQUAL) {
-                            t.setState(ImportTransaction.ImportState.NOT_EQUAL);
-                        } else if (t.getState() == ImportTransaction.ImportState.NOT_EQUAL) {
-                            t.setState(ImportTransaction.ImportState.EQUAL);
-                        } else if (t.getState() == ImportTransaction.ImportState.NEW) {
-                            t.setState(ImportTransaction.ImportState.IGNORE);
-                        } else if (t.getState() == ImportTransaction.ImportState.IGNORE) {
-                            t.setState(ImportTransaction.ImportState.NEW);
+                        if (t.getState() == ImportState.EQUAL) {
+                            t.setState(ImportState.NOT_EQUAL);
+                        } else if (t.getState() == ImportState.NOT_EQUAL) {
+                            t.setState(ImportState.EQUAL);
+                        } else if (t.getState() == ImportState.NEW) {
+                            t.setState(ImportState.IGNORE);
+                        } else if (t.getState() == ImportState.IGNORE) {
+                            t.setState(ImportState.NEW);
                         }
 
                         Platform.runLater(tableView::refresh);
@@ -163,7 +164,7 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
         final TableColumn<ImportTransaction, LocalDate> dateColumn =
                 new TableColumn<>(resources.getString("Column.Date"));
-        dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().datePosted));
+        dateColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getDatePosted()));
         dateColumn.setCellFactory(param -> new ShortDateTableCell<>());
         tableView.getColumns().add(dateColumn);
 
@@ -179,14 +180,14 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
         final TableColumn<ImportTransaction, String> memoColumn =
                 new TableColumn<>(resources.getString("Column.Memo"));
-        memoColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().memo));
+        memoColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getMemo()));
         tableView.getColumns().add(memoColumn);
 
         final TableColumn<ImportTransaction, Account> accountColumn =
                 new TableColumn<>(resources.getString("Column.Account"));
         accountColumn.setCellValueFactory(param -> {
-            if (param.getValue() != null && param.getValue().account != null) {
-                return new SimpleObjectProperty<>(param.getValue().account);
+            if (param.getValue() != null && param.getValue().getAccount() != null) {
+                return new SimpleObjectProperty<>(param.getValue().getAccount());
             }
             return null;
         });
@@ -194,14 +195,14 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
         accountColumn.setEditable(true);
 
         accountColumn.setOnEditCommit(event -> {
-            event.getTableView().getItems().get(event.getTablePosition().getRow()).account = event.getNewValue();
+            event.getTableView().getItems().get(event.getTablePosition().getRow()).setAccount(event.getNewValue());
             Platform.runLater(tableViewManager::packTable);
         });
         tableView.getColumns().add(accountColumn);
 
         final TableColumn<ImportTransaction, BigDecimal> amountColumn =
                 new TableColumn<>(resources.getString("Column.Amount"));
-        amountColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().amount));
+        amountColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getAmount()));
         amountColumn.setCellFactory(param -> new BigDecimalTableCell<>(NumberFormat.getNumberInstance()));
         tableView.getColumns().add(amountColumn);
 
@@ -229,8 +230,8 @@ public class ImportPageTwoController extends AbstractWizardPaneController<Import
 
             // set to sane account assuming it's going to be a single entry
             for (final ImportTransaction t : list) {
-                t.account = account;
-                t.setState(ImportTransaction.ImportState.NEW);  // force reset
+                t.setAccount(account);
+                t.setState(ImportState.NEW);  // force reset
             }
 
             // match up any pre-existing transactions

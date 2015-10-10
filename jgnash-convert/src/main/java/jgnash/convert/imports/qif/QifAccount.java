@@ -63,7 +63,7 @@ public class QifAccount extends ImportBank<QifTransaction> {
         setDateFormat(dateFormat);
 
         for (final QifTransaction transaction: super.getTransactions()) {
-            transaction.datePosted = QifTransaction.parseDate(transaction.oDate, dateFormat);
+            transaction.setDatePosted(QifTransaction.parseDate(transaction.oDate, dateFormat));
         }
     }
 

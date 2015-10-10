@@ -26,6 +26,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
+import jgnash.convert.imports.ImportState;
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.Account;
 import jgnash.uifx.control.wizard.AbstractWizardPaneController;
@@ -66,8 +67,8 @@ public class ImportPageThreeController extends AbstractWizardPaneController<Impo
 
         final AtomicInteger count = new AtomicInteger();
 
-        transactions.stream().filter(tran -> tran.getState() == ImportTransaction.ImportState.NEW
-                || tran.getState() == ImportTransaction.ImportState.NOT_EQUAL)
+        transactions.stream().filter(tran -> tran.getState() == ImportState.NEW
+                || tran.getState() == ImportState.NOT_EQUAL)
                 .forEach(tran -> count.incrementAndGet());
 
         Platform.runLater(() -> transCountLabel.setText(Integer.toString(count.get())));

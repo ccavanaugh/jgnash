@@ -47,23 +47,23 @@ public class GenericImport {
         Objects.requireNonNull(engine);
 
         for (final ImportTransaction tran : transactions) {
-            Objects.requireNonNull(tran.account);
+            Objects.requireNonNull(tran.getAccount());
 
-            if (tran.getState() == ImportTransaction.ImportState.NEW
-                    || tran.getState() == ImportTransaction.ImportState.NOT_EQUAL) { // do not import matched transactions
+            if (tran.getState() == ImportState.NEW
+                    || tran.getState() == ImportState.NOT_EQUAL) { // do not import matched transactions
                 Transaction t;
 
-                if (baseAccount.equals(tran.account)) { // single entry oTran
-                    t = TransactionFactory.generateSingleEntryTransaction(baseAccount, tran.amount,
-                            tran.datePosted, tran.memo, tran.getPayee(), tran.getCheckNumber());
+                if (baseAccount.equals(tran.getAccount())) { // single entry oTran
+                    t = TransactionFactory.generateSingleEntryTransaction(baseAccount, tran.getAmount(),
+                            tran.getDatePosted(), tran.getMemo(), tran.getPayee(), tran.getCheckNumber());
                 } else { // double entry
-                    if (tran.amount.signum() >= 0) {
-                        t = TransactionFactory.generateDoubleEntryTransaction(baseAccount, tran.account,
-                                tran.amount.abs(), tran.datePosted, tran.memo, tran.getPayee(),
+                    if (tran.getAmount().signum() >= 0) {
+                        t = TransactionFactory.generateDoubleEntryTransaction(baseAccount, tran.getAccount(),
+                                tran.getAmount().abs(), tran.getDatePosted(), tran.getMemo(), tran.getPayee(),
                                 tran.getCheckNumber());
                     } else {
-                        t = TransactionFactory.generateDoubleEntryTransaction(tran.account, baseAccount,
-                                tran.amount.abs(), tran.datePosted, tran.memo, tran.getPayee(),
+                        t = TransactionFactory.generateDoubleEntryTransaction(tran.getAccount(), baseAccount,
+                                tran.getAmount().abs(), tran.getDatePosted(), tran.getMemo(), tran.getPayee(),
                                 tran.getCheckNumber());
                     }
                 }
@@ -96,23 +96,23 @@ public class GenericImport {
             for (final Transaction tran : baseAccount.getSortedTransactionList()) {
 
                 // amounts must be comparably the same, do not use an equality check
-                if (tran.getAmount(baseAccount).compareTo(oTran.amount) == 0) {
+                if (tran.getAmount(baseAccount).compareTo(oTran.getAmount()) == 0) {
 
                     { // check for date match
                         LocalDate startDate;
                         LocalDate endDate;
 
                         // we have a user initiated date, use a smaller window
-                        if ((oTran.dateUser != null)) {
-                            startDate = oTran.dateUser.minusDays(1);
-                            endDate = oTran.dateUser.plusDays(1);
+                        if ((oTran.getDateUser() != null)) {
+                            startDate = oTran.getDateUser().minusDays(1);
+                            endDate = oTran.getDateUser().plusDays(1);
                         } else { // use the posted date with a larger window
-                            startDate = oTran.datePosted.minusDays(3);
-                            endDate = oTran.datePosted.plusDays(3);
+                            startDate = oTran.getDatePosted().minusDays(3);
+                            endDate = oTran.getDatePosted().plusDays(3);
                         }
 
                         if (DateUtils.after(tran.getLocalDate(), startDate) && DateUtils.before(tran.getLocalDate(), endDate)) {
-                            oTran.setState(OfxTransaction.ImportState.EQUAL);
+                            oTran.setState(ImportState.EQUAL);
                             break;
                         }
                     }
@@ -121,7 +121,7 @@ public class GenericImport {
                         String checkNumber = oTran.getCheckNumber();
                         if (checkNumber != null && !checkNumber.isEmpty()) {
                             if (tran.getNumber().equals(checkNumber)) {
-                                oTran.setState(OfxTransaction.ImportState.EQUAL);
+                                oTran.setState(ImportState.EQUAL);
                                 break;
                             }
                         }
@@ -130,10 +130,10 @@ public class GenericImport {
 
                     { // check for matching fitid number
                         if (oTran instanceof OfxTransaction) {
-                            String id = ((OfxTransaction) oTran).transactionID;
+                            final String id = oTran.getTransactionID();
                             if (id != null && !id.isEmpty()) {
                                 if (tran.getFitid() != null && tran.getFitid().equals(id)) {
-                                    oTran.setState(OfxTransaction.ImportState.EQUAL);
+                                    oTran.setState(ImportState.EQUAL);
                                     break;
                                 }
                             }

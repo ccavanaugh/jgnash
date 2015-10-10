@@ -39,6 +39,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
+import jgnash.convert.imports.ImportState;
 import jgnash.convert.imports.ImportTransaction;
 import jgnash.engine.Account;
 import jgnash.ui.components.AccountListComboBox;
@@ -91,17 +92,17 @@ class ImportTable extends FormattedJTable {
                         if (col == 0) {
                             ImportTransaction t = transactions.get(row);
 
-                            if (t.getState() == ImportTransaction.ImportState.EQUAL) {
-                                t.setState(ImportTransaction.ImportState.NOT_EQUAL);
+                            if (t.getState() == ImportState.EQUAL) {
+                                t.setState(ImportState.NOT_EQUAL);
                                 model.fireTableCellUpdated(row, col);
-                            } else if (t.getState() == ImportTransaction.ImportState.NOT_EQUAL) {
-                                t.setState(ImportTransaction.ImportState.EQUAL);
+                            } else if (t.getState() == ImportState.NOT_EQUAL) {
+                                t.setState(ImportState.EQUAL);
                                 model.fireTableCellUpdated(row, col);
-                            } else if (t.getState() == ImportTransaction.ImportState.NEW) {
-                                t.setState(ImportTransaction.ImportState.IGNORE);
+                            } else if (t.getState() == ImportState.NEW) {
+                                t.setState(ImportState.IGNORE);
                                 model.fireTableCellUpdated(row, col);
-                            } else if (t.getState() == ImportTransaction.ImportState.IGNORE) {
-                                t.setState(ImportTransaction.ImportState.NEW);
+                            } else if (t.getState() == ImportState.IGNORE) {
+                                t.setState(ImportState.NEW);
                                 model.fireTableCellUpdated(row, col);
                             }
                         }
@@ -259,30 +260,30 @@ class ImportTable extends FormattedJTable {
             ImportTransaction transaction = transactions.get(rowIndex);
             switch (columnIndex) {
                 case 0:
-                    if (transaction.getState() == ImportTransaction.ImportState.EQUAL) {
+                    if (transaction.getState() == ImportState.EQUAL) {
                         return equalIcon;
-                    } else if (transaction.getState() == ImportTransaction.ImportState.NOT_EQUAL) {
+                    } else if (transaction.getState() == ImportState.NOT_EQUAL) {
                         return notEqualIcon;
-                    } else if (transaction.getState() == ImportTransaction.ImportState.IGNORE) {
+                    } else if (transaction.getState() == ImportState.IGNORE) {
                         return removeIcon;
                     }
 
                     return addIcon;
                 case 1:
-                    return dateTimeFormatter.format(transaction.datePosted);
+                    return dateTimeFormatter.format(transaction.getDatePosted());
                 case 2:
                     return transaction.getCheckNumber();
                 case 3:
                     return transaction.getPayee();
                 case 4:
-                    return transaction.memo;
+                    return transaction.getMemo();
                 case 5:
-                    if (transaction.account != null) {
-                        return transaction.account.toString();
+                    if (transaction.getAccount() != null) {
+                        return transaction.getAccount().toString();
                     }
                     return null;
                 case 6:
-                    return transaction.amount;
+                    return transaction.getAmount();
                 default:
                     return null;
             }
@@ -293,7 +294,7 @@ class ImportTable extends FormattedJTable {
             if (columnIndex == 5) {
                 ImportTransaction transaction = transactions.get(rowIndex);
 
-                transaction.account = (Account) value;
+                transaction.setAccount((Account) value);
                 fireTableCellUpdated(rowIndex, columnIndex);
             }
         }

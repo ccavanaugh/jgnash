@@ -34,44 +34,81 @@ import jgnash.util.Nullable;
  */
 public class ImportTransaction implements Comparable<ImportTransaction> {
 
-    public enum ImportState {
-        NEW,
-        EQUAL,
-        IGNORE,
-        NOT_EQUAL
-    }
+    private Account account;
+
+    private BigDecimal amount = BigDecimal.ZERO;
+
+    private String checkNumber = ""; // check number (?)
+
+    @NotNull
+    private LocalDate datePosted = LocalDate.now();
+
+    @Nullable
+    private LocalDate dateUser = null;
+
+    private String memo = ""; // memo
+
+    @NotNull
+    private String payee = ""; // previously: 'name'
+
+    private ImportState state = ImportState.NEW;
+
+    private String transactionID;
 
     /**
      * Destination account
      */
-    public Account account;
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
 
     /**
      * Depending on the implementation a unique ID may be provided that can be used to detect
      * duplication of prior imported transactions.
      */
-    public String transactionID;
+    public String getTransactionID() {
+        return transactionID;
+    }
+
+    public void setTransactionID(String transactionID) {
+        this.transactionID = transactionID;
+    }
 
     /**
      * Deposits get positive 'amounts', withdrawals negative
      */
-    public BigDecimal amount = BigDecimal.ZERO;
+    public BigDecimal getAmount() {
+        return amount;
+    }
 
-    @NotNull public LocalDate datePosted = LocalDate.now();
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    @NotNull
+    public LocalDate getDatePosted() {
+        return datePosted;
+    }
+
+    public void setDatePosted(@NotNull LocalDate datePosted) {
+        this.datePosted = datePosted;
+    }
 
     /**
      * Date user initiated the transaction, optional, may be null
      */
-    @Nullable public LocalDate dateUser = null;
+    @Nullable
+    public LocalDate getDateUser() {
+        return dateUser;
+    }
 
-    public String memo = ""; // memo
-
-    @NotNull
-    private String payee = ""; // previously: 'name'
-
-    private String checkNumber = ""; // check number (?)
-
-    private ImportState state = ImportState.NEW;
+    public void setDateUser(@Nullable LocalDate dateUser) {
+        this.dateUser = dateUser;
+    }
 
     public String getCheckNumber() {
         return checkNumber;
@@ -79,6 +116,14 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     public void setCheckNumber(final String checkNumber) {
         this.checkNumber = checkNumber;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
     }
 
     public ImportState getState() {
@@ -106,7 +151,7 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
             return 0;
         }
 
-        int result = datePosted.compareTo(importTransaction.datePosted);
+        int result = getDatePosted().compareTo(importTransaction.getDatePosted());
         if (result != 0) {
             return result;
         }
@@ -118,4 +163,5 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
         return Integer.compare(hashCode(), importTransaction.hashCode());
     }
+
 }

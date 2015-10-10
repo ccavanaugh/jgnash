@@ -332,16 +332,16 @@ public class OfxV2Parser implements OfxTags {
                             tran.transactionType = reader.getElementText();
                             break;
                         case DTPOSTED:
-                            tran.datePosted = parseDate(reader.getElementText());
+                            tran.setDatePosted(parseDate(reader.getElementText()));
                             break;
                         case DTUSER:
-                            tran.dateUser = parseDate(reader.getElementText());
+                            tran.setDateUser(parseDate(reader.getElementText()));
                             break;
                         case TRNAMT:
-                            tran.amount = parseAmount(reader.getElementText());
+                            tran.setAmount(parseAmount(reader.getElementText()));
                             break;
                         case FITID:
-                            tran.transactionID = reader.getElementText();
+                            tran.setTransactionID(reader.getElementText());
                             break;
                         case CHECKNUM:
                             tran.setCheckNumber(reader.getElementText());
@@ -351,7 +351,7 @@ public class OfxV2Parser implements OfxTags {
                             tran.setPayee(reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim());
                             break;
                         case MEMO:
-                            tran.memo = reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim();
+                            tran.setMemo(reader.getElementText().replaceAll(EXTRA_SPACE_REGEX, " ").trim());
                             break;
                         case SIC:
                             tran.sic = reader.getElementText();

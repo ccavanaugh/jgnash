@@ -62,12 +62,12 @@ public class OfxTransaction extends ImportTransaction {
     @Override
     public String toString() {
         return transactionType + ", " +
-                datePosted + ", " +
-                amount + ", " +
-                transactionID + ", " +
+                getDatePosted() + ", " +
+                getAmount() + ", " +
+                getTransactionID() + ", " +
                 sic + ", " +
                 getPayee() + ", " +
-                memo + ", " +
+                getMemo() + ", " +
                 getCheckNumber() + ", " +
                 refNum + ", " +
                 payeeId + ", " +

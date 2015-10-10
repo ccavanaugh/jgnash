@@ -68,13 +68,13 @@ public class QifTransaction extends ImportTransaction {
     public String toString() {
         StringBuilder buf = new StringBuilder();
         buf.append("Payee: ").append(getPayee()).append('\n');
-        buf.append("Memo: ").append(memo).append('\n');
+        buf.append("Memo: ").append(getMemo()).append('\n');
         buf.append("Category: ").append(category).append('\n');
-        if (amount != null) {
-            buf.append("Amount:").append(amount).append('\n');
+        if (getAmount() != null) {
+            buf.append("Amount:").append(getAmount()).append('\n');
         }
 
-        buf.append("Date: ").append(datePosted).append('\n');
+        buf.append("Date: ").append(getDatePosted()).append('\n');
         return buf.toString();
     }
 

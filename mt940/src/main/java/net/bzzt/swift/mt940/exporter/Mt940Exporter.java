@@ -83,10 +83,10 @@ public class Mt940Exporter {
         }
         
         ImportTransaction tran = new ImportTransaction();
-        tran.amount = amount;
-        tran.datePosted = entry.getValutaDatum();
-        tran.memo = entry.getMehrzweckfeld();
-        tran.account = null;
+        tran.setAmount(amount);
+        tran.setDatePosted(entry.getValutaDatum());
+        tran.setMemo(entry.getMehrzweckfeld());
+        tran.setAccount(null);
 
         return tran;
     }

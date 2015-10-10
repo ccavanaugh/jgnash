@@ -171,10 +171,10 @@ public class Ofx2Test {
 
                 List<OfxTransaction> transactions = parser.getBank().getTransactions();
 
-                assertEquals(new BigDecimal("-130.00"), transactions.get(0).amount);
-                assertEquals(new BigDecimal("-120.00"), transactions.get(1).amount);
-                assertEquals(new BigDecimal("300.01"), transactions.get(2).amount);
-                assertEquals(new BigDecimal("160.50"), transactions.get(3).amount);
+                assertEquals(new BigDecimal("-130.00"), transactions.get(0).getAmount());
+                assertEquals(new BigDecimal("-120.00"), transactions.get(1).getAmount());
+                assertEquals(new BigDecimal("300.01"), transactions.get(2).getAmount());
+                assertEquals(new BigDecimal("160.50"), transactions.get(3).getAmount());
 
                 Logger.getLogger(Ofx2Test.class.getName()).log(Level.INFO, parser.getBank().toString());
             } catch (IOException e) {

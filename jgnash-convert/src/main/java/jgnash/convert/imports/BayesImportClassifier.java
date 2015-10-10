@@ -45,11 +45,11 @@ public class BayesImportClassifier {
 
             builder.append(transaction.getPayee()).append(" ");
 
-            if (transaction.memo != null) {
-                builder.append(transaction.memo);
+            if (transaction.getMemo() != null) {
+                builder.append(transaction.getMemo());
             }
 
-            transaction.account = classifier.classify(builder.toString());
+            transaction.setAccount(classifier.classify(builder.toString()));
         }
     }
 

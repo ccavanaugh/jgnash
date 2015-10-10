@@ -131,13 +131,13 @@ class PartialTable extends FormattedJTable {
             QifTransaction qt = qAccount.get(rowIndex);
             switch (columnIndex) {
                 case 0:
-                    return dateTimeFormatter.format(qt.datePosted);
+                    return dateTimeFormatter.format(qt.getDatePosted());
                 case 1:
                     return qt.getPayee();
                 case 2:
                     return qt.category;
                 case 3:
-                    return qt.amount;
+                    return qt.getAmount();
                 default:
                     return null;
             }
@@ -148,7 +148,7 @@ class PartialTable extends FormattedJTable {
             if (columnIndex == 2 && value != null) {
                 QifTransaction qt = qAccount.get(rowIndex);
                 qt.category = ((Account) value).getPathName();
-                qt.account = (Account) value;
+                qt.setAccount((Account) value);
                 fireTableCellUpdated(rowIndex, columnIndex);
             }
         }

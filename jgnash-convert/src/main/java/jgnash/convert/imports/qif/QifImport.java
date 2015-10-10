@@ -485,8 +485,8 @@ public class QifImport {
 
         Transaction tran;
         Account cAcc;
-        if (qTran.account != null) {
-            cAcc = qTran.account;
+        if (qTran.getAccount() != null) {
+            cAcc = qTran.getAccount();
         } else {
             cAcc = findBestAccount(qTran.category);
         }
@@ -506,18 +506,18 @@ public class QifImport {
             ReconcileManager.reconcileTransaction(acc, tran, reconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
         } else if (acc == cAcc && !qTran.hasSplits() || cAcc == null) {
             // create single entry transaction without splits
-            tran = TransactionFactory.generateSingleEntryTransaction(acc, qTran.amount, qTran.datePosted, qTran.memo,
+            tran = TransactionFactory.generateSingleEntryTransaction(acc, qTran.getAmount(), qTran.getDatePosted(), qTran.getMemo(),
                     qTran.getPayee(), qTran.getCheckNumber());
 
             ReconcileManager.reconcileTransaction(acc, tran, reconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
         } else if (!qTran.hasSplits()) { // && cAcc != null
             // create a double entry transaction without splits
-            if (qTran.amount.signum() == -1) {
-                tran = TransactionFactory.generateDoubleEntryTransaction(cAcc, acc, qTran.amount, qTran.datePosted,
-                        qTran.memo, qTran.getPayee(), qTran.getCheckNumber());
+            if (qTran.getAmount().signum() == -1) {
+                tran = TransactionFactory.generateDoubleEntryTransaction(cAcc, acc, qTran.getAmount(), qTran.getDatePosted(),
+                        qTran.getMemo(), qTran.getPayee(), qTran.getCheckNumber());
             } else {
-                tran = TransactionFactory.generateDoubleEntryTransaction(acc, cAcc, qTran.amount, qTran.datePosted,
-                        qTran.memo, qTran.getPayee(), qTran.getCheckNumber());
+                tran = TransactionFactory.generateDoubleEntryTransaction(acc, cAcc, qTran.getAmount(), qTran.getDatePosted(),
+                        qTran.getMemo(), qTran.getPayee(), qTran.getCheckNumber());
             }
 
             ReconcileManager.reconcileTransaction(cAcc, tran, reconciled ? ReconciledState.RECONCILED : ReconciledState.NOT_RECONCILED);
@@ -531,7 +531,7 @@ public class QifImport {
             logger.log(Level.WARNING, "Could not create following transaction:" + "\n{0}", qTran.toString());
             return null;
         }
-        tran.setDate(qTran.datePosted);
+        tran.setDate(qTran.getDatePosted());
         tran.setPayee(qTran.getPayee());
         tran.setNumber(qTran.getCheckNumber());
 
@@ -620,7 +620,7 @@ public class QifImport {
                 QifTransaction tran;
                 while (i.hasNext()) {
                     tran = i.next();
-                    if (tran.amount.compareTo(qTran.amount.negate()) == 0 && tran.datePosted.equals(qTran.datePosted) && tran.category.contains(acc.getName())) {
+                    if (tran.getAmount().compareTo(qTran.getAmount().negate()) == 0 && tran.getDatePosted().equals(qTran.getDatePosted()) && tran.category.contains(acc.getName())) {
                         i.remove();
                         logger.finest("Removed mirror transaction");
 
@@ -644,7 +644,7 @@ public class QifImport {
                 while (i.hasNext()) {
                     tran = i.next();
                     if (tran != null) {
-                        if (tran.amount.compareTo(qTran.amount.negate()) == 0 && tran.memo.equals(qTran.memo)) {
+                        if (tran.getAmount().compareTo(qTran.amount.negate()) == 0 && tran.getMemo().equals(qTran.memo)) {
                             i.remove();
                             logger.finest("Removed mirror split transaction");
                             return;
@@ -668,7 +668,7 @@ public class QifImport {
                     tran = i.next();
                     // is the match an account and the opposite value and does not have any splits?
                     // is this a valid method?                                                           
-                    if (tran.amount.compareTo(qTran.amount.negate()) == 0 && isAccount(tran.category) && !tran.hasSplits()) {
+                    if (tran.getAmount().compareTo(qTran.amount.negate()) == 0 && isAccount(tran.category) && !tran.hasSplits()) {
                         logger.log(Level.FINE, "Found a match:\n{0}", tran.toString());
                         i.remove();
                         return;
