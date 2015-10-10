@@ -266,8 +266,7 @@
             accel="Menu.Option.KeyStroke"/>
 
     <action id="recurringList-command"
-            name="Menu.RecurringList.Name"
-            mnemonic="Menu.RecurringList.Mnemonic"/>
+            name="Menu.RecurringList.Name"/>
 
     <action id="locale-command"
             name="Menu.Locale.Name"/>
@@ -281,8 +280,7 @@
     <!-- Window menu commands -->
 
     <action id="close-all-windows-command"
-            name="Menu.CloseAllWindows.Name"
-            mnemonic="Menu.CloseAllWindows.Mnemonic"/>
+            name="Menu.CloseAllWindows.Name"/>
 
     <!-- Help menu commands -->
 
