@@ -5,18 +5,24 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import jgnash.resource.font.FontAwesomeLabel?>
+<?import javafx.scene.input.KeyCodeCombination?>
 
 <MenuBar fx:id="menuBar" useSystemMenuBar="true" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
          fx:controller="jgnash.uifx.views.main.MenuBarController">
-    <Menu text="%Menu.File.Name" mnemonicParsing="false">
 
-        <MenuItem mnemonicParsing="false" onAction="#handleNewAction" text="%Menu.New.Name">
+    <Menu text="%Menu.File.Name" mnemonicParsing="false">
+        <MenuItem onAction="#handleNewAction" text="%Menu.New.Name">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="N" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
             <graphic>
                 <FontAwesomeLabel glyphName="FILE"/>
             </graphic>
         </MenuItem>
-        <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#handleOpenAction"
-                  text="%Menu.Open.Name">
+        <MenuItem fx:id="openMenuItem" onAction="#handleOpenAction" text="%Menu.Open.Name">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
             <graphic>
                 <FontAwesomeLabel glyphName="FOLDER_OPEN"/>
             </graphic>
@@ -27,10 +33,16 @@
             <MenuItem text="%Menu.ImportQif.Name" fx:id="importQifMenuItem" onAction="#handleImportQIFAction"/>
         </Menu>
         <SeparatorMenuItem mnemonicParsing="false"/>
-        <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#handleCloseAction"
-                  text="%Menu.Close.Name"/>
-        <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#handleExitAction"
-                  text="%Menu.Exit.Name"/>
+        <MenuItem fx:id="closeMenuItem" onAction="#handleCloseAction" text="%Menu.Close.Name">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="C" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
+        </MenuItem>
+        <MenuItem fx:id="exitMenuItem" onAction="#handleExitAction" text="%Menu.Exit.Name">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="Q" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
+        </MenuItem>
     </Menu>
 
     <Menu mnemonicParsing="false" text="%Menu.View.Name">
@@ -72,7 +84,6 @@
                     <FontAwesomeLabel glyphName="CLOUD_DOWNLOAD"/>
                 </graphic>
             </MenuItem>
-
         </Menu>
         <SeparatorMenuItem mnemonicParsing="false"/>
         <MenuItem text="%Menu.Option.Name" fx:id="optionsMenuItem" onAction="#handleShowOptionDialog">
@@ -86,14 +97,17 @@
                 <FontAwesomeLabel glyphName="LIST"/>
             </graphic>
         </MenuItem>
-        <SeparatorMenuItem />
+        <SeparatorMenuItem/>
         <MenuItem text="%Menu.Locale.Name" onAction="#changeDefaultLocale">
             <graphic>
                 <FontAwesomeLabel glyphName="LANGUAGE"/>
             </graphic>
         </MenuItem>
-        <SeparatorMenuItem />
+        <SeparatorMenuItem/>
         <MenuItem text="%Menu.RunJavaScript.Name" onAction="#handleExecuteJavaScriptFile">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="J" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
             <graphic>
                 <FontAwesomeLabel glyphName="CODE"/>
             </graphic>
@@ -106,12 +120,15 @@
     </Menu>
 
     <Menu text="%Menu.Help.Name" mnemonicParsing="false">
-        <MenuItem mnemonicParsing="false" text="%Menu.About.Name" onAction="#handleAboutAction">
+        <MenuItem text="%Menu.About.Name" onAction="#handleAboutAction">
+            <accelerator>
+                <KeyCodeCombination alt="UP" code="A" control="UP" meta="UP" shift="UP" shortcut="DOWN"/>
+            </accelerator>
             <graphic>
                 <FontAwesomeLabel glyphName="INFO"/>
             </graphic>
         </MenuItem>
-        <SeparatorMenuItem />
+        <SeparatorMenuItem/>
         <MenuItem mnemonicParsing="false" text="%Menu.Console.Name" onAction="#handleShowConsoleDialog">
             <graphic>
                 <FontAwesomeLabel glyphName="TERMINAL"/>
