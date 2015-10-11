@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.BorderPane?>
+<?import jgnash.resource.font.FontAwesomeLabel?>
+<?import javafx.scene.layout.StackPane?>
+
+<?import javafx.scene.control.ComboBox?>
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="jgnash.uifx.views.budget.BudgetViewController">
+    <top>
+        <ToolBar>
+            <ComboBox fx:id="availableBudgetsComboBox"/>
+            <Button fx:id="propertiesButton" text="%Button.Properties" onAction="#handlePropertiesAction">
+                <graphic>
+                    <FontAwesomeLabel glyphName="EDIT"/>
+                </graphic>
+            </Button>
+            <Button text="%Button.BudgetMgr" onAction="#handleManagerAction">
+                <graphic>
+                    <FontAwesomeLabel glyphName="FILE"/>
+                </graphic>
+            </Button>
+            <Button fx:id="exportButton" text="%Button.ExportSpreadsheet" onAction="#handleExportAction">
+                <graphic>
+                    <FontAwesomeLabel glyphName="FILE_EXCEL_ALT"/>
+                </graphic>
+            </Button>
+        </ToolBar>
+    </top>
+    <center>
+        <StackPane fx:id="tableStackPane">
+
+        </StackPane>
+    </center>
+</BorderPane>
