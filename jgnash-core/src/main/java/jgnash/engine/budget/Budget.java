@@ -287,6 +287,16 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
         this.liabilityAccountsIncluded = liabilityAccountsIncluded;
     }
 
+    /**
+     * Overridden to return the name of the budget for convience.
+     *
+     * @return name of the budget
+     */
+    @Override
+    public String toString() {
+        return getName();
+    }
+
     protected Object readResolve() {
         postLoad();
         return this;
