@@ -24,6 +24,7 @@ import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.StackPane;
@@ -35,6 +36,7 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
+import jgnash.uifx.util.FXMLUtils;
 
 /**
  * @author Craig Cavanaugh
@@ -54,16 +56,21 @@ public class BudgetViewController implements MessageListener {
     private ComboBox<Budget> availableBudgetsComboBox;
 
     @FXML
-    protected ResourceBundle resources;
+    private ResourceBundle resources;
 
-    private SimpleObjectProperty<Budget> activeBudget = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<Budget> activeBudgetProperty = new SimpleObjectProperty<>();
 
     @FXML
     private void initialize() {
         exportButton.disableProperty().bind(availableBudgetsComboBox.valueProperty().isNull());
         propertiesButton.disableProperty().bind(availableBudgetsComboBox.valueProperty().isNull());
 
+        final BudgetTableController budgetTableController
+                = FXMLUtils.loadFXML(o -> tableStackPane.getChildren().add((Node) o), "BudgetTable.fxml", resources);
+
         loadComboBox();
+
+        budgetTableController.budgetProperty().bind(activeBudgetProperty);
 
         MessageBus.getInstance().registerListener(this, MessageChannel.BUDGET, MessageChannel.SYSTEM);
     }
@@ -72,7 +79,7 @@ public class BudgetViewController implements MessageListener {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        activeBudget.unbind();  // unbind first
+        activeBudgetProperty.unbindBidirectional(availableBudgetsComboBox.valueProperty()); // unbind first
 
         // List of active budgets
         final List<Budget> budgetList = engine.getBudgetList();
@@ -81,18 +88,18 @@ public class BudgetViewController implements MessageListener {
 
         // make sure we are not holding a deleted value
         if (budgetList.isEmpty()) {
-            activeBudget.setValue(null);
+            activeBudgetProperty.setValue(null);
         }
 
         // if a budget is already active, select it, otherwise select the first available
-        if (budgetList.contains(activeBudget.get())) {
-            availableBudgetsComboBox.setValue(activeBudget.get());
+        if (budgetList.contains(activeBudgetProperty.get())) {
+            availableBudgetsComboBox.setValue(activeBudgetProperty.get());
         } else if (availableBudgetsComboBox.getItems().size() > 0) {
             availableBudgetsComboBox.setValue(availableBudgetsComboBox.getItems().get(0));
         }
 
         // bind / rebind the active budget property
-        activeBudget.bind(availableBudgetsComboBox.valueProperty());
+        activeBudgetProperty.bindBidirectional(availableBudgetsComboBox.valueProperty());
     }
 
     @Override

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollBar?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="jgnash.uifx.views.budget.BudgetTableController">
+   <center>
+       <GridPane BorderPane.alignment="CENTER" styleClass="info-bar">
+           <columnConstraints>
+               <ColumnConstraints hgrow="NEVER"/>
+               <ColumnConstraints hgrow="ALWAYS"/>
+               <ColumnConstraints hgrow="NEVER"/>
+               <ColumnConstraints hgrow="NEVER"/>
+           </columnConstraints>
+           <rowConstraints>
+               <RowConstraints vgrow="ALWAYS"/>
+               <RowConstraints vgrow="NEVER" minHeight="-Infinity"/>
+               <RowConstraints vgrow="NEVER"/>
+           </rowConstraints>
+           <TreeTableView fx:id="accountTreeTableView" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+           <TableView fx:id="dataTable" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+           <TableView fx:id="accountSummaryTable" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+           <ScrollBar fx:id="verticalScrollBar" orientation="VERTICAL" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
+
+           <TableView fx:id="accountTypeTable" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+           <TableView fx:id="periodSummaryTable" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+           <TableView fx:id="accountPeriodSummaryTable" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+
+           <ScrollBar fx:id="horizontalScrollBar" orientation="HORIZONTAL" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+       </GridPane>
+   </center>
+</BorderPane>
