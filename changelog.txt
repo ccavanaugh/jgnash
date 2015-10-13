@@ -27,6 +27,7 @@ Improved handling of memo's in split transactions.  The split entry memo should 
 
 Release 2.20.0
 ----------------------
+10/14/15 Increase the darkness of the alternating tabular data row color from 2% to 6%. (Fx)
 10/11/15 Added keyboard accelerators. (Fx)
 
 Release 2.19.0
