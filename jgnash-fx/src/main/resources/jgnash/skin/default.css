@@ -19,8 +19,8 @@
       -fx-control-inner-background-alt is not defined for caspian
  */
 .root{
-    /* Hushes up Caspian without effecting Modena */
-    -fx-control-inner-background-alt: derive(-fx-control-inner-background,-2%);
+    /* Hushes up Caspian without effecting Modena, the default is 2% */
+    -fx-control-inner-background-alt: derive(-fx-control-inner-background,-6%);
 }
 
 .decimal-details > .arrow-button > .arrow {
