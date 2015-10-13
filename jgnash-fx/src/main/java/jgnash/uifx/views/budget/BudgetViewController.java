@@ -60,12 +60,15 @@ public class BudgetViewController implements MessageListener {
 
     private SimpleObjectProperty<Budget> activeBudgetProperty = new SimpleObjectProperty<>();
 
+    @SuppressWarnings("FieldCanBeLocal")    // reference must be kept to prevent garbage collection of the binding
+    private BudgetTableController budgetTableController;
+
     @FXML
     private void initialize() {
         exportButton.disableProperty().bind(availableBudgetsComboBox.valueProperty().isNull());
         propertiesButton.disableProperty().bind(availableBudgetsComboBox.valueProperty().isNull());
 
-        final BudgetTableController budgetTableController
+       budgetTableController
                 = FXMLUtils.loadFXML(o -> tableStackPane.getChildren().add((Node) o), "BudgetTable.fxml", resources);
 
         loadComboBox();

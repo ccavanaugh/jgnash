@@ -1,5 +1,7 @@
 package jgnash.uifx.views.budget;
 
+import java.time.LocalDate;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
@@ -8,12 +10,17 @@ import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollBar;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.Pane;
 
 import jgnash.engine.Account;
+import jgnash.engine.Engine;
+import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
+import jgnash.engine.budget.BudgetResultsModel;
 
 /**
  * @author Craig Cavanaugh
@@ -22,6 +29,9 @@ public class BudgetTableController {
 
     private static final String HIDE_HORIZONTAL_CSS = "jgnash/skin/tableHideHorizontalScrollBar.css";
     private static final String HIDE_VERTICAL_CSS = "jgnash/skin/tableHideVerticalScrollBar.css";
+
+    @FXML
+    private Spinner<Integer> yearSpinner;
 
     @FXML
     private ScrollBar verticalScrollBar;
@@ -52,8 +62,14 @@ public class BudgetTableController {
 
     private final SimpleObjectProperty<Budget> budgetProperty = new SimpleObjectProperty<>();
 
+    private BudgetResultsModel model;
+
     @FXML
     private void initialize() {
+        yearSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(
+                2000, 2200,
+                LocalDate.now().getYear(), 1));
+
         accountTreeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
         accountTreeTableView.getStylesheets().add(HIDE_VERTICAL_CSS);
 
@@ -101,7 +117,15 @@ public class BudgetTableController {
     }
 
     private void handleBudgetChange() {
-        System.out.println("budget was set");
+        if (budgetProperty.get() != null) {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
+            model = new BudgetResultsModel(budgetProperty.get(), yearSpinner.getValue(), engine.getDefaultCurrency());
+        } else {
+            // TODO: Clear tables
+            System.out.println("budget was cleared");
+        }
     }
 
     private ScrollBar findVerticalScrollBar(final Node table) {
