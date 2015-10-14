@@ -4,20 +4,23 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableView;
 
 import jgnash.engine.Account;
+import jgnash.engine.AccountGroup;
 import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -43,7 +46,7 @@ public class BudgetTableController {
     private ScrollBar horizontalScrollBar;
 
     @FXML
-    private TreeView<Account> accountTreeView;
+    private TreeTableView<Account> accountTreeView;
 
     @FXML
     private TableView<Object> dataTable;
@@ -58,7 +61,7 @@ public class BudgetTableController {
     private TableView accountPeriodSummaryTable;
 
     @FXML
-    private TableView accountTypeTable;
+    private TableView<AccountGroup> accountTypeTable;
 
     @FXML
     private ResourceBundle resources;
@@ -74,6 +77,7 @@ public class BudgetTableController {
                 LocalDate.now().getYear(), 1));
 
         accountTreeView.getStylesheets().addAll(HIDE_VERTICAL_CSS);
+        accountTreeView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
         accountTreeView.setShowRoot(false);
 
         dataTable.getStylesheets().addAll(HIDE_VERTICAL_CSS, HIDE_HORIZONTAL_CSS);
@@ -87,6 +91,9 @@ public class BudgetTableController {
         accountTypeTable.getStylesheets().add(HIDE_HEADER_CSS);
         periodSummaryTable.getStylesheets().add(HIDE_HEADER_CSS);
         accountPeriodSummaryTable.getStylesheets().add(HIDE_HEADER_CSS);
+
+        buildAccountTreeTable();
+        buildAccountTypeTable();
 
         /*Platform.runLater(() -> {
             hideHeader(accountTypeTable);
@@ -132,14 +139,20 @@ public class BudgetTableController {
 
             model = new BudgetResultsModel(budgetProperty.get(), yearSpinner.getValue(), engine.getDefaultCurrency());
 
-            loadAccounts();
+            loadModel();
 
             bindScrollBars();
         } else {
             // TODO: Clear tables
             System.out.println("budget was cleared");
             accountTreeView.setRoot(null);
+            accountTypeTable.getItems().clear();
         }
+    }
+
+    private void loadModel() {
+        loadAccounts();
+        loadAccountTypes();
     }
 
     private void loadAccounts() {
@@ -151,6 +164,10 @@ public class BudgetTableController {
 
         accountTreeView.setRoot(root);
         loadChildren(root);
+    }
+
+    private void loadAccountTypes() {
+        accountTypeTable.getItems().setAll(model.getAccountGroupList());
     }
 
     private synchronized void loadChildren(final TreeItem<Account> parentItem) {
@@ -166,6 +183,25 @@ public class BudgetTableController {
                 loadChildren(childItem);
             }
         });
+    }
+
+    private void buildAccountTreeTable() {
+        // empty column header is needed
+        final TreeTableColumn<Account, String> emptyColumn = new TreeTableColumn<>("");
+
+        final TreeTableColumn<Account, String> nameColumn = new TreeTableColumn<>(resources.getString("Column.Account"));
+        nameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getName()));
+
+        emptyColumn.getColumns().add(nameColumn);
+
+        accountTreeView.getColumns().add(emptyColumn);
+    }
+
+    private void buildAccountTypeTable() {
+        final TableColumn<AccountGroup, String> nameColumn = new TableColumn<>(resources.getString("Column.Type"));
+        nameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().toString()));
+
+        accountTypeTable.getColumns().add(nameColumn);
     }
 
     private ScrollBar findVerticalScrollBar(final Node table) {

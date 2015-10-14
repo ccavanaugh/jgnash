@@ -8,8 +8,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.TreeView?>
 
+<?import javafx.scene.control.TreeTableView?>
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="jgnash.uifx.views.budget.BudgetTableController" styleClass="form">
     <top>
@@ -35,15 +35,15 @@
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints vgrow="ALWAYS"/>
-                <RowConstraints vgrow="NEVER" maxHeight="100" minHeight="-Infinity"/>
+                <RowConstraints vgrow="NEVER" maxHeight="75" minHeight="-Infinity"/>
                 <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
-            <TreeView fx:id="accountTreeView" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TreeTableView fx:id="accountTreeView" GridPane.rowIndex="0" GridPane.columnIndex="0" minWidth="-Infinity"/>
             <TableView fx:id="dataTable" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
             <TableView fx:id="accountSummaryTable" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
             <ScrollBar fx:id="verticalScrollBar" orientation="VERTICAL" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
 
-            <TableView fx:id="accountTypeTable" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TableView fx:id="accountTypeTable" GridPane.rowIndex="1" GridPane.columnIndex="0" minWidth="-Infinity"/>
             <TableView fx:id="periodSummaryTable" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
             <TableView fx:id="accountPeriodSummaryTable" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
 
