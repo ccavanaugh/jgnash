@@ -1,17 +1,19 @@
- .table-view *.scroll-bar:horizontal *.increment-button,
- .table-view *.scroll-bar:horizontal *.decrement-button,
- .table-view *.scroll-bar:horizontal *.increment-arrow,
- .table-view *.scroll-bar:horizontal *.decrement-arrow {
-     visibility: hidden;
-     -fx-background-color: null;
-     -fx-background-radius: 0;
-     -fx-background-insets: 0;
-     -fx-padding: 0;
- }
+@import "default.css";
 
- .scroll-bar:horizontal {
-     visibility: hidden;
-     -fx-opacity: 0;
-     -fx-padding: 0;
- }
+.table-view *.scroll-bar:horizontal *.increment-button,
+.table-view *.scroll-bar:horizontal *.decrement-button,
+.table-view *.scroll-bar:horizontal *.increment-arrow,
+.table-view *.scroll-bar:horizontal *.decrement-arrow {
+    visibility: hidden;
+    -fx-background-color: null;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.scroll-bar:horizontal {
+    visibility: hidden;
+    -fx-opacity: 0;
+    -fx-padding: 0;
+}
 

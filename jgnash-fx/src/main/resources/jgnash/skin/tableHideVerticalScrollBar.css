@@ -1,21 +1,27 @@
- .table-view *.scroll-bar:vertical *.increment-button,
- .table-view *.scroll-bar:vertical *.decrement-button,
- .table-view *.scroll-bar:vertical *.increment-arrow,
- .table-view *.scroll-bar:vertical *.decrement-arrow ,
- .tree-table-view *.scroll-bar:vertical *.increment-button,
- .tree-table-view *.scroll-bar:vertical *.decrement-button,
- .tree-table-view *.scroll-bar:vertical *.increment-arrow,
- .tree-table-view *.scroll-bar:vertical *.decrement-arrow {
+@import "default.css";
+
+.tree-view *.scroll-bar:vertical *.increment-button,
+.tree-view *.scroll-bar:vertical *.decrement-button,
+.tree-view *.scroll-bar:vertical *.increment-arrow,
+.tree-view *.scroll-bar:vertical *.decrement-arrow,
+.table-view *.scroll-bar:vertical *.increment-button,
+.table-view *.scroll-bar:vertical *.decrement-button,
+.table-view *.scroll-bar:vertical *.increment-arrow,
+.table-view *.scroll-bar:vertical *.decrement-arrow,
+.tree-table-view *.scroll-bar:vertical *.increment-button,
+.tree-table-view *.scroll-bar:vertical *.decrement-button,
+.tree-table-view *.scroll-bar:vertical *.increment-arrow,
+.tree-table-view *.scroll-bar:vertical *.decrement-arrow {
      visibility: hidden;
      -fx-background-color: null;
      -fx-background-radius: 0;
      -fx-background-insets: 0;
      -fx-padding: 0;
- }
+}
 
- .scroll-bar:vertical {
+.scroll-bar:vertical {
      visibility: hidden;
      -fx-opacity: 0;
      -fx-padding: 0;
- }
+}
 

@@ -27,7 +27,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.BorderPane;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
@@ -44,7 +44,7 @@ import jgnash.uifx.util.FXMLUtils;
 public class BudgetViewController implements MessageListener {
 
     @FXML
-    private StackPane tableStackPane;
+    private BorderPane borderPane;
 
     @FXML
     private Button exportButton;
@@ -69,7 +69,7 @@ public class BudgetViewController implements MessageListener {
         propertiesButton.disableProperty().bind(availableBudgetsComboBox.valueProperty().isNull());
 
        budgetTableController
-                = FXMLUtils.loadFXML(o -> tableStackPane.getChildren().add((Node) o), "BudgetTable.fxml", resources);
+                = FXMLUtils.loadFXML(o -> borderPane.setCenter((Node) o), "BudgetTable.fxml", resources);
 
         loadComboBox();
 

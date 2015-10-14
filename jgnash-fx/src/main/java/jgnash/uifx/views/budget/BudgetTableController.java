@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -13,10 +14,11 @@ import javafx.scene.control.ScrollBar;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TreeTableView;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 
 import jgnash.engine.Account;
+import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
@@ -29,6 +31,7 @@ public class BudgetTableController {
 
     private static final String HIDE_HORIZONTAL_CSS = "jgnash/skin/tableHideHorizontalScrollBar.css";
     private static final String HIDE_VERTICAL_CSS = "jgnash/skin/tableHideVerticalScrollBar.css";
+    private static final String HIDE_HEADER_CSS = "jgnash/skin/tableHideColumnHeader.css";
 
     @FXML
     private Spinner<Integer> yearSpinner;
@@ -40,10 +43,10 @@ public class BudgetTableController {
     private ScrollBar horizontalScrollBar;
 
     @FXML
-    private TreeTableView<Account> accountTreeTableView;
+    private TreeView<Account> accountTreeView;
 
     @FXML
-    private TableView dataTable;
+    private TableView<Object> dataTable;
 
     @FXML
     private TableView accountSummaryTable;
@@ -70,8 +73,8 @@ public class BudgetTableController {
                 2000, 2200,
                 LocalDate.now().getYear(), 1));
 
-        accountTreeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
-        accountTreeTableView.getStylesheets().add(HIDE_VERTICAL_CSS);
+        accountTreeView.getStylesheets().addAll(HIDE_VERTICAL_CSS);
+        accountTreeView.setShowRoot(false);
 
         dataTable.getStylesheets().addAll(HIDE_VERTICAL_CSS, HIDE_HORIZONTAL_CSS);
 
@@ -81,31 +84,15 @@ public class BudgetTableController {
         accountTypeTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         accountPeriodSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        Platform.runLater(() -> {
-            final ScrollBar periodSummaryBar = findHorizontalScrollBar(periodSummaryTable);
-            final ScrollBar hDataScrollBar = findHorizontalScrollBar(dataTable);
+        accountTypeTable.getStylesheets().add(HIDE_HEADER_CSS);
+        periodSummaryTable.getStylesheets().add(HIDE_HEADER_CSS);
+        accountPeriodSummaryTable.getStylesheets().add(HIDE_HEADER_CSS);
 
-            horizontalScrollBar.minProperty().bindBidirectional(hDataScrollBar.minProperty());
-            horizontalScrollBar.maxProperty().bindBidirectional(hDataScrollBar.maxProperty());
-            horizontalScrollBar.valueProperty().bindBidirectional(hDataScrollBar.valueProperty());
-
-            periodSummaryBar.valueProperty().bindBidirectional(hDataScrollBar.valueProperty());
-
-            final ScrollBar accountScrollBar = findVerticalScrollBar(accountTreeTableView);
-            final ScrollBar vDataScrollBar = findVerticalScrollBar(dataTable);
-            final ScrollBar accountSumScrollBar = findVerticalScrollBar(accountSummaryTable);
-
-            verticalScrollBar.minProperty().bindBidirectional(vDataScrollBar.minProperty());
-            verticalScrollBar.maxProperty().bindBidirectional(vDataScrollBar.maxProperty());
-            verticalScrollBar.valueProperty().bindBidirectional(vDataScrollBar.valueProperty());
-
-            accountScrollBar.valueProperty().bindBidirectional(vDataScrollBar.valueProperty());
-            accountSumScrollBar.valueProperty().bindBidirectional(vDataScrollBar.valueProperty());
-
+        /*Platform.runLater(() -> {
             hideHeader(accountTypeTable);
             hideHeader(periodSummaryTable);
             hideHeader(accountPeriodSummaryTable);
-        });
+        });*/
 
         budgetProperty.addListener((observable, oldValue, newValue) -> {
             Platform.runLater(BudgetTableController.this::handleBudgetChange);  // push change to end of EDT
@@ -116,16 +103,69 @@ public class BudgetTableController {
         return budgetProperty;
     }
 
+    private void bindScrollBars() {
+        final ScrollBar periodSummaryBar = findHorizontalScrollBar(periodSummaryTable);
+        final ScrollBar hDataScrollBar = findHorizontalScrollBar(dataTable);
+
+        horizontalScrollBar.minProperty().bindBidirectional(hDataScrollBar.minProperty());
+        horizontalScrollBar.maxProperty().bindBidirectional(hDataScrollBar.maxProperty());
+        horizontalScrollBar.valueProperty().bindBidirectional(hDataScrollBar.valueProperty());
+
+        periodSummaryBar.valueProperty().bindBidirectional(hDataScrollBar.valueProperty());
+
+        final ScrollBar accountScrollBar = findVerticalScrollBar(accountTreeView);
+        final ScrollBar vDataScrollBar = findVerticalScrollBar(dataTable);
+        final ScrollBar accountSumScrollBar = findVerticalScrollBar(accountSummaryTable);
+
+        verticalScrollBar.minProperty().bindBidirectional(accountScrollBar.minProperty());
+        verticalScrollBar.maxProperty().bindBidirectional(accountScrollBar.maxProperty());
+        verticalScrollBar.valueProperty().bindBidirectional(accountScrollBar.valueProperty());
+
+        accountScrollBar.valueProperty().bindBidirectional(vDataScrollBar.valueProperty());
+        accountSumScrollBar.valueProperty().bindBidirectional(vDataScrollBar.valueProperty());
+    }
+
     private void handleBudgetChange() {
         if (budgetProperty.get() != null) {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             Objects.requireNonNull(engine);
 
             model = new BudgetResultsModel(budgetProperty.get(), yearSpinner.getValue(), engine.getDefaultCurrency());
+
+            loadAccounts();
+
+            bindScrollBars();
         } else {
             // TODO: Clear tables
             System.out.println("budget was cleared");
+            accountTreeView.setRoot(null);
         }
+    }
+
+    private void loadAccounts() {
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        Objects.requireNonNull(engine);
+
+        final TreeItem<Account> root = new TreeItem<>(engine.getRootAccount());
+        root.setExpanded(true);
+
+        accountTreeView.setRoot(root);
+        loadChildren(root);
+    }
+
+    private synchronized void loadChildren(final TreeItem<Account> parentItem) {
+        final Account parent = parentItem.getValue();
+
+        parent.getChildren(Comparators.getAccountByCode()).stream().filter(model::includeAccount).forEach(child ->
+        {
+            final TreeItem<Account> childItem = new TreeItem<>(child);
+            childItem.setExpanded(true);
+            parentItem.getChildren().add(childItem);
+
+            if (child.getChildCount() > 0) {
+                loadChildren(childItem);
+            }
+        });
     }
 
     private ScrollBar findVerticalScrollBar(final Node table) {
@@ -152,7 +192,7 @@ public class BudgetTableController {
         throw new RuntimeException("Could not find horizontal scrollbar");
     }
 
-    private void hideHeader(final TableView<?> table) {
+    /*private void hideHeader(final TableView<?> table) {
         final Pane header = (Pane) table.lookup("TableHeaderRow");
         if (header.isVisible()){
             header.setMaxHeight(0);
@@ -160,5 +200,5 @@ public class BudgetTableController {
             header.setPrefHeight(0);
             header.setVisible(false);
         }
-    }
+    }*/
 }
