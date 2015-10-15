@@ -1,12 +1,5 @@
 package jgnash.uifx.views.budget;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
-
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,12 +11,12 @@ import javafx.scene.Node;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
-
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.Comparators;
@@ -31,6 +24,16 @@ import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetResultsModel;
+import jgnash.text.CommodityFormat;
+import jgnash.uifx.skin.StyleClass;
+
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
 
 /**
  * @author Craig Cavanaugh
@@ -233,9 +236,6 @@ public class BudgetTableController {
     }
 
     private void buildAccountSummaryTable() {
-
-        //TODO, add cell renderers
-
         final TableColumn<Account, ?> headerColumn = new TableColumn<>(resources.getString("Title.Summary"));
 
         final TableColumn<Account, BigDecimal> budgetedColumn = new TableColumn<>(resources.getString("Column.Budgeted"));
@@ -245,15 +245,19 @@ public class BudgetTableController {
             }
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
+        budgetedColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
+
         headerColumn.getColumns().add(budgetedColumn);
 
-        final TableColumn<Account, BigDecimal> actualColumn = new TableColumn<>(resources.getString("Column.Budgeted"));
+        final TableColumn<Account, BigDecimal> actualColumn = new TableColumn<>(resources.getString("Column.Actual"));
         actualColumn.setCellValueFactory(param -> {
             if (param.getValue() != null) {
                 return new SimpleObjectProperty<>(budgetResultsModel.getResults(param.getValue()).getChange());
             }
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
+        actualColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
+
         headerColumn.getColumns().add(actualColumn);
 
         final TableColumn<Account, BigDecimal> remainingColumn = new TableColumn<>(resources.getString("Column.Remaining"));
@@ -263,6 +267,7 @@ public class BudgetTableController {
             }
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
+        remainingColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
         headerColumn.getColumns().add(remainingColumn);
 
         accountSummaryTable.getColumns().add(headerColumn);
@@ -277,7 +282,7 @@ public class BudgetTableController {
             }
         }
 
-        throw new RuntimeException("Could not find horizontal scrollbar");
+        throw new RuntimeException("Could not find horizontal scroll bar");
     }
 
     private ScrollBar findHorizontalScrollBar(final Node table) {
@@ -289,6 +294,33 @@ public class BudgetTableController {
             }
         }
 
-        throw new RuntimeException("Could not find horizontal scrollbar");
+        throw new RuntimeException("Could not find horizontal scroll bar");
+    }
+
+    private class AccountCommodityFormatTableCell extends TableCell<Account, BigDecimal> {
+
+        AccountCommodityFormatTableCell() {
+            setStyle("-fx-alignment: center-right;");  // Right align
+        }
+
+        @Override
+        protected void updateItem(final BigDecimal amount, final boolean empty) {
+            super.updateItem(amount, empty);  // required
+
+            if (!empty && amount != null ) {
+                final Account account = expandedAccountList.get(getTableRow().getIndex());
+                final NumberFormat format = CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
+
+                setText(format.format(amount));
+
+                if (amount.signum() < 0) {
+                    setId(StyleClass.NORMAL_NEGATIVE_CELL_ID);
+                } else {
+                    setId(StyleClass.NORMAL_CELL_ID);
+                }
+            } else {
+                setText(null);
+            }
+        }
     }
 }
