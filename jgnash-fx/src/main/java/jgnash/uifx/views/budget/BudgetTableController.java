@@ -1,12 +1,17 @@
 package jgnash.uifx.views.budget;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
@@ -49,10 +54,10 @@ public class BudgetTableController {
     private TreeTableView<Account> accountTreeView;
 
     @FXML
-    private TableView<Object> dataTable;
+    private TableView<Account> dataTable;
 
     @FXML
-    private TableView accountSummaryTable;
+    private TableView<Account> accountSummaryTable;
 
     @FXML
     private TableView periodSummaryTable;
@@ -68,7 +73,12 @@ public class BudgetTableController {
 
     private final SimpleObjectProperty<Budget> budgetProperty = new SimpleObjectProperty<>();
 
-    private BudgetResultsModel model;
+    private BudgetResultsModel budgetResultsModel;
+
+    /** This list is updated to track the expanded rows of the TreeTableView.
+     * This should be the model for all account specific tables
+     */
+    private final ObservableList<Account> expandedAccountList = FXCollections.observableArrayList();
 
     @FXML
     private void initialize() {
@@ -81,9 +91,11 @@ public class BudgetTableController {
         accountTreeView.setShowRoot(false);
 
         dataTable.getStylesheets().addAll(HIDE_VERTICAL_CSS, HIDE_HORIZONTAL_CSS);
+        dataTable.setItems(expandedAccountList);
 
         accountSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         accountSummaryTable.getStylesheets().add(HIDE_VERTICAL_CSS);
+        accountSummaryTable.setItems(expandedAccountList);
 
         accountTypeTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         accountPeriodSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -94,12 +106,11 @@ public class BudgetTableController {
 
         buildAccountTreeTable();
         buildAccountTypeTable();
+        buildAccountSummaryTable();
 
-        /*Platform.runLater(() -> {
-            hideHeader(accountTypeTable);
-            hideHeader(periodSummaryTable);
-            hideHeader(accountPeriodSummaryTable);
-        });*/
+        accountTreeView.expandedItemCountProperty().addListener((observable, oldValue, newValue) -> {
+            Platform.runLater(this::updateExpandedAccountList);
+        });
 
         budgetProperty.addListener((observable, oldValue, newValue) -> {
             Platform.runLater(BudgetTableController.this::handleBudgetChange);  // push change to end of EDT
@@ -137,7 +148,7 @@ public class BudgetTableController {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             Objects.requireNonNull(engine);
 
-            model = new BudgetResultsModel(budgetProperty.get(), yearSpinner.getValue(), engine.getDefaultCurrency());
+            budgetResultsModel = new BudgetResultsModel(budgetProperty.get(), yearSpinner.getValue(), engine.getDefaultCurrency());
 
             loadModel();
 
@@ -150,9 +161,26 @@ public class BudgetTableController {
         }
     }
 
+    /**
+     * Maintains the list of expanded accounts
+     */
+    private synchronized void updateExpandedAccountList() {
+        final int count = accountTreeView.getExpandedItemCount();
+
+        // Create a new list and update the observable list in one shot to minimize visual updates
+        final List<Account> accountList = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            accountList.add(accountTreeView.getTreeItem(i).getValue());
+        }
+
+        expandedAccountList.setAll(accountList);
+    }
+
     private void loadModel() {
         loadAccounts();
         loadAccountTypes();
+
+        Platform.runLater(this::updateExpandedAccountList);
     }
 
     private void loadAccounts() {
@@ -167,13 +195,13 @@ public class BudgetTableController {
     }
 
     private void loadAccountTypes() {
-        accountTypeTable.getItems().setAll(model.getAccountGroupList());
+        accountTypeTable.getItems().setAll(budgetResultsModel.getAccountGroupList());
     }
 
     private synchronized void loadChildren(final TreeItem<Account> parentItem) {
         final Account parent = parentItem.getValue();
 
-        parent.getChildren(Comparators.getAccountByCode()).stream().filter(model::includeAccount).forEach(child ->
+        parent.getChildren(Comparators.getAccountByCode()).stream().filter(budgetResultsModel::includeAccount).forEach(child ->
         {
             final TreeItem<Account> childItem = new TreeItem<>(child);
             childItem.setExpanded(true);
@@ -187,14 +215,14 @@ public class BudgetTableController {
 
     private void buildAccountTreeTable() {
         // empty column header is needed
-        final TreeTableColumn<Account, String> emptyColumn = new TreeTableColumn<>("");
+        final TreeTableColumn<Account, String> headerColumn = new TreeTableColumn<>("");
 
         final TreeTableColumn<Account, String> nameColumn = new TreeTableColumn<>(resources.getString("Column.Account"));
         nameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getName()));
 
-        emptyColumn.getColumns().add(nameColumn);
+        headerColumn.getColumns().add(nameColumn);
 
-        accountTreeView.getColumns().add(emptyColumn);
+        accountTreeView.getColumns().add(headerColumn);
     }
 
     private void buildAccountTypeTable() {
@@ -202,6 +230,42 @@ public class BudgetTableController {
         nameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().toString()));
 
         accountTypeTable.getColumns().add(nameColumn);
+    }
+
+    private void buildAccountSummaryTable() {
+
+        //TODO, add cell renderers
+
+        final TableColumn<Account, ?> headerColumn = new TableColumn<>(resources.getString("Title.Summary"));
+
+        final TableColumn<Account, BigDecimal> budgetedColumn = new TableColumn<>(resources.getString("Column.Budgeted"));
+        budgetedColumn.setCellValueFactory(param -> {
+            if (param.getValue() != null) {
+                return new SimpleObjectProperty<>(budgetResultsModel.getResults(param.getValue()).getBudgeted());
+            }
+            return new SimpleObjectProperty<>(BigDecimal.ZERO);
+        });
+        headerColumn.getColumns().add(budgetedColumn);
+
+        final TableColumn<Account, BigDecimal> actualColumn = new TableColumn<>(resources.getString("Column.Budgeted"));
+        actualColumn.setCellValueFactory(param -> {
+            if (param.getValue() != null) {
+                return new SimpleObjectProperty<>(budgetResultsModel.getResults(param.getValue()).getChange());
+            }
+            return new SimpleObjectProperty<>(BigDecimal.ZERO);
+        });
+        headerColumn.getColumns().add(actualColumn);
+
+        final TableColumn<Account, BigDecimal> remainingColumn = new TableColumn<>(resources.getString("Column.Remaining"));
+        remainingColumn.setCellValueFactory(param -> {
+            if (param.getValue() != null) {
+                return new SimpleObjectProperty<>(budgetResultsModel.getResults(param.getValue()).getRemaining());
+            }
+            return new SimpleObjectProperty<>(BigDecimal.ZERO);
+        });
+        headerColumn.getColumns().add(remainingColumn);
+
+        accountSummaryTable.getColumns().add(headerColumn);
     }
 
     private ScrollBar findVerticalScrollBar(final Node table) {
@@ -227,14 +291,4 @@ public class BudgetTableController {
 
         throw new RuntimeException("Could not find horizontal scrollbar");
     }
-
-    /*private void hideHeader(final TableView<?> table) {
-        final Pane header = (Pane) table.lookup("TableHeaderRow");
-        if (header.isVisible()){
-            header.setMaxHeight(0);
-            header.setMinHeight(0);
-            header.setPrefHeight(0);
-            header.setVisible(false);
-        }
-    }*/
 }
