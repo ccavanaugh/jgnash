@@ -1,5 +1,13 @@
 package jgnash.uifx.views.budget;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,23 +25,17 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
+
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
 import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
+import jgnash.engine.budget.BudgetPeriodDescriptor;
 import jgnash.engine.budget.BudgetResultsModel;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.skin.StyleClass;
-
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
 
 /**
  * @author Craig Cavanaugh
@@ -78,7 +80,8 @@ public class BudgetTableController {
 
     private BudgetResultsModel budgetResultsModel;
 
-    /** This list is updated to track the expanded rows of the TreeTableView.
+    /**
+     * This list is updated to track the expanded rows of the TreeTableView.
      * This should be the model for all account specific tables
      */
     private final ObservableList<Account> expandedAccountList = FXCollections.observableArrayList();
@@ -118,6 +121,8 @@ public class BudgetTableController {
         budgetProperty.addListener((observable, oldValue, newValue) -> {
             Platform.runLater(BudgetTableController.this::handleBudgetChange);  // push change to end of EDT
         });
+
+        //TODO calculate and set min/max visible widths for summary tables
     }
 
     SimpleObjectProperty<Budget> budgetProperty() {
@@ -159,7 +164,9 @@ public class BudgetTableController {
         } else {
             // TODO: Clear tables
             System.out.println("budget was cleared");
+
             accountTreeView.setRoot(null);
+            expandedAccountList.clear();
             accountTypeTable.getItems().clear();
         }
     }
@@ -182,6 +189,8 @@ public class BudgetTableController {
     private void loadModel() {
         loadAccounts();
         loadAccountTypes();
+
+        buildDataTable();
 
         Platform.runLater(this::updateExpandedAccountList);
     }
@@ -273,10 +282,52 @@ public class BudgetTableController {
         accountSummaryTable.getColumns().add(headerColumn);
     }
 
+    private void buildDataTable() {
+        final List<TableColumn<Account, ?>> columnList = new ArrayList<>();
+
+        for (final BudgetPeriodDescriptor descriptor : budgetResultsModel.getDescriptorList()) {
+            final TableColumn<Account, BigDecimal> headerColumn = new TableColumn<>(descriptor.getPeriodDescription());
+
+            final TableColumn<Account, BigDecimal> budgetedColumn = new TableColumn<>(resources.getString("Column.Budgeted"));
+            budgetedColumn.setCellValueFactory(param -> {
+                if (param.getValue() != null) {
+                    return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getBudgeted());
+                }
+                return new SimpleObjectProperty<>(BigDecimal.ZERO);
+            });
+            budgetedColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
+            headerColumn.getColumns().add(budgetedColumn);
+
+            final TableColumn<Account, BigDecimal> actualColumn = new TableColumn<>(resources.getString("Column.Actual"));
+            actualColumn.setCellValueFactory(param -> {
+                if (param.getValue() != null) {
+                    return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getChange());
+                }
+                return new SimpleObjectProperty<>(BigDecimal.ZERO);
+            });
+            actualColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
+            headerColumn.getColumns().add(actualColumn);
+
+            final TableColumn<Account, BigDecimal> remainingColumn = new TableColumn<>(resources.getString("Column.Remaining"));
+            remainingColumn.setCellValueFactory(param -> {
+                if (param.getValue() != null) {
+                    return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getRemaining());
+                }
+                return new SimpleObjectProperty<>(BigDecimal.ZERO);
+            });
+            remainingColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
+            headerColumn.getColumns().add(remainingColumn);
+
+            columnList.add(headerColumn);
+        }
+
+        dataTable.getColumns().setAll(columnList);
+    }
+
     private ScrollBar findVerticalScrollBar(final Node table) {
         for (final Node node : table.lookupAll(".scroll-bar:vertical")) {
             if (node instanceof ScrollBar) {
-                if (((ScrollBar)node).getOrientation() == Orientation.VERTICAL) {
+                if (((ScrollBar) node).getOrientation() == Orientation.VERTICAL) {
                     return (ScrollBar) node;
                 }
             }
@@ -288,7 +339,7 @@ public class BudgetTableController {
     private ScrollBar findHorizontalScrollBar(final Node table) {
         for (final Node node : table.lookupAll(".scroll-bar:horizontal")) {
             if (node instanceof ScrollBar) {
-                if (((ScrollBar)node).getOrientation() == Orientation.HORIZONTAL) {
+                if (((ScrollBar) node).getOrientation() == Orientation.HORIZONTAL) {
                     return (ScrollBar) node;
                 }
             }
@@ -307,7 +358,7 @@ public class BudgetTableController {
         protected void updateItem(final BigDecimal amount, final boolean empty) {
             super.updateItem(amount, empty);  // required
 
-            if (!empty && amount != null ) {
+            if (!empty && amount != null && getTableRow() != null) {
                 final Account account = expandedAccountList.get(getTableRow().getIndex());
                 final NumberFormat format = CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
 

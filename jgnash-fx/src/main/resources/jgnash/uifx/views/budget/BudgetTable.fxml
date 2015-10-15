@@ -45,7 +45,7 @@
 
             <TableView fx:id="accountTypeTable" GridPane.rowIndex="1" GridPane.columnIndex="0" minWidth="-Infinity"/>
             <TableView fx:id="periodSummaryTable" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-            <TableView fx:id="accountPeriodSummaryTable" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+            <TableView fx:id="accountPeriodSummaryTable" GridPane.rowIndex="1" GridPane.columnIndex="2" minWidth="200"/>
 
             <ScrollBar fx:id="horizontalScrollBar" orientation="HORIZONTAL" GridPane.rowIndex="2"
                        GridPane.columnIndex="1"/>
