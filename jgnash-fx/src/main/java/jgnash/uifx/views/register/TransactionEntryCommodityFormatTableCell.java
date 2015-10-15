@@ -23,6 +23,7 @@ import java.text.NumberFormat;
 import javafx.scene.control.TableCell;
 
 import jgnash.engine.TransactionEntry;
+import jgnash.uifx.skin.StyleClass;
 
 /**
  * @author Craig Cavanaugh
@@ -51,9 +52,9 @@ class TransactionEntryCommodityFormatTableCell extends TableCell<TransactionEntr
 
                 // Set font style
                 if (negative) {
-                    setId("normal-negative-label");
+                    setId(StyleClass.NORMAL_NEGATIVE_CELL_ID);
                 } else {
-                    setId("normal-label");
+                    setId(StyleClass.NORMAL_CELL_ID);
                 }
             }
 

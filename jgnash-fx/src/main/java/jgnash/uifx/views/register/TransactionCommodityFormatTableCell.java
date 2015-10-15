@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import javafx.scene.control.TableCell;
 
 import jgnash.engine.Transaction;
+import jgnash.uifx.skin.StyleClass;
 
 /**
  * @author Craig Cavanaugh
@@ -53,13 +54,13 @@ class TransactionCommodityFormatTableCell extends TableCell<Transaction, BigDeci
 
                 // Set font style
                 if (future && negative) {
-                    setId("italic-negative-label");
+                    setId(StyleClass.ITALIC_NEGATIVE_CELL_ID);
                 } else if (future) {
-                    setId("italic-label");
+                    setId(StyleClass.ITALIC_CELL_ID);
                 } else if (negative) {
-                    setId("normal-negative-label");
+                    setId(StyleClass.NORMAL_NEGATIVE_CELL_ID);
                 } else {
-                    setId("normal-label");
+                    setId(StyleClass.NORMAL_CELL_ID);
                 }
             }
 

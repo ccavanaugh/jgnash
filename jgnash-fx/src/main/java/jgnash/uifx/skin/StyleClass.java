@@ -34,4 +34,9 @@ public class StyleClass {
     public static final String NORMAL_NEGATIVE_CELL_ID = "normal-negative-label";
 
     public static final String NORMAL_CELL_ID = "normal-label";
+
+    public static final String ITALIC_CELL_ID = "italic-label";
+
+    public static final String ITALIC_NEGATIVE_CELL_ID = "italic-negative-label";
+
 }

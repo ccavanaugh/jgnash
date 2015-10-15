@@ -26,6 +26,7 @@ import javafx.scene.control.TableCell;
 import jgnash.engine.InvestmentTransaction;
 import jgnash.engine.Transaction;
 import jgnash.text.CommodityFormat;
+import jgnash.uifx.skin.StyleClass;
 
 /**
  * {@code TableCell} for rendering investment transaction quantities
@@ -64,13 +65,13 @@ class InvestmentTransactionQuantityTableCell extends TableCell<Transaction, BigD
 
                     // Set font style
                     if (future && negative) {
-                        setId("italic-negative-label");
+                        setId(StyleClass.ITALIC_NEGATIVE_CELL_ID);
                     } else if (future) {
-                        setId("italic-label");
+                        setId(StyleClass.ITALIC_CELL_ID);
                     } else if (negative) {
-                        setId("normal-negative-label");
+                        setId(StyleClass.NORMAL_NEGATIVE_CELL_ID);
                     } else {
-                        setId("normal-label");
+                        setId(StyleClass.NORMAL_CELL_ID);
                     }
                 }
             } else {

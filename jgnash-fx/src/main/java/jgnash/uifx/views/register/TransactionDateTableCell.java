@@ -23,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 import javafx.scene.control.TableCell;
 
 import jgnash.engine.Transaction;
+import jgnash.uifx.skin.StyleClass;
 import jgnash.util.DateUtils;
 
 /**
@@ -40,9 +41,9 @@ class TransactionDateTableCell extends TableCell<Transaction, LocalDate> {
             setText(dateFormatter.format(date));
 
             if (date.isAfter(LocalDate.now())) {
-                setId("italic-label");
+                setId(StyleClass.ITALIC_CELL_ID);
             } else {
-                setId("normal-label");
+                setId(StyleClass.NORMAL_CELL_ID);
             }
         } else {
             setText(null);

@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import javafx.scene.control.TableCell;
 
 import jgnash.engine.Transaction;
+import jgnash.uifx.skin.StyleClass;
 
 /**
  * @author Craig Cavanaugh
@@ -41,9 +42,9 @@ class TransactionStringTableCell extends TableCell<Transaction, String> {
                             .isAfter(LocalDate.now());
 
                     if (future) {
-                        setId("italic-label");
+                        setId(StyleClass.ITALIC_CELL_ID);
                     } else {
-                        setId("normal-label");
+                        setId(StyleClass.NORMAL_CELL_ID);
                     }
                 }
             }
