@@ -65,10 +65,10 @@ public class BudgetTableController {
     private TableView<Account> accountSummaryTable;
 
     @FXML
-    private TableView periodSummaryTable;
+    private TableView<AccountGroup> periodSummaryTable;
 
     @FXML
-    private TableView accountPeriodSummaryTable;
+    private TableView<Account> accountPeriodSummaryTable;
 
     @FXML
     private TableView<AccountGroup> accountTypeTable;
@@ -89,7 +89,7 @@ public class BudgetTableController {
     @FXML
     private void initialize() {
         yearSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(
-                2000, 2200,
+                LocalDate.now().getYear() - 10, LocalDate.now().getYear() + 10,
                 LocalDate.now().getYear(), 1));
 
         accountTreeView.getStylesheets().addAll(HIDE_VERTICAL_CSS);
@@ -107,7 +107,7 @@ public class BudgetTableController {
         accountPeriodSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         accountTypeTable.getStylesheets().add(HIDE_HEADER_CSS);
-        periodSummaryTable.getStylesheets().add(HIDE_HEADER_CSS);
+        periodSummaryTable.getStylesheets().addAll(HIDE_HEADER_CSS, HIDE_HORIZONTAL_CSS);
         accountPeriodSummaryTable.getStylesheets().add(HIDE_HEADER_CSS);
 
         buildAccountTreeTable();
@@ -191,6 +191,7 @@ public class BudgetTableController {
         loadAccountTypes();
 
         buildDataTable();
+        buildDataSummaryTable();
 
         Platform.runLater(this::updateExpandedAccountList);
     }
@@ -208,6 +209,7 @@ public class BudgetTableController {
 
     private void loadAccountTypes() {
         accountTypeTable.getItems().setAll(budgetResultsModel.getAccountGroupList());
+        periodSummaryTable.getItems().setAll(budgetResultsModel.getAccountGroupList());
     }
 
     private synchronized void loadChildren(final TreeItem<Account> parentItem) {
@@ -283,7 +285,7 @@ public class BudgetTableController {
     }
 
     private void buildDataTable() {
-        final List<TableColumn<Account, ?>> columnList = new ArrayList<>();
+        final List<TableColumn<Account, BigDecimal>> columnList = new ArrayList<>();
 
         for (final BudgetPeriodDescriptor descriptor : budgetResultsModel.getDescriptorList()) {
             final TableColumn<Account, BigDecimal> headerColumn = new TableColumn<>(descriptor.getPeriodDescription());
@@ -324,6 +326,45 @@ public class BudgetTableController {
         dataTable.getColumns().setAll(columnList);
     }
 
+    private void buildDataSummaryTable() {
+
+        final List<TableColumn<AccountGroup, BigDecimal>> columnList = new ArrayList<>();
+
+        for (final BudgetPeriodDescriptor descriptor : budgetResultsModel.getDescriptorList()) {
+            final TableColumn<AccountGroup, BigDecimal> budgetedColumn = new TableColumn<>(resources.getString("Column.Budgeted"));
+            budgetedColumn.setCellValueFactory(param -> {
+                if (param.getValue() != null) {
+                    return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getBudgeted());
+                }
+                return new SimpleObjectProperty<>(BigDecimal.ZERO);
+            });
+            budgetedColumn.setCellFactory(param -> new AccountGroupTableCell());
+            columnList.add(budgetedColumn);
+
+            final TableColumn<AccountGroup, BigDecimal> actualColumn = new TableColumn<>(resources.getString("Column.Actual"));
+            actualColumn.setCellValueFactory(param -> {
+                if (param.getValue() != null) {
+                    return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getChange());
+                }
+                return new SimpleObjectProperty<>(BigDecimal.ZERO);
+            });
+            actualColumn.setCellFactory(param -> new AccountGroupTableCell());
+            columnList.add(actualColumn);
+
+            final TableColumn<AccountGroup, BigDecimal> remainingColumn = new TableColumn<>(resources.getString("Column.Remaining"));
+            remainingColumn.setCellValueFactory(param -> {
+                if (param.getValue() != null) {
+                    return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getRemaining());
+                }
+                return new SimpleObjectProperty<>(BigDecimal.ZERO);
+            });
+            remainingColumn.setCellFactory(param -> new AccountGroupTableCell());
+            columnList.add(remainingColumn);
+        }
+
+        periodSummaryTable.getColumns().setAll(columnList);
+    }
+
     private ScrollBar findVerticalScrollBar(final Node table) {
         for (final Node node : table.lookupAll(".scroll-bar:vertical")) {
             if (node instanceof ScrollBar) {
@@ -362,6 +403,33 @@ public class BudgetTableController {
                 final Account account = expandedAccountList.get(getTableRow().getIndex());
                 final NumberFormat format = CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
 
+                setText(format.format(amount));
+
+                if (amount.signum() < 0) {
+                    setId(StyleClass.NORMAL_NEGATIVE_CELL_ID);
+                } else {
+                    setId(StyleClass.NORMAL_CELL_ID);
+                }
+            } else {
+                setText(null);
+            }
+        }
+    }
+
+    private class AccountGroupTableCell extends TableCell<AccountGroup, BigDecimal> {
+
+        private final NumberFormat format;
+
+        AccountGroupTableCell() {
+            setStyle("-fx-alignment: center-right;");  // Right align
+            format = CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency());
+        }
+
+        @Override
+        protected void updateItem(final BigDecimal amount, final boolean empty) {
+            super.updateItem(amount, empty);  // required
+
+            if (!empty && amount != null && getTableRow() != null) {
                 setText(format.format(amount));
 
                 if (amount.signum() < 0) {
