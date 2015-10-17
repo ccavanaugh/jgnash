@@ -41,6 +41,7 @@ import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 
 import jgnash.util.NotNull;
 
@@ -55,7 +56,7 @@ public class ThemeManager {
 
     private static final String LAST = "last";
 
-    private static final String FONT_SIZE = "fontSize";
+    private static final String FONT_SCALE = "fontScale";
 
     private static final String BASE_COLOR = "baseColor";
 
@@ -88,12 +89,12 @@ public class ThemeManager {
         final StringProperty _baseColorProperty = new SimpleStringProperty();
 
         // restore the old value
-        fontScaleProperty.set(preferences.getDouble(FONT_SIZE, 1));
+        fontScaleProperty.set(preferences.getDouble(FONT_SCALE, 1));
 
         // Save the value when it changes
         fontScaleProperty.addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                preferences.putDouble(FONT_SIZE, newValue.doubleValue());
+                preferences.putDouble(FONT_SCALE, newValue.doubleValue());
             }
         });
 
@@ -202,12 +203,26 @@ public class ThemeManager {
      *
      * @return Base Paint used for Buttons
      */
-    public static Paint getBaseTextColor() {
+    private static Paint getBaseTextColor() {
         final Button button = new Button(BASE_COLOR);
         final Scene scene = new Scene(new Group(button));
         scene.getRoot().styleProperty().setValue(getStyleProperty().getValue());
         button.applyCss();
         return button.getTextFill();
+    }
+
+    /**
+     * Utility method to discover the base font size in pixels
+     *
+     * @return font size in pixels
+     */
+    public static double getBaseTextHeight() {
+        final Text text = new Text();
+        final Scene scene = new Scene(new Group(text));
+        scene.getRoot().styleProperty().setValue(getStyleProperty().getValue());
+        text.applyCss();
+
+        return Math.rint(text.getLayoutBounds().getHeight());
     }
 
     private static class ThemeHandler implements EventHandler<ActionEvent> {

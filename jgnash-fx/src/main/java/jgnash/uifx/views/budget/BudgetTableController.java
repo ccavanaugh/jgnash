@@ -9,6 +9,9 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -34,6 +37,7 @@ import jgnash.engine.budget.BudgetPeriodDescriptor;
 import jgnash.engine.budget.BudgetResultsModel;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.skin.StyleClass;
+import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.JavaFXUtils;
 
 /**
@@ -44,6 +48,14 @@ public class BudgetTableController {
     private static final String HIDE_HORIZONTAL_CSS = "jgnash/skin/tableHideHorizontalScrollBar.css";
     private static final String HIDE_VERTICAL_CSS = "jgnash/skin/tableHideVerticalScrollBar.css";
     private static final String HIDE_HEADER_CSS = "jgnash/skin/tableHideColumnHeader.css";
+
+    private static final int ROW_HEIGHT_MULTIPLIER = 2;
+
+    //TODO: Magic number that needs to be fixed or controlled with css
+    private static final int BORDER_MARGIN = 2;
+
+    // allow a selection span of +/- the specified number of years
+    private static final int YEAR_MARGIN = 10;
 
     @FXML
     private Spinner<Integer> yearSpinner;
@@ -85,40 +97,55 @@ public class BudgetTableController {
      */
     private final ObservableList<Account> expandedAccountList = FXCollections.observableArrayList();
 
-
     /**
      * This list is updated to track the displayed AccountGroups.
      * This should be the model for all account specific tables
      */
     private final ObservableList<AccountGroup> accountGroupList = FXCollections.observableArrayList();
 
+    private final DoubleProperty rowHeightProperty = new SimpleDoubleProperty();
+
     @FXML
     private void initialize() {
+        updateHeights();
+
         yearSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(
-                LocalDate.now().getYear() - 10, LocalDate.now().getYear() + 10,
+                LocalDate.now().getYear() - 10, LocalDate.now().getYear() + YEAR_MARGIN,
                 LocalDate.now().getYear(), 1));
 
         accountTreeView.getStylesheets().addAll(HIDE_VERTICAL_CSS);
         accountTreeView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
         accountTreeView.setShowRoot(false);
+        accountTreeView.fixedCellSizeProperty().bind(rowHeightProperty);
 
         dataTable.getStylesheets().addAll(HIDE_VERTICAL_CSS, HIDE_HORIZONTAL_CSS);
         dataTable.setItems(expandedAccountList);
+        dataTable.fixedCellSizeProperty().bind(rowHeightProperty);
 
         accountSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         accountSummaryTable.getStylesheets().add(HIDE_VERTICAL_CSS);
         accountSummaryTable.setItems(expandedAccountList);
+        accountSummaryTable.fixedCellSizeProperty().bind(rowHeightProperty);
 
         accountTypeTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         accountTypeTable.getStylesheets().add(HIDE_HEADER_CSS);
         accountTypeTable.setItems(accountGroupList);
+        accountTypeTable.fixedCellSizeProperty().bind(rowHeightProperty);
+        accountTypeTable.prefHeightProperty()
+                .bind(rowHeightProperty.multiply(Bindings.size(accountGroupList)).add(BORDER_MARGIN));
 
-        periodSummaryTable.getStylesheets().addAll(HIDE_HEADER_CSS, HIDE_HORIZONTAL_CSS);
+        periodSummaryTable.getStylesheets().addAll(HIDE_VERTICAL_CSS, HIDE_HEADER_CSS, HIDE_HORIZONTAL_CSS);
         periodSummaryTable.setItems(accountGroupList);
+        periodSummaryTable.fixedCellSizeProperty().bind(rowHeightProperty);
+        periodSummaryTable.prefHeightProperty()
+                .bind(rowHeightProperty.multiply(Bindings.size(accountGroupList)).add(BORDER_MARGIN));
 
         accountGroupPeriodSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         accountGroupPeriodSummaryTable.getStylesheets().add(HIDE_HEADER_CSS);
         accountGroupPeriodSummaryTable.setItems(accountGroupList);
+        accountGroupPeriodSummaryTable.fixedCellSizeProperty().bind(rowHeightProperty);
+        accountGroupPeriodSummaryTable.prefHeightProperty()
+                .bind(rowHeightProperty.multiply(Bindings.size(accountGroupList)).add(BORDER_MARGIN));
 
         buildAccountTreeTable();
         buildAccountTypeTable();
@@ -137,11 +164,17 @@ public class BudgetTableController {
             Platform.runLater(BudgetTableController.this::handleBudgetChange);
         });
 
-        //TODO calculate and set min/max visible widths for summary tables
+        ThemeManager.getFontScaleProperty().addListener((observable, oldValue, newValue) -> {
+            updateHeights();
+        });
     }
 
     SimpleObjectProperty<Budget> budgetProperty() {
         return budgetProperty;
+    }
+
+    private void updateHeights() {
+        rowHeightProperty.setValue(ThemeManager.getBaseTextHeight() * ROW_HEIGHT_MULTIPLIER);
     }
 
     private void bindScrollBars() {
@@ -152,6 +185,8 @@ public class BudgetTableController {
         horizontalScrollBar.maxProperty().bindBidirectional(hDataScrollBar.maxProperty());
         horizontalScrollBar.valueProperty().bindBidirectional(hDataScrollBar.valueProperty());
 
+        periodSummaryBar.minProperty().bindBidirectional(hDataScrollBar.minProperty());
+        periodSummaryBar.maxProperty().bindBidirectional(hDataScrollBar.maxProperty());
         periodSummaryBar.valueProperty().bindBidirectional(hDataScrollBar.valueProperty());
 
         final ScrollBar accountScrollBar = JavaFXUtils.findVerticalScrollBar(accountTreeView);
@@ -174,7 +209,6 @@ public class BudgetTableController {
             budgetResultsModel = new BudgetResultsModel(budgetProperty.get(), yearSpinner.getValue(), engine.getDefaultCurrency());
 
             loadModel();
-
             bindScrollBars();
         } else {
             accountTreeView.setRoot(null);

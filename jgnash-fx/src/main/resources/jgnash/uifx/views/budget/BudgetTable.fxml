@@ -26,7 +26,7 @@
         </GridPane>
     </top>
     <center>
-        <GridPane BorderPane.alignment="CENTER" styleClass="info-bar">
+        <GridPane BorderPane.alignment="CENTER">
             <columnConstraints>
                 <ColumnConstraints hgrow="NEVER"/>
                 <ColumnConstraints hgrow="ALWAYS"/>
