@@ -157,10 +157,10 @@ public class ThemeManager {
             themesMenu.getItems().add(radioMenuItem);
         }
 
-        Platform.runLater(ThemeManager::syncToggle);
+        Platform.runLater(ThemeManager::syncRadioMenuItem);
     }
 
-    private static void syncToggle() {
+    private static void syncRadioMenuItem() {
         final String last = preferences.get(LAST, Application.STYLESHEET_MODENA);
 
         for (final MenuItem menuItem : themesMenu.getItems()) {
