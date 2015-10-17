@@ -217,7 +217,10 @@ public class Engine {
             @Override
             public void run() {
                 if (UpdateFactory.getUpdateOnStartup()) {
-                    startSecuritiesUpdate(SCHEDULED_DELAY);
+                    // don't update on weekends unless needed
+                    if (UpdateFactory.shouldAutomaticUpdateOccur(getConfig().getLastSecuritiesUpdateTimestamp())) {
+                        startSecuritiesUpdate(SCHEDULED_DELAY);
+                    }
                 }
 
                 if (CurrencyUpdateFactory.getUpdateOnStartup()) {
@@ -269,6 +272,9 @@ public class Engine {
 
         // Cleanup thread that monitors for excess network connection failures
         new SecuritiesUpdateThread(futures).start();
+
+        // Save the last update
+        config.setLastSecuritiesUpdateTimestamp(LocalDateTime.now());
     }
 
     /**

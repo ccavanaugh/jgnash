@@ -17,6 +17,7 @@
  */
 package jgnash.engine;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -51,6 +52,8 @@ public class Config extends StoredObject {
     private static final String MAX_BACKUPS = "MaxBackups";
 
     private static final String REMOVE_BACKUPS = "RemoveBackups";
+
+    private static final String LAST_SECURITIES_UPDATE_TIMESTAMP = "LastSecuritiesUpdateTimestamp";
 
     private static final int MAX_BACKUPS_DEFAULT = 5;
 
@@ -212,6 +215,21 @@ public class Config extends StoredObject {
 
     void setRemoveOldBackups(final boolean removeOldBackups) {
         setPreference(REMOVE_BACKUPS, Boolean.toString(removeOldBackups));
+    }
+
+    public void setLastSecuritiesUpdateTimestamp(@NotNull final LocalDateTime localDateTime) {
+        setPreference(LAST_SECURITIES_UPDATE_TIMESTAMP, localDateTime.toString());
+    }
+
+    @NotNull
+    public LocalDateTime getLastSecuritiesUpdateTimestamp() {
+        final String result = getPreference(LAST_SECURITIES_UPDATE_TIMESTAMP);
+
+        if (result != null) {
+            return LocalDateTime.parse(result);
+        }
+
+        return LocalDateTime.MIN;
     }
 
     /**

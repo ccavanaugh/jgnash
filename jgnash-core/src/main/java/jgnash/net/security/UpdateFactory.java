@@ -26,7 +26,9 @@ import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -89,6 +91,30 @@ public class UpdateFactory {
         if (engine != null) {
             engine.putBoolean(UPDATE_ON_STARTUP, update);
         }
+    }
+
+    /**
+     * Determines if an automatic update is recommended.
+     *
+     * The current approach is to avoid multiple updates on Saturday or Sunday if one has already occurred.
+     * This could be expanded to understand locale rules.
+     *
+     * @param lastUpdate the last known timestamp for an update to have occurred
+     * @return true if an update is recommended
+     */
+    public static boolean shouldAutomaticUpdateOccur(final LocalDateTime lastUpdate) {
+        boolean result = true;
+
+        final LocalDate lastDate = LocalDate.from(lastUpdate);
+        final DayOfWeek lastDayOfWeek = lastDate.getDayOfWeek();
+
+        if (lastDayOfWeek == DayOfWeek.SATURDAY || lastDayOfWeek == DayOfWeek.SUNDAY) {
+            if (LocalDate.now().equals(lastDate) ||
+                    (LocalDate.now().minusDays(1).equals(lastDate)) && lastDayOfWeek == DayOfWeek.SATURDAY) {
+                result = false;
+            }
+        }
+        return result;
     }
 
     public static boolean getUpdateOnStartup() {
