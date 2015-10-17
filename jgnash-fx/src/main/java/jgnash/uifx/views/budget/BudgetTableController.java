@@ -67,7 +67,7 @@ public class BudgetTableController {
     private TableView<AccountGroup> periodSummaryTable;
 
     @FXML
-    private TableView<Account> accountPeriodSummaryTable;
+    private TableView<AccountGroup> accountGroupPeriodSummaryTable;
 
     @FXML
     private TableView<AccountGroup> accountTypeTable;
@@ -84,6 +84,13 @@ public class BudgetTableController {
      * This should be the model for all account specific tables
      */
     private final ObservableList<Account> expandedAccountList = FXCollections.observableArrayList();
+
+
+    /**
+     * This list is updated to track the displayed AccountGroups.
+     * This should be the model for all account specific tables
+     */
+    private final ObservableList<AccountGroup> accountGroupList = FXCollections.observableArrayList();
 
     @FXML
     private void initialize() {
@@ -103,15 +110,20 @@ public class BudgetTableController {
         accountSummaryTable.setItems(expandedAccountList);
 
         accountTypeTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        accountPeriodSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
         accountTypeTable.getStylesheets().add(HIDE_HEADER_CSS);
+        accountTypeTable.setItems(accountGroupList);
+
         periodSummaryTable.getStylesheets().addAll(HIDE_HEADER_CSS, HIDE_HORIZONTAL_CSS);
-        accountPeriodSummaryTable.getStylesheets().add(HIDE_HEADER_CSS);
+        periodSummaryTable.setItems(accountGroupList);
+
+        accountGroupPeriodSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        accountGroupPeriodSummaryTable.getStylesheets().add(HIDE_HEADER_CSS);
+        accountGroupPeriodSummaryTable.setItems(accountGroupList);
 
         buildAccountTreeTable();
         buildAccountTypeTable();
         buildAccountSummaryTable();
+        buildAccountGroupSummaryTable();
 
         accountTreeView.expandedItemCountProperty().addListener((observable, oldValue, newValue) -> {
             Platform.runLater(this::updateExpandedAccountList);
@@ -119,6 +131,10 @@ public class BudgetTableController {
 
         budgetProperty.addListener((observable, oldValue, newValue) -> {
             Platform.runLater(BudgetTableController.this::handleBudgetChange);  // push change to end of EDT
+        });
+
+        yearSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            Platform.runLater(BudgetTableController.this::handleBudgetChange);
         });
 
         //TODO calculate and set min/max visible widths for summary tables
@@ -161,12 +177,9 @@ public class BudgetTableController {
 
             bindScrollBars();
         } else {
-            // TODO: Clear tables
-            System.out.println("budget was cleared");
-
             accountTreeView.setRoot(null);
             expandedAccountList.clear();
-            accountTypeTable.getItems().clear();
+            accountGroupList.clear();
         }
     }
 
@@ -186,8 +199,9 @@ public class BudgetTableController {
     }
 
     private void loadModel() {
-        loadAccounts();
-        loadAccountTypes();
+        loadAccountTree();
+
+        Platform.runLater(() -> accountGroupList.setAll(budgetResultsModel.getAccountGroupList()));
 
         buildDataTable();
         buildDataSummaryTable();
@@ -195,7 +209,7 @@ public class BudgetTableController {
         Platform.runLater(this::updateExpandedAccountList);
     }
 
-    private void loadAccounts() {
+    private void loadAccountTree() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
@@ -204,11 +218,6 @@ public class BudgetTableController {
 
         accountTreeView.setRoot(root);
         loadChildren(root);
-    }
-
-    private void loadAccountTypes() {
-        accountTypeTable.getItems().setAll(budgetResultsModel.getAccountGroupList());
-        periodSummaryTable.getItems().setAll(budgetResultsModel.getAccountGroupList());
     }
 
     private synchronized void loadChildren(final TreeItem<Account> parentItem) {
@@ -246,7 +255,7 @@ public class BudgetTableController {
     }
 
     private void buildAccountSummaryTable() {
-        final TableColumn<Account, ?> headerColumn = new TableColumn<>(resources.getString("Title.Summary"));
+        final TableColumn<Account, BigDecimal> headerColumn = new TableColumn<>(resources.getString("Title.Summary"));
 
         final TableColumn<Account, BigDecimal> budgetedColumn = new TableColumn<>(resources.getString("Column.Budgeted"));
         budgetedColumn.setCellValueFactory(param -> {
@@ -362,6 +371,44 @@ public class BudgetTableController {
         }
 
         periodSummaryTable.getColumns().setAll(columnList);
+    }
+
+    private void buildAccountGroupSummaryTable() {
+        final TableColumn<AccountGroup, BigDecimal> headerColumn = new TableColumn<>(resources.getString("Title.Summary"));
+
+        final TableColumn<AccountGroup, BigDecimal> budgetedColumn = new TableColumn<>(resources.getString("Column.Budgeted"));
+        budgetedColumn.setCellValueFactory(param -> {
+            if (param.getValue() != null) {
+                return new SimpleObjectProperty<>(budgetResultsModel.getResults(param.getValue()).getBudgeted());
+            }
+            return new SimpleObjectProperty<>(BigDecimal.ZERO);
+        });
+        budgetedColumn.setCellFactory(param -> new AccountGroupTableCell());
+
+        headerColumn.getColumns().add(budgetedColumn);
+
+        final TableColumn<AccountGroup, BigDecimal> actualColumn = new TableColumn<>(resources.getString("Column.Actual"));
+        actualColumn.setCellValueFactory(param -> {
+            if (param.getValue() != null) {
+                return new SimpleObjectProperty<>(budgetResultsModel.getResults(param.getValue()).getChange());
+            }
+            return new SimpleObjectProperty<>(BigDecimal.ZERO);
+        });
+        actualColumn.setCellFactory(param -> new AccountGroupTableCell());
+
+        headerColumn.getColumns().add(actualColumn);
+
+        final TableColumn<AccountGroup, BigDecimal> remainingColumn = new TableColumn<>(resources.getString("Column.Remaining"));
+        remainingColumn.setCellValueFactory(param -> {
+            if (param.getValue() != null) {
+                return new SimpleObjectProperty<>(budgetResultsModel.getResults(param.getValue()).getRemaining());
+            }
+            return new SimpleObjectProperty<>(BigDecimal.ZERO);
+        });
+        remainingColumn.setCellFactory(param -> new AccountGroupTableCell());
+        headerColumn.getColumns().add(remainingColumn);
+
+        accountGroupPeriodSummaryTable.getColumns().add(headerColumn);
     }
 
     private class AccountCommodityFormatTableCell extends TableCell<Account, BigDecimal> {
