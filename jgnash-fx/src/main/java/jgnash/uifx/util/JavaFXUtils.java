@@ -1,8 +1,10 @@
 package jgnash.uifx.util;
 
 import javafx.collections.ObservableList;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -52,5 +54,29 @@ public class JavaFXUtils {
                 }
             }
         }
+    }
+
+    public static ScrollBar findVerticalScrollBar(final Node table) {
+        for (final Node node : table.lookupAll(".scroll-bar:vertical")) {
+            if (node instanceof ScrollBar) {
+                if (((ScrollBar) node).getOrientation() == Orientation.VERTICAL) {
+                    return (ScrollBar) node;
+                }
+            }
+        }
+
+        throw new RuntimeException("Could not find horizontal scroll bar");
+    }
+
+    public static ScrollBar findHorizontalScrollBar(final Node table) {
+        for (final Node node : table.lookupAll(".scroll-bar:horizontal")) {
+            if (node instanceof ScrollBar) {
+                if (((ScrollBar) node).getOrientation() == Orientation.HORIZONTAL) {
+                    return (ScrollBar) node;
+                }
+            }
+        }
+
+        throw new RuntimeException("Could not find horizontal scroll bar");
     }
 }

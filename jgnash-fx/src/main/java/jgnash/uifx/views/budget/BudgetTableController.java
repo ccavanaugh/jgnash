@@ -14,8 +14,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.geometry.Orientation;
-import javafx.scene.Node;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
@@ -36,6 +34,7 @@ import jgnash.engine.budget.BudgetPeriodDescriptor;
 import jgnash.engine.budget.BudgetResultsModel;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.skin.StyleClass;
+import jgnash.uifx.util.JavaFXUtils;
 
 /**
  * @author Craig Cavanaugh
@@ -130,8 +129,8 @@ public class BudgetTableController {
     }
 
     private void bindScrollBars() {
-        final ScrollBar periodSummaryBar = findHorizontalScrollBar(periodSummaryTable);
-        final ScrollBar hDataScrollBar = findHorizontalScrollBar(dataTable);
+        final ScrollBar periodSummaryBar = JavaFXUtils.findHorizontalScrollBar(periodSummaryTable);
+        final ScrollBar hDataScrollBar = JavaFXUtils.findHorizontalScrollBar(dataTable);
 
         horizontalScrollBar.minProperty().bindBidirectional(hDataScrollBar.minProperty());
         horizontalScrollBar.maxProperty().bindBidirectional(hDataScrollBar.maxProperty());
@@ -139,9 +138,9 @@ public class BudgetTableController {
 
         periodSummaryBar.valueProperty().bindBidirectional(hDataScrollBar.valueProperty());
 
-        final ScrollBar accountScrollBar = findVerticalScrollBar(accountTreeView);
-        final ScrollBar vDataScrollBar = findVerticalScrollBar(dataTable);
-        final ScrollBar accountSumScrollBar = findVerticalScrollBar(accountSummaryTable);
+        final ScrollBar accountScrollBar = JavaFXUtils.findVerticalScrollBar(accountTreeView);
+        final ScrollBar vDataScrollBar = JavaFXUtils.findVerticalScrollBar(dataTable);
+        final ScrollBar accountSumScrollBar = JavaFXUtils.findVerticalScrollBar(accountSummaryTable);
 
         verticalScrollBar.minProperty().bindBidirectional(accountScrollBar.minProperty());
         verticalScrollBar.maxProperty().bindBidirectional(accountScrollBar.maxProperty());
@@ -363,30 +362,6 @@ public class BudgetTableController {
         }
 
         periodSummaryTable.getColumns().setAll(columnList);
-    }
-
-    private ScrollBar findVerticalScrollBar(final Node table) {
-        for (final Node node : table.lookupAll(".scroll-bar:vertical")) {
-            if (node instanceof ScrollBar) {
-                if (((ScrollBar) node).getOrientation() == Orientation.VERTICAL) {
-                    return (ScrollBar) node;
-                }
-            }
-        }
-
-        throw new RuntimeException("Could not find horizontal scroll bar");
-    }
-
-    private ScrollBar findHorizontalScrollBar(final Node table) {
-        for (final Node node : table.lookupAll(".scroll-bar:horizontal")) {
-            if (node instanceof ScrollBar) {
-                if (((ScrollBar) node).getOrientation() == Orientation.HORIZONTAL) {
-                    return (ScrollBar) node;
-                }
-            }
-        }
-
-        throw new RuntimeException("Could not find horizontal scroll bar");
     }
 
     private class AccountCommodityFormatTableCell extends TableCell<Account, BigDecimal> {
