@@ -27,6 +27,7 @@ Improved handling of memo's in split transactions.  The split entry memo should 
 
 Release 2.20.0
 ----------------------
+10/17/15 The base font size will need to be reset after some code cleanup. (Fx)
 10/17/15 Avoid extraneous automatic securities price updates during the weekend if at lest one has occurred.
 10/14/15 Fixed a race condition in the account ComboBx resulting in NPE when creating a new account. (Bug #212) (Fx)
 10/14/15 Increase the darkness of the alternating tabular data row color from 2% to 6%. (Fx)
