@@ -222,7 +222,7 @@ public class ThemeManager {
         scene.getRoot().styleProperty().setValue(getStyleProperty().getValue());
         text.applyCss();
 
-        return Math.rint(text.getLayoutBounds().getHeight());
+        return Math.ceil(text.getLayoutBounds().getHeight());
     }
 
     private static class ThemeHandler implements EventHandler<ActionEvent> {
