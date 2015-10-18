@@ -10,20 +10,14 @@
 <?import javafx.scene.control.Spinner?>
 
 <?import javafx.scene.control.TreeTableView?>
+<?import javafx.scene.control.ToolBar?>
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="jgnash.uifx.views.budget.BudgetTableController" styleClass="form">
     <top>
-        <GridPane styleClass="form">
-            <columnConstraints>
-                <ColumnConstraints hgrow="NEVER"/>
-                <ColumnConstraints hgrow="NEVER"/>
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints vgrow="NEVER"/>
-            </rowConstraints>
+        <ToolBar>
             <Label text="%Label.Year"/>
-            <Spinner fx:id="yearSpinner" GridPane.columnIndex="1"/>
-        </GridPane>
+            <Spinner fx:id="yearSpinner"/>
+        </ToolBar>
     </top>
     <center>
         <GridPane BorderPane.alignment="CENTER">
@@ -35,7 +29,7 @@
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints vgrow="ALWAYS"/>
-                <RowConstraints vgrow="NEVER" maxHeight="75" minHeight="-Infinity"/>
+                <RowConstraints vgrow="NEVER" minHeight="-Infinity"/>
                 <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
             <TreeTableView fx:id="accountTreeView" GridPane.rowIndex="0" GridPane.columnIndex="0" minWidth="-Infinity"/>
