@@ -37,6 +37,7 @@ import jgnash.engine.budget.BudgetPeriodDescriptor;
 import jgnash.engine.budget.BudgetPeriodResults;
 import jgnash.engine.budget.BudgetResultsModel;
 import jgnash.text.CommodityFormat;
+import jgnash.uifx.control.NullTableViewSelectionModel;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.JavaFXUtils;
@@ -127,11 +128,13 @@ public class BudgetTableController {
         dataTable.getStylesheets().addAll(HIDE_VERTICAL_CSS, HIDE_HORIZONTAL_CSS);
         dataTable.setItems(expandedAccountList);
         dataTable.fixedCellSizeProperty().bind(rowHeightProperty);
+        dataTable.setSelectionModel(new NullTableViewSelectionModel<>(dataTable));
 
         accountSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         accountSummaryTable.getStylesheets().add(HIDE_VERTICAL_CSS);
         accountSummaryTable.setItems(expandedAccountList);
         accountSummaryTable.fixedCellSizeProperty().bind(rowHeightProperty);
+        accountSummaryTable.setSelectionModel(new NullTableViewSelectionModel<>(accountSummaryTable));
 
         accountTypeTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         accountTypeTable.getStylesheets().add(HIDE_HEADER_CSS);
@@ -139,12 +142,14 @@ public class BudgetTableController {
         accountTypeTable.fixedCellSizeProperty().bind(rowHeightProperty);
         accountTypeTable.prefHeightProperty()
                 .bind(rowHeightProperty.multiply(Bindings.size(accountGroupList)).add(BORDER_MARGIN));
+        accountTypeTable.setSelectionModel(new NullTableViewSelectionModel<>(accountTypeTable));
 
         periodSummaryTable.getStylesheets().addAll(HIDE_VERTICAL_CSS, HIDE_HEADER_CSS, HIDE_HORIZONTAL_CSS);
         periodSummaryTable.setItems(accountGroupList);
         periodSummaryTable.fixedCellSizeProperty().bind(rowHeightProperty);
         periodSummaryTable.prefHeightProperty()
                 .bind(rowHeightProperty.multiply(Bindings.size(accountGroupList)).add(BORDER_MARGIN));
+        periodSummaryTable.setSelectionModel(new NullTableViewSelectionModel<>(periodSummaryTable));
 
         accountGroupPeriodSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         accountGroupPeriodSummaryTable.getStylesheets().add(HIDE_HEADER_CSS);
@@ -152,6 +157,7 @@ public class BudgetTableController {
         accountGroupPeriodSummaryTable.fixedCellSizeProperty().bind(rowHeightProperty);
         accountGroupPeriodSummaryTable.prefHeightProperty()
                 .bind(rowHeightProperty.multiply(Bindings.size(accountGroupList)).add(BORDER_MARGIN));
+        accountGroupPeriodSummaryTable.setSelectionModel(new NullTableViewSelectionModel<>(accountGroupPeriodSummaryTable));
 
         buildAccountTreeTable();
         buildAccountTypeTable();

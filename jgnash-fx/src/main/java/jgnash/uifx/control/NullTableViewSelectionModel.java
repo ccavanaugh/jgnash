@@ -7,6 +7,8 @@ import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 
 /**
+ * Disables selection
+ *
  * @author Craig Cavanaugh
  */
 public class NullTableViewSelectionModel<S> extends TableView.TableViewSelectionModel<S> {
@@ -21,22 +23,24 @@ public class NullTableViewSelectionModel<S> extends TableView.TableViewSelection
     }
 
     @Override
-    public void clearSelection(int row, TableColumn column) {
+    public void clearSelection(int row, TableColumn<S,?> column) {
 
     }
 
     @Override
-    public void clearAndSelect(int row, TableColumn column) {
+    public void clearAndSelect(int row, TableColumn<S,?> column) {
 
     }
 
     @Override
-    public void select(int row, TableColumn column) {
+    public void select(int row, TableColumn<S,?> column) {
 
     }
 
+
+
     @Override
-    public boolean isSelected(int row, TableColumn column) {
+    public boolean isSelected(int row, TableColumn<S,?> column) {
         return false;
     }
 
@@ -57,6 +61,22 @@ public class NullTableViewSelectionModel<S> extends TableView.TableViewSelection
 
     @Override
     public void selectBelowCell() {
+
+    }
+
+    public void selectIndices(int row, int... rows) {
+
+    }
+
+    @Override public void selectAll() {
+
+    }
+
+    @Override public void clearSelection(int index) {
+
+    }
+
+    @Override public void clearSelection() {
 
     }
 }
