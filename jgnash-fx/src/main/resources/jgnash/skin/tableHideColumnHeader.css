@@ -1,5 +1,3 @@
-@import "default.css";
-
 .table-view .column-header-background {
     visibility: hidden;
     -fx-padding: -2em;
