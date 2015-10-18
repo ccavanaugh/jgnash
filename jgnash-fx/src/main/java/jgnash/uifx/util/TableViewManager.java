@@ -25,11 +25,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
@@ -38,11 +35,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.TableColumnBase;
 import javafx.scene.control.TableView;
-import javafx.scene.text.Text;
 import javafx.util.Callback;
 
 import jgnash.util.Callable;
@@ -143,72 +137,14 @@ public class TableViewManager<S> {
         if (cellItems.size() > 0) { // don't try if there is no data or the stream function will throw an error
             maxWidth = cellItems.parallelStream().filter(s -> s != null).mapToDouble(o -> {
                 final Format format = columnFormatFactory.get().call(column);   // thread local format per thread
-                return calculateDisplayedWidth(format != null ? format.format(o) : o.toString(), column.getStyle());
+                return JavaFXUtils.getDisplayedTextWidth(format != null ? format.format(o) : o.toString(), column.getStyle());
             }).max().getAsDouble();
         }
 
         maxWidth = Math.max(maxWidth, column.getMinWidth());
-        maxWidth = Math.max(maxWidth, calculateHeaderWidth(column));
+        maxWidth = Math.max(maxWidth, JavaFXUtils.getDisplayedTextWidth(column.getText(), column.getStyle()));
 
         return Math.ceil(maxWidth + COLUMN_PADDING);
-    }
-
-    private double calculateDisplayedWidth(final String displayString, final String style) {
-        double width = 0;
-
-        if (!displayString.isEmpty()) {    // ignore empty strings
-
-            // Text and Scene construction must be done on the Platform thread
-            // Invoke the task on the platform thread and wait until complete
-            FutureTask<Double> futureTask = new FutureTask<>(() -> {
-                final Text text = new Text(displayString);
-                new Scene(new Group(text));
-                text.setStyle(style);
-
-                text.applyCss();
-                return text.getLayoutBounds().getWidth();
-            });
-
-            Platform.runLater(futureTask);
-
-            try {
-                width = futureTask.get();
-            } catch (final InterruptedException | ExecutionException e) {
-                Logger.getLogger(TableViewManager.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-            }
-        }
-
-        return width;
-    }
-
-    private double calculateHeaderWidth(final TableColumnBase<S, ?> column) {
-        double width = 0;
-
-        final String displayString = column.getText();
-
-        if (!displayString.isEmpty()) {    // ignore empty strings
-
-            // Text and Scene construction must be done on the Platform thread
-            // Invoke the task on the platform thread and wait until complete
-            FutureTask<Double> futureTask = new FutureTask<>(() -> {
-                final Text text = new Text(displayString);
-                text.setStyle(column.getStyle());
-                new Scene(new Group(text));
-
-                text.applyCss();
-                return text.getLayoutBounds().getWidth();
-            });
-
-            Platform.runLater(futureTask);
-
-            try {
-                width = futureTask.get();
-            } catch (final InterruptedException | ExecutionException e) {
-                Logger.getLogger(TableViewManager.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-            }
-        }
-
-        return width;
     }
 
     private void saveColumnVisibility() {
@@ -318,7 +254,7 @@ public class TableViewManager<S> {
     /**
      * Sets a {@code Format} factory.  A Format will be returned for each column.  A null value may
      * be returned as well.
-     * <p/>
+     * <p>
      * The returned Format must be thread safe.
      *
      * @param cellFormat Callback to generate a {@code Format} given a {@code TableColumnBase}

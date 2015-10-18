@@ -1,13 +1,25 @@
 package jgnash.uifx.util;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.geometry.Orientation;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.text.Text;
+
+import jgnash.util.NotNull;
+import jgnash.util.Nullable;
 
 /**
  * Utility methods for {@code Scene}
@@ -26,6 +38,7 @@ public class JavaFXUtils {
 
     /**
      * Focuses the next node within a {@code Parent}
+     *
      * @param node {@code Node} predecessor node
      */
     public static void focusNext(final Node node) {
@@ -78,5 +91,49 @@ public class JavaFXUtils {
         }
 
         throw new RuntimeException("Could not find horizontal scroll bar");
+    }
+
+    /**
+     * Calculates the displayed width of a text string
+     *
+     * @param displayString displayed text
+     * @param style text style, may be null
+     * @return width of the displayed string
+     */
+    public static double getDisplayedTextWidth(@NotNull final String displayString, @Nullable final String style) {
+        double width = 0;
+
+        // Text and Scene construction must be done on the Platform thread
+        // Invoke the task on the platform thread and wait until complete
+
+        if (!displayString.isEmpty()) {    // ignore empty strings
+            if (Platform.isFxApplicationThread()) {
+                width = _getDisplayedTextWidth(displayString, style);
+            } else {
+                // Text and Scene construction must be done on the Platform thread
+                // Invoke the task on the platform thread and wait until complete
+                final FutureTask<Double> futureTask =
+                        new FutureTask<>(() -> _getDisplayedTextWidth(displayString, style));
+                Platform.runLater(futureTask);
+
+                try {
+                    width = futureTask.get();
+                } catch (final InterruptedException | ExecutionException e) {
+                    Logger.getLogger(JavaFXUtils.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                }
+            }
+        }
+
+        return width;
+    }
+
+    private static double _getDisplayedTextWidth(@NotNull final String displayString, @Nullable final String style) {
+        final Text text = new Text(displayString);
+        new Scene(new Group(text));
+
+        text.setStyle(style);
+        text.applyCss();
+
+        return Math.ceil(text.getLayoutBounds().getWidth());
     }
 }
