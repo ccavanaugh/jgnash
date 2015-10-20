@@ -17,6 +17,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
@@ -58,6 +59,12 @@ public class BudgetTableController {
 
     // allow a selection span of +/- the specified number of years
     private static final int YEAR_MARGIN = 10;
+
+    @FXML
+    private Button shiftLeft;
+
+    @FXML
+    private Button shiftRight;
 
     @FXML
     private Spinner<Integer> yearSpinner;
@@ -180,6 +187,14 @@ public class BudgetTableController {
         });
     }
 
+    @FXML
+    private void handleShiftLeft() {
+    }
+
+    @FXML
+    private void handleShiftRight() {
+    }
+
     SimpleObjectProperty<Budget> budgetProperty() {
         return budgetProperty;
     }
@@ -188,6 +203,7 @@ public class BudgetTableController {
         rowHeightProperty.setValue(ThemeManager.getBaseTextHeight() * ROW_HEIGHT_MULTIPLIER);
     }
 
+    //TODO detect shown state and then bind for lazy loading
     private void bindScrollBars() {
         final ScrollBar accountScrollBar = JavaFXUtils.findVerticalScrollBar(accountTreeView);
         final ScrollBar vDataScrollBar = JavaFXUtils.findVerticalScrollBar(dataTable);

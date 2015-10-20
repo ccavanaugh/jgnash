@@ -11,12 +11,15 @@
 
 <?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.control.Button?>
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="jgnash.uifx.views.budget.BudgetTableController" styleClass="form">
     <top>
         <ToolBar>
             <Label text="%Label.Year"/>
             <Spinner fx:id="yearSpinner"/>
+            <Button fx:id="shiftLeft" text="Shift Left" onAction="#handleShiftLeft"/>
+            <Button fx:id="shiftRight" text="Shift Right" onAction="#handleShiftRight"/>
         </ToolBar>
     </top>
     <center>
