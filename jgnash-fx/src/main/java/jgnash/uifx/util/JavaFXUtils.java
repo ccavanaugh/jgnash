@@ -78,7 +78,7 @@ public class JavaFXUtils {
             }
         }
 
-        throw new RuntimeException("Could not find horizontal scroll bar");
+        throw new RuntimeException("Could not find vertical scroll bar");
     }
 
     public static ScrollBar findHorizontalScrollBar(final Node table) {
