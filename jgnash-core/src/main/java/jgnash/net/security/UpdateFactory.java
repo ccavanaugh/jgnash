@@ -29,6 +29,8 @@ import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -95,7 +97,7 @@ public class UpdateFactory {
 
     /**
      * Determines if an automatic update is recommended.
-     *
+     * <p>
      * The current approach is to avoid multiple updates on Saturday or Sunday if one has already occurred.
      * This could be expanded to understand locale rules.
      *
@@ -114,6 +116,22 @@ public class UpdateFactory {
                 result = false;
             }
         }
+
+        if (result && LocalDate.now().equals(lastDate)) {   // check for an after hours update
+            switch (Locale.getDefault().getCountry()) {
+                case "CA":
+                case "US":
+                    final ZonedDateTime zdt = lastUpdate.atZone(ZoneId.of("UTC").normalized());
+                    if (zdt.getHour() >= 21 && zdt.getMinute() > 25) {  // 4:25 EST for delayed online sources
+                        result = false;
+                        //System.out.println("Last update was after 4:25 pm EST");
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
         return result;
     }
 
@@ -381,7 +399,7 @@ public class UpdateFactory {
                                     logger.info(ResourceUtils.getString("Message.UpdatedSecurityEvent", securityNode.getSymbol()));
                                 }
                             }
-                       }
+                        }
                     }
                 }
             }
