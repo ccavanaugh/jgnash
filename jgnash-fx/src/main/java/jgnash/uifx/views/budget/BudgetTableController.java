@@ -47,7 +47,7 @@ import jgnash.uifx.util.JavaFXUtils;
  */
 public class BudgetTableController {
 
-    private static final String HIDE_HORIZONTAL_CSS = "jgnash/skin/tableHideHorizontalScrollBar.css";
+    //private static final String HIDE_HORIZONTAL_CSS = "jgnash/skin/tableHideHorizontalScrollBar.css";
     private static final String HIDE_VERTICAL_CSS = "jgnash/skin/tableHideVerticalScrollBar.css";
     private static final String HIDE_HEADER_CSS = "jgnash/skin/tableHideColumnHeader.css";
 
@@ -64,9 +64,6 @@ public class BudgetTableController {
 
     @FXML
     private ScrollBar verticalScrollBar;
-
-    @FXML
-    private ScrollBar horizontalScrollBar;
 
     @FXML
     private TreeTableView<Account> accountTreeView;
@@ -125,7 +122,8 @@ public class BudgetTableController {
         accountTreeView.setShowRoot(false);
         accountTreeView.fixedCellSizeProperty().bind(rowHeightProperty);
 
-        dataTable.getStylesheets().addAll(HIDE_VERTICAL_CSS, HIDE_HORIZONTAL_CSS);
+        dataTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        dataTable.getStylesheets().addAll(HIDE_VERTICAL_CSS);
         dataTable.setItems(expandedAccountList);
         dataTable.fixedCellSizeProperty().bind(rowHeightProperty);
         dataTable.setSelectionModel(new NullTableViewSelectionModel<>(dataTable));
@@ -144,7 +142,8 @@ public class BudgetTableController {
                 .bind(rowHeightProperty.multiply(Bindings.size(accountGroupList)).add(BORDER_MARGIN));
         accountTypeTable.setSelectionModel(new NullTableViewSelectionModel<>(accountTypeTable));
 
-        periodSummaryTable.getStylesheets().addAll(HIDE_VERTICAL_CSS, HIDE_HEADER_CSS, HIDE_HORIZONTAL_CSS);
+        periodSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        periodSummaryTable.getStylesheets().addAll(HIDE_VERTICAL_CSS, HIDE_HEADER_CSS);
         periodSummaryTable.setItems(accountGroupList);
         periodSummaryTable.fixedCellSizeProperty().bind(rowHeightProperty);
         periodSummaryTable.prefHeightProperty()
@@ -190,17 +189,6 @@ public class BudgetTableController {
     }
 
     private void bindScrollBars() {
-        final ScrollBar periodSummaryBar = JavaFXUtils.findHorizontalScrollBar(periodSummaryTable);
-        final ScrollBar hDataScrollBar = JavaFXUtils.findHorizontalScrollBar(dataTable);
-
-        horizontalScrollBar.minProperty().bindBidirectional(hDataScrollBar.minProperty());
-        horizontalScrollBar.maxProperty().bindBidirectional(hDataScrollBar.maxProperty());
-        horizontalScrollBar.valueProperty().bindBidirectional(hDataScrollBar.valueProperty());
-
-        periodSummaryBar.minProperty().bindBidirectional(hDataScrollBar.minProperty());
-        periodSummaryBar.maxProperty().bindBidirectional(hDataScrollBar.maxProperty());
-        periodSummaryBar.valueProperty().bindBidirectional(hDataScrollBar.valueProperty());
-
         final ScrollBar accountScrollBar = JavaFXUtils.findVerticalScrollBar(accountTreeView);
         final ScrollBar vDataScrollBar = JavaFXUtils.findVerticalScrollBar(dataTable);
         final ScrollBar accountSumScrollBar = JavaFXUtils.findVerticalScrollBar(accountSummaryTable);
@@ -352,106 +340,127 @@ public class BudgetTableController {
         accountSummaryTable.getColumns().add(headerColumn);
     }
 
+    private TableColumn<Account, BigDecimal> buildAccountPeriodResultsColumn(final int index) {
+
+        final BudgetPeriodDescriptor descriptor = budgetResultsModel.getDescriptorList().get(index);
+
+        final TableColumn<Account, BigDecimal> headerColumn = new TableColumn<>(descriptor.getPeriodDescription());
+
+        final TableColumn<Account, BigDecimal> budgetedColumn = new TableColumn<>(resources.getString("Column.Budgeted"));
+        budgetedColumn.setCellValueFactory(param -> {
+            if (param.getValue() != null) {
+                return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getBudgeted());
+            }
+            return new SimpleObjectProperty<>(BigDecimal.ZERO);
+        });
+        budgetedColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
+        budgetedColumn.minWidthProperty().bind(columnWidthProperty);
+        budgetedColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
+        budgetedColumn.setSortable(false);
+
+        headerColumn.getColumns().add(budgetedColumn);
+
+        final TableColumn<Account, BigDecimal> actualColumn = new TableColumn<>(resources.getString("Column.Actual"));
+        actualColumn.setCellValueFactory(param -> {
+            if (param.getValue() != null) {
+                return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getChange());
+            }
+            return new SimpleObjectProperty<>(BigDecimal.ZERO);
+        });
+        actualColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
+        actualColumn.minWidthProperty().bind(columnWidthProperty);
+        actualColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
+        actualColumn.setSortable(false);
+
+        headerColumn.getColumns().add(actualColumn);
+
+        final TableColumn<Account, BigDecimal> remainingColumn = new TableColumn<>(resources.getString("Column.Remaining"));
+        remainingColumn.setCellValueFactory(param -> {
+            if (param.getValue() != null) {
+                return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getRemaining());
+            }
+            return new SimpleObjectProperty<>(BigDecimal.ZERO);
+        });
+        remainingColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
+        remainingColumn.minWidthProperty().bind(columnWidthProperty);
+        remainingColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
+        remainingColumn.setSortable(false);
+
+        headerColumn.getColumns().add(remainingColumn);
+
+        return headerColumn;
+    }
+
     private void buildDataTable() {
         final List<TableColumn<Account, BigDecimal>> columnList = new ArrayList<>();
 
-        for (final BudgetPeriodDescriptor descriptor : budgetResultsModel.getDescriptorList()) {
-            final TableColumn<Account, BigDecimal> headerColumn = new TableColumn<>(descriptor.getPeriodDescription());
+        int max = 4;    //TODO: this will be calculated
 
-            final TableColumn<Account, BigDecimal> budgetedColumn = new TableColumn<>(resources.getString("Column.Budgeted"));
-            budgetedColumn.setCellValueFactory(param -> {
-                if (param.getValue() != null) {
-                    return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getBudgeted());
-                }
-                return new SimpleObjectProperty<>(BigDecimal.ZERO);
-            });
-            budgetedColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
-            budgetedColumn.minWidthProperty().bind(columnWidthProperty);
-            budgetedColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
-            budgetedColumn.setSortable(false);
-
-            headerColumn.getColumns().add(budgetedColumn);
-
-            final TableColumn<Account, BigDecimal> actualColumn = new TableColumn<>(resources.getString("Column.Actual"));
-            actualColumn.setCellValueFactory(param -> {
-                if (param.getValue() != null) {
-                    return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getChange());
-                }
-                return new SimpleObjectProperty<>(BigDecimal.ZERO);
-            });
-            actualColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
-            actualColumn.minWidthProperty().bind(columnWidthProperty);
-            actualColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
-            actualColumn.setSortable(false);
-
-            headerColumn.getColumns().add(actualColumn);
-
-            final TableColumn<Account, BigDecimal> remainingColumn = new TableColumn<>(resources.getString("Column.Remaining"));
-            remainingColumn.setCellValueFactory(param -> {
-                if (param.getValue() != null) {
-                    return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getRemaining());
-                }
-                return new SimpleObjectProperty<>(BigDecimal.ZERO);
-            });
-            remainingColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
-            remainingColumn.minWidthProperty().bind(columnWidthProperty);
-            remainingColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
-            remainingColumn.setSortable(false);
-
-            headerColumn.getColumns().add(remainingColumn);
-
-            columnList.add(headerColumn);
+        for (int i = 0; i < max; i++) {
+            columnList.add(buildAccountPeriodResultsColumn(i));
         }
 
         dataTable.getColumns().setAll(columnList);
+    }
+
+    private TableColumn<AccountGroup, BigDecimal> buildAccountPeriodSummaryColumn(final int index) {
+        final BudgetPeriodDescriptor descriptor = budgetResultsModel.getDescriptorList().get(index);
+
+        final TableColumn<AccountGroup, BigDecimal> headerColumn = new TableColumn<>(descriptor.getPeriodDescription());
+
+        final TableColumn<AccountGroup, BigDecimal> budgetedColumn = new TableColumn<>(resources.getString("Column.Budgeted"));
+        budgetedColumn.setCellValueFactory(param -> {
+            if (param.getValue() != null) {
+                return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getBudgeted());
+            }
+            return new SimpleObjectProperty<>(BigDecimal.ZERO);
+        });
+        budgetedColumn.setCellFactory(param -> new AccountGroupTableCell());
+        budgetedColumn.minWidthProperty().bind(columnWidthProperty);
+        budgetedColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
+        budgetedColumn.setSortable(false);
+
+        headerColumn.getColumns().add(budgetedColumn);
+
+        final TableColumn<AccountGroup, BigDecimal> actualColumn = new TableColumn<>(resources.getString("Column.Actual"));
+        actualColumn.setCellValueFactory(param -> {
+            if (param.getValue() != null) {
+                return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getChange());
+            }
+            return new SimpleObjectProperty<>(BigDecimal.ZERO);
+        });
+        actualColumn.setCellFactory(param -> new AccountGroupTableCell());
+        actualColumn.minWidthProperty().bind(columnWidthProperty);
+        actualColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
+        actualColumn.setSortable(false);
+
+        headerColumn.getColumns().add(actualColumn);
+
+        final TableColumn<AccountGroup, BigDecimal> remainingColumn = new TableColumn<>(resources.getString("Column.Remaining"));
+        remainingColumn.setCellValueFactory(param -> {
+            if (param.getValue() != null) {
+                return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getRemaining());
+            }
+            return new SimpleObjectProperty<>(BigDecimal.ZERO);
+        });
+        remainingColumn.setCellFactory(param -> new AccountGroupTableCell());
+        remainingColumn.minWidthProperty().bind(columnWidthProperty);
+        remainingColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
+        remainingColumn.setSortable(false);
+
+        headerColumn.getColumns().add(remainingColumn);
+
+        return headerColumn;
     }
 
     private void buildDataSummaryTable() {
 
         final List<TableColumn<AccountGroup, BigDecimal>> columnList = new ArrayList<>();
 
-        for (final BudgetPeriodDescriptor descriptor : budgetResultsModel.getDescriptorList()) {
-            final TableColumn<AccountGroup, BigDecimal> budgetedColumn = new TableColumn<>(resources.getString("Column.Budgeted"));
-            budgetedColumn.setCellValueFactory(param -> {
-                if (param.getValue() != null) {
-                    return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getBudgeted());
-                }
-                return new SimpleObjectProperty<>(BigDecimal.ZERO);
-            });
-            budgetedColumn.setCellFactory(param -> new AccountGroupTableCell());
-            budgetedColumn.minWidthProperty().bind(columnWidthProperty);
-            budgetedColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
-            budgetedColumn.setSortable(false);
+        int max = 4;    //TODO: this will be calculated
 
-            columnList.add(budgetedColumn);
-
-            final TableColumn<AccountGroup, BigDecimal> actualColumn = new TableColumn<>(resources.getString("Column.Actual"));
-            actualColumn.setCellValueFactory(param -> {
-                if (param.getValue() != null) {
-                    return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getChange());
-                }
-                return new SimpleObjectProperty<>(BigDecimal.ZERO);
-            });
-            actualColumn.setCellFactory(param -> new AccountGroupTableCell());
-            actualColumn.minWidthProperty().bind(columnWidthProperty);
-            actualColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
-            actualColumn.setSortable(false);
-
-            columnList.add(actualColumn);
-
-            final TableColumn<AccountGroup, BigDecimal> remainingColumn = new TableColumn<>(resources.getString("Column.Remaining"));
-            remainingColumn.setCellValueFactory(param -> {
-                if (param.getValue() != null) {
-                    return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getRemaining());
-                }
-                return new SimpleObjectProperty<>(BigDecimal.ZERO);
-            });
-            remainingColumn.setCellFactory(param -> new AccountGroupTableCell());
-            remainingColumn.minWidthProperty().bind(columnWidthProperty);
-            remainingColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
-            remainingColumn.setSortable(false);
-
-            columnList.add(remainingColumn);
+        for (int i = 0; i < max; i++) {
+            columnList.add(buildAccountPeriodSummaryColumn(i));
         }
 
         periodSummaryTable.getColumns().setAll(columnList);
