@@ -19,7 +19,6 @@ package jgnash.uifx.views.main;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 
-import java.io.IOException;
 import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -37,9 +36,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.Tab;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -61,6 +60,7 @@ import jgnash.uifx.control.BusyPane;
 import jgnash.uifx.control.TabViewPane;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.tasks.CloseFileTask;
+import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.accounts.AccountsViewController;
 import jgnash.uifx.views.budget.BudgetViewController;
@@ -189,29 +189,28 @@ public class MainApplication extends Application implements MessageListener {
     }
 
     private void addViews() {
-        try {
-            final Pane accountsPane = FXMLLoader.load(AccountsViewController.class.getResource("AccountsView.fxml"),
-                    ResourceUtils.getBundle());
+        Platform.runLater(() -> tabViewPane.addTab(
+                FXMLUtils.load(AccountsViewController.class.getResource("AccountsView.fxml"),
+                        ResourceUtils.getBundle()), rb.getString("Tab.Accounts")));
 
-            final Pane registerPane = FXMLLoader.load(RegisterViewController.class.getResource("RegisterView.fxml"),
-                    ResourceUtils.getBundle());
+        Platform.runLater(() -> tabViewPane.addTab(
+                FXMLUtils.load(RegisterViewController.class.getResource("RegisterView.fxml"),
+                        ResourceUtils.getBundle()), rb.getString("Tab.Register")));
 
-            final Pane recurringPane = FXMLLoader.load(RecurringViewController.class.getResource("RecurringView.fxml"),
-                    ResourceUtils.getBundle());
+        Platform.runLater(() -> tabViewPane.addTab(
+                    FXMLUtils.load(RecurringViewController.class.getResource("RecurringView.fxml"),
+                            ResourceUtils.getBundle()), rb.getString("Tab.Reminders")));
 
-            final Pane budgetingPane = FXMLLoader.load(BudgetViewController.class.getResource("BudgetView.fxml"),
-                    ResourceUtils.getBundle());
+        Platform.runLater(() -> {
+            final Tab tab = tabViewPane.addTab(
+                    FXMLUtils.load(BudgetViewController.class.getResource("BudgetView.fxml"),
+                            ResourceUtils.getBundle()), rb.getString("Tab.Budgeting"));
 
-            tabViewPane.addTab(accountsPane, rb.getString("Tab.Accounts"));
-            tabViewPane.addTab(registerPane, rb.getString("Tab.Register"));
-            tabViewPane.addTab(recurringPane, rb.getString("Tab.Reminders"));
-            tabViewPane.addTab(budgetingPane, rb.getString("Tab.Budgeting"));
-        } catch (final IOException e) {
-            StaticUIMethods.displayException(e);
-        }
+            tabViewPane.getSelectionModel().select(tab);    // budget needs a bit of help
+        });
 
-        // Force layout to occur... JavaFx Bug?
-        Platform.runLater(tabViewPane::requestFocus);
+        //TODO restore the last tab used
+        Platform.runLater(() -> tabViewPane.getSelectionModel().select(0));
     }
 
     private void removeViews() {

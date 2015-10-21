@@ -234,6 +234,26 @@ public class FXMLUtils {
     }
 
     /**
+     * Simple FXML loader that handles exceptions
+     *
+     * @param fxmlUrl        the fxml {@code URL}
+     * @param resourceBundle {@code ResourceBundle} to pass to the {@code FXMLLoader}
+     * @return The loaded object hierarchy.
+     * @see FXMLLoader#load()
+     */
+    public static <T> T load(final URL fxmlUrl, final ResourceBundle resourceBundle) {
+        final FXMLLoader fxmlLoader = new FXMLLoader(fxmlUrl, resourceBundle);
+
+        try {
+            return fxmlLoader.load();
+        } catch (IOException e) {
+            StaticUIMethods.displayException(e);
+        }
+
+        return null;
+    }
+
+    /**
      * Creates a new Stage with application defaults {@code StageStyle.DECORATED}, {@code Modality.APPLICATION_MODAL}
      * with the specified fxml {@code URL} as the {@code Scene}.  The controller is returned via a {@code Consumer}
      *
