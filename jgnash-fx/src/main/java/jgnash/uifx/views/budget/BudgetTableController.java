@@ -11,7 +11,9 @@ import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -48,7 +50,6 @@ import jgnash.uifx.util.JavaFXUtils;
  */
 public class BudgetTableController {
 
-    //private static final String HIDE_HORIZONTAL_CSS = "jgnash/skin/tableHideHorizontalScrollBar.css";
     private static final String HIDE_VERTICAL_CSS = "jgnash/skin/tableHideVerticalScrollBar.css";
     private static final String HIDE_HEADER_CSS = "jgnash/skin/tableHideColumnHeader.css";
 
@@ -61,10 +62,10 @@ public class BudgetTableController {
     private static final int YEAR_MARGIN = 10;
 
     @FXML
-    private Button shiftLeft;
+    private Button shiftLeftButton;
 
     @FXML
-    private Button shiftRight;
+    private Button shiftRightButton;
 
     @FXML
     private Spinner<Integer> yearSpinner;
@@ -115,6 +116,21 @@ public class BudgetTableController {
      * Bind the max and minimum values of every column to this width
      */
     private final DoubleProperty columnWidthProperty = new SimpleDoubleProperty(75);
+
+    /**
+     * Current index to be used for scrolling the display.  If 0 the first period is displayed to the left
+     */
+    private final IntegerProperty indexProperty = new SimpleIntegerProperty(0);
+
+    /**
+     * The number of visible columns
+     */
+    private final IntegerProperty visibleColumnCountProperty = new SimpleIntegerProperty(4);
+
+    /**
+     * The number of periods in the model
+     */
+    private final IntegerProperty periodCountProperty = new SimpleIntegerProperty(1);
 
     @FXML
     private void initialize() {
@@ -185,14 +201,37 @@ public class BudgetTableController {
         ThemeManager.getFontScaleProperty().addListener((observable, oldValue, newValue) -> {
             updateHeights();
         });
+
+        shiftLeftButton.disableProperty().bind(indexProperty.lessThanOrEqualTo(0));
+        shiftRightButton.disableProperty().bind(indexProperty.greaterThanOrEqualTo(periodCountProperty.subtract(visibleColumnCountProperty)));
     }
 
     @FXML
-    private void handleShiftLeft() {
+    private synchronized void handleShiftLeft() {
+        // remove the right column
+        dataTable.getColumns().remove(visibleColumnCountProperty.get() - 1);
+        periodSummaryTable.getColumns().remove(visibleColumnCountProperty.get() - 1);
+
+        indexProperty.setValue(indexProperty.get() - 1);
+
+        // insert a new column to the left
+        dataTable.getColumns().add(0, buildAccountPeriodResultsColumn(indexProperty.get()));
+        periodSummaryTable.getColumns().add(0, buildAccountPeriodSummaryColumn(indexProperty.get()));
     }
 
     @FXML
-    private void handleShiftRight() {
+    private synchronized void handleShiftRight() {
+        // remove leftmost column
+        dataTable.getColumns().remove(0);
+        periodSummaryTable.getColumns().remove(0);
+
+        final int newColumn = indexProperty.get() + visibleColumnCountProperty.get();
+
+        // add a new column to the right
+        dataTable.getColumns().add(buildAccountPeriodResultsColumn(newColumn));
+        periodSummaryTable.getColumns().add(buildAccountPeriodSummaryColumn(newColumn));
+
+        indexProperty.setValue(indexProperty.get() + 1);
     }
 
     SimpleObjectProperty<Budget> budgetProperty() {
@@ -223,6 +262,8 @@ public class BudgetTableController {
             Objects.requireNonNull(engine);
 
             budgetResultsModel = new BudgetResultsModel(budgetProperty.get(), yearSpinner.getValue(), engine.getDefaultCurrency());
+
+            periodCountProperty.setValue(budgetResultsModel.getDescriptorList().size());
 
             columnWidthProperty.setValue(getMaxWidth());
 
@@ -410,9 +451,7 @@ public class BudgetTableController {
     private void buildDataTable() {
         final List<TableColumn<Account, BigDecimal>> columnList = new ArrayList<>();
 
-        int max = 4;    //TODO: this will be calculated
-
-        for (int i = 0; i < max; i++) {
+        for (int i = 0; i < visibleColumnCountProperty.get(); i++) {
             columnList.add(buildAccountPeriodResultsColumn(i));
         }
 
@@ -470,12 +509,9 @@ public class BudgetTableController {
     }
 
     private void buildDataSummaryTable() {
-
         final List<TableColumn<AccountGroup, BigDecimal>> columnList = new ArrayList<>();
 
-        int max = 4;    //TODO: this will be calculated
-
-        for (int i = 0; i < max; i++) {
+        for (int i = 0; i < visibleColumnCountProperty.get(); i++) {
             columnList.add(buildAccountPeriodSummaryColumn(i));
         }
 
