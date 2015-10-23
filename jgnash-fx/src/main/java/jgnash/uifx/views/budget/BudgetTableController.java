@@ -361,7 +361,7 @@ public class BudgetTableController {
         });
         budgetedColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
         budgetedColumn.minWidthProperty().bind(columnWidthProperty);
-        budgetedColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
+        budgetedColumn.maxWidthProperty().bind(columnWidthProperty);
         budgetedColumn.setSortable(false);
 
         headerColumn.getColumns().add(budgetedColumn);
@@ -375,7 +375,7 @@ public class BudgetTableController {
         });
         actualColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
         actualColumn.minWidthProperty().bind(columnWidthProperty);
-        actualColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
+        actualColumn.maxWidthProperty().bind(columnWidthProperty);
         actualColumn.setSortable(false);
 
         headerColumn.getColumns().add(actualColumn);
@@ -389,7 +389,7 @@ public class BudgetTableController {
         });
         remainingColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
         remainingColumn.minWidthProperty().bind(columnWidthProperty);
-        remainingColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
+        remainingColumn.maxWidthProperty().bind(columnWidthProperty);
         remainingColumn.setSortable(false);
 
         headerColumn.getColumns().add(remainingColumn);
@@ -412,7 +412,7 @@ public class BudgetTableController {
         });
         budgetedColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
         budgetedColumn.minWidthProperty().bind(columnWidthProperty);
-        budgetedColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
+        budgetedColumn.maxWidthProperty().bind(columnWidthProperty);
         budgetedColumn.setSortable(false);
 
         headerColumn.getColumns().add(budgetedColumn);
@@ -426,7 +426,7 @@ public class BudgetTableController {
         });
         actualColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
         actualColumn.minWidthProperty().bind(columnWidthProperty);
-        actualColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
+        actualColumn.maxWidthProperty().bind(columnWidthProperty);
         actualColumn.setSortable(false);
 
         headerColumn.getColumns().add(actualColumn);
@@ -440,7 +440,7 @@ public class BudgetTableController {
         });
         remainingColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
         remainingColumn.minWidthProperty().bind(columnWidthProperty);
-        remainingColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
+        remainingColumn.maxWidthProperty().bind(columnWidthProperty);
         remainingColumn.setSortable(false);
 
         headerColumn.getColumns().add(remainingColumn);
@@ -472,7 +472,7 @@ public class BudgetTableController {
         });
         budgetedColumn.setCellFactory(param -> new AccountGroupTableCell());
         budgetedColumn.minWidthProperty().bind(columnWidthProperty);
-        budgetedColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
+        budgetedColumn.maxWidthProperty().bind(columnWidthProperty);
         budgetedColumn.setSortable(false);
 
         headerColumn.getColumns().add(budgetedColumn);
@@ -486,7 +486,7 @@ public class BudgetTableController {
         });
         actualColumn.setCellFactory(param -> new AccountGroupTableCell());
         actualColumn.minWidthProperty().bind(columnWidthProperty);
-        actualColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
+        actualColumn.maxWidthProperty().bind(columnWidthProperty);
         actualColumn.setSortable(false);
 
         headerColumn.getColumns().add(actualColumn);
@@ -500,7 +500,7 @@ public class BudgetTableController {
         });
         remainingColumn.setCellFactory(param -> new AccountGroupTableCell());
         remainingColumn.minWidthProperty().bind(columnWidthProperty);
-        remainingColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
+        remainingColumn.maxWidthProperty().bind(columnWidthProperty);
         remainingColumn.setSortable(false);
 
         headerColumn.getColumns().add(remainingColumn);
@@ -530,7 +530,7 @@ public class BudgetTableController {
         });
         budgetedColumn.setCellFactory(param -> new AccountGroupTableCell());
         budgetedColumn.minWidthProperty().bind(columnWidthProperty);
-        budgetedColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
+        budgetedColumn.maxWidthProperty().bind(columnWidthProperty);
         budgetedColumn.setSortable(false);
 
         headerColumn.getColumns().add(budgetedColumn);
@@ -544,7 +544,7 @@ public class BudgetTableController {
         });
         actualColumn.setCellFactory(param -> new AccountGroupTableCell());
         actualColumn.minWidthProperty().bind(columnWidthProperty);
-        actualColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
+        actualColumn.maxWidthProperty().bind(columnWidthProperty);
         actualColumn.setSortable(false);
 
         headerColumn.getColumns().add(actualColumn);
@@ -558,7 +558,7 @@ public class BudgetTableController {
         });
         remainingColumn.setCellFactory(param -> new AccountGroupTableCell());
         remainingColumn.minWidthProperty().bind(columnWidthProperty);
-        remainingColumn.maxWidthProperty().bindBidirectional(columnWidthProperty);
+        remainingColumn.maxWidthProperty().bind(columnWidthProperty);
         remainingColumn.setSortable(false);
 
         headerColumn.getColumns().add(remainingColumn);
