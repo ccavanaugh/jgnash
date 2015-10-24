@@ -17,7 +17,8 @@ public class NullTableViewSelectionModel<S> extends TableView.TableViewSelection
         super(tableView);
     }
 
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public ObservableList<TablePosition> getSelectedCells() {
         return FXCollections.emptyObservableList();
     }
