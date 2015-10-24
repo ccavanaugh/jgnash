@@ -22,6 +22,7 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -144,12 +145,14 @@ public class AboutDialogController {
     }
 
     public static void showAndWait() {
-        final URL fxmlUrl = AboutDialogController.class.getResource("AboutDialog.fxml");
-        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, ResourceUtils.getBundle());
-        stage.setTitle(ResourceUtils.getString("Title.About"));
-        stage.setResizable(false);
+        Platform.runLater(() -> {   // push to EDT to avoid race when loading the html files
+            final URL fxmlUrl = AboutDialogController.class.getResource("AboutDialog.fxml");
+            final Stage stage = FXMLUtils.loadFXML(fxmlUrl, ResourceUtils.getBundle());
+            stage.setTitle(ResourceUtils.getString("Title.About"));
+            stage.setResizable(false);
 
-        stage.showAndWait();
+            stage.showAndWait();
+        });
     }
 
     @FXML
