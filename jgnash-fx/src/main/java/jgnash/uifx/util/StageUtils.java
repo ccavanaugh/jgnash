@@ -17,18 +17,21 @@
  */
 package jgnash.uifx.util;
 
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+
+import jgnash.util.DefaultDaemonThreadFactory;
 
 /**
  * Saves and restores Stage sizes
@@ -48,6 +51,8 @@ public class StageUtils {
     private static final int WIDTH = 2;
 
     private static final int HEIGHT = 3;
+
+    private static final int UPDATE_PERIOD = 2; // update period in seconds
 
     /**
      * Restores and saves the size and location of a stage
@@ -92,30 +97,26 @@ public class StageUtils {
      * Save Window bounds.  Limits rate of saves to the preferences system
      */
     private static class BoundsListener implements ChangeListener<Number> {
-        private static final int FORCED_DELAY = 1000;
-
-        private final ThreadPoolExecutor executor;
+        private final ScheduledThreadPoolExecutor executor;
         private final Preferences p;
         private final Window window;
 
         public BoundsListener(final Window window, final String prefNode) {
-            executor = new ThreadPoolExecutor(0, 1, 0, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1));
-            executor.setRejectedExecutionHandler(new ThreadPoolExecutor.DiscardOldestPolicy());
+            executor = new ScheduledThreadPoolExecutor(1, new DefaultDaemonThreadFactory(),
+                    new ThreadPoolExecutor.DiscardPolicy());
             p = Preferences.userRoot().node(prefNode);
             this.window = window;
         }
 
         @Override
-        public void changed(final ObservableValue<? extends Number> observable, final Number oldValue, final Number newValue) {
-            executor.execute(() -> {
-                p.put(DEFAULT_KEY, encodeRectangle(window.getX(), window.getY(),
-                        window.getWidth(), window.getHeight()));
-                try {
-                    Thread.sleep(FORCED_DELAY); // forcibly limits amount of saves
-                } catch (final InterruptedException e) {
-                    Logger.getLogger(BoundsListener.class.getName()).log(Level.SEVERE, e.getMessage(), e);
+        public void changed(final ObservableValue<? extends Number> observable, final Number old, final Number newNum) {
+            executor.schedule(() -> {
+                if (executor.getQueue().size() < 1) {   // ignore if we already have one waiting in the queue
+                    // window size and location requests must be pushed to the EDT to prevent a race condition
+                    Platform.runLater(() -> p.put(DEFAULT_KEY, encodeRectangle(window.getX(), window.getY(),
+                            window.getWidth(), window.getHeight())));
                 }
-            });
+            }, UPDATE_PERIOD, TimeUnit.SECONDS);
         }
     }
 

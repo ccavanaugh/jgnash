@@ -27,7 +27,8 @@ Improved handling of memo's in split transactions.  The split entry memo should 
 
 Release 2.20.0
 ----------------------
-10/25/15 Transaction number combo box was not working correctly. (Java Bug JDK-8136838 Fx)
+10/24/15 Windows were not saving their size and location because of a race condition. (Fx)
+10/24/15 Transaction number combo box was not working correctly. (Java Bug JDK-8136838 Fx)
 10/18/15 Improved the column packing speed of the transaction register. (Fx)
 10/17/15 The base font size will need to be reset after some code cleanup. (Fx)
 10/17/15 Avoid extraneous automatic securities price updates during the weekend if at lest one has occurred.
