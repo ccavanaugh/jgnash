@@ -27,6 +27,7 @@ import javafx.application.Application;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.net.NetworkAuthenticator;
 import jgnash.uifx.views.main.MainApplication;
+import jgnash.util.OS;
 import jgnash.util.ResourceUtils;
 import jgnash.util.Version;
 
@@ -47,9 +48,7 @@ public class MainFX {
 
     public static void main(final String[] args) {
 
-        final float version = Float.parseFloat(System.getProperty("java.version").substring(0, 3));
-
-        if (version < 1.8f) {
+        if (OS.getJavaVersion() < 1.8f) {
             System.out.println(ResourceUtils.getString("Message.JVM8"));
             System.out.println(ResourceUtils.getString("Message.Version") + " "
                     + System.getProperty("java.version") + "\n");
@@ -60,8 +59,7 @@ public class MainFX {
             return;
         }
 
-        final int release = Integer.parseInt(System.getProperty("java.version").substring(6));
-        if (release < JAVA_RELEASE) {
+        if (OS.getJavaRelease() < JAVA_RELEASE) {
             JOptionPane.showMessageDialog(null, ResourceUtils.getString("Message.JFX"),
                     ResourceUtils.getString("Title.Error"), JOptionPane.ERROR_MESSAGE);
             return;

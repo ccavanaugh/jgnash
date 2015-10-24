@@ -120,7 +120,7 @@ public final class Main {
     }
 
     private static boolean checkJVMVersion() {
-        final float version = getJVMVersion();
+        final float version = OS.getJavaVersion();
         boolean result = true;
 
         System.out.println(version);
@@ -136,10 +136,6 @@ public final class Main {
         }
 
         return result;
-    }
-
-    private static float getJVMVersion() {
-        return Float.parseFloat(System.getProperty("java.version").substring(0, 3));
     }
 
     private static void configureLogging() {

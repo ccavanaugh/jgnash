@@ -28,8 +28,10 @@ public final class OS {
 
     private static final boolean isWindows;
 
+    public static final String JAVA_VERSION = "java.version";
+
     static {
-        String os = System.getProperty("os.name");
+        final String os = System.getProperty("os.name");
 
         isOSX = os.startsWith("Darwin") || os.startsWith("Mac");
         isWindows = os.startsWith("Windows");
@@ -57,4 +59,21 @@ public final class OS {
         return isWindows;
     }
 
+    /**
+     * Returns the version of the JVM
+     *
+     * @return returns 1.8 given 1.8.0_60
+     */
+    public static float getJavaVersion() {
+        return Float.parseFloat(System.getProperty(JAVA_VERSION).substring(0, 3));
+    }
+
+    /**
+     * Returns the release of the JVM
+     *
+     * @return returns 60 given 1.8.0_60
+     */
+    public static int getJavaRelease() {
+        return Integer.parseInt(System.getProperty(JAVA_VERSION).substring(6));
+    }
 }
