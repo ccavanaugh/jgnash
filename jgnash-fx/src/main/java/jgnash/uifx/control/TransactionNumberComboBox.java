@@ -59,15 +59,17 @@ public class TransactionNumberComboBox extends ComboBox<String> {
 
         setEditable(true);
 
-        setOnAction(event -> new Thread(() -> {
-            if (nextNumberItem.equals(getValue())) {
-                final Account account = accountProperty().getValue();
+        valueProperty().addListener((observable, oldValue, newValue) -> {
+            new Thread(() -> {
+                if (nextNumberItem.equals(newValue)) {
+                    final Account account = accountProperty().getValue();
 
-                if (account != null) {
-                    Platform.runLater(() -> setValue(account.getNextTransactionNumber()));
+                    if (account != null) {
+                        Platform.runLater(() -> setValue(account.getNextTransactionNumber()));
+                    }
                 }
-            }
-        }).start());
+            }).start();
+        });
     }
 
     public ObjectProperty<Account> accountProperty() {
