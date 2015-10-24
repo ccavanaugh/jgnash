@@ -33,6 +33,8 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.input.KeyEvent;
 import javafx.util.StringConverter;
 
+import jgnash.util.OS;
+
 /**
  * Enhanced DatePicker.  Adds short cuts for date entry with better input character filters
  *
@@ -105,11 +107,14 @@ public class DatePickerEx extends DatePicker {
             }
         });
 
-       getEditor().focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                _getValue();    // forces the internal value to be recalculated
-            }
-        });
+        // TODO: This is a workaround for a Java Bug that should be fixed in 8u72
+        if (OS.getJavaVersion() < 1.9 && OS.getJavaRelease() < OS.JVM_RELEASE_72) {
+            getEditor().focusedProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue) {
+                    _getValue();    // forces the internal value to be recalculated
+                }
+            });
+        }
 
         getEditor().addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             final int caretPosition = getEditor().getCaretPosition();

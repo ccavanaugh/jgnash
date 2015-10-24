@@ -28,6 +28,7 @@ import javafx.scene.control.ComboBox;
 import jgnash.engine.Account;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
+import jgnash.util.OS;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -70,6 +71,17 @@ public class TransactionNumberComboBox extends ComboBox<String> {
                 }
             }).start();
         });
+
+        // TODO: This is a workaround for a Java Bug that should be fixed in 8u72
+        if (OS.getJavaVersion() < 1.9 && OS.getJavaRelease() < OS.JVM_RELEASE_72) {
+            getEditor().focusedProperty().addListener((obs, old, isFocused) -> {
+                if (!isFocused) {
+                    if (!getValue().equals(getConverter().fromString(getEditor().getText()))) {
+                        setValue(getConverter().fromString(getEditor().getText()));
+                    }
+                }
+            });
+        }
     }
 
     public ObjectProperty<Account> accountProperty() {

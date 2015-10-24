@@ -30,6 +30,16 @@ public final class OS {
 
     public static final String JAVA_VERSION = "java.version";
 
+    /**
+     * The minimum working release to use for JavaFx due to needed API changes
+     */
+    public static final int JVM_RELEASE_60 = 60;
+
+    /**
+     * JVM Release 72 has some focus bugs (JDK-8136838) that impacts the UI.
+     */
+    public static final int JVM_RELEASE_72 = 72;
+
     static {
         final String os = System.getProperty("os.name");
 
