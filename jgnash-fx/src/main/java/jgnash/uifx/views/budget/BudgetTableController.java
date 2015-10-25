@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -132,6 +134,8 @@ public class BudgetTableController {
      */
     private final IntegerProperty periodCountProperty = new SimpleIntegerProperty(1);
 
+    private final ReadWriteLock lock = new ReentrantReadWriteLock();
+
     @FXML
     private void initialize() {
         updateHeights();
@@ -208,30 +212,42 @@ public class BudgetTableController {
 
     @FXML
     private synchronized void handleShiftLeft() {
-        // remove the right column
-        dataTable.getColumns().remove(visibleColumnCountProperty.get() - 1);
-        periodSummaryTable.getColumns().remove(visibleColumnCountProperty.get() - 1);
+        lock.writeLock().lock();
 
-        indexProperty.setValue(indexProperty.get() - 1);
+        try {
+            // remove the right column
+            dataTable.getColumns().remove(visibleColumnCountProperty.get() - 1);
+            periodSummaryTable.getColumns().remove(visibleColumnCountProperty.get() - 1);
 
-        // insert a new column to the left
-        dataTable.getColumns().add(0, buildAccountPeriodResultsColumn(indexProperty.get()));
-        periodSummaryTable.getColumns().add(0, buildAccountPeriodSummaryColumn(indexProperty.get()));
+            indexProperty.setValue(indexProperty.get() - 1);
+
+            // insert a new column to the left
+            dataTable.getColumns().add(0, buildAccountPeriodResultsColumn(indexProperty.get()));
+            periodSummaryTable.getColumns().add(0, buildAccountPeriodSummaryColumn(indexProperty.get()));
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 
     @FXML
     private synchronized void handleShiftRight() {
-        // remove leftmost column
-        dataTable.getColumns().remove(0);
-        periodSummaryTable.getColumns().remove(0);
+        lock.writeLock().lock();
 
-        final int newColumn = indexProperty.get() + visibleColumnCountProperty.get();
+        try {
+            // remove leftmost column
+            dataTable.getColumns().remove(0);
+            periodSummaryTable.getColumns().remove(0);
 
-        // add a new column to the right
-        dataTable.getColumns().add(buildAccountPeriodResultsColumn(newColumn));
-        periodSummaryTable.getColumns().add(buildAccountPeriodSummaryColumn(newColumn));
+            final int newColumn = indexProperty.get() + visibleColumnCountProperty.get();
 
-        indexProperty.setValue(indexProperty.get() + 1);
+            // add a new column to the right
+            dataTable.getColumns().add(buildAccountPeriodResultsColumn(newColumn));
+            periodSummaryTable.getColumns().add(buildAccountPeriodSummaryColumn(newColumn));
+
+            indexProperty.setValue(indexProperty.get() + 1);
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 
     SimpleObjectProperty<Budget> budgetProperty() {
@@ -292,16 +308,22 @@ public class BudgetTableController {
     }
 
     private void loadModel() {
-        loadAccountTree();
+        lock.readLock().lock();
 
-        Platform.runLater(() -> accountGroupList.setAll(budgetResultsModel.getAccountGroupList()));
+        try {
+            loadAccountTree();
 
-        buildDataTable();
-        buildDataSummaryTable();
+            Platform.runLater(() -> accountGroupList.setAll(budgetResultsModel.getAccountGroupList()));
 
-        Platform.runLater(this::updateExpandedAccountList);
+            buildDataTable();
+            buildDataSummaryTable();
 
-        Platform.runLater(() -> columnWidthProperty.setValue(getMaxWidth()));
+            Platform.runLater(this::updateExpandedAccountList);
+
+            Platform.runLater(() -> columnWidthProperty.setValue(getMaxWidth()));
+        } finally {
+            lock.readLock().unlock();
+        }
     }
 
     private void loadAccountTree() {
@@ -451,7 +473,10 @@ public class BudgetTableController {
     private void buildDataTable() {
         final List<TableColumn<Account, BigDecimal>> columnList = new ArrayList<>();
 
-        for (int i = 0; i < visibleColumnCountProperty.get(); i++) {
+        final int index = indexProperty.getValue();
+        final int periodCount = visibleColumnCountProperty.get();
+
+        for (int i = index; i < index + periodCount; i++) {
             columnList.add(buildAccountPeriodResultsColumn(i));
         }
 
@@ -510,8 +535,10 @@ public class BudgetTableController {
 
     private void buildDataSummaryTable() {
         final List<TableColumn<AccountGroup, BigDecimal>> columnList = new ArrayList<>();
+        final int index = indexProperty.getValue();
+        final int periodCount = visibleColumnCountProperty.get();
 
-        for (int i = 0; i < visibleColumnCountProperty.get(); i++) {
+        for (int i = index; i < index + periodCount; i++) {
             columnList.add(buildAccountPeriodSummaryColumn(i));
         }
 
