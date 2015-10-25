@@ -12,14 +12,24 @@
 <?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.Button?>
+<?import jgnash.resource.font.FontAwesomeLabel?>
+
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="jgnash.uifx.views.budget.BudgetTableController" styleClass="form">
     <top>
         <ToolBar>
             <Label text="%Label.Year"/>
             <Spinner fx:id="yearSpinner"/>
-            <Button fx:id="shiftLeftButton" text="Shift Left" onAction="#handleShiftLeft"/>
-            <Button fx:id="shiftRightButton" text="Shift Right" onAction="#handleShiftRight"/>
+            <Button fx:id="shiftLeftButton" onAction="#handleShiftLeft">
+                <graphic>
+                    <FontAwesomeLabel glyphName="LONG_ARROW_LEFT"/>
+                </graphic>
+            </Button>
+            <Button fx:id="shiftRightButton" onAction="#handleShiftRight">
+                <graphic>
+                    <FontAwesomeLabel glyphName="LONG_ARROW_RIGHT"/>
+                </graphic>
+            </Button>
         </ToolBar>
     </top>
     <center>
