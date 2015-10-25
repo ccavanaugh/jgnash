@@ -208,7 +208,7 @@ public class Engine {
             }
         }, 1, 5, TimeUnit.MINUTES);
 
-        backgroundExecutorService = new ScheduledThreadPoolExecutor(1);
+        backgroundExecutorService = new ScheduledThreadPoolExecutor(1, new DefaultDaemonThreadFactory());
         backgroundExecutorService.setRemoveOnCancelPolicy(true);
         backgroundExecutorService.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
 
