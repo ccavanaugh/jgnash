@@ -23,7 +23,7 @@
         </ToolBar>
     </top>
     <center>
-        <GridPane BorderPane.alignment="CENTER">
+        <GridPane fx:id="gridPane" BorderPane.alignment="CENTER">
             <columnConstraints>
                 <ColumnConstraints hgrow="NEVER"/>
                 <ColumnConstraints hgrow="ALWAYS"/>
@@ -35,7 +35,7 @@
                 <RowConstraints vgrow="NEVER" minHeight="-Infinity"/>
             </rowConstraints>
             <TreeTableView fx:id="accountTreeView" GridPane.rowIndex="0" GridPane.columnIndex="0" minWidth="-Infinity"/>
-            <TableView fx:id="dataTable" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <TableView fx:id="periodTable" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
             <TableView fx:id="accountSummaryTable" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
             <ScrollBar fx:id="verticalScrollBar" orientation="VERTICAL" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
 

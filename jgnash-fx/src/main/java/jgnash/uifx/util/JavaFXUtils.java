@@ -1,5 +1,6 @@
 package jgnash.uifx.util;
 
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.logging.Level;
@@ -69,16 +70,16 @@ public class JavaFXUtils {
         }
     }
 
-    public static ScrollBar findVerticalScrollBar(final Node table) {
-        for (final Node node : table.lookupAll(".scroll-bar:vertical")) {
+    public static Optional<ScrollBar> findVerticalScrollBar(final Node table) {
+        for (final Node node : table.lookupAll(".scroll-bar")) {
             if (node instanceof ScrollBar) {
                 if (((ScrollBar) node).getOrientation() == Orientation.VERTICAL) {
-                    return (ScrollBar) node;
+                    return Optional.of((ScrollBar) node);
                 }
             }
         }
 
-        throw new RuntimeException("Could not find vertical scroll bar");
+        return Optional.empty();
     }
 
     /*public static ScrollBar findHorizontalScrollBar(final Node table) {

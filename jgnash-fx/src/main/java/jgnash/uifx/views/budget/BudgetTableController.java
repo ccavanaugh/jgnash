@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -31,6 +32,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.layout.GridPane;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
@@ -64,6 +66,9 @@ public class BudgetTableController {
     private static final int YEAR_MARGIN = 10;
 
     @FXML
+    private GridPane gridPane;
+
+    @FXML
     private Button shiftLeftButton;
 
     @FXML
@@ -79,7 +84,7 @@ public class BudgetTableController {
     private TreeTableView<Account> accountTreeView;
 
     @FXML
-    private TableView<Account> dataTable;
+    private TableView<Account> periodTable;
 
     @FXML
     private TableView<Account> accountSummaryTable;
@@ -149,12 +154,6 @@ public class BudgetTableController {
         accountTreeView.setShowRoot(false);
         accountTreeView.fixedCellSizeProperty().bind(rowHeightProperty);
 
-        dataTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        dataTable.getStylesheets().addAll(HIDE_VERTICAL_CSS);
-        dataTable.setItems(expandedAccountList);
-        dataTable.fixedCellSizeProperty().bind(rowHeightProperty);
-        dataTable.setSelectionModel(new NullTableViewSelectionModel<>(dataTable));
-
         accountSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         accountSummaryTable.getStylesheets().add(HIDE_VERTICAL_CSS);
         accountSummaryTable.setItems(expandedAccountList);
@@ -168,14 +167,6 @@ public class BudgetTableController {
         accountTypeTable.prefHeightProperty()
                 .bind(rowHeightProperty.multiply(Bindings.size(accountGroupList)).add(BORDER_MARGIN));
         accountTypeTable.setSelectionModel(new NullTableViewSelectionModel<>(accountTypeTable));
-
-        periodSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        periodSummaryTable.getStylesheets().addAll(HIDE_VERTICAL_CSS, HIDE_HEADER_CSS);
-        periodSummaryTable.setItems(accountGroupList);
-        periodSummaryTable.fixedCellSizeProperty().bind(rowHeightProperty);
-        periodSummaryTable.prefHeightProperty()
-                .bind(rowHeightProperty.multiply(Bindings.size(accountGroupList)).add(BORDER_MARGIN));
-        periodSummaryTable.setSelectionModel(new NullTableViewSelectionModel<>(periodSummaryTable));
 
         accountGroupPeriodSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         accountGroupPeriodSummaryTable.getStylesheets().add(HIDE_HEADER_CSS);
@@ -216,13 +207,13 @@ public class BudgetTableController {
 
         try {
             // remove the right column
-            dataTable.getColumns().remove(visibleColumnCountProperty.get() - 1);
+            periodTable.getColumns().remove(visibleColumnCountProperty.get() - 1);
             periodSummaryTable.getColumns().remove(visibleColumnCountProperty.get() - 1);
 
             indexProperty.setValue(indexProperty.get() - 1);
 
             // insert a new column to the left
-            dataTable.getColumns().add(0, buildAccountPeriodResultsColumn(indexProperty.get()));
+            periodTable.getColumns().add(0, buildAccountPeriodResultsColumn(indexProperty.get()));
             periodSummaryTable.getColumns().add(0, buildAccountPeriodSummaryColumn(indexProperty.get()));
         } finally {
             lock.writeLock().unlock();
@@ -235,13 +226,13 @@ public class BudgetTableController {
 
         try {
             // remove leftmost column
-            dataTable.getColumns().remove(0);
+            periodTable.getColumns().remove(0);
             periodSummaryTable.getColumns().remove(0);
 
             final int newColumn = indexProperty.get() + visibleColumnCountProperty.get();
 
             // add a new column to the right
-            dataTable.getColumns().add(buildAccountPeriodResultsColumn(newColumn));
+            periodTable.getColumns().add(buildAccountPeriodResultsColumn(newColumn));
             periodSummaryTable.getColumns().add(buildAccountPeriodSummaryColumn(newColumn));
 
             indexProperty.setValue(indexProperty.get() + 1);
@@ -258,18 +249,25 @@ public class BudgetTableController {
         rowHeightProperty.setValue(ThemeManager.getBaseTextHeight() * ROW_HEIGHT_MULTIPLIER);
     }
 
-    //TODO detect shown state and then bind for lazy loading
+    /**
+     * The table view will lazily create the scrollbars which makes finding them tricky.  We need to check for
+     * their existence and try again later if they do not exist.
+     */
     private void bindScrollBars() {
-        final ScrollBar accountScrollBar = JavaFXUtils.findVerticalScrollBar(accountTreeView);
-        final ScrollBar vDataScrollBar = JavaFXUtils.findVerticalScrollBar(dataTable);
-        final ScrollBar accountSumScrollBar = JavaFXUtils.findVerticalScrollBar(accountSummaryTable);
+        final Optional<ScrollBar> accountScrollBar = JavaFXUtils.findVerticalScrollBar(accountTreeView);
+        final Optional<ScrollBar> vDataScrollBar = JavaFXUtils.findVerticalScrollBar(periodTable);
+        final Optional<ScrollBar> accountSumScrollBar = JavaFXUtils.findVerticalScrollBar(accountSummaryTable);
 
-        verticalScrollBar.minProperty().bindBidirectional(accountScrollBar.minProperty());
-        verticalScrollBar.maxProperty().bindBidirectional(accountScrollBar.maxProperty());
-        verticalScrollBar.valueProperty().bindBidirectional(accountScrollBar.valueProperty());
+        if (!vDataScrollBar.isPresent() || !accountScrollBar.isPresent() || !accountSumScrollBar.isPresent()) {
+            Platform.runLater(BudgetTableController.this::bindScrollBars);  //respawn on the application thread
+        } else {    // all here, lets bind then now
+            verticalScrollBar.minProperty().bindBidirectional(accountScrollBar.get().minProperty());
+            verticalScrollBar.maxProperty().bindBidirectional(accountScrollBar.get().maxProperty());
+            verticalScrollBar.valueProperty().bindBidirectional(accountScrollBar.get().valueProperty());
 
-        accountScrollBar.valueProperty().bindBidirectional(vDataScrollBar.valueProperty());
-        accountSumScrollBar.valueProperty().bindBidirectional(vDataScrollBar.valueProperty());
+            accountScrollBar.get().valueProperty().bindBidirectional(vDataScrollBar.get().valueProperty());
+            accountSumScrollBar.get().valueProperty().bindBidirectional(vDataScrollBar.get().valueProperty());
+        }
     }
 
     private void handleBudgetChange() {
@@ -281,10 +279,7 @@ public class BudgetTableController {
 
             periodCountProperty.setValue(budgetResultsModel.getDescriptorList().size());
 
-            columnWidthProperty.setValue(getMaxWidth());
-
             loadModel();
-            bindScrollBars();
         } else {
             accountTreeView.setRoot(null);
             expandedAccountList.clear();
@@ -313,14 +308,15 @@ public class BudgetTableController {
         try {
             loadAccountTree();
 
-            Platform.runLater(() -> accountGroupList.setAll(budgetResultsModel.getAccountGroupList()));
+            accountGroupList.setAll(budgetResultsModel.getAccountGroupList());
 
-            buildDataTable();
-            buildDataSummaryTable();
+            buildPeriodTable();
+            buildPeriodSummaryTable();
+            updateExpandedAccountList();
 
-            Platform.runLater(this::updateExpandedAccountList);
+            columnWidthProperty.setValue(getMaxWidth());
 
-            Platform.runLater(() -> columnWidthProperty.setValue(getMaxWidth()));
+            Platform.runLater(this::bindScrollBars);
         } finally {
             lock.readLock().unlock();
         }
@@ -470,17 +466,31 @@ public class BudgetTableController {
         return headerColumn;
     }
 
-    private void buildDataTable() {
-        final List<TableColumn<Account, BigDecimal>> columnList = new ArrayList<>();
+    /**
+     * The period table must be rebuilt because of JavaFx issues
+     */
+    private void buildPeriodTable() {
+        // recreate the table and load the new one into the grid pane
+        final int row = GridPane.getRowIndex(periodTable);
+        final int column = GridPane.getColumnIndex(periodTable);
+        gridPane.getChildren().remove(periodTable);
+        periodTable = new TableView<>();
+        GridPane.setConstraints(periodTable, column, row);
+        gridPane.getChildren().add(periodTable);
+
+        periodTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        periodTable.getStylesheets().addAll(HIDE_VERTICAL_CSS);
+        periodTable.fixedCellSizeProperty().bind(rowHeightProperty);
+        periodTable.setSelectionModel(new NullTableViewSelectionModel<>(periodTable));
 
         final int index = indexProperty.getValue();
         final int periodCount = visibleColumnCountProperty.get();
 
         for (int i = index; i < index + periodCount; i++) {
-            columnList.add(buildAccountPeriodResultsColumn(i));
+            periodTable.getColumns().add(buildAccountPeriodResultsColumn(i));
         }
 
-        dataTable.getColumns().setAll(columnList);
+        periodTable.setItems(expandedAccountList);
     }
 
     private TableColumn<AccountGroup, BigDecimal> buildAccountPeriodSummaryColumn(final int index) {
@@ -533,16 +543,33 @@ public class BudgetTableController {
         return headerColumn;
     }
 
-    private void buildDataSummaryTable() {
-        final List<TableColumn<AccountGroup, BigDecimal>> columnList = new ArrayList<>();
+    /**
+     * The period summary table must be rebuilt because of JavaFx issues
+     */
+    private void buildPeriodSummaryTable() {
+        // recreate the table and load the new one into the grid pane
+        final int row = GridPane.getRowIndex(periodSummaryTable);
+        final int column = GridPane.getColumnIndex(periodSummaryTable);
+        gridPane.getChildren().remove(periodSummaryTable);
+        periodSummaryTable = new TableView<>();
+        GridPane.setConstraints(periodSummaryTable, column, row);
+        gridPane.getChildren().add(periodSummaryTable);
+
+        periodSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        periodSummaryTable.getStylesheets().addAll(HIDE_VERTICAL_CSS, HIDE_HEADER_CSS);
+        periodSummaryTable.fixedCellSizeProperty().bind(rowHeightProperty);
+        periodSummaryTable.prefHeightProperty()
+                .bind(rowHeightProperty.multiply(Bindings.size(accountGroupList)).add(BORDER_MARGIN));
+        periodSummaryTable.setSelectionModel(new NullTableViewSelectionModel<>(periodSummaryTable));
+
         final int index = indexProperty.getValue();
         final int periodCount = visibleColumnCountProperty.get();
 
         for (int i = index; i < index + periodCount; i++) {
-            columnList.add(buildAccountPeriodSummaryColumn(i));
+            periodSummaryTable.getColumns().add(buildAccountPeriodSummaryColumn(i));
         }
 
-        periodSummaryTable.getColumns().setAll(columnList);
+        periodSummaryTable.setItems(accountGroupList);
     }
 
     private void buildAccountGroupSummaryTable() {
