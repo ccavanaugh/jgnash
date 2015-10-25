@@ -125,6 +125,12 @@ public class BudgetTableController {
      */
     private final DoubleProperty columnWidthProperty = new SimpleDoubleProperty(75);
 
+
+    /**
+     * Bind the max and minimum values of every summary column to this width
+     */
+    private final DoubleProperty summaryColumnWidthProperty = new SimpleDoubleProperty(75);
+
     /**
      * Current index to be used for scrolling the display.  If 0 the first period is displayed to the left
      */
@@ -313,16 +319,33 @@ public class BudgetTableController {
 
             accountGroupList.setAll(budgetResultsModel.getAccountGroupList());
 
+            optimizeColumnWidths();
+
             buildPeriodTable();
             buildPeriodSummaryTable();
             updateExpandedAccountList();
-
-            columnWidthProperty.setValue(getMaxWidth());
 
             Platform.runLater(this::bindScrollBars);
         } finally {
             lock.readLock().unlock();
         }
+    }
+
+    private void optimizeColumnWidths() {
+        final double maxWidth = getMaxWidth();                  // max calculated width of the columns
+        summaryColumnWidthProperty.setValue(maxWidth);          // summary columns will use the calculated value
+
+        final double minColumnWidth = maxWidth * 3.0;           // descriptor columns are 3 columns wide
+        final double availWidth = periodTable.getWidth() - BORDER_MARGIN;   // width of the table
+
+        // calculate the number of visible columns
+        final int maxVisible = (int)Math.floor(availWidth / minColumnWidth);
+
+        // update the number of visible columns factoring in the size of the descriptor list
+        visibleColumnCountProperty.setValue(Math.min(budgetResultsModel.getDescriptorList().size(), maxVisible));
+
+        columnWidthProperty.setValue(availWidth /
+                        Math.min(budgetResultsModel.getDescriptorList().size() * 3, maxVisible * 3));
     }
 
     private void loadAccountTree() {
@@ -381,8 +404,8 @@ public class BudgetTableController {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         budgetedColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
-        budgetedColumn.minWidthProperty().bind(columnWidthProperty);
-        budgetedColumn.maxWidthProperty().bind(columnWidthProperty);
+        budgetedColumn.minWidthProperty().bind(summaryColumnWidthProperty);
+        budgetedColumn.maxWidthProperty().bind(summaryColumnWidthProperty);
         budgetedColumn.setSortable(false);
 
         headerColumn.getColumns().add(budgetedColumn);
@@ -395,8 +418,8 @@ public class BudgetTableController {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         actualColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
-        actualColumn.minWidthProperty().bind(columnWidthProperty);
-        actualColumn.maxWidthProperty().bind(columnWidthProperty);
+        actualColumn.minWidthProperty().bind(summaryColumnWidthProperty);
+        actualColumn.maxWidthProperty().bind(summaryColumnWidthProperty);
         actualColumn.setSortable(false);
 
         headerColumn.getColumns().add(actualColumn);
@@ -409,8 +432,8 @@ public class BudgetTableController {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         remainingColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
-        remainingColumn.minWidthProperty().bind(columnWidthProperty);
-        remainingColumn.maxWidthProperty().bind(columnWidthProperty);
+        remainingColumn.minWidthProperty().bind(summaryColumnWidthProperty);
+        remainingColumn.maxWidthProperty().bind(summaryColumnWidthProperty);
         remainingColumn.setSortable(false);
 
         headerColumn.getColumns().add(remainingColumn);
@@ -586,8 +609,8 @@ public class BudgetTableController {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         budgetedColumn.setCellFactory(param -> new AccountGroupTableCell());
-        budgetedColumn.minWidthProperty().bind(columnWidthProperty);
-        budgetedColumn.maxWidthProperty().bind(columnWidthProperty);
+        budgetedColumn.minWidthProperty().bind(summaryColumnWidthProperty);
+        budgetedColumn.maxWidthProperty().bind(summaryColumnWidthProperty);
         budgetedColumn.setSortable(false);
 
         headerColumn.getColumns().add(budgetedColumn);
@@ -600,8 +623,8 @@ public class BudgetTableController {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         actualColumn.setCellFactory(param -> new AccountGroupTableCell());
-        actualColumn.minWidthProperty().bind(columnWidthProperty);
-        actualColumn.maxWidthProperty().bind(columnWidthProperty);
+        actualColumn.minWidthProperty().bind(summaryColumnWidthProperty);
+        actualColumn.maxWidthProperty().bind(summaryColumnWidthProperty);
         actualColumn.setSortable(false);
 
         headerColumn.getColumns().add(actualColumn);
@@ -614,8 +637,8 @@ public class BudgetTableController {
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         remainingColumn.setCellFactory(param -> new AccountGroupTableCell());
-        remainingColumn.minWidthProperty().bind(columnWidthProperty);
-        remainingColumn.maxWidthProperty().bind(columnWidthProperty);
+        remainingColumn.minWidthProperty().bind(summaryColumnWidthProperty);
+        remainingColumn.maxWidthProperty().bind(summaryColumnWidthProperty);
         remainingColumn.setSortable(false);
 
         headerColumn.getColumns().add(remainingColumn);
