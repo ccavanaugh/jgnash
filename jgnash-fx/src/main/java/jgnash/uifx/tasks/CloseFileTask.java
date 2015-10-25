@@ -49,7 +49,10 @@ public class CloseFileTask extends Task<String> {
 
     public static void initiateShutdown() {
         final CloseFileTask closeFileTask = new CloseFileTask();
-        closeFileTask.setOnSucceeded(event -> Platform.exit());
+        closeFileTask.setOnSucceeded(event -> {
+            Platform.exit();
+            System.exit(0); // Platform.exit() is not always enough for a complete shutdown.
+        });
 
         final Thread thread = new Thread(closeFileTask);
         thread.setDaemon(true);
