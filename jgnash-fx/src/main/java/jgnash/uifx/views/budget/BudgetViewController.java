@@ -22,7 +22,6 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -58,51 +57,44 @@ public class BudgetViewController implements MessageListener {
     @FXML
     private ResourceBundle resources;
 
-    private SimpleObjectProperty<Budget> activeBudgetProperty = new SimpleObjectProperty<>();
-
-    @SuppressWarnings("FieldCanBeLocal")    // reference must be kept to prevent garbage collection of the binding
-    private BudgetTableController budgetTableController;
-
     @FXML
     private void initialize() {
         exportButton.disableProperty().bind(availableBudgetsComboBox.valueProperty().isNull());
         propertiesButton.disableProperty().bind(availableBudgetsComboBox.valueProperty().isNull());
 
-       budgetTableController
-                = FXMLUtils.loadFXML(o -> borderPane.setCenter((Node) o), "BudgetTable.fxml", resources);
+        // push to end of application thread to avoid a race
+        Platform.runLater(() -> {
+            final BudgetTableController budgetTableController
+                    = FXMLUtils.loadFXML(o -> borderPane.setCenter((Node) o), "BudgetTable.fxml", resources);
 
-        loadComboBox();
+            availableBudgetsComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                Platform.runLater(() -> budgetTableController.budgetProperty().setValue(newValue));
+            });
 
-        budgetTableController.budgetProperty().bind(activeBudgetProperty);
+            loadComboBox();
 
-        MessageBus.getInstance().registerListener(this, MessageChannel.BUDGET, MessageChannel.SYSTEM);
+            MessageBus.getInstance().registerListener(BudgetViewController.this, MessageChannel.BUDGET,
+                    MessageChannel.SYSTEM);
+        });
     }
 
     private void loadComboBox() {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        activeBudgetProperty.unbindBidirectional(availableBudgetsComboBox.valueProperty()); // unbind first
+        final Budget activeBudget = availableBudgetsComboBox.getValue();
 
-        // List of active budgets
+        // Get List of active budgets
         final List<Budget> budgetList = engine.getBudgetList();
 
         availableBudgetsComboBox.getItems().setAll(budgetList);
 
-        // make sure we are not holding a deleted value
-        if (budgetList.isEmpty()) {
-            activeBudgetProperty.setValue(null);
-        }
-
         // if a budget is already active, select it, otherwise select the first available
-        if (budgetList.contains(activeBudgetProperty.get())) {
-            availableBudgetsComboBox.setValue(activeBudgetProperty.get());
+        if (budgetList.contains(activeBudget)) {
+            availableBudgetsComboBox.setValue(activeBudget);
         } else if (availableBudgetsComboBox.getItems().size() > 0) {
             availableBudgetsComboBox.setValue(availableBudgetsComboBox.getItems().get(0));
         }
-
-        // bind / rebind the active budget property
-        activeBudgetProperty.bindBidirectional(availableBudgetsComboBox.valueProperty());
     }
 
     @Override

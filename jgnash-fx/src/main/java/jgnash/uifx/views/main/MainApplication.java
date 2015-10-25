@@ -26,17 +26,19 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.Tab;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -83,6 +85,8 @@ public class MainApplication extends Application implements MessageListener {
      */
     public static final String DEFAULT_CSS = "jgnash/skin/default.css";
 
+    private static final String LAST_TAB = "lastTab";
+
     private static final Logger logger = Logger.getLogger(MainApplication.class.getName());
 
     private final ResourceBundle rb = ResourceUtils.getBundle();
@@ -100,6 +104,11 @@ public class MainApplication extends Application implements MessageListener {
     private BusyPane busyPane;
 
     private final ListProperty<RegisterStage> registerStageListProperty = new SimpleListProperty<>();
+
+    private final Preferences preferences = Preferences.userNodeForPackage(MainApplication.class);
+
+    // Maintain a reference for removal to prevent memory leaks
+    private ChangeListener<Number> tabListener;
 
     /**
      * Application Singleton
@@ -189,38 +198,47 @@ public class MainApplication extends Application implements MessageListener {
     }
 
     private void addViews() {
-        Platform.runLater(() -> tabViewPane.addTab(
+
+        backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
                 FXMLUtils.load(AccountsViewController.class.getResource("AccountsView.fxml"),
-                        ResourceUtils.getBundle()), rb.getString("Tab.Accounts")));
+                        ResourceUtils.getBundle()), rb.getString("Tab.Accounts"))));
 
-        Platform.runLater(() -> tabViewPane.addTab(
+        backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
                 FXMLUtils.load(RegisterViewController.class.getResource("RegisterView.fxml"),
-                        ResourceUtils.getBundle()), rb.getString("Tab.Register")));
+                        ResourceUtils.getBundle()), rb.getString("Tab.Register"))));
 
-        Platform.runLater(() -> tabViewPane.addTab(
-                    FXMLUtils.load(RecurringViewController.class.getResource("RecurringView.fxml"),
-                            ResourceUtils.getBundle()), rb.getString("Tab.Reminders")));
+        backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
+                FXMLUtils.load(RecurringViewController.class.getResource("RecurringView.fxml"),
+                        ResourceUtils.getBundle()), rb.getString("Tab.Reminders"))));
 
-        Platform.runLater(() -> {
-            final Tab tab = tabViewPane.addTab(
+        backgroundExecutor.execute(() -> Platform.runLater(() -> tabViewPane.addTab(
                     FXMLUtils.load(BudgetViewController.class.getResource("BudgetView.fxml"),
-                            ResourceUtils.getBundle()), rb.getString("Tab.Budgeting"));
+                            ResourceUtils.getBundle()), rb.getString("Tab.Budgeting"))));
 
-            tabViewPane.getSelectionModel().select(tab);    // budget needs a bit of help
-        });
+        backgroundExecutor.execute(() ->
+                Platform.runLater(() -> {
+                    tabViewPane.getSelectionModel().select(preferences.getInt(LAST_TAB, 0));
 
-        //TODO restore the last tab used
-        Platform.runLater(() -> tabViewPane.getSelectionModel().select(0));
+                    tabListener = (observable, oldValue, newValue) -> {
+                        if (newValue != null && newValue.intValue() > -1) { // -1 will occur when all tabs are removed
+                            preferences.putInt(LAST_TAB, newValue.intValue());
+                        }
+                    };
+
+                    tabViewPane.getSelectionModel()
+                            .selectedIndexProperty().addListener(new WeakChangeListener<>(tabListener));
+                }));
     }
 
     private void removeViews() {
         tabViewPane.getTabs().clear();
+        tabViewPane.getSelectionModel().selectedIndexProperty().removeListener(tabListener);
+        tabListener = null;
     }
 
     private void installHandlers() {
 
         // Close the file cleanly if it is still open
-        //   primaryStage.setOnHiding(windowEvent -> {... does not work, bug?
         getPrimaryStage().addEventHandler(WindowEvent.WINDOW_CLOSE_REQUEST, windowEvent -> {
             if (EngineFactory.getEngine(EngineFactory.DEFAULT) != null) {
                 windowEvent.consume();  // consume the event and let the shutdown handler deal with closure
