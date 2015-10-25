@@ -55,6 +55,7 @@ import jgnash.uifx.util.JavaFXUtils;
  */
 public class BudgetTableController {
 
+    private static final String HIDE_HORIZONTAL_CSS = "jgnash/skin/tableHideHorizontalScrollBar.css";
     private static final String HIDE_VERTICAL_CSS = "jgnash/skin/tableHideVerticalScrollBar.css";
     private static final String HIDE_HEADER_CSS = "jgnash/skin/tableHideColumnHeader.css";
 
@@ -65,6 +66,9 @@ public class BudgetTableController {
 
     // allow a selection span of +/- the specified number of years
     private static final int YEAR_MARGIN = 10;
+
+    // Initial column width
+    private static final int INITIAL_WIDTH = 75;
 
     @FXML
     private GridPane gridPane;
@@ -123,13 +127,12 @@ public class BudgetTableController {
     /**
      * Bind the max and minimum values of every column to this width
      */
-    private final DoubleProperty columnWidthProperty = new SimpleDoubleProperty(75);
-
+    private final DoubleProperty columnWidthProperty = new SimpleDoubleProperty(INITIAL_WIDTH);
 
     /**
      * Bind the max and minimum values of every summary column to this width
      */
-    private final DoubleProperty summaryColumnWidthProperty = new SimpleDoubleProperty(75);
+    private final DoubleProperty summaryColumnWidthProperty = new SimpleDoubleProperty(INITIAL_WIDTH);
 
     /**
      * Current index to be used for scrolling the display.  If 0 the first period is displayed to the left
@@ -148,8 +151,19 @@ public class BudgetTableController {
 
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
+    /**
+     * Listens to changes to the width of the period table and optimizes the column widths
+     */
+    private ChangeListener<Number> tableWidthChangeListener;
+
     @FXML
     private void initialize() {
+        tableWidthChangeListener = (observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                optimizeColumnWidths();
+            }
+        };
+
         updateHeights();
 
         yearSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(
@@ -199,6 +213,7 @@ public class BudgetTableController {
 
         budgetProperty.addListener(budgetChangeListener);
         yearSpinner.valueProperty().addListener(budgetChangeListener);
+        visibleColumnCountProperty.addListener(budgetChangeListener);  // reload if the number of visible columns change
 
         shiftLeftButton.disableProperty().bind(indexProperty.lessThanOrEqualTo(0));
         shiftRightButton.disableProperty()
@@ -339,13 +354,16 @@ public class BudgetTableController {
         final double availWidth = periodTable.getWidth() - BORDER_MARGIN;   // width of the table
 
         // calculate the number of visible columns
-        final int maxVisible = (int)Math.floor(availWidth / minColumnWidth);
+        final int maxVisible = (int) Math.floor(availWidth / minColumnWidth);
 
         // update the number of visible columns factoring in the size of the descriptor list
         visibleColumnCountProperty.setValue(Math.min(budgetResultsModel.getDescriptorList().size(), maxVisible));
 
-        columnWidthProperty.setValue(availWidth /
-                        Math.min(budgetResultsModel.getDescriptorList().size() * 3, maxVisible * 3));
+        final double width = Math.floor((availWidth - 0.5) /
+                Math.min(budgetResultsModel.getDescriptorList().size() * 3, maxVisible * 3));
+
+        columnWidthProperty.setValue(width);
+
     }
 
     private void loadAccountTree() {
@@ -362,23 +380,25 @@ public class BudgetTableController {
     private synchronized void loadChildren(final TreeItem<Account> parentItem) {
         final Account parent = parentItem.getValue();
 
-        parent.getChildren(Comparators.getAccountByCode()).stream().filter(budgetResultsModel::includeAccount).forEach(child ->
-        {
-            final TreeItem<Account> childItem = new TreeItem<>(child);
-            childItem.setExpanded(true);
-            parentItem.getChildren().add(childItem);
+        parent.getChildren(Comparators.getAccountByCode()).stream().filter(budgetResultsModel::includeAccount)
+                .forEach(child -> {
+                    final TreeItem<Account> childItem = new TreeItem<>(child);
+                    childItem.setExpanded(true);
+                    parentItem.getChildren().add(childItem);
 
-            if (child.getChildCount() > 0) {
-                loadChildren(childItem);
-            }
-        });
+                    if (child.getChildCount() > 0) {
+                        loadChildren(childItem);
+                    }
+                });
     }
 
     private void buildAccountTreeTable() {
         // empty column header is needed
         final TreeTableColumn<Account, String> headerColumn = new TreeTableColumn<>("");
 
-        final TreeTableColumn<Account, String> nameColumn = new TreeTableColumn<>(resources.getString("Column.Account"));
+        final TreeTableColumn<Account, String> nameColumn
+                = new TreeTableColumn<>(resources.getString("Column.Account"));
+
         nameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getName()));
 
         headerColumn.getColumns().add(nameColumn);
@@ -396,7 +416,9 @@ public class BudgetTableController {
     private void buildAccountSummaryTable() {
         final TableColumn<Account, BigDecimal> headerColumn = new TableColumn<>(resources.getString("Title.Summary"));
 
-        final TableColumn<Account, BigDecimal> budgetedColumn = new TableColumn<>(resources.getString("Column.Budgeted"));
+        final TableColumn<Account, BigDecimal> budgetedColumn
+                = new TableColumn<>(resources.getString("Column.Budgeted"));
+
         budgetedColumn.setCellValueFactory(param -> {
             if (param.getValue() != null) {
                 return new SimpleObjectProperty<>(budgetResultsModel.getResults(param.getValue()).getBudgeted());
@@ -424,7 +446,9 @@ public class BudgetTableController {
 
         headerColumn.getColumns().add(actualColumn);
 
-        final TableColumn<Account, BigDecimal> remainingColumn = new TableColumn<>(resources.getString("Column.Remaining"));
+        final TableColumn<Account, BigDecimal> remainingColumn
+                = new TableColumn<>(resources.getString("Column.Remaining"));
+
         remainingColumn.setCellValueFactory(param -> {
             if (param.getValue() != null) {
                 return new SimpleObjectProperty<>(budgetResultsModel.getResults(param.getValue()).getRemaining());
@@ -447,10 +471,13 @@ public class BudgetTableController {
 
         final TableColumn<Account, BigDecimal> headerColumn = new TableColumn<>(descriptor.getPeriodDescription());
 
-        final TableColumn<Account, BigDecimal> budgetedColumn = new TableColumn<>(resources.getString("Column.Budgeted"));
+        final TableColumn<Account, BigDecimal> budgetedColumn
+                = new TableColumn<>(resources.getString("Column.Budgeted"));
+
         budgetedColumn.setCellValueFactory(param -> {
             if (param.getValue() != null) {
-                return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getBudgeted());
+                return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor,
+                        param.getValue()).getBudgeted());
             }
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
@@ -464,7 +491,8 @@ public class BudgetTableController {
         final TableColumn<Account, BigDecimal> actualColumn = new TableColumn<>(resources.getString("Column.Actual"));
         actualColumn.setCellValueFactory(param -> {
             if (param.getValue() != null) {
-                return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getChange());
+                return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor,
+                        param.getValue()).getChange());
             }
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
@@ -475,16 +503,19 @@ public class BudgetTableController {
 
         headerColumn.getColumns().add(actualColumn);
 
-        final TableColumn<Account, BigDecimal> remainingColumn = new TableColumn<>(resources.getString("Column.Remaining"));
+        final TableColumn<Account, BigDecimal> remainingColumn
+                = new TableColumn<>(resources.getString("Column.Remaining"));
         remainingColumn.setCellValueFactory(param -> {
             if (param.getValue() != null) {
-                return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getRemaining());
+                return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor,
+                        param.getValue()).getRemaining());
             }
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         remainingColumn.setCellFactory(param -> new AccountCommodityFormatTableCell());
+
+        // the max width is not bound to allow last column to grow and fill any voids
         remainingColumn.minWidthProperty().bind(columnWidthProperty);
-        remainingColumn.maxWidthProperty().bind(columnWidthProperty);
         remainingColumn.setSortable(false);
 
         headerColumn.getColumns().add(remainingColumn);
@@ -496,6 +527,9 @@ public class BudgetTableController {
      * The period table must be rebuilt because of JavaFx issues
      */
     private void buildPeriodTable() {
+        // remove the old listener so it does not leak
+        periodTable.widthProperty().removeListener(tableWidthChangeListener);
+
         // recreate the table and load the new one into the grid pane
         final int row = GridPane.getRowIndex(periodTable);
         final int column = GridPane.getColumnIndex(periodTable);
@@ -505,7 +539,7 @@ public class BudgetTableController {
         gridPane.getChildren().add(periodTable);
 
         periodTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        periodTable.getStylesheets().addAll(HIDE_VERTICAL_CSS);
+        periodTable.getStylesheets().addAll(HIDE_HORIZONTAL_CSS, HIDE_VERTICAL_CSS);
         periodTable.fixedCellSizeProperty().bind(rowHeightProperty);
         periodTable.setSelectionModel(new NullTableViewSelectionModel<>(periodTable));
 
@@ -517,6 +551,7 @@ public class BudgetTableController {
         }
 
         periodTable.setItems(expandedAccountList);
+        periodTable.widthProperty().addListener(tableWidthChangeListener);
     }
 
     private TableColumn<AccountGroup, BigDecimal> buildAccountPeriodSummaryColumn(final int index) {
@@ -524,10 +559,12 @@ public class BudgetTableController {
 
         final TableColumn<AccountGroup, BigDecimal> headerColumn = new TableColumn<>(descriptor.getPeriodDescription());
 
-        final TableColumn<AccountGroup, BigDecimal> budgetedColumn = new TableColumn<>(resources.getString("Column.Budgeted"));
+        final TableColumn<AccountGroup, BigDecimal> budgetedColumn
+                = new TableColumn<>(resources.getString("Column.Budgeted"));
         budgetedColumn.setCellValueFactory(param -> {
             if (param.getValue() != null) {
-                return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getBudgeted());
+                return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor,
+                        param.getValue()).getBudgeted());
             }
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
@@ -538,7 +575,9 @@ public class BudgetTableController {
 
         headerColumn.getColumns().add(budgetedColumn);
 
-        final TableColumn<AccountGroup, BigDecimal> actualColumn = new TableColumn<>(resources.getString("Column.Actual"));
+        final TableColumn<AccountGroup, BigDecimal> actualColumn
+                = new TableColumn<>(resources.getString("Column.Actual"));
+
         actualColumn.setCellValueFactory(param -> {
             if (param.getValue() != null) {
                 return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getChange());
@@ -552,16 +591,20 @@ public class BudgetTableController {
 
         headerColumn.getColumns().add(actualColumn);
 
-        final TableColumn<AccountGroup, BigDecimal> remainingColumn = new TableColumn<>(resources.getString("Column.Remaining"));
+        final TableColumn<AccountGroup, BigDecimal> remainingColumn
+                = new TableColumn<>(resources.getString("Column.Remaining"));
+
         remainingColumn.setCellValueFactory(param -> {
             if (param.getValue() != null) {
-                return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor, param.getValue()).getRemaining());
+                return new SimpleObjectProperty<>(budgetResultsModel.getResults(descriptor,
+                        param.getValue()).getRemaining());
             }
             return new SimpleObjectProperty<>(BigDecimal.ZERO);
         });
         remainingColumn.setCellFactory(param -> new AccountGroupTableCell());
+
+        // the max width is not bound to allow last column to grow and fill any voids
         remainingColumn.minWidthProperty().bind(columnWidthProperty);
-        remainingColumn.maxWidthProperty().bind(columnWidthProperty);
         remainingColumn.setSortable(false);
 
         headerColumn.getColumns().add(remainingColumn);
@@ -582,7 +625,7 @@ public class BudgetTableController {
         gridPane.getChildren().add(periodSummaryTable);
 
         periodSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        periodSummaryTable.getStylesheets().addAll(HIDE_VERTICAL_CSS, HIDE_HEADER_CSS);
+        periodSummaryTable.getStylesheets().addAll(HIDE_HORIZONTAL_CSS, HIDE_VERTICAL_CSS, HIDE_HEADER_CSS);
         periodSummaryTable.fixedCellSizeProperty().bind(rowHeightProperty);
         periodSummaryTable.prefHeightProperty()
                 .bind(rowHeightProperty.multiply(Bindings.size(accountGroupList)).add(BORDER_MARGIN));
@@ -599,9 +642,12 @@ public class BudgetTableController {
     }
 
     private void buildAccountGroupSummaryTable() {
-        final TableColumn<AccountGroup, BigDecimal> headerColumn = new TableColumn<>(resources.getString("Title.Summary"));
+        final TableColumn<AccountGroup, BigDecimal> headerColumn
+                = new TableColumn<>(resources.getString("Title.Summary"));
 
-        final TableColumn<AccountGroup, BigDecimal> budgetedColumn = new TableColumn<>(resources.getString("Column.Budgeted"));
+        final TableColumn<AccountGroup, BigDecimal> budgetedColumn
+                = new TableColumn<>(resources.getString("Column.Budgeted"));
+
         budgetedColumn.setCellValueFactory(param -> {
             if (param.getValue() != null) {
                 return new SimpleObjectProperty<>(budgetResultsModel.getResults(param.getValue()).getBudgeted());
@@ -615,7 +661,9 @@ public class BudgetTableController {
 
         headerColumn.getColumns().add(budgetedColumn);
 
-        final TableColumn<AccountGroup, BigDecimal> actualColumn = new TableColumn<>(resources.getString("Column.Actual"));
+        final TableColumn<AccountGroup, BigDecimal> actualColumn
+                = new TableColumn<>(resources.getString("Column.Actual"));
+
         actualColumn.setCellValueFactory(param -> {
             if (param.getValue() != null) {
                 return new SimpleObjectProperty<>(budgetResultsModel.getResults(param.getValue()).getChange());
@@ -629,7 +677,9 @@ public class BudgetTableController {
 
         headerColumn.getColumns().add(actualColumn);
 
-        final TableColumn<AccountGroup, BigDecimal> remainingColumn = new TableColumn<>(resources.getString("Column.Remaining"));
+        final TableColumn<AccountGroup, BigDecimal> remainingColumn
+                = new TableColumn<>(resources.getString("Column.Remaining"));
+
         remainingColumn.setCellValueFactory(param -> {
             if (param.getValue() != null) {
                 return new SimpleObjectProperty<>(budgetResultsModel.getResults(param.getValue()).getRemaining());
@@ -661,9 +711,10 @@ public class BudgetTableController {
 
 
         return Math.max(JavaFXUtils.getDisplayedTextWidth(
-                        CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(max), null),
-                JavaFXUtils.getDisplayedTextWidth(
-                        CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(min), null));
+                CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(max) +
+                        BORDER_MARGIN, null), JavaFXUtils.getDisplayedTextWidth(
+                CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(min) +
+                        BORDER_MARGIN, null));
     }
 
     private double getMaxWidth(final BudgetPeriodDescriptor descriptor) {
@@ -682,9 +733,11 @@ public class BudgetTableController {
         }
 
         return Math.max(JavaFXUtils.getDisplayedTextWidth(
-                        CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(max), null),
+                        CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(max) +
+                                BORDER_MARGIN, null),
                 JavaFXUtils.getDisplayedTextWidth(
-                        CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(min), null));
+                        CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(min) +
+                                BORDER_MARGIN, null));
     }
 
     private double getMaxWidth() {
@@ -698,9 +751,12 @@ public class BudgetTableController {
             max = Math.max(max, getMaxWidth(account));
         }
 
-        max = Math.max(max, JavaFXUtils.getDisplayedTextWidth(resources.getString("Column.Budgeted") + BORDER_MARGIN, null));
-        max = Math.max(max, JavaFXUtils.getDisplayedTextWidth(resources.getString("Column.Actual") + BORDER_MARGIN, null));
-        max = Math.max(max, JavaFXUtils.getDisplayedTextWidth(resources.getString("Column.Remaining") + BORDER_MARGIN, null));
+        max = Math.max(max, JavaFXUtils.getDisplayedTextWidth(resources.getString("Column.Budgeted")
+                + BORDER_MARGIN, null));
+        max = Math.max(max, JavaFXUtils.getDisplayedTextWidth(resources.getString("Column.Actual")
+                + BORDER_MARGIN, null));
+        max = Math.max(max, JavaFXUtils.getDisplayedTextWidth(resources.getString("Column.Remaining")
+                + BORDER_MARGIN, null));
 
         return Math.ceil(max);
     }
