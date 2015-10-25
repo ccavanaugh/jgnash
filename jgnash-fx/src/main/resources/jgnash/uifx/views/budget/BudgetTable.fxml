@@ -11,8 +11,6 @@
 
 <?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.control.Button?>
-<?import jgnash.resource.font.FontAwesomeLabel?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="jgnash.uifx.views.budget.BudgetTableController" styleClass="form">
@@ -20,16 +18,6 @@
         <ToolBar>
             <Label text="%Label.Year"/>
             <Spinner fx:id="yearSpinner"/>
-            <Button fx:id="shiftLeftButton" onAction="#handleShiftLeft">
-                <graphic>
-                    <FontAwesomeLabel glyphName="LONG_ARROW_LEFT"/>
-                </graphic>
-            </Button>
-            <Button fx:id="shiftRightButton" onAction="#handleShiftRight">
-                <graphic>
-                    <FontAwesomeLabel glyphName="LONG_ARROW_RIGHT"/>
-                </graphic>
-            </Button>
         </ToolBar>
     </top>
     <center>
@@ -43,6 +31,7 @@
             <rowConstraints>
                 <RowConstraints vgrow="ALWAYS"/>
                 <RowConstraints vgrow="NEVER" minHeight="-Infinity"/>
+                <RowConstraints vgrow="NEVER"/>
             </rowConstraints>
             <TreeTableView fx:id="accountTreeView" GridPane.rowIndex="0" GridPane.columnIndex="0" minWidth="-Infinity"/>
             <TableView fx:id="periodTable" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
@@ -52,6 +41,8 @@
             <TableView fx:id="accountTypeTable" GridPane.rowIndex="1" GridPane.columnIndex="0" minWidth="-Infinity"/>
             <TableView fx:id="periodSummaryTable" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
             <TableView fx:id="accountGroupPeriodSummaryTable" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+
+            <ScrollBar fx:id="horizontalScrollBar" orientation="HORIZONTAL" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
         </GridPane>
     </center>
 </BorderPane>

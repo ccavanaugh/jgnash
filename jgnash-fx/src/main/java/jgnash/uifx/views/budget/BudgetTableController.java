@@ -23,7 +23,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
@@ -71,13 +70,10 @@ public class BudgetTableController {
     private static final int INITIAL_WIDTH = 75;
 
     @FXML
+    private ScrollBar horizontalScrollBar;
+
+    @FXML
     private GridPane gridPane;
-
-    @FXML
-    private Button shiftLeftButton;
-
-    @FXML
-    private Button shiftRightButton;
 
     @FXML
     private Spinner<Integer> yearSpinner;
@@ -215,9 +211,25 @@ public class BudgetTableController {
         yearSpinner.valueProperty().addListener(budgetChangeListener);
         visibleColumnCountProperty.addListener(budgetChangeListener);  // reload if the number of visible columns change
 
-        shiftLeftButton.disableProperty().bind(indexProperty.lessThanOrEqualTo(0));
-        shiftRightButton.disableProperty()
-                .bind(indexProperty.greaterThanOrEqualTo(periodCountProperty.subtract(visibleColumnCountProperty)));
+        horizontalScrollBar.setMin(0);
+        horizontalScrollBar.maxProperty().bind(periodCountProperty.subtract(visibleColumnCountProperty));
+        horizontalScrollBar.setUnitIncrement(1);
+        horizontalScrollBar.disableProperty().bind(periodCountProperty.lessThanOrEqualTo(1));
+
+        // shift the table right and left with the scrollbar value
+        horizontalScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
+            int newIndex = (int)Math.round(newValue.doubleValue());
+
+            if (newIndex > indexProperty.get()) {
+                while (newIndex > indexProperty.get()) {
+                    handleShiftRight();
+                }
+            } else if (newIndex < indexProperty.get()) {
+                while (newIndex < indexProperty.get()) {
+                    handleShiftLeft();
+                }
+            }
+        });
 
         ThemeManager.getFontScaleProperty().addListener((observable, oldValue, newValue) -> {
             updateHeights();
