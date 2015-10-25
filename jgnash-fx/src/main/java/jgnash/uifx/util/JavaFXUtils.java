@@ -81,7 +81,7 @@ public class JavaFXUtils {
         throw new RuntimeException("Could not find vertical scroll bar");
     }
 
-    public static ScrollBar findHorizontalScrollBar(final Node table) {
+    /*public static ScrollBar findHorizontalScrollBar(final Node table) {
         for (final Node node : table.lookupAll(".scroll-bar:horizontal")) {
             if (node instanceof ScrollBar) {
                 if (((ScrollBar) node).getOrientation() == Orientation.HORIZONTAL) {
@@ -91,7 +91,7 @@ public class JavaFXUtils {
         }
 
         throw new RuntimeException("Could not find horizontal scroll bar");
-    }
+    }*/
 
     /**
      * Calculates the displayed width of a text string
