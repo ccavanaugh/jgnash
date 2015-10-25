@@ -19,6 +19,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -185,20 +186,21 @@ public class BudgetTableController {
             Platform.runLater(this::updateExpandedAccountList);
         });
 
-        budgetProperty.addListener((observable, oldValue, newValue) -> {
-            Platform.runLater(BudgetTableController.this::handleBudgetChange);  // push change to end of EDT
-        });
-
-        yearSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+        final ChangeListener<Object> budgetChangeListener = (observable, oldValue, newValue) -> {
+            // push change to end of the application thread
             Platform.runLater(BudgetTableController.this::handleBudgetChange);
-        });
+        };
+
+        budgetProperty.addListener(budgetChangeListener);
+        yearSpinner.valueProperty().addListener(budgetChangeListener);
+
+        shiftLeftButton.disableProperty().bind(indexProperty.lessThanOrEqualTo(0));
+        shiftRightButton.disableProperty()
+                .bind(indexProperty.greaterThanOrEqualTo(periodCountProperty.subtract(visibleColumnCountProperty)));
 
         ThemeManager.getFontScaleProperty().addListener((observable, oldValue, newValue) -> {
             updateHeights();
         });
-
-        shiftLeftButton.disableProperty().bind(indexProperty.lessThanOrEqualTo(0));
-        shiftRightButton.disableProperty().bind(indexProperty.greaterThanOrEqualTo(periodCountProperty.subtract(visibleColumnCountProperty)));
     }
 
     @FXML
@@ -275,7 +277,8 @@ public class BudgetTableController {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             Objects.requireNonNull(engine);
 
-            budgetResultsModel = new BudgetResultsModel(budgetProperty.get(), yearSpinner.getValue(), engine.getDefaultCurrency());
+            budgetResultsModel
+                    = new BudgetResultsModel(budgetProperty.get(), yearSpinner.getValue(), engine.getDefaultCurrency());
 
             periodCountProperty.setValue(budgetResultsModel.getDescriptorList().size());
 
