@@ -218,7 +218,7 @@ public class BudgetTableController {
 
         // shift the table right and left with the scrollbar value
         horizontalScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
-            int newIndex = (int)Math.round(newValue.doubleValue());
+            int newIndex = (int) Math.round(newValue.doubleValue());
 
             if (newIndex > indexProperty.get()) {
                 while (newIndex > indexProperty.get()) {
@@ -346,8 +346,6 @@ public class BudgetTableController {
 
             accountGroupList.setAll(budgetResultsModel.getAccountGroupList());
 
-            optimizeColumnWidths();
-
             buildPeriodTable();
             buildPeriodSummaryTable();
             updateExpandedAccountList();
@@ -375,7 +373,6 @@ public class BudgetTableController {
                 Math.min(budgetResultsModel.getDescriptorList().size() * 3, maxVisible * 3));
 
         columnWidthProperty.setValue(width);
-
     }
 
     private void loadAccountTree() {
