@@ -218,7 +218,7 @@ public class BudgetTableController {
 
         // shift the table right and left with the scrollbar value
         horizontalScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
-            int newIndex = (int) Math.round(newValue.doubleValue());
+            int newIndex = (int)Math.round(newValue.doubleValue());
 
             if (newIndex > indexProperty.get()) {
                 while (newIndex > indexProperty.get()) {
@@ -346,6 +346,8 @@ public class BudgetTableController {
 
             accountGroupList.setAll(budgetResultsModel.getAccountGroupList());
 
+            optimizeColumnWidths();
+
             buildPeriodTable();
             buildPeriodSummaryTable();
             updateExpandedAccountList();
@@ -360,16 +362,15 @@ public class BudgetTableController {
         final double maxWidth = getMaxWidth();                  // max calculated width of the columns
         summaryColumnWidthProperty.setValue(maxWidth);          // summary columns will use the calculated value
 
-        final double minColumnWidth = maxWidth * 3.0;           // period columns are 3 columns wide
         final double availWidth = periodTable.getWidth() - BORDER_MARGIN;   // width of the table
 
         // calculate the number of visible columns
-        final int maxVisible = (int) Math.floor(availWidth / minColumnWidth);
+        final int maxVisible = (int) Math.floor(availWidth / (maxWidth * 3.0)); // period columns are 3 columns wide
 
         // update the number of visible columns factoring in the size of the descriptor list
         visibleColumnCountProperty.setValue(Math.min(budgetResultsModel.getDescriptorList().size(), maxVisible));
 
-        final double width = Math.floor((availWidth - 0.5) /
+        final double width = Math.floor(availWidth /
                 Math.min(budgetResultsModel.getDescriptorList().size() * 3, maxVisible * 3));
 
         columnWidthProperty.setValue(width);
