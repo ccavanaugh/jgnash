@@ -362,7 +362,7 @@ public class BudgetTableController {
         final double maxWidth = getMaxWidth();                  // max calculated width of the columns
         summaryColumnWidthProperty.setValue(maxWidth);          // summary columns will use the calculated value
 
-        final double minColumnWidth = maxWidth * 3.0;           // descriptor columns are 3 columns wide
+        final double minColumnWidth = maxWidth * 3.0;           // period columns are 3 columns wide
         final double availWidth = periodTable.getWidth() - BORDER_MARGIN;   // width of the table
 
         // calculate the number of visible columns
