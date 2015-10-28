@@ -276,6 +276,10 @@ public class BudgetTableController {
         }
     }
 
+    BudgetResultsModel getBudgetResultsModel() {
+        return budgetResultsModel;
+    }
+
     SimpleObjectProperty<Budget> budgetProperty() {
         return budgetProperty;
     }

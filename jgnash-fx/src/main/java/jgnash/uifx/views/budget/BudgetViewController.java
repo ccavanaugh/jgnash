@@ -17,30 +17,39 @@
  */
 package jgnash.uifx.views.budget;
 
+import java.io.File;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
+import jgnash.engine.budget.BudgetResultsExport;
 import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
+import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.uifx.views.main.MainApplication;
 
 /**
  * @author Craig Cavanaugh
  */
 public class BudgetViewController implements MessageListener {
+
+    private static final String EXPORT_DIR = "exportDir";
 
     @FXML
     private BorderPane borderPane;
@@ -57,6 +66,8 @@ public class BudgetViewController implements MessageListener {
     @FXML
     private ResourceBundle resources;
 
+    private BudgetTableController budgetTableController;
+
     @FXML
     private void initialize() {
         exportButton.disableProperty().bind(availableBudgetsComboBox.valueProperty().isNull());
@@ -64,7 +75,7 @@ public class BudgetViewController implements MessageListener {
 
         // push to end of application thread to avoid a race
         Platform.runLater(() -> {
-            final BudgetTableController budgetTableController
+            budgetTableController
                     = FXMLUtils.loadFXML(o -> borderPane.setCenter((Node) o), "BudgetTable.fxml", resources);
 
             availableBudgetsComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -116,7 +127,38 @@ public class BudgetViewController implements MessageListener {
 
     @FXML
     private void handleExportAction() {
-        // TODO Implement
+        Objects.requireNonNull(budgetTableController);
+
+        final Preferences pref = Preferences.userNodeForPackage(BudgetViewController.class);
+        final FileChooser fileChooser = new FileChooser();
+
+        fileChooser.setInitialDirectory(new File(pref.get(EXPORT_DIR, System.getProperty("user.home"))));
+
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter(resources.getString("Label.SpreadsheetFiles") + " (*.xls, *.xlsx)",
+                        "*.xls", "*.xlsx")
+        );
+
+        final File file = fileChooser.showSaveDialog(MainApplication.getInstance().getPrimaryStage());
+
+        if (file != null) {
+            pref.put(EXPORT_DIR, file.getParentFile().getAbsolutePath());
+
+            final Task<Void> exportTask = new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    updateMessage(resources.getString("Message.PleaseWait"));
+                    updateProgress(-1, Long.MAX_VALUE);
+
+                    BudgetResultsExport.exportBudgetResultsModel(file, budgetTableController.getBudgetResultsModel());
+                    return null;
+                }
+            };
+
+            new Thread(exportTask).start();
+
+            StaticUIMethods.displayTaskProgress(exportTask);
+        }
     }
 
     @FXML
