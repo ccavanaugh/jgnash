@@ -556,15 +556,16 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         }
     }
 
+    @NotNull
     public ReconciledState getReconciled(final Account account) {
-        ReconciledState state = null;
+        ReconciledState state = ReconciledState.NOT_RECONCILED; // default is not reconciled
 
-        Lock l = getLock().readLock();
+        final Lock l = getLock().readLock();
         l.lock();
 
         try {
 
-            for (TransactionEntry e : transactionEntries) {
+            for (final TransactionEntry e : transactionEntries) {
                 if (e.getCreditAccount().equals(account)) {
                     state = e.getCreditReconciled();
                     break;
