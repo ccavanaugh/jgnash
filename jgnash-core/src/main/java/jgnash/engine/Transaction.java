@@ -529,12 +529,15 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         this.fitid = fitid;
     }
 
-    public void setReconciled(final Account account, final ReconciledState state) {
-        Lock l = getLock().writeLock();
+    public void setReconciled(@NotNull final Account account, @NotNull final ReconciledState state) {
+        Objects.requireNonNull(account);
+        Objects.requireNonNull(state);
+
+        final Lock l = getLock().writeLock();
         l.lock();
 
         try {
-            for (TransactionEntry e : transactionEntries) {
+            for (final TransactionEntry e : transactionEntries) {
                 e.setReconciled(account, state);
             }
         } finally {
@@ -542,12 +545,14 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
         }
     }
 
-    public void setReconciled(final ReconciledState state) {
-        Lock l = getLock().writeLock();
+    public void setReconciled(@NotNull final ReconciledState state) {
+        Objects.requireNonNull(state);
+
+        final Lock l = getLock().writeLock();
         l.lock();
 
         try {
-            for (TransactionEntry e : transactionEntries) {
+            for (final TransactionEntry e : transactionEntries) {
                 e.setCreditReconciled(state);
                 e.setDebitReconciled(state);
             }
