@@ -16,6 +16,7 @@
 <?import jgnash.uifx.control.DatePickerEx?>
 <?import jgnash.uifx.control.IntegerTextField?>
 <?import jgnash.uifx.control.TextFieldEx?>
+
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="jgnash.uifx.views.recurring.RecurringPropertiesController" styleClass="dialog, form">
 
@@ -35,7 +36,7 @@
 
             <Label text="%Label.Account" GridPane.rowIndex="0"/>
             <AccountComboBox fx:id="accountComboBox" GridPane.columnIndex="1" GridPane.rowIndex="0"
-                             GridPane.columnSpan="2"/>
+                             GridPane.columnSpan="2" maxWidth="Infinity"/>
 
             <Label text="%Label.Description" GridPane.rowIndex="1"/>
             <TextFieldEx fx:id="descriptionTextField" GridPane.rowIndex="1" GridPane.columnIndex="1"
