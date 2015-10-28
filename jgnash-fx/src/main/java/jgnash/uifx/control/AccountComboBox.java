@@ -134,12 +134,14 @@ public class AccountComboBox extends ComboBox<Account> implements MessageListene
 
         loadAccounts(engine.getRootAccount().getChildren(Comparators.getAccountByCode()));
 
-        // Set a default account, need to push to the EDT to avoid a race condition
-        Platform.runLater(() -> {
-            if (getItems().size() > 0) {
+        // Set a default account
+        if (getItems().size() > 0) {
+            if (Platform.isFxApplicationThread()) {
+                setValue(getItems().get(0));
+            } else {    // push to the end of the application thread only if needed
                 Platform.runLater(() -> setValue(getItems().get(0)));
             }
-        });
+        }
     }
 
     private void registerListeners() {
