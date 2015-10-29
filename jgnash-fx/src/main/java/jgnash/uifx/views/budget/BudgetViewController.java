@@ -113,23 +113,6 @@ public class BudgetViewController implements MessageListener {
         }
     }
 
-    @Override
-    public void messagePosted(final Message message) {
-        switch (message.getEvent()) {
-            case FILE_CLOSING:
-                MessageBus.getInstance().unregisterListener(this, MessageChannel.BUDGET, MessageChannel.SYSTEM);
-                Platform.runLater(() -> availableBudgetsComboBox.getItems().clear());
-                break;
-            case BUDGET_REMOVE:
-            case BUDGET_ADD:
-            case BUDGET_UPDATE:
-                Platform.runLater(BudgetViewController.this::loadComboBox);
-                break;
-            default:
-                break;
-        }
-    }
-
     @FXML
     private void handleExportAction() {
         Objects.requireNonNull(budgetTableController);
@@ -179,8 +162,25 @@ public class BudgetViewController implements MessageListener {
         final Stage stage = FXMLUtils.loadFXML(fxmlUrl, controllerObjectProperty, resources);
         stage.setTitle(ResourceUtils.getString("Title.BudgetProperties"));
 
-        stage.showAndWait();
+        controllerObjectProperty.get().setBudget(availableBudgetsComboBox.getValue());
 
-        // TODO: Load form
+        stage.showAndWait();
+    }
+
+    @Override
+    public void messagePosted(final Message message) {
+        switch (message.getEvent()) {
+            case FILE_CLOSING:
+                MessageBus.getInstance().unregisterListener(this, MessageChannel.BUDGET, MessageChannel.SYSTEM);
+                Platform.runLater(() -> availableBudgetsComboBox.getItems().clear());
+                break;
+            case BUDGET_REMOVE:
+            case BUDGET_ADD:
+            case BUDGET_UPDATE:
+                Platform.runLater(BudgetViewController.this::loadComboBox);
+                break;
+            default:
+                break;
+        }
     }
 }
