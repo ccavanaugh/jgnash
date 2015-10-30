@@ -43,6 +43,9 @@ import jgnash.engine.budget.Budget;
 import jgnash.engine.budget.BudgetPeriodDescriptor;
 import jgnash.engine.budget.BudgetPeriodResults;
 import jgnash.engine.budget.BudgetResultsModel;
+import jgnash.engine.message.Message;
+import jgnash.engine.message.MessageListener;
+import jgnash.engine.message.MessageProperty;
 import jgnash.text.CommodityFormat;
 import jgnash.uifx.control.NullTableViewSelectionModel;
 import jgnash.uifx.skin.StyleClass;
@@ -52,7 +55,7 @@ import jgnash.uifx.util.JavaFXUtils;
 /**
  * @author Craig Cavanaugh
  */
-public class BudgetTableController {
+public class BudgetTableController implements MessageListener {
 
     private static final String HIDE_HORIZONTAL_CSS = "jgnash/skin/tableHideHorizontalScrollBar.css";
     private static final String HIDE_VERTICAL_CSS = "jgnash/skin/tableHideVerticalScrollBar.css";
@@ -186,7 +189,7 @@ public class BudgetTableController {
         accountTypeTable.setSelectionModel(new NullTableViewSelectionModel<>(accountTypeTable));
 
         accountGroupPeriodSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        accountGroupPeriodSummaryTable.getStylesheets().add(HIDE_HEADER_CSS);
+        accountGroupPeriodSummaryTable.getStylesheets().addAll(HIDE_HEADER_CSS, HIDE_HORIZONTAL_CSS, HIDE_VERTICAL_CSS);
         accountGroupPeriodSummaryTable.setItems(accountGroupList);
         accountGroupPeriodSummaryTable.fixedCellSizeProperty().bind(rowHeightProperty);
         accountGroupPeriodSummaryTable.prefHeightProperty()
@@ -218,7 +221,7 @@ public class BudgetTableController {
 
         // shift the table right and left with the scrollbar value
         horizontalScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
-            int newIndex = (int)Math.round(newValue.doubleValue());
+            int newIndex = (int) Math.round(newValue.doubleValue());
 
             if (newIndex > indexProperty.get()) {
                 while (newIndex > indexProperty.get()) {
@@ -309,16 +312,24 @@ public class BudgetTableController {
         }
     }
 
+    // a new model is required if the year or budget property is changed
     private void handleBudgetChange() {
         if (budgetProperty.get() != null) {
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
             Objects.requireNonNull(engine);
 
+            // unregister from the old model
+            if (budgetResultsModel != null) {
+                budgetResultsModel.removeMessageListener(this); // unregister from the old model
+            }
+
             budgetResultsModel
                     = new BudgetResultsModel(budgetProperty.get(), yearSpinner.getValue(), engine.getDefaultCurrency());
 
-            periodCountProperty.setValue(budgetResultsModel.getDescriptorList().size());
+            // register with the new model
+            budgetResultsModel.addMessageListener(this);    // register with the new model
 
+            periodCountProperty.setValue(budgetResultsModel.getDescriptorList().size());
             loadModel();
         } else {
             accountTreeView.setRoot(null);
@@ -773,6 +784,51 @@ public class BudgetTableController {
                 + BORDER_MARGIN, null));
 
         return Math.ceil(max);
+    }
+
+    private void handleBudgetUpdate() {
+        Platform.runLater(BudgetTableController.this::handleBudgetChange);
+    }
+
+    private void handleTransactionUpdate() {
+
+        // TODO Rate limit updates
+
+        Platform.runLater(() -> {
+            periodTable.refresh();
+            periodSummaryTable.refresh();
+            accountSummaryTable.refresh();
+            accountGroupPeriodSummaryTable.refresh();
+
+            optimizeColumnWidths();
+        });
+    }
+
+    @Override
+    public void messagePosted(final Message message) {
+        switch (message.getEvent()) {
+            case FILE_CLOSING:
+                budgetResultsModel.removeMessageListener(this);
+                budgetProperty().setValue(null);
+                break;
+            case BUDGET_REMOVE:
+                if (budgetProperty().get().equals(message.getObject(MessageProperty.BUDGET))) {
+                    budgetProperty().setValue(null);
+                    budgetResultsModel.removeMessageListener(this);
+                }
+                break;
+            case BUDGET_UPDATE:
+                if (budgetProperty().get().equals(message.getObject(MessageProperty.BUDGET))) {
+                    handleBudgetUpdate();
+                }
+                break;
+            case TRANSACTION_ADD:
+            case TRANSACTION_REMOVE:
+                handleTransactionUpdate();
+                break;
+            default:
+                break;
+        }
     }
 
     private class AccountCommodityFormatTableCell extends TableCell<Account, BigDecimal> {
