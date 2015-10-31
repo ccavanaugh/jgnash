@@ -1,5 +1,6 @@
 package jgnash.engine;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -24,8 +25,8 @@ public class InvestmentTransactionTest extends AbstractEngineTest {
     }
 
     @Override
-    protected Engine createEngine() {
-        database = EngineFactory.getDefaultDatabase() + "-investTransaction-test.xml";
+    protected Engine createEngine() throws IOException {
+        database = testFolder.newFile("invest-transaction-test.xml").getAbsolutePath();
         EngineFactory.deleteDatabase(database);
 
         return EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);

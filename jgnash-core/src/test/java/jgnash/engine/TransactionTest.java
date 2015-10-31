@@ -4,25 +4,26 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 public class TransactionTest {
+
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
 
     private static final char[] PASSWORD = new char[]{};
 
     @Test
-    public void test() {
-        testBackEnd();
-    }
+    public void testBackEnd() throws IOException {
 
-    private static void testBackEnd() {
-
-        String database = EngineFactory.getDefaultDatabase() + "-transaction-test.xml";
-
+        final String database = testFolder.newFile("transaction-test.xml").getAbsolutePath();
         EngineFactory.deleteDatabase(database);
 
         try {
@@ -79,9 +80,8 @@ public class TransactionTest {
     }
 
     @Test
-    public void testEmptyAccount() {
-        String database = EngineFactory.getDefaultDatabase() + "-empty-test.xml";
-
+    public void testEmptyAccount() throws IOException {
+        final String database = testFolder.newFile("empty-test.xml").getAbsolutePath();
         EngineFactory.deleteDatabase(database);
 
         try {

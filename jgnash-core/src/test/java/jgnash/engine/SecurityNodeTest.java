@@ -17,6 +17,7 @@
  */
 package jgnash.engine;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
@@ -32,8 +33,8 @@ import static org.junit.Assert.assertTrue;
 public class SecurityNodeTest extends AbstractEngineTest {
 
     @Override
-    protected Engine createEngine() {
-        database = EngineFactory.getDefaultDatabase() + "-jgnash-test.bxds";
+    protected Engine createEngine() throws IOException {
+        database = testFolder.newFile("security-test.bxds").getAbsolutePath();
         EngineFactory.deleteDatabase(database);
 
         return EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.BINARY_XSTREAM);

@@ -19,12 +19,9 @@ package jgnash.engine.net.security;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import jgnash.engine.AbstractEngineTest;
 import jgnash.engine.DataStoreType;
@@ -46,14 +43,8 @@ import static org.junit.Assert.assertNotNull;
 public class YahooEventParserTest extends AbstractEngineTest {
 
     @Override
-    protected Engine createEngine() {
-
-        try {
-            database = Files.createTempFile("jgnash-", "." + DataStoreType.BINARY_XSTREAM.getDataStore().getFileExt()).toFile().getAbsolutePath();
-        } catch (IOException e1) {
-            Logger.getLogger(YahooEventParserTest.class.getName()).log(Level.SEVERE, e1.getLocalizedMessage(), e1);
-        }
-
+    protected Engine createEngine() throws IOException {
+        database = testFolder.newFile("yahoo-test.bxds").getAbsolutePath();
         EngineFactory.deleteDatabase(database);
 
         return EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.BINARY_XSTREAM);

@@ -27,7 +27,9 @@ import java.math.RoundingMode;
 import java.util.Objects;
 import java.util.Set;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * Commodity test
@@ -36,18 +38,19 @@ import org.junit.Test;
  */
 public class CommodityNodeTest {
 
-    //public static final String USER = "";
+    @Rule
+    public TemporaryFolder testFolder = new TemporaryFolder();
 
     private static final char[] PASSWORD = new char[]{};
 
     @Test
     public void ExchangeTest1() {
-        EngineFactory.deleteDatabase(EngineFactory.getDefaultDatabase() + "-exchange-test.xml");
-
-        // get an engine, create a commodity and then try to retrieve
 
         try {
-            Engine e = EngineFactory.bootLocalEngine(EngineFactory.getDefaultDatabase() + "-exchange-test.xml", EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
+            final String database = testFolder.newFile("exchange-test.xml").getAbsolutePath();
+            EngineFactory.deleteDatabase(database);
+
+            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
 
             CurrencyNode usdNode = new CurrencyNode();
             usdNode.setSymbol("USD");
@@ -79,11 +82,12 @@ public class CommodityNodeTest {
 
     @Test
     public void ExchangeTest2() {
-        EngineFactory.deleteDatabase(EngineFactory.getDefaultDatabase() + "-exchange-test.xml");
-
         try {
+            final String database = testFolder.newFile("exchange-test2.xml").getAbsolutePath();
+            EngineFactory.deleteDatabase(database);
+
             // get an engine, create a commodity and then try to retrieve
-            Engine e = EngineFactory.bootLocalEngine(EngineFactory.getDefaultDatabase() + "-exchange-test.xml", EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
+            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
 
             CurrencyNode usdNode = new CurrencyNode();
             usdNode.setSymbol("USD");
@@ -116,10 +120,11 @@ public class CommodityNodeTest {
     public void CommodityNodeStore() {
 
         try {
-            EngineFactory.deleteDatabase(EngineFactory.getDefaultDatabase() + "-commodity-test.xml");
+            final String database = testFolder.newFile("exchange-test3.xml").getAbsolutePath();
+            EngineFactory.deleteDatabase(database);
 
             // get an engine, create a commodity and then try to retrieve
-            Engine e = EngineFactory.bootLocalEngine(EngineFactory.getDefaultDatabase() + "-commodity-test.xml", EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
+            Engine e = EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, PASSWORD, DataStoreType.XML);
             Objects.requireNonNull(e);
 
             CurrencyNode node = new CurrencyNode();
