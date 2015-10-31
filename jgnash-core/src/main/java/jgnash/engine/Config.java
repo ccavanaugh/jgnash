@@ -62,6 +62,9 @@ public class Config extends StoredObject {
 
     private String accountSeparator = ":";
 
+    /** TODO: this needs to be changed long term because of corner cases that can break version checks if not careful
+     * Use a date or store as a string so trailing zero's are not lost.  As a float, 2.2 and 2.20 look the same.
+     */
     private float fileVersion = 0f;
 
     private transient ReadWriteLock preferencesLock;
@@ -105,6 +108,30 @@ public class Config extends StoredObject {
     @SuppressWarnings("SameParameterValue")
     void setFileVersion(final float fileVersion) {
         this.fileVersion = fileVersion;
+    }
+
+    /**
+     * Returns the minor file revision.  This is a workaround for the old file revision scheme
+     *
+     * Warning: 2.2 and 2.20 will return 0.2.  2.21 returns 2.1, 2.14 returns 1.4
+     *
+     * @return minor revision as a float
+     */
+    float getMinorRevision() {
+        final String version = String.valueOf(getFileVersion());
+
+        if (version.contains(".")) {
+            final String minor = version.split("\\.")[1];
+
+            if (minor.startsWith("0")) { // 2.01, 2.02, etc
+                return ((float)Integer.parseInt(minor.substring(1))) / 100f;
+            }
+
+            // 2.1, 2.2, 2.17, etc
+            return ((float)Integer.parseInt(minor)) / 10f;
+        }
+
+        return 0;
     }
 
     void setDefaultCurrency(final CurrencyNode defaultCurrency) {

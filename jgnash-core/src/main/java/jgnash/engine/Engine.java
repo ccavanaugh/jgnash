@@ -464,7 +464,7 @@ public class Engine {
             }
 
             /* Check for null account number strings */
-            if (getConfig().getFileVersion() < 2.01f) {
+            if (getConfig().getMinorRevision() < 0.01f) {
                 logInfo("Checking for null account numbers");
                 getAccountDAO().getAccountList().stream().filter(account -> account.getAccountNumber() == null)
                         .forEach(account -> {
@@ -475,7 +475,7 @@ public class Engine {
             }
 
             /* Check for detached accounts */
-            if (getConfig().getFileVersion() < 2.02f) {
+            if (getConfig().getMinorRevision() < 0.02f) {
                 getAccountDAO().getAccountList().stream()
                         .filter(account -> account.getParent() == null && !account.instanceOf(AccountType.ROOT))
                         .forEach(account -> {
@@ -485,9 +485,7 @@ public class Engine {
                             getAccountDAO().updateAccount(getRootAccount());
                             logInfo("Fixing a detached account: " + account.getName());
                         });
-            }
 
-            if (getConfig().getFileVersion() < 2.02f) {
                 logInfo("Checking for a recursive account structure");
                 getAccountDAO().getAccountList().stream()
                         .filter(account -> account.equals(account.getParent()))
@@ -500,12 +498,12 @@ public class Engine {
                         });
             }
 
-            if (getConfig().getFileVersion() < 2.03f) {
+            if (getConfig().getMinorRevision() < 0.03f) {
                 clearObsoleteExchangeRates();
             }
 
             // check for multiple root accounts
-            if (getConfig().getFileVersion() < 2.04f) {
+            if (getConfig().getMinorRevision() < 0.04f) {
                 final List<RootAccount> roots = getStoredObjects().stream()
                         .filter(o -> o instanceof RootAccount).map(o -> (RootAccount) o).collect(Collectors.toList());
 
@@ -527,13 +525,13 @@ public class Engine {
             }
 
             // cleanup currencies
-            if (getConfig().getFileVersion() < 2.1f) {
+            if (getConfig().getMinorRevision() < 0.1f) {
                 System.out.println(getConfig().getFileVersion());
                 removeDuplicateCurrencies();
             }
 
             // force income and expense account to only be display in a budget by default
-            if (getConfig().getFileVersion() < 2.2f) {
+            if (getConfig().getMinorRevision() < 0.2f) {
                 getAccountList().stream()
                         .filter(account -> !account.memberOf(AccountGroup.INCOME) && !account.memberOf(AccountGroup.EXPENSE))
                         .forEach(account -> {
@@ -543,24 +541,28 @@ public class Engine {
             }
 
             // migrate amortization object to new storage format and remove and orphaned transactions from removal and modifications of reminders
-            if (getConfig().getFileVersion() < 2.3f) {
+            if (getConfig().getMinorRevision() < 0.3f) {
                 migrateAmortizeObjects();
                 removeOrphanedTransactions();
             }
 
-            // check for improperly set default currency
-            if (getDefaultCurrency() == null) {
-                setDefaultCurrency(getRootAccount().getCurrencyNode());
-                logger.warning("Forcing default currency");
-            }
-
             // purge stale budget goals for place holder accounts
-            if (getConfig().getFileVersion() < 2.14f) {
+            if (getConfig().getMinorRevision() < 1.4f) {
                 getAccountList().stream().filter(Account::isPlaceHolder).forEach(this::purgeBudgetGoal);
             }
 
+            // check for improperly set default currency
+            if (getConfig().getMinorRevision() < 1.7f) {
+                if (getDefaultCurrency() == null) {
+                    setDefaultCurrency(getRootAccount().getCurrencyNode());
+                    logger.warning("Forcing default currency");
+                }
+            }
+
             // fix transaction incorrectly marked for removal
-            fixMarkedRemovalTransactions();
+            if (getConfig().getMinorRevision() < 1.7f) {
+                fixMarkedRemovalTransactions();
+            }
 
             // if the file version is not current, then update it
             if (!nearlyEquals(getConfig().getFileVersion(), CURRENT_VERSION, EPSILON)) {
