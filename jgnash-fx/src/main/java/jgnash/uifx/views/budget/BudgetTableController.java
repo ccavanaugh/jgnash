@@ -314,10 +314,9 @@ public class BudgetTableController implements MessageListener {
 
     // a new model is required if the year or budget property is changed
     private void handleBudgetChange() {
-        if (budgetProperty.get() != null) {
-            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-            Objects.requireNonNull(engine);
+        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
+        if (budgetProperty.get() != null && engine != null) {
             // unregister from the old model
             if (budgetResultsModel != null) {
                 budgetResultsModel.removeMessageListener(this); // unregister from the old model
