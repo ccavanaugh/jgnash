@@ -129,6 +129,11 @@ public class BudgetTableController implements MessageListener {
     private final DoubleProperty columnWidthProperty = new SimpleDoubleProperty(INITIAL_WIDTH);
 
     /**
+     * The is the minimum column width required to display the largest numeric value
+     */
+    private final DoubleProperty minColumnWidthProperty = new SimpleDoubleProperty(INITIAL_WIDTH);
+
+    /**
      * Bind the max and minimum values of every summary column to this width
      */
     private final DoubleProperty summaryColumnWidthProperty = new SimpleDoubleProperty(INITIAL_WIDTH);
@@ -218,6 +223,8 @@ public class BudgetTableController implements MessageListener {
         horizontalScrollBar.maxProperty().bind(periodCountProperty.subtract(visibleColumnCountProperty));
         horizontalScrollBar.setUnitIncrement(1);
         horizontalScrollBar.disableProperty().bind(periodCountProperty.lessThanOrEqualTo(1));
+
+        summaryColumnWidthProperty.bind(minColumnWidthProperty);
 
         // shift the table right and left with the scrollbar value
         horizontalScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -325,6 +332,9 @@ public class BudgetTableController implements MessageListener {
             budgetResultsModel
                     = new BudgetResultsModel(budgetProperty.get(), yearSpinner.getValue(), engine.getDefaultCurrency());
 
+            // model has changed, calculate the minimum column width
+            minColumnWidthProperty.setValue(calculateMinColumnWidth());
+
             // register with the new model
             budgetResultsModel.addMessageListener(this);    // register with the new model
 
@@ -373,13 +383,10 @@ public class BudgetTableController implements MessageListener {
     }
 
     private void optimizeColumnWidths() {
-        final double maxWidth = getMaxWidth();                  // max calculated width of the columns
-        summaryColumnWidthProperty.setValue(maxWidth);          // summary columns will use the calculated value
-
         final double availWidth = periodTable.getWidth() - BORDER_MARGIN;   // width of the table
 
-        // calculate the number of visible columns
-        final int maxVisible = (int) Math.floor(availWidth / (maxWidth * 3.0)); // period columns are 3 columns wide
+        // calculate the number of visible columns, period columns are 3 columns wide
+        final int maxVisible = (int) Math.floor(availWidth / (minColumnWidthProperty.get() * 3.0));
 
         // update the number of visible columns factoring in the size of the descriptor list
         visibleColumnCountProperty.setValue(Math.min(budgetResultsModel.getDescriptorList().size(), maxVisible));
@@ -720,7 +727,7 @@ public class BudgetTableController implements MessageListener {
         accountGroupPeriodSummaryTable.getColumns().add(headerColumn);
     }
 
-    private double getMaxWidth(final Account account) {
+    private double calculateMinColumnWidth(final Account account) {
         double max = 0;
         double min = 0;
 
@@ -741,7 +748,7 @@ public class BudgetTableController implements MessageListener {
                         BORDER_MARGIN, null));
     }
 
-    private double getMaxWidth(final BudgetPeriodDescriptor descriptor) {
+    private double calculateMinColumnWidth(final BudgetPeriodDescriptor descriptor) {
         double max = 0;
         double min = 0;
 
@@ -764,15 +771,15 @@ public class BudgetTableController implements MessageListener {
                                 BORDER_MARGIN, null));
     }
 
-    private double getMaxWidth() {
+    private double calculateMinColumnWidth() {
         double max = 0;
 
         for (final BudgetPeriodDescriptor descriptor : budgetResultsModel.getDescriptorList()) {
-            max = Math.max(max, getMaxWidth(descriptor));
+            max = Math.max(max, calculateMinColumnWidth(descriptor));
         }
 
         for (final Account account : expandedAccountList) {
-            max = Math.max(max, getMaxWidth(account));
+            max = Math.max(max, calculateMinColumnWidth(account));
         }
 
         max = Math.max(max, JavaFXUtils.getDisplayedTextWidth(resources.getString("Column.Budgeted")
