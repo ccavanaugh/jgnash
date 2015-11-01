@@ -389,18 +389,24 @@ public class BudgetTableController implements MessageListener {
     }
 
     private void optimizeColumnWidths() {
-        final double availWidth = periodTable.getWidth() - BORDER_MARGIN;   // width of the table
+        lock.writeLock().lock();
 
-        // calculate the number of visible columns, period columns are 3 columns wide
-        final int maxVisible = (int) Math.floor(availWidth / (minColumnWidthProperty.get() * 3.0));
+        try {
+            final double availWidth = periodTable.getWidth() - BORDER_MARGIN;   // width of the table
 
-        // update the number of visible columns factoring in the size of the descriptor list
-        visibleColumnCountProperty.setValue(Math.min(budgetResultsModel.getDescriptorList().size(), maxVisible));
+            // calculate the number of visible columns, period columns are 3 columns wide
+            final int maxVisible = (int) Math.floor(availWidth / (minColumnWidthProperty.get() * 3.0));
 
-        final double width = Math.floor(availWidth /
-                Math.min(budgetResultsModel.getDescriptorList().size() * 3, maxVisible * 3));
+            // update the number of visible columns factoring in the size of the descriptor list
+            visibleColumnCountProperty.setValue(Math.min(budgetResultsModel.getDescriptorList().size(), maxVisible));
 
-        columnWidthProperty.setValue(width);
+            final double width = Math.floor(availWidth /
+                    Math.min(budgetResultsModel.getDescriptorList().size() * 3, maxVisible * 3));
+
+            columnWidthProperty.setValue(width);
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 
     private void loadAccountTree() {
