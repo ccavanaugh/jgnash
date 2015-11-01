@@ -146,7 +146,7 @@ public class BudgetTableController implements MessageListener {
     /**
      * The number of visible columns
      */
-    private final IntegerProperty visibleColumnCountProperty = new SimpleIntegerProperty(4);
+    private final IntegerProperty visibleColumnCountProperty = new SimpleIntegerProperty(1);
 
     /**
      * The number of periods in the model
@@ -217,7 +217,6 @@ public class BudgetTableController implements MessageListener {
 
         budgetProperty.addListener(budgetChangeListener);
         yearSpinner.valueProperty().addListener(budgetChangeListener);
-        visibleColumnCountProperty.addListener(budgetChangeListener);  // reload if the number of visible columns change
 
         horizontalScrollBar.setMin(0);
         horizontalScrollBar.maxProperty().bind(periodCountProperty.subtract(visibleColumnCountProperty));
@@ -321,29 +320,36 @@ public class BudgetTableController implements MessageListener {
 
     // a new model is required if the year or budget property is changed
     private void handleBudgetChange() {
-        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+        lock.writeLock().lock();
 
-        if (budgetProperty.get() != null && engine != null) {
-            // unregister from the old model
-            if (budgetResultsModel != null) {
-                budgetResultsModel.removeMessageListener(this); // unregister from the old model
+        try {
+
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+
+            if (budgetProperty.get() != null && engine != null) {
+                // unregister from the old model
+                if (budgetResultsModel != null) {
+                    budgetResultsModel.removeMessageListener(this); // unregister from the old model
+                }
+
+                budgetResultsModel
+                        = new BudgetResultsModel(budgetProperty.get(), yearSpinner.getValue(), engine.getDefaultCurrency());
+
+                // model has changed, calculate the minimum column width
+                minColumnWidthProperty.setValue(calculateMinColumnWidth());
+
+                // register with the new model
+                budgetResultsModel.addMessageListener(this);    // register with the new model
+
+                periodCountProperty.setValue(budgetResultsModel.getDescriptorList().size());
+                loadModel();
+            } else {
+                accountTreeView.setRoot(null);
+                expandedAccountList.clear();
+                accountGroupList.clear();
             }
-
-            budgetResultsModel
-                    = new BudgetResultsModel(budgetProperty.get(), yearSpinner.getValue(), engine.getDefaultCurrency());
-
-            // model has changed, calculate the minimum column width
-            minColumnWidthProperty.setValue(calculateMinColumnWidth());
-
-            // register with the new model
-            budgetResultsModel.addMessageListener(this);    // register with the new model
-
-            periodCountProperty.setValue(budgetResultsModel.getDescriptorList().size());
-            loadModel();
-        } else {
-            accountTreeView.setRoot(null);
-            expandedAccountList.clear();
-            accountGroupList.clear();
+        } finally {
+            lock.writeLock().unlock();
         }
     }
 
@@ -575,7 +581,7 @@ public class BudgetTableController implements MessageListener {
         periodTable.setSelectionModel(new NullTableViewSelectionModel<>(periodTable));
 
         final int index = indexProperty.getValue();
-        final int periodCount = visibleColumnCountProperty.get();
+        final int periodCount = Math.min(visibleColumnCountProperty.get(), budgetResultsModel.getDescriptorList().size());
 
         for (int i = index; i < index + periodCount; i++) {
             periodTable.getColumns().add(buildAccountPeriodResultsColumn(i));
@@ -663,7 +669,7 @@ public class BudgetTableController implements MessageListener {
         periodSummaryTable.setSelectionModel(new NullTableViewSelectionModel<>(periodSummaryTable));
 
         final int index = indexProperty.getValue();
-        final int periodCount = visibleColumnCountProperty.get();
+        final int periodCount = Math.min(visibleColumnCountProperty.get(), budgetResultsModel.getDescriptorList().size());
 
         for (int i = index; i < index + periodCount; i++) {
             periodSummaryTable.getColumns().add(buildAccountPeriodSummaryColumn(i));
