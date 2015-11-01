@@ -38,6 +38,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import jgnash.resource.font.FontAwesomeLabel;
+import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.util.ResourceUtils;
@@ -81,7 +82,8 @@ public class ExceptionDialog {
 
     @FXML
     private void initialize() {
-        message.setGraphic(new FontAwesomeLabel(FontAwesomeIcon.EXCLAMATION_TRIANGLE, Alert.ICON_SIZE, Color.DARKRED));
+        message.setGraphic(new FontAwesomeLabel(FontAwesomeIcon.EXCLAMATION_TRIANGLE,
+                ThemeManager.getBaseTextHeight() * Alert.HEIGHT_MULTIPLIER, Color.DARKRED));
 
         closeButton.setOnAction(event -> ((Stage) parentProperty.get().getWindow()).close());
 

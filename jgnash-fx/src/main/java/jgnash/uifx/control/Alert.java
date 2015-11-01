@@ -36,6 +36,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import jgnash.resource.font.FontAwesomeLabel;
+import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.InjectFXML;
 import jgnash.util.NotNull;
@@ -48,7 +49,7 @@ import jgnash.util.ResourceUtils;
  */
 public class Alert {
 
-    static final double ICON_SIZE = 36;
+    static final int HEIGHT_MULTIPLIER = 3;
 
     @InjectFXML
     private final ObjectProperty<Scene> parentProperty = new SimpleObjectProperty<>();
@@ -77,19 +78,23 @@ public class Alert {
 
         switch (alertType) {
             case ERROR:
-                setGraphic(new FontAwesomeLabel(FontAwesomeIcon.EXCLAMATION_TRIANGLE, ICON_SIZE, Color.DARKRED));
+                setGraphic(new FontAwesomeLabel(FontAwesomeIcon.EXCLAMATION_TRIANGLE,
+                        ThemeManager.getBaseTextHeight() * HEIGHT_MULTIPLIER, Color.DARKRED));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case WARNING:
-                setGraphic(new FontAwesomeLabel(FontAwesomeIcon.EXCLAMATION_CIRCLE, ICON_SIZE, Color.DARKGOLDENROD));
+                setGraphic(new FontAwesomeLabel(FontAwesomeIcon.EXCLAMATION_CIRCLE,
+                        ThemeManager.getBaseTextHeight() * HEIGHT_MULTIPLIER, Color.DARKGOLDENROD));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case INFORMATION:
-                setGraphic(new FontAwesomeLabel(FontAwesomeIcon.INFO_CIRCLE, ICON_SIZE, Color.DARKGOLDENROD));
+                setGraphic(new FontAwesomeLabel(FontAwesomeIcon.INFO_CIRCLE,
+                        ThemeManager.getBaseTextHeight() * HEIGHT_MULTIPLIER, Color.DARKGOLDENROD));
                 setButtons(new ButtonType(resources.getString("Button.Close"), ButtonBar.ButtonData.CANCEL_CLOSE));
                 break;
             case YES_NO:
-                setGraphic(new FontAwesomeLabel(FontAwesomeIcon.QUESTION_CIRCLE, ICON_SIZE));
+                setGraphic(new FontAwesomeLabel(FontAwesomeIcon.QUESTION_CIRCLE,
+                        ThemeManager.getBaseTextHeight() * HEIGHT_MULTIPLIER));
                 ButtonType buttonTypeYes = new ButtonType(resources.getString("Button.Yes"), ButtonBar.ButtonData.YES);
                 ButtonType buttonTypeNo = new ButtonType(resources.getString("Button.No"), ButtonBar.ButtonData.NO);
                 setButtons(buttonTypeYes, buttonTypeNo);
