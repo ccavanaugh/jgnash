@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,6 +43,7 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.control.TextInputDialog;
 
 /**
  * @author Craig Cavanaugh
@@ -151,7 +153,24 @@ public class BudgetManagerDialogController implements MessageListener{
 
     @FXML
     private void handleRenameAction() {
-        //TODO: Implement
+        for (final Budget budget : budgetListView.getSelectionModel().getSelectedItems()) {
+
+            final TextInputDialog textInputDialog = new TextInputDialog(budget.getName());
+            textInputDialog.setTitle(resources.getString("Title.RenameBudget"));
+            textInputDialog.setContentText(resources.getString("Label.RenameBudget"));
+
+            final Optional<String> result = textInputDialog.showAndWait();
+
+            if (result.isPresent()) {
+                if (!result.get().isEmpty()) {
+                    final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                    Objects.requireNonNull(engine);
+
+                    budget.setName(result.get());
+                    engine.updateBudget(budget);
+                }
+            }
+        }
     }
 
     @FXML
