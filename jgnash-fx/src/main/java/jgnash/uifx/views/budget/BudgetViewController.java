@@ -19,6 +19,7 @@ package jgnash.uifx.views.budget;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -100,8 +101,9 @@ public class BudgetViewController implements MessageListener {
 
         final Budget activeBudget = availableBudgetsComboBox.getValue();
 
-        // Get List of active budgets
+        // Create a sorted List of active budgets
         final List<Budget> budgetList = engine.getBudgetList();
+        Collections.sort(budgetList);
 
         availableBudgetsComboBox.getItems().setAll(budgetList);
 
@@ -151,7 +153,12 @@ public class BudgetViewController implements MessageListener {
 
     @FXML
     private void handleManagerAction() {
-        // TODO Implement
+        final URL fxmlUrl = BudgetManagerDialogController.class.getResource("BudgetManagerDialog.fxml");
+        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
+        stage.setTitle(ResourceUtils.getString("Title.BudgetManager"));
+
+        stage.show();
+        stage.setResizable(false);
     }
 
     @FXML
@@ -164,7 +171,8 @@ public class BudgetViewController implements MessageListener {
 
         controllerObjectProperty.get().setBudget(availableBudgetsComboBox.getValue());
 
-        stage.showAndWait();
+        stage.show();
+        stage.setResizable(false);
     }
 
     @Override

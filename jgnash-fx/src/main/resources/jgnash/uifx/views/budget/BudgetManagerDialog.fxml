@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.ListView?>
+
+<GridPane fx:controller="jgnash.uifx.views.budget.BudgetManagerDialogController" minHeight="300" minWidth="280"
+          xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="form, dialog">
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS"/>
+        <ColumnConstraints hgrow="NEVER" fillWidth="true"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="ALWAYS" valignment="TOP"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+
+    <ListView fx:id="budgetListView" GridPane.rowSpan="5" prefHeight="200"/>
+
+    <Button text="%Button.NewHist" onAction="#handleNewHistoricalAction"
+            GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+    <Button text="%Button.NewEmpty" onAction="#handleNewAction" maxWidth="Infinity"
+            GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+    <Button fx:id="duplicateButton" text="%Button.Duplicate" onAction="#handleDuplicateAction" maxWidth="Infinity"
+            GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    <Button fx:id="renameButton" text="%Button.Rename" onAction="#handleRenameAction" maxWidth="Infinity"
+            GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    <Button fx:id="deleteButton" text="%Button.Delete" onAction="#handleDeleteAction" maxWidth="Infinity"
+            GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+    <ButtonBar GridPane.rowIndex="5" GridPane.columnSpan="2">
+        <buttons>
+            <Button mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Close"
+                    ButtonBar.buttonData="CANCEL_CLOSE" maxWidth="Infinity"/>
+        </buttons>
+    </ButtonBar>
+</GridPane>
