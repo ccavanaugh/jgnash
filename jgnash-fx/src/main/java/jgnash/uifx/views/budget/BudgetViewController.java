@@ -48,7 +48,6 @@ import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.views.main.MainApplication;
-import jgnash.util.ResourceUtils;
 
 /**
  * @author Craig Cavanaugh
@@ -155,7 +154,7 @@ public class BudgetViewController implements MessageListener {
     private void handleManagerAction() {
         final URL fxmlUrl = BudgetManagerDialogController.class.getResource("BudgetManagerDialog.fxml");
         final Stage stage = FXMLUtils.loadFXML(fxmlUrl, resources);
-        stage.setTitle(ResourceUtils.getString("Title.BudgetManager"));
+        stage.setTitle(resources.getString("Title.BudgetManager"));
 
         stage.show();
         stage.setResizable(false);
@@ -167,7 +166,7 @@ public class BudgetViewController implements MessageListener {
 
         final URL fxmlUrl = BudgetPropertiesDialogController.class.getResource("BudgetPropertiesDialog.fxml");
         final Stage stage = FXMLUtils.loadFXML(fxmlUrl, controllerObjectProperty, resources);
-        stage.setTitle(ResourceUtils.getString("Title.BudgetProperties"));
+        stage.setTitle(resources.getString("Title.BudgetProperties"));
 
         controllerObjectProperty.get().setBudget(availableBudgetsComboBox.getValue());
 

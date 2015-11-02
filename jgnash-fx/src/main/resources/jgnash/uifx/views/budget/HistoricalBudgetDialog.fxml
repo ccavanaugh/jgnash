@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.text.TextFlow?>
+
+<GridPane fx:controller="jgnash.uifx.views.budget.HistoricalBudgetDialogController"
+        xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" styleClass="form, dialog">
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER"/>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+
+    <TextFlow fx:id="textFlow" GridPane.columnSpan="2" GridPane.fillHeight="true"
+              GridPane.vgrow="ALWAYS" maxWidth="Infinity"/>
+
+    <Label text="%Label.Name" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+    <TextField fx:id="nameTextField" GridPane.rowIndex="1" GridPane.columnIndex="1" maxWidth="Infinity"/>
+
+    <Label text="%Label.Period" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <ComboBox fx:id="periodComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+    <CheckBox fx:id="roundupCheckBox" text="%Button.RoundToWhole" GridPane.rowIndex="3" GridPane.columnSpan="2"/>
+
+    <ButtonBar GridPane.rowIndex="4" GridPane.columnSpan="2">
+        <buttons>
+            <Button fx:id="okButton" onAction="#handleOkAction" text="%Button.Ok"
+                    ButtonBar.buttonData="OK_DONE" maxWidth="Infinity"/>
+            <Button onAction="#handleCancelAction" text="%Button.Cancel"
+                    ButtonBar.buttonData="CANCEL_CLOSE" maxWidth="Infinity"/>
+        </buttons>
+    </ButtonBar>
+</GridPane>
