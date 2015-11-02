@@ -25,10 +25,10 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>jgnash-help</artifactId>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jgnash-resources</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>jidesoft</artifactId>
