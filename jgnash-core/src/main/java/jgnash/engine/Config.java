@@ -65,7 +65,7 @@ public class Config extends StoredObject {
     /** TODO: this needs to be changed long term because of corner cases that can break version checks if not careful
      * Use a date or store as a string so trailing zero's are not lost.  As a float, 2.2 and 2.20 look the same.
      */
-    private float fileVersion = 0f;
+    private float fileVersion = Engine.CURRENT_VERSION; // default to the latest version at init
 
     private transient ReadWriteLock preferencesLock;
 
