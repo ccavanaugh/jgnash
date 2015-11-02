@@ -56,6 +56,8 @@ public class BudgetViewController implements MessageListener {
 
     private static final String EXPORT_DIR = "exportDir";
 
+    private static final String LAST_BUDGET = "lastBudget";
+
     @FXML
     private BorderPane borderPane;
 
@@ -73,6 +75,8 @@ public class BudgetViewController implements MessageListener {
 
     private BudgetTableController budgetTableController;
 
+    private final Preferences preferences = Preferences.userNodeForPackage(BudgetViewController.class);
+
     @FXML
     private void initialize() {
         exportButton.disableProperty().bind(availableBudgetsComboBox.valueProperty().isNull());
@@ -84,6 +88,10 @@ public class BudgetViewController implements MessageListener {
                     = FXMLUtils.loadFXML(o -> borderPane.setCenter((Node) o), "BudgetTable.fxml", resources);
 
             availableBudgetsComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    preferences.put(LAST_BUDGET, newValue.getUuid());
+                }
+
                 Platform.runLater(() -> budgetTableController.budgetProperty().setValue(newValue));
             });
 
@@ -98,17 +106,16 @@ public class BudgetViewController implements MessageListener {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
         Objects.requireNonNull(engine);
 
-        final Budget activeBudget = availableBudgetsComboBox.getValue();
-
         // Create a sorted List of active budgets
         final List<Budget> budgetList = engine.getBudgetList();
         Collections.sort(budgetList);
 
         availableBudgetsComboBox.getItems().setAll(budgetList);
 
-        // if a budget is already active, select it, otherwise select the first available
-        if (budgetList.contains(activeBudget)) {
-            availableBudgetsComboBox.setValue(activeBudget);
+        final Budget lastBudget = engine.getBudgetByUuid(preferences.get(LAST_BUDGET, ""));
+
+        if (budgetList.contains(lastBudget)) {
+            availableBudgetsComboBox.setValue(lastBudget);
         } else if (availableBudgetsComboBox.getItems().size() > 0) {
             availableBudgetsComboBox.setValue(availableBudgetsComboBox.getItems().get(0));
         }
