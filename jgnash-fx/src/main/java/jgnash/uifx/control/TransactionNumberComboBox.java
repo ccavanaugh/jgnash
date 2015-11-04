@@ -76,7 +76,7 @@ public class TransactionNumberComboBox extends ComboBox<String> {
         if (OS.getJavaVersion() < 1.9 && OS.getJavaRelease() < OS.JVM_RELEASE_72) {
             getEditor().focusedProperty().addListener((obs, old, isFocused) -> {
                 if (!isFocused) {
-                    if (!getValue().equals(getConverter().fromString(getEditor().getText()))) {
+                    if (getValue() != null && !getValue().equals(getConverter().fromString(getEditor().getText()))) {
                         setValue(getConverter().fromString(getEditor().getText()));
                     }
                 }
