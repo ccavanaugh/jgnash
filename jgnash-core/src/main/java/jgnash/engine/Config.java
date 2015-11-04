@@ -205,11 +205,7 @@ public class Config extends StoredObject {
     boolean createBackups() {
         final String result = getPreference(CREATE_BACKUPS);
 
-        if (result != null) {
-            return Boolean.parseBoolean(result);
-        }
-
-        return true;
+        return result == null || Boolean.parseBoolean(result);
     }
 
     void setCreateBackups(final boolean createBackups) {
@@ -233,11 +229,7 @@ public class Config extends StoredObject {
     boolean removeOldBackups() {
         final String result = getPreference(REMOVE_BACKUPS);
 
-        if (result != null) {
-            return Boolean.parseBoolean(result);
-        }
-
-        return true;
+        return result == null || Boolean.parseBoolean(result);
     }
 
     void setRemoveOldBackups(final boolean removeOldBackups) {
