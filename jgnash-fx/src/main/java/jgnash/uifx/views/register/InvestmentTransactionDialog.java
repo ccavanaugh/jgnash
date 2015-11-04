@@ -88,7 +88,7 @@ class InvestmentTransactionDialog extends Stage {
         final Slip controller = actionComboBox.getSelectionModel().getSelectedItem().getController();
 
         if (controller.validateForm()) {
-            transactionOptional = Optional.ofNullable(controller.buildTransaction());
+            transactionOptional = Optional.of(controller.buildTransaction());
             transactionSlips.getScene().getWindow().hide();
         }
     }

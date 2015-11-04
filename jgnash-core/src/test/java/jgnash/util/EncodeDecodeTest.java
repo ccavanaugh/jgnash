@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Craig Cavanaugh
@@ -31,6 +32,8 @@ public class EncodeDecodeTest {
     public void testEncodeDecodeDoubleArrays() {
         final double[] base = new double[]{10.231, 11.35, 45.34, 2.0, 4.0, 9.0, 0};
         final String result = EncodeDecode.encodeDoubleArray(base);
+
+        assertNotNull(result);
 
         assertEquals("10.23,11.35,45.34,2,4,9,0", result);
 

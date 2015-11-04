@@ -125,7 +125,7 @@ public class TransactionDialog extends Stage {
 
     private void handleEnterAction(final SlipController controller) {
         if (controller.validateForm()) {
-            transactionOptional = Optional.ofNullable(controller.buildTransaction());
+            transactionOptional = Optional.of(controller.buildTransaction());
             tabPane.getScene().getWindow().hide();
         }
     }

@@ -18,6 +18,7 @@
 package jgnash.ui.recurring;
 
 import java.awt.EventQueue;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
@@ -128,8 +129,9 @@ public class RecurringTableModel extends AbstractTableModel implements MessageLi
                     }
                     return null;
                 case 3:
-                    if (reminders.get(rowIndex).getLastDate() != null) {
-                        return dateFormatter.format(reminders.get(rowIndex).getLastDate());
+                    final LocalDate localDate = reminders.get(rowIndex).getLastDate();
+                    if (localDate != null) {
+                        return dateFormatter.format(localDate);
                     }
                     return null;
                 case 4:

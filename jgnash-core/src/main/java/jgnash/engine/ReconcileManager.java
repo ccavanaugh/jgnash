@@ -231,7 +231,7 @@ public class ReconcileManager {
                                                                      @NotNull final String attribute) {
         final String value = account.getAttribute(attribute);
         if (value != null) {
-            return Optional.ofNullable(new BigDecimal(value));
+            return Optional.of(new BigDecimal(value));
         }
         return Optional.empty();
     }
