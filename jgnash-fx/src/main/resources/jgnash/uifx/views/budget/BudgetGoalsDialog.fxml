@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Separator?>
+<?import jgnash.uifx.control.DecimalTextField?>
+
+<GridPane fx:controller="jgnash.uifx.views.budget.BudgetGoalsDialogController" minHeight="-Infinity"
+          xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="form, dialog">
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER"/>
+        <ColumnConstraints hgrow="ALWAYS"/>
+        <ColumnConstraints hgrow="NEVER"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="ALWAYS"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+
+    <Label text="%Label.Period" labelFor="$periodComboBox" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+    <ComboBox fx:id="periodComboBox" GridPane.rowIndex="0" GridPane.columnIndex="1" maxWidth="Infinity"/>
+
+    <Label text="%Label.Currency" labelFor="$currencyLabel" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+    <Label fx:id="currencyLabel" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+    <TableView fx:id="goalTable" GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2" prefHeight="200"/>
+
+    <TitledPane text="%Title.SmartFill" collapsible="false" GridPane.rowIndex="0" GridPane.columnIndex="2" GridPane.rowSpan="3">
+        <GridPane styleClass="form">
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="NEVER"/>
+            </rowConstraints>
+
+            <Button text="%Button.HistoricalFill" onAction="#handleHistoricalFill" GridPane.columnSpan="2" maxWidth="Infinity"/>
+            <Separator orientation="HORIZONTAL" GridPane.rowIndex="1" GridPane.columnSpan="2"/>
+            <GridPane styleClass="form" GridPane.rowIndex="2" GridPane.columnSpan="2">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="NEVER"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                    <ColumnConstraints hgrow="NEVER"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints vgrow="NEVER"/>
+                </rowConstraints>
+                <Label text="%Label.FillAll"/>
+                <DecimalTextField GridPane.columnIndex="1"/>
+                <Button text="%Button.Enter" GridPane.columnIndex="2"/>
+            </GridPane>
+
+            <Separator orientation="HORIZONTAL" GridPane.rowIndex="3" GridPane.columnSpan="2"/>
+
+        </GridPane>
+    </TitledPane>
+
+    <ButtonBar GridPane.rowIndex="3" GridPane.columnSpan="3">
+        <buttons>
+            <Button mnemonicParsing="false" onAction="#handleOkayAction" text="%Button.Ok"
+                    ButtonBar.buttonData="OK_DONE" maxWidth="Infinity"/>
+            <Button mnemonicParsing="false" onAction="#handleCloseAction" text="%Button.Cancel"
+                    ButtonBar.buttonData="CANCEL_CLOSE" maxWidth="Infinity"/>
+        </buttons>
+    </ButtonBar>
+</GridPane>

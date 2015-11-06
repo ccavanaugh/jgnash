@@ -1,6 +1,7 @@
 package jgnash.uifx.views.budget;
 
 import java.math.BigDecimal;
+import java.net.URL;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -34,6 +36,7 @@ import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
 import jgnash.engine.Account;
 import jgnash.engine.AccountGroup;
@@ -41,6 +44,7 @@ import jgnash.engine.Comparators;
 import jgnash.engine.Engine;
 import jgnash.engine.EngineFactory;
 import jgnash.engine.budget.Budget;
+import jgnash.engine.budget.BudgetGoal;
 import jgnash.engine.budget.BudgetPeriodDescriptor;
 import jgnash.engine.budget.BudgetPeriodResults;
 import jgnash.engine.budget.BudgetResultsModel;
@@ -48,10 +52,10 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.text.CommodityFormat;
-import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.NullTableViewSelectionModel;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.skin.ThemeManager;
+import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.util.NotNull;
 
@@ -790,8 +794,8 @@ public class BudgetTableController implements MessageListener {
         }
 
         return Math.max(JavaFXUtils.getDisplayedTextWidth(
-                        CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(max) +
-                                BORDER_MARGIN, null),
+                CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(max) +
+                        BORDER_MARGIN, null),
                 JavaFXUtils.getDisplayedTextWidth(
                         CommodityFormat.getFullNumberFormat(budgetResultsModel.getBaseCurrency()).format(min) +
                                 BORDER_MARGIN, null));
@@ -836,10 +840,27 @@ public class BudgetTableController implements MessageListener {
         });
     }
 
-    private void handleEditAccountGoals(@NotNull  final Account account) {
+    private void handleEditAccountGoals(@NotNull final Account account) {
         Objects.requireNonNull(account);
 
-        StaticUIMethods.displayMessage("edit " + account.getName());
+        final ObjectProperty<BudgetGoalsDialogController> controllerObjectProperty = new SimpleObjectProperty<>();
+
+        final URL fxmlUrl = BudgetGoalsDialogController.class.getResource("BudgetGoalsDialog.fxml");
+        final Stage stage = FXMLUtils.loadFXML(fxmlUrl, controllerObjectProperty, resources);
+        stage.setTitle(resources.getString("Title.BudgetManager") + " - " + account.getName());
+
+        controllerObjectProperty.get().accountProperty().setValue(account);
+        controllerObjectProperty.get().workingYearProperty().setValue(yearSpinner.getValue());
+
+        try {
+            BudgetGoal oldGoal = (BudgetGoal) budgetProperty().get().getBudgetGoal(account).clone();
+            controllerObjectProperty.get().budgetGoalProperty().setValue(oldGoal);
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+
+        stage.show();
+        //stage.setResizable(false);
     }
 
     @Override
