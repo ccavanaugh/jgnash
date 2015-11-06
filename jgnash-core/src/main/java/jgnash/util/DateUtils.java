@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
+import java.time.format.ResolverStyle;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
@@ -34,6 +34,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.prefs.Preferences;
 import java.util.regex.Pattern;
 
 /**
@@ -46,13 +49,17 @@ import java.util.regex.Pattern;
 @SuppressWarnings("MagicConstant")
 public class DateUtils {
 
+    private static final String DATE_FORMAT = "dateFormat";
+
     private static final int MILLISECONDS_PER_SECOND = 1000;
 
     private static final Pattern MONTH_PATTERN = Pattern.compile("M{1,2}");
 
     private static final Pattern DAY_PATTERN = Pattern.compile("d{1,2}");
 
-    private static final DateTimeFormatter shortDateTimeFormatter;
+    private static DateTimeFormatter shortDateTimeFormatter;
+
+    private static DateTimeFormatter shortDateTimeEntryFormatter;
 
     /**
      * Pattern for a {@code java.time.format.DateTimeFormatter} to parse and format to the default.  DateTimeFormatter
@@ -65,19 +72,73 @@ public class DateUtils {
     public static final String DEFAULT_XSTREAM_LOCAL_DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss.SSS 'UTC'";
 
     static {
-        final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+        shortDateTimeFormatter = DateTimeFormatter.ofPattern(getDateFormatPattern())
+                .withResolverStyle(ResolverStyle.SMART);
 
-        if (df instanceof SimpleDateFormat) {
-            String pattern = ((SimpleDateFormat) df).toPattern();
-            pattern = DAY_PATTERN.matcher(MONTH_PATTERN.matcher(pattern).replaceAll("MM")).replaceAll("dd");
-
-            shortDateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
-        } else {
-            shortDateTimeFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
-        }
+        shortDateTimeEntryFormatter = DateTimeFormatter.ofPattern(getDateFormatEntryPattern())
+                .withResolverStyle(ResolverStyle.SMART);
     }
 
     private DateUtils() {
+    }
+
+    public static void setDateFormatPattern(@NotNull final String pattern) throws IllegalArgumentException {
+        Objects.requireNonNull(pattern);
+        final Preferences preferences = Preferences.userNodeForPackage(DateUtils.class);
+
+        preferences.put(DATE_FORMAT, pattern);
+
+        try {
+            shortDateTimeFormatter = DateTimeFormatter.ofPattern(pattern).withResolverStyle(ResolverStyle.SMART);
+
+            shortDateTimeEntryFormatter = DateTimeFormatter.ofPattern(getDateFormatEntryPattern())
+                    .withResolverStyle(ResolverStyle.SMART);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    public static Set<String> getAvailableDateFormats() {
+        final Set<String> dateFormats = new TreeSet<>();
+
+        for (final Locale locale : Locale.getAvailableLocales()) {
+            final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, locale);
+
+            if (df instanceof SimpleDateFormat) {
+                dateFormats.add(((SimpleDateFormat) df).toPattern());
+            }
+        }
+
+        return dateFormats;
+    }
+
+    public static String getDateFormatPattern() {
+        final Preferences preferences = Preferences.userNodeForPackage(DateUtils.class);
+
+        String pattern = preferences.get(DATE_FORMAT, "");
+
+        if (pattern.isEmpty()) {
+            final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+
+            if (df instanceof SimpleDateFormat) {
+                pattern = ((SimpleDateFormat) df).toPattern();
+                pattern = DAY_PATTERN.matcher(MONTH_PATTERN.matcher(pattern).replaceAll("MM")).replaceAll("dd");
+            } else {
+                throw new RuntimeException("Unexpected class");
+            }
+        }
+
+        return pattern;
+    }
+
+    private static String getDateFormatEntryPattern() {
+        String pattern = getDateFormatPattern();
+
+        if (pattern.contains("dd")) {
+            pattern = pattern.replace("dd", "d");
+        }
+
+        return pattern;
     }
 
     /**
@@ -472,6 +533,10 @@ public class DateUtils {
 
     public static DateTimeFormatter getShortDateTimeFormat() {
         return shortDateTimeFormatter;
+    }
+
+    public static DateTimeFormatter getShortDateTimeEntryFormat() {
+        return shortDateTimeEntryFormatter;
     }
 
     /**

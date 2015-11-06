@@ -103,6 +103,11 @@
                 <FontAwesomeLabel glyphName="LANGUAGE"/>
             </graphic>
         </MenuItem>
+        <MenuItem text="%Menu.DateFormat.Name" onAction="#handleChangeDateFormat">
+            <graphic>
+                <FontAwesomeLabel glyphName="CALENDAR"/>
+            </graphic>
+        </MenuItem>
         <SeparatorMenuItem/>
         <MenuItem text="%Menu.RunJavaScript.Name" onAction="#handleExecuteJavaScriptFile">
             <accelerator>

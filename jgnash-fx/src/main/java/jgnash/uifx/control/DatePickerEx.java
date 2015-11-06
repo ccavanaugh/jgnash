@@ -17,23 +17,16 @@
  */
 package jgnash.uifx.control;
 
-import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
-import java.time.chrono.Chronology;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
-import java.time.format.DecimalStyle;
-import java.time.format.FormatStyle;
-import java.util.Locale;
 
 import javafx.application.Platform;
 import javafx.scene.control.DatePicker;
 import javafx.scene.input.KeyEvent;
 import javafx.util.StringConverter;
 
-import jgnash.util.OS;
+import jgnash.util.DateUtils;
 
 /**
  * Enhanced DatePicker.  Adds short cuts for date entry with better input character filters
@@ -44,7 +37,7 @@ public class DatePickerEx extends DatePicker {
 
     private final String ALLOWED_DATE_CHARACTERS;
 
-    private final int validLength;
+    //private final int validLength;
 
     private final DateTimeFormatter dateFormatter;
 
@@ -53,11 +46,11 @@ public class DatePickerEx extends DatePicker {
 
         final StringBuilder buf = new StringBuilder("0123456789");
 
-        dateFormatter = getDateFormatter();
+        dateFormatter = DateUtils.getShortDateTimeEntryFormat();
 
         final char[] chars = dateFormatter.format(LocalDate.now()).toCharArray();
 
-        validLength = chars.length;
+        //validLength = chars.length;
 
         for (final char aChar : chars) {
             if (!Character.isDigit(aChar)) {
@@ -107,14 +100,14 @@ public class DatePickerEx extends DatePicker {
             }
         });
 
-        // TODO: This is a workaround for a Java Bug that should be fixed in 8u72
-        if (OS.getJavaVersion() < 1.9 && OS.getJavaRelease() < OS.JVM_RELEASE_72) {
-            getEditor().focusedProperty().addListener((observable, oldValue, newValue) -> {
-                if (!newValue) {
-                    _getValue();    // forces the internal value to be recalculated
-                }
+        // Ensure the last parsable value is displayed after focus is lost
+        getEditor().focusedProperty().addListener((observable, oldValue, newValue) -> {
+            Platform.runLater(() -> {
+                final int caretPosition = getEditor().getCaretPosition();
+                getEditor().setText(dateFormatter.format(_getValue()));
+                getEditor().positionCaret(caretPosition);
             });
-        }
+        });
 
         getEditor().addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             final int caretPosition = getEditor().getCaretPosition();
@@ -161,7 +154,7 @@ public class DatePickerEx extends DatePicker {
     }
 
     private LocalDate _getValue() {
-        if (getEditor().getText().length() == validLength) {
+        //if (getEditor().getText().length() == validLength) {
             try {
                 final LocalDate date = LocalDate.parse(getEditor().getText(), dateFormatter);
                 Platform.runLater(() -> setValue(date));
@@ -169,34 +162,8 @@ public class DatePickerEx extends DatePicker {
             } catch (final DateTimeParseException ignored) {
                 return getValue();  // return the current value
             }
-        }
-        return getValue();
-    }
-
-    private String getPattern() {
-        final Locale locale = Locale.getDefault(Locale.Category.FORMAT);
-        final Chronology chronology = getChronology();
-
-        String pattern = DateTimeFormatterBuilder.getLocalizedDateTimePattern(FormatStyle.SHORT,
-                null, chronology, locale);
-
-        if (pattern.contains("d") && !pattern.contains("dd")) {
-            // Modify pattern to show two-digit day, including leading zeros.
-            pattern = pattern.replace("d", "dd");
-        }
-
-        if (pattern.contains("M") && !pattern.contains("MM")) {
-            // Modify pattern to show two-digit month, including leading zeros.
-            pattern = pattern.replace("M", "MM");
-        }
-
-        return pattern;
-    }
-
-    private DateTimeFormatter getDateFormatter() {
-        final Locale locale = Locale.getDefault(Locale.Category.FORMAT);
-
-        return DateTimeFormatter.ofPattern(getPattern()).withDecimalStyle(DecimalStyle.of(locale));
+        //}
+        //return getValue();
     }
 
     private class DateConverter extends StringConverter<LocalDate> {
@@ -204,15 +171,7 @@ public class DatePickerEx extends DatePicker {
         @Override
         public String toString(final LocalDate value) {
             if (value != null) {
-                final Chronology chronology = getChronology();
-                ChronoLocalDate cDate;
-                try {
-                    cDate = chronology.date(value);
-                } catch (final DateTimeException ex) {
-                    cDate = value;
-                }
-
-                return getDateFormatter().format(cDate);
+                return dateFormatter.format(value);
             } else {
                 return "";
             }
@@ -221,22 +180,7 @@ public class DatePickerEx extends DatePicker {
         @Override
         public LocalDate fromString(final String text) {
             if (text != null && !text.isEmpty()) {
-                final Locale locale = Locale.getDefault(Locale.Category.FORMAT);
-                final Chronology chronology = getChronology();
-
-                final String pattern =
-                        DateTimeFormatterBuilder.getLocalizedDateTimePattern(FormatStyle.SHORT,
-                                null, chronology, locale);
-
-                final DateTimeFormatter df =
-                        new DateTimeFormatterBuilder().parseLenient()
-                                .appendPattern(pattern)
-                                .toFormatter()
-                                .withChronology(chronology)
-                                .withDecimalStyle(DecimalStyle.of(locale));
-
-                final ChronoLocalDate cDate = chronology.date(df.parse(text));
-                return LocalDate.from(cDate);
+                return LocalDate.from(dateFormatter.parse(text));
             }
             return null;
         }

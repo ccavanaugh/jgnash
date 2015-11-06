@@ -271,6 +271,9 @@
     <action id="locale-command"
             name="Menu.Locale.Name"/>
 
+    <action id="date-format-command"
+            name="Menu.DateFormat.Name"/>
+
     <action id="javascript-command"
             name="Menu.RunJavaScript.Name"
             smicon="/jgnash/resource/text-x-script.png"
@@ -397,6 +400,7 @@
             <action-node idref="options-command"/>
             <empty/>
             <action-node idref="locale-command"/>
+            <action-node idref="date-format-command"/>
             <empty/>
             <action-node idref="javascript-command"/>
         </action-node>

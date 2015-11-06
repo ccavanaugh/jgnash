@@ -19,9 +19,9 @@ package jgnash.ui.components;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,17 +49,17 @@ public final class JDateField extends JTextFieldEx {
 
     private final String DATE;
 
-    private final DateFormat formatter;
+    private final DateTimeFormatter formatter;
     
     private static final Logger LOG = Logger.getLogger(JDateField.class.getName());
 
     public JDateField() {
         super(0);
 
-        formatter = DateFormat.getDateInstance(DateFormat.SHORT);
+        formatter = DateUtils.getShortDateTimeEntryFormat();
 
         StringBuilder buf = new StringBuilder("0123456789");
-        char[] chars = formatter.format(new Date()).toCharArray();
+        char[] chars = formatter.format(LocalDate.now()).toCharArray();
 
         for (char aChar : chars) {
             if (!Character.isDigit(aChar)) {
@@ -78,23 +78,23 @@ public final class JDateField extends JTextFieldEx {
 
     public void setValue(final Object value) {
         if (value instanceof LocalDate) {
-            setText(formatter.format(DateUtils.asDate((LocalDate) value)));
+            setText(formatter.format((LocalDate) value));
         } else if (value instanceof Date) {
-            setText(formatter.format((Date) value));
+            setText(formatter.format(DateUtils.asLocalDate((Date)value)));
         } else {
             setText("");
         }
     }
 
-    public Object getValue() {
+    /*public Object getValue() {
         return dateValue();
-    }
+    }*/
 
     private Date dateValue() {
         Date tDate = new Date();
         try {
-            tDate.setTime(formatter.parse(getText()).getTime());
-        } catch (ParseException e) {
+            tDate = DateUtils.asDate(LocalDate.from(formatter.parse(getText())));
+        } catch (final DateTimeParseException e) {
             LOG.log(Level.INFO, e.getLocalizedMessage(), e);
         }
         return tDate;
@@ -138,7 +138,7 @@ public final class JDateField extends JTextFieldEx {
             try {
                 formatter.parse(((JTextField) input).getText());
                 return true;
-            } catch (ParseException e) {
+            } catch (final DateTimeParseException e) {
                 LOG.log(Level.FINEST, e.getLocalizedMessage(), e);
                 return false;
             }

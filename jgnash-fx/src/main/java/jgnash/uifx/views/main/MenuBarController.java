@@ -42,6 +42,7 @@ import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.about.AboutDialogController;
 import jgnash.uifx.actions.DefaultCurrencyAction;
+import jgnash.uifx.actions.DefaultDateFormatAction;
 import jgnash.uifx.actions.DefaultLocaleAction;
 import jgnash.uifx.actions.ExecuteJavaScriptAction;
 import jgnash.uifx.actions.ImportOfxAction;
@@ -344,5 +345,10 @@ public class MenuBarController implements MessageListener {
     @FXML
     private void handleImportQIFAction() {
         ImportQifAction.showAndWait();
+    }
+
+    @FXML
+    private void handleChangeDateFormat() {
+        DefaultDateFormatAction.showAndWait();
     }
 }
