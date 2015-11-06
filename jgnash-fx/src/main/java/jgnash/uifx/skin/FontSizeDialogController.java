@@ -46,7 +46,7 @@ public class FontSizeDialogController {
         slider.labelFormatterProperty().setValue(new StringConverter<Double>() {
             @Override
             public String toString(Double object) {
-                return String.format("%.1f%%", object.doubleValue());
+                return String.format("%.1f%%", object);
             }
 
             @Override

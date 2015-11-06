@@ -130,7 +130,7 @@ public class FilterDecorator implements FilterModel {
      */
     @Override
     public Object getValueAt(final int row, final int col) {
-        return model.getValueAt(this.matchedPayee.get(row).intValue(), col);
+        return model.getValueAt(this.matchedPayee.get(row), col);
     }
 
     /**
