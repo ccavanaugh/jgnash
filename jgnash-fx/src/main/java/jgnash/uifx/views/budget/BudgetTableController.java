@@ -30,6 +30,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.GridPane;
@@ -47,10 +48,12 @@ import jgnash.engine.message.Message;
 import jgnash.engine.message.MessageListener;
 import jgnash.engine.message.MessageProperty;
 import jgnash.text.CommodityFormat;
+import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.NullTableViewSelectionModel;
 import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.JavaFXUtils;
+import jgnash.util.NotNull;
 
 /**
  * @author Craig Cavanaugh
@@ -177,6 +180,7 @@ public class BudgetTableController implements MessageListener {
         accountTreeView.getStylesheets().addAll(HIDE_VERTICAL_CSS);
         accountTreeView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
         accountTreeView.setShowRoot(false);
+        accountTreeView.setEditable(true);
         accountTreeView.fixedCellSizeProperty().bind(rowHeightProperty);
 
         accountSummaryTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -436,13 +440,23 @@ public class BudgetTableController implements MessageListener {
     }
 
     private void buildAccountTreeTable() {
-        // empty column header is needed
+        // empty column header is needed to match other table columns
         final TreeTableColumn<Account, String> headerColumn = new TreeTableColumn<>("");
 
-        final TreeTableColumn<Account, String> nameColumn
+        final TreeTableColumn<Account, Account> nameColumn
                 = new TreeTableColumn<>(resources.getString("Column.Account"));
 
-        nameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getName()));
+        nameColumn.setCellFactory(param -> new AccountTreeTableCell());
+        nameColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getValue()));
+
+        nameColumn.setOnEditStart(event -> {
+            final Account account = event.getRowValue().getValue();
+
+            if (account != null && !account.isPlaceHolder()) {
+                handleEditAccountGoals(account);
+            }
+        });
+        nameColumn.setEditable(true);
 
         headerColumn.getColumns().add(nameColumn);
 
@@ -822,6 +836,12 @@ public class BudgetTableController implements MessageListener {
         });
     }
 
+    private void handleEditAccountGoals(@NotNull  final Account account) {
+        Objects.requireNonNull(account);
+
+        StaticUIMethods.displayMessage("edit " + account.getName());
+    }
+
     @Override
     public void messagePosted(final Message message) {
         switch (message.getEvent()) {
@@ -894,6 +914,26 @@ public class BudgetTableController implements MessageListener {
 
                 if (amount.signum() < 0) {
                     setId(StyleClass.NORMAL_NEGATIVE_CELL_ID);
+                } else {
+                    setId(StyleClass.NORMAL_CELL_ID);
+                }
+            } else {
+                setText(null);
+            }
+        }
+    }
+
+    private static class AccountTreeTableCell extends TreeTableCell<Account, Account> {
+
+        @Override
+        protected void updateItem(final Account account, final boolean empty) {
+            super.updateItem(account, empty);  // required
+
+            if (!empty && account != null && getTreeTableRow() != null) {
+                setText(account.getName());
+
+                if (account.isPlaceHolder()) {
+                    setId(StyleClass.DISABLED_CELL_ID);
                 } else {
                     setId(StyleClass.NORMAL_CELL_ID);
                 }
