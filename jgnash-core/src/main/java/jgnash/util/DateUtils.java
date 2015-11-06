@@ -117,7 +117,7 @@ public class DateUtils {
 
         String pattern = preferences.get(DATE_FORMAT, "");
 
-        if (pattern.isEmpty()) {
+        if (pattern.isEmpty()) {    // create a default for the current locale
             final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 
             if (df instanceof SimpleDateFormat) {
@@ -131,6 +131,11 @@ public class DateUtils {
         return pattern;
     }
 
+    /**
+     * Returns a variant of the default format with required days reduced to one to make manual entry easier
+     *
+     * @return date format
+     */
     private static String getDateFormatEntryPattern() {
         String pattern = getDateFormatPattern();
 
