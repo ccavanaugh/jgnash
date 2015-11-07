@@ -860,7 +860,11 @@ public class BudgetTableController implements MessageListener {
         }
 
         stage.show();
-        //stage.setResizable(false);
+
+        Platform.runLater(() -> {
+            stage.setMinHeight(stage.getHeight());
+            stage.setMaxHeight(stage.getHeight());
+        });
     }
 
     @Override

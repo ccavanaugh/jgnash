@@ -11,6 +11,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.Separator?>
 <?import jgnash.uifx.control.DecimalTextField?>
+<?import javafx.scene.control.Spinner?>
 
 <GridPane fx:controller="jgnash.uifx.views.budget.BudgetGoalsDialogController" minHeight="-Infinity"
           xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" styleClass="form, dialog">
@@ -49,7 +50,7 @@
                 <RowConstraints vgrow="NEVER"/>
                 <RowConstraints vgrow="NEVER"/>
                 <RowConstraints vgrow="NEVER"/>
-                <RowConstraints vgrow="NEVER"/>
+                <RowConstraints vgrow="ALWAYS" valignment="BOTTOM"/>
             </rowConstraints>
 
             <Button text="%Button.HistoricalFill" onAction="#handleHistoricalFill" GridPane.columnSpan="2" maxWidth="Infinity"/>
@@ -64,11 +65,29 @@
                     <RowConstraints vgrow="NEVER"/>
                 </rowConstraints>
                 <Label text="%Label.FillAll"/>
-                <DecimalTextField GridPane.columnIndex="1"/>
-                <Button text="%Button.Enter" GridPane.columnIndex="2"/>
+                <DecimalTextField fx:id="fillAllDecimalTextField" GridPane.columnIndex="1"/>
+                <Button text="%Button.Enter" onAction="#handleFillAllAction" GridPane.columnIndex="2"/>
             </GridPane>
-
             <Separator orientation="HORIZONTAL" GridPane.rowIndex="3" GridPane.columnSpan="2"/>
+
+            <Label text="%Label.Pattern" GridPane.rowIndex="4"/>
+            <ComboBox fx:id="patternComboBox" GridPane.rowIndex="4" GridPane.columnIndex="1" maxWidth="Infinity"/>
+
+            <Label text="%Label.StartRow" GridPane.rowIndex="5"/>
+            <Spinner fx:id="startRowSpinner" GridPane.rowIndex="5" GridPane.columnIndex="1" maxWidth="Infinity"/>
+
+            <Label text="%Label.EndRow" GridPane.rowIndex="6"/>
+            <Spinner fx:id="endRowSpinner" GridPane.rowIndex="6" GridPane.columnIndex="1" maxWidth="Infinity"/>
+
+            <Label text="%Label.Amount" GridPane.rowIndex="7"/>
+            <DecimalTextField fx:id="amountDecimalTextField" GridPane.rowIndex="7" GridPane.columnIndex="1" maxWidth="Infinity"/>
+
+            <ButtonBar GridPane.rowIndex="8" GridPane.columnSpan="2">
+                <buttons>
+                    <Button onAction="#handlePatternFillAction" text="%Button.Enter"
+                            ButtonBar.buttonData="OK_DONE" maxWidth="Infinity"/>
+                </buttons>
+            </ButtonBar>
 
         </GridPane>
     </TitledPane>
