@@ -35,7 +35,7 @@ public class BigDecimalTableCell<S> extends TableCell<S, BigDecimal> {
 
     public BigDecimalTableCell(final ObjectProperty<NumberFormat> numberFormatProperty) {
         setStyle("-fx-alignment: center-right;");  // Right align
-        numberFormatProperty().bind(numberFormatProperty);
+        this.numberFormatProperty().bind(numberFormatProperty);
     }
 
     public BigDecimalTableCell(final NumberFormat numberFormat) {
