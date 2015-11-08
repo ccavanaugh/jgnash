@@ -23,9 +23,13 @@ import java.text.NumberFormat;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.TableCell;
+import javafx.scene.input.KeyCode;
 
 /**
- * {@code TableCell} for {@code BigDecimals}
+ * A class containing a {@link TableCell} implementation that draws a {@link DecimalTextField} node inside the cell.
+ * <p>
+ * By default, the BigDecimalTableCell is rendered as a {@link javafx.scene.control.Label} when not being edited, and
+ * as a DecimalTextField when in editing mode.
  *
  * @author Craig Cavanaugh
  */
@@ -33,9 +37,11 @@ public class BigDecimalTableCell<S> extends TableCell<S, BigDecimal> {
 
     private final SimpleObjectProperty<NumberFormat> numberFormatProperty = new SimpleObjectProperty<>();
 
+    private DecimalTextField decimalTextField = null;
+
     public BigDecimalTableCell(final ObjectProperty<NumberFormat> numberFormatProperty) {
         setStyle("-fx-alignment: center-right;");  // Right align
-        this.numberFormatProperty().bind(numberFormatProperty);
+        numberFormatProperty().bind(numberFormatProperty);
     }
 
     public BigDecimalTableCell(final NumberFormat numberFormat) {
@@ -47,14 +53,75 @@ public class BigDecimalTableCell<S> extends TableCell<S, BigDecimal> {
     protected void updateItem(final BigDecimal amount, final boolean empty) {
         super.updateItem(amount, empty);  // required
 
-        if (!empty && amount != null) {
-            setText(numberFormatProperty.get().format(amount));
-        } else {
+        if (empty) {
             setText(null);
+            setGraphic(null);
+        } else {
+            if (isEditing()) {
+                setText(null);
+                getDecimalTextField().setDecimal(getItem());
+                setGraphic(getDecimalTextField());
+            } else if (amount != null) {
+                setText(numberFormatProperty.get().format(amount));
+                setGraphic(null);
+            } else {
+                setText(null);
+                setGraphic(null);
+            }
         }
     }
 
-    public SimpleObjectProperty<NumberFormat> numberFormatProperty() {
+    private SimpleObjectProperty<NumberFormat> numberFormatProperty() {
         return numberFormatProperty;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void startEdit() {
+        if (!isEditable() || !getTableView().isEditable() || !getTableColumn().isEditable()) {
+            return;
+        }
+
+        final DecimalTextField decimalTextField = getDecimalTextField();
+        decimalTextField.setDecimal(getItem());
+
+        super.startEdit();
+        setText(null);
+        setGraphic(decimalTextField);
+        decimalTextField.requestFocus();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void cancelEdit() {
+        super.cancelEdit();
+
+        setText(numberFormatProperty.get().format(getItem()));
+        setGraphic(null);
+    }
+
+    private DecimalTextField getDecimalTextField() {
+        if (decimalTextField == null) {
+            decimalTextField = new DecimalTextField();
+            decimalTextField.scaleProperty().setValue(numberFormatProperty.get().getMaximumFractionDigits());
+
+            decimalTextField.setOnKeyPressed(event -> {
+                if (isEditing() && event.getCode() == KeyCode.ENTER) {
+                    commitEdit(decimalTextField.getDecimal());
+                }
+            });
+
+            decimalTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+                if (isEditing() && !newValue) {
+                    commitEdit(decimalTextField.getDecimal());
+                }
+            });
+        }
+
+        return decimalTextField;
     }
 }

@@ -17,27 +17,37 @@
  */
 package jgnash.uifx.views.budget;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 
 import jgnash.engine.Account;
 import jgnash.engine.CurrencyNode;
+import jgnash.engine.MathConstants;
 import jgnash.engine.budget.BudgetGoal;
 import jgnash.engine.budget.BudgetPeriod;
 import jgnash.engine.budget.BudgetPeriodDescriptor;
 import jgnash.engine.budget.BudgetPeriodDescriptorFactory;
 import jgnash.engine.budget.Pattern;
+import jgnash.uifx.control.BigDecimalTableCell;
 import jgnash.uifx.control.DecimalTextField;
 
 /**
@@ -61,7 +71,7 @@ public class BudgetGoalsDialogController {
     private DecimalTextField fillAllDecimalTextField;
 
     @FXML
-    private TableView goalTable;
+    private TableView<BudgetPeriodDescriptor> goalTable;
 
     @FXML
     private Label currencyLabel;
@@ -72,13 +82,15 @@ public class BudgetGoalsDialogController {
     @FXML
     private ResourceBundle resources;
 
-    private SimpleObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
-    private SimpleObjectProperty<BudgetGoal> budgetGoalProperty = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<BudgetGoal> budgetGoalProperty = new SimpleObjectProperty<>();
 
-    private IntegerProperty workingYearProperty = new SimpleIntegerProperty();
+    private final IntegerProperty workingYearProperty = new SimpleIntegerProperty();
 
-    private IntegerProperty descriptorSizeProperty = new SimpleIntegerProperty();
+    private final IntegerProperty descriptorSizeProperty = new SimpleIntegerProperty();
+
+    private final ObjectProperty<NumberFormat> numberFormatProperty = new SimpleObjectProperty<>(NumberFormat.getInstance());
 
     @FXML
     private void initialize() {
@@ -90,10 +102,63 @@ public class BudgetGoalsDialogController {
         patternComboBox.getItems().addAll(Pattern.values());
         patternComboBox.setValue(Pattern.EveryRow);
 
+        fillAllDecimalTextField.emptyWhenZeroProperty().setValue(false);
+        amountDecimalTextField.emptyWhenZeroProperty().setValue(false);
+
+        fillAllDecimalTextField.setDecimal(BigDecimal.ZERO);
+        amountDecimalTextField.setDecimal(BigDecimal.ZERO);
+
+        goalTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        goalTable.setEditable(true);
+
+        final TableColumn<BudgetPeriodDescriptor, String> periodColumn
+                = new TableColumn<>(resources.getString("Column.Period"));
+        periodColumn.setEditable(false);
+
+        periodColumn.setCellValueFactory(param -> {
+            if (param != null) {
+                return new SimpleStringProperty(param.getValue().getPeriodDescription());
+            }
+            return new SimpleStringProperty("");
+        });
+        periodColumn.setSortable(false);
+
+        goalTable.getColumns().add(periodColumn);
+
+        final TableColumn<BudgetPeriodDescriptor, BigDecimal> amountColumn
+                = new TableColumn<>(resources.getString("Column.Amount"));
+        amountColumn.setEditable(true);
+        amountColumn.setSortable(false);
+
+        amountColumn.setCellValueFactory(param -> {
+            if (param != null) {
+                final BudgetPeriodDescriptor descriptor = param.getValue();
+                final BigDecimal goal
+                        = budgetGoalProperty.get().getGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod());
+
+                return new SimpleObjectProperty<>(goal.setScale(accountProperty().get().getCurrencyNode().getScale(),
+                        MathConstants.roundingMode));
+            }
+            return new SimpleObjectProperty<>(BigDecimal.ZERO);
+        });
+        amountColumn.setCellFactory(cell -> new BigDecimalTableCell<>(numberFormatProperty));
+        /// fTextFieldTableCell.forTableColumn()
+
+        amountColumn.setOnEditCommit(event -> {
+            final BudgetPeriodDescriptor descriptor = event.getTableView().getItems().get(event.getTablePosition().getRow());
+            budgetGoalProperty().get().setGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(), event.getNewValue());
+        });
+
+        goalTable.getColumns().add(amountColumn);
+
         periodComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 budgetGoalProperty().get().setBudgetPeriod(newValue);
-                descriptorSizeProperty.setValue(getDescriptors().size());
+
+                final List<BudgetPeriodDescriptor> descriptors = getDescriptors();
+
+                goalTable.getItems().setAll(descriptors);
+                descriptorSizeProperty.setValue(descriptors.size());
             }
         });
 
@@ -116,11 +181,22 @@ public class BudgetGoalsDialogController {
                 final CurrencyNode currencyNode = newValue.getCurrencyNode();
 
                 currencyLabel.setText(currencyNode.getSymbol());
+
                 fillAllDecimalTextField.scaleProperty().setValue(currencyNode.getScale());
+                fillAllDecimalTextField.minScaleProperty().setValue(currencyNode.getScale());
+
                 amountDecimalTextField.scaleProperty().setValue(currencyNode.getScale());
+                amountDecimalTextField.minScaleProperty().setValue(currencyNode.getScale());
+
+                final NumberFormat decimalFormat = NumberFormat.getInstance();
+                if (decimalFormat instanceof DecimalFormat) {
+                    decimalFormat.setMinimumFractionDigits(currencyNode.getScale());
+                    decimalFormat.setMaximumFractionDigits(currencyNode.getScale());
+                }
+
+                numberFormatProperty.setValue(decimalFormat);
             }
         });
-
     }
 
     public SimpleObjectProperty<Account> accountProperty() {
