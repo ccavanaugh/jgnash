@@ -68,27 +68,6 @@ public class DateTest {
     }
 
     @Test
-    public void formatTestTwo() throws ParseException {
-        final SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-
-        final LocalDateTime localDateTime = LocalDateTime.now();
-        final Date now = DateUtils.asDate(localDateTime);
-
-        assertEquals(format.format(now), dateTimeFormatter.format(localDateTime));
-    }
-
-    @Test
-    public void formatTestThree() throws ParseException {
-        final SimpleDateFormat format = new SimpleDateFormat("MMMMM");
-
-        final LocalDate localDateTime = LocalDate.now();
-        final Date now = DateUtils.asDate(localDateTime);
-
-        assertEquals(format.format(now), localDateTime.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault()));
-    }
-
-    @Test
     public void epochTest() {
         final LocalDate now = LocalDate.now();
 
@@ -179,5 +158,11 @@ public class DateTest {
         assertEquals(LocalDate.ofYearDay(2011, 365), days[364]);
 
         assertEquals(366, DateUtils.getAllDays(2000).length);
+    }
+
+    @Test
+    public void weekOfYear() {
+        assertEquals(53, DateUtils.getWeekOfTheYear(LocalDate.ofYearDay(2016, 3)));
+        assertEquals(1, DateUtils.getWeekOfTheYear(LocalDate.ofYearDay(2016, 4)));
     }
 }

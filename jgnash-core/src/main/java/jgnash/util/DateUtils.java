@@ -157,16 +157,6 @@ public class DateUtils {
     }
 
     /**
-     * Converts a {@code LocalDateTime} into a {@code Date} using the default timezone
-     *
-     * @param localDate {@code LocalDateTime} to convert
-     * @return an equivalent {@code Date}
-     */
-    public static Date asDate(final LocalDateTime localDate) {
-        return Date.from(localDate.atZone(ZoneId.systemDefault()).toInstant());
-    }
-
-    /**
      * Converts a {@code Date} into a {@code LocalDate} using the default timezone.
      *
      * @param date {@code Date} to convert
@@ -545,14 +535,12 @@ public class DateUtils {
     }
 
     /**
-     * Returns the numerical week of the year given a date.
-     * <p>
-     * Minimal days of week is set to 4 to comply with ISO 8601
+     * Returns the numerical week of the year given a date per the ISO 8601 standard
      *
      * @param dateOfYear the base date to work from
      * @return the week of the year
      */
     public static int getWeekOfTheYear(final LocalDate dateOfYear) {
-        return dateOfYear.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
+        return dateOfYear.get(WeekFields.ISO.weekOfWeekBasedYear());
     }
 }
