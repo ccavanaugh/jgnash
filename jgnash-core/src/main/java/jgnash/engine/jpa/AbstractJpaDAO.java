@@ -33,16 +33,25 @@ import jgnash.engine.StoredObject;
 import jgnash.engine.dao.AbstractDAO;
 
 /**
- * Abstract DAO
+ * Abstract JPA DAO.  Provides basic framework to work with the {@link EntityManager} in a thread safe manner.
  *
  * @author Craig Cavanaugh
  */
 abstract class AbstractJpaDAO extends AbstractDAO {
 
+    /**
+     * The {@link EntityManager} is not thread safe.  All interaction should be wrapped with this lock
+     */
     static final ReentrantLock emLock = new ReentrantLock();
 
+    /**
+     * Shared entity manager
+     */
     final EntityManager em;
 
+    /**
+     * Remote connection if {@code true}
+     */
     boolean isRemote = false;
 
     /**
@@ -72,7 +81,9 @@ abstract class AbstractJpaDAO extends AbstractDAO {
     /**
      * Merge / Update the object in place
      *
-     * @param object Object to merge
+     * @param object {@link StoredObject} to merge
+     * @param <T> the type of the value being merged
+     *
      * @return the merged object or null if an error occurred
      */
     <T extends StoredObject> T merge(final T object) {
@@ -101,7 +112,8 @@ abstract class AbstractJpaDAO extends AbstractDAO {
     /**
      * Persists an object
      *
-     * @param object Object to merge
+     * @param object {@link StoredObject} to persist
+     * @param <T> the type of the value being persisted
      */
     <T extends StoredObject> void persist(final T object) {
         emLock.lock();

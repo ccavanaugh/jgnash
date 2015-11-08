@@ -222,7 +222,7 @@ public class Budget extends StoredObject implements Comparable<Budget>, Cloneabl
 
     /**
      * Sets the working year for the budget.
-     * <p/>
+     * <p>
      * This is a transient property primarily used to help UI component communicate the working year.
      *
      * @param workingYear the working year to set

@@ -123,10 +123,9 @@ public class BudgetGoal implements Cloneable, Serializable {
     }
 
     /**
-     * Returns a clone of this {@code Budget}
-     * 
-     * @return clone
-     * @throws CloneNotSupportedException
+     * {@inheritDoc}
+     * <p>
+     * A deep copy of the goals is performed
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
