@@ -82,9 +82,7 @@ public final class BudgetPeriodDescriptorFactory {
             descriptors = new ArrayList<>(dates.length);
 
             for (final LocalDate date : dates) {
-                // Calendar day 1 is 1.  Must subtract 1 to get correct index
-                int day = date.getDayOfYear() - 1;
-                descriptors.add(new BudgetPeriodDescriptor(budgetYear, budgetPeriod, day));
+                descriptors.add(new BudgetPeriodDescriptor(date, budgetYear, budgetPeriod));
             }
 
             rwl.writeLock().lock();

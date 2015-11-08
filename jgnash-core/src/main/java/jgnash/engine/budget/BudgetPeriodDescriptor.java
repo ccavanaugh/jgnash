@@ -56,12 +56,13 @@ public class BudgetPeriodDescriptor {
 
     final private int budgetYear;
 
-    BudgetPeriodDescriptor(final int budgetYear, final BudgetPeriod budgetPeriod, final int startPeriod) {
+    BudgetPeriodDescriptor(final LocalDate budgetDate, final int budgetYear, final BudgetPeriod budgetPeriod) {
         Objects.requireNonNull(budgetPeriod);
+        Objects.requireNonNull(budgetDate);
 
         this.budgetYear = budgetYear;
         this.budgetPeriod = budgetPeriod;
-        this.startPeriod = startPeriod;
+        this.startPeriod = budgetDate.getDayOfYear() - 1;   // zero based index vs. 1 based day of year
 
         /* Calendar day 1 is 1.  Need to add 1 to get correct dates */
         startDate = LocalDate.ofYearDay(budgetYear, startPeriod + 1);
