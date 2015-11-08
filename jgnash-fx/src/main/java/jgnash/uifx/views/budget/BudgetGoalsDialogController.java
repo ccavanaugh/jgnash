@@ -28,7 +28,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -36,12 +35,12 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 
 import jgnash.engine.Account;
 import jgnash.engine.CurrencyNode;
 import jgnash.engine.MathConstants;
+import jgnash.engine.budget.BudgetFactory;
 import jgnash.engine.budget.BudgetGoal;
 import jgnash.engine.budget.BudgetPeriod;
 import jgnash.engine.budget.BudgetPeriodDescriptor;
@@ -90,7 +89,8 @@ public class BudgetGoalsDialogController {
 
     private final IntegerProperty descriptorSizeProperty = new SimpleIntegerProperty();
 
-    private final ObjectProperty<NumberFormat> numberFormatProperty = new SimpleObjectProperty<>(NumberFormat.getInstance());
+    private final ObjectProperty<NumberFormat> numberFormatProperty
+            = new SimpleObjectProperty<>(NumberFormat.getInstance());
 
     @FXML
     private void initialize() {
@@ -145,8 +145,11 @@ public class BudgetGoalsDialogController {
         /// fTextFieldTableCell.forTableColumn()
 
         amountColumn.setOnEditCommit(event -> {
-            final BudgetPeriodDescriptor descriptor = event.getTableView().getItems().get(event.getTablePosition().getRow());
-            budgetGoalProperty().get().setGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(), event.getNewValue());
+            final BudgetPeriodDescriptor descriptor = event.getTableView().getItems()
+                    .get(event.getTablePosition().getRow());
+
+            budgetGoalProperty().get().setGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(),
+                    event.getNewValue());
         });
 
         goalTable.getColumns().add(amountColumn);
@@ -170,8 +173,12 @@ public class BudgetGoalsDialogController {
 
         // the spinner factory max values do not like being bound; Set value instead
         descriptorSizeProperty.addListener((observable, oldValue, newValue) -> {
-            ((SpinnerValueFactory.IntegerSpinnerValueFactory)endRowSpinner.getValueFactory()).setMax(newValue.intValue());
-            ((SpinnerValueFactory.IntegerSpinnerValueFactory)startRowSpinner.getValueFactory()).setMax(newValue.intValue());
+            ((SpinnerValueFactory.IntegerSpinnerValueFactory) endRowSpinner.getValueFactory())
+                    .setMax(newValue.intValue());
+
+            ((SpinnerValueFactory.IntegerSpinnerValueFactory) startRowSpinner.getValueFactory())
+                    .setMax(newValue.intValue());
+
             endRowSpinner.getValueFactory().setValue(newValue.intValue());
         });
 
@@ -217,7 +224,36 @@ public class BudgetGoalsDialogController {
     }
 
     private List<BudgetPeriodDescriptor> getDescriptors() {
-        return  BudgetPeriodDescriptorFactory.getDescriptors(workingYearProperty.get(), budgetGoalProperty.get().getBudgetPeriod());
+        return BudgetPeriodDescriptorFactory.getDescriptors(workingYearProperty.get(),
+                budgetGoalProperty.get().getBudgetPeriod());
+    }
+
+    @FXML
+    private void handleHistoricalFill() {
+        budgetGoalProperty.setValue(BudgetFactory.buildAverageBudgetGoal(accountProperty.get(),
+                getDescriptors(), true));
+
+        final List<BudgetPeriodDescriptor> descriptors = getDescriptors();
+
+        goalTable.getItems().setAll(descriptors);
+        descriptorSizeProperty.setValue(descriptors.size());
+
+        goalTable.refresh();
+    }
+
+    @FXML
+    private void handleFillAllAction() {
+        final BigDecimal fillAmount = fillAllDecimalTextField.getDecimal();
+
+        for (final BudgetPeriodDescriptor descriptor : getDescriptors()) {
+            budgetGoalProperty.get().setGoal(descriptor.getStartPeriod(), descriptor.getEndPeriod(), fillAmount);
+        }
+
+        goalTable.refresh();
+    }
+
+    @FXML
+    private void handlePatternFillAction() {
     }
 
     @FXML
@@ -228,18 +264,5 @@ public class BudgetGoalsDialogController {
     @FXML
     private void handleCloseAction() {
         ((Stage) periodComboBox.getScene().getWindow()).close();
-    }
-
-    @FXML
-    private void handleHistoricalFill() {
-
-    }
-
-    @FXML
-    private void handleFillAllAction() {
-    }
-
-    @FXML
-    private void handlePatternFillAction() {
     }
 }
