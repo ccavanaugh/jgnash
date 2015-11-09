@@ -22,6 +22,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 import jgnash.util.DateUtils;
+import jgnash.util.NotNull;
 import jgnash.util.ResourceUtils;
 
 /**
@@ -29,7 +30,7 @@ import jgnash.util.ResourceUtils;
  *
  * @author Craig Cavanaugh
  */
-public class BudgetPeriodDescriptor {
+public class BudgetPeriodDescriptor implements Comparable<BudgetPeriodDescriptor> {
 
     private int hash = 0;
 
@@ -76,7 +77,7 @@ public class BudgetPeriodDescriptor {
                 break;
             case WEEKLY:
                 endDate = startDate.plusDays(ONE_WEEK_INCREMENT);
-                endPeriod = startPeriod + ONE_WEEK_INCREMENT;
+                endPeriod = Math.min(startPeriod + ONE_WEEK_INCREMENT, BudgetGoal.PERIODS - 1);
 
                 periodDescription = ResourceUtils.getString("Pattern.WeekOfYear",
                         DateUtils.getWeekOfTheYear(startDate), budgetYear);
@@ -203,5 +204,15 @@ public class BudgetPeriodDescriptor {
         BudgetPeriodDescriptor other = (BudgetPeriodDescriptor) obj;
 
         return budgetPeriod == other.budgetPeriod && budgetYear == other.budgetYear && startPeriod == other.startPeriod;
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Compares by the start date
+     */
+    @Override
+    public int compareTo(@NotNull final BudgetPeriodDescriptor that) {
+        return this.startDate.compareTo(that.getStartDate());
     }
 }
