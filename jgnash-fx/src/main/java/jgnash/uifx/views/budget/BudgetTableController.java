@@ -11,6 +11,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -853,13 +855,22 @@ public class BudgetTableController implements MessageListener {
         controllerObjectProperty.get().workingYearProperty().setValue(yearSpinner.getValue());
 
         try {
-            BudgetGoal oldGoal = (BudgetGoal) budgetProperty().get().getBudgetGoal(account).clone();
+            final BudgetGoal oldGoal = (BudgetGoal) budgetProperty().get().getBudgetGoal(account).clone();
             controllerObjectProperty.get().budgetGoalProperty().setValue(oldGoal);
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+        } catch (final CloneNotSupportedException e) {
+            Logger.getLogger(BudgetTableController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
         }
 
-        stage.show();
+        stage.showAndWait();
+
+        final Optional<BudgetGoal> result = controllerObjectProperty.get().getResult();
+
+        if (result.isPresent()) {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            Objects.requireNonNull(engine);
+
+            engine.updateBudgetGoals(budgetProperty.get(), account, result.get());
+        }
     }
 
     @Override
@@ -875,7 +886,11 @@ public class BudgetTableController implements MessageListener {
                     budgetResultsModel.removeMessageListener(this);
                 }
                 break;
+            case ACCOUNT_ADD:
+            case ACCOUNT_MODIFY:
+            case ACCOUNT_REMOVE:
             case BUDGET_UPDATE:
+            case BUDGET_GOAL_UPDATE:
                 if (budgetProperty().get().equals(message.getObject(MessageProperty.BUDGET))) {
                     handleBudgetUpdate();
                 }

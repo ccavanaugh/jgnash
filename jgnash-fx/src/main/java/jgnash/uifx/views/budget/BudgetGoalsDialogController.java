@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.beans.property.IntegerProperty;
@@ -55,7 +56,7 @@ import jgnash.uifx.control.DecimalTextField;
 public class BudgetGoalsDialogController {
 
     @FXML
-    private DecimalTextField amountDecimalTextField;
+    private DecimalTextField fillPatternAmountDecimalTextField;
 
     @FXML
     private Spinner<Integer> endRowSpinner;
@@ -77,6 +78,8 @@ public class BudgetGoalsDialogController {
 
     @FXML
     private ComboBox<BudgetPeriod> periodComboBox;
+
+    private Optional<BudgetGoal> result = Optional.empty();
 
     @FXML
     private ResourceBundle resources;
@@ -103,10 +106,10 @@ public class BudgetGoalsDialogController {
         patternComboBox.setValue(Pattern.EveryRow);
 
         fillAllDecimalTextField.emptyWhenZeroProperty().setValue(false);
-        amountDecimalTextField.emptyWhenZeroProperty().setValue(false);
+        fillPatternAmountDecimalTextField.emptyWhenZeroProperty().setValue(false);
 
         fillAllDecimalTextField.setDecimal(BigDecimal.ZERO);
-        amountDecimalTextField.setDecimal(BigDecimal.ZERO);
+        fillPatternAmountDecimalTextField.setDecimal(BigDecimal.ZERO);
 
         goalTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         goalTable.setEditable(true);
@@ -192,8 +195,8 @@ public class BudgetGoalsDialogController {
                 fillAllDecimalTextField.scaleProperty().setValue(currencyNode.getScale());
                 fillAllDecimalTextField.minScaleProperty().setValue(currencyNode.getScale());
 
-                amountDecimalTextField.scaleProperty().setValue(currencyNode.getScale());
-                amountDecimalTextField.minScaleProperty().setValue(currencyNode.getScale());
+                fillPatternAmountDecimalTextField.scaleProperty().setValue(currencyNode.getScale());
+                fillPatternAmountDecimalTextField.minScaleProperty().setValue(currencyNode.getScale());
 
                 final NumberFormat decimalFormat = NumberFormat.getInstance();
                 if (decimalFormat instanceof DecimalFormat) {
@@ -223,6 +226,10 @@ public class BudgetGoalsDialogController {
         return workingYearProperty;
     }
 
+    public Optional<BudgetGoal> getResult() {
+        return result;
+    }
+
     private List<BudgetPeriodDescriptor> getDescriptors() {
         return BudgetPeriodDescriptorFactory.getDescriptors(workingYearProperty.get(),
                 budgetGoalProperty.get().getBudgetPeriod());
@@ -230,15 +237,7 @@ public class BudgetGoalsDialogController {
 
     @FXML
     private void handleHistoricalFill() {
-        budgetGoalProperty.setValue(BudgetFactory.buildAverageBudgetGoal(accountProperty.get(),
-                getDescriptors(), true));
-
-        final List<BudgetPeriodDescriptor> descriptors = getDescriptors();
-
-        goalTable.getItems().setAll(descriptors);
-        descriptorSizeProperty.setValue(descriptors.size());
-
-        goalTable.refresh();
+        setBudgetGoal(BudgetFactory.buildAverageBudgetGoal(accountProperty.get(), getDescriptors(), true));
     }
 
     @FXML
@@ -254,10 +253,31 @@ public class BudgetGoalsDialogController {
 
     @FXML
     private void handlePatternFillAction() {
+        final BigDecimal fillAmount = fillPatternAmountDecimalTextField.getDecimal();
+
+        final int startRow = startRowSpinner.getValue() - 1;
+        final int endRow = endRowSpinner.getValue() - 1;
+
+        final Pattern pattern = patternComboBox.getValue();
+
+        setBudgetGoal(BudgetFactory.buildBudgetGoal(budgetGoalProperty.get(),
+                accountProperty.get(), getDescriptors(), pattern, startRow, endRow, fillAmount));
+    }
+
+    private void setBudgetGoal(final BudgetGoal budgetGoal) {
+        budgetGoalProperty.setValue(budgetGoal);
+
+        final List<BudgetPeriodDescriptor> descriptors = getDescriptors();
+
+        goalTable.getItems().setAll(descriptors);
+        descriptorSizeProperty.setValue(descriptors.size());
+
+        goalTable.refresh();
     }
 
     @FXML
     private void handleOkayAction() {
+        result = Optional.ofNullable(budgetGoalProperty.get());
         ((Stage) periodComboBox.getScene().getWindow()).close();
     }
 

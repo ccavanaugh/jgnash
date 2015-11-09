@@ -80,7 +80,7 @@
             <Spinner fx:id="endRowSpinner" GridPane.rowIndex="6" GridPane.columnIndex="1" maxWidth="Infinity"/>
 
             <Label text="%Label.Amount" GridPane.rowIndex="7"/>
-            <DecimalTextField fx:id="amountDecimalTextField" GridPane.rowIndex="7" GridPane.columnIndex="1" maxWidth="Infinity"/>
+            <DecimalTextField fx:id="fillPatternAmountDecimalTextField" GridPane.rowIndex="7" GridPane.columnIndex="1" maxWidth="Infinity"/>
 
             <ButtonBar GridPane.rowIndex="8" GridPane.columnSpan="2">
                 <buttons>
