@@ -88,6 +88,10 @@ public class NewFileDialog extends WizardDialog {
 
                 try {
                     NewFileUtility.buildNewFile(database, type, password.toCharArray(), defaultCurrency, nodes, accountList);
+
+                    // force a save and reload of the file
+                    EngineFactory.closeEngine(EngineFactory.DEFAULT);
+                    EngineFactory.bootLocalEngine(database, EngineFactory.DEFAULT, password.toCharArray());
                 } catch (final IOException e) {
                     StaticUIMethods.displayError(e.getMessage());
                 }

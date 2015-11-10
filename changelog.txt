@@ -28,6 +28,7 @@ Change the base highlight color for the FX interface
 
 Release 2.20.0
 ----------------------
+11/10/15 Duplicate tabs were being created and an exception thrown when creating a new file. (Fx)
 11/05/15 Added the ability to change the default date format to something other than the locale default. (Swing, Fx)
 10/31/15 Fixed a file version check bug that was causing asset and liability accounts to loose their budget visibility.
 10/31/15 Internal test framework should not leave files lying around anymore.

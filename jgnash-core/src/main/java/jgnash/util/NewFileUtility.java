@@ -104,10 +104,6 @@ public class NewFileUtility {
 
             e.addAccount(root, expense);
         }
-
-        // force a save and reload of the file
-        EngineFactory.closeEngine(EngineFactory.DEFAULT);
-        EngineFactory.bootLocalEngine(fileName, EngineFactory.DEFAULT, password, dataStoreType);
     }
 
     private NewFileUtility() {
