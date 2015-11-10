@@ -313,7 +313,6 @@ public class AccountListTreePane extends JScrollPane implements TreeSelectionLis
                     expand();
                     break;
                 case FILE_LOAD_SUCCESS:
-                case FILE_NEW_SUCCESS:
                     refresh();
                     expand();
                     break;

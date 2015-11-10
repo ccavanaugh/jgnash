@@ -316,7 +316,6 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
                         return;
                     }
                     // drop through to close
-                case FILE_NEW_SUCCESS:
                 case FILE_CLOSING:
                 case FILE_LOAD_SUCCESS:
                     closeDialog();

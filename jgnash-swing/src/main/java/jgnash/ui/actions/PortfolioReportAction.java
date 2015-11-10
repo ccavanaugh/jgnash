@@ -51,7 +51,6 @@ public class PortfolioReportAction extends AbstractEnabledAction {
                 case FILE_CLOSING:
                     setEnabled(false);
                     break;
-                case FILE_NEW_SUCCESS:
                 case FILE_LOAD_SUCCESS:
                 case ACCOUNT_REMOVE:
                 case ACCOUNT_ADD:

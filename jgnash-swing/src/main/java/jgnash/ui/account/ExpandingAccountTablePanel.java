@@ -266,9 +266,7 @@ public class ExpandingAccountTablePanel extends JPanel implements ActionListener
 
     @Override
     public void messagePosted(final Message event) {
-        if (event.getEvent() == ChannelEvent.FILE_NEW_SUCCESS) {
-            enableButtons(true);
-        } else if (event.getEvent() == ChannelEvent.FILE_LOAD_SUCCESS) {
+        if (event.getEvent() == ChannelEvent.FILE_LOAD_SUCCESS) {
             enableButtons(true);
         } else if (event.getEvent() == ChannelEvent.FILE_CLOSING) {
             enableButtons(false);

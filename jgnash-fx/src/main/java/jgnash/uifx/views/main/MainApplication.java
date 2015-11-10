@@ -284,7 +284,6 @@ public class MainApplication extends Application implements MessageListener {
     public void messagePosted(final Message event) {
         switch (event.getEvent()) {
             case FILE_LOAD_SUCCESS:
-            case FILE_NEW_SUCCESS:
                 Platform.runLater(() -> {
                     updateTitle();
                     addViews();

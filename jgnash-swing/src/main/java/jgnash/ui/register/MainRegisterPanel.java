@@ -400,9 +400,6 @@ public class MainRegisterPanel extends JPanel implements ActionListener, Message
                     showLast();
                     enableButtons(true);
                     break;
-                case FILE_NEW_SUCCESS:
-                    enableButtons(true);
-                    break;
                 case ACCOUNT_REMOVE:
                     _removeAccount(event.getObject(MessageProperty.ACCOUNT));
                     break;

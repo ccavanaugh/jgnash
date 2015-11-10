@@ -77,7 +77,6 @@ public class MainToolBarController implements MessageListener {
 
         Platform.runLater(() -> {
             switch (event.getEvent()) {
-                case FILE_NEW_SUCCESS:
                 case FILE_LOAD_SUCCESS:
                     disabled.setValue(false);
                     break;

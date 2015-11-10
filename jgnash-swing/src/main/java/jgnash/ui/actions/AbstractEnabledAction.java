@@ -51,7 +51,6 @@ public abstract class AbstractEnabledAction extends AbstractAction implements Me
                 case FILE_CLOSING:
                     setEnabled(false);
                     break;
-                case FILE_NEW_SUCCESS:
                 case FILE_LOAD_SUCCESS:
                 case UI_RESTARTED:
                     setEnabled(true);

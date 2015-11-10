@@ -577,7 +577,6 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
                     StaticUIMethods.displayError(rb.getString("Message.Error.AccountRemove"));
                     break;
                 case FILE_LOAD_SUCCESS:
-                case FILE_NEW_SUCCESS:
                     setOpenState(true);
                     addViews();
                     updateTitle();

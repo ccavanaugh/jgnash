@@ -83,7 +83,6 @@ public enum ChannelEvent {
     FILE_IO_ERROR,
     FILE_LOAD_FAILED,
     FILE_LOAD_SUCCESS,
-    FILE_NEW_SUCCESS,
     UI_RESTARTED, // UI has restarted
     UI_RESTARTING // UI will restart
 }

@@ -237,9 +237,6 @@ public class AutoCompleteFactory {
                     Transaction t = event.getObject(MessageProperty.TRANSACTION);
                     load(t);
                     return;
-                case FILE_NEW_SUCCESS:
-                    purge(); // purge the old
-                    return;
                 case FILE_LOAD_SUCCESS:
                     reload();
                     return;
@@ -327,9 +324,6 @@ public class AutoCompleteFactory {
                     if (a.equals(account)) {
                         load(t);
                     }
-                    return;
-                case FILE_NEW_SUCCESS:
-                    purge(); // purge the old
                     return;
                 case FILE_LOAD_SUCCESS:
                     reload();

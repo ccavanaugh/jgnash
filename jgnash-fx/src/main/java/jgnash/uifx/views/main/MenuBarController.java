@@ -210,7 +210,6 @@ public class MenuBarController implements MessageListener {
         Platform.runLater(() -> {
             switch (event.getEvent()) {
                 case FILE_LOAD_SUCCESS:
-                case FILE_NEW_SUCCESS:
                     disabled.setValue(false);
                     break;
                 case FILE_CLOSING:

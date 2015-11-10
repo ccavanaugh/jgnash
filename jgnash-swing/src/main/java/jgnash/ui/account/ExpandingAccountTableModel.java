@@ -313,7 +313,6 @@ public final class ExpandingAccountTableModel extends AbstractExpandingTableMode
                         fireNodeChanged();
                         break;
                     case FILE_LOAD_SUCCESS:
-                    case FILE_NEW_SUCCESS:
                         logger.warning("Should not have received a load and new file notification");
                         break;
                     default: // ignore any other messages that don't belong to us
