@@ -37,6 +37,7 @@ import jgnash.engine.RootAccount;
 import jgnash.uifx.StaticUIMethods;
 import jgnash.uifx.control.wizard.WizardDialogController;
 import jgnash.uifx.util.FXMLUtils;
+import jgnash.util.FileUtils;
 import jgnash.util.NewFileUtility;
 import jgnash.util.ResourceUtils;
 
@@ -111,8 +112,11 @@ public class NewFileWizard {
             final String password = (String)wizardController.getSetting(Settings.PASSWORD);
             final List<RootAccount> accountList = (List<RootAccount>) wizardController.getSetting(Settings.ACCOUNT_SET);
 
+            // Ensure file extension matches data store type
+            final String fileName = FileUtils.stripFileExtension(database) + "." + type.getDataStore().getFileExt();
+
             try {
-                NewFileUtility.buildNewFile(database, type, password.toCharArray(), defaultCurrency, nodes, accountList);
+                NewFileUtility.buildNewFile(fileName, type, password.toCharArray(), defaultCurrency, nodes, accountList);
             } catch (final IOException e) {
                 StaticUIMethods.displayError(e.getMessage());
             }
