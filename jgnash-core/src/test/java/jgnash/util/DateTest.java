@@ -86,20 +86,20 @@ public class DateTest {
 
         assertEquals(52, days.length);
 
-        assertEquals(2, days[0].getDayOfMonth());
+        assertEquals(3, days[0].getDayOfMonth());
 
-        assertEquals(25, days[51].getDayOfMonth());
+        assertEquals(26, days[51].getDayOfMonth());
 
         // test days for year 2004
         days = DateUtils.getFirstDayWeekly(2004);
 
         assertEquals(53, days.length);
 
-        assertEquals(28, days[0].getDayOfMonth());
+        assertEquals(29, days[0].getDayOfMonth());
 
-        assertEquals(19, days[51].getDayOfMonth());
+        assertEquals(20, days[51].getDayOfMonth());
 
-        assertEquals(26, days[52].getDayOfMonth());
+        assertEquals(27, days[52].getDayOfMonth());
 
         // test days for year 2015
         days = DateUtils.getFirstDayWeekly(2015);
@@ -110,13 +110,13 @@ public class DateTest {
 
         assertEquals(53, days.length);
 
-        assertEquals(28, days[0].getDayOfMonth());
+        assertEquals(29, days[0].getDayOfMonth());
 
-        assertEquals(4, days[1].getDayOfMonth());
+        assertEquals(5, days[1].getDayOfMonth());
 
-        assertEquals(20, days[51].getDayOfMonth());
+        assertEquals(21, days[51].getDayOfMonth());
 
-        assertEquals(27, days[52].getDayOfMonth());
+        assertEquals(28, days[52].getDayOfMonth());
     }
 
     @Test
@@ -129,11 +129,11 @@ public class DateTest {
         days = DateUtils.getFirstDayBiWeekly(2015);
         assertEquals(27, days.length);
 
-        assertEquals(28, days[0].getDayOfMonth());
+        assertEquals(29, days[0].getDayOfMonth());
 
-        assertEquals(11, days[1].getDayOfMonth());
+        assertEquals(12, days[1].getDayOfMonth());
 
-        assertEquals(27, days[26].getDayOfMonth());
+        assertEquals(28, days[26].getDayOfMonth());
     }
 
     @Test

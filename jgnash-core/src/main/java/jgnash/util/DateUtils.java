@@ -18,24 +18,15 @@
 package jgnash.util;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.prefs.Preferences;
 import java.util.regex.Pattern;
 
@@ -326,7 +317,7 @@ public class DateUtils {
 
     /**
      * Returns an array of Dates starting with the first day of each week of the
-     * year.
+     * year per ISO 8601
      *
      * @param year The year to generate the array for
      * @return The array of dates
@@ -334,21 +325,19 @@ public class DateUtils {
      */
     public static LocalDate[] getFirstDayWeekly(final int year) {
 
+        final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_WEEK_DATE;
+        final DecimalFormat decimalFormat= new DecimalFormat("00");
+
         final List<LocalDate> dates = new ArrayList<>();
 
-        LocalDate localDate = LocalDate.ofYearDay(year, 1).with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
-
-        final LocalDate testDate = LocalDate.ofYearDay(year, 1);
-        if (testDate.getDayOfWeek() == DayOfWeek.THURSDAY) {
-            dates.add(testDate.minusDays(4));
-        }
-
-        for (int i = 0; i <= 53; i++) {
-            if (localDate.getYear() == year) {
-                dates.add(localDate);
-            }
-
-            localDate = localDate.plusWeeks(1);
+        for (int i = 1; i <= 53; i++) {
+           try {
+               String date = year + "-W" + decimalFormat.format(i) + "-1";
+               LocalDate localeDate = LocalDate.parse(date, dateTimeFormatter);
+               dates.add(localeDate);
+           } catch(DateTimeParseException ignored) {
+               // do nothing
+           }
         }
 
         return dates.toArray(new LocalDate[dates.size()]);
