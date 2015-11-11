@@ -48,7 +48,7 @@ public class LocaleObject implements Comparable<LocaleObject> {
     }
 
     @Override
-    public int compareTo(final LocaleObject o) {
+    public int compareTo(@NotNull final LocaleObject o) {
         return toString().compareTo(o.toString());
     }
 
