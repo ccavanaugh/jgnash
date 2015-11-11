@@ -68,7 +68,11 @@ class JpaConfigDAO extends AbstractJpaDAO implements ConfigDAO {
 
                 } catch (final Exception e) {
                     newConfig = new Config();
+
+                    em.getTransaction().begin();
                     em.persist(newConfig);
+                    em.getTransaction().commit();
+
                     logger.info("Generating new default config");
                 }
                 return newConfig;
