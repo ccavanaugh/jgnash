@@ -165,4 +165,16 @@ public class DateTest {
         assertEquals(53, DateUtils.getWeekOfTheYear(LocalDate.ofYearDay(2016, 3)));
         assertEquals(1, DateUtils.getWeekOfTheYear(LocalDate.ofYearDay(2016, 4)));
     }
+
+    @Test
+    public void weeksPerYear() {
+        assertEquals(53, DateUtils.getNumberOfWeeksInYear(2009));
+        assertEquals(52, DateUtils.getNumberOfWeeksInYear(2014));
+        assertEquals(53, DateUtils.getNumberOfWeeksInYear(2015));
+        assertEquals(52, DateUtils.getNumberOfWeeksInYear(2016));
+        assertEquals(53, DateUtils.getNumberOfWeeksInYear(2020));
+        assertEquals(52, DateUtils.getNumberOfWeeksInYear(2025));
+        assertEquals(53, DateUtils.getNumberOfWeeksInYear(2026));
+        assertEquals(53, DateUtils.getNumberOfWeeksInYear(2032));
+    }
 }

@@ -22,7 +22,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
@@ -39,6 +38,11 @@ import java.util.regex.Pattern;
 
 @SuppressWarnings("MagicConstant")
 public class DateUtils {
+
+    /**
+     * Maximum number of weeks that can occur in a year
+     */
+    public static final int LEAP_WEEK = 53;
 
     private static final String DATE_FORMAT = "dateFormat";
 
@@ -325,22 +329,33 @@ public class DateUtils {
      */
     public static LocalDate[] getFirstDayWeekly(final int year) {
 
+        //Use the ISO date formatter to perform the heavy lifting
         final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_WEEK_DATE;
-        final DecimalFormat decimalFormat= new DecimalFormat("00");
+
+        // a preceding 0 is required for single digit values
+        final DecimalFormat decimalFormat = new DecimalFormat("00");
 
         final List<LocalDate> dates = new ArrayList<>();
 
-        for (int i = 1; i <= 53; i++) {
-           try {
-               String date = year + "-W" + decimalFormat.format(i) + "-1";
-               LocalDate localeDate = LocalDate.parse(date, dateTimeFormatter);
-               dates.add(localeDate);
-           } catch(DateTimeParseException ignored) {
-               // do nothing
-           }
+        for (int i = 1; i <= getNumberOfWeeksInYear(year); i++) {
+            final String date = year + "-W" + decimalFormat.format(i) + "-1";
+            final LocalDate localeDate = LocalDate.parse(date, dateTimeFormatter);
+            dates.add(localeDate);
         }
 
         return dates.toArray(new LocalDate[dates.size()]);
+    }
+
+    /**
+     * Returns the number of weeks in a year per ISO 8601.
+     *
+     * @param year year
+     * @return number of weeks
+     * @see <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO_8601</a>
+     */
+    public static int getNumberOfWeeksInYear(final int year) {
+        LocalDate midYear = LocalDate.of(year, Month.JUNE, 1);
+        return (int) midYear.range(WeekFields.ISO.weekOfWeekBasedYear()).getMaximum();
     }
 
     /**

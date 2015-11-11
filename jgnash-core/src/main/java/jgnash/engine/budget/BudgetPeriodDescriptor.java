@@ -38,8 +38,6 @@ public class BudgetPeriodDescriptor implements Comparable<BudgetPeriodDescriptor
 
     private static final int TWO_WEEK_INCREMENT = 13;
 
-    private static final int LEAP_WEEK = 53;
-
     /**
      * The starting period (Day of the year)
      */
@@ -83,7 +81,7 @@ public class BudgetPeriodDescriptor implements Comparable<BudgetPeriodDescriptor
                         DateUtils.getWeekOfTheYear(startDate), budgetYear);
                 break;
             case BI_WEEKLY:
-                if (DateUtils.getWeekOfTheYear(startDate) != LEAP_WEEK) {
+                if (DateUtils.getWeekOfTheYear(startDate) != DateUtils.LEAP_WEEK) {
                     endDate = startDate.plusDays(TWO_WEEK_INCREMENT);
                     endPeriod = startPeriod + TWO_WEEK_INCREMENT;
                 } else {
