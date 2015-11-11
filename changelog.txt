@@ -1,5 +1,6 @@
 WANTS
 ---------------
+Support for Derby database
 CSV Import
 OFX export
 VAT/GST UI
