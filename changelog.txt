@@ -29,6 +29,8 @@ Change the base highlight color for the FX interface
 
 Release 2.20.0
 ----------------------
+11/11/15 Budgeting now uses the ISO 8601 standard for handling weekly periods for consistency. (Swing)
+11/11/15 Fixed several budgeting bugs related to 53 week years. (Swing)
 11/10/15 Fixed an error that would occur when creating a new file and the given filename extension did not match the selected file type. (Fx)
 11/10/15 Duplicate tabs were being created and an exception thrown when creating a new file. (Fx)
 11/05/15 Added the ability to change the default date format to something other than the locale default. (Swing, Fx)

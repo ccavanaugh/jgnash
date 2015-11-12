@@ -86,6 +86,15 @@ public final class BudgetPeriodDescriptorFactory {
                 descriptors.add(new BudgetPeriodDescriptor(date, budgetYear, budgetPeriod));
             }
 
+            // Debugging info
+            /*for (BudgetPeriodDescriptor budgetPeriodDescriptor: descriptors) {
+                System.out.println(budgetPeriodDescriptor.getStartPeriod());
+                System.out.println(budgetPeriodDescriptor.getEndPeriod());
+                System.out.println(budgetPeriodDescriptor.getStartDate());
+                System.out.println(budgetPeriodDescriptor.getEndDate());
+                System.out.println();
+            }*/
+
             rwl.writeLock().lock();
             try {
                 cache.put(cacheKey, descriptors);

@@ -18,6 +18,7 @@
 package jgnash.engine.budget;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
@@ -41,11 +42,11 @@ public class BudgetPeriodDescriptor implements Comparable<BudgetPeriodDescriptor
     /**
      * The starting period (Day of the year)
      */
-    final private int startPeriod;
+    private int startPeriod;
 
     private int endPeriod;
 
-    final private LocalDate startDate;
+    private LocalDate startDate;
 
     private LocalDate endDate;
 
@@ -74,8 +75,17 @@ public class BudgetPeriodDescriptor implements Comparable<BudgetPeriodDescriptor
                 periodDescription = ResourceUtils.getString("Pattern.NumericDate", DateUtils.asDate(startDate));
                 break;
             case WEEKLY:
-                endDate = startDate.plusDays(ONE_WEEK_INCREMENT);
-                endPeriod = Math.min(startPeriod + ONE_WEEK_INCREMENT, BudgetGoal.PERIODS - 1);
+                // Check to see if we are working with the start of a 53 week year.  The first week will be truncated
+                if (DateUtils.getNumberOfWeeksInYear(budgetYear) == DateUtils.LEAP_WEEK && budgetDate.getYear() < budgetYear) {
+                    startPeriod = 0;
+                    startDate = budgetDate;
+
+                    endPeriod = (int) ChronoUnit.DAYS.between(startDate, LocalDate.of(budgetYear, Month.JANUARY, 1));
+                    endDate = startDate.plusDays(ONE_WEEK_INCREMENT);
+                } else {
+                    endDate = startDate.plusDays(ONE_WEEK_INCREMENT);
+                    endPeriod = Math.min(startPeriod + ONE_WEEK_INCREMENT, BudgetGoal.PERIODS - 1); // need to cap for 53 week years
+                }
 
                 periodDescription = ResourceUtils.getString("Pattern.WeekOfYear",
                         DateUtils.getWeekOfTheYear(startDate), budgetYear);
