@@ -105,10 +105,14 @@ Reports, Imports, and Help.  The transaction register and account management is 
 ## Java 8 Requirements
 
 [JDK 8u60](https://jdk8.java.net/download.html) or later is required for the jGnashFx early release.  The 8u60 release 
-fixed several JavaFX bugs and jGnashFx is dependent of several recent API changes.
+fixed several JavaFX bugs and jGnashFx is dependent on several recent API changes.
 
 ## Linux Users
 Linux users may use the jGnashFx Early Access version if you have the Oracle release of Java installed or if you are
 using OpenJDK with OpenJFX 8u60 or later installed.  OpenJFX 8u40 and u45 packages are generally available for most 
 mainstream distributions, but will not work.  You will need the 8u60 packages.
+
+## OpenJFX
+jGnashFx Early Access has been heavily tested against OpenJFX.  There are no noticeable differences in performance or
+ stability with the Oracle release or OpenJDK with OpenJFX.
 
