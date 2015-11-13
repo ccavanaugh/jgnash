@@ -39,6 +39,7 @@
         <apachi-poi.version>3.12</apachi-poi.version>
         <itext.version>2.1.7</itext.version>
         <jfree.version>1.0.19</jfree.version>
+        <fxgraphics2d.version>1.1</fxgraphics2d.version>
         <insubstantial.version>7.3</insubstantial.version>
         <swingx.version>1.6.5-1</swingx.version>
         <dynamic-jasper.version>5.0.3</dynamic-jasper.version>
