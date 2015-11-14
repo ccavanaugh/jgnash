@@ -13,6 +13,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -38,6 +39,7 @@ import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import jgnash.engine.Account;
@@ -80,6 +82,9 @@ public class BudgetTableController implements MessageListener {
 
     // Initial column width
     private static final int INITIAL_WIDTH = 75;
+
+    @FXML
+    private HBox sparkLinePane;
 
     @FXML
     private ScrollBar horizontalScrollBar;
@@ -391,6 +396,8 @@ public class BudgetTableController implements MessageListener {
             buildPeriodTable();
             buildPeriodSummaryTable();
             updateExpandedAccountList();
+
+            updateSparkLines();
 
             Platform.runLater(this::bindScrollBars);
         } finally {
@@ -839,7 +846,23 @@ public class BudgetTableController implements MessageListener {
             accountGroupPeriodSummaryTable.refresh();
 
             optimizeColumnWidths();
+
+            updateSparkLines();
         });
+    }
+
+    private void updateSparkLines() {
+        sparkLinePane.getChildren().clear();
+
+        for (AccountGroup group : accountGroupList) {
+            List<BigDecimal> remaining = budgetResultsModel.getDescriptorList().parallelStream().map(descriptor ->
+                    budgetResultsModel.getResults(descriptor, group).getRemaining()).collect(Collectors.toList());
+
+            BudgetSparkLine sparkLine = new BudgetSparkLine();
+            sparkLine.setAmounts(remaining);
+
+            sparkLinePane.getChildren().add(sparkLine);
+        }
     }
 
     private void handleEditAccountGoals(@NotNull final Account account) {

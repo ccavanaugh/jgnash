@@ -12,12 +12,14 @@
 <?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.control.ToolBar?>
 
+<?import javafx.scene.layout.HBox?>
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="jgnash.uifx.views.budget.BudgetTableController" styleClass="form">
     <top>
         <ToolBar>
             <Label text="%Label.Year"/>
             <Spinner fx:id="yearSpinner"/>
+            <HBox fx:id="sparkLinePane"/>
         </ToolBar>
     </top>
     <center>
