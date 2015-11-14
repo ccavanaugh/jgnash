@@ -37,13 +37,17 @@ class BudgetSparkLine extends Canvas {
 
     private static final int DEFAULT_WIDTH = 140;
 
-    private static final double PERIOD_GAP = 1.0;
+    private static final double DEFAULT_PERIOD_GAP = 1.0;
 
-    private static final double BAR_WIDTH = 2.0;
+    private static final double DEFAULT_BAR_WIDTH = 2.0;
 
-    private static final double MARGIN = 5.0;
+    private static final double MARGIN = 6.0;
 
     private final ObservableList<BigDecimal> amounts = FXCollections.observableArrayList();
+
+    private double barWidth = DEFAULT_BAR_WIDTH;
+
+    private double periodGap = DEFAULT_PERIOD_GAP;
 
     public BudgetSparkLine(final List<BigDecimal> amounts) {
         setHeight(ThemeManager.getBaseTextHeight() * 1.5);
@@ -52,38 +56,48 @@ class BudgetSparkLine extends Canvas {
         setAmounts(amounts);
     }
 
-    public void setAmounts(final List<BigDecimal> amounts) {
+    private void setAmounts(final List<BigDecimal> amounts) {
         this.amounts.clear();
         this.amounts.addAll(amounts);
 
-        setWidth(amounts.size() * BAR_WIDTH + (amounts.size() * (PERIOD_GAP - 1)) + (MARGIN * 2) + BAR_WIDTH);
+        if (calculateWidth() < DEFAULT_WIDTH) {
+            double scale = DEFAULT_WIDTH / calculateWidth();
+            barWidth = barWidth * scale;
+            periodGap = periodGap * scale;
+        }
+
+        setWidth(calculateWidth());
         setHeight(ThemeManager.getBaseTextHeight() * 1.5);
 
         draw();
     }
 
+    private double calculateWidth() {
+        return (amounts.size() * barWidth )+ (amounts.size() * periodGap) + (MARGIN * 2) + barWidth;
+    }
+
     private void draw() {
         final GraphicsContext gc = getGraphicsContext2D();
         gc.clearRect(0, 0, getWidth(), getHeight());
-        gc.setLineWidth(BAR_WIDTH);
+        gc.setLineWidth(barWidth);
 
         final double centerLine = getHeight() / 2d;
         final double max = amounts.stream().max(BigDecimal::compareTo).get().doubleValue();
         final double min = amounts.stream().min(BigDecimal::compareTo).get().doubleValue();
         final double scale = centerLine / Math.max(max, Math.abs(min));
 
-        double x = MARGIN;
+        double x = MARGIN + barWidth / 2d;
 
         for (final BigDecimal amount : amounts) {
             if (amount.signum() > 0) {
                 gc.setStroke(Color.BLACK);
-                gc.strokeLine(x, centerLine - (BAR_WIDTH / 2d), x, centerLine - amount.abs().doubleValue() * scale);
+                gc.strokeLine(x, centerLine - (barWidth / 2d), x, centerLine - amount.abs().doubleValue() * scale);
             } else if (amount.signum() < 0) {
                 gc.setStroke(Color.RED);
-                gc.strokeLine(x, centerLine + (BAR_WIDTH / 2d), x, centerLine + amount.abs().doubleValue() * scale);
+                gc.strokeLine(x, centerLine + (barWidth / 2d), x, centerLine + amount.abs().doubleValue() * scale);
             }
 
-            x += (BAR_WIDTH + PERIOD_GAP);
+            x += (barWidth + periodGap);
         }
     }
 }
