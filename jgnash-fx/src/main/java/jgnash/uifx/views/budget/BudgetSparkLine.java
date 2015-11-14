@@ -45,16 +45,18 @@ class BudgetSparkLine extends Canvas {
 
     private final ObservableList<BigDecimal> amounts = FXCollections.observableArrayList();
 
-    public BudgetSparkLine() {
+    public BudgetSparkLine(final List<BigDecimal> amounts) {
         setHeight(ThemeManager.getBaseTextHeight() * 1.5);
         setWidth(DEFAULT_WIDTH);
+
+        setAmounts(amounts);
     }
 
     public void setAmounts(final List<BigDecimal> amounts) {
         this.amounts.clear();
         this.amounts.addAll(amounts);
 
-        setWidth(amounts.size() * BAR_WIDTH + (amounts.size() * (PERIOD_GAP - 1)) + (MARGIN * 2));
+        setWidth(amounts.size() * BAR_WIDTH + (amounts.size() * (PERIOD_GAP - 1)) + (MARGIN * 2) + BAR_WIDTH);
         setHeight(ThemeManager.getBaseTextHeight() * 1.5);
 
         draw();
@@ -75,10 +77,10 @@ class BudgetSparkLine extends Canvas {
         for (final BigDecimal amount : amounts) {
             if (amount.signum() > 0) {
                 gc.setStroke(Color.BLACK);
-                gc.strokeLine(x, centerLine - (BAR_WIDTH / 2), x, centerLine - amount.abs().doubleValue() * scale);
+                gc.strokeLine(x, centerLine - (BAR_WIDTH / 2d), x, centerLine - amount.abs().doubleValue() * scale);
             } else if (amount.signum() < 0) {
                 gc.setStroke(Color.RED);
-                gc.strokeLine(x, centerLine + (BAR_WIDTH / 2), x, centerLine + amount.abs().doubleValue() * scale);
+                gc.strokeLine(x, centerLine + (BAR_WIDTH / 2d), x, centerLine + amount.abs().doubleValue() * scale);
             }
 
             x += (BAR_WIDTH + PERIOD_GAP);

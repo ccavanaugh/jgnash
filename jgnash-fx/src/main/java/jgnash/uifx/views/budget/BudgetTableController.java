@@ -28,6 +28,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
@@ -61,6 +63,7 @@ import jgnash.uifx.skin.StyleClass;
 import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.JavaFXUtils;
+import jgnash.uifx.views.main.MainApplication;
 import jgnash.util.NotNull;
 
 /**
@@ -858,10 +861,11 @@ public class BudgetTableController implements MessageListener {
             List<BigDecimal> remaining = budgetResultsModel.getDescriptorList().parallelStream().map(descriptor ->
                     budgetResultsModel.getResults(descriptor, group).getRemaining()).collect(Collectors.toList());
 
-            BudgetSparkLine sparkLine = new BudgetSparkLine();
-            sparkLine.setAmounts(remaining);
+            final HBox hBox = new HBox(new Label(group.toString()), new BudgetSparkLine(remaining));
+            hBox.setAlignment(Pos.CENTER_LEFT);
+            hBox.getStylesheets().addAll(MainApplication.DEFAULT_CSS);
 
-            sparkLinePane.getChildren().add(sparkLine);
+            sparkLinePane.getChildren().add(hBox);
         }
     }
 

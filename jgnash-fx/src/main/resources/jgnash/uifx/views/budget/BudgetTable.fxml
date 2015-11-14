@@ -19,7 +19,7 @@
         <ToolBar>
             <Label text="%Label.Year"/>
             <Spinner fx:id="yearSpinner"/>
-            <HBox fx:id="sparkLinePane"/>
+            <HBox fx:id="sparkLinePane" styleClass="form"/>
         </ToolBar>
     </top>
     <center>
