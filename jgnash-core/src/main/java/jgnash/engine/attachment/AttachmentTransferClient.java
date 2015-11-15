@@ -67,8 +67,11 @@ class AttachmentTransferClient {
     }
 
     /**
-     * Starts the connection with the lock server
+     * Starts the connection with the lock server.
      *
+     * @param host remote host
+     * @param port connection port
+     * @param password connection password
      * @return {@code true} if successful
      */
     public boolean connectToServer(final String host, final int port, final char[] password) {

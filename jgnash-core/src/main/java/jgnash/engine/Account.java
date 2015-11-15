@@ -1553,7 +1553,7 @@ public class Account extends StoredObject implements Comparable<Account> {
      * The clone does not include transactions or child accounts
      *
      * @return clone of this account
-     * @throws java.lang.CloneNotSupportedException
+     * @throws java.lang.CloneNotSupportedException should never occur
      */
     @Override
     public Object clone() throws CloneNotSupportedException {

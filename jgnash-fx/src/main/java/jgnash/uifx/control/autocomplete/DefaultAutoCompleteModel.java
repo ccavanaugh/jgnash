@@ -24,6 +24,7 @@ import java.util.List;
 import javafx.beans.property.SimpleBooleanProperty;
 
 import jgnash.uifx.Options;
+import jgnash.util.Nullable;
 
 /**
  * Default model for auto complete search.
@@ -61,8 +62,14 @@ abstract class DefaultAutoCompleteModel<E> implements AutoCompleteModel<E> {
         return null;
     }
 
-    /** Perform a brute force linear search top down for the best match */
-    private String doLookAhead(final String content, final boolean ignoreCase) {
+    /**
+     * Perform a brute force linear search top down for the best match
+     *
+     * @param content content to search for
+     * @param ignoreCase true is search is case insensitive
+     * @return best match if found, null otherwise
+     */
+    private @Nullable String doLookAhead(final String content, final boolean ignoreCase) {
         if (!content.isEmpty()) {
             synchronized (list) {
                 for (final String s : list) {

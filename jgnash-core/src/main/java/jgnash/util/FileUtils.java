@@ -69,7 +69,7 @@ public final class FileUtils {
      * Deletes a path and it's contents
      *
      * @param path {@code Path} to delete
-     * @throws IOException
+     * @throws IOException thrown if an IO error occurs
      */
     public static void deletePathAndContents(final Path path) throws IOException {
         if (Files.exists(path)) {   // only try if it exists

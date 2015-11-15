@@ -133,6 +133,7 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
      * override this method to return the different mask
      *
      * @see JLayer#setLayerEventMask(long)
+     * @return filtered event mask
      */
     private static long getLayerEventMask() {
         return AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK

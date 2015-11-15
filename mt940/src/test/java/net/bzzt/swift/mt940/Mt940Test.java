@@ -69,8 +69,8 @@ public class Mt940Test {
      * Test parsing an (anonimized) mt940 file as produced by the Rabobank
      * online bank
      * 
-     * @throws ParseException
-     * @throws IOException
+     * @throws ParseException thrown if a parse exception occurs while reading the file
+     * @throws IOException thrown if an IO exception occurs while reading the file
      */
     @Test
     public void testMt940Rabobank() throws IOException, ParseException {

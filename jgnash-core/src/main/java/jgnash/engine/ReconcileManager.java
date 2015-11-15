@@ -185,6 +185,7 @@ public class ReconcileManager {
     /**
      * Sets a date attribute for an account
      * @param account account that is being updated
+     * @param attribute key for the date attribute
      * @param date date value
      */
     public static void setAccountDateAttribute(@NotNull final Account account, @NotNull final String attribute,
@@ -198,6 +199,7 @@ public class ReconcileManager {
     /**
      * Returns a date attribute for an account
      * @param account {@code Account} that is being queried
+     * @param attribute key for the date attribute
      * @return an {@code Optional} containing the date if previously set
      */
     public static Optional<LocalDate> getAccountDateAttribute(@NotNull final Account account,
@@ -212,6 +214,7 @@ public class ReconcileManager {
     /**
      * Sets a {@code BigDecimal} attribute for an account
      * @param account account that is being updated
+     * @param attribute key for the {@code BigDecimal} attribute
      * @param decimal decimal value
      */
     public static void setAccountBigDecimalAttribute(@NotNull final Account account, @NotNull final String attribute,
@@ -225,6 +228,7 @@ public class ReconcileManager {
     /**
      * Returns a {@code BigDecimal} attribute for an account
      * @param account {@code Account} that is being queried
+     * @param attribute key for the {@code BigDecimal} attribute
      * @return an {@code Optional} containing the {@code BigDecimal} if previously set
      */
     public static Optional<BigDecimal> getAccountBigDecimalAttribute(@NotNull final Account account,

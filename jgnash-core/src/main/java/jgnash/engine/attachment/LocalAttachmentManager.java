@@ -48,7 +48,7 @@ public class LocalAttachmentManager implements AttachmentManager {
      * @param path Path to the attachment to add
      * @param copy true if only copying the file
      * @return true if successful
-     * @throws IOException
+     * @throws IOException thrown if a filesystem error occurs
      */
     @Override
     public boolean addAttachment(final Path path, final boolean copy) throws IOException {

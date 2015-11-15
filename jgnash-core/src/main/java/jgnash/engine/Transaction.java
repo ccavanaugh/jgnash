@@ -603,8 +603,10 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
     /**
      * Sets an external link to a file, the path should be relative to the data file for portability.
      * May be set to null.
+     *
+     * @param attachment attachment path
      */
-    public void setAttachment(final String attachment) {
+    public void setAttachment(@Nullable final String attachment) {
         this.attachment = attachment;
     }
 

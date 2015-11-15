@@ -26,6 +26,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
@@ -33,6 +34,7 @@ import java.util.logging.Logger;
 
 import jgnash.engine.AttachmentUtils;
 import jgnash.util.EncryptionManager;
+import jgnash.util.Nullable;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
@@ -80,8 +82,11 @@ class NettyTransferHandler extends SimpleChannelInboundHandler<String> {
      * Netty Handler.  The specified path may be a temporary location for clients or a persistent location for servers.
      *
      * @param attachmentPath Path for attachments.
+     * @param encryptionManager encryption manager instance
      */
-    public NettyTransferHandler(final Path attachmentPath, final EncryptionManager encryptionManager) {
+    public NettyTransferHandler(final Path attachmentPath, @Nullable final EncryptionManager encryptionManager) {
+        Objects.requireNonNull(attachmentPath);
+
         this.attachmentPath = attachmentPath;
         this.encryptionManager = encryptionManager;
     }

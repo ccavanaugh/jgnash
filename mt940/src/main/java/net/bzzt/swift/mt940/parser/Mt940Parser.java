@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,13 +58,13 @@ public class Mt940Parser {
          }
      }*/
 
-    /** 
+    /**
      * Parse the Mt940-file. Mt940 records are delimited by '-'.
      *
      * @param reader reader
      * @return Mt940File instance
-     * @throws IOException
-     * @throws ParseException
+     * @throws IOException    An IO exception occurred
+     * @throws ParseException parse error occurred reading text
      */
     public Mt940File parse(final LineNumberReader reader) throws IOException, ParseException {
         final Mt940File retval = new Mt940File();
@@ -93,14 +94,15 @@ public class Mt940Parser {
     /**
      * An mt940-record first has a couple of 'header' lines that do not
      * start with a ':'.
-     *
+     * <p>
      * After that, a line that doesn't start with a ':' is assumed to
      * belong to the previous 'real' line.
      *
+     * @param recordLines list of records
      * @return List of strings that have been correctly merged
      */
     private static List<String> mergeLines(final List<String> recordLines) {
-        List<String> retval = new ArrayList<>();
+        List<String> retVal = new ArrayList<>();
         String currentString = null;
         boolean inMessage = false;
         for (String string : recordLines) {
@@ -108,7 +110,7 @@ public class Mt940Parser {
             // header?
             if (inMessage) {
                 if (string.startsWith(":")) {
-                    retval.add(currentString);
+                    retVal.add(currentString);
                     currentString = "";
                 }
                 currentString += string;
@@ -119,11 +121,11 @@ public class Mt940Parser {
                     currentString = string;
                 } else {
                     // add a line of the header
-                    retval.add(string);
+                    retVal.add(string);
                 }
             }
         }
-        return retval;
+        return retVal;
     }
 
     /**
@@ -132,25 +134,24 @@ public class Mt940Parser {
      *
      * @param recordLines the List of MT940 records to parse
      * @return and generate Mt940 Record
-     * @throws ParseException
+     * @throws ParseException parse error occurred reading text
      */
     private static Mt940Record parseRecord(final List<String> recordLines) throws ParseException {
         Mt940Record retval = new Mt940Record();
 
         // Merge 'lines' that span multiple actual lines.
         List<String> mergedLines = mergeLines(recordLines);
-        
+
         Mt940Entry currentEntry = null;
         for (String line : mergedLines) {
             if (line.startsWith(":61:")) {
-            	currentEntry = nextEntry(retval.getEntries(), currentEntry);
-            	
+                currentEntry = nextEntry(retval.getEntries(), currentEntry);
+
                 line = line.substring(4);
                 line = parseDatumJJMMTT(currentEntry, line);
                 // for now don't handle the buchungsdatum. It is optional.
-                if (startsWithBuchungsDatum(line))
-                {
-                	line = line.substring(4);
+                if (startsWithBuchungsDatum(line)) {
+                    line = line.substring(4);
                 }
                 // for now only support C and D, not RC and RD
                 line = parseSollHabenKennung(currentEntry, line);
@@ -160,38 +161,45 @@ public class Mt940Parser {
                 currentEntry.addToMehrzweckfeld(line.substring(4));
             }
         }
-        
+
         // add the last one:
         nextEntry(retval.getEntries(), currentEntry);
-        
+
         return retval;
     }
 
     /**
-     *  adds the current entry to the result as a side-effect, if available 
+     * adds the current entry to the result as a side-effect, if available
+     *
+     * @param entries       entry list
+     * @param previousEntry entry to add if not null;
+     * @return new working {@code Mt940Entry}
      */
-    private static Mt940Entry nextEntry(List<Mt940Entry> entries,
-			Mt940Entry previousEntry) {
-    	if (previousEntry != null)
-    	{
-    		entries.add(previousEntry);
-    	}
-    	return new Mt940Entry();
-	}
+    private static Mt940Entry nextEntry(List<Mt940Entry> entries, Mt940Entry previousEntry) {
+        if (previousEntry != null) {
+            entries.add(previousEntry);
+        }
+        return new Mt940Entry();
+    }
 
-	/** 
+    /**
      * BuchungsDatum is a 4-character optional field - but how can we check whether it was included?
-     * 
+     * <p>
      * The field is directly followed by the mandatory 'soll/haben-kennung' character, so
      * we assume that when the string starts with a digit that's probably the buchungsdatum
+     *
+     * @param line line to check for BuchungsDatum
+     * @return true if found
      */
-    private static boolean startsWithBuchungsDatum(String line) {
-		return line != null && line.matches("^\\d.*");
-	}
+    private static boolean startsWithBuchungsDatum(final String line) {
+        return line != null && line.matches("^\\d.*");
+    }
 
-	/**
+    /**
      * Parse the value, put it into the entry.
      *
+     * @param currentEntry working {@code Mt940Entry}
+     * @param line line to parse decimal value from
      * @return the rest of the string to be parsed
      */
     private static String parseBetrag(final Mt940Entry currentEntry, final String line) {
@@ -200,17 +208,18 @@ public class Mt940Parser {
             endIndex = line.indexOf('F');
         }
 
-        String betrag = line.substring(0, endIndex);
-        betrag = betrag.replaceAll(",", ".");
-        //currentEntry.setBetrag(BigDecimal.valueOf(Double.valueOf(betrag)));
-        currentEntry.setBetrag(new BigDecimal(betrag));
+        String decimal = line.substring(0, endIndex);
+        decimal = decimal.replaceAll(",", ".");
+        currentEntry.setBetrag(new BigDecimal(decimal));
 
         return line.substring(endIndex);
     }
 
     /**
-     * Parse the debet/credit value, put it into the entry.
+     * Parse the debit/credit value, put it into the entry.
      *
+     * @param currentEntry working {@code Mt940Entry}
+     * @param string credit / debit line to parse
      * @return the rest of the string to be parsed
      */
     private static String parseSollHabenKennung(final Mt940Entry currentEntry, final String string) {
@@ -229,11 +238,14 @@ public class Mt940Parser {
     }
 
     /**
-     * Parse the JJMMTT-formatted date, put it into the entry.
+     * Parse the formatted date, put it into the entry.
      *
+     * @param currentEntry working {@code Mt940Entry}
+     * @param string string to parse date from
      * @return the rest of the string to be parsed
+     * @throws DateTimeParseException thrown if date format is bad
      */
-    private static String parseDatumJJMMTT(final Mt940Entry currentEntry, final String string) throws ParseException {
+    private static String parseDatumJJMMTT(final Mt940Entry currentEntry, final String string) throws DateTimeParseException {
         final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyMMdd");
 
         final String date = string.substring(0, 6);

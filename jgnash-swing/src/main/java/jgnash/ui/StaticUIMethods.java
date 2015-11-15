@@ -68,6 +68,8 @@ public class StaticUIMethods {
      * Display an error message
      *
      * @param message error message to display
+     * @param title   dialog title
+     * @param type    message type
      */
     public static void displayMessage(final String message, final String title, final int type) {
         EventQueue.invokeLater(() -> {

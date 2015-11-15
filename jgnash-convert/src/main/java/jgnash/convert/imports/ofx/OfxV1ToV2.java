@@ -99,7 +99,7 @@ public class OfxV1ToV2 {
      * formatting or EOL characters.
      *
      * @param reader {@code BufferedReader}
-     * @throws IOException
+     * @throws IOException thrown if IO error occurs
      */
     private static void consumeHeader(final BufferedReader reader) throws IOException {
 
@@ -127,6 +127,7 @@ public class OfxV1ToV2 {
      * string
      *
      * @param stream input stream
+     * @param characterSet assumed character set for the file being converted
      * @return a String with the SGML content and header removed
      */
     private static String readFile(final InputStream stream, final String characterSet) {

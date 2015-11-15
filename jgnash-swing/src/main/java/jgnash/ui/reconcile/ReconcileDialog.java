@@ -330,6 +330,8 @@ public class ReconcileDialog extends JDialog implements MessageListener, ActionL
     /**
      * Commits the changes.  This can take a long time if working remotely or using a relational database.  Push
      * the model update to a background thread and make the user wait.
+     *
+     * @param reconciledState {@code ReconciledState} to apply to the credit and debit models
      */
     private void commitChanges(final ReconciledState reconciledState) {
         final class CommitChangesWorker extends SwingWorker<Void, Void> {
