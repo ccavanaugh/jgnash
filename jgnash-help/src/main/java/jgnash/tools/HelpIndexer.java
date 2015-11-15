@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
@@ -56,19 +57,17 @@ public class HelpIndexer {
     private static final String DEFAULT_INCLUDE = "**/*.html";
     private static final String DEFAULT_EXCLUDE = "**/.svn";
 
-
     /**
      * The directory containing the Java Help set.
-     *
-     * @parameter expression="${basedir}/src/main/resources"
      */
+    @Parameter(property = "${basedir}/src/main/resources")
     @Option(name = "-source", usage = "Source of html files to index")
     private File sourcePath;
+
     /**
      * The location of the output JavaSearchIndex database.
-     *
-     * @parameter expression="${project.build.directory}" @required
      */
+    @Parameter(property = "project.build.directory", required = true)
     @Option(name = "-db", usage = "Location to dump index database")
     private File dataBase;
 
