@@ -33,7 +33,11 @@
 			</includes>
 			<excludes>
 				<exclude>junit*</exclude>
+                <exclude>hamcrest*</exclude>
+                <exclude>plexus-utils*</exclude>
+                <exclude>annotations*</exclude>
 			</excludes>
+
 		</fileSet>
 		<fileSet>
 			<directory>target</directory>
