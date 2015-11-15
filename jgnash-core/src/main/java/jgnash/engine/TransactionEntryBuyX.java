@@ -25,9 +25,9 @@ import jgnash.util.NotNull;
 
 /**
  * Buy shares and reduce the (cash) balance of an account
- * <p/>
+ * <p>
  * The investment account is always assigned to the debit account.
- * <p/>
+ * <p>
  * If an account other than the investment account is assigned to the credit
  * account, then the balance of the credit account is reduced because the cost
  * of the buy is made against it.

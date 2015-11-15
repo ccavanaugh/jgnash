@@ -357,8 +357,8 @@ public class ThemeManager {
      * isSupportedLookAndFeel() method. Returns true if the LookAndFeel is
      * supported. Returns false if the LookAndFeel is not supported and/or if
      * there is any kind of error checking if the LookAndFeel is supported.
-     * <p/>
-     * The L&F menu will use this method to determine whether the various L&F
+     * <p>
+     * The Look and Feel menu will use this method to determine whether the various Look and Feel
      * options should be active or inactive.
      * 
      * @param laf name of look and feel to search for

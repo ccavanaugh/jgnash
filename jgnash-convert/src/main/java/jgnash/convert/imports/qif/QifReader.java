@@ -49,6 +49,9 @@ class QifReader extends LineNumberReader {
 
     /**
      * Takes a peek at the next line and eats and empty line if found
+     *
+     * @return next readable line, null if at the end of the file
+     * @throws IOException IO exception
      */
     public String peekLine() throws IOException {
         String peek;

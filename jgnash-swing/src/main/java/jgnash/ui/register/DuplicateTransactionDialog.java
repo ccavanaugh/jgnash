@@ -42,7 +42,7 @@ class DuplicateTransactionDialog extends DateChkNumberDialog {
     private Transaction newTransaction;
 
     /**
-     * Creates new DuplicateTransactionDialog.<b> null transactions and SplitEntryTransactions are ignored to prevent
+     * Creates new DuplicateTransactionDialog. Null transactions and SplitEntryTransactions are ignored to prevent
      * bad results.
      *
      * @param a the account for the transaction. This cannot be null.

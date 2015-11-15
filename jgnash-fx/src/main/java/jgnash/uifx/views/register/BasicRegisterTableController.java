@@ -38,7 +38,6 @@ import jgnash.util.DateUtils;
 
 /**
  * Register Table with stats controller
- * <p/>
  *
  * @author Craig Cavanaugh
  */

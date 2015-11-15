@@ -42,12 +42,11 @@ import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * UI Panel for handling investment gains and loss.
- * <p/>
- * If gainsList.size() > 0, then a one or more specialized gains exist.  Otherwise, it's
+ * <p>
+ * If {@code gainsList.size() > 0}, then a one or more specialized gains exist.  Otherwise, it's
  * assumed the user is not tracking income gains or loss
  *
  * @author Craig Cavanaugh
- *
  */
 class GainsPanel extends JPanel implements ActionListener {
 

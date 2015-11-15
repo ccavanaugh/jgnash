@@ -65,7 +65,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Parses an XML file and builds JMenuBar and JToolBar UI objects
- * <p/>
+ * <p>
  * Ideas borrowed from: http://www.javadesktop.org/articles/actions/index.html
  *
  * @author Craig Cavanaugh

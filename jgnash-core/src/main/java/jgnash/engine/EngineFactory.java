@@ -47,7 +47,7 @@ import jgnash.util.ResourceUtils;
 
 /**
  * Factory class for obtaining an engine instance
- * <p/>
+ * <p>
  * The filename of the database or remote server must be explicitly set before
  * an Engine instance will be returned
  *
@@ -135,7 +135,7 @@ public class EngineFactory {
      *
      * @param name engine name to look for
      * @return the DataStoreType
-     * @throws NullPointerException
+     * @throws NullPointerException thrown if engine is not found
      */
     public static synchronized DataStoreType getType(final String name) throws NullPointerException {
         DataStore dataStore = dataStoreMap.get(name);

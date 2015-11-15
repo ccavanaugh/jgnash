@@ -407,7 +407,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
 
     /**
      * Generates the visible object model.
-     * <p/>
+     * <p>
      * If overridden, the overriding method must call the base method for the model to update correctly
      */
     void buildVisibleModel() {
@@ -463,7 +463,7 @@ public abstract class AbstractExpandingTableModel<E extends Comparable<? super E
 
     /**
      * Returns a collection of all objects that should be loaded into the model.
-     * </p>
+     * <p>
      * This method can be expensive as it is intended for constructing the model,
      * so usage should be minimal.
      *

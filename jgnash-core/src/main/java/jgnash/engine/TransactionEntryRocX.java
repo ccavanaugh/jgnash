@@ -26,7 +26,7 @@ import jgnash.util.NotNull;
 
 /**
  * Return of capital investment transaction
- * <p/>
+ * <p>
  * The creditAccount and creditAmount fields are used for the investment account.
  * The debitAccount and debitAmount fields are used for the capital gains (income) account.
  *

@@ -76,7 +76,7 @@ public class InvestmentAccountProxy extends AccountProxy {
 
     /**
      * Returns the balance of the transactions inclusive of the start and end dates.
-     * <p/>
+     * <p>
      * The balance includes the cash transactions and is based on the current market value.
      *
      * @param start The inclusive start date

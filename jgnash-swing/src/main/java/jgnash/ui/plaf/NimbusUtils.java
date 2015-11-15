@@ -39,7 +39,7 @@ public class NimbusUtils {
 
     /**
      * Returns the base font size for the Nimbus Look and Feel
-     * <p/>
+     * <p>
      * Assumes that the Nimbus look and feel has been set.
      * 
      * @return base base font size

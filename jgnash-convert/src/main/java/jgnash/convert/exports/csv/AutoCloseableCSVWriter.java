@@ -22,7 +22,7 @@ import au.com.bytecode.opencsv.CSVWriter;
 import java.io.Writer;
 
 /**
- * Wrap <code>CSVWriter to add a little syntactic sugar.
+ * Wrap CSVWriter to add a little syntactic sugar.
  *
  * @author Craig Cavanaugh
  */

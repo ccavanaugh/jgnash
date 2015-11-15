@@ -446,7 +446,8 @@ public class Transaction extends StoredObject implements Comparable<Transaction>
      * Return a list of transaction entries with the given tag
      *
      * @param tag TransactionTag to filter for
-     * @return List<TransactionEntry> of entries with the given tag. An empty list will be returned if none are found
+     * @return {@code List<TransactionEntry>} of entries with the given tag. An empty list will be
+     * returned if none are found
      */
     List<TransactionEntry> getTransactionEntriesByTag(final TransactionTag tag) {
         List<TransactionEntry> list = new ArrayList<>();

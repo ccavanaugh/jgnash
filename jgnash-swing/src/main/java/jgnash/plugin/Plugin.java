@@ -22,23 +22,21 @@ import javax.swing.JPanel;
 
 /**
  * This is the interface for jGnash application plugins.
- * <p/>
- * <p/>
+ * <p>
  * Plugins can install multiple menu items into the primary UI. Any returned {@code JMenuItem}s must have the
  * client property {@code PRECEDINGMENUIDREF} set for the menu item to installed correctly.
- * <p/>
- * <p/>
+ * <p>
  * The available preceding id for installation may be found in {@code main-frame-actions.xml} in the
  * {@code jgnash.resource} package.
- * <p/>
+ * <p>
  * Example:
- * <p/>
+ * <p>
  * {@code
  * JMenuItem item = new JMenuItem("Test Plugin");
- * <p/>
+ * <p>
  * item.putClientProperty(Plugin.PRECEDINGMENUIDREF, "paste-command");
  * }
- * <p/>
+ * <p>
  * The above example will install a menu item after <tt>Paste</tt> in the <tt>Edit</tt> menu.
  *
  * @author Leif-Erik Dörr

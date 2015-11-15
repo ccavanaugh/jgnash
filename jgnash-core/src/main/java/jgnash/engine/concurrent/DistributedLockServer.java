@@ -294,7 +294,7 @@ public class DistributedLockServer {
 
     /**
      * Reentrant Read Write lock.
-     * <p/>
+     * <p>
      * A unique integer must be supplied to identify the thread instead of the current thread.
      */
     private static class ReadWriteLock {
@@ -303,7 +303,7 @@ public class DistributedLockServer {
 
         /**
          * The key is the uuid of the manager plus the remote thread id
-         * <p/>
+         * <p>
          * uuid-integer
          */
         private final Map<String, Integer> readingThreads = new ConcurrentHashMap<>();

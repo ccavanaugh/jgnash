@@ -28,7 +28,7 @@ import javax.swing.ListCellRenderer;
 
 /**
  * Renderer to show a checkbox in ListCellRenderer
- * <p/>
+ * <p>
  * Usage: <code>jList.setCellRenderer(new CheckListCellRenderer(jList.getCellRenderer())); </code>
  *
  * @author Craig Cavanaugh

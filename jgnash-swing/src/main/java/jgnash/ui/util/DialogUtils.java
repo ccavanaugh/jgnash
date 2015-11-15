@@ -45,10 +45,9 @@ public class DialogUtils {
 
     /**
      * Listens to a JDialog to save and restore windows bounds automatically.
-     * <p/>
+     * <p>
      * {@code setVisible(false)} and {@code dispose()} must not be used
      * to close the window.  Instead, dispatch a window closing event.
-     * <p/>
      * <PRE>
      * dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
      * </PRE>

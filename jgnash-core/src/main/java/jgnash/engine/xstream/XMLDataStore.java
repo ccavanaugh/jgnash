@@ -124,7 +124,7 @@ public class XMLDataStore implements DataStore {
      * XMLDataStore will throw an exception if called
      *
      * @see DataStore#getClientEngine(java.lang.String, int, char[], java.lang.String)
-     * @throws UnsupportedOperationException
+     * @throws UnsupportedOperationException thrown if an attempt is made to use as a remote data store
      */
     @Override
     public Engine getClientEngine(final String host, final int port, final char[] password, final String engineName) {

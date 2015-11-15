@@ -67,7 +67,7 @@ public class ExchangeRate extends StoredObject {
 
     /**
      * No argument constructor for reflection purposes.
-     * <p/>
+     * <p>
      * <b>Do not use to create a new instance</b>
      */
     @SuppressWarnings("unused")
@@ -213,7 +213,7 @@ public class ExchangeRate extends StoredObject {
 
     /**
      * Returns the exchange rate for a given {@code LocalDate}.
-     * <p/>
+     * <p>
      * If a rate has not be set, {@code BigDecimal.ZERO} is returned
      *
      * @param localDate {@code LocalDate} for exchange

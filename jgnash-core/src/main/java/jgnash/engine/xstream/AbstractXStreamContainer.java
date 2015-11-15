@@ -90,7 +90,7 @@ abstract class AbstractXStreamContainer {
 
     /**
      * Returns a list of objects that are assignable from from the specified Class.
-     * <p/>
+     * <p>
      * The returned list may be modified without causing side effects
      *
      * @param <T>    the type of class to query

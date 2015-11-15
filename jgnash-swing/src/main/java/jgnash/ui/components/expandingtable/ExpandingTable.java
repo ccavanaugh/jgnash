@@ -387,7 +387,7 @@ public class ExpandingTable<E extends Comparable<? super E>> extends JTable {
 
     /**
      * An empty icon that indents based on a reference icon
-     * <p/>
+     * <p>
      * Null checks have to be performed on icons because look and feel can set it as null
      */
     private static class EmptyIndentedIcon implements Icon {

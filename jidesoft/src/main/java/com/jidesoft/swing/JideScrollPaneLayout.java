@@ -464,20 +464,14 @@ class JideScrollPaneLayout extends ScrollPaneLayout implements JideScrollPaneCon
      * Lays out the scrollpane. The positioning of components depends on the following constraints:
      * <ul>
      * <li>The row header, if present and visible, gets its preferred width and the viewport's height.
-     * <p/>
      * <li>The column header, if present and visible, gets its preferred height and the viewport's width.
-     * <p/>
      * <li>If a vertical scrollbar is needed, i.e. if the viewport's extent height is smaller than its view height or if
      * the {@code displayPolicy} is ALWAYS, it's treated like the row header with respect to its dimensions and is
      * made visible.
-     * <p/>
      * <li>If a horizontal scrollbar is needed, it is treated like the column header (see the paragraph above regarding
      * the vertical scrollbar).
-     * <p/>
      * <li>If the scrollpane has a non-{@code null} {@code viewportBorder}, then space is allocated for that.
-     * <p/>
      * <li>The viewport gets the space available after accounting for the previous constraints.
-     * <p/>
      * <li>The corner components, if provided, are aligned with the ends of the scrollbars and headers. If there is a
      * vertical scrollbar, the right corners appear; if there is a horizontal scrollbar, the lower corners appear; a row
      * header gets left corners, and a column header gets upper corners.

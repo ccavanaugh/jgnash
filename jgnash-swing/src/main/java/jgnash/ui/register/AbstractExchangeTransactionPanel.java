@@ -28,7 +28,7 @@ import com.jgoodies.forms.layout.FormLayout;
 /**
  * Extends AbstractBankTransactionPanel and adds fields and labels for transactions
  * across accounts with different currencies.
- * <p/>
+ * <p>
  * When transactions with multiple currencies are modified, the transaction takes
  * on the base currency of the account register it is being modified from.  The
  * original base currency is only preserved if the transaction is modified in the
@@ -36,7 +36,6 @@ import com.jgoodies.forms.layout.FormLayout;
  *
  * @author Craig Cavanaugh
  * @author Pranay
- *
  */
 public abstract class AbstractExchangeTransactionPanel extends AbstractBankTransactionPanel {
 

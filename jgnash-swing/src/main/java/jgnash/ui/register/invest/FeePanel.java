@@ -45,12 +45,11 @@ import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * UI Panel for handling investment transaction fees
- * <p/>
- * If feeSet.size() > 0, then a one or more specialized fees exist.  Otherwise, the fee is
+ * <p>
+ * If {@code feeSet.size() > 0}, then a one or more specialized fees exist.  Otherwise, the fee is
  * simple and charged against the account adjusting the cash balance.
  *
  * @author Craig Cavanaugh
- *
  */
 class FeePanel extends JPanel implements ActionListener {
 

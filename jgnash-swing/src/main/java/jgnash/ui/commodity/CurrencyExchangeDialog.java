@@ -82,7 +82,7 @@ import com.jgoodies.forms.layout.RowSpec;
 
 /**
  * CurrencyModifyPanel is used for modifying the currencies and exchange rates.
- * <p/>
+ * <p>
  * <b>Note:</b> By default the exchange rate history list is always returned with the exchange occurring in a set
  * direction. The rate must be inverted accordingly.
  *

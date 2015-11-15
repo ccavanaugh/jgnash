@@ -25,9 +25,9 @@ import jgnash.util.NotNull;
 
 /**
  * Sell shares and increase the (cash) balance of an account
- * <p/>
+ * <p>
  * The investment account is always assigned to the credit account.
- * <p/>
+ * <p>
  * If an account other than the investment account is assigned to the debit
  * account, then the balance of the debit account is increased because the
  * gains of the sell are added to it.

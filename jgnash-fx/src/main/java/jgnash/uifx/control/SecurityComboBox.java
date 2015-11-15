@@ -44,7 +44,7 @@ import jgnash.engine.message.MessageProperty;
 
 /**
  * ComboBox that allows selection of a SecurityNode and manages it's own model
- * <p/>
+ * <p>
  * The default operation is to load all known {@code SecurityNodes}.  If the
  * {@code accountProperty} is set, then only the account's {@code SecurityNodes}
  * will be available for selection.

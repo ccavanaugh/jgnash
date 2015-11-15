@@ -26,7 +26,7 @@ import jgnash.util.NotNull;
 
 /**
  * Investment dividend.
- * <p/>
+ * <p>
  * The creditAccount and creditAmount fields are used for the investment account.
  * The debitAccount and debitAmount fields are used for the capital gains (income) account.
  * creditAccount is assumed to be the investment account.

@@ -174,7 +174,7 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     /**
      * Balance of the account
-     * <p/>
+     * <p>
      * Cached balances cannot be persisted to do nature of JPA
      */
     @Transient
@@ -182,7 +182,7 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     /**
      * Reconciled balance of the account
-     * <p/>
+     * <p>
      * Cached balances cannot be persisted to do nature of JPA
      */
     @Transient
@@ -226,7 +226,7 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     /**
      * No argument public constructor for reflection purposes.
-     * <p/>
+     * <p>
      * <b>Do not use to create account new instance</b>
      */
     public Account() {
@@ -1549,7 +1549,7 @@ public class Account extends StoredObject implements Comparable<Account> {
 
     /**
      * When overridden, this should return account shallow copy only.
-     * <p/>
+     * <p>
      * The clone does not include transactions or child accounts
      *
      * @return clone of this account

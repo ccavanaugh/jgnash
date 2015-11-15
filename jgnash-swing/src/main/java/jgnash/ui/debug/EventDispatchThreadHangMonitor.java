@@ -31,25 +31,25 @@ import java.util.TimerTask;
 /**
  * Monitors the AWT event dispatch thread for events that take longer than a
  * certain time to be dispatched.
- * <p/>
+ * <p>
  * The principle is to record the time at which we start processing an event,
  * and have another thread check frequently to see if we're still processing. If
  * the other thread notices that we've been processing a single event for too
  * long, it prints a stack trace showing what the event dispatch thread is
  * doing, and continues to time it until it finally finishes.
- * <p/>
+ * <p>
  * This is useful in determining what code is causing your Java application's
  * GUI to be unresponsive.
- * <p/>
- * <p>The original blog can be found here<br> <a
+ * <p>
+ * The original blog can be found here<br> <a
  * href="http://elliotth.blogspot.com/2005/05/automatically-detecting-awt-event.html">
- * Automatically detecting AWT event dispatch thread hangs</a> </p>
+ * Automatically detecting AWT event dispatch thread hangs</a>
  *
- * @author Elliott Hughes <enh@jessies.org>
- * <p/>
+ * @author Elliott Hughes (enh@jessies.org)
+ * <p>
  * Advice, bug fixes, and test cases from Alexander Potochkin and Oleg
  * Sukhodolsky.
- * <p/>
+ * <p>
  * https://swinghelper.dev.java.net/
  */
 public final class EventDispatchThreadHangMonitor extends EventQueue {

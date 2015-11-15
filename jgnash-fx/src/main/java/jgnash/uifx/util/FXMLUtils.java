@@ -238,6 +238,7 @@ public class FXMLUtils {
      *
      * @param fxmlUrl        the fxml {@code URL}
      * @param resourceBundle {@code ResourceBundle} to pass to the {@code FXMLLoader}
+     * @param <T> expected return type being loaded
      * @return The loaded object hierarchy.
      * @see FXMLLoader#load()
      */

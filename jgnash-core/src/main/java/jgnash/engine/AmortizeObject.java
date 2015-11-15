@@ -29,7 +29,7 @@ import javax.persistence.ManyToOne;
 
 /**
  * This class is used to calculate loan payments.
- * <p/>
+ * <p>
  * Because BigDecimal is lacking methods of exponents, calculations are
  * performed using StrictMath to maintain portability. Results are returned as
  * doubles. Results will need to be scaled and rounded.

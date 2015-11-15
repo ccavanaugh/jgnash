@@ -43,7 +43,7 @@ public class SortedListModel<E extends Comparable<? super E>> extends AbstractLi
 
     /**
      * Returns the number of components in this list.
-     * <p/>
+     * <p>
      * This method is identical to <tt>size()</tt>, which implements the <tt>List</tt> interface defined in the 1.2
      * Collections framework. This method exists in conjunction with <tt>setSize()</tt> so that "size" is identifiable
      * as a JavaBean property.
@@ -140,7 +140,7 @@ public class SortedListModel<E extends Comparable<? super E>> extends AbstractLi
 
     /**
      * Returns an array containing all of the elements in this list in the correct order.
-     * <p/>
+     * <p>
      * Throws an <tt>ArrayStoreException</tt> if the runtime type of the array a is not a supertype of the runtime type
      * of every element in this list.
      * 

@@ -86,6 +86,7 @@ public class ValidationFactory {
      * Show a validation error on a control
      *
      * @param control {@code Control} to attach to
+     * @param decoration {@code Decoration} to be displayed with failed validation
      * @param error tooltip to display
      * @param sticky {@code true} if not removed when focus changes
      */

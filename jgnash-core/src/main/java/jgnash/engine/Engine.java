@@ -1542,9 +1542,9 @@ public class Engine {
     }
 
     /**
-     * Remove a {@code SecurityHistoryEvent} from a {@code SecurityNode
+     * Remove a {@code SecurityHistoryEvent} from a {@code SecurityNode}
      *
-     * @param node         {@code SecurityNode} to remove history from
+     * @param node {@code SecurityNode} to remove history from
      * @param historyEvent the {@code SecurityHistoryEvent} to remove
      * @return {@code true} if the {@code SecurityHistoryEvent} was found and removed
      */

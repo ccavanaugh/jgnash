@@ -59,7 +59,7 @@ import jgnash.ui.util.ValidationFactory;
 /**
  * Abstract JPanel that implements common code used in all bank TransactionPanels. This class does not perform any
  * layout or container assignment.
- * <p/>
+ * <p>
  * Any extending class may assign the KeyListener member to additional components to improve focus traversal.
  *
  * @author Craig Cavanaugh

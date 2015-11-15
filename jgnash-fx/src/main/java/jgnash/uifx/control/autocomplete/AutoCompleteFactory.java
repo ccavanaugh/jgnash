@@ -84,6 +84,7 @@ public class AutoCompleteFactory {
     /**
      * Sets the {@code AutoCompleteModel} for {@code Transaction} payees to an {@code AutoCompleteTextField<Transaction>}
      *
+     * @param account base Account for payee model
      * @param autoCompleteTextField text field to bind to
      */
     public static void setPayeeModel(final AutoCompleteTextField<Transaction> autoCompleteTextField, final Account account) {

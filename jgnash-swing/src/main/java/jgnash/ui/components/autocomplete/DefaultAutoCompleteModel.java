@@ -61,7 +61,14 @@ public class DefaultAutoCompleteModel implements AutoCompleteModel {
         return null;
     }
 
-    /** Perform a brute force linear search top down for the best match */
+    /**
+     * Perform a brute force linear search top down for the best match
+     *
+     * @param content string content to search for
+     * @param ignoreCase search is case sensitive if set to true
+     *
+     * @return best match
+     */
     private String doLookAhead(final String content, final boolean ignoreCase) {
         if (!content.isEmpty()) {
             synchronized (list) {

@@ -27,7 +27,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * A Utility class that forwards messages to registered listeners.
- * <p/>
+ * <p>
  * This is useful for classes that must process a message first and then forward to other listeners for secondary
  * processing
  *

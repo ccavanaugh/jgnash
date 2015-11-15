@@ -23,7 +23,7 @@ import javax.swing.JComboBox;
 
 /**
  * Provides a UI to the user to select an available font family
- * <p/>
+ * <p>
  * 
  * @author Craig Cavanaugh
  *

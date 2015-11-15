@@ -23,11 +23,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * The default thread factory to be used for {@code ExecutorService} that
  * forces threads to be daemons
- * <p/>
+ * <p>
  * Example usage:
- * <pre>
+ * {@code
  * ExecutorService pool = Executors.newSingleThreadExecutor(new DefaultDaemonThreadFactory());
- * </pre>
+ * }
  *
  * @author Craig Cavanaugh
  *

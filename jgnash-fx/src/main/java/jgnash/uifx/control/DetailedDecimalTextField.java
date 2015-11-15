@@ -1,6 +1,7 @@
 package jgnash.uifx.control;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -49,6 +50,8 @@ public class DetailedDecimalTextField extends ComboBoxBase<BigDecimal> {
 
     /**
      * @see DecimalTextField#decimalProperty()
+     *
+     * @return BigDecimal object property
      */
     public ObjectProperty<BigDecimal> decimalProperty() {
         return getEditor().decimalProperty();
@@ -56,6 +59,8 @@ public class DetailedDecimalTextField extends ComboBoxBase<BigDecimal> {
 
     /**
      * @see DecimalTextField#getDecimal()
+     *
+     * @return BigDecimal value
      */
     public @NotNull
     BigDecimal getDecimal() {
@@ -64,9 +69,12 @@ public class DetailedDecimalTextField extends ComboBoxBase<BigDecimal> {
 
     /**
      * @see DecimalTextField#setDecimal(BigDecimal)
+     * @param decimal BigDecimal value to display.  May not be null
      */
     @SuppressWarnings("WeakerAccess")
     public void setDecimal(@NotNull final BigDecimal decimal) {
+        Objects.requireNonNull(decimal);
+
         getEditor().setDecimal(decimal);
     }
 

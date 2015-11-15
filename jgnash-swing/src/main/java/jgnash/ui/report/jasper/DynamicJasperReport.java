@@ -154,7 +154,7 @@ public abstract class DynamicJasperReport {
     /**
      * Creates a JasperPrint object.
      * 
-     * @param formatForCSV <code>true<code> if the report should be formated for CSV export
+     * @param formatForCSV {@code true} if the report should be formatted for CSV export
      * @return JasperPrint object
      */
     public abstract JasperPrint createJasperPrint(final boolean formatForCSV);

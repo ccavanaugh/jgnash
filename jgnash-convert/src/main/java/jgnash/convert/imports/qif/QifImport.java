@@ -47,12 +47,14 @@ import jgnash.engine.TransactionFactory;
  * with each transaction and account to prevent duplication. This import utility is ideal for importing an existing data
  * set, but not for importing monthly bank statements. A more specialized import utility may be useful/required for more
  * advanced imports
- * 
+ *
  * @author Craig Cavanaugh
  */
 public class QifImport {
 
-    /** Default for a QIF import */
+    /**
+     * Default for a QIF import
+     */
     private static final String FITID = "qif";
 
     private QifParser parser;
@@ -168,7 +170,7 @@ public class QifImport {
 
     /**
      * Returns a list of all accounts excluding the rootAccount and IncomeAccounts and ExpenseAccounts
-     * 
+     *
      * @return List of bank accounts
      */
     List<Account> getBankAccountList() {
@@ -287,7 +289,7 @@ public class QifImport {
 
     /**
      * Returns the number of duplicate transactions that were stripped during the import
-     * 
+     *
      * @return number of duplicates found
      */
     public int getDuplicateCount() {
@@ -296,6 +298,8 @@ public class QifImport {
 
     /**
      * Return an array of duplicate transactions that were found
+     *
+     * @return duplicate transactions if found
      */
     public Transaction[] getDuplicates() {
         return duplicates.toArray(new Transaction[duplicates.size()]);
@@ -319,6 +323,10 @@ public class QifImport {
 
     /**
      * Returns the Account of the best possible parent account for the supplied QifCategory
+     *
+     * @param cat imported QifCategory to match
+     * @param map cached account map
+     * @return best Account match
      */
     private Account findBestParent(final QifCategory cat, final Map<String, Account> map) {
         int i = cat.name.lastIndexOf(':');
@@ -353,6 +361,7 @@ public class QifImport {
 
     /**
      * Returns the best matching account
+     *
      * @param category QIF category
      * @return Best matching account
      */
@@ -388,6 +397,9 @@ public class QifImport {
 
     /**
      * Determines if the supplied String represents a QIF account
+     *
+     * @param category category string to validate
+     * @return true if this is suppose to be an account
      */
     private static boolean isAccount(final String category) {
         return category.startsWith("[") && category.endsWith("]");
@@ -475,8 +487,14 @@ public class QifImport {
     }
 
     /**
-     * Generates a transaction Notes:<b> If a QifTransaction does not specify an account, then assume it is a single
+     * Generates a transaction
+     * <p>
+     * Notes: If a QifTransaction does not specify an account, then assume it is a single
      * entry transaction for the supplied Account. The transaction most likely came from a online banking source.
+     *
+     * @param qTran Qif transaction to generate Transaction for
+     * @param acc base Account
+     * @return new Transaction
      */
     private Transaction generateTransaction(final QifTransaction qTran, final Account acc) {
         Objects.requireNonNull(acc);
@@ -544,6 +562,9 @@ public class QifImport {
 
     /**
      * Generates a Transaction given a QifSplitTransaction
+     *
+     * @param qTran split qif transaction to convert
+     * @param acc base Account
      * @return generated TransactionEntry
      */
     private TransactionEntry generateSplitTransaction(final QifSplitTransaction qTran, final Account acc) {

@@ -27,11 +27,10 @@ import jgnash.util.OS;
 
 /**
  * JButtons do not respond to look and feel updates correctly.  This
- * is an extended JButton to handle L&F problems.  It also configures
+ * is an extended JButton to handle Look and Feel problems.  It also configures
  * itself for a rollover toolbar correctly.
  *
  * @author Craig Cavanaugh
- *
  */
 public class RollOverButton extends JButton {
 

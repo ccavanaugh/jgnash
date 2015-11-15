@@ -61,8 +61,7 @@ public abstract class AbstractInvestmentTransactionEntry extends TransactionEntr
     /**
      * Calculates the total of the value of the shares, gains, fees, etc. as it
      * pertains to an account.
-     * <p/>
-     * <p/>
+     * <p>
      * <b>Not intended for use to calculate account balances</b>
      *
      * @return total resulting total for this entry

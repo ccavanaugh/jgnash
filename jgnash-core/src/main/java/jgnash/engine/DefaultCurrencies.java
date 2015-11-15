@@ -28,11 +28,14 @@ import java.util.logging.Logger;
 
 /**
  * Static methods for currency generation and discovery
- * <p/>
+ * <p>
  * These are known to not show up because Java 1.4.2 and older does not have
- * a default NumberFormat defined for the currency:<br>
- * "SGD"<br>
+ * a default NumberFormat defined for the currency:
+ *
+ * {@code
+ * "SGD"
  * "MYR"
+ * }
  *
  * @author Craig Cavanaugh
  */

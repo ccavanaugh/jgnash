@@ -42,7 +42,7 @@ import org.kohsuke.args4j.Option;
 /**
  * This is a tool to index Javahelp files within Maven using only the javahelp2
  * dependency. Javahelp is not required to be installed at the OS level.
- * <p/>
+ * <p>
  * This class is a replacement for the jhindexer executable class that is
  * included with the binary distribution of javahelp2 and an equivalent to
  * maven-javahelp-plugin which was not available in the codehaus repository at

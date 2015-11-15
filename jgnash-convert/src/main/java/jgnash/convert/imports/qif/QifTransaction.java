@@ -106,6 +106,7 @@ public class QifTransaction extends ImportTransaction {
     /**
      * Converts a string into a data object
      * <p>
+     * {@code
      * "6/21' 1" -> 6/21/2001
      * "6/21'01" -> 6/21/2001
      * "9/18'2001 -> 9/18/2001
@@ -116,6 +117,7 @@ public class QifTransaction extends ImportTransaction {
      * European dd/mm/yyyy
      * 21/2/07 -> 02/21/2007 UK
      * Quicken 2007 D15/2/07
+     * }
      *
      * @param sDate  String QIF date to parse
      * @param format String identifier of format to parse

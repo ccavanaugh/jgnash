@@ -27,7 +27,7 @@ import jgnash.util.NotNull;
 
 /**
  * Class for investment transactions.
- * <p/>
+ * <p>
  * All TransactionEntry(s) must be of the same security
  *
  * @author Craig Cavanaugh
@@ -273,9 +273,7 @@ public class InvestmentTransaction extends Transaction {
     /**
      * Calculates the total of the value of the shares, gains, fees, etc. as it
      * pertains to an account.
-     * <p/>
-     * <
-     * p/>
+     * <p>
      * <b>Not intended for use to calculate account balances</b>
      *
      * @param account The {@code Account} to calculate the total against
@@ -305,7 +303,7 @@ public class InvestmentTransaction extends Transaction {
 
     /**
      * Calculates the total cash value of the transaction
-     * <p/>
+     * <p>
      * <b>Not intended for use to calculate account balances</b>
      *
      * @return the total cash value of the transaction

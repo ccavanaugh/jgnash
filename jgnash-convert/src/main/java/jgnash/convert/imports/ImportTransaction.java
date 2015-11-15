@@ -56,7 +56,7 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
     private String transactionID;
 
     /**
-     * Destination account
+     * @return returns the destination account
      */
     public Account getAccount() {
         return account;
@@ -69,6 +69,8 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
     /**
      * Depending on the implementation a unique ID may be provided that can be used to detect
      * duplication of prior imported transactions.
+     *
+     * @return transaction id
      */
     public String getTransactionID() {
         return transactionID;
@@ -80,6 +82,8 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     /**
      * Deposits get positive 'amounts', withdrawals negative
+     *
+     * @return transaction amount
      */
     public BigDecimal getAmount() {
         return amount;
@@ -100,6 +104,8 @@ public class ImportTransaction implements Comparable<ImportTransaction> {
 
     /**
      * Date user initiated the transaction, optional, may be null
+     *
+     * @return date transaction was initiated
      */
     @Nullable
     public LocalDate getDateUser() {

@@ -39,10 +39,10 @@ import jgnash.util.ResourceUtils;
 
 /**
  * By default, the transactions are returned in the natural order of the account.
- * <p/>
+ * <p>
  * Column order will be handled by JTable. This model is responsible for handling column visibility and saving/restoring
  * user widths.
- * <p/>
+ * <p>
  * This model does some internal manipulation to make it possible to hide specific columns.
  *
  * @author Craig Cavanaugh

@@ -51,7 +51,7 @@ import javax.swing.plaf.LayerUI;
  * {@link #paint(Graphics, JComponent)} method. It also provides convenient
  * methods named {@code process<eventType>Event} to process the given class of
  * event.
- * <p/>
+ * <p>
  * If state of the {@code AbstractLayerUI} is changed, call
  * {@link #setDirty(boolean)} with {@code true} as the parameter, it will
  * repaint all {@code JXLayer}s connected with this {@code AbstractLayerUI}
@@ -93,10 +93,10 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * <b>Note:</b> It is rarely necessary to override this method, for custom
      * painting override {@link #paintLayer(Graphics2D, JLayer)} instead
-     * <p/>
+     * <p>
      * This method calls {@code paintLayer(Graphics2D, JXLayer)} and resets the "dirty bit" at the end.
      *
      * @see #paintLayer(Graphics2D, JLayer)
@@ -117,7 +117,7 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
     /**
      * Subclasses should implement this method and perform custom painting
      * operations here.
-     * <p/>
+     * <p>
      * The default implementation paints the passed {@code JXLayer} as is.
      *
      * @param g2 the {@code Graphics2D} context in which to paint
@@ -142,7 +142,7 @@ public class AbstractLayerUI<V extends JComponent> extends LayerUI<V> {
 
     /**
      * {@inheritDoc}
-     * <p/>
+     * <p>
      * This method calls the appropriate {@code process<eventType>Event} method
      * for the given class of event.
      */

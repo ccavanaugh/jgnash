@@ -35,7 +35,6 @@ import jgnash.util.DateUtils;
 
 /**
  * Investment Register Table with stats controller
- * <p/>
  *
  * @author Craig Cavanaugh
  */

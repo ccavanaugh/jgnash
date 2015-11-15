@@ -36,7 +36,7 @@ import jgnash.util.ResourceUtils;
 
 /**
  * UI Panel for handling investment transaction fees
- * <p/>
+ * <p>
  * If {@code feeList.size() > 0 }, then a one or more specialized fees exist.  Otherwise, the fee is
  * simple and charged against the account adjusting the cash balance.
  *
