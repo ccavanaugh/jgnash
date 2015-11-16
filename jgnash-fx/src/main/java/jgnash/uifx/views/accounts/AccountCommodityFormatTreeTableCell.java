@@ -30,14 +30,19 @@ import jgnash.uifx.skin.StyleClass;
  * @author Craig Cavanaugh
  */
 class AccountCommodityFormatTreeTableCell extends TreeTableCell<Account, BigDecimal> {
+
+    public AccountCommodityFormatTreeTableCell() {
+        setStyle("-fx-alignment: center-right;");  // Right align
+    }
+
     @Override
     protected void updateItem(final BigDecimal amount, final boolean empty) {
         super.updateItem(amount, empty);  // required
 
         if (!empty && amount != null && getTreeTableRow().getTreeItem() != null) {
-            Account account = getTreeTableRow().getTreeItem().getValue();
+            final Account account = getTreeTableRow().getTreeItem().getValue();
 
-            NumberFormat format = CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
+            final NumberFormat format = CommodityFormat.getFullNumberFormat(account.getCurrencyNode());
 
             setText(format.format(amount));
 
