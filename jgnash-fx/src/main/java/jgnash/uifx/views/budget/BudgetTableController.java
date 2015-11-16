@@ -81,7 +81,7 @@ public class BudgetTableController implements MessageListener {
     private static final int BORDER_MARGIN = 2;
 
     // allow a selection span of +/- the specified number of years
-    private static final int YEAR_MARGIN = 10;
+    private static final int YEAR_MARGIN = 15;
 
     // Initial column width
     private static final int INITIAL_WIDTH = 75;
@@ -188,7 +188,7 @@ public class BudgetTableController implements MessageListener {
         updateHeights();
 
         yearSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(
-                LocalDate.now().getYear() - 10, LocalDate.now().getYear() + YEAR_MARGIN,
+                LocalDate.now().getYear() - YEAR_MARGIN, LocalDate.now().getYear() + YEAR_MARGIN,
                 LocalDate.now().getYear(), 1));
 
         accountTreeView.getStylesheets().addAll(HIDE_VERTICAL_CSS);
@@ -336,8 +336,12 @@ public class BudgetTableController implements MessageListener {
         }
     }
 
-    // a new model is required if the year or budget property is changed
-    private void handleBudgetChange() {
+    /**
+     * Model must be rebuilt if the year or budget property is changed.
+     * <p>
+     * This method is synchronized to limit more than one update attempt at a time.
+     */
+    private synchronized void handleBudgetChange() {
         lock.writeLock().lock();
 
         try {
