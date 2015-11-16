@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
@@ -64,6 +67,7 @@ import jgnash.uifx.skin.ThemeManager;
 import jgnash.uifx.util.FXMLUtils;
 import jgnash.uifx.util.JavaFXUtils;
 import jgnash.uifx.views.main.MainApplication;
+import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
 
 /**
@@ -177,8 +181,19 @@ public class BudgetTableController implements MessageListener {
      */
     private ChangeListener<Number> tableWidthChangeListener;
 
+    /**
+     * Rate limiting executor.
+     */
+    private ScheduledThreadPoolExecutor rateLimitExecutor;
+
+    private static final int UPDATE_PERIOD = 750; // update period in milliseconds
+
     @FXML
     private void initialize() {
+        rateLimitExecutor = new ScheduledThreadPoolExecutor(1, new DefaultDaemonThreadFactory(),
+                new ThreadPoolExecutor.DiscardPolicy());
+
+
         tableWidthChangeListener = (observable, oldValue, newValue) -> {
             if (newValue != null) {
                 optimizeColumnWidths();
@@ -261,6 +276,14 @@ public class BudgetTableController implements MessageListener {
         ThemeManager.getFontScaleProperty().addListener((observable, oldValue, newValue) -> {
             updateHeights();
         });
+    }
+
+    private void rateLimitUpdate(final Runnable runnable) {
+        rateLimitExecutor.schedule(() -> {
+            if (rateLimitExecutor.getQueue().size() < 1) {   // ignore if we already have one waiting in the queue
+                Platform.runLater(runnable);    // update is assumed to be on the platform thread
+            }
+        }, UPDATE_PERIOD, TimeUnit.MILLISECONDS);
     }
 
     @FXML
@@ -839,14 +862,13 @@ public class BudgetTableController implements MessageListener {
     }
 
     private void handleBudgetUpdate() {
-        Platform.runLater(BudgetTableController.this::handleBudgetChange);
+        //Platform.runLater(BudgetTableController.this::handleBudgetChange);
+
+        rateLimitUpdate(BudgetTableController.this::handleBudgetChange);
     }
 
     private void handleTransactionUpdate() {
-
-        // TODO Rate limit updates
-
-        Platform.runLater(() -> {
+        rateLimitUpdate(() -> {
             periodTable.refresh();
             periodSummaryTable.refresh();
             accountSummaryTable.refresh();
