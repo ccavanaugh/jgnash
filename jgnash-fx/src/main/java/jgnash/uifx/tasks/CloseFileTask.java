@@ -68,7 +68,19 @@ public class CloseFileTask extends Task<String> {
         try {
             updateMessage(resources.getString("Message.SavingFile"));
             updateProgress(INDETERMINATE, Long.MAX_VALUE);
-            EngineFactory.closeEngine(EngineFactory.DEFAULT);
+
+            final Thread thread = new Thread(() -> {
+                try {
+                    Thread.sleep(FORCED_DELAY); // lets the UI catch up
+                } catch (final InterruptedException exception) {
+                    Platform.runLater(() -> StaticUIMethods.displayException(exception));
+                }
+                EngineFactory.closeEngine(EngineFactory.DEFAULT);
+            });
+
+            thread.start();
+            thread.join();
+
             updateMessage(resources.getString("Message.FileSaveComplete"));
             Thread.sleep(FORCED_DELAY);
         } catch (final Exception exception) {
