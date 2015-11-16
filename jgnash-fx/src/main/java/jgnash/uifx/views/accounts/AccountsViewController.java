@@ -46,6 +46,7 @@ import jgnash.engine.message.MessageBus;
 import jgnash.engine.message.MessageChannel;
 import jgnash.engine.message.MessageListener;
 import jgnash.uifx.StaticUIMethods;
+import jgnash.uifx.control.IntegerTreeTableCell;
 import jgnash.uifx.util.AccountTypeFilter;
 import jgnash.uifx.views.AccountBalanceDisplayManager;
 import jgnash.uifx.views.register.RegisterActions;
@@ -154,7 +155,7 @@ public class AccountsViewController implements MessageListener {
         final TreeTableColumn<Account, Integer> codeColumn = new TreeTableColumn<>(resources.getString("Column.Code"));
         codeColumn.setEditable(true);
         codeColumn.setCellValueFactory(param -> new SimpleIntegerProperty(param.getValue().getValue().getAccountCode()).asObject());
-        codeColumn.setCellFactory(param -> new IntegerEditingTreeTableCell());
+        codeColumn.setCellFactory(param -> new IntegerTreeTableCell());
         codeColumn.setOnEditCommit(event -> updateAccountCode(event.getRowValue().getValue(), event.getNewValue()));
 
         treeTableView.getColumns().addAll(nameColumn, codeColumn, entriesColumn, balanceColumn, reconciledBalanceColumn, currencyColumn, typeColumn);
@@ -265,18 +266,21 @@ public class AccountsViewController implements MessageListener {
     }
 
     private void updateAccountCode(final Account account, final Integer code) {
-        final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-        if (engine != null) {
-            try {
-                final Account template = (Account) account.clone();
-                template.setAccountCode(code);
+        new Thread(() -> {  // push the change to an external thread to unload the platform thread
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-                engine.modifyAccount(template, account);
-            } catch (final CloneNotSupportedException e) {
-                Logger.getLogger(AccountsViewController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+            if (engine != null) {
+                try {
+                    final Account template = (Account) account.clone();
+                    template.setAccountCode(code);
+
+                    engine.modifyAccount(template, account);
+                } catch (final CloneNotSupportedException e) {
+                    Logger.getLogger(AccountsViewController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
+                }
             }
-        }
+        }).start();
     }
 
     private void loadAccountTree() {
@@ -323,7 +327,9 @@ public class AccountsViewController implements MessageListener {
                 break;
             case TRANSACTION_ADD:
             case TRANSACTION_REMOVE:
-                treeTableView.refresh();    //TODO implement a better model that listens to account balance changes
+                Platform.runLater(() -> {
+                    treeTableView.refresh();    //TODO implement a better model that listens to account balance changes
+                });
                 break;
             case FILE_CLOSING:
                 Platform.runLater(() -> treeTableView.setRoot(null));
