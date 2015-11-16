@@ -35,13 +35,17 @@ import jgnash.uifx.skin.ThemeManager;
  */
 class BudgetSparkLine extends Canvas {
 
-    private static final int DEFAULT_WIDTH = 140;
+    private static final double DEFAULT_WIDTH = 180;
+
+    private static final double MAX_WIDTH = 400;
 
     private static final double DEFAULT_PERIOD_GAP = 1.0;
 
     private static final double DEFAULT_BAR_WIDTH = 2.0;
 
     private static final double MARGIN = 6.0;
+
+    private static final double HEIGHT_MULTIPLIER = 1.5;
 
     private final ObservableList<BigDecimal> amounts = FXCollections.observableArrayList();
 
@@ -50,8 +54,9 @@ class BudgetSparkLine extends Canvas {
     private double periodGap = DEFAULT_PERIOD_GAP;
 
     public BudgetSparkLine(final List<BigDecimal> amounts) {
-        setHeight(ThemeManager.getBaseTextHeight() * 1.5);
-        setWidth(DEFAULT_WIDTH);
+        ThemeManager.getFontScaleProperty().addListener((observable, oldValue, newValue) -> {
+            draw();
+        });
 
         setAmounts(amounts);
     }
@@ -59,15 +64,6 @@ class BudgetSparkLine extends Canvas {
     private void setAmounts(final List<BigDecimal> amounts) {
         this.amounts.clear();
         this.amounts.addAll(amounts);
-
-        if (calculateWidth() < DEFAULT_WIDTH) {
-            double scale = DEFAULT_WIDTH / calculateWidth();
-            barWidth = barWidth * scale;
-            periodGap = periodGap * scale;
-        }
-
-        setWidth(calculateWidth());
-        setHeight(ThemeManager.getBaseTextHeight() * 1.5);
 
         draw();
     }
@@ -77,6 +73,15 @@ class BudgetSparkLine extends Canvas {
     }
 
     private void draw() {
+        if (calculateWidth() < DEFAULT_WIDTH || calculateWidth() > MAX_WIDTH) {
+            final double scale = DEFAULT_WIDTH / calculateWidth();
+            barWidth = barWidth * scale;
+            periodGap = periodGap * scale;
+        }
+
+        setWidth(calculateWidth());
+        setHeight(ThemeManager.getBaseTextHeight() * HEIGHT_MULTIPLIER);
+
         final GraphicsContext gc = getGraphicsContext2D();
         gc.clearRect(0, 0, getWidth(), getHeight());
         gc.setLineWidth(barWidth);
