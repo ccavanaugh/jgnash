@@ -213,6 +213,7 @@ public class MenuBarController implements MessageListener {
                     disabled.setValue(false);
                     break;
                 case FILE_CLOSING:
+                    closeAllWindows();
                     disabled.setValue(true);
                     break;
                 default:
