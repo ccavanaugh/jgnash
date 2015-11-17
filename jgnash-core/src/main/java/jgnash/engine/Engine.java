@@ -2056,6 +2056,33 @@ public class Engine {
     }
 
     /**
+     * Changes an Account's code.
+     *
+     * @param account Account to change
+     * @param code new code
+     * @return true is successful
+     */
+    public boolean setAccountCode(final Account account, final int code) {
+        account.setAccountCode(code);
+
+        boolean result = getAccountDAO().updateAccount(account);
+
+        if (result) {
+            final Message message = new Message(MessageChannel.ACCOUNT, ChannelEvent.ACCOUNT_MODIFY, this);
+            message.setObject(MessageProperty.ACCOUNT, account);
+            messageBus.fireEvent(message);
+
+            logInfo(rb.getString("Message.AccountModify"));
+        } else {
+            final Message message = new Message(MessageChannel.ACCOUNT, ChannelEvent.ACCOUNT_MODIFY_FAILED, this);
+            message.setObject(MessageProperty.ACCOUNT, account);
+            messageBus.fireEvent(message);
+        }
+
+        return result;
+    }
+
+    /**
      * Modifies an existing account given an account as a template. The type of the account cannot be changed.
      *
      * @param template The Account object to use as a template

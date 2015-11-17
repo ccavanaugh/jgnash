@@ -21,8 +21,6 @@ import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import javafx.application.Platform;
@@ -266,19 +264,13 @@ public class AccountsViewController implements MessageListener {
     }
 
     private void updateAccountCode(final Account account, final Integer code) {
-
         new Thread(() -> {  // push the change to an external thread to unload the platform thread
             final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
-            if (engine != null) {
-                try {
-                    final Account template = (Account) account.clone();
-                    template.setAccountCode(code);
+            Objects.requireNonNull(engine);
 
-                    engine.modifyAccount(template, account);
-                } catch (final CloneNotSupportedException e) {
-                    Logger.getLogger(AccountsViewController.class.getName()).log(Level.SEVERE, e.getLocalizedMessage(), e);
-                }
+            if (!engine.setAccountCode(account, code)) {
+                StaticUIMethods.displayError(resources.getString("Message.Error.AccountUpdate"));
             }
         }).start();
     }
@@ -287,7 +279,7 @@ public class AccountsViewController implements MessageListener {
         final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
 
         if (engine != null) {
-            RootAccount r = engine.getRootAccount();
+            final RootAccount r = engine.getRootAccount();
 
             final TreeItem<Account> root = new TreeItem<>(r);
             root.setExpanded(true);

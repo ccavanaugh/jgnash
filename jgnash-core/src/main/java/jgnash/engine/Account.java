@@ -1548,23 +1548,14 @@ public class Account extends StoredObject implements Comparable<Account> {
     }
 
     /**
-     * When overridden, this should return account shallow copy only.
-     * <p>
-     * The clone does not include transactions or child accounts
+     * Accounts should not be cloned
      *
-     * @return clone of this account
-     * @throws java.lang.CloneNotSupportedException should never occur
+     * @return will result in a CloneNotSupportedException
+     * @throws java.lang.CloneNotSupportedException will always occur
      */
     @Override
     public Object clone() throws CloneNotSupportedException {
-        Account a = (Account) super.clone();
-        a.securities.clear();
-        a.children.clear();
-        a.transactions.clear();
-        a.cachedSortedTransactionList.clear();
-        a.cachedSortedChildren.clear();
-        a.attributes.clear();
-
-        return a;
+        super.clone();
+        throw new CloneNotSupportedException("Accounts may not be cloned");
     }
 }
