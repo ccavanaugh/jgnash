@@ -19,17 +19,20 @@ package jgnash.uifx.views.accounts;
 
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableRow;
@@ -57,8 +60,6 @@ import jgnash.util.EncodeDecode;
  * Accounts view controller
  *
  * @author Craig Cavanaugh
- * <p>
- * TODO: context menu, icons for placeholders, etc.
  */
 public class AccountsViewController implements MessageListener {
 
@@ -125,17 +126,7 @@ public class AccountsViewController implements MessageListener {
         treeTableView.setEditable(true);    // required for editable columns
         treeTableView.setTableMenuButtonVisible(true);
 
-        treeTableView.setRowFactory(ttv -> {
-            TreeTableRow<Account> treeTableRow = new TreeTableRow<>();
-            treeTableRow.setOnMouseClicked(event -> {
-                if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
-                    if (selectedAccountProperty.get() != null && !selectedAccountProperty.get().isPlaceHolder()) {
-                        Platform.runLater(AccountsViewController.this::handleZoomAccountAction);
-                    }
-                }
-            });
-            return treeTableRow;
-        });
+        treeTableView.setRowFactory(ttv -> getTreeTableRow());
 
         // force resize policy for better default appearance
         treeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
@@ -191,6 +182,54 @@ public class AccountsViewController implements MessageListener {
         }
     }
 
+    private TreeTableRow<Account> getTreeTableRow() {
+        final TreeTableRow<Account> treeTableRow = new TreeTableRow<>();
+        treeTableRow.setOnMouseClicked(event -> {
+            if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+                if (selectedAccountProperty.get() != null && !selectedAccountProperty.get().isPlaceHolder()) {
+                    Platform.runLater(AccountsViewController.this::handleZoomAccountAction);
+                }
+            }
+        });
+
+        final ContextMenu rowMenu = new ContextMenu();
+
+        final MenuItem newItem = new MenuItem(resources.getString("Menu.New.Name"));
+        newItem.setOnAction(event -> handleNewAccountAction());
+
+        final MenuItem modifyItem = new MenuItem(resources.getString("Menu.Modify.Name"));
+        modifyItem.setOnAction(event -> handleModifyAccountAction());
+
+        final MenuItem deleteItem = new MenuItem(resources.getString("Menu.Delete.Name"));
+        deleteItem.setOnAction(event -> handleDeleteAccountAction());
+        deleteItem.disableProperty().bind(deleteButton.disabledProperty());
+
+        final MenuItem visibilityMenuItem = new MenuItem(resources.getString("Menu.Hide.Name"));
+        visibilityMenuItem.setOnAction(event -> handleModifyAccountAction());
+        visibilityMenuItem.setOnAction(event -> new Thread(() -> {
+            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+            if (engine != null) {
+                engine.toggleAccountVisibility(selectedAccountProperty.get());
+            }
+        }).start());
+
+        final MenuItem reconcileItem = new MenuItem(resources.getString("Menu.Reconcile.Name"));
+        reconcileItem.setOnAction(event -> handleReconcileAction());
+
+        rowMenu.getItems().addAll(newItem, modifyItem, deleteItem, new SeparatorMenuItem(), visibilityMenuItem,
+                new SeparatorMenuItem(), reconcileItem);
+
+        rowMenu.setOnShowing(event -> visibilityMenuItem.setText(selectedAccountProperty.get().isVisible()
+                ? resources.getString("Menu.Hide.Name") : resources.getString("Menu.Show.Name")));
+
+        treeTableRow.contextMenuProperty().bind(
+                Bindings.when(Bindings.isNotNull(treeTableRow.itemProperty()))
+                        .then(rowMenu)
+                        .otherwise((ContextMenu) null));
+
+        return treeTableRow;
+    }
+
     private void updateButtonStates() {
         Platform.runLater(() -> {
             final Account account = selectedAccountProperty.get();
@@ -233,16 +272,6 @@ public class AccountsViewController implements MessageListener {
         }
     }
 
-    private Optional<Account> getSelectedAccount() {
-        final TreeItem<Account> treeItem = treeTableView.getSelectionModel().getSelectedItem();
-
-        if (treeItem != null) {
-            return Optional.ofNullable(treeItem.getValue());
-        }
-
-        return Optional.empty();
-    }
-
     @FXML
     private void handleFilterAccountAction() {
         StaticAccountsMethods.showAccountFilterDialog(typeFilter);
@@ -250,26 +279,28 @@ public class AccountsViewController implements MessageListener {
 
     @FXML
     private void handleModifyAccountAction() {
-        if (getSelectedAccount().isPresent()) {
-            StaticAccountsMethods.showModifyAccountProperties(getSelectedAccount().get());
+        if (selectedAccountProperty.get() != null) {
+            StaticAccountsMethods.showModifyAccountProperties(selectedAccountProperty.get());
         }
     }
 
     @FXML
     private void handleNewAccountAction() {
-        StaticAccountsMethods.showNewAccountPropertiesDialog();
+        StaticAccountsMethods.showNewAccountPropertiesDialog(selectedAccountProperty.get());
     }
 
     @FXML
     private void handleDeleteAccountAction() {
-        if (getSelectedAccount().isPresent()) {
-            final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
-            Objects.requireNonNull(engine);
+        new Thread(() -> {   // push off the platform thread to improve performance
+            if (selectedAccountProperty.get() != null) {
+                final Engine engine = EngineFactory.getEngine(EngineFactory.DEFAULT);
+                Objects.requireNonNull(engine);
 
-            if (!engine.removeAccount(getSelectedAccount().get())) {
-                StaticUIMethods.displayError(resources.getString("Message.Error.AccountRemove"));
+                if (!engine.removeAccount(selectedAccountProperty.get())) {
+                    StaticUIMethods.displayError(resources.getString("Message.Error.AccountRemove"));
+                }
             }
-        }
+        }).start();
     }
 
     @FXML
@@ -329,17 +360,17 @@ public class AccountsViewController implements MessageListener {
             case ACCOUNT_ADD:
             case ACCOUNT_MODIFY:
             case ACCOUNT_REMOVE:
+            case ACCOUNT_VISIBILITY_CHANGE:
                 reload();
                 break;
             case TRANSACTION_ADD:
             case TRANSACTION_REMOVE:
-                Platform.runLater(() -> {
-                    treeTableView.refresh();    //TODO implement a better model that listens to account balance changes
-                });
+                Platform.runLater(() -> treeTableView.refresh());
                 break;
             case FILE_CLOSING:
                 Platform.runLater(() -> treeTableView.setRoot(null));
-                MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT, MessageChannel.TRANSACTION);
+                MessageBus.getInstance().unregisterListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT,
+                        MessageChannel.TRANSACTION);
                 break;
             default:
                 break;

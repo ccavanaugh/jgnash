@@ -72,7 +72,7 @@ public final class StaticAccountsMethods {
         dialog.showAndWait();
     }
 
-    public static void showNewAccountPropertiesDialog() {
+    public static void showNewAccountPropertiesDialog(@Nullable final Account parentAccount) {
         final Stage dialog = new Stage(StageStyle.DECORATED);
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(MainApplication.getInstance().getPrimaryStage());
@@ -87,7 +87,8 @@ public final class StaticAccountsMethods {
         Objects.requireNonNull(engine);
 
         controller.setSelectedCurrency(engine.getDefaultCurrency());
-        controller.setParentAccount(engine.getRootAccount());
+
+        controller.setParentAccount(parentAccount != null ? parentAccount : engine.getRootAccount());
 
         dialog.setResizable(false);
 
