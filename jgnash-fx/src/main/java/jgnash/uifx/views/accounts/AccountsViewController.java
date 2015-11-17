@@ -32,7 +32,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableRow;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.input.MouseButton;
 
 import jgnash.engine.Account;
 import jgnash.engine.Comparators;
@@ -55,8 +57,8 @@ import jgnash.util.EncodeDecode;
  * Accounts view controller
  *
  * @author Craig Cavanaugh
- *
- * TODO Double click action, context menu, icons for placeholders, etc.
+ * <p>
+ * TODO: context menu, icons for placeholders, etc.
  */
 public class AccountsViewController implements MessageListener {
 
@@ -123,6 +125,18 @@ public class AccountsViewController implements MessageListener {
         treeTableView.setEditable(true);    // required for editable columns
         treeTableView.setTableMenuButtonVisible(true);
 
+        treeTableView.setRowFactory(ttv -> {
+            TreeTableRow<Account> treeTableRow = new TreeTableRow<>();
+            treeTableRow.setOnMouseClicked(event -> {
+                if (event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2) {
+                    if (selectedAccountProperty.get() != null && !selectedAccountProperty.get().isPlaceHolder()) {
+                        Platform.runLater(AccountsViewController.this::handleZoomAccountAction);
+                    }
+                }
+            });
+            return treeTableRow;
+        });
+
         // force resize policy for better default appearance
         treeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -172,7 +186,7 @@ public class AccountsViewController implements MessageListener {
             }
         });
 
-        for (final TreeTableColumn<?,?> treeTableColumn : treeTableView.getColumns()) {
+        for (final TreeTableColumn<?, ?> treeTableColumn : treeTableView.getColumns()) {
             treeTableColumn.visibleProperty().addListener((observable, oldValue, newValue) -> saveColumnVisibility());
         }
     }
