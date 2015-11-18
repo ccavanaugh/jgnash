@@ -43,7 +43,7 @@ public class BigDecimalTableCell<S> extends TableCell<S, BigDecimal> {
     /**
      * Reference is needed to prevent memory leaks
      */
-    private ChangeListener<Boolean> decimalTextFieldListener = null;
+    private ChangeListener<Boolean> focusListener = null;
 
     public BigDecimalTableCell(final ObjectProperty<NumberFormat> numberFormatProperty) {
         setStyle("-fx-alignment: center-right;");  // Right align
@@ -121,13 +121,13 @@ public class BigDecimalTableCell<S> extends TableCell<S, BigDecimal> {
                 }
             });
 
-            decimalTextFieldListener = (observable, oldValue, newValue) -> {
+            focusListener = (observable, oldValue, newValue) -> {
                 if (isEditing() && !newValue) {
                     commitEdit(decimalTextField.getDecimal());
                 }
             };
 
-            decimalTextField.focusedProperty().addListener(decimalTextFieldListener);
+            decimalTextField.focusedProperty().addListener(focusListener);
         }
 
         return decimalTextField;
@@ -138,7 +138,7 @@ public class BigDecimalTableCell<S> extends TableCell<S, BigDecimal> {
         super.finalize();
 
         if (decimalTextField != null) {
-            decimalTextField.focusedProperty().removeListener(decimalTextFieldListener);
+            decimalTextField.focusedProperty().removeListener(focusListener);
         }
     }
 }

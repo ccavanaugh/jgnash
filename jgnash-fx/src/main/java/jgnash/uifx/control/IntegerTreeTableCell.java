@@ -36,7 +36,7 @@ public class IntegerTreeTableCell<S> extends TreeTableCell<S, Integer> {
     /**
      * Reference is needed to prevent memory leaks
      */
-    private ChangeListener<Boolean> integerTextFieldListener = null;
+    private ChangeListener<Boolean> focusListener = null;
 
     @Override
     protected void updateItem(final Integer amount, final boolean empty) {
@@ -99,13 +99,13 @@ public class IntegerTreeTableCell<S> extends TreeTableCell<S, Integer> {
                 }
             });
 
-            integerTextFieldListener = (observable, oldValue, newValue) -> {
+            focusListener = (observable, oldValue, newValue) -> {
                 if (isEditing() && !newValue) {
                     commitEdit(integerTextField.getInteger());
                 }
             };
 
-            integerTextField.focusedProperty().addListener(integerTextFieldListener);
+            integerTextField.focusedProperty().addListener(focusListener);
         }
 
         return integerTextField;
@@ -116,7 +116,7 @@ public class IntegerTreeTableCell<S> extends TreeTableCell<S, Integer> {
         super.finalize();
 
         if (integerTextField != null) {
-            integerTextField.focusedProperty().removeListener(integerTextFieldListener);
+            integerTextField.focusedProperty().removeListener(focusListener);
         }
     }
 }
