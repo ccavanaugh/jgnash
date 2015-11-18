@@ -20,6 +20,8 @@ package jgnash.uifx.control.skin;
 import java.math.BigDecimal;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.css.PseudoClass;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
@@ -40,6 +42,18 @@ public class DetailedDecimalTextFieldSkin extends ComboBoxPopupControl<BigDecima
 
     private DecimalTextField textField;
 
+    /**
+     * Reference is needed to prevent premature garbage collection
+     */
+    @SuppressWarnings("FieldCanBeLocal")
+    private final ChangeListener<Boolean> detailedDecimalFocusChangeListener;
+
+    /**
+     * Reference is needed to prevent premature garbage collection
+     */
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<Boolean> focusChangeListener;
+
     public DetailedDecimalTextFieldSkin(final DetailedDecimalTextField detailedDecimalTextField) {
         super(detailedDecimalTextField, new DetailedDecimalTextFieldBehavior(detailedDecimalTextField));
         this.detailedDecimalTextField = detailedDecimalTextField;
@@ -52,11 +66,13 @@ public class DetailedDecimalTextFieldSkin extends ComboBoxPopupControl<BigDecima
         }
 
         // move focus in to the text field if the detailedDecimalTextField is editable
-        detailedDecimalTextField.focusedProperty().addListener((ov, t, hasFocus) -> {
+        detailedDecimalFocusChangeListener = (observable, oldValue, hasFocus) -> {
             if (detailedDecimalTextField.isEditable() && hasFocus) {
                 Platform.runLater(textField::requestFocus);
             }
-        });
+        };
+
+        detailedDecimalTextField.focusedProperty().addListener(new WeakChangeListener<>(detailedDecimalFocusChangeListener));
     }
 
     @Override
@@ -92,7 +108,7 @@ public class DetailedDecimalTextFieldSkin extends ComboBoxPopupControl<BigDecima
 
         initialDecimalFieldValue = textField.getDecimal();
 
-        textField.focusedProperty().addListener((ov, t, hasFocus) -> {
+        focusChangeListener = (observable, oldValue, hasFocus) -> {
             // RT-21454 starts here
             if (!hasFocus) {
                 setTextFromTextFieldIntoComboBoxValue();
@@ -101,7 +117,9 @@ public class DetailedDecimalTextFieldSkin extends ComboBoxPopupControl<BigDecima
             else {
                 pseudoClassStateChanged(CONTAINS_FOCUS_PSEUDO_CLASS_STATE, true);
             }
-        });
+        };
+
+        textField.focusedProperty().addListener(new WeakChangeListener<>(focusChangeListener));
 
         return textField;
     }

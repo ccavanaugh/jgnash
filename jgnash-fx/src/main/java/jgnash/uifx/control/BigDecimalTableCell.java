@@ -23,6 +23,7 @@ import java.text.NumberFormat;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.scene.control.TableCell;
 import javafx.scene.input.KeyCode;
 
@@ -41,9 +42,10 @@ public class BigDecimalTableCell<S> extends TableCell<S, BigDecimal> {
     private DecimalTextField decimalTextField = null;
 
     /**
-     * Reference is needed to prevent memory leaks
+     * Reference is needed to prevent premature garbage collection
      */
-    private ChangeListener<Boolean> focusListener = null;
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<Boolean> focusChangeListener;
 
     public BigDecimalTableCell(final ObjectProperty<NumberFormat> numberFormatProperty) {
         setStyle("-fx-alignment: center-right;");  // Right align
@@ -121,24 +123,15 @@ public class BigDecimalTableCell<S> extends TableCell<S, BigDecimal> {
                 }
             });
 
-            focusListener = (observable, oldValue, newValue) -> {
+            focusChangeListener = (observable, oldValue, newValue) -> {
                 if (isEditing() && !newValue) {
                     commitEdit(decimalTextField.getDecimal());
                 }
             };
 
-            decimalTextField.focusedProperty().addListener(focusListener);
+            decimalTextField.focusedProperty().addListener(new WeakChangeListener<>(focusChangeListener));
         }
 
         return decimalTextField;
-    }
-
-    @Override
-    public void finalize() throws Throwable {
-        super.finalize();
-
-        if (decimalTextField != null) {
-            decimalTextField.focusedProperty().removeListener(focusListener);
-        }
     }
 }

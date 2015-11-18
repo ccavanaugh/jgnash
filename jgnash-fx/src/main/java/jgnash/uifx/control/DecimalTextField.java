@@ -36,6 +36,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.beans.value.WeakChangeListener;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -96,6 +97,12 @@ public class DecimalTextField extends TextFieldEx {
      */
     private final BooleanProperty emptyWhenZeroProperty = new SimpleBooleanProperty(true);
 
+    /**
+     * Reference is needed to prevent premature garbage collection
+     */
+    @SuppressWarnings("FieldCanBeLocal")
+    private final ChangeListener<Boolean> focusChangeListener;
+
     static {
         FLOAT = getAllowedChars();
         jsEngine = new ScriptEngineManager().getEngineByName("JavaScript");
@@ -121,11 +128,13 @@ public class DecimalTextField extends TextFieldEx {
         format.setGroupingUsed(false);
 
         // Force evaluation on loss of focus
-        focusedProperty().addListener((observable, oldValue, newValue) -> {
+        focusChangeListener = (observable, oldValue, newValue) -> {
             if (!newValue) {
                 evaluateAndSet();
             }
-        });
+        };
+
+        focusedProperty().addListener(new WeakChangeListener<>(focusChangeListener));
 
         addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             //Raise a flag the Decimal key has been pressed so it can be

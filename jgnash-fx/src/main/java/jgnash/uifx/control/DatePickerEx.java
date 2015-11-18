@@ -22,6 +22,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.scene.control.DatePicker;
 import javafx.scene.input.KeyEvent;
 import javafx.util.StringConverter;
@@ -37,9 +39,13 @@ public class DatePickerEx extends DatePicker {
 
     private final String ALLOWED_DATE_CHARACTERS;
 
-    //private final int validLength;
-
     private final DateTimeFormatter dateFormatter;
+
+    /**
+     * Reference is needed to prevent premature garbage collection
+     */
+    @SuppressWarnings("FieldCanBeLocal")
+    private final ChangeListener<Boolean> focusChangeListener;
 
     public DatePickerEx() {
         super(LocalDate.now()); // initialize with a valid date
@@ -49,8 +55,6 @@ public class DatePickerEx extends DatePicker {
         dateFormatter = DateUtils.getShortDateTimeEntryFormat();
 
         final char[] chars = dateFormatter.format(LocalDate.now()).toCharArray();
-
-        //validLength = chars.length;
 
         for (final char aChar : chars) {
             if (!Character.isDigit(aChar)) {
@@ -100,14 +104,14 @@ public class DatePickerEx extends DatePicker {
             }
         });
 
-        // Ensure the last parsable value is displayed after focus is lost
-        getEditor().focusedProperty().addListener((observable, oldValue, newValue) -> {
-            Platform.runLater(() -> {
-                final int caretPosition = getEditor().getCaretPosition();
-                getEditor().setText(dateFormatter.format(_getValue()));
-                getEditor().positionCaret(caretPosition);
-            });
+        focusChangeListener = (observable, oldValue, newValue) -> Platform.runLater(() -> {
+            final int caretPosition = getEditor().getCaretPosition();
+            getEditor().setText(dateFormatter.format(_getValue()));
+            getEditor().positionCaret(caretPosition);
         });
+
+        // Ensure the last parsable value is displayed after focus is lost
+        getEditor().focusedProperty().addListener(new WeakChangeListener<>(focusChangeListener));
 
         getEditor().addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             final int caretPosition = getEditor().getCaretPosition();
@@ -154,16 +158,13 @@ public class DatePickerEx extends DatePicker {
     }
 
     private LocalDate _getValue() {
-        //if (getEditor().getText().length() == validLength) {
-            try {
-                final LocalDate date = LocalDate.parse(getEditor().getText(), dateFormatter);
-                Platform.runLater(() -> setValue(date));
-                return date;
-            } catch (final DateTimeParseException ignored) {
-                return getValue();  // return the current value
-            }
-        //}
-        //return getValue();
+        try {
+            final LocalDate date = LocalDate.parse(getEditor().getText(), dateFormatter);
+            Platform.runLater(() -> setValue(date));
+            return date;
+        } catch (final DateTimeParseException ignored) {
+            return getValue();  // return the current value
+        }
     }
 
     private class DateConverter extends StringConverter<LocalDate> {

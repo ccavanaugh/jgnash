@@ -24,6 +24,8 @@ import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -89,6 +91,18 @@ public class AccountExchangePane extends GridPane {
      */
     final private SimpleBooleanProperty filterBaseAccountProperty = new SimpleBooleanProperty(true);
 
+    /**
+     * Reference is needed to prevent premature garbage collection
+     */
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<Boolean> amountFocusChangeListener;
+
+    /**
+     * Reference is needed to prevent premature garbage collection
+     */
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<Boolean> rateFocusChangeListener;
+
     public AccountExchangePane() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AccountExchangePane.fxml"),
                 ResourceUtils.getBundle());
@@ -151,21 +165,26 @@ public class AccountExchangePane extends GridPane {
 
         exchangeAmountProperty.bindBidirectional(exchangeAmountField.decimalProperty());
 
-        exchangeAmountField.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) { // lost focus
+        amountFocusChangeListener = (observable, oldValue, newValue) -> {
+            if (!newValue) {
                 if (exchangeAmountField.getDecimal().compareTo(BigDecimal.ZERO) > 0) {
                     exchangeAmountFieldAction();
                 }
             }
-        });
+        };
+
+        exchangeAmountField.focusedProperty().addListener(new WeakChangeListener<>(amountFocusChangeListener));
 
         // Call exchangeRateFieldAction() on entry or loss of focus
         exchangeRateField.setOnAction(event -> exchangeRateFieldAction());
-        exchangeRateField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+
+        rateFocusChangeListener = (observable, oldValue, newValue) -> {
             if (!newValue) {
                 exchangeRateFieldAction();
             }
-        });
+        };
+
+        exchangeRateField.focusedProperty().addListener(new WeakChangeListener<>(rateFocusChangeListener));
 
         amountProperty.addListener((observable, oldValue, newValue) -> {
             amountFieldAction();

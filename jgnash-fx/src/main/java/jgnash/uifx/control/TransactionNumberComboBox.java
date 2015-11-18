@@ -23,6 +23,8 @@ import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.scene.control.ComboBox;
 
 import jgnash.engine.Account;
@@ -42,6 +44,12 @@ public class TransactionNumberComboBox extends ComboBox<String> {
     private final String nextNumberItem;
 
     final private ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
+
+    /**
+     * Reference is needed to prevent premature garbage collection
+     */
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<Boolean> focusChangeListener = null;
 
     public TransactionNumberComboBox() {
         super();
@@ -74,13 +82,16 @@ public class TransactionNumberComboBox extends ComboBox<String> {
 
         // TODO: This is a workaround for a Java Bug that should be fixed in 8u72
         if (OS.getJavaVersion() < 1.9 && OS.getJavaRelease() < OS.JVM_RELEASE_72) {
-            getEditor().focusedProperty().addListener((obs, old, isFocused) -> {
+
+            focusChangeListener = (observable, oldValue, isFocused) -> {
                 if (!isFocused) {
                     if (getValue() != null && !getValue().equals(getConverter().fromString(getEditor().getText()))) {
                         setValue(getConverter().fromString(getEditor().getText()));
                     }
                 }
-            });
+            };
+
+            getEditor().focusedProperty().addListener(new WeakChangeListener<>(focusChangeListener));
         }
     }
 

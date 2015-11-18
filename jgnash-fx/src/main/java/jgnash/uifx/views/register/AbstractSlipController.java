@@ -29,6 +29,8 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -86,6 +88,12 @@ abstract class AbstractSlipController implements Slip {
     final ObjectProperty<Account> accountProperty = new SimpleObjectProperty<>();
 
     /**
+     * Reference is needed to prevent premature garbage collection
+     */
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<Boolean> focusChangeListener;
+
+    /**
      * Holds a reference to a transaction being modified
      */
     Transaction modTrans = null;
@@ -116,11 +124,14 @@ abstract class AbstractSlipController implements Slip {
 
         // If focus is lost, check and load the form with an existing transaction
         if (payeeTextField != null) {   // transfer slips do not use the payee field
-            payeeTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+
+            focusChangeListener = (observable, oldValue, newValue) -> {
                 if (!newValue) {
                     handlePayeeFocusChange();
                 }
-            });
+            };
+
+            payeeTextField.focusedProperty().addListener(new WeakChangeListener<>(focusChangeListener));
         }
 
         // Install an event handler when the parent has been set via injection

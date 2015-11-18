@@ -18,6 +18,7 @@
 package jgnash.uifx.control;
 
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.input.KeyCode;
 
@@ -34,9 +35,10 @@ public class IntegerTreeTableCell<S> extends TreeTableCell<S, Integer> {
     private IntegerTextField integerTextField = null;
 
     /**
-     * Reference is needed to prevent memory leaks
+     * Reference is needed to prevent premature garbage collection
      */
-    private ChangeListener<Boolean> focusListener = null;
+    @SuppressWarnings("FieldCanBeLocal")
+    private ChangeListener<Boolean> focusChangeListener;
 
     @Override
     protected void updateItem(final Integer amount, final boolean empty) {
@@ -99,24 +101,15 @@ public class IntegerTreeTableCell<S> extends TreeTableCell<S, Integer> {
                 }
             });
 
-            focusListener = (observable, oldValue, newValue) -> {
+            focusChangeListener = (observable, oldValue, newValue) -> {
                 if (isEditing() && !newValue) {
                     commitEdit(integerTextField.getInteger());
                 }
             };
 
-            integerTextField.focusedProperty().addListener(focusListener);
+            integerTextField.focusedProperty().addListener(new WeakChangeListener<>(focusChangeListener));
         }
 
         return integerTextField;
-    }
-
-    @Override
-    public void finalize() throws Throwable {
-        super.finalize();
-
-        if (integerTextField != null) {
-            integerTextField.focusedProperty().removeListener(focusListener);
-        }
     }
 }
