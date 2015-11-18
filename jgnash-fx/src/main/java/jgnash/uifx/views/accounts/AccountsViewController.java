@@ -24,10 +24,9 @@ import java.util.prefs.Preferences;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
@@ -104,7 +103,8 @@ public class AccountsViewController implements MessageListener {
 
         Platform.runLater(this::loadAccountTree);
 
-        MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT, MessageChannel.TRANSACTION);
+        MessageBus.getInstance().registerListener(this, MessageChannel.SYSTEM, MessageChannel.ACCOUNT,
+                MessageChannel.TRANSACTION);
 
         // Register invalidation listeners to force a reload
         typeFilter.addListener(observable -> reload());
@@ -115,7 +115,8 @@ public class AccountsViewController implements MessageListener {
 
         modifyButton.disableProperty().bind(selectedAccountProperty.isNull());
 
-        AccountBalanceDisplayManager.getAccountBalanceDisplayModeProperty().addListener((observable, oldValue, newValue) -> {
+        AccountBalanceDisplayManager.getAccountBalanceDisplayModeProperty()
+                .addListener((observable, oldValue, newValue) -> {
             treeTableView.refresh();
         });
     }
@@ -132,28 +133,28 @@ public class AccountsViewController implements MessageListener {
         treeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
 
         final TreeTableColumn<Account, String> nameColumn = new TreeTableColumn<>(resources.getString("Column.Account"));
-        nameColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getName()));
+        nameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getName()));
 
         final TreeTableColumn<Account, Integer> entriesColumn = new TreeTableColumn<>(resources.getString("Column.Entries"));
         entriesColumn.setCellValueFactory(param -> new SimpleIntegerProperty(param.getValue().getValue().getTransactionCount()).asObject());
 
         final TreeTableColumn<Account, BigDecimal> balanceColumn = new TreeTableColumn<>(resources.getString("Column.Balance"));
-        balanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(AccountBalanceDisplayManager.
+        balanceColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(AccountBalanceDisplayManager.
                 convertToSelectedBalanceMode(param.getValue().getValue().getAccountType(),
                         param.getValue().getValue().getTreeBalance())));
         balanceColumn.setCellFactory(cell -> new AccountCommodityFormatTreeTableCell());
 
         final TreeTableColumn<Account, BigDecimal> reconciledBalanceColumn = new TreeTableColumn<>(resources.getString("Column.ReconciledBalance"));
-        reconciledBalanceColumn.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(AccountBalanceDisplayManager.
+        reconciledBalanceColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(AccountBalanceDisplayManager.
                 convertToSelectedBalanceMode(param.getValue().getValue().getAccountType(),
                         param.getValue().getValue().getReconciledTreeBalance())));
         reconciledBalanceColumn.setCellFactory(cell -> new AccountCommodityFormatTreeTableCell());
 
         final TreeTableColumn<Account, String> currencyColumn = new TreeTableColumn<>(resources.getString("Column.Currency"));
-        currencyColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getCurrencyNode().getSymbol()));
+        currencyColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getCurrencyNode().getSymbol()));
 
         final TreeTableColumn<Account, String> typeColumn = new TreeTableColumn<>(resources.getString("Column.Type"));
-        typeColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getValue().getAccountType().toString()));
+        typeColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getAccountType().toString()));
 
         final TreeTableColumn<Account, Integer> codeColumn = new TreeTableColumn<>(resources.getString("Column.Code"));
         codeColumn.setEditable(true);
@@ -161,7 +162,8 @@ public class AccountsViewController implements MessageListener {
         codeColumn.setCellFactory(param -> new IntegerTreeTableCell());
         codeColumn.setOnEditCommit(event -> updateAccountCode(event.getRowValue().getValue(), event.getNewValue()));
 
-        treeTableView.getColumns().addAll(nameColumn, codeColumn, entriesColumn, balanceColumn, reconciledBalanceColumn, currencyColumn, typeColumn);
+        treeTableView.getColumns().addAll(nameColumn, codeColumn, entriesColumn, balanceColumn,
+                reconciledBalanceColumn, currencyColumn, typeColumn);
 
         restoreColumnVisibility();
 
