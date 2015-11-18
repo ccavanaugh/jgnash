@@ -186,7 +186,7 @@ public class BudgetTableController implements MessageListener {
      */
     private ScheduledThreadPoolExecutor rateLimitExecutor;
 
-    private static final int UPDATE_PERIOD = 750; // update period in milliseconds
+    private static final int UPDATE_PERIOD = 350; // update period in milliseconds
 
     @FXML
     private void initialize() {
@@ -482,6 +482,9 @@ public class BudgetTableController implements MessageListener {
                 });
     }
 
+    /**
+     * @see Stage#showAndWait() for need to push {@code handleEditAccountGoals(account)} to the platform thread
+     */
     private void buildAccountTreeTable() {
         // empty column header is needed to match other table columns
         final TreeTableColumn<Account, String> headerColumn = new TreeTableColumn<>("");
@@ -496,7 +499,15 @@ public class BudgetTableController implements MessageListener {
             final Account account = event.getRowValue().getValue();
 
             if (account != null && !account.isPlaceHolder()) {
-                handleEditAccountGoals(account);
+
+                // push to the edit of the platform thread to avoid an IllegalStateException
+                // "showAndWait is not allowed during animation or layout processing" exception
+                // this may be reach outside the platform thread if a uses is click happy
+                if (Platform.isFxApplicationThread()) {
+                    handleEditAccountGoals(account);
+                } else {
+                    Platform.runLater(() -> handleEditAccountGoals(account));
+                }
             }
         });
         nameColumn.setEditable(true);
