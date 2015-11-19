@@ -32,6 +32,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 import java.util.Objects;
@@ -388,7 +390,11 @@ public class MainFrame extends JFrame implements MessageListener, ActionListener
 
         actionParser.preLoadAction("security-background-update-command", new UpdateSecuritiesAction());
 
-        actionParser.loadFile(MainFrame.class.getResourceAsStream("/jgnash/resource/main-frame-actions.xml"));
+        try (final InputStream stream = MainFrame.class.getResourceAsStream("/jgnash/resource/main-frame-actions.xml")) {
+            actionParser.loadFile(stream);
+        } catch (final IOException exception) {
+            logger.log(Level.SEVERE, exception.getMessage(), exception);
+        }
 
         menuBar = actionParser.createMenuBar("main-menu");
         JToolBar toolBar = actionParser.createToolBar("main-toolbar");
