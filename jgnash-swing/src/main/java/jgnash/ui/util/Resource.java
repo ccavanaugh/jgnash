@@ -70,7 +70,7 @@ public class Resource {
         if (value == null || value.length() != 1) {
             Logger.getLogger(Resource.class.getName()).log(Level.WARNING,
                     "The value ''{0}'' for key ''{1}'' is not valid.", new Object[]{value, key});
-            return "".charAt(0);
+            return 0;
         }
         return value.charAt(0);
     }
