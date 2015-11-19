@@ -30,8 +30,6 @@ import java.util.prefs.Preferences;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.WeakChangeListener;
 import javafx.concurrent.Task;
@@ -67,7 +65,6 @@ import jgnash.uifx.util.StageUtils;
 import jgnash.uifx.views.accounts.AccountsViewController;
 import jgnash.uifx.views.budget.BudgetViewController;
 import jgnash.uifx.views.recurring.RecurringViewController;
-import jgnash.uifx.views.register.RegisterStage;
 import jgnash.uifx.views.register.RegisterViewController;
 import jgnash.util.DefaultDaemonThreadFactory;
 import jgnash.util.NotNull;
@@ -102,8 +99,6 @@ public class MainApplication extends Application implements MessageListener {
     private TabViewPane tabViewPane;
 
     private BusyPane busyPane;
-
-    private final ListProperty<RegisterStage> registerStageListProperty = new SimpleListProperty<>();
 
     private final Preferences preferences = Preferences.userNodeForPackage(MainApplication.class);
 
@@ -143,9 +138,6 @@ public class MainApplication extends Application implements MessageListener {
         final FXMLLoader fxmlLoader = new FXMLLoader(MenuBarController.class.getResource("MainMenuBar.fxml"), rb);
 
         final MenuBar menuBar = fxmlLoader.load();
-
-        // bind the register stage lists together
-        registerStageListProperty.bindBidirectional(RegisterStage.registerStageListProperty());
 
         final ToolBar mainToolBar = FXMLLoader.load(MainToolBarController.class.getResource("MainToolBar.fxml"), rb);
 
